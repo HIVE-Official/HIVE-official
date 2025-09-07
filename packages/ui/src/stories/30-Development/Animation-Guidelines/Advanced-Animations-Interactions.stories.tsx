@@ -84,8 +84,9 @@ import {
  * - **Accessibility Aware**: Respects reduced motion preferences
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '20-Advanced Systems/Animations & Interactions',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

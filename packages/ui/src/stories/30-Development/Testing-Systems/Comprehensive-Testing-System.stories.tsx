@@ -124,8 +124,9 @@ import {
  * - **Network Testing**: Offline, slow connection, and network failure scenarios
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '25-Advanced Systems/Comprehensive Testing',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

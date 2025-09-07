@@ -5,9 +5,9 @@ import Image from 'next/image';
 import {
   Card,
   Button,
-  ShadcnAvatar as Avatar,
-  ShadcnAvatarImage as AvatarImage,
-  ShadcnAvatarFallback as AvatarFallback,
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
   Badge,
   Textarea,
   Progress,

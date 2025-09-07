@@ -22,5 +22,5 @@ export const adminFirestore = {
     commit: async () => true,
   }),
   
-  runTransaction: async (fn: Function) => fn(),
+  runTransaction: async (fn: () => void) => fn(),
 };

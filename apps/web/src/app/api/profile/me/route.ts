@@ -88,16 +88,8 @@ export async function PATCH(request: NextRequest) {
     updateData.updatedAt = new Date()
     updateData.lastActiveAt = new Date()
 
-    // Development mode bypass
-    if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-      console.log('🔥 Development mode: profile update bypassed', updateData)
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Profile updated successfully',
-        updates: updateData
-      })
-    }
+    // SECURITY FIX: Removed dangerous Firebase API key bypass
+    // All profile updates must go through proper authentication
 
     // Production mode: Update Firestore
     try {

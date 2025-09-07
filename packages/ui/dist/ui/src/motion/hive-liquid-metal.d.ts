@@ -261,7 +261,7 @@ export declare const liquidMetalUtils: {
         type: "spring";
         mass: 1.2 | 0.8 | 0.5 | 1.8;
         stiffness: 200 | 400 | 600 | 800;
-        damping: 15 | 10 | 35 | 25;
+        damping: 15 | 10 | 25 | 35;
     };
     createEasedTransition(duration?: keyof typeof liquidTiming.duration, easing?: keyof typeof liquidEasing): {
         duration: 1.2 | 0.8 | 0.1 | 0.6 | 0.4 | 0.2 | 0.15 | 1.8;

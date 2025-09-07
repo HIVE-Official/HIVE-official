@@ -112,8 +112,9 @@ import {
  * - **Accessibility**: Full support for assistive technologies and motor impairments
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '24-Advanced Systems/Mobile Gestures & Touch',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

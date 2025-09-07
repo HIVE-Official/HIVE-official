@@ -185,12 +185,12 @@ export declare const ToolShareMetadataSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     toolName: string;
     toolId: string;
-    shareType: "featured" | "created" | "updated";
+    shareType: "created" | "featured" | "updated";
     toolDescription?: string | undefined;
 }, {
     toolName: string;
     toolId: string;
-    shareType: "featured" | "created" | "updated";
+    shareType: "created" | "featured" | "updated";
     toolDescription?: string | undefined;
 }>;
 /**
@@ -206,13 +206,13 @@ export declare const PostAuthorSchema: z.ZodObject<{
     id: string;
     handle: string;
     fullName: string;
-    role?: "builder" | "admin" | "member" | undefined;
+    role?: "builder" | "member" | "admin" | undefined;
     photoURL?: string | undefined;
 }, {
     id: string;
     handle: string;
     fullName: string;
-    role?: "builder" | "admin" | "member" | undefined;
+    role?: "builder" | "member" | "admin" | undefined;
     photoURL?: string | undefined;
 }>;
 /**
@@ -249,13 +249,13 @@ export declare const PostSchema: z.ZodObject<{
         id: string;
         handle: string;
         fullName: string;
-        role?: "builder" | "admin" | "member" | undefined;
+        role?: "builder" | "member" | "admin" | undefined;
         photoURL?: string | undefined;
     }, {
         id: string;
         handle: string;
         fullName: string;
-        role?: "builder" | "admin" | "member" | undefined;
+        role?: "builder" | "member" | "admin" | undefined;
         photoURL?: string | undefined;
     }>>;
     type: z.ZodDefault<z.ZodEnum<["text", "image", "poll", "event", "toolshare"]>>;
@@ -391,12 +391,12 @@ export declare const PostSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     }, {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     }>>;
     reactions: z.ZodDefault<z.ZodObject<{
@@ -431,10 +431,10 @@ export declare const PostSchema: z.ZodObject<{
     id: string;
     type: "text" | "image" | "event" | "poll" | "toolshare";
     content: string;
+    spaceId: string;
     reactions: {
         heart: number;
     };
-    spaceId: string;
     updatedAt: Date;
     createdAt: Date;
     authorId: string;
@@ -449,7 +449,7 @@ export declare const PostSchema: z.ZodObject<{
         id: string;
         handle: string;
         fullName: string;
-        role?: "builder" | "admin" | "member" | undefined;
+        role?: "builder" | "member" | "admin" | undefined;
         photoURL?: string | undefined;
     } | undefined;
     richContent?: {
@@ -492,7 +492,7 @@ export declare const PostSchema: z.ZodObject<{
     toolShareMetadata?: {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     } | undefined;
     pinnedAt?: Date | undefined;
@@ -518,7 +518,7 @@ export declare const PostSchema: z.ZodObject<{
         id: string;
         handle: string;
         fullName: string;
-        role?: "builder" | "admin" | "member" | undefined;
+        role?: "builder" | "member" | "admin" | undefined;
         photoURL?: string | undefined;
     } | undefined;
     richContent?: {
@@ -561,7 +561,7 @@ export declare const PostSchema: z.ZodObject<{
     toolShareMetadata?: {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     } | undefined;
     reactedUsers?: {
@@ -718,12 +718,12 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     }, {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
@@ -769,7 +769,7 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     toolShareMetadata?: {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     } | undefined;
 }, {
@@ -815,7 +815,7 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     toolShareMetadata?: {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     } | undefined;
 }>, {
@@ -861,7 +861,7 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     toolShareMetadata?: {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     } | undefined;
 }, {
@@ -907,7 +907,7 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     toolShareMetadata?: {
         toolName: string;
         toolId: string;
-        shareType: "featured" | "created" | "updated";
+        shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     } | undefined;
 }>;

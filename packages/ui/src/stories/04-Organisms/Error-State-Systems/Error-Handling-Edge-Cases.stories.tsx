@@ -107,8 +107,9 @@ import {
  * - **Error Boundaries**: Component isolation, graceful degradation, error reporting
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '22-Advanced Systems/Error Handling & Edge Cases',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

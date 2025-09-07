@@ -46,6 +46,15 @@ export { HiveModal as Modal, HiveModal as Dialog } from './components/hive-modal
 
 // === FORM COMPONENTS ===
 export { FormField } from './atomic/molecules/form-field';
+export { ComprehensiveFormField, type ComprehensiveFormFieldProps } from './atomic/molecules/form-field-comprehensive';
+export { 
+  UniversityEmailFieldMolecule,
+  StudentIDFieldMolecule,
+  MajorSelectionFieldMolecule,
+  type UniversityEmailFieldProps,
+  type StudentIDFieldProps,
+  type MajorSelectionFieldProps
+} from './atomic/molecules/form-comprehensive';
 export { Label } from './atomic/atoms/label';
 
 // === SELECT COMPONENTS ===
@@ -104,7 +113,31 @@ export { Tooltip } from './atomic/atoms/tooltip';
 
 // Navigation components
 export { NavigationPreferences } from './atomic/atoms/navigation-preferences';
-export { useShell } from './contexts/shell-context';
+export { useShell, ShellProvider } from './contexts/shell-context';
 
 // Hooks
-export { useDebounce } from './hooks/use-debounce'; 
+export { useDebounce } from './hooks/use-debounce';
+
+// === PROFILE COMPONENTS ===
+// Profile Atoms
+export { ProfileAvatar, type ProfileAvatarProps } from './atomic/atoms/profile-avatar';
+export { ProfileBadge, type ProfileBadgeProps } from './atomic/atoms/profile-badge';
+export { ProfileAction, type ProfileActionProps } from './atomic/atoms/profile-action';
+export { ProfileStatistic, type ProfileStatisticProps } from './atomic/atoms/profile-statistic';
+
+// Profile Molecules
+export { ProfileHeader, type ProfileHeaderProps } from './atomic/molecules/profile-header';
+export { ProfileStats, type ProfileStatsProps } from './atomic/molecules/profile-stats';
+
+// Profile Organisms
+export { ProfileDashboard, type ProfileDashboardProps } from './atomic/organisms/profile-dashboard';
+export { ProfileAvatarWidget, type ProfileAvatarWidgetProps } from './atomic/organisms/profile-avatar-widget';
+export { ProfileStatsWidget, type ProfileStatsWidgetProps } from './atomic/organisms/profile-stats-widget';
+export { ProfileSpacesWidget, type ProfileSpacesWidgetProps } from './atomic/organisms/profile-spaces-widget';
+export { ProfileToolsWidget, type ProfileToolsWidgetProps } from './atomic/organisms/profile-tools-widget';
+export { ProfileActivityWidget, type ProfileActivityWidgetProps } from './atomic/organisms/profile-activity-widget';
+export { ProfileCalendarWidget, type ProfileCalendarWidgetProps } from './atomic/organisms/profile-calendar-widget';
+export { ProfileGhostModeWidget, type ProfileGhostModeWidgetProps } from './atomic/organisms/profile-ghost-mode-widget';
+export { ProfileHiveLabWidget, type ProfileHiveLabWidgetProps } from './atomic/organisms/profile-hivelab-widget';
+export { ProfileCard, type ProfileCardProps } from './atomic/organisms/profile-card';
+export { ProfileSystem, type ProfileSystemProps } from './atomic/organisms/profile-system'; 

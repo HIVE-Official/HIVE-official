@@ -4,7 +4,6 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 import { Search, Bell, Settings, Command } from 'lucide-react';
 import { Button } from './button-enhanced';
-import { Avatar } from './avatar';
 
 export interface NavBarProps {
   user?: {

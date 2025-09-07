@@ -386,8 +386,8 @@ export declare const ToolSchema: z.ZodObject<{
         };
         elementId: string;
         isVisible?: boolean | undefined;
-        isLocked?: boolean | undefined;
         config?: unknown;
+        isLocked?: boolean | undefined;
         parentId?: string | undefined;
     }>, "many">;
     config: z.ZodDefault<z.ZodObject<{
@@ -584,7 +584,7 @@ export declare const ToolSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     id: string;
     name: string;
-    status: "preview" | "draft" | "published";
+    status: "draft" | "published" | "preview";
     description: string;
     metadata: {
         language: string;
@@ -690,11 +690,11 @@ export declare const ToolSchema: z.ZodObject<{
         };
         elementId: string;
         isVisible?: boolean | undefined;
-        isLocked?: boolean | undefined;
         config?: unknown;
+        isLocked?: boolean | undefined;
         parentId?: string | undefined;
     }[];
-    status?: "preview" | "draft" | "published" | undefined;
+    status?: "draft" | "published" | "preview" | undefined;
     metadata?: {
         language?: string | undefined;
         category?: string | undefined;
@@ -1097,8 +1097,8 @@ export declare const UpdateToolSchema: z.ZodObject<{
         };
         elementId: string;
         isVisible?: boolean | undefined;
-        isLocked?: boolean | undefined;
         config?: unknown;
+        isLocked?: boolean | undefined;
         parentId?: string | undefined;
     }>, "many">>;
     config: z.ZodOptional<z.ZodObject<{
@@ -1395,8 +1395,8 @@ export declare const UpdateToolSchema: z.ZodObject<{
         };
         elementId: string;
         isVisible?: boolean | undefined;
-        isLocked?: boolean | undefined;
         config?: unknown;
+        isLocked?: boolean | undefined;
         parentId?: string | undefined;
     }[] | undefined;
 }>;

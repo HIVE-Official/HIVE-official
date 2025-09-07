@@ -195,8 +195,9 @@ function MobileNavigationVariant1() {
   )
 }
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '02-Patterns/Navigation Variations',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     backgrounds: {

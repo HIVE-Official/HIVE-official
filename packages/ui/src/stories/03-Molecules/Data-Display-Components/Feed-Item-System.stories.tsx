@@ -6,8 +6,9 @@ import { Button } from '../../../components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
 import { Badge } from '../../../components/ui/badge';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Data-Display-Components/Feed Item System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {

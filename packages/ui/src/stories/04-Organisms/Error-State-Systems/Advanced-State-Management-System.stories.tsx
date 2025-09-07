@@ -83,8 +83,9 @@ import {
  * - **Real-time Notifications**: Live updates and presence indicators
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '18-Advanced Systems/State Management & Data Flow',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

@@ -6,8 +6,9 @@ import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
 import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Card-Components/Space Card System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {

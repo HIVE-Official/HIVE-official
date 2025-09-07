@@ -6,8 +6,9 @@ import { Input } from '../../atomic/atoms/input-enhanced';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
 import { Badge } from '../../../components/ui/badge';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Navigation-Components/Header Navigation System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {

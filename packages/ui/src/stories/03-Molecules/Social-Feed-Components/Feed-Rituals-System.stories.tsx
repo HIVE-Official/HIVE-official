@@ -14,8 +14,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avat
 import { Badge } from '../../../components/ui/badge';
 import { Progress } from '../../../components/ui/progress';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Social-Feed-Components/Feed & Rituals System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {

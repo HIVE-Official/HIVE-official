@@ -55,8 +55,9 @@ import '../../../hive-tokens.css';
 // META CONFIGURATION
 // =============================================================================
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '🏛️ SPACES SYSTEM/Complete Interactive System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

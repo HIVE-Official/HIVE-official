@@ -96,8 +96,9 @@ import {
  * - **Real-time Metrics**: Core Web Vitals, user experience monitoring
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '23-Advanced Systems/Performance Optimization',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

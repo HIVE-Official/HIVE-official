@@ -154,6 +154,7 @@ export function SpaceManagementDashboard() {
 
   useEffect(() => {
     searchSpaces();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [admin, selectedType, selectedStatus]);
 
   const getStatusColor = (status: string) => {

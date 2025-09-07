@@ -73,7 +73,7 @@ export const Progress = React.forwardRef(({ value = 0, max = 100, variant = 'def
                     } }) })] }));
 });
 Progress.displayName = 'Progress';
-const CircularProgress = React.forwardRef(({ value = 0, max = 100, size = 'md', color = 'primary', showValue = false, animated = false, indeterminate = false, label, strokeWidth, className, ...props }, ref) => {
+const CircularProgress = React.forwardRef(({ value = 0, max = 100, size = 'md', color = 'primary', showValue = false, animated: _animated = false, indeterminate = false, label, strokeWidth, className, ...props }, ref) => {
     const percentage = indeterminate ? 0 : Math.min(Math.max((value / max) * 100, 0), 100);
     const sizeClasses = progressSizes.circular[size];
     const radius = size === 'sm' ? 12 : size === 'md' ? 20 : 28;

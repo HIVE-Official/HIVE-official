@@ -29,6 +29,8 @@ export { HiveModal, HiveConfirmModal, HiveAlertModal } from './components/hive-m
 export { HiveModal as Modal, HiveModal as Dialog } from './components/hive-modal.js';
 // === FORM COMPONENTS ===
 export { FormField } from './atomic/molecules/form-field.js';
+export { ComprehensiveFormField } from './atomic/molecules/form-field-comprehensive.js';
+export { UniversityEmailFieldMolecule, StudentIDFieldMolecule, MajorSelectionFieldMolecule } from './atomic/molecules/form-comprehensive.js';
 export { Label } from './atomic/atoms/label.js';
 // === SELECT COMPONENTS ===
 export { SelectEnhanced as Select } from './atomic/atoms/select-enhanced.js';
@@ -70,7 +72,28 @@ export { Spinner } from './atomic/atoms/spinner.js';
 export { Tooltip } from './atomic/atoms/tooltip.js';
 // Navigation components
 export { NavigationPreferences } from './atomic/atoms/navigation-preferences.js';
-export { useShell } from './contexts/shell-context.js';
+export { useShell, ShellProvider } from './contexts/shell-context.js';
 // Hooks
 export { useDebounce } from './hooks/use-debounce.js';
+// === PROFILE COMPONENTS ===
+// Profile Atoms
+export { ProfileAvatar } from './atomic/atoms/profile-avatar.js';
+export { ProfileBadge } from './atomic/atoms/profile-badge.js';
+export { ProfileAction } from './atomic/atoms/profile-action.js';
+export { ProfileStatistic } from './atomic/atoms/profile-statistic.js';
+// Profile Molecules
+export { ProfileHeader } from './atomic/molecules/profile-header.js';
+export { ProfileStats } from './atomic/molecules/profile-stats.js';
+// Profile Organisms
+export { ProfileDashboard } from './atomic/organisms/profile-dashboard.js';
+export { ProfileAvatarWidget } from './atomic/organisms/profile-avatar-widget.js';
+export { ProfileStatsWidget } from './atomic/organisms/profile-stats-widget.js';
+export { ProfileSpacesWidget } from './atomic/organisms/profile-spaces-widget.js';
+export { ProfileToolsWidget } from './atomic/organisms/profile-tools-widget.js';
+export { ProfileActivityWidget } from './atomic/organisms/profile-activity-widget.js';
+export { ProfileCalendarWidget } from './atomic/organisms/profile-calendar-widget.js';
+export { ProfileGhostModeWidget } from './atomic/organisms/profile-ghost-mode-widget.js';
+export { ProfileHiveLabWidget } from './atomic/organisms/profile-hivelab-widget.js';
+export { ProfileCard } from './atomic/organisms/profile-card.js';
+export { ProfileSystem } from './atomic/organisms/profile-system.js';
 //# sourceMappingURL=index.js.map

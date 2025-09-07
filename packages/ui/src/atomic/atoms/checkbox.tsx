@@ -58,32 +58,33 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
 
   const boxClasses = [
     'relative flex items-center justify-center',
-    'border-2 rounded-md',
+    'border rounded',
     'transition-all duration-200 ease-out',
     checkboxSizes[size].box,
     
     // States
     !disabled && !error && [
-      'border-[var(--hive-border-default)]',
-      'hover:border-[var(--hive-brand-gold)]',
-      'focus-within:border-[var(--hive-brand-gold)] focus-within:ring-2 focus-within:ring-[var(--hive-brand-gold)]/20'
+      'border-white/20',
+      'bg-transparent',
+      'hover:border-[#FFD700]',
+      'focus-within:border-[#FFD700]'
     ].filter(Boolean).join(' '),
     
     disabled && [
-      'border-[var(--hive-border-default)]',
+      'border-[var(--hive-border-disabled)]',
       'bg-[var(--hive-background-disabled)]',
       'cursor-not-allowed'
     ].join(' '),
     
     error && [
       'border-[var(--hive-status-error)]',
-      'focus-within:border-[var(--hive-status-error)] focus-within:ring-2 focus-within:ring-[var(--hive-status-error)]/20'
+      'focus-within:border-[var(--hive-status-error)]'
     ].join(' '),
     
-    // Checked state
+    // Checked state - keep transparent background
     showCheck && !disabled && [
-      'bg-[var(--hive-brand-secondary)] border-[var(--hive-brand-gold)]',
-      error && 'bg-[var(--hive-status-error)] border-[var(--hive-status-error)]'
+      'border-[#FFD700]',
+      error && 'border-[#FFD700]'
     ].filter(Boolean).join(' ')
   ].filter(Boolean).join(' ');
 
@@ -112,14 +113,14 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
         {showCheck && (
           <div className={cn(
             'flex items-center justify-center',
-            'text-[var(--hive-background-primary)]',
+            'text-[#FFD700]',
             checkboxSizes[size].icon,
-            disabled && 'text-[var(--hive-text-disabled)]'
+            disabled && 'text-white/40'
           )}>
             {indeterminate ? (
-              <Minus className="h-full w-full" />
+              <Minus className="h-full w-full stroke-[1.5]" />
             ) : (
-              <Check className="h-full w-full" />
+              <Check className="h-full w-full stroke-[1.5]" />
             )}
           </div>
         )}

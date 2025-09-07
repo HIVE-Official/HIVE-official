@@ -483,12 +483,13 @@ export class MobileTester {
     const { type, target } = assertion;
     
     switch (type) {
-      case 'visible':
+      case 'visible': {
         const element = document.querySelector(target);
         if (!element || !this.isElementVisible(element)) {
           throw new Error(`Element not visible: ${target}`);
         }
         break;
+      }
       case 'focused':
         if (document.activeElement !== document.querySelector(target)) {
           throw new Error(`Element not focused: ${target}`);

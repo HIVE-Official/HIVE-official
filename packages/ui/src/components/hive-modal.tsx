@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
 const hiveModalVariants = cva(
-  'fixed inset-0 z-50 flex items-center justify-center',
+  '',
   {
     variants: {
       size: {
@@ -92,11 +92,11 @@ const HiveModal = forwardRef<HTMLDivElement, HiveModalProps>(
         />
         
         {/* Modal */}
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div
             ref={ref}
             className={cn(
-              'relative w-full bg-[var(--hive-background-primary)] border border-[var(--hive-border-primary)] rounded-lg shadow-xl',
+              'relative w-full bg-[var(--hive-background-primary)] border border-[var(--hive-border-primary)] rounded-lg shadow-xl mx-auto',
               hiveModalVariants({ size, variant }),
               className
             )}

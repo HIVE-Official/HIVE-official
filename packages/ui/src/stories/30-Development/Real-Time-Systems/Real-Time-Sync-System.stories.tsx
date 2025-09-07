@@ -86,8 +86,9 @@ import {
  * - **Performance Optimized**: Efficient delta updates and selective synchronization
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '21-Advanced Systems/Real-Time Synchronization',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

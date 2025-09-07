@@ -115,11 +115,11 @@ function VerifyPageContent() {
     switch (state.status) {
       case 'loading':
       case 'verifying':
-        return <Loader2 className="h-16 w-16 text-[var(--hive-brand-primary)] animate-spin" />;
+        return <Loader2 className="h-16 w-16 text-[#FFD700] animate-spin" />;
       case 'success':
-        return <CheckCircle className="h-16 w-16 text-[var(--hive-status-success)]" />;
+        return <CheckCircle className="h-16 w-16 text-[#FFD700]" />;
       case 'error':
-        return <XCircle className="h-16 w-16 text-[var(--hive-status-error)]" />;
+        return <XCircle className="h-16 w-16 text-[#FFD700]" />;
     }
   };
 
@@ -158,7 +158,7 @@ function VerifyPageContent() {
         {/* Error details */}
         {state.status === 'error' && state.error && (
           <div className="bg-[var(--hive-status-error)]/10 border border-[var(--hive-status-error)]/20 rounded-lg p-4">
-            <p className="text-sm text-[var(--hive-status-error)]">
+            <p className="text-sm text-[#FFD700]">
               {state.error}
             </p>
           </div>
@@ -220,7 +220,7 @@ export default function VerifyPage() {
     <Suspense 
       fallback={
         <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
-          <Loader2 className="h-12 w-12 text-[var(--hive-brand-primary)] animate-spin" />
+          <Loader2 className="h-12 w-12 text-[#FFD700] animate-spin" />
         </div>
       }
     >

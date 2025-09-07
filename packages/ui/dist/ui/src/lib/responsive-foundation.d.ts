@@ -49,7 +49,7 @@ export declare const touchInteractions: {
     readonly scrollContainer: "overflow-auto -webkit-overflow-scrolling-touch";
 };
 export declare const socialGrid: (props?: ({
-    type?: "feed" | "profile" | "cards" | "dashboard" | null | undefined;
+    type?: "feed" | "cards" | "profile" | "dashboard" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export declare const visibility: {
     readonly mobileOnly: "block sm:hidden";

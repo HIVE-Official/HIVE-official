@@ -690,8 +690,8 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
                 <SpaceCard
                   key={space.id}
                   space={space}
-                  onViewDetails={() => console.log('View details:', space.id)}
-                  onEdit={() => console.log('Edit space:', space.id)}
+                  onViewDetails={() => {/* View details: space.id */}}
+                  onEdit={() => {/* Edit space: space.id */}}
                   onAudit={() => onAuditSpace?.(space.id)}
                 />
               ))}

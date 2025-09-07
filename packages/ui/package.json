@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "main": "./dist/ui/index.js",
-  "types": "./dist/ui/index.d.ts",
+  "types": "./dist/ui/src/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/ui/index.d.ts",
+      "types": "./dist/ui/src/index.d.ts",
       "import": "./dist/ui/index.js",
       "require": "./dist/ui/index.js"
     },
     "./lib/utils": {
-      "types": "./dist/ui/index.d.ts",
+      "types": "./dist/ui/src/index.d.ts",
       "import": "./dist/ui/index.js",
       "require": "./dist/ui/index.js"
     },

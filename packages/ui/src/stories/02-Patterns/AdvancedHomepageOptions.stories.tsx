@@ -7,6 +7,7 @@ import {
 } from '../../components/page-layouts/advanced-homepage-options';
 
 const meta = {
+  component: React.Fragment,
   title: 'Page Layouts/✨ Advanced Homepage Options',
   parameters: {
     layout: 'fullscreen',

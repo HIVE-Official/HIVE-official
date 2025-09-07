@@ -1,4 +1,4 @@
-import { AppLayout } from '../../components/app-layout';
+import { HiveAppShellV2 } from '../../components/shell/hive-app-shell-v2';
 import { AuthGuard } from '../../components/auth-guard';
 
 interface DashboardLayoutProps {
@@ -17,9 +17,9 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <AuthGuard requireAuth={true}>
-      <AppLayout>
+      <HiveAppShellV2>
         {children}
-      </AppLayout>
+      </HiveAppShellV2>
     </AuthGuard>
   );
 }

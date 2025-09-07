@@ -166,7 +166,7 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
   size = 'md',
   color = 'primary',
   showValue = false,
-  animated = false,
+  animated: _animated = false,
   indeterminate = false,
   label,
   strokeWidth,

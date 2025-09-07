@@ -22,7 +22,14 @@
     "pre-work": "pnpm workflow-check",
     "safe-start": "pnpm workflow-check && pnpm dev",
     "component-check": "node scripts/design-system-check.js",
-    "ai-prompt": "node scripts/ai-workflow-prompt.js"
+    "ai-prompt": "node scripts/ai-workflow-prompt.js",
+    "ai:context": "node scripts/ai-context-analyzer.js",
+    "ai:prioritize": "node scripts/ai-task-prioritizer.js",
+    "ai:validate": "node scripts/ai-quality-validator.js",
+    "ai:suggest": "node scripts/ai-task-prioritizer.js",
+    "ai:quality": "node scripts/ai-quality-validator.js",
+    "ai:analyze": "pnpm ai:context && pnpm ai:prioritize",
+    "ai:full-check": "pnpm ai:context && pnpm ai:prioritize && pnpm ai:validate"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.4",

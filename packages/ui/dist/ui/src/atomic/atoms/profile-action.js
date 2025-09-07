@@ -139,7 +139,7 @@ export const ACTION_TYPES = {
         variant: "ghost"
     }
 };
-export function ProfileAction({ actionType, type = "button", label, icon: CustomIcon, iconOnly = false, loading = false, badge, tooltip, href, external = false, onClick, size = "md", variant = "secondary", shape = "rounded", width = "auto", interactive = true, disabled, className, children, ...props }) {
+export function ProfileAction({ actionType, type: _type = "button", label, icon: CustomIcon, iconOnly = false, loading = false, badge, tooltip, href, external = false, onClick, size = "md", variant = "secondary", shape = "rounded", width = "auto", interactive = true, disabled, className, children, ...props }) {
     // Get predefined action config if actionType is provided
     const actionConfig = actionType ? ACTION_TYPES[actionType] : null;
     // Determine final values

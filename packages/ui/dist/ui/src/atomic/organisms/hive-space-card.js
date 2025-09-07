@@ -30,6 +30,7 @@ export const HiveSpaceCard = ({ space, currentUser, mutualConnections = [], onJo
                     case 'waitlist': return { text: 'Join Waitlist', variant: 'secondary' };
                     case 'approval_required': return { text: 'Request Access', variant: 'secondary' };
                     case 'closed': return { text: 'View Details', variant: 'ghost' };
+                    default: return { text: 'View Details', variant: 'ghost' };
                 }
                 break;
             }
@@ -43,6 +44,8 @@ export const HiveSpaceCard = ({ space, currentUser, mutualConnections = [], onJo
                 return { text: 'Join Floor', variant: 'primary' };
             case 'student':
                 return { text: 'Join Group', variant: 'primary' };
+            default:
+                return { text: 'View Details', variant: 'ghost' };
         }
     };
     const primaryAction = getPrimaryAction();

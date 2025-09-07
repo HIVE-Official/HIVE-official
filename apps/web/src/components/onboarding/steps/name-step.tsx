@@ -2,37 +2,50 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, Input, Label } from '@hive/ui';
+import { Button, Input, Label } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { User, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { User, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { logger } from '@hive/core';
-import { useHandleAvailability } from '@/hooks/use-handle-availability';
+import { useHandleAvailability } from '@hive/hooks';
 
 export function OnboardingNameStep() {
   const router = useRouter();
   const { data: onboardingData, update } = useOnboardingStore();
   
-  const [displayName, setDisplayName] = useState(onboardingData?.displayName || '');
-  const [handle, setHandle] = useState(onboardingData?.handle || '');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [handle, setHandle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Parse existing display name if available
+  useEffect(() => {
+    if (onboardingData?.displayName) {
+      const parts = onboardingData.displayName.split(' ');
+      setFirstName(parts[0] || '');
+      setLastName(parts.slice(1).join(' ') || '');
+    }
+    if (onboardingData?.handle) {
+      setHandle(onboardingData.handle);
+    }
+  }, [onboardingData]);
 
   // Handle availability checking
   const { available: isAvailable, isChecking, error: handleError } = useHandleAvailability(handle);
 
-  // Auto-generate handle from display name
+  // Auto-generate handle from first and last name
   useEffect(() => {
-    if (displayName && !handle) {
-      const generatedHandle = displayName
+    if (firstName || lastName) {
+      const fullName = `${firstName} ${lastName}`.trim();
+      const generatedHandle = fullName
         .toLowerCase()
-        .replace(/[^a-z0-9]/g, '_')
-        .replace(/_+/g, '_')
-        .replace(/^_|_$/g, '')
+        .replace(/[^a-z0-9]/g, '')
         .substring(0, 20);
       setHandle(generatedHandle);
     }
-  }, [displayName, handle]);
+  }, [firstName, lastName]);
 
-  const isFormValid = displayName.trim().length >= 2 &&
+  const isFormValid = firstName.trim().length >= 1 &&
+                     lastName.trim().length >= 1 &&
                      handle.length >= 3 && 
                      isAvailable && 
                      !isChecking;
@@ -45,8 +58,9 @@ export function OnboardingNameStep() {
     setIsLoading(true);
     
     try {
+      const displayName = `${firstName.trim()} ${lastName.trim()}`;
       await update({
-        displayName: displayName.trim(),
+        displayName,
         handle: handle.toLowerCase()
       });
 
@@ -61,118 +75,127 @@ export function OnboardingNameStep() {
     }
   };
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-lg bg-card border-border">
-        <CardHeader className="text-center space-y-2">
-          <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
-            <User className="w-6 h-6 text-accent" />
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="w-full max-w-lg">
+        {/* Header Section */}
+        <div className="mb-12 text-center">
+          <div className="mb-6 flex justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/10">
+              <User className="h-8 w-8 text-accent" />
+            </div>
           </div>
-          <CardTitle className="text-xl font-display text-card-foreground">
-            Create Your Profile
-          </CardTitle>
-          <CardDescription className="text-muted-foreground font-sans">
-            Choose your display name and unique handle
-          </CardDescription>
-        </CardHeader>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Your Identity</h1>
+          <p className="text-base text-muted-foreground">How should we know you?</p>
+        </div>
 
-        <CardContent className="space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Display Name */}
-            <div className="space-y-3">
-              <Label htmlFor="displayName" className="text-sm font-medium text-card-foreground">
-                Display Name
+        {/* Form Section */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* First Name Field */}
+          <div className="space-y-2">
+            <Label htmlFor="firstName" className="text-sm font-medium text-foreground">
+              First Name *
+            </Label>
+            <Input
+              id="firstName"
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="First name"
+              className="h-12 text-base bg-input border-border focus:border-accent"
+              required
+              minLength={1}
+              maxLength={50}
+              autoFocus
+            />
+          </div>
+
+          {/* Last Name Field */}
+          <div className="space-y-2">
+            <Label htmlFor="lastName" className="text-sm font-medium text-foreground">
+              Last Name *
+            </Label>
+            <Input
+              id="lastName"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Last name"
+              className="h-12 text-base bg-input border-border focus:border-accent"
+              required
+              minLength={1}
+              maxLength={50}
+            />
+          </div>
+
+          {/* Handle Field */}
+          <div className="space-y-2 mt-8">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="handle" className="text-sm font-medium text-foreground">
+                Handle
               </Label>
-              <Input
-                id="displayName"
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Enter your full name"
-                required
-                minLength={2}
-                maxLength={50}
-              />
-              <p className="text-xs text-muted-foreground">
-                This is how others will see your name on HIVE
-              </p>
+              <span className="text-xs font-medium text-accent">Auto-generated</span>
             </div>
-
-            {/* Handle */}
-            <div className="space-y-3">
-              <Label htmlFor="handle" className="text-sm font-medium text-card-foreground">
-                Username
-              </Label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-muted-foreground text-sm">@</span>
-                </div>
-                <Input
-                  id="handle"
-                  type="text"
-                  value={handle}
-                  onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                  placeholder="your_username"
-                  className="pl-8"
-                  required
-                  minLength={3}
-                  maxLength={20}
-                  pattern="^[a-z0-9_]{3,20}$"
-                />
-                
-                {/* Handle validation indicator */}
-                {handle.length >= 3 && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    {isChecking ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    ) : isAvailable ? (
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    ) : (
-                      <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </div>
-                )}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <span className="text-accent text-base">@</span>
               </div>
-              
-              {/* Handle feedback */}
-              {handle.length >= 3 && (
-                <div className="text-xs">
-                  {isChecking ? (
-                    <span className="text-muted-foreground">Checking availability...</span>
-                  ) : isAvailable ? (
-                    <span className="text-accent">✓ Username is available</span>
-                  ) : handleError ? (
-                    <span className="text-muted-foreground">✗ {handleError}</span>
-                  ) : (
-                    <span className="text-muted-foreground">✗ Username is not available</span>
-                  )}
-                </div>
-              )}
-              
-              <p className="text-xs text-muted-foreground">
-                3-20 characters, letters, numbers, and underscores only
-              </p>
+              <Input
+                id="handle"
+                type="text"
+                value={handle}
+                onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                placeholder="handle"
+                className="h-12 pl-10 text-base text-accent bg-input/50 border-border focus:border-accent"
+                disabled
+                minLength={3}
+                maxLength={20}
+                pattern="^[a-z0-9_]{3,20}$"
+              />
             </div>
+            <p className="text-xs text-muted-foreground">
+              Your handle will be automatically generated from your name
+            </p>
+          </div>
 
-            {/* Submit Button */}
+          {/* Navigation Buttons */}
+          <div className="flex items-center justify-between pt-8">
+            <Button
+              type="button"
+              variant="ghost"
+              size="lg"
+              onClick={handleBack}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <ChevronLeft className="mr-2 h-5 w-5" />
+              Back
+            </Button>
+
             <Button
               type="submit"
               size="lg"
-              className="w-full"
               disabled={!isFormValid || isLoading}
+              className="bg-accent hover:bg-accent/90 text-accent-foreground disabled:opacity-40"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Saving...
                 </>
               ) : (
-                'Next'
+                <>
+                  Continue
+                  <ChevronRight className="ml-2 h-5 w-5" />
+                </>
               )}
             </Button>
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+        </form>
+      </div>
     </div>
   );
 } 

@@ -77,15 +77,19 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Development mode bypass
-    if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-      logger.info('🔥 Development mode: handle checking bypassed')
+    // SECURITY FIX: Removed Firebase API key bypass - handle checking must always validate against real data
+    // Use proper authentication middleware instead
+    
+    // Always check against real Firestore data
+    try {
+      const querySnapshot = await dbAdmin.collection('users')
+        .where('handle', '==', handle.toLowerCase())
+        .limit(1)
+        .get()
       
-      // In dev mode, simulate some handles being taken for testing
-      const takenHandles = ['admin', 'test', 'user', 'hive', 'demo']
-      const available = !takenHandles.includes(handle.toLowerCase())
-      
+      const available = querySnapshot.empty
       let suggestions: string[] = [];
+      
       if (!available) {
         // Generate simple suggestions in dev mode
         const baseHandle = generateBaseHandle(handle);
@@ -97,48 +101,13 @@ export async function POST(request: NextRequest) {
         handle,
         message: available ? 'Handle is available' : 'Handle is already taken',
         suggestions
-      })
-    }
-
-    // Production mode: Check Firestore
-    try {
-      const handleQuery = await dbAdmin.collection('users')
-        .where('handle', '==', handle)
-        .limit(1)
-        .get()
-
-      const available = handleQuery.empty
-      let suggestions: string[] = [];
-
-      // If handle is not available, generate suggestions
-      if (!available) {
-        suggestions = await generateSuggestions(generateBaseHandle(handle));
-      }
-
-      logger.info('Handle availability check:', {
-        handle,
-        available,
-        querySize: handleQuery.size,
-        suggestionsCount: suggestions.length
-      })
-
-      return NextResponse.json({
-        available,
-        handle,
-        message: available ? 'Handle is available' : 'Handle is already taken',
-        suggestions
-      })
-
-    } catch (firestoreError) {
-      logger.error('Firestore handle check failed:', firestoreError)
-      
+      });
+    } catch (error) {
+      console.error('Error checking handle availability:', error);
       return NextResponse.json(
-        { 
-          available: false, 
-          message: 'Unable to check handle availability. Please try again.' 
-        },
+        { error: 'Failed to check handle availability' },
         { status: 500 }
-      )
+      );
     }
 
   } catch (error) {

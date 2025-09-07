@@ -332,7 +332,7 @@ import {
   
   // Tools & Builder
   Wrench, Hammer, Code, Palette, Layers, Grid3X3, 
-  Play, Pause, Square, Volume2, VolumeX,
+  Play,
   
   // University context
   GraduationCap, Book, School, Home as House, Users2,
@@ -344,7 +344,7 @@ import {
   ThumbsUp, ThumbsDown, Star, Send, Reply, Forward,
   
   // System
-  Lock, Unlock, Shield, Key, Database, Server,
+  Lock, Unlock, Shield, Key,
   
   type LucideIcon
 } from "lucide-react";

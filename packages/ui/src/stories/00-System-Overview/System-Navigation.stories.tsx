@@ -32,7 +32,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
+  component: React.Fragment,
   title: '00-Platform Overview/System Navigation',
   parameters: {
     layout: 'fullscreen',

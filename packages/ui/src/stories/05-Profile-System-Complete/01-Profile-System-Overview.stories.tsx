@@ -63,8 +63,9 @@ import {
   Building2
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '05-Profile System/Complete User Flows',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

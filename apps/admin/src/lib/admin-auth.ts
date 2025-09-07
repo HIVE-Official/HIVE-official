@@ -167,18 +167,15 @@ export async function requireAdmin(request: NextRequest): Promise<{
  * Log admin activity
  */
 export async function logAdminActivity(
-  adminId: string,
-  action: string,
-  details?: Record<string, unknown>,
-  ipAddress?: string
+  _adminId: string,
+  _action: string,
+  _details?: Record<string, unknown>,
+  _ipAddress?: string
 ) {
   try {
     // TODO: Implement admin activity logging to database
-    console.log(`[ADMIN] ${adminId} performed ${action}`, {
-      timestamp: new Date().toISOString(),
-      details,
-      ipAddress
-    });
+    // [ADMIN] ${adminId} performed ${action} - timestamp: ${new Date().toISOString()}
+    // ipAddress: ${ipAddress}
   } catch (error) {
     console.error('Failed to log admin activity:', error);
   }

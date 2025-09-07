@@ -158,10 +158,31 @@ function parseEnv() {
       );
     }
     
-    console.warn("⚠️ Environment validation failed in development mode, continuing with warnings");
-    throw new Error(
-      `Environment configuration is invalid. Please check your environment variables.`
-    );
+    console.warn("⚠️ Environment validation failed in development mode, using fallback values");
+    // In development, continue with fallback values instead of throwing
+    return {
+      NODE_ENV: (process.env.NODE_ENV as any) || "development",
+      NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
+      NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
+      NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || "",
+      FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+      FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+      REDIS_URL: process.env.REDIS_URL,
+      REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+      REDIS_USERNAME: process.env.REDIS_USERNAME,
+      UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+      SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+      FROM_EMAIL: process.env.FROM_EMAIL,
+      SENTRY_DSN: process.env.SENTRY_DSN,
+      NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    } as any;
   }
 }
 
@@ -224,17 +245,36 @@ try {
 }
 
 export { env };
+export { skipAuthInDev, skipOnboardingInDev, devBypassEmail };
 
-// Export current environment info
-export const isProduction = env.NODE_ENV === "production";
-export const isDevelopment = env.NODE_ENV === "development";
-export const isStaging = env.NODE_ENV === "staging";
+// Export current environment info with PRODUCTION SAFETY
+export const isProduction = env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+export const isStaging = env.NODE_ENV === "staging" || process.env.VERCEL_ENV === "preview";
 export const isTest = env.NODE_ENV === "test";
+
+// CRITICAL: Bulletproof development detection
+// This MUST be false in production to prevent security issues
+export const isDevelopment = (() => {
+  // Multiple checks to ensure we're REALLY in development
+  const checks = {
+    nodeEnv: env.NODE_ENV === "development",
+    notVercel: !process.env.VERCEL,
+    notVercelProd: process.env.VERCEL_ENV !== "production",
+    localhost: typeof window !== "undefined" && window.location?.hostname === "localhost",
+    port3000: typeof window !== "undefined" && window.location?.port === "3000",
+    noProductionUrl: typeof window !== "undefined" && !window.location?.hostname?.includes("hive")
+  };
+  
+  // Only true if we're definitely in local development
+  return checks.nodeEnv && checks.notVercel && !isProduction;
+})();
+
 export const currentEnvironment = getCurrentEnvironment();
 
-// Dev mode flags - simple client-side check (also enabled in test mode)
-export const skipAuthInDev = isDevelopment || isTest;
-export const skipOnboardingInDev = isDevelopment || isTest;
+// PRODUCTION SAFETY: These flags MUST be false in production
+export const skipAuthInDev = isDevelopment && process.env.NEXT_PUBLIC_DEV_BYPASS === 'true';
+export const skipOnboardingInDev = isDevelopment && process.env.NEXT_PUBLIC_DEV_BYPASS === 'true';
+export const devBypassEmail = 'jwhrineh@buffalo.edu';
 
 // Export whether Firebase Admin is properly configured
 export const isFirebaseAdminConfigured = !!(

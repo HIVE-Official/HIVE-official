@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Badge } from '../../components/ui/badge';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
+  component: React.Fragment,
   title: '00-Token-System-Documentation',
   parameters: {
     docs: {

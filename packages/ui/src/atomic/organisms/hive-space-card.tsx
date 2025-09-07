@@ -194,6 +194,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
           case 'waitlist': return { text: 'Join Waitlist', variant: 'secondary' as const };
           case 'approval_required': return { text: 'Request Access', variant: 'secondary' as const };
           case 'closed': return { text: 'View Details', variant: 'ghost' as const };
+          default: return { text: 'View Details', variant: 'ghost' as const };
         }
         break;
       }
@@ -207,6 +208,8 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
         return { text: 'Join Floor', variant: 'primary' as const };
       case 'student':
         return { text: 'Join Group', variant: 'primary' as const };
+      default:
+        return { text: 'View Details', variant: 'ghost' as const };
     }
   };
 

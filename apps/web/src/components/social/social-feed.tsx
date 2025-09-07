@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Card, Button } from "@hive/ui";
 import { 
   Heart, 
@@ -12,11 +12,22 @@ import {
   Hash,
   ArrowUp,
   Plus,
-  RefreshCw
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
-import { useSession } from '../../hooks/use-session';
 import { useIntersectionObserver } from '../../hooks/use-intersection-observer';
 import { generateDefaultAvatar } from '../../lib/avatar-generator';
+
+// State Management
+import { 
+  useFeedPosts,
+  useLikePost,
+  useBookmarkPost,
+  useSharePost,
+  useUIStore,
+  useAuthStore,
+  useFeedStore
+} from '@hive/hooks';
 
 // Post types and interfaces
 export interface Post {
@@ -87,7 +98,7 @@ export interface FeedFilters {
   spaces: string[];
 }
 
-interface SocialFeedProps {
+interface SocialFeedMigratedProps {
   feedType?: 'home' | 'space' | 'profile';
   spaceId?: string;
   userId?: string;
@@ -95,241 +106,146 @@ interface SocialFeedProps {
   className?: string;
 }
 
-export function SocialFeed({
+export function SocialFeedMigrated({
   feedType = 'home',
   spaceId,
   userId,
   searchQuery = '',
   className = ''
-}: SocialFeedProps) {
-  const { user: _user } = useSession();
-  const [feedState, setFeedState] = useState({
-    posts: [] as Post[],
-    isLoading: true,
-    isLoadingMore: false,
-    hasMore: true,
-    error: null as string | null,
-    lastUpdated: null as Date | null
+}: SocialFeedMigratedProps) {
+  // Global state
+  const { user } = useAuthStore();
+  const { addToast, openModal } = useUIStore();
+  const { filters, setFilters, expandedPosts, togglePostExpanded } = useFeedStore();
+
+  // React Query hooks
+  const { 
+    data: posts, 
+    isLoading, 
+    error, 
+    refetch,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage
+  } = useFeedPosts({
+    feedType,
+    spaceId,
+    userId,
+    searchQuery,
+    filters
   });
-  
-  const [filters, _setFilters] = useState<FeedFilters>({
-    postTypes: [],
-    sortBy: 'recent',
-    timeRange: 'all',
-    spaces: []
-  });
-  
-  const [_showComposerModal, setShowComposerModal] = useState(false);
-  const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
-  
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-  const _isIntersecting = useIntersectionObserver(loadMoreRef);
 
-  // Load initial posts
-  useEffect(() => {
-    const loadPosts = async () => {
-      setFeedState(prev => ({ ...prev, isLoading: true, error: null }));
-      
-      try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Mock data for development
-        const mockPosts: Post[] = [
-          {
-            id: '1',
-            content: 'Just finished building a new study scheduler tool! 📚 It automatically finds free time slots based on your calendar and creates optimal study sessions. Perfect for finals season! #StudyTools #Productivity',
-            type: 'tool',
-            author: {
-              id: 'user1',
-              name: 'Alex Chen',
-              handle: '@alex_codes',
-              avatarUrl: generateDefaultAvatar('user1', { seed: 'Alex Chen', style: 'avataaars' }),
-              isVerified: true,
-              badges: ['early-adopter', 'top-contributor']
-            },
-            createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-            visibility: 'public',
-            spaceId: spaceId,
-            spaceName: spaceId ? 'Computer Science' : undefined,
-            tags: ['StudyTools', 'Productivity'],
-            engagement: {
-              likes: 24,
-              comments: 8,
-              shares: 12,
-              views: 156,
-              hasLiked: false,
-              hasBookmarked: true
-            },
-            comments: [
-              {
-                id: 'c1',
-                content: 'This looks amazing! Can you share the code?',
-                author: {
-                  id: 'user2',
-                  name: 'Sarah Kim',
-                  handle: '@sarahk',
-                  avatarUrl: generateDefaultAvatar('user2', { seed: 'Sarah Kim', style: 'avataaars' })
-                },
-                createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-                likes: 3,
-                hasLiked: false
-              }
-            ]
-          }
-        ];
-        
-        // Apply filters
-        let filteredPosts = mockPosts;
-        
-        // Filter by search query
-        if (searchQuery) {
-          filteredPosts = filteredPosts.filter(post => 
-            post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            post.author.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            post.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-          );
-        }
-        
-        // Filter by feed type
-        if (feedType === 'space' && spaceId) {
-          filteredPosts = filteredPosts.filter(post => post.spaceId === spaceId);
-        } else if (feedType === 'profile' && userId) {
-          filteredPosts = filteredPosts.filter(post => post.author.id === userId);
-        }
-        
-        // Apply filters
-        if (filters.postTypes.length > 0) {
-          filteredPosts = filteredPosts.filter(post => filters.postTypes.includes(post.type));
-        }
-        
-        // Sort posts
-        switch (filters.sortBy) {
-          case 'popular':
-            filteredPosts.sort((a, b) => b.engagement.likes - a.engagement.likes);
-            break;
-          case 'trending':
-            filteredPosts.sort((a, b) => 
-              (b.engagement.likes + b.engagement.comments + b.engagement.shares) - 
-              (a.engagement.likes + a.engagement.comments + a.engagement.shares)
-            );
-            break;
-          case 'recent':
-          default:
-            filteredPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        }
-        
-        setFeedState(prev => ({
-          ...prev,
-          posts: filteredPosts,
-          isLoading: false,
-          lastUpdated: new Date()
-        }));
-        
-      } catch (error) {
-        setFeedState(prev => ({
-          ...prev,
-          isLoading: false,
-          error: error instanceof Error ? error.message : 'Failed to load posts'
-        }));
-      }
-    };
+  const likePost = useLikePost();
+  const bookmarkPost = useBookmarkPost();
+  const sharePost = useSharePost();
 
-    loadPosts();
-  }, [feedType, spaceId, userId, searchQuery, filters]);
+  // Infinite scroll
+  const loadMoreRef = React.useRef<HTMLDivElement>(null);
+  const isIntersecting = useIntersectionObserver(loadMoreRef);
 
+  React.useEffect(() => {
+    if (isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [isIntersecting, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Handlers
   const handleLike = useCallback((postId: string) => {
-    setFeedState(prev => ({
-      ...prev,
-      posts: prev.posts.map(post => 
-        post.id === postId 
-          ? {
-              ...post,
-              engagement: {
-                ...post.engagement,
-                likes: post.engagement.hasLiked 
-                  ? post.engagement.likes - 1 
-                  : post.engagement.likes + 1,
-                hasLiked: !post.engagement.hasLiked
-              }
-            }
-          : post
-      )
-    }));
-  }, []);
+    if (!user) {
+      addToast({
+        title: 'Authentication Required',
+        description: 'Please log in to like posts',
+        type: 'error',
+      });
+      return;
+    }
+
+    likePost.mutate(postId, {
+      onError: (error) => {
+        addToast({
+          title: 'Failed to like post',
+          description: error.message || 'Something went wrong',
+          type: 'error',
+        });
+      },
+    });
+  }, [user, likePost, addToast]);
 
   const handleBookmark = useCallback((postId: string) => {
-    setFeedState(prev => ({
-      ...prev,
-      posts: prev.posts.map(post => 
-        post.id === postId 
-          ? {
-              ...post,
-              engagement: {
-                ...post.engagement,
-                hasBookmarked: !post.engagement.hasBookmarked
-              }
-            }
-          : post
-      )
-    }));
-  }, []);
+    if (!user) {
+      addToast({
+        title: 'Authentication Required',
+        description: 'Please log in to bookmark posts',
+        type: 'error',
+      });
+      return;
+    }
+
+    bookmarkPost.mutate(postId, {
+      onSuccess: (data) => {
+        addToast({
+          title: data.isBookmarked ? 'Bookmarked' : 'Removed from bookmarks',
+          description: data.isBookmarked ? 'Post saved to your bookmarks' : 'Post removed from bookmarks',
+          type: 'success',
+        });
+      },
+      onError: (error) => {
+        addToast({
+          title: 'Failed to bookmark post',
+          description: error.message || 'Something went wrong',
+          type: 'error',
+        });
+      },
+    });
+  }, [user, bookmarkPost, addToast]);
 
   const handleShare = useCallback((postId: string) => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'HIVE Post',
-        url: `${window.location.origin}/post/${postId}`
-      }).catch(() => {
-        // Fallback to clipboard
-        navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
-      });
-    } else {
-      navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
-    }
-  }, []);
-
-  const toggleExpanded = useCallback((postId: string) => {
-    setExpandedPosts(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(postId)) {
-        newSet.delete(postId);
-      } else {
-        newSet.add(postId);
-      }
-      return newSet;
+    sharePost.mutate(postId, {
+      onSuccess: () => {
+        addToast({
+          title: 'Shared!',
+          description: 'Post has been shared to your profile',
+          type: 'success',
+        });
+      },
+      onError: (error) => {
+        addToast({
+          title: 'Failed to share post',
+          description: error.message || 'Something went wrong',
+          type: 'error',
+        });
+      },
     });
-  }, []);
+  }, [sharePost, addToast]);
 
-  const formatTimeAgo = useCallback((timestamp: string) => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
-    
-    if (days > 0) return `${days}d ago`;
-    if (hours > 0) return `${hours}h ago`;
-    return 'Just now';
-  }, []);
+  const handleCommentClick = useCallback((postId: string) => {
+    openModal('comments', { postId });
+  }, [openModal]);
 
-  const refreshFeed = useCallback(() => {
-    setFeedState(prev => ({ ...prev, posts: [], hasMore: true }));
-  }, []);
+  const handleCreatePost = useCallback(() => {
+    openModal('create-post', { spaceId, feedType });
+  }, [openModal, spaceId, feedType]);
 
-  if (feedState.error) {
+  // Loading state
+  if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <User className="h-6 w-6 text-[var(--hive-text-inverse)]" />
-          </div>
-          <p className="text-[var(--hive-text-inverse)] mb-2">Failed to load feed</p>
-          <p className="text-red-400 text-sm">{feedState.error}</p>
-          <Button 
-            onClick={refreshFeed} 
-            className="mt-4 bg-hive-gold text-hive-obsidian"
-          >
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 text-accent animate-spin" />
+          <p className="text-muted-foreground">Loading feed...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-3">
+          <p className="text-destructive">Failed to load feed</p>
+          <Button onClick={() => refetch()} variant="outline">
+            <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
           </Button>
         </div>
@@ -337,184 +253,214 @@ export function SocialFeed({
     );
   }
 
-  if (feedState.isLoading) {
-    return (
-      <div className="space-y-6">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i} className="p-6 animate-pulse">
-            <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-hive-surface-elevated rounded-full" />
-              <div className="flex-1 space-y-2">
-                <div className="h-4 w-32 bg-hive-surface-elevated rounded" />
-                <div className="h-3 w-24 bg-hive-surface-elevated rounded" />
-                <div className="space-y-2 mt-4">
-                  <div className="h-4 w-full bg-hive-surface-elevated rounded" />
-                  <div className="h-4 w-3/4 bg-hive-surface-elevated rounded" />
+  const allPosts = posts?.pages?.flatMap(page => page.posts) || [];
+
+  return (
+    <div className={`space-y-4 ${className}`}>
+      {/* Create Post Button */}
+      <Card className="p-4">
+        <Button
+          onClick={handleCreatePost}
+          variant="outline"
+          className="w-full justify-start text-muted-foreground"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          What's on your mind?
+        </Button>
+      </Card>
+
+      {/* Posts Feed */}
+      <div className="space-y-4">
+        {allPosts.map((post) => (
+          <Card key={post.id} className="overflow-hidden">
+            {/* Post Header */}
+            <div className="p-4 flex items-start justify-between">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-muted">
+                  {post.author.avatarUrl ? (
+                    <img 
+                      src={post.author.avatarUrl} 
+                      alt={post.author.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <User className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <div className="flex items-center gap-1">
+                    <span className="font-medium">{post.author.name}</span>
+                    {post.author.isVerified && (
+                      <span className="text-blue-500 text-xs">✓</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>{post.author.handle}</span>
+                    <span>·</span>
+                    <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                  </div>
                 </div>
               </div>
+              <Button variant="ghost" size="sm">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
             </div>
+
+            {/* Post Content */}
+            <div className="px-4 pb-3">
+              <p className={`text-sm ${expandedPosts.has(post.id) ? '' : 'line-clamp-3'}`}>
+                {post.content}
+              </p>
+              {post.content.length > 200 && (
+                <button
+                  onClick={() => togglePostExpanded(post.id)}
+                  className="text-sm text-accent hover:underline mt-1"
+                >
+                  {expandedPosts.has(post.id) ? 'Show less' : 'Show more'}
+                </button>
+              )}
+            </div>
+
+            {/* Post Tags */}
+            {post.tags && post.tags.length > 0 && (
+              <div className="px-4 pb-3 flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center text-xs text-accent hover:underline cursor-pointer"
+                  >
+                    <Hash className="h-3 w-3" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Engagement Bar */}
+            <div className="px-4 py-2 border-t flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => handleLike(post.id)}
+                  className={`flex items-center gap-1 text-sm transition-colors ${
+                    post.engagement.hasLiked 
+                      ? 'text-red-500' 
+                      : 'text-muted-foreground hover:text-red-500'
+                  }`}
+                  disabled={likePost.isPending}
+                >
+                  <Heart 
+                    className={`h-4 w-4 ${post.engagement.hasLiked ? 'fill-current' : ''}`} 
+                  />
+                  <span>{post.engagement.likes}</span>
+                </button>
+
+                <button
+                  onClick={() => handleCommentClick(post.id)}
+                  className="flex items-center gap-1 text-sm text-muted-foreground hover:text-accent transition-colors"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>{post.engagement.comments}</span>
+                </button>
+
+                <button
+                  onClick={() => handleShare(post.id)}
+                  className="flex items-center gap-1 text-sm text-muted-foreground hover:text-accent transition-colors"
+                  disabled={sharePost.isPending}
+                >
+                  <Share className="h-4 w-4" />
+                  <span>{post.engagement.shares}</span>
+                </button>
+              </div>
+
+              <button
+                onClick={() => handleBookmark(post.id)}
+                className={`text-sm transition-colors ${
+                  post.engagement.hasBookmarked 
+                    ? 'text-accent' 
+                    : 'text-muted-foreground hover:text-accent'
+                }`}
+                disabled={bookmarkPost.isPending}
+              >
+                <Bookmark 
+                  className={`h-4 w-4 ${post.engagement.hasBookmarked ? 'fill-current' : ''}`} 
+                />
+              </button>
+            </div>
+
+            {/* Comments Preview */}
+            {post.comments.length > 0 && (
+              <div className="px-4 py-2 border-t">
+                <div className="text-xs text-muted-foreground mb-2">
+                  {post.comments.length} comment{post.comments.length !== 1 ? 's' : ''}
+                </div>
+                {post.comments.slice(0, 2).map((comment) => (
+                  <div key={comment.id} className="mb-2">
+                    <div className="flex items-start gap-2">
+                      <div className="w-6 h-6 rounded-full bg-muted flex-shrink-0" />
+                      <div className="flex-1">
+                        <span className="font-medium text-sm">{comment.author.name}</span>
+                        <p className="text-sm text-muted-foreground">{comment.content}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {post.comments.length > 2 && (
+                  <button
+                    onClick={() => handleCommentClick(post.id)}
+                    className="text-xs text-accent hover:underline"
+                  >
+                    View all comments
+                  </button>
+                )}
+              </div>
+            )}
           </Card>
         ))}
       </div>
-    );
-  }
 
-  return (
-    <div className={`space-y-6 ${className}`}>
-      {/* Feed Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-hive-text-primary">
-          {feedType === 'home' ? 'Your Feed' : 
-           feedType === 'space' ? 'Space Feed' : 
-           'Profile Posts'}
-        </h2>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowComposerModal(true)}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Post
-          </Button>
-        </div>
-      </div>
-
-      {/* Posts */}
-      <div className="space-y-6">
-        {feedState.posts.map((post) => {
-          const isExpanded = expandedPosts.has(post.id);
-          const shouldTruncate = post.content.length > 300;
-          const displayContent = shouldTruncate && !isExpanded 
-            ? post.content.slice(0, 300) + '...' 
-            : post.content;
-
-          return (
-            <Card key={post.id} className="p-6 hover:bg-hive-background-interactive transition-colors">
-              {/* Post Header */}
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-hive-gold to-hive-brand-secondary rounded-full flex items-center justify-center">
-                    <span className="text-sm font-bold text-hive-obsidian">
-                      {post.author.name.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <h3 className="font-semibold text-hive-text-primary">
-                        {post.author.name}
-                      </h3>
-                      {post.author.isVerified && (
-                        <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                          <User className="h-2 w-2 text-[var(--hive-text-inverse)]" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-sm text-hive-text-secondary">
-                      {post.author.handle} • {formatTimeAgo(post.createdAt)}
-                    </p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </div>
-
-              {/* Post Content */}
-              <div className="mb-4">
-                <p className="text-hive-text-primary whitespace-pre-wrap">
-                  {displayContent}
-                </p>
-                {shouldTruncate && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                    onClick={() => toggleExpanded(post.id)}
-                  >
-                    {isExpanded ? 'Show less' : 'Show more'}
-                  </Button>
-                )}
-              </div>
-
-              {/* Post Tags */}
-              {post.tags && post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-hive-gold/20 text-hive-gold"
-                    >
-                      <Hash className="h-3 w-3 mr-1" />
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Engagement Bar */}
-              <div className="flex items-center justify-between pt-4 border-t border-hive-border-subtle">
-                <div className="flex items-center space-x-6">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleLike(post.id)}
-                    className={post.engagement.hasLiked ? '!text-red-400 !border-red-400' : ''}
-                  >
-                    <Heart className={`h-4 w-4 mr-2 ${post.engagement.hasLiked ? 'fill-current' : ''}`} />
-                    {post.engagement.likes}
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    {post.engagement.comments}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare(post.id)}
-                  >
-                    <Share className="h-4 w-4 mr-2" />
-                    {post.engagement.shares}
-                  </Button>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleBookmark(post.id)}
-                  className={post.engagement.hasBookmarked ? '!text-hive-gold !border-hive-gold' : ''}
-                >
-                  <Bookmark className={`h-4 w-4 ${post.engagement.hasBookmarked ? 'fill-current' : ''}`} />
-                </Button>
-              </div>
-            </Card>
-          );
-        })}
-
-        {/* Load More */}
-        {feedState.hasMore && (
-          <div ref={loadMoreRef} className="text-center py-8">
-            {feedState.isLoadingMore ? (
-              <div className="flex items-center justify-center">
-                <RefreshCw className="h-5 w-5 animate-spin mr-2" />
-                <span>Loading more posts...</span>
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-hive-text-secondary">You&apos;ve reached the end!</p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={refreshFeed}
-                  className="mt-2"
-                >
-                  <ArrowUp className="h-4 w-4 mr-2" />
-                  Back to Top
-                </Button>
-              </div>
-            )}
+      {/* Load More Indicator */}
+      <div ref={loadMoreRef} className="py-4">
+        {isFetchingNextPage && (
+          <div className="flex justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        )}
+        {!hasNextPage && allPosts.length > 0 && (
+          <div className="text-center text-muted-foreground text-sm">
+            No more posts to load
           </div>
         )}
       </div>
+
+      {/* Empty State */}
+      {allPosts.length === 0 && (
+        <Card className="p-12">
+          <div className="text-center space-y-3">
+            <div className="w-12 h-12 rounded-full bg-muted mx-auto flex items-center justify-center">
+              <Hash className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <h3 className="font-medium">No posts yet</h3>
+            <p className="text-sm text-muted-foreground">
+              Be the first to share something with the community
+            </p>
+            <Button onClick={handleCreatePost}>
+              <Plus className="h-4 w-4 mr-2" />
+              Create Post
+            </Button>
+          </div>
+        </Card>
+      )}
+
+      {/* Scroll to Top Button */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-6 right-6 p-3 rounded-full bg-accent text-white shadow-lg hover:shadow-xl transition-all"
+        aria-label="Scroll to top"
+      >
+        <ArrowUp className="h-5 w-5" />
+      </button>
     </div>
   );
 }

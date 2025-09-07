@@ -442,6 +442,7 @@ export async function executeOnboardingTransaction(
           builderRequestSpaces: onboardingData.builderRequestSpaces,
           consentGiven: onboardingData.consentGiven,
           consentGivenAt: now,
+          onboardingCompleted: true,
           onboardingCompletedAt: now,
           updatedAt: now,
         };

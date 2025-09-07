@@ -1,88 +1,79 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
-import { useUnifiedAuth } from '@hive/ui';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Button } from '@hive/ui';
 
 /**
- * HIVE Root Page - Clean Firebase Authentication Router
- * 
- * Simple, reliable routing based on Firebase auth state:
- * - No authentication → Schools page
- * - Authenticated + needs onboarding → Onboarding
- * - Authenticated + completed → Profile (dashboard)
- * 
- * NO development bypasses or complex logic
+ * HIVE Entry Page
+ * Simple, minimal entry page with liquid button animations
  */
-export default function RootPage() {
+export default function EntryPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading, requiresOnboarding, devLogin } = useUnifiedAuth();
-  
-  // Development mode detection
-  const isDev = process.env.NODE_ENV === "development";
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Wait for auth to finish loading
-    if (isLoading) return;
+    setMounted(true);
+  }, []);
 
-    console.log('🏠 Root page routing:', { 
-      isAuthenticated, 
-      requiresOnboarding: requiresOnboarding(),
-      isDev 
-    });
+  if (!mounted) return null;
 
-    // Development: Auto-login with dev user if not authenticated
-    if (isDev && !isAuthenticated && devLogin) {
-      
-      devLogin('student')
-        .then(() => {
-          
-        })
-        .catch((error) => {
-          console.error('🔧 Dev login failed:', error);
-          router.push('/schools');
-        });
-      return;
-    }
-
-    // Not authenticated - redirect to schools selection
-    if (!isAuthenticated) {
-      
-      router.push('/schools');
-      return;
-    }
-
-    // User needs onboarding
-    if (requiresOnboarding()) {
-      
-      router.push('/onboarding');
-      return;
-    }
-
-    // Authenticated and onboarded - redirect to profile dashboard
-    
-    router.replace('/profile');
-
-  }, [isLoading, isAuthenticated, requiresOnboarding, router, isDev, devLogin]);
-
-  // Show loading while auth is initializing
   return (
-    <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <Loader2 className="h-12 w-12 text-[var(--hive-brand-primary)] animate-spin mx-auto" />
-        <div className="space-y-2">
-          <h2 className="text-xl font-semibold">Welcome to HIVE</h2>
-          <p className="text-[var(--hive-text-muted)]">
-            {isLoading ? 'Checking your authentication...' : 'Redirecting...'}
+    <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center px-4">
+      <div className="text-center max-w-md w-full">
+        {/* HIVE Logo */}
+        <div className="flex justify-center mb-8">
+          <Image
+            src="/assets/hive-logo-white.svg"
+            alt="HIVE"
+            width={80}
+            height={80}
+            className="w-20 h-20"
+            priority
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "/assets/whitelogo.svg";
+            }}
+          />
+        </div>
+
+        {/* Brand Name */}
+        <h1 className="text-5xl font-black text-white mb-2 tracking-tight">
+          HIVE
+        </h1>
+        
+        {/* Tagline */}
+        <p className="text-lg text-white/60 mb-12">
+          Your Campus, Connected
+        </p>
+
+        {/* Single Primary Action */}
+        <div className="max-w-xs mx-auto">
+          <Link href="/schools" className="block">
+            <Button 
+              variant="accent"
+              className="w-full"
+            >
+              Get Started
+            </Button>
+          </Link>
+          
+          {/* Simple text link for returning users */}
+          <p className="text-sm text-white/40 mt-6 text-center">
+            <Link href="/auth/login" className="hover:text-white transition-colors underline-offset-4 hover:underline">
+              Sign In
+            </Link>
           </p>
-          {isDev && (
-            <p className="text-xs text-[var(--hive-text-muted)] mt-4">
-              🔧 Development Mode Active
-            </p>
-          )}
         </div>
       </div>
+
+      {/* Subtle Background Gradient */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#FFD700] rounded-full blur-[200px] opacity-[0.02]" />
+      </div>
+
     </div>
   );
 }

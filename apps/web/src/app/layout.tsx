@@ -5,6 +5,7 @@ import "./globals.css";
 import { WelcomeMatProvider } from "../components/welcome-mat-provider";
 import { FeedbackToast } from "../components/feedback-toast";
 import { ErrorBoundary } from "../components/error-boundary";
+import { ProductionSafetyCheck } from "../components/dev/ProductionSafetyCheck";
 
 // Using Geist Sans via CSS import in globals.css instead of Next.js font optimization
 // to match the HIVE design system approach
@@ -37,6 +38,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <ErrorBoundary>
+          <ProductionSafetyCheck />
           <Providers>
             <WelcomeMatProvider>{children}</WelcomeMatProvider>
             <FeedbackToast />

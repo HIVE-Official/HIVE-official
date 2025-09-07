@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Button } from '@hive/ui';
 import { 
   User,
@@ -13,51 +13,25 @@ import {
   Sparkles
 } from 'lucide-react';
 import Image from 'next/image';
-
-interface ProfileData {
-  id: string;
-  fullName?: string;
-  handle?: string;
-  email: string;
-  avatarUrl?: string;
-  bio?: string;
-  major?: string;
-  graduationYear?: number;
-  completionPercentage: number;
-}
+import { useProfileModern, type ProfileData } from '@hive/hooks';
 
 interface IdentityCardProps {
   profile: ProfileData | null;
-  onUpdate: (updates: Partial<ProfileData>) => void;
+  onUpdate: (updates: Partial<ProfileData>) => Promise<void>;
   isUnlocked: boolean;
 }
 
 export function IdentityCard({ profile, onUpdate, isUnlocked }: IdentityCardProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const { isEditing, setEditing, uploadPhoto, loading } = useProfileModern();
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !profile) return;
 
-    setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('avatar', file);
-
-      const response = await fetch('/api/profile/avatar', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        onUpdate({ avatarUrl: data.avatarUrl });
-      }
+      await uploadPhoto(file);
     } catch (error) {
       console.error('Error uploading avatar:', error);
-    } finally {
-      setIsUploading(false);
     }
   };
 
@@ -125,10 +99,10 @@ export function IdentityCard({ profile, onUpdate, isUnlocked }: IdentityCardProp
           {/* Photo upload button */}
           <button
             onClick={triggerPhotoUpload}
-            disabled={isUploading}
+            disabled={loading.uploading}
             className="absolute -bottom-2 -right-2 w-8 h-8 bg-accent text-accent-foreground rounded-full flex items-center justify-center hover:bg-accent/80 transition-colors"
           >
-            {isUploading ? (
+            {loading.uploading ? (
               <div className="w-4 h-4 border-2 border-accent-foreground border-t-transparent rounded-full animate-spin" />
             ) : (
               <Camera className="h-4 w-4" />
@@ -185,7 +159,7 @@ export function IdentityCard({ profile, onUpdate, isUnlocked }: IdentityCardProp
       {/* Action buttons */}
       <div className="mt-6 space-y-2">
         <Button 
-          onClick={() => setIsEditing(true)}
+          onClick={() => setEditing(true)}
           variant="outline" 
           className="w-full"
           size="sm"

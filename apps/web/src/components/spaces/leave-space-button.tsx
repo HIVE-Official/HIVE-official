@@ -2,11 +2,16 @@
 
 import { useState } from 'react';
 import { Button } from "@hive/ui";
-import { LogOut } from "lucide-react";
-import { useModalHelpers } from '../ui/modal-system';
-import { useUnifiedAuth } from '@hive/ui';
+import { LogOut, Loader2 } from "lucide-react";
 
-interface LeaveSpaceButtonProps {
+// State Management
+import { 
+  useLeaveSpace,
+  useUIStore,
+  useAuthStore
+} from '@hive/hooks';
+
+interface LeaveSpaceButtonMigratedProps {
   spaceId: string;
   spaceName: string;
   spaceType: string;
@@ -15,17 +20,20 @@ interface LeaveSpaceButtonProps {
   className?: string;
 }
 
-export function LeaveSpaceButton({
+export function LeaveSpaceButtonMigrated({
   spaceId,
   spaceName,
   spaceType,
   userRole = 'member',
   onLeave,
   className
-}: LeaveSpaceButtonProps) {
-  const [isLeaving, setIsLeaving] = useState(false);
-  const { confirm } = useModalHelpers();
-  const { user } = useUnifiedAuth();
+}: LeaveSpaceButtonMigratedProps) {
+  // Global state
+  const { addToast, showConfirm } = useUIStore();
+  const { user } = useAuthStore();
+  
+  // React Query mutations
+  const leaveSpace = useLeaveSpace();
 
   const isGreekLife = spaceType === 'greek_life';
   const isImportantRole = userRole === 'owner' || userRole === 'admin';
@@ -43,7 +51,7 @@ export function LeaveSpaceButton({
       message += `\n\nYou are currently ${userRole === 'owner' ? 'the owner' : 'an admin'} of this space. Consider transferring your role before leaving.`;
     }
 
-    confirm({
+    showConfirm({
       title: 'Leave Space',
       message,
       confirmText: 'Leave Space',
@@ -54,38 +62,37 @@ export function LeaveSpaceButton({
   };
 
   const handleConfirmLeave = async () => {
-    if (!user) return;
-    
-    setIsLeaving(true);
-    
-    try {
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.id === 'dev_user_123' ? 'test-token' : 'user-token'}`
-      };
-
-      const response = await fetch('/api/spaces/leave', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ spaceId })
+    if (!user) {
+      addToast({
+        title: 'Authentication Required',
+        description: 'Please log in to leave this space',
+        type: 'error',
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to leave space');
-      }
-
-      // Call onLeave callback if provided
-      onLeave?.();
-      
-      // Redirect to spaces page
-      window.location.href = '/spaces';
-    } catch (error: any) {
-      // Use alert for now, could use toast notification system later
-      alert(error.message || 'Failed to leave space');
-    } finally {
-      setIsLeaving(false);
+      return;
     }
+    
+    leaveSpace.mutate(spaceId, {
+      onSuccess: () => {
+        addToast({
+          title: 'Left Space',
+          description: `You have successfully left ${spaceName}`,
+          type: 'success',
+        });
+        
+        // Call onLeave callback if provided
+        onLeave?.();
+        
+        // Redirect to spaces page
+        window.location.href = '/spaces';
+      },
+      onError: (error) => {
+        addToast({
+          title: 'Failed to leave space',
+          description: error.message || 'Something went wrong',
+          type: 'error',
+        });
+      },
+    });
   };
 
   const getWarningMessage = () => {
@@ -101,18 +108,24 @@ export function LeaveSpaceButton({
   };
 
   return (
-    <>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleLeaveClick}
-        className={`border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 ${className}`}
-        disabled={isLeaving}
-      >
-        <LogOut className="h-4 w-4 mr-2" />
-        Leave Space
-      </Button>
-
-    </>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={handleLeaveClick}
+      className={`border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 ${className}`}
+      disabled={leaveSpace.isPending}
+    >
+      {leaveSpace.isPending ? (
+        <>
+          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          Leaving...
+        </>
+      ) : (
+        <>
+          <LogOut className="h-4 w-4 mr-2" />
+          Leave Space
+        </>
+      )}
+    </Button>
   );
 }

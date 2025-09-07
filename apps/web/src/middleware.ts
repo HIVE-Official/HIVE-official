@@ -6,6 +6,7 @@ import type { NextRequest } from 'next/server';
  * 
  * Lightweight middleware that works in Edge Runtime
  * Firebase token verification is delegated to API routes
+ * Updated: Added test-firebase route for development debugging
  */
 
 // Security logging for production
@@ -19,11 +20,6 @@ function logSecurityEvent(event: string, details: any): void {
 // Basic token format validation (detailed verification happens in API routes)
 function hasValidTokenFormat(token: string): boolean {
   if (!token || typeof token !== 'string') return false;
-  
-  // Development token format
-  if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_') && token.length > 20) {
-    return true;
-  }
   
   // JWT token format (both Firebase production and emulator)
   if (token.includes('.')) {
@@ -45,6 +41,12 @@ function hasValidTokenFormat(token: string): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
+  // Development bypass when NEXT_PUBLIC_DEV_BYPASS=true
+  if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DEV_BYPASS === 'true') {
+    // Skip all auth checks in dev bypass mode
+    return NextResponse.next();
+  }
+  
   // Allow static files and Next.js internals
   if (
     pathname.startsWith('/_next') ||
@@ -59,23 +61,25 @@ export async function middleware(request: NextRequest) {
   // Public routes that don't require authentication
   const publicRoutes = [
     '/schools',
+    '/signin',
     '/auth/login', 
+    '/auth/quick-signin',
     '/auth/verify',
     '/auth/expired',
     '/landing',
     '/waitlist',
-    // Development routes (only in development)
-    ...(process.env.NODE_ENV === 'development' ? ['/debug-auth', '/dev-login', '/profile-dev'] : [])
+    '/onboarding'  // Allow onboarding pages
   ];
   
-  if (publicRoutes.some(route => pathname.startsWith(route))) {
+  // Check exact match for root path
+  if (pathname === '/' || publicRoutes.some(route => pathname.startsWith(route))) {
     return NextResponse.next();
   }
 
   // API routes authentication
   if (pathname.startsWith('/api/')) {
     // Public API endpoints
-    const publicApiRoutes = ['/api/health', '/api/auth/', '/api/schools', '/api/campus/detect'];
+    const publicApiRoutes = ['/api/health', '/api/auth/', '/api/schools', '/api/campus/detect', '/api/spaces/search-mock', '/api/spaces/status', '/api/spaces/diagnostic'];
     
     if (publicApiRoutes.some(route => pathname.startsWith(route))) {
       return NextResponse.next();
@@ -136,8 +140,6 @@ export async function middleware(request: NextRequest) {
 
   // No session token - redirect to login
   if (!sessionToken) {
-    // No session token, redirecting to schools page
-    
     const loginUrl = new URL('/schools', request.url);
     loginUrl.searchParams.set('returnTo', pathname);
     return NextResponse.redirect(loginUrl);

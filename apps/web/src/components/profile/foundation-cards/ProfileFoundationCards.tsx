@@ -1,234 +1,29 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { Card } from '@hive/ui';
 import { IdentityCard } from './IdentityCard';
 import { CampusConnectionCard } from './CampusConnectionCard';
 import { ProfileStrengthCard } from './ProfileStrengthCard';
 import { useSession } from '@/hooks/use-session';
-// Firebase imports - will fallback to API if not available
-let db: any;
-let doc: any;
-let onSnapshot: any;
-let collection: any;
-let query: any;
-let where: any;
-let orderBy: any;
-
-try {
-  const firebaseClient = require('@/lib/firebase-client');
-  const firestore = require('firebase/firestore');
-  
-  db = firebaseClient.db;
-  doc = firestore.doc;
-  onSnapshot = firestore.onSnapshot;
-  collection = firestore.collection;
-  query = firestore.query;
-  where = firestore.where;
-  orderBy = firestore.orderBy;
-} catch (error) {
-  console.warn('Firebase client not available, falling back to API mode');
-}
-
-interface ProfileData {
-  // Basic profile info
-  id: string;
-  fullName?: string;
-  handle?: string;
-  email: string;
-  avatarUrl?: string;
-  bio?: string;
-  major?: string;
-  graduationYear?: number;
-  onboardingCompleted: boolean;
-  // Completion tracking
-  completedFields: string[];
-  completionPercentage: number;
-}
-
-interface SpaceMembership {
-  spaceId: string;
-  spaceName: string;
-  spaceType: string;
-  memberCount: number;
-  role: 'member' | 'moderator' | 'admin' | 'builder';
-  status: 'active' | 'inactive' | 'pending';
-  activityLevel: 'high' | 'medium' | 'low';
-  recentActivity: {
-    posts: number;
-    interactions: number;
-    timeSpent: number;
-  };
-}
-
-interface CardUnlockStatus {
-  identity: boolean; // Always unlocked
-  campusConnection: boolean; // Unlocked after basic profile completion
-  profileStrength: boolean; // Always unlocked
-  // Future cards will be added here
-}
+import { useProfileModern } from '@hive/hooks';
 
 export function ProfileFoundationCards() {
   const { user } = useSession();
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [spaces, setSpaces] = useState<SpaceMembership[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [unlockStatus, setUnlockStatus] = useState<CardUnlockStatus>({
-    identity: true,
-    campusConnection: false,
-    profileStrength: true
-  });
+  
+  // Modern hook replaces all useState/useEffect logic
+  const {
+    profile,
+    spaces,
+    unlocks,
+    loading,
+    errors,
+    completionPercentage,
+    nextSteps,
+    updateProfile,
+  } = useProfileModern();
 
-  // Set up real-time Firebase listeners or fallback to API
-  useEffect(() => {
-    if (!user) return;
-    
-    // Check if Firebase is available for real-time updates
-    if (db && doc && onSnapshot && collection && query && where && orderBy) {
-      // Firebase subscription cleanup functions will be created below
-      
-      // Real-time profile listener
-      const profileDocRef = doc(db, 'users', user.uid);
-      const unsubscribeProfile = onSnapshot(profileDocRef, (doc) => {
-        if (doc.exists()) {
-          const profileData = { id: doc.id, ...doc.data() };
-          
-          // Calculate completion
-          const requiredFields = ['fullName', 'handle', 'bio', 'major', 'avatarUrl'];
-          const completedFields = requiredFields.filter(field => profileData[field as keyof typeof profileData]);
-          const completionPercentage = Math.round((completedFields.length / requiredFields.length) * 100);
-          
-          setProfile({
-            ...profileData,
-            completedFields,
-            completionPercentage
-          } as ProfileData);
-        }
-        setIsLoading(false);
-      }, (error) => {
-        console.error('Error fetching profile:', error);
-        // Fallback to API call
-        fetchProfileData();
-      });
-      
-      // Real-time spaces listener  
-      const spacesQuery = query(
-        collection(db, 'members'),
-        where('userId', '==', user.uid),
-        orderBy('lastActivity', 'desc')
-      );
-      
-      const unsubscribeSpaces = onSnapshot(spacesQuery, async (snapshot) => {
-        const memberships = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        // Transform to expected format - in a real app, you'd want to join with spaces collection
-        const spaceMemberships: SpaceMembership[] = memberships.map(membership => ({
-          spaceId: membership.spaceId || membership.id,
-          spaceName: membership.spaceName || 'Loading...',
-          spaceType: membership.spaceType || 'community',
-          memberCount: membership.memberCount || 0,
-          role: membership.role || 'member',
-          status: membership.status || 'active',
-          activityLevel: membership.activityLevel || 'medium',
-          recentActivity: membership.recentActivity || {
-            posts: 0,
-            interactions: 0,
-            timeSpent: 0
-          }
-        }));
-        
-        setSpaces(spaceMemberships);
-        setIsLoading(false);
-      }, (error) => {
-        console.error('Error fetching spaces:', error);
-        // Fallback to API call
-        fetchSpaceData();
-      });
-      
-      return () => {
-        unsubscribeProfile?.();
-        unsubscribeSpaces?.();
-      };
-    } else {
-      // Firebase not available, use API calls directly
-      console.log('Using API mode for profile data');
-      fetchProfileData();
-      fetchSpaceData();
-    }
-  }, [user]);
-
-  // Update unlock status based on profile completion
-  useEffect(() => {
-    if (!profile) return;
-
-    const hasBasicInfo = profile.fullName && profile.handle && profile.bio;
-    
-    setUnlockStatus(prev => ({
-      ...prev,
-      campusConnection: hasBasicInfo || spaces.length > 0
-    }));
-  }, [profile, spaces]);
-
-  const fetchProfileData = async () => {
-    try {
-      const response = await fetch('/api/profile/me');
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Calculate completion
-        const requiredFields = ['fullName', 'handle', 'bio', 'major', 'avatarUrl'];
-        const completedFields = requiredFields.filter(field => data.profile[field]);
-        const completionPercentage = Math.round((completedFields.length / requiredFields.length) * 100);
-        
-        setProfile({
-          ...data.profile,
-          completedFields,
-          completionPercentage
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
-
-  const fetchSpaceData = async () => {
-    try {
-      const response = await fetch('/api/profile/spaces?includeActivity=true&timeRange=week');
-      if (response.ok) {
-        const data = await response.json();
-        setSpaces(data.memberships || []);
-      }
-    } catch (error) {
-      console.error('Error fetching spaces:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleProfileUpdate = useCallback(async (updatedProfile: Partial<ProfileData>) => {
-    // Optimistically update local state
-    setProfile(prev => prev ? { ...prev, ...updatedProfile } : null);
-    
-    // Send update to API
-    if (user) {
-      try {
-        const response = await fetch('/api/profile/me', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedProfile)
-        });
-        
-        if (!response.ok) {
-          console.error('Failed to update profile');
-          // Revert optimistic update on failure
-          fetchProfileData();
-        }
-      } catch (error) {
-        console.error('Error updating profile:', error);
-        fetchProfileData();
-      }
-    }
-  }, [user]);
+  const isLoading = loading.profile || loading.spaces;
 
   if (!user) {
     return (
@@ -276,7 +71,7 @@ export function ProfileFoundationCards() {
             <div className="text-right">
               <div className="text-sm text-muted-foreground">Profile Strength</div>
               <div className="text-lg font-semibold text-accent">
-                {profile?.completionPercentage || 0}%
+                {completionPercentage}%
               </div>
             </div>
           </div>
@@ -289,8 +84,8 @@ export function ProfileFoundationCards() {
           {/* Foundation Card 1: Identity (Always Visible) */}
           <IdentityCard 
             profile={profile}
-            onUpdate={handleProfileUpdate}
-            isUnlocked={unlockStatus.identity}
+            onUpdate={updateProfile}
+            isUnlocked={unlocks.identity}
           />
 
           {/* Foundation Card 2: Campus Connection (Unlocks with basic info) */}
@@ -298,38 +93,18 @@ export function ProfileFoundationCards() {
             spaces={spaces}
             totalSpaces={spaces.length}
             activeSpaces={spaces.filter(s => s.activityLevel !== 'low').length}
-            isUnlocked={unlockStatus.campusConnection}
-            onUnlock={() => setUnlockStatus(prev => ({ ...prev, campusConnection: true }))}
+            isUnlocked={unlocks.campusConnection}
           />
 
           {/* Foundation Card 3: Profile Strength (Always Visible) */}
           <ProfileStrengthCard
-            completionPercentage={profile?.completionPercentage || 0}
+            completionPercentage={completionPercentage}
             completedFields={profile?.completedFields || []}
-            nextSteps={getNextSteps(profile)}
-            isUnlocked={unlockStatus.profileStrength}
+            nextSteps={nextSteps}
+            isUnlocked={unlocks.profileStrength}
           />
         </div>
       </div>
     </div>
   );
-}
-
-// Helper function to determine next steps for profile completion
-function getNextSteps(profile: ProfileData | null): string[] {
-  if (!profile) return ['Complete your profile setup'];
-  
-  const steps: string[] = [];
-  
-  if (!profile.fullName) steps.push('Add your full name');
-  if (!profile.handle) steps.push('Choose your handle');
-  if (!profile.bio) steps.push('Write a short bio');
-  if (!profile.major) steps.push('Add your major');
-  if (!profile.avatarUrl) steps.push('Upload a profile photo');
-  
-  if (steps.length === 0) {
-    steps.push('Join your first space', 'Connect with classmates', 'Explore campus tools');
-  }
-  
-  return steps.slice(0, 3); // Show max 3 next steps
 }

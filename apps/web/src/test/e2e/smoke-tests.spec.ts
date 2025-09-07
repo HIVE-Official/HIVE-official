@@ -15,14 +15,18 @@ test.describe('Smoke Tests - Critical User Journeys', () => {
     // Should redirect to schools for unauthenticated users
     await expect(page).toHaveURL(/\/schools/);
     
-    // Should show HIVE branding
-    await expect(page.locator('[data-testid="hive-logo"]')).toBeVisible();
+    // Should show school selection header
+    await expect(page.locator('h1').filter({ hasText: 'Find your campus' })).toBeVisible();
     
-    // Should show school selection
-    await expect(page.locator('text=Choose your school')).toBeVisible();
+    // Should show search input
+    await expect(page.locator('input[placeholder="Search universities..."]')).toBeVisible();
     
-    // Should show UB option
-    await expect(page.locator('[data-testid="school-card-ub-buffalo"]')).toBeVisible();
+    // Should show at least one school card (UB should be there)
+    const schoolCards = page.locator('[data-testid^="school-"]');
+    await expect(schoolCards.first()).toBeVisible();
+    
+    // Specifically check for UB as it's the active school
+    await expect(page.locator('text=University at Buffalo')).toBeVisible();
   });
 
   test('should handle app health check', async ({ page }) => {

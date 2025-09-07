@@ -91,13 +91,23 @@ class AuthRateLimiter {
     
     const identifiers: string[] = [];
     
-    // In production environments, prefer connection info over headers
+    // In production environments, use proper client identification
     if (process.env.NODE_ENV === 'production') {
-      // Use 'anonymous' for now - in production you'd use:
-      // - Server connection IP (not available in serverless)  
-      // - User agent + basic fingerprinting
-      // - Session-based rate limiting
-      identifiers.push('production-client');
+      // SECURITY FIX: Use proper client fingerprinting for production rate limiting
+      const userAgent = request.headers.get('user-agent') || '';
+      const acceptLanguage = request.headers.get('accept-language') || '';
+      const acceptEncoding = request.headers.get('accept-encoding') || '';
+      
+      // Create a fingerprint from stable browser characteristics
+      const fingerprint = this.hashString(`${userAgent}:${acceptLanguage}:${acceptEncoding}`);
+      identifiers.push(`prod-${fingerprint.substring(0, 16)}`);
+      
+      // Also try to get real IP from Vercel headers (more reliable than x-forwarded-for)
+      const vercelIp = request.headers.get('x-vercel-forwarded-for') || 
+                      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+      if (vercelIp) {
+        identifiers.push(`ip-${this.hashString(vercelIp).substring(0, 12)}`);
+      }
     } else {
       // In development, we can use forwarded headers
       const forwarded = request.headers.get('x-forwarded-for');
@@ -124,6 +134,21 @@ class AuthRateLimiter {
     
     // Use the first available identifier or fallback
     return identifiers[0] || 'anonymous';
+  }
+
+  /**
+   * Simple hash function for client fingerprinting
+   * SECURITY: Uses a basic hash - sufficient for rate limiting, not cryptographic security
+   */
+  private hashString(str: string): string {
+    let hash = 0;
+    if (str.length === 0) return hash.toString();
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash).toString(36);
   }
 }
 

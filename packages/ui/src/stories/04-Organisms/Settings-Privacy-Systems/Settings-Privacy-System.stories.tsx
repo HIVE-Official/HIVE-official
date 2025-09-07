@@ -54,8 +54,9 @@ import {
  * - **Accessibility**: Theme, font size, motion preferences
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '11-Live Frontend/Settings & Privacy System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

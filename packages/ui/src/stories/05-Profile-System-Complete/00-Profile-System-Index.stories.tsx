@@ -47,8 +47,9 @@ import {
   Lightbulb
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '05-Profile System/Profile System Index',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

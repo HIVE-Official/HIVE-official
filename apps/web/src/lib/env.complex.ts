@@ -241,9 +241,9 @@ export const isStaging = env.NODEENV === "staging";
 export const isTest = env.NODEENV === "test";
 export const currentEnvironment = getCurrentEnvironment();
 
-// Dev mode flags simple client side check (also enabled in test mode)
-export const skipAuthInDev = isDevelopment || isTest;
-export const skipOnboardingInDev = isDevelopment || isTest;
+// SECURITY FIX: NEVER skip auth or onboarding - these were dangerous bypasses
+export const skipAuthInDev = false; // DISABLED - security vulnerability
+export const skipOnboardingInDev = false; // DISABLED - security vulnerability
 
 // Export whether Firebase Admin is properly configured
 export const isFirebaseAdminConfigured = !!(

@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
       structure: 'Nested collection: spaces/cohort/spaces/{spaceId}',
       cohortTypes: [
         'major', // e.g., "Computer Science"
-        'graduation_year', // e.g., "Class of '25"
-        'major_year' // e.g., "CS '25"
+        'graduation_year', // e.g., "Class of 2026"
+        'major_year' // e.g., "CS 2026"
       ],
       autoCreated: true,
       version: '1.0'

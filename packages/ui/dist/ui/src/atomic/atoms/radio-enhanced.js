@@ -84,11 +84,12 @@ const RadioGroup = React.forwardRef(({ className, name, value, onChange, orienta
     // Clone children and add necessary props
     const radioChildren = React.Children.map(children, (child) => {
         if (React.isValidElement(child) && child.type === Radio) {
+            const childProps = child.props;
             return React.cloneElement(child, {
                 name,
-                checked: child.props.value === value,
-                onChange: () => handleRadioChange(child.props.value),
-                disabled: disabled || child.props.disabled,
+                checked: childProps.value === value,
+                onChange: () => handleRadioChange(childProps.value),
+                disabled: disabled || childProps.disabled,
             });
         }
         return child;

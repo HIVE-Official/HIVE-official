@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
 import { cva } from 'class-variance-authority';
 import { X } from 'lucide-react';
-const hiveModalVariants = cva('fixed inset-0 z-50 flex items-center justify-center', {
+const hiveModalVariants = cva('', {
     variants: {
         size: {
             sm: 'max-w-sm',
@@ -43,7 +43,7 @@ const HiveModal = forwardRef(({ className, isOpen, open, onClose, onOpenChange, 
     }, [isVisible, closeOnEscape]);
     if (!isVisible)
         return null;
-    return (_jsxs("div", { className: "fixed inset-0 z-50", children: [_jsx("div", { className: "fixed inset-0 bg-black/50 backdrop-blur-sm", onClick: closeOnBackdropClick ? handleClose : undefined, "aria-hidden": "true" }), _jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4", children: _jsxs("div", { ref: ref, className: cn('relative w-full bg-[var(--hive-background-primary)] border border-[var(--hive-border-primary)] rounded-lg shadow-xl', hiveModalVariants({ size, variant }), className), ...props, children: [(title || showCloseButton) && (_jsxs("div", { className: "flex items-start justify-between p-6 border-b border-[var(--hive-border-primary)]", children: [title && (_jsxs("div", { children: [_jsx("h2", { className: "text-xl font-semibold text-[var(--hive-text-primary)]", children: title }), description && (_jsx("p", { className: "mt-1 text-sm text-[var(--hive-text-secondary)]", children: description }))] })), showCloseButton && (_jsx("button", { onClick: handleClose, className: "ml-auto p-1 rounded-md hover:bg-[var(--hive-interactive-hover)] transition-colors", "aria-label": "Close modal", children: _jsx(X, { className: "h-5 w-5 text-[var(--hive-text-secondary)]" }) }))] })), _jsx("div", { className: "p-6", children: children })] }) })] }));
+    return (_jsxs("div", { className: "fixed inset-0 z-50", children: [_jsx("div", { className: "fixed inset-0 bg-black/50 backdrop-blur-sm", onClick: closeOnBackdropClick ? handleClose : undefined, "aria-hidden": "true" }), _jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto", children: _jsxs("div", { ref: ref, className: cn('relative w-full bg-[var(--hive-background-primary)] border border-[var(--hive-border-primary)] rounded-lg shadow-xl mx-auto', hiveModalVariants({ size, variant }), className), ...props, children: [(title || showCloseButton) && (_jsxs("div", { className: "flex items-start justify-between p-6 border-b border-[var(--hive-border-primary)]", children: [title && (_jsxs("div", { children: [_jsx("h2", { className: "text-xl font-semibold text-[var(--hive-text-primary)]", children: title }), description && (_jsx("p", { className: "mt-1 text-sm text-[var(--hive-text-secondary)]", children: description }))] })), showCloseButton && (_jsx("button", { onClick: handleClose, className: "ml-auto p-1 rounded-md hover:bg-[var(--hive-interactive-hover)] transition-colors", "aria-label": "Close modal", children: _jsx(X, { className: "h-5 w-5 text-[var(--hive-text-secondary)]" }) }))] })), _jsx("div", { className: "p-6", children: children })] }) })] }));
 });
 HiveModal.displayName = 'HiveModal';
 const HiveConfirmModal = forwardRef(({ confirmText = 'Confirm', cancelText = 'Cancel', onConfirm, onCancel, confirmVariant = 'default', loading = false, ...props }, ref) => {

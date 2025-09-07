@@ -98,6 +98,7 @@ export function AnalyticsDashboard() {
     // Auto-refresh every 5 minutes
     const interval = setInterval(fetchStats, 5 * 60 * 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [admin]);
 
   const formatUptime = (seconds: number) => {

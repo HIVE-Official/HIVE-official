@@ -7,6 +7,9 @@ import { useAuthErrorHandler } from './auth/auth-error-boundary';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@hive/ui';
 
+// Check if dev bypass is enabled
+const skipAuthInDev = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DEV_BYPASS === 'true';
+
 interface AuthGuardProps {
   children: React.ReactNode;
   requireAuth?: boolean;
@@ -31,18 +34,18 @@ export function AuthGuard({
   // Get auth state - hooks must be called unconditionally
   const authState = useUnifiedAuth();
   
+  const { isAuthenticated, isLoading, requiresOnboarding } = authState || { 
+    isAuthenticated: false, 
+    isLoading: false, 
+    requiresOnboarding: () => false 
+  };
+  
   // Handle auth context errors after hook is called
   useEffect(() => {
     if (!authState) {
       setAuthError('Authentication system unavailable');
     }
   }, [authState]);
-  
-  const { isAuthenticated, isLoading, requiresOnboarding } = authState || { 
-    isAuthenticated: false, 
-    isLoading: false, 
-    requiresOnboarding: () => false 
-  };
 
   useEffect(() => {
     // Reset redirect attempts when pathname changes significantly
@@ -96,6 +99,11 @@ export function AuthGuard({
       return;
     }
   }, [isLoading, isAuthenticated, requiresOnboarding, pathname, requireAuth, redirectTo, router, redirectAttempts, reportAuthError]);
+
+  // If dev bypass is enabled, skip all auth checks
+  if (skipAuthInDev) {
+    return <>{children}</>;
+  }
 
   // Show auth error state if there's an error
   if (authError) {

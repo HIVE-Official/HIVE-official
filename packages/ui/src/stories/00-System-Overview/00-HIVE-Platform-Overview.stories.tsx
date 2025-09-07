@@ -18,7 +18,7 @@ import { HiveLogo } from '../../components/hive-logo';
  * ## Core Platform Components
  * 
  * - **Profile System**: Your campus command center connecting calendar, tools, communities, and goals
- * - **Spaces System**: Functional communities where students collaborate and coordinate
+ * - **Spaces System**: () => voidal communities where students collaborate and coordinate
  * - **Tools System**: Solutions you build and share with your community
  * - **Feed System**: Real coordination, collaboration, and community building happening around you
  * - **Navigation System**: Intuitive command palette and responsive navigation

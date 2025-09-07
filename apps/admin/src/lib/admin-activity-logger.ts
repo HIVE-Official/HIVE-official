@@ -294,7 +294,7 @@ class AdminActivityLogger {
       });
 
       await batch.commit();
-      console.log(`Cleaned up ${oldLogs.docs.length} old activity logs`);
+      // Cleaned up ${oldLogs.docs.length} old activity logs
     } catch (error) {
       console.error('Failed to cleanup old logs from database:', error);
     }

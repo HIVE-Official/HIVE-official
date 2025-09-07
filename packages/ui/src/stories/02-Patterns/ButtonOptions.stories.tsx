@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 
 const meta = {
+  component: React.Fragment,
   title: 'Visual Improvements/🎛️ Button Options',
   parameters: {
     layout: 'padded',

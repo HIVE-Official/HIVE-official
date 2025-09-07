@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 
 const meta = {
+  component: React.Fragment,
   title: 'Visual Improvements/🎨 Master Overview',
   parameters: {
     layout: 'fullscreen',

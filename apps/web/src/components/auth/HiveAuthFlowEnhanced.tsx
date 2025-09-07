@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button, Card, Input, Text } from '@hive/ui';
+import { Button, Card, Input } from '@hive/ui';
 import { Loader2, Mail, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface HiveAuthFlowEnhancedProps {
@@ -140,9 +140,9 @@ export function HiveAuthFlowEnhanced({
             <h1 className="text-3xl font-bold text-white mb-2">
               Welcome to HIVE
             </h1>
-            <Text variant="body" className="text-muted">
+            <p className="text-muted">
               {schoolName}
-            </Text>
+            </p>
           </div>
 
           {/* Email Input Step */}
@@ -161,17 +161,17 @@ export function HiveAuthFlowEnhanced({
                   disabled={state.isLoading}
                   className="w-full"
                 />
-                <Text variant="caption" className="text-muted">
+                <p className="text-sm text-muted">
                   Use your {schoolDomain} email address
-                </Text>
+                </p>
               </div>
 
               {state.error && (
-                <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-md">
-                  <AlertCircle className="h-4 w-4 text-red-400" />
-                  <Text variant="caption" className="text-red-400">
+                <div className="flex items-center gap-2 p-3 bg-[#FFD700]/10 border border-[#FFD700]/20 rounded-md">
+                  <AlertCircle className="h-4 w-4 text-[#FFD700]" />
+                  <p className="text-sm text-[#FFD700]">
                     {state.error}
-                  </Text>
+                  </p>
                 </div>
               )}
 
@@ -199,27 +199,27 @@ export function HiveAuthFlowEnhanced({
           {state.step === 'sent' && (
             <div className="text-center space-y-6">
               <div className="flex justify-center">
-                <div className="rounded-full bg-green-500/20 p-3">
-                  <CheckCircle className="h-8 w-8 text-green-400" />
+                <div className="rounded-full bg-[#FFD700]/20 p-3">
+                  <CheckCircle className="h-8 w-8 text-[#FFD700]" />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Text variant="h3" className="text-white font-semibold">
+                <h3 className="text-xl text-white font-semibold">
                   Check Your Email
-                </Text>
-                <Text variant="body" className="text-muted">
+                </h3>
+                <p className="text-muted">
                   We sent a magic link to
-                </Text>
-                <Text variant="body" className="text-white font-medium">
+                </p>
+                <p className="text-white font-medium">
                   {state.email}
-                </Text>
+                </p>
               </div>
 
               <div className="space-y-4">
-                <Text variant="caption" className="text-muted">
+                <p className="text-sm text-muted">
                   Click the link in your email to sign in. The link will expire in 15 minutes.
-                </Text>
+                </p>
                 
                 <Button
                   variant="outline"
@@ -236,22 +236,22 @@ export function HiveAuthFlowEnhanced({
           {state.step === 'error' && (
             <div className="text-center space-y-6">
               <div className="flex justify-center">
-                <div className="rounded-full bg-red-500/20 p-3">
-                  <AlertCircle className="h-8 w-8 text-red-400" />
+                <div className="rounded-full bg-[#FFD700]/20 p-3">
+                  <AlertCircle className="h-8 w-8 text-[#FFD700]" />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Text variant="h3" className="text-white font-semibold">
+                <h3 className="text-xl text-white font-semibold">
                   Something went wrong
-                </Text>
-                <Text variant="body" className="text-muted">
+                </h3>
+                <p className="text-muted">
                   {state.error}
-                </Text>
+                </p>
                 {state.retryAfter && (
-                  <Text variant="caption" className="text-muted">
+                  <p className="text-sm text-muted">
                     Please wait {Math.ceil(state.retryAfter / 60)} minutes before trying again.
-                  </Text>
+                  </p>
                 )}
               </div>
 

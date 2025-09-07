@@ -1,0 +1,32 @@
+import { QueryClient } from '@tanstack/react-query';
+export declare const queryClient: QueryClient;
+export declare const queryKeys: {
+    all: readonly ["hive"];
+    auth: () => readonly ["hive", "auth"];
+    session: () => readonly ["hive", "auth", "session"];
+    profiles: () => readonly ["hive", "profiles"];
+    profile: (userId: string) => readonly ["hive", "profiles", string];
+    spaces: () => readonly ["hive", "spaces"];
+    space: (spaceId: string) => readonly ["hive", "spaces", string];
+    spaceMembers: (spaceId: string) => readonly ["hive", "spaces", string, "members"];
+    spaceTools: (spaceId: string) => readonly ["hive", "spaces", string, "tools"];
+    spaceEvents: (spaceId: string) => readonly ["hive", "spaces", string, "events"];
+    tools: () => readonly ["hive", "tools"];
+    tool: (toolId: string) => readonly ["hive", "tools", string];
+    toolDeployments: (toolId: string) => readonly ["hive", "tools", string, "deployments"];
+    feed: () => readonly ["hive", "feed"];
+    feedFiltered: (filter: string) => readonly ["hive", "feed", string];
+    post: (postId: string) => readonly ["hive", "feed", "post", string];
+    events: () => readonly ["hive", "events"];
+    event: (eventId: string) => readonly ["hive", "events", string];
+    eventAttendees: (eventId: string) => readonly ["hive", "events", string, "attendees"];
+    rituals: () => readonly ["hive", "rituals"];
+    ritual: (ritualId: string) => readonly ["hive", "rituals", string];
+    search: (query: string) => readonly ["hive", "search", string];
+    analytics: () => readonly ["hive", "analytics"];
+    userAnalytics: (userId: string) => readonly ["hive", "analytics", "user", string];
+    spaceAnalytics: (spaceId: string) => readonly ["hive", "analytics", "space", string];
+    onboarding: () => readonly ["hive", "onboarding"];
+    handleAvailability: (handle: string) => readonly ["hive", "onboarding", "handle-availability", string];
+};
+//# sourceMappingURL=query-client.d.ts.map

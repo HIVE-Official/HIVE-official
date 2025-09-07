@@ -4,7 +4,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
-// import dynamic from "next/dynamic"; // Not used in this component
+import dynamicImport from "next/dynamic";
 import { Card, Badge, Button } from "@hive/ui";
 import { Modal, PageContainer } from "@/components/temp-stubs";
 import { 
@@ -27,7 +27,7 @@ import { useSession } from "../../../hooks/use-session";
 import { ErrorBoundary } from "../../../components/error-boundary";
 
 // Dynamic imports for heavy modal components
-const EventDetailsModal = dynamic(
+const EventDetailsModal = dynamicImport(
   async () => {
     const mod = await import("../../../components/events/event-details-modal");
     return { default: mod.EventDetailsModal };

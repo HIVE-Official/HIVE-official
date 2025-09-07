@@ -5518,8 +5518,8 @@ export declare const ElementInstanceSchema: z.ZodObject<{
     };
     elementId: string;
     isVisible?: boolean | undefined;
-    isLocked?: boolean | undefined;
     config?: unknown;
+    isLocked?: boolean | undefined;
     parentId?: string | undefined;
 }>;
 export type ElementInstance = z.infer<typeof ElementInstanceSchema>;

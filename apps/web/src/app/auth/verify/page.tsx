@@ -2,10 +2,11 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Loader2, CheckCircle, XCircle } from 'lucide-react';
-import { useUnifiedAuth } from '@hive/ui';
-import { signInWithCustomToken } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+// import { useUnifiedAuth } from '@hive/ui'; // Disabled - context not provided
+import { signInWithCustomToken, onAuthStateChanged, signOut } from 'firebase/auth';
+// Use auth from firebase-client which has proper initialization
+import { auth } from '@/lib/firebase-client';
 
 /**
  * HIVE Magic Link Verification Page - Clean Firebase Implementation
@@ -15,7 +16,7 @@ import { auth } from '@/lib/firebase';
  */
 
 interface VerificationState {
-  status: 'loading' | 'verifying' | 'success' | 'error';
+  status: 'loading' | 'verifying' | 'success' | 'error' | 'already-signed-in';
   message: string;
   error?: string;
 }
@@ -23,7 +24,7 @@ interface VerificationState {
 function VerifyPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const hiveAuth = useUnifiedAuth();
+  // const hiveAuth = useUnifiedAuth(); // Disabled - context not provided
   
   const [state, setState] = useState<VerificationState>({
     status: 'loading',
@@ -36,11 +37,35 @@ function VerifyPageContent() {
 
   useEffect(() => {
     const verifyMagicLink = async () => {
-      if (!token || !email || !schoolId) {
+      // First check if user is already signed in
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        // User is already signed in
+        setState({
+          status: 'already-signed-in',
+          message: 'You are already signed in',
+          error: 'Please sign out before using a new magic link'
+        });
+        
+        // Offer to sign out and retry
+        setTimeout(() => {
+          setState(prev => ({
+            ...prev,
+            message: 'Signing you out to use the new link...'
+          }));
+          signOut(auth).then(() => {
+            // After sign out, reload the page to retry verification
+            window.location.reload();
+          });
+        }, 2000);
+        return;
+      }
+
+      if (!token || !email) {
         setState({
           status: 'error',
           message: 'Invalid verification link',
-          error: 'Missing required parameters'
+          error: 'Missing required parameters (token or email)'
         });
         return;
       }
@@ -52,10 +77,16 @@ function VerifyPageContent() {
 
       try {
         // Step 1: Verify magic link and get Firebase Custom Token
+        const payload: any = { token, email };
+        // Only include schoolId if it exists and isn't "undefined" string
+        if (schoolId && schoolId !== 'undefined' && schoolId !== 'null') {
+          payload.schoolId = schoolId;
+        }
+        
         const verifyResponse = await fetch('/api/auth/verify-magic-link', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token, email, schoolId })
+          body: JSON.stringify(payload)
         });
 
         if (!verifyResponse.ok) {
@@ -71,7 +102,26 @@ function VerifyPageContent() {
         });
 
         // Step 2: Sign in with Firebase custom token
-        await signInWithCustomToken(auth, verifyData.token);
+        try {
+          console.log('🔐 Attempting Firebase sign in with custom token...');
+          await signInWithCustomToken(auth, verifyData.token);
+          console.log('✅ Firebase sign in successful');
+        } catch (firebaseError: any) {
+          console.error('❌ Firebase sign in failed:', {
+            error: firebaseError,
+            code: firebaseError?.code,
+            message: firebaseError?.message,
+            auth: !!auth,
+            hasToken: !!verifyData.token
+          });
+          
+          // Check if it's a configuration error
+          if (firebaseError?.code === 'auth/configuration-not-found') {
+            throw new Error('Firebase authentication is not properly configured. Please contact support.');
+          }
+          
+          throw firebaseError;
+        }
 
         // Firebase auth context will handle profile loading automatically
         setState({
@@ -102,7 +152,7 @@ function VerifyPageContent() {
     };
 
     verifyMagicLink();
-  }, [token, email, schoolId, router]);
+  }, [token, email, router]);
 
   const getIcon = () => {
     switch (state.status) {
@@ -113,6 +163,8 @@ function VerifyPageContent() {
         return <CheckCircle className="h-16 w-16 text-hive-status-success" />;
       case 'error':
         return <XCircle className="h-16 w-16 text-hive-status-error" />;
+      case 'already-signed-in':
+        return <AlertCircle className="h-16 w-16 text-hive-status-warning" />;
     }
   };
 
@@ -122,6 +174,8 @@ function VerifyPageContent() {
         return 'var(--hive-status-success)';
       case 'error':
         return 'var(--hive-status-error)';
+      case 'already-signed-in':
+        return 'var(--hive-status-warning)';
       default:
         return 'var(--hive-brand-primary)';
     }

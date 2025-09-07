@@ -51,8 +51,9 @@ import {
   Info
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '05-Profile System/Component Testing Lab',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

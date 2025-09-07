@@ -45,6 +45,6 @@ export const PlatformIcon = ({ icon, size = 'md', className, color = 'currentCol
         lg: 32,
         xl: 40
     };
-    return (_jsx(IconComponent, { size: iconSizes[size], className: cn('shrink-0', className), color: color, ...props }));
+    return (_jsx(IconComponent, { className: cn('shrink-0', className), color: color, style: { width: iconSizes[size], height: iconSizes[size] }, ...props }));
 };
 //# sourceMappingURL=platform-icons.js.map

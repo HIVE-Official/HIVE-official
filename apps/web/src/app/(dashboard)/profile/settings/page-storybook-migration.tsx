@@ -12,7 +12,7 @@ import {
   Button,
   Switch,
   FormField,
-  Modal,
+  Modal as _Modal,
   HiveConfirmModal,
   Badge,
   Tabs,

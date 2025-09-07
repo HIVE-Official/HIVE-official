@@ -65,8 +65,9 @@ import {
   TrendingUp
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '05-Profile System/Mobile-First Responsive',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

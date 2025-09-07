@@ -1,8 +1,10 @@
 import Redis from 'ioredis';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Redis client for production-grade caching and rate limiting
- * Falls back to in-memory implementation for development
+ * Falls back to filesystem implementation for development
  */
 
 let redis: Redis | null = null;
@@ -10,6 +12,20 @@ let isConnected = false;
 
 // In-memory fallback for development
 const memoryStore = new Map<string, any>();
+
+// Filesystem storage for development (persists across reloads)
+const DEV_STORAGE_PATH = path.join(process.cwd(), '.next', 'cache', 'dev-redis');
+
+// Ensure dev storage directory exists
+if (process.env.NODE_ENV === 'development') {
+  try {
+    if (!fs.existsSync(DEV_STORAGE_PATH)) {
+      fs.mkdirSync(DEV_STORAGE_PATH, { recursive: true });
+    }
+  } catch (error) {
+    console.error('Failed to create dev storage directory:', error);
+  }
+}
 
 /**
  * Initialize Redis connection
@@ -131,9 +147,25 @@ export class RedisService {
         }
         return true;
       } else {
-        // Fallback to memory store
-        const expiry = ttlSeconds ? Date.now() + (ttlSeconds * 1000) : null;
-        memoryStore.set(key, { value, expiry });
+        // Fallback to filesystem in development
+        if (process.env.NODE_ENV === 'development') {
+          const expiry = ttlSeconds ? Date.now() + (ttlSeconds * 1000) : null;
+          const data = { value, expiry };
+          const filename = path.join(DEV_STORAGE_PATH, `${Buffer.from(key).toString('base64')}.json`);
+          try {
+            fs.writeFileSync(filename, JSON.stringify(data));
+            console.log('💾 Stored in dev filesystem:', { key, filename: path.basename(filename) });
+            return true;
+          } catch (err) {
+            console.error('Failed to write to dev storage:', err);
+            memoryStore.set(key, data);
+            return false;
+          }
+        } else {
+          // Fallback to memory store
+          const expiry = ttlSeconds ? Date.now() + (ttlSeconds * 1000) : null;
+          memoryStore.set(key, { value, expiry });
+        }
         return true;
       }
     } catch (error) {
@@ -153,6 +185,28 @@ export class RedisService {
       if (this.client && isConnected) {
         return await this.client.get(key);
       } else {
+        // Fallback to filesystem in development
+        if (process.env.NODE_ENV === 'development') {
+          const filename = path.join(DEV_STORAGE_PATH, `${Buffer.from(key).toString('base64')}.json`);
+          try {
+            if (fs.existsSync(filename)) {
+              const data = JSON.parse(fs.readFileSync(filename, 'utf-8'));
+              
+              // Check expiry
+              if (data.expiry && Date.now() > data.expiry) {
+                fs.unlinkSync(filename);
+                console.log('🗑️ Expired dev storage:', { key, filename: path.basename(filename) });
+                return null;
+              }
+              
+              console.log('📖 Retrieved from dev filesystem:', { key, filename: path.basename(filename) });
+              return data.value;
+            }
+          } catch (err) {
+            console.error('Failed to read from dev storage:', err);
+          }
+        }
+        
         // Fallback to memory store
         const item = memoryStore.get(key);
         if (!item) return null;
@@ -209,6 +263,20 @@ export class RedisService {
         const result = await this.client.del(key);
         return result > 0;
       } else {
+        // Fallback to filesystem in development
+        if (process.env.NODE_ENV === 'development') {
+          const filename = path.join(DEV_STORAGE_PATH, `${Buffer.from(key).toString('base64')}.json`);
+          try {
+            if (fs.existsSync(filename)) {
+              fs.unlinkSync(filename);
+              console.log('🗑️ Deleted from dev storage:', { key, filename: path.basename(filename) });
+              return true;
+            }
+          } catch (err) {
+            console.error('Failed to delete from dev storage:', err);
+          }
+        }
+        
         // Fallback to memory store
         return memoryStore.delete(key);
       }

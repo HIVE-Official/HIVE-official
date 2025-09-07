@@ -130,8 +130,9 @@ import {
  * - **Cultural Sensitivity**: Appropriate imagery, colors, and interaction patterns
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '27-Advanced Systems/Internationalization & Localization',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

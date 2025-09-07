@@ -18,6 +18,7 @@ import { HiveLogo } from '../../components/HiveLogo';
 import { Heart, Star, Plus, Settings, User, Search } from 'lucide-react';
 
 const meta = {
+  component: React.Fragment,
   title: 'Components/UI Components',
   parameters: {
     layout: 'fullscreen',

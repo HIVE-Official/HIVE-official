@@ -562,8 +562,7 @@ export default function SchoolsPage() {
 
   if (!isMounted) {
     return (
-      <div className="relative min-h-screen overflow-hidden font-sans bg-hive-background-primary text-hive-text-primary" 
-           style={{ backgroundColor: '#0A0A0B', color: '#F5F5F7' }}>
+      <div className="relative min-h-screen overflow-hidden font-sans bg-[#0A0A0B] text-white">
         <div className="flex items-center justify-center min-h-screen">
           <div className="w-6 h-6 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
         </div>
@@ -574,8 +573,7 @@ export default function SchoolsPage() {
   return (
     <React.Fragment>
       <div 
-        className="relative min-h-screen overflow-hidden font-sans bg-hive-background-primary text-hive-text-primary animate-in fade-in duration-300" 
-        style={{ backgroundColor: '#0A0A0B', color: '#F5F5F7' }}
+        className="relative min-h-screen overflow-hidden font-sans bg-[#0A0A0B] text-white animate-in fade-in duration-300"
       >
       {/* Enhanced Glassy Background */}
       <div className="absolute inset-0" style={{ 
@@ -588,7 +586,7 @@ export default function SchoolsPage() {
         <div className="max-w-6xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <Link 
-              href="/landing" 
+              href="/" 
               className="flex items-center gap-2 text-hive-text-muted hover:text-hive-text-primary transition-colors duration-200 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
@@ -596,7 +594,7 @@ export default function SchoolsPage() {
             </Link>
             
             <div className="absolute left-1/2 transform -translate-x-1/2">
-              <Link href="/landing" className="hover:opacity-90 transition-all duration-200 flex items-center gap-3 group">
+              <Link href="/" className="hover:opacity-90 transition-all duration-200 flex items-center gap-3 group">
                 <div className="flex items-center justify-center">
                   <img 
                     src="/assets/hive-logo-white.svg" 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -19,7 +19,8 @@ import {
   Zap,
   BookOpen,
   Home,
-  GraduationCap
+  GraduationCap,
+  Loader2
 } from 'lucide-react';
 
 import {
@@ -51,6 +52,17 @@ import {
   DialogTrigger
 } from '@hive/ui';
 
+// State Management
+import { 
+  useSpaces, 
+  useJoinSpace, 
+  useLeaveSpace,
+  usePrefetchSpace,
+  useHiveStore,
+  useUIStore,
+  useAuthStore
+} from '@hive/hooks';
+
 interface Space {
   id: string;
   name: string;
@@ -63,6 +75,7 @@ interface Space {
   bannerUrl?: string;
   recentActivity: number;
   leadersNeeded: boolean;
+  isMember: boolean;
   metrics: {
     postCount: number;
     eventCount: number;
@@ -84,7 +97,7 @@ const SPACE_CATEGORIES = [
     name: 'Residential',
     icon: Home,
     color: 'bg-green-500',
-    description: 'Dorms, residence halls, and campus living communities'
+    description: 'Dorm floors, residential halls, and campus living communities'
   },
   {
     id: 'greek',
@@ -98,136 +111,230 @@ const SPACE_CATEGORIES = [
     name: 'Student Orgs',
     icon: Users,
     color: 'bg-orange-500',
-    description: 'Clubs, societies, and student-led organizations'
+    description: 'Clubs, societies, and student-run organizations'
   }
 ];
 
-export function EnhancedSpaceDiscovery() {
+const SORT_OPTIONS = [
+  { value: 'trending', label: 'Trending', icon: TrendingUp },
+  { value: 'popular', label: 'Most Popular', icon: Users },
+  { value: 'recent', label: 'Recently Active', icon: Clock },
+  { value: 'new', label: 'Newest', icon: Plus },
+];
+
+export function EnhancedSpaceDiscoveryMigrated() {
   const router = useRouter();
-  const [spaces, setSpaces] = useState<Space[]>([]);
-  const [filteredSpaces, setFilteredSpaces] = useState<Space[]>([]);
-  const [loading, setLoading] = useState(true);
+  
+  // Local UI state
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'popular' | 'recent' | 'name'>('popular');
-  const [showJoinModal, setShowJoinModal] = useState<Space | null>(null);
+  const [sortBy, setSortBy] = useState('trending');
+  const [showFilters, setShowFilters] = useState(false);
+  const [showPrivateSpaces, setShowPrivateSpaces] = useState(false);
+  
+  // Global state
+  const { profile } = useAuthStore();
+  const { addToast } = useUIStore();
+  
+  // React Query hooks
+  const { data: spaces, isLoading, error, refetch } = useSpaces();
+  const joinSpace = useJoinSpace();
+  const leaveSpace = useLeaveSpace();
+  const prefetchSpace = usePrefetchSpace();
 
-  // Fetch spaces from API
-  useEffect(() => {
-    async function fetchSpaces() {
-      try {
-        const response = await fetch('/api/spaces');
-        if (response.ok) {
-          const data = await response.json();
-          setSpaces(data.spaces || []);
-        }
-      } catch (error) {
-        console.error('Failed to fetch spaces:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchSpaces();
-  }, []);
-
-  // Filter and search spaces
-  useEffect(() => {
-    let filtered = spaces;
-
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(space => space.type === selectedCategory);
-    }
-
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(space =>
-        space.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        space.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        space.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-    }
-
-    // Sort spaces
+  // Filter and sort spaces
+  const filteredSpaces = spaces?.filter((space: Space) => {
+    const matchesSearch = searchQuery === '' || 
+      space.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      space.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      space.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    const matchesCategory = selectedCategory === 'all' || space.type === selectedCategory;
+    const matchesPrivacy = showPrivateSpaces || !space.isPrivate;
+    
+    return matchesSearch && matchesCategory && matchesPrivacy;
+  }).sort((a: Space, b: Space) => {
     switch (sortBy) {
       case 'popular':
-        filtered.sort((a, b) => b.memberCount - a.memberCount);
-        break;
+        return b.memberCount - a.memberCount;
       case 'recent':
-        filtered.sort((a, b) => b.recentActivity - a.recentActivity);
-        break;
-      case 'name':
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+        return b.recentActivity - a.recentActivity;
+      case 'new':
+        return new Date(b.id).getTime() - new Date(a.id).getTime();
+      case 'trending':
+      default:
+        return (b.recentActivity * b.memberCount) - (a.recentActivity * a.memberCount);
     }
+  }) || [];
 
-    setFilteredSpaces(filtered);
-  }, [spaces, searchQuery, selectedCategory, sortBy]);
-
-  const joinSpace = async (spaceId: string) => {
-    try {
-      const response = await fetch('/api/spaces/join', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ spaceId })
-      });
-
-      if (response.ok) {
-        // Update space member count locally
-        setSpaces(prev => 
-          prev.map(space => 
-            space.id === spaceId 
-              ? { ...space, memberCount: space.memberCount + 1 }
-              : space
-          )
-        );
-        setShowJoinModal(null);
-      }
-    } catch (error) {
-      console.error('Failed to join space:', error);
-    }
+  const handleJoinSpace = async (space: Space) => {
+    joinSpace.mutate(space.id, {
+      onSuccess: () => {
+        addToast({
+          title: 'Joined Space!',
+          description: `Welcome to ${space.name}`,
+          type: 'success',
+        });
+      },
+      onError: (error) => {
+        addToast({
+          title: 'Failed to join',
+          description: error.message || 'Something went wrong',
+          type: 'error',
+        });
+      },
+    });
   };
 
-  const requestLeadership = async (spaceId: string) => {
-    try {
-      const response = await fetch('/api/spaces/request-to-lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ spaceId })
-      });
-
-      if (response.ok) {
-        // Handle success (show confirmation)
-        setShowJoinModal(null);
-      }
-    } catch (error) {
-      console.error('Failed to request leadership:', error);
-    }
+  const handleLeaveSpace = async (space: Space) => {
+    leaveSpace.mutate(space.id, {
+      onSuccess: () => {
+        addToast({
+          title: 'Left Space',
+          description: `You have left ${space.name}`,
+          type: 'info',
+        });
+      },
+    });
   };
 
-  const getSpaceIcon = (type: string) => {
-    const category = SPACE_CATEGORIES.find(cat => cat.id === type);
-    const IconComponent = category?.icon || Users;
-    return <IconComponent className="h-5 w-5" />;
-  };
+  // SpaceCard component with optimistic updates
+  const SpaceCard = ({ space }: { space: Space }) => {
+    const isJoining = joinSpace.isPending && joinSpace.variables === space.id;
+    const isLeaving = leaveSpace.isPending && leaveSpace.variables === space.id;
+    const isProcessing = isJoining || isLeaving;
 
-  const getSpaceColor = (type: string) => {
-    const category = SPACE_CATEGORIES.find(cat => cat.id === type);
-    return category?.color || 'bg-gray-500';
-  };
-
-  if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="h-8 bg-gray-200 rounded w-48 animate-pulse" />
-          <div className="h-10 bg-gray-200 rounded w-32 animate-pulse" />
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        whileHover={{ scale: 1.02 }}
+        onMouseEnter={() => prefetchSpace(space.id)}
+      >
+        <Card className="h-full hover:shadow-lg transition-all cursor-pointer">
+          <CardHeader className="pb-3">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                  {space.name}
+                  {space.isPrivate && (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  )}
+                  {space.leadersNeeded && (
+                    <Badge variant="secondary" className="text-xs">
+                      Leaders Needed
+                    </Badge>
+                  )}
+                </CardTitle>
+                <CardDescription className="line-clamp-2">
+                  {space.description}
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {/* Category & Stats */}
+              <div className="flex items-center justify-between">
+                <Badge variant="outline" className="capitalize">
+                  {space.type.replace('_', ' ')}
+                </Badge>
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <Users className="h-3 w-3" />
+                  <span>{space.memberCount}</span>
+                </div>
+              </div>
+
+              {/* Tags */}
+              {space.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {space.tags.slice(0, 3).map((tag, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs">
+                      #{tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+
+              {/* Metrics */}
+              <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Hash className="h-3 w-3" />
+                  <span>{space.metrics.postCount}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  <span>{space.metrics.eventCount}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Zap className="h-3 w-3" />
+                  <span>{space.metrics.toolCount}</span>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <Button
+                onClick={() => 
+                  space.isMember 
+                    ? handleLeaveSpace(space)
+                    : handleJoinSpace(space)
+                }
+                disabled={isProcessing}
+                variant={space.isMember ? 'outline' : 'default'}
+                className="w-full"
+                size="sm"
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                    {isJoining ? 'Joining...' : 'Leaving...'}
+                  </>
+                ) : (
+                  <>
+                    {space.isMember ? (
+                      <>
+                        <Star className="mr-2 h-3 w-3" />
+                        Joined
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="mr-2 h-3 w-3" />
+                        Join Space
+                      </>
+                    )}
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 text-accent animate-spin" />
+          <p className="text-muted-foreground">Discovering spaces...</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-64 bg-gray-200 rounded-lg animate-pulse" />
-          ))}
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-3">
+          <p className="text-destructive">Failed to load spaces</p>
+          <Button onClick={() => refetch()} variant="outline">
+            Try Again
+          </Button>
         </div>
       </div>
     );
@@ -236,275 +343,136 @@ export function EnhancedSpaceDiscovery() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Campus Spaces</h1>
+          <h1 className="text-2xl font-bold">Discover Spaces</h1>
           <p className="text-muted-foreground">
-            Discover and join communities across UB campus
+            Find and join campus communities that match your interests
           </p>
         </div>
         <Button onClick={() => router.push('/spaces/create')}>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="mr-2 h-4 w-4" />
           Create Space
         </Button>
       </div>
 
-      {/* Category Overview */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {SPACE_CATEGORIES.map((category) => {
-          const categorySpaces = spaces.filter(space => space.type === category.id);
-          const IconComponent = category.icon;
-          
-          return (
-            <Card 
-              key={category.id} 
-              className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => setSelectedCategory(category.id)}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`p-2 rounded-lg ${category.color} text-[var(--hive-text-inverse)]`}>
-                    <IconComponent className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-semibold">{category.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {categorySpaces.length} spaces
-                    </div>
-                  </div>
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {category.description}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Filters and Search */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <SearchBar
-                placeholder="Search spaces by name, description, or tags..."
-                value={searchQuery}
-                onChange={setSearchQuery}
-              />
-            </div>
-            <div className="flex gap-2">
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-40">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {SPACE_CATEGORIES.map(category => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={sortBy} onValueChange={setSortBy as any}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="popular">Popular</SelectItem>
-                  <SelectItem value="recent">Recent</SelectItem>
-                  <SelectItem value="name">Name</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+      {/* Search & Filters */}
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search spaces, tags, or descriptions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
           </div>
-        </CardContent>
-      </Card>
+          <Button
+            variant="outline"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            Filters
+          </Button>
+        </div>
 
-      {/* Spaces Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Advanced Filters */}
         <AnimatePresence>
-          {filteredSpaces.map((space) => (
+          {showFilters && (
             <motion.div
-              key={space.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="space-y-4 p-4 border rounded-lg bg-muted/10"
             >
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={`p-2 rounded-lg ${getSpaceColor(space.type)} text-[var(--hive-text-inverse)]`}>
-                        {getSpaceIcon(space.type)}
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg group-hover:text-hive-accent transition-colors">
-                          {space.name}
-                        </CardTitle>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" className="text-xs">
-                            {SPACE_CATEGORIES.find(cat => cat.id === space.type)?.name}
-                          </Badge>
-                          {space.isPrivate && (
-                            <Badge variant="secondary">
-                              <EyeOff className="h-3 w-3 mr-1" />
-                              Private
-                            </Badge>
-                          )}
-                          {space.leadersNeeded && (
-                            <Badge variant="destructive">
-                              <Crown className="h-3 w-3 mr-1" />
-                              Leader Needed
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <CardDescription className="line-clamp-2">
-                    {space.description}
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        {space.memberCount}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <TrendingUp className="h-4 w-4" />
-                        {space.metrics.postCount}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Zap className="h-4 w-4" />
-                        {space.metrics.toolCount}
-                      </div>
-                    </div>
-                    {space.isActive && (
-                      <Badge variant="outline" className="text-green-600 border-green-600">
-                        <div className="w-2 h-2 bg-green-600 rounded-full mr-1" />
-                        Active
-                      </Badge>
-                    )}
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button
-                      className="flex-1"
-                      variant={space.leadersNeeded ? "default" : "outline"}
-                      onClick={() => setShowJoinModal(space)}
-                    >
-                      {space.leadersNeeded ? (
-                        <>
-                          <Crown className="h-4 w-4 mr-2" />
-                          Claim Leadership
-                        </>
-                      ) : (
-                        <>
-                          <Plus className="h-4 w-4 mr-2" />
-                          Join Space
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => router.push(`/spaces/${space.id}`)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  {space.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-3">
-                      {space.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          #{tag}
-                        </Badge>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* Category Filter */}
+                <div>
+                  <label className="text-sm font-medium">Category</label>
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      {SPACE_CATEGORIES.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
                       ))}
-                      {space.tags.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{space.tags.length - 3}
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Sort Filter */}
+                <div>
+                  <label className="text-sm font-medium">Sort By</label>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SORT_OPTIONS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Privacy Filter */}
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="showPrivate"
+                    checked={showPrivateSpaces}
+                    onChange={(e) => setShowPrivateSpaces(e.target.checked)}
+                  />
+                  <label htmlFor="showPrivate" className="text-sm">
+                    Show private spaces
+                  </label>
+                </div>
+              </div>
             </motion.div>
-          ))}
+          )}
         </AnimatePresence>
       </div>
 
-      {/* Empty State */}
-      {filteredSpaces.length === 0 && !loading && (
-        <Card>
-          <CardContent className="text-center py-12">
-            <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Spaces Found</h3>
-            <p className="text-muted-foreground mb-4">
-              Try adjusting your search criteria or create a new space
-            </p>
-            <Button onClick={() => router.push('/spaces/create')}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create New Space
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+      {/* Results */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            Found {filteredSpaces.length} spaces
+          </p>
+        </div>
 
-      {/* Join/Claim Modal */}
-      <Dialog open={!!showJoinModal} onOpenChange={() => setShowJoinModal(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {showJoinModal?.leadersNeeded ? 'Claim Leadership' : 'Join Space'}
-            </DialogTitle>
-            <DialogDescription>
-              {showJoinModal?.leadersNeeded
-                ? `Become a leader of ${showJoinModal?.name} and help activate this community.`
-                : `Join ${showJoinModal?.name} and connect with ${showJoinModal?.memberCount} other members.`
-              }
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <div className="flex items-center gap-3 mb-4">
-              <div className={`p-3 rounded-lg ${getSpaceColor(showJoinModal?.type || '')} text-[var(--hive-text-inverse)]`}>
-                {getSpaceIcon(showJoinModal?.type || '')}
-              </div>
-              <div>
-                <div className="font-semibold">{showJoinModal?.name}</div>
-                <div className="text-sm text-muted-foreground">
-                  {showJoinModal?.description}
-                </div>
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowJoinModal(null)}>
-              Cancel
-            </Button>
-            <Button
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <AnimatePresence mode="popLayout">
+            {filteredSpaces.map((space) => (
+              <SpaceCard key={space.id} space={space} />
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {filteredSpaces.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No spaces match your criteria</p>
+            <Button 
               onClick={() => {
-                if (showJoinModal?.leadersNeeded) {
-                  requestLeadership(showJoinModal.id);
-                } else {
-                  joinSpace(showJoinModal?.id || '');
-                }
+                setSearchQuery('');
+                setSelectedCategory('all');
+                setShowPrivateSpaces(false);
               }}
+              variant="link"
+              className="mt-2"
             >
-              {showJoinModal?.leadersNeeded ? 'Request Leadership' : 'Join Space'}
+              Clear filters
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

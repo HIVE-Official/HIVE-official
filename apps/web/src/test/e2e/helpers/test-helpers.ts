@@ -9,11 +9,19 @@ export class TestHelpers {
    * Clear all authentication state
    */
   async clearAuthState(): Promise<void> {
-    // Clear localStorage, sessionStorage, and cookies
-    await this.page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
+    // Only clear storage if we're on a page with a valid origin
+    const url = this.page.url();
+    if (url && !url.startsWith('about:') && !url.startsWith('data:')) {
+      try {
+        await this.page.evaluate(() => {
+          localStorage.clear();
+          sessionStorage.clear();
+        });
+      } catch (error) {
+        // Ignore errors when clearing storage on non-http pages
+        console.log('Could not clear storage:', error);
+      }
+    }
     
     await this.page.context().clearCookies();
   }

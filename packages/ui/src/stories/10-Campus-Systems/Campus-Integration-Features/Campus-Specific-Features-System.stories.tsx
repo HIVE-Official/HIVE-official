@@ -66,8 +66,9 @@ import {
  * - **Weather Integration**: Buffalo weather with campus-specific alerts
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '14-Live Frontend/Campus-Specific Features System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

@@ -150,8 +150,9 @@ import {
  * - **Academic Resources**: Study spaces, group booking, resource availability
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '26-Advanced Systems/Campus Integration',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

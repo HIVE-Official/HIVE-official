@@ -85,8 +85,9 @@ import {
  * - **Crisis & Support Flows**: Help, safety, and community support
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '17-Live Frontend/Complete User Flows System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

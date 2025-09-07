@@ -112,6 +112,7 @@ export function ContentModerationDashboard() {
     // Auto-refresh every 2 minutes
     const interval = setInterval(fetchFlaggedContent, 2 * 60 * 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [admin]);
 
   const getSeverityColor = (severity: string) => {

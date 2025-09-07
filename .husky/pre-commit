@@ -14,6 +14,35 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Check design system compliance on changed files
+echo "🎨 Checking design system compliance..."
+git diff --cached --name-only --diff-filter=ACM | grep -E '\.(tsx?|jsx?)$' | while read file; do
+  if [ -f "$file" ]; then
+    # Skip token definition files
+    if echo "$file" | grep -E '(tokens|colors)\.ts$' > /dev/null; then
+      continue
+    fi
+    
+    # Check for hardcoded colors (excluding comments)
+    if grep -E '#[0-9a-fA-F]{3,6}(?![0-9a-fA-F])|rgba?\([^)]+\)' "$file" | grep -v '^\s*//' | grep -v '^\s*\*' > /dev/null; then
+      echo "❌ Design system violation in $file:"
+      echo "   Found hardcoded colors. Use semantic tokens from @hive/tokens"
+      echo "   Run 'pnpm --filter @hive/ui check-design' for details"
+      exit 1
+    fi
+    
+    # Check for forbidden direct color usage
+    if grep -E 'colors\.(gold|champagne|amber|bronze|obsidian|charcoal|graphite|slate|steel|platinum|silver|mercury|pewter|smoke)(?![a-zA-Z])' "$file" | grep -v '^\s*//' | grep -v '^\s*\*' > /dev/null; then
+      echo "❌ Design system violation in $file:"
+      echo "   Found direct color usage. Use semantic.* tokens instead"
+      echo "   Example: semantic.brand.primary instead of colors.gold"
+      exit 1
+    fi
+  fi
+done
+
+echo "✅ Design system check passed"
+
 # Run standard pre-commit checks
 pnpm lint
 pnpm typecheck

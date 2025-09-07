@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db as adminFirestore } from "@/lib/firebase-admin";
-import * as admin from "firebase-admin";
+import { dbAdmin } from "@/lib/firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
+import { logger } from "@/lib/structured-logger";
+import { withAuth } from "@/lib/api-auth-middleware";
+import { HttpStatus } from "@/lib/api-response-types";
 
 // Validation schema for activation request
 const ActivationRequestSchema = z.object({
-  connection: z.string().min(1, "Connection type is required"),
+  connection: z.enum(['major', 'ta', 'leader', 'other']),
   connectionDetails: z.string().optional(),
   reason: z.string().min(10, "Reason must be at least 10 characters"),
-  firstTool: z.string().min(1, "First tool selection is required"),
+  firstToolIdea: z.string().min(1, "First tool idea is required"),
 });
 
 export async function POST(
@@ -27,7 +30,7 @@ export async function POST(
     const userId = "mock-user-id";
     
     // Check if space exists and is in preview mode
-    const spaceDoc = await adminFirestore.doc(`spaces/${spaceId}`).get();
+    const spaceDoc = await dbAdmin.doc(`spaces/${spaceId}`).get();
     if (!spaceDoc.exists) {
       return NextResponse.json(
         { error: "Space not found" },
@@ -44,7 +47,7 @@ export async function POST(
     }
     
     // Check if user has already submitted a request for this space
-    const existingRequest = await adminFirestore
+    const existingRequest = await dbAdmin
       .collection("activationRequests")
       .where("spaceId", "==", spaceId)
       .where("userId", "==", userId)
@@ -76,14 +79,14 @@ export async function POST(
     };
     
     // Save to Firestore
-    await adminFirestore
+    await dbAdmin
       .collection("activationRequests")
       .doc(activationRequest.id)
       .set(activationRequest);
     
     // Update space with pending request count
-    await adminFirestore.doc(`spaces/${spaceId}`).update({
-      pendingRequests: admin.firestore.FieldValue.increment(1),
+    await dbAdmin.doc(`spaces/${spaceId}`).update({
+      pendingRequests: FieldValue.increment(1),
       lastRequestAt: new Date().toISOString(),
     });
     

@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 
 const meta = {
+  component: React.Fragment,
   title: 'Visual Improvements/🃏 Card Options',
   parameters: {
     layout: 'padded',

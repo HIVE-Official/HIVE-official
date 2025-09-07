@@ -1,652 +1,830 @@
 "use client";
 
-// 🚀 **PROFILE EDIT STORYBOOK MIGRATION**
-// Replacing 347 lines of custom form implementation with sophisticated @hive/ui components
-// Following the successful profile main page pattern
-
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-// PageContainer not available from @hive/ui";
-
-// Temporary components until @hive/ui exports are fixed
-const Input = ({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) => (
-  <input 
-    className={`w-full px-3 py-2 border border-[var(--hive-border-default)] rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${className || ''}`} 
-    {...props} 
-  />
-);
-
-const Textarea = ({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
-  <textarea 
-    className={`w-full px-3 py-2 border border-[var(--hive-border-default)] rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${className || ''}`} 
-    {...props} 
-  />
-);
-
-const Button = ({ className, children, variant = 'default', ...props }: { 
-  className?: string; 
-  children: React.ReactNode; 
-  variant?: 'default' | 'primary' | 'ghost';
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <button 
-    className={`px-4 py-2 rounded-md font-medium transition-colors ${
-      variant === 'primary' ? 'bg-blue-600 text-[var(--hive-text-inverse)] hover:bg-blue-700' :
-      variant === 'ghost' ? 'bg-transparent text-[var(--hive-text-muted)] hover:bg-[var(--hive-background-secondary)]' :
-      'bg-gray-200 text-gray-900 hover:bg-gray-300'
-    } ${className || ''}`} 
-    {...props} 
-  >
-    {children}
-  </button>
-);
-
-const Card = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <div className={`bg-white border border-gray-200 rounded-lg p-6 ${className || ''}`}>
-    {children}
-  </div>
-);
-
-const Avatar = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
-  <div className={`w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center ${className || ''}`}>
-    {children}
-  </div>
-);
-
-const Badge = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <span className={`px-2 py-1 bg-[var(--hive-background-secondary)] text-gray-800 rounded-full text-xs ${className || ''}`}>
-    {children}
-  </span>
-);
-
-const Modal = ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => {
-  if (!isOpen) return null;
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-        {children}
-      </div>
-    </div>
-  );
-};
-
-// Temporary FormField component until @hive/ui exports are fixed
-const FormField = ({ label, description, error, required, children, className }: {
-  label?: string;
-  description?: string;
-  error?: string;
-  required?: boolean;
-  children: React.ReactElement;
-  className?: string;
-}) => {
-  const fieldId = `field-${Math.random().toString(36).substr(2, 9)}`;
-  const childWithProps = React.cloneElement(children, {
-    id: fieldId,
-    'aria-describedby': [description ? `${fieldId}-desc` : null, error ? `${fieldId}-error` : null].filter(Boolean).join(' ') || undefined,
-    'aria-invalid': error ? 'true' : undefined,
-    error
-  });
-
-  return (
-    <div className={`space-y-2 ${className || ''}`}>
-      {label && (
-        <label htmlFor={fieldId} className="block text-sm font-medium text-foreground">
-          {label}
-          {required && <span className="text-destructive ml-1">*</span>}
-        </label>
-      )}
-      {childWithProps}
-      {description && (
-        <p id={`${fieldId}-desc`} className="text-xs text-muted-foreground">
-          {description}
-        </p>
-      )}
-      {error && (
-        <p id={`${fieldId}-error`} className="text-xs text-destructive">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-};
-import { useHiveProfile } from '../../../../hooks/use-hive-profile';
-import { ErrorBoundary } from '../../../../components/error-boundary';
-import { 
-  Camera, 
-  Save, 
-  ArrowLeft,
+import { useProfileModern, useUpdateProfile, useUploadProfilePhoto } from '@hive/hooks';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  Button,
+  Input,
+  Textarea,
+  Label,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  Badge,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  ComprehensiveFormField,
+  ProfileAvatar,
+  Container,
+  Separator,
+  Switch,
+  Progress,
+  HiveModal,
+  UB_MAJORS,
+  UB_ACADEMIC_YEARS,
+} from '@hive/ui';
+import {
   User,
-  GraduationCap,
-  MapPin,
-  Hash,
+  Camera,
+  Save,
+  X,
+  AlertCircle,
   Check,
-  AlertCircle
+  ChevronLeft,
+  Shield,
+  Eye,
+  EyeOff,
+  Users,
+  Globe,
+  Lock,
+  Bell,
+  MessageCircle,
+  Loader2,
+  GraduationCap,
+  Home,
+  Hash,
+  Sparkles,
 } from 'lucide-react';
+import { useSession } from '@/hooks/use-session';
 
-// =============================================================================
-// 🎯 **TRANSFORMATION STRATEGY**
-// =============================================================================
-// BEFORE: 347 lines of custom form implementation with hardcoded styling
-// AFTER: Sophisticated @hive/ui components with UB student context
-// PATTERN: Platform hooks provide data → Transform → Storybook components handle UX
+const PRONOUNS_OPTIONS = [
+  'he/him',
+  'she/her',
+  'they/them',
+  'ze/zir',
+  'xe/xem',
+  'other',
+  'prefer not to say',
+];
 
-interface FormData {
-  fullName: string;
-  handle: string;
-  bio: string;
-  pronouns: string;
-  major: string;
-  academicYear: string;
-  graduationYear: string;
-  housing: string;
-  interests: string[];
-}
+const HOUSING_OPTIONS = [
+  'Ellicott Complex',
+  'Governors Complex',
+  'South Campus',
+  'Flint Loop',
+  'Off Campus - North',
+  'Off Campus - South',
+  'Off Campus - Downtown',
+  'Commuter',
+];
 
-interface ValidationErrors {
-  fullName?: string;
-  handle?: string;
-  bio?: string;
-  major?: string;
-  graduationYear?: string;
-}
+const INTERESTS_OPTIONS = [
+  'Computer Science',
+  'Engineering',
+  'Business',
+  'Healthcare',
+  'Arts & Design',
+  'Music',
+  'Sports',
+  'Gaming',
+  'Research',
+  'Entrepreneurship',
+  'Social Impact',
+  'Technology',
+  'Photography',
+  'Writing',
+  'Cooking',
+];
 
-export default function ProfileEditPageStorybook() {
+export default function ProfileEditPage() {
   const router = useRouter();
-  const { profile, updateProfile, uploadAvatar, isLoading, isUpdating } = useHiveProfile();
-  const [isFormDirty, setIsFormDirty] = useState(false);
-  const [showAvatarModal, setShowAvatarModal] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  
-  // =============================================================================
-  // 🎓 **UB STUDENT CONTEXT DATA**
-  // =============================================================================
-  // Enhanced with real University at Buffalo context
-  
-  const [formData, setFormData] = useState<FormData>({
+  const { user } = useSession();
+  const { profile, loading: profileLoading, completionPercentage } = useProfileModern();
+  const updateProfileMutation = useUpdateProfile();
+  const uploadPhotoMutation = useUploadProfilePhoto();
+
+  const [activeTab, setActiveTab] = useState('personal');
+  const [isDirty, setIsDirty] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    // Personal Information
     fullName: '',
     handle: '',
-    bio: '',
     pronouns: '',
+    bio: '',
+    statusMessage: '',
+    
+    // Academic Information
     major: '',
     academicYear: '',
-    graduationYear: '',
+    graduationYear: new Date().getFullYear() + 4,
     housing: '',
-    interests: []
+    
+    // Interests
+    interests: [] as string[],
+    
+    // Privacy Settings
+    isPublic: true,
+    showActivity: true,
+    showSpaces: true,
+    showConnections: true,
+    allowDirectMessages: true,
+    showOnlineStatus: true,
+    ghostModeEnabled: false,
+    ghostModeLevel: 'minimal' as 'minimal' | 'moderate' | 'maximum',
+    
+    // Builder Settings
+    builderOptIn: false,
+    builderSpecializations: [] as string[],
   });
 
-  // UB-specific data for enhanced form experience
-  const ubMajors = [
-    'Computer Science', 'Computer Engineering', 'Electrical Engineering',
-    'Mechanical Engineering', 'Aerospace Engineering', 'Biomedical Engineering',
-    'Business Administration', 'Economics', 'Psychology', 'Biology',
-    'Chemistry', 'Physics', 'Mathematics', 'English', 'History',
-    'Political Science', 'Sociology', 'Communications', 'Architecture',
-    'Nursing', 'Pharmacy', 'Medicine', 'Law'
-  ];
-
-  const ubHousing = [
-    'Ellicott Complex', 'Governors Complex', 'South Campus Apartments',
-    'Flint Loop', 'Creekside Village', 'Hadley Village',
-    'Off-Campus Housing', 'Commuter'
-  ];
-
-  const academicYears = [
-    'Freshman', 'Sophomore', 'Junior', 'Senior', 
-    'Graduate', 'PhD', 'Post-Doc'
-  ];
-
-  const pronounOptions = [
-    'they/them', 'she/her', 'he/him', 'ze/zir', 'other'
-  ];
-
-  // =============================================================================
-  // 🔄 **DATA TRANSFORMATION LAYER**
-  // =============================================================================
-  
-  // Populate form when profile loads
+  // Initialize form data from profile
   useEffect(() => {
     if (profile) {
       setFormData({
-        fullName: profile.identity.fullName || '',
-        handle: profile.identity.handle || '',
-        bio: profile.personal.bio || '',
-        pronouns: profile.academic.pronouns || '',
-        major: profile.academic.major || '',
-        academicYear: profile.academic.academicYear || '',
-        graduationYear: String(profile.academic.graduationYear || ''),
-        housing: profile.academic.housing || '',
-        interests: profile.personal.interests || []
+        fullName: profile.identity?.fullName || '',
+        handle: profile.identity?.handle || '',
+        pronouns: profile.academic?.pronouns || '',
+        bio: profile.personal?.bio || '',
+        statusMessage: profile.personal?.statusMessage || '',
+        major: profile.academic?.major || '',
+        academicYear: profile.academic?.academicYear || '',
+        graduationYear: profile.academic?.graduationYear || new Date().getFullYear() + 4,
+        housing: profile.academic?.housing || '',
+        interests: profile.personal?.interests || [],
+        isPublic: profile.privacy?.isPublic ?? true,
+        showActivity: profile.privacy?.showActivity ?? true,
+        showSpaces: profile.privacy?.showSpaces ?? true,
+        showConnections: profile.privacy?.showConnections ?? true,
+        allowDirectMessages: profile.privacy?.allowDirectMessages ?? true,
+        showOnlineStatus: profile.privacy?.showOnlineStatus ?? true,
+        ghostModeEnabled: profile.privacy?.ghostMode?.enabled ?? false,
+        ghostModeLevel: profile.privacy?.ghostMode?.level || 'minimal',
+        builderOptIn: profile.builder?.builderOptIn ?? false,
+        builderSpecializations: profile.builder?.specializations || [],
       });
     }
   }, [profile]);
 
-  // Enhanced validation with UB context
-  const validateForm = (): boolean => {
-    const errors: ValidationErrors = {};
-    
-    if (!formData.fullName.trim()) {
-      errors.fullName = 'Full name is required';
-    }
-    
-    if (!formData.handle.trim()) {
-      errors.handle = 'Handle is required';
-    } else if (!/^[a-zA-Z0-9_-]+$/.test(formData.handle)) {
-      errors.handle = 'Handle can only contain letters, numbers, dashes, and underscores';
-    }
-    
-    if (formData.bio.length > 500) {
-      errors.bio = 'Bio must be less than 500 characters';
-    }
-    
-    if (formData.graduationYear && (parseInt(formData.graduationYear) < 2024 || parseInt(formData.graduationYear) > 2035)) {
-      errors.graduationYear = 'Graduation year must be between 2024 and 2035';
-    }
-    
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    setIsDirty(true);
   };
 
-  const handleInputChange = (field: keyof FormData, value: string | string[]) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setIsFormDirty(true);
-    setSaveSuccess(false);
-    
-    // Clear validation error for this field
-    if (validationErrors[field as keyof ValidationErrors]) {
-      setValidationErrors(prev => ({ ...prev, [field]: undefined }));
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Photo must be less than 5MB');
+        return;
+      }
+      
+      setPhotoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSave = async () => {
-    if (!validateForm()) return;
-    
     try {
-      const validAcademicYears = ['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'alumni', 'faculty'];
-      const academicYear = validAcademicYears.includes(formData.academicYear.toLowerCase()) 
-        ? formData.academicYear.toLowerCase() as 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'alumni' | 'faculty'
-        : undefined;
+      // Upload photo first if changed
+      let avatarUrl = profile?.identity?.avatarUrl;
+      if (photoFile) {
+        const photoResult = await uploadPhotoMutation.mutateAsync(photoFile);
+        avatarUrl = photoResult.avatarUrl;
+      }
 
-      const updateData = {
+      // Update profile data
+      await updateProfileMutation.mutateAsync({
         identity: {
           fullName: formData.fullName,
-          handle: formData.handle
+          avatarUrl,
+        },
+        academic: {
+          major: formData.major,
+          academicYear: formData.academicYear as any,
+          graduationYear: formData.graduationYear,
+          housing: formData.housing,
+          pronouns: formData.pronouns,
         },
         personal: {
           bio: formData.bio,
-          interests: formData.interests
+          statusMessage: formData.statusMessage,
+          interests: formData.interests,
         },
-        academic: {
-          pronouns: formData.pronouns,
-          major: formData.major,
-          academicYear: academicYear,
-          graduationYear: formData.graduationYear ? parseInt(formData.graduationYear, 10) : undefined,
-          housing: formData.housing
-        }
-      };
+        privacy: {
+          isPublic: formData.isPublic,
+          showActivity: formData.showActivity,
+          showSpaces: formData.showSpaces,
+          showConnections: formData.showConnections,
+          allowDirectMessages: formData.allowDirectMessages,
+          showOnlineStatus: formData.showOnlineStatus,
+          ghostMode: {
+            enabled: formData.ghostModeEnabled,
+            level: formData.ghostModeLevel,
+          },
+        },
+        builder: {
+          builderOptIn: formData.builderOptIn,
+          specializations: formData.builderSpecializations,
+        },
+      });
 
-      const success = await updateProfile(updateData);
-      if (success) {
-        setIsFormDirty(false);
-        setSaveSuccess(true);
-        setTimeout(() => router.push('/profile'), 1500);
-      }
+      setIsDirty(false);
+      router.push('/profile');
     } catch (error) {
       console.error('Failed to save profile:', error);
     }
   };
 
-  const handleAvatarUpload = async (file: File) => {
-    try {
-      await uploadAvatar(file);
-      setShowAvatarModal(false);
-    } catch (error) {
-      console.error('Failed to upload avatar:', error);
+  const handleCancel = () => {
+    if (isDirty) {
+      setShowExitModal(true);
+    } else {
+      router.push('/profile');
     }
   };
 
-  // Current user data for components
-  const currentUser = useMemo(() => {
-    if (!profile) return null;
-    return {
-      id: profile.identity.id,
-      name: profile.identity.fullName || '',
-      handle: profile.identity.handle || '',
-      avatar: profile.identity.avatarUrl,
-      role: profile.builder?.isBuilder ? 'builder' : 'member',
-      campus: 'ub-buffalo',
-      major: profile.academic.major,
-      year: profile.academic.academicYear,
-      housing: profile.academic.housing
-    };
-  }, [profile]);
+  const isLoading = profileLoading || updateProfileMutation.isPending || uploadPhotoMutation.isPending;
 
-  if (isLoading || !profile) {
-    return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-[var(--hive-text-inverse)]">Loading your profile...</p>
-          </div>
-        </div>
-      </div>
-    );
+  if (!user) {
+    router.push('/auth/login');
+    return null;
   }
 
   return (
-    <ErrorBoundary>
-      <div className="max-w-6xl mx-auto p-6 pb-8">
-        <div className="mb-8 flex items-center justify-between">
+    <Container className="max-w-4xl mx-auto py-8 px-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCancel}
+            className="gap-2"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Back
+          </Button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Edit Profile</h1>
-            <p className="text-muted-foreground">Update your HIVE profile information</p>
+            <h1 className="text-2xl font-bold">Edit Profile</h1>
+            <p className="text-sm text-muted-foreground">
+              Customize your HIVE presence
+            </p>
           </div>
-          <div className="flex items-center gap-3">
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <p className="text-sm text-muted-foreground">Profile Strength</p>
+            <div className="flex items-center gap-2">
+              <Progress value={completionPercentage} className="w-24 h-2" />
+              <span className="text-sm font-medium">{completionPercentage}%</span>
+            </div>
+          </div>
+          
+          <div className="flex gap-2">
             <Button
               variant="outline"
-              onClick={() => router.push('/profile')}
+              onClick={handleCancel}
+              disabled={isLoading}
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
               Cancel
             </Button>
             <Button
               onClick={handleSave}
-              disabled={!isFormDirty || isUpdating}
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+              disabled={isLoading || !isDirty}
+              className="gap-2"
             >
-              <Save className="h-4 w-4 mr-2" />
-              {isUpdating ? 'Saving...' : saveSuccess ? 'Saved!' : 'Save Changes'}
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Save Changes
+                </>
+              )}
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 📷 **SOPHISTICATED AVATAR SECTION** */}
-          <div className="lg:col-span-1">
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
-                <Camera className="h-5 w-5 text-hive-gold" />
-                Profile Photo
-              </h2>
-              
-              <div className="text-center">
-                <div className="relative inline-block mb-4">
-                  <Avatar 
-                    size="2xl"
-                    src={profile.identity.avatarUrl}
-                    fallback={profile.identity.fullName?.charAt(0) || 'U'}
-                    className="mx-auto"
-                  />
-                  <Button
-                    size="sm"
-                    className="absolute bottom-0 right-0 rounded-full w-8 h-8 p-0 bg-hive-gold text-hive-obsidian"
-                    onClick={() => setShowAvatarModal(true)}
-                  >
-                    <Camera className="h-4 w-4" />
-                  </Button>
-                </div>
-                
-                <p className="text-sm text-gray-400">
-                  Click the camera icon to update your photo
-                </p>
-                
-                {currentUser && (
-                  <div className="mt-4 space-y-2">
-                    <Badge variant="primary" className="text-xs">
-                      {currentUser.role === 'builder' ? 'Tool Builder' : 'Student'}
-                    </Badge>
-                    {currentUser.major && (
-                      <Badge variant="secondary" className="text-xs block">
-                        {currentUser.major}
-                      </Badge>
-                    )}
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
-
-          {/* 📝 **SOPHISTICATED FORM FIELDS** - Using @hive/ui FormField components */}
-          <div className="lg:col-span-2 space-y-6">
-            
-            {/* Basic Information */}
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
-                <User className="h-5 w-5 text-hive-gold" />
-                Basic Information
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField 
-                  label="Full Name" 
-                  required 
-                  error={validationErrors.fullName}
-                >
-                  <Input
-                    value={formData.fullName}
-                    onChange={(e) => handleInputChange('fullName', e.target.value)}
-                    placeholder="Enter your full name"
-                    error={validationErrors.fullName}
-                  />
-                </FormField>
-                
-                <FormField 
-                  label="Pronouns"
-                  description="Help others address you correctly"
-                >
-                  <Input
-                    value={formData.pronouns}
-                    onChange={(e) => handleInputChange('pronouns', e.target.value)}
-                    placeholder="Select or type pronouns"
-                    list="pronouns-list"
-                  />
-                </FormField>
-              </div>
-
-              <div className="mt-4">
-                <FormField 
-                  label="Handle" 
-                  required 
-                  error={validationErrors.handle}
-                  description="Your unique identifier on HIVE"
-                >
-                  <Input
-                    value={formData.handle}
-                    onChange={(e) => handleInputChange('handle', e.target.value)}
-                    placeholder="your-handle"
-                    leftIcon={<Hash className="h-4 w-4" />}
-                    error={validationErrors.handle}
-                  />
-                </FormField>
-              </div>
-
-              <div className="mt-4">
-                <FormField 
-                  label="Bio" 
-                  error={validationErrors.bio}
-                  description={`${formData.bio.length}/500 characters`}
-                >
-                  <Textarea
-                    value={formData.bio}
-                    onChange={(e) => handleInputChange('bio', e.target.value)}
-                    placeholder="Tell your campus community about yourself..."
-                    rows={3}
-                    maxLength={500}
-                    error={validationErrors.bio}
-                  />
-                </FormField>
-              </div>
-            </Card>
-
-            {/* 🎓 **UB ACADEMIC INFORMATION** */}
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
-                <GraduationCap className="h-5 w-5 text-hive-gold" />
-                Academic Information
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField label="Major">
-                  <Input
-                    value={formData.major}
-                    onChange={(e) => handleInputChange('major', e.target.value)}
-                    placeholder="Computer Science"
-                    list="majors-list"
-                  />
-                </FormField>
-                
-                <FormField label="Academic Year">
-                  <Input
-                    value={formData.academicYear}
-                    onChange={(e) => handleInputChange('academicYear', e.target.value)}
-                    placeholder="Select year"
-                    list="years-list"
-                  />
-                </FormField>
-              </div>
-
-              <div className="mt-4">
-                <FormField 
-                  label="Graduation Year" 
-                  error={validationErrors.graduationYear}
-                  description="Expected graduation year"
-                >
-                  <Input
-                    type="number"
-                    value={formData.graduationYear}
-                    onChange={(e) => handleInputChange('graduationYear', e.target.value)}
-                    min="2024"
-                    max="2035"
-                    placeholder="2027"
-                    error={validationErrors.graduationYear}
-                  />
-                </FormField>
-              </div>
-            </Card>
-
-            {/* 🏠 **UB HOUSING INFORMATION** */}
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-hive-gold" />
-                Housing & Location
-              </h2>
-              
-              <FormField 
-                label="Housing/Location"
-                description="Your dorm, apartment, or living situation"
-              >
-                <Input
-                  value={formData.housing}
-                  onChange={(e) => handleInputChange('housing', e.target.value)}
-                  placeholder="Hadley Village 123A"
-                  list="housing-list"
-                />
-              </FormField>
-            </Card>
-
-            {/* ✅ **SUCCESS MESSAGE** */}
-            {saveSuccess && (
-              <Card className="p-4 bg-green-500/10 border-green-500/20">
-                <div className="flex items-center gap-2 text-green-400">
-                  <Check className="h-5 w-5" />
-                  <span>Profile updated successfully! Redirecting...</span>
-                </div>
-              </Card>
-            )}
-          </div>
-        </div>
-
-        {/* 📷 **SOPHISTICATED AVATAR UPLOAD MODAL** */}
-        <Modal
-          open={showAvatarModal}
-          onClose={() => setShowAvatarModal(false)}
-          title="Update Profile Photo"
-          description="Choose a new profile photo that represents you on campus"
-        >
-          <div className="space-y-4">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleAvatarUpload(file);
-              }}
-              className="w-full p-3 border border-gray-600 rounded-lg bg-gray-800 text-[var(--hive-text-inverse)]"
-            />
-            <p className="text-sm text-gray-400">
-              Recommended: Square image, at least 400x400 pixels
-            </p>
-          </div>
-        </Modal>
-
-        {/* 🗂️ **DATA LISTS FOR ENHANCED UX** */}
-        <datalist id="majors-list">
-          {ubMajors.map(major => (
-            <option key={major} value={major} />
-          ))}
-        </datalist>
-
-        <datalist id="housing-list">
-          {ubHousing.map(housing => (
-            <option key={housing} value={housing} />
-          ))}
-        </datalist>
-
-        <datalist id="years-list">
-          {academicYears.map(year => (
-            <option key={year} value={year} />
-          ))}
-        </datalist>
-
-        <datalist id="pronouns-list">
-          {pronounOptions.map(pronoun => (
-            <option key={pronoun} value={pronoun} />
-          ))}
-        </datalist>
       </div>
-    </ErrorBoundary>
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="personal">Personal</TabsTrigger>
+          <TabsTrigger value="academic">Academic</TabsTrigger>
+          <TabsTrigger value="privacy">Privacy</TabsTrigger>
+          <TabsTrigger value="builder">Builder</TabsTrigger>
+        </TabsList>
+
+        {/* Personal Tab */}
+        <TabsContent value="personal" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile Photo</CardTitle>
+              <CardDescription>
+                Your photo helps others recognize you
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-6">
+                <div className="relative">
+                  <ProfileAvatar
+                    src={photoPreview || profile?.identity?.avatarUrl}
+                    alt={formData.fullName}
+                    size="xl"
+                    fallback={formData.fullName.charAt(0)}
+                  />
+                  <label
+                    htmlFor="photo-upload"
+                    className="absolute bottom-0 right-0 p-2 bg-primary rounded-full cursor-pointer hover:bg-primary/90 transition-colors"
+                  >
+                    <Camera className="h-4 w-4 text-primary-foreground" />
+                    <input
+                      id="photo-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoChange}
+                      disabled={isLoading}
+                    />
+                  </label>
+                </div>
+                
+                <div className="flex-1 space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Upload a photo that represents you. Max size: 5MB
+                  </p>
+                  {photoFile && (
+                    <div className="flex items-center gap-2 text-sm text-green-600">
+                      <Check className="h-4 w-4" />
+                      New photo selected
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Basic Information</CardTitle>
+              <CardDescription>
+                How you appear across HIVE
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ComprehensiveFormField
+                  label="Full Name"
+                  value={formData.fullName}
+                  onChange={(e) => handleInputChange('fullName', e.target.value)}
+                  placeholder="John Doe"
+                  icon={<User className="h-4 w-4" />}
+                  required
+                />
+                
+                <ComprehensiveFormField
+                  label="Handle"
+                  value={formData.handle}
+                  onChange={(e) => handleInputChange('handle', e.target.value)}
+                  placeholder="johndoe"
+                  icon={<Hash className="h-4 w-4" />}
+                  helperText="Your unique username"
+                  disabled
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Pronouns</Label>
+                <Select
+                  value={formData.pronouns}
+                  onValueChange={(value) => handleInputChange('pronouns', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select pronouns" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRONOUNS_OPTIONS.map(pronoun => (
+                      <SelectItem key={pronoun} value={pronoun}>
+                        {pronoun}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Bio</Label>
+                <Textarea
+                  value={formData.bio}
+                  onChange={(e) => handleInputChange('bio', e.target.value)}
+                  placeholder="Tell us about yourself..."
+                  rows={4}
+                  maxLength={500}
+                />
+                <p className="text-xs text-muted-foreground text-right">
+                  {formData.bio.length}/500
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Status Message</Label>
+                <Input
+                  value={formData.statusMessage}
+                  onChange={(e) => handleInputChange('statusMessage', e.target.value)}
+                  placeholder="What are you up to?"
+                  maxLength={100}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Interests</CardTitle>
+              <CardDescription>
+                Help others find you through shared interests
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                {INTERESTS_OPTIONS.map(interest => (
+                  <Badge
+                    key={interest}
+                    variant={formData.interests.includes(interest) ? 'default' : 'outline'}
+                    className="cursor-pointer"
+                    onClick={() => {
+                      const newInterests = formData.interests.includes(interest)
+                        ? formData.interests.filter(i => i !== interest)
+                        : [...formData.interests, interest];
+                      handleInputChange('interests', newInterests);
+                    }}
+                  >
+                    {formData.interests.includes(interest) && (
+                      <Check className="h-3 w-3 mr-1" />
+                    )}
+                    {interest}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Academic Tab */}
+        <TabsContent value="academic" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Academic Information</CardTitle>
+              <CardDescription>
+                Your academic profile at UB
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Major</Label>
+                  <Select
+                    value={formData.major}
+                    onValueChange={(value) => handleInputChange('major', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your major" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {UB_MAJORS.map(major => (
+                        <SelectItem key={major} value={major}>
+                          {major}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Academic Year</Label>
+                  <Select
+                    value={formData.academicYear}
+                    onValueChange={(value) => handleInputChange('academicYear', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {UB_ACADEMIC_YEARS.map(year => (
+                        <SelectItem key={year.value} value={year.value}>
+                          {year.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ComprehensiveFormField
+                  label="Graduation Year"
+                  type="number"
+                  value={formData.graduationYear.toString()}
+                  onChange={(e) => handleInputChange('graduationYear', parseInt(e.target.value))}
+                  placeholder="2025"
+                  icon={<GraduationCap className="h-4 w-4" />}
+                  min={new Date().getFullYear()}
+                  max={new Date().getFullYear() + 10}
+                />
+
+                <div className="space-y-2">
+                  <Label>Housing</Label>
+                  <Select
+                    value={formData.housing}
+                    onValueChange={(value) => handleInputChange('housing', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select housing" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {HOUSING_OPTIONS.map(housing => (
+                        <SelectItem key={housing} value={housing}>
+                          {housing}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Privacy Tab */}
+        <TabsContent value="privacy" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile Visibility</CardTitle>
+              <CardDescription>
+                Control who can see your profile information
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Public Profile</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Allow anyone to view your profile
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.isPublic}
+                  onCheckedChange={(checked) => handleInputChange('isPublic', checked)}
+                />
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Show Activity</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Display your recent activity on your profile
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.showActivity}
+                  onCheckedChange={(checked) => handleInputChange('showActivity', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Show Spaces</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Display the spaces you're a member of
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.showSpaces}
+                  onCheckedChange={(checked) => handleInputChange('showSpaces', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Show Connections</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Display your connections count
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.showConnections}
+                  onCheckedChange={(checked) => handleInputChange('showConnections', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Communication</CardTitle>
+              <CardDescription>
+                Manage how others can interact with you
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Direct Messages</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Allow others to send you direct messages
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.allowDirectMessages}
+                  onCheckedChange={(checked) => handleInputChange('allowDirectMessages', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Online Status</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Show when you're online
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.showOnlineStatus}
+                  onCheckedChange={(checked) => handleInputChange('showOnlineStatus', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Ghost Mode</CardTitle>
+              <CardDescription>
+                Browse HIVE with enhanced privacy
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Enable Ghost Mode</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Hide your activity from others
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.ghostModeEnabled}
+                  onCheckedChange={(checked) => handleInputChange('ghostModeEnabled', checked)}
+                />
+              </div>
+
+              {formData.ghostModeEnabled && (
+                <div className="space-y-2">
+                  <Label>Ghost Mode Level</Label>
+                  <Select
+                    value={formData.ghostModeLevel}
+                    onValueChange={(value) => handleInputChange('ghostModeLevel', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="minimal">
+                        <div>
+                          <p className="font-medium">Minimal</p>
+                          <p className="text-xs text-muted-foreground">Hide online status only</p>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="moderate">
+                        <div>
+                          <p className="font-medium">Moderate</p>
+                          <p className="text-xs text-muted-foreground">Hide activity and status</p>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="maximum">
+                        <div>
+                          <p className="font-medium">Maximum</p>
+                          <p className="text-xs text-muted-foreground">Complete invisibility</p>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Builder Tab */}
+        <TabsContent value="builder" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Builder Program</CardTitle>
+              <CardDescription>
+                Join the HIVE Builder community
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                <div className="flex gap-3">
+                  <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-amber-900 dark:text-amber-100">
+                      Become a HIVE Builder
+                    </p>
+                    <p className="text-sm text-amber-800 dark:text-amber-200">
+                      Create tools and solutions for the campus community. Get early access to new features
+                      and shape the future of HIVE.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Opt into Builder Program</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Start creating tools for your community
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.builderOptIn}
+                  onCheckedChange={(checked) => handleInputChange('builderOptIn', checked)}
+                />
+              </div>
+
+              {formData.builderOptIn && (
+                <div className="space-y-4">
+                  <Separator />
+                  
+                  <div className="space-y-2">
+                    <Label>Specializations</Label>
+                    <p className="text-sm text-muted-foreground">
+                      What types of tools do you want to build?
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {['Study Tools', 'Social Features', 'Productivity', 'Analytics', 'Automation', 'Entertainment'].map(spec => (
+                        <Badge
+                          key={spec}
+                          variant={formData.builderSpecializations.includes(spec) ? 'default' : 'outline'}
+                          className="cursor-pointer"
+                          onClick={() => {
+                            const newSpecs = formData.builderSpecializations.includes(spec)
+                              ? formData.builderSpecializations.filter(s => s !== spec)
+                              : [...formData.builderSpecializations, spec];
+                            handleInputChange('builderSpecializations', newSpecs);
+                          }}
+                        >
+                          {formData.builderSpecializations.includes(spec) && (
+                            <Check className="h-3 w-3 mr-1" />
+                          )}
+                          {spec}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Exit Confirmation Modal */}
+      <HiveModal
+        open={showExitModal}
+        onOpenChange={setShowExitModal}
+        title="Unsaved Changes"
+        description="You have unsaved changes. Are you sure you want to leave?"
+      >
+        <div className="flex justify-end gap-3 mt-6">
+          <Button
+            variant="outline"
+            onClick={() => setShowExitModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => router.push('/profile')}
+          >
+            Leave Without Saving
+          </Button>
+        </div>
+      </HiveModal>
+    </Container>
   );
 }
-
-// =============================================================================
-// 🎯 **STORYBOOK MIGRATION BENEFITS ACHIEVED**
-// =============================================================================
-
-/**
- * ✅ **BEFORE vs AFTER COMPARISON**:
- * 
- * BEFORE (347 lines of custom implementation):
- * - Hardcoded input styling with manual classes
- * - No design system consistency
- * - Basic form validation
- * - Custom modal implementation
- * - Repetitive styling patterns
- * 
- * AFTER (@hive/ui components):
- * - FormField component with automatic accessibility
- * - Input with sophisticated interactions
- * - Modal with liquid motion animations
- * - Consistent design tokens throughout
- * - Built-in validation and error states
- * 
- * 🎓 **ENHANCED UB STUDENT CONTEXT**:
- * - Real UB majors list for autocomplete
- * - Actual campus housing options (Hadley Village, Ellicott Complex)
- * - Academic year progression appropriate for university
- * - Graduation year validation for realistic timeframes
- * - Campus-focused form language and interactions
- * 
- * ⚡ **SOPHISTICATED INTERACTIONS**:
- * - Real-time form validation with user-friendly messages
- * - Autocomplete for common UB-specific fields
- * - Character counting for bio field
- * - Sophisticated avatar upload with modal
- * - Success states with automatic redirection
- * 
- * 🏗️ **MAINTAINABLE ARCHITECTURE**:
- * - Reusable FormField components reduce duplication
- * - Consistent error handling and validation patterns
- * - Type-safe form data management
- * - Separation of concerns: platform provides data, Storybook handles UX
- * 
- * RESULT: 40% less code, 300% better UX, 100% design system consistency
- */

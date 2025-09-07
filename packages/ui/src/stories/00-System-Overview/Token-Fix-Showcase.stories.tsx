@@ -9,7 +9,8 @@ import { Select } from '../../atomic/atoms/select-enhanced';
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
+  component: React.Fragment,
   title: '00-Token-Fix-Showcase',
   parameters: {
     docs: {

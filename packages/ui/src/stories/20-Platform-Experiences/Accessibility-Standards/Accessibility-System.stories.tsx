@@ -92,8 +92,9 @@ import {
  * - **Multi-modal Feedback**: Visual, auditory, and haptic feedback options
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '19-Advanced Systems/Accessibility & Inclusive Design',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

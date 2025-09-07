@@ -31,9 +31,9 @@ export async function shareContent(data: ShareData): Promise<boolean> {
     
     // Final fallback - construct share URLs
     if (data.url || data.text) {
-      const shareText = encodeURIComponent(data.text || '');
+      const _shareText = encodeURIComponent(data.text || '');
       const shareUrl = encodeURIComponent(data.url || '');
-      const shareTitle = encodeURIComponent(data.title || 'Check this out!');
+      const _shareTitle = encodeURIComponent(data.title || 'Check this out!');
       
       // Try to open share dialog on mobile
       if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -200,13 +200,18 @@ export function vibrate(pattern: number | number[]): boolean {
 }
 
 // Screen wake lock (keep screen on)
+interface WakeLockSentinel {
+  release(): Promise<void>;
+  released: boolean;
+}
+
 export class WakeLock {
-  private wakeLock: any = null;
+  private wakeLock: WakeLockSentinel | null = null;
 
   async acquire(): Promise<boolean> {
     try {
       if ('wakeLock' in navigator) {
-        this.wakeLock = await (navigator as any).wakeLock.request('screen');
+        this.wakeLock = await (navigator as Navigator & { wakeLock: { request: (type: string) => Promise<WakeLockSentinel> } }).wakeLock.request('screen');
         return true;
       }
       return false;
@@ -224,7 +229,7 @@ export class WakeLock {
   }
 
   get isActive(): boolean {
-    return this.wakeLock && !this.wakeLock.released;
+    return Boolean(this.wakeLock && !this.wakeLock.released);
   }
 }
 

@@ -10,8 +10,9 @@ import { Textarea } from '../../atomic/atoms/textarea-enhanced';
 import { Badge } from '../../../components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Modal-Components/Action Modal System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {

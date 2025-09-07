@@ -46,8 +46,9 @@ import {
  * - **Social Onboarding**: Immediate space suggestions and connection opportunities
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '10-Live Frontend/Authentication & Onboarding System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

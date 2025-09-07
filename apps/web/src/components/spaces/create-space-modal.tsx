@@ -20,16 +20,13 @@ import {
   Home,
   Briefcase,
   Trophy,
-  Hammer
+  Hammer,
+  Loader2
 } from "lucide-react";
 
-interface CreateSpaceModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCreateSpace: (_spaceData: CreateSpaceData) => void;
-  isLoading?: boolean;
-  error?: string | null;
-}
+// State Management
+import { useUIStore, useAuthStore } from '@hive/hooks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface CreateSpaceData {
   type: SpaceType;
@@ -49,74 +46,86 @@ interface CreateSpaceData {
   };
 }
 
-type SpaceType = 'academic' | 'residential' | 'professional' | 'recreational' | 'project';
+type SpaceType = 'academic' | 'residential' | 'greek' | 'interest' | 'professional';
 
-type CreateStep = 'type' | 'details' | 'privacy' | 'rules' | 'tools' | 'members' | 'review';
-
-const SPACE_TYPES = {
-  academic: {
+const SPACE_TYPES: Array<{
+  id: SpaceType;
+  name: string;
+  description: string;
+  icon: React.ElementType;
+  color: string;
+  examples: string[];
+}> = [
+  {
+    id: 'academic',
     name: 'Academic',
+    description: 'Study groups, courses, and academic organizations',
     icon: BookOpen,
-    emoji: '📚',
-    description: 'Study groups, research teams, course collaboration',
-    examples: ['CS Study Group', 'Physics Research Lab', 'Writing Circle'],
-    suggestedTools: ['study-timer', 'file-share', 'whiteboard', 'poll-maker'],
     color: 'bg-blue-500',
-    features: ['Study scheduling', 'Resource sharing', 'Progress tracking', 'Academic calendar integration']
+    examples: ['CS Study Group', 'Pre-Med Society', 'Engineering Club']
   },
-  residential: {
+  {
+    id: 'residential',
     name: 'Residential',
+    description: 'Dorm floors, residential communities, and campus living',
     icon: Home,
-    emoji: '🏠',
-    description: 'Residence halls, floors, building communities',
-    examples: ['Floor 3 Community', 'Building A Residents', 'Roommate Group'],
-    suggestedTools: ['group-chat', 'poll-maker', 'file-share', 'attendance'],
     color: 'bg-green-500',
-    features: ['Room coordination', 'Floor events', 'Maintenance requests', 'Quiet hours scheduling']
+    examples: ['Ellicott Floor 3', 'South Campus', 'Commons Residents']
   },
-  professional: {
-    name: 'Professional',
-    icon: Briefcase,
-    emoji: '💼',
-    description: 'Career clubs, networking, professional development',
-    examples: ['Engineering Career Club', 'Pre-Med Society', 'Startup Network'],
-    suggestedTools: ['group-chat', 'file-share', 'poll-maker', 'whiteboard'],
+  {
+    id: 'greek',
+    name: 'Greek Life',
+    description: 'Fraternities, sororities, and Greek organizations',
+    icon: Shield,
     color: 'bg-purple-500',
-    features: ['Job sharing', 'Networking events', 'Mentorship matching', 'Professional development']
+    examples: ['Alpha Beta Gamma', 'Delta Sigma Pi', 'Greek Council']
   },
-  recreational: {
-    name: 'Recreational',
+  {
+    id: 'interest',
+    name: 'Interest',
+    description: 'Hobby groups, clubs, and special interest communities',
     icon: Trophy,
-    emoji: '🎮',
-    description: 'Sports teams, hobby groups, gaming communities',
-    examples: ['Intramural Soccer', 'Board Game Club', 'Photography Group'],
-    suggestedTools: ['group-chat', 'poll-maker', 'attendance', 'file-share'],
     color: 'bg-orange-500',
-    features: ['Event coordination', 'Resource booking', 'Tournament brackets', 'Activity planning']
+    examples: ['Gaming Club', 'Photography Society', 'Hiking Group']
   },
-  project: {
-    name: 'Project',
-    icon: Hammer,
-    emoji: '🛠️',
-    description: 'Hackathon teams, student orgs, volunteer groups',
-    examples: ['Hackathon Team Alpha', 'Community Service Club', 'App Development Group'],
-    suggestedTools: ['whiteboard', 'file-share', 'group-chat', 'poll-maker'],
-    color: 'bg-red-500',
-    features: ['Project management', 'Deadline tracking', 'Resource allocation', 'Outcome sharing']
+  {
+    id: 'professional',
+    name: 'Professional',
+    description: 'Career-focused groups and networking organizations',
+    icon: Briefcase,
+    color: 'bg-indigo-500',
+    examples: ['Business Network', 'Career Services', 'Alumni Connect']
   }
+];
+
+interface CreateSpaceModalMigratedProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+// API function for creating spaces
+const createSpace = async (spaceData: CreateSpaceData) => {
+  const response = await fetch('/api/spaces', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(spaceData),
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to create space');
+  }
+  
+  return response.json();
 };
 
-const SUGGESTED_TOOLS = {
-  'study-timer': { name: 'Study Timer', icon: '⏱️', description: 'Synchronized focus sessions' },
-  'poll-maker': { name: 'Live Polls', icon: '📊', description: 'Real-time polling and voting' },
-  'whiteboard': { name: 'Whiteboard', icon: '📝', description: 'Collaborative drawing space' },
-  'file-share': { name: 'File Share', icon: '📁', description: 'Document sharing hub' },
-  'group-chat': { name: 'Group Chat', icon: '💬', description: 'Dedicated chat channel' },
-  'attendance': { name: 'Attendance', icon: '✅', description: 'Event attendance tracking' }
-};
-
-export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = false, error = null }: CreateSpaceModalProps) {
-  const [currentStep, setCurrentStep] = useState<CreateStep>('type');
+export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMigratedProps) {
+  // Global state
+  const { addToast } = useUIStore();
+  const { profile } = useAuthStore();
+  const queryClient = useQueryClient();
+  
+  // Local form state
+  const [currentStep, setCurrentStep] = useState(1);
   const [spaceData, setSpaceData] = useState<CreateSpaceData>({
     type: 'academic',
     name: '',
@@ -128,754 +137,307 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
     foundingMembers: [],
     customizations: {}
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [newRule, setNewRule] = useState('');
 
-  const steps: CreateStep[] = ['type', 'details', 'privacy', 'rules', 'tools', 'members', 'review'];
-  const currentStepIndex = steps.indexOf(currentStep);
-
-  const validateStep = (step: CreateStep): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    switch (step) {
-      case 'type':
-        if (!spaceData.type) newErrors.type = 'Please select a space type';
-        break;
-      case 'details':
-        if (!spaceData.name.trim()) newErrors.name = 'Space name is required';
-        if (spaceData.name.length > 50) newErrors.name = 'Space name must be 50 characters or less';
-        if (!spaceData.description.trim()) newErrors.description = 'Description is required';
-        if (spaceData.description.length > 200) newErrors.description = 'Description must be 200 characters or less';
-        break;
-      case 'privacy':
-        if (!spaceData.visibility) newErrors.visibility = 'Please select visibility';
-        if (!spaceData.joinProcess) newErrors.joinProcess = 'Please select join process';
-        break;
-      case 'rules':
-        if (spaceData.rules.length === 0) newErrors.rules = 'Please add at least one community guideline';
-        break;
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const nextStep = () => {
-    if (validateStep(currentStep)) {
-      const nextIndex = currentStepIndex + 1;
-      if (nextIndex < steps.length) {
-        setCurrentStep(steps[nextIndex]);
-      }
-    }
-  };
-
-  const prevStep = () => {
-    const prevIndex = currentStepIndex - 1;
-    if (prevIndex >= 0) {
-      setCurrentStep(steps[prevIndex]);
-    }
-  };
-
-  const handleCreateSpace = () => {
-    if (validateStep('review') && !isLoading) {
-      onCreateSpace(spaceData);
-      // Don't close modal or reset form here - parent will handle it
-    }
-  };
-
-  // Reset form when modal closes
-  const handleClose = () => {
-    if (!isLoading) {
-      onClose();
-      setCurrentStep('type');
-      setSpaceData({
-        type: 'academic',
-        name: '',
-        description: '',
-        visibility: 'public',
-        joinProcess: 'instant',
-        rules: [],
-        tools: [],
-        foundingMembers: [],
-        customizations: {}
+  // React Query mutation for creating space
+  const createSpaceMutation = useMutation({
+    mutationFn: createSpace,
+    onSuccess: (newSpace) => {
+      // Optimistically update spaces cache
+      queryClient.setQueryData(['spaces'], (old: any) => {
+        return old ? [...old, { ...newSpace, isMember: true }] : [newSpace];
       });
-      setErrors({});
-    }
+      
+      // Invalidate and refetch spaces
+      queryClient.invalidateQueries({ queryKey: ['spaces'] });
+      
+      addToast({
+        title: 'Space Created!',
+        description: `${newSpace.name} is now ready for members`,
+        type: 'success',
+      });
+      
+      handleClose();
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Failed to create space',
+        description: error.message || 'Something went wrong',
+        type: 'error',
+      });
+    },
+  });
+
+  const handleClose = () => {
+    setCurrentStep(1);
+    setSpaceData({
+      type: 'academic',
+      name: '',
+      description: '',
+      visibility: 'public',
+      joinProcess: 'instant',
+      rules: [],
+      tools: [],
+      foundingMembers: [],
+      customizations: {}
+    });
+    onClose();
   };
 
-  const updateSpaceData = (updates: Partial<CreateSpaceData>) => {
-    setSpaceData(prev => ({ ...prev, ...updates }));
-    setErrors({});
+  const handleSubmit = () => {
+    createSpaceMutation.mutate(spaceData);
   };
 
-  const addRule = (rule: string) => {
-    if (rule.trim() && !spaceData.rules.includes(rule.trim())) {
-      updateSpaceData({ rules: [...spaceData.rules, rule.trim()] });
-    }
-  };
+  const isLoading = createSpaceMutation.isPending;
 
-  const removeRule = (index: number) => {
-    updateSpaceData({ rules: spaceData.rules.filter((_, i) => i !== index) });
-  };
-
-  const toggleTool = (toolId: string) => {
-    const tools = spaceData.tools.includes(toolId)
-      ? spaceData.tools.filter(t => t !== toolId)
-      : [...spaceData.tools, toolId];
-    updateSpaceData({ tools });
-  };
-
-  const getStepTitle = (step: CreateStep) => {
-    switch (step) {
-      case 'type': return 'Choose Space Type';
-      case 'details': return 'Space Details';
-      case 'privacy': return 'Privacy & Access';
-      case 'rules': return 'Community Guidelines';
-      case 'tools': return 'Tools & Features';
-      case 'members': return 'Founding Members';
-      case 'review': return 'Review & Launch';
-      default: return '';
-    }
-  };
-
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 'type':
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">What type of space are you creating?</h3>
-              <p className="text-zinc-400">Choose the category that best fits your community's purpose</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.entries(SPACE_TYPES).map(([type, config]) => {
-                const _Icon = config.icon;
-                const isSelected = spaceData.type === type;
-                
-                return (
-                  <Card
-                    key={type}
-                    className={`p-4 cursor-pointer transition-all duration-200 ${
-                      isSelected 
-                        ? 'bg-hive-gold/10 border-hive-gold' 
-                        : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
-                    }`}
-                    onClick={() => updateSpaceData({ type: type as SpaceType })}
-                  >
-                    <div className="flex items-start space-x-3">
-                      <div className={`w-12 h-12 ${config.color} rounded-lg flex items-center justify-center text-xl flex-shrink-0`}>
-                        {config.emoji}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold text-[var(--hive-text-inverse)]">{config.name}</h4>
-                          {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
-                        </div>
-                        <p className="text-sm text-zinc-400 mb-3 leading-tight">{config.description}</p>
-                        <div className="space-y-2">
-                          <div className="text-xs text-zinc-500 font-medium">Examples:</div>
-                          <div className="flex flex-wrap gap-1">
-                            {config.examples.slice(0, 2).map((example) => (
-                              <Badge key={example} variant="skill-tag" className="text-xs">
-                                {example}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-
-            {errors.type && (
-              <div className="flex items-center space-x-2 text-red-400 text-sm">
-                <AlertCircle className="h-4 w-4" />
-                <span>{errors.type}</span>
-              </div>
-            )}
-          </div>
-        );
-
-      case 'details':
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <div className={`w-16 h-16 ${SPACE_TYPES[spaceData.type].color} rounded-xl flex items-center justify-center text-2xl mx-auto mb-3`}>
-                {SPACE_TYPES[spaceData.type].emoji}
-              </div>
-              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Space Identity</h3>
-              <p className="text-zinc-400">Give your {SPACE_TYPES[spaceData.type].name.toLowerCase()} space a name and description</p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Space Name *</label>
-                <Input
-                  value={spaceData.name}
-                  onChange={(e) => updateSpaceData({ name: e.target.value })}
-                  placeholder="Enter a clear, descriptive name..."
-                  maxLength={50}
-                  error={errors.name}
-                />
-                <div className="text-xs text-zinc-500 mt-1">{spaceData.name.length}/50 characters</div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Description *</label>
-                <textarea
-                  value={spaceData.description}
-                  onChange={(e) => updateSpaceData({ description: e.target.value })}
-                  placeholder="Describe the purpose and goals of your space..."
-                  maxLength={200}
-                  rows={4}
-                  className={`w-full p-3 bg-zinc-800 border rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-hive-gold/50 resize-none ${
-                    errors.description ? 'border-red-500' : 'border-zinc-700 focus:border-hive-gold'
-                  }`}
-                />
-                <div className="flex items-center justify-between mt-1">
-                  <div className="text-xs text-zinc-500">{spaceData.description.length}/200 characters</div>
-                  {errors.description && (
-                    <div className="text-red-400 text-xs">{errors.description}</div>
-                  )}
+  // Step components
+  const SpaceTypeStep = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold">Choose Space Type</h2>
+        <p className="text-muted-foreground">What kind of community are you creating?</p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {SPACE_TYPES.map((type) => {
+          const Icon = type.icon;
+          return (
+            <Card
+              key={type.id}
+              className={`cursor-pointer transition-all hover:shadow-md ${
+                spaceData.type === type.id ? 'ring-2 ring-accent' : ''
+              }`}
+              onClick={() => setSpaceData({ ...spaceData, type: type.id })}
+            >
+              <div className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`p-2 rounded-lg ${type.color} text-white`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">{type.name}</h3>
+                    <p className="text-sm text-muted-foreground">{type.description}</p>
+                  </div>
                 </div>
-              </div>
-
-              {/* Category Tags */}
-              <div>
-                <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Category Tags (Optional)</label>
-                <div className="flex flex-wrap gap-2">
-                  {['study-group', 'social', 'academic', 'project', 'community', 'networking'].map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="skill-tag"
-                      className={`cursor-pointer transition-colors ${
-                        spaceData.customizations.tags?.includes(tag) ? 'bg-hive-gold text-hive-obsidian' : ''
-                      }`}
-                      onClick={() => {
-                        const currentTags = spaceData.customizations.tags || [];
-                        const newTags = currentTags.includes(tag)
-                          ? currentTags.filter(t => t !== tag)
-                          : [...currentTags, tag];
-                        updateSpaceData({
-                          customizations: { ...spaceData.customizations, tags: newTags }
-                        });
-                      }}
-                    >
-                      #{tag}
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">Examples:</p>
+                  {type.examples.map((example, index) => (
+                    <Badge key={index} variant="outline" className="text-xs mr-1">
+                      {example}
                     </Badge>
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
-        );
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
 
-      case 'privacy':
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Privacy & Access Settings</h3>
-              <p className="text-zinc-400">Configure who can see and join your space</p>
-            </div>
-
-            {/* Visibility Settings */}
-            <div>
-              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Space Visibility</h4>
-              <div className="space-y-3">
-                {[
-                  {
-                    value: 'public',
-                    icon: Globe,
-                    title: 'Public',
-                    description: 'Anyone on campus can discover and view this space'
-                  },
-                  {
-                    value: 'private',
-                    icon: Lock,
-                    title: 'Private',
-                    description: 'Only members can see the space and its content'
-                  },
-                  {
-                    value: 'invite_only',
-                    icon: Shield,
-                    title: 'Invite Only',
-                    description: 'Only invited users can see and access the space'
-                  }
-                ].map((option) => {
-                  const Icon = option.icon;
-                  const isSelected = spaceData.visibility === option.value;
-                  
-                  return (
-                    <Card
-                      key={option.value}
-                      className={`p-4 cursor-pointer transition-all duration-200 ${
-                        isSelected 
-                          ? 'bg-hive-gold/10 border-hive-gold' 
-                          : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
-                      }`}
-                      onClick={() => updateSpaceData({ visibility: option.value as any })}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Icon className={`h-5 w-5 ${isSelected ? 'text-hive-gold' : 'text-zinc-400'}`} />
-                        <div className="flex-1">
-                          <div className="font-medium text-[var(--hive-text-inverse)]">{option.title}</div>
-                          <div className="text-sm text-zinc-400">{option.description}</div>
-                        </div>
-                        {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Join Process */}
-            <div>
-              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Join Process</h4>
-              <div className="space-y-3">
-                {[
-                  {
-                    value: 'instant',
-                    icon: Users,
-                    title: 'Instant Join',
-                    description: 'Anyone can join immediately without approval'
-                  },
-                  {
-                    value: 'approval',
-                    icon: Settings,
-                    title: 'Requires Approval',
-                    description: 'Admins must approve new member requests'
-                  },
-                  {
-                    value: 'invite_only',
-                    icon: Mail,
-                    title: 'Invite Only',
-                    description: 'New members can only join via invitation'
-                  }
-                ].map((option) => {
-                  const Icon = option.icon;
-                  const isSelected = spaceData.joinProcess === option.value;
-                  
-                  return (
-                    <Card
-                      key={option.value}
-                      className={`p-4 cursor-pointer transition-all duration-200 ${
-                        isSelected 
-                          ? 'bg-hive-gold/10 border-hive-gold' 
-                          : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
-                      }`}
-                      onClick={() => updateSpaceData({ joinProcess: option.value as any })}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Icon className={`h-5 w-5 ${isSelected ? 'text-hive-gold' : 'text-zinc-400'}`} />
-                        <div className="flex-1">
-                          <div className="font-medium text-[var(--hive-text-inverse)]">{option.title}</div>
-                          <div className="text-sm text-zinc-400">{option.description}</div>
-                        </div>
-                        {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'rules': {
-        const defaultRules = [
-          'Be respectful and constructive in all interactions',
-          'Stay on topic and contribute meaningfully',
-          'No spam, harassment, or inappropriate content',
-          'Help maintain a positive learning environment'
-        ];
-
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Community Guidelines</h3>
-              <p className="text-zinc-400">Set clear expectations for your space members</p>
-            </div>
-
-            {/* Add Rule Input */}
-            <div>
-              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Add Custom Rule</label>
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={newRule}
-                  onChange={(e) => setNewRule(e.target.value)}
-                  placeholder="Enter a community guideline..."
-                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      addRule(newRule);
-                      setNewRule('');
-                    }
-                  }}
-                />
-                <Button
-                  onClick={() => {
-                    addRule(newRule);
-                    setNewRule('');
-                  }}
-                  disabled={!newRule.trim()}
-                  className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Suggested Rules */}
-            <div>
-              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Suggested Guidelines</h4>
-              <div className="space-y-2">
-                {defaultRules.map((rule, index) => (
-                  <div
-                    key={index}
-                    className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                      spaceData.rules.includes(rule)
-                        ? 'bg-hive-gold/10 border-hive-gold text-[var(--hive-text-inverse)]'
-                        : 'bg-zinc-800/50 border-zinc-700 text-zinc-300 hover:bg-zinc-800'
-                    }`}
-                    onClick={() => {
-                      if (spaceData.rules.includes(rule)) {
-                        removeRule(spaceData.rules.indexOf(rule));
-                      } else {
-                        addRule(rule);
-                      }
-                    }}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">{rule}</span>
-                      {spaceData.rules.includes(rule) ? (
-                        <Check className="h-4 w-4 text-hive-gold" />
-                      ) : (
-                        <Plus className="h-4 w-4 text-zinc-400" />
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Current Rules */}
-            {spaceData.rules.length > 0 && (
-              <div>
-                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Your Community Guidelines ({spaceData.rules.length})</h4>
-                <div className="space-y-2">
-                  {spaceData.rules.map((rule, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-hive-gold/10 border border-hive-gold rounded-lg">
-                      <span className="text-sm text-[var(--hive-text-inverse)]">{rule}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeRule(index)}
-                        className="text-red-400 hover:text-red-300"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {errors.rules && (
-              <div className="flex items-center space-x-2 text-red-400 text-sm">
-                <AlertCircle className="h-4 w-4" />
-                <span>{errors.rules}</span>
-              </div>
-            )}
-          </div>
-        );
-      }
-
-      case 'tools': {
-        const suggestedTools = SPACE_TYPES[spaceData.type].suggestedTools;
+  const BasicInfoStep = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold">Basic Information</h2>
+        <p className="text-muted-foreground">Tell us about your space</p>
+      </div>
+      
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">Space Name*</label>
+          <Input
+            placeholder="e.g., CS Study Group"
+            value={spaceData.name}
+            onChange={(e) => setSpaceData({ ...spaceData, name: e.target.value })}
+          />
+        </div>
         
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Tools & Features</h3>
-              <p className="text-zinc-400">Choose tools that will help your {SPACE_TYPES[spaceData.type].name.toLowerCase()} space coordinate effectively</p>
-            </div>
-
-            {/* Recommended Tools */}
-            <div>
-              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Recommended for {SPACE_TYPES[spaceData.type].name} Spaces</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {suggestedTools.map((toolId) => {
-                  const tool = SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS];
-                  const isSelected = spaceData.tools.includes(toolId);
-                  
-                  return (
-                    <Card
-                      key={toolId}
-                      className={`p-4 cursor-pointer transition-all duration-200 ${
-                        isSelected 
-                          ? 'bg-hive-gold/10 border-hive-gold' 
-                          : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
-                      }`}
-                      onClick={() => toggleTool(toolId)}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="text-2xl">{tool.icon}</div>
-                        <div className="flex-1">
-                          <div className="font-medium text-[var(--hive-text-inverse)]">{tool.name}</div>
-                          <div className="text-sm text-zinc-400">{tool.description}</div>
-                        </div>
-                        {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Other Available Tools */}
-            <div>
-              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Other Available Tools</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {Object.entries(SUGGESTED_TOOLS)
-                  .filter(([toolId]) => !suggestedTools.includes(toolId))
-                  .map(([toolId, tool]) => {
-                    const isSelected = spaceData.tools.includes(toolId);
-                    
-                    return (
-                      <Card
-                        key={toolId}
-                        className={`p-4 cursor-pointer transition-all duration-200 ${
-                          isSelected 
-                            ? 'bg-hive-gold/10 border-hive-gold' 
-                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
-                        }`}
-                        onClick={() => toggleTool(toolId)}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className="text-2xl">{tool.icon}</div>
-                          <div className="flex-1">
-                            <div className="font-medium text-[var(--hive-text-inverse)]">{tool.name}</div>
-                            <div className="text-sm text-zinc-400">{tool.description}</div>
-                          </div>
-                          {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
-                        </div>
-                      </Card>
-                    );
-                  })}
-              </div>
-            </div>
-
-            {spaceData.tools.length > 0 && (
-              <div className="p-4 bg-zinc-800/30 rounded-lg">
-                <div className="text-sm text-zinc-400 mb-2">Selected Tools:</div>
-                <div className="flex flex-wrap gap-2">
-                  {spaceData.tools.map((toolId) => (
-                    <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
-                      <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.icon}</span>
-                      <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.name}</span>
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
+        <div>
+          <label className="block text-sm font-medium mb-2">Description*</label>
+          <textarea
+            className="w-full p-3 border rounded-lg resize-none"
+            rows={4}
+            placeholder="Describe what your space is about and what members can expect..."
+            value={spaceData.description}
+            onChange={(e) => setSpaceData({ ...spaceData, description: e.target.value })}
+          />
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Visibility</label>
+            <select
+              className="w-full p-2 border rounded-lg"
+              value={spaceData.visibility}
+              onChange={(e) => setSpaceData({ 
+                ...spaceData, 
+                visibility: e.target.value as 'public' | 'private' | 'invite_only'
+              })}
+            >
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+              <option value="invite_only">Invite Only</option>
+            </select>
           </div>
-        );
-      }
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">Join Process</label>
+            <select
+              className="w-full p-2 border rounded-lg"
+              value={spaceData.joinProcess}
+              onChange={(e) => setSpaceData({ 
+                ...spaceData, 
+                joinProcess: e.target.value as 'instant' | 'approval' | 'invite_only'
+              })}
+            >
+              <option value="instant">Instant</option>
+              <option value="approval">Requires Approval</option>
+              <option value="invite_only">Invite Only</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
-      case 'members':
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Founding Members</h3>
-              <p className="text-zinc-400">Invite initial members to help establish your space (optional)</p>
-            </div>
-
+  const ReviewStep = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold">Review & Create</h2>
+        <p className="text-muted-foreground">Double-check your space details</p>
+      </div>
+      
+      <Card className="p-4">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            {(() => {
+              const typeConfig = SPACE_TYPES.find(t => t.id === spaceData.type);
+              const Icon = typeConfig?.icon || BookOpen;
+              return (
+                <div className={`p-2 rounded-lg ${typeConfig?.color || 'bg-gray-500'} text-white`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+              );
+            })()}
             <div>
-              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Invite by Handle or Email</label>
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  placeholder="@handle or email@university.edu"
-                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
-                />
-                <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Invite
-                </Button>
-              </div>
-              <div className="text-xs text-zinc-500 mt-1">
-                You can invite more members after creating the space
-              </div>
-            </div>
-
-            <div className="p-4 bg-zinc-800/30 rounded-lg">
-              <div className="flex items-center space-x-2 text-sm text-zinc-400">
-                <Users className="h-4 w-4" />
-                <span>You'll be automatically added as the space admin</span>
-              </div>
+              <h3 className="font-semibold">{spaceData.name}</h3>
+              <p className="text-sm capitalize text-muted-foreground">
+                {spaceData.type.replace('_', ' ')} Space
+              </p>
             </div>
           </div>
-        );
-
-      case 'review':
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <div className={`w-16 h-16 ${SPACE_TYPES[spaceData.type].color} rounded-xl flex items-center justify-center text-2xl mx-auto mb-3`}>
-                {SPACE_TYPES[spaceData.type].emoji}
-              </div>
-              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Ready to Launch!</h3>
-              <p className="text-zinc-400">Review your space details before creating</p>
-            </div>
-
-            <div className="space-y-4">
-              {/* Basic Info */}
-              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
-                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Basic Information</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-zinc-400">Type:</span>
-                    <Badge variant="skill-tag">{SPACE_TYPES[spaceData.type].name}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-400">Name:</span>
-                    <span className="text-[var(--hive-text-inverse)] font-medium">{spaceData.name}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-400">Visibility:</span>
-                    <span className="text-[var(--hive-text-inverse)] capitalize">{spaceData.visibility.replace('_', ' ')}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-400">Join Process:</span>
-                    <span className="text-[var(--hive-text-inverse)] capitalize">{spaceData.joinProcess.replace('_', ' ')}</span>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Description */}
-              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
-                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Description</h4>
-                <p className="text-zinc-300 text-sm leading-relaxed">{spaceData.description}</p>
-              </Card>
-
-              {/* Guidelines */}
-              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
-                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Community Guidelines ({spaceData.rules.length})</h4>
-                <div className="space-y-2">
-                  {spaceData.rules.map((rule, index) => (
-                    <div key={index} className="flex items-start space-x-2 text-sm">
-                      <Check className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
-                      <span className="text-zinc-300">{rule}</span>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-
-              {/* Tools */}
-              {spaceData.tools.length > 0 && (
-                <Card className="p-4 bg-zinc-800/50 border-zinc-700">
-                  <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Enabled Tools ({spaceData.tools.length})</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {spaceData.tools.map((toolId) => (
-                      <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
-                        <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.icon}</span>
-                        <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.name}</span>
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
+          
+          <p className="text-sm">{spaceData.description}</p>
+          
+          <div className="flex gap-4 text-sm">
+            <div className="flex items-center gap-1">
+              {spaceData.visibility === 'public' ? (
+                <Globe className="h-4 w-4" />
+              ) : (
+                <Lock className="h-4 w-4" />
               )}
+              <span className="capitalize">{spaceData.visibility}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Users className="h-4 w-4" />
+              <span className="capitalize">{spaceData.joinProcess.replace('_', ' ')}</span>
             </div>
           </div>
-        );
+        </div>
+      </Card>
+      
+      {createSpaceMutation.error && (
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <div>
+            <h4 className="font-medium">Error creating space</h4>
+            <p className="text-sm">{createSpaceMutation.error.message}</p>
+          </div>
+        </Alert>
+      )}
+    </div>
+  );
 
+  const canProceed = () => {
+    switch (currentStep) {
+      case 1:
+        return spaceData.type;
+      case 2:
+        return spaceData.name.trim() && spaceData.description.trim();
+      case 3:
+        return true;
       default:
-        return null;
+        return false;
     }
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      title=""
-      size="lg"
-      className="max-h-[90vh] overflow-hidden"
-    >
-      <div className="flex flex-col h-full">
-        {/* Header with Progress */}
-        <div className="p-6 border-b border-zinc-800">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)]">Create New Space</h2>
-            <div className="text-sm text-zinc-400">
-              Step {currentStepIndex + 1} of {steps.length}
-            </div>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="flex items-center space-x-2">
-            {steps.map((step, index) => (
-              <div key={step} className="flex-1">
-                <div className={`h-2 rounded-full transition-colors ${
-                  index <= currentStepIndex ? 'bg-hive-gold' : 'bg-zinc-700'
-                }`} />
+    <Modal isOpen={isOpen} onClose={handleClose}>
+      <div className="p-6 w-full max-w-2xl">
+        {/* Progress Steps */}
+        <div className="flex items-center justify-between mb-8">
+          {[1, 2, 3].map((step) => (
+            <div key={step} className="flex items-center">
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                  step === currentStep
+                    ? 'bg-accent text-white'
+                    : step < currentStep
+                    ? 'bg-green-500 text-white'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {step < currentStep ? <Check className="h-4 w-4" /> : step}
               </div>
-            ))}
-          </div>
-          
-          <div className="mt-3">
-            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{getStepTitle(currentStep)}</h3>
-          </div>
+              {step < 3 && (
+                <div
+                  className={`w-16 h-0.5 mx-2 ${
+                    step < currentStep ? 'bg-green-500' : 'bg-muted'
+                  }`}
+                />
+              )}
+            </div>
+          ))}
         </div>
 
         {/* Step Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {renderStepContent()}
+        <div className="min-h-[400px]">
+          {currentStep === 1 && <SpaceTypeStep />}
+          {currentStep === 2 && <BasicInfoStep />}
+          {currentStep === 3 && <ReviewStep />}
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-6 border-t border-zinc-800">
-          {/* Error Display */}
-          {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
-              <span className="text-sm text-red-400">{error}</span>
-            </div>
-          )}
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={currentStepIndex === 0 ? handleClose : prevStep}
-              className="flex items-center space-x-2"
-              disabled={isLoading}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>{currentStepIndex === 0 ? 'Cancel' : 'Back'}</span>
-            </Button>
-
-            <Button
-              onClick={currentStep === 'review' ? handleCreateSpace : nextStep}
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne flex items-center space-x-2"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-hive-obsidian/20 border-t-hive-obsidian rounded-full animate-spin" />
-                  <span>Creating...</span>
-                </>
-              ) : (
-                <>
-                  <span>{currentStep === 'review' ? 'Create Space' : 'Continue'}</span>
-                  {currentStep !== 'review' && <ArrowRight className="h-4 w-4" />}
-                </>
-              )}
-            </Button>
-          </div>
+        {/* Navigation */}
+        <div className="flex justify-between mt-8">
+          <Button
+            variant="outline"
+            onClick={currentStep === 1 ? handleClose : () => setCurrentStep(currentStep - 1)}
+            disabled={isLoading}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {currentStep === 1 ? 'Cancel' : 'Back'}
+          </Button>
+          
+          <Button
+            onClick={currentStep === 3 ? handleSubmit : () => setCurrentStep(currentStep + 1)}
+            disabled={!canProceed() || isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating...
+              </>
+            ) : currentStep === 3 ? (
+              <>
+                <Plus className="mr-2 h-4 w-4" />
+                Create Space
+              </>
+            ) : (
+              <>
+                Next
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </Modal>

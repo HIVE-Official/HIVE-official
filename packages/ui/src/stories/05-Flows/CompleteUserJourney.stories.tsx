@@ -290,8 +290,9 @@ const JourneyWithReset = () => {
   );
 };
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: 'Full Website/Complete User Journey',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     viewport: {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Shield, 
@@ -20,9 +20,12 @@ import {
 import { Button, Badge } from "@hive/ui";
 import { cn } from '../../lib/utils';
 
+// State Management
+import { useUIStore, useAuthStore } from '@hive/hooks';
+
 export type LeaderMode = 'moderate' | 'manage' | 'configure' | 'insights' | null;
 
-interface LeaderToolbarProps {
+interface LeaderToolbarMigratedProps {
   isVisible: boolean;
   currentMode: LeaderMode;
   onModeChange: (mode: LeaderMode) => void;
@@ -65,14 +68,25 @@ const LEADER_MODES = {
   }
 } as const;
 
-export function LeaderToolbar({ 
+export function LeaderToolbarMigrated({ 
   isVisible, 
   currentMode, 
   onModeChange, 
   spaceRole,
   className 
-}: LeaderToolbarProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+}: LeaderToolbarMigratedProps) {
+  // Global state
+  const { profile } = useAuthStore();
+  const isExpanded = useUIStore((state) => state.modals['leader-toolbar']?.isOpen || false);
+  const { openModal, closeModal } = useUIStore();
+
+  const handleToggleExpanded = () => {
+    if (isExpanded) {
+      closeModal('leader-toolbar');
+    } else {
+      openModal('leader-toolbar');
+    }
+  };
 
   const availableModes = Object.entries(LEADER_MODES).filter(([mode]) => {
     // All roles can moderate and manage
@@ -122,7 +136,7 @@ export function LeaderToolbar({
                     )}
                     onClick={() => {
                       onModeChange(isActive ? null : mode);
-                      setIsExpanded(false);
+                      closeModal('leader-toolbar');
                     }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -168,7 +182,7 @@ export function LeaderToolbar({
             if (currentMode) {
               onModeChange(null);
             } else {
-              setIsExpanded(!isExpanded);
+              handleToggleExpanded();
             }
           }}
           whileHover={{ scale: 1.05 }}
@@ -269,16 +283,22 @@ export function LeaderToolbar({
   );
 }
 
-// Helper hook for leader mode context
+// Updated hook for leader mode context with store integration
 export function useLeaderMode() {
-  const [currentMode, setCurrentMode] = useState<LeaderMode>(null);
+  const { openModal, closeModal } = useUIStore();
+  const currentMode = useUIStore((state) => state.modals['leader-mode']?.data as LeaderMode) || null;
   
   const toggleMode = (mode: LeaderMode) => {
-    setCurrentMode(currentMode === mode ? null : mode);
+    const newMode = currentMode === mode ? null : mode;
+    if (newMode) {
+      openModal('leader-mode', newMode);
+    } else {
+      closeModal('leader-mode');
+    }
   };
   
   const exitMode = () => {
-    setCurrentMode(null);
+    closeModal('leader-mode');
   };
   
   return {

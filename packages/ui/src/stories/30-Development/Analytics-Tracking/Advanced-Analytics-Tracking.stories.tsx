@@ -35,8 +35,9 @@ import {
   Timer
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '28-Advanced-Analytics-Tracking/Analytics-Tracking-System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ProfileDashboard } from './profile-dashboard';
 
 // Mock framer-motion to avoid animation issues in tests

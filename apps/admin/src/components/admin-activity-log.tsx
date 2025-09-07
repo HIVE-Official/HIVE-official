@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { AdminActivityLog, ActivityLogStats, AdminAction } from "@/lib/admin-activity-logger";
@@ -20,7 +20,7 @@ export function AdminActivityLogDashboard() {
     limit: 100,
   });
 
-  const fetchActivityLogs = async () => {
+  const fetchActivityLogs = useCallback(async () => {
     if (!admin) return;
 
     setLoading(true);
@@ -51,7 +51,7 @@ export function AdminActivityLogDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [admin, filters]);
 
   const exportLogs = async () => {
     if (!admin) return;
@@ -122,7 +122,7 @@ export function AdminActivityLogDashboard() {
 
   useEffect(() => {
     fetchActivityLogs();
-  }, [admin]);
+  }, [fetchActivityLogs]);
 
   const getActionColor = (action: AdminAction) => {
     if (action.includes('approve') || action.includes('login')) return 'text-green-400';

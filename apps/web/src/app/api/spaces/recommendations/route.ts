@@ -4,8 +4,8 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { withAuth, ApiResponse as _ApiResponse } from '@/lib/api-auth-middleware';
 
 const recommendationsSchema = z.object({
   limit: z.coerce.number().min(1).max(20).default(10),
@@ -148,7 +148,7 @@ async function getUserProfile(userId: string): Promise<UserProfile> {
 /**
  * Extract user interests from profile and behavior
  */
-function extractUserInterests(userData: any, joinedSpaces: string[], spaceTypes: string[]): string[] {
+function extractUserInterests(userData: any, _joinedSpaces: string[], spaceTypes: string[]): string[] {
   const interests: string[] = [];
   
   // From explicit profile interests

@@ -188,7 +188,7 @@ export interface ProfileActionProps
 
 export function ProfileAction({
   actionType,
-  type = "button",
+  type: _type = "button",
   label,
   icon: CustomIcon,
   iconOnly = false,

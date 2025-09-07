@@ -44,8 +44,8 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -53,7 +53,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -67,8 +67,8 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -76,7 +76,7 @@ export declare const CreationAnalyticsEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -148,8 +148,8 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -157,7 +157,7 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -176,8 +176,8 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -185,7 +185,7 @@ export declare const ToolCreatedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -264,8 +264,8 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -273,7 +273,7 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -294,8 +294,8 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -303,7 +303,7 @@ export declare const ToolUpdatedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -396,8 +396,8 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -405,7 +405,7 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -428,8 +428,8 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -437,7 +437,7 @@ export declare const ElementAddedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -512,8 +512,8 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -521,7 +521,7 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -541,8 +541,8 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -550,7 +550,7 @@ export declare const ElementConfiguredEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -641,8 +641,8 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -650,7 +650,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -674,8 +674,8 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -683,7 +683,7 @@ export declare const BuilderSessionEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -754,8 +754,8 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -763,7 +763,7 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -782,8 +782,8 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -791,7 +791,7 @@ export declare const ToolInstanceOpenedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -870,8 +870,8 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -879,7 +879,7 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -900,8 +900,8 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -909,7 +909,7 @@ export declare const ToolInstanceSubmittedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -1006,8 +1006,8 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -1015,7 +1015,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -1039,8 +1039,8 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -1048,7 +1048,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -1119,8 +1119,8 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -1128,7 +1128,7 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -1147,8 +1147,8 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -1156,7 +1156,7 @@ export declare const ShareLinkCreatedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -1231,8 +1231,8 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -1240,7 +1240,7 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;
@@ -1260,8 +1260,8 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
         height: number;
         width: number;
     } | undefined;
-    spaceId?: string | undefined;
     toolName?: string | undefined;
+    spaceId?: string | undefined;
     elementId?: string | undefined;
     elementType?: string | undefined;
     isSpaceTool?: boolean | undefined;
@@ -1269,7 +1269,7 @@ export declare const ToolForkedEventSchema: z.ZodObject<{
     userAgent?: string | undefined;
     userIdHash?: string | undefined;
     toolVersion?: string | undefined;
-    toolStatus?: "preview" | "draft" | "published" | undefined;
+    toolStatus?: "draft" | "published" | "preview" | undefined;
     elementVersion?: number | undefined;
     loadTime?: number | undefined;
     renderTime?: number | undefined;

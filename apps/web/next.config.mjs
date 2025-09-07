@@ -35,8 +35,8 @@ const nextConfig = {
   },
   
   eslint: {
-    // Temporarily allow warnings for launch - can be tightened post-launch
-    ignoreDuringBuilds: true,
+    // Enable ESLint validation during builds
+    ignoreDuringBuilds: false,
   },
   typescript: {
     // Enable TypeScript validation for production builds
@@ -241,11 +241,10 @@ const nextConfig = {
             },
             // Common vendor libraries
             vendor: {
-              test: /[\\/]node_modules[\\/]/,
+              test: /[\\/]node_modules[\\/](?!(@tanstack|@hive|framer-motion)[\\/])/,
               name: 'vendor',
               chunks: 'all',
               priority: 10,
-              exclude: /[\\/]node_modules[\\/](@tanstack|@hive|framer-motion)[\\/]/,
             },
           },
         },

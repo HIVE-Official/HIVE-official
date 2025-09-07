@@ -988,7 +988,7 @@ export function EnhancedSpaceControlDashboard() {
                   <Button
                     onClick={() => {
                       // TODO: Implement edit functionality
-                      console.log('Edit space:', selectedSpace.id);
+                      // Edit space: selectedSpace.id
                     }}
                     variant="outline"
                     className="border-amber-600 text-amber-400 hover:bg-amber-600/10"

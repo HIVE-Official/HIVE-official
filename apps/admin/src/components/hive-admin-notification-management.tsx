@@ -778,10 +778,10 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
                   <NotificationCard
                     key={notification.id}
                     notification={notification}
-                    onViewDetails={() => console.log('View details:', notification.id)}
-                    onEdit={() => console.log('Edit notification:', notification.id)}
-                    onCancel={() => console.log('Cancel notification:', notification.id)}
-                    onResend={() => console.log('Resend notification:', notification.id)}
+                    onViewDetails={() => {/* View details: notification.id */}}
+                    onEdit={() => {/* Edit notification: notification.id */}}
+                    onCancel={() => {/* Cancel notification: notification.id */}}
+                    onResend={() => {/* Resend notification: notification.id */}}
                   />
                 ))}
               </div>

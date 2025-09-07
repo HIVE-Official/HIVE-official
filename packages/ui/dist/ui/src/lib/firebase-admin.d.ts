@@ -19,6 +19,6 @@ export declare const adminFirestore: {
         delete: () => void;
         commit: () => Promise<boolean>;
     };
-    runTransaction: (fn: Function) => Promise<any>;
+    runTransaction: (fn: () => void) => Promise<void>;
 };
 //# sourceMappingURL=firebase-admin.d.ts.map

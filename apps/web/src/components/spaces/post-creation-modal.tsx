@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { authenticatedFetch } from '../../lib/auth-utils';
 import { Button, Badge } from "@hive/ui";
 import { Alert } from "@/components/temp-stubs";
 import { 
@@ -20,7 +18,14 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface PostCreationModalProps {
+// State Management
+import { 
+  useCreatePost,
+  useUIStore,
+  useAuthStore
+} from '@hive/hooks';
+
+interface PostCreationModalMigratedProps {
   isOpen: boolean;
   onClose: () => void;
   spaceId: string;
@@ -67,56 +72,30 @@ const postTypes = {
   }
 } as const;
 
-export function PostCreationModal({
+export function PostCreationModalMigrated({
   isOpen,
   onClose,
   spaceId,
   spaceName,
   initialPostType = 'discussion',
   canCreateAnnouncements = false
-}: PostCreationModalProps) {
+}: PostCreationModalMigratedProps) {
+  // Global state
+  const { addToast } = useUIStore();
+  const { user } = useAuthStore();
+
+  // Local state
   const [selectedType, setSelectedType] = useState<keyof typeof postTypes>(initialPostType);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '']);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const queryClient = useQueryClient();
 
-  // Create post mutation
-  const createPostMutation = useMutation({
-    mutationFn: async (postData: {
-      type: string;
-      content: string;
-      title?: string;
-      linkUrl?: string;
-      pollOptions?: string[];
-    }) => {
-      const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postData)
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create post');
-      }
-      
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['space-posts', spaceId] });
-      handleClose();
-    },
-    onError: (error: Error) => {
-      setError(error.message);
-      setIsSubmitting(false);
-    }
-  });
+  // React Query mutation
+  const createPost = useCreatePost();
 
   const handleClose = () => {
     setContent('');
@@ -124,25 +103,21 @@ export function PostCreationModal({
     setLinkUrl('');
     setPollOptions(['', '']);
     setError(null);
-    setIsSubmitting(false);
     onClose();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsSubmitting(true);
 
     // Validation
     if (!content.trim()) {
       setError('Content is required');
-      setIsSubmitting(false);
       return;
     }
 
     if (selectedType === 'link' && !linkUrl.trim()) {
       setError('Link URL is required for link posts');
-      setIsSubmitting(false);
       return;
     }
 
@@ -150,12 +125,12 @@ export function PostCreationModal({
       const validOptions = pollOptions.filter(option => option.trim());
       if (validOptions.length < 2) {
         setError('Polls need at least 2 options');
-        setIsSubmitting(false);
         return;
       }
     }
 
     const postData: any = {
+      spaceId,
       type: selectedType,
       content: content.trim(),
       title: title.trim() || undefined
@@ -169,7 +144,24 @@ export function PostCreationModal({
       postData.pollOptions = pollOptions.filter(option => option.trim());
     }
 
-    createPostMutation.mutate(postData);
+    createPost.mutate(postData, {
+      onSuccess: () => {
+        addToast({
+          title: 'Post Created!',
+          description: `Your ${selectedType} has been shared with ${spaceName}`,
+          type: 'success',
+        });
+        handleClose();
+      },
+      onError: (error) => {
+        setError(error.message || 'Failed to create post');
+        addToast({
+          title: 'Failed to create post',
+          description: error.message || 'Something went wrong',
+          type: 'error',
+        });
+      },
+    });
   };
 
   const addPollOption = () => {
@@ -246,6 +238,7 @@ export function PostCreationModal({
               size="sm"
               onClick={handleClose}
               className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
+              disabled={createPost.isPending}
             >
               <X className="h-4 w-4" />
             </Button>
@@ -276,6 +269,7 @@ export function PostCreationModal({
                         onClick={() => setSelectedType(type as keyof typeof postTypes)}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        disabled={createPost.isPending}
                       >
                         <TypeIcon className="h-5 w-5 mx-auto mb-2" />
                         <div className="text-xs font-medium">{config.label}</div>
@@ -297,6 +291,7 @@ export function PostCreationModal({
                   placeholder="Give your post a title..."
                   className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   maxLength={200}
+                  disabled={createPost.isPending}
                 />
               </div>
 
@@ -313,6 +308,7 @@ export function PostCreationModal({
                   className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30 min-h-[120px]"
                   maxLength={2000}
                   required
+                  disabled={createPost.isPending}
                 />
                 <div className="flex justify-between items-center mt-2">
                   <p className="text-xs text-neutral-400">
@@ -337,6 +333,7 @@ export function PostCreationModal({
                     placeholder="https://example.com"
                     className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                     required={selectedType === 'link'}
+                    disabled={createPost.isPending}
                   />
                 </div>
               )}
@@ -357,6 +354,7 @@ export function PostCreationModal({
                           placeholder={`Option ${index + 1}`}
                           className="flex-1 px-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                           maxLength={100}
+                          disabled={createPost.isPending}
                         />
                         {pollOptions.length > 2 && (
                           <Button
@@ -365,6 +363,7 @@ export function PostCreationModal({
                             size="sm"
                             onClick={() => removePollOption(index)}
                             className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                            disabled={createPost.isPending}
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
@@ -379,6 +378,7 @@ export function PostCreationModal({
                         size="sm"
                         onClick={addPollOption}
                         className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
+                        disabled={createPost.isPending}
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         Add Option
@@ -408,7 +408,7 @@ export function PostCreationModal({
                   type="button"
                   variant="outline"
                   onClick={handleClose}
-                  disabled={isSubmitting}
+                  disabled={createPost.isPending}
                   className="flex-1"
                 >
                   Cancel
@@ -417,10 +417,10 @@ export function PostCreationModal({
                 <Button
                   type="submit"
                   variant="primary"
-                  disabled={isSubmitting || !content.trim()}
+                  disabled={createPost.isPending || !content.trim()}
                   className="flex-1 bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255]"
                 >
-                  {isSubmitting ? (
+                  {createPost.isPending ? (
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       <span>Creating...</span>

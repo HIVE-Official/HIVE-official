@@ -33,7 +33,12 @@ function SpaceDetailsWidget({ space, membershipRole, onJoin, onLeave, onMessage,
 }
 
 interface UnifiedSpaceCardProps {
-  space: Space;
+  space: Space & {
+    status?: string;
+    potentialMembers?: number;
+    awaitingLeader?: boolean;
+    hasRequestedActivation?: boolean;
+  };
   variant?: "grid" | "list" | "compact";
   showMembership?: boolean;
   membershipRole?: "member" | "admin" | "owner";
@@ -104,6 +109,14 @@ export function UnifiedSpaceCard({
   };
 
   const getActionButton = () => {
+    // Preview mode spaces waiting for leaders
+    if (space.status === 'preview' && space.awaitingLeader) {
+      if (space.hasRequestedActivation) {
+        return { text: 'Request Pending', action: 'pending', disabled: true };
+      }
+      return { text: 'Request to Lead', action: 'request-lead', disabled: false };
+    }
+    
     if (space.status === 'dormant') {
       return { text: 'Preview', action: 'preview', disabled: false };
     }
@@ -219,19 +232,42 @@ export function UnifiedSpaceCard({
               <div className="flex items-center gap-4 text-xs text-[#71717A]">
                 <span className="flex items-center">
                   <Users className="h-3 w-3 mr-1" />
-                  {space.memberCount || 0} members
+                  {space.status === 'preview' && space.potentialMembers ? (
+                    <>{space.potentialMembers} potential members</>
+                  ) : (
+                    <>{space.memberCount || 0} members</>
+                  )}
                 </span>
                 <span className="flex items-center">
                   <MapPin className="h-3 w-3 mr-1" />
                   {space.type?.replace('_', ' ')}
                 </span>
+                {space.status === 'preview' && (
+                  <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded-full text-xs">
+                    Preview Mode
+                  </span>
+                )}
               </div>
             </div>
           </div>
           <Button 
             size="sm"
-            className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255] disabled:opacity-50"
-            onClick={getActionButton().action === 'join' ? handleJoinClick : (e) => e.stopPropagation()}
+            className={
+              getActionButton().action === 'request-lead' 
+                ? "bg-amber-500 text-white hover:bg-amber-600" 
+                : "bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255] disabled:opacity-50"
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+              const action = getActionButton().action;
+              if (action === 'join') {
+                handleJoinClick(e);
+              } else if (action === 'request-lead') {
+                router.push(`/spaces/${space.id}/request-activation`);
+              } else if (action === 'open') {
+                router.push(`/spaces/${space.id}`);
+              }
+            }}
             disabled={getActionButton().disabled}
             aria-label={`${getActionButton().text} ${space.name} space`}
           >

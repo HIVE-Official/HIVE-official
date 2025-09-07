@@ -574,7 +574,7 @@ export function VisualToolComposer({
                   y1={connection.from.y}
                   x2={connection.to.x}
                   y2={connection.to.y}
-                  stroke="#D4AF37"
+                  stroke="#FFD700"
                   strokeWidth="2"
                   markerEnd="url(#arrowhead)"
                 />
@@ -590,7 +590,7 @@ export function VisualToolComposer({
                 >
                   <polygon
                     points="0 0, 10 3.5, 0 7"
-                    fill="#D4AF37"
+                    fill="#FFD700"
                   />
                 </marker>
               </defs>

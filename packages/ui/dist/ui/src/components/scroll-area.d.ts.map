@@ -1,1 +1,0 @@
-{"version":3,"file":"scroll-area.d.ts","sourceRoot":"","sources":["../../../../src/components/scroll-area.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAA;AAGzB,UAAU,eAAe;IACvB,QAAQ,EAAE,KAAK,CAAC,SAAS,CAAA;IACzB,SAAS,CAAC,EAAE,MAAM,CAAA;CACnB;AAED,eAAO,MAAM,UAAU,EAAE,KAAK,CAAC,EAAE,CAAC,eAAe,CAQhD,CAAA"}

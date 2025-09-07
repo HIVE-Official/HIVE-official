@@ -14,9 +14,7 @@ import {
   Zap, 
   Users, 
   BookOpen,
-  Eye,
-  EyeOff,
-  Verified 
+  EyeOff
 } from 'lucide-react';
 
 const profileBadgeVariants = cva(

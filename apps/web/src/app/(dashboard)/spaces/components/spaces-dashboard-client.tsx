@@ -8,14 +8,14 @@ import {
   Filter, 
   Users, 
   Star, 
-  GraduationCap, 
-  Building,
+  GraduationCap as _GraduationCap, 
+  Building as _Building,
   Sparkles,
   Plus,
   ArrowLeft,
   Grid3X3,
   List,
-  MapPin,
+  MapPin as _MapPin,
   Clock,
   TrendingUp
 } from 'lucide-react';

@@ -20,9 +20,9 @@ export async function shareContent(data) {
         }
         // Final fallback - construct share URLs
         if (data.url || data.text) {
-            const shareText = encodeURIComponent(data.text || '');
+            const _shareText = encodeURIComponent(data.text || '');
             const shareUrl = encodeURIComponent(data.url || '');
-            const shareTitle = encodeURIComponent(data.title || 'Check this out!');
+            const _shareTitle = encodeURIComponent(data.title || 'Check this out!');
             // Try to open share dialog on mobile
             if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 window.open(`https://m.facebook.com/sharer/sharer.php?u=${shareUrl}`, '_blank');
@@ -137,7 +137,6 @@ export function vibrate(pattern) {
     }
     return false;
 }
-// Screen wake lock (keep screen on)
 export class WakeLock {
     constructor() {
         this.wakeLock = null;
@@ -162,7 +161,7 @@ export class WakeLock {
         }
     }
     get isActive() {
-        return this.wakeLock && !this.wakeLock.released;
+        return Boolean(this.wakeLock && !this.wakeLock.released);
     }
 }
 export function watchOrientation(callback) {

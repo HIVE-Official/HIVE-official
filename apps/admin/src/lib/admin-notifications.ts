@@ -77,7 +77,7 @@ class AdminNotificationSystem {
     await this.sendToChannels(newNotification);
 
     // Log the notification
-    console.log(`[ADMIN_NOTIFICATION] ${notification.type}: ${notification.title}`);
+    // [ADMIN_NOTIFICATION] ${notification.type}: ${notification.title}
 
     return newNotification;
   }
@@ -204,9 +204,9 @@ class AdminNotificationSystem {
   /**
    * Send security alert
    */
-  private async sendSecurityAlert(notification: AdminNotification): Promise<void> {
+  private async sendSecurityAlert(_notification: AdminNotification): Promise<void> {
     // TODO: Implement security alert system (email, Slack, etc.)
-    console.log(`[SECURITY_ALERT] ${notification.title}: ${notification.message}`);
+    // [SECURITY_ALERT] ${notification.title}: ${notification.message}
   }
 
   /**

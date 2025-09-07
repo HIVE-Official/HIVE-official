@@ -3,7 +3,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
-import { Camera, Crown, Shield, Eye, EyeOff, Upload } from 'lucide-react';
+import { Camera, Crown, Shield, EyeOff, Upload } from 'lucide-react';
 import Image from 'next/image';
 
 const profileAvatarVariants = cva(

@@ -13,20 +13,20 @@ export { SchoolPick } from './components/auth/school-pick.js';
 // === LOADING COMPONENTS ===
 export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator.js';
 // === ONBOARDING COMPONENTS (temporarily commented - components need to be created) ===
-// export { CreateProfileStep } from './components/onboarding/create-profile-step.js';
-// export { AcademicStep } from './components/onboarding/academic-step.js';
-// export { InterestsStep } from './components/onboarding/interests-step.js';
-// export { WelcomeRoleStep } from './components/onboarding/welcome-role-step.js';
-// export { AlumniComingSoonStep } from './components/onboarding/alumni-coming-soon-step.js';
-// export { OnboardingCompleteStep } from './components/onboarding/onboarding-complete-step.js';
+// export { CreateProfileStep } from './components/onboarding/create-profile-step';
+// export { AcademicStep } from './components/onboarding/academic-step';
+// export { InterestsStep } from './components/onboarding/interests-step';
+// export { WelcomeRoleStep } from './components/onboarding/welcome-role-step';
+// export { AlumniComingSoonStep } from './components/onboarding/alumni-coming-soon-step';
+// export { OnboardingCompleteStep } from './components/onboarding/onboarding-complete-step';
 // === PROFILE COMPONENTS (temporarily commented - components need to be created) ===
-// export { BentoProfileDashboard } from './components/profile/bento-profile-dashboard.js';
-// export { EnhancedProfileHeader } from './components/profile/enhanced-profile-header.js';
-// export { EnhancedProfileNavigation, ProfileSectionHeader } from './components/profile/enhanced-profile-navigation.js';
-// export { EnhancedProfileSettings } from './components/profile/enhanced-profile-settings.js';
-// export { CampusActivityFeed } from './components/profile/campus-activity-feed.js';
-// export { EnhancedUserIdentity } from './components/profile/enhanced-user-identity.js';
-// export { WorkingProfileHeader } from './components/profile/working-profile-header.js';
+// export { BentoProfileDashboard } from './components/profile/bento-profile-dashboard';
+// export { EnhancedProfileHeader } from './components/profile/enhanced-profile-header';
+// export { EnhancedProfileNavigation, ProfileSectionHeader } from './components/profile/enhanced-profile-navigation';
+// export { EnhancedProfileSettings } from './components/profile/enhanced-profile-settings';
+// export { CampusActivityFeed } from './components/profile/campus-activity-feed';
+// export { EnhancedUserIdentity } from './components/profile/enhanced-user-identity';
+// export { WorkingProfileHeader } from './components/profile/working-profile-header';
 // export { 
 //   MySpacesCard, 
 //   MyToolsCard, 
@@ -34,7 +34,7 @@ export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingO
 //   CampusConnectionsCard, 
 //   ProfileStatsCard, 
 //   QuickActionsCard 
-// } from './components/profile/profile-dashboard-cards.js';
+// } from './components/profile/profile-dashboard-cards';
 // === PROFILE LAYOUT SYSTEM (temporarily commented - components need to be created) ===
 // export { 
 //   ProfileLayout,
@@ -45,7 +45,7 @@ export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingO
 //   ResponsiveProfileWrapper,
 //   ProfileIdentityLayout,
 //   ProfileStatsLayout
-// } from './components/profile/profile-layout-system.js';
+// } from './components/profile/profile-layout-system';
 // === CROSS-SLICE INTEGRATION (temporarily commented - components need to be created) ===
 // export { 
 //   CrossSliceIntegration,
@@ -54,9 +54,9 @@ export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingO
 //   EventsIntegration,
 //   ActivityIntegration,
 //   QuickActions
-// } from './components/profile/cross-slice-integration.js';
+// } from './components/profile/cross-slice-integration';
 // === SPACES COMPONENTS (temporarily commented - components need to be created) ===
-// export { SpaceRequestForm } from './components/spaces/space-request-form.js';
+// export { SpaceRequestForm } from './components/spaces/space-request-form';
 // === BASIC UI COMPONENTS (from existing system) ===
 export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced.js';
 export { HiveInput as Input } from './components/hive-input.js';

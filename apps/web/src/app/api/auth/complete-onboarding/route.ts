@@ -13,6 +13,8 @@ import { createRequestLogger } from "@/lib/structured-logger";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { authRateLimiter, RATE_LIMITS } from "@/lib/auth-rate-limiter";
+import { validateCSRFToken } from "@/lib/csrf-protection";
+import { auditLogger, AuditEventType, AuditSeverity } from "@/lib/audit-logger";
 
 
 const completeOnboardingSchema = z.object({
@@ -62,6 +64,21 @@ interface _UserData {
 
 export async function POST(request: NextRequest) {
   try {
+    // CSRF Protection - prevent cross-site request forgery
+    const csrfValidation = validateCSRFToken(request);
+    if (!csrfValidation.valid) {
+      console.warn('🚨 CSRF validation failed for complete onboarding:', {
+        error: csrfValidation.error,
+        userAgent: request.headers.get('user-agent'),
+        origin: request.headers.get('origin')
+      });
+      
+      return NextResponse.json(
+        { error: "Invalid request - CSRF validation failed" },
+        { status: 403 }
+      );
+    }
+
     // Rate limiting - prevent onboarding spam
     const clientKey = authRateLimiter.getClientKey(request);
     const rateLimit = authRateLimiter.checkLimit(
@@ -179,6 +196,21 @@ export async function POST(request: NextRequest) {
       // Handle specific error types
       if (transactionResult.error instanceof TransactionError) {
         const message = transactionResult.error.message;
+        
+        // Audit log onboarding failure
+        await auditLogger.log(
+          AuditEventType.ONBOARDING_FAILED,
+          AuditSeverity.WARNING,
+          `Onboarding failed for ${userEmail}: ${message}`,
+          {
+            userId,
+            userEmail,
+            request,
+            error: transactionResult.error,
+            metadata: { handle: normalizedHandle }
+          }
+        );
+        
         if (message.includes('Handle is already taken')) {
           return NextResponse.json(ApiResponseHelper.error("Handle is already taken", "UNKNOWN_ERROR"), { status: 409 });
         }
@@ -201,6 +233,24 @@ export async function POST(request: NextRequest) {
       duration: transactionResult.duration,
       operationsCompleted: transactionResult.operationsCompleted
     });
+    
+    // Audit log successful onboarding
+    await auditLogger.log(
+      AuditEventType.ONBOARDING_COMPLETED,
+      AuditSeverity.INFO,
+      `User ${userEmail} completed onboarding successfully`,
+      {
+        userId,
+        userEmail,
+        request,
+        metadata: {
+          handle: normalizedHandle,
+          userType: onboardingData.userType,
+          major: onboardingData.major,
+          graduationYear: onboardingData.graduationYear
+        }
+      }
+    );
 
     // Create builder requests if user selected spaces (using transaction manager)
     if (onboardingData.builderRequestSpaces && onboardingData.builderRequestSpaces.length > 0) {

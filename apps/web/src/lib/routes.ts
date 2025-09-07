@@ -12,6 +12,7 @@ export const ROUTES = {
   // Authentication Flow
   AUTH: {
     ROOT: '/auth',
+    LOGIN: '/auth/login',                  // Login page
     SCHOOL_SELECT: '/auth/school-select',  // Step 1: Choose school + email (integrated)
     CHECK_EMAIL: '/auth/check-email',      // Step 2: Check for magic link
     VERIFY: '/auth/verify',                // Verify magic link
@@ -20,19 +21,9 @@ export const ROUTES = {
     // Removed: /auth/email - now integrated into school-select
   },
   
-  // 4-Step Progressive Onboarding Flow
+  // Single Onboarding Page
   ONBOARDING: {
-    ROOT: '/onboarding',
-    STEP_1: '/onboarding/1',  // Welcome + Role Selection (student/faculty/alumni)
-    STEP_2: '/onboarding/2',  // Profile Creation (name, handle, avatar)
-    STEP_3: '/onboarding/3',  // Academic Info (level, graduation year)
-    STEP_4: '/onboarding/4',  // Interest Selection + Community Preview
-    COMPLETE: '/onboarding/complete',
-    // Special flows
-    FACULTY_VERIFY: '/onboarding/faculty-verify',
-    ALUMNI_SOON: '/onboarding/alumni-soon',
-    // Dynamic step helper
-    STEP: (num: number) => `/onboarding/${num}` as const,
+    ROOT: '/onboarding',  // All onboarding steps in one page
   },
   
   // Main App
@@ -59,27 +50,20 @@ export const ROUTES = {
   },
 } as const;
 
-// Helper functions for navigation
+// Helper functions for navigation (simplified for single-page onboarding)
 export const getNextOnboardingStep = (currentStep: number): string => {
-  if (currentStep >= 4) {
-    return ROUTES.ONBOARDING.COMPLETE;
-  }
-  return ROUTES.ONBOARDING.STEP(currentStep + 1);
+  return ROUTES.ONBOARDING.ROOT;
 };
 
 export const getPreviousOnboardingStep = (currentStep: number): string | null => {
-  if (currentStep <= 1) {
-    return null; // No step before step 1 (role selection)
-  }
-  return ROUTES.ONBOARDING.STEP(currentStep - 1);
+  return ROUTES.ONBOARDING.ROOT;
 };
 
 // Type-safe route params  
-export type OnboardingStep = 1 | 2 | 3 | 4;
+export type OnboardingStep = number;
 
-export const isValidOnboardingStep = (step: string): step is `${OnboardingStep}` => {
-  const num = parseInt(step, 10);
-  return !isNaN(num) && num >= 1 && num <= 4; // 4-step progressive flow
+export const isValidOnboardingStep = (step: string): boolean => {
+  return true; // All steps handled internally
 };
 
 // Route guards configuration

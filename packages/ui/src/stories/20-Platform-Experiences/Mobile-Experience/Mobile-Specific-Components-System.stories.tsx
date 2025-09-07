@@ -68,8 +68,9 @@ import {
  * - **Mobile Performance**: Optimized for campus WiFi and cellular networks
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '15-Live Frontend/Mobile-Specific Components System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

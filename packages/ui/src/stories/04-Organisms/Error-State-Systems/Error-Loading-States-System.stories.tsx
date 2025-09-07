@@ -62,8 +62,9 @@ import {
  * - **Mobile Optimization**: Touch-friendly error recovery and loading indicators
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '12-Live Frontend/Error & Loading States System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {

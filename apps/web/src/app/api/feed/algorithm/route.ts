@@ -301,11 +301,11 @@ async function getEnhancedFeedContent(params: {
   diversityMode: string;
   timeRange: string;
 }): Promise<EnhancedFeedItem[]> {
-  const { userId, memberships, config, limit, feedType, timeRange } = params;
+  const { userId, memberships, config, limit, feedType, timeRange, offset: _offset, includeTrending: _includeTrending, diversityMode: _diversityMode } = params;
   
   try {
     const feedItems: EnhancedFeedItem[] = [];
-    const spaceIds = memberships.map(m => m.spaceId);
+    const _spaceIds = memberships.map(m => m.spaceId);
     
     // Calculate time range
     const timeRangeHours = timeRange === '6h' ? 6 : timeRange === '24h' ? 24 : timeRange === '7d' ? 168 : 720;

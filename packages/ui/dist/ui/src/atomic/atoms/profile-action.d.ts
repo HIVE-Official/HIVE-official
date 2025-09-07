@@ -103,7 +103,7 @@ export interface ProfileActionProps extends Omit<React.ButtonHTMLAttributes<HTML
     href?: string;
     external?: boolean;
 }
-export declare function ProfileAction({ actionType, type, label, icon: CustomIcon, iconOnly, loading, badge, tooltip, href, external, onClick, size, variant, shape, width, interactive, disabled, className, children, ...props }: ProfileActionProps): import("react/jsx-runtime").JSX.Element;
+export declare function ProfileAction({ actionType, type: _type, label, icon: CustomIcon, iconOnly, loading, badge, tooltip, href, external, onClick, size, variant, shape, width, interactive, disabled, className, children, ...props }: ProfileActionProps): import("react/jsx-runtime").JSX.Element;
 export declare function EditAction({ ...props }: Omit<ProfileActionProps, 'actionType'>): import("react/jsx-runtime").JSX.Element;
 export declare function ShareAction({ ...props }: Omit<ProfileActionProps, 'actionType'>): import("react/jsx-runtime").JSX.Element;
 export declare function MessageAction({ ...props }: Omit<ProfileActionProps, 'actionType'>): import("react/jsx-runtime").JSX.Element;

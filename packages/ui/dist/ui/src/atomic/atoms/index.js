@@ -16,7 +16,7 @@ export * from './spacing-enhanced.js';
 // === OTHER ATOMS ===
 export * from './avatar.js';
 export * from './badge.js';
-// export * from './button.js'; // Use button-enhanced instead
+// export * from './button'; // Use button-enhanced instead
 // export * from './checkbox.js'; // Use checkbox-enhanced instead
 // Export with specific names to avoid conflicts
 export { Container } from './container.js';
@@ -26,7 +26,7 @@ export { Icon as HiveBrandIcon, Image as HiveBrandImage, PlatformIcons as HivePl
 export { Icon } from './icon.js';
 export { Image } from './image.js';
 export { PlatformIcons } from './platform-icons.js';
-// export * from './input.js'; // Use input-enhanced instead
+// export * from './input'; // Use input-enhanced instead
 export * from './label.js';
 // Export with specific names to avoid conflicts with hive-brand
 export { Link } from './link.js';
