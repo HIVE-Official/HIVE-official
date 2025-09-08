@@ -1,11 +1,12 @@
 import * as admin from "firebase-admin";
+import { applicationDefault } from 'firebase-admin/app';
 
-// Initialize Firebase Admin SDK with production credentials
-const serviceAccount = require('./service-account-prod.json');
-
+// Initialize Firebase Admin SDK
+// Uses Application Default Credentials in production
+// or GOOGLE_APPLICATION_CREDENTIALS environment variable
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  projectId: 'hive-9265c'
+  credential: applicationDefault(),
+  projectId: process.env.FIREBASE_PROJECT_ID || 'hive-9265c'
 });
 
 const db = admin.firestore();

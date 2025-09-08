@@ -103,7 +103,7 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
               name: 'University',
               type: 'university',
               status: 'disconnected', // Default to disconnected until user connects
-              color: '#ffd700'
+              color: 'var(--hive-gold)'
             }
           ],
           conflicts: [], // TODO: Implement conflict detection

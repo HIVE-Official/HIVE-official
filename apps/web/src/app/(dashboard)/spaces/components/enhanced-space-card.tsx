@@ -110,7 +110,7 @@ export function EnhancedSpaceCard({
           <div className="flex items-center gap-4">
             {/* Avatar with status */}
             <div className="relative flex-shrink-0">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500/20 to-[var(--hive-gold)]/20 border border-[var(--hive-white)]/10 flex items-center justify-center">
                 {space.bannerUrl ? (
                   <Image 
                     src={space.bannerUrl} 
@@ -140,7 +140,7 @@ export function EnhancedSpaceCard({
                   {space.name}
                 </h3>
                 {space.trendingRank && space.trendingRank <= 10 && (
-                  <Badge variant="active-tag" className="bg-orange-400/20 text-orange-400 text-xs">
+                  <Badge variant="active-tag" className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] text-xs">
                     <TrendingUp className="h-3 w-3 mr-1" />
                     #{space.trendingRank}
                   </Badge>
@@ -224,7 +224,7 @@ export function EnhancedSpaceCard({
         {/* Trending badge */}
         {space.trendingRank && space.trendingRank <= 5 && (
           <div className="absolute top-3 right-3 z-10">
-            <Badge className="bg-orange-400/20 text-orange-400 text-xs">
+            <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] text-xs">
               <TrendingUp className="h-3 w-3 mr-1" />
               #{space.trendingRank}
             </Badge>
@@ -236,7 +236,7 @@ export function EnhancedSpaceCard({
           <div className="flex items-center gap-3 mb-3">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-[var(--hive-gold)]/20 border border-[var(--hive-white)]/10 flex items-center justify-center">
                 {space.bannerUrl ? (
                   <Image 
                     src={space.bannerUrl} 
@@ -327,7 +327,7 @@ export function EnhancedSpaceCard({
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="px-4 pb-2 border-t border-white/10"
+              className="px-4 pb-2 border-t border-[var(--hive-white)]/10"
             >
               <div className="py-2">
                 <div className="grid grid-cols-3 gap-2 text-center">
@@ -362,7 +362,7 @@ export function EnhancedSpaceCard({
               size="sm"
               variant="outline"
               onClick={() => onPreview?.(space.id)}
-              className="flex-1 text-xs border-white/20 text-neutral-300 hover:text-[var(--hive-text-inverse)]"
+              className="flex-1 text-xs border-[var(--hive-white)]/20 text-neutral-300 hover:text-[var(--hive-text-inverse)]"
             >
               <Eye className="h-3 w-3 mr-1" />
               Preview

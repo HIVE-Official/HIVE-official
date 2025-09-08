@@ -511,9 +511,9 @@ export default function ProfileSettingsStorybook() {
             </Card>
 
             {/* 👻 **UB GHOST MODE** */}
-            <Card className="p-6 border-purple-500/20 bg-purple-500/5">
+            <Card className="p-6 border-[var(--hive-gold)]/20 bg-[var(--hive-gold)]/5">
               <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
-                <Moon className="h-5 w-5 text-purple-400" />
+                <Moon className="h-5 w-5 text-[var(--hive-gold)]" />
                 Ghost Mode
                 <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
               </h3>
@@ -536,7 +536,7 @@ export default function ProfileSettingsStorybook() {
                       onCheckedChange={() => setShowGhostModeModal(true)}
                     />
                     {privacySettings.ghostMode.enabled && (
-                      <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">
+                      <Badge variant="secondary" className="text-xs bg-[var(--hive-gold)]/20 text-purple-300">
                         Active - {privacySettings.ghostMode.level}
                       </Badge>
                     )}

@@ -251,7 +251,7 @@ export const ElementLibraryBrowser: Story = {
                       onClick={() => setSelectedCategory(category.id)}
                       className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
                         selectedCategory === category.id 
-                          ? 'bg-blue-600 text-white' 
+                          ? 'bg-blue-600 text-[var(--hive-text-primary)]' 
                           : 'hover:bg-gray-100'
                       }`}
                     >
@@ -313,7 +313,7 @@ export const ElementLibraryBrowser: Story = {
                                 {element.complexity}
                               </Badge>
                               <div className="flex items-center gap-1 text-sm text-gray-600">
-                                <Star className="h-3 w-3 fill-current text-yellow-500" />
+                                <Star className="h-3 w-3 fill-current text-[var(--hive-gold)]" />
                                 <span>{element.popularity}%</span>
                               </div>
                             </div>
@@ -410,8 +410,8 @@ export const StudentCreatedTools: Story = {
               onClick={() => setFilter(filterOption.id)}
               className={`px-4 py-2 rounded-lg transition-colors ${
                 filter === filterOption.id
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+                  ? 'bg-green-600 text-[var(--hive-text-primary)]'
+                  : 'bg-[var(--hive-white)] text-gray-600 hover:bg-gray-50 border border-gray-200'
               }`}
             >
               {filterOption.label} ({filterOption.count})
@@ -447,7 +447,7 @@ export const StudentCreatedTools: Story = {
                       
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-current text-yellow-500" />
+                          <Star className="h-4 w-4 fill-current text-[var(--hive-gold)]" />
                           <span>{tool.rating}</span>
                         </div>
                         <div className="flex items-center gap-1">
@@ -630,7 +630,7 @@ export const ToolCreationInterface: Story = {
                       creationStep === item.step ? 'bg-purple-100' : 'bg-gray-50'
                     }`}>
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium ${
-                        creationStep === item.step ? 'bg-purple-600 text-white' : 'bg-gray-300 text-gray-600'
+                        creationStep === item.step ? 'bg-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]' : 'bg-gray-300 text-gray-600'
                       }`}>
                         {item.step}
                       </div>
@@ -654,7 +654,7 @@ export const ToolCreationInterface: Story = {
                 {commonCombinations.map((combo, index) => (
                   <div key={index} className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                     <div className="flex items-center gap-2 mb-2">
-                      <Wrench className="h-4 w-4 text-purple-600" />
+                      <Wrench className="h-4 w-4 text-[var(--hive-gold-dark)]" />
                       <p className="font-medium text-gray-900">{combo.name}</p>
                     </div>
                     <p className="text-sm text-gray-600 mb-2">{combo.description}</p>
@@ -671,7 +671,7 @@ export const ToolCreationInterface: Story = {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Puzzle className="h-5 w-5 text-purple-600" />
+                  <Puzzle className="h-5 w-5 text-[var(--hive-gold-dark)]" />
                   Tool Configuration
                 </CardTitle>
               </CardHeader>
@@ -685,7 +685,7 @@ export const ToolCreationInterface: Story = {
                     placeholder="e.g., Floor movie night, Study session for CSE 474, Food order..."
                     value={toolName}
                     onChange={(e) => setToolName(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--hive-gold)] focus:border-transparent"
                   />
                 </div>
                 
@@ -719,7 +719,7 @@ export const ToolCreationInterface: Story = {
                         onClick={() => toggleElement(element.id)}
                         className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                           isSelected 
-                            ? 'border-purple-500 bg-purple-50' 
+                            ? 'border-[var(--hive-gold)] bg-purple-50' 
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
@@ -728,14 +728,14 @@ export const ToolCreationInterface: Story = {
                             isSelected ? 'bg-purple-100' : 'bg-gray-100'
                           }`}>
                             <IconComponent className={`h-5 w-5 ${
-                              isSelected ? 'text-purple-600' : 'text-gray-600'
+                              isSelected ? 'text-[var(--hive-gold-dark)]' : 'text-gray-600'
                             }`} />
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center justify-between">
                               <p className="font-medium text-gray-900">{element.name}</p>
                               {isSelected && (
-                                <CheckCircle className="h-5 w-5 text-purple-600" />
+                                <CheckCircle className="h-5 w-5 text-[var(--hive-gold-dark)]" />
                               )}
                             </div>
                             <p className="text-sm text-gray-600 mt-1">{element.description}</p>
@@ -753,7 +753,7 @@ export const ToolCreationInterface: Story = {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Eye className="h-5 w-5 text-purple-600" />
+                    <Eye className="h-5 w-5 text-[var(--hive-gold-dark)]" />
                     Tool Preview
                   </CardTitle>
                 </CardHeader>
@@ -775,7 +775,7 @@ export const ToolCreationInterface: Story = {
                           const IconComponent = element.icon;
                           return (
                             <div key={elementId} className="flex items-center gap-2 text-sm">
-                              <IconComponent className="h-4 w-4 text-purple-600" />
+                              <IconComponent className="h-4 w-4 text-[var(--hive-gold-dark)]" />
                               <span>{element.name}</span>
                             </div>
                           );
@@ -784,7 +784,7 @@ export const ToolCreationInterface: Story = {
                     </div>
                     
                     <div className="flex gap-3">
-                      <Button className="flex-1 bg-purple-600 hover:bg-purple-700">
+                      <Button className="flex-1 bg-[var(--hive-gold-dark)] hover:bg-purple-700">
                         <Play className="h-4 w-4 mr-2" />
                         Create Tool
                       </Button>

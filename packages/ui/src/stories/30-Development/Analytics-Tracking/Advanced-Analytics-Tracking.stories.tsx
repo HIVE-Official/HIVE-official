@@ -249,7 +249,7 @@ function RealTimeMetrics() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+      <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-[var(--hive-text-primary)]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -262,7 +262,7 @@ function RealTimeMetrics() {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
+      <Card className="bg-gradient-to-br from-green-500 to-green-600 text-[var(--hive-text-primary)]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -275,7 +275,7 @@ function RealTimeMetrics() {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+      <Card className="bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -288,7 +288,7 @@ function RealTimeMetrics() {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
+      <Card className="bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -365,7 +365,7 @@ function UserBehaviorHeatmap() {
       <CardContent>
         <div className="relative h-80 bg-gray-50 rounded-lg overflow-hidden">
           {/* Simulated mobile/desktop interface */}
-          <div className="absolute inset-4 bg-white rounded-lg shadow-sm border">
+          <div className="absolute inset-4 bg-[var(--hive-white)] rounded-lg shadow-sm border">
             {heatmapData[selectedView].map((point, index) => (
               <div
                 key={index}
@@ -378,7 +378,7 @@ function UserBehaviorHeatmap() {
                 <div 
                   className={`w-8 h-8 rounded-full blur-sm ${
                     point.intensity > 85 ? 'bg-red-500' :
-                    point.intensity > 70 ? 'bg-yellow-500' :
+                    point.intensity > 70 ? 'bg-[var(--hive-gold)]' :
                     'bg-blue-500'
                   }`}
                   style={{
@@ -400,7 +400,7 @@ function UserBehaviorHeatmap() {
               <span>Low (40-69%)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+              <div className="w-3 h-3 bg-[var(--hive-gold)] rounded-full" />
               <span>Medium (70-84%)</span>
             </div>
             <div className="flex items-center gap-2">
@@ -768,7 +768,7 @@ function AdvancedAnalyticsSystem() {
     <AnalyticsProvider>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="bg-[var(--hive-white)] border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">HIVE Analytics Dashboard</h1>
@@ -837,7 +837,7 @@ function AdvancedAnalyticsSystem() {
                     
                     <div className="text-center">
                       <div className="flex items-center justify-center mb-2">
-                        <Share2 className="h-8 w-8 text-purple-500" />
+                        <Share2 className="h-8 w-8 text-[var(--hive-gold)]" />
                       </div>
                       <p className="text-2xl font-bold">892</p>
                       <p className="text-sm text-gray-500">Shares This Week</p>

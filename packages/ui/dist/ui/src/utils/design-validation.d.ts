@@ -3,11 +3,11 @@
  * Tools to ensure components comply with HIVE design standards
  */
 export declare const HIVE_COLORS: {
-    readonly primaryBlack: "#0A0A0A";
-    readonly surface: "#111111";
-    readonly border: "#2A2A2A";
+    readonly primaryBlack: "var(--hive-background-primary)";
+    readonly surface: "var(--hive-background-secondary)";
+    readonly border: "var(--hive-gray-700)";
     readonly mutedText: "#6B7280";
-    readonly goldAccent: "#FFD700";
+    readonly goldAccent: "var(--hive-gold)";
     readonly white: "#FFFFFF";
     readonly success: "#10B981";
     readonly warning: "#F59E0B";
@@ -57,11 +57,11 @@ export declare const designValidation: {
     enableContinuousValidation: typeof enableContinuousValidation;
     rules: DesignValidationRule[];
     colors: {
-        readonly primaryBlack: "#0A0A0A";
-        readonly surface: "#111111";
-        readonly border: "#2A2A2A";
+        readonly primaryBlack: "var(--hive-background-primary)";
+        readonly surface: "var(--hive-background-secondary)";
+        readonly border: "var(--hive-gray-700)";
         readonly mutedText: "#6B7280";
-        readonly goldAccent: "#FFD700";
+        readonly goldAccent: "var(--hive-gold)";
         readonly white: "#FFFFFF";
         readonly success: "#10B981";
         readonly warning: "#F59E0B";

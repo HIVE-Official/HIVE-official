@@ -149,7 +149,7 @@ export function UserSpacesCard({ settings, isEditMode, className }: UserSpacesCa
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'admin': return 'text-amber-400';
+      case 'admin': return 'text-[var(--hive-gold)]';
       case 'moderator': return 'text-blue-400';
       case 'builder': return 'text-accent';
       default: return 'text-muted-foreground';
@@ -159,7 +159,7 @@ export function UserSpacesCard({ settings, isEditMode, className }: UserSpacesCa
   const getActivityColor = (level: string) => {
     switch (level) {
       case 'high': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'medium': return 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30';
       case 'low': return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
       default: return 'bg-muted/20 text-muted-foreground border-muted/30';
     }
@@ -169,7 +169,7 @@ export function UserSpacesCard({ settings, isEditMode, className }: UserSpacesCa
     switch (type) {
       case 'university': return 'bg-blue-500/10 text-blue-400';
       case 'residential': return 'bg-green-500/10 text-green-400';
-      case 'greek': return 'bg-purple-500/10 text-purple-400';
+      case 'greek': return 'bg-[var(--hive-gold)]/10 text-[var(--hive-gold)]';
       case 'student': return 'bg-accent/10 text-accent';
       default: return 'bg-muted/10 text-muted-foreground';
     }

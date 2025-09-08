@@ -84,7 +84,7 @@ function WelcomeStep({ space, userProfile, onNext }: {
         initial={{ scale: 0 }}
         animate={{ scale: showAnimation ? 1 : 0 }}
         transition={{ type: "spring", delay: 0.2 }}
-        className="w-20 h-20 mx-auto bg-gradient-to-br from-hive-gold to-orange-400 rounded-full flex items-center justify-center"
+        className="w-20 h-20 mx-auto bg-gradient-to-br from-hive-gold to-[var(--hive-gold)] rounded-full flex items-center justify-center"
       >
         <Sparkles className="h-10 w-10 text-[var(--hive-text-inverse)]" />
       </motion.div>
@@ -101,18 +101,18 @@ function WelcomeStep({ space, userProfile, onNext }: {
 
       {/* Space Preview Stats */}
       <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto">
-        <div className="bg-white/5 rounded-lg p-3">
+        <div className="bg-[var(--hive-white)]/5 rounded-lg p-3">
           <Users className="h-5 w-5 text-blue-400 mx-auto mb-1" />
           <div className="text-sm font-medium text-[var(--hive-text-inverse)]">{space.memberCount}</div>
           <div className="text-xs text-neutral-400">Members</div>
         </div>
-        <div className="bg-white/5 rounded-lg p-3">
+        <div className="bg-[var(--hive-white)]/5 rounded-lg p-3">
           <MessageSquare className="h-5 w-5 text-green-400 mx-auto mb-1" />
           <div className="text-sm font-medium text-[var(--hive-text-inverse)]">Active</div>
           <div className="text-xs text-neutral-400">Community</div>
         </div>
-        <div className="bg-white/5 rounded-lg p-3">
-          <Calendar className="h-5 w-5 text-purple-400 mx-auto mb-1" />
+        <div className="bg-[var(--hive-white)]/5 rounded-lg p-3">
+          <Calendar className="h-5 w-5 text-[var(--hive-gold)] mx-auto mb-1" />
           <div className="text-sm font-medium text-[var(--hive-text-inverse)]">Events</div>
           <div className="text-xs text-neutral-400">Weekly</div>
         </div>
@@ -164,10 +164,10 @@ function ExpectationsStep({ space, onNext }: {
 
       <div className="space-y-4">
         {/* Time Commitment */}
-        <Card className="p-4 bg-white/5">
+        <Card className="p-4 bg-[var(--hive-white)]/5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
-              <Clock className="h-5 w-5 text-orange-400" />
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/20 rounded-lg flex items-center justify-center">
+              <Clock className="h-5 w-5 text-[var(--hive-gold)]" />
             </div>
             <div>
               <h3 className="font-medium text-[var(--hive-text-inverse)]">Time Commitment</h3>
@@ -179,7 +179,7 @@ function ExpectationsStep({ space, onNext }: {
         </Card>
 
         {/* Activity Level */}
-        <Card className="p-4 bg-white/5">
+        <Card className="p-4 bg-[var(--hive-white)]/5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
               <MessageSquare className="h-5 w-5 text-green-400" />
@@ -195,10 +195,10 @@ function ExpectationsStep({ space, onNext }: {
 
         {/* Community Guidelines */}
         {space.expectations?.rules && (
-          <Card className="p-4 bg-white/5">
+          <Card className="p-4 bg-[var(--hive-white)]/5">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <Shield className="h-5 w-5 text-purple-400" />
+              <div className="w-10 h-10 bg-[var(--hive-gold)]/20 rounded-lg flex items-center justify-center">
+                <Shield className="h-5 w-5 text-[var(--hive-gold)]" />
               </div>
               <div>
                 <h3 className="font-medium text-[var(--hive-text-inverse)] mb-2">Community Guidelines</h3>
@@ -220,7 +220,7 @@ function ExpectationsStep({ space, onNext }: {
         <Button
           variant="outline"
           onClick={onNext}
-          className="flex-1 border-white/20 text-[var(--hive-text-inverse)]"
+          className="flex-1 border-[var(--hive-white)]/20 text-[var(--hive-text-inverse)]"
         >
           I understand
         </Button>
@@ -276,7 +276,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
           { key: "events", label: "Upcoming Events", description: "Event reminders and updates" },
           { key: "mentions", label: "Mentions & Replies", description: "When someone mentions or replies to you" }
         ].map((item) => (
-          <Card key={item.key} className="p-4 bg-white/5">
+          <Card key={item.key} className="p-4 bg-[var(--hive-white)]/5">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-medium text-[var(--hive-text-inverse)]">{item.label}</h3>
@@ -293,7 +293,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
                 `}
               >
                 <div className={`
-                  w-5 h-5 rounded-full bg-white transition-transform absolute top-0.5
+                  w-5 h-5 rounded-full bg-[var(--hive-white)] transition-transform absolute top-0.5
                   ${notifications[item.key as keyof typeof notifications] 
                     ? "translate-x-6" 
                     : "translate-x-0.5"
@@ -305,7 +305,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
         ))}
 
         {/* Digest Frequency */}
-        <Card className="p-4 bg-white/5">
+        <Card className="p-4 bg-[var(--hive-white)]/5">
           <div className="mb-3">
             <h3 className="font-medium text-[var(--hive-text-inverse)]">Daily Digest</h3>
             <p className="text-sm text-neutral-400">Summary of community activity</p>
@@ -324,7 +324,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
                   p-2 rounded-lg text-sm transition-colors
                   ${notifications.digest === option.value
                     ? "bg-hive-gold text-hive-obsidian"
-                    : "bg-white/10 text-neutral-300 hover:bg-white/20"
+                    : "bg-[var(--hive-white)]/10 text-neutral-300 hover:bg-[var(--hive-white)]/20"
                   }
                 `}
               >
@@ -445,7 +445,7 @@ export function SpaceOnboardingFlow({
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-white/10 rounded-full h-2">
+        <div className="w-full bg-[var(--hive-white)]/10 rounded-full h-2">
           <div 
             className="bg-hive-gold h-2 rounded-full transition-all duration-500"
             style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
@@ -489,7 +489,7 @@ export function SpaceOnboardingFlow({
 
         {/* Step Actions */}
         {currentStepData.skippable && (
-          <div className="mt-6 pt-4 border-t border-white/10">
+          <div className="mt-6 pt-4 border-t border-[var(--hive-white)]/10">
             <Button
               variant="ghost"
               onClick={handleSkipStep}
@@ -534,7 +534,7 @@ export function PostJoinActivation({ space, onComplete }: PostJoinActivationProp
       description: "See what's happening in the community",
       action: "View events",
       icon: Calendar,
-      color: "text-purple-400"
+      color: "text-[var(--hive-gold)]"
     }
   ];
 
@@ -576,14 +576,14 @@ export function PostJoinActivation({ space, onComplete }: PostJoinActivationProp
               p-4 transition-all
               ${isCompleted ? "bg-green-500/10 border-green-500/20" : 
                 isCurrent ? "bg-hive-gold/10 border-hive-gold/20" : 
-                "bg-white/5 border-white/10"}
+                "bg-[var(--hive-white)]/5 border-[var(--hive-white)]/10"}
             `}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`
                     w-8 h-8 rounded-lg flex items-center justify-center
                     ${isCompleted ? "bg-green-500/20" : 
-                      isCurrent ? "bg-hive-gold/20" : "bg-white/10"}
+                      isCurrent ? "bg-hive-gold/20" : "bg-[var(--hive-white)]/10"}
                   `}>
                     {isCompleted ? (
                       <CheckCircle className="h-4 w-4 text-green-400" />
@@ -608,7 +608,7 @@ export function PostJoinActivation({ space, onComplete }: PostJoinActivationProp
                     className={`
                       ${isCurrent 
                         ? "bg-hive-gold text-hive-obsidian hover:bg-hive-champagne" 
-                        : "bg-white/10 text-[var(--hive-text-inverse)] hover:bg-white/20"
+                        : "bg-[var(--hive-white)]/10 text-[var(--hive-text-inverse)] hover:bg-[var(--hive-white)]/20"
                       }
                     `}
                   >
@@ -625,7 +625,7 @@ export function PostJoinActivation({ space, onComplete }: PostJoinActivationProp
         <p className="text-sm text-neutral-400">
           {completedTasks.size} of {activationTasks.length} tasks completed
         </p>
-        <div className="w-full bg-white/10 rounded-full h-2 mt-2">
+        <div className="w-full bg-[var(--hive-white)]/10 rounded-full h-2 mt-2">
           <div 
             className="bg-green-400 h-2 rounded-full transition-all duration-500"
             style={{ width: `${(completedTasks.size / activationTasks.length) * 100}%` }}

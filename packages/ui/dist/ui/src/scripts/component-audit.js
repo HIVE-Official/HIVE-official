@@ -15,37 +15,38 @@ import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
 class HiveComponentAuditor {
+    rootPath;
+    results = [];
+    // Patterns for detecting issues
+    hardcodedValuePatterns = [
+        // Color hardcodes
+        /#[0-9a-fA-F]{3,8}/g,
+        /rgb\(/g,
+        /rgba\(/g,
+        /hsl\(/g,
+        /hsla\(/g,
+        // Size hardcodes (excluding semantic values)
+        /\d+px(?!.*var\()/g,
+        /\d+rem(?!.*var\()/g,
+        /\d+em(?!.*var\()/g,
+    ];
+    accessibilityPatterns = [
+        // Missing ARIA attributes
+        /<button(?![^>]*aria-label)/g,
+        /<input(?![^>]*aria-label)(?![^>]*aria-labelledby)/g,
+        /<img(?![^>]*alt)/g,
+        // Missing semantic HTML
+        /<div[^>]*role="button"/g,
+        /<span[^>]*onClick/g,
+    ];
+    motionPatterns = [
+        // Motion system usage
+        /transition-/g,
+        /animate-/g,
+        /motion\./g,
+        /framer-motion/g,
+    ];
     constructor(rootPath = process.cwd()) {
-        this.results = [];
-        // Patterns for detecting issues
-        this.hardcodedValuePatterns = [
-            // Color hardcodes
-            /#[0-9a-fA-F]{3,8}/g,
-            /rgb\(/g,
-            /rgba\(/g,
-            /hsl\(/g,
-            /hsla\(/g,
-            // Size hardcodes (excluding semantic values)
-            /\d+px(?!.*var\()/g,
-            /\d+rem(?!.*var\()/g,
-            /\d+em(?!.*var\()/g,
-        ];
-        this.accessibilityPatterns = [
-            // Missing ARIA attributes
-            /<button(?![^>]*aria-label)/g,
-            /<input(?![^>]*aria-label)(?![^>]*aria-labelledby)/g,
-            /<img(?![^>]*alt)/g,
-            // Missing semantic HTML
-            /<div[^>]*role="button"/g,
-            /<span[^>]*onClick/g,
-        ];
-        this.motionPatterns = [
-            // Motion system usage
-            /transition-/g,
-            /animate-/g,
-            /motion\./g,
-            /framer-motion/g,
-        ];
         this.rootPath = rootPath;
     }
     async auditAllComponents() {

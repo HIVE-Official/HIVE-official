@@ -191,10 +191,10 @@ export function ActivityHistoryCard({ settings, isEditMode, className }: Activit
 
   const getActivityColor = (type: string, impact: string) => {
     const baseColors = {
-      tool: 'text-purple-400',
+      tool: 'text-[var(--hive-gold)]',
       space: 'text-blue-400',
       social: 'text-green-400',
-      profile: 'text-amber-400'
+      profile: 'text-[var(--hive-gold)]'
     };
 
     const impactIntensity = {
@@ -209,7 +209,7 @@ export function ActivityHistoryCard({ settings, isEditMode, className }: Activit
   const getImpactBadge = (impact: string) => {
     const colors = {
       high: 'bg-red-500/20 text-red-400 border-red-500/30',
-      medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+      medium: 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30',
       low: 'bg-gray-500/20 text-gray-400 border-gray-500/30'
     };
     return colors[impact as keyof typeof colors];

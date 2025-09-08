@@ -331,7 +331,7 @@ export function SpacesDashboardClient() {
                     onClick={() => router.push(`/spaces/${space.id}`)}
                   >
                     <div className="flex items-start space-x-3">
-                      <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-[var(--hive-gold)] rounded-lg flex items-center justify-center flex-shrink-0">
                         <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
                           {space.name.charAt(0)}
                         </span>

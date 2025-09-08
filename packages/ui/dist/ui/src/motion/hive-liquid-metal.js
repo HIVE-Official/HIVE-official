@@ -344,11 +344,9 @@ export const milestoneSequences = {
 };
 // 🎮 Enhanced Motion Orchestrator
 export class LiquidMetalOrchestrator {
-    constructor() {
-        this.sequences = new Map();
-        this.cascadeQueue = [];
-        this.isProcessingCascade = false;
-    }
+    sequences = new Map();
+    cascadeQueue = [];
+    isProcessingCascade = false;
     // Register animation controls for orchestration
     register(id, controls) {
         this.sequences.set(id, controls);

@@ -139,7 +139,7 @@ export function RealtimePerformanceDashboard() {
     switch (quality) {
       case 'excellent': return 'text-green-500';
       case 'good': return 'text-blue-500';
-      case 'poor': return 'text-yellow-500';
+      case 'poor': return 'text-[var(--hive-gold)]';
       case 'critical': return 'text-red-500';
       default: return 'text-gray-500';
     }
@@ -148,7 +148,7 @@ export function RealtimePerformanceDashboard() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'connected': return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'connecting': return <RefreshCw className="h-5 w-5 text-yellow-500 animate-spin" />;
+      case 'connecting': return <RefreshCw className="h-5 w-5 text-[var(--hive-gold)] animate-spin" />;
       case 'disconnected': return <XCircle className="h-5 w-5 text-gray-500" />;
       case 'error': return <AlertTriangle className="h-5 w-5 text-red-500" />;
       default: return <Activity className="h-5 w-5 text-gray-500" />;
@@ -305,7 +305,7 @@ export function RealtimePerformanceDashboard() {
         <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center space-x-2 text-sm font-medium">
-              <Clock className="h-5 w-5 text-yellow-500" />
+              <Clock className="h-5 w-5 text-[var(--hive-gold)]" />
               <span>Avg Latency</span>
             </CardTitle>
           </CardHeader>
@@ -338,7 +338,7 @@ export function RealtimePerformanceDashboard() {
         <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Activity className="h-5 w-5 text-purple-500" />
+              <Activity className="h-5 w-5 text-[var(--hive-gold)]" />
               <span>Performance Metrics</span>
             </CardTitle>
           </CardHeader>
@@ -410,7 +410,7 @@ export function RealtimePerformanceDashboard() {
               ) : (
                 <div className="space-y-1">
                   {connectionHealth.issues.map((issue, index) => (
-                    <div key={index} className="flex items-center space-x-2 text-yellow-400">
+                    <div key={index} className="flex items-center space-x-2 text-[var(--hive-gold)]">
                       <AlertTriangle className="h-4 w-4" />
                       <span className="text-sm">{issue}</span>
                     </div>
@@ -464,7 +464,7 @@ export function RealtimePerformanceDashboard() {
         <Card className="bg-[var(--hive-background-primary)] border-gray-800">
           <CardHeader className="flex items-center justify-between">
             <CardTitle className="flex items-center space-x-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-500" />
+              <AlertTriangle className="h-5 w-5 text-[var(--hive-gold)]" />
               <span>Recent Alerts</span>
             </CardTitle>
             <Button

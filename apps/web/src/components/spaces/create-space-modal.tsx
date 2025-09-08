@@ -77,7 +77,7 @@ const SPACE_TYPES: Array<{
     name: 'Greek Life',
     description: 'Fraternities, sororities, and Greek organizations',
     icon: Shield,
-    color: 'bg-purple-500',
+    color: 'bg-[var(--hive-gold)]',
     examples: ['Alpha Beta Gamma', 'Delta Sigma Pi', 'Greek Council']
   },
   {
@@ -85,7 +85,7 @@ const SPACE_TYPES: Array<{
     name: 'Interest',
     description: 'Hobby groups, clubs, and special interest communities',
     icon: Trophy,
-    color: 'bg-orange-500',
+    color: 'bg-[var(--hive-gold)]',
     examples: ['Gaming Club', 'Photography Society', 'Hiking Group']
   },
   {
@@ -210,7 +210,7 @@ export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMi
             >
               <div className="p-4">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className={`p-2 rounded-lg ${type.color} text-white`}>
+                  <div className={`p-2 rounded-lg ${type.color} text-[var(--hive-text-primary)]`}>
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
@@ -313,7 +313,7 @@ export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMi
               const typeConfig = SPACE_TYPES.find(t => t.id === spaceData.type);
               const Icon = typeConfig?.icon || BookOpen;
               return (
-                <div className={`p-2 rounded-lg ${typeConfig?.color || 'bg-gray-500'} text-white`}>
+                <div className={`p-2 rounded-lg ${typeConfig?.color || 'bg-gray-500'} text-[var(--hive-text-primary)]`}>
                   <Icon className="h-5 w-5" />
                 </div>
               );
@@ -380,9 +380,9 @@ export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMi
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   step === currentStep
-                    ? 'bg-accent text-white'
+                    ? 'bg-accent text-[var(--hive-text-primary)]'
                     : step < currentStep
-                    ? 'bg-green-500 text-white'
+                    ? 'bg-green-500 text-[var(--hive-text-primary)]'
                     : 'bg-muted text-muted-foreground'
                 }`}
               >

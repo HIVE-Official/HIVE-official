@@ -65,7 +65,7 @@ const spaceTypeIcons: Record<CampusSpace['type'], string> = {
 const spaceTypeColors: Record<CampusSpace['type'], string> = {
   course: 'from-blue-500/20 to-blue-600/10',
   housing: 'from-emerald-500/20 to-emerald-600/10',
-  club: 'from-purple-500/20 to-purple-600/10',
+  club: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10',
   academic: 'from-gold/20 to-champagne/10',
   community: 'from-rose-500/20 to-rose-600/10',
   school: 'from-indigo-500/20 to-indigo-600/10',

@@ -168,7 +168,7 @@ export function UnifiedSpaceCard({
     if (!isGreekLife()) return null;
     
     return (
-      <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">
+      <div className="flex items-center gap-1 px-2 py-1 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] rounded-full text-xs">
         <Shield className="h-3 w-3" />
         1 Organization Limit
       </div>
@@ -243,7 +243,7 @@ export function UnifiedSpaceCard({
                   {space.type?.replace('_', ' ')}
                 </span>
                 {space.status === 'preview' && (
-                  <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded-full text-xs">
+                  <span className="px-2 py-0.5 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] rounded-full text-xs">
                     Preview Mode
                   </span>
                 )}
@@ -254,7 +254,7 @@ export function UnifiedSpaceCard({
             size="sm"
             className={
               getActionButton().action === 'request-lead' 
-                ? "bg-amber-500 text-white hover:bg-amber-600" 
+                ? "bg-[var(--hive-gold)] text-[var(--hive-text-primary)] hover:bg-amber-600" 
                 : "bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255] disabled:opacity-50"
             }
             onClick={(e) => {

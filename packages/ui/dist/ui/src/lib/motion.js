@@ -89,9 +89,9 @@ export const hiveVariants = {
     goldPulse: {
         pulse: {
             boxShadow: [
-                '0 0 0 rgba(255, 215, 0, 0)',
-                '0 0 20px rgba(255, 215, 0, 0.3)',
-                '0 0 0 rgba(255, 215, 0, 0)',
+                '0 0 0 rgba(var(--hive-gold-rgb), 0)',
+                '0 0 20px rgba(var(--hive-gold-rgb), 0.3)',
+                '0 0 0 rgba(var(--hive-gold-rgb), 0)',
             ],
             transition: {
                 duration: 2,
@@ -104,9 +104,9 @@ export const hiveVariants = {
     goldGlow: {
         glow: {
             filter: [
-                'drop-shadow(0 0 0 rgba(255, 215, 0, 0))',
-                'drop-shadow(0 0 12px rgba(255, 215, 0, 0.4))',
-                'drop-shadow(0 0 0 rgba(255, 215, 0, 0))',
+                'drop-shadow(0 0 0 rgba(var(--hive-gold-rgb), 0))',
+                'drop-shadow(0 0 12px rgba(var(--hive-gold-rgb), 0.4))',
+                'drop-shadow(0 0 0 rgba(var(--hive-gold-rgb), 0))',
             ],
             transition: {
                 duration: 1.5,
@@ -124,7 +124,7 @@ export const hiveVariants = {
             filter: [
                 'brightness(1)',
                 'brightness(1.1)',
-                'brightness(1.2) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))',
+                'brightness(1.2) drop-shadow(0 0 15px rgba(var(--hive-gold-rgb), 0.4))',
                 'brightness(1.1)',
                 'brightness(1)',
             ],
@@ -174,7 +174,7 @@ export const hivePresets = {
         whileHover: {
             scale: 1.01,
             y: -1,
-            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)',
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(var(--hive-gold-rgb), 0.1)',
             transition: hiveTransitions.quick,
         },
     },
@@ -182,7 +182,7 @@ export const hivePresets = {
     button: {
         whileHover: {
             scale: 1.02,
-            boxShadow: '0 0 15px rgba(255, 215, 0, 0.2)',
+            boxShadow: '0 0 15px rgba(var(--hive-gold-rgb), 0.2)',
             transition: hiveTransitions.quick,
         },
         whileTap: {
@@ -261,8 +261,8 @@ export const createHiveScale = (scale = 'scaleHover') => ({
 });
 export const createGoldAccent = (duration = 'quick') => ({
     whileHover: {
-        boxShadow: '0 0 20px rgba(255, 215, 0, 0.3)',
-        borderColor: '#FFD700',
+        boxShadow: '0 0 20px rgba(var(--hive-gold-rgb), 0.3)',
+        borderColor: 'var(--hive-gold)',
         transition: createHiveTransition(duration, 'liquid'),
     },
 });

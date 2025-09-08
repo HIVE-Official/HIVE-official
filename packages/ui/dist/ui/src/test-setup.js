@@ -8,11 +8,10 @@ global.ResizeObserver = class MockResizeObserver {
 };
 // Mock IntersectionObserver
 global.IntersectionObserver = class MockIntersectionObserver {
-    constructor() {
-        this.root = null;
-        this.rootMargin = '';
-        this.thresholds = [];
-    }
+    root = null;
+    rootMargin = '';
+    thresholds = [];
+    constructor() { }
     observe() { }
     unobserve() { }
     disconnect() { }

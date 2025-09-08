@@ -129,8 +129,8 @@ export function EventDetailsModal({
       case 'academic': return 'bg-blue-500';
       case 'social': return 'bg-pink-500';
       case 'professional': return 'bg-green-500';
-      case 'recreational': return 'bg-orange-500';
-      case 'official': return 'bg-purple-500';
+      case 'recreational': return 'bg-[var(--hive-gold)]';
+      case 'official': return 'bg-[var(--hive-gold)]';
       default: return 'bg-gray-500';
     }
   };
@@ -527,7 +527,7 @@ export function EventDetailsModal({
                       {Array.from({ length: Math.min(event.engagement.interested, 4) }, (_, i) => (
                         <div key={i} className="flex items-center space-x-3 p-3 bg-zinc-800/30 rounded-lg">
                           <div className="w-10 h-10 bg-zinc-700 rounded-full flex items-center justify-center">
-                            <Star className="h-4 w-4 text-yellow-400" />
+                            <Star className="h-4 w-4 text-[var(--hive-gold)]" />
                           </div>
                           <div className="flex-1">
                             <div className="font-medium text-[var(--hive-text-inverse)]">
@@ -665,7 +665,7 @@ export function EventDetailsModal({
                       </div>
                       
                       <div className="flex items-start space-x-3 p-4 bg-zinc-800/20 rounded-lg">
-                        <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 bg-[var(--hive-gold)] rounded-full flex items-center justify-center flex-shrink-0">
                           <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">MR</span>
                         </div>
                         <div className="flex-1">

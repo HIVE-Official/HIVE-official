@@ -138,9 +138,7 @@ export function vibrate(pattern) {
     return false;
 }
 export class WakeLock {
-    constructor() {
-        this.wakeLock = null;
-    }
+    wakeLock = null;
     async acquire() {
         try {
             if ('wakeLock' in navigator) {
@@ -216,8 +214,8 @@ export async function getBatteryInfo() {
 }
 // Install prompt (PWA)
 export class InstallPrompt {
+    deferredPrompt = null;
     constructor() {
-        this.deferredPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             this.deferredPrompt = e;

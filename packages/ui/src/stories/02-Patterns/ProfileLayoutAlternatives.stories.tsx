@@ -39,7 +39,7 @@ Three distinct profile page layouts designed to optimize for different user goal
 ## 🎨 **Design Quality Features**
 
 ### **Consistent Brand System**
-- **Colors**: #FFD700 gold with proper contrast ratios (7:1 for WCAG AAA)
+- **Colors**: var(--hive-gold) gold with proper contrast ratios (7:1 for WCAG AAA)
 - **Typography**: Geist Sans for professional readability with -0.01em to -0.04em tracking
 - **Spacing**: 8px grid system throughout for pixel-perfect alignment
 - **Motion**: Smooth transitions and hover states for interactive elements
@@ -192,10 +192,10 @@ Social media inspired layout focused on activity and achievements. Chronological
 
 export const AllLayoutsComparison: Story = {
   render: () => (
-    <div className="bg-[#0A0A0A] text-white font-['Geist_Sans']">
-      <div className="p-8 text-center border-b border-white/10">
+    <div className="bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] font-['Geist_Sans']">
+      <div className="p-8 text-center border-b border-[var(--hive-white)]/10">
         <h1 className="text-3xl font-bold mb-4">HIVE Profile Layout Alternatives</h1>
-        <p className="text-white/70 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-[var(--hive-text-primary)]/70 max-w-3xl mx-auto leading-relaxed">
           Three distinct profile layouts optimized for different user goals and interaction patterns. 
           Each layout emphasizes different aspects of the student experience and campus engagement.
         </p>
@@ -204,63 +204,63 @@ export const AllLayoutsComparison: Story = {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
         {/* Bento Grid Preview */}
         <div className="space-y-4">
-          <div className="aspect-[4/5] bg-[#111111] border border-white/10 rounded-lg overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 to-transparent"></div>
+          <div className="aspect-[4/5] bg-[var(--hive-background-secondary)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-gold)]/5 to-transparent"></div>
             <div className="p-4 space-y-3">
               {/* Profile Header */}
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#FFD700] flex items-center justify-center">
-                  <span className="font-black text-black text-sm">JS</span>
+                <div className="w-12 h-12 rounded-xl bg-[var(--hive-gold)] flex items-center justify-center">
+                  <span className="font-black text-[var(--hive-black)] text-sm">JS</span>
                 </div>
                 <div>
                   <div className="font-bold text-sm">Jacob Smith</div>
-                  <div className="text-xs text-white/60">CS • 2026</div>
+                  <div className="text-xs text-[var(--hive-text-primary)]/60">CS • 2026</div>
                 </div>
               </div>
               
               {/* Grid Layout Preview */}
               <div className="grid grid-cols-12 gap-2">
                 {/* Main Stats */}
-                <div className="col-span-8 bg-white/5 rounded p-2">
-                  <div className="text-xs text-white/60 mb-1">Campus Impact</div>
-                  <div className="text-lg font-bold text-[#FFD700]">1,247</div>
-                  <div className="text-xs text-white/60">Students Connected</div>
+                <div className="col-span-8 bg-[var(--hive-white)]/5 rounded p-2">
+                  <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Campus Impact</div>
+                  <div className="text-lg font-bold text-[var(--hive-gold)]">1,247</div>
+                  <div className="text-xs text-[var(--hive-text-primary)]/60">Students Connected</div>
                 </div>
                 
                 {/* Quick Actions */}
-                <div className="col-span-4 bg-white/5 rounded p-2">
-                  <div className="text-xs text-white/60 mb-1">Quick</div>
+                <div className="col-span-4 bg-[var(--hive-white)]/5 rounded p-2">
+                  <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Quick</div>
                   <div className="space-y-1">
-                    <div className="h-1 bg-white/20 rounded"></div>
-                    <div className="h-1 bg-white/20 rounded"></div>
-                    <div className="h-1 bg-white/20 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
                   </div>
                 </div>
                 
                 {/* Current Status */}
-                <div className="col-span-4 bg-[#FFD700]/10 rounded p-2">
-                  <div className="text-xs text-[#FFD700] mb-1">Currently</div>
+                <div className="col-span-4 bg-[var(--hive-gold)]/10 rounded p-2">
+                  <div className="text-xs text-[var(--hive-gold)] mb-1">Currently</div>
                   <div className="text-xs">Studying CS 301</div>
                 </div>
                 
                 {/* Achievements */}
-                <div className="col-span-8 bg-white/5 rounded p-2">
-                  <div className="text-xs text-white/60 mb-1">Achievements</div>
+                <div className="col-span-8 bg-[var(--hive-white)]/5 rounded p-2">
+                  <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Achievements</div>
                   <div className="space-y-1">
-                    <div className="h-1 bg-[#FFD700]/30 rounded"></div>
-                    <div className="h-1 bg-[#FFD700]/30 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-gold)]/30 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-gold)]/30 rounded"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-[#FFD700]">Bento Grid</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <h3 className="font-semibold text-[var(--hive-gold)]">Bento Grid</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Modern dashboard with visual, modular information cards
             </p>
             <div className="flex items-center gap-2 text-xs">
-              <span className="px-2 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded">🎯 Power Users</span>
+              <span className="px-2 py-1 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] rounded">🎯 Power Users</span>
               <span className="px-2 py-1 bg-accent/20 text-accent rounded">📊 Visual</span>
             </div>
           </div>
@@ -268,69 +268,69 @@ export const AllLayoutsComparison: Story = {
 
         {/* Card Grid Preview */}
         <div className="space-y-4">
-          <div className="aspect-[4/5] bg-[#111111] border border-white/10 rounded-lg overflow-hidden relative">
+          <div className="aspect-[4/5] bg-[var(--hive-background-secondary)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent"></div>
             <div className="p-4 space-y-3">
               {/* Header Card */}
-              <div className="bg-white/5 rounded p-3">
+              <div className="bg-[var(--hive-white)]/5 rounded p-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center">
-                    <span className="font-black text-black text-xs">JS</span>
+                  <div className="w-10 h-10 rounded-full bg-[var(--hive-gold)] flex items-center justify-center">
+                    <span className="font-black text-[var(--hive-black)] text-xs">JS</span>
                   </div>
                   <div>
                     <div className="font-bold text-sm">Jacob Smith</div>
-                    <div className="text-xs text-white/60">Computer Science • 2026</div>
+                    <div className="text-xs text-[var(--hive-text-primary)]/60">Computer Science • 2026</div>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 gap-2 mt-2">
                   <div className="text-center">
-                    <div className="text-sm font-bold text-[#FFD700]">1,247</div>
-                    <div className="text-xs text-white/60">Connected</div>
+                    <div className="text-sm font-bold text-[var(--hive-gold)]">1,247</div>
+                    <div className="text-xs text-[var(--hive-text-primary)]/60">Connected</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-bold text-[#FFD700]">23</div>
-                    <div className="text-xs text-white/60">Spaces</div>
+                    <div className="text-sm font-bold text-[var(--hive-gold)]">23</div>
+                    <div className="text-xs text-[var(--hive-text-primary)]/60">Spaces</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-bold text-[#FFD700]">89</div>
-                    <div className="text-xs text-white/60">Tools</div>
+                    <div className="text-sm font-bold text-[var(--hive-gold)]">89</div>
+                    <div className="text-xs text-[var(--hive-text-primary)]/60">Tools</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-bold text-[#FFD700]">12</div>
-                    <div className="text-xs text-white/60">Level</div>
+                    <div className="text-sm font-bold text-[var(--hive-gold)]">12</div>
+                    <div className="text-xs text-[var(--hive-text-primary)]/60">Level</div>
                   </div>
                 </div>
               </div>
               
               {/* Content Cards */}
               <div className="grid grid-cols-3 gap-2">
-                <div className="bg-white/5 rounded p-2">
-                  <div className="text-xs text-white/60 mb-1">About</div>
+                <div className="bg-[var(--hive-white)]/5 rounded p-2">
+                  <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">About</div>
                   <div className="space-y-1">
-                    <div className="h-1 bg-white/20 rounded"></div>
-                    <div className="h-1 bg-white/20 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
                   </div>
                 </div>
-                <div className="bg-white/5 rounded p-2">
-                  <div className="text-xs text-white/60 mb-1">Activity</div>
+                <div className="bg-[var(--hive-white)]/5 rounded p-2">
+                  <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Activity</div>
                   <div className="space-y-1">
-                    <div className="h-1 bg-white/20 rounded"></div>
-                    <div className="h-1 bg-white/20 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
                   </div>
                 </div>
-                <div className="bg-[#FFD700]/10 rounded p-2">
-                  <div className="text-xs text-[#FFD700] mb-1">Status</div>
+                <div className="bg-[var(--hive-gold)]/10 rounded p-2">
+                  <div className="text-xs text-[var(--hive-gold)] mb-1">Status</div>
                   <div className="space-y-1">
-                    <div className="h-1 bg-[#FFD700]/30 rounded"></div>
-                    <div className="h-1 bg-[#FFD700]/30 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-gold)]/30 rounded"></div>
+                    <div className="h-1 bg-[var(--hive-gold)]/30 rounded"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-[#FFD700]">Card Grid</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <h3 className="font-semibold text-[var(--hive-gold)]">Card Grid</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Traditional, structured layout with clear information hierarchy
             </p>
             <div className="flex items-center gap-2 text-xs">
@@ -342,19 +342,19 @@ export const AllLayoutsComparison: Story = {
 
         {/* Timeline Preview */}
         <div className="space-y-4">
-          <div className="aspect-[4/5] bg-[#111111] border border-white/10 rounded-lg overflow-hidden relative">
+          <div className="aspect-[4/5] bg-[var(--hive-background-secondary)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent"></div>
             <div className="p-4 space-y-3">
               {/* Profile Header */}
               <div className="relative">
-                <div className="h-12 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded"></div>
+                <div className="h-12 bg-gradient-to-r from-[var(--hive-gold)]/20 to-transparent rounded"></div>
                 <div className="flex items-center gap-3 -mt-6 px-2">
-                  <div className="w-12 h-12 rounded-full bg-[#FFD700] flex items-center justify-center border-2 border-[#111111]">
-                    <span className="font-black text-black text-sm">JS</span>
+                  <div className="w-12 h-12 rounded-full bg-[var(--hive-gold)] flex items-center justify-center border-2 border-[var(--hive-background-secondary)]">
+                    <span className="font-black text-[var(--hive-black)] text-sm">JS</span>
                   </div>
                   <div>
                     <div className="font-bold text-sm">Jacob Smith</div>
-                    <div className="text-xs text-white/60">CS • Stanford • 2026</div>
+                    <div className="text-xs text-[var(--hive-text-primary)]/60">CS • Stanford • 2026</div>
                   </div>
                 </div>
               </div>
@@ -362,11 +362,11 @@ export const AllLayoutsComparison: Story = {
               {/* Timeline Items */}
               <div className="space-y-2">
                 <div className="flex gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#FFD700]/20 flex items-center justify-center flex-shrink-0">
-                    <div className="w-2 h-2 bg-[#FFD700] rounded-full"></div>
+                  <div className="w-6 h-6 rounded-full bg-[var(--hive-gold)]/20 flex items-center justify-center flex-shrink-0">
+                    <div className="w-2 h-2 bg-[var(--hive-gold)] rounded-full"></div>
                   </div>
-                  <div className="bg-white/5 rounded p-2 flex-1">
-                    <div className="text-xs text-white/60 mb-1">Achievement Unlocked</div>
+                  <div className="bg-[var(--hive-white)]/5 rounded p-2 flex-1">
+                    <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Achievement Unlocked</div>
                     <div className="text-xs font-medium">Study Streak Master</div>
                   </div>
                 </div>
@@ -374,8 +374,8 @@ export const AllLayoutsComparison: Story = {
                   <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
                     <div className="w-2 h-2 bg-accent rounded-full"></div>
                   </div>
-                  <div className="bg-white/5 rounded p-2 flex-1">
-                    <div className="text-xs text-white/60 mb-1">Created Tool</div>
+                  <div className="bg-[var(--hive-white)]/5 rounded p-2 flex-1">
+                    <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Created Tool</div>
                     <div className="text-xs font-medium">Study Session Timer</div>
                   </div>
                 </div>
@@ -383,8 +383,8 @@ export const AllLayoutsComparison: Story = {
                   <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
                     <div className="w-2 h-2 bg-accent rounded-full"></div>
                   </div>
-                  <div className="bg-white/5 rounded p-2 flex-1">
-                    <div className="text-xs text-white/60 mb-1">Joined Space</div>
+                  <div className="bg-[var(--hive-white)]/5 rounded p-2 flex-1">
+                    <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Joined Space</div>
                     <div className="text-xs font-medium">Algorithm Club</div>
                   </div>
                 </div>
@@ -392,20 +392,20 @@ export const AllLayoutsComparison: Story = {
             </div>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-[#FFD700]">Timeline</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <h3 className="font-semibold text-[var(--hive-gold)]">Timeline</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Social media inspired with activity and achievement focus
             </p>
             <div className="flex items-center gap-2 text-xs">
               <span className="px-2 py-1 bg-accent/20 text-accent rounded">📱 Social</span>
-              <span className="px-2 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded">🏆 Achievements</span>
+              <span className="px-2 py-1 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] rounded">🏆 Achievements</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Comparison Table */}
-      <div className="border-t border-white/5 p-8">
+      <div className="border-t border-[var(--hive-white)]/5 p-8">
         <h2 className="text-2xl font-bold mb-8 text-center">Layout Comparison Matrix</h2>
         
         <div className="max-w-4xl mx-auto">
@@ -456,8 +456,8 @@ Side-by-side comparison of all three profile layouts, showing different approach
 
 export const ResponsiveExamples: Story = {
   render: () => (
-    <div className="bg-[#0A0A0A] text-white font-['Geist_Sans'] p-8 space-y-8">
-      <h2 className="text-2xl font-bold text-[#FFD700] text-center mb-8">Responsive Design Examples</h2>
+    <div className="bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] font-['Geist_Sans'] p-8 space-y-8">
+      <h2 className="text-2xl font-bold text-[var(--hive-gold)] text-center mb-8">Responsive Design Examples</h2>
       
       <div className="space-y-8">
         {/* Mobile Layout Examples */}
@@ -466,32 +466,32 @@ export const ResponsiveExamples: Story = {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-4">
-              <h4 className="font-medium text-[#FFD700] text-center">Bento Grid Mobile</h4>
-              <div className="max-w-xs mx-auto aspect-[9/16] bg-[#111111] border border-white/10 rounded-lg overflow-hidden">
+              <h4 className="font-medium text-[var(--hive-gold)] text-center">Bento Grid Mobile</h4>
+              <div className="max-w-xs mx-auto aspect-[9/16] bg-[var(--hive-background-secondary)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden">
                 <div className="p-4 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-[#FFD700] flex items-center justify-center">
-                      <span className="font-black text-black text-sm">JS</span>
+                    <div className="w-12 h-12 rounded-xl bg-[var(--hive-gold)] flex items-center justify-center">
+                      <span className="font-black text-[var(--hive-black)] text-sm">JS</span>
                     </div>
                     <div>
                       <div className="font-bold text-sm">Jacob Smith</div>
-                      <div className="text-xs text-white/60">CS • 2026</div>
+                      <div className="text-xs text-[var(--hive-text-primary)]/60">CS • 2026</div>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="bg-white/5 rounded p-3">
-                      <div className="text-xs text-white/60 mb-1">Impact</div>
-                      <div className="text-lg font-bold text-[#FFD700]">1,247</div>
+                    <div className="bg-[var(--hive-white)]/5 rounded p-3">
+                      <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Impact</div>
+                      <div className="text-lg font-bold text-[var(--hive-gold)]">1,247</div>
                     </div>
-                    <div className="bg-[#FFD700]/10 rounded p-3">
-                      <div className="text-xs text-[#FFD700] mb-1">Currently</div>
+                    <div className="bg-[var(--hive-gold)]/10 rounded p-3">
+                      <div className="text-xs text-[var(--hive-gold)] mb-1">Currently</div>
                       <div className="text-xs">Studying CS 301</div>
                     </div>
-                    <div className="bg-white/5 rounded p-3">
-                      <div className="text-xs text-white/60 mb-1">Quick Actions</div>
+                    <div className="bg-[var(--hive-white)]/5 rounded p-3">
+                      <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Quick Actions</div>
                       <div className="space-y-1">
-                        <div className="h-1 bg-white/20 rounded"></div>
-                        <div className="h-1 bg-white/20 rounded"></div>
+                        <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
+                        <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
                       </div>
                     </div>
                   </div>
@@ -500,32 +500,32 @@ export const ResponsiveExamples: Story = {
             </div>
             
             <div className="space-y-4">
-              <h4 className="font-medium text-[#FFD700] text-center">Card Grid Mobile</h4>
-              <div className="max-w-xs mx-auto aspect-[9/16] bg-[#111111] border border-white/10 rounded-lg overflow-hidden">
+              <h4 className="font-medium text-[var(--hive-gold)] text-center">Card Grid Mobile</h4>
+              <div className="max-w-xs mx-auto aspect-[9/16] bg-[var(--hive-background-secondary)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden">
                 <div className="p-4 space-y-3">
-                  <div className="bg-white/5 rounded p-3">
+                  <div className="bg-[var(--hive-white)]/5 rounded p-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center">
-                        <span className="font-black text-black text-xs">JS</span>
+                      <div className="w-10 h-10 rounded-full bg-[var(--hive-gold)] flex items-center justify-center">
+                        <span className="font-black text-[var(--hive-black)] text-xs">JS</span>
                       </div>
                       <div>
                         <div className="font-bold text-sm">Jacob Smith</div>
-                        <div className="text-xs text-white/60">CS • 2026</div>
+                        <div className="text-xs text-[var(--hive-text-primary)]/60">CS • 2026</div>
                       </div>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="bg-white/5 rounded p-3">
-                      <div className="text-xs text-white/60 mb-1">About</div>
+                    <div className="bg-[var(--hive-white)]/5 rounded p-3">
+                      <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">About</div>
                       <div className="space-y-1">
-                        <div className="h-1 bg-white/20 rounded"></div>
-                        <div className="h-1 bg-white/20 rounded"></div>
+                        <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
+                        <div className="h-1 bg-[var(--hive-white)]/20 rounded"></div>
                       </div>
                     </div>
-                    <div className="bg-[#FFD700]/10 rounded p-3">
-                      <div className="text-xs text-[#FFD700] mb-1">Status</div>
+                    <div className="bg-[var(--hive-gold)]/10 rounded p-3">
+                      <div className="text-xs text-[var(--hive-gold)] mb-1">Status</div>
                       <div className="space-y-1">
-                        <div className="h-1 bg-[#FFD700]/30 rounded"></div>
+                        <div className="h-1 bg-[var(--hive-gold)]/30 rounded"></div>
                       </div>
                     </div>
                   </div>
@@ -534,28 +534,28 @@ export const ResponsiveExamples: Story = {
             </div>
             
             <div className="space-y-4">
-              <h4 className="font-medium text-[#FFD700] text-center">Timeline Mobile</h4>
-              <div className="max-w-xs mx-auto aspect-[9/16] bg-[#111111] border border-white/10 rounded-lg overflow-hidden">
+              <h4 className="font-medium text-[var(--hive-gold)] text-center">Timeline Mobile</h4>
+              <div className="max-w-xs mx-auto aspect-[9/16] bg-[var(--hive-background-secondary)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden">
                 <div className="p-4 space-y-3">
                   <div className="relative">
-                    <div className="h-8 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded"></div>
+                    <div className="h-8 bg-gradient-to-r from-[var(--hive-gold)]/20 to-transparent rounded"></div>
                     <div className="flex items-center gap-3 -mt-4 px-2">
-                      <div className="w-8 h-8 rounded-full bg-[#FFD700] flex items-center justify-center border-2 border-[#111111]">
-                        <span className="font-black text-black text-xs">JS</span>
+                      <div className="w-8 h-8 rounded-full bg-[var(--hive-gold)] flex items-center justify-center border-2 border-[var(--hive-background-secondary)]">
+                        <span className="font-black text-[var(--hive-black)] text-xs">JS</span>
                       </div>
                       <div>
                         <div className="font-bold text-xs">Jacob Smith</div>
-                        <div className="text-xs text-white/60">CS • 2026</div>
+                        <div className="text-xs text-[var(--hive-text-primary)]/60">CS • 2026</div>
                       </div>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <div className="flex gap-2">
-                      <div className="w-4 h-4 rounded-full bg-[#FFD700]/20 flex items-center justify-center flex-shrink-0">
-                        <div className="w-1.5 h-1.5 bg-[#FFD700] rounded-full"></div>
+                      <div className="w-4 h-4 rounded-full bg-[var(--hive-gold)]/20 flex items-center justify-center flex-shrink-0">
+                        <div className="w-1.5 h-1.5 bg-[var(--hive-gold)] rounded-full"></div>
                       </div>
-                      <div className="bg-white/5 rounded p-2 flex-1">
-                        <div className="text-xs text-white/60 mb-1">Achievement</div>
+                      <div className="bg-[var(--hive-white)]/5 rounded p-2 flex-1">
+                        <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Achievement</div>
                         <div className="text-xs font-medium">Study Streak</div>
                       </div>
                     </div>
@@ -563,8 +563,8 @@ export const ResponsiveExamples: Story = {
                       <div className="w-4 h-4 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
                         <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
                       </div>
-                      <div className="bg-white/5 rounded p-2 flex-1">
-                        <div className="text-xs text-white/60 mb-1">Created Tool</div>
+                      <div className="bg-[var(--hive-white)]/5 rounded p-2 flex-1">
+                        <div className="text-xs text-[var(--hive-text-primary)]/60 mb-1">Created Tool</div>
                         <div className="text-xs font-medium">Study Timer</div>
                       </div>
                     </div>

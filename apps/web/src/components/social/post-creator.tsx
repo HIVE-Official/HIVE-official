@@ -57,8 +57,8 @@ interface PostDraft {
 const POST_TYPES = {
   text: { label: 'Text Post', icon: Hash, color: 'text-blue-500' },
   image: { label: 'Photo/Video', icon: Image, color: 'text-green-500' },
-  link: { label: 'Link Share', icon: Link, color: 'text-purple-500' },
-  event: { label: 'Event', icon: Calendar, color: 'text-orange-500' },
+  link: { label: 'Link Share', icon: Link, color: 'text-[var(--hive-gold)]' },
+  event: { label: 'Event', icon: Calendar, color: 'text-[var(--hive-gold)]' },
   announcement: { label: 'Announcement', icon: Users, color: 'text-red-500' }
 };
 
@@ -194,7 +194,7 @@ export function PostCreator({
             onClick={handleExpand}
           >
             <Avatar className="h-10 w-10">
-              <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+              <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-[var(--hive-gold)] rounded-full flex items-center justify-center">
                 <span className="text-[var(--hive-text-inverse)] font-medium">
                   {user?.displayName?.charAt(0) || 'U'}
                 </span>
@@ -218,7 +218,7 @@ export function PostCreator({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Avatar className="h-10 w-10">
-                <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-[var(--hive-gold)] rounded-full flex items-center justify-center">
                   <span className="text-[var(--hive-text-inverse)] font-medium">
                     {user?.displayName?.charAt(0) || 'U'}
                   </span>

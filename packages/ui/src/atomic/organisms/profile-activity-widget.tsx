@@ -83,9 +83,9 @@ const getActivityTypeConfig = (type: string) => {
       label: 'Commented'
     },
     join: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Users,
       label: 'Joined'
     },
@@ -435,7 +435,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
 
       {/* Hover Glow Effect */}
       {isHovered && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-lg blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
   );

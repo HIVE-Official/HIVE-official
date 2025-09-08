@@ -299,8 +299,8 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
     switch (category) {
       case 'productivity': return 'bg-blue-500';
       case 'collaboration': return 'bg-green-500';
-      case 'communication': return 'bg-orange-500';
-      case 'organization': return 'bg-purple-500';
+      case 'communication': return 'bg-[var(--hive-gold)]';
+      case 'organization': return 'bg-[var(--hive-gold)]';
       case 'engagement': return 'bg-pink-500';
       case 'academic': return 'bg-indigo-500';
       default: return 'bg-gray-500';
@@ -438,7 +438,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                 <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{totalSessions}</div>
                 <div className="text-sm text-zinc-400">Total Sessions</div>
               </div>
-              <Activity className="h-8 w-8 text-purple-400" />
+              <Activity className="h-8 w-8 text-[var(--hive-gold)]" />
             </div>
           </Card>
           
@@ -448,7 +448,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                 <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{totalActiveUsers}</div>
                 <div className="text-sm text-zinc-400">Active Users</div>
               </div>
-              <Users className="h-8 w-8 text-orange-400" />
+              <Users className="h-8 w-8 text-[var(--hive-gold)]" />
             </div>
           </Card>
         </div>

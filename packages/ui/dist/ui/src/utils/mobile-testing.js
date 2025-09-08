@@ -115,10 +115,8 @@ export const MOBILE_TEST_SCENARIOS = [
 ];
 // Mobile testing utilities
 export class MobileTester {
-    constructor() {
-        this.currentProfile = null;
-        this.testResults = [];
-    }
+    currentProfile = null;
+    testResults = [];
     // Simulate device profile
     async simulateDevice(profileName) {
         const profile = DEVICE_PROFILES[profileName];

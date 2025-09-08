@@ -302,7 +302,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
             <span>Spaces</span>
           </Button>
           <Separator orientation="vertical" className="h-6" />
-          <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+          <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-[var(--hive-gold)] rounded-lg flex items-center justify-center">
             <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
               {spaceData.name.charAt(0)}
             </span>
@@ -450,7 +450,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
                           {member.avatar ? (
                             <Image src={member.avatar} alt={member.name} width={40} height={40} className="rounded-full" />
                           ) : (
-                            <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                            <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-[var(--hive-gold)] rounded-full flex items-center justify-center">
                               <span className="text-[var(--hive-text-inverse)] font-medium text-sm">
                                 {member.name.charAt(0)}
                               </span>
@@ -485,7 +485,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
                           {leader.avatar ? (
                             <Image src={leader.avatar} alt={leader.name} width={40} height={40} className="rounded-full" />
                           ) : (
-                            <div className="h-8 w-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                            <div className="h-8 w-8 bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold)] rounded-full flex items-center justify-center">
                               <span className="text-[var(--hive-text-inverse)] font-medium text-xs">
                                 {leader.name.charAt(0)}
                               </span>

@@ -171,7 +171,7 @@ const InterestsStep = ({ onComplete, initialData }: any) => {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-hive-brand-secondary to-purple-500 rounded-full flex items-center justify-center">
+        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-hive-brand-secondary to-[var(--hive-gold)] rounded-full flex items-center justify-center">
           <Heart className="h-10 w-10 text-[var(--hive-text-inverse)]" />
         </div>
         <h3 className="text-2xl font-bold text-hive-text-primary mb-2">

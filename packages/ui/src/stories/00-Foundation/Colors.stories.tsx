@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 const ColorSystem = () => (
   <div className="bg-background p-8 space-y-8">
     <div>
-      <h2 className="text-2xl font-bold text-white mb-4">HIVE Color System</h2>
+      <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-4">HIVE Color System</h2>
       <p className="text-muted mb-8">Our monochromatic foundation with strategic gold accents creates sophistication with purposeful moments of celebration.</p>
     </div>
   </div>
@@ -36,7 +36,7 @@ const ColorSwatch = ({ color, name, hex, usage }: {
       style={{ backgroundColor: color }}
     />
     <div>
-      <h3 className="font-semibold text-white">{name}</h3>
+      <h3 className="font-semibold text-[var(--hive-text-primary)]">{name}</h3>
       <p className="text-sm text-muted font-mono">{hex}</p>
       <p className="text-xs text-muted/70 mt-1">{usage}</p>
     </div>
@@ -47,33 +47,33 @@ export const ColorPalette: Story = {
   render: () => (
     <div className="bg-background p-8 space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-white mb-4">HIVE Color System</h2>
+        <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-4">HIVE Color System</h2>
         <p className="text-muted mb-8">Our monochromatic foundation with strategic gold accents creates sophistication with purposeful moments of celebration.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
         <ColorSwatch
-          color="#0A0A0A"
+          color="var(--hive-background-primary)"
           name="Primary Black"
-          hex="#0A0A0A"
+          hex="var(--hive-background-primary)"
           usage="Main background, primary surfaces"
         />
         <ColorSwatch
-          color="#111111"
+          color="var(--hive-background-secondary)"
           name="Surface"
-          hex="#111111"
+          hex="var(--hive-background-secondary)"
           usage="Cards, elevated elements"
         />
         <ColorSwatch
-          color="#2A2A2A"
+          color="var(--hive-gray-700)"
           name="Border"
-          hex="#2A2A2A"
+          hex="var(--hive-gray-700)"
           usage="Subtle divisions, component borders"
         />
         <ColorSwatch
-          color="#FFD700"
+          color="var(--hive-gold)"
           name="Gold Accent"
-          hex="#FFD700"
+          hex="var(--hive-gold)"
           usage="Focus rings, achievements, highlights"
         />
         <ColorSwatch
@@ -85,7 +85,7 @@ export const ColorPalette: Story = {
       </div>
 
       <div className="border border-accent rounded-xl p-6 bg-accent/5">
-        <h3 className="text-lg font-semibold text-white mb-4">Gold Usage Strategy</h3>
+        <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-4">Gold Usage Strategy</h3>
         <div className="grid md:grid-cols-2 gap-6">
           <div>
             <h4 className="text-accent font-medium mb-2">✅ DO Use Gold For:</h4>
@@ -115,18 +115,18 @@ export const ColorPalette: Story = {
 export const DesignTokens: Story = {
   render: () => (
     <div className="bg-background p-8">
-      <h2 className="text-2xl font-bold text-white mb-6">Design Tokens</h2>
+      <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-6">Design Tokens</h2>
       
       <div className="space-y-6">
         <div className="border border-border rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-white mb-3">CSS Custom Properties</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-3">CSS Custom Properties</h3>
           <pre className="text-sm text-muted bg-surface/50 p-4 rounded border border-border overflow-x-auto">
 {`:root {
   /* Colors */
-  --color-background: #0A0A0A;
-  --color-surface: #111111;
-  --color-border: #2A2A2A;
-  --color-accent: #FFD700;
+  --color-background: var(--hive-background-primary);
+  --color-surface: var(--hive-background-secondary);
+  --color-border: var(--hive-gray-700);
+  --color-accent: var(--hive-gold);
   --color-muted: #6B7280;
   
   /* Motion */
@@ -137,13 +137,13 @@ export const DesignTokens: Story = {
         </div>
 
         <div className="border border-border rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-white mb-3">Tailwind Classes</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-3">Tailwind Classes</h3>
           <pre className="text-sm text-muted bg-surface/50 p-4 rounded border border-border overflow-x-auto">
 {`/* Color Classes */
-bg-background     /* #0A0A0A */
-bg-surface        /* #111111 */
-border-border     /* #2A2A2A */
-border-accent     /* #FFD700 */
+bg-background     /* var(--hive-background-primary) */
+bg-surface        /* var(--hive-background-secondary) */
+border-border     /* var(--hive-gray-700) */
+border-accent     /* var(--hive-gold) */
 text-muted        /* #6B7280 */
 
 /* Motion Classes */

@@ -62,9 +62,9 @@ const LEADER_MODES = {
     icon: BarChart3,
     label: 'Insights',
     description: 'Analytics and engagement data',
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/20',
-    borderColor: 'border-purple-500/30'
+    color: 'text-[var(--hive-gold)]',
+    bgColor: 'bg-[var(--hive-gold)]/20',
+    borderColor: 'border-[var(--hive-gold)]/30'
   }
 } as const;
 
@@ -132,7 +132,7 @@ export function LeaderToolbarMigrated({
                       "w-full flex items-center gap-3 p-3 rounded-xl bg-[var(--hive-background-primary)] border transition-all text-left",
                       isActive 
                         ? `${modeConfig.borderColor} ${modeConfig.bgColor}` 
-                        : "border-white/10 hover:border-white/20 hover:bg-white/5"
+                        : "border-[var(--hive-white)]/10 hover:border-[var(--hive-white)]/20 hover:bg-[var(--hive-white)]/5"
                     )}
                     onClick={() => {
                       onModeChange(isActive ? null : mode);
@@ -176,7 +176,7 @@ export function LeaderToolbarMigrated({
             "flex items-center gap-3 p-4 rounded-xl backdrop-blur-sm border transition-all shadow-lg",
             currentMode 
               ? `${LEADER_MODES[currentMode].borderColor} ${LEADER_MODES[currentMode].bgColor}` 
-              : "bg-[var(--hive-background-primary)]/90 border-white/10 hover:border-white/20"
+              : "bg-[var(--hive-background-primary)]/90 border-[var(--hive-white)]/10 hover:border-[var(--hive-white)]/20"
           )}
           onClick={() => {
             if (currentMode) {
@@ -226,7 +226,7 @@ export function LeaderToolbarMigrated({
         {/* Mode Indicator Help */}
         {currentMode && (
           <motion.div
-            className="absolute -top-12 right-0 bg-[var(--hive-background-primary)] border border-white/10 rounded-lg px-3 py-2 text-xs text-neutral-300 whitespace-nowrap"
+            className="absolute -top-12 right-0 bg-[var(--hive-background-primary)] border border-[var(--hive-white)]/10 rounded-lg px-3 py-2 text-xs text-neutral-300 whitespace-nowrap"
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
@@ -272,7 +272,7 @@ export function LeaderToolbarMigrated({
           )}
           
           {currentMode === 'insights' && (
-            <Button size="sm" variant="outline" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10">
+            <Button size="sm" variant="outline" className="border-[var(--hive-gold)]/30 text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/10">
               <Eye className="w-3 h-3 mr-1" />
               Analytics
             </Button>

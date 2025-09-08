@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk as SpaceGrotesk } from "next/font/google";
 import { Providers } from "./providers";
+import "@hive/ui/styles.css";
 import "./globals.css";
 import { WelcomeMatProvider } from "../components/welcome-mat-provider";
 import { FeedbackToast } from "../components/feedback-toast";

@@ -339,7 +339,7 @@ function UserTypeSelection({ state, dispatch }: {
               <div className="flex items-center gap-3 mb-3">
                 <div className={`p-2 rounded-lg ${
                   state.userType === userType.type 
-                    ? 'bg-blue-500 text-white' 
+                    ? 'bg-blue-500 text-[var(--hive-text-primary)]' 
                     : 'bg-gray-100 text-gray-600'
                 }`}>
                   {userType.icon}
@@ -826,7 +826,7 @@ function SocialPreferencesStep({ state, dispatch }: {
                 onClick={() => handleSocialChange('extroverted', false)}
               >
                 <CardContent className="p-4 text-center">
-                  <User className="h-8 w-8 mx-auto mb-2 text-purple-500" />
+                  <User className="h-8 w-8 mx-auto mb-2 text-[var(--hive-gold)]" />
                   <h3 className="font-medium">More Introverted</h3>
                   <p className="text-sm text-gray-500">Prefer smaller groups and deeper connections</p>
                 </CardContent>
@@ -1377,7 +1377,7 @@ function OnboardingFlow() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Progress Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
+      <div className="bg-[var(--hive-white)] border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-lg font-semibold text-gray-900">HIVE Onboarding</h1>
@@ -1409,7 +1409,7 @@ function OnboardingFlow() {
       </div>
 
       {/* Footer */}
-      <div className="bg-white border-t border-gray-200 px-6 py-4 mt-8">
+      <div className="bg-[var(--hive-white)] border-t border-gray-200 px-6 py-4 mt-8">
         <div className="max-w-4xl mx-auto flex justify-between items-center text-sm text-gray-500">
           <span>© 2025 HIVE - University at Buffalo</span>
           <div className="flex items-center gap-4">

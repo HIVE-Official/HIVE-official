@@ -181,11 +181,11 @@ const TransitionSystemDemo = () => {
   }, [currentPhase]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)] relative overflow-hidden">
       
       {/* Celebration Overlay */}
       {showCelebration && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-[var(--hive-black)]/80 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="max-w-2xl mx-auto p-8 text-center space-y-6">
             <div className="text-8xl animate-bounce">🎉</div>
             <h1 className="text-4xl font-bold" style={{ color: 'var(--hive-brand-primary)' }}>
@@ -199,7 +199,7 @@ const TransitionSystemDemo = () => {
                 <Trophy className="w-4 h-4 mr-2" />
                 Pioneer Campus
               </Badge>
-              <Badge className="bg-purple-600 text-white">
+              <Badge className="bg-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]">
                 <Crown className="w-4 h-4 mr-2" />
                 Community Champion
               </Badge>
@@ -216,11 +216,11 @@ const TransitionSystemDemo = () => {
       )}
 
       {/* Header with Phase Indicator */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Platform Evolution</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Platform Evolution</h1>
               <p className="text-gray-400">From Ritual-Driven Foundation to Feed-Centric Coordination</p>
             </div>
             <div className="flex items-center space-x-3">
@@ -238,7 +238,7 @@ const TransitionSystemDemo = () => {
               <ArrowRight className="w-4 h-4 text-gray-500" />
               <Badge 
                 className={`${
-                  currentPhase === 'v1' ? 'bg-purple-600 text-white' : 'bg-gray-700'
+                  currentPhase === 'v1' ? 'bg-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]' : 'bg-gray-700'
                 }`}
               >
                 v1
@@ -256,7 +256,7 @@ const TransitionSystemDemo = () => {
                 setTransitionProgress(0);
                 setShowCelebration(false);
               }}
-              className={currentPhase === 'vbeta' ? 'hive-interactive' : 'border-gray-600 text-white'}
+              className={currentPhase === 'vbeta' ? 'hive-interactive' : 'border-gray-600 text-[var(--hive-text-primary)]'}
               style={currentPhase === 'vbeta' ? {
                 backgroundColor: 'var(--hive-brand-primary)',
                 color: 'var(--hive-text-inverse)'
@@ -271,7 +271,7 @@ const TransitionSystemDemo = () => {
                 setCurrentPhase('transition');
                 setTransitionProgress(0);
               }}
-              className="border-gray-600 text-white"
+              className="border-gray-600 text-[var(--hive-text-primary)]"
               disabled={currentPhase === 'transition'}
             >
               Start Transition
@@ -283,7 +283,7 @@ const TransitionSystemDemo = () => {
                 setCurrentPhase('v1');
                 setTransitionProgress(100);
               }}
-              className={currentPhase === 'v1' ? 'bg-purple-600 text-white' : 'border-gray-600 text-white'}
+              className={currentPhase === 'v1' ? 'bg-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]' : 'border-gray-600 text-[var(--hive-text-primary)]'}
             >
               Show v1 Phase
             </Button>
@@ -299,7 +299,7 @@ const TransitionSystemDemo = () => {
               <Rocket className="w-6 h-6" style={{ color: 'var(--hive-brand-primary)' }} />
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-white font-medium">Transitioning to v1...</span>
+                  <span className="text-[var(--hive-text-primary)] font-medium">Transitioning to v1...</span>
                   <span className="text-gray-400 text-sm">{transitionProgress}%</span>
                 </div>
                 <HiveProgress value={transitionProgress} className="h-2" />
@@ -346,7 +346,7 @@ const TransitionSystemDemo = () => {
               </Card>
               <Card className="bg-gray-800/50 border-gray-700 text-center">
                 <CardContent className="pt-4">
-                  <div className="text-2xl font-bold text-purple-400">
+                  <div className="text-2xl font-bold text-[var(--hive-gold)]">
                     {mockTransitionData.vBetaStats.toolsBuilt}
                   </div>
                   <div className="text-sm text-gray-400">Tools Built</div>
@@ -354,7 +354,7 @@ const TransitionSystemDemo = () => {
               </Card>
               <Card className="bg-gray-800/50 border-gray-700 text-center">
                 <CardContent className="pt-4">
-                  <div className="text-2xl font-bold text-orange-400">
+                  <div className="text-2xl font-bold text-[var(--hive-gold)]">
                     {mockTransitionData.vBetaStats.successStories}
                   </div>
                   <div className="text-sm text-gray-400">Success Stories</div>
@@ -373,7 +373,7 @@ const TransitionSystemDemo = () => {
             {/* Transition Readiness */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
                   <Target className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
                   Transition Readiness Assessment
                 </CardTitle>
@@ -389,13 +389,13 @@ const TransitionSystemDemo = () => {
                           }`} 
                         />
                         <div>
-                          <h4 className="text-white font-medium">{milestone.title}</h4>
+                          <h4 className="text-[var(--hive-text-primary)] font-medium">{milestone.title}</h4>
                           <p className="text-gray-400 text-sm">{milestone.description}</p>
                         </div>
                       </div>
                       <Badge 
                         className={`${
-                          milestone.status === 'completed' ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'
+                          milestone.status === 'completed' ? 'bg-green-600 text-[var(--hive-text-primary)]' : 'bg-blue-600 text-[var(--hive-text-primary)]'
                         }`}
                       >
                         {milestone.progress}%
@@ -426,18 +426,18 @@ const TransitionSystemDemo = () => {
               {Object.entries(mockTransitionData.v1Capabilities).map(([key, value]) => (
                 <Card key={key} className="bg-gradient-to-br from-purple-900/50 to-gray-800/50 border-purple-700">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-white text-base flex items-center">
-                      <Sparkles className="w-5 h-5 mr-2 text-purple-400" />
+                    <CardTitle className="text-[var(--hive-text-primary)] text-base flex items-center">
+                      <Sparkles className="w-5 h-5 mr-2 text-[var(--hive-gold)]" />
                       {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-300 text-sm">{value}</p>
                     <div className="mt-3 flex items-center justify-between">
-                      <Badge className="bg-purple-600 text-white text-xs">
+                      <Badge className="bg-[var(--hive-gold-dark)] text-[var(--hive-text-primary)] text-xs">
                         New in v1
                       </Badge>
-                      <Button size="sm" variant="secondary" className="border-purple-600 text-purple-400">
+                      <Button size="sm" variant="secondary" className="border-[var(--hive-gold-dark)] text-[var(--hive-gold)]">
                         <Eye className="w-3 h-3 mr-1" />
                         Explore
                       </Button>
@@ -450,32 +450,32 @@ const TransitionSystemDemo = () => {
             {/* Achievement Celebrations */}
             <Card className="bg-gradient-to-r from-yellow-900/50 to-orange-900/50 border-yellow-700">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
-                  <Trophy className="w-5 h-5 mr-2 text-yellow-400" />
+                <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
+                  <Trophy className="w-5 h-5 mr-2 text-[var(--hive-gold)]" />
                   Community Achievements
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {mockTransitionData.celebrationMoments.map((moment) => (
-                  <div key={moment.id} className="flex items-start space-x-4 p-4 bg-black/30 rounded-lg">
+                  <div key={moment.id} className="flex items-start space-x-4 p-4 bg-[var(--hive-black)]/30 rounded-lg">
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
                         {moment.type === 'major_milestone' ? (
-                          <PartyPopper className="w-6 h-6 text-white" />
+                          <PartyPopper className="w-6 h-6 text-[var(--hive-text-primary)]" />
                         ) : (
-                          <Award className="w-6 h-6 text-white" />
+                          <Award className="w-6 h-6 text-[var(--hive-text-primary)]" />
                         )}
                       </div>
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-white font-semibold">{moment.title}</h4>
+                      <h4 className="text-[var(--hive-text-primary)] font-semibold">{moment.title}</h4>
                       <p className="text-gray-300 text-sm mt-1">{moment.description}</p>
                       <div className="flex items-center space-x-4 mt-2 text-sm text-gray-400">
                         <span className="flex items-center">
                           <Users className="w-4 h-4 mr-1" />
                           {moment.participants} participants
                         </span>
-                        <Badge className="bg-yellow-600 text-black text-xs">
+                        <Badge className="bg-yellow-600 text-[var(--hive-black)] text-xs">
                           {moment.achievement}
                         </Badge>
                       </div>
@@ -488,7 +488,7 @@ const TransitionSystemDemo = () => {
             {/* Enhanced Feed Preview */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
                   <Activity className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
                   Enhanced Feed Experience
                 </CardTitle>
@@ -521,22 +521,22 @@ const TransitionSystemDemo = () => {
                     timeframe: '3 days'
                   }
                 ].map((item, index) => (
-                  <div key={index} className="p-4 bg-black/30 rounded-lg space-y-3">
+                  <div key={index} className="p-4 bg-[var(--hive-black)]/30 rounded-lg space-y-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
                           <Badge 
                             className={`text-xs ${
-                              item.urgency === 'high' ? 'bg-red-600 text-white' :
-                              item.urgency === 'medium' ? 'bg-yellow-600 text-black' :
-                              'bg-green-600 text-white'
+                              item.urgency === 'high' ? 'bg-red-600 text-[var(--hive-text-primary)]' :
+                              item.urgency === 'medium' ? 'bg-yellow-600 text-[var(--hive-black)]' :
+                              'bg-green-600 text-[var(--hive-text-primary)]'
                             }`}
                           >
                             {item.type.replace('_', ' ')}
                           </Badge>
                           <span className="text-xs text-gray-500">{item.timeframe} ago</span>
                         </div>
-                        <h4 className="text-white font-medium">{item.title}</h4>
+                        <h4 className="text-[var(--hive-text-primary)] font-medium">{item.title}</h4>
                         <p className="text-gray-300 text-sm">{item.description}</p>
                       </div>
                     </div>
@@ -552,7 +552,7 @@ const TransitionSystemDemo = () => {
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                        <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                           <Heart className="w-3 h-3 mr-1" />
                           Save
                         </Button>
@@ -586,7 +586,7 @@ export const CelebrationMoment: Story = {
   render: () => {
     const CelebrationDemo = () => {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex items-center justify-center relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)] flex items-center justify-center relative overflow-hidden">
           {/* Animated Background Elements */}
           <div className="absolute inset-0 opacity-20">
             {[...Array(50)].map((_, i) => (
@@ -610,7 +610,7 @@ export const CelebrationMoment: Story = {
             <div className="text-9xl animate-bounce">🎉</div>
             
             <div className="space-y-4">
-              <h1 className="text-6xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-6xl font-bold bg-gradient-to-r from-[var(--hive-gold)] via-[var(--hive-gold)] to-[var(--hive-gold-dark)] bg-clip-text text-transparent">
                 Welcome to HIVE v1!
               </h1>
               <p className="text-2xl text-gray-300 max-w-2xl mx-auto">
@@ -620,15 +620,15 @@ export const CelebrationMoment: Story = {
 
             {/* Achievement Badges */}
             <div className="flex flex-wrap justify-center gap-4">
-              <Badge className="text-lg px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-black">
+              <Badge className="text-lg px-6 py-2 bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] text-[var(--hive-black)]">
                 <Trophy className="w-5 h-5 mr-2" />
                 Pioneer Campus
               </Badge>
-              <Badge className="text-lg px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+              <Badge className="text-lg px-6 py-2 bg-gradient-to-r from-[var(--hive-gold-dark)] to-pink-600 text-[var(--hive-text-primary)]">
                 <Crown className="w-5 h-5 mr-2" />
                 Community Champion
               </Badge>
-              <Badge className="text-lg px-6 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
+              <Badge className="text-lg px-6 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-[var(--hive-text-primary)]">
                 <Star className="w-5 h-5 mr-2" />
                 Excellence in Innovation
               </Badge>
@@ -638,13 +638,13 @@ export const CelebrationMoment: Story = {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               <Card className="bg-gradient-to-br from-yellow-900/50 to-orange-900/50 border-yellow-700">
                 <CardContent className="pt-6 text-center">
-                  <div className="text-4xl font-bold text-yellow-400">2,834</div>
+                  <div className="text-4xl font-bold text-[var(--hive-gold)]">2,834</div>
                   <div className="text-yellow-300">Students Engaged</div>
                 </CardContent>
               </Card>
               <Card className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 border-purple-700">
                 <CardContent className="pt-6 text-center">
-                  <div className="text-4xl font-bold text-purple-400">156</div>
+                  <div className="text-4xl font-bold text-[var(--hive-gold)]">156</div>
                   <div className="text-purple-300">Communities Formed</div>
                 </CardContent>
               </Card>
@@ -666,7 +666,7 @@ export const CelebrationMoment: Story = {
             <div className="space-y-4">
               <Button 
                 size="lg" 
-                className="text-xl px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-black hover:from-yellow-400 hover:to-orange-400 transition-all duration-300"
+                className="text-xl px-8 py-4 bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] text-[var(--hive-black)] hover:from-[var(--hive-gold)] hover:to-[var(--hive-gold)] transition-all duration-300"
               >
                 <Rocket className="w-6 h-6 mr-3" />
                 Explore v1 Capabilities
@@ -719,10 +719,10 @@ export const CapabilityComparison: Story = {
       };
 
       return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-8">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)] p-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-white mb-4">Platform Evolution</h1>
+              <h1 className="text-4xl font-bold text-[var(--hive-text-primary)] mb-4">Platform Evolution</h1>
               <p className="text-xl text-gray-400">From Foundation to Full Coordination</p>
             </div>
 
@@ -730,7 +730,7 @@ export const CapabilityComparison: Story = {
               {Object.entries(capabilities).map(([phase, data]) => (
                 <Card key={phase} className="bg-gray-800/50 border-gray-700 h-full">
                   <CardHeader>
-                    <CardTitle className="text-2xl text-white flex items-center">
+                    <CardTitle className="text-2xl text-[var(--hive-text-primary)] flex items-center">
                       <div 
                         className="w-6 h-6 rounded-full mr-3" 
                         style={{ backgroundColor: data.color }}
@@ -750,7 +750,7 @@ export const CapabilityComparison: Story = {
                           </div>
                         </div>
                         <div className="flex-1">
-                          <h4 className="text-white font-medium">{feature.name}</h4>
+                          <h4 className="text-[var(--hive-text-primary)] font-medium">{feature.name}</h4>
                           <p className="text-gray-400 text-sm mt-1">{feature.description}</p>
                         </div>
                       </div>
@@ -774,9 +774,9 @@ export const CapabilityComparison: Story = {
 
             <div className="text-center mt-12">
               <div className="inline-flex items-center space-x-4 p-6 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl border border-purple-700">
-                <ArrowRight className="w-8 h-8 text-purple-400" />
+                <ArrowRight className="w-8 h-8 text-[var(--hive-gold)]" />
                 <div>
-                  <h3 className="text-xl font-semibold text-white">Seamless Evolution</h3>
+                  <h3 className="text-xl font-semibold text-[var(--hive-text-primary)]">Seamless Evolution</h3>
                   <p className="text-purple-300">All your data, relationships, and communities preserved</p>
                 </div>
               </div>

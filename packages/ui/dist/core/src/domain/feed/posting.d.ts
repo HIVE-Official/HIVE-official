@@ -250,8 +250,8 @@ export declare const PostSchema: z.ZodObject<{
     authorDisplayName: string;
     commentCount: number;
     shareCount: number;
-    spaceName?: string | undefined;
     spaceId?: string | undefined;
+    spaceName?: string | undefined;
     publishedAt?: Date | undefined;
     scheduledAt?: Date | undefined;
     toolData?: Record<string, unknown> | undefined;
@@ -295,8 +295,8 @@ export declare const PostSchema: z.ZodObject<{
     authorId: string;
     authorHandle: string;
     authorDisplayName: string;
-    spaceName?: string | undefined;
     spaceId?: string | undefined;
+    spaceName?: string | undefined;
     reactions?: Record<string, number> | undefined;
     viewCount?: number | undefined;
     publishedAt?: Date | undefined;

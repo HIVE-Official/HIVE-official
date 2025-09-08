@@ -116,7 +116,7 @@ export declare const hiveVariants: {
     };
     readonly goldPulse: {
         pulse: {
-            boxShadow: ["0 0 0 rgba(255, 215, 0, 0)", "0 0 20px rgba(255, 215, 0, 0.3)", "0 0 0 rgba(255, 215, 0, 0)"];
+            boxShadow: ["0 0 0 rgba(var(--hive-gold-rgb), 0)", "0 0 20px rgba(var(--hive-gold-rgb), 0.3)", "0 0 0 rgba(var(--hive-gold-rgb), 0)"];
             transition: {
                 duration: number;
                 ease: [number, number, number, number];
@@ -197,7 +197,7 @@ export declare const hivePresets: {
         whileHover: {
             scale: number;
             y: number;
-            boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1)";
+            boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(var(--hive-gold-rgb), 0.1)";
             transition: {
                 duration: number;
                 ease: [number, number, number, number];
@@ -207,7 +207,7 @@ export declare const hivePresets: {
     readonly button: {
         whileHover: {
             scale: number;
-            boxShadow: "0 0 15px rgba(255, 215, 0, 0.2)";
+            boxShadow: "0 0 15px rgba(var(--hive-gold-rgb), 0.2)";
             transition: {
                 duration: number;
                 ease: [number, number, number, number];

@@ -24,9 +24,9 @@ const getEventTypeConfig = (type) => {
             label: 'Study'
         },
         meeting: {
-            color: 'text-purple-500',
-            bgColor: 'bg-purple-500/10',
-            borderColor: 'border-purple-500/20',
+            color: 'text-[var(--hive-gold)]',
+            bgColor: 'bg-[var(--hive-gold)]/10',
+            borderColor: 'border-[var(--hive-gold)]/20',
             icon: Users,
             label: 'Meeting'
         },

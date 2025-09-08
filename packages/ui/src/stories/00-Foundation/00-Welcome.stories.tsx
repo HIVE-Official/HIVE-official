@@ -2,9 +2,9 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const Welcome = () => (
-  <div className="max-w-4xl mx-auto p-8 space-y-8 bg-[#0A0A0A] text-white min-h-screen">
+  <div className="max-w-4xl mx-auto p-8 space-y-8 bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] min-h-screen">
     <div className="text-center space-y-4">
-      <h1 className="text-4xl font-bold text-[#FFD700]">HIVE Design System</h1>
+      <h1 className="text-4xl font-bold text-[var(--hive-gold)]">HIVE Design System</h1>
       <p className="text-xl text-gray-300">
         Foundations & Concrete Components
       </p>
@@ -15,8 +15,8 @@ const Welcome = () => (
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="bg-[#111111] p-6 rounded-lg border border-[#2A2A2A]">
-        <h3 className="text-lg font-semibold text-[#FFD700] mb-3">🏗️ Foundations</h3>
+      <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg border border-[var(--hive-gray-700)]">
+        <h3 className="text-lg font-semibold text-[var(--hive-gold)] mb-3">🏗️ Foundations</h3>
         <ul className="space-y-2 text-gray-300">
           <li>• Design Tokens (Colors, Typography, Spacing)</li>
           <li>• Motion & Animation System</li>
@@ -25,8 +25,8 @@ const Welcome = () => (
         </ul>
       </div>
 
-      <div className="bg-[#111111] p-6 rounded-lg border border-[#2A2A2A]">
-        <h3 className="text-lg font-semibold text-[#FFD700] mb-3">🧱 Components</h3>
+      <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg border border-[var(--hive-gray-700)]">
+        <h3 className="text-lg font-semibold text-[var(--hive-gold)] mb-3">🧱 Components</h3>
         <ul className="space-y-2 text-gray-300">
           <li>• Button System (Transparent + Gold Outline)</li>
           <li>• Form Elements</li>
@@ -36,8 +36,8 @@ const Welcome = () => (
       </div>
     </div>
 
-    <div className="bg-[#111111] p-6 rounded-lg border border-[#2A2A2A]">
-      <h3 className="text-lg font-semibold text-[#FFD700] mb-3">✅ Quality Status</h3>
+    <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg border border-[var(--hive-gray-700)]">
+      <h3 className="text-lg font-semibold text-[var(--hive-gold)] mb-3">✅ Quality Status</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
         <div>
           <div className="text-green-400 font-medium">✅ Working</div>

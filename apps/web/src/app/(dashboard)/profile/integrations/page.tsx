@@ -282,7 +282,7 @@ export default function ProfileIntegrationsPage() {
     switch (status) {
       case 'connected': return 'text-green-400';
       case 'error': return 'text-red-400';
-      case 'syncing': return 'text-yellow-400';
+      case 'syncing': return 'text-[var(--hive-gold)]';
       default: return 'text-gray-400';
     }
   };
@@ -291,7 +291,7 @@ export default function ProfileIntegrationsPage() {
     switch (status) {
       case 'connected': return <Check className="h-4 w-4 text-green-400" />;
       case 'error': return <X className="h-4 w-4 text-red-400" />;
-      case 'syncing': return <RefreshCw className="h-4 w-4 text-yellow-400 animate-spin" />;
+      case 'syncing': return <RefreshCw className="h-4 w-4 text-[var(--hive-gold)] animate-spin" />;
       default: return <AlertTriangle className="h-4 w-4 text-gray-400" />;
     }
   };
@@ -336,7 +336,7 @@ export default function ProfileIntegrationsPage() {
               <Button 
                 variant="outline" 
                 size="sm"
-                className="border-yellow-500 text-yellow-400 hover:bg-yellow-500/10"
+                className="border-[var(--hive-gold)] text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/10"
               >
                 <AlertTriangle className="h-4 w-4 mr-2" />
                 {criticalMissing.length} Missing
@@ -383,8 +383,8 @@ export default function ProfileIntegrationsPage() {
               <div className="text-xs text-hive-text-mutedLight">Sync Errors</div>
             </Card>
             
-            <Card className="p-4 text-center bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
-              <RefreshCw className="h-6 w-6 mx-auto mb-2 text-purple-400" />
+            <Card className="p-4 text-center bg-gradient-to-br from-[var(--hive-gold)]/10 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20">
+              <RefreshCw className="h-6 w-6 mx-auto mb-2 text-[var(--hive-gold)]" />
               <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{health.dataFreshness}%</div>
               <div className="text-xs text-hive-text-mutedLight">Data Freshness</div>
             </Card>
@@ -603,7 +603,7 @@ export default function ProfileIntegrationsPage() {
           </Tabs>
 
           {/* Privacy & Data Information */}
-          <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
+          <Card className="p-6 bg-gradient-to-br from-[var(--hive-gold)]/10 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20">
             <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
               <Shield className="h-5 w-5 mr-2" />
               Privacy & Data Control

@@ -21,7 +21,7 @@ export default function EntryPage() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center px-4">
       <div className="text-center max-w-md w-full">
         {/* HIVE Logo */}
         <div className="flex justify-center mb-8">
@@ -40,12 +40,12 @@ export default function EntryPage() {
         </div>
 
         {/* Brand Name */}
-        <h1 className="text-5xl font-black text-white mb-2 tracking-tight">
+        <h1 className="text-5xl font-black text-[var(--hive-text-primary)] mb-2 tracking-tight">
           HIVE
         </h1>
         
         {/* Tagline */}
-        <p className="text-lg text-white/60 mb-12">
+        <p className="text-lg text-[var(--hive-text-primary)]/60 mb-12">
           Your Campus, Connected
         </p>
 
@@ -61,8 +61,8 @@ export default function EntryPage() {
           </Link>
           
           {/* Simple text link for returning users */}
-          <p className="text-sm text-white/40 mt-6 text-center">
-            <Link href="/auth/login" className="hover:text-white transition-colors underline-offset-4 hover:underline">
+          <p className="text-sm text-[var(--hive-text-primary)]/40 mt-6 text-center">
+            <Link href="/auth/login" className="hover:text-[var(--hive-text-primary)] transition-colors underline-offset-4 hover:underline">
               Sign In
             </Link>
           </p>
@@ -71,7 +71,7 @@ export default function EntryPage() {
 
       {/* Subtle Background Gradient */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#FFD700] rounded-full blur-[200px] opacity-[0.02]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--hive-gold)] rounded-full blur-[200px] opacity-[0.02]" />
       </div>
 
     </div>

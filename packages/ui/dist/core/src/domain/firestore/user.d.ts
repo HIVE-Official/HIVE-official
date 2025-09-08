@@ -84,12 +84,12 @@ export declare const UserSchema: z.ZodObject<{
     major: string;
     isBuilder: boolean;
     isVerified: boolean;
+    isPublic: boolean;
     fullName: string;
     builderOptIn: boolean;
     consentGiven: boolean;
     updatedAt: number;
     createdAt: number;
-    isPublic: boolean;
     builderAnalyticsEnabled: boolean;
     avatarUrl?: string | undefined;
     bio?: string | undefined;
@@ -111,10 +111,10 @@ export declare const UserSchema: z.ZodObject<{
     onboardingCompleted?: boolean | undefined;
     isBuilder?: boolean | undefined;
     isVerified?: boolean | undefined;
+    isPublic?: boolean | undefined;
     bio?: string | undefined;
     graduationYear?: number | undefined;
     builderOptIn?: boolean | undefined;
-    isPublic?: boolean | undefined;
     builderAnalyticsEnabled?: boolean | undefined;
     lastActiveAt?: number | undefined;
 }>;
@@ -149,10 +149,10 @@ export declare const CreateUserSchema: z.ZodObject<Omit<{
     major: string;
     isBuilder: boolean;
     isVerified: boolean;
+    isPublic: boolean;
     fullName: string;
     builderOptIn: boolean;
     consentGiven: boolean;
-    isPublic: boolean;
     builderAnalyticsEnabled: boolean;
     avatarUrl?: string | undefined;
     bio?: string | undefined;
@@ -169,10 +169,10 @@ export declare const CreateUserSchema: z.ZodObject<Omit<{
     onboardingCompleted?: boolean | undefined;
     isBuilder?: boolean | undefined;
     isVerified?: boolean | undefined;
+    isPublic?: boolean | undefined;
     bio?: string | undefined;
     graduationYear?: number | undefined;
     builderOptIn?: boolean | undefined;
-    isPublic?: boolean | undefined;
     builderAnalyticsEnabled?: boolean | undefined;
 }>;
 export declare const UpdateUserSchema: z.ZodObject<Omit<{
@@ -205,13 +205,13 @@ export declare const UpdateUserSchema: z.ZodObject<Omit<{
     major?: string | undefined;
     isBuilder?: boolean | undefined;
     isVerified?: boolean | undefined;
+    isPublic?: boolean | undefined;
     bio?: string | undefined;
     graduationYear?: number | undefined;
     fullName?: string | undefined;
     builderOptIn?: boolean | undefined;
     consentGiven?: boolean | undefined;
     updatedAt?: number | undefined;
-    isPublic?: boolean | undefined;
     builderAnalyticsEnabled?: boolean | undefined;
     lastActiveAt?: number | undefined;
 }, {
@@ -222,13 +222,13 @@ export declare const UpdateUserSchema: z.ZodObject<Omit<{
     major?: string | undefined;
     isBuilder?: boolean | undefined;
     isVerified?: boolean | undefined;
+    isPublic?: boolean | undefined;
     bio?: string | undefined;
     graduationYear?: number | undefined;
     fullName?: string | undefined;
     builderOptIn?: boolean | undefined;
     consentGiven?: boolean | undefined;
     updatedAt?: number | undefined;
-    isPublic?: boolean | undefined;
     builderAnalyticsEnabled?: boolean | undefined;
     lastActiveAt?: number | undefined;
 }>;

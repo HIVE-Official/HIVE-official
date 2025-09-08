@@ -186,10 +186,10 @@ export function SocialConnectionsCard({ settings, isEditMode, className }: Socia
 
   const getConnectionColor = (type: string, strength: string) => {
     const baseColors = {
-      study_partner: 'text-purple-400',
+      study_partner: 'text-[var(--hive-gold)]',
       floormate: 'text-green-400',
       project_partner: 'text-blue-400',
-      classmate: 'text-amber-400'
+      classmate: 'text-[var(--hive-gold)]'
     };
 
     const strengthOpacity = {
@@ -204,7 +204,7 @@ export function SocialConnectionsCard({ settings, isEditMode, className }: Socia
   const getStrengthBadge = (strength: string) => {
     const colors = {
       strong: 'bg-green-500/20 text-green-400 border-green-500/30',
-      medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+      medium: 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30',
       new: 'bg-blue-500/20 text-blue-400 border-blue-500/30'
     };
     return colors[strength as keyof typeof colors];
@@ -321,7 +321,7 @@ export function SocialConnectionsCard({ settings, isEditMode, className }: Socia
           <div className="text-xs text-muted-foreground">Close</div>
         </div>
         <div className="text-center">
-          <div className="text-lg font-bold text-purple-400">
+          <div className="text-lg font-bold text-[var(--hive-gold)]">
             {connections.filter(c => c.type === 'study_partner').length}
           </div>
           <div className="text-xs text-muted-foreground">Study</div>

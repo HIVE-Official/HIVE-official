@@ -24,9 +24,9 @@ const getSpaceTypeConfig = (type) => {
             label: 'Residential'
         },
         social: {
-            color: 'text-purple-500',
-            bgColor: 'bg-purple-500/10',
-            borderColor: 'border-purple-500/20',
+            color: 'text-[var(--hive-gold)]',
+            bgColor: 'bg-[var(--hive-gold)]/10',
+            borderColor: 'border-[var(--hive-gold)]/20',
             icon: Heart,
             label: 'Social'
         },
@@ -62,8 +62,8 @@ const getRoleConfig = (role) => {
             label: 'Moderator'
         },
         admin: {
-            color: 'text-purple-500',
-            bgColor: 'bg-purple-500/10',
+            color: 'text-[var(--hive-gold)]',
+            bgColor: 'bg-[var(--hive-gold)]/10',
             icon: Crown,
             label: 'Admin'
         },
@@ -84,8 +84,8 @@ const getActivityLevelConfig = (level) => {
             label: 'Very Active'
         },
         medium: {
-            color: 'text-yellow-500',
-            bgColor: 'bg-yellow-500/10',
+            color: 'text-[var(--hive-gold)]',
+            bgColor: 'bg-[var(--hive-gold)]/10',
             label: 'Active'
         },
         low: {
@@ -118,6 +118,6 @@ export const ProfileSpacesWidget = ({ user, joinedSpaces = [], totalSpaces = 0, 
                                     const roleConfig = getRoleConfig(space.role);
                                     const activityConfig = getActivityLevelConfig(space.activityLevel);
                                     return (_jsxs("div", { className: "flex items-center gap-2 p-2 rounded hover:bg-[var(--hive-background-secondary)] transition-colors cursor-pointer", onClick: () => onViewSpace?.(space.id), children: [_jsx(typeConfig.icon, { className: cn('h-3 w-3', typeConfig.color) }), _jsx(Text, { variant: "body-xs", color: "primary", className: "flex-1 truncate", children: space.name }), space.unreadMessages && space.unreadMessages > 0 && (_jsx(Badge, { variant: "secondary", className: "text-xs", children: space.unreadMessages })), _jsx("div", { className: cn('w-2 h-2 rounded-full', activityConfig.color.replace('text-', 'bg-')) }), _jsx(ChevronRight, { className: "h-3 w-3 text-[var(--hive-text-secondary)]" })] }, space.id));
-                                }) })] })), weeklyEngagement > 0 && (_jsxs("div", { className: "space-y-2 pt-2 border-t border-[var(--hive-border-primary)]", children: [_jsx(Text, { variant: "body-sm", color: "primary", weight: "medium", children: "This Week:" }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx(Text, { variant: "body-sm", color: "secondary", children: "Community Engagement" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: "w-16 h-2 bg-[var(--hive-background-secondary)] rounded-full", children: _jsx("div", { className: "h-2 bg-green-500 rounded-full transition-all duration-500", style: { width: `${Math.min(weeklyEngagement, 100)}%` } }) }), _jsxs(Text, { variant: "body-xs", color: "gold", weight: "medium", children: [weeklyEngagement, "%"] })] })] })] })), _jsxs("div", { className: "flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]", children: [isEditable && onJoinSpace && (_jsxs(Button, { variant: "secondary", size: "sm", onClick: onJoinSpace, className: "flex-1", children: [_jsx(Plus, { className: "h-3 w-3 mr-1" }), "Join Space"] })), onViewAllSpaces && (_jsxs(Button, { variant: "primary", size: "sm", onClick: onViewAllSpaces, className: "flex-1", children: [_jsx(Users, { className: "h-3 w-3 mr-1" }), "My Spaces"] })), onExploreSpaces && (_jsx(Button, { variant: "ghost", size: "icon", onClick: onExploreSpaces, className: "text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]", children: _jsx(Search, { className: "h-3 w-3" }) }))] }), joinedSpaces.length === 0 && (_jsxs("div", { className: "text-center py-6", children: [_jsx(Users, { className: "h-8 w-8 mx-auto mb-3 text-[var(--hive-text-muted)]" }), _jsx(Text, { variant: "body-sm", color: "secondary", className: "mb-2", children: "No spaces joined yet" }), _jsx(Text, { variant: "body-xs", color: "secondary", className: "mb-4", children: "Discover communities and connect with fellow UB students" }), isEditable && onJoinSpace && (_jsxs(Button, { variant: "secondary", size: "sm", onClick: onJoinSpace, children: [_jsx(Plus, { className: "h-3 w-3 mr-1" }), "Explore Spaces"] }))] }))] }), isHovered && (_jsx("div", { className: "absolute inset-0 -z-10 bg-gradient-to-r from-purple-500/5 to-green-500/5 rounded-lg blur-xl" }))] }));
+                                }) })] })), weeklyEngagement > 0 && (_jsxs("div", { className: "space-y-2 pt-2 border-t border-[var(--hive-border-primary)]", children: [_jsx(Text, { variant: "body-sm", color: "primary", weight: "medium", children: "This Week:" }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx(Text, { variant: "body-sm", color: "secondary", children: "Community Engagement" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: "w-16 h-2 bg-[var(--hive-background-secondary)] rounded-full", children: _jsx("div", { className: "h-2 bg-green-500 rounded-full transition-all duration-500", style: { width: `${Math.min(weeklyEngagement, 100)}%` } }) }), _jsxs(Text, { variant: "body-xs", color: "gold", weight: "medium", children: [weeklyEngagement, "%"] })] })] })] })), _jsxs("div", { className: "flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]", children: [isEditable && onJoinSpace && (_jsxs(Button, { variant: "secondary", size: "sm", onClick: onJoinSpace, className: "flex-1", children: [_jsx(Plus, { className: "h-3 w-3 mr-1" }), "Join Space"] })), onViewAllSpaces && (_jsxs(Button, { variant: "primary", size: "sm", onClick: onViewAllSpaces, className: "flex-1", children: [_jsx(Users, { className: "h-3 w-3 mr-1" }), "My Spaces"] })), onExploreSpaces && (_jsx(Button, { variant: "ghost", size: "icon", onClick: onExploreSpaces, className: "text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]", children: _jsx(Search, { className: "h-3 w-3" }) }))] }), joinedSpaces.length === 0 && (_jsxs("div", { className: "text-center py-6", children: [_jsx(Users, { className: "h-8 w-8 mx-auto mb-3 text-[var(--hive-text-muted)]" }), _jsx(Text, { variant: "body-sm", color: "secondary", className: "mb-2", children: "No spaces joined yet" }), _jsx(Text, { variant: "body-xs", color: "secondary", className: "mb-4", children: "Discover communities and connect with fellow UB students" }), isEditable && onJoinSpace && (_jsxs(Button, { variant: "secondary", size: "sm", onClick: onJoinSpace, children: [_jsx(Plus, { className: "h-3 w-3 mr-1" }), "Explore Spaces"] }))] }))] }), isHovered && (_jsx("div", { className: "absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-green-500/5 rounded-lg blur-xl" }))] }));
 };
 //# sourceMappingURL=profile-spaces-widget.js.map

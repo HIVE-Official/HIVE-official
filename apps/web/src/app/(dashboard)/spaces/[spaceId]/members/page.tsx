@@ -232,7 +232,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
   const getRoleColor = (role: SpaceMember['role']) => {
     switch (role) {
       case 'admin': return 'bg-red-500';
-      case 'moderator': return 'bg-orange-500';
+      case 'moderator': return 'bg-[var(--hive-gold)]';
       case 'member': return 'bg-blue-500';
       default: return 'bg-gray-500';
     }
@@ -384,7 +384,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                 </div>
                 <div className="text-sm text-zinc-400">Activity Rate</div>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-400" />
+              <TrendingUp className="h-8 w-8 text-[var(--hive-gold)]" />
             </div>
           </Card>
           
@@ -396,7 +396,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                 </div>
                 <div className="text-sm text-zinc-400">Staff Members</div>
               </div>
-              <Shield className="h-8 w-8 text-orange-400" />
+              <Shield className="h-8 w-8 text-[var(--hive-gold)]" />
             </div>
           </Card>
         </div>

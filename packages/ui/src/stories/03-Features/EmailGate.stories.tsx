@@ -218,7 +218,7 @@ export const BrandCompliance: Story = {
 **Brand Compliance Check:**
 - ✅ Space Grotesk for "Join {School}" headline
 - ✅ Geist Sans for body text and labels
-- ✅ Gold accent (#FFD700) for mail icon and focus states
+- ✅ Gold accent (var(--hive-gold)) for mail icon and focus states
 - ✅ Ritual button styling for magic link
 - ✅ Proper contrast ratios and accessibility
 - ✅ Consistent spacing using 8dp grid

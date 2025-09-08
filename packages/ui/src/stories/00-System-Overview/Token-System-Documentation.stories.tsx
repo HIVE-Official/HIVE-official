@@ -36,9 +36,9 @@ export const TokenSystemOverview: Story = {
     // Sample of all token categories
     const tokenCategories = {
       "Background Tokens": [
-        { name: "--hive-background-primary", value: "#0A0A0B", description: "Main app background" },
-        { name: "--hive-background-secondary", value: "#111113", description: "Card backgrounds" },
-        { name: "--hive-background-tertiary", value: "#1A1A1C", description: "Elevated surfaces" },
+        { name: "--hive-background-primary", value: "var(--hive-background-primary)", description: "Main app background" },
+        { name: "--hive-background-secondary", value: "var(--hive-background-secondary)", description: "Card backgrounds" },
+        { name: "--hive-background-tertiary", value: "var(--hive-background-tertiary)", description: "Elevated surfaces" },
         { name: "--hive-background-interactive", value: "#222225", description: "Interactive elements" },
       ],
       "Text Tokens": [
@@ -48,14 +48,14 @@ export const TokenSystemOverview: Story = {
         { name: "--hive-text-placeholder", value: "#6B6B70", description: "Placeholder text" },
       ],
       "Brand Tokens": [
-        { name: "--hive-brand-primary", value: "#FFD700", description: "Primary brand color (gold)" },
-        { name: "--hive-brand-secondary", value: "#FFD700", description: "Secondary brand color" },
+        { name: "--hive-brand-primary", value: "var(--hive-gold)", description: "Primary brand color (gold)" },
+        { name: "--hive-brand-secondary", value: "var(--hive-gold)", description: "Secondary brand color" },
         { name: "--hive-brand-accent", value: "#FFA500", description: "Brand accent color" },
         { name: "--hive-brand-hover", value: "var(--hive-brand-accent)", description: "🆕 FIXED - Brand hover state" },
       ],
       "Border Tokens - RECENTLY FIXED": [
-        { name: "--hive-border-primary", value: "#2A2A2D", description: "Primary borders" },
-        { name: "--hive-border-secondary", value: "#1A1A1C", description: "Secondary borders" },
+        { name: "--hive-border-primary", value: "var(--hive-gray-700)", description: "Primary borders" },
+        { name: "--hive-border-secondary", value: "var(--hive-background-tertiary)", description: "Secondary borders" },
         { name: "--hive-border-subtle", value: "rgba(255, 255, 255, 0.05)", description: "Subtle dividers" },
         { name: "--hive-border-default", value: "var(--hive-border-primary)", description: "🆕 FIXED - Default borders (142 files)" },
         { name: "--hive-border-hover", value: "var(--hive-border-gold-strong)", description: "🆕 FIXED - Interactive borders" },
@@ -63,7 +63,7 @@ export const TokenSystemOverview: Story = {
       ],
       "Interactive Tokens": [
         { name: "--hive-interactive-hover", value: "rgba(255, 255, 255, 0.08)", description: "Hover backgrounds" },
-        { name: "--hive-interactive-focus", value: "#FFD700", description: "Focus indicators" },
+        { name: "--hive-interactive-focus", value: "var(--hive-gold)", description: "Focus indicators" },
         { name: "--hive-interactive-active", value: "rgba(255, 255, 255, 0.12)", description: "Active states" },
       ],
       "Status Tokens": [
@@ -135,7 +135,7 @@ export const TokenSystemOverview: Story = {
           <Card key={category} className="border-[var(--hive-border-default)]">
             <CardHeader>
               <CardTitle className="text-[var(--hive-text-primary)] flex items-center gap-2">
-                {category.includes('FIXED') && <Badge className="bg-green-500 text-white text-xs">RECENTLY FIXED</Badge>}
+                {category.includes('FIXED') && <Badge className="bg-green-500 text-[var(--hive-text-primary)] text-xs">RECENTLY FIXED</Badge>}
                 {category}
               </CardTitle>
             </CardHeader>
@@ -152,7 +152,7 @@ export const TokenSystemOverview: Story = {
                           {token.name}
                         </code>
                         {token.description.includes('🆕 FIXED') && (
-                          <Badge className="bg-green-500 text-white text-xs">NEW</Badge>
+                          <Badge className="bg-green-500 text-[var(--hive-text-primary)] text-xs">NEW</Badge>
                         )}
                       </div>
                       <p className="text-sm text-[var(--hive-text-muted)] mt-1">
@@ -225,9 +225,9 @@ className="border border-[var(--hive-border-default)]
                   <pre className="text-xs bg-[var(--hive-background-primary)] p-3 rounded border border-[var(--hive-border-subtle)]">
 {`// Using hardcoded values
 className="border border-gray-600
-           hover:border-yellow-400
+           hover:border-[var(--hive-gold)]
            bg-gray-800
-           text-white"`}
+           text-[var(--hive-text-primary)]"`}
                   </pre>
                 </div>
               </div>

@@ -33,7 +33,7 @@ export const badgeVariants = {
     connector: 'bg-[color-mix(in_srgb,#14B8A6_15%,transparent)] text-[#14B8A6] border-[#14B8A6]',
     // === CUSTOM ROLE VARIANTS ===
     // Dean's List - Premium gold
-    dean: 'bg-[color-mix(in_srgb,#FFD700_20%,transparent)] text-[#B8860B] border-[#FFD700]',
+    dean: 'bg-[color-mix(in_srgb,var(--hive-gold)_20%,transparent)] text-[#B8860B] border-[var(--hive-gold)]',
     // Developer - Tech blue 
     developer: 'bg-[color-mix(in_srgb,#3B82F6_15%,transparent)] text-[#3B82F6] border-[#3B82F6]',
     // Event Organizer - Pink for event organizers

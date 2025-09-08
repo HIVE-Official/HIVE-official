@@ -103,14 +103,14 @@ const SPACE_CATEGORIES = [
     id: 'greek',
     name: 'Greek Life',
     icon: Crown,
-    color: 'bg-purple-500',
+    color: 'bg-[var(--hive-gold)]',
     description: 'Fraternities, sororities, and Greek organizations'
   },
   {
     id: 'student',
     name: 'Student Orgs',
     icon: Users,
-    color: 'bg-orange-500',
+    color: 'bg-[var(--hive-gold)]',
     description: 'Clubs, societies, and student-run organizations'
   }
 ];

@@ -299,14 +299,14 @@ export default function FeedPage() {
             <div className="text-xs text-hive-text-mutedLight">Active Spaces</div>
           </Card>
           
-          <Card className="p-4 text-center bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
-            <Calendar className="h-6 w-6 mx-auto mb-2 text-purple-400" />
+          <Card className="p-4 text-center bg-gradient-to-br from-[var(--hive-gold)]/10 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20">
+            <Calendar className="h-6 w-6 mx-auto mb-2 text-[var(--hive-gold)]" />
             <div className="text-lg font-bold text-[var(--hive-text-inverse)]">8</div>
             <div className="text-xs text-hive-text-mutedLight">Events Today</div>
           </Card>
           
-          <Card className="p-4 text-center bg-gradient-to-br from-orange-500/10 to-orange-600/10 border-orange-500/20">
-            <Zap className="h-6 w-6 mx-auto mb-2 text-orange-400" />
+          <Card className="p-4 text-center bg-gradient-to-br from-[var(--hive-gold)]/10 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20">
+            <Zap className="h-6 w-6 mx-auto mb-2 text-[var(--hive-gold)]" />
             <div className="text-lg font-bold text-[var(--hive-text-inverse)]">5</div>
             <div className="text-xs text-hive-text-mutedLight">New Tools</div>
           </Card>

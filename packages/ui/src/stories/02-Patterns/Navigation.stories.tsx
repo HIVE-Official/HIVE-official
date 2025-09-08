@@ -36,13 +36,13 @@ function HiveLogoStorybook({ size = "lg" }: { size?: "sm" | "md" | "lg" }) {
 function CampusCommandStrip() {
   return (
     <div className="w-full">
-      <header className="bg-[#0A0A0A] border-b border-[#2A2A2A] sticky top-0 z-50 backdrop-blur-md">
+      <header className="bg-[var(--hive-background-primary)] border-b border-[var(--hive-gray-700)] sticky top-0 z-50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           {/* Logo */}
           <button className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]">
             <HiveLogoStorybook size="md" />
             <span 
-              className="text-lg font-bold text-white tracking-tight" 
+              className="text-lg font-bold text-[var(--hive-text-primary)] tracking-tight" 
               style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
             >
               HIVE
@@ -51,28 +51,28 @@ function CampusCommandStrip() {
 
           {/* Primary Navigation + HiveLAB */}
           <nav className="flex items-center">
-            <div className="flex items-center bg-[#111111] rounded-lg p-1">
+            <div className="flex items-center bg-[var(--hive-background-secondary)] rounded-lg p-1">
               <button 
-                className="px-4 py-1.5 rounded-md bg-[#2A2A2A] border border-[#FFD700] text-white text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] relative" 
+                className="px-4 py-1.5 rounded-md bg-[var(--hive-gray-700)] border border-[var(--hive-gold)] text-[var(--hive-text-primary)] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] relative" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 Feed
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-[#FFD700] rounded-full"></div>
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-[var(--hive-gold)] rounded-full"></div>
               </button>
               <button 
-                className="px-4 py-1.5 rounded-md text-white/70 hover:text-white/90 hover:bg-[#2A2A2A] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+                className="px-4 py-1.5 rounded-md text-[var(--hive-text-primary)]/70 hover:text-[var(--hive-text-primary)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 Spaces
               </button>
               <button 
-                className="px-4 py-1.5 rounded-md text-white/70 hover:text-white/90 hover:bg-[#2A2A2A] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+                className="px-4 py-1.5 rounded-md text-[var(--hive-text-primary)]/70 hover:text-[var(--hive-text-primary)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 Profile
               </button>
               <button 
-                className="px-4 py-1.5 rounded-md text-[#FFD700] hover:text-[#FFD700]/90 hover:bg-[#2A2A2A] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+                className="px-4 py-1.5 rounded-md text-[var(--hive-gold)] hover:text-[var(--hive-gold)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 HiveLAB
@@ -83,17 +83,17 @@ function CampusCommandStrip() {
           {/* Right Actions */}
           <div className="flex items-center">
             {/* Command Palette */}
-            <button className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-[#111111] border border-[#2A2A2A] hover:border-[#FFD700]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] group min-w-[200px]">
-              <Search className="w-4 h-4 text-[#6B7280] group-hover:text-white" />
+            <button className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-[var(--hive-background-secondary)] border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] group min-w-[200px]">
+              <Search className="w-4 h-4 text-[#6B7280] group-hover:text-[var(--hive-text-primary)]" />
               <span 
-                className="text-sm text-[#6B7280] group-hover:text-white flex-1 text-left" 
+                className="text-sm text-[#6B7280] group-hover:text-[var(--hive-text-primary)] flex-1 text-left" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 Search or type command...
               </span>
               <div className="flex items-center space-x-1">
-                <kbd className="px-1.5 py-0.5 text-xs text-[#6B7280] bg-[#2A2A2A] rounded border border-[#3A3A3A]">⌘</kbd>
-                <kbd className="px-1.5 py-0.5 text-xs text-[#6B7280] bg-[#2A2A2A] rounded border border-[#3A3A3A]">K</kbd>
+                <kbd className="px-1.5 py-0.5 text-xs text-[#6B7280] bg-[var(--hive-gray-700)] rounded border border-[#3A3A3A]">⌘</kbd>
+                <kbd className="px-1.5 py-0.5 text-xs text-[#6B7280] bg-[var(--hive-gray-700)] rounded border border-[#3A3A3A]">K</kbd>
               </div>
             </button>
           </div>
@@ -107,12 +107,12 @@ function CampusCommandStrip() {
 function NavigationVariant1() {
   return (
     <div className="w-full">
-      <header className="border-b border-[#2A2A2A] bg-[#0A0A0A] sticky top-0 z-50">
+      <header className="border-b border-[var(--hive-gray-700)] bg-[var(--hive-background-primary)] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <HiveLogoStorybook size="lg" />
             <span 
-              className="text-xl font-bold text-white tracking-tight" 
+              className="text-xl font-bold text-[var(--hive-text-primary)] tracking-tight" 
               style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
             >
               HIVE
@@ -121,19 +121,19 @@ function NavigationVariant1() {
           
           <nav className="flex items-center space-x-8">
             <button 
-              className="text-sm font-medium text-white hover:text-[#FFD700] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+              className="text-sm font-medium text-[var(--hive-text-primary)] hover:text-[var(--hive-gold)] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
               style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
             >
               Feed
             </button>
             <button 
-              className="text-sm font-medium text-[#6B7280] hover:text-[#FFD700] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+              className="text-sm font-medium text-[#6B7280] hover:text-[var(--hive-gold)] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
               style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
             >
               Spaces
             </button>
             <button 
-              className="text-sm font-medium text-[#6B7280] hover:text-[#FFD700] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+              className="text-sm font-medium text-[#6B7280] hover:text-[var(--hive-gold)] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
               style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
             >
               Profile
@@ -141,12 +141,12 @@ function NavigationVariant1() {
           </nav>
 
           <div className="flex items-center space-x-3">
-            <button className="h-8 px-3 bg-[#2A2A2A] text-white hover:bg-[#3A3A3A] border border-[#2A2A2A] focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] rounded-md flex items-center text-sm font-medium">
+            <button className="h-8 px-3 bg-[var(--hive-gray-700)] text-[var(--hive-text-primary)] hover:bg-[#3A3A3A] border border-[var(--hive-gray-700)] focus:ring-2 focus:ring-[var(--hive-gold)] focus:ring-offset-2 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] rounded-md flex items-center text-sm font-medium">
               <Plus className="w-4 h-4 mr-1" />
               Create
             </button>
-            <div className="w-8 h-8 rounded-full bg-[#111111] border border-[#2A2A2A] hover:border-[#FFD700]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] flex items-center justify-center">
-              <span className="text-white text-sm font-medium">U</span>
+            <div className="w-8 h-8 rounded-full bg-[var(--hive-background-secondary)] border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] flex items-center justify-center">
+              <span className="text-[var(--hive-text-primary)] text-sm font-medium">U</span>
             </div>
           </div>
         </div>
@@ -159,19 +159,19 @@ function NavigationVariant1() {
 function MobileNavigationVariant1() {
   return (
     <div className="w-full max-w-sm mx-auto">
-      <nav className="fixed bottom-0 left-0 right-0 border-t border-[#2A2A2A] bg-[#0A0A0A]/95 backdrop-blur-lg">
+      <nav className="fixed bottom-0 left-0 right-0 border-t border-[var(--hive-gray-700)] bg-[var(--hive-background-primary)]/95 backdrop-blur-lg">
         <div className="flex">
           <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] relative">
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#FFD700] rounded-full"></div>
-            <Home className="w-5 h-5 text-[#FFD700] mb-1" />
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[var(--hive-gold)] rounded-full"></div>
+            <Home className="w-5 h-5 text-[var(--hive-gold)] mb-1" />
             <span 
-              className="text-xs font-medium text-[#FFD700]" 
+              className="text-xs font-medium text-[var(--hive-gold)]" 
               style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
             >
               Feed
             </span>
           </button>
-          <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] hover:bg-[#111111] transition-colors duration-[180ms]">
+          <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] hover:bg-[var(--hive-background-secondary)] transition-colors duration-[180ms]">
             <Compass className="w-5 h-5 text-[#6B7280] mb-1" />
             <span 
               className="text-xs font-medium text-[#6B7280]" 
@@ -180,7 +180,7 @@ function MobileNavigationVariant1() {
               Spaces
             </span>
           </button>
-          <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] hover:bg-[#111111] transition-colors duration-[180ms]">
+          <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] hover:bg-[var(--hive-background-secondary)] transition-colors duration-[180ms]">
             <User className="w-5 h-5 text-[#6B7280] mb-1" />
             <span 
               className="text-xs font-medium text-[#6B7280]" 
@@ -203,13 +203,13 @@ const meta: Meta<typeof React.Fragment> = {
     backgrounds: {
       default: 'dark',
       values: [
-        { name: 'dark', value: '#0A0A0A' },
+        { name: 'dark', value: 'var(--hive-background-primary)' },
         { name: 'light', value: '#FFFFFF' }
       ]
     },
     docs: {
       description: {
-        component: 'Navigation variations for HIVE structure: Feed | Spaces | Profile. All variations follow HIVE design system with proper color palette (#0A0A0A, #FFD700, #6B7280) and motion timing (180ms, cubic-bezier).'
+        component: 'Navigation variations for HIVE structure: Feed | Spaces | Profile. All variations follow HIVE design system with proper color palette (var(--hive-background-primary), var(--hive-gold), #6B7280) and motion timing (180ms, cubic-bezier).'
       }
     }
   }
@@ -260,7 +260,7 @@ export const ResponsiveComparison: Story = {
     <div className="space-y-8 p-6">
       <div>
         <h3 
-          className="text-lg font-semibold mb-4 text-white" 
+          className="text-lg font-semibold mb-4 text-[var(--hive-text-primary)]" 
           style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
         >
           Desktop: Campus Command Strip (Recommended)
@@ -269,23 +269,23 @@ export const ResponsiveComparison: Story = {
       </div>
       <div>
         <h3 
-          className="text-lg font-semibold mb-4 text-white" 
+          className="text-lg font-semibold mb-4 text-[var(--hive-text-primary)]" 
           style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
         >
           Mobile: Standard Bottom Nav (Recommended)
         </h3>
         <MobileNavigationVariant1 />
       </div>
-      <div className="mt-8 p-4 bg-[#111111] rounded-lg border border-[#2A2A2A]">
+      <div className="mt-8 p-4 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-gray-700)]">
         <h4 
-          className="text-sm font-medium text-white mb-2" 
+          className="text-sm font-medium text-[var(--hive-text-primary)] mb-2" 
           style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
         >
           HIVE Navigation Principles
         </h4>
         <ul className="text-xs text-[#6B7280] space-y-1">
           <li>• Clean Feed | Spaces | Profile structure (no Tools until Builder status)</li>
-          <li>• Gold (#FFD700) reserved for active states and focus rings only</li>
+          <li>• Gold (var(--hive-gold)) reserved for active states and focus rings only</li>
           <li>• 180ms transitions with cubic-bezier(0.33,0.65,0,1) timing</li>
           <li>• Space Grotesk typography for brand consistency</li>
           <li>• Web-first design with responsive mobile adaptation</li>

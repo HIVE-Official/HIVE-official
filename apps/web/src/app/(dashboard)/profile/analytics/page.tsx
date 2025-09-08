@@ -124,10 +124,10 @@ export default function ProfileAnalyticsStorybook() {
 
   const getFeatureColorClasses = (color: string) => {
     const colorMap: Record<string, string> = {
-      purple: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+      purple: 'bg-[var(--hive-gold)]/10 text-[var(--hive-gold)] border-[var(--hive-gold)]/20',
       blue: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
       green: 'bg-green-500/10 text-green-400 border-green-500/20',
-      yellow: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+      yellow: 'bg-[var(--hive-gold)]/10 text-[var(--hive-gold)] border-[var(--hive-gold)]/20'
     };
     return colorMap[color as keyof typeof colorMap] || 'bg-hive-gold/10 text-hive-gold border-hive-gold/20';
   };
@@ -187,7 +187,7 @@ export default function ProfileAnalyticsStorybook() {
         maxWidth="4xl"
       >
         {/* 🎯 **ANALYTICS HERO SECTION** */}
-        <Card className="p-8 mb-8 bg-gradient-to-br from-hive-gold/5 to-purple-500/5 border-hive-gold/20">
+        <Card className="p-8 mb-8 bg-gradient-to-br from-hive-gold/5 to-[var(--hive-gold)]/5 border-hive-gold/20">
           <div className="text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-hive-gold/10 rounded-full border border-hive-gold/20 mb-6">
               <Sparkles className="h-4 w-4 text-hive-gold" />
@@ -334,8 +334,8 @@ export default function ProfileAnalyticsStorybook() {
             </div>
             
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/10 rounded-xl mb-4">
-                <TrendingUp className="h-8 w-8 text-purple-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-[var(--hive-gold)]/10 rounded-xl mb-4">
+                <TrendingUp className="h-8 w-8 text-[var(--hive-gold)]" />
               </div>
               <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">Academic Progress</h4>
               <p className="text-sm text-gray-400">
@@ -346,7 +346,7 @@ export default function ProfileAnalyticsStorybook() {
         </Card>
 
         {/* 📧 **WAITLIST CALL TO ACTION** */}
-        <Card className="p-8 text-center border-hive-gold/20 bg-gradient-to-r from-hive-gold/5 to-purple-500/5">
+        <Card className="p-8 text-center border-hive-gold/20 bg-gradient-to-r from-hive-gold/5 to-[var(--hive-gold)]/5">
           <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-4">
             Ready to Unlock Your UB Analytics?
           </h3>

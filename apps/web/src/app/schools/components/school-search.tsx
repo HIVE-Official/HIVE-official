@@ -92,9 +92,9 @@ export function SchoolSearch() {
           type="search"
           placeholder="Search for your school..."
           className={cn(
-            "w-full pl-12 pr-4 py-4 bg-black/40 backdrop-blur-xl border rounded-xl text-[var(--hive-text-inverse)] placeholder:text-[var(--hive-text-inverse)]/40 transition-all duration-300",
-            "focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30",
-            "hover:bg-black/50 hover:border-white/25"
+            "w-full pl-12 pr-4 py-4 bg-[var(--hive-black)]/40 backdrop-blur-xl border rounded-xl text-[var(--hive-text-inverse)] placeholder:text-[var(--hive-text-inverse)]/40 transition-all duration-300",
+            "focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-[var(--hive-white)]/30",
+            "hover:bg-[var(--hive-black)]/50 hover:border-[var(--hive-white)]/25"
           )}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -141,7 +141,7 @@ export function SchoolSearch() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden max-h-80 overflow-y-auto"
+            className="bg-[var(--hive-black)]/40 backdrop-blur-xl border border-[var(--hive-white)]/10 rounded-xl overflow-hidden max-h-80 overflow-y-auto"
           >
             {filteredSchools.length > 0 ? (
               <ul id="school-results" role="listbox" ref={listRef} className="p-2">
@@ -154,8 +154,8 @@ export function SchoolSearch() {
                     className={cn(
                       "p-4 rounded-xl cursor-pointer transition-all duration-200 border border-transparent",
                       index === activeIndex 
-                        ? "bg-white/10 border-white/20" 
-                        : "hover:bg-white/5 hover:border-white/10"
+                        ? "bg-[var(--hive-white)]/10 border-[var(--hive-white)]/20" 
+                        : "hover:bg-[var(--hive-white)]/5 hover:border-[var(--hive-white)]/10"
                     )}
                     onClick={() => handleSchoolSelect(school)}
                     onKeyDown={(e) => {
@@ -172,7 +172,7 @@ export function SchoolSearch() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
+                      <div className="w-10 h-10 bg-[var(--hive-white)]/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-[var(--hive-white)]/20">
                         <GraduationCap className="w-5 h-5 text-[var(--hive-text-inverse)]/70" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -183,7 +183,7 @@ export function SchoolSearch() {
                             <span>{school.domain}</span>
                           </div>
                           {school.status === "waitlist" && (
-                            <div className="flex items-center text-xs text-amber-400">
+                            <div className="flex items-center text-xs text-[var(--hive-gold)]">
                               <Users className="w-3 h-3 mr-1" />
                               <span>{school.waitlistCount} waiting</span>
                             </div>
@@ -194,7 +194,7 @@ export function SchoolSearch() {
                         "px-3 py-1 rounded-full text-xs font-medium",
                         school.status === "active" 
                           ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                          : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                          : "bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border border-[var(--hive-gold)]/30"
                       )}>
                         {school.status === "active" ? "Active" : "Waitlist"}
                       </div>

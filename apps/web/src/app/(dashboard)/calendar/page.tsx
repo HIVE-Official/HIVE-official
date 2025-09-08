@@ -35,7 +35,7 @@ const EventDetailsModal = dynamicImport(
   { 
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm z-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
       </div>
     )
@@ -50,7 +50,7 @@ const CreateEventModal = dynamic(
   { 
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm z-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
       </div>
     )
@@ -331,8 +331,8 @@ export default function CalendarPage() {
     switch (type) {
       case 'event': return 'bg-blue-500';
       case 'class': return 'bg-green-500';
-      case 'assignment': return 'bg-yellow-500';
-      case 'meeting': return 'bg-purple-500';
+      case 'assignment': return 'bg-[var(--hive-gold)]';
+      case 'meeting': return 'bg-[var(--hive-gold)]';
       case 'personal': return 'bg-pink-500';
       default: return 'bg-gray-500';
     }

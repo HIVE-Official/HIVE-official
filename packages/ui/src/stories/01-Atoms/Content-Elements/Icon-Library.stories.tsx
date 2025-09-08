@@ -469,8 +469,8 @@ const IconCategoriesShowcase = () => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20',
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20',
       red: 'from-red-500/20 to-red-600/10 border-red-500/20',
       indigo: 'from-indigo-500/20 to-indigo-600/10 border-indigo-500/20'
     };
@@ -770,7 +770,7 @@ const AccessibilityShowcase = () => {
                     <div className="flex items-center gap-3 mb-2">
                       <example.icon 
                         className={`${example.size || 'w-6 h-6'} ${
-                          contrastMode ? 'text-white' : 'text-[var(--hive-brand-primary)]'
+                          contrastMode ? 'text-[var(--hive-text-primary)]' : 'text-[var(--hive-brand-primary)]'
                         }`} 
                         aria-label={example.ariaLabel || example.label}
                       />

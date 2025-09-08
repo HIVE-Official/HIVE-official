@@ -11,119 +11,120 @@ import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
 class HiveStoryGenerator {
+    rootPath;
+    components = [];
+    // Social media + utility contexts for campus life
+    socialUtilityContexts = {
+        // Profile & Identity Components
+        profile: {
+            socialFeatures: [
+                'Social proof badges and achievements',
+                'Peer recognition and endorsements',
+                'Community status and role displays',
+                'Friend connections and social graphs'
+            ],
+            utilityFeatures: [
+                'Academic progress tracking',
+                'Skill development monitoring',
+                'Course completion status',
+                'GPA and grade analytics'
+            ],
+            campusScenarios: [
+                'Building study group credibility',
+                'Showcasing academic achievements',
+                'Connecting with classmates',
+                'Discovering academic mentors'
+            ],
+            engagementPatterns: [
+                'Profile views and social validation',
+                'Achievement sharing and celebrations',
+                'Peer comparison and motivation',
+                'Academic milestone announcements'
+            ]
+        },
+        // Social & Communication Components
+        social: {
+            socialFeatures: [
+                'Real-time chat and messaging',
+                'Group discussions and forums',
+                'Content sharing and reactions',
+                'Event planning and coordination'
+            ],
+            utilityFeatures: [
+                'Study session scheduling',
+                'Assignment collaboration tools',
+                'Resource sharing platforms',
+                'Academic calendar integration'
+            ],
+            campusScenarios: [
+                'Organizing study groups',
+                'Planning campus events',
+                'Coordinating group projects',
+                'Sharing class notes and resources'
+            ],
+            engagementPatterns: [
+                'Group formation and joining',
+                'Content creation and sharing',
+                'Peer-to-peer learning',
+                'Campus community building'
+            ]
+        },
+        // Academic & Learning Components
+        academic: {
+            socialFeatures: [
+                'Peer learning communities',
+                'Study buddy matching',
+                'Academic achievement sharing',
+                'Collaborative learning spaces'
+            ],
+            utilityFeatures: [
+                'Assignment tracking and deadlines',
+                'Grade monitoring and analytics',
+                'Course planning and scheduling',
+                'Academic resource libraries'
+            ],
+            campusScenarios: [
+                'Course registration and planning',
+                'Study session coordination',
+                'Academic goal setting',
+                'Performance tracking and improvement'
+            ],
+            engagementPatterns: [
+                'Academic milestone celebrations',
+                'Peer tutoring and mentoring',
+                'Study group participation',
+                'Knowledge sharing and collaboration'
+            ]
+        },
+        // Campus Life & Utility Components
+        campus: {
+            socialFeatures: [
+                'Campus event discovery',
+                'Club and organization networking',
+                'Roommate and friend finding',
+                'Campus community engagement'
+            ],
+            utilityFeatures: [
+                'Campus navigation and maps',
+                'Dining and facility information',
+                'Event scheduling and reminders',
+                'Campus resource access'
+            ],
+            campusScenarios: [
+                'Discovering campus events',
+                'Finding study spaces',
+                'Connecting with organizations',
+                'Navigating campus resources'
+            ],
+            engagementPatterns: [
+                'Event attendance and networking',
+                'Campus community participation',
+                'Resource sharing and recommendations',
+                'Location-based social connections'
+            ]
+        }
+    };
     constructor(rootPath = process.cwd()) {
-        this.components = [];
-        // Social media + utility contexts for campus life
-        this.socialUtilityContexts = {
-            // Profile & Identity Components
-            profile: {
-                socialFeatures: [
-                    'Social proof badges and achievements',
-                    'Peer recognition and endorsements',
-                    'Community status and role displays',
-                    'Friend connections and social graphs'
-                ],
-                utilityFeatures: [
-                    'Academic progress tracking',
-                    'Skill development monitoring',
-                    'Course completion status',
-                    'GPA and grade analytics'
-                ],
-                campusScenarios: [
-                    'Building study group credibility',
-                    'Showcasing academic achievements',
-                    'Connecting with classmates',
-                    'Discovering academic mentors'
-                ],
-                engagementPatterns: [
-                    'Profile views and social validation',
-                    'Achievement sharing and celebrations',
-                    'Peer comparison and motivation',
-                    'Academic milestone announcements'
-                ]
-            },
-            // Social & Communication Components
-            social: {
-                socialFeatures: [
-                    'Real-time chat and messaging',
-                    'Group discussions and forums',
-                    'Content sharing and reactions',
-                    'Event planning and coordination'
-                ],
-                utilityFeatures: [
-                    'Study session scheduling',
-                    'Assignment collaboration tools',
-                    'Resource sharing platforms',
-                    'Academic calendar integration'
-                ],
-                campusScenarios: [
-                    'Organizing study groups',
-                    'Planning campus events',
-                    'Coordinating group projects',
-                    'Sharing class notes and resources'
-                ],
-                engagementPatterns: [
-                    'Group formation and joining',
-                    'Content creation and sharing',
-                    'Peer-to-peer learning',
-                    'Campus community building'
-                ]
-            },
-            // Academic & Learning Components
-            academic: {
-                socialFeatures: [
-                    'Peer learning communities',
-                    'Study buddy matching',
-                    'Academic achievement sharing',
-                    'Collaborative learning spaces'
-                ],
-                utilityFeatures: [
-                    'Assignment tracking and deadlines',
-                    'Grade monitoring and analytics',
-                    'Course planning and scheduling',
-                    'Academic resource libraries'
-                ],
-                campusScenarios: [
-                    'Course registration and planning',
-                    'Study session coordination',
-                    'Academic goal setting',
-                    'Performance tracking and improvement'
-                ],
-                engagementPatterns: [
-                    'Academic milestone celebrations',
-                    'Peer tutoring and mentoring',
-                    'Study group participation',
-                    'Knowledge sharing and collaboration'
-                ]
-            },
-            // Campus Life & Utility Components
-            campus: {
-                socialFeatures: [
-                    'Campus event discovery',
-                    'Club and organization networking',
-                    'Roommate and friend finding',
-                    'Campus community engagement'
-                ],
-                utilityFeatures: [
-                    'Campus navigation and maps',
-                    'Dining and facility information',
-                    'Event scheduling and reminders',
-                    'Campus resource access'
-                ],
-                campusScenarios: [
-                    'Discovering campus events',
-                    'Finding study spaces',
-                    'Connecting with organizations',
-                    'Navigating campus resources'
-                ],
-                engagementPatterns: [
-                    'Event attendance and networking',
-                    'Campus community participation',
-                    'Resource sharing and recommendations',
-                    'Location-based social connections'
-                ]
-            }
-        };
         this.rootPath = rootPath;
     }
     async generateAllMissingStories() {

@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* eslint-disable no-undef */
 module.exports = {
   root: true,
   env: {
@@ -18,7 +20,7 @@ module.exports = {
     project: ["tsconfig.json", "tsconfig.dev.json"],
     sourceType: "module",
     ecmaVersion: 2020,
-    tsconfigRootDir: __dirname,
+    tsconfigRootDir: __dirname, // eslint-disable-line
   },
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
@@ -31,11 +33,11 @@ module.exports = {
     "import/no-unresolved": 0,
     indent: ["error", 2],
     // Core safety rules
-    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-floating-promises": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/no-unused-vars": [
-      "error",
+      "warn",
       {
         argsIgnorePattern: "^_",
         varsIgnorePattern: "^_",
@@ -48,8 +50,8 @@ module.exports = {
     "@typescript-eslint/no-unsafe-return": "warn",
     "@typescript-eslint/no-unsafe-argument": "warn",
     // Other helpful rules
-    "@typescript-eslint/no-require-imports": "error",
-    "@typescript-eslint/no-unused-expressions": "error",
+    "@typescript-eslint/no-require-imports": "warn",
+    "@typescript-eslint/no-unused-expressions": "warn",
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
   },

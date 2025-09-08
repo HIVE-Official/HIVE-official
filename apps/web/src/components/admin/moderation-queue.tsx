@@ -177,8 +177,8 @@ export function ModerationQueue() {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'medium': return 'bg-yellow-500';
+      case 'high': return 'bg-[var(--hive-gold)]';
+      case 'medium': return 'bg-[var(--hive-gold)]';
       case 'low': return 'bg-blue-500';
       default: return 'bg-gray-500';
     }
@@ -186,7 +186,7 @@ export function ModerationQueue() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending': return <Clock className="h-4 w-4 text-yellow-500" />;
+      case 'pending': return <Clock className="h-4 w-4 text-[var(--hive-gold)]" />;
       case 'under_review': return <Eye className="h-4 w-4 text-blue-500" />;
       case 'resolved': return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'dismissed': return <XCircle className="h-4 w-4 text-gray-500" />;
@@ -255,7 +255,7 @@ export function ModerationQueue() {
           <Card className="bg-[var(--hive-background-primary)] border-gray-800">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-sm font-medium">
-                <Clock className="h-5 w-5 text-yellow-500" />
+                <Clock className="h-5 w-5 text-[var(--hive-gold)]" />
                 <span>Pending Reports</span>
               </CardTitle>
             </CardHeader>
@@ -420,8 +420,8 @@ export function ModerationQueue() {
                       </div>
                       {report.aiAnalysis && (
                         <div className="flex items-center space-x-1">
-                          <MessageSquare className="h-4 w-4 text-purple-400" />
-                          <span className="text-purple-400">
+                          <MessageSquare className="h-4 w-4 text-[var(--hive-gold)]" />
+                          <span className="text-[var(--hive-gold)]">
                             AI: {Math.round(report.aiAnalysis.confidence * 100)}% confident
                           </span>
                         </div>
@@ -467,7 +467,7 @@ export function ModerationQueue() {
                           })}
                           variant="outline"
                           size="sm"
-                          className="text-yellow-400 border-yellow-400/50 hover:bg-yellow-400/10"
+                          className="text-[var(--hive-gold)] border-[var(--hive-gold)]/50 hover:bg-[var(--hive-gold)]/10"
                         >
                           {getActionIcon('warn_user')}
                         </Button>
@@ -479,7 +479,7 @@ export function ModerationQueue() {
                           })}
                           variant="outline"
                           size="sm"
-                          className="text-orange-400 border-orange-400/50 hover:bg-orange-400/10"
+                          className="text-[var(--hive-gold)] border-[var(--hive-gold)]/50 hover:bg-[var(--hive-gold)]/10"
                         >
                           {getActionIcon('hide_content')}
                         </Button>
@@ -739,10 +739,10 @@ function ReportDetailsPanel({
           <Button onClick={() => onAction('no_action')} variant="outline" size="sm">
             Dismiss
           </Button>
-          <Button onClick={() => onAction('warn_user')} variant="outline" size="sm" className="text-yellow-400">
+          <Button onClick={() => onAction('warn_user')} variant="outline" size="sm" className="text-[var(--hive-gold)]">
             Warn User
           </Button>
-          <Button onClick={() => onAction('hide_content')} variant="outline" size="sm" className="text-orange-400">
+          <Button onClick={() => onAction('hide_content')} variant="outline" size="sm" className="text-[var(--hive-gold)]">
             Hide Content
           </Button>
           <Button onClick={() => onAction('remove_content')} variant="outline" size="sm" className="text-red-400">
@@ -756,8 +756,8 @@ function ReportDetailsPanel({
   function getSeverityColor(severity: string) {
     switch (severity) {
       case 'critical': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'medium': return 'bg-yellow-500';
+      case 'high': return 'bg-[var(--hive-gold)]';
+      case 'medium': return 'bg-[var(--hive-gold)]';
       case 'low': return 'bg-blue-500';
       default: return 'bg-gray-500';
     }

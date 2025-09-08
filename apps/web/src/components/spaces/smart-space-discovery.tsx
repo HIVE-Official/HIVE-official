@@ -521,7 +521,7 @@ export function SmartSpaceDiscovery({
 
       {/* AI Insights Banner */}
       {discoveryMode === 'ai-recommended' && filteredSpaces.length > 0 && (
-        <Card className="p-4 bg-gradient-to-r from-hive-gold/10 to-purple-500/10 border-hive-gold/30">
+        <Card className="p-4 bg-gradient-to-r from-hive-gold/10 to-[var(--hive-gold)]/10 border-hive-gold/30">
           <div className="flex items-center space-x-3">
             <Lightbulb className="h-8 w-8 text-hive-gold" />
             <div>
@@ -804,7 +804,7 @@ export function SmartSpaceDiscovery({
             
             {/* AI Recommendation */}
             {selectedSpace.recommendationReason && (
-              <Card className="p-4 bg-gradient-to-r from-hive-gold/10 to-purple-500/10 border-hive-gold/30">
+              <Card className="p-4 bg-gradient-to-r from-hive-gold/10 to-[var(--hive-gold)]/10 border-hive-gold/30">
                 <div className="flex items-start space-x-3">
                   <Brain className="h-5 w-5 text-hive-gold mt-0.5" />
                   <div>

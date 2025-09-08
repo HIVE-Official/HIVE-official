@@ -102,7 +102,7 @@ export declare function useToolAnalytics(toolId: string, options?: UseQueryOptio
     successRate: number;
     avgExecutionTime: number;
     recentExecutions: ToolExecution[];
-}>): import("@tanstack/react-query").DefinedUseQueryResult<{
+}>): import("@tanstack/react-query").UseQueryResult<{
     totalExecutions: number;
     successRate: number;
     avgExecutionTime: number;

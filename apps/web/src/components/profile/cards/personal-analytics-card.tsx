@@ -209,7 +209,7 @@ export function PersonalAnalyticsCard({ settings, isEditMode, className }: Perso
 
   const getEngagementColor = (score: number) => {
     if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
+    if (score >= 60) return 'text-[var(--hive-gold)]';
     return 'text-red-400';
   };
 
@@ -350,7 +350,7 @@ export function PersonalAnalyticsCard({ settings, isEditMode, className }: Perso
           </div>
           <div className="flex justify-between items-center p-2 rounded bg-muted/30">
             <span className="text-sm text-foreground">Social Interactions</span>
-            <Badge className="bg-purple-500/20 text-purple-400 text-xs">
+            <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] text-xs">
               {analytics.campusEngagement.breakdown.socialInteractions}%
             </Badge>
           </div>
@@ -416,14 +416,14 @@ export function PersonalAnalyticsCard({ settings, isEditMode, className }: Perso
 
       {/* Recent Achievements */}
       {!isEditMode && analytics.achievements.recentBadges.length > 0 && (
-        <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+        <div className="mt-4 p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
-            <Award className="h-4 w-4 text-amber-400" />
+            <Award className="h-4 w-4 text-[var(--hive-gold)]" />
             <span className="font-medium text-foreground text-sm">Recent Achievements</span>
           </div>
           <div className="flex flex-wrap gap-1">
             {analytics.achievements.recentBadges.map((badge) => (
-              <Badge key={badge} className="bg-amber-500/20 text-amber-400 text-xs">
+              <Badge key={badge} className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] text-xs">
                 {badge}
               </Badge>
             ))}

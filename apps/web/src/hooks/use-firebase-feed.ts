@@ -35,7 +35,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
 
   // Load posts from Firestore
   const loadPosts = useCallback(async (reset = false) => {
-    if (!user?.uid) return;
+    if (!user?.id) return;
 
     setState(prev => ({
       ...prev,
@@ -51,7 +51,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
       };
 
       const { posts, lastDoc } = await feedService.getFeedPosts(
-        user.uid,
+        user.id,
         queryOptions
       );
 
@@ -74,11 +74,11 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
         error: error instanceof Error ? error.message : 'Failed to load posts'
       }));
     }
-  }, [user?.uid, options]);
+  }, [user?.id, options]);
 
   // Set up real-time subscription
   useEffect(() => {
-    if (!user?.uid || !options.realtime) return;
+    if (!user?.id || !options.realtime) return;
 
     // Clean up previous subscription
     if (unsubscribeRef.current) {
@@ -87,7 +87,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
 
     // Subscribe to real-time updates
     unsubscribeRef.current = feedService.subscribeFeedUpdates(
-      user.uid,
+      user.id,
       options,
       (posts) => {
         setState(prev => ({
@@ -104,25 +104,25 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
         unsubscribeRef.current = null;
       }
     };
-  }, [user?.uid, options.realtime, options.spaceId]);
+  }, [user?.id, options.realtime, options.spaceId]);
 
   // Initial load
   useEffect(() => {
-    if (user?.uid && options.autoLoad !== false) {
+    if (user?.id && options.autoLoad !== false) {
       loadPosts(true);
     }
-  }, [user?.uid, options.feedType, options.spaceId]);
+  }, [user?.id, options.feedType, options.spaceId]);
 
   // Create a new post
   const createPost = useCallback(async (postData: Partial<FeedPost>) => {
-    if (!user?.uid) throw new Error('User not authenticated');
+    if (!user?.id) throw new Error('User not authenticated');
 
     try {
-      const postId = await feedService.createPost(user.uid, {
+      const postId = await feedService.createPost(user.id, {
         ...postData,
-        authorName: user.displayName || 'Anonymous',
-        authorHandle: user.email?.split('@')[0] || 'user',
-        authorAvatar: user.photoURL || undefined
+        authorName: user.fullName || 'Anonymous',
+        authorHandle: user.handle || user.email?.split('@')[0] || 'user',
+        authorAvatar: user.avatarUrl || undefined
       });
 
       // Reload feed to include new post
@@ -136,10 +136,10 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
 
   // Like/unlike a post
   const toggleLike = useCallback(async (postId: string) => {
-    if (!user?.uid) throw new Error('User not authenticated');
+    if (!user?.id) throw new Error('User not authenticated');
 
     try {
-      await feedService.toggleLike(postId, user.uid);
+      await feedService.toggleLike(postId, user.id);
       
       // Optimistically update UI
       setState(prev => ({
@@ -148,7 +148,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
           if (post.id !== postId) return post;
           
           const likedBy = post.engagement.likedBy || [];
-          const isLiked = likedBy.includes(user.uid);
+          const isLiked = likedBy.includes(user.id);
           
           return {
             ...post,
@@ -158,8 +158,8 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
                 ? Math.max(0, post.engagement.likes - 1)
                 : post.engagement.likes + 1,
               likedBy: isLiked
-                ? likedBy.filter(id => id !== user.uid)
-                : [...likedBy, user.uid]
+                ? likedBy.filter(id => id !== user.id)
+                : [...likedBy, user.id]
             }
           };
         })
@@ -170,14 +170,14 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
       await loadPosts(true);
       throw error;
     }
-  }, [user?.uid, loadPosts]);
+  }, [user?.id, loadPosts]);
 
   // Bookmark/unbookmark a post
   const toggleBookmark = useCallback(async (postId: string) => {
-    if (!user?.uid) throw new Error('User not authenticated');
+    if (!user?.id) throw new Error('User not authenticated');
 
     try {
-      await feedService.toggleBookmark(postId, user.uid);
+      await feedService.toggleBookmark(postId, user.id);
       
       // Optimistically update UI
       setState(prev => ({
@@ -186,15 +186,15 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
           if (post.id !== postId) return post;
           
           const bookmarkedBy = post.engagement.bookmarkedBy || [];
-          const isBookmarked = bookmarkedBy.includes(user.uid);
+          const isBookmarked = bookmarkedBy.includes(user.id);
           
           return {
             ...post,
             engagement: {
               ...post.engagement,
               bookmarkedBy: isBookmarked
-                ? bookmarkedBy.filter(id => id !== user.uid)
-                : [...bookmarkedBy, user.uid]
+                ? bookmarkedBy.filter(id => id !== user.id)
+                : [...bookmarkedBy, user.id]
             }
           };
         })
@@ -203,14 +203,14 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
       console.error('Error toggling bookmark:', error);
       throw error;
     }
-  }, [user?.uid]);
+  }, [user?.id]);
 
   // Add a comment
   const addComment = useCallback(async (postId: string, content: string) => {
-    if (!user?.uid) throw new Error('User not authenticated');
+    if (!user?.id) throw new Error('User not authenticated');
 
     try {
-      await feedService.addComment(postId, user.uid, content);
+      await feedService.addComment(postId, user.id, content);
       
       // Optimistically update comment count
       setState(prev => ({
@@ -231,14 +231,14 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
       console.error('Error adding comment:', error);
       throw error;
     }
-  }, [user?.uid]);
+  }, [user?.id]);
 
   // Share a post
   const sharePost = useCallback(async (postId: string) => {
-    if (!user?.uid) throw new Error('User not authenticated');
+    if (!user?.id) throw new Error('User not authenticated');
 
     try {
-      await feedService.sharePost(postId, user.uid);
+      await feedService.sharePost(postId, user.id);
       
       // Optimistically update share count
       setState(prev => ({
@@ -263,7 +263,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
       console.error('Error sharing post:', error);
       throw error;
     }
-  }, [user?.uid]);
+  }, [user?.id]);
 
   // Load more posts
   const loadMore = useCallback(() => {
@@ -280,17 +280,17 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
 
   // Check if user has liked a post
   const hasLiked = useCallback((postId: string): boolean => {
-    if (!user?.uid) return false;
+    if (!user?.id) return false;
     const post = state.posts.find(p => p.id === postId);
-    return post?.engagement.likedBy?.includes(user.uid) || false;
-  }, [user?.uid, state.posts]);
+    return post?.engagement.likedBy?.includes(user.id) || false;
+  }, [user?.id, state.posts]);
 
   // Check if user has bookmarked a post
   const hasBookmarked = useCallback((postId: string): boolean => {
-    if (!user?.uid) return false;
+    if (!user?.id) return false;
     const post = state.posts.find(p => p.id === postId);
-    return post?.engagement.bookmarkedBy?.includes(user.uid) || false;
-  }, [user?.uid, state.posts]);
+    return post?.engagement.bookmarkedBy?.includes(user.id) || false;
+  }, [user?.id, state.posts]);
 
   return {
     // State

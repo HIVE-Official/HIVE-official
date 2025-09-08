@@ -77,9 +77,9 @@ const getToolCategoryConfig = (category: string) => {
       label: 'Productivity'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: MessageSquare,
       label: 'Social'
     },
@@ -110,8 +110,8 @@ const getToolStatusConfig = (status: string) => {
       label: 'Active'
     },
     draft: {
-      color: 'text-yellow-500',
-      bgColor: 'bg-yellow-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       label: 'Draft'
     },
     published: {
@@ -452,7 +452,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
 
       {/* Hover Glow Effect */}
       {isHovered && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-purple-500/5 rounded-lg blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
   );

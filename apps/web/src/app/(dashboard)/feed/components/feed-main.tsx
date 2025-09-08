@@ -273,10 +273,10 @@ export function FeedMain() {
     const getPostIcon = () => {
       switch (post.type) {
         case 'tool_share': return <Wrench className="h-4 w-4 text-green-400" />;
-        case 'event': return <Calendar className="h-4 w-4 text-purple-400" />;
+        case 'event': return <Calendar className="h-4 w-4 text-[var(--hive-gold)]" />;
         case 'space_update': return <Users className="h-4 w-4 text-blue-400" />;
-        case 'collaboration': return <Target className="h-4 w-4 text-orange-400" />;
-        case 'achievement': return <Award className="h-4 w-4 text-yellow-400" />;
+        case 'collaboration': return <Target className="h-4 w-4 text-[var(--hive-gold)]" />;
+        case 'achievement': return <Award className="h-4 w-4 text-[var(--hive-gold)]" />;
         default: return <MessageCircle className="h-4 w-4 text-muted-foreground" />;
       }
     };
@@ -300,7 +300,7 @@ export function FeedMain() {
         transition={{ duration: 0.3 }}
       >
         <Card className={`hover:border-accent/50 transition-all ${
-          post.isPinned ? 'border-yellow-500/30 bg-yellow-500/5' : ''
+          post.isPinned ? 'border-[var(--hive-gold)]/30 bg-[var(--hive-gold)]/5' : ''
         } ${post.isPromoted ? 'border-accent/30 bg-accent/5' : ''}`}>
           <CardHeader className="pb-3">
             <div className="flex items-start gap-3">
@@ -314,7 +314,7 @@ export function FeedMain() {
                   {getPostIcon()}
                   <span className="font-medium text-foreground">{post.userName}</span>
                   <span className="text-sm text-muted-foreground">{getPostTypeLabel()}</span>
-                  {post.isPinned && <Pin className="h-3 w-3 text-yellow-400" />}
+                  {post.isPinned && <Pin className="h-3 w-3 text-[var(--hive-gold)]" />}
                   {post.isPromoted && <TrendingUp className="h-3 w-3 text-accent" />}
                 </div>
                 
@@ -326,7 +326,7 @@ export function FeedMain() {
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs ${
                         post.spaceCategory === 'UNI' ? 'bg-blue-500/20 text-blue-400' :
                         post.spaceCategory === 'REZ' ? 'bg-green-500/20 text-green-400' :
-                        'bg-purple-500/20 text-purple-400'
+                        'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
                       }`}>
                         {post.spaceCategory}
                         <span>{post.spaceName}</span>
@@ -367,7 +367,7 @@ export function FeedMain() {
               {post.content.eventName && (
                 <div className="p-3 bg-muted/50 rounded-lg border border-border">
                   <div className="flex items-center gap-2 mb-1">
-                    <Calendar className="h-4 w-4 text-purple-400" />
+                    <Calendar className="h-4 w-4 text-[var(--hive-gold)]" />
                     <span className="font-medium text-foreground">{post.content.eventName}</span>
                   </div>
                   {post.content.eventDate && (
@@ -380,9 +380,9 @@ export function FeedMain() {
               )}
 
               {post.content.achievement && (
-                <div className="p-3 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20">
+                <div className="p-3 bg-gradient-to-r from-[var(--hive-gold)]/10 to-[var(--hive-gold)]/10 rounded-lg border border-[var(--hive-gold)]/20">
                   <div className="flex items-center gap-2">
-                    <Award className="h-4 w-4 text-yellow-400" />
+                    <Award className="h-4 w-4 text-[var(--hive-gold)]" />
                     <span className="font-medium text-foreground">{post.content.achievement}</span>
                   </div>
                 </div>
@@ -557,7 +557,7 @@ export function FeedMain() {
       >
         <Card className="hover:border-accent/50 transition-colors cursor-pointer">
           <CardContent className="p-4 text-center">
-            <Activity className="h-6 w-6 text-purple-400 mx-auto mb-2" />
+            <Activity className="h-6 w-6 text-[var(--hive-gold)] mx-auto mb-2" />
             <div className="text-lg font-bold text-foreground">{feedStats.campusActivity}</div>
             <div className="text-xs text-muted-foreground">Campus Activity</div>
           </CardContent>
@@ -581,7 +581,7 @@ export function FeedMain() {
 
         <Card className="hover:border-accent/50 transition-colors cursor-pointer">
           <CardContent className="p-4 text-center">
-            <Wrench className="h-6 w-6 text-orange-400 mx-auto mb-2" />
+            <Wrench className="h-6 w-6 text-[var(--hive-gold)] mx-auto mb-2" />
             <div className="text-lg font-bold text-foreground">{feedStats.toolsShared}</div>
             <div className="text-xs text-muted-foreground">Tools Shared</div>
           </CardContent>
@@ -733,7 +733,7 @@ export function FeedMain() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <Calendar className="h-4 w-4 text-purple-400" />
+                <Calendar className="h-4 w-4 text-[var(--hive-gold)]" />
                 This Week's Events
               </CardTitle>
             </CardHeader>

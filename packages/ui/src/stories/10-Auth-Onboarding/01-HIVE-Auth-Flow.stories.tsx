@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 // Real HIVE Auth Flow Components
 const HiveWelcomeFlow = () => (
-  <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4">
+  <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center p-4">
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -14,14 +14,14 @@ const HiveWelcomeFlow = () => (
       className="w-full max-w-md"
     >
       <div 
-        className="bg-[#111111] rounded-xl p-8 text-center space-y-6 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
+        className="bg-[var(--hive-background-secondary)] rounded-xl p-8 text-center space-y-6 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
         style={{
-          border: '1px solid rgba(255, 215, 0, 0.15)',
+          border: '1px solid rgba(var(--hive-gold-rgb), 0.15)',
         }}
       >
         {/* HIVE Logo/Brand */}
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-[var(--hive-text-primary)]">
             HIVE
           </h1>
           <p className="text-gray-300 text-lg">
@@ -58,10 +58,10 @@ const HiveWelcomeFlow = () => (
 
 // School Selection Flow
 const SchoolSelectionFlow = () => (
-  <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4">
-    <Card className="w-full max-w-md bg-[#111111] border-[#2A2A2A]">
+  <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center p-4">
+    <Card className="w-full max-w-md bg-[var(--hive-background-secondary)] border-[var(--hive-gray-700)]">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-[#FFD700]">
+        <CardTitle className="text-2xl font-bold text-[var(--hive-gold)]">
           Select Your School
         </CardTitle>
         <p className="text-gray-300">
@@ -95,10 +95,10 @@ const SchoolSelectionFlow = () => (
 
 // Email Gate Flow  
 const EmailGateFlow = () => (
-  <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4">
-    <Card className="w-full max-w-md bg-[#111111] border-[#2A2A2A]">
+  <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center p-4">
+    <Card className="w-full max-w-md bg-[var(--hive-background-secondary)] border-[var(--hive-gray-700)]">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-[#FFD700]">
+        <CardTitle className="text-2xl font-bold text-[var(--hive-gold)]">
           Stanford University
         </CardTitle>
         <p className="text-gray-300">
@@ -111,7 +111,7 @@ const EmailGateFlow = () => (
             <input
               type="email"
               placeholder="your.email@stanford.edu"
-              className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg text-white placeholder-gray-500 focus:border-[#FFD700] focus:outline-none"
+              className="w-full px-4 py-3 bg-[#1A1A1A] border border-[var(--hive-gray-700)] rounded-lg text-[var(--hive-text-primary)] placeholder-gray-500 focus:border-[var(--hive-gold)] focus:outline-none"
             />
           </div>
           <Button
@@ -158,9 +158,9 @@ The actual authentication flow used in HIVE, showcasing your transparent button 
 
 ## Your Design Principles:
 - **Transparent buttons** with gold outlines for primary actions
-- **Dark surfaces** (#0A0A0A background, #111111 cards)
-- **Gold accents** (#FFD700) for brand and highlights
-- **Subtle borders** with rgba(255, 215, 0, 0.15) opacity
+- **Dark surfaces** (var(--hive-background-primary) background, var(--hive-background-secondary) cards)
+- **Gold accents** (var(--hive-gold)) for brand and highlights
+- **Subtle borders** with rgba(var(--hive-gold-rgb), 0.15) opacity
 - **Smooth animations** with cubic-bezier easing
 
 ## Real Routes:

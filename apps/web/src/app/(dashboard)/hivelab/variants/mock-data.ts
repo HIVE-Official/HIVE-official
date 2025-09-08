@@ -21,7 +21,7 @@ export const mockElements: Element[] = [
       properties: {
         content: { type: 'string', default: 'Sample text' },
         fontSize: { type: 'string', default: '16px' },
-        color: { type: 'string', default: '#000000' },
+        color: { type: 'string', default: 'var(--hive-black)' },
         fontWeight: { type: 'string', default: 'normal' },
         textAlign: { type: 'string', default: 'left' },
       }
@@ -29,7 +29,7 @@ export const mockElements: Element[] = [
     defaultConfig: {
       content: 'Sample text',
       fontSize: '16px',
-      color: '#000000',
+      color: 'var(--hive-black)',
       fontWeight: 'normal',
       textAlign: 'left',
     },

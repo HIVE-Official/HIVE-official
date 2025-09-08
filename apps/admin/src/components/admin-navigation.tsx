@@ -49,6 +49,30 @@ export function AdminNavigation({ activeTab, onTabChange, pendingCounts }: Admin
       badge: pendingCounts?.builderRequests
     },
     {
+      id: 'feature-flags',
+      label: 'Feature Flags',
+      icon: '🚩',
+      description: 'Feature flags and A/B testing'
+    },
+    {
+      id: 'health-monitor',
+      label: 'Health',
+      icon: '💓',
+      description: 'Real-time platform health monitoring'
+    },
+    {
+      id: 'emergency',
+      label: 'Emergency',
+      icon: '🚨',
+      description: 'Emergency controls and kill switches'
+    },
+    {
+      id: 'config',
+      label: 'Config',
+      icon: '⚙️',
+      description: 'Platform configuration management'
+    },
+    {
       id: 'analytics',
       label: 'Analytics',
       icon: '📊',
@@ -57,8 +81,8 @@ export function AdminNavigation({ activeTab, onTabChange, pendingCounts }: Admin
     {
       id: 'system',
       label: 'System',
-      icon: '⚙️',
-      description: 'System settings and configuration'
+      icon: '🔧',
+      description: 'System settings and logs'
     }
   ];
 

@@ -181,9 +181,9 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-500/20 via-purple-400/10 to-purple-500/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-purple-500/30"
+          className="mx-auto w-16 h-16 bg-gradient-to-br from-[var(--hive-gold)]/20 via-[var(--hive-gold)]/10 to-[var(--hive-gold)]/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-[var(--hive-gold)]/30"
         >
-          <AtSign className="w-8 h-8 text-purple-400" />
+          <AtSign className="w-8 h-8 text-[var(--hive-gold)]" />
         </motion.div>
         
         <motion.div
@@ -293,7 +293,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
           className="bg-secondary/20 backdrop-blur-sm border border-border/50 rounded-xl p-4"
         >
           <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center">
-            <div className="w-2 h-2 bg-purple-400 rounded-full mr-2" />
+            <div className="w-2 h-2 bg-[var(--hive-gold)] rounded-full mr-2" />
             Handle Requirements
           </h4>
           <div className="space-y-1 text-xs text-muted">

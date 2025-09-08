@@ -565,10 +565,8 @@ export const milestoneSequence = {
 };
 // 🎮 Motion Control System - Central orchestration
 export class HiveMotionOrchestrator {
-    constructor() {
-        this.activeSequences = new Map();
-        this.cascadeQueue = [];
-    }
+    activeSequences = new Map();
+    cascadeQueue = [];
     // Register a motion sequence
     registerSequence(id, controls) {
         this.activeSequences.set(id, controls);

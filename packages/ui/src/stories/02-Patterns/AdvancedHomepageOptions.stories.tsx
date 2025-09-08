@@ -22,7 +22,7 @@ Four cutting-edge homepage layouts inspired by industry-leading design systems a
 
 ### 1. **Linear-Inspired** - Minimalist Performance Focus
 - **Typography**: Geist Sans with precise tracking (-0.01em to -0.04em)
-- **Gold Usage**: #FFD700 with proper contrast ratios (7:1 for AAA compliance)
+- **Gold Usage**: var(--hive-gold) with proper contrast ratios (7:1 for AAA compliance)
 - **Layout**: Ultra-clean spacing with 8px grid system
 - **Performance**: Optimized for speed and clarity like Linear's interface
 
@@ -53,7 +53,7 @@ Four cutting-edge homepage layouts inspired by industry-leading design systems a
 - **Performance**: Optimized font loading and rendering
 
 ### **WCAG AAA Gold Contrast**
-- **Primary Gold**: #FFD700 (contrast ratio 7:1+ on black)
+- **Primary Gold**: var(--hive-gold) (contrast ratio 7:1+ on black)
 - **Accent Applications**: Strategic use for focus and highlights
 - **Accessibility**: Meets enhanced WCAG AAA standards
 - **Usage**: Gold for accents only, never for body text
@@ -104,7 +104,7 @@ export const LinearInspired: Story = {
         story: `
 ### Linear-Inspired Layout
 Ultra-minimalist design focused on performance and clarity. Features precise typography with Geist Sans, 
-strategic gold accents (#FFD700), and clean component hierarchy inspired by Linear's interface excellence.
+strategic gold accents (var(--hive-gold)), and clean component hierarchy inspired by Linear's interface excellence.
 
 **Key Features:**
 - Precise tracking and spacing (-0.01em to -0.04em)
@@ -182,10 +182,10 @@ contemporary spacing, and next-generation interface patterns for modern users.
 
 export const AllAdvancedOptions: Story = {
   render: () => (
-    <div className="bg-black text-white font-['Geist_Sans']">
-      <div className="p-8 text-center border-b border-white/10">
+    <div className="bg-[var(--hive-black)] text-[var(--hive-text-primary)] font-['Geist_Sans']">
+      <div className="p-8 text-center border-b border-[var(--hive-white)]/10">
         <h1 className="text-3xl font-bold mb-4 tracking-tight">Advanced HIVE Homepage Options</h1>
-        <p className="text-white/70 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-[var(--hive-text-primary)]/70 max-w-3xl mx-auto leading-relaxed">
           Four cutting-edge layouts inspired by industry leaders: Linear, Vercel, Figma, and modern bento grids. 
           Each features professional gold contrast, Geist Sans typography, and 2025 design trends.
         </p>
@@ -194,19 +194,19 @@ export const AllAdvancedOptions: Story = {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
         {/* Linear Preview */}
         <div className="space-y-4">
-          <div className="aspect-video bg-[#0A0A0A] border border-white/10 rounded-lg overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 to-transparent"></div>
+          <div className="aspect-video bg-[var(--hive-background-primary)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-gold)]/5 to-transparent"></div>
             <div className="w-full h-full flex items-center justify-center">
               <div className="text-center space-y-3">
-                <div className="w-8 h-8 bg-[#FFD700] rounded-md mx-auto"></div>
+                <div className="w-8 h-8 bg-[var(--hive-gold)] rounded-md mx-auto"></div>
                 <div className="text-sm font-semibold">Linear-Inspired</div>
-                <div className="text-xs text-white/60">Minimalist Performance</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Minimalist Performance</div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Linear-Inspired</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Ultra-minimalist design with precise typography and performance focus
             </p>
           </div>
@@ -214,22 +214,22 @@ export const AllAdvancedOptions: Story = {
 
         {/* Vercel Preview */}
         <div className="space-y-4">
-          <div className="aspect-video bg-black border border-white/10 rounded-lg overflow-hidden relative">
-            <div className="absolute top-2 left-2 right-2 h-6 bg-white/5 rounded flex items-center px-2">
-              <div className="w-1 h-1 bg-[#FFD700] rounded-full"></div>
-              <div className="text-[10px] text-white/60 ml-2">Terminal</div>
+          <div className="aspect-video bg-[var(--hive-black)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute top-2 left-2 right-2 h-6 bg-[var(--hive-white)]/5 rounded flex items-center px-2">
+              <div className="w-1 h-1 bg-[var(--hive-gold)] rounded-full"></div>
+              <div className="text-[10px] text-[var(--hive-text-primary)]/60 ml-2">Terminal</div>
             </div>
             <div className="w-full h-full flex items-center justify-center">
               <div className="text-center space-y-3">
-                <div className="w-8 h-8 bg-[#FFD700] rounded mx-auto"></div>
+                <div className="w-8 h-8 bg-[var(--hive-gold)] rounded mx-auto"></div>
                 <div className="text-sm font-semibold font-mono">Vercel-Inspired</div>
-                <div className="text-xs text-white/60">Developer Precision</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Developer Precision</div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Vercel-Inspired</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Developer-focused with terminal aesthetics and technical precision
             </p>
           </div>
@@ -237,19 +237,19 @@ export const AllAdvancedOptions: Story = {
 
         {/* Figma Preview */}
         <div className="space-y-4">
-          <div className="aspect-video bg-[#0F0F0F] border border-white/10 rounded-lg overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/10 via-transparent to-[#FFD700]/5"></div>
+          <div className="aspect-video bg-[#0F0F0F] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-gold)]/10 via-transparent to-[var(--hive-gold)]/5"></div>
             <div className="w-full h-full flex items-center justify-center">
               <div className="text-center space-y-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FFD700] to-[#FFD700]/80 rounded-lg mx-auto"></div>
+                <div className="w-8 h-8 bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold)]/80 rounded-lg mx-auto"></div>
                 <div className="text-sm font-semibold">Figma-Inspired</div>
-                <div className="text-xs text-white/60">Creative Collaboration</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Creative Collaboration</div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Figma-Inspired</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Creative design with collaborative emphasis and visual storytelling
             </p>
           </div>
@@ -257,23 +257,23 @@ export const AllAdvancedOptions: Story = {
 
         {/* Bento Preview */}
         <div className="space-y-4">
-          <div className="aspect-video bg-[#0A0A0A] border border-white/8 rounded-lg overflow-hidden relative p-4">
+          <div className="aspect-video bg-[var(--hive-background-primary)] border border-[var(--hive-white)]/8 rounded-lg overflow-hidden relative p-4">
             <div className="grid grid-cols-3 grid-rows-2 gap-2 h-full">
-              <div className="col-span-2 bg-white/[0.02] border border-white/10 rounded"></div>
-              <div className="bg-white/[0.02] border border-white/10 rounded"></div>
-              <div className="bg-white/[0.02] border border-white/10 rounded"></div>
-              <div className="col-span-2 bg-gradient-to-r from-[#FFD700]/10 to-[#FFD700]/5 border border-[#FFD700]/20 rounded"></div>
+              <div className="col-span-2 bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/10 rounded"></div>
+              <div className="bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/10 rounded"></div>
+              <div className="bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/10 rounded"></div>
+              <div className="col-span-2 bg-gradient-to-r from-[var(--hive-gold)]/10 to-[var(--hive-gold)]/5 border border-[var(--hive-gold)]/20 rounded"></div>
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center space-y-2">
                 <div className="text-xs font-semibold">Modern Bento</div>
-                <div className="text-[10px] text-white/60">Cutting Edge</div>
+                <div className="text-[10px] text-[var(--hive-text-primary)]/60">Cutting Edge</div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Modern Bento Grid</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               2025 cutting-edge design with advanced grid system and sophistication
             </p>
           </div>
@@ -281,36 +281,36 @@ export const AllAdvancedOptions: Story = {
       </div>
 
       {/* Features Comparison */}
-      <div className="border-t border-white/5 p-8">
+      <div className="border-t border-[var(--hive-white)]/5 p-8">
         <h2 className="text-xl font-semibold mb-6 text-center">Design Quality Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="text-center space-y-2">
-            <div className="w-10 h-10 bg-[#FFD700]/10 rounded-lg flex items-center justify-center mx-auto">
-              <span className="text-[#FFD700] text-lg">✓</span>
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center mx-auto">
+              <span className="text-[var(--hive-gold)] text-lg">✓</span>
             </div>
             <h3 className="font-medium text-sm">WCAG AAA Gold</h3>
-            <p className="text-xs text-white/60">7:1 contrast ratio compliance</p>
+            <p className="text-xs text-[var(--hive-text-primary)]/60">7:1 contrast ratio compliance</p>
           </div>
           <div className="text-center space-y-2">
-            <div className="w-10 h-10 bg-[#FFD700]/10 rounded-lg flex items-center justify-center mx-auto">
-              <span className="text-[#FFD700] text-lg">✓</span>
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center mx-auto">
+              <span className="text-[var(--hive-gold)] text-lg">✓</span>
             </div>
             <h3 className="font-medium text-sm">Geist Sans</h3>
-            <p className="text-xs text-white/60">Professional typography system</p>
+            <p className="text-xs text-[var(--hive-text-primary)]/60">Professional typography system</p>
           </div>
           <div className="text-center space-y-2">
-            <div className="w-10 h-10 bg-[#FFD700]/10 rounded-lg flex items-center justify-center mx-auto">
-              <span className="text-[#FFD700] text-lg">✓</span>
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center mx-auto">
+              <span className="text-[var(--hive-gold)] text-lg">✓</span>
             </div>
             <h3 className="font-medium text-sm">2025 Trends</h3>
-            <p className="text-xs text-white/60">Cutting-edge design patterns</p>
+            <p className="text-xs text-[var(--hive-text-primary)]/60">Cutting-edge design patterns</p>
           </div>
           <div className="text-center space-y-2">
-            <div className="w-10 h-10 bg-[#FFD700]/10 rounded-lg flex items-center justify-center mx-auto">
-              <span className="text-[#FFD700] text-lg">✓</span>
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center mx-auto">
+              <span className="text-[var(--hive-gold)] text-lg">✓</span>
             </div>
             <h3 className="font-medium text-sm">8px Grid</h3>
-            <p className="text-xs text-white/60">Professional spacing system</p>
+            <p className="text-xs text-[var(--hive-text-primary)]/60">Professional spacing system</p>
           </div>
         </div>
       </div>

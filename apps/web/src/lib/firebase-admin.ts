@@ -77,74 +77,81 @@ try {
     );
   }
 
-  // Development fallback - create mock services for Firebase emulator
-  console.warn(`⚠️ Firebase Admin initialization failed for ${currentEnvironment}:`, error);
-  console.log('🔄 Setting up mock Firebase Admin for development with emulators');
-  
-  dbAdmin = {
-    collection: (path: string) => ({
-      doc: (id: string) => ({
-        get: async () => ({ exists: false, data: () => null }),
-        set: async (data: any) => console.log(`🔄 Mock Firestore set: ${path}/${id}`, data),
-        update: async (data: any) => console.log(`🔄 Mock Firestore update: ${path}/${id}`, data),
+  // Only use mocks in development environment
+  if (currentEnvironment === 'development') {
+    console.warn(`⚠️ Firebase Admin initialization failed for development:`, error);
+    console.log('🔄 Setting up mock Firebase Admin for development with emulators');
+    
+    dbAdmin = {
+      collection: (path: string) => ({
+        doc: (id: string) => ({
+          get: async () => ({ exists: false, data: () => null }),
+          set: async (data: any) => console.log(`🔄 Mock Firestore set: ${path}/${id}`, data),
+          update: async (data: any) => console.log(`🔄 Mock Firestore update: ${path}/${id}`, data),
+        }),
+        add: async (data: any) => {
+          console.log(`🔄 Mock Firestore add: ${path}`, data);
+          return { id: `mock-${Date.now()}` };
+        },
+        where: () => ({ get: async () => ({ docs: [] }) }),
       }),
-      add: async (data: any) => {
-        console.log(`🔄 Mock Firestore add: ${path}`, data);
-        return { id: `mock-${Date.now()}` };
-      },
-      where: () => ({ get: async () => ({ docs: [] }) }),
-    }),
-  } as any;
+    } as any;
 
-  authAdmin = {
-    verifyIdToken: async (token: string) => {
-      console.log('🔄 Mock Firebase call: verifyIdToken() - development mode');
-      
-      // In development, accept Firebase emulator JWT tokens
-      if (token.includes('.') && token.split('.').length === 3) {
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          
-          // Check if it's a Firebase dev project token
-          if (payload.iss?.includes('dev-project') || payload.aud === 'dev-project') {
-            return {
-              uid: payload.user_id || payload.sub || 'dev-user',
-              email: payload.email || 'test@dev-project.com',
-              email_verified: payload.email_verified || true,
-            };
+    authAdmin = {
+      verifyIdToken: async (token: string) => {
+        console.log('🔄 Mock Firebase call: verifyIdToken() - development mode');
+        
+        // In development, accept Firebase emulator JWT tokens
+        if (token.includes('.') && token.split('.').length === 3) {
+          try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            
+            // Check if it's a Firebase dev project token
+            if (payload.iss?.includes('dev-project') || payload.aud === 'dev-project') {
+              return {
+                uid: payload.user_id || payload.sub || 'dev-user',
+                email: payload.email || 'test@dev-project.com',
+                email_verified: payload.email_verified || true,
+              };
+            }
+          } catch (err) {
+            console.warn('Failed to parse dev JWT token:', err);
           }
-        } catch (err) {
-          console.warn('Failed to parse dev JWT token:', err);
         }
-      }
-      
-      // Fallback for other dev tokens
-      if (token.startsWith('dev_token_') || token === 'test-token') {
-        return {
-          uid: 'dev-user-123',
-          email: 'test@dev-project.com',
-          email_verified: true,
-        };
-      }
-      
-      throw new Error('Invalid token for development mode');
-    },
-    createCustomToken: async (uid: string) => {
-      console.log('🔄 Mock Firebase call: createCustomToken() - development mode');
-      // Generate a mock custom token
-      const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-      const payload = btoa(JSON.stringify({
-        iss: 'https://securetoken.google.com/dev-project',
-        aud: 'dev-project',
-        user_id: uid,
-        sub: uid,
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 3600,
-      }));
-      const signature = btoa('dev-signature');
-      return `${header}.${payload}.${signature}`;
-    },
-  } as any;
+        
+        // Fallback for other dev tokens
+        if (token.startsWith('dev_token_') || token === 'test-token') {
+          return {
+            uid: 'dev-user-123',
+            email: 'test@dev-project.com',
+            email_verified: true,
+          };
+        }
+        
+        throw new Error('Invalid token for development mode');
+      },
+      createCustomToken: async (uid: string) => {
+        console.log('🔄 Mock Firebase call: createCustomToken() - development mode');
+        // Generate a mock custom token
+        const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+        const payload = btoa(JSON.stringify({
+          iss: 'https://securetoken.google.com/dev-project',
+          aud: 'dev-project',
+          user_id: uid,
+          sub: uid,
+          iat: Math.floor(Date.now() / 1000),
+          exp: Math.floor(Date.now() / 1000) + 3600,
+        }));
+        const signature = btoa('dev-signature');
+        return `${header}.${payload}.${signature}`;
+      },
+    } as any;
+  } else {
+    // In production/staging, fail fast if Firebase Admin cannot initialize
+    console.error(`❌ CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}`);
+    console.error('Error details:', error);
+    throw new Error(`Firebase Admin initialization failed. Check service account configuration.`);
+  }
 }
 
 export { dbAdmin, authAdmin };

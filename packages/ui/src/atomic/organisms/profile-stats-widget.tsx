@@ -94,9 +94,9 @@ const getMetricCategoryConfig = (category: string) => {
       label: 'Academic'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Users,
       label: 'Social'
     },
@@ -146,8 +146,8 @@ const getGoalCategoryConfig = (category: string) => {
       label: 'Academic'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       icon: Users,
       label: 'Social'
     },
@@ -295,7 +295,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
             </div>
             <div className="w-full bg-[var(--hive-background-secondary)] rounded-full h-2">
               <div 
-                className="bg-purple-500 rounded-full h-2 transition-all duration-500"
+                className="bg-[var(--hive-gold)] rounded-full h-2 transition-all duration-500"
                 style={{ width: `${socialEngagement}%` }}
               />
             </div>

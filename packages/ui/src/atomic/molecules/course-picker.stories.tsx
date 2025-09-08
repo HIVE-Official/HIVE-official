@@ -1,0 +1,350 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { CoursePicker, type CourseInfo } from './course-picker';
+import { useState } from 'react';
+
+// Sample UB (University at Buffalo) courses
+const sampleCourses: CourseInfo[] = [
+  {
+    id: 'cse115',
+    code: 'CSE 115',
+    title: 'Introduction to Computer Science I',
+    credits: 4,
+    department: 'Computer Science & Engineering',
+    instructor: 'Dr. Smith',
+    schedule: 'MWF 10:00-10:50',
+    location: 'Knox 20',
+    description: 'Programming concepts including data types, control structures, functions, arrays, and the basics of object-oriented programming.',
+    prerequisites: ['MTH 121'],
+    seats: { available: 15, total: 120 },
+    status: 'open',
+    semester: 'Fall 2024'
+  },
+  {
+    id: 'cse116',
+    code: 'CSE 116',
+    title: 'Introduction to Computer Science II',
+    credits: 4,
+    department: 'Computer Science & Engineering',
+    instructor: 'Dr. Johnson',
+    schedule: 'TR 11:00-12:20',
+    location: 'Knox 109',
+    description: 'Object-oriented programming, inheritance, polymorphism, data structures, and algorithm analysis.',
+    prerequisites: ['CSE 115'],
+    seats: { available: 3, total: 100 },
+    status: 'waitlist',
+    semester: 'Fall 2024'
+  },
+  {
+    id: 'mth141',
+    code: 'MTH 141',
+    title: 'College Calculus I',
+    credits: 4,
+    department: 'Mathematics',
+    instructor: 'Prof. Davis',
+    schedule: 'MWF 9:00-9:50',
+    location: 'Mathematics 122',
+    description: 'Functions, limits, derivatives, applications of derivatives, and introduction to integration.',
+    prerequisites: ['MTH 121'],
+    seats: { available: 0, total: 150 },
+    status: 'closed',
+    semester: 'Fall 2024'
+  },
+  {
+    id: 'phy107',
+    code: 'PHY 107',
+    title: 'General Physics I',
+    credits: 4,
+    department: 'Physics',
+    instructor: 'Dr. Wilson',
+    schedule: 'MW 1:00-2:20',
+    location: 'Fronczak 444',
+    description: 'Mechanics, including kinematics, dynamics, work and energy, momentum, and rotational motion.',
+    prerequisites: ['MTH 141'],
+    seats: { available: 25, total: 80 },
+    status: 'open',
+    semester: 'Fall 2024'
+  },
+  {
+    id: 'eng105',
+    code: 'ENG 105',
+    title: 'Writing and Rhetoric',
+    credits: 4,
+    department: 'English',
+    instructor: 'Prof. Brown',
+    schedule: 'TR 2:00-3:20',
+    location: 'Clemens 312',
+    description: 'Academic writing, research methods, and rhetorical analysis.',
+    prerequisites: [],
+    seats: { available: 8, total: 25 },
+    status: 'open',
+    semester: 'Fall 2024'
+  },
+  {
+    id: 'cse250',
+    code: 'CSE 250',
+    title: 'Data Structures',
+    credits: 4,
+    department: 'Computer Science & Engineering',
+    instructor: 'Dr. Anderson',
+    schedule: 'MWF 11:00-11:50',
+    location: 'Knox 20',
+    description: 'Abstract data types, including stacks, queues, lists, trees, and hash tables.',
+    prerequisites: ['CSE 116', 'MTH 141'],
+    seats: { available: 12, total: 90 },
+    status: 'open',
+    semester: 'Fall 2024'
+  }
+];
+
+const departments = [
+  'Computer Science & Engineering',
+  'Mathematics', 
+  'Physics',
+  'English'
+];
+
+const meta: Meta<typeof CoursePicker> = {
+  title: 'Molecules/CoursePicker',
+  component: CoursePicker,
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component: 'Campus-specific course picker molecule designed for university course registration systems. Features search, filtering, prerequisites, and schedule conflict detection.'
+      }
+    }
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    maxCourses: {
+      control: { type: 'number', min: 1, max: 10 },
+      description: 'Maximum number of courses that can be selected'
+    },
+    searchable: {
+      control: { type: 'boolean' },
+      description: 'Whether to show search functionality'
+    },
+    showPrerequisites: {
+      control: { type: 'boolean' },
+      description: 'Whether to show course prerequisites'
+    },
+    loading: {
+      control: { type: 'boolean' },
+      description: 'Loading state'
+    }
+  }
+};
+
+export default meta;
+type Story = StoryObj<typeof CoursePicker>;
+
+// Interactive Example with State Management
+export const Default: Story = {
+  render: (args) => {
+    const [selectedCourses, setSelectedCourses] = useState<CourseInfo[]>([]);
+
+    const handleCourseSelect = (course: CourseInfo) => {
+      setSelectedCourses(prev => [...prev, course]);
+    };
+
+    const handleCourseRemove = (course: CourseInfo) => {
+      setSelectedCourses(prev => prev.filter(c => c.id !== course.id));
+    };
+
+    return (
+      <CoursePicker
+        {...args}
+        courses={sampleCourses}
+        selectedCourses={selectedCourses}
+        onCourseSelect={handleCourseSelect}
+        onCourseRemove={handleCourseRemove}
+        departments={departments}
+      />
+    );
+  }
+};
+
+// Pre-selected Courses
+export const WithSelectedCourses: Story = {
+  render: () => {
+    const [selectedCourses, setSelectedCourses] = useState<CourseInfo[]>([
+      sampleCourses[0], // CSE 115
+      sampleCourses[4]  // ENG 105
+    ]);
+
+    const handleCourseSelect = (course: CourseInfo) => {
+      setSelectedCourses(prev => [...prev, course]);
+    };
+
+    const handleCourseRemove = (course: CourseInfo) => {
+      setSelectedCourses(prev => prev.filter(c => c.id !== course.id));
+    };
+
+    return (
+      <CoursePicker
+        courses={sampleCourses}
+        selectedCourses={selectedCourses}
+        onCourseSelect={handleCourseSelect}
+        onCourseRemove={handleCourseRemove}
+        departments={departments}
+        semester="Fall 2024"
+      />
+    );
+  }
+};
+
+// Loading State
+export const Loading: Story = {
+  args: {
+    courses: sampleCourses,
+    selectedCourses: [],
+    loading: true,
+    departments: departments,
+    semester: 'Fall 2024'
+  }
+};
+
+// Error State
+export const WithError: Story = {
+  args: {
+    courses: sampleCourses,
+    selectedCourses: [],
+    error: 'Unable to load courses. Please check your internet connection and try again.',
+    departments: departments,
+    semester: 'Fall 2024'
+  }
+};
+
+// Limited Course Selection
+export const LimitedSelection: Story = {
+  render: () => {
+    const [selectedCourses, setSelectedCourses] = useState<CourseInfo[]>([
+      sampleCourses[0],
+      sampleCourses[1],
+      sampleCourses[2]
+    ]);
+
+    const handleCourseSelect = (course: CourseInfo) => {
+      setSelectedCourses(prev => [...prev, course]);
+    };
+
+    const handleCourseRemove = (course: CourseInfo) => {
+      setSelectedCourses(prev => prev.filter(c => c.id !== course.id));
+    };
+
+    return (
+      <CoursePicker
+        courses={sampleCourses}
+        selectedCourses={selectedCourses}
+        onCourseSelect={handleCourseSelect}
+        onCourseRemove={handleCourseRemove}
+        maxCourses={4}
+        departments={departments}
+        semester="Fall 2024"
+      />
+    );
+  }
+};
+
+// No Search, No Prerequisites
+export const Minimal: Story = {
+  render: () => {
+    const [selectedCourses, setSelectedCourses] = useState<CourseInfo[]>([]);
+
+    const handleCourseSelect = (course: CourseInfo) => {
+      setSelectedCourses(prev => [...prev, course]);
+    };
+
+    const handleCourseRemove = (course: CourseInfo) => {
+      setSelectedCourses(prev => prev.filter(c => c.id !== course.id));
+    };
+
+    return (
+      <CoursePicker
+        courses={sampleCourses}
+        selectedCourses={selectedCourses}
+        onCourseSelect={handleCourseSelect}
+        onCourseRemove={handleCourseRemove}
+        searchable={false}
+        showPrerequisites={false}
+        departments={[]}
+      />
+    );
+  }
+};
+
+// Empty State
+export const EmptyState: Story = {
+  args: {
+    courses: [],
+    selectedCourses: [],
+    departments: departments,
+    semester: 'Fall 2024'
+  }
+};
+
+// High Credit Warning
+export const HighCreditWarning: Story = {
+  render: () => {
+    const heavyCourses: CourseInfo[] = sampleCourses.map(course => ({
+      ...course,
+      credits: 4
+    }));
+
+    const [selectedCourses, setSelectedCourses] = useState<CourseInfo[]>([
+      heavyCourses[0],
+      heavyCourses[1],
+      heavyCourses[2],
+      heavyCourses[3],
+      heavyCourses[4] // 20 credits total - triggers warning
+    ]);
+
+    const handleCourseSelect = (course: CourseInfo) => {
+      setSelectedCourses(prev => [...prev, course]);
+    };
+
+    const handleCourseRemove = (course: CourseInfo) => {
+      setSelectedCourses(prev => prev.filter(c => c.id !== course.id));
+    };
+
+    return (
+      <CoursePicker
+        courses={heavyCourses}
+        selectedCourses={selectedCourses}
+        onCourseSelect={handleCourseSelect}
+        onCourseRemove={handleCourseRemove}
+        departments={departments}
+        semester="Fall 2024"
+      />
+    );
+  }
+};
+
+// Mobile Layout
+export const Mobile: Story = {
+  render: () => {
+    const [selectedCourses, setSelectedCourses] = useState<CourseInfo[]>([sampleCourses[0]]);
+
+    const handleCourseSelect = (course: CourseInfo) => {
+      setSelectedCourses(prev => [...prev, course]);
+    };
+
+    const handleCourseRemove = (course: CourseInfo) => {
+      setSelectedCourses(prev => prev.filter(c => c.id !== course.id));
+    };
+
+    return (
+      <div className="max-w-sm mx-auto">
+        <CoursePicker
+          courses={sampleCourses}
+          selectedCourses={selectedCourses}
+          onCourseSelect={handleCourseSelect}
+          onCourseRemove={handleCourseRemove}
+          departments={departments}
+          semester="Fall 2024"
+          maxCourses={5}
+        />
+      </div>
+    );
+  }
+};

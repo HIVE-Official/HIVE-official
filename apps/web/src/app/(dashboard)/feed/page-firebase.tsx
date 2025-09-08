@@ -229,9 +229,9 @@ export default function FeedPage() {
             )}
 
             {post.content.eventDetails && (
-              <div className="p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
+              <div className="p-3 bg-[var(--hive-gold)]/10 rounded-lg border border-[var(--hive-gold)]/20">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-purple-400" />
+                  <Calendar className="h-4 w-4 text-[var(--hive-gold)]" />
                   <span className="font-medium">{post.content.eventDetails.name}</span>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">

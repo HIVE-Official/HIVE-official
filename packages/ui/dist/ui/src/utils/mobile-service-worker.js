@@ -5,6 +5,9 @@
 import { useState, useEffect } from 'react';
 // Service Worker registration utility
 export class MobileServiceWorker {
+    static instance;
+    registration = null;
+    isOnline = navigator.onLine;
     static getInstance() {
         if (!MobileServiceWorker.instance) {
             MobileServiceWorker.instance = new MobileServiceWorker();
@@ -12,8 +15,6 @@ export class MobileServiceWorker {
         return MobileServiceWorker.instance;
     }
     constructor() {
-        this.registration = null;
-        this.isOnline = navigator.onLine;
         // Listen for online/offline changes
         window.addEventListener('online', () => {
             this.isOnline = true;

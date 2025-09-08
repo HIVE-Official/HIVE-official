@@ -386,8 +386,8 @@ const AtomicComponentsLibrary = () => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-400',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -507,7 +507,7 @@ const AtomicComponentsLibrary = () => {
                         </div>
                         <div className="flex items-center gap-2 mt-2">
                           <Badge 
-                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}
+                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'}`}
                           >
                             {component.status}
                           </Badge>
@@ -554,7 +554,7 @@ const AtomicComponentsLibrary = () => {
               </div>
               <div className="text-center">
                 <div className="p-4 rounded-lg bg-[var(--hive-background-primary)] border border-[var(--hive-border-default)] mb-4">
-                  <Users className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+                  <Users className="w-8 h-8 text-[var(--hive-gold)] mx-auto mb-3" />
                   <h4 className="font-medium text-[var(--hive-text-primary)] mb-2">Social Organizations</h4>
                   <p className="text-sm text-[var(--hive-text-secondary)]">
                     Greek life, clubs, sports teams, cultural organizations

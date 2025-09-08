@@ -49,8 +49,8 @@ const EVENT_TYPES = [
   { id: 'academic', label: 'Academic', icon: '📚', color: 'bg-blue-500' },
   { id: 'social', label: 'Social', icon: '🎉', color: 'bg-pink-500' },
   { id: 'professional', label: 'Professional', icon: '💼', color: 'bg-green-500' },
-  { id: 'recreational', label: 'Recreational', icon: '🎮', color: 'bg-orange-500' },
-  { id: 'official', label: 'Official', icon: '🏛️', color: 'bg-purple-500' }
+  { id: 'recreational', label: 'Recreational', icon: '🎮', color: 'bg-[var(--hive-gold)]' },
+  { id: 'official', label: 'Official', icon: '🏛️', color: 'bg-[var(--hive-gold)]' }
 ] as const;
 
 const AVAILABLE_TOOLS = [

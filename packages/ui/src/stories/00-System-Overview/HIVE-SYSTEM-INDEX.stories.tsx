@@ -331,10 +331,10 @@ const HIVESystemIndex = () => {
   const getColorClasses = (color: string) => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-400',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
-      yellow: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/20 text-yellow-400',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
+      yellow: 'from-[var(--hive-gold)]/20 to-yellow-600/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -408,7 +408,7 @@ const HIVESystemIndex = () => {
             </Card>
             <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-400">UB</div>
+                <div className="text-2xl font-bold text-[var(--hive-gold)]">UB</div>
                 <div className="text-sm text-[var(--hive-text-secondary)]">Campus Ready</div>
               </CardContent>
             </Card>
@@ -509,7 +509,7 @@ const HIVESystemIndex = () => {
                               {section.components} components
                             </Badge>
                             <Badge 
-                              className={`text-xs ${section.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}
+                              className={`text-xs ${section.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'}`}
                             >
                               {section.status}
                             </Badge>

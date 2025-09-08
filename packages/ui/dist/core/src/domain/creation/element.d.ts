@@ -5371,8 +5371,8 @@ export declare const ElementPresetSchema: z.ZodObject<{
     description: string;
     elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
     config?: unknown;
-    popularity?: number | undefined;
     tags?: string[] | undefined;
+    popularity?: number | undefined;
 }>;
 export declare const ElementSchema: z.ZodObject<{
     id: z.ZodString;
@@ -5406,8 +5406,8 @@ export declare const ElementSchema: z.ZodObject<{
         description: string;
         elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
         config?: unknown;
-        popularity?: number | undefined;
         tags?: string[] | undefined;
+        popularity?: number | undefined;
     }>, "many">>;
     isOfficial: z.ZodDefault<z.ZodBoolean>;
     isDeprecated: z.ZodDefault<z.ZodBoolean>;
@@ -5459,8 +5459,8 @@ export declare const ElementSchema: z.ZodObject<{
         description: string;
         elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
         config?: unknown;
-        popularity?: number | undefined;
         tags?: string[] | undefined;
+        popularity?: number | undefined;
     }[] | undefined;
     isOfficial?: boolean | undefined;
     isDeprecated?: boolean | undefined;
@@ -5502,8 +5502,8 @@ export declare const ElementInstanceSchema: z.ZodObject<{
         height?: number | undefined;
         width?: number | undefined;
     };
-    isVisible: boolean;
     isLocked: boolean;
+    isVisible: boolean;
     elementId: string;
     config?: unknown;
     parentId?: string | undefined;
@@ -5517,9 +5517,9 @@ export declare const ElementInstanceSchema: z.ZodObject<{
         width?: number | undefined;
     };
     elementId: string;
+    isLocked?: boolean | undefined;
     isVisible?: boolean | undefined;
     config?: unknown;
-    isLocked?: boolean | undefined;
     parentId?: string | undefined;
 }>;
 export type ElementInstance = z.infer<typeof ElementInstanceSchema>;

@@ -633,7 +633,7 @@ export const EditModeFeaturesDemo: StoryObj = {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className={`w-3 h-3 rounded-full ${
-                    isEditMode ? 'bg-orange-500' : 'bg-green-500'
+                    isEditMode ? 'bg-[var(--hive-gold)]' : 'bg-green-500'
                   }`} />
                   <span className="text-sm font-medium">
                     {isEditMode ? 'Edit Mode Active' : 'View Mode'}

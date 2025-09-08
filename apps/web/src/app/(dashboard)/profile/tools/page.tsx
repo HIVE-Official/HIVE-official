@@ -115,9 +115,9 @@ export default function ProfileToolsPage() {
   const getColorClasses = (color: string) => {
     switch (color) {
       case 'blue': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
-      case 'purple': return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+      case 'purple': return 'bg-[var(--hive-gold)]/10 text-[var(--hive-gold)] border-[var(--hive-gold)]/20';
       case 'green': return 'bg-green-500/10 text-green-400 border-green-500/20';
-      case 'yellow': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
+      case 'yellow': return 'bg-[var(--hive-gold)]/10 text-[var(--hive-gold)] border-[var(--hive-gold)]/20';
       default: return 'bg-hive-brand-secondary/10 text-hive-brand-secondary border-hive-brand-secondary/20';
     }
   };
@@ -287,8 +287,8 @@ export default function ProfileToolsPage() {
               </div>
               
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/10 rounded-xl mb-4 mx-auto">
-                  <Building className="h-7 w-7 text-purple-400" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-[var(--hive-gold)]/10 rounded-xl mb-4 mx-auto">
+                  <Building className="h-7 w-7 text-[var(--hive-gold)]" />
                 </div>
                 <h4 className="font-semibold text-[var(--hive-text-inverse)] mb-2">UB Campus Integration</h4>
                 <p className="text-sm text-gray-300">

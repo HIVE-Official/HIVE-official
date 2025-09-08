@@ -12,7 +12,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
 }
-declare const Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
+declare const Button: React.MemoExoticComponent<React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>>;
 export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     orientation?: "horizontal" | "vertical";
     spacing?: "none" | "sm" | "md";

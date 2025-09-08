@@ -93,7 +93,7 @@ function generateMagicLinkHTML({ magicLink, schoolName }: { magicLink: string; s
         .logo {
           font-size: 32px;
           font-weight: bold;
-          color: #FFD700;
+          color: var(--hive-gold);
           margin-bottom: 8px;
         }
         .tagline {
@@ -108,7 +108,7 @@ function generateMagicLinkHTML({ magicLink, schoolName }: { magicLink: string; s
         }
         .button {
           display: inline-block;
-          background: linear-gradient(135deg, #FFD700 0%, #F4E99B 100%);
+          background: linear-gradient(135deg, var(--hive-gold) 0%, #F4E99B 100%);
           color: #000;
           text-decoration: none;
           padding: 16px 32px;

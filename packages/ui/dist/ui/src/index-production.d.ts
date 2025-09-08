@@ -1,47 +1,30 @@
 import React from 'react';
+export { ButtonEnhanced as Button, type ButtonProps, ButtonGroup, IconButton } from './atomic/atoms/button-enhanced';
+export { InputEnhanced as Input, type InputProps } from './atomic/atoms/input-enhanced';
+export { TextareaEnhanced as Textarea, type TextareaProps } from './atomic/atoms/textarea-enhanced';
+export { Text, type TextProps } from './atomic/atoms/text';
+export { Badge } from './atomic/atoms/badge';
+export { Avatar, AvatarImage, AvatarFallback } from './atomic/atoms/avatar';
+export { Container, PageContainer } from './atomic/atoms/container';
+export { Grid } from './components/Grid';
+export { Stack } from './components/Stack';
+export { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from './atomic/ui/card';
+export { FormField } from './atomic/molecules/form-field';
+export { Label } from './atomic/atoms/label';
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './atomic/ui/tabs';
+export { AppHeader } from './components/AppHeader';
+export { BottomNavBar } from './components/BottomNavBar';
 export { cn } from './lib/utils';
-export { HiveAuthProvider, useHiveAuth, type HiveUser } from './contexts/hive-auth-context';
-export { useHiveAuth as useAuth } from './contexts/hive-auth-context';
-export { EmailGate } from './components/auth/email-gate';
-export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
-export { SchoolPick } from './components/auth/school-pick';
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
-export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
-export { InputEnhanced as Input } from './atomic/atoms/input-enhanced';
-export { HiveCard as Card, HiveCard } from './components/hive-card';
-export { HiveBadge as Badge, HiveBadge } from './components/hive-badge';
-export { HiveModal } from './components/hive-modal';
-export { HiveLogo } from './components/hive-logo';
+export { logger } from './lib/logger';
+export { FirebaseAuthProvider as AuthProvider, useFirebaseAuth as useAuth } from './contexts/unified-auth-context';
 export { hiveVariants } from './lib/motion';
-export declare const CreateProfileStep: React.FC<any>;
-export declare const AcademicStep: React.FC<any>;
-export declare const InterestsSelectionStep: React.FC<any>;
-export declare const WelcomeRoleStep: React.FC<any>;
-export declare const AlumniComingSoonStep: React.FC<any>;
-export declare const OnboardingCompleteStep: React.FC<any>;
-export declare const BentoProfileDashboard: React.FC<any>;
-export declare const SpaceRequestForm: React.FC<any>;
-export declare const FormField: React.FC<any>;
-export declare const Checkbox: React.FC<any>;
-export declare const PageContainer: React.FC<{
-    children: React.ReactNode;
-    className?: string;
-}>;
-export declare const CardContent: React.FC<{
-    children: React.ReactNode;
-    className?: string;
-}>;
-export declare const CardHeader: React.FC<{
-    children: React.ReactNode;
-    className?: string;
-}>;
-export declare const CardTitle: React.FC<{
-    children: React.ReactNode;
-    className?: string;
-}>;
-export declare const Label: React.FC<{
-    children: React.ReactNode;
-    htmlFor?: string;
-    className?: string;
-}>;
+export { HiveModal as Modal } from './components/hive-modal';
+export type { ProfileDashboardProps } from './atomic/organisms/profile-dashboard';
+export type { CampusIdentityHeaderProps } from './atomic/molecules/campus-identity-header';
+export type { CampusSpacesCardProps } from './atomic/molecules/campus-spaces-card';
+export declare const LazyProfileDashboard: React.LazyExoticComponent<React.FC<import("./index-production").ProfileDashboardProps>>;
+export declare const LazyCampusIdentityHeader: React.LazyExoticComponent<React.FC<import("./index-production").CampusIdentityHeaderProps>>;
+export declare const LazyCampusSpacesCard: React.LazyExoticComponent<React.FC<import("./index-production").CampusSpacesCardProps>>;
+export { getInteractiveA11yProps, getFormA11yProps, getLiveRegionProps, getModalA11yProps, focusStyles, screenReader } from './lib/accessibility-foundation';
+export { useHapticFeedback, useSwipeGestures, usePullToRefresh, useLongPress, useMobileViewport } from './hooks/use-mobile-interactions';
 //# sourceMappingURL=index-production.d.ts.map

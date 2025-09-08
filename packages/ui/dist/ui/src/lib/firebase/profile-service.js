@@ -4,8 +4,11 @@
  */
 // Firebase Service Class
 export class ProfileFirebaseService {
+    db; // Firestore instance
+    auth; // Firebase Auth instance
+    storage; // Firebase Storage instance
+    listeners = new Map();
     constructor() {
-        this.listeners = new Map();
         // In production, initialize Firebase here
         console.log('Firebase Profile Service initialized');
     }

@@ -265,13 +265,13 @@ const AdminLayout = ({
   subtitle?: string;
   actions?: React.ReactNode;
 }) => (
-  <div className="min-h-screen bg-black text-white">
+  <div className="min-h-screen bg-[var(--hive-black)] text-[var(--hive-text-primary)]">
     <div className="max-w-7xl mx-auto p-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-white flex items-center">
+            <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] flex items-center">
               <Shield className="mr-3 h-8 w-8 text-red-400" />
               {title}
             </h1>
@@ -313,13 +313,13 @@ const AdminDashboard = () => (
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-400">Pending Reports</p>
-              <p className="text-3xl font-bold text-yellow-400">{mockAnalytics.pendingReports}</p>
+              <p className="text-3xl font-bold text-[var(--hive-gold)]">{mockAnalytics.pendingReports}</p>
             </div>
-            <Flag className="h-8 w-8 text-yellow-400" />
+            <Flag className="h-8 w-8 text-[var(--hive-gold)]" />
           </div>
           <div className="mt-2 flex items-center text-xs">
-            <Clock className="h-3 w-3 text-yellow-400 mr-1" />
-            <span className="text-yellow-400">Avg {mockAnalytics.averageResponseTime} response</span>
+            <Clock className="h-3 w-3 text-[var(--hive-gold)] mr-1" />
+            <span className="text-[var(--hive-gold)]">Avg {mockAnalytics.averageResponseTime} response</span>
           </div>
         </CardContent>
       </Card>
@@ -345,9 +345,9 @@ const AdminDashboard = () => (
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-400">Active Spaces</p>
-              <p className="text-3xl font-bold text-purple-400">{mockAnalytics.activeSpaces}</p>
+              <p className="text-3xl font-bold text-[var(--hive-gold)]">{mockAnalytics.activeSpaces}</p>
             </div>
-            <Hash className="h-8 w-8 text-purple-400" />
+            <Hash className="h-8 w-8 text-[var(--hive-gold)]" />
           </div>
           <div className="mt-2 flex items-center text-xs">
             <span className="text-gray-500">of {mockAnalytics.totalSpaces} total</span>
@@ -360,7 +360,7 @@ const AdminDashboard = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <Card className="bg-gray-900 border-gray-800">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
             <Activity className="mr-2 h-5 w-5" />
             Recent Reports
           </CardTitle>
@@ -378,7 +378,7 @@ const AdminDashboard = () => (
                   </Badge>
                   <span className="text-sm text-gray-400">{report.reason}</span>
                 </div>
-                <p className="text-sm text-white">
+                <p className="text-sm text-[var(--hive-text-primary)]">
                   {report.content.type === 'post' ? 'Post' : 'User'}: {report.content.author.name}
                 </p>
                 <p className="text-xs text-gray-500">
@@ -395,7 +395,7 @@ const AdminDashboard = () => (
 
       <Card className="bg-gray-900 border-gray-800">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
             <BarChart3 className="mr-2 h-5 w-5" />
             Campus Activity
           </CardTitle>
@@ -406,7 +406,7 @@ const AdminDashboard = () => (
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-white">Academic Spaces</span>
+              <span className="text-sm text-[var(--hive-text-primary)]">Academic Spaces</span>
               <div className="flex items-center gap-2">
                 <div className="w-20 bg-gray-700 rounded-full h-2">
                   <div className="w-3/4 bg-green-500 h-2 rounded-full"></div>
@@ -415,7 +415,7 @@ const AdminDashboard = () => (
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-white">Housing Communities</span>
+              <span className="text-sm text-[var(--hive-text-primary)]">Housing Communities</span>
               <div className="flex items-center gap-2">
                 <div className="w-20 bg-gray-700 rounded-full h-2">
                   <div className="w-4/5 bg-blue-500 h-2 rounded-full"></div>
@@ -424,19 +424,19 @@ const AdminDashboard = () => (
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-white">Student Organizations</span>
+              <span className="text-sm text-[var(--hive-text-primary)]">Student Organizations</span>
               <div className="flex items-center gap-2">
                 <div className="w-20 bg-gray-700 rounded-full h-2">
-                  <div className="w-3/5 bg-purple-500 h-2 rounded-full"></div>
+                  <div className="w-3/5 bg-[var(--hive-gold)] h-2 rounded-full"></div>
                 </div>
                 <span className="text-xs text-gray-400">60%</span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-white">Campus Events</span>
+              <span className="text-sm text-[var(--hive-text-primary)]">Campus Events</span>
               <div className="flex items-center gap-2">
                 <div className="w-20 bg-gray-700 rounded-full h-2">
-                  <div className="w-2/3 bg-yellow-500 h-2 rounded-full"></div>
+                  <div className="w-2/3 bg-[var(--hive-gold)] h-2 rounded-full"></div>
                 </div>
                 <span className="text-xs text-gray-400">67%</span>
               </div>
@@ -448,7 +448,7 @@ const AdminDashboard = () => (
 
     {/* Campus Safety Alert */}
     <Alert className="border-amber-800 bg-amber-900/20">
-      <School className="h-4 w-4 text-amber-400" />
+      <School className="h-4 w-4 text-[var(--hive-gold)]" />
       <AlertDescription className="text-amber-200">
         <strong>Campus Integration Status:</strong> HIVE is fully integrated with UB systems. 
         All students verified via @buffalo.edu authentication. Platform health: excellent.
@@ -470,12 +470,12 @@ const ModerationQueue = ({
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-gray-400" />
-            <Label className="text-sm text-white">Filters:</Label>
+            <Label className="text-sm text-[var(--hive-text-primary)]">Filters:</Label>
           </div>
           <Select value={state.filters.status} onValueChange={(value) => 
             state.setFilters({...state.filters, status: value})
           }>
-            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-white">
+            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-gray-800 border-gray-700">
@@ -489,7 +489,7 @@ const ModerationQueue = ({
           <Select value={state.filters.priority} onValueChange={(value) => 
             state.setFilters({...state.filters, priority: value})
           }>
-            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-white">
+            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-gray-800 border-gray-700">
@@ -503,7 +503,7 @@ const ModerationQueue = ({
           <Select value={state.filters.type} onValueChange={(value) => 
             state.setFilters({...state.filters, type: value})
           }>
-            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-white">
+            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-gray-800 border-gray-700">
@@ -548,7 +548,7 @@ const ModerationQueue = ({
 
                 {/* Report Details */}
                 <div>
-                  <p className="text-white font-medium mb-1">{report.reason}</p>
+                  <p className="text-[var(--hive-text-primary)] font-medium mb-1">{report.reason}</p>
                   <p className="text-gray-400 text-sm">{report.description}</p>
                 </div>
 
@@ -556,11 +556,11 @@ const ModerationQueue = ({
                 <div className="p-3 bg-gray-800 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Avatar className="w-6 h-6">
-                      <AvatarFallback className="bg-gray-700 text-white text-xs">
+                      <AvatarFallback className="bg-gray-700 text-[var(--hive-text-primary)] text-xs">
                         {report.content.author.name[0]}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm text-white">{report.content.author.name}</span>
+                    <span className="text-sm text-[var(--hive-text-primary)]">{report.content.author.name}</span>
                     <span className="text-xs text-gray-500">@{report.content.author.handle}</span>
                     {report.content.type === 'post' && (
                       <span className="text-xs text-gray-500">in {(report.content as any).space}</span>
@@ -604,10 +604,10 @@ const ModerationQueue = ({
 
     {/* Report Review Modal */}
     {state.selectedReport && (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 flex items-center justify-center p-4 z-50">
         <Card className="bg-gray-900 border-gray-800 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
           <CardHeader>
-            <CardTitle className="text-white flex items-center justify-between">
+            <CardTitle className="text-[var(--hive-text-primary)] flex items-center justify-between">
               <span>Review Report: {state.selectedReport.reason}</span>
               <Button
                 variant="ghost"
@@ -622,7 +622,7 @@ const ModerationQueue = ({
           <CardContent className="space-y-6">
             {/* Decision Actions */}
             <div className="space-y-3">
-              <Label className="text-white">Moderation Action:</Label>
+              <Label className="text-[var(--hive-text-primary)]">Moderation Action:</Label>
               <div className="grid grid-cols-2 gap-3">
                 <Button className="bg-green-900 hover:bg-green-800 text-green-300">
                   <CheckCircle className="mr-2 h-4 w-4" />
@@ -645,9 +645,9 @@ const ModerationQueue = ({
 
             {/* Action Notes */}
             <div className="space-y-2">
-              <Label className="text-white">Moderation Notes:</Label>
+              <Label className="text-[var(--hive-text-primary)]">Moderation Notes:</Label>
               <Textarea 
-                className="bg-gray-800 border-gray-700 text-white resize-none"
+                className="bg-gray-800 border-gray-700 text-[var(--hive-text-primary)] resize-none"
                 rows={3}
                 placeholder="Document your decision and reasoning..."
               />
@@ -697,11 +697,11 @@ const UserManagement = ({
             <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
             <Input 
               placeholder="Search users by name, handle, or email..."
-              className="pl-10 bg-gray-800 border-gray-700 text-white"
+              className="pl-10 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]"
             />
           </div>
           <Select defaultValue="all">
-            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-white">
+            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-gray-800 border-gray-700">
@@ -723,14 +723,14 @@ const UserManagement = ({
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
                 <Avatar className="w-12 h-12">
-                  <AvatarFallback className="bg-gray-700 text-white">
+                  <AvatarFallback className="bg-gray-700 text-[var(--hive-text-primary)]">
                     {user.name.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
                 
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-semibold text-white">{user.name}</h3>
+                    <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">{user.name}</h3>
                     <Badge variant={user.status === 'active' ? 'default' : 'destructive'}>
                       {user.status}
                     </Badge>
@@ -760,7 +760,7 @@ const UserManagement = ({
                     <span>{user.stats.spacesJoined} spaces</span>
                     <span>{user.stats.toolsCreated} tools</span>
                     {user.stats.reportsReceived > 0 && (
-                      <span className="text-yellow-400">
+                      <span className="text-[var(--hive-gold)]">
                         {user.stats.reportsReceived} reports
                       </span>
                     )}
@@ -771,7 +771,7 @@ const UserManagement = ({
                     <div className="mt-2">
                       <p className="text-xs text-gray-500 mb-1">Recent actions:</p>
                       {user.stats.actionsHistory.map((action, idx) => (
-                        <div key={idx} className="text-xs text-yellow-400 bg-yellow-900/20 px-2 py-1 rounded">
+                        <div key={idx} className="text-xs text-[var(--hive-gold)] bg-yellow-900/20 px-2 py-1 rounded">
                           {action.action}: {action.reason} ({new Date(action.date).toLocaleDateString()})
                         </div>
                       ))}
@@ -820,21 +820,21 @@ const SpaceManagement = () => (
       <Card className="bg-gray-900 border-gray-800">
         <CardContent className="p-6 text-center">
           <Hash className="h-8 w-8 text-blue-400 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-white">{mockAnalytics.totalSpaces}</p>
+          <p className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalytics.totalSpaces}</p>
           <p className="text-sm text-gray-400">Total Spaces</p>
         </CardContent>
       </Card>
       <Card className="bg-gray-900 border-gray-800">
         <CardContent className="p-6 text-center">
           <CheckCircle className="h-8 w-8 text-green-400 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-white">{mockAnalytics.activeSpaces}</p>
+          <p className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalytics.activeSpaces}</p>
           <p className="text-sm text-gray-400">Active Spaces</p>
         </CardContent>
       </Card>
       <Card className="bg-gray-900 border-gray-800">
         <CardContent className="p-6 text-center">
-          <Flag className="h-8 w-8 text-yellow-400 mx-auto mb-2" />
-          <p className="text-2xl font-bold text-white">5</p>
+          <Flag className="h-8 w-8 text-[var(--hive-gold)] mx-auto mb-2" />
+          <p className="text-2xl font-bold text-[var(--hive-text-primary)]">5</p>
           <p className="text-sm text-gray-400">Flagged Spaces</p>
         </CardContent>
       </Card>
@@ -848,7 +848,7 @@ const SpaceManagement = () => (
             <div className="flex items-start justify-between">
               <div className="flex-1 space-y-3">
                 <div className="flex items-center gap-3">
-                  <h3 className="text-lg font-semibold text-white">{space.name}</h3>
+                  <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">{space.name}</h3>
                   <Badge variant="secondary" className="border-gray-700 text-gray-300">
                     {space.type}
                   </Badge>
@@ -885,7 +885,7 @@ const SpaceManagement = () => (
                 <div className="text-sm text-gray-400">
                   <span>Moderators: </span>
                   {space.moderators.map((mod, idx) => (
-                    <span key={mod} className="text-white">
+                    <span key={mod} className="text-[var(--hive-text-primary)]">
                       @{mod}{idx < space.moderators.length - 1 && ', '}
                     </span>
                   ))}
@@ -948,19 +948,19 @@ const AdminSystem = () => {
     >
       <Tabs value={adminState.activeTab} onValueChange={adminState.setActiveTab}>
         <TabsList className="grid w-full grid-cols-4 bg-gray-800 text-gray-300">
-          <TabsTrigger value="dashboard" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+          <TabsTrigger value="dashboard" className="data-[state=active]:bg-red-600 data-[state=active]:text-[var(--hive-text-primary)]">
             <BarChart3 className="mr-2 h-4 w-4" />
             Dashboard
           </TabsTrigger>
-          <TabsTrigger value="moderation" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+          <TabsTrigger value="moderation" className="data-[state=active]:bg-red-600 data-[state=active]:text-[var(--hive-text-primary)]">
             <Flag className="mr-2 h-4 w-4" />
             Moderation
           </TabsTrigger>
-          <TabsTrigger value="users" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+          <TabsTrigger value="users" className="data-[state=active]:bg-red-600 data-[state=active]:text-[var(--hive-text-primary)]">
             <Users className="mr-2 h-4 w-4" />
             Users
           </TabsTrigger>
-          <TabsTrigger value="spaces" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+          <TabsTrigger value="spaces" className="data-[state=active]:bg-red-600 data-[state=active]:text-[var(--hive-text-primary)]">
             <Hash className="mr-2 h-4 w-4" />
             Spaces
           </TabsTrigger>

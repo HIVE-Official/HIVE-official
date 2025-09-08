@@ -77,7 +77,7 @@ export default function QuickSignInPage() {
 
   if (isSent) {
     return (
-      <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center px-4">
         <div className="text-center max-w-md w-full">
           {/* Success Icon */}
           <div className="flex justify-center mb-6">
@@ -86,15 +86,15 @@ export default function QuickSignInPage() {
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-white mb-3">
+          <h1 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-3">
             Check Your Email
           </h1>
           
           <p className="text-[#C1C1C4] mb-6">
-            We've sent a magic link to <span className="font-medium text-white">{email}</span>
+            We've sent a magic link to <span className="font-medium text-[var(--hive-text-primary)]">{email}</span>
           </p>
 
-          <div className="bg-[#1A1A1B] rounded-lg p-4 mb-6">
+          <div className="bg-[var(--hive-background-tertiary)] rounded-lg p-4 mb-6">
             <p className="text-sm text-[#8B8B8F]">
               Click the link in your email to sign in to HIVE. The link expires in 15 minutes.
             </p>
@@ -107,7 +107,7 @@ export default function QuickSignInPage() {
                 setIsSent(false);
                 setError('');
               }}
-              className="text-[#FFD700] hover:text-[#FFD700] transition-colors"
+              className="text-[var(--hive-gold)] hover:text-[var(--hive-gold)] transition-colors"
             >
               Try again
             </button>
@@ -118,14 +118,14 @@ export default function QuickSignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] flex flex-col">
+    <div className="min-h-screen bg-[var(--hive-background-primary)] flex flex-col">
       {/* Header */}
-      <div className="border-b border-[#1A1A1B]">
+      <div className="border-b border-[var(--hive-background-tertiary)]">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link 
               href="/" 
-              className="flex items-center gap-2 text-[#8B8B8F] hover:text-white transition-colors group"
+              className="flex items-center gap-2 text-[#8B8B8F] hover:text-[var(--hive-text-primary)] transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span className="text-sm font-medium">Back</span>
@@ -143,7 +143,7 @@ export default function QuickSignInPage() {
                   target.src = "/assets/whitelogo.svg";
                 }}
               />
-              <span className="text-xl font-bold text-white">HIVE</span>
+              <span className="text-xl font-bold text-[var(--hive-text-primary)]">HIVE</span>
             </Link>
             
             <div className="w-16" /> {/* Spacer for centering */}
@@ -155,7 +155,7 @@ export default function QuickSignInPage() {
       <div className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-3">
+            <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-3">
               Welcome Back
             </h1>
             <p className="text-[#C1C1C4]">
@@ -177,7 +177,7 @@ export default function QuickSignInPage() {
                   placeholder="you@university.edu"
                   required
                   disabled={isLoading}
-                  className="w-full px-4 py-3 pl-11 bg-[#1A1A1B] border border-[#2A2A2B] rounded-lg text-white placeholder-[#6B6B6F] focus:outline-none focus:border-[#FFD700] transition-colors disabled:opacity-50"
+                  className="w-full px-4 py-3 pl-11 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-lg text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors disabled:opacity-50"
                 />
                 <Mail className="absolute left-3.5 top-3.5 w-4 h-4 text-[#6B6B6F]" />
               </div>
@@ -211,14 +211,14 @@ export default function QuickSignInPage() {
           <div className="mt-8 text-center">
             <p className="text-sm text-[#8B8B8F]">
               New to HIVE?{' '}
-              <Link href="/schools" className="text-[#FFD700] hover:text-[#FFD700] transition-colors">
+              <Link href="/schools" className="text-[var(--hive-gold)] hover:text-[var(--hive-gold)] transition-colors">
                 Join your campus
               </Link>
             </p>
           </div>
 
           {/* Info Box */}
-          <div className="mt-8 bg-[#1A1A1B]/50 rounded-lg p-4 border border-[#2A2A2B]">
+          <div className="mt-8 bg-[var(--hive-background-tertiary)]/50 rounded-lg p-4 border border-[var(--hive-gray-700)]">
             <p className="text-xs text-[#6B6B6F] text-center">
               We'll send you a secure link to sign in. No password needed.
             </p>
@@ -228,7 +228,7 @@ export default function QuickSignInPage() {
 
       {/* Background Gradient */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#FFD700] rounded-full blur-[300px] opacity-[0.01]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--hive-gold)] rounded-full blur-[300px] opacity-[0.01]" />
       </div>
     </div>
   );

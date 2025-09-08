@@ -20,7 +20,9 @@ export const leaveSpace = functions.https.onCall(async (data, context) => {
     );
   }
 
-  const memberRef = db.collection('spaces').doc(spaceId).collection('members').doc(userId);
+  // Use flat spaceMembers collection with composite key
+  const compositeKey = `${spaceId}_${userId}`;
+  const memberRef = db.collection('spaceMembers').doc(compositeKey);
   const spaceRef = db.collection('spaces').doc(spaceId);
 
   try {

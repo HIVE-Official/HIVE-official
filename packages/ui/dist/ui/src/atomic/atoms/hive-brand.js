@@ -74,7 +74,7 @@ export const HiveLogo = React.forwardRef(({ className, size, color = "auto", var
     // Determine color based on preference
     const getColor = () => {
         if (color === "black")
-            return "#000000";
+            return "var(--hive-black)";
         if (color === "white")
             return "#ffffff";
         if (color === "gold")

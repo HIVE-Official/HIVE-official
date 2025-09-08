@@ -369,7 +369,7 @@ export const CompleteShowcase: Story = {
                   <div className="space-y-3">
                     <Text variant="body-sm" color="gold" weight="medium">Advanced Privacy Features:</Text>
                     <div className="space-y-2">
-                      <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                      <div className="p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg">
                         <Text variant="body-sm" color="primary" weight="medium">Location Privacy</Text>
                         <Text variant="body-xs" color="secondary">Campus location sharing, residence hall privacy, study space discretion</Text>
                       </div>

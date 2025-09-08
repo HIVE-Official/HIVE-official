@@ -67,9 +67,9 @@ export default function TestProfileCardsPage() {
               <div className="text-xs text-green-400">API Integrated</div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-amber-400">⚡</div>
+              <div className="text-lg font-bold text-[var(--hive-gold)]">⚡</div>
               <div className="text-muted-foreground">Quick Actions</div>
-              <div className="text-xs text-amber-400">UI Only</div>
+              <div className="text-xs text-[var(--hive-gold)]">UI Only</div>
             </div>
             <div className="text-center">
               <div className="text-lg font-bold text-accent">🎯</div>

@@ -55,8 +55,8 @@ export function IdentitySelector({
     return (
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold text-white mb-1">{title}</h3>
-          {subtitle && <p className="text-sm text-white/60">{subtitle}</p>}
+          <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-1">{title}</h3>
+          {subtitle && <p className="text-sm text-[var(--hive-text-primary)]/60">{subtitle}</p>}
         </div>
         
         <motion.div 
@@ -73,8 +73,8 @@ export function IdentitySelector({
                 relative px-4 py-2 rounded-full text-sm font-medium
                 transition-all duration-200 transform
                 ${selectedArray.includes(option.id) 
-                  ? 'bg-[#FFD700] text-black scale-105 shadow-lg shadow-[#FFD700]/20' 
-                  : 'bg-[#1A1A1B] text-white/80 hover:bg-[#2A2A2B] hover:text-white border border-[#2A2A2B]'
+                  ? 'bg-[var(--hive-gold)] text-[var(--hive-black)] scale-105 shadow-lg shadow-[var(--hive-gold)]/20' 
+                  : 'bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-gray-700)] hover:text-[var(--hive-text-primary)] border border-[var(--hive-gray-700)]'
                 }
               `}
               initial={{ opacity: 0, scale: 0.8 }}
@@ -112,8 +112,8 @@ export function IdentitySelector({
     return (
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold text-white mb-1">{title}</h3>
-          {subtitle && <p className="text-sm text-white/60">{subtitle}</p>}
+          <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-1">{title}</h3>
+          {subtitle && <p className="text-sm text-[var(--hive-text-primary)]/60">{subtitle}</p>}
         </div>
         
         <div className="space-y-2">
@@ -125,8 +125,8 @@ export function IdentitySelector({
                 w-full text-left p-4 rounded-xl
                 transition-all duration-200 transform
                 ${selectedArray.includes(option.id) 
-                  ? 'bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10 border-[#FFD700]' 
-                  : 'bg-[#1A1A1B] hover:bg-[#2A2A2B] border-[#2A2A2B]'
+                  ? 'bg-gradient-to-r from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]' 
+                  : 'bg-[var(--hive-background-tertiary)] hover:bg-[var(--hive-gray-700)] border-[var(--hive-gray-700)]'
                 }
                 border
               `}
@@ -142,8 +142,8 @@ export function IdentitySelector({
                     <div className={`
                       w-10 h-10 rounded-lg flex items-center justify-center
                       ${selectedArray.includes(option.id)
-                        ? 'bg-[#FFD700]/20 text-[#FFD700]'
-                        : 'bg-white/5 text-white/40'
+                        ? 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
+                        : 'bg-[var(--hive-white)]/5 text-[var(--hive-text-primary)]/40'
                       }
                     `}>
                       {option.icon}
@@ -151,12 +151,12 @@ export function IdentitySelector({
                   )}
                   <div>
                     <div className={`font-medium ${
-                      selectedArray.includes(option.id) ? 'text-[#FFD700]' : 'text-white'
+                      selectedArray.includes(option.id) ? 'text-[var(--hive-gold)]' : 'text-[var(--hive-text-primary)]'
                     }`}>
                       {option.label}
                     </div>
                     {option.description && (
-                      <div className="text-xs text-white/60 mt-0.5">
+                      <div className="text-xs text-[var(--hive-text-primary)]/60 mt-0.5">
                         {option.description}
                       </div>
                     )}
@@ -168,9 +168,9 @@ export function IdentitySelector({
                       initial={{ scale: 0, rotate: -180 }}
                       animate={{ scale: 1, rotate: 0 }}
                       exit={{ scale: 0, rotate: 180 }}
-                      className="w-6 h-6 rounded-full bg-[#FFD700] flex items-center justify-center"
+                      className="w-6 h-6 rounded-full bg-[var(--hive-gold)] flex items-center justify-center"
                     >
-                      <Check className="h-4 w-4 text-black" />
+                      <Check className="h-4 w-4 text-[var(--hive-black)]" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -186,8 +186,8 @@ export function IdentitySelector({
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-semibold text-white mb-1">{title}</h3>
-        {subtitle && <p className="text-sm text-white/60">{subtitle}</p>}
+        <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-1">{title}</h3>
+        {subtitle && <p className="text-sm text-[var(--hive-text-primary)]/60">{subtitle}</p>}
       </div>
       
       <div className="grid grid-cols-2 gap-3">
@@ -199,8 +199,8 @@ export function IdentitySelector({
               relative p-6 rounded-2xl text-left
               transition-all duration-300 transform
               ${selectedArray.includes(option.id) 
-                ? 'bg-gradient-to-br from-[#FFD700]/20 to-[#FFD700]/10 border-[#FFD700] shadow-lg shadow-[#FFD700]/10' 
-                : 'bg-[#1A1A1B] hover:bg-[#2A2A2B] border-[#2A2A2B]'
+                ? 'bg-gradient-to-br from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)] shadow-lg shadow-[var(--hive-gold)]/10' 
+                : 'bg-[var(--hive-background-tertiary)] hover:bg-[var(--hive-gray-700)] border-[var(--hive-gray-700)]'
               }
               border
             `}
@@ -216,9 +216,9 @@ export function IdentitySelector({
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   exit={{ scale: 0, rotate: 180 }}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#FFD700] flex items-center justify-center"
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[var(--hive-gold)] flex items-center justify-center"
                 >
-                  <Check className="h-5 w-5 text-black" />
+                  <Check className="h-5 w-5 text-[var(--hive-black)]" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -227,8 +227,8 @@ export function IdentitySelector({
               <div className={`
                 w-12 h-12 rounded-xl flex items-center justify-center mb-3
                 ${selectedArray.includes(option.id)
-                  ? 'bg-[#FFD700]/20 text-[#FFD700]'
-                  : 'bg-white/5 text-white/40'
+                  ? 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
+                  : 'bg-[var(--hive-white)]/5 text-[var(--hive-text-primary)]/40'
                 }
               `}>
                 {option.icon}
@@ -237,17 +237,17 @@ export function IdentitySelector({
             
             <div>
               <div className={`font-semibold mb-1 ${
-                selectedArray.includes(option.id) ? 'text-[#FFD700]' : 'text-white'
+                selectedArray.includes(option.id) ? 'text-[var(--hive-gold)]' : 'text-[var(--hive-text-primary)]'
               }`}>
                 {option.label}
               </div>
               {option.description && (
-                <div className="text-xs text-white/60">
+                <div className="text-xs text-[var(--hive-text-primary)]/60">
                   {option.description}
                 </div>
               )}
               {option.vibe && (
-                <div className="text-xs text-white/40 mt-2 italic">
+                <div className="text-xs text-[var(--hive-text-primary)]/40 mt-2 italic">
                   {option.vibe}
                 </div>
               )}

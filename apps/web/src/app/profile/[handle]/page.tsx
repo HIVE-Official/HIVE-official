@@ -290,8 +290,8 @@ export default function PublicProfilePage() {
                 <div className="text-xs text-hive-text-mutedLight">Spaces</div>
               </Card>
               
-              <Card className="p-4 text-center bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20">
-                <Zap className="h-6 w-6 mx-auto mb-2 text-purple-400" />
+              <Card className="p-4 text-center bg-gradient-to-br from-[var(--hive-gold)]/10 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20">
+                <Zap className="h-6 w-6 mx-auto mb-2 text-[var(--hive-gold)]" />
                 <div className="text-lg font-bold text-[var(--hive-text-inverse)]">8</div>
                 <div className="text-xs text-hive-text-mutedLight">Tools Built</div>
               </Card>
@@ -302,8 +302,8 @@ export default function PublicProfilePage() {
                 <div className="text-xs text-hive-text-mutedLight">Reputation</div>
               </Card>
               
-              <Card className="p-4 text-center bg-gradient-to-br from-orange-500/10 to-orange-600/10 border-orange-500/20">
-                <Calendar className="h-6 w-6 mx-auto mb-2 text-orange-400" />
+              <Card className="p-4 text-center bg-gradient-to-br from-[var(--hive-gold)]/10 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20">
+                <Calendar className="h-6 w-6 mx-auto mb-2 text-[var(--hive-gold)]" />
                 <div className="text-lg font-bold text-[var(--hive-text-inverse)]">
                   {Math.floor((Date.now() - new Date(profileData.joinedAt).getTime()) / (1000 * 60 * 60 * 24))}d
                 </div>
@@ -316,7 +316,7 @@ export default function PublicProfilePage() {
               <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Recent Activity</h3>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3 p-3 rounded-lg bg-hive-background-tertiary">
-                  <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-[var(--hive-gold)] rounded-lg flex items-center justify-center">
                     <Zap className="h-4 w-4 text-[var(--hive-text-inverse)]" />
                   </div>
                   <div>
@@ -340,9 +340,9 @@ export default function PublicProfilePage() {
         
         {/* Privacy Notice */}
         {!profileData.isOwnProfile && !profileData.isPublic && (
-          <Card className="p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/20">
+          <Card className="p-4 bg-gradient-to-r from-[var(--hive-gold)]/10 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20">
             <div className="flex items-center space-x-3">
-              <Shield className="h-5 w-5 text-amber-400" />
+              <Shield className="h-5 w-5 text-[var(--hive-gold)]" />
               <div>
                 <p className="text-sm text-[var(--hive-text-inverse)] font-medium">Limited Profile View</p>
                 <p className="text-xs text-amber-200">This user has restricted their profile visibility. Connect to see more information.</p>

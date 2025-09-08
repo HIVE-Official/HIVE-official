@@ -399,14 +399,14 @@ function UniversalSurfacesDemo() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Universal Surfaces Demo</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Universal Surfaces Demo</h1>
               <p className="text-gray-400">Interactive demonstration of all HIVE space widget components</p>
             </div>
             
@@ -446,8 +446,8 @@ function UniversalSurfacesDemo() {
                 onClick={() => setActiveSurface(id as any)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeSurface === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                 }`}
                 style={activeSurface === id ? {
                   backgroundColor: 'var(--hive-brand-primary)',
@@ -456,7 +456,7 @@ function UniversalSurfacesDemo() {
               >
                 <Icon className="w-4 h-4 mr-2" />
                 {label}
-                <Badge className="ml-2 bg-gray-700 text-white text-xs">{count}</Badge>
+                <Badge className="ml-2 bg-gray-700 text-[var(--hive-text-primary)] text-xs">{count}</Badge>
               </button>
             ))}
           </div>
@@ -485,13 +485,13 @@ function PostBoardSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
       {/* Surface Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-white">Post Board</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Post Board</h2>
           <p className="text-gray-400 text-sm">Community discussions and coordination</p>
         </div>
         
         <div className="flex items-center gap-3">
           {viewMode === 'manage' && (
-            <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+            <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30">
               Management Mode
             </Badge>
           )}
@@ -511,31 +511,31 @@ function PostBoardSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
       {showComposer && (
         <Card className="bg-gray-800/50 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-white">Create Post</CardTitle>
+            <CardTitle className="text-[var(--hive-text-primary)]">Create Post</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <Input 
                 placeholder="Post title..."
-                className="bg-gray-900 border-gray-700 text-white"
+                className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)]"
               />
               <Textarea 
                 placeholder="What's happening in the study group?"
-                className="bg-gray-900 border-gray-700 text-white"
+                className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)]"
                 rows={3}
               />
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                  <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                     <Calendar className="w-4 h-4 mr-1" />
                     Add Event
                   </Button>
-                  <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                  <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                     <MapPin className="w-4 h-4 mr-1" />
                     Location
                   </Button>
-                  <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                  <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                     <Paperclip className="w-4 h-4 mr-1" />
                     Attach
                   </Button>
@@ -544,7 +544,7 @@ function PostBoardSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
                 <div className="flex gap-2">
                   <Button 
                     variant="secondary" 
-                    className="border-gray-600 text-white"
+                    className="border-gray-600 text-[var(--hive-text-primary)]"
                     onClick={() => setShowComposer(false)}
                   >
                     Cancel
@@ -584,7 +584,7 @@ function EventsSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
       {/* Surface Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-white">Events</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Events</h2>
           <p className="text-gray-400 text-sm">Calendar and event management</p>
         </div>
         
@@ -639,7 +639,7 @@ function MembersSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
       {/* Surface Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-white">Members</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Members</h2>
           <p className="text-gray-400 text-sm">Community directory and management</p>
         </div>
         
@@ -672,14 +672,14 @@ function MembersSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
             placeholder="Search members..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-gray-900 border-gray-700 text-white pl-10"
+            className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] pl-10"
           />
         </div>
         
         <select 
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm"
+          className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
         >
           <option value="all">All Roles</option>
           <option value="owner">Owners</option>
@@ -706,13 +706,13 @@ function ToolsSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
       {/* Surface Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-white">Tools</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Tools</h2>
           <p className="text-gray-400 text-sm">Space-specific applications and utilities</p>
         </div>
         
         <div className="flex items-center gap-3">
           {viewMode === 'manage' && (
-            <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
+            <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30">
               Admin Only
             </Badge>
           )}
@@ -754,7 +754,7 @@ function PinnedSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
       {/* Surface Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-white">Pinned Resources</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Pinned Resources</h2>
           <p className="text-gray-400 text-sm">Important resources and announcements</p>
         </div>
         
@@ -762,7 +762,7 @@ function PinnedSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
           <select 
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm"
+            className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
           >
             {categories.map(cat => (
               <option key={cat.id} value={cat.id}>{cat.label}</option>
@@ -801,17 +801,17 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center">
             <Avatar className="w-10 h-10 mr-3">
-              <AvatarFallback className={`text-white ${
-                post.author.role === 'leader' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                'bg-gradient-to-r from-blue-500 to-purple-500'
+              <AvatarFallback className={`text-[var(--hive-text-primary)] ${
+                post.author.role === 'leader' ? 'bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)]' :
+                'bg-gradient-to-r from-blue-500 to-[var(--hive-gold)]'
               }`}>
                 {post.author.avatar}
               </AvatarFallback>
             </Avatar>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-white font-medium">{post.author.name}</span>
-                {post.author.role === 'leader' && <Crown className="w-4 h-4 text-yellow-400" />}
+                <span className="text-[var(--hive-text-primary)] font-medium">{post.author.name}</span>
+                {post.author.role === 'leader' && <Crown className="w-4 h-4 text-[var(--hive-gold)]" />}
                 {post.isPinned && <Pin className="w-4 h-4 text-blue-400" />}
               </div>
               <div className="flex items-center gap-2 text-gray-400 text-sm">
@@ -829,7 +829,7 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
           <div className="flex items-center gap-2">
             {viewMode === 'manage' && (
               <>
-                <Button size="icon" variant="secondary" className="border-gray-600 text-white h-8 w-8">
+                <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] h-8 w-8">
                   <Edit className="w-3 h-3" />
                 </Button>
                 <Button size="icon" variant="secondary" className="border-red-600 text-red-400 h-8 w-8">
@@ -843,7 +843,7 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
 
         {/* Post Content */}
         <div className="mb-4">
-          <h3 className="text-white font-medium mb-2">{post.title}</h3>
+          <h3 className="text-[var(--hive-text-primary)] font-medium mb-2">{post.title}</h3>
           <p className="text-gray-300">{post.content}</p>
         </div>
 
@@ -853,7 +853,7 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-green-400" />
-                <span className="text-white font-medium">Study Session</span>
+                <span className="text-[var(--hive-text-primary)] font-medium">Study Session</span>
               </div>
               <Badge className="bg-green-500/20 text-green-400 text-xs">
                 {post.coordination.spots.current}/{post.coordination.spots.max} spots
@@ -872,11 +872,11 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
             </div>
             
             <div className="mt-3 flex gap-2">
-              <Button size="sm" className="bg-green-600 text-white hover:bg-green-700">
+              <Button size="sm" className="bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700">
                 <CheckCircle className="w-3 h-3 mr-1" />
                 Attending
               </Button>
-              <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+              <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <AlertCircle className="w-3 h-3 mr-1" />
                 Maybe
               </Button>
@@ -903,13 +903,13 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
             <Button 
               size="sm" 
               variant="ghost" 
-              className="text-gray-400 hover:text-white"
+              className="text-gray-400 hover:text-[var(--hive-text-primary)]"
               onClick={() => setShowComments(!showComments)}
             >
               <MessageSquare className="w-4 h-4 mr-1" />
               {post.engagement.comments}
             </Button>
-            <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+            <Button size="sm" variant="ghost" className="text-gray-400 hover:text-[var(--hive-text-primary)]">
               <Share className="w-4 h-4 mr-1" />
               {post.engagement.shares}
             </Button>
@@ -926,13 +926,13 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <Avatar className="w-6 h-6">
-                  <AvatarFallback className="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs">
+                  <AvatarFallback className="bg-gradient-to-r from-pink-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)] text-xs">
                     SC
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                   <div className="text-sm">
-                    <span className="text-white font-medium">Sarah Chen</span>
+                    <span className="text-[var(--hive-text-primary)] font-medium">Sarah Chen</span>
                     <span className="text-gray-400 ml-2">Great idea! I'll bring extra practice problems.</span>
                   </div>
                   <div className="text-xs text-gray-500 mt-1">2 hours ago</div>
@@ -941,13 +941,13 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
               
               <div className="flex items-center space-x-3">
                 <Avatar className="w-6 h-6">
-                  <AvatarFallback className="bg-gradient-to-r from-green-500 to-teal-500 text-white text-xs">
+                  <AvatarFallback className="bg-gradient-to-r from-green-500 to-teal-500 text-[var(--hive-text-primary)] text-xs">
                     AK
                   </AvatarFallback>
                 </Avatar>
                 <Input 
                   placeholder="Add a comment..."
-                  className="bg-gray-900 border-gray-700 text-white text-sm"
+                  className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] text-sm"
                 />
                 <Button size="sm" className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
                   <Send className="w-3 h-3" />
@@ -968,9 +968,9 @@ function EventCard({ event, viewMode }: { event: any; viewMode: 'view' | 'manage
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-white font-medium">{event.title}</h3>
+              <h3 className="text-[var(--hive-text-primary)] font-medium">{event.title}</h3>
               {event.isRecurring && (
-                <Badge className="text-xs bg-purple-500/20 text-purple-400">Recurring</Badge>
+                <Badge className="text-xs bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]">Recurring</Badge>
               )}
             </div>
             
@@ -995,7 +995,7 @@ function EventCard({ event, viewMode }: { event: any; viewMode: 'view' | 'manage
           <div className="flex flex-col items-end gap-2">
             {viewMode === 'manage' && (
               <div className="flex gap-1">
-                <Button size="icon" variant="secondary" className="border-gray-600 text-white h-8 w-8">
+                <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] h-8 w-8">
                   <Edit className="w-3 h-3" />
                 </Button>
                 <Button size="icon" variant="secondary" className="border-red-600 text-red-400 h-8 w-8">
@@ -1004,7 +1004,7 @@ function EventCard({ event, viewMode }: { event: any; viewMode: 'view' | 'manage
               </div>
             )}
             
-            <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700">
+            <Button size="sm" className="bg-blue-600 text-[var(--hive-text-primary)] hover:bg-blue-700">
               <CheckCircle className="w-3 h-3 mr-1" />
               RSVP
             </Button>
@@ -1023,9 +1023,9 @@ function MemberCard({ member, viewMode }: { member: any; viewMode: 'view' | 'man
           <div className="flex items-center">
             <div className="relative">
               <Avatar className="w-12 h-12 mr-3">
-                <AvatarFallback className={`text-white ${
-                  member.role === 'owner' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                  member.role === 'moderator' ? 'bg-gradient-to-r from-blue-500 to-purple-500' :
+                <AvatarFallback className={`text-[var(--hive-text-primary)] ${
+                  member.role === 'owner' ? 'bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)]' :
+                  member.role === 'moderator' ? 'bg-gradient-to-r from-blue-500 to-[var(--hive-gold)]' :
                   'bg-gradient-to-r from-gray-500 to-gray-600'
                 }`}>
                   {member.avatar}
@@ -1037,8 +1037,8 @@ function MemberCard({ member, viewMode }: { member: any; viewMode: 'view' | 'man
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-white font-medium">{member.name}</span>
-                {member.role === 'owner' && <Crown className="w-4 h-4 text-yellow-400" />}
+                <span className="text-[var(--hive-text-primary)] font-medium">{member.name}</span>
+                {member.role === 'owner' && <Crown className="w-4 h-4 text-[var(--hive-gold)]" />}
                 {member.role === 'moderator' && <Shield className="w-4 h-4 text-blue-400" />}
               </div>
               <div className="text-gray-400 text-sm">{member.handle}</div>
@@ -1055,15 +1055,15 @@ function MemberCard({ member, viewMode }: { member: any; viewMode: 'view' | 'man
         
         <div className="grid grid-cols-3 gap-2 text-center text-xs mb-3">
           <div>
-            <div className="text-white font-medium">{member.contributions.posts}</div>
+            <div className="text-[var(--hive-text-primary)] font-medium">{member.contributions.posts}</div>
             <div className="text-gray-400">Posts</div>
           </div>
           <div>
-            <div className="text-white font-medium">{member.contributions.events}</div>
+            <div className="text-[var(--hive-text-primary)] font-medium">{member.contributions.events}</div>
             <div className="text-gray-400">Events</div>
           </div>
           <div>
-            <div className="text-white font-medium">{member.contributions.helpfulVotes}</div>
+            <div className="text-[var(--hive-text-primary)] font-medium">{member.contributions.helpfulVotes}</div>
             <div className="text-gray-400">Helpful</div>
           </div>
         </div>
@@ -1072,7 +1072,7 @@ function MemberCard({ member, viewMode }: { member: any; viewMode: 'view' | 'man
           <Badge variant="secondary" className={`text-xs ${
             member.activity === 'very-active' ? 'border-green-400/50 text-green-400' :
             member.activity === 'active' ? 'border-blue-400/50 text-blue-400' :
-            member.activity === 'moderate' ? 'border-yellow-400/50 text-yellow-400' :
+            member.activity === 'moderate' ? 'border-[var(--hive-gold)]/50 text-[var(--hive-gold)]' :
             'border-gray-400/50 text-gray-400'
           }`}>
             {member.activity.replace('-', ' ')}
@@ -1096,10 +1096,10 @@ function ToolCard({ tool, viewMode }: { tool: any; viewMode: 'view' | 'manage' }
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center mr-3">
-              <Icon className="w-5 h-5 text-white" />
+              <Icon className="w-5 h-5 text-[var(--hive-text-primary)]" />
             </div>
             <div>
-              <h3 className="text-white font-medium">{tool.name}</h3>
+              <h3 className="text-[var(--hive-text-primary)] font-medium">{tool.name}</h3>
               <Badge variant="secondary" className="text-xs mt-1 border-cyan-400/50 text-cyan-400">
                 {tool.type}
               </Badge>
@@ -1108,7 +1108,7 @@ function ToolCard({ tool, viewMode }: { tool: any; viewMode: 'view' | 'manage' }
           
           {viewMode === 'manage' && (
             <div className="flex gap-1">
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white h-8 w-8">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] h-8 w-8">
                 <Settings className="w-3 h-3" />
               </Button>
               <Button size="icon" variant="secondary" className="border-red-600 text-red-400 h-8 w-8">
@@ -1123,15 +1123,15 @@ function ToolCard({ tool, viewMode }: { tool: any; viewMode: 'view' | 'manage' }
         <div className="space-y-2 text-xs mb-4">
           <div className="flex justify-between">
             <span className="text-gray-400">This Week</span>
-            <span className="text-white">{tool.usage.thisWeek} uses</span>
+            <span className="text-[var(--hive-text-primary)]">{tool.usage.thisWeek} uses</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Total Uses</span>
-            <span className="text-white">{tool.usage.total}</span>
+            <span className="text-[var(--hive-text-primary)]">{tool.usage.total}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Creator</span>
-            <span className="text-white">{tool.creator}</span>
+            <span className="text-[var(--hive-text-primary)]">{tool.creator}</span>
           </div>
         </div>
         
@@ -1164,13 +1164,13 @@ function PinnedItemCard({ item, viewMode }: { item: any; viewMode: 'view' | 'man
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center flex-1">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center mr-3">
-              <Icon className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center mr-3">
+              <Icon className="w-5 h-5 text-[var(--hive-text-primary)]" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-white font-medium truncate">{item.title}</h3>
-                <Badge variant="secondary" className="text-xs border-amber-400/50 text-amber-400">
+                <h3 className="text-[var(--hive-text-primary)] font-medium truncate">{item.title}</h3>
+                <Badge variant="secondary" className="text-xs border-[var(--hive-gold)]/50 text-[var(--hive-gold)]">
                   {item.category.replace('-', ' ')}
                 </Badge>
               </div>
@@ -1193,12 +1193,12 @@ function PinnedItemCard({ item, viewMode }: { item: any; viewMode: 'view' | 'man
             )}
             
             {item.type === 'link' ? (
-              <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700">
+              <Button size="sm" className="bg-blue-600 text-[var(--hive-text-primary)] hover:bg-blue-700">
                 <ExternalLink className="w-3 h-3 mr-1" />
                 Visit
               </Button>
             ) : item.type === 'file' ? (
-              <Button size="sm" className="bg-green-600 text-white hover:bg-green-700">
+              <Button size="sm" className="bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700">
                 <Download className="w-3 h-3 mr-1" />
                 Download
               </Button>

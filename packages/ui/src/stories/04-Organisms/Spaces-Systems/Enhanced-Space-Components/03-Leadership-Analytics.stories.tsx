@@ -251,19 +251,19 @@ function LeadershipAnalyticsDemo() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Leadership Toolbar Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Leadership Dashboard</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Leadership Dashboard</h1>
               <p className="text-gray-400">Advanced space management and analytics</p>
             </div>
             
             <div className="flex items-center gap-3">
-              <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+              <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30">
                 Space Leader
               </Badge>
               <Badge className="text-xs" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -284,8 +284,8 @@ function LeadershipAnalyticsDemo() {
                 onClick={() => setLeaderMode(id as any)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   leaderMode === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                 }`}
                 style={leaderMode === id ? {
                   backgroundColor: 'var(--hive-brand-primary)',
@@ -339,13 +339,13 @@ function ConfigureMode() {
       {/* Configure Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-white">Space Configuration</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Space Configuration</h2>
           <p className="text-gray-400 text-sm">Customize space settings, features, and appearance</p>
         </div>
         
         {hasChanges && (
           <Button 
-            className="bg-green-600 text-white hover:bg-green-700"
+            className="bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700"
             onClick={() => setHasChanges(false)}
           >
             <CheckCircle className="w-4 h-4 mr-2" />
@@ -366,35 +366,35 @@ function ConfigureMode() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-white text-sm font-medium">Space Name</label>
+              <label className="text-[var(--hive-text-primary)] text-sm font-medium">Space Name</label>
               <input
                 type="text"
                 value={settings.general.name}
                 onChange={(e) => updateSetting('general', 'name', e.target.value)}
-                className="w-full mt-1 bg-gray-900 border border-green-500/30 rounded-lg px-3 py-2 text-white"
+                className="w-full mt-1 bg-gray-900 border border-green-500/30 rounded-lg px-3 py-2 text-[var(--hive-text-primary)]"
               />
             </div>
             
             <div>
-              <label className="text-white text-sm font-medium">Description</label>
+              <label className="text-[var(--hive-text-primary)] text-sm font-medium">Description</label>
               <textarea
                 value={settings.general.description}
                 onChange={(e) => updateSetting('general', 'description', e.target.value)}
                 rows={3}
-                className="w-full mt-1 bg-gray-900 border border-green-500/30 rounded-lg px-3 py-2 text-white resize-none"
+                className="w-full mt-1 bg-gray-900 border border-green-500/30 rounded-lg px-3 py-2 text-[var(--hive-text-primary)] resize-none"
               />
             </div>
             
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-white text-sm">Public Discovery</span>
+                <span className="text-[var(--hive-text-primary)] text-sm">Public Discovery</span>
                 <Switch 
                   checked={settings.general.discoverability}
                   onCheckedChange={(checked) => updateSetting('general', 'discoverability', checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-white text-sm">Auto-approve Members</span>
+                <span className="text-[var(--hive-text-primary)] text-sm">Auto-approve Members</span>
                 <Switch 
                   checked={settings.general.autoApprove}
                   onCheckedChange={(checked) => updateSetting('general', 'autoApprove', checked)}
@@ -415,7 +415,7 @@ function ConfigureMode() {
           <CardContent className="space-y-3">
             {Object.entries(settings.features).map(([feature, enabled]) => (
               <div key={feature} className="flex items-center justify-between">
-                <span className="text-white text-sm capitalize">
+                <span className="text-[var(--hive-text-primary)] text-sm capitalize">
                   {feature.replace(/([A-Z])/g, ' $1').toLowerCase()}
                 </span>
                 <Switch 
@@ -428,9 +428,9 @@ function ConfigureMode() {
         </Card>
 
         {/* Moderation Settings */}
-        <Card className="bg-orange-500/10 border-orange-500/30">
+        <Card className="bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/30">
           <CardHeader>
-            <CardTitle className="flex items-center text-orange-400">
+            <CardTitle className="flex items-center text-[var(--hive-gold)]">
               <Shield className="w-5 h-5 mr-2" />
               Moderation & Safety
             </CardTitle>
@@ -438,7 +438,7 @@ function ConfigureMode() {
           <CardContent className="space-y-3">
             {Object.entries(settings.moderation).map(([setting, enabled]) => (
               <div key={setting} className="flex items-center justify-between">
-                <span className="text-white text-sm capitalize">
+                <span className="text-[var(--hive-text-primary)] text-sm capitalize">
                   {setting.replace(/([A-Z])/g, ' $1').toLowerCase()}
                 </span>
                 <Switch 
@@ -451,9 +451,9 @@ function ConfigureMode() {
         </Card>
 
         {/* Notification Settings */}
-        <Card className="bg-purple-500/10 border-purple-500/30">
+        <Card className="bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/30">
           <CardHeader>
-            <CardTitle className="flex items-center text-purple-400">
+            <CardTitle className="flex items-center text-[var(--hive-gold)]">
               <Bell className="w-5 h-5 mr-2" />
               Notifications
             </CardTitle>
@@ -461,7 +461,7 @@ function ConfigureMode() {
           <CardContent className="space-y-3">
             {Object.entries(settings.notifications).map(([notification, enabled]) => (
               <div key={notification} className="flex items-center justify-between">
-                <span className="text-white text-sm capitalize">
+                <span className="text-[var(--hive-text-primary)] text-sm capitalize">
                   {notification.replace(/([A-Z])/g, ' $1').toLowerCase()}
                 </span>
                 <Switch 
@@ -477,7 +477,7 @@ function ConfigureMode() {
       {/* Layout Customization */}
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="flex items-center text-white">
+          <CardTitle className="flex items-center text-[var(--hive-text-primary)]">
             <Palette className="w-5 h-5 mr-2" />
             Layout Customization
           </CardTitle>
@@ -486,21 +486,21 @@ function ConfigureMode() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 border border-gray-600 rounded-lg">
               <Grid className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <h4 className="text-white font-medium mb-1">Widget Grid</h4>
+              <h4 className="text-[var(--hive-text-primary)] font-medium mb-1">Widget Grid</h4>
               <p className="text-gray-400 text-sm">Desktop layout with widgets</p>
-              <Button size="sm" className="mt-2 bg-gray-700 text-white">Current</Button>
+              <Button size="sm" className="mt-2 bg-gray-700 text-[var(--hive-text-primary)]">Current</Button>
             </div>
             <div className="text-center p-4 border border-gray-600 rounded-lg">
               <List className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <h4 className="text-white font-medium mb-1">Tab Layout</h4>
+              <h4 className="text-[var(--hive-text-primary)] font-medium mb-1">Tab Layout</h4>
               <p className="text-gray-400 text-sm">Mobile-friendly tabs</p>
-              <Button size="sm" variant="secondary" className="mt-2 border-gray-600 text-white">Available</Button>
+              <Button size="sm" variant="secondary" className="mt-2 border-gray-600 text-[var(--hive-text-primary)]">Available</Button>
             </div>
             <div className="text-center p-4 border border-gray-600 rounded-lg">
               <Monitor className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <h4 className="text-white font-medium mb-1">Custom Layout</h4>
+              <h4 className="text-[var(--hive-text-primary)] font-medium mb-1">Custom Layout</h4>
               <p className="text-gray-400 text-sm">Advanced customization</p>
-              <Button size="sm" variant="secondary" className="mt-2 border-yellow-600 text-yellow-400">Pro</Button>
+              <Button size="sm" variant="secondary" className="mt-2 border-yellow-600 text-[var(--hive-gold)]">Pro</Button>
             </div>
           </div>
         </CardContent>
@@ -521,12 +521,12 @@ function InsightsMode({ activeTab, onTabChange, isLoading }: {
       {/* Analytics Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-white">Analytics Insights</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Analytics Insights</h2>
           <p className="text-gray-400 text-sm">Space performance metrics and member analytics</p>
         </div>
         
         <div className="flex items-center gap-3">
-          <select className="bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm">
+          <select className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm">
             <option>Last 7 days</option>
             <option>Last 30 days</option>
             <option>Last 3 months</option>
@@ -534,7 +534,7 @@ function InsightsMode({ activeTab, onTabChange, isLoading }: {
           
           <Button 
             variant="secondary"
-            className="border-gray-600 text-white"
+            className="border-gray-600 text-[var(--hive-text-primary)]"
           >
             <Download className="w-4 h-4 mr-2" />
             Export Data
@@ -556,8 +556,8 @@ function InsightsMode({ activeTab, onTabChange, isLoading }: {
             onClick={() => onTabChange(id)}
             className={`flex items-center px-4 py-2 rounded-md transition-colors ${
               activeTab === id
-                ? 'bg-purple-500 text-white'
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-[var(--hive-gold)] text-[var(--hive-text-primary)]'
+                : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
             }`}
           >
             <Icon className="w-4 h-4 mr-2" />
@@ -586,7 +586,7 @@ function ManageMode() {
       {/* Management Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-white">Space Management</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Space Management</h2>
           <p className="text-gray-400 text-sm">Member management, content moderation, and administrative tools</p>
         </div>
         
@@ -607,8 +607,8 @@ function ManageMode() {
             onClick={() => setActiveManageTab(id as any)}
             className={`flex items-center px-4 py-2 rounded-md transition-colors ${
               activeManageTab === id
-                ? 'bg-red-500 text-white'
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-red-500 text-[var(--hive-text-primary)]'
+                : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
             }`}
           >
             <Icon className="w-4 h-4 mr-2" />
@@ -630,7 +630,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--hive-gold)]" />
         <span className="ml-3 text-gray-400">Loading analytics...</span>
       </div>
     );
@@ -640,9 +640,9 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
     <div className="space-y-6">
       
       {/* Space Health Score */}
-      <Card className="bg-purple-500/10 border-purple-500/30">
+      <Card className="bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/30">
         <CardHeader>
-          <CardTitle className="flex items-center text-purple-400">
+          <CardTitle className="flex items-center text-[var(--hive-gold)]">
             <Target className="w-5 h-5 mr-2" />
             Space Health Score
           </CardTitle>
@@ -650,7 +650,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
         <CardContent>
           <div className="flex items-center justify-between mb-4">
             <div className="text-center">
-              <div className="text-4xl font-bold text-white">{mockAnalyticsData.spaceHealth.score}</div>
+              <div className="text-4xl font-bold text-[var(--hive-text-primary)]">{mockAnalyticsData.spaceHealth.score}</div>
               <div className="text-sm text-gray-400">Overall Score</div>
             </div>
             <div className="flex items-center text-green-400">
@@ -669,7 +669,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
                 <div className={`text-sm font-medium ${
                   status === 'Excellent' || status === 'High' ? 'text-green-400' :
                   status === 'Good' || status === 'Growing' ? 'text-blue-400' :
-                  'text-yellow-400'
+                  'text-[var(--hive-gold)]'
                 }`}>
                   {status}
                 </div>
@@ -685,7 +685,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
         <Card className="bg-gray-800/50 border-gray-700">
           <CardContent className="p-4 text-center">
             <Users className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{mockAnalyticsData.memberMetrics.total}</div>
+            <div className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalyticsData.memberMetrics.total}</div>
             <div className="text-sm text-gray-400">Total Members</div>
             <div className="text-xs text-green-400 mt-1">+{mockAnalyticsData.memberMetrics.newThisWeek} this week</div>
           </CardContent>
@@ -694,7 +694,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
         <Card className="bg-gray-800/50 border-gray-700">
           <CardContent className="p-4 text-center">
             <Activity className="w-8 h-8 text-green-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{mockAnalyticsData.memberMetrics.active}</div>
+            <div className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalyticsData.memberMetrics.active}</div>
             <div className="text-sm text-gray-400">Active Members</div>
             <div className="text-xs text-blue-400 mt-1">{mockAnalyticsData.memberMetrics.engagementRate}% engagement</div>
           </CardContent>
@@ -702,17 +702,17 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
         
         <Card className="bg-gray-800/50 border-gray-700">
           <CardContent className="p-4 text-center">
-            <MessageSquare className="w-8 h-8 text-orange-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{mockAnalyticsData.contentMetrics.postsThisWeek}</div>
+            <MessageSquare className="w-8 h-8 text-[var(--hive-gold)] mx-auto mb-2" />
+            <div className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalyticsData.contentMetrics.postsThisWeek}</div>
             <div className="text-sm text-gray-400">Posts This Week</div>
-            <div className="text-xs text-purple-400 mt-1">{mockAnalyticsData.contentMetrics.avgEngagement}% avg engagement</div>
+            <div className="text-xs text-[var(--hive-gold)] mt-1">{mockAnalyticsData.contentMetrics.avgEngagement}% avg engagement</div>
           </CardContent>
         </Card>
         
         <Card className="bg-gray-800/50 border-gray-700">
           <CardContent className="p-4 text-center">
-            <Calendar className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{mockAnalyticsData.eventsMetrics.upcomingEvents}</div>
+            <Calendar className="w-8 h-8 text-[var(--hive-gold)] mx-auto mb-2" />
+            <div className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalyticsData.eventsMetrics.upcomingEvents}</div>
             <div className="text-sm text-gray-400">Upcoming Events</div>
             <div className="text-xs text-green-400 mt-1">{mockAnalyticsData.eventsMetrics.avgAttendance}% attendance</div>
           </CardContent>
@@ -722,7 +722,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
       {/* Recent Alerts */}
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="flex items-center text-white">
+          <CardTitle className="flex items-center text-[var(--hive-text-primary)]">
             <Bell className="w-5 h-5 mr-2" />
             Recent Alerts
           </CardTitle>
@@ -732,13 +732,13 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
             {mockAnalyticsData.spaceHealth.alerts.map((alert, index) => (
               <div key={index} className={`flex items-start p-3 rounded-lg ${
                 alert.type === 'success' ? 'bg-green-500/10 border-l-4 border-green-400' :
-                'bg-yellow-500/10 border-l-4 border-yellow-400'
+                'bg-[var(--hive-gold)]/10 border-l-4 border-[var(--hive-gold)]'
               }`}>
                 <div className="flex-1">
-                  <p className="text-white text-sm">{alert.message}</p>
+                  <p className="text-[var(--hive-text-primary)] text-sm">{alert.message}</p>
                   <p className="text-gray-400 text-xs mt-1">{alert.timestamp}</p>
                 </div>
-                <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                   View Details
                 </Button>
               </div>
@@ -757,7 +757,7 @@ function MemberAnalytics({ isLoading }: { isLoading: boolean }) {
       {/* Member Growth Chart */}
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Member Growth & Activity</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Member Growth & Activity</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-64 flex items-center justify-center bg-gray-900/50 rounded-lg">
@@ -772,23 +772,23 @@ function MemberAnalytics({ isLoading }: { isLoading: boolean }) {
       {/* Top Contributors */}
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Top Contributors</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Top Contributors</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {mockAnalyticsData.memberMetrics.topContributors.map((contributor, index) => (
               <div key={contributor.id} className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium mr-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-[var(--hive-gold)] flex items-center justify-center text-[var(--hive-text-primary)] text-sm font-medium mr-3">
                     {index + 1}
                   </div>
                   <div>
-                    <div className="text-white font-medium">{contributor.name}</div>
+                    <div className="text-[var(--hive-text-primary)] font-medium">{contributor.name}</div>
                     <div className="text-gray-400 text-sm">{contributor.posts} posts</div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-white font-medium">{contributor.score}</div>
+                  <div className="text-[var(--hive-text-primary)] font-medium">{contributor.score}</div>
                   <div className="text-gray-400 text-sm">score</div>
                 </div>
               </div>
@@ -807,20 +807,20 @@ function ContentAnalytics({ isLoading }: { isLoading: boolean }) {
       {/* Content Performance */}
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Top Performing Content</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Top Performing Content</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {mockAnalyticsData.contentMetrics.topPosts.map((post) => (
               <div key={post.id} className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg">
                 <div className="flex-1">
-                  <h4 className="text-white font-medium">{post.title}</h4>
+                  <h4 className="text-[var(--hive-text-primary)] font-medium">{post.title}</h4>
                   <Badge variant="secondary" className="text-xs mt-1 border-blue-400/50 text-blue-400">
                     {post.type}
                   </Badge>
                 </div>
                 <div className="text-right">
-                  <div className="text-white font-medium">{post.engagement}%</div>
+                  <div className="text-[var(--hive-text-primary)] font-medium">{post.engagement}%</div>
                   <div className="text-gray-400 text-sm">engagement</div>
                 </div>
               </div>
@@ -832,14 +832,14 @@ function ContentAnalytics({ isLoading }: { isLoading: boolean }) {
       {/* Content Type Distribution */}
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Content Type Distribution</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Content Type Distribution</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {Object.entries(mockAnalyticsData.contentMetrics.contentTypes).map(([type, percentage]) => (
               <div key={type}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-white capitalize">{type}</span>
+                  <span className="text-[var(--hive-text-primary)] capitalize">{type}</span>
                   <span className="text-gray-400">{percentage}%</span>
                 </div>
                 <HiveProgress value={percentage as number} className="bg-gray-700" />
@@ -860,8 +860,8 @@ function EventAnalytics({ isLoading }: { isLoading: boolean }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-gray-800/50 border-gray-700">
           <CardContent className="p-4 text-center">
-            <Calendar className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{mockAnalyticsData.eventsMetrics.totalEvents}</div>
+            <Calendar className="w-8 h-8 text-[var(--hive-gold)] mx-auto mb-2" />
+            <div className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalyticsData.eventsMetrics.totalEvents}</div>
             <div className="text-sm text-gray-400">Total Events</div>
           </CardContent>
         </Card>
@@ -869,7 +869,7 @@ function EventAnalytics({ isLoading }: { isLoading: boolean }) {
         <Card className="bg-gray-800/50 border-gray-700">
           <CardContent className="p-4 text-center">
             <Users className="w-8 h-8 text-green-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{mockAnalyticsData.eventsMetrics.avgAttendance}%</div>
+            <div className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalyticsData.eventsMetrics.avgAttendance}%</div>
             <div className="text-sm text-gray-400">Avg Attendance</div>
           </CardContent>
         </Card>
@@ -877,7 +877,7 @@ function EventAnalytics({ isLoading }: { isLoading: boolean }) {
         <Card className="bg-gray-800/50 border-gray-700">
           <CardContent className="p-4 text-center">
             <CheckCircle className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{mockAnalyticsData.eventsMetrics.rsvpRate}%</div>
+            <div className="text-2xl font-bold text-[var(--hive-text-primary)]">{mockAnalyticsData.eventsMetrics.rsvpRate}%</div>
             <div className="text-sm text-gray-400">RSVP Rate</div>
           </CardContent>
         </Card>
@@ -886,14 +886,14 @@ function EventAnalytics({ isLoading }: { isLoading: boolean }) {
       {/* Popular Times */}
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Popular Event Times</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Popular Event Times</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {mockAnalyticsData.eventsMetrics.popularTimes.map((time, index) => (
               <div key={index} className="text-center p-3 bg-gray-900/50 rounded-lg">
                 <Clock className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                <div className="text-white font-medium">{time}</div>
+                <div className="text-[var(--hive-text-primary)] font-medium">{time}</div>
                 <div className="text-gray-400 text-sm">Peak attendance</div>
               </div>
             ))}
@@ -911,7 +911,7 @@ function ToolAnalytics({ isLoading }: { isLoading: boolean }) {
       {/* Tool Performance */}
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Tool Performance</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Tool Performance</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -920,11 +920,11 @@ function ToolAnalytics({ isLoading }: { isLoading: boolean }) {
                 <div className="flex items-center">
                   <Code className="w-6 h-6 text-cyan-400 mr-3" />
                   <div>
-                    <div className="text-white font-medium">{tool.name}</div>
+                    <div className="text-[var(--hive-text-primary)] font-medium">{tool.name}</div>
                     <div className="text-gray-400 text-sm">{tool.uses} uses • {tool.rating}★ rating</div>
                   </div>
                 </div>
-                <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                   <ExternalLink className="w-3 h-3 mr-1" />
                   View
                 </Button>
@@ -966,23 +966,23 @@ function ModerationQueue() {
   return (
     <div className="space-y-4">
       {mockModerationQueue.map((item) => (
-        <Card key={item.id} className="bg-yellow-500/10 border-yellow-500/30">
+        <Card key={item.id} className="bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/30">
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="secondary" className="border-yellow-400/50 text-yellow-400 text-xs">
+                  <Badge variant="secondary" className="border-[var(--hive-gold)]/50 text-[var(--hive-gold)] text-xs">
                     {item.type.replace('_', ' ')}
                   </Badge>
                   <span className="text-gray-400 text-sm">{item.timestamp}</span>
                 </div>
-                <p className="text-white mb-2">{item.content}</p>
+                <p className="text-[var(--hive-text-primary)] mb-2">{item.content}</p>
                 <p className="text-gray-400 text-sm">
                   Reported by {item.reporter} • Reason: {item.reason}
                 </p>
               </div>
               <div className="flex gap-2 ml-4">
-                <Button size="sm" className="bg-green-600 text-white hover:bg-green-700">
+                <Button size="sm" className="bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700">
                   <CheckCircle className="w-3 h-3 mr-1" />
                   Approve
                 </Button>

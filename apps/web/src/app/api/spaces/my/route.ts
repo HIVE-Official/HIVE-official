@@ -5,6 +5,7 @@ import { type Space } from '@hive/core';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { getUserSpaces, getSpace } from '@/lib/spaces-db';
 
 /**
  * Get user's spaces with enhanced widget data
@@ -98,14 +99,10 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       });
     }
 
-    // Get user's memberships using collectionGroup
-    const membershipsQuery = dbAdmin.collectionGroup('members')
-      .where('userId', '==', userId)
-      .limit(50); // Limit for performance
-      
-    const membershipsSnapshot = await membershipsQuery.get();
+    // Get user's memberships using flat spaceMembers collection
+    const memberships = await getUserSpaces(userId);
     
-    if (membershipsSnapshot.empty) {
+    if (memberships.length === 0) {
       logger.info('📊 No memberships found for user', { userId, endpoint: '/api/spaces/my' });
       return NextResponse.json({
         success: true,
@@ -121,103 +118,71 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       });
     }
 
-    logger.info('📊 Foundmemberships for user', { membershipsSnapshot, userId, endpoint: '/api/spaces/my' });
-
-    // Extract space IDs and membership data
-    const membershipData = new Map<string, any>();
-    const spaceIds: string[] = [];
-
-    membershipsSnapshot.docs.forEach(doc => {
-      const membership = doc.data();
-      const spaceId = doc.ref.parent.parent?.id;
-      
-      if (spaceId) {
-        spaceIds.push(spaceId);
-        membershipData.set(spaceId, {
-          role: membership.role || 'member',
-          joinedAt: membership.joinedAt,
-          lastVisited: membership.lastVisited || new Date(),
-          notifications: membership.notifications || 0,
-          pinned: membership.pinned || false
-        });
-      }
-    });
+    logger.info('📊 Found memberships for user', { membershipCount: memberships.length, userId, endpoint: '/api/spaces/my' });
 
     // Fetch space details for each membership
     const spaces: any[] = [];
-    const spaceTypes = ['student_organizations', 'university_organizations', 'greek_life', 'campus_living', 'hive_exclusive', 'cohort'];
-
-    for (const spaceType of spaceTypes) {
+    
+    for (const membership of memberships) {
       try {
-        const spacesSnapshot = await dbAdmin.collection('spaces')
-          .doc(spaceType)
-          .collection('spaces')
-          .get();
-          
-        spacesSnapshot.docs.forEach(doc => {
-          const spaceId = doc.id;
-          if (spaceIds.includes(spaceId)) {
-            const spaceData = doc.data();
-            const membership = membershipData.get(spaceId);
+        const space = await getSpace(membership.spaceId);
+        
+        if (space && space.status === 'active') {
+          spaces.push({
+            id: space.id,
+            name: space.name,
+            description: space.description,
+            type: space.type,
+            category: space.category,
+            status: space.status,
+            memberCount: space.memberCount || 0,
+            visibility: space.visibility,
+            createdAt: space.createdAt,
+            updatedAt: space.updatedAt,
             
-            spaces.push({
-              id: spaceId,
-              name: spaceData.name,
-              description: spaceData.description,
-              type: spaceType,
-              status: spaceData.status || 'activated', // All active in V1
-              memberCount: spaceData.metrics?.memberCount || 0,
-              tags: spaceData.tags || [],
-              bannerUrl: spaceData.bannerUrl,
-              isPrivate: spaceData.isPrivate || false,
-              createdAt: spaceData.createdAt,
-              updatedAt: spaceData.updatedAt,
-              
-              // Membership-specific data
-              membershipRole: membership?.role || 'member',
-              lastVisited: membership?.lastVisited || new Date(),
-              notifications: membership?.notifications || 0,
-              pinned: membership?.pinned || false,
-              
-              // Production-safe activity data (empty until real integration)
-              activity: {
-                newPosts: 0,
-                newEvents: 0,
-                newMembers: 0
+            // Membership-specific data
+            membershipRole: membership.role || 'member',
+            lastVisited: membership.lastActiveAt || new Date(),
+            joinedAt: membership.joinedAt,
+            
+            // Real activity data (can be expanded based on actual analytics)
+            activity: {
+              newPosts: 0, // TODO: Calculate from spacePosts
+              newEvents: 0, // TODO: Calculate from spaceEvents
+              newMembers: 0 // TODO: Calculate from recent spaceMembers
+            },
+            
+            // Widget data with real counts
+            widgets: {
+              posts: {
+                recentCount: space.postCount || 0,
+                lastActivity: null // TODO: Get from last spacePosts entry
               },
-              
-              // Production-safe widget data (empty until real integration)
-              widgets: {
-                posts: {
-                  recentCount: 0,
-                  lastActivity: null
-                },
-                events: {
-                  upcomingCount: 0,
-                  nextEvent: null
-                },
-                members: {
-                  activeCount: spaceData.metrics?.memberCount || 0,
-                  recentJoins: 0
-                },
-                tools: {
-                  availableCount: 0
-                }
+              events: {
+                upcomingCount: space.eventCount || 0,
+                nextEvent: null // TODO: Get from next spaceEvents entry
+              },
+              members: {
+                activeCount: space.memberCount || 0,
+                recentJoins: 0
+              },
+              tools: {
+                availableCount: 0 // TODO: Implement tools system
               }
-            });
-          }
-        });
+            }
+          });
+        }
       } catch (error) {
-        logger.error('❌ Error fetching spaces for type', { spaceType, error: error, endpoint: '/api/spaces/my' });
-        // Continue with other types even if one fails
+        logger.error('❌ Error fetching space details', { spaceId: membership.spaceId, error, endpoint: '/api/spaces/my' });
+        // Continue with other spaces even if one fails
       }
     }
 
     // Sort spaces by last visited (most recent first)
     spaces.sort((a, b) => new Date(b.lastVisited).getTime() - new Date(a.lastVisited).getTime());
 
-    // Separate pinned spaces
-    const pinnedSpaces = spaces.filter(s => s.pinned).slice(0, 4);
+    // TODO: Implement pinning in spaceMembers collection
+    const pinnedSpaces = spaces.slice(0, 4); // For now, just show first 4 as "pinned"
     const recentSpaces = spaces.slice(0, 5);
 
     // Calculate stats
@@ -290,41 +255,33 @@ export const PATCH = withAuth(async (request: NextRequest, authContext) => {
       return NextResponse.json(ApiResponseHelper.error("spaceId and action are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    // Find the space's membership document
-    const membershipsQuery = dbAdmin.collectionGroup('members')
-      .where('userId', '==', userId)
-      .limit(50);
-      
-    const membershipsSnapshot = await membershipsQuery.get();
-    
-    let membershipRef = null;
-    for (const doc of membershipsSnapshot.docs) {
-      const spaceIdFromRef = doc.ref.parent.parent?.id;
-      if (spaceIdFromRef === spaceId) {
-        membershipRef = doc.ref;
-        break;
-      }
-    }
+    // Find the membership document using flat spaceMembers collection
+    const memberId = `${spaceId}_${userId}`;
+    const membershipRef = dbAdmin.collection('spaceMembers').doc(memberId);
+    const membershipDoc = await membershipRef.get();
 
-    if (!membershipRef) {
+    if (!membershipDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Membership not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
     // Update membership based on action
-    const updates: any = { updatedAt: new Date() };
+    const updates: any = { lastActiveAt: new Date() };
     
     switch (action) {
       case 'pin':
-        updates.pinned = true;
+        // TODO: Add pinning support to spaceMembers schema
+        logger.warn('Pinning not yet implemented in flat structure', { spaceId, action });
         break;
       case 'unpin':
-        updates.pinned = false;
+        // TODO: Add pinning support to spaceMembers schema
+        logger.warn('Unpinning not yet implemented in flat structure', { spaceId, action });
         break;
       case 'mark_visited':
-        updates.lastVisited = new Date();
+        updates.lastActiveAt = new Date();
         break;
       case 'update_notifications':
-        updates.notifications = value || 0;
+        // TODO: Add notification preferences to spaceMembers schema
+        logger.warn('Notification updates not yet implemented in flat structure', { spaceId, action });
         break;
       default:
         return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });

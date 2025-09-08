@@ -329,8 +329,8 @@ export function DashboardMain() {
           <Card className="flex-1">
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
-                <div className="h-12 w-12 bg-purple-500/10 rounded-lg flex items-center justify-center">
-                  <Zap className="h-6 w-6 text-purple-500" />
+                <div className="h-12 w-12 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center">
+                  <Zap className="h-6 w-6 text-[var(--hive-gold)]" />
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{dashboardData.user.tools}</div>
@@ -343,8 +343,8 @@ export function DashboardMain() {
           <Card className="flex-1">
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
-                <div className="h-12 w-12 bg-amber-500/10 rounded-lg flex items-center justify-center">
-                  <Star className="h-6 w-6 text-amber-500" />
+                <div className="h-12 w-12 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center">
+                  <Star className="h-6 w-6 text-[var(--hive-gold)]" />
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{dashboardData.user.reputation.toLocaleString()}</div>
@@ -391,7 +391,7 @@ export function DashboardMain() {
                       onClick={() => router.push(`/spaces/${space.id}`)}
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                        <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-[var(--hive-gold)] rounded-lg flex items-center justify-center">
                           <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
                             {space.name.charAt(0)}
                           </span>

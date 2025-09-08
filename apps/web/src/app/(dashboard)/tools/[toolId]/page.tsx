@@ -146,7 +146,7 @@ export default function ToolPage() {
                     <span>{tool.downloads.toLocaleString()} downloads</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <Star className="h-4 w-4 fill-[var(--hive-gold)] text-[var(--hive-gold)]" />
                     <span>{tool.rating.toFixed(1)} ({tool.ratingCount} reviews)</span>
                   </div>
                   <div className="flex items-center gap-1">
@@ -173,7 +173,7 @@ export default function ToolPage() {
                   >
                     {isInstalling ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--hive-white)] mr-2"></div>
                         Installing...
                       </>
                     ) : (
@@ -242,8 +242,8 @@ export default function ToolPage() {
 
             <Card className="p-4 hover:bg-neutral-800 transition-colors cursor-pointer">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-500/20 rounded-lg">
-                  <Share2 className="h-5 w-5 text-purple-400" />
+                <div className="p-2 bg-[var(--hive-gold)]/20 rounded-lg">
+                  <Share2 className="h-5 w-5 text-[var(--hive-gold)]" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-[var(--hive-text-inverse)]">Share Tool</h3>

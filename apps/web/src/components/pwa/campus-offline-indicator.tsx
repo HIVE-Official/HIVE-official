@@ -50,29 +50,29 @@ export function CampusOfflineIndicator() {
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-40 bg-orange-500/10 border-b border-orange-500/20">
+    <div className="fixed top-0 left-0 right-0 z-40 bg-[var(--hive-gold)]/10 border-b border-[var(--hive-gold)]/20">
       <div className="container mx-auto px-4 py-2">
-        <Alert className="border-orange-500/20 bg-orange-500/5">
-          <WifiOff className="h-4 w-4 text-orange-500" />
+        <Alert className="border-[var(--hive-gold)]/20 bg-[var(--hive-gold)]/5">
+          <WifiOff className="h-4 w-4 text-[var(--hive-gold)]" />
           <AlertDescription className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-orange-700 dark:text-orange-300">
                 Campus Network Unavailable
               </span>
-              <span className="text-xs text-orange-600 dark:text-orange-400">
+              <span className="text-xs text-[var(--hive-gold-dark)] dark:text-[var(--hive-gold)]">
                 HIVE is running in offline mode
               </span>
             </div>
             
             <div className="flex items-center gap-2">
-              <div className="text-xs text-orange-600 dark:text-orange-400">
+              <div className="text-xs text-[var(--hive-gold-dark)] dark:text-[var(--hive-gold)]">
                 {retryCount > 0 && `Tried ${retryCount} time${retryCount > 1 ? 's' : ''}`}
               </div>
               <Button
                 onClick={handleRetry}
                 variant="ghost"
                 size="sm"
-                className="h-6 px-2 text-orange-700 dark:text-orange-300 hover:bg-orange-500/20"
+                className="h-6 px-2 text-orange-700 dark:text-orange-300 hover:bg-[var(--hive-gold)]/20"
               >
                 <RefreshCw className="w-3 h-3 mr-1" />
                 Retry

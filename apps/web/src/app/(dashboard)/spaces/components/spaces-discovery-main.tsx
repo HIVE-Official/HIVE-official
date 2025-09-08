@@ -69,7 +69,7 @@ const SPACE_CATEGORIES = [
     title: 'Greek Life',
     description: 'Fraternities, sororities, and Greek organizations',
     icon: Crown,
-    color: 'from-purple-500 to-violet-600',
+    color: 'from-[var(--hive-gold)] to-violet-600',
     examples: ['Alpha Phi Alpha', 'Delta Gamma', 'IFC Council', 'Panhellenic']
   },
   {
@@ -78,7 +78,7 @@ const SPACE_CATEGORIES = [
     title: 'Student Spaces',
     description: 'Student-created communities, clubs, and interest groups',
     icon: Users,
-    color: 'from-orange-500 to-red-600',
+    color: 'from-[var(--hive-gold)] to-red-600',
     examples: ['Study Groups', 'Gaming Club', 'Startup Squad', 'Photography Club']
   }
 ];
@@ -534,7 +534,7 @@ function SpaceCard({ space, onClick, onActivate, delay, viewMode }: SpaceCardPro
                 </Badge>
               )}
               {space.isLeader && (
-                <Badge variant="outline" className="border-yellow-500 text-yellow-600">
+                <Badge variant="outline" className="border-[var(--hive-gold)] text-yellow-600">
                   Leader
                 </Badge>
               )}

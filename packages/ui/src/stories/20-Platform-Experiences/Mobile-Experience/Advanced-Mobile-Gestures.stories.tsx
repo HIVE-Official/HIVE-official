@@ -429,7 +429,7 @@ const SwipeableCard = ({
               `}
               style={{ width: `${Math.abs(swipeOffset) / leftActions.length}px` }}
             >
-              <action.icon className="h-6 w-6 text-white" />
+              <action.icon className="h-6 w-6 text-[var(--hive-text-primary)]" />
             </div>
           ))}
         </div>
@@ -450,7 +450,7 @@ const SwipeableCard = ({
               `}
               style={{ width: `${Math.abs(swipeOffset) / rightActions.length}px` }}
             >
-              <action.icon className="h-6 w-6 text-white" />
+              <action.icon className="h-6 w-6 text-[var(--hive-text-primary)]" />
             </div>
           ))}
         </div>
@@ -541,10 +541,10 @@ const PullToRefresh = ({
           transform: `translateY(-${maxPullDistance - pullDistance}px)`
         }}
       >
-        <div className="flex flex-col items-center space-y-2 text-white">
+        <div className="flex flex-col items-center space-y-2 text-[var(--hive-text-primary)]">
           <div className={`transition-transform ${isPulling ? 'scale-110' : ''}`}>
             {refreshing ? (
-              <RefreshCw className="h-6 w-6 animate-spin text-yellow-500" />
+              <RefreshCw className="h-6 w-6 animate-spin text-[var(--hive-gold)]" />
             ) : canRefresh ? (
               <ChevronUp className="h-6 w-6 text-green-400" />
             ) : (
@@ -667,13 +667,13 @@ const CampusFeedMobile = () => {
       direction: 'left',
       icon: Bookmark,
       label: 'Bookmark',
-      color: 'bg-yellow-500',
+      color: 'bg-[var(--hive-gold)]',
       action: () => console.log('Bookmarked!')
     }
   ];
 
   return (
-    <div className="max-w-md mx-auto h-96 bg-black rounded-lg overflow-hidden">
+    <div className="max-w-md mx-auto h-96 bg-[var(--hive-black)] rounded-lg overflow-hidden">
       <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
         <div className="space-y-4 p-4">
           {posts.map(post => (
@@ -687,19 +687,19 @@ const CampusFeedMobile = () => {
                 <div className="flex items-start space-x-3 mb-3">
                   <Avatar className="w-10 h-10">
                     <AvatarImage src={post.user.avatar} />
-                    <AvatarFallback className="bg-gray-700 text-white text-sm">
+                    <AvatarFallback className="bg-gray-700 text-[var(--hive-text-primary)] text-sm">
                       {post.user.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-semibold text-white text-sm">{post.user.name}</span>
+                      <span className="font-semibold text-[var(--hive-text-primary)] text-sm">{post.user.name}</span>
                       <Badge variant="secondary" className="bg-blue-900 text-blue-300 text-xs">
                         {post.space}
                       </Badge>
                       <span className="text-gray-500 text-xs">{post.timestamp}</span>
                     </div>
-                    <p className="text-white text-sm leading-relaxed">{post.content}</p>
+                    <p className="text-[var(--hive-text-primary)] text-sm leading-relaxed">{post.content}</p>
                   </div>
                 </div>
                 
@@ -718,7 +718,7 @@ const CampusFeedMobile = () => {
                       <span>{post.shares}</span>
                     </button>
                   </div>
-                  <button className={`${post.bookmarked ? 'text-yellow-400' : 'text-gray-400'}`}>
+                  <button className={`${post.bookmarked ? 'text-[var(--hive-gold)]' : 'text-gray-400'}`}>
                     <Bookmark className={`h-4 w-4 ${post.bookmarked ? 'fill-current' : ''}`} />
                   </button>
                 </div>
@@ -782,7 +782,7 @@ const MobileNavigation = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-black rounded-lg overflow-hidden">
+    <div className="max-w-md mx-auto bg-[var(--hive-black)] rounded-lg overflow-hidden">
       {/* Content Area with Swipe Detection */}
       <div
         ref={navRef}
@@ -795,8 +795,8 @@ const MobileNavigation = () => {
           {tabs.map(tab => {
             const Icon = tab.icon;
             return tab.id === activeTab ? (
-              <div key={tab.id} className="text-white">
-                <Icon className="h-12 w-12 mx-auto mb-2 text-yellow-500" />
+              <div key={tab.id} className="text-[var(--hive-text-primary)]">
+                <Icon className="h-12 w-12 mx-auto mb-2 text-[var(--hive-gold)]" />
                 <h2 className="text-xl font-bold">{tab.label}</h2>
                 <p className="text-gray-400 text-sm">Swipe left/right to navigate</p>
               </div>
@@ -815,10 +815,10 @@ const MobileNavigation = () => {
 
         {/* Swipe Indicators */}
         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 opacity-20">
-          <ChevronLeft className="h-8 w-8 text-white" />
+          <ChevronLeft className="h-8 w-8 text-[var(--hive-text-primary)]" />
         </div>
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-20">
-          <ChevronRight className="h-8 w-8 text-white" />
+          <ChevronRight className="h-8 w-8 text-[var(--hive-text-primary)]" />
         </div>
       </div>
 
@@ -834,13 +834,13 @@ const MobileNavigation = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`
                   flex-1 flex flex-col items-center py-3 px-2 transition-all
-                  ${isActive ? 'text-yellow-500' : 'text-gray-400 hover:text-gray-300'}
+                  ${isActive ? 'text-[var(--hive-gold)]' : 'text-gray-400 hover:text-gray-300'}
                 `}
               >
                 <Icon className="h-6 w-6 mb-1" />
                 <span className="text-xs font-medium">{tab.label}</span>
                 {isActive && (
-                  <div className="w-8 h-0.5 bg-yellow-500 rounded-full mt-1" />
+                  <div className="w-8 h-0.5 bg-[var(--hive-gold)] rounded-full mt-1" />
                 )}
               </button>
             );
@@ -858,7 +858,7 @@ const GestureSettings = () => {
   return (
     <Card className="bg-gray-900 border-gray-800">
       <CardHeader>
-        <CardTitle className="text-white flex items-center">
+        <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
           <Settings className="mr-2 h-5 w-5" />
           Gesture Settings
         </CardTitle>
@@ -869,7 +869,7 @@ const GestureSettings = () => {
       <CardContent className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <label className="text-white font-medium">Haptic Feedback</label>
+            <label className="text-[var(--hive-text-primary)] font-medium">Haptic Feedback</label>
             <p className="text-sm text-gray-400">Vibration feedback for gestures</p>
           </div>
           <Switch
@@ -881,7 +881,7 @@ const GestureSettings = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-white font-medium">
+          <label className="text-[var(--hive-text-primary)] font-medium">
             Swipe Sensitivity: {gestures.settings.swipeSensitivity}x
           </label>
           <Slider
@@ -897,7 +897,7 @@ const GestureSettings = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-white font-medium">
+          <label className="text-[var(--hive-text-primary)] font-medium">
             Gesture Threshold: {gestures.settings.gestureThreshold}px
           </label>
           <Slider
@@ -914,7 +914,7 @@ const GestureSettings = () => {
 
         <div className="flex items-center justify-between">
           <div>
-            <label className="text-white font-medium">Long Press</label>
+            <label className="text-[var(--hive-text-primary)] font-medium">Long Press</label>
             <p className="text-sm text-gray-400">Enable long press gestures</p>
           </div>
           <Switch
@@ -926,7 +926,7 @@ const GestureSettings = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-white font-medium">
+          <label className="text-[var(--hive-text-primary)] font-medium">
             Long Press Duration: {gestures.settings.longPressDuration}ms
           </label>
           <Slider
@@ -951,12 +951,12 @@ const CampusQuickActions = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
   const gestures = useAdvancedGestures();
 
   const quickActions = [
-    { id: 'dining', label: 'Dining Hours', icon: Coffee, color: 'bg-orange-500' },
+    { id: 'dining', label: 'Dining Hours', icon: Coffee, color: 'bg-[var(--hive-gold)]' },
     { id: 'parking', label: 'Parking Status', icon: MapPin, color: 'bg-blue-500' },
     { id: 'library', label: 'Library Hours', icon: Book, color: 'bg-green-500' },
-    { id: 'bus', label: 'Shuttle Times', icon: Navigation, color: 'bg-purple-500' },
+    { id: 'bus', label: 'Shuttle Times', icon: Navigation, color: 'bg-[var(--hive-gold)]' },
     { id: 'wifi', label: 'WiFi Status', icon: Wifi, color: 'bg-cyan-500' },
-    { id: 'events', label: 'Today\'s Events', icon: Calendar, color: 'bg-yellow-500' },
+    { id: 'events', label: 'Today\'s Events', icon: Calendar, color: 'bg-[var(--hive-gold)]' },
     { id: 'weather', label: 'Buffalo Weather', icon: Globe, color: 'bg-indigo-500' },
     { id: 'emergency', label: 'Campus Safety', icon: Bell, color: 'bg-red-500' }
   ];
@@ -974,13 +974,13 @@ const CampusQuickActions = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-[var(--hive-black)] bg-opacity-50 flex items-center justify-center z-50">
       <div className="max-w-sm w-full mx-4 bg-gray-900 rounded-2xl p-6 border border-gray-800">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-white text-xl font-bold">Campus Quick Actions</h2>
+          <h2 className="text-[var(--hive-text-primary)] text-xl font-bold">Campus Quick Actions</h2>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-[var(--hive-text-primary)] transition-colors"
           >
             <X className="h-6 w-6" />
           </button>
@@ -1003,9 +1003,9 @@ const CampusQuickActions = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                   }
                 `}
               >
-                <Icon className={`h-6 w-6 ${isSelected ? 'text-white' : 'text-gray-300'}`} />
+                <Icon className={`h-6 w-6 ${isSelected ? 'text-[var(--hive-text-primary)]' : 'text-gray-300'}`} />
                 <span className={`text-sm font-medium text-center leading-tight ${
-                  isSelected ? 'text-white' : 'text-gray-300'
+                  isSelected ? 'text-[var(--hive-text-primary)]' : 'text-gray-300'
                 }`}>
                   {action.label}
                 </span>
@@ -1038,11 +1038,11 @@ const MobileGesturesSystem = () => {
   const DemoComponent = currentDemo?.component || CampusFeedMobile;
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[var(--hive-black)] text-[var(--hive-text-primary)]">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4 flex items-center">
+          <h1 className="text-4xl font-bold text-[var(--hive-text-primary)] mb-4 flex items-center">
             <Smartphone className="mr-4 h-10 w-10" />
             Advanced Mobile Gestures & Touch
           </h1>
@@ -1059,7 +1059,7 @@ const MobileGesturesSystem = () => {
 
             <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
                   <Fingerprint className="mr-2 h-5 w-5" />
                   Demo Selection
                 </CardTitle>
@@ -1073,8 +1073,8 @@ const MobileGesturesSystem = () => {
                       className={`
                         w-full p-3 text-left rounded-lg transition-colors
                         ${gestureDemo === option.id 
-                          ? 'bg-yellow-500 text-black font-medium' 
-                          : 'bg-gray-800 text-white hover:bg-gray-700'
+                          ? 'bg-[var(--hive-gold)] text-[var(--hive-black)] font-medium' 
+                          : 'bg-gray-800 text-[var(--hive-text-primary)] hover:bg-gray-700'
                         }
                       `}
                     >
@@ -1087,12 +1087,12 @@ const MobileGesturesSystem = () => {
 
             <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
-                <CardTitle className="text-white">Campus Actions</CardTitle>
+                <CardTitle className="text-[var(--hive-text-primary)]">Campus Actions</CardTitle>
               </CardHeader>
               <CardContent>
                 <Button
                   onClick={() => setShowQuickActions(true)}
-                  className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
+                  className="w-full bg-[var(--hive-gold)] hover:bg-yellow-600 text-[var(--hive-black)]"
                 >
                   <Zap className="mr-2 h-4 w-4" />
                   Open Quick Actions
@@ -1105,7 +1105,7 @@ const MobileGesturesSystem = () => {
           <div className="lg:col-span-2 space-y-6">
             <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
                   <Hand className="mr-2 h-5 w-5" />
                   {currentDemo?.label} Demo
                 </CardTitle>
@@ -1124,7 +1124,7 @@ const MobileGesturesSystem = () => {
             {/* Gesture Guide */}
             <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
                   <Move className="mr-2 h-5 w-5" />
                   Gesture Guide
                 </CardTitle>
@@ -1135,33 +1135,33 @@ const MobileGesturesSystem = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-4">
-                    <h4 className="text-white font-medium">Touch Gestures</h4>
+                    <h4 className="text-[var(--hive-text-primary)] font-medium">Touch Gestures</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center space-x-3">
                         <ArrowLeft className="h-4 w-4 text-red-400" />
-                        <span className="text-white">Swipe Left:</span>
+                        <span className="text-[var(--hive-text-primary)]">Swipe Left:</span>
                         <span className="text-gray-400">Bookmark post</span>
                       </div>
                       <div className="flex items-center space-x-3">
                         <ArrowRight className="h-4 w-4 text-green-400" />
-                        <span className="text-white">Swipe Right:</span>
+                        <span className="text-[var(--hive-text-primary)]">Swipe Right:</span>
                         <span className="text-gray-400">Like post</span>
                       </div>
                       <div className="flex items-center space-x-3">
                         <ArrowDown className="h-4 w-4 text-blue-400" />
-                        <span className="text-white">Pull Down:</span>
+                        <span className="text-[var(--hive-text-primary)]">Pull Down:</span>
                         <span className="text-gray-400">Refresh content</span>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <Fingerprint className="h-4 w-4 text-purple-400" />
-                        <span className="text-white">Long Press:</span>
+                        <Fingerprint className="h-4 w-4 text-[var(--hive-gold)]" />
+                        <span className="text-[var(--hive-text-primary)]">Long Press:</span>
                         <span className="text-gray-400">Quick actions</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="text-white font-medium">Campus Features</h4>
+                    <h4 className="text-[var(--hive-text-primary)] font-medium">Campus Features</h4>
                     <div className="space-y-2 text-sm text-gray-400">
                       <div>• Thumb-friendly navigation zones</div>
                       <div>• One-handed operation optimized</div>
@@ -1201,7 +1201,7 @@ export const MobileGesturesSystemDemo: Story = {
 
 export const SwipeableContent: Story = {
   render: () => (
-    <div className="max-w-md mx-auto p-6 bg-black">
+    <div className="max-w-md mx-auto p-6 bg-[var(--hive-black)]">
       <CampusFeedMobile />
     </div>
   ),
@@ -1216,7 +1216,7 @@ export const SwipeableContent: Story = {
 
 export const TouchNavigation: Story = {
   render: () => (
-    <div className="max-w-md mx-auto p-6 bg-black">
+    <div className="max-w-md mx-auto p-6 bg-[var(--hive-black)]">
       <MobileNavigation />
     </div>
   ),
@@ -1233,7 +1233,7 @@ export const CampusQuickActionsDemo: Story = {
   render: () => {
     const [isOpen, setIsOpen] = useState(true);
     return (
-      <div className="p-6 bg-black min-h-96">
+      <div className="p-6 bg-[var(--hive-black)] min-h-96">
         <Button onClick={() => setIsOpen(true)} className="mb-4">
           Open Quick Actions
         </Button>
@@ -1252,7 +1252,7 @@ export const CampusQuickActionsDemo: Story = {
 
 export const GestureConfiguration: Story = {
   render: () => (
-    <div className="max-w-md mx-auto p-6 bg-black">
+    <div className="max-w-md mx-auto p-6 bg-[var(--hive-black)]">
       <GestureSettings />
     </div>
   ),

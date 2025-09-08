@@ -58,14 +58,14 @@ const getRarityConfig = (rarity: string) => {
       glowColor: 'shadow-blue-400/20'
     },
     epic: {
-      color: 'text-purple-400',
-      bgColor: 'from-purple-400 to-purple-500',
-      borderColor: 'border-purple-400/30',
-      glowColor: 'shadow-purple-400/20'
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'from-[var(--hive-gold)] to-[var(--hive-gold)]',
+      borderColor: 'border-[var(--hive-gold)]/30',
+      glowColor: 'shadow-[var(--hive-gold)]/20'
     },
     legendary: {
       color: 'text-hive-gold',
-      bgColor: 'from-hive-gold to-yellow-500',
+      bgColor: 'from-hive-gold to-[var(--hive-gold)]',
       borderColor: 'border-hive-gold/30',
       glowColor: 'shadow-hive-gold/20'
     }
@@ -130,6 +130,8 @@ export function MilestoneCelebration({
         clearTimeout(settleTimer);
       };
     }
+    
+    return () => {}; // No cleanup needed when not visible
   }, [isVisible]);
 
   if (!isVisible) return null;
@@ -138,7 +140,7 @@ export function MilestoneCelebration({
     <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${className}`}>
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-500"
+        className="absolute inset-0 bg-[var(--hive-black)]/70 backdrop-blur-sm transition-opacity duration-500"
         onClick={onClose}
       />
       
@@ -275,7 +277,7 @@ export function MilestoneCelebration({
         {animationPhase === 'celebrate' && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
             <div className="absolute top-0 left-1/4 w-2 h-2 bg-hive-gold transform rotate-45 animate-bounce" style={{ animationDelay: '0.1s' }} />
-            <div className="absolute top-0 right-1/4 w-2 h-2 bg-purple-400 transform rotate-45 animate-bounce" style={{ animationDelay: '0.3s' }} />
+            <div className="absolute top-0 right-1/4 w-2 h-2 bg-[var(--hive-gold)] transform rotate-45 animate-bounce" style={{ animationDelay: '0.3s' }} />
             <div className="absolute bottom-0 left-1/3 w-2 h-2 bg-green-400 transform rotate-45 animate-bounce" style={{ animationDelay: '0.5s' }} />
             <div className="absolute bottom-0 right-1/3 w-2 h-2 bg-blue-400 transform rotate-45 animate-bounce" style={{ animationDelay: '0.7s' }} />
           </div>

@@ -99,9 +99,9 @@ const getToolCategoryConfig = (category: string) => {
       label: 'Productivity'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Users,
       label: 'Social'
     },
@@ -133,8 +133,8 @@ const getBuildStatusConfig = (status: string) => {
       progress: 10
     },
     prototype: {
-      color: 'text-yellow-500',
-      bgColor: 'bg-yellow-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       label: 'Prototype',
       progress: 35
     },
@@ -176,8 +176,8 @@ const getBuilderLevelConfig = (level: string) => {
       label: 'Apprentice Builder'
     },
     expert: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       icon: Rocket,
       label: 'Expert Builder'
     },
@@ -307,7 +307,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
 
           <div className="text-center">
             <div className="flex items-center justify-center gap-1">
-              <Users className="h-3 w-3 text-purple-500" />
+              <Users className="h-3 w-3 text-[var(--hive-gold)]" />
               <Text variant="body-sm" weight="medium" color="primary">
                 {totalCollaborations}
               </Text>
@@ -329,7 +329,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
             </div>
             <div className="w-full bg-[var(--hive-background-secondary)] rounded-full h-2">
               <div 
-                className="bg-gradient-to-r from-purple-500 to-[var(--hive-gold)] rounded-full h-2 transition-all duration-500"
+                className="bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] rounded-full h-2 transition-all duration-500"
                 style={{ width: `${builderScore}%` }}
               />
             </div>
@@ -389,7 +389,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                       </div>
                       {featuredBuild.collaborators > 1 && (
                         <div className="flex items-center gap-1">
-                          <Users className="h-3 w-3 text-purple-500" />
+                          <Users className="h-3 w-3 text-[var(--hive-gold)]" />
                           <Text variant="body-xs" color="secondary">
                             {featuredBuild.collaborators} collaborators
                           </Text>
@@ -526,7 +526,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
               <div className="flex items-center gap-2">
                 <div className="w-16 h-2 bg-[var(--hive-background-secondary)] rounded-full">
                   <div 
-                    className="h-2 bg-gradient-to-r from-purple-500 to-[var(--hive-gold)] rounded-full transition-all duration-500"
+                    className="h-2 bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] rounded-full transition-all duration-500"
                     style={{ width: `${Math.min((weeklyBuildTime / 20) * 100, 100)}%` }}
                   />
                 </div>
@@ -603,7 +603,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
 
       {/* Hover Glow Effect */}
       {isHovered && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-500/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
   );

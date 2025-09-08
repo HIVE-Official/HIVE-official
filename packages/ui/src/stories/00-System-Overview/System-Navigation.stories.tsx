@@ -293,8 +293,8 @@ const SystemNavigation = () => {
   const getColorClasses = (color: string) => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20',
-      yellow: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/20',
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20',
+      yellow: 'from-[var(--hive-gold)]/20 to-yellow-600/10 border-[var(--hive-gold)]/20',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20',
       red: 'from-red-500/20 to-red-600/10 border-red-500/20',
       gray: 'from-gray-500/20 to-gray-600/10 border-gray-500/20',
@@ -306,8 +306,8 @@ const SystemNavigation = () => {
   const getIconColor = (color: string) => {
     const colors = {
       blue: 'text-blue-400',
-      purple: 'text-purple-400',
-      yellow: 'text-yellow-400',
+      purple: 'text-[var(--hive-gold)]',
+      yellow: 'text-[var(--hive-gold)]',
       green: 'text-green-400',
       red: 'text-red-400',
       gray: 'text-gray-400',
@@ -351,7 +351,7 @@ const SystemNavigation = () => {
             </Card>
             <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-400">100%</div>
+                <div className="text-2xl font-bold text-[var(--hive-gold)]">100%</div>
                 <div className="text-sm text-[var(--hive-text-secondary)]">Mobile Optimized</div>
               </CardContent>
             </Card>

@@ -11,10 +11,25 @@
       "import": "./dist/ui/index.js",
       "require": "./dist/ui/index.js"
     },
+    "./production": {
+      "types": "./dist/ui/src/index-production.d.ts",
+      "import": "./dist/ui/src/index-production.js",
+      "require": "./dist/ui/src/index-production.js"
+    },
     "./lib/utils": {
-      "types": "./dist/ui/src/index.d.ts",
-      "import": "./dist/ui/index.js",
-      "require": "./dist/ui/index.js"
+      "types": "./dist/ui/src/lib/utils.d.ts",
+      "import": "./dist/ui/src/lib/utils.js",
+      "require": "./dist/ui/src/lib/utils.js"
+    },
+    "./lib/accessibility": {
+      "types": "./dist/ui/src/lib/accessibility-foundation.d.ts",
+      "import": "./dist/ui/src/lib/accessibility-foundation.js",
+      "require": "./dist/ui/src/lib/accessibility-foundation.js"
+    },
+    "./hooks/mobile": {
+      "types": "./dist/ui/src/hooks/use-mobile-interactions.d.ts",
+      "import": "./dist/ui/src/hooks/use-mobile-interactions.js",
+      "require": "./dist/ui/src/hooks/use-mobile-interactions.js"
     },
     "./src/components/framer-motion-proxy": {
       "types": "./dist/ui/src/components/framer-motion-proxy.d.ts",

@@ -328,8 +328,8 @@ export function SpaceEventCalendar({
       case 'academic': return 'bg-blue-500';
       case 'social': return 'bg-pink-500';
       case 'professional': return 'bg-green-500';
-      case 'recreational': return 'bg-orange-500';
-      case 'official': return 'bg-purple-500';
+      case 'recreational': return 'bg-[var(--hive-gold)]';
+      case 'official': return 'bg-[var(--hive-gold)]';
       default: return 'bg-gray-500';
     }
   };

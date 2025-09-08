@@ -77,7 +77,7 @@ export default function SignInPage() {
 
   if (isSent) {
     return (
-      <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           {/* HIVE Logo */}
           <div className="flex justify-center mb-8">
@@ -95,20 +95,20 @@ export default function SignInPage() {
           </div>
 
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-white mb-3">
+            <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-3">
               Check Your Inbox
             </h1>
             
             <p className="text-[#C1C1C4] mb-8">
               We sent a magic link to<br />
-              <span className="font-medium text-white">{email}</span>
+              <span className="font-medium text-[var(--hive-text-primary)]">{email}</span>
             </p>
 
-            <div className="bg-[#1A1A1B] rounded-2xl p-6 mb-6 border border-[#2A2A2B]">
+            <div className="bg-[var(--hive-background-tertiary)] rounded-2xl p-6 mb-6 border border-[var(--hive-gray-700)]">
               <div className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-[#FFD700] mt-0.5 flex-shrink-0" />
+                <Mail className="w-5 h-5 text-[var(--hive-gold)] mt-0.5 flex-shrink-0" />
                 <div className="text-left">
-                  <p className="text-sm text-white font-medium mb-1">
+                  <p className="text-sm text-[var(--hive-text-primary)] font-medium mb-1">
                     Click the link in your email
                   </p>
                   <p className="text-xs text-[#8B8B8F]">
@@ -123,7 +123,7 @@ export default function SignInPage() {
                 setIsSent(false);
                 setError('');
               }}
-              className="text-sm text-[#8B8B8F] hover:text-white transition-colors"
+              className="text-sm text-[#8B8B8F] hover:text-[var(--hive-text-primary)] transition-colors"
             >
               Didn't receive it? Try again
             </button>
@@ -135,7 +135,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         {/* HIVE Logo */}
         <div className="flex justify-center mb-8">
@@ -155,9 +155,9 @@ export default function SignInPage() {
         </div>
 
         {/* Sign In Form */}
-        <div className="bg-[#0F0F10] rounded-3xl p-8 border border-[#1A1A1B] shadow-2xl">
+        <div className="bg-[#0F0F10] rounded-3xl p-8 border border-[var(--hive-background-tertiary)] shadow-2xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-2">
               Welcome Back
             </h1>
             <p className="text-[#8B8B8F] text-sm">
@@ -179,7 +179,7 @@ export default function SignInPage() {
                   placeholder="you@university.edu"
                   required
                   disabled={isLoading}
-                  className="w-full px-4 py-3.5 bg-[#1A1A1B] border border-[#2A2A2B] rounded-xl text-white placeholder-[#6B6B6F] focus:outline-none focus:border-[#FFD700] focus:bg-[#1F1F20] transition-all disabled:opacity-50 group-hover:border-[#3A3A3B]"
+                  className="w-full px-4 py-3.5 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] focus:bg-[#1F1F20] transition-all disabled:opacity-50 group-hover:border-[#3A3A3B]"
                 />
               </div>
             </div>
@@ -207,10 +207,10 @@ export default function SignInPage() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-[#1A1A1B]">
+          <div className="mt-6 pt-6 border-t border-[var(--hive-background-tertiary)]">
             <p className="text-center text-sm text-[#6B6B6F]">
               New to HIVE?{' '}
-              <Link href="/schools" className="text-[#FFD700] hover:text-[#E5C048] transition-colors font-medium">
+              <Link href="/schools" className="text-[var(--hive-gold)] hover:text-[#E5C048] transition-colors font-medium">
                 Join Your Campus
               </Link>
             </p>

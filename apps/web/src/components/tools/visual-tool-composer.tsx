@@ -239,8 +239,8 @@ export function VisualToolComposer({
   const elementCategories = [
     { id: 'input', name: 'Input', icon: 'Type', color: 'text-blue-400' },
     { id: 'display', name: 'Display', icon: 'Eye', color: 'text-green-400' },
-    { id: 'filter', name: 'Filter', icon: 'Filter', color: 'text-purple-400' },
-    { id: 'action', name: 'Action', icon: 'Zap', color: 'text-orange-400' },
+    { id: 'filter', name: 'Filter', icon: 'Filter', color: 'text-[var(--hive-gold)]' },
+    { id: 'action', name: 'Action', icon: 'Zap', color: 'text-[var(--hive-gold)]' },
     { id: 'layout', name: 'Layout', icon: 'Grid', color: 'text-pink-400' }
   ];
 
@@ -574,7 +574,7 @@ export function VisualToolComposer({
                   y1={connection.from.y}
                   x2={connection.to.x}
                   y2={connection.to.y}
-                  stroke="#FFD700"
+                  stroke="var(--hive-gold)"
                   strokeWidth="2"
                   markerEnd="url(#arrowhead)"
                 />
@@ -590,7 +590,7 @@ export function VisualToolComposer({
                 >
                   <polygon
                     points="0 0, 10 3.5, 0 7"
-                    fill="#FFD700"
+                    fill="var(--hive-gold)"
                   />
                 </marker>
               </defs>

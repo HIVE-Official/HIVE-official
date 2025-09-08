@@ -8,11 +8,11 @@ import { HIVE_MOTION_CURVE_CSS, HIVE_DURATIONS } from './hive-motion';
 // HIVE Brand Colors
 export const HIVE_COLORS = {
   // Core palette
-  primaryBlack: '#0A0A0A',
-  surface: '#111111',
-  border: '#2A2A2A',
+  primaryBlack: 'var(--hive-background-primary)',
+  surface: 'var(--hive-background-secondary)',
+  border: 'var(--hive-gray-700)',
   mutedText: '#6B7280',
-  goldAccent: '#FFD700',
+  goldAccent: 'var(--hive-gold)',
   white: '#FFFFFF',
   
   // Semantic colors
@@ -73,7 +73,7 @@ export const hiveDesignRules: DesignValidationRule[] = [
         computedStyle.backgroundColor,
         computedStyle.borderColor,
         computedStyle.color,
-      ].some(color => color.toLowerCase().includes('#ffd700') || color.toLowerCase().includes('gold'));
+      ].some(color => color.toLowerCase().includes('var(--hive-gold)') || color.toLowerCase().includes('gold'));
       
       if (!hasGold) return true;
       
@@ -129,7 +129,7 @@ export const hiveDesignRules: DesignValidationRule[] = [
              element.classList.contains('focus-visible');
     },
     severity: 'error',
-    fix: 'Add focus:ring-2 focus:ring-[#FFD700] focus:ring-offset-2 classes',
+    fix: 'Add focus:ring-2 focus:ring-[var(--hive-gold)] focus:ring-offset-2 classes',
   },
 ];
 

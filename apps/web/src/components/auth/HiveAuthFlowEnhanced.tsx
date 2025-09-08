@@ -137,7 +137,7 @@ export function HiveAuthFlowEnhanced({
         <Card variant="elevated" className="p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-2">
               Welcome to HIVE
             </h1>
             <p className="text-muted">
@@ -149,7 +149,7 @@ export function HiveAuthFlowEnhanced({
           {state.step === 'email' && (
             <form onSubmit={handleEmailSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium text-white">
+                <label htmlFor="email" className="block text-sm font-medium text-[var(--hive-text-primary)]">
                   Email Address
                 </label>
                 <Input
@@ -167,9 +167,9 @@ export function HiveAuthFlowEnhanced({
               </div>
 
               {state.error && (
-                <div className="flex items-center gap-2 p-3 bg-[#FFD700]/10 border border-[#FFD700]/20 rounded-md">
-                  <AlertCircle className="h-4 w-4 text-[#FFD700]" />
-                  <p className="text-sm text-[#FFD700]">
+                <div className="flex items-center gap-2 p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-md">
+                  <AlertCircle className="h-4 w-4 text-[var(--hive-gold)]" />
+                  <p className="text-sm text-[var(--hive-gold)]">
                     {state.error}
                   </p>
                 </div>
@@ -199,19 +199,19 @@ export function HiveAuthFlowEnhanced({
           {state.step === 'sent' && (
             <div className="text-center space-y-6">
               <div className="flex justify-center">
-                <div className="rounded-full bg-[#FFD700]/20 p-3">
-                  <CheckCircle className="h-8 w-8 text-[#FFD700]" />
+                <div className="rounded-full bg-[var(--hive-gold)]/20 p-3">
+                  <CheckCircle className="h-8 w-8 text-[var(--hive-gold)]" />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <h3 className="text-xl text-white font-semibold">
+                <h3 className="text-xl text-[var(--hive-text-primary)] font-semibold">
                   Check Your Email
                 </h3>
                 <p className="text-muted">
                   We sent a magic link to
                 </p>
-                <p className="text-white font-medium">
+                <p className="text-[var(--hive-text-primary)] font-medium">
                   {state.email}
                 </p>
               </div>
@@ -236,13 +236,13 @@ export function HiveAuthFlowEnhanced({
           {state.step === 'error' && (
             <div className="text-center space-y-6">
               <div className="flex justify-center">
-                <div className="rounded-full bg-[#FFD700]/20 p-3">
-                  <AlertCircle className="h-8 w-8 text-[#FFD700]" />
+                <div className="rounded-full bg-[var(--hive-gold)]/20 p-3">
+                  <AlertCircle className="h-8 w-8 text-[var(--hive-gold)]" />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <h3 className="text-xl text-white font-semibold">
+                <h3 className="text-xl text-[var(--hive-text-primary)] font-semibold">
                   Something went wrong
                 </h3>
                 <p className="text-muted">

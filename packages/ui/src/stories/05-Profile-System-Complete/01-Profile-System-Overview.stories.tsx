@@ -487,7 +487,7 @@ function FlowNavigation({
                 <div className="flex items-start gap-4">
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
                     isActive 
-                      ? 'bg-[var(--hive-brand-primary)] text-white' 
+                      ? 'bg-[var(--hive-brand-primary)] text-[var(--hive-text-primary)]' 
                       : 'bg-[var(--hive-background-secondary)] text-[var(--hive-text-muted)]'
                   }`}>
                     <Icon className="w-6 h-6" />
@@ -540,14 +540,14 @@ function FlowStats({ profile }: { profile: any }) {
       value: profile.tools?.length || 0,
       max: 5,
       suffix: '',
-      color: 'bg-purple-500'
+      color: 'bg-[var(--hive-gold)]'
     },
     {
       label: 'Campus Integration',
       value: profile.user.isVerified ? 100 : 75,
       max: 100,
       suffix: '%',
-      color: 'bg-orange-500'
+      color: 'bg-[var(--hive-gold)]'
     }
   ];
 
@@ -613,12 +613,12 @@ export const CompleteUserFlows: StoryObj = {
       <div>
         <div className="min-h-screen bg-[var(--hive-background-primary)]">
           {/* Header */}
-          <div className="bg-gradient-to-br from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] text-white p-8">
+          <div className="bg-gradient-to-br from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] text-[var(--hive-text-primary)] p-8">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h1 className="text-4xl font-bold mb-2">HIVE Profile System</h1>
-                  <p className="text-xl text-white text-opacity-90">
+                  <p className="text-xl text-[var(--hive-text-primary)] text-opacity-90">
                     Complete User Flow Demonstrations for University at Buffalo
                   </p>
                 </div>
@@ -628,7 +628,7 @@ export const CompleteUserFlows: StoryObj = {
                     variant="secondary"
                     size="sm"
                     onClick={() => setShowMobileView(!showMobileView)}
-                    className="bg-white/20 border-white/20"
+                    className="bg-[var(--hive-white)]/20 border-[var(--hive-white)]/20"
                   >
                     {showMobileView ? <Monitor className="w-4 h-4 mr-2" /> : <Smartphone className="w-4 h-4 mr-2" />}
                     {showMobileView ? 'Desktop' : 'Mobile'} View
@@ -672,7 +672,7 @@ export const CompleteUserFlows: StoryObj = {
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-[var(--hive-brand-primary)] rounded-lg flex items-center justify-center">
-                    <PlayCircle className="w-6 h-6 text-white" />
+                    <PlayCircle className="w-6 h-6 text-[var(--hive-text-primary)]" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-[var(--hive-text-primary)] mb-2">
@@ -705,7 +705,7 @@ export const CompleteUserFlows: StoryObj = {
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-[var(--hive-brand-primary)] rounded-full flex items-center justify-center">
-                    <Rocket className="w-6 h-6 text-white" />
+                    <Rocket className="w-6 h-6 text-[var(--hive-text-primary)]" />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-[var(--hive-text-primary)] mb-1">

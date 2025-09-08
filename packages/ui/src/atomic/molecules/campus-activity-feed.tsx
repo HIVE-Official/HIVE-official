@@ -52,8 +52,8 @@ const activityTypeConfig = {
   },
   event: {
     icon: '📅',
-    color: 'from-purple-500/20 to-purple-600/10',
-    border: 'border-purple-500/30',
+    color: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10',
+    border: 'border-[var(--hive-gold)]/30',
     label: 'Event'
   },
   announcement: {

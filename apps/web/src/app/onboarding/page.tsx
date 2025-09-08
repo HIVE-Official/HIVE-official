@@ -578,10 +578,10 @@ export default function OnboardingPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Loader2 className="h-8 w-8 animate-spin text-[#FFD700] mx-auto" />
-          <p className="text-white/60">Loading your profile...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--hive-gold)] mx-auto" />
+          <p className="text-[var(--hive-text-primary)]/60">Loading your profile...</p>
         </div>
       </div>
     );
@@ -589,15 +589,15 @@ export default function OnboardingPage() {
 
   if (!firebaseUser) {
     return (
-      <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center">
-        <Card className="bg-[#1A1A1B] border-[#2A2A2B] max-w-md">
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
+        <Card className="bg-[var(--hive-background-tertiary)] border-[var(--hive-gray-700)] max-w-md">
           <CardContent className="p-8 text-center">
-            <AlertCircle className="h-12 w-12 text-[#FFD700] mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">Authentication Required</h2>
-            <p className="text-white/60 mb-6">Please sign in to continue with onboarding</p>
+            <AlertCircle className="h-12 w-12 text-[var(--hive-gold)] mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-[var(--hive-text-primary)] mb-2">Authentication Required</h2>
+            <p className="text-[var(--hive-text-primary)]/60 mb-6">Please sign in to continue with onboarding</p>
             <Button 
               onClick={() => router.push('/auth/login?redirect=/onboarding')}
-              className="bg-[#FFD700] text-black hover:opacity-90"
+              className="bg-[var(--hive-gold)] text-[var(--hive-black)] hover:opacity-90"
             >
               Sign In
             </Button>
@@ -610,9 +610,9 @@ export default function OnboardingPage() {
   const currentStepData = ONBOARDING_STEPS[currentStep];
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] flex flex-col">
+    <div className="min-h-screen bg-[var(--hive-background-primary)] flex flex-col">
       {/* Header with progress */}
-      <div className="border-b border-[#1A1A1B]">
+      <div className="border-b border-[var(--hive-background-tertiary)]">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -628,8 +628,8 @@ export default function OnboardingPage() {
                 }}
               />
               <div>
-                <h1 className="text-sm font-medium text-white">Building Your Profile</h1>
-                <p className="text-xs text-white/60">{getProfileCompletion()}% Complete</p>
+                <h1 className="text-sm font-medium text-[var(--hive-text-primary)]">Building Your Profile</h1>
+                <p className="text-xs text-[var(--hive-text-primary)]/60">{getProfileCompletion()}% Complete</p>
               </div>
             </div>
             
@@ -640,7 +640,7 @@ export default function OnboardingPage() {
                   Draft saved
                 </span>
               )}
-              <div className="text-sm text-white/60">
+              <div className="text-sm text-[var(--hive-text-primary)]/60">
                 Step {currentStep + 1} of {ONBOARDING_STEPS.length}
               </div>
             </div>
@@ -648,9 +648,9 @@ export default function OnboardingPage() {
         </div>
         
         {/* Progress bar */}
-        <div className="relative h-1 bg-[#1A1A1B] overflow-hidden">
+        <div className="relative h-1 bg-[var(--hive-background-tertiary)] overflow-hidden">
           <motion.div 
-            className="h-full bg-gradient-to-r from-[#FFD700] to-[#FFD700]/80"
+            className="h-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)]/80"
             initial={{ width: "0%" }}
             animate={{ width: `${currentStepData.progress}%` }}
             transition={{ 
@@ -660,7 +660,7 @@ export default function OnboardingPage() {
             }}
           />
           <motion.div
-            className="absolute top-0 right-0 h-full w-8 bg-gradient-to-r from-transparent to-[#FFD700]/50"
+            className="absolute top-0 right-0 h-full w-8 bg-gradient-to-r from-transparent to-[var(--hive-gold)]/50"
             initial={{ x: "-100%" }}
             animate={{ x: "0%" }}
             transition={{ 
@@ -677,7 +677,7 @@ export default function OnboardingPage() {
 
       {/* Error message */}
       {error && (
-        <div className="bg-[#FFD700]/10 border border-[#FFD700]/20 text-[#FFD700] px-4 py-3 mx-auto max-w-4xl mt-4 rounded-lg flex items-center gap-2">
+        <div className="bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 text-[var(--hive-gold)] px-4 py-3 mx-auto max-w-4xl mt-4 rounded-lg flex items-center gap-2">
           <AlertCircle className="h-4 w-4" />
           <span className="text-sm">{error}</span>
         </div>
@@ -686,63 +686,63 @@ export default function OnboardingPage() {
       {/* Main content area */}
       <div className="flex-1 flex">
         {/* Left side - Profile Preview */}
-        <div className="hidden lg:block w-1/3 border-r border-[#1A1A1B] bg-[#0F0F10]">
+        <div className="hidden lg:block w-1/3 border-r border-[var(--hive-background-tertiary)] bg-[#0F0F10]">
           <div className="p-8">
-            <h2 className="text-sm font-medium text-white/60 mb-6">PROFILE PREVIEW</h2>
+            <h2 className="text-sm font-medium text-[var(--hive-text-primary)]/60 mb-6">PROFILE PREVIEW</h2>
             
             {/* Profile Card Preview */}
-            <Card className="bg-[#1A1A1B] border-[#2A2A2B]">
+            <Card className="bg-[var(--hive-background-tertiary)] border-[var(--hive-gray-700)]">
               <CardContent className="p-6 space-y-4">
                 {/* Profile Photo */}
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFD700] flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
                     {profilePhoto ? (
                       <img src={profilePhoto} alt="" className="w-full h-full rounded-full object-cover" />
                     ) : (
-                      <UserIcon className="w-8 h-8 text-black" />
+                      <UserIcon className="w-8 h-8 text-[var(--hive-black)]" />
                     )}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white">
+                    <h3 className="font-semibold text-[var(--hive-text-primary)]">
                       {profile.firstName && profile.lastName ? `${profile.firstName} ${profile.lastName}` : 'Your Name'}
                     </h3>
                     {profile.handle && (
-                      <p className="text-sm text-white/60">@{profile.handle}</p>
+                      <p className="text-sm text-[var(--hive-text-primary)]/60">@{profile.handle}</p>
                     )}
                   </div>
                 </div>
 
                 {/* Academic Info */}
                 {(profile.major || profile.graduationYear) && (
-                  <div className="pt-4 border-t border-[#2A2A2B]">
-                    <p className="text-xs text-white/40 mb-2">ACADEMIC</p>
+                  <div className="pt-4 border-t border-[var(--hive-gray-700)]">
+                    <p className="text-xs text-[var(--hive-text-primary)]/40 mb-2">ACADEMIC</p>
                     {profile.major && (
-                      <p className="text-sm text-white">
+                      <p className="text-sm text-[var(--hive-text-primary)]">
                         {UB_MAJORS.find(m => m.value === profile.major)?.label}
                       </p>
                     )}
                     {profile.graduationYear && (
-                      <p className="text-sm text-white/60">Class of {profile.graduationYear}</p>
+                      <p className="text-sm text-[var(--hive-text-primary)]/60">Class of {profile.graduationYear}</p>
                     )}
                   </div>
                 )}
 
                 {/* Interests */}
                 {profile.interests.length > 0 && (
-                  <div className="pt-4 border-t border-[#2A2A2B]">
-                    <p className="text-xs text-white/40 mb-2">INTERESTS</p>
+                  <div className="pt-4 border-t border-[var(--hive-gray-700)]">
+                    <p className="text-xs text-[var(--hive-text-primary)]/40 mb-2">INTERESTS</p>
                     <div className="flex flex-wrap gap-2">
                       {profile.interests.slice(0, 5).map(interest => (
                         <Badge 
                           key={interest}
                           variant="secondary"
-                          className="bg-[#2A2A2B] text-[#FFD700] border-0"
+                          className="bg-[var(--hive-gray-700)] text-[var(--hive-gold)] border-0"
                         >
                           {interest}
                         </Badge>
                       ))}
                       {profile.interests.length > 5 && (
-                        <span className="px-2 py-1 text-xs text-white/40">
+                        <span className="px-2 py-1 text-xs text-[var(--hive-text-primary)]/40">
                           +{profile.interests.length - 5} more
                         </span>
                       )}
@@ -752,12 +752,12 @@ export default function OnboardingPage() {
 
                 {/* Goals */}
                 {profile.goals.length > 0 && (
-                  <div className="pt-4 border-t border-[#2A2A2B]">
-                    <p className="text-xs text-white/40 mb-2">GOALS</p>
+                  <div className="pt-4 border-t border-[var(--hive-gray-700)]">
+                    <p className="text-xs text-[var(--hive-text-primary)]/40 mb-2">GOALS</p>
                     <ul className="space-y-1">
                       {profile.goals.slice(0, 3).map(goal => (
-                        <li key={goal} className="text-sm text-white flex items-center gap-2">
-                          <Target className="w-3 h-3 text-[#FFD700]" />
+                        <li key={goal} className="text-sm text-[var(--hive-text-primary)] flex items-center gap-2">
+                          <Target className="w-3 h-3 text-[var(--hive-gold)]" />
                           {goal}
                         </li>
                       ))}
@@ -768,9 +768,9 @@ export default function OnboardingPage() {
             </Card>
             
             {/* User email display */}
-            <div className="mt-4 p-3 bg-[#1A1A1B] rounded-lg">
-              <p className="text-xs text-white/40 mb-1">Signed in as</p>
-              <p className="text-sm text-white truncate">{firebaseUser.email}</p>
+            <div className="mt-4 p-3 bg-[var(--hive-background-tertiary)] rounded-lg">
+              <p className="text-xs text-[var(--hive-text-primary)]/40 mb-1">Signed in as</p>
+              <p className="text-sm text-[var(--hive-text-primary)] truncate">{firebaseUser.email}</p>
             </div>
           </div>
         </div>
@@ -782,15 +782,15 @@ export default function OnboardingPage() {
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-4">
                 {currentStep !== 0 && (
-                  <div className="p-3 rounded-xl bg-[#FFD700]/10 text-[#FFD700]">
+                  <div className="p-3 rounded-xl bg-[var(--hive-gold)]/10 text-[var(--hive-gold)]">
                     {currentStepData.icon}
                   </div>
                 )}
                 <div>
-                  <h2 className="text-2xl font-bold text-white">
+                  <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
                     {currentStepData.title}
                   </h2>
-                  <p className="text-white/60">
+                  <p className="text-[var(--hive-text-primary)]/60">
                     {currentStepData.subtitle}
                   </p>
                 </div>
@@ -810,7 +810,7 @@ export default function OnboardingPage() {
                     exit="exit"
                     transition={stepContentTransition}
                   >
-                  <Card className="bg-[#1A1A1B] border-[#2A2A2B]">
+                  <Card className="bg-[var(--hive-background-tertiary)] border-[var(--hive-gray-700)]">
                     <CardContent className="p-8 text-center">
                       <div className="mb-6">
                         <Image
@@ -824,30 +824,30 @@ export default function OnboardingPage() {
                             target.src = "/assets/whitelogo.svg";
                           }}
                         />
-                        <h3 className="text-xl font-bold text-white mb-2">
+                        <h3 className="text-xl font-bold text-[var(--hive-text-primary)] mb-2">
                           Welcome to HIVE at UB
                         </h3>
-                        <p className="text-white/60">
+                        <p className="text-[var(--hive-text-primary)]/60">
                           Your campus, connected. Let's build your profile and find your community.
                         </p>
                       </div>
                       
                       <div className="space-y-3 text-left">
                         <div className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-[#FFD700] mt-0.5 flex-shrink-0" />
-                          <p className="text-sm text-white/60">
+                          <Check className="w-5 h-5 text-[var(--hive-gold)] mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-[var(--hive-text-primary)]/60">
                             Connect with 30,000+ UB students
                           </p>
                         </div>
                         <div className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-[#FFD700] mt-0.5 flex-shrink-0" />
-                          <p className="text-sm text-white/60">
+                          <Check className="w-5 h-5 text-[var(--hive-gold)] mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-[var(--hive-text-primary)]/60">
                             Join communities that match your interests
                           </p>
                         </div>
                         <div className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-[#FFD700] mt-0.5 flex-shrink-0" />
-                          <p className="text-sm text-white/60">
+                          <Check className="w-5 h-5 text-[var(--hive-gold)] mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-[var(--hive-text-primary)]/60">
                             Build tools and solutions with your peers
                           </p>
                         </div>
@@ -872,7 +872,7 @@ export default function OnboardingPage() {
                                 e.stopPropagation();
                                 setShowTermsModal(true);
                               }}
-                              className="text-[#FFD700] underline hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer"
+                              className="text-[var(--hive-gold)] underline hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer"
                             >
                               Terms of Service
                             </button>
@@ -883,7 +883,7 @@ export default function OnboardingPage() {
                                 e.stopPropagation();
                                 setShowPrivacyModal(true);
                               }}
-                              className="text-[#FFD700] underline hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer"
+                              className="text-[var(--hive-gold)] underline hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer"
                             >
                               Privacy Policy
                             </button>, 
@@ -907,14 +907,14 @@ export default function OnboardingPage() {
                     transition={stepContentTransition}
                   >
                   <div className="text-center space-y-4 mb-8">
-                    <div className="w-16 h-16 rounded-full bg-[#FFD700]/20 flex items-center justify-center mx-auto">
-                      <GraduationCap className="w-8 h-8 text-[#FFD700]" />
+                    <div className="w-16 h-16 rounded-full bg-[var(--hive-gold)]/20 flex items-center justify-center mx-auto">
+                      <GraduationCap className="w-8 h-8 text-[var(--hive-gold)]" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-white mb-2">
+                      <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">
                         HIVE is built for students
                       </h3>
-                      <p className="text-white/60 text-sm">
+                      <p className="text-[var(--hive-text-primary)]/60 text-sm">
                         We know .edu emails include alumni and faculty. Help us understand your connection to campus.
                       </p>
                     </div>
@@ -955,29 +955,29 @@ export default function OnboardingPage() {
                         <Card 
                           className={`cursor-pointer transition-all p-4 ${
                             profile.userType === option.value
-                              ? 'bg-[#FFD700]/10 border-[#FFD700] ring-2 ring-[#FFD700]/20'
-                              : 'bg-[#1A1A1B] border-[#2A2A2B] hover:border-[#3A3A3B]'
+                              ? 'bg-[var(--hive-gold)]/10 border-[var(--hive-gold)] ring-2 ring-[var(--hive-gold)]/20'
+                              : 'bg-[var(--hive-background-tertiary)] border-[var(--hive-gray-700)] hover:border-[#3A3A3B]'
                           }`}
                           onClick={() => setProfile(prev => ({ ...prev, userType: option.value as 'student' | 'alumni' | 'faculty' }))}
                         >
                         <div className="flex items-center gap-4">
                           <div className={`flex-shrink-0 ${
-                            profile.userType === option.value ? 'text-[#FFD700]' : 'text-white/40'
+                            profile.userType === option.value ? 'text-[var(--hive-gold)]' : 'text-[var(--hive-text-primary)]/40'
                           }`}>
                             {option.icon}
                           </div>
                           <div className="flex-1">
                             <div className={`font-medium ${
-                              profile.userType === option.value ? 'text-[#FFD700]' : 'text-white'
+                              profile.userType === option.value ? 'text-[var(--hive-gold)]' : 'text-[var(--hive-text-primary)]'
                             }`}>
                               {option.label}
                             </div>
-                            <div className="text-sm text-white/60">
+                            <div className="text-sm text-[var(--hive-text-primary)]/60">
                               {option.description}
                             </div>
                           </div>
                           {profile.userType === option.value && (
-                            <Check className="w-5 h-5 text-[#FFD700] flex-shrink-0" />
+                            <Check className="w-5 h-5 text-[var(--hive-gold)] flex-shrink-0" />
                           )}
                         </div>
                       </Card>
@@ -988,7 +988,7 @@ export default function OnboardingPage() {
                   <AnimatePresence mode="wait">
                     {profile.userType === 'alumni' && (
                       <motion.div 
-                        className="mt-6 p-4 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-xl"
+                        className="mt-6 p-4 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/30 rounded-xl"
                         variants={cardVariants}
                         initial="initial"
                         animate="animate"
@@ -996,14 +996,14 @@ export default function OnboardingPage() {
                         transition={cardTransition}
                       >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#FFD700]/20 flex items-center justify-center flex-shrink-0">
-                          <Users className="w-4 h-4 text-[#FFD700]" />
+                        <div className="w-8 h-8 rounded-full bg-[var(--hive-gold)]/20 flex items-center justify-center flex-shrink-0">
+                          <Users className="w-4 h-4 text-[var(--hive-gold)]" />
                         </div>
                         <div>
-                          <div className="font-medium text-[#FFD700] mb-1">
+                          <div className="font-medium text-[var(--hive-gold)] mb-1">
                             Alumni Waitlist
                           </div>
-                          <div className="text-sm text-white/80">
+                          <div className="text-sm text-[var(--hive-text-primary)]/80">
                             HIVE is currently focused on current students. We'll notify you when we expand to alumni!
                           </div>
                         </div>
@@ -1013,7 +1013,7 @@ export default function OnboardingPage() {
 
                     {profile.userType === 'faculty' && (
                       <motion.div 
-                        className="mt-6 p-4 bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-xl"
+                        className="mt-6 p-4 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/30 rounded-xl"
                         variants={cardVariants}
                         initial="initial"
                         animate="animate"
@@ -1021,14 +1021,14 @@ export default function OnboardingPage() {
                         transition={cardTransition}
                       >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#FFD700]/20 flex items-center justify-center flex-shrink-0">
-                          <Target className="w-4 h-4 text-[#FFD700]" />
+                        <div className="w-8 h-8 rounded-full bg-[var(--hive-gold)]/20 flex items-center justify-center flex-shrink-0">
+                          <Target className="w-4 h-4 text-[var(--hive-gold)]" />
                         </div>
                         <div>
-                          <div className="font-medium text-[#FFD700] mb-1">
+                          <div className="font-medium text-[var(--hive-gold)] mb-1">
                             Faculty Space Requests
                           </div>
-                          <div className="text-sm text-white/80">
+                          <div className="text-sm text-[var(--hive-text-primary)]/80">
                             You can request to create and manage spaces for your courses, research, or campus initiatives.
                           </div>
                         </div>
@@ -1057,7 +1057,7 @@ export default function OnboardingPage() {
                           onChange={(e) => setProfile(prev => ({ ...prev, firstName: e.target.value }))}
                           placeholder="First name"
                           autoFocus
-                          className="focus:border-[#FFD700] focus:ring-[#FFD700]/20"
+                          className="focus:border-[var(--hive-gold)] focus:ring-[var(--hive-gold)]/20"
                         />
                       </motion.div>
 
@@ -1067,23 +1067,23 @@ export default function OnboardingPage() {
                           value={profile.lastName}
                           onChange={(e) => setProfile(prev => ({ ...prev, lastName: e.target.value }))}
                           placeholder="Last name"
-                          className="focus:border-[#FFD700] focus:ring-[#FFD700]/20"
+                          className="focus:border-[var(--hive-gold)] focus:ring-[var(--hive-gold)]/20"
                         />
                       </motion.div>
 
                       <motion.div variants={staggerItem}>
-                        <div className="p-4 bg-[#1A1A1B] border border-[#2A2A2B] rounded-xl">
+                        <div className="p-4 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl">
                           <div className="flex items-center justify-between mb-2">
-                            <label className="text-sm font-medium text-white/60">Handle</label>
-                            <Badge variant="secondary" className="bg-[#FFD700]/10 text-[#FFD700] border-0 text-xs">
+                            <label className="text-sm font-medium text-[var(--hive-text-primary)]/60">Handle</label>
+                            <Badge variant="secondary" className="bg-[var(--hive-gold)]/10 text-[var(--hive-gold)] border-0 text-xs">
                               Auto-generated
                             </Badge>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="text-[#6B6B6F]">@</span>
-                            <span className="text-[#FFD700] font-mono">{profile.handle || 'handle'}</span>
+                            <span className="text-[var(--hive-gold)] font-mono">{profile.handle || 'handle'}</span>
                           </div>
-                          <p className="text-xs text-white/40 mt-2">
+                          <p className="text-xs text-[var(--hive-text-primary)]/40 mt-2">
                             Your handle will be automatically generated from your name
                           </p>
                         </div>
@@ -1182,21 +1182,21 @@ export default function OnboardingPage() {
                       transition={cardTransition}
                     >
                       <motion.div 
-                        className="w-20 h-20 rounded-full bg-[#FFD700]/20 flex items-center justify-center mx-auto"
+                        className="w-20 h-20 rounded-full bg-[var(--hive-gold)]/20 flex items-center justify-center mx-auto"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Users className="w-10 h-10 text-[#FFD700]" />
+                        <Users className="w-10 h-10 text-[var(--hive-gold)]" />
                       </motion.div>
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                       >
-                        <h3 className="text-xl font-semibold text-white mb-2">
+                        <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">
                           Alumni Waitlist
                         </h3>
-                        <p className="text-white/60 max-w-md mx-auto">
+                        <p className="text-[var(--hive-text-primary)]/60 max-w-md mx-auto">
                           Thank you for your interest! HIVE is currently focused on current students. 
                           We'll notify you via email when we expand to include alumni.
                         </p>
@@ -1208,7 +1208,7 @@ export default function OnboardingPage() {
                       >
                         <Button
                           onClick={() => router.push('/auth/login')}
-                          className="bg-[#FFD700] text-black hover:opacity-90"
+                          className="bg-[var(--hive-gold)] text-[var(--hive-black)] hover:opacity-90"
                         >
                           Got it, thanks
                         </Button>
@@ -1225,21 +1225,21 @@ export default function OnboardingPage() {
                       transition={cardTransition}
                     >
                       <motion.div 
-                        className="w-20 h-20 rounded-full bg-[#FFD700]/20 flex items-center justify-center mx-auto"
+                        className="w-20 h-20 rounded-full bg-[var(--hive-gold)]/20 flex items-center justify-center mx-auto"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Target className="w-10 h-10 text-[#FFD700]" />
+                        <Target className="w-10 h-10 text-[var(--hive-gold)]" />
                       </motion.div>
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                       >
-                        <h3 className="text-xl font-semibold text-white mb-2">
+                        <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">
                           Faculty Space Requests
                         </h3>
-                        <p className="text-white/60 max-w-md mx-auto mb-6">
+                        <p className="text-[var(--hive-text-primary)]/60 max-w-md mx-auto mb-6">
                           Faculty and staff can request to create and manage spaces for courses, research projects, 
                           or campus initiatives. Tell us what you'd like to build.
                         </p>
@@ -1257,12 +1257,12 @@ export default function OnboardingPage() {
                             value={profile.department || ''}
                             onChange={(e) => setProfile(prev => ({ ...prev, department: e.target.value }))}
                             placeholder="e.g. Computer Science, Student Life, etc."
-                            className="focus:border-[#FFD700] focus:ring-[#FFD700]/20 mb-4"
+                            className="focus:border-[var(--hive-gold)] focus:ring-[var(--hive-gold)]/20 mb-4"
                           />
                         </motion.div>
                         
                         <motion.div variants={staggerItem}>
-                          <label className="block text-sm font-medium text-white/60 mb-2">
+                          <label className="block text-sm font-medium text-[var(--hive-text-primary)]/60 mb-2">
                             Space Request Description *
                           </label>
                           <textarea
@@ -1270,7 +1270,7 @@ export default function OnboardingPage() {
                             onChange={(e) => setProfile(prev => ({ ...prev, spaceRequest: e.target.value }))}
                             placeholder="Describe the space you'd like to create and how students would benefit..."
                             rows={4}
-                            className="w-full px-4 py-3 bg-[#1A1A1B] border border-[#2A2A2B] rounded-xl text-white placeholder-[#6B6B6F] focus:outline-none focus:border-[#FFD700] transition-colors resize-none"
+                            className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors resize-none"
                           />
                         </motion.div>
                       </motion.div>
@@ -1337,14 +1337,14 @@ export default function OnboardingPage() {
                   <motion.div variants={staggerContainer} initial="initial" animate="animate">
                     <motion.div variants={staggerItem}>
                       <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-white mb-2">
+                        <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-2">
                           What's your vibe? 
                         </h2>
-                        <p className="text-white/60">
+                        <p className="text-[var(--hive-text-primary)]/60">
                           Pick the ones that actually describe you (not what looks good on LinkedIn)
                         </p>
                         <div className="flex items-center gap-4 mt-3">
-                          <span className="text-sm text-white/40">
+                          <span className="text-sm text-[var(--hive-text-primary)]/40">
                             {profile.interests.length < 3 
                               ? `Pick at least ${3 - profile.interests.length} more`
                               : profile.interests.length < 10
@@ -1358,8 +1358,8 @@ export default function OnboardingPage() {
                                 key={i}
                                 className={`h-1.5 w-8 rounded-full transition-colors ${
                                   i < profile.interests.length
-                                    ? 'bg-[#FFD700]'
-                                    : 'bg-white/10'
+                                    ? 'bg-[var(--hive-gold)]'
+                                    : 'bg-[var(--hive-white)]/10'
                                 }`}
                               />
                             ))}
@@ -1369,12 +1369,12 @@ export default function OnboardingPage() {
                     </motion.div>
                     
                     <motion.div variants={staggerItem}>
-                      <Card className="bg-[#0A0A0B] border-[#1A1A1B]">
+                      <Card className="bg-[var(--hive-background-primary)] border-[var(--hive-background-tertiary)]">
                         <CardContent className="p-6 max-h-[500px] overflow-y-auto">
                           <div className="space-y-8">
                             {Object.entries(INTEREST_CATEGORIES).map(([category, interests]) => (
                               <div key={category}>
-                                <h4 className="text-base font-bold text-[#FFD700] mb-4 flex items-center gap-2">
+                                <h4 className="text-base font-bold text-[var(--hive-gold)] mb-4 flex items-center gap-2">
                                   <span className="text-2xl">
                                     {category.includes('Academic') && '📚'}
                                     {category.includes('Social') && '🎉'}
@@ -1421,8 +1421,8 @@ export default function OnboardingPage() {
                                         relative px-4 py-2 rounded-full text-sm font-medium
                                         transition-all duration-200 transform
                                         ${profile.interests.includes(interest) 
-                                          ? 'bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black scale-105 shadow-lg shadow-[#FFD700]/30' 
-                                          : 'bg-[#1A1A1B] text-white/80 hover:bg-[#2A2A2B] hover:text-white hover:scale-105'
+                                          ? 'bg-gradient-to-r from-[var(--hive-gold)] to-[#FFA500] text-[var(--hive-black)] scale-105 shadow-lg shadow-[var(--hive-gold)]/30' 
+                                          : 'bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-gray-700)] hover:text-[var(--hive-text-primary)] hover:scale-105'
                                         }
                                         ${!profile.interests.includes(interest) && profile.interests.length >= 10 
                                           ? 'opacity-40 cursor-not-allowed' 
@@ -1453,7 +1453,7 @@ export default function OnboardingPage() {
                                 </motion.div>
                                 {interests.length > 15 && (
                                   <details className="mt-3">
-                                    <summary className="text-xs text-white/40 cursor-pointer hover:text-white/60">
+                                    <summary className="text-xs text-[var(--hive-text-primary)]/40 cursor-pointer hover:text-[var(--hive-text-primary)]/60">
                                       Show {interests.length - 15} more...
                                     </summary>
                                     <motion.div 
@@ -1482,8 +1482,8 @@ export default function OnboardingPage() {
                                             relative px-4 py-2 rounded-full text-sm font-medium
                                             transition-all duration-200 transform
                                             ${profile.interests.includes(interest) 
-                                              ? 'bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black scale-105 shadow-lg shadow-[#FFD700]/30' 
-                                              : 'bg-[#1A1A1B] text-white/80 hover:bg-[#2A2A2B] hover:text-white hover:scale-105'
+                                              ? 'bg-gradient-to-r from-[var(--hive-gold)] to-[#FFA500] text-[var(--hive-black)] scale-105 shadow-lg shadow-[var(--hive-gold)]/30' 
+                                              : 'bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)]/80 hover:bg-[var(--hive-gray-700)] hover:text-[var(--hive-text-primary)] hover:scale-105'
                                             }
                                             ${!profile.interests.includes(interest) && profile.interests.length >= 10 
                                               ? 'opacity-40 cursor-not-allowed' 
@@ -1534,49 +1534,49 @@ export default function OnboardingPage() {
                   <motion.div variants={staggerContainer} initial="initial" animate="animate">
                     <motion.div variants={staggerItem}>
                       <div className="mb-6">
-                        <h2 className="text-3xl font-bold text-white mb-3">
+                        <h2 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-3">
                           Are you building something on campus? 
                         </h2>
-                        <p className="text-lg text-white/80 mb-4">
+                        <p className="text-lg text-[var(--hive-text-primary)]/80 mb-4">
                           Student leaders get builder access to create custom tools and experiences for their communities
                         </p>
                         
                         {/* What Builder Access Means */}
                         <div className="grid grid-cols-2 gap-3 mb-6">
                           <motion.div 
-                            className="bg-[#1A1A1B] border border-[#2A2A2B] rounded-xl p-4 hover:border-[#FFD700]/30 transition-all"
+                            className="bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl p-4 hover:border-[var(--hive-gold)]/30 transition-all"
                             whileHover={{ scale: 1.02 }}
                           >
-                            <div className="text-[#FFD700] mb-2">✨</div>
-                            <h4 className="text-sm font-semibold text-white mb-1">Create Tools</h4>
-                            <p className="text-xs text-white/60">Build custom solutions for your org's specific needs</p>
+                            <div className="text-[var(--hive-gold)] mb-2">✨</div>
+                            <h4 className="text-sm font-semibold text-[var(--hive-text-primary)] mb-1">Create Tools</h4>
+                            <p className="text-xs text-[var(--hive-text-primary)]/60">Build custom solutions for your org's specific needs</p>
                           </motion.div>
                           
                           <motion.div 
-                            className="bg-[#1A1A1B] border border-[#2A2A2B] rounded-xl p-4 hover:border-[#FFD700]/30 transition-all"
+                            className="bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl p-4 hover:border-[var(--hive-gold)]/30 transition-all"
                             whileHover={{ scale: 1.02 }}
                           >
-                            <div className="text-[#FFD700] mb-2">📊</div>
-                            <h4 className="text-sm font-semibold text-white mb-1">See Analytics</h4>
-                            <p className="text-xs text-white/60">Track engagement and member activity</p>
+                            <div className="text-[var(--hive-gold)] mb-2">📊</div>
+                            <h4 className="text-sm font-semibold text-[var(--hive-text-primary)] mb-1">See Analytics</h4>
+                            <p className="text-xs text-[var(--hive-text-primary)]/60">Track engagement and member activity</p>
                           </motion.div>
                           
                           <motion.div 
-                            className="bg-[#1A1A1B] border border-[#2A2A2B] rounded-xl p-4 hover:border-[#FFD700]/30 transition-all"
+                            className="bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl p-4 hover:border-[var(--hive-gold)]/30 transition-all"
                             whileHover={{ scale: 1.02 }}
                           >
-                            <div className="text-[#FFD700] mb-2">🎯</div>
-                            <h4 className="text-sm font-semibold text-white mb-1">Run Events</h4>
-                            <p className="text-xs text-white/60">Coordinate meetings, socials, and initiatives</p>
+                            <div className="text-[var(--hive-gold)] mb-2">🎯</div>
+                            <h4 className="text-sm font-semibold text-[var(--hive-text-primary)] mb-1">Run Events</h4>
+                            <p className="text-xs text-[var(--hive-text-primary)]/60">Coordinate meetings, socials, and initiatives</p>
                           </motion.div>
                           
                           <motion.div 
-                            className="bg-[#1A1A1B] border border-[#2A2A2B] rounded-xl p-4 hover:border-[#FFD700]/30 transition-all"
+                            className="bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl p-4 hover:border-[var(--hive-gold)]/30 transition-all"
                             whileHover={{ scale: 1.02 }}
                           >
-                            <div className="text-[#FFD700] mb-2">🤝</div>
-                            <h4 className="text-sm font-semibold text-white mb-1">Manage Members</h4>
-                            <p className="text-xs text-white/60">Onboard new members and assign roles</p>
+                            <div className="text-[var(--hive-gold)] mb-2">🤝</div>
+                            <h4 className="text-sm font-semibold text-[var(--hive-text-primary)] mb-1">Manage Members</h4>
+                            <p className="text-xs text-[var(--hive-text-primary)]/60">Onboard new members and assign roles</p>
                           </motion.div>
                         </div>
                       </div>
@@ -1585,21 +1585,21 @@ export default function OnboardingPage() {
                     {/* Leadership Toggle */}
                     <motion.div variants={staggerItem}>
                       <div className="relative overflow-hidden rounded-2xl">
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#FFD700]/5" />
-                        <div className="relative bg-[#0A0A0B]/80 backdrop-blur-sm border border-[#2A2A2B] rounded-2xl p-6">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-gold)]/5 via-transparent to-[var(--hive-gold)]/5" />
+                        <div className="relative bg-[var(--hive-background-primary)]/80 backdrop-blur-sm border border-[var(--hive-gray-700)] rounded-2xl p-6">
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
-                              <h3 className="text-xl font-bold text-white mb-2">
+                              <h3 className="text-xl font-bold text-[var(--hive-text-primary)] mb-2">
                                 I'm a student leader
                               </h3>
-                              <p className="text-sm text-white/70">
+                              <p className="text-sm text-[var(--hive-text-primary)]/70">
                                 President, e-board member, team captain, or founding something new
                               </p>
                               <div className="flex flex-wrap gap-2 mt-3">
-                                <span className="text-xs px-2 py-1 bg-white/5 text-white/60 rounded-full">Club President</span>
-                                <span className="text-xs px-2 py-1 bg-white/5 text-white/60 rounded-full">E-Board</span>
-                                <span className="text-xs px-2 py-1 bg-white/5 text-white/60 rounded-full">Team Captain</span>
-                                <span className="text-xs px-2 py-1 bg-white/5 text-white/60 rounded-full">Founder</span>
+                                <span className="text-xs px-2 py-1 bg-[var(--hive-white)]/5 text-[var(--hive-text-primary)]/60 rounded-full">Club President</span>
+                                <span className="text-xs px-2 py-1 bg-[var(--hive-white)]/5 text-[var(--hive-text-primary)]/60 rounded-full">E-Board</span>
+                                <span className="text-xs px-2 py-1 bg-[var(--hive-white)]/5 text-[var(--hive-text-primary)]/60 rounded-full">Team Captain</span>
+                                <span className="text-xs px-2 py-1 bg-[var(--hive-white)]/5 text-[var(--hive-text-primary)]/60 rounded-full">Founder</span>
                               </div>
                             </div>
                             
@@ -1617,14 +1617,14 @@ export default function OnboardingPage() {
                               className={`
                                 relative ml-4 w-20 h-12 rounded-full transition-all duration-300
                                 ${profile.isStudentLeader 
-                                  ? 'bg-gradient-to-r from-[#FFD700] to-[#FFA500]' 
-                                  : 'bg-[#2A2A2B]'
+                                  ? 'bg-gradient-to-r from-[var(--hive-gold)] to-[#FFA500]' 
+                                  : 'bg-[var(--hive-gray-700)]'
                                 }
                               `}
                               whileTap={{ scale: 0.95 }}
                             >
                               <motion.div
-                                className="absolute top-1 w-10 h-10 bg-white rounded-full shadow-lg"
+                                className="absolute top-1 w-10 h-10 bg-[var(--hive-white)] rounded-full shadow-lg"
                                 animate={{
                                   x: profile.isStudentLeader ? 38 : 2
                                 }}
@@ -1636,7 +1636,7 @@ export default function OnboardingPage() {
                                   animate={{ opacity: 1, scale: 1 }}
                                   className="absolute inset-0 flex items-center justify-center"
                                 >
-                                  <Check className="h-4 w-4 text-black ml-8" />
+                                  <Check className="h-4 w-4 text-[var(--hive-black)] ml-8" />
                                 </motion.div>
                               )}
                             </motion.button>
@@ -1655,19 +1655,19 @@ export default function OnboardingPage() {
                         >
                           {/* Request Builder Access */}
                           <motion.div variants={staggerItem}>
-                            <Card className="bg-[#0A0A0B] border-[#1A1A1B]">
+                            <Card className="bg-[var(--hive-background-primary)] border-[var(--hive-background-tertiary)]">
                               <CardContent className="p-6">
                                 <div className="flex items-start justify-between mb-4">
                                   <div>
-                                    <h3 className="text-lg font-semibold text-white mb-1">
+                                    <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-1">
                                       Request builder access 🔨
                                     </h3>
-                                    <p className="text-sm text-white/60">
+                                    <p className="text-sm text-[var(--hive-text-primary)]/60">
                                       Search for orgs you lead to get admin tools and analytics
                                     </p>
                                   </div>
                                   {profile.builderRequestSpaces.length > 0 && (
-                                    <Badge className="bg-[#FFD700]/20 text-[#FFD700] border-0">
+                                    <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-0">
                                       {profile.builderRequestSpaces.length} requested
                                     </Badge>
                                   )}
@@ -1675,18 +1675,18 @@ export default function OnboardingPage() {
                                 
                                 {/* Search Input */}
                                 <div className="relative mb-4">
-                                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
+                                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--hive-text-primary)]/40" />
                                   <input
                                     type="text"
                                     value={spaceSearchQuery}
                                     onChange={(e) => setSpaceSearchQuery(e.target.value)}
                                     placeholder="Search clubs, teams, orgs..."
-                                    className="w-full pl-10 pr-10 py-3 bg-[#1A1A1B] border border-[#2A2A2B] rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50 focus:border-[#FFD700] transition-all"
+                                    className="w-full pl-10 pr-10 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]/50 focus:border-[var(--hive-gold)] transition-all"
                                     autoFocus
                                   />
                                   {isSearching && (
                                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#FFD700]" />
+                                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--hive-gold)]" />
                                     </div>
                                   )}
                                   {spaceSearchQuery && !isSearching && (
@@ -1696,7 +1696,7 @@ export default function OnboardingPage() {
                                         setSpaceSearchQuery('');
                                         setSearchResults([]);
                                       }}
-                                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white/60 transition-colors"
+                                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--hive-text-primary)]/40 hover:text-[var(--hive-text-primary)]/60 transition-colors"
                                     >
                                       <X className="h-4 w-4" />
                                     </button>
@@ -1708,7 +1708,7 @@ export default function OnboardingPage() {
                                   <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
                                     {searchResults.length > 0 ? (
                                       <>
-                                        <p className="text-xs text-white/40 mb-2">
+                                        <p className="text-xs text-[var(--hive-text-primary)]/40 mb-2">
                                           Found {searchResults.length} organization{searchResults.length !== 1 ? 's' : ''}
                                         </p>
                                         {searchResults.map((space, index) => (
@@ -1735,8 +1735,8 @@ export default function OnboardingPage() {
                                               className={`
                                                 w-full p-4 rounded-xl border text-left transition-all group
                                                 ${profile.builderRequestSpaces.includes(space.id)
-                                                  ? 'bg-gradient-to-r from-[#FFD700]/15 to-[#FFD700]/5 border-[#FFD700] shadow-lg shadow-[#FFD700]/10'
-                                                  : 'bg-[#1A1A1B]/50 border-[#2A2A2B] hover:border-[#3A3A3B] hover:bg-[#1A1A1B]'
+                                                  ? 'bg-gradient-to-r from-[var(--hive-gold)]/15 to-[var(--hive-gold)]/5 border-[var(--hive-gold)] shadow-lg shadow-[var(--hive-gold)]/10'
+                                                  : 'bg-[var(--hive-background-tertiary)]/50 border-[var(--hive-gray-700)] hover:border-[#3A3A3B] hover:bg-[var(--hive-background-tertiary)]'
                                                 }
                                               `}
                                             >
@@ -1745,8 +1745,8 @@ export default function OnboardingPage() {
                                                   <div className={`
                                                     w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors
                                                     ${profile.builderRequestSpaces.includes(space.id)
-                                                      ? 'bg-[#FFD700]/20 text-[#FFD700]'
-                                                      : 'bg-white/5 text-white/40 group-hover:bg-white/10'
+                                                      ? 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
+                                                      : 'bg-[var(--hive-white)]/5 text-[var(--hive-text-primary)]/40 group-hover:bg-[var(--hive-white)]/10'
                                                     }
                                                   `}>
                                                     <Users className="h-5 w-5" />
@@ -1755,20 +1755,20 @@ export default function OnboardingPage() {
                                                     <div className="flex items-center gap-2">
                                                       <span className={`font-medium transition-colors ${
                                                         profile.builderRequestSpaces.includes(space.id) 
-                                                          ? 'text-[#FFD700]' 
-                                                          : 'text-white group-hover:text-white/90'
+                                                          ? 'text-[var(--hive-gold)]' 
+                                                          : 'text-[var(--hive-text-primary)] group-hover:text-[var(--hive-text-primary)]/90'
                                                       }`}>
                                                         {space.name}
                                                       </span>
                                                       {space.isVerified && (
-                                                        <span className="text-xs px-2 py-0.5 bg-[#FFD700]/20 text-[#FFD700] rounded-full">
+                                                        <span className="text-xs px-2 py-0.5 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] rounded-full">
                                                           Verified
                                                         </span>
                                                       )}
                                                     </div>
-                                                    <div className="text-xs text-white/50 mt-0.5">
+                                                    <div className="text-xs text-[var(--hive-text-primary)]/50 mt-0.5">
                                                       {space.memberCount !== undefined && (
-                                                        <span className="font-semibold text-white/60">{space.memberCount}</span>
+                                                        <span className="font-semibold text-[var(--hive-text-primary)]/60">{space.memberCount}</span>
                                                       )} members
                                                       {space.type && (
                                                         <span className="ml-2 capitalize">{space.type.replace('_', ' ')}</span>
@@ -1778,7 +1778,7 @@ export default function OnboardingPage() {
                                                       )}
                                                     </div>
                                                     {profile.builderRequestSpaces.includes(space.id) && (
-                                                      <div className="text-xs text-[#FFD700]/80 mt-2 flex items-center gap-1">
+                                                      <div className="text-xs text-[var(--hive-gold)]/80 mt-2 flex items-center gap-1">
                                                         <Check className="h-3 w-3" />
                                                         You'll be notified when approved
                                                       </div>
@@ -1793,16 +1793,16 @@ export default function OnboardingPage() {
                                                         initial={{ scale: 0, rotate: -180 }}
                                                         animate={{ scale: 1, rotate: 0 }}
                                                         exit={{ scale: 0, rotate: 180 }}
-                                                        className="w-8 h-8 rounded-full bg-[#FFD700] flex items-center justify-center"
+                                                        className="w-8 h-8 rounded-full bg-[var(--hive-gold)] flex items-center justify-center"
                                                       >
-                                                        <Check className="h-4 w-4 text-black" />
+                                                        <Check className="h-4 w-4 text-[var(--hive-black)]" />
                                                       </motion.div>
                                                     ) : (
                                                       <motion.div
                                                         key="unselected"
                                                         initial={{ opacity: 0 }}
                                                         animate={{ opacity: 1 }}
-                                                        className="w-8 h-8 rounded-full border-2 border-white/20 group-hover:border-white/40 transition-colors"
+                                                        className="w-8 h-8 rounded-full border-2 border-[var(--hive-white)]/20 group-hover:border-[var(--hive-white)]/40 transition-colors"
                                                       />
                                                     )}
                                                   </AnimatePresence>
@@ -1813,7 +1813,7 @@ export default function OnboardingPage() {
                                         ))}
                                       </>
                                     ) : !isSearching ? (
-                                      <div className="text-center py-8 text-white/40">
+                                      <div className="text-center py-8 text-[var(--hive-text-primary)]/40">
                                         <p>No organizations found matching "{spaceSearchQuery}"</p>
                                         <p className="text-sm mt-2">Try a different search term</p>
                                       </div>
@@ -1821,16 +1821,16 @@ export default function OnboardingPage() {
                                   </div>
                                 ) : spaceSearchQuery.length === 1 ? (
                                   <div className="text-center py-8">
-                                    <div className="w-16 h-16 rounded-full bg-[#FFD700]/10 flex items-center justify-center mx-auto mb-3">
-                                      <Search className="h-8 w-8 text-[#FFD700]/40" />
+                                    <div className="w-16 h-16 rounded-full bg-[var(--hive-gold)]/10 flex items-center justify-center mx-auto mb-3">
+                                      <Search className="h-8 w-8 text-[var(--hive-gold)]/40" />
                                     </div>
-                                    <p className="text-white/40">Type one more character...</p>
-                                    <p className="text-xs text-white/30 mt-1">Minimum 2 characters to search</p>
+                                    <p className="text-[var(--hive-text-primary)]/40">Type one more character...</p>
+                                    <p className="text-xs text-[var(--hive-text-primary)]/30 mt-1">Minimum 2 characters to search</p>
                                   </div>
                                 ) : (
                                   <div className="text-center py-12">
                                     <motion.div 
-                                      className="w-20 h-20 rounded-full bg-[#1A1A1B] border border-[#2A2A2B] flex items-center justify-center mx-auto mb-4"
+                                      className="w-20 h-20 rounded-full bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] flex items-center justify-center mx-auto mb-4"
                                       animate={{ 
                                         scale: [1, 1.05, 1],
                                       }}
@@ -1840,10 +1840,10 @@ export default function OnboardingPage() {
                                         repeatType: "reverse"
                                       }}
                                     >
-                                      <Search className="h-10 w-10 text-white/20" />
+                                      <Search className="h-10 w-10 text-[var(--hive-text-primary)]/20" />
                                     </motion.div>
-                                    <p className="text-white/40 font-medium">Search your organization</p>
-                                    <p className="text-xs text-white/30 mt-2">
+                                    <p className="text-[var(--hive-text-primary)]/40 font-medium">Search your organization</p>
+                                    <p className="text-xs text-[var(--hive-text-primary)]/30 mt-2">
                                       Try: "Computer Science", "Dance", "Pre-Med", "Rocket League"
                                     </p>
                                   </div>
@@ -1851,8 +1851,8 @@ export default function OnboardingPage() {
                                 
                                 {/* Selected Organizations Display */}
                                 {profile.builderRequestSpaces.length > 0 && (
-                                  <div className="mt-4 pt-4 border-t border-[#2A2A2B]">
-                                    <p className="text-xs text-white/40 mb-3">
+                                  <div className="mt-4 pt-4 border-t border-[var(--hive-gray-700)]">
+                                    <p className="text-xs text-[var(--hive-text-primary)]/40 mb-3">
                                       Selected for leadership access ({profile.builderRequestSpaces.length})
                                     </p>
                                     <div className="flex flex-wrap gap-2">
@@ -1861,9 +1861,9 @@ export default function OnboardingPage() {
                                         return space ? (
                                           <div
                                             key={spaceId}
-                                            className="flex items-center gap-2 px-3 py-1.5 bg-[#FFD700]/20 border border-[#FFD700] rounded-full"
+                                            className="flex items-center gap-2 px-3 py-1.5 bg-[var(--hive-gold)]/20 border border-[var(--hive-gold)] rounded-full"
                                           >
-                                            <span className="text-xs text-[#FFD700]">{space.name}</span>
+                                            <span className="text-xs text-[var(--hive-gold)]">{space.name}</span>
                                             <button
                                               type="button"
                                               onClick={() => {
@@ -1872,7 +1872,7 @@ export default function OnboardingPage() {
                                                   builderRequestSpaces: prev.builderRequestSpaces.filter(id => id !== spaceId)
                                                 }));
                                               }}
-                                              className="text-[#FFD700] hover:text-[#FFD700]/80"
+                                              className="text-[var(--hive-gold)] hover:text-[var(--hive-gold)]/80"
                                             >
                                               <X className="h-3 w-3" />
                                             </button>
@@ -1884,24 +1884,24 @@ export default function OnboardingPage() {
                                 )}
                                 
                                 {/* Help text */}
-                                <div className="mt-4 p-4 bg-gradient-to-r from-[#FFD700]/5 to-[#FFD700]/10 border border-[#FFD700]/20 rounded-xl">
+                                <div className="mt-4 p-4 bg-gradient-to-r from-[var(--hive-gold)]/5 to-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-xl">
                                   <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-[#FFD700]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                      <Sparkles className="h-4 w-4 text-[#FFD700]" />
+                                    <div className="w-8 h-8 rounded-full bg-[var(--hive-gold)]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                      <Sparkles className="h-4 w-4 text-[var(--hive-gold)]" />
                                     </div>
                                     <div>
-                                      <p className="text-sm font-semibold text-[#FFD700] mb-2">
+                                      <p className="text-sm font-semibold text-[var(--hive-gold)] mb-2">
                                         What happens next?
                                       </p>
-                                      <p className="text-xs text-white/70 mb-2">
+                                      <p className="text-xs text-[var(--hive-text-primary)]/70 mb-2">
                                         We'll verify your leadership role (usually within 24 hours)
                                       </p>
-                                      <p className="text-xs text-white/60 font-semibold mb-1">Once approved, you can:</p>
+                                      <p className="text-xs text-[var(--hive-text-primary)]/60 font-semibold mb-1">Once approved, you can:</p>
                                       <div className="grid grid-cols-2 gap-2">
-                                        <div className="text-xs text-white/50">• Build custom tools</div>
-                                        <div className="text-xs text-white/50">• See member analytics</div>
-                                        <div className="text-xs text-white/50">• Create events</div>
-                                        <div className="text-xs text-white/50">• Send announcements</div>
+                                        <div className="text-xs text-[var(--hive-text-primary)]/50">• Build custom tools</div>
+                                        <div className="text-xs text-[var(--hive-text-primary)]/50">• See member analytics</div>
+                                        <div className="text-xs text-[var(--hive-text-primary)]/50">• Create events</div>
+                                        <div className="text-xs text-[var(--hive-text-primary)]/50">• Send announcements</div>
                                       </div>
                                     </div>
                                   </div>
@@ -1914,46 +1914,46 @@ export default function OnboardingPage() {
                           <motion.div variants={staggerItem}>
                             <div className="relative">
                               {/* Glow effect */}
-                              <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded-2xl blur-md opacity-10" />
+                              <div className="absolute -inset-1 bg-gradient-to-r from-[var(--hive-gold)] to-[#FFA500] rounded-2xl blur-md opacity-10" />
                               
-                              <Card className="relative bg-gradient-to-br from-[#0A0A0B] to-[#1A1A1B] border-[#FFD700]/30 overflow-hidden">
+                              <Card className="relative bg-gradient-to-br from-[var(--hive-background-primary)] to-[var(--hive-background-tertiary)] border-[var(--hive-gold)]/30 overflow-hidden">
                                 <CardContent className="p-6">
                                   <div className="absolute top-3 right-3">
-                                    <Badge className="bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black font-bold border-0">
+                                    <Badge className="bg-gradient-to-r from-[var(--hive-gold)] to-[#FFA500] text-[var(--hive-black)] font-bold border-0">
                                       Coming Soon ⚡
                                     </Badge>
                                   </div>
                                   
                                   <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-[#FFD700]/10 border border-[#FFD700]/20 flex items-center justify-center flex-shrink-0">
-                                      <ArrowRight className="h-6 w-6 text-[#FFD700]" />
+                                    <div className="w-12 h-12 rounded-xl bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 flex items-center justify-center flex-shrink-0">
+                                      <ArrowRight className="h-6 w-6 text-[var(--hive-gold)]" />
                                     </div>
                                     
                                     <div className="flex-1">
-                                      <h3 className="text-xl font-bold text-white mb-2">
+                                      <h3 className="text-xl font-bold text-[var(--hive-text-primary)] mb-2">
                                         Starting something new?
                                       </h3>
-                                      <p className="text-sm text-white/70 mb-3">
+                                      <p className="text-sm text-[var(--hive-text-primary)]/70 mb-3">
                                         Launch your own club, team, or community on HIVE
                                       </p>
                                       
                                       <div className="space-y-3">
-                                        <div className="flex items-center gap-2 text-xs text-white/50">
-                                          <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]" />
+                                        <div className="flex items-center gap-2 text-xs text-[var(--hive-text-primary)]/50">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-[var(--hive-gold)]" />
                                           <span>Get your own custom space</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs text-white/50">
-                                          <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/70" />
+                                        <div className="flex items-center gap-2 text-xs text-[var(--hive-text-primary)]/50">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-[var(--hive-gold)]/70" />
                                           <span>Build tools specific to your community</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs text-white/50">
-                                          <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/40" />
+                                        <div className="flex items-center gap-2 text-xs text-[var(--hive-text-primary)]/50">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-[var(--hive-gold)]/40" />
                                           <span>Grow from day one with HIVE's network</span>
                                         </div>
                                       </div>
                                       
-                                      <div className="mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
-                                        <p className="text-xs text-white/40">
+                                      <div className="mt-4 p-3 bg-[var(--hive-white)]/5 rounded-lg border border-[var(--hive-white)]/10">
+                                        <p className="text-xs text-[var(--hive-text-primary)]/40">
                                           Space creation opens January 2025 - we'll notify you when it's ready!
                                         </p>
                                       </div>
@@ -1975,7 +1975,7 @@ export default function OnboardingPage() {
                         className="text-center py-12"
                       >
                         <motion.div 
-                          className="w-24 h-24 rounded-full bg-gradient-to-br from-[#FFD700]/10 to-[#FFD700]/5 flex items-center justify-center mx-auto mb-4"
+                          className="w-24 h-24 rounded-full bg-gradient-to-br from-[var(--hive-gold)]/10 to-[var(--hive-gold)]/5 flex items-center justify-center mx-auto mb-4"
                           animate={{ 
                             scale: [1, 1.05, 1],
                             rotate: [0, 5, -5, 0]
@@ -1986,12 +1986,12 @@ export default function OnboardingPage() {
                             repeatType: "reverse"
                           }}
                         >
-                          <Sparkles className="h-12 w-12 text-[#FFD700]/40" />
+                          <Sparkles className="h-12 w-12 text-[var(--hive-gold)]/40" />
                         </motion.div>
-                        <h3 className="text-lg font-semibold text-white mb-2">
+                        <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
                           All good! 
                         </h3>
-                        <p className="text-white/60 max-w-sm mx-auto">
+                        <p className="text-[var(--hive-text-primary)]/60 max-w-sm mx-auto">
                           You can still discover and join spaces. If you become a leader later, just update your profile to request builder access.
                         </p>
                       </motion.div>
@@ -2013,17 +2013,17 @@ export default function OnboardingPage() {
                   <motion.div variants={staggerContainer} initial="initial" animate="animate">
                     <motion.div variants={staggerItem}>
                       <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium text-white/60">
+                        <label className="text-sm font-medium text-[var(--hive-text-primary)]/60">
                           What are your goals? (select up to 5)
                         </label>
-                        <span className="text-xs text-white/40">
+                        <span className="text-xs text-[var(--hive-text-primary)]/40">
                           {profile.goals.length}/5 selected
                         </span>
                       </div>
                     </motion.div>
                     
                     <motion.div variants={staggerItem}>
-                      <Card className="bg-[#1A1A1B] border-[#2A2A2B]">
+                      <Card className="bg-[var(--hive-background-tertiary)] border-[var(--hive-gray-700)]">
                         <CardContent className="p-4 max-h-96 overflow-y-auto">
                           <motion.div 
                             className="grid grid-cols-2 gap-2"
@@ -2059,7 +2059,7 @@ export default function OnboardingPage() {
                                   disabled={!profile.goals.includes(goal) && profile.goals.length >= 5}
                                   className={`justify-start text-left w-full transition-all duration-200 ${
                                     profile.goals.includes(goal)
-                                      ? 'bg-[#FFD700]/10 border-[#FFD700] text-[#FFD700] hover:border-[#FFD700] scale-[1.02]'
+                                      ? 'bg-[var(--hive-gold)]/10 border-[var(--hive-gold)] text-[var(--hive-gold)] hover:border-[var(--hive-gold)] scale-[1.02]'
                                       : 'hover:scale-[1.01]'
                                   }`}
                                 >
@@ -2093,11 +2093,11 @@ export default function OnboardingPage() {
                     animate="animate"
                     transition={cardTransition}
                   >
-                    <Card className="bg-gradient-to-br from-[#FFD700]/20 to-[#FFD700]/10 border-[#FFD700]/30">
+                    <Card className="bg-gradient-to-br from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/30">
                       <CardContent className="p-8 text-center">
                         <motion.div className="mb-6">
                           <motion.div 
-                            className="w-20 h-20 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFD700] flex items-center justify-center mx-auto mb-4"
+                            className="w-20 h-20 rounded-full bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center mx-auto mb-4"
                             initial={{ scale: 0, rotate: -180 }}
                             animate={{ scale: 1, rotate: 0 }}
                             transition={{ 
@@ -2113,11 +2113,11 @@ export default function OnboardingPage() {
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.5, duration: 0.3 }}
                             >
-                              <Check className="w-10 h-10 text-black" />
+                              <Check className="w-10 h-10 text-[var(--hive-black)]" />
                             </motion.div>
                           </motion.div>
                           <motion.h3 
-                            className="text-2xl font-bold text-white mb-2"
+                            className="text-2xl font-bold text-[var(--hive-text-primary)] mb-2"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3, duration: 0.3 }}
@@ -2125,7 +2125,7 @@ export default function OnboardingPage() {
                             Welcome to HIVE, {profile.firstName}!
                           </motion.h3>
                           <motion.p 
-                            className="text-white/60"
+                            className="text-[var(--hive-text-primary)]/60"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4, duration: 0.3 }}
@@ -2147,7 +2147,7 @@ export default function OnboardingPage() {
                           ].map((item, index) => (
                             <motion.div 
                               key={index}
-                              className="flex items-center gap-3 text-sm text-white/60"
+                              className="flex items-center gap-3 text-sm text-[var(--hive-text-primary)]/60"
                               variants={staggerItem}
                               whileHover={{ x: 5 }}
                               transition={{ duration: 0.2 }}
@@ -2157,7 +2157,7 @@ export default function OnboardingPage() {
                                 animate={{ scale: 1 }}
                                 transition={{ delay: 0.6 + (index * 0.1), duration: 0.3 }}
                               >
-                                <item.icon className="w-4 h-4 text-[#FFD700]" />
+                                <item.icon className="w-4 h-4 text-[var(--hive-gold)]" />
                               </motion.div>
                               <span>{item.text}</span>
                             </motion.div>
@@ -2170,7 +2170,7 @@ export default function OnboardingPage() {
                   <AnimatePresence>
                     {isSaving && (
                       <motion.div 
-                        className="flex items-center justify-center gap-2 text-[#FFD700]"
+                        className="flex items-center justify-center gap-2 text-[var(--hive-gold)]"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
@@ -2202,7 +2202,7 @@ export default function OnboardingPage() {
                   variant="ghost"
                   onClick={handleBack}
                   disabled={currentStep === 0}
-                  className="text-white/60 disabled:opacity-30"
+                  className="text-[var(--hive-text-primary)]/60 disabled:opacity-30"
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   Back
@@ -2218,7 +2218,7 @@ export default function OnboardingPage() {
                   <Button
                     onClick={handleComplete}
                     disabled={isSaving || !profile.consentGiven}
-                    className="bg-gradient-to-r from-[#FFD700] to-[#FFD700] text-black hover:opacity-90 disabled:opacity-50"
+                    className="bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] text-[var(--hive-black)] hover:opacity-90 disabled:opacity-50"
                   >
                     {isSaving ? (
                       <>
@@ -2250,8 +2250,8 @@ export default function OnboardingPage() {
                     variant="outline"
                     className={`transition-all duration-200 ${
                       isStepValid() 
-                        ? "border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/5 hover:border-[#FFD700]/50" 
-                        : "border-[#3A3A3B] text-white/40 opacity-50"
+                        ? "border-[var(--hive-gold)]/30 text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/5 hover:border-[var(--hive-gold)]/50" 
+                        : "border-[#3A3A3B] text-[var(--hive-text-primary)]/40 opacity-50"
                     }`}
                   >
                     {currentStep === 0 ? 'Get Started' : 'Continue'}

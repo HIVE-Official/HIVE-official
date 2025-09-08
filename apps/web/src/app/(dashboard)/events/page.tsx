@@ -29,7 +29,7 @@ const CreateEventModal = dynamic(
   { 
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm z-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
       </div>
     )
@@ -44,7 +44,7 @@ const EventDetailsModal = dynamic(
   { 
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm z-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
       </div>
     )
@@ -351,8 +351,8 @@ export default function EventsPage() {
       case 'academic': return 'bg-blue-500';
       case 'social': return 'bg-pink-500';
       case 'professional': return 'bg-green-500';
-      case 'recreational': return 'bg-orange-500';
-      case 'official': return 'bg-purple-500';
+      case 'recreational': return 'bg-[var(--hive-gold)]';
+      case 'official': return 'bg-[var(--hive-gold)]';
       default: return 'bg-gray-500';
     }
   };

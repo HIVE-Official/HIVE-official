@@ -173,9 +173,9 @@ export function EventToolIntegration({
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'productivity': return 'bg-blue-500';
-      case 'engagement': return 'bg-purple-500';
+      case 'engagement': return 'bg-[var(--hive-gold)]';
       case 'collaboration': return 'bg-green-500';
-      case 'communication': return 'bg-orange-500';
+      case 'communication': return 'bg-[var(--hive-gold)]';
       case 'organization': return 'bg-red-500';
       default: return 'bg-gray-500';
     }

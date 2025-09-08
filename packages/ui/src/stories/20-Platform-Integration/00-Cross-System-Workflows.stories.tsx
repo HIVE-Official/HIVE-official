@@ -256,14 +256,14 @@ const CrossSystemWorkflowsDemo = () => {
   const [showSystemConnections, setShowSystemConnections] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white flex items-center">
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)] flex items-center">
                 <Network className="w-6 h-6 mr-3" style={{ color: 'var(--hive-brand-primary)' }} />
                 Cross-System Integration
               </h1>
@@ -277,7 +277,7 @@ const CrossSystemWorkflowsDemo = () => {
                 />
                 <span className="text-sm text-gray-400">Show Connections</span>
               </div>
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -295,7 +295,7 @@ const CrossSystemWorkflowsDemo = () => {
               <Card key={system.name} className="bg-gray-800/50 border-gray-700 text-center">
                 <CardContent className="pt-4 pb-4">
                   <system.icon className="w-6 h-6 mx-auto mb-2" style={{ color: system.color }} />
-                  <div className="text-sm font-medium text-white">{system.name}</div>
+                  <div className="text-sm font-medium text-[var(--hive-text-primary)]">{system.name}</div>
                   <div className={`w-2 h-2 rounded-full mx-auto mt-2 ${
                     system.status === 'active' ? 'bg-green-400' : 'bg-gray-600'
                   }`} />
@@ -312,7 +312,7 @@ const CrossSystemWorkflowsDemo = () => {
         {/* User Integration Overview */}
         <Card className="bg-gray-800/50 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-white flex items-center">
+            <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
               <Users className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
               Integrated User Profile: {mockIntegratedUser.profile.name}
             </CardTitle>
@@ -322,19 +322,19 @@ const CrossSystemWorkflowsDemo = () => {
               
               {/* Profile System */}
               <div className="space-y-3">
-                <h4 className="text-white font-medium flex items-center">
+                <h4 className="text-[var(--hive-text-primary)] font-medium flex items-center">
                   <Users className="w-4 h-4 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
                   Profile
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center">
                     <Avatar className="w-8 h-8 mr-2">
-                      <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                      <AvatarFallback className="bg-gradient-to-r from-[var(--hive-gold)] to-pink-500 text-[var(--hive-text-primary)]">
                         {mockIntegratedUser.profile.avatar}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="text-white">{mockIntegratedUser.profile.name}</div>
+                      <div className="text-[var(--hive-text-primary)]">{mockIntegratedUser.profile.name}</div>
                       <div className="text-gray-400 text-xs">{mockIntegratedUser.profile.major}</div>
                     </div>
                   </div>
@@ -346,29 +346,29 @@ const CrossSystemWorkflowsDemo = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Reputation</span>
-                    <span className="text-white">{mockIntegratedUser.profile.reputation}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.profile.reputation}</span>
                   </div>
                 </div>
               </div>
 
               {/* Spaces System */}
               <div className="space-y-3">
-                <h4 className="text-white font-medium flex items-center">
+                <h4 className="text-[var(--hive-text-primary)] font-medium flex items-center">
                   <Users2 className="w-4 h-4 mr-2 text-blue-400" />
                   Spaces
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Member of</span>
-                    <span className="text-white">{mockIntegratedUser.spaces.memberOf.length}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.spaces.memberOf.length}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Created</span>
-                    <span className="text-white">{mockIntegratedUser.spaces.created.length}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.spaces.created.length}</span>
                   </div>
                   {mockIntegratedUser.spaces.memberOf.slice(0, 2).map((space) => (
-                    <div key={space.id} className="p-2 bg-black/30 rounded text-xs">
-                      <div className="text-white font-medium">{space.name}</div>
+                    <div key={space.id} className="p-2 bg-[var(--hive-black)]/30 rounded text-xs">
+                      <div className="text-[var(--hive-text-primary)] font-medium">{space.name}</div>
                       <div className="text-gray-400">{space.role}</div>
                     </div>
                   ))}
@@ -377,24 +377,24 @@ const CrossSystemWorkflowsDemo = () => {
 
               {/* Feed System */}
               <div className="space-y-3">
-                <h4 className="text-white font-medium flex items-center">
+                <h4 className="text-[var(--hive-text-primary)] font-medium flex items-center">
                   <Activity className="w-4 h-4 mr-2 text-green-400" />
                   Feed
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Posts</span>
-                    <span className="text-white">{mockIntegratedUser.feed.engagement.postsCreated}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.feed.engagement.postsCreated}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Comments</span>
-                    <span className="text-white">{mockIntegratedUser.feed.engagement.commentsGiven}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.feed.engagement.commentsGiven}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Helpful Votes</span>
-                    <span className="text-white">{mockIntegratedUser.feed.engagement.helpfulVotes}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.feed.engagement.helpfulVotes}</span>
                   </div>
-                  <div className="p-2 bg-black/30 rounded text-xs">
+                  <div className="p-2 bg-[var(--hive-black)]/30 rounded text-xs">
                     <div className="text-green-400">Recent: Tool Shared</div>
                     <div className="text-gray-400">2 hours ago</div>
                   </div>
@@ -403,26 +403,26 @@ const CrossSystemWorkflowsDemo = () => {
 
               {/* Rituals System */}
               <div className="space-y-3">
-                <h4 className="text-white font-medium flex items-center">
-                  <Target className="w-4 h-4 mr-2 text-yellow-400" />
+                <h4 className="text-[var(--hive-text-primary)] font-medium flex items-center">
+                  <Target className="w-4 h-4 mr-2 text-[var(--hive-gold)]" />
                   Rituals
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Completed</span>
-                    <span className="text-white">{mockIntegratedUser.rituals.completed.filter(r => r.status === 'completed').length}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.rituals.completed.filter(r => r.status === 'completed').length}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">In Progress</span>
-                    <span className="text-white">{mockIntegratedUser.rituals.completed.filter(r => r.status === 'in_progress').length}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.rituals.completed.filter(r => r.status === 'in_progress').length}</span>
                   </div>
                   {mockIntegratedUser.rituals.completed.map((ritual) => (
-                    <div key={ritual.id} className="p-2 bg-black/30 rounded text-xs">
-                      <div className="text-white font-medium">{ritual.name}</div>
+                    <div key={ritual.id} className="p-2 bg-[var(--hive-black)]/30 rounded text-xs">
+                      <div className="text-[var(--hive-text-primary)] font-medium">{ritual.name}</div>
                       <div className="flex items-center justify-between">
                         <span className="text-gray-400">Week {ritual.completedWeeks}/4</span>
                         <Badge className={`text-xs ${
-                          ritual.status === 'completed' ? 'bg-green-600 text-white' : 'bg-yellow-600 text-black'
+                          ritual.status === 'completed' ? 'bg-green-600 text-[var(--hive-text-primary)]' : 'bg-yellow-600 text-[var(--hive-black)]'
                         }`}>
                           {ritual.status}
                         </Badge>
@@ -434,29 +434,29 @@ const CrossSystemWorkflowsDemo = () => {
 
               {/* HiveLAB System */}
               <div className="space-y-3">
-                <h4 className="text-white font-medium flex items-center">
-                  <Wrench className="w-4 h-4 mr-2 text-purple-400" />
+                <h4 className="text-[var(--hive-text-primary)] font-medium flex items-center">
+                  <Wrench className="w-4 h-4 mr-2 text-[var(--hive-gold)]" />
                   HiveLAB
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Tools Created</span>
-                    <span className="text-white">{mockIntegratedUser.hivelab.toolsCreated.length}</span>
+                    <span className="text-[var(--hive-text-primary)]">{mockIntegratedUser.hivelab.toolsCreated.length}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Total Installs</span>
-                    <span className="text-white">
+                    <span className="text-[var(--hive-text-primary)]">
                       {mockIntegratedUser.hivelab.toolsCreated.reduce((sum, tool) => sum + tool.installs, 0)}
                     </span>
                   </div>
                   {mockIntegratedUser.hivelab.toolsCreated.slice(0, 2).map((tool) => (
-                    <div key={tool.id} className="p-2 bg-black/30 rounded text-xs">
-                      <div className="text-white font-medium">{tool.name}</div>
+                    <div key={tool.id} className="p-2 bg-[var(--hive-black)]/30 rounded text-xs">
+                      <div className="text-[var(--hive-text-primary)] font-medium">{tool.name}</div>
                       <div className="flex items-center justify-between">
                         <span className="text-gray-400">{tool.installs} installs</span>
                         <div className="flex items-center">
-                          <Star className="w-3 h-3 mr-1 fill-current text-yellow-400" />
-                          <span className="text-white">{tool.rating}</span>
+                          <Star className="w-3 h-3 mr-1 fill-current text-[var(--hive-gold)]" />
+                          <span className="text-[var(--hive-text-primary)]">{tool.rating}</span>
                         </div>
                       </div>
                     </div>
@@ -470,13 +470,13 @@ const CrossSystemWorkflowsDemo = () => {
         {/* Cross-System Workflows */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Cross-System Workflows</h2>
+            <h2 className="text-xl font-bold text-[var(--hive-text-primary)]">Cross-System Workflows</h2>
             <div className="flex items-center space-x-2">
               <Button 
                 size="sm" 
                 variant={viewMode === 'timeline' ? 'default' : 'outline'}
                 onClick={() => setViewMode('timeline')}
-                className={viewMode === 'timeline' ? 'hive-interactive' : 'border-gray-600 text-white'}
+                className={viewMode === 'timeline' ? 'hive-interactive' : 'border-gray-600 text-[var(--hive-text-primary)]'}
                 style={viewMode === 'timeline' ? {
                   backgroundColor: 'var(--hive-brand-primary)',
                   color: 'var(--hive-text-inverse)'
@@ -488,7 +488,7 @@ const CrossSystemWorkflowsDemo = () => {
                 size="sm" 
                 variant={viewMode === 'system' ? 'default' : 'outline'}
                 onClick={() => setViewMode('system')}
-                className={viewMode === 'system' ? 'hive-interactive' : 'border-gray-600 text-white'}
+                className={viewMode === 'system' ? 'hive-interactive' : 'border-gray-600 text-[var(--hive-text-primary)]'}
                 style={viewMode === 'system' ? {
                   backgroundColor: 'var(--hive-brand-primary)',
                   color: 'var(--hive-text-inverse)'
@@ -514,7 +514,7 @@ const CrossSystemWorkflowsDemo = () => {
                 <CardContent className="pt-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h4 className="text-white font-medium mb-1">{workflow.title}</h4>
+                      <h4 className="text-[var(--hive-text-primary)] font-medium mb-1">{workflow.title}</h4>
                       <p className="text-gray-400 text-sm mb-3">{workflow.type.replace('_', ' ')}</p>
                       <div className="flex flex-wrap gap-1">
                         {workflow.systems.map((system) => (
@@ -536,7 +536,7 @@ const CrossSystemWorkflowsDemo = () => {
           {/* Workflow Details */}
           <Card className="bg-gray-800/50 border-gray-700">
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
+              <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
                 <Workflow className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
                 {mockCrossSystemActivities[selectedWorkflow].title}
               </CardTitle>
@@ -564,7 +564,7 @@ const CrossSystemWorkflowsDemo = () => {
                             {new Date(step.timestamp).toLocaleTimeString()}
                           </span>
                         </div>
-                        <h5 className="text-white font-medium">{step.action}</h5>
+                        <h5 className="text-[var(--hive-text-primary)] font-medium">{step.action}</h5>
                       </div>
                       {index < mockCrossSystemActivities[selectedWorkflow].timeline.length - 1 && (
                         <div className="absolute left-6 mt-12 w-px h-6 bg-gray-600" />
@@ -582,7 +582,7 @@ const CrossSystemWorkflowsDemo = () => {
                       {Object.entries(mockCrossSystemActivities[selectedWorkflow].outcome).map(([key, value]) => (
                         <div key={key}>
                           <div className="text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1')}</div>
-                          <div className="text-white font-semibold">{value.toString()}</div>
+                          <div className="text-[var(--hive-text-primary)] font-semibold">{value.toString()}</div>
                         </div>
                       ))}
                     </div>
@@ -591,14 +591,14 @@ const CrossSystemWorkflowsDemo = () => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                   {mockCrossSystemActivities[selectedWorkflow].systems.map((system, index) => (
-                    <Card key={system} className="bg-black/30 border-gray-600">
+                    <Card key={system} className="bg-[var(--hive-black)]/30 border-gray-600">
                       <CardHeader className="pb-3">
-                        <CardTitle className="text-white text-sm capitalize flex items-center">
+                        <CardTitle className="text-[var(--hive-text-primary)] text-sm capitalize flex items-center">
                           {system === 'profile' && <Users className="w-4 h-4 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />}
                           {system === 'spaces' && <Users2 className="w-4 h-4 mr-2 text-blue-400" />}
                           {system === 'feed' && <Activity className="w-4 h-4 mr-2 text-green-400" />}
-                          {system === 'rituals' && <Target className="w-4 h-4 mr-2 text-yellow-400" />}
-                          {system === 'hivelab' && <Wrench className="w-4 h-4 mr-2 text-purple-400" />}
+                          {system === 'rituals' && <Target className="w-4 h-4 mr-2 text-[var(--hive-gold)]" />}
+                          {system === 'hivelab' && <Wrench className="w-4 h-4 mr-2 text-[var(--hive-gold)]" />}
                           {system}
                         </CardTitle>
                       </CardHeader>
@@ -608,7 +608,7 @@ const CrossSystemWorkflowsDemo = () => {
                             .filter(step => step.system === system)
                             .map((step, stepIndex) => (
                               <div key={stepIndex} className="mb-2 last:mb-0">
-                                <div className="text-white font-medium text-xs mb-1">{step.action}</div>
+                                <div className="text-[var(--hive-text-primary)] font-medium text-xs mb-1">{step.action}</div>
                                 <div className="text-gray-500 text-xs">
                                   {new Date(step.timestamp).toLocaleTimeString()}
                                 </div>
@@ -627,7 +627,7 @@ const CrossSystemWorkflowsDemo = () => {
         {/* System Integration Metrics */}
         <Card className="bg-gray-800/50 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-white flex items-center">
+            <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
               <BarChart3 className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
               Integration Performance Metrics
             </CardTitle>
@@ -650,7 +650,7 @@ const CrossSystemWorkflowsDemo = () => {
                 <div className="text-green-400 text-xs mt-1">+23 this week</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400">4.8</div>
+                <div className="text-3xl font-bold text-[var(--hive-gold)]">4.8</div>
                 <div className="text-gray-400 text-sm">User Experience Rating</div>
                 <div className="text-green-400 text-xs mt-1">+0.3 this month</div>
               </div>
@@ -735,10 +735,10 @@ export const SystemDataFlow: Story = {
     };
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)] p-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-4">System Data Flow Visualization</h1>
+            <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-4">System Data Flow Visualization</h1>
             <p className="text-gray-400">Understanding how data flows between platform systems</p>
           </div>
 
@@ -749,7 +749,7 @@ export const SystemDataFlow: Story = {
                 key={key}
                 variant={activeSystem === key ? 'default' : 'outline'}
                 onClick={() => setActiveSystem(key)}
-                className={activeSystem === key ? 'hive-interactive' : 'border-gray-600 text-white'}
+                className={activeSystem === key ? 'hive-interactive' : 'border-gray-600 text-[var(--hive-text-primary)]'}
                 style={activeSystem === key ? {
                   backgroundColor: system.color,
                   color: 'white'
@@ -766,14 +766,14 @@ export const SystemDataFlow: Story = {
             {/* Central System */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
                   <Database className="w-5 h-5 mr-2" style={{ color: systemConnections[activeSystem].color }} />
                   {systemConnections[activeSystem].name}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="text-white font-medium mb-3">Data Types</h4>
+                  <h4 className="text-[var(--hive-text-primary)] font-medium mb-3">Data Types</h4>
                   <div className="space-y-2">
                     {systemConnections[activeSystem].dataTypes.map((dataType, index) => (
                       <div key={index} className="flex items-center">
@@ -790,13 +790,13 @@ export const SystemDataFlow: Story = {
                 <Separator className="bg-gray-700" />
 
                 <div>
-                  <h4 className="text-white font-medium mb-3">System Connections</h4>
+                  <h4 className="text-[var(--hive-text-primary)] font-medium mb-3">System Connections</h4>
                   <div className="space-y-3">
                     {systemConnections[activeSystem].connections.map((connection, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-black/30 rounded-lg">
+                      <div key={index} className="flex items-center justify-between p-3 bg-[var(--hive-black)]/30 rounded-lg">
                         <div className="flex items-center">
                           <ArrowRight className="w-4 h-4 mr-2" style={{ color: systemConnections[activeSystem].color }} />
-                          <span className="text-white font-medium capitalize">{connection.to}</span>
+                          <span className="text-[var(--hive-text-primary)] font-medium capitalize">{connection.to}</span>
                         </div>
                         <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                           {connection.type}
@@ -811,13 +811,13 @@ export const SystemDataFlow: Story = {
             {/* Connection Details */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-white">Data Exchange Details</CardTitle>
+                <CardTitle className="text-[var(--hive-text-primary)]">Data Exchange Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {systemConnections[activeSystem].connections.map((connection, index) => (
-                  <div key={index} className="p-4 bg-black/30 rounded-lg">
+                  <div key={index} className="p-4 bg-[var(--hive-black)]/30 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
-                      <h5 className="text-white font-medium capitalize">→ {connection.to}</h5>
+                      <h5 className="text-[var(--hive-text-primary)] font-medium capitalize">→ {connection.to}</h5>
                       <Badge 
                         className="text-xs"
                         style={{

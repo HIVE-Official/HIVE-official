@@ -87,13 +87,13 @@ const TOOL_CATEGORIES = {
   forms: { 
     name: 'Data Collection', 
     icon: ExternalLink, 
-    color: 'from-purple-500 to-violet-600',
+    color: 'from-[var(--hive-gold)] to-violet-600',
     description: 'Gather information and feedback'
   },
   resources: { 
     name: 'Resource Sharing', 
     icon: ExternalLink, 
-    color: 'from-orange-500 to-amber-600',
+    color: 'from-[var(--hive-gold)] to-amber-600',
     description: 'Share links, files, and materials'
   },
   coordination: { 
@@ -293,7 +293,7 @@ export default function BrowseToolsPage() {
           {/* Featured/Trending Badges */}
           <div className="absolute top-3 right-3 flex gap-1 z-10">
             {tool.featured && (
-              <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+              <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30">
                 <Star className="h-3 w-3 mr-1" />
                 Featured
               </Badge>

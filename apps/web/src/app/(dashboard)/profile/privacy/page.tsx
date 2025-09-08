@@ -278,7 +278,7 @@ export default function ProfilePrivacyStorybook() {
   };
 
   const getPrivacyLevelColor = () => {
-    if (privacySettings.ghostMode.enabled) return 'bg-purple-500/10 border-purple-500/20 text-purple-400';
+    if (privacySettings.ghostMode.enabled) return 'bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]';
     if (!privacySettings.isPublic) return 'bg-red-500/10 border-red-500/20 text-red-400';
     return 'bg-green-500/10 border-green-500/20 text-green-400';
   };
@@ -508,13 +508,13 @@ export default function ProfilePrivacyStorybook() {
         </Card>
 
         {/* 👻 **UB GHOST MODE** */}
-        <Card className="p-6 border-purple-500/20 bg-purple-500/5 mb-6">
+        <Card className="p-6 border-[var(--hive-gold)]/20 bg-[var(--hive-gold)]/5 mb-6">
           <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
-            <Moon className="h-5 w-5 text-purple-400" />
+            <Moon className="h-5 w-5 text-[var(--hive-gold)]" />
             Ghost Mode
             <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
             {privacySettings.ghostMode.enabled && (
-              <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">
+              <Badge variant="secondary" className="text-xs bg-[var(--hive-gold)]/20 text-purple-300">
                 Active - {privacySettings.ghostMode.level}
               </Badge>
             )}
@@ -540,7 +540,7 @@ export default function ProfilePrivacyStorybook() {
             </FormField>
             
             {privacySettings.ghostMode.enabled && (
-              <div className="pl-4 border-l-2 border-purple-500/20 space-y-3 mt-4">
+              <div className="pl-4 border-l-2 border-[var(--hive-gold)]/20 space-y-3 mt-4">
                 <FormField label="Hide Activity Feed">
                   <Switch
                     checked={privacySettings.ghostMode.hideActivity}

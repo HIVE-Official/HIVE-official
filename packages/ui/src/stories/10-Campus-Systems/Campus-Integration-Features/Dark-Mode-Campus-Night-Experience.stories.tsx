@@ -91,10 +91,10 @@ const DarkModeShowcase = () => {
   // Dark Mode Color System
   const darkTheme = {
     // Core Backgrounds
-    'background-primary': '#0A0A0B',      // Pure black for OLED efficiency
+    'background-primary': 'var(--hive-background-primary)',      // Pure black for OLED efficiency
     'background-secondary': '#111114',    // Subtle lift for cards
     'background-tertiary': '#1A1A1F',     // Modal and elevated surfaces
-    'background-overlay': '#000000CC',    // Semi-transparent overlays
+    'background-overlay': 'var(--hive-black)CC',    // Semi-transparent overlays
     
     // Content Surfaces
     'surface-elevated': '#1E1E24',        // Prominent cards and panels
@@ -107,7 +107,7 @@ const DarkModeShowcase = () => {
     'text-secondary': '#B3B3B8',        // Secondary information
     'text-muted': '#7A7A82',             // Tertiary content
     'text-disabled': '#4A4A52',         // Disabled states
-    'text-inverse': '#0A0A0B',          // Light text on dark backgrounds
+    'text-inverse': 'var(--hive-background-primary)',          // Light text on dark backgrounds
     
     // Interactive States
     'interactive-primary': '#3B82F6',    // Primary actions (kept vibrant)
@@ -130,7 +130,7 @@ const DarkModeShowcase = () => {
     // Special Effects
     'glow-primary': '#3B82F6',          // Primary glow effects
     'glow-accent': '#8B5CF6',           // Accent glows
-    'shadow-elevation': '#000000'       // Drop shadows
+    'shadow-elevation': 'var(--hive-black)'       // Drop shadows
   };
 
   const lightTheme = {
@@ -288,7 +288,7 @@ const DarkModeShowcase = () => {
                   opacity: darkMode ? 0.9 : 1
                 }}
               >
-                <scenario.icon className="w-5 h-5 text-white" />
+                <scenario.icon className="w-5 h-5 text-[var(--hive-text-primary)]" />
               </div>
               <div>
                 <h4 className="font-medium" style={{ color: currentTheme['text-primary'] }}>
@@ -440,7 +440,7 @@ const DarkModeShowcase = () => {
                 className="w-8 h-8 rounded-lg flex items-center justify-center"
                 style={{ backgroundColor: currentTheme['interactive-primary'] }}
               >
-                <Zap className="w-4 h-4 text-white" />
+                <Zap className="w-4 h-4 text-[var(--hive-text-primary)]" />
               </div>
               <h3 className="font-semibold" style={{ color: currentTheme['text-primary'] }}>
                 HIVE
@@ -473,7 +473,7 @@ const DarkModeShowcase = () => {
                   className="w-8 h-8 rounded-full flex items-center justify-center"
                   style={{ backgroundColor: currentTheme['interactive-primary'] }}
                 >
-                  <User className="w-4 h-4 text-white" />
+                  <User className="w-4 h-4 text-[var(--hive-text-primary)]" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center space-x-2">
@@ -538,7 +538,7 @@ const DarkModeShowcase = () => {
       className="min-h-screen p-8 transition-all duration-500"
       style={{ 
         background: darkMode
-          ? 'linear-gradient(135deg, #0A0A0B 0%, #111114 50%, #1A1A1F 100%)'
+          ? 'linear-gradient(135deg, var(--hive-background-primary) 0%, #111114 50%, #1A1A1F 100%)'
           : 'linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%)',
         color: currentTheme['text-primary']
       }}
@@ -562,7 +562,7 @@ const DarkModeShowcase = () => {
             >
               <Moon className="w-full h-full p-2" style={{ color: currentTheme['interactive-primary'] }} />
             </div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-[var(--hive-brand-primary)] via-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-[var(--hive-brand-primary)] via-[var(--hive-gold)] to-blue-400 bg-clip-text text-transparent">
               Dark Mode Experience
             </h1>
           </div>
@@ -829,7 +829,7 @@ const DarkModeShowcase = () => {
                         className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
                         style={{ backgroundColor: benefit.color, opacity: 0.9 }}
                       >
-                        <benefit.icon className="w-4 h-4 text-white" />
+                        <benefit.icon className="w-4 h-4 text-[var(--hive-text-primary)]" />
                       </div>
                       <h4 className="font-medium" style={{ color: currentTheme['text-primary'] }}>
                         {benefit.title}
@@ -886,7 +886,7 @@ const DarkModeShowcase = () => {
                     >
                       <div style={{ color: currentTheme['text-muted'] }}>/* Dark Theme Variables */</div>
                       <div style={{ color: currentTheme['text-primary'] }}>:root[data-theme="dark"] &#123;</div>
-                      <div className="pl-4" style={{ color: currentTheme['interactive-primary'] }}>--bg-primary: #0A0A0B;</div>
+                      <div className="pl-4" style={{ color: currentTheme['interactive-primary'] }}>--bg-primary: var(--hive-background-primary);</div>
                       <div className="pl-4" style={{ color: currentTheme['interactive-primary'] }}>--bg-secondary: #111114;</div>
                       <div className="pl-4" style={{ color: currentTheme['interactive-primary'] }}>--text-primary: #FFFFFF;</div>
                       <div className="pl-4" style={{ color: currentTheme['interactive-primary'] }}>--text-secondary: #B3B3B8;</div>

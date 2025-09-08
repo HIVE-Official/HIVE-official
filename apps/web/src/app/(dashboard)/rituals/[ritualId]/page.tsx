@@ -123,23 +123,23 @@ async function fetchRitualDetail(ritualId: string): Promise<RitualDetail> {
 const RITUAL_TYPES = {
   onboarding: {
     icon: Sparkles,
-    color: 'text-purple-400',
+    color: 'text-[var(--hive-gold)]',
     bgColor: 'bg-purple-900/20',
-    gradient: 'from-purple-400 to-pink-400',
+    gradient: 'from-[var(--hive-gold)] to-pink-400',
     label: 'Welcome Experience'
   },
   seasonal: {
     icon: Calendar,
-    color: 'text-orange-400',
+    color: 'text-[var(--hive-gold)]',
     bgColor: 'bg-orange-900/20',
-    gradient: 'from-orange-400 to-red-400',
+    gradient: 'from-[var(--hive-gold)] to-red-400',
     label: 'Campus Moment'
   },
   achievement: {
     icon: Trophy,
-    color: 'text-yellow-400',
+    color: 'text-[var(--hive-gold)]',
     bgColor: 'bg-yellow-900/20',
-    gradient: 'from-yellow-400 to-orange-400',
+    gradient: 'from-[var(--hive-gold)] to-[var(--hive-gold)]',
     label: 'Milestone'
   },
   community: {
@@ -153,7 +153,7 @@ const RITUAL_TYPES = {
     icon: Star,
     color: 'text-pink-400',
     bgColor: 'bg-pink-900/20',
-    gradient: 'from-pink-400 to-purple-400',
+    gradient: 'from-pink-400 to-[var(--hive-gold)]',
     label: 'Creative Challenge'
   },
   emergency: {
@@ -547,8 +547,8 @@ export default function RitualDetailPage() {
                   {ritual.rewards.map((reward) => (
                     <div key={reward.id} className="flex items-center space-x-3">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                        reward.rarity === 'legendary' ? 'bg-yellow-500' :
-                        reward.rarity === 'epic' ? 'bg-purple-500' :
+                        reward.rarity === 'legendary' ? 'bg-[var(--hive-gold)]' :
+                        reward.rarity === 'epic' ? 'bg-[var(--hive-gold)]' :
                         reward.rarity === 'rare' ? 'bg-blue-500' :
                         'bg-hive-brand-secondary'
                       }`}>

@@ -323,7 +323,10 @@ function useToolAnalytics(toolId, options) {
                 const executionsRef = (0, firestore_1.collection)(db, 'tool_executions');
                 const q = (0, firestore_1.query)(executionsRef, (0, firestore_1.where)('toolId', '==', toolId), (0, firestore_1.orderBy)('startedAt', 'desc'), (0, firestore_1.limit)(100));
                 const snapshot = await (0, firestore_1.getDocs)(q);
-                const executions = snapshot.docs.map(doc => doc.data());
+                const executions = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
                 // Calculate analytics
                 const totalExecutions = executions.length;
                 const successRate = executions.filter(e => e.status === 'completed').length / totalExecutions;

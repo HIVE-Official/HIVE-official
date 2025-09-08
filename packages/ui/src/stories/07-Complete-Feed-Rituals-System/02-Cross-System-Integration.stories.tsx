@@ -338,7 +338,7 @@ function CrossSystemIntegration() {
     switch (system) {
       case 'profile': return 'text-green-400 bg-green-500/20';
       case 'spaces': return 'text-blue-400 bg-blue-500/20';
-      case 'hivelab': return 'text-purple-400 bg-purple-500/20';
+      case 'hivelab': return 'text-[var(--hive-gold)] bg-[var(--hive-gold)]/20';
       default: return 'text-gray-400 bg-gray-500/20';
     }
   };
@@ -354,19 +354,19 @@ function CrossSystemIntegration() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-400 via-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                  <Network className="h-5 w-5 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-br from-green-400 via-blue-500 to-[var(--hive-gold)] rounded-xl flex items-center justify-center">
+                  <Network className="h-5 w-5 text-[var(--hive-text-primary)]" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-white">System Integration</h1>
+                  <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">System Integration</h1>
                   <p className="text-gray-400">Cross-system data flow & synchronization</p>
                 </div>
               </div>
@@ -382,16 +382,16 @@ function CrossSystemIntegration() {
               <Button 
                 variant="secondary" 
                 size="sm"
-                className="border-gray-600 text-white hover:bg-gray-800"
+                className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
                 onClick={() => setShowIntegrationFlow(!showIntegrationFlow)}
               >
                 <Workflow className="w-4 h-4 mr-2" />
                 {showIntegrationFlow ? 'Hide' : 'Show'} Flows
               </Button>
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <RefreshCw className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -400,19 +400,19 @@ function CrossSystemIntegration() {
           {/* Navigation */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4 bg-gray-800">
-              <TabsTrigger value="live-feed" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white">
+              <TabsTrigger value="live-feed" className="data-[state=active]:bg-blue-500 data-[state=active]:text-[var(--hive-text-primary)]">
                 <Activity className="w-4 h-4 mr-2" />
                 Live Integration
               </TabsTrigger>
-              <TabsTrigger value="data-flows" className="data-[state=active]:bg-purple-500 data-[state=active]:text-white">
+              <TabsTrigger value="data-flows" className="data-[state=active]:bg-[var(--hive-gold)] data-[state=active]:text-[var(--hive-text-primary)]">
                 <GitBranch className="w-4 h-4 mr-2" />
                 Data Flows
               </TabsTrigger>
-              <TabsTrigger value="sync-status" className="data-[state=active]:bg-green-500 data-[state=active]:text-white">
+              <TabsTrigger value="sync-status" className="data-[state=active]:bg-green-500 data-[state=active]:text-[var(--hive-text-primary)]">
                 <Database className="w-4 h-4 mr-2" />
                 Sync Status
               </TabsTrigger>
-              <TabsTrigger value="coordination" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+              <TabsTrigger value="coordination" className="data-[state=active]:bg-[var(--hive-gold)] data-[state=active]:text-[var(--hive-text-primary)]">
                 <Layers className="w-4 h-4 mr-2" />
                 Coordination
               </TabsTrigger>
@@ -435,8 +435,8 @@ function CrossSystemIntegration() {
                     variant={selectedSystem === id ? "default" : "outline"}
                     onClick={() => setSelectedSystem(id)}
                     className={selectedSystem === id 
-                      ? "bg-blue-500 text-white border-blue-400"
-                      : "border-gray-600 text-white hover:bg-gray-800"
+                      ? "bg-blue-500 text-[var(--hive-text-primary)] border-blue-400"
+                      : "border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
                     }
                   >
                     <Icon className="w-4 h-4 mr-1" />
@@ -472,13 +472,13 @@ function CrossSystemIntegration() {
               </Card>
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardContent className="pt-4 text-center">
-                  <div className="text-2xl font-bold text-purple-400">120ms</div>
+                  <div className="text-2xl font-bold text-[var(--hive-gold)]">120ms</div>
                   <div className="text-sm text-gray-400">Avg Response Time</div>
                 </CardContent>
               </Card>
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardContent className="pt-4 text-center">
-                  <div className="text-2xl font-bold text-orange-400">4.8</div>
+                  <div className="text-2xl font-bold text-[var(--hive-gold)]">4.8</div>
                   <div className="text-sm text-gray-400">UX Score</div>
                 </CardContent>
               </Card>
@@ -503,14 +503,14 @@ function CrossSystemIntegration() {
                           {activity.user && (
                             <div className="flex items-center space-x-2 mb-1">
                               <Avatar className="w-8 h-8">
-                                <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm">
+                                <AvatarFallback className="bg-gradient-to-r from-blue-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)] text-sm">
                                   {activity.user.avatar}
                                 </AvatarFallback>
                               </Avatar>
-                              <span className="font-medium text-white">{activity.user.name}</span>
+                              <span className="font-medium text-[var(--hive-text-primary)]">{activity.user.name}</span>
                               <span className="text-gray-400 text-sm">{activity.user.handle}</span>
                               {activity.creator?.isBuilder && (
-                                <Badge variant="secondary" className="text-xs bg-purple-500/10 text-purple-400">
+                                <Badge variant="secondary" className="text-xs bg-[var(--hive-gold)]/10 text-[var(--hive-gold)]">
                                   Builder
                                 </Badge>
                               )}
@@ -548,7 +548,7 @@ function CrossSystemIntegration() {
                         <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
                           <div className="flex items-center space-x-2 mb-3">
                             <Award className="w-5 h-5 text-green-400" />
-                            <h4 className="font-semibold text-white">{activity.data.achievement}</h4>
+                            <h4 className="font-semibold text-[var(--hive-text-primary)]">{activity.data.achievement}</h4>
                           </div>
                           <p className="text-gray-300 mb-3">{activity.data.description}</p>
                           <div className="flex items-center justify-between">
@@ -566,7 +566,7 @@ function CrossSystemIntegration() {
                         <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                           <div className="flex items-center space-x-2 mb-3">
                             <Settings className="w-5 h-5 text-blue-400" />
-                            <h4 className="font-semibold text-white">{activity.data.update}</h4>
+                            <h4 className="font-semibold text-[var(--hive-text-primary)]">{activity.data.update}</h4>
                           </div>
                           <p className="text-gray-300 mb-2">{activity.data.description}</p>
                           <div className="text-sm text-blue-400">
@@ -577,13 +577,13 @@ function CrossSystemIntegration() {
 
                       {/* Space Activities */}
                       {activity.type === 'space_event' && (
-                        <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-4">
+                        <div className="bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center space-x-2">
-                              <Calendar className="w-5 h-5 text-orange-400" />
-                              <h4 className="font-semibold text-white">{activity.data.event.title}</h4>
+                              <Calendar className="w-5 h-5 text-[var(--hive-gold)]" />
+                              <h4 className="font-semibold text-[var(--hive-text-primary)]">{activity.data.event.title}</h4>
                             </div>
-                            <Button size="sm" className="bg-orange-500 text-white hover:bg-orange-600">
+                            <Button size="sm" className="bg-[var(--hive-gold)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-gold-dark)]">
                               RSVP ({activity.data.event.attendees})
                             </Button>
                           </div>
@@ -608,13 +608,13 @@ function CrossSystemIntegration() {
                       )}
 
                       {activity.type === 'tool_installation' && (
-                        <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
+                        <div className="bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center space-x-2">
-                              <Zap className="w-5 h-5 text-purple-400" />
-                              <h4 className="font-semibold text-white">{activity.data.tool.name}</h4>
+                              <Zap className="w-5 h-5 text-[var(--hive-gold)]" />
+                              <h4 className="font-semibold text-[var(--hive-text-primary)]">{activity.data.tool.name}</h4>
                             </div>
-                            <Button size="sm" className="bg-purple-500 text-white hover:bg-purple-600">
+                            <Button size="sm" className="bg-[var(--hive-gold)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-gold-dark)]">
                               Try Tool
                             </Button>
                           </div>
@@ -622,25 +622,25 @@ function CrossSystemIntegration() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div className="text-sm">
                               <span className="text-gray-400">Impact: </span>
-                              <span className="text-purple-400 font-medium">{activity.data.tool.impact}</span>
+                              <span className="text-[var(--hive-gold)] font-medium">{activity.data.tool.impact}</span>
                             </div>
                             <div className="text-sm">
                               <span className="text-gray-400">Usage: </span>
-                              <span className="text-white font-medium">{activity.data.tool.usage} students</span>
+                              <span className="text-[var(--hive-text-primary)] font-medium">{activity.data.tool.usage} students</span>
                             </div>
                           </div>
                         </div>
                       )}
 
                       {activity.type === 'membership_milestone' && (
-                        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
+                        <div className="bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg p-4">
                           <div className="flex items-center space-x-2 mb-3">
-                            <Trophy className="w-5 h-5 text-yellow-400" />
-                            <h4 className="font-semibold text-white">{activity.data.milestone}</h4>
+                            <Trophy className="w-5 h-5 text-[var(--hive-gold)]" />
+                            <h4 className="font-semibold text-[var(--hive-text-primary)]">{activity.data.milestone}</h4>
                           </div>
                           <p className="text-gray-300 mb-3">{activity.data.description}</p>
                           <div className="flex items-center justify-between">
-                            <div className="text-sm text-yellow-400 font-medium">
+                            <div className="text-sm text-[var(--hive-gold)] font-medium">
                               Growth: {activity.data.growth}
                             </div>
                             <div className="text-sm text-gray-400">
@@ -652,13 +652,13 @@ function CrossSystemIntegration() {
 
                       {/* HiveLAB Activities */}
                       {activity.type === 'tool_creation' && (
-                        <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
+                        <div className="bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center space-x-2">
-                              <Sparkles className="w-5 h-5 text-purple-400" />
-                              <h4 className="font-semibold text-white">New Innovation: {activity.data.tool.name}</h4>
+                              <Sparkles className="w-5 h-5 text-[var(--hive-gold)]" />
+                              <h4 className="font-semibold text-[var(--hive-text-primary)]">New Innovation: {activity.data.tool.name}</h4>
                             </div>
-                            <Badge className="bg-purple-500/20 text-purple-400">
+                            <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]">
                               {activity.data.tool.successRate}% success rate
                             </Badge>
                           </div>
@@ -666,7 +666,7 @@ function CrossSystemIntegration() {
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 text-sm">
                             <div>
                               <span className="text-gray-400">Problem: </span>
-                              <span className="text-white">{activity.data.innovation.problemSolved}</span>
+                              <span className="text-[var(--hive-text-primary)]">{activity.data.innovation.problemSolved}</span>
                             </div>
                             <div>
                               <span className="text-gray-400">Impact: </span>
@@ -679,7 +679,7 @@ function CrossSystemIntegration() {
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {activity.data.tool.deploymentSpaces.map((space) => (
-                              <Badge key={space} variant="secondary" className="text-xs bg-purple-500/10 text-purple-400">
+                              <Badge key={space} variant="secondary" className="text-xs bg-[var(--hive-gold)]/10 text-[var(--hive-gold)]">
                                 {space}
                               </Badge>
                             ))}
@@ -691,11 +691,11 @@ function CrossSystemIntegration() {
                         <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
                           <div className="flex items-center space-x-2 mb-3">
                             <TrendingUp className="w-5 h-5 text-green-400" />
-                            <h4 className="font-semibold text-white">Tool Impact Report: {activity.tool.name}</h4>
+                            <h4 className="font-semibold text-[var(--hive-text-primary)]">Tool Impact Report: {activity.tool.name}</h4>
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
                             <div className="text-center p-3 bg-gray-700 rounded">
-                              <div className="text-lg font-bold text-white">{activity.data.impact.totalUsage}</div>
+                              <div className="text-lg font-bold text-[var(--hive-text-primary)]">{activity.data.impact.totalUsage}</div>
                               <div className="text-xs text-gray-400">Total Usage</div>
                             </div>
                             <div className="text-center p-3 bg-gray-700 rounded">
@@ -707,7 +707,7 @@ function CrossSystemIntegration() {
                               <div className="text-xs text-gray-400">Satisfaction</div>
                             </div>
                             <div className="text-center p-3 bg-gray-700 rounded">
-                              <div className="text-lg font-bold text-purple-400">{activity.data.expansion.newSpaces.length}</div>
+                              <div className="text-lg font-bold text-[var(--hive-gold)]">{activity.data.expansion.newSpaces.length}</div>
                               <div className="text-xs text-gray-400">New Spaces</div>
                             </div>
                           </div>
@@ -734,7 +734,7 @@ function CrossSystemIntegration() {
                             )}
                             {activity.integration.ritualConnection && (
                               <div className="flex items-center space-x-2">
-                                <Target className="w-3 h-3 text-purple-400" />
+                                <Target className="w-3 h-3 text-[var(--hive-gold)]" />
                                 <span className="text-gray-300">Ritual Connection: {activity.integration.ritualConnection}</span>
                               </div>
                             )}
@@ -746,15 +746,15 @@ function CrossSystemIntegration() {
                     {/* Action Buttons */}
                     <div className="flex items-center justify-between pt-4 border-t border-gray-700">
                       <div className="flex items-center space-x-3">
-                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-[var(--hive-text-primary)]">
                           <Heart className="w-4 h-4 mr-1" />
                           Appreciate
                         </Button>
-                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-[var(--hive-text-primary)]">
                           <MessageSquare className="w-4 h-4 mr-1" />
                           Comment
                         </Button>
-                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                        <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-[var(--hive-text-primary)]">
                           <Share className="w-4 h-4 mr-1" />
                           Share
                         </Button>
@@ -778,7 +778,7 @@ function CrossSystemIntegration() {
             {Object.entries(mockIntegrationFlows).map(([flowKey, flow]) => (
               <Card key={flowKey} className="bg-gray-800/50 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-lg text-white flex items-center space-x-2">
+                  <CardTitle className="text-lg text-[var(--hive-text-primary)] flex items-center space-x-2">
                     <GitBranch className="w-5 h-5" />
                     <span>{flow.trigger}</span>
                   </CardTitle>
@@ -787,11 +787,11 @@ function CrossSystemIntegration() {
                   <div className="space-y-4">
                     {/* Process Steps */}
                     <div className="space-y-3">
-                      <h4 className="font-semibold text-white">Integration Process:</h4>
+                      <h4 className="font-semibold text-[var(--hive-text-primary)]">Integration Process:</h4>
                       <div className="space-y-2">
                         {flow.process.map((step, index) => (
                           <div key={index} className="flex items-center space-x-3">
-                            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold text-[var(--hive-text-primary)]">
                               {index + 1}
                             </div>
                             <div className="text-gray-300">{step}</div>
@@ -804,7 +804,7 @@ function CrossSystemIntegration() {
                     <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
                       <div className="flex items-center space-x-2 mb-2">
                         <CheckCircle className="w-5 h-5 text-green-400" />
-                        <span className="font-semibold text-white">Expected Outcome:</span>
+                        <span className="font-semibold text-[var(--hive-text-primary)]">Expected Outcome:</span>
                       </div>
                       <p className="text-gray-300">{flow.outcome}</p>
                     </div>
@@ -822,7 +822,7 @@ function CrossSystemIntegration() {
             {/* System Status Overview */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-lg text-white">System Status</CardTitle>
+                <CardTitle className="text-lg text-[var(--hive-text-primary)]">System Status</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {mockSyncStatus.systems.map((system) => (
@@ -832,7 +832,7 @@ function CrossSystemIntegration() {
                         system.status === 'active' ? 'bg-green-400' : 'bg-red-400'
                       }`} />
                       <div>
-                        <div className="font-medium text-white">{system.name}</div>
+                        <div className="font-medium text-[var(--hive-text-primary)]">{system.name}</div>
                         <div className="text-sm text-gray-400">Last sync: {system.lastSync}</div>
                       </div>
                     </div>
@@ -852,7 +852,7 @@ function CrossSystemIntegration() {
             {/* Performance Metrics */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-lg text-white">Performance Metrics</CardTitle>
+                <CardTitle className="text-lg text-[var(--hive-text-primary)]">Performance Metrics</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {Object.entries(mockSyncStatus.performance).map(([key, value]) => (
@@ -861,7 +861,7 @@ function CrossSystemIntegration() {
                       <span className="text-gray-400">
                         {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:
                       </span>
-                      <span className="text-white font-medium">
+                      <span className="text-[var(--hive-text-primary)] font-medium">
                         {typeof value === 'number' ? 
                           (key.includes('Success') || key.includes('Consistency') ? `${value}%` : 
                            key.includes('Score') ? `${value}/5` : 
@@ -884,7 +884,7 @@ function CrossSystemIntegration() {
           {/* Cross-System Coordination Examples */}
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-2">Cross-System Coordination</h2>
+              <h2 className="text-2xl font-bold text-[var(--hive-text-primary)] mb-2">Cross-System Coordination</h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
                 See how different HIVE systems work together to create seamless, coordinated user experiences 
                 that enhance campus community formation and coordination.
@@ -895,12 +895,12 @@ function CrossSystemIntegration() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-lg text-white">Ritual → Profile → Spaces</CardTitle>
+                  <CardTitle className="text-lg text-[var(--hive-text-primary)]">Ritual → Profile → Spaces</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center space-x-2">
-                      <Sparkles className="w-4 h-4 text-purple-400" />
+                      <Sparkles className="w-4 h-4 text-[var(--hive-gold)]" />
                       <span className="text-gray-300">Student completes Week 2 ritual objective</span>
                     </div>
                     <ArrowRight className="w-4 h-4 text-gray-500 mx-auto" />
@@ -919,12 +919,12 @@ function CrossSystemIntegration() {
 
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-lg text-white">Tool → Spaces → Feed</CardTitle>
+                  <CardTitle className="text-lg text-[var(--hive-text-primary)]">Tool → Spaces → Feed</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center space-x-2">
-                      <Zap className="w-4 h-4 text-purple-400" />
+                      <Zap className="w-4 h-4 text-[var(--hive-gold)]" />
                       <span className="text-gray-300">HiveLAB tool reaches impact milestone</span>
                     </div>
                     <ArrowRight className="w-4 h-4 text-gray-500 mx-auto" />
@@ -934,7 +934,7 @@ function CrossSystemIntegration() {
                     </div>
                     <ArrowRight className="w-4 h-4 text-gray-500 mx-auto" />
                     <div className="flex items-center space-x-2">
-                      <Activity className="w-4 h-4 text-orange-400" />
+                      <Activity className="w-4 h-4 text-[var(--hive-gold)]" />
                       <span className="text-gray-300">Success story surfaces in personalized feeds</span>
                     </div>
                   </div>

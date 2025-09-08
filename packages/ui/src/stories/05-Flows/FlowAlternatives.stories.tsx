@@ -53,7 +53,7 @@ Five distinct onboarding and authentication flows designed to test different use
 ## 🎨 **Design Quality Features**
 
 ### **Consistent Brand System**
-- **Colors**: #FFD700 gold with proper contrast ratios
+- **Colors**: var(--hive-gold) gold with proper contrast ratios
 - **Typography**: Geist Sans for professional readability
 - **Spacing**: 8px grid system throughout
 - **Motion**: Smooth transitions and micro-interactions
@@ -254,10 +254,10 @@ Traditional step-by-step onboarding with clear progress indicators. Comprehensiv
 
 export const AllFlowsComparison: Story = {
   render: () => (
-    <div className="bg-black text-white font-['Geist_Sans']">
-      <div className="p-8 text-center border-b border-white/10">
+    <div className="bg-[var(--hive-black)] text-[var(--hive-text-primary)] font-['Geist_Sans']">
+      <div className="p-8 text-center border-b border-[var(--hive-white)]/10">
         <h1 className="text-3xl font-bold mb-4">HIVE Onboarding Flow Alternatives</h1>
-        <p className="text-white/70 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-[var(--hive-text-primary)]/70 max-w-3xl mx-auto leading-relaxed">
           Five distinct onboarding approaches optimized for different user psychology and conversion goals. 
           Each flow targets specific user segments and optimizes for different success metrics.
         </p>
@@ -266,26 +266,26 @@ export const AllFlowsComparison: Story = {
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 p-8">
         {/* Instant Activation Preview */}
         <div className="space-y-4">
-          <div className="aspect-[3/4] bg-black border border-white/10 rounded-lg overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 to-transparent"></div>
+          <div className="aspect-[3/4] bg-[var(--hive-black)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-gold)]/5 to-transparent"></div>
             <div className="w-full h-full flex flex-col items-center justify-center p-6">
-              <div className="w-12 h-12 bg-[#FFD700] rounded-2xl flex items-center justify-center mb-4">
-                <span className="font-black text-black text-lg">H</span>
+              <div className="w-12 h-12 bg-[var(--hive-gold)] rounded-2xl flex items-center justify-center mb-4">
+                <span className="font-black text-[var(--hive-black)] text-lg">H</span>
               </div>
               <div className="text-center space-y-2">
                 <div className="text-lg font-semibold">Instant Activation</div>
-                <div className="text-xs text-white/60">30-second signup</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">30-second signup</div>
               </div>
               <div className="mt-4 space-y-2 w-full">
-                <div className="h-8 bg-white/10 rounded"></div>
-                <div className="h-8 bg-white/10 rounded"></div>
-                <div className="h-8 bg-[#FFD700]/20 rounded"></div>
+                <div className="h-8 bg-[var(--hive-white)]/10 rounded"></div>
+                <div className="h-8 bg-[var(--hive-white)]/10 rounded"></div>
+                <div className="h-8 bg-[var(--hive-gold)]/20 rounded"></div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Instant Activation</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Minimize friction, get users into product immediately
             </p>
             <div className="flex items-center gap-2 text-xs">
@@ -297,15 +297,15 @@ export const AllFlowsComparison: Story = {
 
         {/* Community-First Preview */}
         <div className="space-y-4">
-          <div className="aspect-[3/4] bg-black border border-white/10 rounded-lg overflow-hidden relative">
+          <div className="aspect-[3/4] bg-[var(--hive-black)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent"></div>
             <div className="w-full h-full flex flex-col items-center justify-center p-6">
               <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center mb-4">
-                <span className="font-black text-white text-lg">👥</span>
+                <span className="font-black text-[var(--hive-text-primary)] text-lg">👥</span>
               </div>
               <div className="text-center space-y-2">
                 <div className="text-lg font-semibold">Community-First</div>
-                <div className="text-xs text-white/60">Social discovery</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Social discovery</div>
               </div>
               <div className="mt-4 space-y-2 w-full">
                 <div className="h-6 bg-accent/20 rounded"></div>
@@ -317,7 +317,7 @@ export const AllFlowsComparison: Story = {
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Community-First</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Lead with social proof and community discovery
             </p>
             <div className="flex items-center gap-2 text-xs">
@@ -329,15 +329,15 @@ export const AllFlowsComparison: Story = {
 
         {/* Academic-First Preview */}
         <div className="space-y-4">
-          <div className="aspect-[3/4] bg-black border border-white/10 rounded-lg overflow-hidden relative">
+          <div className="aspect-[3/4] bg-[var(--hive-black)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent"></div>
             <div className="w-full h-full flex flex-col items-center justify-center p-6">
               <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center mb-4">
-                <span className="font-black text-white text-lg">🎓</span>
+                <span className="font-black text-[var(--hive-text-primary)] text-lg">🎓</span>
               </div>
               <div className="text-center space-y-2">
                 <div className="text-lg font-semibold">Academic-First</div>
-                <div className="text-xs text-white/60">Educational context</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Educational context</div>
               </div>
               <div className="mt-4 space-y-2 w-full">
                 <div className="h-10 bg-accent/20 rounded"></div>
@@ -348,7 +348,7 @@ export const AllFlowsComparison: Story = {
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Academic-First</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Establish academic credibility and institutional trust
             </p>
             <div className="flex items-center gap-2 text-xs">
@@ -360,34 +360,34 @@ export const AllFlowsComparison: Story = {
 
         {/* Gamified Preview */}
         <div className="space-y-4">
-          <div className="aspect-[3/4] bg-black border border-white/10 rounded-lg overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 to-transparent"></div>
+          <div className="aspect-[3/4] bg-[var(--hive-black)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-gold)]/5 to-transparent"></div>
             <div className="w-full h-full flex flex-col items-center justify-center p-6">
-              <div className="w-12 h-12 bg-[#FFD700] rounded-2xl flex items-center justify-center mb-4">
-                <span className="font-black text-black text-lg">🏆</span>
+              <div className="w-12 h-12 bg-[var(--hive-gold)] rounded-2xl flex items-center justify-center mb-4">
+                <span className="font-black text-[var(--hive-black)] text-lg">🏆</span>
               </div>
               <div className="text-center space-y-2">
                 <div className="text-lg font-semibold">Gamified</div>
-                <div className="text-xs text-white/60">Achievement system</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Achievement system</div>
               </div>
               <div className="mt-4 space-y-2 w-full">
-                <div className="h-2 bg-[#FFD700]/20 rounded-full">
-                  <div className="h-2 bg-[#FFD700] rounded-full w-3/4"></div>
+                <div className="h-2 bg-[var(--hive-gold)]/20 rounded-full">
+                  <div className="h-2 bg-[var(--hive-gold)] rounded-full w-3/4"></div>
                 </div>
                 <div className="text-center">
-                  <div className="text-sm font-bold text-[#FFD700]">Level 2</div>
-                  <div className="text-xs text-white/60">75 XP</div>
+                  <div className="text-sm font-bold text-[var(--hive-gold)]">Level 2</div>
+                  <div className="text-xs text-[var(--hive-text-primary)]/60">75 XP</div>
                 </div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Gamified</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Make onboarding fun with achievements and progress
             </p>
             <div className="flex items-center gap-2 text-xs">
-              <span className="px-2 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded">🎮 Game</span>
+              <span className="px-2 py-1 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] rounded">🎮 Game</span>
               <span className="px-2 py-1 bg-accent/20 text-accent rounded">🚀 Engage</span>
             </div>
           </div>
@@ -395,28 +395,28 @@ export const AllFlowsComparison: Story = {
 
         {/* Progressive Wizard Preview */}
         <div className="space-y-4">
-          <div className="aspect-[3/4] bg-black border border-white/10 rounded-lg overflow-hidden relative">
+          <div className="aspect-[3/4] bg-[var(--hive-black)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent"></div>
             <div className="w-full h-full flex flex-col items-center justify-center p-6">
               <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center mb-4">
-                <span className="font-black text-white text-lg">📋</span>
+                <span className="font-black text-[var(--hive-text-primary)] text-lg">📋</span>
               </div>
               <div className="text-center space-y-2">
                 <div className="text-lg font-semibold">Progressive Wizard</div>
-                <div className="text-xs text-white/60">Step-by-step</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Step-by-step</div>
               </div>
               <div className="mt-4 space-y-2 w-full">
-                <div className="text-xs text-white/60 text-center">Step 3 of 5</div>
-                <div className="h-2 bg-white/10 rounded-full">
+                <div className="text-xs text-[var(--hive-text-primary)]/60 text-center">Step 3 of 5</div>
+                <div className="h-2 bg-[var(--hive-white)]/10 rounded-full">
                   <div className="h-2 bg-accent rounded-full w-3/5"></div>
                 </div>
-                <div className="h-8 bg-white/10 rounded"></div>
+                <div className="h-8 bg-[var(--hive-white)]/10 rounded"></div>
               </div>
             </div>
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Progressive Wizard</h3>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
               Structured guidance with clear progress indicators
             </p>
             <div className="flex items-center gap-2 text-xs">
@@ -428,7 +428,7 @@ export const AllFlowsComparison: Story = {
       </div>
 
       {/* Comparison Table */}
-      <div className="border-t border-white/5 p-8">
+      <div className="border-t border-[var(--hive-white)]/5 p-8">
         <h2 className="text-2xl font-bold mb-8 text-center">Flow Comparison Matrix</h2>
         
         <div className="max-w-4xl mx-auto">

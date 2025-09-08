@@ -239,8 +239,8 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
     switch (status) {
       case 'active': return 'bg-green-500';
       case 'planning': return 'bg-blue-500';
-      case 'completed': return 'bg-purple-500';
-      case 'paused': return 'bg-orange-500';
+      case 'completed': return 'bg-[var(--hive-gold)]';
+      case 'paused': return 'bg-[var(--hive-gold)]';
       default: return 'bg-zinc-500';
     }
   };

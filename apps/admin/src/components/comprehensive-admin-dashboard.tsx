@@ -12,6 +12,11 @@ import { AnalyticsDashboard } from "./analytics-dashboard";
 import { MetricCards } from "./metric-cards";
 import { AdminNotifications } from "./admin-notifications";
 import { AdminActivityLogDashboard } from "./admin-activity-log";
+import { FeatureFlagDashboard } from "./feature-flag-dashboard";
+import { PlatformHealthMonitor } from "./platform-health-monitor";
+import { EmergencyResponseCenter } from "./emergency-response-center";
+import { PlatformConfigManager } from "./platform-config-manager";
+import { ToolApprovalSystem } from "./tool-approval-system";
 
 interface AdminDashboardProps {
   initialTab?: string;
@@ -114,18 +119,17 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
       case 'content':
         return <ContentModerationDashboard />;
       case 'builders':
-        return (
-          <Card className="border-gray-700 bg-gray-900/50">
-            <CardHeader>
-              <CardTitle className="text-white">Builder Approval Queue</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BuilderQueueEnhanced />
-            </CardContent>
-          </Card>
-        );
+        return <ToolApprovalSystem />;
       case 'analytics':
         return <AnalyticsDashboard />;
+      case 'feature-flags':
+        return <FeatureFlagDashboard />;
+      case 'health-monitor':
+        return <PlatformHealthMonitor />;
+      case 'emergency':
+        return <EmergencyResponseCenter />;
+      case 'config':
+        return <PlatformConfigManager />;
       case 'system':
         return (
           <div className="space-y-6">

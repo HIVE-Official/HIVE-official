@@ -229,7 +229,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-hive-brand-secondary to-purple-500 rounded-full flex items-center justify-center">
+        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-hive-brand-secondary to-[var(--hive-gold)] rounded-full flex items-center justify-center">
           <Compass className="h-10 w-10 text-[var(--hive-text-inverse)]" />
         </div>
         <h3 className="text-2xl font-bold text-hive-text-primary mb-2">
@@ -455,8 +455,8 @@ export function RitualDiscoverWorkflow({
   if (isComplete) {
     return (
       <div className={`space-y-8 ${className}`}>
-        <Card className="p-8 text-center bg-gradient-to-br from-hive-brand-secondary/10 to-purple-500/10 border-hive-brand-secondary/30">
-          <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-hive-brand-secondary to-purple-500 rounded-full flex items-center justify-center">
+        <Card className="p-8 text-center bg-gradient-to-br from-hive-brand-secondary/10 to-[var(--hive-gold)]/10 border-hive-brand-secondary/30">
+          <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-hive-brand-secondary to-[var(--hive-gold)] rounded-full flex items-center justify-center">
             <CheckCircle className="h-12 w-12 text-[var(--hive-text-inverse)]" />
           </div>
           
@@ -476,7 +476,7 @@ export function RitualDiscoverWorkflow({
               <p className="text-sm text-hive-text-secondary">{joinedSpaces.length} active spaces</p>
             </div>
             <div className="p-4 bg-hive-surface-elevated rounded-lg">
-              <MapPin className="h-8 w-8 mx-auto mb-2 text-purple-400" />
+              <MapPin className="h-8 w-8 mx-auto mb-2 text-[var(--hive-gold)]" />
               <h3 className="font-semibold text-hive-text-primary">Campus Network</h3>
               <p className="text-sm text-hive-text-secondary">Ready for connections</p>
             </div>

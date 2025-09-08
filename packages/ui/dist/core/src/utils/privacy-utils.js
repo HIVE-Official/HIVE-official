@@ -3,8 +3,10 @@ import { jsx as _jsx } from "react/jsx-runtime";
 // This can be imported and used throughout the platform
 import React from 'react';
 class PrivacyUtils {
+    static instance;
+    baseUrl;
+    cache = new Map();
     constructor() {
-        this.cache = new Map();
         this.baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     }
     static getInstance() {

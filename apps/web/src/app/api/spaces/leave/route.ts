@@ -1,151 +1,139 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { FieldValue } from "firebase-admin/firestore";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { withAuth } from "@/lib/api-auth-middleware";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { logger } from "@/lib/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuth } from '@/lib/api-auth-middleware';
+import { 
+  getSpace,
+  getSpaceMember,
+  removeSpaceMember,
+  getSpaceMembers
+} from '@/lib/spaces-db';
 
 const leaveSpaceSchema = z.object({
   spaceId: z.string().min(1, "Space ID is required")
 });
 
 /**
- * Leave a space manually - Updated for flat collection structure
- * POST /api/spaces/leave
+ * Leave a space - uses flat spaceMembers collection
  */
 export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
+    const body = await request.json();
+    const { spaceId } = leaveSpaceSchema.parse(body);
     const userId = authContext.userId;
 
-    // Parse and validate request body
-    const body = (await request.json()) as unknown;
-    const { spaceId } = leaveSpaceSchema.parse(body);
+    logger.info('User attempting to leave space', { 
+      userId, 
+      spaceId,
+      endpoint: '/api/spaces/leave' 
+    });
 
-    // Get space from flat collection
-    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
-
-    if (!spaceDoc.exists) {
+    // Check if space exists
+    const space = await getSpace(spaceId);
+    if (!space) {
       return NextResponse.json(
-        ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"),
+        ApiResponseHelper.error("Space not found", ErrorCodes.NOT_FOUND),
         { status: HttpStatus.NOT_FOUND }
       );
     }
 
-    const space = spaceDoc.data()!;
-
-    // Check if user is actually a member using flat spaceMembers collection
-    const membershipQuery = dbAdmin.collection('spaceMembers')
-      .where('spaceId', '==', spaceId)
-      .where('userId', '==', userId)
-      .where('isActive', '==', true)
-      .limit(1);
-    
-    const membershipSnapshot = await membershipQuery.get();
-
-    if (membershipSnapshot.empty) {
+    // Check if user is a member
+    const membership = await getSpaceMember(spaceId, userId);
+    if (!membership) {
       return NextResponse.json(
-        ApiResponseHelper.error("You are not a member of this space", "RESOURCE_NOT_FOUND"),
+        ApiResponseHelper.error("You are not a member of this space", ErrorCodes.NOT_FOUND),
         { status: HttpStatus.NOT_FOUND }
       );
     }
 
-    const memberDoc = membershipSnapshot.docs[0];
-    const memberData = memberDoc.data();
+    // Prevent owner from leaving without transferring ownership
+    if (membership.role === 'owner') {
+      // Check if there are other admins who can take over
+      const allMembers = await getSpaceMembers(spaceId);
+      const otherAdmins = allMembers.filter(m => 
+        m.userId !== userId && (m.role === 'admin' || m.role === 'moderator')
+      );
 
-    // Prevent owners from leaving if they're the only owner
-    if (memberData.role === "owner") {
-      // Check if there are other owners
-      const otherOwnersQuery = dbAdmin.collection('spaceMembers')
-        .where('spaceId', '==', spaceId)
-        .where('role', '==', 'owner')
-        .where('isActive', '==', true)
-        .limit(2);
-      
-      const otherOwnersSnapshot = await otherOwnersQuery.get();
-      
-      if (otherOwnersSnapshot.size <= 1) {
+      if (otherAdmins.length === 0 && allMembers.length > 1) {
         return NextResponse.json(
-          ApiResponseHelper.error("Cannot leave space: You are the only owner. Transfer ownership or promote another member first.", "BUSINESS_RULE_VIOLATION"),
-          { status: HttpStatus.CONFLICT }
+          ApiResponseHelper.error(
+            "As the owner, you must transfer ownership before leaving the space",
+            ErrorCodes.FORBIDDEN
+          ),
+          { status: HttpStatus.FORBIDDEN }
         );
       }
+
+      // If owner is the only member, we could archive the space
+      if (allMembers.length === 1) {
+        logger.info('Owner is last member, space will be empty', { spaceId });
+        // Could implement space archival here
+      }
     }
 
-    // Perform the leave operation atomically
-    const batch = dbAdmin.batch();
-    const now = FieldValue.serverTimestamp();
+    // Remove member from space
+    const success = await removeSpaceMember(spaceId, userId);
+    if (!success) {
+      throw new Error('Failed to remove membership');
+    }
 
-    // Mark membership as inactive instead of deleting
-    batch.update(memberDoc.ref, {
-      isActive: false,
-      leftAt: now
-    });
-
-    // Decrement the space's member count
-    batch.update(spaceDoc.ref, {
-      'metrics.memberCount': FieldValue.increment(-1),
-      'metrics.activeMembers': FieldValue.increment(-1),
-      updatedAt: now
-    });
-
-    // Record leave activity
-    const activityRef = dbAdmin.collection('activityEvents').doc();
-    batch.set(activityRef, {
+    logger.info('User successfully left space', {
       userId,
-      type: 'space_leave',
       spaceId,
-      timestamp: new Date().toISOString(),
-      date: new Date().toISOString().split('T')[0],
-      metadata: {
+      previousRole: membership.role
+    });
+
+    // Log activity event
+    try {
+      await logLeaveActivity(userId, spaceId, space.name);
+    } catch (error) {
+      logger.error('Failed to log leave activity', { error });
+      // Don't fail the leave operation if logging fails
+    }
+
+    return NextResponse.json(
+      ApiResponseHelper.success({
+        spaceId,
         spaceName: space.name,
-        spaceType: space.type,
-        previousRole: memberData.role
-      }
-    });
+        leftAt: new Date().toISOString()
+      }, "Successfully left space")
+    );
 
-    // Execute all operations atomically
-    await batch.commit();
-
-    logger.info('✅ User left space successfully', {
-      userId,
-      spaceId,
-      spaceName: space.name,
-      previousRole: memberData.role,
-      endpoint: '/api/spaces/leave'
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: "Successfully left the space",
-      space: {
-        id: spaceId,
-        name: space.name,
-        type: space.type,
-        description: space.description
-      }
-    });
-
-  } catch (error: any) {
-    logger.error('Error leaving space', {
-      error: error.message,
-      stack: error.stack,
-      endpoint: '/api/spaces/leave'
-    });
-
+  } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        ApiResponseHelper.error('Invalid request data', 'VALIDATION_ERROR'),
+        ApiResponseHelper.error("Invalid request data", ErrorCodes.VALIDATION_ERROR, error.errors),
         { status: HttpStatus.BAD_REQUEST }
       );
     }
 
+    logger.error('Error leaving space', { error, endpoint: '/api/spaces/leave' });
     return NextResponse.json(
-      ApiResponseHelper.error("Failed to leave space. Please try again.", "INTERNAL_ERROR"),
+      ApiResponseHelper.error("Failed to leave space", ErrorCodes.INTERNAL_ERROR),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }, {
-  allowDevelopmentBypass: false,
+  requireAuth: true,
   operation: 'leave_space'
 });
+
+/**
+ * Log leave activity for analytics
+ */
+async function logLeaveActivity(userId: string, spaceId: string, spaceName: string) {
+  const { dbAdmin } = await import('@/lib/firebase-admin');
+  const { Timestamp } = await import('firebase-admin/firestore');
+  
+  await dbAdmin.collection('activityEvents').add({
+    type: 'space_leave',
+    userId,
+    spaceId,
+    spaceName,
+    timestamp: Timestamp.now(),
+    metadata: {
+      source: 'api'
+    }
+  });
+}

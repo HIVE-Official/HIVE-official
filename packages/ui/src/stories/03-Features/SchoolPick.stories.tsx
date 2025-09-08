@@ -261,7 +261,7 @@ export const BrandValidation: Story = {
 **Brand Compliance Check:**
 - ✅ Space Grotesk for headers ("finally, your campus OS")
 - ✅ Geist Sans for body text and subtitles
-- ✅ Gold accent (#FFD700) for UB card border and badges
+- ✅ Gold accent (var(--hive-gold)) for UB card border and badges
 - ✅ Proper contrast and hierarchy
 - ✅ 8dp grid spacing system
 - ✅ Glass search bar with backdrop-blur

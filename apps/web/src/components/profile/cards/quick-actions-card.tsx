@@ -62,7 +62,7 @@ export function QuickActionsCard({ settings, isEditMode, className }: QuickActio
       id: 'build-tool',
       label: 'Build Tool',
       icon: Wrench,
-      color: 'text-purple-400 hover:bg-purple-500/10',
+      color: 'text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/10',
       category: 'create',
       action: () => router.push('/tools/create'),
       isPopular: true
@@ -89,7 +89,7 @@ export function QuickActionsCard({ settings, isEditMode, className }: QuickActio
       id: 'find-study-partner',
       label: 'Find Study Partner',
       icon: Star,
-      color: 'text-amber-400 hover:bg-amber-500/10',
+      color: 'text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/10',
       category: 'connect',
       action: () => router.push('/profile/connections?type=study-partners'),
       isPopular: true
@@ -139,7 +139,7 @@ export function QuickActionsCard({ settings, isEditMode, className }: QuickActio
       id: 'browse-tools',
       label: 'Browse Tools',
       icon: Search,
-      color: 'text-purple-400 hover:bg-purple-500/10',
+      color: 'text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/10',
       category: 'explore',
       action: () => router.push('/tools/browse')
     },
@@ -155,7 +155,7 @@ export function QuickActionsCard({ settings, isEditMode, className }: QuickActio
       id: 'explore-feed',
       label: 'Explore Feed',
       icon: Search,
-      color: 'text-orange-400 hover:bg-orange-500/10',
+      color: 'text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/10',
       category: 'explore',
       action: () => router.push('/feed?view=discover')
     },
@@ -173,7 +173,7 @@ export function QuickActionsCard({ settings, isEditMode, className }: QuickActio
       id: 'notifications',
       label: 'Notifications',
       icon: Bell,
-      color: 'text-yellow-400 hover:bg-yellow-500/10',
+      color: 'text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/10',
       category: 'manage',
       action: () => router.push('/profile/settings?tab=notifications'),
       badge: '3'
@@ -243,7 +243,7 @@ export function QuickActionsCard({ settings, isEditMode, className }: QuickActio
       {view === 'all' && !isEditMode && (
         <div className="mb-4">
           <h4 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
-            <Star className="h-4 w-4 text-amber-400" />
+            <Star className="h-4 w-4 text-[var(--hive-gold)]" />
             Popular Actions
           </h4>
           <div className="grid grid-cols-2 gap-2">

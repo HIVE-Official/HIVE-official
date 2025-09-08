@@ -306,25 +306,25 @@ const CampusFeedSystem = () => {
   const [postText, setPostText] = useState('');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Campus Feed</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Campus Feed</h1>
               <p className="text-gray-400">What's happening at UB</p>
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white relative">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] relative">
                 <Bell className="w-4 h-4" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
               </Button>
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -342,8 +342,8 @@ const CampusFeedSystem = () => {
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeTab === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                   }`}
                   style={activeTab === id ? {
                     backgroundColor: 'var(--hive-brand-primary)',
@@ -372,7 +372,7 @@ const CampusFeedSystem = () => {
                   onClick={() => setFeedFilter(id)}
                   className={feedFilter === id 
                     ? "hive-interactive"
-                    : "border-gray-600 text-white hover:bg-gray-800"
+                    : "border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
                   }
                   style={feedFilter === id ? {
                     backgroundColor: 'var(--hive-brand-primary)',
@@ -384,7 +384,7 @@ const CampusFeedSystem = () => {
                 </Button>
               ))}
             </div>
-            <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+            <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
               <Filter className="w-4 h-4" />
             </Button>
           </div>
@@ -406,19 +406,19 @@ const CampusFeedSystem = () => {
                   placeholder="What's happening on campus?"
                   value={postText}
                   onChange={(e) => setPostText(e.target.value)}
-                  className="bg-gray-900 border-gray-700 text-white placeholder-gray-400 mb-3"
+                  className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 mb-3"
                 />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                       <Camera className="w-4 h-4 mr-1" />
                       Photo
                     </Button>
-                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                       <Calendar className="w-4 h-4 mr-1" />
                       Event
                     </Button>
-                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                       <Target className="w-4 h-4 mr-1" />
                       Poll
                     </Button>
@@ -448,15 +448,15 @@ const CampusFeedSystem = () => {
                     <Avatar className="w-10 h-10 mr-3">
                       <AvatarFallback className={`${
                         post.author.role === 'Builder' ? '' :
-                        post.author.role === 'Space Leader' ? 'bg-blue-500 text-white' :
-                        'bg-gradient-to-r from-green-500 to-teal-500 text-white'
+                        post.author.role === 'Space Leader' ? 'bg-blue-500 text-[var(--hive-text-primary)]' :
+                        'bg-gradient-to-r from-green-500 to-teal-500 text-[var(--hive-text-primary)]'
                       }`}>
                         {post.author.avatar}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <div className="flex items-center">
-                        <h4 className="text-white font-medium mr-2">{post.author.name}</h4>
+                        <h4 className="text-[var(--hive-text-primary)] font-medium mr-2">{post.author.name}</h4>
                         {post.author.isVerified && <Award className="w-4 h-4" style={{ color: 'var(--hive-brand-primary)' }} />}
                       </div>
                       <p className="text-gray-400 text-sm">
@@ -478,7 +478,7 @@ const CampusFeedSystem = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
                         <Calendar className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
-                        <h4 className="text-white font-semibold">{post.content.event.title}</h4>
+                        <h4 className="text-[var(--hive-text-primary)] font-semibold">{post.content.event.title}</h4>
                       </div>
                       <Button size="sm" className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
                         RSVP ({post.content.event.rsvpCount})
@@ -503,10 +503,10 @@ const CampusFeedSystem = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-                          <Zap className="w-6 h-6 text-white" />
+                          <Zap className="w-6 h-6 text-[var(--hive-text-primary)]" />
                         </div>
                         <div>
-                          <h4 className="text-white font-semibold">{post.content.tool.name}</h4>
+                          <h4 className="text-[var(--hive-text-primary)] font-semibold">{post.content.tool.name}</h4>
                           <p className="text-gray-400 text-sm">{post.content.tool.description}</p>
                           <div className="flex items-center mt-1">
                             <Badge className="bg-blue-500/20 text-blue-400 mr-2">{post.content.tool.category}</Badge>
@@ -514,7 +514,7 @@ const CampusFeedSystem = () => {
                           </div>
                         </div>
                       </div>
-                      <Button size="sm" className="bg-blue-500 text-white hover:bg-blue-600">
+                      <Button size="sm" className="bg-blue-500 text-[var(--hive-text-primary)] hover:bg-blue-600">
                         Try Tool
                       </Button>
                     </div>
@@ -527,10 +527,10 @@ const CampusFeedSystem = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-3">
-                          <Flame className="w-6 h-6 text-white" />
+                          <Flame className="w-6 h-6 text-[var(--hive-text-primary)]" />
                         </div>
                         <div>
-                          <h4 className="text-white font-semibold">{post.content.ritual.name}</h4>
+                          <h4 className="text-[var(--hive-text-primary)] font-semibold">{post.content.ritual.name}</h4>
                           <div className="flex items-center mt-1">
                             <Badge className="bg-green-500/20 text-green-400 mr-2">{post.content.ritual.category}</Badge>
                             <span className="font-semibold" style={{ color: 'var(--hive-brand-primary)' }}>{post.content.ritual.streak} day streak!</span>
@@ -540,7 +540,7 @@ const CampusFeedSystem = () => {
                           </p>
                         </div>
                       </div>
-                      <Button size="sm" className="bg-green-500 text-white hover:bg-green-600">
+                      <Button size="sm" className="bg-green-500 text-[var(--hive-text-primary)] hover:bg-green-600">
                         Join Challenge
                       </Button>
                     </div>
@@ -550,7 +550,7 @@ const CampusFeedSystem = () => {
                 {/* Poll Content */}
                 {post.content.poll && (
                   <div className="bg-gray-800 rounded-lg p-4 mb-4">
-                    <h4 className="text-white font-medium mb-3">{post.content.poll.question}</h4>
+                    <h4 className="text-[var(--hive-text-primary)] font-medium mb-3">{post.content.poll.question}</h4>
                     <div className="space-y-2 mb-3">
                       {post.content.poll.options.map((option, index) => {
                         const percentage = (option.votes / post.content.poll.totalVotes) * 100;
@@ -567,7 +567,7 @@ const CampusFeedSystem = () => {
                               }}
                             />
                             <div className="relative flex justify-between items-center">
-                              <span className="text-white">{option.text}</span>
+                              <span className="text-[var(--hive-text-primary)]">{option.text}</span>
                               <span className="text-gray-300">{option.votes} ({Math.round(percentage)}%)</span>
                             </div>
                           </div>
@@ -600,11 +600,11 @@ const CampusFeedSystem = () => {
                       <Heart className={`w-4 h-4 mr-1 ${post.engagement.isLiked ? 'fill-current' : ''}`} />
                       {post.engagement.likes}
                     </Button>
-                    <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+                    <Button size="sm" variant="ghost" className="text-gray-400 hover:text-[var(--hive-text-primary)]">
                       <MessageSquare className="w-4 h-4 mr-1" />
                       {post.engagement.comments}
                     </Button>
-                    <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+                    <Button size="sm" variant="ghost" className="text-gray-400 hover:text-[var(--hive-text-primary)]">
                       <Share className="w-4 h-4 mr-1" />
                       {post.engagement.shares}
                     </Button>
@@ -612,7 +612,7 @@ const CampusFeedSystem = () => {
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map((i) => (
                       <Avatar key={i} className="w-6 h-6 border-2 border-gray-800">
-                        <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs">
+                        <AvatarFallback className="bg-gradient-to-r from-[var(--hive-gold)] to-pink-500 text-[var(--hive-text-primary)] text-xs">
                           {String.fromCharCode(65 + i)}
                         </AvatarFallback>
                       </Avatar>
@@ -626,7 +626,7 @@ const CampusFeedSystem = () => {
 
         {/* Load More */}
         <div className="text-center mt-8">
-          <Button variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
+          <Button variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
             Load More Posts
           </Button>
         </div>
@@ -653,21 +653,21 @@ const CampusRitualsSystem = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Campus Rituals</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Campus Rituals</h1>
               <p className="text-gray-400">Build healthy habits with your campus community</p>
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -689,8 +689,8 @@ const CampusRitualsSystem = () => {
                 onClick={() => setViewMode(id)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   viewMode === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                   }`}
                   style={viewMode === id ? {
                     backgroundColor: 'var(--hive-brand-primary)',
@@ -713,7 +713,7 @@ const CampusRitualsSystem = () => {
                 onClick={() => setActiveCategory(id)}
                 className={activeCategory === id 
                   ? "hive-interactive"
-                  : "border-gray-600 text-white hover:bg-gray-800"
+                  : "border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
                 }
                 style={activeCategory === id ? {
                   backgroundColor: 'var(--hive-brand-primary)',
@@ -752,7 +752,7 @@ const CampusRitualsSystem = () => {
           </Card>
           <Card className="bg-gray-800/50 border-gray-700 text-center">
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-purple-400">23</div>
+              <div className="text-2xl font-bold text-[var(--hive-gold)]">23</div>
               <div className="text-sm text-gray-400">Campus Ranking</div>
             </CardContent>
           </Card>
@@ -767,7 +767,7 @@ const CampusRitualsSystem = () => {
                   <div className="flex items-center">
                     <div className="text-3xl mr-3">{ritual.icon}</div>
                     <div>
-                      <CardTitle className="text-white text-base">{ritual.name}</CardTitle>
+                      <CardTitle className="text-[var(--hive-text-primary)] text-base">{ritual.name}</CardTitle>
                       <p className="text-gray-400 text-sm">{ritual.description}</p>
                     </div>
                   </div>
@@ -786,26 +786,26 @@ const CampusRitualsSystem = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-400">Duration</span>
-                    <div className="text-white font-medium">{ritual.duration}</div>
+                    <div className="text-[var(--hive-text-primary)] font-medium">{ritual.duration}</div>
                   </div>
                   <div>
                     <span className="text-gray-400">Difficulty</span>
-                    <div className="text-white font-medium">{ritual.difficulty}</div>
+                    <div className="text-[var(--hive-text-primary)] font-medium">{ritual.difficulty}</div>
                   </div>
                   <div>
                     <span className="text-gray-400">Best Time</span>
-                    <div className="text-white font-medium">{ritual.bestTime}</div>
+                    <div className="text-[var(--hive-text-primary)] font-medium">{ritual.bestTime}</div>
                   </div>
                   <div>
                     <span className="text-gray-400">Participants</span>
-                    <div className="text-white font-medium">{ritual.participants}</div>
+                    <div className="text-[var(--hive-text-primary)] font-medium">{ritual.participants}</div>
                   </div>
                 </div>
 
                 {/* Streak Info */}
                 <div className="bg-gray-800 rounded-lg p-3">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-white font-medium">Current Streak</span>
+                    <span className="text-[var(--hive-text-primary)] font-medium">Current Streak</span>
                     <div className="flex items-center">
                       <Flame className="w-4 h-4 mr-1" style={{ color: 'var(--hive-brand-primary)' }} />
                       <span className="font-bold" style={{ color: 'var(--hive-brand-primary)' }}>{ritual.myStreak} days</span>
@@ -822,7 +822,7 @@ const CampusRitualsSystem = () => {
                 {/* Weekly Progress */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-white font-medium">This Week</span>
+                    <span className="text-[var(--hive-text-primary)] font-medium">This Week</span>
                     <span className="text-gray-400 text-sm">
                       {ritual.weeklyProgress}/{ritual.weeklyTarget}
                     </span>
@@ -836,7 +836,7 @@ const CampusRitualsSystem = () => {
                 {/* Rewards */}
                 {ritual.rewards.length > 0 && (
                   <div>
-                    <span className="text-white font-medium mb-2 block">Rewards</span>
+                    <span className="text-[var(--hive-text-primary)] font-medium mb-2 block">Rewards</span>
                     <div className="flex flex-wrap gap-1">
                       {ritual.rewards.map((reward, index) => (
                         <Badge 
@@ -867,7 +867,7 @@ const CampusRitualsSystem = () => {
                   {ritual.isActive ? (
                     <>
                       {ritual.todayCompleted ? (
-                        <Button size="sm" className="flex-1 bg-green-600 text-white" disabled>
+                        <Button size="sm" className="flex-1 bg-green-600 text-[var(--hive-text-primary)]" disabled>
                           <CheckCircle className="w-4 h-4 mr-2" />
                           Completed Today
                         </Button>
@@ -877,17 +877,17 @@ const CampusRitualsSystem = () => {
                           Complete Now
                         </Button>
                       )}
-                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                         <Settings className="w-4 h-4" />
                       </Button>
                     </>
                   ) : (
                     <>
-                      <Button size="sm" className="flex-1 bg-blue-500 text-white hover:bg-blue-600">
+                      <Button size="sm" className="flex-1 bg-blue-500 text-[var(--hive-text-primary)] hover:bg-blue-600">
                         <Plus className="w-4 h-4 mr-2" />
                         Start Ritual
                       </Button>
-                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                         <Heart className="w-4 h-4" />
                       </Button>
                     </>
@@ -903,7 +903,7 @@ const CampusRitualsSystem = () => {
           <div className="text-center mt-8">
             <Button 
               variant="secondary" 
-              className="border-gray-600 text-white hover:bg-gray-800"
+              className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
               onClick={() => setViewMode('discover')}
             >
               Discover More Rituals

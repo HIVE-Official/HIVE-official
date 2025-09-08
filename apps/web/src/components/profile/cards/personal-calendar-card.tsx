@@ -150,7 +150,7 @@ export function PersonalCalendarCard({ settings, isEditMode, className }: Person
     const colors = {
       academic: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
       personal: 'bg-green-500/20 text-green-400 border-green-500/30',
-      social: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+      social: 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30',
       hive: 'bg-accent/20 text-accent border-accent/30'
     };
     return colors[type as keyof typeof colors] || colors.personal;

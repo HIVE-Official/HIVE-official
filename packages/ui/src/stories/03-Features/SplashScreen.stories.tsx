@@ -17,7 +17,7 @@ const meta: Meta<typeof SplashScreen> = {
 **Screen 0: Splash/Teaser** - Brand ignition with tap requirement
 
 According to the HIVE vBETA Authentication spec:
-- Full-bleed #0A0A0A background  
+- Full-bleed var(--hive-background-primary) background  
 - Center "Get Inside" button (56px height, pill shape, gold border 2px)
 - Small crest watermark 8% opacity bottom-right
 - Hover → gold glow effect
@@ -71,8 +71,8 @@ export const BrandValidation: Story = {
       description: {
         story: `
 **Brand Compliance Check:**
-- ✅ Matte black background (#0A0A0A)
-- ✅ Gold accent (#FFD700) for button and crest
+- ✅ Matte black background (var(--hive-background-primary))
+- ✅ Gold accent (var(--hive-gold)) for button and crest
 - ✅ Space Grotesk font for button text
 - ✅ Geist Sans for footer text
 - ✅ 8dp grid spacing system

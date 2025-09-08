@@ -90,9 +90,9 @@ const getPrivacyCategoryConfig = (category: string) => {
       label: 'Interactions'
     },
     location: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: MapPin,
       label: 'Location'
     },
@@ -129,8 +129,8 @@ const getVisibilityLevelConfig = (level: string) => {
       label: 'Private'
     },
     ghost: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       icon: EyeOff,
       label: 'Ghost Mode'
     }
@@ -186,7 +186,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
         'relative overflow-hidden transition-all duration-300 hover:shadow-lg',
         'bg-[var(--hive-background-primary)] border-[var(--hive-border-primary)]',
         isHovered && 'scale-[1.02]',
-        isGhostModeActive && 'border-purple-500/30 bg-purple-500/5',
+        isGhostModeActive && 'border-[var(--hive-gold)]/30 bg-[var(--hive-gold)]/5',
         className
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -199,7 +199,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
               Privacy & Ghost Mode
             </Text>
             {isGhostModeActive && (
-              <Badge variant="secondary" className="text-xs text-purple-500">
+              <Badge variant="secondary" className="text-xs text-[var(--hive-gold)]">
                 <EyeOff className="h-3 w-3 mr-1" />
                 Ghost Active
               </Badge>
@@ -293,7 +293,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
                 size="sm"
                 onClick={() => onToggleGhostMode(!isGhostModeActive)}
                 className={cn(
-                  isGhostModeActive && 'bg-purple-500 hover:bg-purple-600 text-[var(--hive-text-inverse)]'
+                  isGhostModeActive && 'bg-[var(--hive-gold)] hover:bg-[var(--hive-gold-dark)] text-[var(--hive-text-inverse)]'
                 )}
               >
                 {isGhostModeActive ? (
@@ -312,10 +312,10 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
           </div>
           
           {isGhostModeActive && ghostModeConfig && (
-            <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg space-y-2">
+            <div className="p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg space-y-2">
               <div className="flex items-center justify-between">
                 <Text variant="body-sm" color="primary">Ghost Mode Active</Text>
-                <Badge variant="secondary" className="text-xs text-purple-500">
+                <Badge variant="secondary" className="text-xs text-[var(--hive-gold)]">
                   {ghostModeConfig.visibilityLevel}
                 </Badge>
               </div>
@@ -337,7 +337,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
                   variant="ghost"
                   size="sm"
                   onClick={onConfigureGhostMode}
-                  className="mt-2 text-purple-500 hover:text-purple-600"
+                  className="mt-2 text-[var(--hive-gold)] hover:text-[var(--hive-gold-dark)]"
                 >
                   Configure Settings
                   <ChevronRight className="h-3 w-3 ml-1" />
@@ -474,7 +474,7 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
         <div className={cn(
           'absolute inset-0 -z-10 rounded-lg blur-xl',
           isGhostModeActive 
-            ? 'bg-gradient-to-r from-purple-500/5 to-indigo-500/5'
+            ? 'bg-gradient-to-r from-[var(--hive-gold)]/5 to-indigo-500/5'
             : 'bg-gradient-to-r from-blue-500/5 to-green-500/5'
         )} />
       )}

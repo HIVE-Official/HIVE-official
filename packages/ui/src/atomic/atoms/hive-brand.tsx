@@ -224,7 +224,7 @@ export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
   }, ref) => {
     // Determine color based on preference
     const getColor = () => {
-      if (color === "black") return "#000000";
+      if (color === "black") return "var(--hive-black)";
       if (color === "white") return "#ffffff";
       if (color === "gold") return "var(--hive-brand-secondary)";
       

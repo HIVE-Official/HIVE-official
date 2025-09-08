@@ -125,7 +125,7 @@ export function PostDisplay({
                 {post.author.avatar ? (
                   <img src={post.author.avatar} alt={post.author.name} className="rounded-full" />
                 ) : (
-                  <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-[var(--hive-gold)] rounded-full flex items-center justify-center">
                     <span className="text-[var(--hive-text-inverse)] font-medium">
                       {post.author.name.charAt(0)}
                     </span>
@@ -137,7 +137,7 @@ export function PostDisplay({
                 <div className="flex items-center space-x-2">
                   <span className="font-medium text-foreground">{post.author.name}</span>
                   {post.isPinned && (
-                    <Pin className="h-4 w-4 text-amber-500" />
+                    <Pin className="h-4 w-4 text-[var(--hive-gold)]" />
                   )}
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">

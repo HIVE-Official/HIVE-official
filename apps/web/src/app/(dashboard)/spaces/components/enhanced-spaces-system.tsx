@@ -39,10 +39,10 @@ import { useSession } from '../../../../hooks/use-session';
 // Enhanced space type filters with UB-specific categories
 const enhancedSpaceTypeFilters = [
   { id: "all", label: "All Spaces", color: "bg-gray-500", emoji: "🌐", subtitle: "Every community" },
-  { id: "campus_living", label: "Residential", color: "bg-orange-500", emoji: "🏠", subtitle: "Dorms & living communities" },
+  { id: "campus_living", label: "Residential", color: "bg-[var(--hive-gold)]", emoji: "🏠", subtitle: "Dorms & living communities" },
   { id: "student_organizations", label: "Academic", color: "bg-blue-500", emoji: "🎓", subtitle: "Departments & courses" },
   { id: "university_organizations", label: "Official", color: "bg-emerald-500", emoji: "🏛️", subtitle: "University programs" },
-  { id: "greek_life", label: "Greek Life", color: "bg-purple-500", emoji: "🏛️", subtitle: "Fraternities & sororities" },
+  { id: "greek_life", label: "Greek Life", color: "bg-[var(--hive-gold)]", emoji: "🏛️", subtitle: "Fraternities & sororities" },
   { id: "hive_exclusive", label: "HIVE Special", color: "bg-indigo-500", emoji: "💎", subtitle: "Platform exclusive" },
 ];
 

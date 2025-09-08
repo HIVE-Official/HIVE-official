@@ -37,7 +37,7 @@ export const designQualityGates = [
                 description: "Color communicates function and state, not decoration",
                 examples: {
                     good: "bg-[var(--hive-background-primary)] (neutral), text-amber-400 (interactive), border-red-500 (error)",
-                    bad: "bg-gradient-to-r from-blue-500/10 to-purple-500/10, decorative gradients"
+                    bad: "bg-gradient-to-r from-blue-500/10 to-gold-500/10, decorative gradients"
                 }
             }
         ]

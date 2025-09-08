@@ -346,18 +346,21 @@ export default function ToolsPage() {
   return (
     <ErrorBoundary>
       <CompleteHIVEToolsSystem
-        activeTab={activeTab}
-        userRole={'student'}
-        onTabChange={handleTabChange}
+        userId={_user?.uid || 'anonymous'}
+        userProfile={{
+          name: _user?.displayName || 'Student',
+          handle: _user?.email?.split('@')[0] || 'student',
+          avatar: _user?.photoURL,
+          builderLevel: 'novice'
+        }}
+        initialTab={activeTab}
         onToolInstall={handleToolInstall}
-        onToolAction={handleToolAction}
-        onToolPreview={handleToolPreview}
-        onCreateTool={handleCreateTool}
-        marketplaceTools={marketplaceTools || [...CAMPUS_MARKETPLACE_TOOLS, ...MARKETPLACE_TOOLS]}
-        personalTools={personalTools || [...CAMPUS_MARKETPLACE_TOOLS, ...MARKETPLACE_TOOLS].filter(t => t.isInstalled)}
-        loading={isLoading}
-        error={error?.message || null}
-        showDebugLabels={process.env.NODE_ENV === 'development'}
+        onToolCreate={(tool) => {
+          flags.trackEvent('tools', 'created', { toolId: tool.id });
+        }}
+        onToolDeploy={(toolId, spaceId) => {
+          flags.trackEvent('tools', 'deployed', { toolId, spaceId });
+        }}
       />
     </ErrorBoundary>
   );

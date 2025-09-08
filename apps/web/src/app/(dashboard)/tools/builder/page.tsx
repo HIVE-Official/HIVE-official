@@ -102,14 +102,14 @@ const TOOL_CATEGORIES = [
     name: 'Data Collection',
     description: 'Gather information and feedback',
     icon: FileText,
-    color: 'from-purple-500 to-violet-600'
+    color: 'from-[var(--hive-gold)] to-violet-600'
   },
   {
     id: 'resources',
     name: 'Resource Sharing',
     description: 'Share links, files, and materials',
     icon: Link,
-    color: 'from-orange-500 to-amber-600'
+    color: 'from-[var(--hive-gold)] to-amber-600'
   },
   {
     id: 'coordination',

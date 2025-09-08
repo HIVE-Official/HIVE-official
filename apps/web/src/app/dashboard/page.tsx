@@ -45,25 +45,25 @@ export default function DashboardPage() {
 
   if (!userData) {
     return (
-      <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
+        <div className="text-[var(--hive-text-primary)]">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B]">
+    <div className="min-h-screen bg-[var(--hive-background-primary)]">
       {/* Header */}
-      <div className="border-b border-[#1A1A1B]">
+      <div className="border-b border-[var(--hive-background-tertiary)]">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <h1 className="text-2xl font-bold text-white">HIVE Dashboard</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">HIVE Dashboard</h1>
             </div>
             
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-white">{userData.displayName}</p>
+                <p className="text-sm font-medium text-[var(--hive-text-primary)]">{userData.displayName}</p>
                 <p className="text-xs text-[#6B6B6F]">@{userData.handle}</p>
               </div>
               
@@ -71,7 +71,7 @@ export default function DashboardPage() {
                 onClick={handleLogout}
                 variant="ghost"
                 size="sm"
-                className="text-[#8B8B8F] hover:text-white"
+                className="text-[#8B8B8F] hover:text-[var(--hive-text-primary)]"
               >
                 <LogOut className="w-4 h-4" />
               </Button>
@@ -85,33 +85,33 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Quick Actions */}
           <Link href="/feed" className="group">
-            <div className="bg-[#1A1A1B] rounded-lg p-6 border border-[#2A2A2B] hover:border-[#FFD700] transition-colors">
-              <Home className="w-8 h-8 text-[#FFD700] mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">Feed</h3>
+            <div className="bg-[var(--hive-background-tertiary)] rounded-lg p-6 border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)] transition-colors">
+              <Home className="w-8 h-8 text-[var(--hive-gold)] mb-4" />
+              <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">Feed</h3>
               <p className="text-sm text-[#8B8B8F]">View your campus feed</p>
             </div>
           </Link>
 
           <Link href="/spaces" className="group">
-            <div className="bg-[#1A1A1B] rounded-lg p-6 border border-[#2A2A2B] hover:border-[#FFD700] transition-colors">
-              <Users className="w-8 h-8 text-[#FFD700] mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">Spaces</h3>
+            <div className="bg-[var(--hive-background-tertiary)] rounded-lg p-6 border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)] transition-colors">
+              <Users className="w-8 h-8 text-[var(--hive-gold)] mb-4" />
+              <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">Spaces</h3>
               <p className="text-sm text-[#8B8B8F]">Join campus communities</p>
             </div>
           </Link>
 
           <Link href="/calendar" className="group">
-            <div className="bg-[#1A1A1B] rounded-lg p-6 border border-[#2A2A2B] hover:border-[#FFD700] transition-colors">
-              <Calendar className="w-8 h-8 text-[#FFD700] mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">Events</h3>
+            <div className="bg-[var(--hive-background-tertiary)] rounded-lg p-6 border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)] transition-colors">
+              <Calendar className="w-8 h-8 text-[var(--hive-gold)] mb-4" />
+              <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">Events</h3>
               <p className="text-sm text-[#8B8B8F]">Campus calendar</p>
             </div>
           </Link>
 
           <Link href="/profile/settings" className="group">
-            <div className="bg-[#1A1A1B] rounded-lg p-6 border border-[#2A2A2B] hover:border-[#FFD700] transition-colors">
-              <Settings className="w-8 h-8 text-[#FFD700] mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">Settings</h3>
+            <div className="bg-[var(--hive-background-tertiary)] rounded-lg p-6 border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)] transition-colors">
+              <Settings className="w-8 h-8 text-[var(--hive-gold)] mb-4" />
+              <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">Settings</h3>
               <p className="text-sm text-[#8B8B8F]">Manage your profile</p>
             </div>
           </Link>

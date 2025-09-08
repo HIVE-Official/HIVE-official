@@ -51,15 +51,15 @@ export interface ToolLibraryModalProps {
 const CATEGORY_INFO = {
   productivity: {
     icon: <Zap className="w-5 h-5" />,
-    color: 'text-yellow-400',
-    bgColor: 'bg-yellow-500/20',
-    borderColor: 'border-yellow-500/30',
+    color: 'text-[var(--hive-gold)]',
+    bgColor: 'bg-[var(--hive-gold)]/20',
+    borderColor: 'border-[var(--hive-gold)]/30',
   },
   social: {
     icon: <Users className="w-5 h-5" />,
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/20',
-    borderColor: 'border-purple-500/30',
+    color: 'text-[var(--hive-gold)]',
+    bgColor: 'bg-[var(--hive-gold)]/20',
+    borderColor: 'border-[var(--hive-gold)]/30',
   },
   academic: {
     icon: <BarChart3 className="w-5 h-5" />,
@@ -266,7 +266,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                           
                           <div className="flex items-center gap-4 text-sm text-[var(--hive-text-muted)]">
                             <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-yellow-400" />
+                              <Star className="w-4 h-4 text-[var(--hive-gold)]" />
                               <span>{selectedTool.rating.toFixed(1)}</span>
                             </div>
                             <div className="flex items-center gap-1">
@@ -390,7 +390,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                           <div className="flex items-center justify-between text-xs text-[var(--hive-text-muted)]">
                             <div className="flex items-center gap-3">
                               <div className="flex items-center gap-1">
-                                <Star className="w-3 h-3 text-yellow-400" />
+                                <Star className="w-3 h-3 text-[var(--hive-gold)]" />
                                 <span>{tool.rating.toFixed(1)}</span>
                               </div>
                               <div className="flex items-center gap-1">

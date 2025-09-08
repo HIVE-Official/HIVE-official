@@ -142,7 +142,7 @@ export const PersonalAvatarShowcase: Story = {
 
       <div className="grid md:grid-cols-2 gap-6">
         {campusAvatarData.students.map((student) => (
-          <div key={student.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div key={student.id} className="bg-[var(--hive-white)] rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="flex items-center gap-4 mb-4">
               <div className="relative">
                 <Avatar className="h-16 w-16">
@@ -153,9 +153,9 @@ export const PersonalAvatarShowcase: Story = {
                 </Avatar>
                 
                 {/* Status Indicator */}
-                <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white ${
+                <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-[var(--hive-white)] ${
                   student.status === 'online' ? 'bg-green-500' :
-                  student.status === 'away' ? 'bg-yellow-500' :
+                  student.status === 'away' ? 'bg-[var(--hive-gold)]' :
                   'bg-gray-400'
                 }`}></div>
               </div>
@@ -212,7 +212,7 @@ export const GroupAvatarShowcase: Story = {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {campusAvatarData.groups.map((group) => (
-          <div key={group.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div key={group.id} className="bg-[var(--hive-white)] rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-center mb-4">
               <div className="relative inline-block">
                 <Avatar className="h-20 w-20 mx-auto mb-3">
@@ -220,7 +220,7 @@ export const GroupAvatarShowcase: Story = {
                   <AvatarFallback className={`text-lg font-bold ${
                     group.type === 'Academic' ? 'bg-blue-100 text-blue-600' :
                     group.type === 'Residential' ? 'bg-green-100 text-green-600' :
-                    'bg-purple-100 text-purple-600'
+                    'bg-purple-100 text-[var(--hive-gold-dark)]'
                   }`}>
                     {group.name.split(' ').map(word => word[0]).join('').slice(0, 2)}
                   </AvatarFallback>
@@ -230,14 +230,14 @@ export const GroupAvatarShowcase: Story = {
                 <div className={`absolute -top-1 -right-1 p-1 rounded-full ${
                   group.type === 'Academic' ? 'bg-blue-500' :
                   group.type === 'Residential' ? 'bg-green-500' :
-                  'bg-purple-500'
+                  'bg-[var(--hive-gold)]'
                 }`}>
                   {group.type === 'Academic' ? (
-                    <GraduationCap className="h-3 w-3 text-white" />
+                    <GraduationCap className="h-3 w-3 text-[var(--hive-text-primary)]" />
                   ) : group.type === 'Residential' ? (
-                    <Building className="h-3 w-3 text-white" />
+                    <Building className="h-3 w-3 text-[var(--hive-text-primary)]" />
                   ) : (
-                    <Users className="h-3 w-3 text-white" />
+                    <Users className="h-3 w-3 text-[var(--hive-text-primary)]" />
                   )}
                 </div>
               </div>
@@ -283,7 +283,7 @@ export const AvatarSizeVariants: Story = {
         <p className="text-lg text-gray-600">Consistent sizing across different platform contexts</p>
       </div>
 
-      <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
+      <div className="bg-[var(--hive-white)] rounded-xl p-8 shadow-sm border border-gray-100">
         <div className="space-y-8">
           {avatarSizes.map((size) => (
             <div key={size.size} className="flex items-center gap-6 pb-6 border-b border-gray-100 last:border-b-0">
@@ -331,7 +331,7 @@ export const AvatarStatesAndFallbacks: Story = {
 
       <div className="grid md:grid-cols-2 gap-8">
         {/* Loading & Error States */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-[var(--hive-white)] rounded-xl p-6 shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Loading & Error States</h3>
           
           <div className="space-y-6">
@@ -375,7 +375,7 @@ export const AvatarStatesAndFallbacks: Story = {
         </div>
 
         {/* Status Indicators */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-[var(--hive-white)] rounded-xl p-6 shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Status Indicators</h3>
           
           <div className="space-y-6">
@@ -385,7 +385,7 @@ export const AvatarStatesAndFallbacks: Story = {
                   <AvatarImage src="/api/placeholder/120/120" alt="Online user" />
                   <AvatarFallback className="bg-green-100 text-green-600">ON</AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[var(--hive-white)]"></div>
               </div>
               <div>
                 <div className="font-medium text-gray-900">Online</div>
@@ -399,7 +399,7 @@ export const AvatarStatesAndFallbacks: Story = {
                   <AvatarImage src="/api/placeholder/120/120" alt="Away user" />
                   <AvatarFallback className="bg-yellow-100 text-yellow-600">AW</AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full border-2 border-white"></div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-[var(--hive-gold)] rounded-full border-2 border-[var(--hive-white)]"></div>
               </div>
               <div>
                 <div className="font-medium text-gray-900">Away</div>
@@ -413,7 +413,7 @@ export const AvatarStatesAndFallbacks: Story = {
                   <AvatarImage src="/api/placeholder/120/120" alt="Offline user" />
                   <AvatarFallback className="bg-gray-100 text-gray-600">OF</AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gray-400 rounded-full border-2 border-white"></div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gray-400 rounded-full border-2 border-[var(--hive-white)]"></div>
               </div>
               <div>
                 <div className="font-medium text-gray-900">Offline</div>
@@ -447,7 +447,7 @@ export const InteractiveAvatarEditor: Story = {
           <p className="text-lg text-gray-600">Experience HIVE's avatar customization system</p>
         </div>
 
-        <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
+        <div className="bg-[var(--hive-white)] rounded-xl p-8 shadow-lg border border-gray-100">
           <div className="text-center mb-8">
             <h3 className="text-xl font-semibold text-gray-800 mb-6">Profile Avatar</h3>
             
@@ -461,7 +461,7 @@ export const InteractiveAvatarEditor: Story = {
               
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="absolute -bottom-2 -right-2 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors shadow-lg"
+                className="absolute -bottom-2 -right-2 p-2 bg-blue-600 text-[var(--hive-text-primary)] rounded-full hover:bg-blue-700 transition-colors shadow-lg"
               >
                 {isEditing ? <Settings className="h-4 w-4" /> : <Edit3 className="h-4 w-4" />}
               </button>

@@ -68,7 +68,7 @@ export const accessibilityThemeCSS = `
     --hive-a11y-neutral-600: #606060;
     --hive-a11y-neutral-700: #404040;
     --hive-a11y-neutral-800: #202020;
-    --hive-a11y-neutral-900: #000000;
+    --hive-a11y-neutral-900: var(--hive-black);
     
     /* Enhanced semantic colors with higher contrast ratios */
     --hive-a11y-success: #059669; /* Green 600 - WCAG AAA */

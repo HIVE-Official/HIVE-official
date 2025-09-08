@@ -203,16 +203,16 @@ export function CampusDiscoveryCard({ settings, isEditMode, className }: CampusD
     switch (type) {
       case 'space': return 'text-blue-400';
       case 'event': return 'text-green-400';
-      case 'tool': return 'text-purple-400';
+      case 'tool': return 'text-[var(--hive-gold)]';
       case 'person': return 'text-pink-400';
-      case 'opportunity': return 'text-amber-400';
+      case 'opportunity': return 'text-[var(--hive-gold)]';
       default: return 'text-muted-foreground';
     }
   };
 
   const getRelevanceColor = (score: number) => {
     if (score >= 90) return 'text-green-400 bg-green-500/20 border-green-500/30';
-    if (score >= 80) return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30';
+    if (score >= 80) return 'text-[var(--hive-gold)] bg-[var(--hive-gold)]/20 border-[var(--hive-gold)]/30';
     if (score >= 70) return 'text-blue-400 bg-blue-500/20 border-blue-500/30';
     return 'text-muted-foreground bg-muted/20 border-muted/30';
   };

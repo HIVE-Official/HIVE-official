@@ -42,9 +42,9 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
     switch (post.type) {
       case 'announcement': return <Pin className="h-4 w-4 text-hive-gold" />;
       case 'poll': return <Badge className="text-xs bg-blue-500/20 text-blue-400">Poll</Badge>;
-      case 'event': return <Badge className="text-xs bg-purple-500/20 text-purple-400">Event</Badge>;
+      case 'event': return <Badge className="text-xs bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]">Event</Badge>;
       case 'tool': return <Badge className="text-xs bg-green-500/20 text-green-400">Tool</Badge>;
-      case 'ritual': return <Badge className="text-xs bg-orange-500/20 text-orange-400">Ritual</Badge>;
+      case 'ritual': return <Badge className="text-xs bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]">Ritual</Badge>;
       default: return null;
     }
   };
@@ -62,7 +62,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
 
     return (
       <div className="mt-3 p-4 bg-gray-800 rounded-lg">
-        <h4 className="font-medium text-white mb-3">{post.poll.question}</h4>
+        <h4 className="font-medium text-[var(--hive-text-primary)] mb-3">{post.poll.question}</h4>
         
         <div className="space-y-2">
           {post.poll.options.map((option: any) => (
@@ -81,7 +81,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-white">{option.text}</span>
+                  <span className="text-[var(--hive-text-primary)]">{option.text}</span>
                   <span className="text-sm text-gray-400">
                     {option.percentage}% ({option.votes})
                   </span>
@@ -112,7 +112,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center">
             <Calendar className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
-            <h4 className="text-white font-semibold">{post.event.title}</h4>
+            <h4 className="text-[var(--hive-text-primary)] font-semibold">{post.event.title}</h4>
           </div>
           <Button size="sm" className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
             RSVP ({post.event.rsvpCount})
@@ -140,10 +140,10 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-              <Zap className="w-6 h-6 text-white" />
+              <Zap className="w-6 h-6 text-[var(--hive-text-primary)]" />
             </div>
             <div>
-              <h4 className="text-white font-semibold">{post.tool.name}</h4>
+              <h4 className="text-[var(--hive-text-primary)] font-semibold">{post.tool.name}</h4>
               <p className="text-gray-400 text-sm">{post.tool.description}</p>
               <div className="flex items-center mt-1">
                 <Badge className="bg-blue-500/20 text-blue-400 mr-2">{post.tool.category}</Badge>
@@ -151,7 +151,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
               </div>
             </div>
           </div>
-          <Button size="sm" className="bg-blue-500 text-white hover:bg-blue-600">
+          <Button size="sm" className="bg-blue-500 text-[var(--hive-text-primary)] hover:bg-blue-600">
             Try Tool
           </Button>
         </div>
@@ -167,10 +167,10 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-3">
-              <Flame className="w-6 h-6 text-white" />
+              <Flame className="w-6 h-6 text-[var(--hive-text-primary)]" />
             </div>
             <div>
-              <h4 className="text-white font-semibold">{post.ritual.name}</h4>
+              <h4 className="text-[var(--hive-text-primary)] font-semibold">{post.ritual.name}</h4>
               <div className="flex items-center mt-1">
                 <Badge className="bg-green-500/20 text-green-400 mr-2">{post.ritual.category}</Badge>
                 <span className="font-semibold" style={{ color: 'var(--hive-brand-primary)' }}>{post.ritual.streak} day streak!</span>
@@ -180,7 +180,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
               </p>
             </div>
           </div>
-          <Button size="sm" className="bg-green-500 text-white hover:bg-green-600">
+          <Button size="sm" className="bg-green-500 text-[var(--hive-text-primary)] hover:bg-green-600">
             Join Challenge
           </Button>
         </div>
@@ -197,15 +197,15 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
             <Avatar className="w-10 h-10 mr-3">
               <AvatarFallback className={`${
                 post.author.role === 'Builder' ? '' :
-                post.author.role === 'Space Leader' ? 'bg-blue-500 text-white' :
-                'bg-gradient-to-r from-green-500 to-teal-500 text-white'
+                post.author.role === 'Space Leader' ? 'bg-blue-500 text-[var(--hive-text-primary)]' :
+                'bg-gradient-to-r from-green-500 to-teal-500 text-[var(--hive-text-primary)]'
               }`}>
                 {post.author.avatar}
               </AvatarFallback>
             </Avatar>
             <div>
               <div className="flex items-center">
-                <h4 className="text-white font-medium mr-2">{post.author.name}</h4>
+                <h4 className="text-[var(--hive-text-primary)] font-medium mr-2">{post.author.name}</h4>
                 {post.author.isVerified && <Award className="w-4 h-4" style={{ color: 'var(--hive-brand-primary)' }} />}
                 {getPostTypeIcon()}
               </div>
@@ -252,17 +252,17 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
               <Heart className={`w-4 h-4 mr-1 ${post.engagement.isLiked ? 'fill-current' : ''}`} />
               {post.engagement.likes}
             </Button>
-            <Button size="sm" variant="ghost" onClick={handleComment} className="text-gray-400 hover:text-white">
+            <Button size="sm" variant="ghost" onClick={handleComment} className="text-gray-400 hover:text-[var(--hive-text-primary)]">
               <MessageCircle className="w-4 h-4 mr-1" />
               {post.engagement.comments}
             </Button>
-            <Button size="sm" variant="ghost" onClick={handleShare} className="text-gray-400 hover:text-white">
+            <Button size="sm" variant="ghost" onClick={handleShare} className="text-gray-400 hover:text-[var(--hive-text-primary)]">
               <Share2 className="w-4 h-4 mr-1" />
               {post.engagement.shares}
             </Button>
           </div>
           <div className="flex items-center space-x-2">
-            <Button size="sm" variant="ghost" onClick={handleCopyLink} className="text-gray-400 hover:text-white">
+            <Button size="sm" variant="ghost" onClick={handleCopyLink} className="text-gray-400 hover:text-[var(--hive-text-primary)]">
               <Copy className="w-4 h-4" />
             </Button>
             <Button size="sm" variant="ghost" className={`${post.engagement.hasBookmarked ? 'text-hive-gold' : 'text-gray-400 hover:text-hive-gold'}`}>

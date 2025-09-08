@@ -6,15 +6,15 @@ import { cn } from '../../lib/utils.js';
 import { Settings, Play, Pause, MoreHorizontal, AlertCircle, CheckCircle, Users, Trash2, BarChart3, Calendar, MessageSquare, Zap } from 'lucide-react';
 const CATEGORY_CONFIG = {
     productivity: {
-        color: 'text-yellow-400',
-        bgColor: 'bg-yellow-500/10',
-        borderColor: 'border-yellow-500/20',
+        color: 'text-[var(--hive-gold)]',
+        bgColor: 'bg-[var(--hive-gold)]/10',
+        borderColor: 'border-[var(--hive-gold)]/20',
         icon: _jsx(Zap, { className: "w-4 h-4" }),
     },
     social: {
-        color: 'text-purple-400',
-        bgColor: 'bg-purple-500/10',
-        borderColor: 'border-purple-500/20',
+        color: 'text-[var(--hive-gold)]',
+        bgColor: 'bg-[var(--hive-gold)]/10',
+        borderColor: 'border-[var(--hive-gold)]/20',
         icon: _jsx(Users, { className: "w-4 h-4" }),
     },
     academic: {

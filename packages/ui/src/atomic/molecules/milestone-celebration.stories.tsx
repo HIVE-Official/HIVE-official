@@ -186,7 +186,7 @@ export const CompleteShowcase: Story = {
                     <Text variant="body-sm" color="gold" weight="medium">Epic Achievements:</Text>
                     <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-purple-400 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-[var(--hive-gold)] flex items-center justify-center">
                           <Text variant="body-xs" color="white">E</Text>
                         </div>
                         <div>
@@ -204,7 +204,7 @@ export const CompleteShowcase: Story = {
 
                 <div className="space-y-4">
                   <Text variant="body-sm" color="gold" weight="medium">Legendary Achievements:</Text>
-                  <div className="p-4 bg-gradient-to-r from-[var(--hive-gold)]/10 to-yellow-500/10 rounded-lg border border-[var(--hive-gold)]/20 space-y-3">
+                  <div className="p-4 bg-gradient-to-r from-[var(--hive-gold)]/10 to-[var(--hive-gold)]/10 rounded-lg border border-[var(--hive-gold)]/20 space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-[var(--hive-gold)] flex items-center justify-center">
                         <Text variant="body-xs" color="black">L</Text>
@@ -330,7 +330,7 @@ export const CompleteShowcase: Story = {
                     <Text variant="body-sm" color="gold" weight="medium">Semester Excellence:</Text>
                     <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-purple-500 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
                           <Text variant="body-xs" color="white">🏆</Text>
                         </div>
                         <div>
@@ -407,7 +407,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Peer Mentoring:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-yellow-500 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
                         <Text variant="body-xs" color="black">⭐</Text>
                       </div>
                       <div>
@@ -425,7 +425,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Tool Innovation:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-purple-500 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
                         <Text variant="body-xs" color="white">🛠️</Text>
                       </div>
                       <div>
@@ -455,7 +455,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Study Streak Achievements:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-red-500 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-red-500 flex items-center justify-center">
                         <Text variant="body-xs" color="white">🔥</Text>
                       </div>
                       <div>

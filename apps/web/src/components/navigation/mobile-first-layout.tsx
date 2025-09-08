@@ -90,7 +90,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
       <div className="lg:hidden sticky top-0 z-40 bg-[var(--hive-background-primary)]/95 backdrop-blur border-b border-gray-800">
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] rounded-lg flex items-center justify-center">
               <span className="text-[var(--hive-text-primary)] font-bold text-sm">H</span>
             </div>
             <span className="font-bold text-[var(--hive-text-inverse)]">HIVE</span>
@@ -138,7 +138,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
                 className={`
                   flex flex-col items-center justify-center gap-1 transition-colors
                   ${isActive 
-                    ? 'text-amber-400' 
+                    ? 'text-[var(--hive-gold)]' 
                     : 'text-gray-500 hover:text-gray-300 active:text-gray-200'
                   }
                 `}
@@ -146,7 +146,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
                 <Icon className="w-5 h-5" />
                 <span className="text-xs font-medium">{tab.label}</span>
                 {isActive && (
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-amber-400 rounded-full" />
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[var(--hive-gold)] rounded-full" />
                 )}
               </button>
             );
@@ -163,7 +163,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
               onClick={() => router.push('/')}
               className="flex items-center gap-3 cursor-pointer"
             >
-              <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] rounded-lg flex items-center justify-center">
                 <span className="text-[var(--hive-text-primary)] font-bold">H</span>
               </div>
               <span className="text-xl font-bold text-[var(--hive-text-inverse)]">HIVE</span>
@@ -182,7 +182,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
                     className={`
                       flex items-center gap-2 px-4 py-2 rounded-lg transition-colors relative
                       ${isActive 
-                        ? 'text-amber-400 bg-amber-400/10' 
+                        ? 'text-[var(--hive-gold)] bg-[var(--hive-gold)]/10' 
                         : 'text-gray-400 hover:text-[var(--hive-text-inverse)] hover:bg-gray-800'
                       }
                     `}
@@ -224,7 +224,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
               
               <button 
                 onClick={() => router.push('/spaces/create')}
-                className="ml-2 flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-[var(--hive-text-primary)] font-medium rounded-lg transition-colors"
+                className="ml-2 flex items-center gap-2 px-4 py-2 bg-[var(--hive-gold)] hover:bg-[var(--hive-gold)] text-[var(--hive-text-primary)] font-medium rounded-lg transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create</span>

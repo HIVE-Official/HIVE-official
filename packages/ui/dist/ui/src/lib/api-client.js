@@ -4,6 +4,7 @@
  */
 // Base API Client Class
 class ApiClient {
+    baseUrl;
     constructor(baseUrl = '/api') {
         this.baseUrl = baseUrl;
     }

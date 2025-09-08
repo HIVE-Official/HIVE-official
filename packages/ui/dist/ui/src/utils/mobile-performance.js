@@ -6,12 +6,10 @@
 import { useState, useEffect } from 'react';
 import { getNetworkInfo, getBatteryInfo, getDeviceMemory, getHardwareConcurrency } from './mobile-native-features.js';
 export class MobilePerformanceManager {
-    constructor() {
-        this.metrics = null;
-        this.observers = [];
-        this.rafId = null;
-        this.frameTimings = [];
-    }
+    metrics = null;
+    observers = [];
+    rafId = null;
+    frameTimings = [];
     async initialize() {
         const [batteryInfo, networkInfo] = await Promise.all([
             getBatteryInfo(),
@@ -208,6 +206,7 @@ export class BatteryEfficientAnimations {
 }
 // Memory pressure detection
 export class MemoryManager {
+    static MEMORY_THRESHOLD = 0.8; // 80% of available memory
     static async checkMemoryPressure() {
         try {
             if ('memory' in performance) {
@@ -238,7 +237,6 @@ export class MemoryManager {
         }
     }
 }
-MemoryManager.MEMORY_THRESHOLD = 0.8; // 80% of available memory
 // Network-aware loading
 export class AdaptiveLoader {
     static shouldPreloadImages(networkInfo, batteryLevel) {
@@ -274,6 +272,11 @@ export class AdaptiveLoader {
 }
 // Performance budget utilities
 export class PerformanceBudget {
+    static BUDGETS = {
+        highEnd: { js: 170, css: 75, images: 1712 }, // KB
+        midRange: { js: 130, css: 50, images: 1000 }, // KB  
+        lowEnd: { js: 65, css: 25, images: 500 } // KB
+    };
     static getBudget(deviceMemory, cpuCores) {
         if (deviceMemory && deviceMemory >= 4 && cpuCores >= 4) {
             return this.BUDGETS.highEnd;
@@ -289,11 +292,6 @@ export class PerformanceBudget {
         return bundleSize <= budget;
     }
 }
-PerformanceBudget.BUDGETS = {
-    highEnd: { js: 170, css: 75, images: 1712 }, // KB
-    midRange: { js: 130, css: 50, images: 1000 }, // KB  
-    lowEnd: { js: 65, css: 25, images: 500 } // KB
-};
 // Export performance manager singleton
 export const mobilePerformanceManager = new MobilePerformanceManager();
 //# sourceMappingURL=mobile-performance.js.map

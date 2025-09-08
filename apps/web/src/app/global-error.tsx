@@ -63,8 +63,8 @@ export default function GlobalError({
       <body style={{ margin: 0, padding: 0 }}>
         {/* Background gradients matching home page */}
         <div className="fixed inset-0 bg-[var(--hive-background-primary)]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#111111,transparent_50%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,#111111,transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--hive-background-secondary),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,var(--hive-background-secondary),transparent_50%)]" />
         </div>
 
         <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
@@ -74,7 +74,7 @@ export default function GlobalError({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.24, ease: [0.33, 0.65, 0, 1] }}
           >
-            <div className="rounded-lg border border-[var(--hive-brand-secondary)]/30 bg-[#111111] p-8 shadow-xl">
+            <div className="rounded-lg border border-[var(--hive-brand-secondary)]/30 bg-[var(--hive-background-secondary)] p-8 shadow-xl">
               {/* Gold accent line */}
               <div className="h-1 bg-gradient-to-r from-[var(--hive-brand-secondary)] to-[var(--hive-brand-secondary)]/50 rounded-full mb-6" />
               
@@ -114,7 +114,7 @@ export default function GlobalError({
                 <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                   <motion.button
                     onClick={handleReset}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-[#2A2A2A] rounded-lg hover:bg-[#111111] hover:border-[var(--hive-brand-secondary)]/50 text-[var(--hive-text-inverse)] transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[var(--hive-brand-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-[var(--hive-gray-700)] rounded-lg hover:bg-[var(--hive-background-secondary)] hover:border-[var(--hive-brand-secondary)]/50 text-[var(--hive-text-inverse)] transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[var(--hive-brand-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]"
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
                     style={{
@@ -142,7 +142,7 @@ export default function GlobalError({
 
                 {/* Show error details in development */}
                 {process.env.NODE_ENV === 'development' && (
-                  <div className="mt-4 w-full rounded-lg border border-[#2A2A2A] bg-[var(--hive-background-primary)] p-4 text-left">
+                  <div className="mt-4 w-full rounded-lg border border-[var(--hive-gray-700)] bg-[var(--hive-background-primary)] p-4 text-left">
                     <p 
                       className="text-[#6B7280] text-sm"
                       style={{ fontFamily: 'Geist Mono, ui-monospace, monospace' }}

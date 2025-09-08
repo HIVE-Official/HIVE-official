@@ -52,8 +52,8 @@ const PostCard = ({ post, currentUser, onReaction, onComment, onShare, onEdit, o
     const getPriorityColor = (priority) => {
         switch (priority) {
             case 'urgent': return 'border-red-500/40 bg-red-500/10';
-            case 'high': return 'border-orange-500/40 bg-orange-500/10';
-            case 'medium': return 'border-yellow-500/40 bg-yellow-500/10';
+            case 'high': return 'border-[var(--hive-gold)]/40 bg-[var(--hive-gold)]/10';
+            case 'medium': return 'border-[var(--hive-gold)]/40 bg-[var(--hive-gold)]/10';
             default: return 'border-[var(--hive-border-primary)]/20 bg-[var(--hive-background-secondary)]/60';
         }
     };
@@ -67,6 +67,7 @@ const PostCard = ({ post, currentUser, onReaction, onComment, onShare, onEdit, o
             document.addEventListener('mousedown', handleClickOutside);
             return () => document.removeEventListener('mousedown', handleClickOutside);
         }
+        return () => { }; // No cleanup needed when menu is not shown
     }, [showMenu]);
     return (_jsxs(motion.div, { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, className: cn('relative backdrop-blur-xl border rounded-2xl p-6 transition-all duration-300', post.type === 'announcement'
             ? getPriorityColor(post.announcement?.priority)

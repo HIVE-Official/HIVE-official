@@ -6,18 +6,18 @@
 export const buttonStates = {
     // Default State
     default: {
-        border: '1px solid rgba(255, 215, 0, 0.4)',
+        border: '1px solid rgba(var(--hive-gold-rgb), 0.4)',
         background: 'transparent',
-        text: '#FFD700',
+        text: 'var(--hive-gold)',
         transform: 'none',
         transition: 'all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)',
         use: 'Resting state, no user interaction'
     },
     // Hover State (Desktop Only)
     hover: {
-        border: '1px solid rgba(255, 215, 0, 0.8)',
-        background: 'rgba(255, 215, 0, 0.05)',
-        text: '#FFD700',
+        border: '1px solid rgba(var(--hive-gold-rgb), 0.8)',
+        background: 'rgba(var(--hive-gold-rgb), 0.05)',
+        text: 'var(--hive-gold)',
         transform: 'translateY(-1px) scale(1.01)',
         transition: 'all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)',
         use: 'Desktop pointer hover, not on touch devices',
@@ -25,19 +25,19 @@ export const buttonStates = {
     },
     // Active State
     active: {
-        border: '1px solid #FFD700',
-        background: 'rgba(255, 215, 0, 0.12)',
-        text: '#FFD700',
+        border: '1px solid var(--hive-gold)',
+        background: 'rgba(var(--hive-gold-rgb), 0.12)',
+        text: 'var(--hive-gold)',
         transform: 'translateY(0px) scale(0.98)',
         transition: 'all 100ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         use: 'Pressed/clicked state, immediate feedback'
     },
     // Focus State
     focus: {
-        border: '1px solid #FFD700',
-        background: 'rgba(255, 215, 0, 0.05)',
-        text: '#FFD700',
-        boxShadow: '0 0 0 3px rgba(255, 215, 0, 0.3)',
+        border: '1px solid var(--hive-gold)',
+        background: 'rgba(var(--hive-gold-rgb), 0.05)',
+        text: 'var(--hive-gold)',
+        boxShadow: '0 0 0 3px rgba(var(--hive-gold-rgb), 0.3)',
         transform: 'none',
         outline: 'none',
         use: 'Keyboard focus, accessibility compliance'
@@ -54,8 +54,8 @@ export const buttonStates = {
     },
     // Loading State
     loading: {
-        border: '1px solid rgba(255, 215, 0, 0.4)',
-        background: 'rgba(255, 215, 0, 0.05)',
+        border: '1px solid rgba(var(--hive-gold-rgb), 0.4)',
+        background: 'rgba(var(--hive-gold-rgb), 0.05)',
         text: 'transparent',
         pointerEvents: 'none',
         cursor: 'wait',
@@ -76,10 +76,10 @@ export const inputStates = {
     },
     // Focus State
     focus: {
-        border: '1px solid #FFD700',
+        border: '1px solid var(--hive-gold)',
         background: 'rgba(255, 255, 255, 0.03)',
         text: 'rgba(255, 255, 255, 1.0)',
-        boxShadow: '0 0 0 3px rgba(255, 215, 0, 0.2)',
+        boxShadow: '0 0 0 3px rgba(var(--hive-gold-rgb), 0.2)',
         outline: 'none',
         use: 'Active input focus'
     },

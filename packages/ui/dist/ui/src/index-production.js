@@ -1,75 +1,48 @@
-// HIVE UI - Production Ready Exports
-// Minimal working version with stubs for complex components
+// === PRODUCTION-OPTIMIZED HIVE UI EXPORTS ===
+// Tree-shakeable exports for optimal bundle size in production
 import React from 'react';
-// === CORE UTILITIES ===
-export { cn } from './lib/utils.js';
-// === AUTH CONTEXT (working) ===
-export { HiveAuthProvider, useHiveAuth } from './contexts/hive-auth-context.js';
-export { useHiveAuth as useAuth } from './contexts/hive-auth-context.js';
-// === AUTH COMPONENTS (working) ===
-export { EmailGate } from './components/auth/email-gate.js';
-export { CheckEmailInfo } from './components/auth/CheckEmailInfo.js';
-export { SchoolPick } from './components/auth/school-pick.js';
-// === LOADING COMPONENTS (working) ===
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator.js';
-// === BASIC UI COMPONENTS (working) ===
-export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced.js';
+// === CORE ATOMIC COMPONENTS (Most Used) ===
+export { ButtonEnhanced as Button, ButtonGroup, IconButton } from './atomic/atoms/button-enhanced.js';
 export { InputEnhanced as Input } from './atomic/atoms/input-enhanced.js';
-export { HiveCard as Card, HiveCard } from './components/hive-card.js';
-export { HiveBadge as Badge, HiveBadge } from './components/hive-badge.js';
-export { HiveModal } from './components/hive-modal.js';
-export { HiveLogo } from './components/hive-logo.js';
-// === MOTION SYSTEM (working) ===
+export { TextareaEnhanced as Textarea } from './atomic/atoms/textarea-enhanced.js';
+export { Text } from './atomic/atoms/text.js';
+export { Badge } from './atomic/atoms/badge.js';
+export { Avatar, AvatarImage, AvatarFallback } from './atomic/atoms/avatar.js';
+// === LAYOUT COMPONENTS ===
+export { Container, PageContainer } from './atomic/atoms/container.js';
+export { Grid } from './components/Grid.js';
+export { Stack } from './components/Stack.js';
+// === CARD SYSTEM ===
+export { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from './atomic/ui/card.js';
+// === FORM SYSTEM ===
+export { FormField } from './atomic/molecules/form-field.js';
+export { Label } from './atomic/atoms/label.js';
+// === NAVIGATION ===
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './atomic/ui/tabs.js';
+export { AppHeader } from './components/AppHeader.js';
+export { BottomNavBar } from './components/BottomNavBar.js';
+// === UTILITIES & CONTEXTS (Essential) ===
+export { cn } from './lib/utils.js';
+export { logger } from './lib/logger.js';
+export { FirebaseAuthProvider as AuthProvider, useFirebaseAuth as useAuth } from './contexts/unified-auth-context.js';
+// === MOTION SYSTEM (Light) ===
 export { hiveVariants } from './lib/motion.js';
-// === STUB COMPONENTS (for complex ones that have deep dependencies) ===
-// Onboarding Components (stubs - to be replaced with working versions)
-export const CreateProfileStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Create Profile'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Complete your profile to get started with HIVE.'));
-};
-export const AcademicStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Academic Information'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Tell us about your academic journey.'));
-};
-export const InterestsSelectionStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Select Your Interests'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Choose topics that interest you most.'));
-};
-export const WelcomeRoleStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Select your role to personalize your experience.'));
-};
-export const AlumniComingSoonStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Alumni Access Coming Soon'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Alumni features will be available soon!'));
-};
-export const OnboardingCompleteStep = (props) => {
-    return React.createElement('div', { className: 'p-8 text-center' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE!'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Your profile is complete. Start exploring!'));
-};
-// Profile Components (stubs)
-export const BentoProfileDashboard = (props) => {
-    return React.createElement('div', { className: 'p-8' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Profile Dashboard'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Your personalized dashboard will appear here.'));
-};
-// Spaces Components (stubs)
-export const SpaceRequestForm = (props) => {
-    return React.createElement('div', { className: 'p-8' }, React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Request a Space'), React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Space request form will appear here.'));
-};
-// Form Components (stubs)
-export const FormField = (props) => {
-    return React.createElement('div', { className: 'mb-4' }, props.children);
-};
-// Basic UI Stubs
-export const Checkbox = (props) => {
-    return React.createElement('input', { type: 'checkbox', className: 'rounded border-[var(--hive-border-default)]', ...props });
-};
-export const PageContainer = ({ children, className }) => {
-    return React.createElement('div', { className: `container mx-auto px-4 ${className || ''}` }, children);
-};
-export const CardContent = ({ children, className }) => {
-    return React.createElement('div', { className: `p-6 ${className || ''}` }, children);
-};
-export const CardHeader = ({ children, className }) => {
-    return React.createElement('div', { className: `p-6 pb-0 ${className || ''}` }, children);
-};
-export const CardTitle = ({ children, className }) => {
-    return React.createElement('h3', { className: `text-lg font-semibold ${className || ''}` }, children);
-};
-export const Label = ({ children, htmlFor, className }) => {
-    return React.createElement('label', { htmlFor, className: `block text-sm font-medium ${className || ''}` }, children);
-};
+// === MODAL SYSTEM ===
+export { HiveModal as Modal } from './components/hive-modal.js';
+// === LAZY LOADED COMPONENTS ===
+// Use dynamic imports for these heavy components
+export const LazyProfileDashboard = React.lazy(() => import('./atomic/organisms/profile-dashboard').then(mod => ({ default: mod.ProfileDashboard })));
+export const LazyCampusIdentityHeader = React.lazy(() => import('./atomic/molecules/campus-identity-header').then(mod => ({ default: mod.CampusIdentityHeader })));
+export const LazyCampusSpacesCard = React.lazy(() => import('./atomic/molecules/campus-spaces-card').then(mod => ({ default: mod.CampusSpacesCard })));
+// CompleteHIVEToolsSystem - Available when needed
+// export const LazyCompleteHIVEToolsSystem = React.lazy(() => 
+//   import('./atomic/organisms/complete-hive-tools-system').then(mod => ({ default: mod.CompleteHIVEToolsSystem }))
+// );
+// === ACCESSIBILITY UTILITIES ===
+export { getInteractiveA11yProps, getFormA11yProps, getLiveRegionProps, getModalA11yProps, focusStyles, screenReader } from './lib/accessibility-foundation.js';
+// === MOBILE HOOKS ===
+export { useHapticFeedback, useSwipeGestures, usePullToRefresh, useLongPress, useMobileViewport } from './hooks/use-mobile-interactions.js';
+// === PERFORMANCE OPTIMIZED BUNDLE ===
+// This file provides the minimal set of exports needed for most use cases
+// Heavy components are lazy-loaded to improve initial bundle size
 //# sourceMappingURL=index-production.js.map

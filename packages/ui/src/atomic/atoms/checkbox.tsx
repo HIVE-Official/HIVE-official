@@ -64,10 +64,10 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
     
     // States
     !disabled && !error && [
-      'border-white/20',
+      'border-[var(--hive-white)]/20',
       'bg-transparent',
-      'hover:border-[#FFD700]',
-      'focus-within:border-[#FFD700]'
+      'hover:border-[var(--hive-gold)]',
+      'focus-within:border-[var(--hive-gold)]'
     ].filter(Boolean).join(' '),
     
     disabled && [
@@ -83,8 +83,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
     
     // Checked state - keep transparent background
     showCheck && !disabled && [
-      'border-[#FFD700]',
-      error && 'border-[#FFD700]'
+      'border-[var(--hive-gold)]',
+      error && 'border-[var(--hive-gold)]'
     ].filter(Boolean).join(' ')
   ].filter(Boolean).join(' ');
 
@@ -113,9 +113,9 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
         {showCheck && (
           <div className={cn(
             'flex items-center justify-center',
-            'text-[#FFD700]',
+            'text-[var(--hive-gold)]',
             checkboxSizes[size].icon,
-            disabled && 'text-white/40'
+            disabled && 'text-[var(--hive-text-primary)]/40'
           )}>
             {indeterminate ? (
               <Minus className="h-full w-full stroke-[1.5]" />

@@ -71,7 +71,7 @@ export function EmptySearchResults({
           <Button 
             onClick={onClearSearch}
             variant="outline"
-            className="w-full border-white/20 text-[var(--hive-text-inverse)]"
+            className="w-full border-[var(--hive-white)]/20 text-[var(--hive-text-inverse)]"
           >
             Clear search term
           </Button>
@@ -81,7 +81,7 @@ export function EmptySearchResults({
           <Button 
             onClick={onClearFilters}
             variant="outline"
-            className="w-full border-white/20 text-[var(--hive-text-inverse)]"
+            className="w-full border-[var(--hive-white)]/20 text-[var(--hive-text-inverse)]"
           >
             Reset filters
           </Button>
@@ -108,10 +108,10 @@ export function EmptySearchResults({
             {alternativeSuggestions.slice(0, 3).map((space) => (
               <div 
                 key={space.id}
-                className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
+                className="flex items-center justify-between p-3 bg-[var(--hive-white)]/5 rounded-lg"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500/20 to-[var(--hive-gold)]/20 rounded-lg flex items-center justify-center">
                     <span className="text-xs font-bold text-[var(--hive-text-inverse)]">
                       {space.name.charAt(0)}
                     </span>
@@ -154,10 +154,10 @@ export function SpaceOverloadHandler({
   if (joinedSpacesCount < 8) return null; // Only show for 8+ spaces
 
   return (
-    <Card className="p-6 bg-orange-500/10 border-orange-500/20 mb-6">
+    <Card className="p-6 bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 mb-6">
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-orange-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-          <AlertCircle className="h-6 w-6 text-orange-400" />
+        <div className="w-12 h-12 bg-[var(--hive-gold)]/20 rounded-full flex items-center justify-center flex-shrink-0">
+          <AlertCircle className="h-6 w-6 text-[var(--hive-gold)]" />
         </div>
         
         <div className="flex-1">
@@ -171,11 +171,11 @@ export function SpaceOverloadHandler({
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="bg-white/5 rounded-lg p-3">
+            <div className="bg-[var(--hive-white)]/5 rounded-lg p-3">
               <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{recentlyJoined.length}</div>
               <div className="text-xs text-neutral-400">Joined this week</div>
             </div>
-            <div className="bg-white/5 rounded-lg p-3">
+            <div className="bg-[var(--hive-white)]/5 rounded-lg p-3">
               <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{inactiveSpaces.length}</div>
               <div className="text-xs text-neutral-400">Haven't visited recently</div>
             </div>
@@ -193,7 +193,7 @@ export function SpaceOverloadHandler({
                 <h4 className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Spaces you might consider leaving:</h4>
                 <div className="space-y-2">
                   {inactiveSpaces.slice(0, 3).map((space) => (
-                    <div key={space.id} className="flex items-center justify-between p-2 bg-white/5 rounded">
+                    <div key={space.id} className="flex items-center justify-between p-2 bg-[var(--hive-white)]/5 rounded">
                       <div>
                         <div className="text-sm text-[var(--hive-text-inverse)]">{space.name}</div>
                         <div className="text-xs text-neutral-400">Last visited 2+ weeks ago</div>
@@ -212,7 +212,7 @@ export function SpaceOverloadHandler({
           <div className="flex flex-wrap gap-2">
             <Button
               onClick={onOptimizeSpaces}
-              className="bg-orange-400 text-hive-obsidian hover:bg-orange-300"
+              className="bg-[var(--hive-gold)] text-hive-obsidian hover:bg-orange-300"
             >
               <Target className="h-4 w-4 mr-2" />
               Optimize my spaces
@@ -221,7 +221,7 @@ export function SpaceOverloadHandler({
             <Button
               variant="outline"
               onClick={() => setShowDetails(!showDetails)}
-              className="border-orange-400/30 text-orange-400"
+              className="border-[var(--hive-gold)]/30 text-[var(--hive-gold)]"
             >
               {showDetails ? "Hide details" : "Show details"}
             </Button>
@@ -287,10 +287,10 @@ export function InclusiveCommunityFinder({
   const personalizedMessage = getPersonalizedMessage();
 
   return (
-    <Card className="p-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/20">
+    <Card className="p-6 bg-gradient-to-r from-[var(--hive-gold)]/10 to-pink-500/10 border-[var(--hive-gold)]/20">
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-          <Shield className="h-6 w-6 text-purple-400" />
+        <div className="w-12 h-12 bg-[var(--hive-gold)]/20 rounded-full flex items-center justify-center flex-shrink-0">
+          <Shield className="h-6 w-6 text-[var(--hive-gold)]" />
         </div>
         
         <div className="flex-1">
@@ -303,7 +303,7 @@ export function InclusiveCommunityFinder({
           </p>
 
           {personalizedMessage && (
-            <div className="mb-4 p-3 bg-white/5 rounded-lg">
+            <div className="mb-4 p-3 bg-[var(--hive-white)]/5 rounded-lg">
               <p className="text-sm text-purple-300">
                 <Shield className="h-4 w-4 inline mr-2" />
                 Based on your profile, you might be interested in {personalizedMessage}.
@@ -314,9 +314,9 @@ export function InclusiveCommunityFinder({
           {/* Inclusive Spaces Preview */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
             {inclusiveSpaces.slice(0, 4).map((space) => (
-              <div key={space.id} className="p-3 bg-white/5 rounded-lg">
+              <div key={space.id} className="p-3 bg-[var(--hive-white)]/5 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded flex items-center justify-center">
+                  <div className="w-6 h-6 bg-gradient-to-br from-[var(--hive-gold)]/20 to-pink-500/20 rounded flex items-center justify-center">
                     <span className="text-xs font-bold text-[var(--hive-text-inverse)]">
                       {space.name.charAt(0)}
                     </span>
@@ -328,7 +328,7 @@ export function InclusiveCommunityFinder({
                 </p>
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-xs text-neutral-400">{space.memberCount} members</span>
-                  <Badge className="bg-purple-400/20 text-purple-300 text-xs">
+                  <Badge className="bg-[var(--hive-gold)]/20 text-purple-300 text-xs">
                     Inclusive
                   </Badge>
                 </div>
@@ -340,7 +340,7 @@ export function InclusiveCommunityFinder({
           <div className="flex flex-wrap gap-2">
             <Button
               onClick={onFindMore}
-              className="bg-purple-400 text-[var(--hive-text-inverse)] hover:bg-purple-300"
+              className="bg-[var(--hive-gold)] text-[var(--hive-text-inverse)] hover:bg-purple-300"
             >
               <Search className="h-4 w-4 mr-2" />
               Explore inclusive communities
@@ -348,7 +348,7 @@ export function InclusiveCommunityFinder({
             
             <Button
               variant="outline"
-              className="border-purple-400/30 text-purple-400"
+              className="border-[var(--hive-gold)]/30 text-[var(--hive-gold)]"
             >
               <Globe className="h-4 w-4 mr-2" />
               Report an issue
@@ -444,7 +444,7 @@ export function TransferStudentHelper({
           {/* Specialized Resources */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             {(studentType === "transfer" || studentType === "both") && (
-              <div className="p-4 bg-white/5 rounded-lg">
+              <div className="p-4 bg-[var(--hive-white)]/5 rounded-lg">
                 <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">
                   <Users className="h-4 w-4 inline mr-2 text-blue-400" />
                   Transfer Student Resources
@@ -458,7 +458,7 @@ export function TransferStudentHelper({
             )}
 
             {(studentType === "international" || studentType === "both") && (
-              <div className="p-4 bg-white/5 rounded-lg">
+              <div className="p-4 bg-[var(--hive-white)]/5 rounded-lg">
                 <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">
                   <Globe className="h-4 w-4 inline mr-2 text-green-400" />
                   International Student Support
@@ -478,7 +478,7 @@ export function TransferStudentHelper({
               <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Recommended communities:</h4>
               <div className="space-y-2">
                 {specificSpaces.slice(0, 3).map((space) => (
-                  <div key={space.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                  <div key={space.id} className="flex items-center justify-between p-3 bg-[var(--hive-white)]/5 rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-blue-500/20 to-green-500/20 rounded-lg flex items-center justify-center">
                         <span className="text-xs font-bold text-[var(--hive-text-inverse)]">
@@ -517,7 +517,7 @@ export function TransferStudentHelper({
             </Button>
             <Button
               variant="outline"
-              className="border-purple-400/30 text-purple-400 text-sm"
+              className="border-[var(--hive-gold)]/30 text-[var(--hive-gold)] text-sm"
             >
               <Calendar className="h-4 w-4 mr-2" />
               Orientation Events

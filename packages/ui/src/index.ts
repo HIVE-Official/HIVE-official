@@ -91,7 +91,9 @@ export { hiveVariants } from './lib/motion';
 // === HIVE ALIASES ===
 export { ButtonEnhanced as HiveButton } from './atomic/atoms/button-enhanced';
 export { HiveBadge } from './components/hive-badge';
-export { HiveCard } from './components/hive-card';
+export { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from './components/hive-card';
+export { Avatar as HiveAvatar } from './atomic/atoms/avatar';
+export { TextareaEnhanced as HiveTextarea } from './atomic/atoms/textarea-enhanced';
 
 // === ADDITIONAL EXPORTS ===
 // Academic constants
@@ -105,11 +107,13 @@ export { adminFirestore } from './lib/firebase-admin';
 export { Checkbox } from './atomic/atoms/checkbox';
 export { Switch } from './atomic/atoms/switch';
 export { Slider } from './atomic/atoms/slider';
-export { Progress } from './atomic/atoms/progress';
+export { Progress, CircularProgress, LoadingProgress, SuccessProgress, ErrorProgress, CircularSpinner } from './atomic/atoms/progress';
 export { Separator } from './atomic/atoms/separator';
-export { Skeleton } from './atomic/atoms/skeleton';
+export { Skeleton, SkeletonText, SkeletonAvatar, SkeletonCard } from './atomic/atoms/skeleton';
 export { Spinner } from './atomic/atoms/spinner';
 export { Tooltip } from './atomic/atoms/tooltip';
+export { Alert, AlertTitle, AlertDescription, AlertIcons, CampusAlerts } from './atomic/atoms/alert';
+// Radio group and Calendar components need to be rebuilt
 
 // Navigation components
 export { NavigationPreferences } from './atomic/atoms/navigation-preferences';
@@ -129,6 +133,11 @@ export { ProfileStatistic, type ProfileStatisticProps } from './atomic/atoms/pro
 export { ProfileHeader, type ProfileHeaderProps } from './atomic/molecules/profile-header';
 export { ProfileStats, type ProfileStatsProps } from './atomic/molecules/profile-stats';
 
+// Campus-Specific Molecules
+export { CoursePicker, type CourseInfo, type CoursePickerProps } from './atomic/molecules/course-picker';
+export { StudyGroupMatcher, type StudyGroupMember, type StudyGroup, type StudyGroupMatcherProps } from './atomic/molecules/study-group-matcher';
+export { ResourceSharingCard, ResourceGrid, type SharedResource, type ResourceSharingCardProps, type ResourceGridProps } from './atomic/molecules/resource-sharing-card';
+
 // Profile Organisms
 export { ProfileDashboard, type ProfileDashboardProps } from './atomic/organisms/profile-dashboard';
 export { ProfileAvatarWidget, type ProfileAvatarWidgetProps } from './atomic/organisms/profile-avatar-widget';
@@ -140,4 +149,29 @@ export { ProfileCalendarWidget, type ProfileCalendarWidgetProps } from './atomic
 export { ProfileGhostModeWidget, type ProfileGhostModeWidgetProps } from './atomic/organisms/profile-ghost-mode-widget';
 export { ProfileHiveLabWidget, type ProfileHiveLabWidgetProps } from './atomic/organisms/profile-hivelab-widget';
 export { ProfileCard, type ProfileCardProps } from './atomic/organisms/profile-card';
-export { ProfileSystem, type ProfileSystemProps } from './atomic/organisms/profile-system'; 
+export { ProfileSystem, type ProfileSystemProps } from './atomic/organisms/profile-system';
+
+// === SURFACE COMPONENTS (Space Widgets) ===
+export { HivePostsSurface, type HivePostsSurfaceProps } from './components/surfaces/HivePostsSurface';
+export { HiveMembersSurface, type HiveMembersSurfaceProps } from './components/surfaces/HiveMembersSurface';
+export { HiveEventsSurface, type HiveEventsSurfaceProps } from './components/surfaces/HiveEventsSurface';
+export { HivePinnedSurface, type HivePinnedSurfaceProps } from './components/surfaces/HivePinnedSurface';
+export { HiveToolsSurface, type HiveToolsSurfaceProps } from './components/surfaces/HiveToolsSurface';
+
+// === TOOLS/HIVELAB COMPONENTS ===
+// Note: Tool system components need to be rebuilt
+// export { CompleteHIVEToolsSystem } from './atomic/organisms/complete-hive-tools-system';
+export { ProfileHiveLabWidget as HiveLabWidget } from './atomic/organisms/profile-hivelab-widget';
+
+// === THEME & DESIGN TOKENS ===
+export { 
+  hiveTheme,
+  type HiveTheme,
+  type HiveColors,
+  type HiveSemantic,
+  type HiveSpacing,
+  type HiveTypography,
+  type HiveShadows,
+  getCSSVariable,
+  applyThemeToRoot
+} from './theme/hive-theme'; 

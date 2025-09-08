@@ -139,7 +139,7 @@ export interface ButtonProps
   rightIcon?: React.ReactNode;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.memo(React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ 
     className, 
     variant, 
@@ -155,29 +155,44 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }, ref) => {
     const Comp = asChild ? Slot : "button";
     
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, radius, loading }), className)}
-        ref={ref}
-        disabled={disabled || loading}
-        {...props}
-      >
-        {loading ? (
+    // Memoize the className calculation to prevent unnecessary re-renders
+    const buttonClassName = React.useMemo(
+      () => cn(buttonVariants({ variant, size, radius, loading }), className),
+      [variant, size, radius, loading, className]
+    );
+    
+    // Memoize content to prevent unnecessary re-computation
+    const content = React.useMemo(() => {
+      if (loading) {
+        return (
           <>
             <LoadingSpinner size={size} />
             {children && <span className="opacity-70">{children}</span>}
           </>
-        ) : (
-          <>
-            {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
-            {children}
-            {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
-          </>
-        )}
+        );
+      }
+      
+      return (
+        <>
+          {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
+          {children}
+          {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+        </>
+      );
+    }, [loading, size, children, leftIcon, rightIcon]);
+    
+    return (
+      <Comp
+        className={buttonClassName}
+        ref={ref}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {content}
       </Comp>
     );
   }
-);
+));
 Button.displayName = "Button";
 
 // Loading Spinner Component
@@ -185,7 +200,7 @@ interface LoadingSpinnerProps {
   size?: VariantProps<typeof buttonVariants>["size"];
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = "default" }) => {
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = React.memo(({ size = "default" }) => {
   const spinnerSize = {
     xs: "h-3 w-3",
     sm: "h-3 w-3", 
@@ -218,7 +233,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = "default" }) => 
       />
     </svg>
   );
-};
+});
 
 // Button Group Component
 export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {

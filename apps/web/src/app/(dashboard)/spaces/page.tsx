@@ -26,7 +26,7 @@ const CreateSpaceModal = dynamic(
   { 
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-[var(--hive-black)]/80 backdrop-blur-sm z-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-hive-gold"></div>
       </div>
     )
@@ -38,8 +38,8 @@ const spaceTypeFilters = [
   { id: "all", label: "All Spaces", color: "bg-gray-500", emoji: "🌐", subtitle: "Every community" },
   { id: "student_organizations", label: "Student Spaces", color: "bg-blue-500", emoji: "🎯", subtitle: "Student-led communities" },
   { id: "university_organizations", label: "University Spaces", color: "bg-emerald-500", emoji: "🎓", subtitle: "Academic programs" },
-  { id: "greek_life", label: "Greek Life", color: "bg-purple-500", emoji: "🏛️", subtitle: "Fraternities & sororities" },
-  { id: "campus_living", label: "Residential Life", color: "bg-orange-500", emoji: "🏠", subtitle: "Dorms & living communities" },
+  { id: "greek_life", label: "Greek Life", color: "bg-[var(--hive-gold)]", emoji: "🏛️", subtitle: "Fraternities & sororities" },
+  { id: "campus_living", label: "Residential Life", color: "bg-[var(--hive-gold)]", emoji: "🏠", subtitle: "Dorms & living communities" },
   { id: "hive_exclusive", label: "HIVE Exclusive", color: "bg-indigo-500", emoji: "💎", subtitle: "Platform specials" },
 ];
 
@@ -349,7 +349,7 @@ export default function UnifiedSpacesPage() {
         maxWidth="xl"
       >
         {/* Unified Navigation Tabs */}
-        <div className="flex border-b border-white/10 mb-8">
+        <div className="flex border-b border-[var(--hive-white)]/10 mb-8">
           <button
             onClick={() => setActiveView("my")}
             className={cn(
@@ -366,7 +366,7 @@ export default function UnifiedSpacesPage() {
                 "px-2 py-0.5 text-xs rounded-full",
                 activeView === "my"
                   ? "bg-hive-gold text-hive-obsidian"
-                  : "bg-white/10 text-neutral-400"
+                  : "bg-[var(--hive-white)]/10 text-neutral-400"
               )}>
                 {mySpacesData.joined.length}
               </span>
@@ -419,7 +419,7 @@ export default function UnifiedSpacesPage() {
             </div>
 
             {/* My Spaces Tab Navigation */}
-            <div className="flex border-b border-white/10 mb-8">
+            <div className="flex border-b border-[var(--hive-white)]/10 mb-8">
               {mySpaceTabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -440,7 +440,7 @@ export default function UnifiedSpacesPage() {
                         "px-2 py-0.5 text-xs rounded-full",
                         mySpacesTab === tab.id
                           ? "bg-hive-gold text-hive-obsidian"
-                          : "bg-white/10 text-neutral-400"
+                          : "bg-[var(--hive-white)]/10 text-neutral-400"
                       )}>
                         {tab.count}
                       </span>
@@ -464,11 +464,11 @@ export default function UnifiedSpacesPage() {
                   placeholder="Search spaces, descriptions, or keywords..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-lg text-[var(--hive-text-inverse)] placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none"
+                  className="w-full pl-10 pr-4 py-3 bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg text-[var(--hive-text-inverse)] placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none"
                 />
               </div>
 
-              <div className="flex items-center bg-white/[0.02] border border-white/[0.06] rounded-lg p-1">
+              <div className="flex items-center bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg p-1">
                 <ArrowUpDown className="h-4 w-4 text-neutral-400 mx-2" />
                 <select
                   value={sortBy}
@@ -482,7 +482,7 @@ export default function UnifiedSpacesPage() {
                 </select>
               </div>
 
-              <div className="flex items-center bg-white/[0.02] border border-white/[0.06] rounded-lg p-1">
+              <div className="flex items-center bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg p-1">
                 <Button
                   variant={viewMode === "grid" ? "primary" : "ghost"}
                   size="sm"
@@ -513,7 +513,7 @@ export default function UnifiedSpacesPage() {
                     "h-auto p-4 flex flex-col items-center text-center transition-all",
                     filter === filterOption.id
                       ? "bg-hive-gold/10 border border-hive-gold/30 text-hive-gold"
-                      : "border border-white/10 text-[var(--hive-text-inverse)] hover:bg-white/[0.05]"
+                      : "border border-[var(--hive-white)]/10 text-[var(--hive-text-inverse)] hover:bg-[var(--hive-white)]/[0.05]"
                   )}
                 >
                   <span className="text-2xl mb-2">{filterOption.emoji}</span>
@@ -563,7 +563,7 @@ export default function UnifiedSpacesPage() {
                   }
                 }} 
                 variant="outline"
-                className="border-white/20 text-[var(--hive-text-inverse)] hover:bg-white/5"
+                className="border-[var(--hive-white)]/20 text-[var(--hive-text-inverse)] hover:bg-[var(--hive-white)]/5"
               >
                 Try Again
               </Button>
@@ -763,7 +763,7 @@ function BrowseEmptyState({
         <Button 
           onClick={() => setSearchTerm("")}
           variant="outline"
-          className="border-white/20 text-[var(--hive-text-inverse)]"
+          className="border-[var(--hive-white)]/20 text-[var(--hive-text-inverse)]"
         >
           Clear Search
         </Button>

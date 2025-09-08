@@ -12,6 +12,9 @@ export { SocialConnectionsCard } from './social-connections-card';
 export { PersonalAnalyticsCard } from './personal-analytics-card';
 export { CampusDiscoveryCard } from './campus-discovery-card';
 export { QuickActionsCard } from './quick-actions-card';
+export { ContextualQuickActionsCard } from './contextual-quick-actions-card';
+export { StudyGroupMatcherCard } from './study-group-matcher-card';
+export { ResourceSharingCard } from './resource-sharing-card';
 
 // Tools card from existing implementation
 export { PersonalToolsCard } from '../personal-tools-card';

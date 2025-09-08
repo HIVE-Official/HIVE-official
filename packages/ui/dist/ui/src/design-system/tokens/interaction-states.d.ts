@@ -4,35 +4,35 @@
  */
 export declare const buttonStates: {
     readonly default: {
-        readonly border: "1px solid rgba(255, 215, 0, 0.4)";
+        readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.4)";
         readonly background: "transparent";
-        readonly text: "#FFD700";
+        readonly text: "var(--hive-gold)";
         readonly transform: "none";
         readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
         readonly use: "Resting state, no user interaction";
     };
     readonly hover: {
-        readonly border: "1px solid rgba(255, 215, 0, 0.8)";
-        readonly background: "rgba(255, 215, 0, 0.05)";
-        readonly text: "#FFD700";
+        readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.8)";
+        readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
+        readonly text: "var(--hive-gold)";
         readonly transform: "translateY(-1px) scale(1.01)";
         readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
         readonly use: "Desktop pointer hover, not on touch devices";
         readonly condition: "@media (hover: hover) and (pointer: fine)";
     };
     readonly active: {
-        readonly border: "1px solid #FFD700";
-        readonly background: "rgba(255, 215, 0, 0.12)";
-        readonly text: "#FFD700";
+        readonly border: "1px solid var(--hive-gold)";
+        readonly background: "rgba(var(--hive-gold-rgb), 0.12)";
+        readonly text: "var(--hive-gold)";
         readonly transform: "translateY(0px) scale(0.98)";
         readonly transition: "all 100ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
         readonly use: "Pressed/clicked state, immediate feedback";
     };
     readonly focus: {
-        readonly border: "1px solid #FFD700";
-        readonly background: "rgba(255, 215, 0, 0.05)";
-        readonly text: "#FFD700";
-        readonly boxShadow: "0 0 0 3px rgba(255, 215, 0, 0.3)";
+        readonly border: "1px solid var(--hive-gold)";
+        readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
+        readonly text: "var(--hive-gold)";
+        readonly boxShadow: "0 0 0 3px rgba(var(--hive-gold-rgb), 0.3)";
         readonly transform: "none";
         readonly outline: "none";
         readonly use: "Keyboard focus, accessibility compliance";
@@ -47,8 +47,8 @@ export declare const buttonStates: {
         readonly use: "Non-interactive state";
     };
     readonly loading: {
-        readonly border: "1px solid rgba(255, 215, 0, 0.4)";
-        readonly background: "rgba(255, 215, 0, 0.05)";
+        readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.4)";
+        readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
         readonly text: "transparent";
         readonly pointerEvents: "none";
         readonly cursor: "wait";
@@ -66,10 +66,10 @@ export declare const inputStates: {
         readonly use: "Default input appearance";
     };
     readonly focus: {
-        readonly border: "1px solid #FFD700";
+        readonly border: "1px solid var(--hive-gold)";
         readonly background: "rgba(255, 255, 255, 0.03)";
         readonly text: "rgba(255, 255, 255, 1.0)";
-        readonly boxShadow: "0 0 0 3px rgba(255, 215, 0, 0.2)";
+        readonly boxShadow: "0 0 0 3px rgba(var(--hive-gold-rgb), 0.2)";
         readonly outline: "none";
         readonly use: "Active input focus";
     };
@@ -174,35 +174,35 @@ export declare const componentVariations: {
     readonly buttonVariants: {
         readonly primary: {
             readonly default: {
-                readonly border: "1px solid rgba(255, 215, 0, 0.4)";
+                readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.4)";
                 readonly background: "transparent";
-                readonly text: "#FFD700";
+                readonly text: "var(--hive-gold)";
                 readonly transform: "none";
                 readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                 readonly use: "Resting state, no user interaction";
             };
             readonly hover: {
-                readonly border: "1px solid rgba(255, 215, 0, 0.8)";
-                readonly background: "rgba(255, 215, 0, 0.05)";
-                readonly text: "#FFD700";
+                readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.8)";
+                readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
+                readonly text: "var(--hive-gold)";
                 readonly transform: "translateY(-1px) scale(1.01)";
                 readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                 readonly use: "Desktop pointer hover, not on touch devices";
                 readonly condition: "@media (hover: hover) and (pointer: fine)";
             };
             readonly active: {
-                readonly border: "1px solid #FFD700";
-                readonly background: "rgba(255, 215, 0, 0.12)";
-                readonly text: "#FFD700";
+                readonly border: "1px solid var(--hive-gold)";
+                readonly background: "rgba(var(--hive-gold-rgb), 0.12)";
+                readonly text: "var(--hive-gold)";
                 readonly transform: "translateY(0px) scale(0.98)";
                 readonly transition: "all 100ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
                 readonly use: "Pressed/clicked state, immediate feedback";
             };
             readonly focus: {
-                readonly border: "1px solid #FFD700";
-                readonly background: "rgba(255, 215, 0, 0.05)";
-                readonly text: "#FFD700";
-                readonly boxShadow: "0 0 0 3px rgba(255, 215, 0, 0.3)";
+                readonly border: "1px solid var(--hive-gold)";
+                readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
+                readonly text: "var(--hive-gold)";
+                readonly boxShadow: "0 0 0 3px rgba(var(--hive-gold-rgb), 0.3)";
                 readonly transform: "none";
                 readonly outline: "none";
                 readonly use: "Keyboard focus, accessibility compliance";
@@ -220,7 +220,7 @@ export declare const componentVariations: {
             readonly hover: {
                 readonly border: "1px solid rgba(255, 255, 255, 0.4)";
                 readonly background: "rgba(255, 255, 255, 0.05)";
-                readonly text: "#FFD700";
+                readonly text: "var(--hive-gold)";
                 readonly transform: "translateY(-1px) scale(1.01)";
                 readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                 readonly use: "Desktop pointer hover, not on touch devices";
@@ -231,7 +231,7 @@ export declare const componentVariations: {
             readonly default: {
                 readonly border: "none";
                 readonly background: "transparent";
-                readonly text: "#FFD700";
+                readonly text: "var(--hive-gold)";
                 readonly transform: "none";
                 readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                 readonly use: "Resting state, no user interaction";
@@ -239,7 +239,7 @@ export declare const componentVariations: {
             readonly hover: {
                 readonly border: "none";
                 readonly background: "rgba(255, 255, 255, 0.05)";
-                readonly text: "#FFD700";
+                readonly text: "var(--hive-gold)";
                 readonly transform: "translateY(-1px) scale(1.01)";
                 readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                 readonly use: "Desktop pointer hover, not on touch devices";
@@ -301,35 +301,35 @@ export declare const componentVariations: {
 export declare const interactionStates: {
     readonly buttonStates: {
         readonly default: {
-            readonly border: "1px solid rgba(255, 215, 0, 0.4)";
+            readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.4)";
             readonly background: "transparent";
-            readonly text: "#FFD700";
+            readonly text: "var(--hive-gold)";
             readonly transform: "none";
             readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
             readonly use: "Resting state, no user interaction";
         };
         readonly hover: {
-            readonly border: "1px solid rgba(255, 215, 0, 0.8)";
-            readonly background: "rgba(255, 215, 0, 0.05)";
-            readonly text: "#FFD700";
+            readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.8)";
+            readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
+            readonly text: "var(--hive-gold)";
             readonly transform: "translateY(-1px) scale(1.01)";
             readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
             readonly use: "Desktop pointer hover, not on touch devices";
             readonly condition: "@media (hover: hover) and (pointer: fine)";
         };
         readonly active: {
-            readonly border: "1px solid #FFD700";
-            readonly background: "rgba(255, 215, 0, 0.12)";
-            readonly text: "#FFD700";
+            readonly border: "1px solid var(--hive-gold)";
+            readonly background: "rgba(var(--hive-gold-rgb), 0.12)";
+            readonly text: "var(--hive-gold)";
             readonly transform: "translateY(0px) scale(0.98)";
             readonly transition: "all 100ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
             readonly use: "Pressed/clicked state, immediate feedback";
         };
         readonly focus: {
-            readonly border: "1px solid #FFD700";
-            readonly background: "rgba(255, 215, 0, 0.05)";
-            readonly text: "#FFD700";
-            readonly boxShadow: "0 0 0 3px rgba(255, 215, 0, 0.3)";
+            readonly border: "1px solid var(--hive-gold)";
+            readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
+            readonly text: "var(--hive-gold)";
+            readonly boxShadow: "0 0 0 3px rgba(var(--hive-gold-rgb), 0.3)";
             readonly transform: "none";
             readonly outline: "none";
             readonly use: "Keyboard focus, accessibility compliance";
@@ -344,8 +344,8 @@ export declare const interactionStates: {
             readonly use: "Non-interactive state";
         };
         readonly loading: {
-            readonly border: "1px solid rgba(255, 215, 0, 0.4)";
-            readonly background: "rgba(255, 215, 0, 0.05)";
+            readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.4)";
+            readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
             readonly text: "transparent";
             readonly pointerEvents: "none";
             readonly cursor: "wait";
@@ -363,10 +363,10 @@ export declare const interactionStates: {
             readonly use: "Default input appearance";
         };
         readonly focus: {
-            readonly border: "1px solid #FFD700";
+            readonly border: "1px solid var(--hive-gold)";
             readonly background: "rgba(255, 255, 255, 0.03)";
             readonly text: "rgba(255, 255, 255, 1.0)";
-            readonly boxShadow: "0 0 0 3px rgba(255, 215, 0, 0.2)";
+            readonly boxShadow: "0 0 0 3px rgba(var(--hive-gold-rgb), 0.2)";
             readonly outline: "none";
             readonly use: "Active input focus";
         };
@@ -471,35 +471,35 @@ export declare const interactionStates: {
         readonly buttonVariants: {
             readonly primary: {
                 readonly default: {
-                    readonly border: "1px solid rgba(255, 215, 0, 0.4)";
+                    readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.4)";
                     readonly background: "transparent";
-                    readonly text: "#FFD700";
+                    readonly text: "var(--hive-gold)";
                     readonly transform: "none";
                     readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                     readonly use: "Resting state, no user interaction";
                 };
                 readonly hover: {
-                    readonly border: "1px solid rgba(255, 215, 0, 0.8)";
-                    readonly background: "rgba(255, 215, 0, 0.05)";
-                    readonly text: "#FFD700";
+                    readonly border: "1px solid rgba(var(--hive-gold-rgb), 0.8)";
+                    readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
+                    readonly text: "var(--hive-gold)";
                     readonly transform: "translateY(-1px) scale(1.01)";
                     readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                     readonly use: "Desktop pointer hover, not on touch devices";
                     readonly condition: "@media (hover: hover) and (pointer: fine)";
                 };
                 readonly active: {
-                    readonly border: "1px solid #FFD700";
-                    readonly background: "rgba(255, 215, 0, 0.12)";
-                    readonly text: "#FFD700";
+                    readonly border: "1px solid var(--hive-gold)";
+                    readonly background: "rgba(var(--hive-gold-rgb), 0.12)";
+                    readonly text: "var(--hive-gold)";
                     readonly transform: "translateY(0px) scale(0.98)";
                     readonly transition: "all 100ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
                     readonly use: "Pressed/clicked state, immediate feedback";
                 };
                 readonly focus: {
-                    readonly border: "1px solid #FFD700";
-                    readonly background: "rgba(255, 215, 0, 0.05)";
-                    readonly text: "#FFD700";
-                    readonly boxShadow: "0 0 0 3px rgba(255, 215, 0, 0.3)";
+                    readonly border: "1px solid var(--hive-gold)";
+                    readonly background: "rgba(var(--hive-gold-rgb), 0.05)";
+                    readonly text: "var(--hive-gold)";
+                    readonly boxShadow: "0 0 0 3px rgba(var(--hive-gold-rgb), 0.3)";
                     readonly transform: "none";
                     readonly outline: "none";
                     readonly use: "Keyboard focus, accessibility compliance";
@@ -517,7 +517,7 @@ export declare const interactionStates: {
                 readonly hover: {
                     readonly border: "1px solid rgba(255, 255, 255, 0.4)";
                     readonly background: "rgba(255, 255, 255, 0.05)";
-                    readonly text: "#FFD700";
+                    readonly text: "var(--hive-gold)";
                     readonly transform: "translateY(-1px) scale(1.01)";
                     readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                     readonly use: "Desktop pointer hover, not on touch devices";
@@ -528,7 +528,7 @@ export declare const interactionStates: {
                 readonly default: {
                     readonly border: "none";
                     readonly background: "transparent";
-                    readonly text: "#FFD700";
+                    readonly text: "var(--hive-gold)";
                     readonly transform: "none";
                     readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                     readonly use: "Resting state, no user interaction";
@@ -536,7 +536,7 @@ export declare const interactionStates: {
                 readonly hover: {
                     readonly border: "none";
                     readonly background: "rgba(255, 255, 255, 0.05)";
-                    readonly text: "#FFD700";
+                    readonly text: "var(--hive-gold)";
                     readonly transform: "translateY(-1px) scale(1.01)";
                     readonly transition: "all 200ms cubic-bezier(0.4, 0.0, 0.6, 1.0)";
                     readonly use: "Desktop pointer hover, not on touch devices";

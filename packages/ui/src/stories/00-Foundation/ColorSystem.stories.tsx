@@ -25,7 +25,7 @@ The HIVE color system follows the "Minimal Surface. Maximal Spark." philosophy w
 ## Inspiration
 - **Vercel + Apple Spacing**: Generous whitespace with confident, technical precision
 - **Campus Energy**: Colors that adapt to student life cycles and energy states
-- **Gold Rings Only**: Gold (#FFD700) reserved for focus states, achievements, and ritual moments
+- **Gold Rings Only**: Gold (var(--hive-gold)) reserved for focus states, achievements, and ritual moments
 
 ## Implementation
 - Uses CSS custom properties with HSL values for theme flexibility
@@ -98,19 +98,19 @@ export const ColorPalette: Story = {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <ColorCard
             name="Primary"
-            value="#0A0A0A"
+            value="var(--hive-background-primary)"
             description="Primary black - main backgrounds and high contrast elements"
             className="bg-primary text-primary-foreground"
           />
           <ColorCard
             name="Surface"
-            value="#111111"
+            value="var(--hive-background-secondary)"
             description="Surface gray - cards, elevated elements, layering"
             className="bg-surface text-foreground"
           />
           <ColorCard
             name="Accent (Gold)"
-            value="#FFD700"
+            value="var(--hive-gold)"
             description="Gold accent - focus rings, achievements, ritual moments only"
             className="bg-accent text-accent-foreground"
           />

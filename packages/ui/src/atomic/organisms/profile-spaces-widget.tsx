@@ -79,9 +79,9 @@ const getSpaceTypeConfig = (type: string) => {
       label: 'Residential'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Heart,
       label: 'Social'
     },
@@ -119,8 +119,8 @@ const getRoleConfig = (role: string) => {
       label: 'Moderator'
     },
     admin: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       icon: Crown,
       label: 'Admin'
     },
@@ -143,8 +143,8 @@ const getActivityLevelConfig = (level: string) => {
       label: 'Very Active'
     },
     medium: {
-      color: 'text-yellow-500',
-      bgColor: 'bg-yellow-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       label: 'Active'
     },
     low: {
@@ -476,7 +476,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
 
       {/* Hover Glow Effect */}
       {isHovered && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-500/5 to-green-500/5 rounded-lg blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-green-500/5 rounded-lg blur-xl" />
       )}
     </Card>
   );

@@ -342,7 +342,7 @@ const AvatarCardShowcase = () => {
                   </Avatar>
                   <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-[var(--hive-background-secondary)] ${
                     student.status === 'online' ? 'bg-green-400' :
-                    student.status === 'studying' ? 'bg-yellow-400' : 'bg-gray-400'
+                    student.status === 'studying' ? 'bg-[var(--hive-gold)]' : 'bg-gray-400'
                   }`} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -567,9 +567,9 @@ const MolecularComponentsLibrary = () => {
   const getColorClasses = (color: string) => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-400',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -680,7 +680,7 @@ const MolecularComponentsLibrary = () => {
                         </div>
                         <div className="flex items-center gap-2 mt-2">
                           <Badge 
-                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}
+                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'}`}
                           >
                             {component.status}
                           </Badge>
@@ -723,7 +723,7 @@ const MolecularComponentsLibrary = () => {
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-purple-400" />
+                    <div className="w-2 h-2 rounded-full bg-[var(--hive-gold)]" />
                     <span className="text-sm text-[var(--hive-text-secondary)]">
                       React to study group posts
                     </span>
@@ -734,7 +734,7 @@ const MolecularComponentsLibrary = () => {
                 <h4 className="font-medium text-[var(--hive-text-primary)] mb-4">Study Breaks (10-15 minutes)</h4>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-yellow-400" />
+                    <div className="w-2 h-2 rounded-full bg-[var(--hive-gold)]" />
                     <span className="text-sm text-[var(--hive-text-secondary)]">
                       Browse and join academic spaces
                     </span>

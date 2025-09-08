@@ -123,10 +123,10 @@ export function CardCustomizationModal({
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'identity': return 'bg-purple-500';
+      case 'identity': return 'bg-[var(--hive-gold)]';
       case 'academic': return 'bg-blue-500';
       case 'community': return 'bg-green-500';
-      case 'platform': return 'bg-orange-500';
+      case 'platform': return 'bg-[var(--hive-gold)]';
       case 'privacy': return 'bg-red-500';
       default: return 'bg-gray-500';
     }

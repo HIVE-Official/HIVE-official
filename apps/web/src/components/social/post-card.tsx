@@ -209,7 +209,7 @@ export function PostCard({
     switch (post.type) {
       case 'announcement': return <Pin className="h-4 w-4 text-hive-gold" />;
       case 'poll': return <Badge className="text-xs bg-blue-500/20 text-blue-400">Poll</Badge>;
-      case 'event': return <Badge className="text-xs bg-purple-500/20 text-purple-400">Event</Badge>;
+      case 'event': return <Badge className="text-xs bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]">Event</Badge>;
       case 'tool': return <Badge className="text-xs bg-green-500/20 text-green-400">Tool</Badge>;
       default: return null;
     }

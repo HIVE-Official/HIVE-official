@@ -584,8 +584,8 @@ const OrganismSystemsLibrary = () => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-400',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -593,7 +593,7 @@ const OrganismSystemsLibrary = () => {
   const getComplexityColor = (complexity: string) => {
     const colors = {
       Low: 'bg-green-500/20 text-green-400',
-      Medium: 'bg-yellow-500/20 text-yellow-400',
+      Medium: 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
       High: 'bg-red-500/20 text-red-400'
     };
     return colors[complexity as keyof typeof colors] || colors.Medium;
@@ -708,7 +708,7 @@ const OrganismSystemsLibrary = () => {
                             {component.complexity} Complexity
                           </Badge>
                           <Badge 
-                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}
+                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'}`}
                           >
                             {component.status}
                           </Badge>
@@ -751,7 +751,7 @@ const OrganismSystemsLibrary = () => {
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-purple-400" />
+                    <div className="w-2 h-2 rounded-full bg-[var(--hive-gold)]" />
                     <span className="text-sm text-[var(--hive-text-secondary)]">
                       Finals week and academic deadline integration
                     </span>
@@ -762,7 +762,7 @@ const OrganismSystemsLibrary = () => {
                 <h4 className="font-medium text-[var(--hive-text-primary)] mb-4">Campus Community</h4>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-yellow-400" />
+                    <div className="w-2 h-2 rounded-full bg-[var(--hive-gold)]" />
                     <span className="text-sm text-[var(--hive-text-secondary)]">
                       Residential life integration with dorm floor communities
                     </span>

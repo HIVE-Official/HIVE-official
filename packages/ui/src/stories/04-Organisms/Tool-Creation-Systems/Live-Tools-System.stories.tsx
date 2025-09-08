@@ -178,21 +178,21 @@ const ToolsCreationSystem = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Campus Tools</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Campus Tools</h1>
               <p className="text-gray-400">Build, discover, and share campus utilities</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -214,8 +214,8 @@ const ToolsCreationSystem = () => {
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeTab === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                 }`}
                 style={activeTab === id ? {
                   backgroundColor: 'var(--hive-brand-primary)',
@@ -237,17 +237,17 @@ const ToolsCreationSystem = () => {
                 placeholder="Search tools by name, category, or functionality..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-gray-900 border-gray-700 text-white placeholder-gray-400 pl-10"
+                className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 pl-10"
               />
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="secondary" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Filter className="w-4 h-4" />
               </Button>
               <select 
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm"
+                className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
               >
                 {categories.map(cat => (
                   <option key={cat.id} value={cat.id}>
@@ -285,7 +285,7 @@ const ToolsCreationSystem = () => {
           </Card>
           <Card className="bg-gray-800/50 border-gray-700 text-center">
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-purple-400">23</div>
+              <div className="text-2xl font-bold text-[var(--hive-gold)]">23</div>
               <div className="text-sm text-gray-400">New This Week</div>
             </CardContent>
           </Card>
@@ -307,17 +307,17 @@ const ToolsCreationSystem = () => {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center">
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center mr-3 hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)' }}>
-                      <Zap className="w-6 h-6 text-black" />
+                      <Zap className="w-6 h-6 text-[var(--hive-black)]" />
                     </div>
                     <div>
-                      <CardTitle className="text-white text-base">{tool.name}</CardTitle>
+                      <CardTitle className="text-[var(--hive-text-primary)] text-base">{tool.name}</CardTitle>
                       <p className="text-gray-400 text-sm">{tool.subcategory}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="flex items-center">
                       <Star className="w-4 h-4 mr-1 fill-current" style={{ color: 'var(--hive-brand-primary)' }} />
-                      <span className="text-white text-sm">{tool.stats.rating}</span>
+                      <span className="text-[var(--hive-text-primary)] text-sm">{tool.stats.rating}</span>
                     </div>
                     <MoreVertical className="w-4 h-4 text-gray-500" />
                   </div>
@@ -331,7 +331,7 @@ const ToolsCreationSystem = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Avatar className="w-8 h-8 mr-2">
-                      <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs">
+                      <AvatarFallback className="bg-gradient-to-r from-[var(--hive-gold)] to-pink-500 text-[var(--hive-text-primary)] text-xs">
                         {tool.author.avatar}
                       </AvatarFallback>
                     </Avatar>
@@ -344,8 +344,8 @@ const ToolsCreationSystem = () => {
                         <Badge 
                           className={`text-xs mr-1 ${
                             tool.author.builderLevel === 'Expert' ? '' :
-                            tool.author.builderLevel === 'Intermediate' ? 'bg-blue-500 text-white' :
-                            'bg-green-500 text-white'
+                            tool.author.builderLevel === 'Intermediate' ? 'bg-blue-500 text-[var(--hive-text-primary)]' :
+                            'bg-green-500 text-[var(--hive-text-primary)]'
                           }`}
                           style={tool.author.builderLevel === 'Expert' ? {
                             backgroundColor: 'var(--hive-brand-primary)',
@@ -397,11 +397,11 @@ const ToolsCreationSystem = () => {
                 <div className="flex space-x-2 pt-2">
                   {tool.isInstalled ? (
                     <>
-                      <Button size="sm" className="flex-1 bg-green-600 text-white hover:bg-green-700">
+                      <Button size="sm" className="flex-1 bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700">
                         <Play className="w-4 h-4 mr-2" />
                         Launch Tool
                       </Button>
-                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                         <Settings className="w-4 h-4" />
                       </Button>
                     </>
@@ -411,12 +411,12 @@ const ToolsCreationSystem = () => {
                         <Download className="w-4 h-4 mr-2" />
                         Install
                       </Button>
-                      <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                         <Heart className={tool.isFavorite ? "w-4 h-4 fill-current text-red-400" : "w-4 h-4"} />
                       </Button>
                     </>
                   )}
-                  <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
+                  <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                     <Share className="w-4 h-4" />
                   </Button>
                 </div>
@@ -427,7 +427,7 @@ const ToolsCreationSystem = () => {
 
         {/* Load More */}
         <div className="text-center mt-8">
-          <Button variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
+          <Button variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
             Load More Tools
           </Button>
         </div>

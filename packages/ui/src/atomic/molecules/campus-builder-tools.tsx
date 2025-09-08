@@ -61,8 +61,8 @@ const toolTypeConfig = {
   },
   automation: {
     icon: '⚡',
-    color: 'from-purple-500/20 to-purple-600/10',
-    border: 'border-purple-500/30',
+    color: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10',
+    border: 'border-[var(--hive-gold)]/30',
     label: 'Automation'
   },
   widget: {
@@ -73,8 +73,8 @@ const toolTypeConfig = {
   },
   integration: {
     icon: '🔗',
-    color: 'from-orange-500/20 to-orange-600/10',
-    border: 'border-orange-500/30',
+    color: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10',
+    border: 'border-[var(--hive-gold)]/30',
     label: 'Integration'
   },
   custom: {
@@ -177,9 +177,9 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
       >
         {/* Ambient Background Pattern */}
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-gradient-to-br from-gold/20 via-transparent to-purple-500/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/20 via-transparent to-[var(--hive-gold)]/10" />
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-gold/30 to-transparent rounded-full blur-2xl" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-radial from-purple-500/20 to-transparent rounded-full blur-xl" />
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-radial from-[var(--hive-gold)]/20 to-transparent rounded-full blur-xl" />
         </div>
 
         <div className="relative z-10">
@@ -195,7 +195,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
               </div>
             </div>
             
-            <div className="px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-gold/10 border border-purple-500/20 rounded-full">
+            <div className="px-3 py-1.5 bg-gradient-to-r from-[var(--hive-gold)]/10 to-gold/10 border border-[var(--hive-gold)]/20 rounded-full">
               <span className="text-purple-300/80 text-xs font-medium tracking-wide">v1 Preview</span>
             </div>
           </div>
@@ -207,7 +207,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold/10 to-purple-500/10 border border-[var(--hive-brand-secondary)]/20 flex items-center justify-center relative"
+                className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold/10 to-[var(--hive-gold)]/10 border border-[var(--hive-brand-secondary)]/20 flex items-center justify-center relative"
               >
                 <motion.div
                   animate={{ 
@@ -224,7 +224,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                 </motion.div>
                 
                 {/* Subtle glow effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/5 to-purple-500/5 blur-xl animate-pulse" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/5 to-[var(--hive-gold)]/5 blur-xl animate-pulse" />
               </motion.div>
               
               <h4 className="text-platinum/80 font-semibold mb-2 text-lg">Your Personal Toolkit</h4>
@@ -240,7 +240,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                   icon: <Zap className="h-4 w-4" />,
                   title: "Custom Automations",
                   description: "Build workflows that save you hours every week",
-                  color: "from-purple-500/10 to-purple-600/5 border-purple-500/20"
+                  color: "from-[var(--hive-gold)]/10 to-[var(--hive-gold-dark)]/5 border-[var(--hive-gold)]/20"
                 },
                 {
                   icon: <Users className="h-4 w-4" />,
@@ -266,7 +266,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-white/5 text-[var(--hive-text-inverse)]/80 mt-0.5">
+                    <div className="p-2 rounded-lg bg-[var(--hive-white)]/5 text-[var(--hive-text-inverse)]/80 mt-0.5">
                       {feature.icon}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -294,7 +294,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
               onClick={onJoinWaitlist}
               className={cn(
                 'w-full px-6 py-3 rounded-xl',
-                'bg-gradient-to-r from-gold/15 to-purple-500/15',
+                'bg-gradient-to-r from-gold/15 to-[var(--hive-gold)]/15',
                 'border border-[var(--hive-brand-secondary)]/30 hover:border-[var(--hive-brand-secondary)]/50',
                 'text-[var(--hive-brand-secondary)] hover:text-champagne transition-all duration-300',
                 'font-medium text-sm group flex items-center justify-center gap-2'

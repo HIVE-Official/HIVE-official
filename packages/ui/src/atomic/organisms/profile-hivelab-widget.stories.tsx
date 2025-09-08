@@ -535,7 +535,7 @@ export const CompleteShowcase: Story = {
                         <Text variant="body-sm" color="primary" weight="medium">Productivity Tools</Text>
                         <Text variant="body-xs" color="secondary">Time management, task organization, workflow optimization</Text>
                       </div>
-                      <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                      <div className="p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg">
                         <Text variant="body-sm" color="primary" weight="medium">Social Tools</Text>
                         <Text variant="body-xs" color="secondary">Community building, event coordination, peer collaboration</Text>
                       </div>

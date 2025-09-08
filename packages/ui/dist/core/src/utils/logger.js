@@ -11,21 +11,21 @@ const LOG_LEVELS = {
     VALID: '\x1b[90m%s\x1b[0m' // Gray for validation
 };
 class Logger {
+    isProduction = process.env.NODE_ENV === 'production';
+    debugEnabled = process.env.DEBUG === 'true';
+    errorQueue = [];
+    maxQueueSize = 100;
+    errorCount = 0;
+    lastErrorReset = Date.now();
+    ERROR_RATE_LIMIT = {
+        maxErrors: 100, // Max errors per window
+        windowMs: 60 * 1000 // 1 minute
+    };
+    // Add a property to hold the analytics provider.
+    analyticsProvider = null;
+    // Performance tracking
+    perfMarks = {};
     constructor() {
-        this.isProduction = process.env.NODE_ENV === 'production';
-        this.debugEnabled = process.env.DEBUG === 'true';
-        this.errorQueue = [];
-        this.maxQueueSize = 100;
-        this.errorCount = 0;
-        this.lastErrorReset = Date.now();
-        this.ERROR_RATE_LIMIT = {
-            maxErrors: 100, // Max errors per window
-            windowMs: 60 * 1000 // 1 minute
-        };
-        // Add a property to hold the analytics provider.
-        this.analyticsProvider = null;
-        // Performance tracking
-        this.perfMarks = {};
         if (!this.isProduction) {
             this.debug('Logger initialized in development mode');
         }

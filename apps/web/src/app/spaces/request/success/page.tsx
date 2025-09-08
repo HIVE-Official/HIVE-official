@@ -26,8 +26,8 @@ function SuccessContent() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       {/* Background gradients */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#111111,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,#111111,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,var(--hive-background-secondary),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,var(--hive-background-secondary),transparent_50%)]" />
       </div>
 
       <motion.div 
