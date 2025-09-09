@@ -6,6 +6,7 @@ import { authenticatedFetch } from '../../../../lib/auth-utils';
 import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface, type Comment } from "@hive/ui";
 import { useSpacePosts } from '../../../../hooks/use-space-posts';
 import { useSpaceEvents } from '../../../../hooks/use-space-events';
+import { useSpaceMembers } from '../../../../hooks/use-space-members';
 import { PostWithComments } from '../../../../components/posts/post-with-comments';
 import { SpaceManagementPanel } from '../../../../components/spaces/space-management-panel';
 import { PageContainer } from "@/components/temp-stubs";
@@ -229,6 +230,14 @@ export default function SpaceDetailPage({
     deleteEvent,
     rsvpToEvent
   } = useSpaceEvents(spaceId);
+  
+  // Use real-time members hook
+  const {
+    members,
+    loading: membersLoading,
+    summary: membersSummary,
+    refresh: refreshMembers
+  } = useSpaceMembers(spaceId);
 
   const handleJoinSpace = async () => {
     try {
