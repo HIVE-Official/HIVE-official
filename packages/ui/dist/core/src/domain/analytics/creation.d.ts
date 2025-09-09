@@ -1467,11 +1467,6 @@ export declare const BuilderBehaviorSchema: z.ZodObject<{
         start: Date;
     }>;
 }, "strip", z.ZodTypeAny, {
-    userIdHash: string;
-    timeframe: {
-        end: Date;
-        start: Date;
-    };
     insights: {
         preferredElements: string[];
         averageToolComplexity: number;
@@ -1484,13 +1479,13 @@ export declare const BuilderBehaviorSchema: z.ZodObject<{
         };
         collaborationStyle: "mixed" | "solo" | "collaborative";
         shareFrequency: "always" | "never" | "rarely" | "sometimes" | "often";
+    };
+    userIdHash: string;
+    timeframe: {
+        end: Date;
+        start: Date;
     };
 }, {
-    userIdHash: string;
-    timeframe: {
-        end: Date;
-        start: Date;
-    };
     insights: {
         preferredElements: string[];
         averageToolComplexity: number;
@@ -1503,6 +1498,11 @@ export declare const BuilderBehaviorSchema: z.ZodObject<{
         };
         collaborationStyle: "mixed" | "solo" | "collaborative";
         shareFrequency: "always" | "never" | "rarely" | "sometimes" | "often";
+    };
+    userIdHash: string;
+    timeframe: {
+        end: Date;
+        start: Date;
     };
 }>;
 export type BuilderBehavior = z.infer<typeof BuilderBehaviorSchema>;

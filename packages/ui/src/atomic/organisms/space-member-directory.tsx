@@ -29,16 +29,16 @@ import {
   Share2
 } from 'lucide-react';
 
-export type MemberRole = 'leader' | 'co_leader' | 'member' | 'pending';
-export type MemberStatus = 'active' | 'inactive' | 'banned' | 'pending';
+export type DirectoryMemberRole = 'leader' | 'co_leader' | 'member' | 'pending';
+export type DirectoryMemberStatus = 'active' | 'inactive' | 'banned' | 'pending';
 
-export interface SpaceMember {
+export interface DirectorySpaceMember {
   id: string;
   handle: string;
   displayName: string;
   avatar?: string;
-  role: MemberRole;
-  status: MemberStatus;
+  role: DirectoryMemberRole;
+  status: DirectoryMemberStatus;
   joinedAt: string;
   lastActive?: string;
   bio?: string;
@@ -65,8 +65,8 @@ export type MemberFilterType = 'all' | 'leaders' | 'members' | 'pending' | 'onli
 export type MemberSortType = 'name' | 'role' | 'joined' | 'activity';
 
 export interface SpaceMemberDirectoryProps {
-  members: SpaceMember[];
-  currentUserRole: MemberRole;
+  members: DirectorySpaceMember[];
+  currentUserRole: DirectoryMemberRole;
   spaceType: 'university' | 'residential' | 'greek' | 'student';
   onInviteMembers?: () => void;
   onManageMember?: (memberId: string, action: 'promote' | 'demote' | 'remove' | 'ban' | 'unban') => Promise<void>;
@@ -77,7 +77,13 @@ export interface SpaceMemberDirectoryProps {
   className?: string;
 }
 
-const ROLE_CONFIG = {
+const ROLE_CONFIG: Record<DirectoryMemberRole, {
+  label: string;
+  icon: React.ReactElement;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+}> = {
   leader: {
     label: 'Leader',
     icon: <Crown className="w-4 h-4" />,
@@ -198,7 +204,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
     }
   };
 
-  const MemberCard: React.FC<{ member: SpaceMember }> = ({ member }) => {
+  const MemberCard: React.FC<{ member: DirectorySpaceMember }> = ({ member }) => {
     const roleConfig = ROLE_CONFIG[member.role];
     const isSelected = selectedMember === member.id;
 

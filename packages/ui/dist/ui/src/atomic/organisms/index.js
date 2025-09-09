@@ -12,6 +12,15 @@ export * from './space-explore-hub.js';
 export * from './space-dashboard.js';
 export * from './space-member-directory.js';
 export * from './space-category-browser.js';
+// === HIVE SPACE SURFACES ===
+export * from './hive-posts-surface.js';
+export * from './hive-members-surface.js';
+export * from './hive-events-surface.js';
+export * from './hive-pinned-surface.js';
+export * from './hive-tools-surface.js';
+// === SPACE UTILITY COMPONENTS ===
+export * from './space-surface-error-boundary.js';
+export * from './space-surface-skeleton.js';
 // === HIVE TOOLS SYSTEM ===
 export * from './tool-library-modal.js';
 export * from './tool-configuration-panel.js';

@@ -5,7 +5,7 @@ export { useHiveAuth as useAuth } from './contexts/hive-auth-context';
 export { EmailGate } from './components/auth/email-gate';
 export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
 export { SchoolPick } from './components/auth/school-pick';
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
 export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
 export { HiveInput as Input } from './components/hive-input';
 export { HiveCard as Card, HiveCard } from './components/hive-card';

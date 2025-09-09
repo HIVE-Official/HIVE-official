@@ -1,0 +1,487 @@
+'use client';
+
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Pin, 
+  Plus, 
+  FileText, 
+  Link as LinkIcon,
+  Calendar,
+  AlertCircle,
+  Download,
+  Eye,
+  MoreHorizontal,
+  Clock,
+  User,
+  TrendingUp,
+  Activity,
+  Trash2
+} from 'lucide-react';
+import { cn } from '../../lib/utils';
+import type { Space } from '../../types';
+
+export type PinnedItemType = 'document' | 'link' | 'announcement' | 'event' | 'resource';
+
+export interface PinnedItem {
+  id: string;
+  title: string;
+  description?: string;
+  type: PinnedItemType;
+  url?: string;
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: number;
+  
+  // Metadata
+  pinnedBy: {
+    id: string;
+    name: string;
+    role?: string;
+  };
+  pinnedAt: Date;
+  expiresAt?: Date;
+  
+  // Analytics
+  viewCount?: number;
+  downloadCount?: number;
+  lastAccessed?: Date;
+}
+
+export interface HivePinnedSurfaceProps {
+  space: Space;
+  items?: PinnedItem[];
+  maxItems?: number;
+  canPin?: boolean;
+  canModerate?: boolean;
+  leaderMode?: 'configure' | 'moderate' | 'insights' | null;
+  viewMode?: 'list' | 'grid';
+  
+  // Event handlers
+  onAddPinned?: () => void;
+  onViewItem?: (itemId: string) => void;
+  onDownloadItem?: (itemId: string) => void;
+  onUnpinItem?: (itemId: string) => void;
+}
+
+// Mock pinned items data
+const mockPinnedItems: PinnedItem[] = [
+  {
+    id: '1',
+    title: 'Floor Policies & Guidelines',
+    description: 'Updated policies for quiet hours, guests, and common areas. Please review before the floor meeting.',
+    type: 'document',
+    fileUrl: '/documents/floor-policies-2024.pdf',
+    fileName: 'floor-policies-2024.pdf',
+    fileSize: 245760, // ~240KB
+    pinnedBy: {
+      id: 'ra1',
+      name: 'Jordan Martinez',
+      role: 'RA'
+    },
+    pinnedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+    viewCount: 24,
+    downloadCount: 18,
+    lastAccessed: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
+  },
+  {
+    id: '2',
+    title: 'CS 220 Study Resources',
+    description: 'Comprehensive study guide and practice problems for the upcoming midterm exam.',
+    type: 'resource',
+    url: 'https://docs.google.com/document/d/study-guide-cs220',
+    pinnedBy: {
+      id: 'u1',
+      name: 'Sarah Chen',
+      role: 'member'
+    },
+    pinnedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 1 week from now
+    viewCount: 31,
+    lastAccessed: new Date(Date.now() - 30 * 60 * 1000) // 30 minutes ago
+  },
+  {
+    id: '3',
+    title: 'Emergency Contact Information',
+    description: 'Important phone numbers for campus security, maintenance, and emergency services.',
+    type: 'announcement',
+    pinnedBy: {
+      id: 'ra1',
+      name: 'Jordan Martinez',
+      role: 'RA'
+    },
+    pinnedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
+    viewCount: 15,
+    lastAccessed: new Date(Date.now() - 6 * 60 * 60 * 1000) // 6 hours ago
+  },
+  {
+    id: '4',
+    title: 'Formal Event Planning Committee',
+    description: 'Join our planning committee for the spring formal! Meeting details inside.',
+    type: 'event',
+    url: 'https://calendar.google.com/event/formal-planning',
+    pinnedBy: {
+      id: 'u2',
+      name: 'Alex Rodriguez',
+      role: 'admin'
+    },
+    pinnedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+    expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 2 weeks from now
+    viewCount: 12,
+    lastAccessed: new Date(Date.now() - 1 * 60 * 60 * 1000) // 1 hour ago
+  }
+];
+
+export const HivePinnedSurface: React.FC<HivePinnedSurfaceProps> = ({
+  space,
+  items = mockPinnedItems,
+  maxItems,
+  canPin = false,
+  canModerate = false,
+  leaderMode,
+  viewMode = 'list',
+  onAddPinned,
+  onViewItem,
+  onDownloadItem,
+  onUnpinItem
+}) => {
+  const [filter, setFilter] = useState<PinnedItemType | 'all'>('all');
+
+  const filteredItems = useMemo(() => {
+    let filtered = items.filter(item => {
+      const matchesFilter = filter === 'all' || item.type === filter;
+      return matchesFilter;
+    });
+
+    // Sort by pinned date (most recent first)
+    filtered.sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime());
+
+    if (maxItems) {
+      filtered = filtered.slice(0, maxItems);
+    }
+
+    return filtered;
+  }, [items, filter, maxItems]);
+
+  const getItemIcon = (type: PinnedItemType) => {
+    switch (type) {
+      case 'document': return <FileText className="h-4 w-4" />;
+      case 'link': return <LinkIcon className="h-4 w-4" />;
+      case 'announcement': return <AlertCircle className="h-4 w-4" />;
+      case 'event': return <Calendar className="h-4 w-4" />;
+      case 'resource': return <FileText className="h-4 w-4" />;
+      default: return <Pin className="h-4 w-4" />;
+    }
+  };
+
+  const getItemTypeColor = (type: PinnedItemType) => {
+    switch (type) {
+      case 'document': return 'text-blue-400 bg-blue-400/10 border-blue-400/20';
+      case 'link': return 'text-green-400 bg-green-400/10 border-green-400/20';
+      case 'announcement': return 'text-red-400 bg-red-400/10 border-red-400/20';
+      case 'event': return 'text-purple-400 bg-purple-400/10 border-purple-400/20';
+      case 'resource': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
+      default: return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
+    }
+  };
+
+  const formatFileSize = (bytes?: number) => {
+    if (!bytes) return '';
+    const kb = bytes / 1024;
+    const mb = kb / 1024;
+    if (mb >= 1) return `${mb.toFixed(1)}MB`;
+    return `${kb.toFixed(0)}KB`;
+  };
+
+  const formatTimeAgo = (date: Date) => {
+    const diff = Date.now() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    const minutes = Math.floor(diff / (1000 * 60));
+    return `${minutes}m ago`;
+  };
+
+  const isExpiringSoon = (expiresAt?: Date) => {
+    if (!expiresAt) return false;
+    const daysUntilExpiry = (expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+    return daysUntilExpiry <= 3;
+  };
+
+  const pinnedStats = useMemo(() => {
+    return {
+      total: items.length,
+      totalViews: items.reduce((sum, item) => sum + (item.viewCount || 0), 0),
+      totalDownloads: items.reduce((sum, item) => sum + (item.downloadCount || 0), 0),
+      expiringSoon: items.filter(item => isExpiringSoon(item.expiresAt)).length
+    };
+  }, [items]);
+
+  return (
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Pin className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
+            <h3 className="font-semibold text-[var(--hive-text-inverse)]">
+              Pinned Resources
+            </h3>
+            <span className="text-sm text-neutral-400">({filteredItems.length})</span>
+          </div>
+
+          {leaderMode === 'insights' && (
+            <div className="flex items-center gap-2 px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded-full">
+              <TrendingUp className="h-3 w-3 text-purple-400" />
+              <span className="text-xs text-purple-400">Analytics Active</span>
+            </div>
+          )}
+        </div>
+
+        {canPin && (
+          <button
+            onClick={onAddPinned}
+            className="flex items-center gap-2 px-3 py-2 bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30 rounded-lg hover:bg-[var(--hive-brand-secondary)]/20 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="text-sm">Pin Resource</span>
+          </button>
+        )}
+      </div>
+
+      {/* Stats (Insights Mode) */}
+      {leaderMode === 'insights' && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
+            <div className="text-lg font-bold text-purple-400">{pinnedStats.total}</div>
+            <div className="text-xs text-neutral-400">Pinned Items</div>
+          </div>
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+            <div className="text-lg font-bold text-blue-400">{pinnedStats.totalViews}</div>
+            <div className="text-xs text-neutral-400">Total Views</div>
+          </div>
+          <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+            <div className="text-lg font-bold text-green-400">{pinnedStats.totalDownloads}</div>
+            <div className="text-xs text-neutral-400">Downloads</div>
+          </div>
+          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+            <div className="text-lg font-bold text-yellow-400">{pinnedStats.expiringSoon}</div>
+            <div className="text-xs text-neutral-400">Expiring Soon</div>
+          </div>
+        </div>
+      )}
+
+      {/* Filters */}
+      {items.length > 3 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+          {[
+            { id: 'all', label: 'All Items' },
+            { id: 'document', label: 'Documents' },
+            { id: 'announcement', label: 'Announcements' },
+            { id: 'resource', label: 'Resources' },
+            { id: 'event', label: 'Events' },
+            { id: 'link', label: 'Links' }
+          ].map((filterOption) => (
+            <button
+              key={filterOption.id}
+              onClick={() => setFilter(filterOption.id as PinnedItemType | 'all')}
+              className={cn(
+                "px-3 py-1 rounded-full text-sm transition-colors whitespace-nowrap",
+                filter === filterOption.id
+                  ? "bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30"
+                  : "bg-white/5 text-neutral-400 border border-white/10 hover:text-[var(--hive-text-inverse)]"
+              )}
+            >
+              {filterOption.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Items */}
+      <div className={cn(
+        viewMode === 'grid' 
+          ? "grid grid-cols-1 sm:grid-cols-2 gap-4" 
+          : "space-y-3"
+      )}>
+        <AnimatePresence>
+          {filteredItems.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ delay: index * 0.05 }}
+              className={cn(
+                "bg-white/[0.02] border border-white/[0.06] rounded-lg p-4 hover:bg-white/[0.05] transition-colors",
+                leaderMode === 'insights' && "border-purple-500/20 bg-purple-500/5",
+                isExpiringSoon(item.expiresAt) && "border-yellow-500/30 bg-yellow-500/5"
+              )}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h4 className="font-medium text-[var(--hive-text-inverse)] truncate">
+                      {item.title}
+                    </h4>
+
+                    {/* Type Badge */}
+                    <span className={cn(
+                      "px-2 py-0.5 text-xs font-medium rounded-full border capitalize flex items-center gap-1",
+                      getItemTypeColor(item.type)
+                    )}>
+                      {getItemIcon(item.type)}
+                      {item.type}
+                    </span>
+
+                    {/* Expiring Soon Warning */}
+                    {isExpiringSoon(item.expiresAt) && (
+                      <span className="px-2 py-0.5 text-xs font-medium rounded-full border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                        Expiring Soon
+                      </span>
+                    )}
+                  </div>
+
+                  {item.description && (
+                    <p className="text-sm text-neutral-300 mb-3 line-clamp-2">
+                      {item.description}
+                    </p>
+                  )}
+
+                  {/* Item Details */}
+                  <div className="space-y-1 text-xs text-neutral-400">
+                    <div className="flex items-center gap-2">
+                      <User className="h-3 w-3" />
+                      <span>Pinned by {item.pinnedBy.name}</span>
+                      <span>•</span>
+                      <span>{formatTimeAgo(item.pinnedAt)}</span>
+                    </div>
+
+                    {item.fileName && (
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-3 w-3" />
+                        <span>{item.fileName}</span>
+                        {item.fileSize && (
+                          <>
+                            <span>•</span>
+                            <span>{formatFileSize(item.fileSize)}</span>
+                          </>
+                        )}
+                      </div>
+                    )}
+
+                    {item.expiresAt && (
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-3 w-3" />
+                        <span>
+                          Expires {item.expiresAt.toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Analytics (Insights Mode) */}
+                    {leaderMode === 'insights' && (item.viewCount || item.downloadCount) && (
+                      <div className="flex items-center gap-4 pt-2 border-t border-white/10">
+                        {item.viewCount && (
+                          <div className="flex items-center gap-1">
+                            <Eye className="h-3 w-3" />
+                            <span className="text-blue-400">{item.viewCount} views</span>
+                          </div>
+                        )}
+                        {item.downloadCount && (
+                          <div className="flex items-center gap-1">
+                            <Download className="h-3 w-3" />
+                            <span className="text-green-400">{item.downloadCount} downloads</span>
+                          </div>
+                        )}
+                        {item.lastAccessed && (
+                          <span className="text-neutral-500">
+                            Last accessed {formatTimeAgo(item.lastAccessed)}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-2 ml-4">
+                  {/* Primary Action */}
+                  {item.fileUrl ? (
+                    <button
+                      onClick={() => onDownloadItem?.(item.id)}
+                      className="flex items-center gap-1 px-3 py-1 bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30 rounded-lg hover:bg-[var(--hive-brand-secondary)]/20 transition-colors text-sm"
+                    >
+                      <Download className="h-3 w-3" />
+                      Download
+                    </button>
+                  ) : item.url ? (
+                    <button
+                      onClick={() => onViewItem?.(item.id)}
+                      className="flex items-center gap-1 px-3 py-1 bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30 rounded-lg hover:bg-[var(--hive-brand-secondary)]/20 transition-colors text-sm"
+                    >
+                      <Eye className="h-3 w-3" />
+                      View
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => onViewItem?.(item.id)}
+                      className="flex items-center gap-1 px-3 py-1 bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30 rounded-lg hover:bg-[var(--hive-brand-secondary)]/20 transition-colors text-sm"
+                    >
+                      <Eye className="h-3 w-3" />
+                      View
+                    </button>
+                  )}
+
+                  {/* Management Actions */}
+                  {canModerate && (
+                    <div className="relative">
+                      <button className="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                        <MoreHorizontal className="h-4 w-4 text-neutral-400" />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Unpin Action */}
+                  {canModerate && (
+                    <button
+                      onClick={() => onUnpinItem?.(item.id)}
+                      className="p-2 hover:bg-red-500/10 rounded-lg transition-colors"
+                      title="Unpin item"
+                    >
+                      <Trash2 className="h-4 w-4 text-red-400" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        {filteredItems.length === 0 && (
+          <div className="text-center py-8 col-span-full">
+            <Pin className="h-12 w-12 mx-auto mb-3 text-neutral-400 opacity-50" />
+            <p className="text-neutral-400">No pinned items found</p>
+            <p className="text-sm text-neutral-500 mt-1">
+              {canPin ? 'Pin important resources for quick access' : 'Leaders will pin important items here'}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Show More Button */}
+      {maxItems && items.length > maxItems && (
+        <div className="text-center pt-4">
+          <button className="text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80 transition-colors text-sm font-medium">
+            View all {items.length} pinned items
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default HivePinnedSurface;

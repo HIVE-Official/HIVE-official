@@ -78,7 +78,7 @@ export declare const UserSchema: z.ZodObject<{
     email: string;
     handle: string;
     schoolId: string;
-    status: "active" | "deleted" | "suspended";
+    status: "active" | "suspended" | "deleted";
     uid: string;
     onboardingCompleted: boolean;
     major: string;
@@ -107,7 +107,7 @@ export declare const UserSchema: z.ZodObject<{
     updatedAt: number;
     createdAt: number;
     avatarUrl?: string | undefined;
-    status?: "active" | "deleted" | "suspended" | undefined;
+    status?: "active" | "suspended" | "deleted" | undefined;
     onboardingCompleted?: boolean | undefined;
     isBuilder?: boolean | undefined;
     isVerified?: boolean | undefined;
@@ -144,7 +144,7 @@ export declare const CreateUserSchema: z.ZodObject<Omit<{
     email: string;
     handle: string;
     schoolId: string;
-    status: "active" | "deleted" | "suspended";
+    status: "active" | "suspended" | "deleted";
     onboardingCompleted: boolean;
     major: string;
     isBuilder: boolean;
@@ -165,7 +165,7 @@ export declare const CreateUserSchema: z.ZodObject<Omit<{
     fullName: string;
     consentGiven: boolean;
     avatarUrl?: string | undefined;
-    status?: "active" | "deleted" | "suspended" | undefined;
+    status?: "active" | "suspended" | "deleted" | undefined;
     onboardingCompleted?: boolean | undefined;
     isBuilder?: boolean | undefined;
     isVerified?: boolean | undefined;
@@ -200,7 +200,7 @@ export declare const UpdateUserSchema: z.ZodObject<Omit<{
 }, "id" | "handle" | "schoolId" | "uid" | "createdAt">, "strip", z.ZodTypeAny, {
     email?: string | undefined;
     avatarUrl?: string | undefined;
-    status?: "active" | "deleted" | "suspended" | undefined;
+    status?: "active" | "suspended" | "deleted" | undefined;
     onboardingCompleted?: boolean | undefined;
     major?: string | undefined;
     isBuilder?: boolean | undefined;
@@ -217,7 +217,7 @@ export declare const UpdateUserSchema: z.ZodObject<Omit<{
 }, {
     email?: string | undefined;
     avatarUrl?: string | undefined;
-    status?: "active" | "deleted" | "suspended" | undefined;
+    status?: "active" | "suspended" | "deleted" | undefined;
     onboardingCompleted?: boolean | undefined;
     major?: string | undefined;
     isBuilder?: boolean | undefined;

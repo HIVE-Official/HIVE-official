@@ -91,9 +91,7 @@ export { hiveVariants } from './lib/motion';
 // === HIVE ALIASES ===
 export { ButtonEnhanced as HiveButton } from './atomic/atoms/button-enhanced';
 export { HiveBadge } from './components/hive-badge';
-export { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from './components/hive-card';
-export { Avatar as HiveAvatar } from './atomic/atoms/avatar';
-export { TextareaEnhanced as HiveTextarea } from './atomic/atoms/textarea-enhanced';
+export { HiveCard } from './components/hive-card';
 
 // === ADDITIONAL EXPORTS ===
 // Academic constants
@@ -107,13 +105,11 @@ export { adminFirestore } from './lib/firebase-admin';
 export { Checkbox } from './atomic/atoms/checkbox';
 export { Switch } from './atomic/atoms/switch';
 export { Slider } from './atomic/atoms/slider';
-export { Progress, CircularProgress, LoadingProgress, SuccessProgress, ErrorProgress, CircularSpinner } from './atomic/atoms/progress';
+export { Progress } from './atomic/atoms/progress';
 export { Separator } from './atomic/atoms/separator';
-export { Skeleton, SkeletonText, SkeletonAvatar, SkeletonCard } from './atomic/atoms/skeleton';
+export { Skeleton } from './atomic/atoms/skeleton';
 export { Spinner } from './atomic/atoms/spinner';
 export { Tooltip } from './atomic/atoms/tooltip';
-export { Alert, AlertTitle, AlertDescription, AlertIcons, CampusAlerts } from './atomic/atoms/alert';
-// Radio group and Calendar components need to be rebuilt
 
 // Navigation components
 export { NavigationPreferences } from './atomic/atoms/navigation-preferences';
@@ -133,11 +129,6 @@ export { ProfileStatistic, type ProfileStatisticProps } from './atomic/atoms/pro
 export { ProfileHeader, type ProfileHeaderProps } from './atomic/molecules/profile-header';
 export { ProfileStats, type ProfileStatsProps } from './atomic/molecules/profile-stats';
 
-// Campus-Specific Molecules
-export { CoursePicker, type CourseInfo, type CoursePickerProps } from './atomic/molecules/course-picker';
-export { StudyGroupMatcher, type StudyGroupMember, type StudyGroup, type StudyGroupMatcherProps } from './atomic/molecules/study-group-matcher';
-export { ResourceSharingCard, ResourceGrid, type SharedResource, type ResourceSharingCardProps, type ResourceGridProps } from './atomic/molecules/resource-sharing-card';
-
 // Profile Organisms
 export { ProfileDashboard, type ProfileDashboardProps } from './atomic/organisms/profile-dashboard';
 export { ProfileAvatarWidget, type ProfileAvatarWidgetProps } from './atomic/organisms/profile-avatar-widget';
@@ -151,27 +142,32 @@ export { ProfileHiveLabWidget, type ProfileHiveLabWidgetProps } from './atomic/o
 export { ProfileCard, type ProfileCardProps } from './atomic/organisms/profile-card';
 export { ProfileSystem, type ProfileSystemProps } from './atomic/organisms/profile-system';
 
-// === SURFACE COMPONENTS (Space Widgets) ===
-export { HivePostsSurface, type HivePostsSurfaceProps } from './components/surfaces/HivePostsSurface';
-export { HiveMembersSurface, type HiveMembersSurfaceProps } from './components/surfaces/HiveMembersSurface';
-export { HiveEventsSurface, type HiveEventsSurfaceProps } from './components/surfaces/HiveEventsSurface';
-export { HivePinnedSurface, type HivePinnedSurfaceProps } from './components/surfaces/HivePinnedSurface';
-export { HiveToolsSurface, type HiveToolsSurfaceProps } from './components/surfaces/HiveToolsSurface';
+// === SPACES SYSTEM ===
+// Space Surface Components
+export { HivePostsSurface, type HivePostsSurfaceProps, type HiveSpacePost, type HivePostType } from './atomic/organisms/hive-posts-surface';
 
-// === TOOLS/HIVELAB COMPONENTS ===
-// Note: Tool system components need to be rebuilt
-// export { CompleteHIVEToolsSystem } from './atomic/organisms/complete-hive-tools-system';
-export { ProfileHiveLabWidget as HiveLabWidget } from './atomic/organisms/profile-hivelab-widget';
+// Comment type for posts
+export type Comment = {
+  id: string;
+  content: string;
+  author: {
+    id: string;
+    name: string;
+    avatar?: string;
+  };
+  timestamp: Date;
+  parentId?: string;
+  replies?: Comment[];
+};
+export { HiveMembersSurface, type HiveMembersSurfaceProps, type HiveSpaceMember, type HiveMemberRole } from './atomic/organisms/hive-members-surface';
+export { HiveEventsSurface, type HiveEventsSurfaceProps, type SpaceEvent, type EventType } from './atomic/organisms/hive-events-surface';
+export { HivePinnedSurface, type HivePinnedSurfaceProps, type PinnedItem, type PinnedItemType } from './atomic/organisms/hive-pinned-surface';
+export { HiveToolsSurface, type HiveToolsSurfaceProps, type SpaceTool, type ToolType } from './atomic/organisms/hive-tools-surface';
 
-// === THEME & DESIGN TOKENS ===
-export { 
-  hiveTheme,
-  type HiveTheme,
-  type HiveColors,
-  type HiveSemantic,
-  type HiveSpacing,
-  type HiveTypography,
-  type HiveShadows,
-  getCSSVariable,
-  applyThemeToRoot
-} from './theme/hive-theme'; 
+// Space Dashboard
+export { SpaceDashboard, type SpaceDashboardProps } from './atomic/organisms/space-dashboard';
+
+// Space Utilities
+export { SpaceExploreHub, type SpaceExploreHubProps } from './atomic/organisms/space-explore-hub';
+export { SpaceSurfaceErrorBoundary, useSpaceSurfaceErrorHandler } from './atomic/organisms/space-surface-error-boundary';
+export { SpaceSurfaceSkeleton } from './atomic/organisms/space-surface-skeleton'; 

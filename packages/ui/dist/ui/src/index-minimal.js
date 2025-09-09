@@ -11,7 +11,7 @@ export { EmailGate } from './components/auth/email-gate.js';
 export { CheckEmailInfo } from './components/auth/CheckEmailInfo.js';
 export { SchoolPick } from './components/auth/school-pick.js';
 // === LOADING COMPONENTS ===
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator.js';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator.js';
 // === ONBOARDING COMPONENTS (temporarily commented - components need to be created) ===
 // export { CreateProfileStep } from './components/onboarding/create-profile-step';
 // export { AcademicStep } from './components/onboarding/academic-step';

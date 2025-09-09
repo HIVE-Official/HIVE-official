@@ -9,6 +9,8 @@ import {
   removeSpaceMember,
   getSpaceMembers
 } from '@/lib/spaces-db';
+import { COLLECTIONS } from '@/lib/firebase-collections';
+import { Timestamp, FieldValue } from 'firebase-admin/firestore';
 
 const leaveSpaceSchema = z.object({
   spaceId: z.string().min(1, "Space ID is required")
@@ -84,6 +86,15 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       previousRole: membership.role
     });
 
+    // Update connections to remove this space from mutualSpaces
+    try {
+      await updateConnectionsOnLeave(userId, spaceId);
+      logger.info('Updated connections after leaving space', { userId, spaceId });
+    } catch (error) {
+      logger.error('Failed to update connections on leave', { error });
+      // Don't fail the leave operation if connection update fails
+    }
+
     // Log activity event
     try {
       await logLeaveActivity(userId, spaceId, space.name);
@@ -118,6 +129,70 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
   requireAuth: true,
   operation: 'leave_space'
 });
+
+/**
+ * Update connections when leaving a space
+ * Removes the space from mutualSpaces array but doesn't delete connections
+ * (Users might be connected through other spaces)
+ */
+async function updateConnectionsOnLeave(
+  userId: string,
+  spaceId: string
+): Promise<void> {
+  const { dbAdmin } = await import('@/lib/firebase-admin');
+  
+  try {
+    // Get all connections for this user
+    const connectionsSnapshot = await dbAdmin
+      .collection(COLLECTIONS.USER_CONNECTIONS)
+      .where('userId', '==', userId)
+      .get();
+    
+    const batch = dbAdmin.batch();
+    const now = Timestamp.now();
+    
+    for (const connectionDoc of connectionsSnapshot.docs) {
+      const connection = connectionDoc.data();
+      
+      // Only update if this space is in mutualSpaces
+      if (connection.mutualSpaces?.includes(spaceId)) {
+        // Remove space from mutual spaces
+        batch.update(connectionDoc.ref, {
+          mutualSpaces: FieldValue.arrayRemove(spaceId),
+          lastInteraction: now
+        });
+        
+        // Also update the reverse connection
+        const reverseConnectionRef = dbAdmin
+          .collection(COLLECTIONS.USER_CONNECTIONS)
+          .doc(`${connection.connectedUserId}_${userId}`);
+        
+        const reverseDoc = await reverseConnectionRef.get();
+        if (reverseDoc.exists) {
+          batch.update(reverseConnectionRef, {
+            mutualSpaces: FieldValue.arrayRemove(spaceId),
+            lastInteraction: now
+          });
+        }
+      }
+    }
+    
+    await batch.commit();
+    
+    logger.info('Updated connections after leaving space', {
+      userId,
+      spaceId,
+      connectionsUpdated: connectionsSnapshot.size
+    });
+  } catch (error) {
+    logger.error('Failed to update connections on leave', {
+      error,
+      userId,
+      spaceId
+    });
+    throw error;
+  }
+}
 
 /**
  * Log leave activity for analytics

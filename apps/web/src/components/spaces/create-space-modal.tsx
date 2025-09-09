@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Modal, Button, Card, Badge, Input } from "@hive/ui";
 import { Alert } from "@/components/temp-stubs";
+import { authenticatedFetch } from "@/lib/auth-utils";
 import { 
   ArrowRight, 
   ArrowLeft,
@@ -101,24 +102,51 @@ const SPACE_TYPES: Array<{
 interface CreateSpaceModalMigratedProps {
   isOpen: boolean;
   onClose: () => void;
+  onCreateSpace?: (space: any) => void;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 // API function for creating spaces
-const createSpace = async (spaceData: CreateSpaceData) => {
-  const response = await fetch('/api/spaces', {
+const createSpace = async (spaceData: Partial<CreateSpaceData>) => {
+  // Transform data to match API schema
+  const apiData = {
+    name: spaceData.name,
+    description: spaceData.description,
+    type: spaceData.type,
+    visibility: spaceData.visibility,
+    joinProcess: spaceData.joinProcess,
+    rules: spaceData.rules || [],
+    avatar: spaceData.avatar,
+    bannerUrl: spaceData.banner,
+    primaryColor: spaceData.customizations?.primaryColor,
+    category: spaceData.customizations?.category,
+    tags: spaceData.customizations?.tags?.map(tag => ({
+      type: 'general',
+      sub_type: tag
+    })) || [],
+    coordinationTypes: ['study_session', 'meetup'], // Default coordination types
+    foundingMembers: spaceData.foundingMembers || []
+  };
+
+  const response = await authenticatedFetch('/api/spaces/create', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(spaceData),
+    headers: { 
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(apiData),
   });
   
+  const data = await response.json();
+  
   if (!response.ok) {
-    throw new Error('Failed to create space');
+    throw new Error(data.error || 'Failed to create space');
   }
   
-  return response.json();
+  return data.data || data;
 };
 
-export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMigratedProps) {
+export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, error: externalError }: CreateSpaceModalMigratedProps) {
   // Global state
   const { addToast } = useUIStore();
   const { profile } = useAuthStore();
@@ -156,9 +184,19 @@ export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMi
         type: 'success',
       });
       
+      // Call the parent callback if provided
+      if (onCreateSpace) {
+        onCreateSpace(newSpace);
+      }
+      
       handleClose();
+      
+      // Redirect to the new space
+      setTimeout(() => {
+        window.location.href = `/spaces/${newSpace.id}`;
+      }, 500);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       addToast({
         title: 'Failed to create space',
         description: error.message || 'Something went wrong',
@@ -234,33 +272,95 @@ export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMi
     </div>
   );
 
-  const BasicInfoStep = () => (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold">Basic Information</h2>
-        <p className="text-muted-foreground">Tell us about your space</p>
-      </div>
-      
-      <div className="space-y-4">
+  const BasicInfoStep = () => {
+    // Validation state
+    const [nameError, setNameError] = useState('');
+    const [descError, setDescError] = useState('');
+    
+    const validateName = (name: string) => {
+      if (name.length < 3) {
+        setNameError('Space name must be at least 3 characters');
+        return false;
+      }
+      if (name.length > 50) {
+        setNameError('Space name must be less than 50 characters');
+        return false;
+      }
+      if (!/^[a-zA-Z0-9\s\-_]+$/.test(name)) {
+        setNameError('Only letters, numbers, spaces, hyphens, and underscores allowed');
+        return false;
+      }
+      setNameError('');
+      return true;
+    };
+    
+    const validateDescription = (desc: string) => {
+      if (desc.length < 10) {
+        setDescError('Description must be at least 10 characters');
+        return false;
+      }
+      if (desc.length > 500) {
+        setDescError('Description must be less than 500 characters');
+        return false;
+      }
+      setDescError('');
+      return true;
+    };
+    
+    return (
+      <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-2">Space Name*</label>
-          <Input
-            placeholder="e.g., CS Study Group"
-            value={spaceData.name}
-            onChange={(e) => setSpaceData({ ...spaceData, name: e.target.value })}
-          />
+          <h2 className="text-xl font-semibold">Basic Information</h2>
+          <p className="text-muted-foreground">Tell us about your space</p>
         </div>
         
-        <div>
-          <label className="block text-sm font-medium mb-2">Description*</label>
-          <textarea
-            className="w-full p-3 border rounded-lg resize-none"
-            rows={4}
-            placeholder="Describe what your space is about and what members can expect..."
-            value={spaceData.description}
-            onChange={(e) => setSpaceData({ ...spaceData, description: e.target.value })}
-          />
-        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Space Name* 
+              <span className="text-xs text-muted-foreground ml-2">
+                ({spaceData.name.length}/50)
+              </span>
+            </label>
+            <Input
+              placeholder="e.g., CS Study Group"
+              value={spaceData.name}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSpaceData({ ...spaceData, name: value });
+                if (value) validateName(value);
+              }}
+              className={nameError ? 'border-red-500' : ''}
+            />
+            {nameError && (
+              <p className="text-xs text-red-500 mt-1">{nameError}</p>
+            )}
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Description* 
+              <span className="text-xs text-muted-foreground ml-2">
+                ({spaceData.description.length}/500)
+              </span>
+            </label>
+            <textarea
+              className={`w-full p-3 border rounded-lg resize-none ${
+                descError ? 'border-red-500' : ''
+              }`}
+              rows={4}
+              placeholder="Describe what your space is about and what members can expect..."
+              value={spaceData.description}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSpaceData({ ...spaceData, description: value });
+                if (value) validateDescription(value);
+              }}
+            />
+            {descError && (
+              <p className="text-xs text-red-500 mt-1">{descError}</p>
+            )}
+          </div>
         
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -294,10 +394,11 @@ export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMi
               <option value="invite_only">Invite Only</option>
             </select>
           </div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const ReviewStep = () => (
     <div className="space-y-6">
@@ -443,3 +544,6 @@ export function CreateSpaceModalMigrated({ isOpen, onClose }: CreateSpaceModalMi
     </Modal>
   );
 }
+
+// Export with old name for backwards compatibility
+export const CreateSpaceModalMigrated = CreateSpaceModal;

@@ -1,13 +1,13 @@
 import React from 'react';
-export type MemberRole = 'leader' | 'co_leader' | 'member' | 'pending';
-export type MemberStatus = 'active' | 'inactive' | 'banned' | 'pending';
-export interface SpaceMember {
+export type DirectoryMemberRole = 'leader' | 'co_leader' | 'member' | 'pending';
+export type DirectoryMemberStatus = 'active' | 'inactive' | 'banned' | 'pending';
+export interface DirectorySpaceMember {
     id: string;
     handle: string;
     displayName: string;
     avatar?: string;
-    role: MemberRole;
-    status: MemberStatus;
+    role: DirectoryMemberRole;
+    status: DirectoryMemberStatus;
     joinedAt: string;
     lastActive?: string;
     bio?: string;
@@ -26,8 +26,8 @@ export interface SpaceMember {
 export type MemberFilterType = 'all' | 'leaders' | 'members' | 'pending' | 'online';
 export type MemberSortType = 'name' | 'role' | 'joined' | 'activity';
 export interface SpaceMemberDirectoryProps {
-    members: SpaceMember[];
-    currentUserRole: MemberRole;
+    members: DirectorySpaceMember[];
+    currentUserRole: DirectoryMemberRole;
     spaceType: 'university' | 'residential' | 'greek' | 'student';
     onInviteMembers?: () => void;
     onManageMember?: (memberId: string, action: 'promote' | 'demote' | 'remove' | 'ban' | 'unban') => Promise<void>;

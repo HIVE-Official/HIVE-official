@@ -4,6 +4,10 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { authenticatedFetch } from '../../../../lib/auth-utils';
 import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface, type Comment } from "@hive/ui";
+import { useSpacePosts } from '../../../../hooks/use-space-posts';
+import { useSpaceEvents } from '../../../../hooks/use-space-events';
+import { PostWithComments } from '../../../../components/posts/post-with-comments';
+import { SpaceManagementPanel } from '../../../../components/spaces/space-management-panel';
 import { PageContainer } from "@/components/temp-stubs";
 import { Users, AlertTriangle, Loader2, Hash, /* Heart as _Heart, */ MessageSquare, /* Camera as _Camera, */ Code, Calendar, /* ArrowRight as _ArrowRight, */ Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
 import Image from "next/image";
@@ -205,6 +209,26 @@ export default function SpaceDetailPage({
   const [/* membershipLoading */, setMembershipLoading] = useState(true); // TODO: For membership loading state
   
   const { user } = useUnifiedAuth();
+  
+  // Use real-time posts hook
+  const { 
+    posts, 
+    loading: postsLoading, 
+    createPost: createSpacePost,
+    toggleReaction,
+    deletePost,
+    respondToCoordination 
+  } = useSpacePosts(spaceId);
+  
+  // Use real-time events hook
+  const {
+    events,
+    loading: eventsLoading,
+    createEvent,
+    updateEvent,
+    deleteEvent,
+    rsvpToEvent
+  } = useSpaceEvents(spaceId);
 
   const handleJoinSpace = async () => {
     try {
@@ -219,6 +243,23 @@ export default function SpaceDetailPage({
       if (!response.ok) {
         const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Failed to join space');
+      }
+
+      const result = await response.json();
+      
+      // Show connection notification if auto-connections were created
+      if (result.data?.connections?.created > 0) {
+        const connectionMessage = result.data.connections.message;
+        // Use a toast notification if available, otherwise alert
+        if (typeof window !== 'undefined' && window.showToast) {
+          window.showToast({
+            title: 'Welcome to ' + space?.name,
+            description: connectionMessage,
+            type: 'success'
+          });
+        } else {
+          console.log('Auto-connections created:', connectionMessage);
+        }
       }
 
       setIsJoined(true);
@@ -320,6 +361,8 @@ export default function SpaceDetailPage({
     return result.data.comments;
   };
 
+  // Posts are now fetched via useSpacePosts hook with real-time updates
+
   // Member Management Handlers
   const handleChangeRole = async (memberId: string, role: string) => {
     const response = await authenticatedFetch(`/api/spaces/${spaceId}/members`, {
@@ -414,6 +457,8 @@ export default function SpaceDetailPage({
       isMounted = false;
     };
   }, [spaceId, user]);
+
+  // Posts are now fetched automatically via useSpacePosts hook
   
   // Fetch analytics data when Insights Mode is activated
   React.useEffect(() => {
@@ -628,6 +673,8 @@ export default function SpaceDetailPage({
                     </div>
                     <Component
                       space={space}
+                      posts={activeWidget.id === 'posts' ? posts : undefined}
+                      isLoading={activeWidget.id === 'posts' ? postsLoading : undefined}
                       mode="view"
                       maxItems={5}
                       showCompact={true}
@@ -638,10 +685,10 @@ export default function SpaceDetailPage({
             </div>
           </div>
         ) : (
-          /* Desktop Widget Grid */
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Primary Widget - Post Board */}
-            <div className="lg:col-span-2 space-y-6">
+          /* Desktop Widget Grid - 60/40 Layout per PRD */
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            {/* Primary Widget - Post Board (60%) */}
+            <div className="lg:col-span-3 space-y-6">
               <motion.div
                 className={cn(
                   "rounded-xl p-6 cursor-pointer group transition-all",
@@ -723,8 +770,18 @@ export default function SpaceDetailPage({
                     )}
                   </motion.div>
                 )}
+                {/* Show management panel in manage mode, posts otherwise */}
+                {isLeader && currentMode === 'manage' ? (
+                  <SpaceManagementPanel
+                    spaceId={spaceId}
+                    isOwner={membership?.role === 'owner'}
+                    currentUserId={user?.uid || ''}
+                  />
+                ) : (
                 <HivePostsSurface
                   space={space}
+                  posts={posts}
+                  isLoading={postsLoading}
                   mode="view"
                   maxPosts={3}
                   showFilters={false}
@@ -768,12 +825,28 @@ export default function SpaceDetailPage({
                       alert('Failed to update status. Please try again.');
                     }
                   }}
+                  PostRenderer={PostWithComments}
+                  onReaction={toggleReaction}
+                  onShare={async (postId) => {
+                    // Share functionality can be implemented later
+                    console.log('Share post:', postId);
+                  }}
+                  onDelete={async (postId) => {
+                    if (confirm('Are you sure you want to delete this post?')) {
+                      try {
+                        await deletePost(postId);
+                      } catch (error) {
+                        console.error('Delete post error:', error);
+                      }
+                    }
+                  }}
                 />
+                )}
               </motion.div>
             </div>
             
-            {/* Secondary Widgets */}
-            <div className="space-y-6">
+            {/* Secondary Widgets (40%) */}
+            <div className="lg:col-span-2 space-y-6">
               {availableWidgets.filter(w => w.id !== 'posts').map((widget) => {
                 const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                 const Component = widget.component;
@@ -954,12 +1027,20 @@ export default function SpaceDetailPage({
                     ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                       <HiveEventsSurface
                         space={space}
+                        events={events}
                         canCreateEvents={isLeader}
                         canModerate={isLeader}
+                        leaderMode={currentMode === 'manage' ? 'moderate' : 'insights'}
+                        onCreateEvent={() => createEvent({})}
+                        onEditEvent={(eventId) => updateEvent(eventId, {})}
+                        onCancelEvent={(eventId) => deleteEvent(eventId)}
+                        onRSVPEvent={(eventId, status) => rsvpToEvent(eventId, status as any)}
                       />
                     ) : (
                       <Component
                         space={space}
+                        posts={widget.id === 'posts' ? posts : undefined}
+                        isLoading={widget.id === 'posts' ? postsLoading : undefined}
                         mode="view"
                         showCompact={true}
                         maxItems={3}
@@ -1276,12 +1357,20 @@ export default function SpaceDetailPage({
                         ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                           <HiveEventsSurface
                             space={space}
+                            events={events}
+                            isLoading={eventsLoading}
                             canCreateEvents={isLeader}
                             canModerate={isLeader}
+                            onCreateEvent={createEvent}
+                            onUpdateEvent={updateEvent}
+                            onDeleteEvent={deleteEvent}
+                            onRSVP={rsvpToEvent}
                           />
                         ) : (
                           <Component
                             space={space}
+                            posts={widget.id === 'posts' ? posts : undefined}
+                            isLoading={widget.id === 'posts' ? postsLoading : undefined}
                             mode="view"
                             viewMode={widgetViews[activeModal] || widget.allowedViews?.[0] || 'default'}
                             canPost={isJoined && space.status === 'activated'}

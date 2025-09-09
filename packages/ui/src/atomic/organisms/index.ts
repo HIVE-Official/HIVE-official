@@ -16,6 +16,17 @@ export * from './space-dashboard';
 export * from './space-member-directory';
 export * from './space-category-browser';
 
+// === HIVE SPACE SURFACES ===
+export * from './hive-posts-surface';
+export * from './hive-members-surface';
+export * from './hive-events-surface';
+export * from './hive-pinned-surface';
+export * from './hive-tools-surface';
+
+// === SPACE UTILITY COMPONENTS ===
+export * from './space-surface-error-boundary';
+export * from './space-surface-skeleton';
+
 // === HIVE TOOLS SYSTEM ===
 export * from './tool-library-modal';
 export * from './tool-configuration-panel';

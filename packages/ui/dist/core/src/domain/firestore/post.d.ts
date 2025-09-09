@@ -144,8 +144,8 @@ export declare const PollMetadataSchema: z.ZodObject<{
     expiresAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
     options: string[];
-    allowMultiple: boolean;
     question: string;
+    allowMultiple: boolean;
     expiresAt?: Date | undefined;
     votes?: Record<string, string[]> | undefined;
 }, {
@@ -350,8 +350,8 @@ export declare const PostSchema: z.ZodObject<{
         expiresAt: z.ZodOptional<z.ZodDate>;
     }, "strip", z.ZodTypeAny, {
         options: string[];
-        allowMultiple: boolean;
         question: string;
+        allowMultiple: boolean;
         expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
     }, {
@@ -476,8 +476,8 @@ export declare const PostSchema: z.ZodObject<{
     } | undefined;
     pollMetadata?: {
         options: string[];
-        allowMultiple: boolean;
         question: string;
+        allowMultiple: boolean;
         expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
     } | undefined;
@@ -677,8 +677,8 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         expiresAt: z.ZodOptional<z.ZodDate>;
     }, "strip", z.ZodTypeAny, {
         options: string[];
-        allowMultiple: boolean;
         question: string;
+        allowMultiple: boolean;
         expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
     }, {
@@ -753,8 +753,8 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     pollMetadata?: {
         options: string[];
-        allowMultiple: boolean;
         question: string;
+        allowMultiple: boolean;
         expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
     } | undefined;
@@ -845,8 +845,8 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     } | undefined;
     pollMetadata?: {
         options: string[];
-        allowMultiple: boolean;
         question: string;
+        allowMultiple: boolean;
         expiresAt?: Date | undefined;
         votes?: Record<string, string[]> | undefined;
     } | undefined;

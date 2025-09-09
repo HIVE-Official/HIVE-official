@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "NODE_ENV=production next build",
-    "build:safe": "node scripts/check-production-safety.js && NODE_ENV=production next build",
-    "build:analyze": "ANALYZE=true next build",
+    "build": "next build",
+    "build:safe": "node scripts/check-production-safety.js && next build",
+    "build:analyze": "set ANALYZE=true && next build",
     "start": "next start",
     "lint": "npx eslint . --max-warnings 600",
     "test": "vitest",

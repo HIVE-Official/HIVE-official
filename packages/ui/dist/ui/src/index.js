@@ -54,9 +54,7 @@ export { hiveVariants } from './lib/motion.js';
 // === HIVE ALIASES ===
 export { ButtonEnhanced as HiveButton } from './atomic/atoms/button-enhanced.js';
 export { HiveBadge } from './components/hive-badge.js';
-export { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from './components/hive-card.js';
-export { Avatar as HiveAvatar } from './atomic/atoms/avatar.js';
-export { TextareaEnhanced as HiveTextarea } from './atomic/atoms/textarea-enhanced.js';
+export { HiveCard } from './components/hive-card.js';
 // === ADDITIONAL EXPORTS ===
 // Academic constants
 export { UB_MAJORS } from './constants/academics.js';
@@ -67,13 +65,11 @@ export { adminFirestore } from './lib/firebase-admin.js';
 export { Checkbox } from './atomic/atoms/checkbox.js';
 export { Switch } from './atomic/atoms/switch.js';
 export { Slider } from './atomic/atoms/slider.js';
-export { Progress, CircularProgress, LoadingProgress, SuccessProgress, ErrorProgress, CircularSpinner } from './atomic/atoms/progress.js';
+export { Progress } from './atomic/atoms/progress.js';
 export { Separator } from './atomic/atoms/separator.js';
-export { Skeleton, SkeletonText, SkeletonAvatar, SkeletonCard } from './atomic/atoms/skeleton.js';
+export { Skeleton } from './atomic/atoms/skeleton.js';
 export { Spinner } from './atomic/atoms/spinner.js';
 export { Tooltip } from './atomic/atoms/tooltip.js';
-export { Alert, AlertTitle, AlertDescription, AlertIcons, CampusAlerts } from './atomic/atoms/alert.js';
-// Radio group and Calendar components need to be rebuilt
 // Navigation components
 export { NavigationPreferences } from './atomic/atoms/navigation-preferences.js';
 export { useShell, ShellProvider } from './contexts/shell-context.js';
@@ -88,10 +84,6 @@ export { ProfileStatistic } from './atomic/atoms/profile-statistic.js';
 // Profile Molecules
 export { ProfileHeader } from './atomic/molecules/profile-header.js';
 export { ProfileStats } from './atomic/molecules/profile-stats.js';
-// Campus-Specific Molecules
-export { CoursePicker } from './atomic/molecules/course-picker.js';
-export { StudyGroupMatcher } from './atomic/molecules/study-group-matcher.js';
-export { ResourceSharingCard, ResourceGrid } from './atomic/molecules/resource-sharing-card.js';
 // Profile Organisms
 export { ProfileDashboard } from './atomic/organisms/profile-dashboard.js';
 export { ProfileAvatarWidget } from './atomic/organisms/profile-avatar-widget.js';
@@ -104,16 +96,17 @@ export { ProfileGhostModeWidget } from './atomic/organisms/profile-ghost-mode-wi
 export { ProfileHiveLabWidget } from './atomic/organisms/profile-hivelab-widget.js';
 export { ProfileCard } from './atomic/organisms/profile-card.js';
 export { ProfileSystem } from './atomic/organisms/profile-system.js';
-// === SURFACE COMPONENTS (Space Widgets) ===
-export { HivePostsSurface } from './components/surfaces/HivePostsSurface.js';
-export { HiveMembersSurface } from './components/surfaces/HiveMembersSurface.js';
-export { HiveEventsSurface } from './components/surfaces/HiveEventsSurface.js';
-export { HivePinnedSurface } from './components/surfaces/HivePinnedSurface.js';
-export { HiveToolsSurface } from './components/surfaces/HiveToolsSurface.js';
-// === TOOLS/HIVELAB COMPONENTS ===
-// Note: Tool system components need to be rebuilt
-// export { CompleteHIVEToolsSystem } from './atomic/organisms/complete-hive-tools-system.js';
-export { ProfileHiveLabWidget as HiveLabWidget } from './atomic/organisms/profile-hivelab-widget.js';
-// === THEME & DESIGN TOKENS ===
-export { hiveTheme, getCSSVariable, applyThemeToRoot } from './theme/hive-theme.js';
+// === SPACES SYSTEM ===
+// Space Surface Components
+export { HivePostsSurface } from './atomic/organisms/hive-posts-surface.js';
+export { HiveMembersSurface } from './atomic/organisms/hive-members-surface.js';
+export { HiveEventsSurface } from './atomic/organisms/hive-events-surface.js';
+export { HivePinnedSurface } from './atomic/organisms/hive-pinned-surface.js';
+export { HiveToolsSurface } from './atomic/organisms/hive-tools-surface.js';
+// Space Dashboard
+export { SpaceDashboard } from './atomic/organisms/space-dashboard.js';
+// Space Utilities
+export { SpaceExploreHub } from './atomic/organisms/space-explore-hub.js';
+export { SpaceSurfaceErrorBoundary, useSpaceSurfaceErrorHandler } from './atomic/organisms/space-surface-error-boundary.js';
+export { SpaceSurfaceSkeleton } from './atomic/organisms/space-surface-skeleton.js';
 //# sourceMappingURL=index.js.map
