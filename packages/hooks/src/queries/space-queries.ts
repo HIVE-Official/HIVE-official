@@ -70,6 +70,7 @@ const createPostApi = async (postData: {
   type: string;
   content: string;
   title?: string;
+  images?: string[];
   linkUrl?: string;
   pollOptions?: string[];
 }): Promise<{ id: string; success: boolean }> => {

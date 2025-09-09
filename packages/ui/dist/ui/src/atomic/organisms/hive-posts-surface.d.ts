@@ -53,6 +53,8 @@ export interface HiveSpacePost {
 }
 export interface HivePostsSurfaceProps {
     space: Space;
+    posts?: HiveSpacePost[];
+    isLoading?: boolean;
     mode?: 'view' | 'edit';
     maxPosts?: number;
     showFilters?: boolean;
@@ -67,6 +69,18 @@ export interface HivePostsSurfaceProps {
     onLoadComments?: (postId: string) => Promise<any[]>;
     onCoordinationResponse?: (postId: string, response: CoordinationResponse) => void;
     onUpdateCoordinationStatus?: (postId: string, status: 'open' | 'full' | 'closed' | 'completed') => void;
+    PostRenderer?: React.ComponentType<{
+        post: HiveSpacePost;
+        spaceId: string;
+        currentUserId?: string;
+        canModerate?: boolean;
+        onReaction?: (postId: string, emoji: string) => void;
+        onShare?: (postId: string) => void;
+        onDelete?: (postId: string) => void;
+    }>;
+    onReaction?: (postId: string, emoji: string) => void;
+    onShare?: (postId: string) => void;
+    onDelete?: (postId: string) => void;
 }
 export declare const HivePostsSurface: React.FC<HivePostsSurfaceProps>;
 export default HivePostsSurface;

@@ -4,6 +4,7 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getFirebaseConfig } from "./env";
 
@@ -88,6 +89,7 @@ try {
 // Initialize Firebase services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 // Initialize Analytics (only in browser and if supported)
 export let analytics: ReturnType<typeof getAnalytics> | null = null;

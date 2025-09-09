@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from 'next/image';
 import { Input, Button, Textarea } from "@hive/ui";
 import { useSession } from '../../hooks/use-session';
+import { authenticatedFetch } from '@/lib/api-client';
 
 interface CampusProfile {
   fullName: string;
@@ -85,18 +86,32 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
   
   const queryClient = useQueryClient();
   
-  // Stub profile methods (useSession doesn't provide these)
+  // Profile update methods
   const updateProfile = async (data: any): Promise<any> => {
-    // Return mock data for now - implement actual API call later
-    return { success: true, ...data };
+    const response = await authenticatedFetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Failed to update profile');
+    return response.json();
   };
+  
   const uploadPhoto = async (file: File): Promise<{ avatarUrl: string }> => {
-    // Return mock data for now - implement actual API call later
-    return { avatarUrl: URL.createObjectURL(file) };
+    const formData = new FormData();
+    formData.append('photo', file);
+    
+    const response = await authenticatedFetch('/api/profile/upload-photo', {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) throw new Error('Failed to upload photo');
+    return response.json();
   };
-  const isUpdating = false;
-  const _profileError = null;
-  const _clearError = () => {};
+  
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const clearError = () => setProfileError(null);
   
   // PWA Camera Support Detection
   const isCameraSupported = typeof navigator !== 'undefined' && 

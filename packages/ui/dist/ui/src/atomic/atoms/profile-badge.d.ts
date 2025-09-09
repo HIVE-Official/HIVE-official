@@ -3,7 +3,7 @@ import { type VariantProps } from 'class-variance-authority';
 import type { LucideIcon } from 'lucide-react';
 declare const profileBadgeVariants: (props?: ({
     size?: "xs" | "sm" | "md" | "lg" | null | undefined;
-    variant?: "ghost" | "default" | "academic" | "social" | "builder" | "verified" | "leader" | "achievement" | "streak" | null | undefined;
+    variant?: "ghost" | "default" | "academic" | "social" | "builder" | "leader" | "verified" | "achievement" | "streak" | null | undefined;
     interactive?: boolean | null | undefined;
     pulsing?: boolean | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;

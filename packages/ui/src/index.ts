@@ -22,6 +22,9 @@ export { Avatar, AvatarImage, AvatarFallback } from './atomic/atoms/avatar';
 // Badge
 export { Badge } from './atomic/atoms/badge';
 
+// Alert system
+export { Alert, AlertTitle, AlertDescription } from './atomic/atoms/alert';
+
 // Container
 export { Container, PageContainer } from './atomic/atoms/container';
 
@@ -43,6 +46,12 @@ export {
 // === MODALS ===
 export { HiveModal, HiveConfirmModal, HiveAlertModal } from './components/hive-modal';
 export { HiveModal as Modal, HiveModal as Dialog } from './components/hive-modal';
+export { 
+  HiveModal as DialogContent,
+  HiveModal as DialogHeader,
+  HiveModal as DialogTitle,
+  HiveModal as DialogTrigger 
+} from './components/hive-modal';
 
 // === FORM COMPONENTS ===
 export { FormField } from './atomic/molecules/form-field';

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * HIVE Comprehensive Form Field Molecule
  * Campus-optimized form input combination with label, validation, and help text

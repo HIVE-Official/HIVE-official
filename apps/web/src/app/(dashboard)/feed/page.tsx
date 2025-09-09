@@ -42,6 +42,7 @@ import { cn } from '@/lib/utils';
 import { useFirebaseFeed } from '@/hooks/use-firebase-feed';
 import { RitualsStrip } from '@/components/feed/rituals-strip';
 import { PostComposer } from '@/components/feed/post-composer';
+import { useActiveUsers } from '@/hooks/use-active-users';
 
 // Feed stats component with real data
 interface FeedStatsProps {
@@ -49,6 +50,9 @@ interface FeedStatsProps {
 }
 
 function FeedStats({ posts = [] }: FeedStatsProps) {
+  // Get real active user count
+  const { activeCount, isLoading: activeLoading } = useActiveUsers();
+  
   // Calculate real stats from posts
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -63,7 +67,13 @@ function FeedStats({ posts = [] }: FeedStatsProps) {
   const eventPosts = posts.filter(p => p.type === 'event').length;
   
   const stats = [
-    { label: 'Active Now', value: Math.floor(Math.random() * 50 + 10).toString(), icon: Users, color: 'text-green-400', bgColor: 'bg-green-400/10' },
+    { 
+      label: 'Active Now', 
+      value: activeLoading ? '...' : activeCount.toString(), 
+      icon: Users, 
+      color: 'text-green-400', 
+      bgColor: 'bg-green-400/10' 
+    },
     { label: 'Today\'s Posts', value: todayPosts.length.toString(), icon: Activity, color: 'text-blue-400', bgColor: 'bg-blue-400/10' },
     { label: 'Tools Shared', value: toolPosts.toString(), icon: Zap, color: 'text-[var(--hive-gold)]', bgColor: 'bg-[var(--hive-gold)]/10' },
     { label: 'Events Today', value: eventPosts.toString(), icon: Calendar, color: 'text-[var(--hive-gold)]', bgColor: 'bg-[var(--hive-gold)]/10' }
@@ -252,8 +262,8 @@ function TrendingSidebar() {
 
 // Post card component
 function PostCard({ post, onLike, onBookmark, onShare, onComment, hasLiked, hasBookmarked }: any) {
-  const timeAgo = post.createdAt ? formatDistanceToNow(
-    post.createdAt.toDate ? post.createdAt.toDate() : new Date(post.createdAt),
+  const timeAgo = post.timestamp ? formatDistanceToNow(
+    post.timestamp instanceof Date ? post.timestamp : new Date(post.timestamp),
     { addSuffix: true }
   ) : 'just now';
 
@@ -287,8 +297,8 @@ function PostCard({ post, onLike, onBookmark, onShare, onComment, hasLiked, hasB
             
             <div className="flex-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-semibold text-[var(--hive-text-primary)] text-sm">{post.authorName}</span>
-                <span className="text-xs text-gray-500">@{post.authorHandle}</span>
+                <span className="font-semibold text-[var(--hive-text-primary)] text-sm">{post.author?.name || 'Anonymous'}</span>
+                <span className="text-xs text-gray-500">@{post.spaceHandle || post.spaceName}</span>
                 {getPostTypeIcon()}
                 {post.isPinned && (
                   <span className="text-xs px-1.5 py-0.5 rounded-full bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]">
@@ -318,18 +328,69 @@ function PostCard({ post, onLike, onBookmark, onShare, onComment, hasLiked, hasB
 
       {/* Post Content */}
       <div className="px-4 pb-3 space-y-3">
-        {post.content.title && (
-          <h3 className="font-semibold text-[var(--hive-text-primary)] text-base">{post.content.title}</h3>
+        {post.title && (
+          <h3 className="font-semibold text-[var(--hive-text-primary)] text-base">{post.title}</h3>
         )}
         
-        {post.content.text && (
+        {post.content && (
           <p className="text-gray-300 text-sm whitespace-pre-wrap leading-relaxed">
-            {post.content.text}
+            {post.content}
           </p>
         )}
 
-        {/* Tool/Event Cards */}
-        {post.content.toolName && (
+        {/* Images */}
+        {post.images && post.images.length > 0 && (
+          <div className={cn(
+            "grid gap-2",
+            post.images.length === 1 ? "grid-cols-1" : "grid-cols-2"
+          )}>
+            {post.images.map((url: string, idx: number) => (
+              <img
+                key={idx}
+                src={url}
+                alt={`Post image ${idx + 1}`}
+                className="rounded-lg w-full h-auto object-cover max-h-96"
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Coordination Data */}
+        {post.coordinationData && (
+          <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+            <div className="flex items-center gap-2 mb-1">
+              <Calendar className="h-4 w-4 text-blue-400" />
+              <span className="font-medium text-[var(--hive-text-primary)] text-sm">{post.coordinationData.title}</span>
+            </div>
+            {post.coordinationData.location && (
+              <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                <MapPin className="h-3 w-3" />
+                <span>{post.coordinationData.location}</span>
+              </div>
+            )}
+            <div className="mt-2 text-xs text-blue-400">
+              {post.coordinationData.status === 'open' ? 'Open for responses' : post.coordinationData.status}
+            </div>
+          </div>
+        )}
+
+        {/* Poll Data */}
+        {post.pollData && (
+          <div className="p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
+            <h4 className="font-medium text-[var(--hive-text-primary)] text-sm mb-2">{post.pollData.question}</h4>
+            <div className="space-y-1">
+              {post.pollData.options.map((option: any) => (
+                <div key={option.id} className="flex items-center justify-between text-xs">
+                  <span className="text-gray-300">{option.text}</span>
+                  <span className="text-gray-500">{option.votes} votes</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Tool/Event Cards - Legacy support */}
+        {post.content?.toolName && (
           <div className="p-3 bg-[var(--hive-gold)]/10 rounded-lg border border-[var(--hive-gold)]/20">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="h-4 w-4 text-[var(--hive-gold)]" />
@@ -435,37 +496,42 @@ function PostCard({ post, onLike, onBookmark, onShare, onComment, hasLiked, hasB
 }
 
 export default function FeedPageV2() {
-  const [feedType, setFeedType] = useState<'personal' | 'trending' | 'following'>('personal');
   const [showComposer, setShowComposer] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
 
-  // Use Firebase feed hook
+  // Use the new feed aggregation hook
   const {
     posts,
-    isLoading,
-    isLoadingMore,
-    hasMore,
+    loading: isLoading,
     error,
+    hasMore,
+    loadMore,
+    refresh,
+    feedType,
+    setFeedType
+  } = useFeedAggregation();
+
+  // Keep the old Firebase feed hook for actions
+  const {
     createPost,
     toggleLike,
     toggleBookmark,
     addComment,
     sharePost,
-    loadMore,
-    refresh,
     hasLiked,
     hasBookmarked
   } = useFirebaseFeed({
-    feedType,
-    sortBy: feedType === 'trending' ? 'popular' : 'recent',
+    feedType: 'personal',
+    sortBy: 'recent',
     pageSize: 20,
-    realtime: true
+    realtime: false,
+    autoLoad: false
   });
 
   // Intersection observer for infinite scroll
   const loadMoreRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (!loadMoreRef.current || !hasMore || isLoadingMore) return;
+    if (!loadMoreRef.current || !hasMore || isLoading) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -478,7 +544,7 @@ export default function FeedPageV2() {
 
     observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, loadMore]);
+  }, [hasMore, isLoading, loadMore]);
 
   // Handle comment
   const handleComment = useCallback(async (postId: string) => {
@@ -494,7 +560,7 @@ export default function FeedPageV2() {
 
   // Feed type filters
   const feedFilters = [
-    { value: 'personal', label: 'For You', icon: Sparkles },
+    { value: 'for-you', label: 'For You', icon: Sparkles },
     { value: 'following', label: 'Following', icon: UserPlus },
     { value: 'trending', label: 'Trending', icon: Flame }
   ];
@@ -625,7 +691,7 @@ export default function FeedPageV2() {
             {/* Load More Trigger */}
             {hasMore && !isLoading && posts.length > 0 && (
               <div ref={loadMoreRef} className="py-4 flex justify-center">
-                {isLoadingMore && (
+                {isLoading && (
                   <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
                 )}
               </div>

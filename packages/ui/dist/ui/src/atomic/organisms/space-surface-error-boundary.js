@@ -4,18 +4,9 @@ import React, { Component } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { motion } from 'framer-motion';
 export class SpaceSurfaceErrorBoundary extends Component {
-    constructor() {
-        super(...arguments);
-        this.state = {
-            hasError: false
-        };
-        this.handleRetry = () => {
-            this.setState({ hasError: false, error: undefined, errorInfo: undefined });
-        };
-        this.handleGoHome = () => {
-            window.location.href = '/';
-        };
-    }
+    state = {
+        hasError: false
+    };
     static getDerivedStateFromError(error) {
         return { hasError: true, error };
     }
@@ -31,6 +22,12 @@ export class SpaceSurfaceErrorBoundary extends Component {
             // TODO: Send to error tracking service (Sentry, etc.)
         }
     }
+    handleRetry = () => {
+        this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+    };
+    handleGoHome = () => {
+        window.location.href = '/';
+    };
     render() {
         if (this.state.hasError) {
             if (this.props.fallback) {

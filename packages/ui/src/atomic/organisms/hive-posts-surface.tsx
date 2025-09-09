@@ -101,6 +101,8 @@ export interface HiveSpacePost {
 
 export interface HivePostsSurfaceProps {
   space: Space;
+  posts?: HiveSpacePost[];  // Accept posts from parent
+  isLoading?: boolean;       // Loading state
   mode?: 'view' | 'edit';
   maxPosts?: number;
   showFilters?: boolean;
@@ -119,6 +121,20 @@ export interface HivePostsSurfaceProps {
   onLoadComments?: (postId: string) => Promise<any[]>;
   onCoordinationResponse?: (postId: string, response: CoordinationResponse) => void;
   onUpdateCoordinationStatus?: (postId: string, status: 'open' | 'full' | 'closed' | 'completed') => void;
+  
+  // Custom post renderer
+  PostRenderer?: React.ComponentType<{
+    post: HiveSpacePost;
+    spaceId: string;
+    currentUserId?: string;
+    canModerate?: boolean;
+    onReaction?: (postId: string, emoji: string) => void;
+    onShare?: (postId: string) => void;
+    onDelete?: (postId: string) => void;
+  }>;
+  onReaction?: (postId: string, emoji: string) => void;
+  onShare?: (postId: string) => void;
+  onDelete?: (postId: string) => void;
 }
 
 // Mock posts data for demo
@@ -203,6 +219,8 @@ const mockPosts: HiveSpacePost[] = [
 
 export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
   space,
+  posts: propsPosts,
+  isLoading = false,
   mode = 'view',
   maxPosts,
   showFilters = true,
@@ -214,13 +232,18 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
   currentUserId,
   onCreatePost,
   onCoordinationResponse,
-  onUpdateCoordinationStatus
+  onUpdateCoordinationStatus,
+  PostRenderer,
+  onReaction,
+  onShare,
+  onDelete
 }) => {
   const [filter, setFilter] = useState<'all' | 'coordination' | 'discussion'>('all');
   const [showCreateMenu, setShowCreateMenu] = useState(false);
 
   const filteredPosts = useMemo(() => {
-    let posts = mockPosts;
+    // Use props posts if provided, otherwise fall back to mock data for development
+    let posts = propsPosts || mockPosts;
     
     if (filter === 'coordination') {
       posts = posts.filter(post => ['study_session', 'food_run', 'ride_share', 'meetup'].includes(post.type));
@@ -233,7 +256,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
     }
     
     return posts;
-  }, [filter, maxPosts]);
+  }, [filter, maxPosts, propsPosts]);
 
   const getPostIcon = (type: HivePostType) => {
     switch (type) {
@@ -398,8 +421,57 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
 
       {/* Posts */}
       <div className="space-y-4">
-        <AnimatePresence>
-          {filteredPosts.map((post, index) => (
+        {isLoading ? (
+          // Loading skeleton
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 animate-pulse">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-white/10"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-white/10 rounded w-32 mb-2"></div>
+                    <div className="h-3 bg-white/5 rounded w-20"></div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-white/5 rounded w-full"></div>
+                  <div className="h-4 bg-white/5 rounded w-3/4"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredPosts.length === 0 ? (
+          // Empty state
+          <div className="text-center py-12">
+            <MessageSquare className="h-12 w-12 text-neutral-500 mx-auto mb-4" />
+            <p className="text-neutral-400">No posts yet</p>
+            {canPost && (
+              <p className="text-neutral-500 text-sm mt-2">Be the first to share something!</p>
+            )}
+          </div>
+        ) : (
+          // Posts list
+          <AnimatePresence>
+            {filteredPosts.map((post, index) => (
+              PostRenderer ? (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <PostRenderer
+                    post={post}
+                    spaceId={space.id}
+                    currentUserId={currentUserId}
+                    canModerate={canModerate}
+                    onReaction={onReaction}
+                    onShare={onShare}
+                    onDelete={onDelete}
+                  />
+                </motion.div>
+              ) : (
             <motion.div
               key={post.id}
               initial={{ opacity: 0, y: 20 }}
@@ -563,15 +635,9 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
                 </div>
               </div>
             </motion.div>
+              )
           ))}
-        </AnimatePresence>
-
-        {filteredPosts.length === 0 && (
-          <div className="text-center py-8">
-            <Activity className="h-12 w-12 mx-auto mb-3 text-neutral-400 opacity-50" />
-            <p className="text-neutral-400">No posts yet</p>
-            <p className="text-sm text-neutral-500 mt-1">Be the first to start the conversation!</p>
-          </div>
+          </AnimatePresence>
         )}
       </div>
     </div>

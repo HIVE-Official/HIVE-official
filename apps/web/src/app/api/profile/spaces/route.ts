@@ -231,14 +231,31 @@ function calculateActivityLevel(activity: any): 'high' | 'medium' | 'low' {
 // Helper function to get space notifications
 async function getSpaceNotifications(userId: string, spaceId: string) {
   try {
-    // This would be implemented when notification system is built
-    // For now, return mock data
+    // Get real unread notifications for this user in this space
+    const notificationsSnapshot = await dbAdmin
+      .collection('users')
+      .doc(userId)
+      .collection('notifications')
+      .where('spaceId', '==', spaceId)
+      .where('read', '==', false)
+      .get();
+    
+    const importantSnapshot = await dbAdmin
+      .collection('users')
+      .doc(userId)
+      .collection('notifications')
+      .where('spaceId', '==', spaceId)
+      .where('priority', '==', 'high')
+      .where('read', '==', false)
+      .get();
+    
     return {
-      unreadCount: Math.floor(Math.random() * 5),
-      hasImportantUpdates: Math.random() > 0.7
+      unreadCount: notificationsSnapshot.size,
+      hasImportantUpdates: importantSnapshot.size > 0
     };
   } catch (error) {
     logger.error('Error getting space notifications', { error: error, endpoint: '/api/profile/spaces' });
+    // Return zeros if collection doesn't exist yet
     return { unreadCount: 0, hasImportantUpdates: false };
   }
 }

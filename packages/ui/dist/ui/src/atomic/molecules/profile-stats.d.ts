@@ -3,7 +3,7 @@ import { type VariantProps } from 'class-variance-authority';
 declare const profileStatsVariants: (props?: ({
     layout?: "horizontal" | "vertical" | "grid" | "compact" | null | undefined;
     columns?: "2" | "3" | "4" | "5" | "auto" | null | undefined;
-    variant?: "ghost" | "default" | "card" | "minimal" | null | undefined;
+    variant?: "ghost" | "default" | "minimal" | "card" | null | undefined;
     spacing?: "normal" | "loose" | "tight" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveProfileStats {

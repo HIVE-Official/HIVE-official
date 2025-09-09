@@ -10,10 +10,14 @@ import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-ty
 
 const CreatePostSchema = z.object({
   content: z.string().min(1).max(2000),
-  type: z.enum(["text", "image", "link", "tool"]).default("text"),
-  imageUrl: z.string().url().optional(),
+  type: z.enum(["text", "image", "link", "tool", "discussion", "question", "poll", "announcement"]).default("text"),
+  title: z.string().optional(),
+  images: z.array(z.string().url()).optional(),
+  imageUrl: z.string().url().optional(), // legacy support
   linkUrl: z.string().url().optional(),
-  toolId: z.string().optional() });
+  toolId: z.string().optional(),
+  pollOptions: z.array(z.string()).optional()
+});
 
 const db = dbAdmin;
 

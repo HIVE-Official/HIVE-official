@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { globalSearch, searchSpaces, searchUsers, searchWithinSpace } from "@/lib/firebase-search";
 
 interface SearchResult {
   id: string;
@@ -246,6 +247,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q')?.trim();
     const category = searchParams.get('category');
+    const spaceId = searchParams.get('spaceId');
     const limit = parseInt(searchParams.get('limit') || '20');
 
     if (!query) {
@@ -257,56 +259,68 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    let allItems: any[] = [];
+    let results: any[] = [];
 
-    // Collect items based on category filter
-    if (!category || category === 'all') {
-      allItems = [
-        ...MOCK_SEARCH_DATA.spaces,
-        ...MOCK_SEARCH_DATA.tools,
-        ...MOCK_SEARCH_DATA.people,
-        ...MOCK_SEARCH_DATA.events,
-        ...MOCK_SEARCH_DATA.posts
-      ];
-    } else {
-      switch (category) {
-        case 'spaces':
-          allItems = MOCK_SEARCH_DATA.spaces;
-          break;
-        case 'tools':
-          allItems = MOCK_SEARCH_DATA.tools;
-          break;
-        case 'people':
-          allItems = MOCK_SEARCH_DATA.people;
-          break;
-        case 'events':
-          allItems = MOCK_SEARCH_DATA.events;
-          break;
-        case 'posts':
-          allItems = MOCK_SEARCH_DATA.posts;
-          break;
+    try {
+      // Use Firebase search based on category
+      if (spaceId) {
+        // Search within a specific space
+        results = await searchWithinSpace(spaceId, query, limit);
+      } else if (!category || category === 'all') {
+        // Global search across all content
+        results = await globalSearch(query, limit);
+      } else {
+        // Category-specific search
+        switch (category) {
+          case 'spaces':
+            results = await searchSpaces(query, limit);
+            break;
+          case 'people':
+          case 'users':
+            results = await searchUsers(query, limit);
+            break;
+          default:
+            // For other categories, use global search with type filter
+            const allResults = await globalSearch(query, limit);
+            results = allResults.filter(r => r.type === category);
+        }
       }
-    }
+    } catch (firebaseError) {
+      logger.warn('Firebase search failed, falling back to mock data', { error: firebaseError });
+      
+      // Fallback to mock data if Firebase fails
+      let allItems: any[] = [];
+      if (!category || category === 'all') {
+        allItems = [
+          ...MOCK_SEARCH_DATA.spaces,
+          ...MOCK_SEARCH_DATA.tools,
+          ...MOCK_SEARCH_DATA.people,
+          ...MOCK_SEARCH_DATA.events,
+          ...MOCK_SEARCH_DATA.posts
+        ];
+      } else {
+        allItems = MOCK_SEARCH_DATA[category as keyof typeof MOCK_SEARCH_DATA] || [];
+      }
 
-    // Filter and score results
-    const results: SearchResult[] = allItems
-      .map(item => ({
-        ...item,
-        relevanceScore: calculateRelevanceScore(item, query, category ?? undefined)
-      }))
-      .filter(item => item.relevanceScore > 0)
-      .sort((a, b) => b.relevanceScore - a.relevanceScore)
-      .slice(0, limit)
-      .map(({ keywords, ...item }) => item); // Remove keywords from response
+      results = allItems
+        .map(item => ({
+          ...item,
+          relevanceScore: calculateRelevanceScore(item, query, category ?? undefined)
+        }))
+        .filter(item => item.relevanceScore > 0)
+        .sort((a, b) => b.relevanceScore - a.relevanceScore)
+        .slice(0, limit);
+    }
 
     return NextResponse.json({
       results,
       totalCount: results.length,
       query,
       category: category || null,
+      spaceId: spaceId || null,
       suggestions: query.length > 2 ? [
         `${query} in spaces`,
-        `${query} tools`,
+        `${query} users`,
         `${query} events`
       ] : []
     });

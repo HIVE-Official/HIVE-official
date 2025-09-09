@@ -2,12 +2,17 @@
 
 import { useState, useCallback } from 'react';
 import { VisualToolComposer } from '@/components/tools/visual-tool-composer';
+import { useUnifiedAuth } from '@hive/ui';
+import { authenticatedFetch } from '@/lib/api-client';
+import { useToast } from '@/hooks/use-toast';
 
 // Define a simple Tool type for the builder
 interface Tool {
   id: string;
   name: string;
   description: string;
+  elements?: any[];
+  config?: any;
 }
 import { PageContainer } from "@/components/temp-stubs";
 import { Zap, Wrench, Code, Palette, Database, BarChart3, Users, Rocket, ArrowLeft } from 'lucide-react';
@@ -15,26 +20,61 @@ import { Zap, Wrench, Code, Palette, Database, BarChart3, Users, Rocket, ArrowLe
 export default function HiveLabPage() {
   const [mode, setMode] = useState<'overview' | 'visual' | 'template' | 'wizard'>('overview');
   const [, setCurrentTool] = useState<Tool | null>(null);
+  const { user } = useUnifiedAuth();
+  const { toast } = useToast();
 
   // Handle tool saving
   const handleToolSave = useCallback((tool: Tool) => {
     // Handle async operation without returning promise
     (async () => {
       try {
-        // In a real app, this would save to the backend
+        if (!user) {
+          toast({
+            title: "Authentication Required",
+            description: "Please sign in to save tools",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        // Save to Firebase via API
+        const response = await authenticatedFetch('/api/tools', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: tool.name,
+            description: tool.description,
+            elements: tool.elements || [],
+            config: tool.config || {},
+            status: 'draft',
+            visibility: 'private',
+            authorId: user.id
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save tool');
+        }
+
+        const savedTool = await response.json();
         
+        toast({
+          title: "Tool Saved!",
+          description: `"${tool.name}" has been saved to your tools library`,
+          variant: "default"
+        });
         
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        alert(`Tool "${tool.name}" saved successfully!`);
-        setCurrentTool(tool);
+        setCurrentTool(savedTool);
       } catch (error) {
         console.error('Failed to save tool:', error);
-        alert('Failed to save tool. Please try again.');
+        toast({
+          title: "Save Failed",
+          description: "Unable to save tool. Please try again.",
+          variant: "destructive"
+        });
       }
     })();
-  }, []);
+  }, [user, toast]);
 
   // Handle tool preview
   const handleToolPreview = useCallback((_tool: Tool) => {

@@ -14,7 +14,8 @@ import {
   Loader2,
   AlertCircle,
   Plus,
-  Minus
+  Minus,
+  Upload
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,6 +25,7 @@ import {
   useUIStore,
   useAuthStore
 } from '@hive/hooks';
+import { useImageUpload } from '@/hooks/use-image-upload';
 
 interface PostCreationModalMigratedProps {
   isOpen: boolean;
@@ -91,8 +93,12 @@ export function PostCreationModalMigrated({
   const [linkUrl, setLinkUrl] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '']);
   const [error, setError] = useState<string | null>(null);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadMultipleImages, isUploading, progress } = useImageUpload();
 
   // React Query mutation
   const createPost = useCreatePost();
@@ -103,7 +109,25 @@ export function PostCreationModalMigrated({
     setLinkUrl('');
     setPollOptions(['', '']);
     setError(null);
+    setSelectedImages([]);
+    setImageUrls([]);
     onClose();
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    
+    if (imageFiles.length + selectedImages.length > 4) {
+      setError('Maximum 4 images allowed');
+      return;
+    }
+    
+    setSelectedImages(prev => [...prev, ...imageFiles]);
+  };
+
+  const removeImage = (index: number) => {
+    setSelectedImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -129,11 +153,26 @@ export function PostCreationModalMigrated({
       }
     }
 
+    // Upload images if any
+    let uploadedImageUrls: string[] = [];
+    if (selectedImages.length > 0) {
+      try {
+        uploadedImageUrls = await uploadMultipleImages(
+          selectedImages, 
+          `spaces/${spaceId}/posts`
+        );
+      } catch (err) {
+        setError('Failed to upload images');
+        return;
+      }
+    }
+
     const postData: any = {
       spaceId,
       type: selectedType,
       content: content.trim(),
-      title: title.trim() || undefined
+      title: title.trim() || undefined,
+      images: uploadedImageUrls
     };
 
     if (selectedType === 'link') {

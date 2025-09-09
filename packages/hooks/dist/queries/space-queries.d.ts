@@ -57,6 +57,7 @@ export declare function useCreatePost(): import("@tanstack/react-query").UseMuta
     type: string;
     content: string;
     title?: string;
+    images?: string[];
     linkUrl?: string;
     pollOptions?: string[];
 }, unknown>;

@@ -20,6 +20,25 @@ const spaceGrotesk = SpaceGrotesk({
 export const metadata: Metadata = {
   title: "HIVE",
   description: "The social platform for builders.",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    viewportFit: 'cover', // For iOS safe areas
+  },
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A0A0B' }
+  ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'HIVE',
+  },
+  formatDetection: {
+    telephone: false, // Prevent iOS from making phone numbers clickable
+  },
 };
 
 export default function RootLayout({

@@ -16,6 +16,8 @@ export { Text as Typography } from './atomic/atoms/text.js';
 export { Avatar, AvatarImage, AvatarFallback } from './atomic/atoms/avatar.js';
 // Badge
 export { Badge } from './atomic/atoms/badge.js';
+// Alert system
+export { Alert, AlertTitle, AlertDescription } from './atomic/atoms/alert.js';
 // Container
 export { Container, PageContainer } from './atomic/atoms/container.js';
 // Tabs
@@ -27,6 +29,7 @@ export { FirebaseAuthProvider, FirebaseAuthProvider as UnifiedAuthProvider, useF
 // === MODALS ===
 export { HiveModal, HiveConfirmModal, HiveAlertModal } from './components/hive-modal.js';
 export { HiveModal as Modal, HiveModal as Dialog } from './components/hive-modal.js';
+export { HiveModal as DialogContent, HiveModal as DialogHeader, HiveModal as DialogTitle, HiveModal as DialogTrigger } from './components/hive-modal.js';
 // === FORM COMPONENTS ===
 export { FormField } from './atomic/molecules/form-field.js';
 export { ComprehensiveFormField } from './atomic/molecules/form-field-comprehensive.js';
