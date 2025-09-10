@@ -3,83 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Plus, Clock, MapPin, Users, CheckCircle2, XCircle, AlertCircle, Eye, Settings, TrendingUp, Activity, Filter } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-// Mock events data
-const mockEvents = [
-    {
-        id: '1',
-        title: 'Floor Meeting - New Policies',
-        description: 'Discussion about updated quiet hours and new guest policies. Pizza will be provided!',
-        type: 'meeting',
-        status: 'upcoming',
-        startDate: new Date(Date.now() + 4 * 60 * 60 * 1000), // 4 hours from now
-        endDate: new Date(Date.now() + 5 * 60 * 60 * 1000), // 5 hours from now
-        location: 'Common Room',
-        capacity: 30,
-        organizer: {
-            id: 'ra1',
-            name: 'Jordan Martinez',
-            role: 'RA'
-        },
-        rsvps: [
-            { userId: 'u1', userName: 'Sarah Chen', status: 'yes', timestamp: new Date() },
-            { userId: 'u2', userName: 'Alex Rodriguez', status: 'yes', timestamp: new Date() },
-            { userId: 'u3', userName: 'Taylor Kim', status: 'maybe', timestamp: new Date() },
-        ],
-        requiresRSVP: true,
-        rsvpDeadline: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
-        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-        tags: ['mandatory', 'policies']
-    },
-    {
-        id: '2',
-        title: 'Study Group - Midterms',
-        description: 'Group study session for CS 220 midterm. Bring your notes and questions!',
-        type: 'academic',
-        status: 'upcoming',
-        startDate: new Date(Date.now() + 22 * 60 * 60 * 1000), // Tomorrow
-        endDate: new Date(Date.now() + 25 * 60 * 60 * 1000),
-        location: 'Library Group Room 204',
-        capacity: 8,
-        organizer: {
-            id: 'u1',
-            name: 'Sarah Chen',
-            role: 'member'
-        },
-        rsvps: [
-            { userId: 'u2', userName: 'Alex Rodriguez', status: 'yes', timestamp: new Date() },
-            { userId: 'u4', userName: 'Morgan Davis', status: 'yes', timestamp: new Date() },
-        ],
-        requiresRSVP: true,
-        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        tags: ['study', 'cs220']
-    },
-    {
-        id: '3',
-        title: 'Movie Night - Marvel Marathon',
-        description: 'Starting with Iron Man and going through the MCU. Bring snacks!',
-        type: 'social',
-        status: 'upcoming',
-        startDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
-        endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000 + 6 * 60 * 60 * 1000), // 6 hours later
-        location: 'Common Room',
-        organizer: {
-            id: 'u3',
-            name: 'Taylor Kim',
-            role: 'member'
-        },
-        rsvps: [
-            { userId: 'u1', userName: 'Sarah Chen', status: 'maybe', timestamp: new Date() },
-            { userId: 'u2', userName: 'Alex Rodriguez', status: 'yes', timestamp: new Date() },
-            { userId: 'u4', userName: 'Morgan Davis', status: 'yes', timestamp: new Date() },
-            { userId: 'u5', userName: 'Jamie Park', status: 'yes', timestamp: new Date() },
-        ],
-        requiresRSVP: false,
-        createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-        tags: ['social', 'movies']
-    }
-];
-export const HiveEventsSurface = ({ space, events = mockEvents, maxEvents, canCreateEvents = false, canModerate = false, leaderMode, viewMode = 'list', onCreateEvent, onRSVPEvent, onEditEvent, onCancelEvent }) => {
+import { cn } from '../../lib/utils';
+export const HiveEventsSurface = ({ space, events = [], maxEvents, canCreateEvents = false, canModerate = false, leaderMode, viewMode = 'list', onCreateEvent, onRSVPEvent, onEditEvent, onCancelEvent }) => {
     const [filter, setFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('upcoming');
     const filteredEvents = useMemo(() => {

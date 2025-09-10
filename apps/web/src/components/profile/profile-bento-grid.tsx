@@ -164,6 +164,7 @@ function StatusUpdateModal({ onClose }: { onClose: () => void }) {
   const [emoji, setEmoji] = useState('🎯');
   const [text, setText] = useState('Thriving');
   const [availability, setAvailability] = useState('Available 2hr');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const vibeOptions = [
     { emoji: '🎯', text: 'Focused' },
@@ -262,13 +263,36 @@ function StatusUpdateModal({ onClose }: { onClose: () => void }) {
             Cancel
           </button>
           <button
-            onClick={() => {
-              // Save status
-              onClose();
+            onClick={async () => {
+              setIsUpdating(true);
+              try {
+                const response = await fetch('/api/profile/status', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    emoji,
+                    text,
+                    availability
+                  })
+                });
+                
+                if (response.ok) {
+                  onClose();
+                } else {
+                  console.error('Failed to update status');
+                }
+              } catch (error) {
+                console.error('Error updating status:', error);
+              } finally {
+                setIsUpdating(false);
+              }
             }}
-            className="flex-1 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors"
+            disabled={isUpdating}
+            className="flex-1 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50"
           >
-            Update Status
+            {isUpdating ? 'Updating...' : 'Update Status'}
           </button>
         </div>
       </motion.div>

@@ -22,6 +22,7 @@ import {
   Hash
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { GlobalSearch, useGlobalSearch } from '@/components/search/global-search';
 
 interface NavItem {
   label: string;
@@ -59,6 +60,7 @@ export function HiveAppShellV2({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { isOpen: isSearchOpen, open: openSearch, close: closeSearch } = useGlobalSearch();
 
   // Mock user data for dev
   const user = {
@@ -234,14 +236,16 @@ export function HiveAppShellV2({ children }: { children: React.ReactNode }) {
           <div className="h-full px-6 flex items-center justify-between">
             {/* Search Bar */}
             <div className="flex-1 max-w-lg">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                <input
-                  type="text"
-                  placeholder="Search HIVE..."
-                  className="w-full h-9 pl-10 pr-4 bg-[var(--hive-white)]/[0.06] border border-[var(--hive-white)]/[0.08] rounded-lg text-[13px] text-[var(--hive-text-primary)] placeholder-gray-500 focus:outline-none focus:border-[var(--hive-gold)]/40 focus:bg-[var(--hive-white)]/[0.08] transition-all"
-                />
-              </div>
+              <button
+                onClick={openSearch}
+                className="w-full h-9 px-4 bg-[var(--hive-white)]/[0.06] border border-[var(--hive-white)]/[0.08] rounded-lg text-[13px] text-gray-500 hover:bg-[var(--hive-white)]/[0.08] hover:border-[var(--hive-gold)]/40 transition-all flex items-center gap-3"
+              >
+                <Search className="h-4 w-4" />
+                <span className="flex-1 text-left">Search HIVE...</span>
+                <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 bg-[var(--hive-white)]/10 rounded text-[10px] font-mono">
+                  ⌘K
+                </kbd>
+              </button>
             </div>
 
             {/* Right Actions */}
@@ -359,6 +363,9 @@ export function HiveAppShellV2({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </main>
+
+      {/* Global Search Modal */}
+      <GlobalSearch isOpen={isSearchOpen} onClose={closeSearch} />
     </div>
   );
 }

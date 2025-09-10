@@ -295,7 +295,7 @@ async function aggregateFromAllSources(params: {
   config: AggregationConfig;
   forceRefresh: boolean;
 }): Promise<AggregatedContentItem[]> {
-  const { sources, config, forceRefresh } = params;
+  const { sources, config, forceRefresh } = await params;
   const aggregatedItems: AggregatedContentItem[] = [];
 
   const timeWindow = new Date();

@@ -69,5 +69,24 @@ export * from './tooltip';
 export * from './typography';
 export * from './navigation-preferences';
 
+
+// === UI COMPONENTS (for backward compatibility) ===
+// Re-export Card components directly for use in complete-hive-tools-system
+export { 
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '../ui/card';
+
+// Export tabs components
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent
+} from '../ui/tabs';
 // === HIVE SPACES SYSTEM ===
 export * from './space-category-card';

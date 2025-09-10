@@ -3,92 +3,92 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Plus, Calendar, MapPin, Users, Clock, ChevronDown, MessageCircle, Share2, Pin, MoreHorizontal, AlertCircle, CheckCircle2, Timer, Car, Coffee, BookOpen, Crown, TrendingUp } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-// Mock posts data for demo
-const mockPosts = [
-    {
-        id: '1',
-        type: 'study_session',
-        content: 'Anyone want to study for the midterm tomorrow? Library group room 204.',
-        author: {
-            id: 'user1',
-            name: 'Sarah Chen',
-            role: 'member'
-        },
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        coordinationType: 'study_session',
-        coordinationData: {
-            title: 'CS 220 Midterm Study Session',
-            description: 'Review data structures and algorithms',
-            location: 'Library Group Room 204',
-            datetime: new Date(Date.now() + 22 * 60 * 60 * 1000), // Tomorrow
-            capacity: 6,
-            responses: [
-                { userId: 'user2', response: 'yes', timestamp: new Date() },
-                { userId: 'user3', response: 'maybe', timestamp: new Date() },
-            ],
-            status: 'open',
-            organizer: 'user1'
-        },
-        reactions: [
-            { emoji: '📚', count: 3, userReacted: true },
-            { emoji: '👍', count: 2, userReacted: false }
-        ],
-        commentCount: 2
+import { cn } from '../../lib/utils';
+// Removed mock data - using real posts only
+/* const mockPosts: HiveSpacePost[] = [
+  {
+    id: '1',
+    type: 'study_session',
+    content: 'Anyone want to study for the midterm tomorrow? Library group room 204.',
+    author: {
+      id: 'user1',
+      name: 'Sarah Chen',
+      role: 'member'
     },
-    {
-        id: '2',
-        type: 'food_run',
-        content: 'Chipotle run in 30 minutes! Drop your orders in the comments.',
-        author: {
-            id: 'user2',
-            name: 'Alex Rodriguez',
-            role: 'member'
-        },
-        timestamp: new Date(Date.now() - 25 * 60 * 1000), // 25 minutes ago
-        coordinationType: 'food_run',
-        coordinationData: {
-            title: 'Chipotle Run',
-            description: 'Leaving from dorm lobby',
-            location: 'Chipotle on Main St',
-            datetime: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
-            deadline: new Date(Date.now() + 2 * 60 * 1000), // 2 minutes from now
-            responses: [
-                { userId: 'user4', response: 'yes', details: 'Burrito bowl, chicken, brown rice', timestamp: new Date() },
-                { userId: 'user5', response: 'yes', details: 'Burrito, steak, white rice', timestamp: new Date() },
-            ],
-            status: 'open',
-            organizer: 'user2'
-        },
-        reactions: [
-            { emoji: '🌯', count: 5, userReacted: false },
-            { emoji: '🔥', count: 2, userReacted: true }
-        ]
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    coordinationType: 'study_session',
+    coordinationData: {
+      title: 'CS 220 Midterm Study Session',
+      description: 'Review data structures and algorithms',
+      location: 'Library Group Room 204',
+      datetime: new Date(Date.now() + 22 * 60 * 60 * 1000), // Tomorrow
+      capacity: 6,
+      responses: [
+        { userId: 'user2', response: 'yes', timestamp: new Date() },
+        { userId: 'user3', response: 'maybe', timestamp: new Date() },
+      ],
+      status: 'open',
+      organizer: 'user1'
     },
-    {
-        id: '3',
-        type: 'announcement',
-        content: 'Reminder: Floor meeting tonight at 8 PM in the common room. We\'ll discuss the upcoming formal and new quiet hours policy.',
-        author: {
-            id: 'user6',
-            name: 'Jordan Martinez',
-            role: 'admin'
-        },
-        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-        isPinned: true,
-        reactions: [
-            { emoji: '👍', count: 8, userReacted: true },
-            { emoji: '📝', count: 3, userReacted: false }
-        ],
-        commentCount: 5
-    }
-];
+    reactions: [
+      { emoji: '📚', count: 3, userReacted: true },
+      { emoji: '👍', count: 2, userReacted: false }
+    ],
+    commentCount: 2
+  },
+  {
+    id: '2',
+    type: 'food_run',
+    content: 'Chipotle run in 30 minutes! Drop your orders in the comments.',
+    author: {
+      id: 'user2',
+      name: 'Alex Rodriguez',
+      role: 'member'
+    },
+    timestamp: new Date(Date.now() - 25 * 60 * 1000), // 25 minutes ago
+    coordinationType: 'food_run',
+    coordinationData: {
+      title: 'Chipotle Run',
+      description: 'Leaving from dorm lobby',
+      location: 'Chipotle on Main St',
+      datetime: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
+      deadline: new Date(Date.now() + 2 * 60 * 1000), // 2 minutes from now
+      responses: [
+        { userId: 'user4', response: 'yes', details: 'Burrito bowl, chicken, brown rice', timestamp: new Date() },
+        { userId: 'user5', response: 'yes', details: 'Burrito, steak, white rice', timestamp: new Date() },
+      ],
+      status: 'open',
+      organizer: 'user2'
+    },
+    reactions: [
+      { emoji: '🌯', count: 5, userReacted: false },
+      { emoji: '🔥', count: 2, userReacted: true }
+    ]
+  },
+  {
+    id: '3',
+    type: 'announcement',
+    content: 'Reminder: Floor meeting tonight at 8 PM in the common room. We\'ll discuss the upcoming formal and new quiet hours policy.',
+    author: {
+      id: 'user6',
+      name: 'Jordan Martinez',
+      role: 'admin'
+    },
+    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+    isPinned: true,
+    reactions: [
+      { emoji: '👍', count: 8, userReacted: true },
+      { emoji: '📝', count: 3, userReacted: false }
+    ],
+    commentCount: 5
+  }
+]; */
 export const HivePostsSurface = React.memo(({ space, posts: propsPosts, isLoading = false, mode = 'view', maxPosts, showFilters = true, canPost = false, canModerate = false, leaderMode, showLiveActivity = false, liveActivityCount = 0, currentUserId, onCreatePost, onCoordinationResponse, onUpdateCoordinationStatus, PostRenderer, onReaction, onShare, onDelete }) => {
     const [filter, setFilter] = useState('all');
     const [showCreateMenu, setShowCreateMenu] = useState(false);
     const filteredPosts = useMemo(() => {
-        // Use props posts if provided, otherwise fall back to mock data for development
-        let posts = propsPosts || mockPosts;
+        // Use real posts from props only - no mock data
+        let posts = propsPosts || [];
         if (filter === 'coordination') {
             posts = posts.filter(post => ['study_session', 'food_run', 'ride_share', 'meetup'].includes(post.type));
         }
@@ -100,6 +100,10 @@ export const HivePostsSurface = React.memo(({ space, posts: propsPosts, isLoadin
         }
         return posts;
     }, [filter, maxPosts, propsPosts]);
+    // Show loading state
+    if (isLoading) {
+        return (_jsx("div", { className: "flex items-center justify-center py-12", children: _jsx("div", { className: "animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)]" }) }));
+    }
     const getPostIcon = (type) => {
         switch (type) {
             case 'study_session': return _jsx(BookOpen, { className: "h-4 w-4" });

@@ -9,12 +9,12 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
  */
 import { memo, useState, useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { useNavigationState } from '../hooks/useNavigationState.js';
-import { MobileNavigation } from './MobileNavigation.js';
-import { DesktopSidebar, SidebarOverlay } from './DesktopSidebar.js';
-import { DesktopTopbar } from './DesktopTopbar.js';
-import { TabletDrawer, TabletDrawerTrigger } from './TabletDrawer.js';
-import { cn } from '../../lib/utils.js';
+import { useNavigationState } from '../hooks/useNavigationState';
+import { MobileNavigation } from './MobileNavigation';
+import { DesktopSidebar, SidebarOverlay } from './DesktopSidebar';
+import { DesktopTopbar } from './DesktopTopbar';
+import { TabletDrawer, TabletDrawerTrigger } from './TabletDrawer';
+import { cn } from '../../lib/utils';
 // ============================================================================
 // NAVIGATION LAYOUT WRAPPER
 // ============================================================================
@@ -121,5 +121,5 @@ export { NavigationContainer as default };
 // Re-export all navigation components for direct usage
 export { MobileNavigation, DesktopSidebar, DesktopTopbar, TabletDrawer, SidebarOverlay, TabletDrawerTrigger };
 // Re-export hooks and utilities
-export { useNavigationState } from '../hooks/useNavigationState.js';
+export { useNavigationState } from '../hooks/useNavigationState';
 //# sourceMappingURL=NavigationContainer.js.map

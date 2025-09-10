@@ -1,231 +1,213 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../atoms/tabs';
-import { ToolLibraryModal } from '../molecules/tool-library-modal';
-import { ToolConfigurationPanel } from '../molecules/tool-configuration-panel';
-import { ProfileHiveLabWidget } from '../molecules/profile-hivelab-widget';
-import { VisualToolComposer } from '../molecules/visual-tool-composer';
-import { Button } from '../atoms/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../atoms/card';
-import { Badge } from '../atoms/badge.js';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Package, Wrench, Users, TrendingUp, Rocket, Grid, Plus, Search, Settings, Share2, GitBranch, Zap } from 'lucide-react';
-// Campus-specific tool templates
-const CAMPUS_TEMPLATES = [
+import { useState, useCallback, useRef, useMemo } from 'react';
+import { Plus, Search, Download, Star, Eye, Settings, Code, Play, Save, Share2, Edit, Layout, Type, Image, Link, MousePointer, Sparkles, Zap, Target } from 'lucide-react';
+import { Button, Input, Card, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '../atoms';
+// Available element types for the visual builder
+const ELEMENT_TYPES = [
     {
-        id: 'study-group-coordinator',
-        name: 'Study Group Coordinator',
-        description: 'Organize study sessions with smart scheduling',
-        icon: '📚',
-        category: 'Academic',
-        popularity: 94,
-        features: ['Auto-scheduling', 'Resource sharing', 'Progress tracking']
+        type: 'input',
+        label: 'Text Input',
+        icon: Type,
+        color: 'text-blue-500',
+        defaultProps: {
+            placeholder: 'Enter text...',
+            label: 'Input Field',
+            required: false
+        }
     },
     {
-        id: 'laundry-tracker',
-        name: 'Laundry Tracker',
-        description: 'Never forget your laundry again',
-        icon: '🧺',
-        category: 'Daily Life',
-        popularity: 87,
-        features: ['Machine availability', 'Timer alerts', 'Building maps']
+        type: 'button',
+        label: 'Button',
+        icon: MousePointer,
+        color: 'text-green-500',
+        defaultProps: {
+            text: 'Click me',
+            variant: 'primary',
+            size: 'medium'
+        }
     },
     {
-        id: 'ride-share-hub',
-        name: 'Ride Share Hub',
-        description: 'Coordinate rides home with fellow students',
-        icon: '🚗',
-        category: 'Transportation',
-        popularity: 92,
-        features: ['Route matching', 'Cost splitting', 'Safety verification']
+        type: 'text',
+        label: 'Text Block',
+        icon: Type,
+        color: 'text-gray-500',
+        defaultProps: {
+            content: 'Sample text',
+            size: 'medium',
+            weight: 'normal'
+        }
     },
     {
-        id: 'meal-swap',
-        name: 'Meal Swap Coordinator',
-        description: 'Trade dining hall swipes efficiently',
-        icon: '🍕',
-        category: 'Food',
-        popularity: 78,
-        features: ['Swipe tracking', 'Fair trades', 'Dietary preferences']
+        type: 'image',
+        label: 'Image',
+        icon: Image,
+        color: 'text-purple-500',
+        defaultProps: {
+            src: '/placeholder-image.jpg',
+            alt: 'Image description',
+            fit: 'cover'
+        }
+    },
+    {
+        type: 'container',
+        label: 'Container',
+        icon: Layout,
+        color: 'text-orange-500',
+        defaultProps: {
+            padding: 16,
+            margin: 8,
+            backgroundColor: 'transparent',
+            borderRadius: 8
+        }
+    },
+    {
+        type: 'link',
+        label: 'Link',
+        icon: Link,
+        color: 'text-indigo-500',
+        defaultProps: {
+            text: 'Click here',
+            url: 'https://example.com',
+            target: '_blank'
+        }
     }
 ];
-export const CompleteHIVEToolsSystem = ({ userId, userProfile, spaceId, initialTab = 'marketplace', onToolInstall, onToolCreate, onToolDeploy }) => {
-    const [activeTab, setActiveTab] = useState(initialTab);
-    const [selectedTool, setSelectedTool] = useState(null);
-    const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-    const [isConfigOpen, setIsConfigOpen] = useState(false);
-    const [isComposerOpen, setIsComposerOpen] = useState(false);
-    const [personalTools, setPersonalTools] = useState([]);
-    const [marketplaceTools, setMarketplaceTools] = useState([]);
+export function CompleteHIVEToolsSystem({ tools, personalTools = [], onToolInstall, onToolCreate, onToolUpdate, onToolDelete, className = '' }) {
+    const [activeTab, setActiveTab] = useState('marketplace');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
-    // Load tools data
-    useEffect(() => {
-        loadMarketplaceTools();
-        loadPersonalTools();
-    }, [userId]);
-    const loadMarketplaceTools = async () => {
-        try {
-            const response = await fetch('/api/tools/browse', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ category: selectedCategory })
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setMarketplaceTools(data.tools || []);
-            }
+    const [builderMode, setBuilderMode] = useState('design');
+    const [selectedElement, setSelectedElement] = useState(null);
+    const [currentTool, setCurrentTool] = useState(null);
+    const [draggedElement, setDraggedElement] = useState(null);
+    const canvasRef = useRef(null);
+    // Filter tools based on search and category
+    const filteredTools = useMemo(() => {
+        let filtered = tools;
+        if (searchQuery) {
+            filtered = filtered.filter(tool => tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
         }
-        catch (error) {
-            console.error('Failed to load marketplace tools:', error);
+        if (selectedCategory !== 'all') {
+            filtered = filtered.filter(tool => tool.category === selectedCategory);
         }
-    };
-    const loadPersonalTools = async () => {
-        try {
-            const response = await fetch('/api/tools/personal');
-            if (response.ok) {
-                const data = await response.json();
-                setPersonalTools(data.tools || []);
-            }
-        }
-        catch (error) {
-            console.error('Failed to load personal tools:', error);
-        }
-    };
-    const handleInstallTool = async (toolId) => {
-        try {
-            const response = await fetch('/api/tools/install', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ toolId })
-            });
-            if (response.ok) {
-                await loadPersonalTools();
-                onToolInstall?.(toolId);
-                setActiveTab('personal');
-            }
-        }
-        catch (error) {
-            console.error('Failed to install tool:', error);
-        }
-    };
-    const handleCreateFromTemplate = async (templateId) => {
-        const template = CAMPUS_TEMPLATES.find(t => t.id === templateId);
-        if (!template)
+        return filtered;
+    }, [tools, searchQuery, selectedCategory]);
+    // Get unique categories
+    const categories = useMemo(() => {
+        const cats = [...new Set(tools.map(tool => tool.category))];
+        return ['all', ...cats];
+    }, [tools]);
+    // Handle element drag and drop
+    const handleElementDrag = useCallback((elementType, event) => {
+        event.dataTransfer.setData('elementType', elementType);
+        setDraggedElement(elementType);
+    }, []);
+    const handleCanvasDrop = useCallback((event) => {
+        event.preventDefault();
+        const elementType = event.dataTransfer.getData('elementType');
+        const canvas = canvasRef.current;
+        if (!canvas || !elementType)
             return;
-        try {
-            const response = await fetch('/api/tools', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    template: templateId,
-                    name: template.name,
-                    description: template.description
-                })
-            });
-            if (response.ok) {
-                const newTool = await response.json();
-                await loadPersonalTools();
-                onToolCreate?.(newTool);
-                setSelectedTool(newTool);
-                setIsConfigOpen(true);
-            }
-        }
-        catch (error) {
-            console.error('Failed to create tool from template:', error);
-        }
-    };
-    const handleDeployToSpace = async (toolId) => {
-        if (!spaceId)
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const elementTemplate = ELEMENT_TYPES.find(t => t.type === elementType);
+        if (!elementTemplate)
             return;
-        try {
-            const response = await fetch('/api/tools/deploy', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ toolId, spaceId })
-            });
-            if (response.ok) {
-                onToolDeploy?.(toolId, spaceId);
-            }
+        const newElement = {
+            id: `element-${Date.now()}`,
+            type: elementType,
+            label: elementTemplate.label,
+            properties: { ...elementTemplate.defaultProps },
+            position: { x, y },
+            size: { width: 200, height: 40 },
+            style: {}
+        };
+        setCurrentTool(prev => ({
+            ...prev,
+            elements: [...(prev?.elements || []), newElement]
+        }));
+        setDraggedElement(null);
+    }, []);
+    const handleCanvasDragOver = useCallback((event) => {
+        event.preventDefault();
+    }, []);
+    // Tool creation and management
+    const startNewTool = useCallback(() => {
+        setCurrentTool({
+            id: `tool-${Date.now()}`,
+            name: 'New Tool',
+            description: 'A custom tool created with HiveLab',
+            category: 'custom',
+            type: 'custom',
+            elements: [],
+            config: {}
+        });
+        setActiveTab('builder');
+        setBuilderMode('design');
+    }, []);
+    const saveTool = useCallback(() => {
+        if (currentTool && onToolCreate) {
+            onToolCreate(currentTool);
+            setCurrentTool(null);
+            setActiveTab('personal');
         }
-        catch (error) {
-            console.error('Failed to deploy tool:', error);
+    }, [currentTool, onToolCreate]);
+    const renderElement = useCallback((element) => {
+        const { type, properties, position, size, style } = element;
+        const isSelected = selectedElement === element.id;
+        const elementStyle = {
+            position: 'absolute',
+            left: position.x,
+            top: position.y,
+            width: size.width,
+            height: type === 'container' ? 'auto' : size.height,
+            minHeight: type === 'container' ? size.height : undefined,
+            border: isSelected ? '2px solid #3B82F6' : '1px solid #E5E7EB',
+            borderRadius: '6px',
+            padding: '8px',
+            cursor: 'pointer',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            ...style
+        };
+        const handleElementClick = () => setSelectedElement(element.id);
+        switch (type) {
+            case 'input':
+                return (_jsx("div", { style: elementStyle, onClick: handleElementClick, children: _jsx("input", { type: "text", placeholder: properties.placeholder, disabled: builderMode === 'design', className: "w-full border-0 bg-transparent outline-none" }) }, element.id));
+            case 'button':
+                return (_jsx("div", { style: elementStyle, onClick: handleElementClick, children: _jsx(Button, { size: "sm", variant: properties.variant, disabled: builderMode === 'design', className: "w-full", children: properties.text }) }, element.id));
+            case 'text':
+                return (_jsx("div", { style: elementStyle, onClick: handleElementClick, children: _jsx("span", { style: {
+                            fontSize: properties.size === 'large' ? '18px' : properties.size === 'small' ? '12px' : '14px',
+                            fontWeight: properties.weight
+                        }, children: properties.content }) }, element.id));
+            case 'image':
+                return (_jsx("div", { style: elementStyle, onClick: handleElementClick, children: _jsx("img", { src: properties.src, alt: properties.alt, className: "w-full h-full object-cover rounded" }) }, element.id));
+            case 'container':
+                return (_jsx("div", { style: {
+                        ...elementStyle,
+                        backgroundColor: properties.backgroundColor || 'rgba(249, 250, 251, 0.8)',
+                        padding: properties.padding || 16,
+                        minHeight: 100
+                    }, onClick: handleElementClick, children: _jsx("div", { className: "text-sm text-gray-500 text-center", children: "Container" }) }, element.id));
+            case 'link':
+                return (_jsx("div", { style: elementStyle, onClick: handleElementClick, children: _jsx("a", { href: builderMode === 'preview' ? properties.url : '#', target: properties.target, className: "text-blue-600 hover:text-blue-800 underline", onClick: (e) => builderMode === 'design' && e.preventDefault(), children: properties.text }) }, element.id));
+            default:
+                return null;
         }
-    };
-    const renderMarketplace = () => (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { children: [_jsxs("div", { className: "flex items-center justify-between mb-4", children: [_jsx("h3", { className: "text-lg font-semibold text-foreground-primary", children: "Quick Start Templates" }), _jsxs(Badge, { variant: "secondary", className: "bg-surface-secondary", children: [_jsx(Zap, { className: "w-3 h-3 mr-1" }), "UB Campus Optimized"] })] }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: CAMPUS_TEMPLATES.map((template) => (_jsxs(Card, { className: "border-border-primary hover:border-orange-primary/50 transition-all cursor-pointer group", onClick: () => handleCreateFromTemplate(template.id), children: [_jsx(CardHeader, { className: "pb-3", children: _jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx("span", { className: "text-2xl", children: template.icon }), _jsxs("div", { children: [_jsx(CardTitle, { className: "text-base", children: template.name }), _jsx(Badge, { variant: "outline", className: "mt-1 text-xs", children: template.category })] })] }), _jsxs("div", { className: "flex items-center gap-1 text-foreground-secondary", children: [_jsx(TrendingUp, { className: "w-4 h-4" }), _jsxs("span", { className: "text-sm", children: [template.popularity, "%"] })] })] }) }), _jsxs(CardContent, { children: [_jsx("p", { className: "text-sm text-foreground-secondary mb-3", children: template.description }), _jsx("div", { className: "flex flex-wrap gap-2", children: template.features.map((feature, i) => (_jsx(Badge, { variant: "secondary", className: "text-xs", children: feature }, i))) }), _jsxs(Button, { size: "sm", className: "w-full mt-3 group-hover:bg-orange-primary group-hover:text-white", variant: "outline", children: [_jsx(Plus, { className: "w-4 h-4 mr-1" }), "Quick Deploy"] })] })] }, template.id))) })] }), _jsxs("div", { children: [_jsxs("div", { className: "flex items-center justify-between mb-4", children: [_jsx("h3", { className: "text-lg font-semibold text-foreground-primary", children: "Community Tools" }), _jsxs(Button, { variant: "outline", size: "sm", onClick: () => setIsLibraryOpen(true), children: [_jsx(Search, { className: "w-4 h-4 mr-1" }), "Browse All"] })] }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4", children: marketplaceTools.slice(0, 6).map((tool) => (_jsxs(Card, { className: "border-border-primary hover:border-purple-primary/50 transition-all", children: [_jsxs(CardHeader, { className: "pb-3", children: [_jsx(CardTitle, { className: "text-sm", children: tool.name }), _jsxs(CardDescription, { className: "text-xs", children: ["by ", tool.metadata?.creatorName || 'Anonymous'] })] }), _jsxs(CardContent, { children: [_jsx("p", { className: "text-xs text-foreground-secondary mb-3 line-clamp-2", children: tool.description }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2 text-xs text-foreground-secondary", children: [_jsx(Users, { className: "w-3 h-3" }), _jsxs("span", { children: [tool.metadata?.installCount || 0, " users"] })] }), _jsxs(Button, { size: "sm", variant: "ghost", onClick: () => handleInstallTool(tool.id), children: [_jsx(Package, { className: "w-4 h-4 mr-1" }), "Install"] })] })] })] }, tool.id))) })] })] }));
-    const renderPersonalTools = () => (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h3", { className: "text-lg font-semibold text-foreground-primary", children: "Your Toolkit" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsxs(Badge, { variant: "secondary", children: [personalTools.length, " Tools"] }), _jsxs(Button, { size: "sm", onClick: () => setActiveTab('hivelab'), children: [_jsx(Plus, { className: "w-4 h-4 mr-1" }), "Create New"] })] })] }), personalTools.length === 0 ? (_jsx(Card, { className: "border-dashed", children: _jsxs(CardContent, { className: "flex flex-col items-center justify-center py-12", children: [_jsx(Package, { className: "w-12 h-12 text-foreground-secondary mb-4" }), _jsx("h4", { className: "text-lg font-medium mb-2", children: "No tools yet" }), _jsx("p", { className: "text-sm text-foreground-secondary text-center mb-4", children: "Install tools from the marketplace or create your own" }), _jsxs("div", { className: "flex gap-2", children: [_jsx(Button, { variant: "outline", size: "sm", onClick: () => setActiveTab('marketplace'), children: "Browse Marketplace" }), _jsx(Button, { size: "sm", onClick: () => setActiveTab('hivelab'), children: "Create Tool" })] })] }) })) : (_jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: personalTools.map((tool) => (_jsxs(Card, { className: "border-border-primary hover:shadow-lg transition-all", children: [_jsx(CardHeader, { children: _jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { children: [_jsx(CardTitle, { className: "text-base", children: tool.name }), _jsx(Badge, { variant: tool.status === 'published' ? 'default' : 'secondary', className: "mt-1 text-xs", children: tool.status })] }), _jsx(Button, { size: "sm", variant: "ghost", onClick: () => {
-                                            setSelectedTool(tool);
-                                            setIsConfigOpen(true);
-                                        }, children: _jsx(Settings, { className: "w-4 h-4" }) })] }) }), _jsxs(CardContent, { children: [_jsx("p", { className: "text-sm text-foreground-secondary mb-4 line-clamp-2", children: tool.description }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx("div", { className: "flex items-center gap-1", children: tool.metadata?.isCollaborative && (_jsxs(Badge, { variant: "outline", className: "text-xs", children: [_jsx(GitBranch, { className: "w-3 h-3 mr-1" }), "Collaborative"] })) }), _jsxs("div", { className: "flex gap-1", children: [spaceId && (_jsx(Button, { size: "sm", variant: "ghost", onClick: () => handleDeployToSpace(tool.id), children: _jsx(Rocket, { className: "w-4 h-4" }) })), _jsx(Button, { size: "sm", variant: "ghost", children: _jsx(Share2, { className: "w-4 h-4" }) })] })] })] })] }, tool.id))) }))] }));
-    const renderHiveLab = () => (_jsxs("div", { className: "space-y-6", children: [userProfile && (_jsx(ProfileHiveLabWidget, { profile: {
-                    name: userProfile.name,
-                    handle: userProfile.handle,
-                    avatar: userProfile.avatar,
-                    builderLevel: userProfile.builderLevel || 'novice',
-                    stats: {
-                        toolsBuilt: personalTools.filter(t => t.ownerId === userId).length,
-                        totalUsers: personalTools.reduce((sum, t) => sum + (t.metadata?.installCount || 0), 0),
-                        collaborations: personalTools.filter(t => t.metadata?.isCollaborative).length
-                    },
-                    recentBuilds: personalTools.slice(0, 3).map(t => ({
-                        id: t.id,
-                        name: t.name,
-                        users: t.metadata?.installCount || 0,
-                        trend: 'up'
-                    }))
-                } })), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-semibold text-foreground-primary mb-4", children: "Start Building" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [_jsx(Card, { className: "border-border-primary hover:border-orange-primary transition-all cursor-pointer", onClick: () => setIsComposerOpen(true), children: _jsx(CardHeader, { children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "p-2 bg-orange-primary/10 rounded-lg", children: _jsx(Sparkles, { className: "w-6 h-6 text-orange-primary" }) }), _jsxs("div", { children: [_jsx(CardTitle, { className: "text-base", children: "Visual Composer" }), _jsx(CardDescription, { children: "Drag and drop elements to build tools" })] })] }) }) }), _jsx(Card, { className: "border-border-primary hover:border-purple-primary transition-all cursor-pointer", onClick: () => setActiveTab('marketplace'), children: _jsx(CardHeader, { children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "p-2 bg-purple-primary/10 rounded-lg", children: _jsx(Grid, { className: "w-6 h-6 text-purple-primary" }) }), _jsxs("div", { children: [_jsx(CardTitle, { className: "text-base", children: "From Template" }), _jsx(CardDescription, { children: "Start with a proven campus solution" })] })] }) }) })] })] }), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-semibold text-foreground-primary mb-4", children: "Community Activity" }), _jsx(Card, { children: _jsx(CardContent, { className: "p-4", children: _jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx(Badge, { variant: "secondary", children: "New" }), _jsx("span", { className: "text-sm", children: "Study Buddy Matcher launched" })] }), _jsx("span", { className: "text-xs text-foreground-secondary", children: "2 hours ago" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx(Badge, { variant: "outline", children: "Update" }), _jsx("span", { className: "text-sm", children: "Laundry Tracker v2.0 released" })] }), _jsx("span", { className: "text-xs text-foreground-secondary", children: "5 hours ago" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx(Badge, { variant: "secondary", children: "Trending" }), _jsx("span", { className: "text-sm", children: "Event Coordinator hits 500 users" })] }), _jsx("span", { className: "text-xs text-foreground-secondary", children: "1 day ago" })] })] }) }) })] })] }));
-    return (_jsxs("div", { className: "w-full max-w-7xl mx-auto space-y-6", children: [_jsxs("div", { className: "flex flex-col gap-2", children: [_jsx("h1", { className: "text-2xl font-bold text-foreground-primary", children: "HiveLab & Tools" }), _jsx("p", { className: "text-foreground-secondary", children: "Build and share solutions that make campus life better" })] }), _jsxs(Tabs, { value: activeTab, onValueChange: setActiveTab, className: "w-full", children: [_jsxs(TabsList, { className: "grid w-full grid-cols-3 mb-6", children: [_jsxs(TabsTrigger, { value: "marketplace", className: "flex items-center gap-2", children: [_jsx(Package, { className: "w-4 h-4" }), "Marketplace"] }), _jsxs(TabsTrigger, { value: "personal", className: "flex items-center gap-2", children: [_jsx(Wrench, { className: "w-4 h-4" }), "Your Tools"] }), _jsxs(TabsTrigger, { value: "hivelab", className: "flex items-center gap-2", children: [_jsx(Sparkles, { className: "w-4 h-4" }), "HiveLab"] })] }), _jsx(AnimatePresence, { mode: "wait", children: _jsxs(motion.div, { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -10 }, transition: { duration: 0.2 }, children: [_jsx(TabsContent, { value: "marketplace", className: "mt-0", children: renderMarketplace() }), _jsx(TabsContent, { value: "personal", className: "mt-0", children: renderPersonalTools() }), _jsx(TabsContent, { value: "hivelab", className: "mt-0", children: renderHiveLab() })] }, activeTab) })] }), _jsx(ToolLibraryModal, { isOpen: isLibraryOpen, onClose: () => setIsLibraryOpen(false), onSelectTool: (tool) => {
-                    setSelectedTool(tool);
-                    setIsLibraryOpen(false);
-                    handleInstallTool(tool.id);
-                }, tools: marketplaceTools, categories: ['Academic', 'Daily Life', 'Transportation', 'Food', 'Social', 'Events'] }), selectedTool && (_jsx(ToolConfigurationPanel, { isOpen: isConfigOpen, onClose: () => {
-                    setIsConfigOpen(false);
-                    setSelectedTool(null);
-                }, tool: selectedTool, onSave: async (config) => {
-                    try {
-                        const response = await fetch(`/api/tools/${selectedTool.id}`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ config })
-                        });
-                        if (response.ok) {
-                            await loadPersonalTools();
-                            setIsConfigOpen(false);
-                        }
-                    }
-                    catch (error) {
-                        console.error('Failed to save tool config:', error);
-                    }
-                } })), _jsx(VisualToolComposer, { isOpen: isComposerOpen, onClose: () => setIsComposerOpen(false), onSave: async (elements) => {
-                    try {
-                        const response = await fetch('/api/tools', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                name: 'New Tool',
-                                description: 'Created with Visual Composer',
-                                elements
-                            })
-                        });
-                        if (response.ok) {
-                            const newTool = await response.json();
-                            await loadPersonalTools();
-                            onToolCreate?.(newTool);
-                            setIsComposerOpen(false);
-                            setActiveTab('personal');
-                        }
-                    }
-                    catch (error) {
-                        console.error('Failed to create tool:', error);
-                    }
-                }, availableElements: [
-                    { id: 'text-input', name: 'Text Input', category: 'input' },
-                    { id: 'button', name: 'Button', category: 'action' },
-                    { id: 'calendar', name: 'Calendar', category: 'scheduling' },
-                    { id: 'map', name: 'Map', category: 'location' },
-                    { id: 'chart', name: 'Chart', category: 'data' },
-                    { id: 'list', name: 'List', category: 'display' }
-                ] })] }));
-};
+    }, [selectedElement, builderMode]);
+    return (_jsxs("div", { className: `h-full flex flex-col ${className}`, children: [_jsxs("div", { className: "flex items-center justify-between p-4 border-b border-white/10", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Sparkles, { className: "h-6 w-6 text-[var(--hive-gold)]" }), _jsx("h2", { className: "text-xl font-semibold text-[var(--hive-text-inverse)]", children: "HIVE Tools" })] }), _jsxs(Button, { onClick: startNewTool, className: "bg-[var(--hive-gold)] text-[var(--hive-obsidian)]", children: [_jsx(Plus, { className: "h-4 w-4 mr-2" }), "Create Tool"] })] }), _jsxs(Tabs, { value: activeTab, onValueChange: (value) => setActiveTab(value), className: "flex-1 flex flex-col", children: [_jsxs(TabsList, { className: "w-full bg-white/5 p-1", children: [_jsxs(TabsTrigger, { value: "marketplace", className: "flex-1", children: [_jsx(Target, { className: "h-4 w-4 mr-2" }), "Marketplace"] }), _jsxs(TabsTrigger, { value: "personal", className: "flex-1", children: [_jsx(Settings, { className: "h-4 w-4 mr-2" }), "My Tools"] }), _jsxs(TabsTrigger, { value: "builder", className: "flex-1", children: [_jsx(Zap, { className: "h-4 w-4 mr-2" }), "HiveLab"] })] }), _jsxs(TabsContent, { value: "marketplace", className: "flex-1 flex flex-col", children: [_jsx("div", { className: "p-4 border-b border-white/10", children: _jsxs("div", { className: "flex gap-4 mb-4", children: [_jsxs("div", { className: "flex-1 relative", children: [_jsx(Search, { className: "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" }), _jsx(Input, { placeholder: "Search tools...", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), className: "pl-10" })] }), _jsx("select", { value: selectedCategory, onChange: (e) => setSelectedCategory(e.target.value), className: "px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)]", children: categories.map(cat => (_jsx("option", { value: cat, children: cat === 'all' ? 'All Categories' : cat.charAt(0).toUpperCase() + cat.slice(1) }, cat))) })] }) }), _jsx("div", { className: "flex-1 overflow-y-auto p-4", children: _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: filteredTools.map((tool) => {
+                                        const IconComponent = tool.icon;
+                                        return (_jsxs(Card, { className: "p-4 hover:bg-white/5 transition-colors", children: [_jsxs("div", { className: "flex items-start gap-3 mb-3", children: [_jsx("div", { className: "p-2 rounded-lg", style: { backgroundColor: `${tool.color}20` }, children: _jsx(IconComponent, { className: "h-5 w-5", style: { color: tool.color } }) }), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("h3", { className: "font-medium text-[var(--hive-text-inverse)] truncate", children: tool.name }), _jsx("p", { className: "text-sm text-gray-400 line-clamp-2", children: tool.description })] })] }), _jsxs("div", { className: "flex items-center gap-2 mb-3", children: [_jsxs("div", { className: "flex items-center gap-1", children: [_jsx(Star, { className: "h-3 w-3 text-yellow-400 fill-current" }), _jsxs("span", { className: "text-xs text-gray-400", children: [tool.rating, " (", tool.ratingCount, ")"] })] }), _jsxs("div", { className: "flex items-center gap-1", children: [_jsx(Download, { className: "h-3 w-3 text-gray-400" }), _jsx("span", { className: "text-xs text-gray-400", children: tool.downloads })] })] }), _jsx("div", { className: "flex flex-wrap gap-1 mb-3", children: tool.tags.slice(0, 3).map((tag) => (_jsx(Badge, { variant: "secondary", className: "text-xs", children: tag }, tag))) }), _jsxs("div", { className: "flex gap-2", children: [_jsx(Button, { size: "sm", className: "flex-1", onClick: () => onToolInstall?.(tool.id), disabled: tool.isInstalled, children: tool.isInstalled ? 'Installed' : 'Install' }), _jsx(Button, { size: "sm", variant: "outline", children: _jsx(Eye, { className: "h-4 w-4" }) })] })] }, tool.id));
+                                    }) }) })] }), _jsx(TabsContent, { value: "personal", className: "flex-1 flex flex-col", children: _jsx("div", { className: "flex-1 overflow-y-auto p-4", children: personalTools.length === 0 ? (_jsxs("div", { className: "flex flex-col items-center justify-center h-64", children: [_jsx(Zap, { className: "h-12 w-12 text-gray-400 mb-4" }), _jsx("h3", { className: "text-lg font-medium text-[var(--hive-text-inverse)] mb-2", children: "No personal tools yet" }), _jsx("p", { className: "text-gray-400 text-center mb-4", children: "Create your first custom tool using HiveLab or install tools from the marketplace." }), _jsxs(Button, { onClick: startNewTool, children: [_jsx(Plus, { className: "h-4 w-4 mr-2" }), "Create Your First Tool"] })] })) : (_jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: personalTools.map((tool) => {
+                                    const IconComponent = tool.icon;
+                                    return (_jsxs(Card, { className: "p-4 hover:bg-white/5 transition-colors", children: [_jsxs("div", { className: "flex items-start gap-3 mb-3", children: [_jsx("div", { className: "p-2 rounded-lg", style: { backgroundColor: `${tool.color}20` }, children: _jsx(IconComponent, { className: "h-5 w-5", style: { color: tool.color } }) }), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("h3", { className: "font-medium text-[var(--hive-text-inverse)] truncate", children: tool.name }), _jsx("p", { className: "text-sm text-gray-400 line-clamp-2", children: tool.description })] })] }), _jsxs("div", { className: "flex gap-2", children: [_jsxs(Button, { size: "sm", className: "flex-1", children: [_jsx(Play, { className: "h-4 w-4 mr-2" }), "Open"] }), _jsx(Button, { size: "sm", variant: "outline", children: _jsx(Edit, { className: "h-4 w-4" }) }), _jsx(Button, { size: "sm", variant: "outline", children: _jsx(Share2, { className: "h-4 w-4" }) })] })] }, tool.id));
+                                }) })) }) }), _jsx(TabsContent, { value: "builder", className: "flex-1 flex flex-col", children: !currentTool ? (_jsxs("div", { className: "flex flex-col items-center justify-center h-full", children: [_jsx(Code, { className: "h-16 w-16 text-gray-400 mb-4" }), _jsx("h3", { className: "text-xl font-semibold text-[var(--hive-text-inverse)] mb-2", children: "Welcome to HiveLab" }), _jsx("p", { className: "text-gray-400 text-center mb-6 max-w-md", children: "Build powerful tools for your campus community without writing any code. Drag and drop elements to create exactly what you need." }), _jsxs(Button, { onClick: startNewTool, size: "lg", children: [_jsx(Plus, { className: "h-5 w-5 mr-2" }), "Start Building"] })] })) : (_jsxs("div", { className: "flex-1 flex", children: [_jsxs("div", { className: "w-64 border-r border-white/10 p-4 bg-white/[0.02]", children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-inverse)] mb-4", children: "Elements" }), _jsx("div", { className: "space-y-2", children: ELEMENT_TYPES.map((elementType) => {
+                                                const IconComponent = elementType.icon;
+                                                return (_jsxs("div", { draggable: true, onDragStart: (e) => handleElementDrag(elementType.type, e), className: "flex items-center gap-2 p-3 rounded-lg border border-white/10 cursor-move hover:bg-white/5 transition-colors", children: [_jsx(IconComponent, { className: `h-4 w-4 ${elementType.color}` }), _jsx("span", { className: "text-sm text-[var(--hive-text-inverse)]", children: elementType.label })] }, elementType.type));
+                                            }) })] }), _jsxs("div", { className: "flex-1 flex flex-col", children: [_jsxs("div", { className: "flex items-center gap-2 p-4 border-b border-white/10", children: [_jsx(Input, { value: currentTool.name || '', onChange: (e) => setCurrentTool(prev => ({ ...prev, name: e.target.value })), className: "flex-1", placeholder: "Tool name..." }), _jsxs(Button, { onClick: saveTool, disabled: !currentTool.name, children: [_jsx(Save, { className: "h-4 w-4 mr-2" }), "Save"] })] }), _jsxs("div", { ref: canvasRef, className: "flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-auto", onDrop: handleCanvasDrop, onDragOver: handleCanvasDragOver, style: { minHeight: '500px' }, children: [currentTool.elements?.map(renderElement), draggedElement && (_jsx("div", { className: "absolute inset-0 bg-blue-500/10 border-2 border-dashed border-blue-500 pointer-events-none flex items-center justify-center", children: _jsxs("span", { className: "text-blue-600 font-medium", children: ["Drop to add ", ELEMENT_TYPES.find(t => t.type === draggedElement)?.label] }) }))] })] })] })) })] })] }));
+}
 //# sourceMappingURL=complete-hive-tools-system.js.map

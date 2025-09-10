@@ -1,12 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
-import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
+import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
 import { Wrench, Plus, ExternalLink, Star, Users, Settings, Share2, Heart, MoreVertical, Zap, Calendar, FileText, BarChart, Globe, Lock, Unlock, Code, Palette, Database, Cloud } from 'lucide-react';
+import { useFirebaseRealtime, useOptimisticUpdates } from '../../hooks/use-live-updates';
 import { formatDistanceToNow } from 'date-fns';
 // Category configuration
 const categoryConfig = {
@@ -88,123 +89,132 @@ const ToolCard = ({ tool, isLeader, variant = 'widget', onInstall, onUninstall, 
 export const HiveToolsSurface = ({ spaceId, spaceName, isLeader = false, currentUserId, className, variant = 'widget', tools: propTools, loading = false, error = null, onCreateTool, onInstallTool, onUninstallTool, onFavoriteTool, onConfigureTool, }) => {
     const [filter, setFilter] = useState('all');
     const [categoryFilter, setCategoryFilter] = useState('all');
-    // Mock data for development
-    const mockTools = useMemo(() => [
-        {
-            id: '1',
-            name: 'Task Manager Pro',
-            description: 'Advanced task management with Kanban boards, Gantt charts, and team collaboration features.',
-            category: 'productivity',
-            icon: 'calendar',
-            creator: {
-                id: '1',
-                name: 'Sarah Chen'
-            },
-            stats: {
-                users: 234,
-                rating: 4.8,
-                reviews: 45
-            },
-            status: 'active',
-            visibility: 'public',
-            url: 'https://taskmanager.example.com',
-            features: ['Kanban boards', 'Gantt charts', 'Time tracking', 'Team collaboration'],
-            lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
-            price: { type: 'freemium' },
-            isInstalled: true,
-            isFavorite: true
+    // No mock data - use real tools only
+    const emptyTools = [];
+    /* Removed mock data
+    const mockTools: SpaceTool[] = useMemo(() => [
+      {
+        id: '1',
+        name: 'Task Manager Pro',
+        description: 'Advanced task management with Kanban boards, Gantt charts, and team collaboration features.',
+        category: 'productivity',
+        icon: 'calendar',
+        creator: {
+          id: '1',
+          name: 'Sarah Chen'
         },
-        {
-            id: '2',
-            name: 'Analytics Dashboard',
-            description: 'Real-time analytics and insights for your space activities and member engagement.',
-            category: 'analytics',
-            icon: 'analytics',
-            creator: {
-                id: '2',
-                name: 'Marcus Johnson'
-            },
-            stats: {
-                users: 156,
-                rating: 4.6,
-                reviews: 28
-            },
-            status: 'active',
-            visibility: 'space',
-            features: ['Real-time data', 'Custom reports', 'Export to CSV', 'API access'],
-            lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10),
-            price: { type: 'free' },
-            isInstalled: true
+        stats: {
+          users: 234,
+          rating: 4.8,
+          reviews: 45
         },
-        {
-            id: '3',
-            name: 'Meeting Scheduler',
-            description: 'Smart scheduling tool that finds the best time for everyone and integrates with calendars.',
-            category: 'collaboration',
-            icon: 'calendar',
-            creator: {
-                id: '3',
-                name: 'Emily Rodriguez'
-            },
-            stats: {
-                users: 89,
-                rating: 4.3,
-                reviews: 12
-            },
-            status: 'beta',
-            visibility: 'public',
-            url: 'https://scheduler.example.com',
-            features: ['Calendar sync', 'Time zone support', 'Availability finder'],
-            lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
-            price: { type: 'free' },
-            isInstalled: false
+        status: 'active',
+        visibility: 'public',
+        url: 'https://taskmanager.example.com',
+        features: ['Kanban boards', 'Gantt charts', 'Time tracking', 'Team collaboration'],
+        lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
+        price: { type: 'freemium' },
+        isInstalled: true,
+        isFavorite: true
+      },
+      {
+        id: '2',
+        name: 'Analytics Dashboard',
+        description: 'Real-time analytics and insights for your space activities and member engagement.',
+        category: 'analytics',
+        icon: 'analytics',
+        creator: {
+          id: '2',
+          name: 'Marcus Johnson'
         },
-        {
-            id: '4',
-            name: 'Code Review Bot',
-            description: 'Automated code review assistant that helps maintain code quality and standards.',
-            category: 'automation',
-            icon: 'code',
-            creator: {
-                id: '4',
-                name: 'Alex Kim'
-            },
-            stats: {
-                users: 67,
-                rating: 4.5,
-                reviews: 8
-            },
-            status: 'active',
-            visibility: 'public',
-            features: ['GitHub integration', 'Style checking', 'Security scanning'],
-            lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 15),
-            price: { type: 'paid', amount: '$10/mo' },
-            isInstalled: false
+        stats: {
+          users: 156,
+          rating: 4.6,
+          reviews: 28
         },
-        {
-            id: '5',
-            name: 'Social Feed Widget',
-            description: 'Embed your space\'s social feed anywhere with customizable themes and filters.',
-            category: 'social',
-            icon: 'global',
-            creator: {
-                id: '1',
-                name: 'Sarah Chen'
-            },
-            stats: {
-                users: 45,
-                rating: 4.2,
-                reviews: 6
-            },
-            status: 'coming_soon',
-            visibility: 'public',
-            features: ['Embeddable widget', 'Custom themes', 'Content filtering'],
-            lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
-            price: { type: 'free' },
-            isInstalled: false
-        }
+        status: 'active',
+        visibility: 'space',
+        features: ['Real-time data', 'Custom reports', 'Export to CSV', 'API access'],
+        lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10),
+        price: { type: 'free' },
+        isInstalled: true
+      },
+      {
+        id: '3',
+        name: 'Meeting Scheduler',
+        description: 'Smart scheduling tool that finds the best time for everyone and integrates with calendars.',
+        category: 'collaboration',
+        icon: 'calendar',
+        creator: {
+          id: '3',
+          name: 'Emily Rodriguez'
+        },
+        stats: {
+          users: 89,
+          rating: 4.3,
+          reviews: 12
+        },
+        status: 'beta',
+        visibility: 'public',
+        url: 'https://scheduler.example.com',
+        features: ['Calendar sync', 'Time zone support', 'Availability finder'],
+        lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
+        price: { type: 'free' },
+        isInstalled: false
+      },
+      {
+        id: '4',
+        name: 'Code Review Bot',
+        description: 'Automated code review assistant that helps maintain code quality and standards.',
+        category: 'automation',
+        icon: 'code',
+        creator: {
+          id: '4',
+          name: 'Alex Kim'
+        },
+        stats: {
+          users: 67,
+          rating: 4.5,
+          reviews: 8
+        },
+        status: 'active',
+        visibility: 'public',
+        features: ['GitHub integration', 'Style checking', 'Security scanning'],
+        lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 15),
+        price: { type: 'paid', amount: '$10/mo' },
+        isInstalled: false
+      },
+      {
+        id: '5',
+        name: 'Social Feed Widget',
+        description: 'Embed your space\'s social feed anywhere with customizable themes and filters.',
+        category: 'social',
+        icon: 'global',
+        creator: {
+          id: '1',
+          name: 'Sarah Chen'
+        },
+        stats: {
+          users: 45,
+          rating: 4.2,
+          reviews: 6
+        },
+        status: 'coming_soon',
+        visibility: 'public',
+        features: ['Embeddable widget', 'Custom themes', 'Content filtering'],
+        lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+        price: { type: 'free' },
+        isInstalled: false
+      }
     ], []);
-    const tools = propTools || mockTools;
+    */
+    // Real-time tools data
+    const { data: realtimeTools, loading: realtimeLoading, error: realtimeError } = useFirebaseRealtime('tools', [{ field: 'spaceId', operator: '==', value: spaceId }], 'createdAt', 20, [spaceId]);
+    const { data: optimisticTools } = useOptimisticUpdates(propTools || realtimeTools || []);
+    // Use optimistic tools for immediate UI updates
+    const tools = optimisticTools || emptyTools;
+    const isLoading = loading || realtimeLoading;
+    const displayError = error || realtimeError;
     // Filter tools
     const filteredTools = useMemo(() => {
         let filtered = [...tools];
@@ -234,11 +244,11 @@ export const HiveToolsSurface = ({ spaceId, spaceName, isLeader = false, current
         const favorites = tools.filter(t => t.isFavorite).length;
         return { installed, favorites, total: tools.length };
     }, [tools]);
-    if (loading) {
+    if (isLoading) {
         return (_jsx("div", { className: cn("space-y-4", className), children: _jsxs("div", { className: "animate-pulse", children: [_jsx("div", { className: "bg-gray-200 rounded-lg h-20 mb-4" }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [1, 2, 3, 4].map((i) => (_jsx("div", { className: "bg-gray-100 rounded-lg h-32" }, i))) })] }) }));
     }
-    if (error) {
-        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load tools" }), _jsx("p", { className: "text-sm text-gray-500", children: error.message })] }) }));
+    if (displayError) {
+        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load tools" }), _jsx("p", { className: "text-sm text-gray-500", children: displayError.message })] }) }));
     }
     return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: variant === 'full' && spaceName ? `${spaceName} Tools` : 'Tools' }), _jsxs("p", { className: "text-sm text-gray-500 mt-1", children: [stats.installed, " installed \u2022 ", stats.total - stats.installed, " available"] })] }), _jsxs("div", { className: "flex items-center gap-2", children: [variant === 'full' && (_jsxs(_Fragment, { children: [_jsxs("select", { value: filter, onChange: (e) => setFilter(e.target.value), className: "px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]", children: [_jsx("option", { value: "all", children: "All Tools" }), _jsx("option", { value: "installed", children: "Installed" }), _jsx("option", { value: "available", children: "Available" })] }), _jsxs("select", { value: categoryFilter, onChange: (e) => setCategoryFilter(e.target.value), className: "px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]", children: [_jsx("option", { value: "all", children: "All Categories" }), _jsx("option", { value: "productivity", children: "Productivity" }), _jsx("option", { value: "collaboration", children: "Collaboration" }), _jsx("option", { value: "analytics", children: "Analytics" }), _jsx("option", { value: "automation", children: "Automation" }), _jsx("option", { value: "social", children: "Social" }), _jsx("option", { value: "custom", children: "Custom" })] })] })), isLeader && (_jsxs(HiveButton, { variant: "primary", size: "sm", onClick: onCreateTool, className: "flex items-center gap-2", children: [_jsx(Plus, { className: "h-4 w-4" }), variant === 'widget' ? 'Add' : 'Create Tool'] }))] })] }), _jsx("div", { className: cn("grid gap-4", variant === 'full' ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"), children: filteredTools.length === 0 ? (_jsx(HiveCard, { className: "col-span-full p-8", children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx(Wrench, { className: "h-12 w-12 text-gray-400 mx-auto" }), _jsx("p", { className: "text-gray-600", children: "No tools found" }), _jsx("p", { className: "text-sm text-gray-500", children: filter === 'installed'
                                     ? "Install tools to enhance your space"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Badge } from '@hive/ui';
 import { 
   Edit,
@@ -14,16 +14,22 @@ import {
   Shield,
   Ghost,
   Sparkles,
-  Clock
+  Clock,
+  Plus,
+  X,
+  Upload
 } from 'lucide-react';
 import { useProfileModern } from '@hive/hooks';
 import Image from 'next/image';
+import { uploadProfilePhoto } from '@/lib/profile-firebase';
+import { auth } from '@/lib/firebase';
 
 interface Photo {
   id: string;
   url: string;
   context: string[];
   privacy: 'public' | 'friends' | 'private';
+  order?: number;
 }
 
 interface IdentityModuleProps {
@@ -34,14 +40,9 @@ interface IdentityModuleProps {
 export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps) {
   const { profile, updateProfile } = useProfileModern();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-  const [photos, setPhotos] = useState<Photo[]>([
-    {
-      id: '1',
-      url: profile?.avatarUrl || '/default-avatar.png',
-      context: ['main', 'campus'],
-      privacy: 'public'
-    }
-  ]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [status, setStatus] = useState({
     vibe: '🎯',
@@ -50,12 +51,112 @@ export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps)
     expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000)
   });
 
+  // Load photos from profile
+  useEffect(() => {
+    if (profile?.photos && profile.photos.length > 0) {
+      setPhotos(profile.photos);
+    } else if (profile?.avatarUrl) {
+      // Fallback to avatar if no photos array
+      setPhotos([{
+        id: '1',
+        url: profile.avatarUrl,
+        context: ['main'],
+        privacy: 'public'
+      }]);
+    } else {
+      // Default placeholder
+      setPhotos([{
+        id: 'default',
+        url: '/default-avatar.png',
+        context: ['main'],
+        privacy: 'public'
+      }]);
+    }
+  }, [profile]);
+
+  // Load status from profile
+  useEffect(() => {
+    if (profile?.currentStatus) {
+      setStatus({
+        vibe: profile.currentStatus.emoji || '🎯',
+        text: profile.currentStatus.text || 'Active',
+        availability: profile.currentStatus.availability || 'Available',
+        expiresAt: profile.currentStatus.expiresAt || new Date()
+      });
+    }
+  }, [profile]);
+
   const nextPhoto = () => {
     setCurrentPhotoIndex((prev) => (prev + 1) % photos.length);
   };
 
   const prevPhoto = () => {
     setCurrentPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  };
+
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !auth.currentUser) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be less than 5MB');
+      return;
+    }
+
+    setIsUploadingPhoto(true);
+    try {
+      const photoUrl = await uploadProfilePhoto(auth.currentUser.uid, file, ['profile']);
+      
+      // Update local state
+      const newPhoto: Photo = {
+        id: `photo_${Date.now()}`,
+        url: photoUrl,
+        context: ['profile'],
+        privacy: 'public',
+        order: photos.length
+      };
+      
+      setPhotos([...photos, newPhoto]);
+      setCurrentPhotoIndex(photos.length); // Show the new photo
+      
+      // Clear input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      alert('Failed to upload photo. Please try again.');
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  const removePhoto = async (photoId: string) => {
+    if (photos.length <= 1) {
+      alert('You must have at least one photo');
+      return;
+    }
+
+    const photoIndex = photos.findIndex(p => p.id === photoId);
+    if (photoIndex === -1) return;
+
+    // Remove from local state
+    const newPhotos = photos.filter(p => p.id !== photoId);
+    setPhotos(newPhotos);
+    
+    // Adjust current index if needed
+    if (currentPhotoIndex >= newPhotos.length) {
+      setCurrentPhotoIndex(newPhotos.length - 1);
+    }
+
+    // TODO: Also remove from Firebase
   };
 
   const getVerificationBadge = () => {
@@ -100,16 +201,40 @@ export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps)
                 <>
                   <button
                     onClick={prevPhoto}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 p-1 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 p-1 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity rounded-r"
                   >
                     <ChevronLeft className="h-3 w-3" />
                   </button>
                   <button
                     onClick={nextPhoto}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 p-1 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 p-1 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity rounded-l"
                   >
                     <ChevronRight className="h-3 w-3" />
                   </button>
+                </>
+              )}
+              
+              {/* Add photo button */}
+              {editable && (
+                <>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingPhoto}
+                    className="absolute bottom-0 right-0 p-1.5 bg-accent rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    {isUploadingPhoto ? (
+                      <div className="h-3 w-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Camera className="h-3 w-3 text-white" />
+                    )}
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
                 </>
               )}
             </div>
@@ -120,11 +245,12 @@ export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps)
                 {photos.map((_, idx) => (
                   <div
                     key={idx}
-                    className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                    className={`w-1.5 h-1.5 rounded-full transition-colors cursor-pointer ${
                       idx === currentPhotoIndex 
                         ? 'bg-accent' 
                         : 'bg-muted-foreground/30'
                     }`}
+                    onClick={() => setCurrentPhotoIndex(idx)}
                   />
                 ))}
               </div>
@@ -212,6 +338,38 @@ export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps)
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
+                </>
+              )}
+              
+              {/* Add/Remove photo buttons */}
+              {editable && (
+                <>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingPhoto}
+                    className="absolute bottom-1 right-1 p-2 bg-accent rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent/90"
+                  >
+                    {isUploadingPhoto ? (
+                      <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Camera className="h-4 w-4 text-white" />
+                    )}
+                  </button>
+                  {photos.length > 1 && (
+                    <button
+                      onClick={() => removePhoto(photos[currentPhotoIndex].id)}
+                      className="absolute top-1 right-1 p-1.5 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                    >
+                      <X className="h-3 w-3 text-white" />
+                    </button>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
                 </>
               )}
             </div>

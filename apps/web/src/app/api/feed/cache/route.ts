@@ -235,7 +235,7 @@ function generateCacheKey(params: {
   timeRange: string;
   qualityThreshold: number;
 }): string {
-  const { userId, feedType, spaceIds, contentTypes, timeRange, qualityThreshold } = params;
+  const { userId, feedType, spaceIds, contentTypes, timeRange, qualityThreshold } = await params;
   
   const keyData = {
     userId,
@@ -299,7 +299,7 @@ async function cacheFeedContent(params: {
   parameters: any;
 }): Promise<void> {
   try {
-    const { userId, cacheKey, feedType, content, metadata, parameters } = params;
+    const { userId, cacheKey, feedType, content, metadata, parameters } = await params;
     
     const now = new Date();
     const expiresAt = new Date(now.getTime() + (15 * 60 * 1000)); // 15 minutes TTL

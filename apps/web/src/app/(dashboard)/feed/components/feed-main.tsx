@@ -148,40 +148,64 @@ export function FeedMain() {
       try {
         setIsLoading(true);
 
-        // Mock feed data - would be fetched from APIs in production
-        const mockPosts: FeedPost[] = [
-          {
-            id: 'post-1',
+        // Fetch real feed data from API
+        const response = await fetch('/api/feed', {
+          headers: {
+            'Authorization': `Bearer ${user?.token || 'test-token'}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          const posts = data.posts || [];
+          
+          // Transform API response to feed format
+          const transformedPosts: FeedPost[] = posts.map((post: any) => ({
+            id: post.id,
             type: 'post',
-            userId: 'user-123',
-            userName: 'Sarah Chen',
-            userHandle: '@sarahc_cs',
-            userAvatar: '/avatars/sarah.jpg',
-            spaceId: 'cs-major-lounge',
-            spaceName: 'CS Major Lounge',
-            spaceCategory: 'Academic',
+            userId: post.authorId || post.author?.id || 'unknown',
+            userName: post.author?.fullName || post.author?.name || 'Unknown User',
+            userHandle: post.author?.handle || '@unknown',
+            userAvatar: post.author?.photoURL || post.author?.avatar,
+            spaceId: post._metadata?.spaceId,
+            spaceName: post._metadata?.spaceName || 'Unknown Space',
+            spaceCategory: post.spaceCategory || 'General',
             content: {
-              text: 'Just finished my Operating Systems project! Built a custom shell with process management. The threading concepts finally clicked 🧠⚡',
-              title: 'OS Project Complete!'
+              text: post.content,
+              title: post.title
             },
-            stats: { likes: 24, comments: 8, shares: 3, views: 127 },
-            interactions: { liked: false, bookmarked: true, shared: false },
-            timestamp: '2 hours ago',
-            tags: ['CS', 'Operating Systems', 'Project']
-          },
-          // ... more mock posts
-        ];
-
-        setFeedPosts(mockPosts);
-        setFeedStats(prev => ({ 
-          ...prev, 
-          todayPosts: mockPosts.length,
-          activeSpaces: 12,
-          toolsShared: 8,
-          upcomingEvents: 5
-        }));
+            stats: {
+              likes: post.reactions?.heart || 0,
+              comments: post.commentCount || 0,
+              shares: 0,
+              views: 0
+            },
+            interactions: {
+              liked: false,
+              bookmarked: false,
+              shared: false
+            },
+            timestamp: post.createdAt ? new Date(post.createdAt).toLocaleString() : 'Unknown',
+            isPinned: post.isPinned,
+            tags: post.tags || []
+          }));
+          
+          setFeedPosts(transformedPosts);
+          setFeedStats(prev => ({ 
+            ...prev, 
+            todayPosts: transformedPosts.length,
+            activeSpaces: data.analytics?.totalMemberships || 0,
+            toolsShared: 0,
+            upcomingEvents: 0
+          }));
+        } else {
+          console.error('Failed to fetch feed data');
+          setFeedPosts([]);
+        }
       } catch (error) {
         console.error('Error loading feed:', error);
+        setFeedPosts([]);
       } finally {
         setIsLoading(false);
       }

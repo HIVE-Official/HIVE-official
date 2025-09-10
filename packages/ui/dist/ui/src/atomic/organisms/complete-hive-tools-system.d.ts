@@ -1,19 +1,55 @@
 import React from 'react';
-import type { Tool } from '@hive/core';
-interface CompleteHIVEToolsSystemProps {
-    userId: string;
-    userProfile?: {
-        name: string;
-        handle: string;
-        avatar?: string;
-        builderLevel?: 'novice' | 'apprentice' | 'journeyman' | 'expert' | 'master';
+interface ToolElement {
+    id: string;
+    type: 'input' | 'button' | 'text' | 'image' | 'container' | 'link';
+    label: string;
+    properties: Record<string, any>;
+    position: {
+        x: number;
+        y: number;
     };
-    spaceId?: string;
-    initialTab?: 'marketplace' | 'personal' | 'hivelab';
-    onToolInstall?: (toolId: string) => void;
-    onToolCreate?: (tool: Tool) => void;
-    onToolDeploy?: (toolId: string, spaceId: string) => void;
+    size: {
+        width: number;
+        height: number;
+    };
+    style?: Record<string, any>;
+    events?: Array<{
+        trigger: string;
+        action: string;
+        target?: string;
+        data?: any;
+    }>;
 }
-export declare const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps>;
+interface Tool {
+    id: string;
+    name: string;
+    description: string;
+    category: string;
+    type: 'template' | 'custom' | 'installed';
+    icon: React.ComponentType<any>;
+    color: string;
+    downloads: number;
+    rating: number;
+    ratingCount: number;
+    creator: string;
+    creatorType: 'student' | 'faculty' | 'community' | 'verified';
+    tags: string[];
+    version: string;
+    isInstalled?: boolean;
+    isFavorite?: boolean;
+    lastUsed?: string;
+    elements?: ToolElement[];
+    config?: Record<string, any>;
+}
+interface CompleteHIVEToolsSystemProps {
+    tools: Tool[];
+    personalTools?: Tool[];
+    onToolInstall?: (toolId: string) => void;
+    onToolCreate?: (tool: Partial<Tool>) => void;
+    onToolUpdate?: (toolId: string, updates: Partial<Tool>) => void;
+    onToolDelete?: (toolId: string) => void;
+    className?: string;
+}
+export declare function CompleteHIVEToolsSystem({ tools, personalTools, onToolInstall, onToolCreate, onToolUpdate, onToolDelete, className }: CompleteHIVEToolsSystemProps): import("react/jsx-runtime").JSX.Element;
 export {};
 //# sourceMappingURL=complete-hive-tools-system.d.ts.map

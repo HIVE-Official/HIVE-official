@@ -43,20 +43,20 @@ export async function GET(request: NextRequest) {
       .where("visibility", "in", ["public", "campus"]);
 
     // Apply filters
-    if (params.category) {
-      query = query.where("category", "==", params.category);
+    if ((await params).category) {
+      query = query.where("category", "==", (await params).category);
     }
 
-    if (params.type) {
-      query = query.where("type", "==", params.type);
+    if ((await params).type) {
+      query = query.where("type", "==", (await params).type);
     }
 
-    if (params.featured) {
+    if ((await params).featured) {
       query = query.where("featured", "==", true);
     }
 
     // Apply sorting
-    switch (params.sortBy) {
+    switch ((await params).sortBy) {
       case 'popular':
         query = query.orderBy("analytics.deployments", "desc");
         break;
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply pagination
-    query = query.limit(params.limit).offset(params.offset);
+    query = query.limit((await params).limit).offset((await params).offset);
 
     const snapshot = await query.get();
     const tools = [];
@@ -81,8 +81,8 @@ export async function GET(request: NextRequest) {
       const toolData = doc.data();
       
       // Apply text search if query provided
-      if (params.query) {
-        const searchLower = params.query.toLowerCase();
+      if ((await params).query) {
+        const searchLower = (await params).query.toLowerCase();
         const matchesSearch = 
           toolData.name.toLowerCase().includes(searchLower) ||
           toolData.description.toLowerCase().includes(searchLower) ||
@@ -150,9 +150,9 @@ export async function GET(request: NextRequest) {
       tools,
       categories,
       pagination: {
-        limit: params.limit,
-        offset: params.offset,
-        hasMore: snapshot.size === params.limit,
+        limit: (await params).limit,
+        offset: (await params).offset,
+        hasMore: snapshot.size === (await params).limit,
         total: tools.length
       }
     });

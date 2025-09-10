@@ -35,12 +35,12 @@ const CreateSpaceModal = dynamic(
 
 // Space category filters - aligned with new HIVE system
 const spaceTypeFilters = [
-  { id: "all", label: "All Spaces", color: "bg-gray-500", emoji: "🌐", subtitle: "Every community" },
-  { id: "student_organizations", label: "Student Spaces", color: "bg-blue-500", emoji: "🎯", subtitle: "Student-led communities" },
-  { id: "university_organizations", label: "University Spaces", color: "bg-emerald-500", emoji: "🎓", subtitle: "Academic programs" },
-  { id: "greek_life", label: "Greek Life", color: "bg-[var(--hive-gold)]", emoji: "🏛️", subtitle: "Fraternities & sororities" },
-  { id: "campus_living", label: "Residential Life", color: "bg-[var(--hive-gold)]", emoji: "🏠", subtitle: "Dorms & living communities" },
-  { id: "hive_exclusive", label: "HIVE Exclusive", color: "bg-indigo-500", emoji: "💎", subtitle: "Platform specials" },
+  { id: "all", label: "All Spaces", color: "bg-neutral-500", icon: Compass, subtitle: "Every community" },
+  { id: "student_organizations", label: "Student Spaces", color: "bg-blue-500", icon: Users, subtitle: "Student-led communities" },
+  { id: "university_organizations", label: "University Spaces", color: "bg-emerald-500", icon: Crown, subtitle: "Academic programs" },
+  { id: "greek_life", label: "Greek Life", color: "bg-amber-500", icon: Heart, subtitle: "Fraternities & sororities" },
+  { id: "campus_living", label: "Residential Life", color: "bg-amber-500", icon: Grid, subtitle: "Dorms & living communities" },
+  { id: "hive_exclusive", label: "HIVE Exclusive", color: "bg-indigo-500", icon: Star, subtitle: "Platform specials" },
 ];
 
 async function fetchMySpaces(): Promise<{
@@ -166,8 +166,21 @@ export default function UnifiedSpacesPage() {
         break;
       case "trending":
         sortedSpaces.sort((a, b) => {
-          const aTrending = (a.memberCount || 0) * Math.random() * 2;
-          const bTrending = (b.memberCount || 0) * Math.random() * 2;
+          // Calculate trending score based on recent growth and engagement
+          const now = Date.now();
+          const dayMs = 24 * 60 * 60 * 1000;
+          
+          const aCreated = a.createdAt?.toDate?.() || new Date(0);
+          const bCreated = b.createdAt?.toDate?.() || new Date(0);
+          
+          // Recent spaces get boost, older spaces penalized
+          const aAge = Math.max(1, (now - aCreated.getTime()) / dayMs);
+          const bAge = Math.max(1, (now - bCreated.getTime()) / dayMs);
+          
+          // Trending = members / age (recent spaces with members trend higher)
+          const aTrending = (a.memberCount || 0) / Math.sqrt(aAge);
+          const bTrending = (b.memberCount || 0) / Math.sqrt(bAge);
+          
           return bTrending - aTrending;
         });
         break;

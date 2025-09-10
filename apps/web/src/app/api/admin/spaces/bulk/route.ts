@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
               // This would require moving the space to a different collection
               // For now, we'll add a category tag
               const currentTags = spaceData.tags || [];
-              updateData.tags = [...currentTags, `category:${params.newCategory}`];
+              updateData.tags = [...currentTags, `category:${(await params).newCategory}`];
               updateData.categorizedAt = FieldValue.serverTimestamp();
               updateData.categorizedBy = adminUserId;
               newState = { ...spaceData, tags: updateData.tags };
@@ -231,9 +231,9 @@ export async function POST(request: NextRequest) {
             break;
 
           case 'tag':
-            if (params?.tags && params.tags.length > 0) {
+            if (params?.tags && (await params).tags.length > 0) {
               const currentTags = spaceData.tags || [];
-              const newTags = [...new Set([...currentTags, ...params.tags])]; // Deduplicate
+              const newTags = [...new Set([...currentTags, ...(await params).tags])]; // Deduplicate
               updateData.tags = newTags;
               updateData.taggedAt = FieldValue.serverTimestamp();
               updateData.taggedBy = adminUserId;
@@ -249,7 +249,7 @@ export async function POST(request: NextRequest) {
             updateData.featuredAt = FieldValue.serverTimestamp();
             updateData.featuredBy = adminUserId;
             if (params?.priority !== undefined) {
-              updateData.featuredPriority = params.priority;
+              updateData.featuredPriority = (await params).priority;
             }
             newState = { ...spaceData, isFeatured: updateData.isFeatured };
             operationSuccess = true;

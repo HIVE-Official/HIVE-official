@@ -87,11 +87,13 @@ const CAMPUS_MARKETPLACE_TOOLS = CAMPUS_TOOL_TEMPLATES.map(template => ({
          template.category === 'events' ? '#F59E0B' :
          template.category === 'services' ? '#8B5CF6' :
          '#6B7280',
-  downloads: template.viralPotential === 'very-high' ? Math.floor(Math.random() * 500) + 200 :
-             template.viralPotential === 'high' ? Math.floor(Math.random() * 300) + 100 :
-             Math.floor(Math.random() * 150) + 50,
-  rating: 4.5 + Math.random() * 0.5,
-  ratingCount: Math.floor(Math.random() * 50) + 20,
+  downloads: template.viralPotential === 'very-high' ? 450 :
+             template.viralPotential === 'high' ? 250 :
+             100,
+  rating: template.viralPotential === 'very-high' ? 4.8 : 
+          template.viralPotential === 'high' ? 4.6 : 4.4,
+  ratingCount: template.viralPotential === 'very-high' ? 65 :
+               template.viralPotential === 'high' ? 45 : 35,
   creator: 'UB Students',
   creatorType: 'community' as const,
   tags: [template.category, 'campus', 'ub'],

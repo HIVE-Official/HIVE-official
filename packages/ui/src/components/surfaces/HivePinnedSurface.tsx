@@ -23,6 +23,7 @@ import {
   Image
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useFirebaseRealtime, useOptimisticUpdates } from '../../hooks/use-live-updates';
 
 // Types
 interface PinnedItem {
@@ -293,7 +294,10 @@ export const HivePinnedSurface: React.FC<HivePinnedSurfaceProps> = ({
   onUnpinItem,
   onEditItem,
 }) => {
-  // Mock data for development
+  // No mock data - use real pinned items only
+  const emptyPinnedItems: PinnedItem[] = [];
+  
+  /* Removed mock data
   const mockPinnedItems: PinnedItem[] = useMemo(() => [
     {
       id: '1',
@@ -346,8 +350,22 @@ export const HivePinnedSurface: React.FC<HivePinnedSurfaceProps> = ({
       tags: ['welcome']
     }
   ], []);
+  */
 
-  const pinnedItems = propItems || mockPinnedItems;
+  // Real-time pinned items data
+  const { data: realtimePinnedItems, loading: realtimeLoading, error: realtimeError } = useFirebaseRealtime<PinnedItem>(
+    'pinned',
+    [{ field: 'spaceId', operator: '==', value: spaceId }],
+    'pinnedAt',
+    10,
+    [spaceId]
+  );
+  const { data: optimisticPinnedItems } = useOptimisticUpdates<PinnedItem>(propItems || realtimePinnedItems || []);
+  
+  // Use optimistic pinned items for immediate UI updates
+  const pinnedItems = optimisticPinnedItems || emptyPinnedItems;
+  const isLoading = loading || realtimeLoading;
+  const displayError = error || realtimeError;
 
   // Sort by priority then by date
   const sortedItems = useMemo(() => {
@@ -359,7 +377,7 @@ export const HivePinnedSurface: React.FC<HivePinnedSurfaceProps> = ({
     });
   }, [pinnedItems]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className={cn("space-y-4", className)}>
         <div className="animate-pulse">
@@ -374,12 +392,12 @@ export const HivePinnedSurface: React.FC<HivePinnedSurfaceProps> = ({
     );
   }
 
-  if (error) {
+  if (displayError) {
     return (
       <HiveCard className={cn("p-6", className)}>
         <div className="text-center space-y-2">
           <p className="text-gray-600">Unable to load pinned items</p>
-          <p className="text-sm text-gray-500">{error.message}</p>
+          <p className="text-sm text-gray-500">{displayError.message}</p>
         </div>
       </HiveCard>
     );

@@ -175,7 +175,7 @@ async function generateFeedContentFromAction(params: {
   data: any;
   elementId?: string;
 }): Promise<any> {
-  const { deployment, tool, user, action, data, elementId } = params;
+  const { deployment, tool, user, action, data, elementId } = await params;
 
   try {
     // Get feed content templates for this tool

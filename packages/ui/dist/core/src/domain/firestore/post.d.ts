@@ -435,8 +435,8 @@ export declare const PostSchema: z.ZodObject<{
     reactions: {
         heart: number;
     };
-    updatedAt: Date;
     createdAt: Date;
+    updatedAt: Date;
     authorId: string;
     reactedUsers: {
         heart: string[];
@@ -445,6 +445,7 @@ export declare const PostSchema: z.ZodObject<{
     isEdited: boolean;
     isDeleted: boolean;
     isFlagged: boolean;
+    pinnedAt?: Date | undefined;
     author?: {
         id: string;
         handle: string;
@@ -495,7 +496,6 @@ export declare const PostSchema: z.ZodObject<{
         shareType: "created" | "featured" | "updated";
         toolDescription?: string | undefined;
     } | undefined;
-    pinnedAt?: Date | undefined;
     pinnedBy?: string | undefined;
     deletedAt?: Date | undefined;
     deletedBy?: string | undefined;
@@ -507,13 +507,14 @@ export declare const PostSchema: z.ZodObject<{
     id: string;
     content: string;
     spaceId: string;
-    updatedAt: Date;
     createdAt: Date;
+    updatedAt: Date;
     authorId: string;
     type?: "text" | "image" | "event" | "poll" | "toolshare" | undefined;
     reactions?: {
         heart?: number | undefined;
     } | undefined;
+    pinnedAt?: Date | undefined;
     author?: {
         id: string;
         handle: string;
@@ -568,7 +569,6 @@ export declare const PostSchema: z.ZodObject<{
         heart?: string[] | undefined;
     } | undefined;
     isPinned?: boolean | undefined;
-    pinnedAt?: Date | undefined;
     pinnedBy?: string | undefined;
     isEdited?: boolean | undefined;
     isDeleted?: boolean | undefined;

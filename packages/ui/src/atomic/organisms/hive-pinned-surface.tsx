@@ -64,78 +64,9 @@ export interface HivePinnedSurfaceProps {
   onUnpinItem?: (itemId: string) => void;
 }
 
-// Mock pinned items data
-const mockPinnedItems: PinnedItem[] = [
-  {
-    id: '1',
-    title: 'Floor Policies & Guidelines',
-    description: 'Updated policies for quiet hours, guests, and common areas. Please review before the floor meeting.',
-    type: 'document',
-    fileUrl: '/documents/floor-policies-2024.pdf',
-    fileName: 'floor-policies-2024.pdf',
-    fileSize: 245760, // ~240KB
-    pinnedBy: {
-      id: 'ra1',
-      name: 'Jordan Martinez',
-      role: 'RA'
-    },
-    pinnedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-    viewCount: 24,
-    downloadCount: 18,
-    lastAccessed: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-  },
-  {
-    id: '2',
-    title: 'CS 220 Study Resources',
-    description: 'Comprehensive study guide and practice problems for the upcoming midterm exam.',
-    type: 'resource',
-    url: 'https://docs.google.com/document/d/study-guide-cs220',
-    pinnedBy: {
-      id: 'u1',
-      name: 'Sarah Chen',
-      role: 'member'
-    },
-    pinnedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 1 week from now
-    viewCount: 31,
-    lastAccessed: new Date(Date.now() - 30 * 60 * 1000) // 30 minutes ago
-  },
-  {
-    id: '3',
-    title: 'Emergency Contact Information',
-    description: 'Important phone numbers for campus security, maintenance, and emergency services.',
-    type: 'announcement',
-    pinnedBy: {
-      id: 'ra1',
-      name: 'Jordan Martinez',
-      role: 'RA'
-    },
-    pinnedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
-    viewCount: 15,
-    lastAccessed: new Date(Date.now() - 6 * 60 * 60 * 1000) // 6 hours ago
-  },
-  {
-    id: '4',
-    title: 'Formal Event Planning Committee',
-    description: 'Join our planning committee for the spring formal! Meeting details inside.',
-    type: 'event',
-    url: 'https://calendar.google.com/event/formal-planning',
-    pinnedBy: {
-      id: 'u2',
-      name: 'Alex Rodriguez',
-      role: 'admin'
-    },
-    pinnedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-    expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 2 weeks from now
-    viewCount: 12,
-    lastAccessed: new Date(Date.now() - 1 * 60 * 60 * 1000) // 1 hour ago
-  }
-];
-
 export const HivePinnedSurface: React.FC<HivePinnedSurfaceProps> = ({
   space,
-  items = mockPinnedItems,
+  items = [],
   maxItems,
   canPin = false,
   canModerate = false,

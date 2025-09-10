@@ -13,29 +13,38 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useDebounce } from './use-debounce';
+import { logger } from '@/lib/logger';
 
 export interface SearchResult {
   id: string;
-  type: 'space' | 'post' | 'user' | 'event';
+  type: 'space' | 'post' | 'user' | 'event' | 'tool' | 'person' | 'navigation';
   title: string;
   description?: string;
   image?: string;
   url: string;
   metadata?: Record<string, any>;
   score: number;
+  category?: string;
+  relevanceScore?: number;
 }
 
 interface UseSearchOptions {
-  types?: ('space' | 'post' | 'user' | 'event')[];
+  types?: ('space' | 'post' | 'user' | 'event' | 'tool' | 'person')[];
   limit?: number;
   debounceMs?: number;
+  useApi?: boolean; // Use API route instead of direct Firebase queries
+  category?: 'all' | 'spaces' | 'tools' | 'people' | 'events' | 'posts';
+  spaceId?: string; // Search within specific space
 }
 
 export function useSearch(options: UseSearchOptions = {}) {
   const { 
     types = ['space', 'post', 'user', 'event'],
     limit: resultLimit = 20,
-    debounceMs = 300
+    debounceMs = 300,
+    useApi = false,
+    category,
+    spaceId
   } = options;
 
   const [query, setQuery] = useState('');
@@ -45,19 +54,50 @@ export function useSearch(options: UseSearchOptions = {}) {
 
   const debouncedQuery = useDebounce(query, debounceMs);
 
-  // Search function
-  const search = useCallback(async (searchQuery: string) => {
-    if (!searchQuery || searchQuery.length < 2) {
-      setResults([]);
-      return;
+  // API search function
+  const searchViaApi = useCallback(async (searchQuery: string) => {
+    const params = new URLSearchParams();
+    params.set('q', searchQuery);
+    
+    if (category && category !== 'all') {
+      params.set('category', category);
+    }
+    
+    if (spaceId) {
+      params.set('spaceId', spaceId);
+    }
+    
+    if (resultLimit) {
+      params.set('limit', resultLimit.toString());
     }
 
-    setLoading(true);
-    setError(null);
+    const response = await fetch(`/api/search?${params.toString()}`);
+    
+    if (!response.ok) {
+      throw new Error('Search API request failed');
+    }
+    
+    const data = await response.json();
+    
+    // Transform API results to match local interface
+    return data.results.map((result: any) => ({
+      id: result.id,
+      type: result.type,
+      title: result.title,
+      description: result.description,
+      image: result.metadata?.avatar || result.metadata?.image,
+      url: result.url,
+      metadata: result.metadata,
+      score: result.relevanceScore || 0,
+      category: result.category,
+      relevanceScore: result.relevanceScore
+    }));
+  }, [category, spaceId, resultLimit]);
 
-    try {
-      const allResults: SearchResult[] = [];
-      const searchTerms = searchQuery.toLowerCase().split(' ').filter(Boolean);
+  // Firebase direct search function  
+  const searchViaFirebase = useCallback(async (searchQuery: string) => {
+    const allResults: SearchResult[] = [];
+    const searchTerms = searchQuery.toLowerCase().split(' ').filter(Boolean);
 
       // Search spaces
       if (types.includes('space')) {
@@ -223,16 +263,45 @@ export function useSearch(options: UseSearchOptions = {}) {
         });
       }
 
-      // Sort by score and limit results
-      allResults.sort((a, b) => b.score - a.score);
-      setResults(allResults.slice(0, resultLimit));
+    // Sort by score and limit results
+    allResults.sort((a, b) => b.score - a.score);
+    return allResults.slice(0, resultLimit);
+  }, [types, resultLimit]);
+
+  // Main search function that chooses between API and Firebase
+  const search = useCallback(async (searchQuery: string) => {
+    if (!searchQuery || searchQuery.length < 2) {
+      setResults([]);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      let searchResults: SearchResult[];
+      
+      if (useApi) {
+        searchResults = await searchViaApi(searchQuery);
+      } else {
+        searchResults = await searchViaFirebase(searchQuery);
+      }
+      
+      setResults(searchResults);
+      
+      logger.info('Search completed', { 
+        query: searchQuery, 
+        method: useApi ? 'API' : 'Firebase',
+        resultsCount: searchResults.length 
+      });
+      
     } catch (err) {
-      console.error('Search error:', err);
+      logger.error('Search error', { error: err, query: searchQuery });
       setError(err as Error);
     } finally {
       setLoading(false);
     }
-  }, [types, resultLimit]);
+  }, [useApi, searchViaApi, searchViaFirebase]);
 
   // Trigger search when debounced query changes
   useEffect(() => {
@@ -337,4 +406,29 @@ export function useRecentSearches(userId: string, limit = 5) {
     addRecentSearch,
     clearRecentSearches
   };
+}
+
+// Specialized search hooks using API
+export function useApiSpaceSearch(query = '', options: Omit<UseSearchOptions, 'useApi' | 'category'> = {}) {
+  return useSearch({ ...options, useApi: true, category: 'spaces' });
+}
+
+export function useApiToolSearch(query = '', options: Omit<UseSearchOptions, 'useApi' | 'category'> = {}) {
+  return useSearch({ ...options, useApi: true, category: 'tools' });
+}
+
+export function useApiPeopleSearch(query = '', options: Omit<UseSearchOptions, 'useApi' | 'category'> = {}) {
+  return useSearch({ ...options, useApi: true, category: 'people' });
+}
+
+export function useApiEventSearch(query = '', options: Omit<UseSearchOptions, 'useApi' | 'category'> = {}) {
+  return useSearch({ ...options, useApi: true, category: 'events' });
+}
+
+export function useGlobalSearch(query = '', options: UseSearchOptions = {}) {
+  return useSearch({ ...options, useApi: true, category: 'all' });
+}
+
+export function useSpaceContentSearch(spaceId: string, query = '', options: UseSearchOptions = {}) {
+  return useSearch({ ...options, useApi: true, spaceId });
 }

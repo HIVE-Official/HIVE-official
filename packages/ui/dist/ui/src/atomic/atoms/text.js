@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const textVariants = {
     variant: {
         // Display Scale

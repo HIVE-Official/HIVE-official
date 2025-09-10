@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from 'react';
-import { VisualToolComposer } from '@/components/tools/visual-tool-composer';
+import { HiveLabBuilder } from '@/components/hivelab/HiveLabBuilder';
 import { useUnifiedAuth } from '@hive/ui';
 import { authenticatedFetch } from '@/lib/api-client';
 import { useToast } from '@/hooks/use-toast';
@@ -104,26 +104,12 @@ export default function HiveLabPage() {
           </div>
         </div>
         <div className="flex-1">
-          <VisualToolComposer
-            onSave={async (composition) => {
-              // Convert composition to Tool for the handler
-              const tool = {
-                id: composition.id,
-                name: composition.name,
-                description: composition.description
-              };
+          <HiveLabBuilder
+            userId={user?.id || 'anonymous'}
+            onSave={async (tool) => {
               handleToolSave(tool);
             }}
-            onPreview={(composition) => {
-              const tool = {
-                id: composition.id,
-                name: composition.name,
-                description: composition.description
-              };
-              handleToolPreview(tool);
-            }}
-            onCancel={() => {}}
-            userId="current-user"
+            onClose={() => setMode('overview')}
           />
         </div>
       </div>

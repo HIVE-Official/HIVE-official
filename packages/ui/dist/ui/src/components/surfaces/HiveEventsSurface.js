@@ -1,12 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
 import { Clock, Users, Plus, ChevronRight, Video, Globe, Building, CalendarDays, UserCheck, Edit, Trash2, Share2 } from 'lucide-react';
 import { format, isPast, isToday, isTomorrow, addDays, startOfWeek } from 'date-fns';
+import { useRealtimeEvents, useOptimisticUpdates } from '../../hooks/use-live-updates';
 // Event Card Component
 const EventCard = ({ event, isLeader, currentUserId, variant = 'widget', onEdit, onDelete, onRSVP, onShare }) => {
     const [showActions, setShowActions] = useState(false);
@@ -78,87 +79,96 @@ const CalendarView = ({ events, onDateSelect }) => {
 export const HiveEventsSurface = ({ spaceId, spaceName, isLeader = false, currentUserId, className, variant = 'widget', events: propEvents, loading = false, error = null, onCreateEvent, onEditEvent, onDeleteEvent, onRSVP, }) => {
     const [view, setView] = useState('list');
     const [filter, setFilter] = useState('upcoming');
-    // Mock data for development
-    const mockEvents = useMemo(() => [
-        {
-            id: '1',
-            title: 'Weekly Team Sync',
-            description: 'Regular team sync to discuss progress and blockers. Everyone is welcome to join and share updates.',
-            startTime: new Date(Date.now() + 1000 * 60 * 60 * 2),
-            endTime: new Date(Date.now() + 1000 * 60 * 60 * 3),
-            location: {
-                type: 'hybrid',
-                name: 'Room 301 + Zoom',
-                address: 'Engineering Building',
-                url: 'https://zoom.us/j/123456'
-            },
-            organizer: {
-                id: '1',
-                name: 'Sarah Chen'
-            },
-            attendees: {
-                going: 12,
-                maybe: 3,
-                invited: 20
-            },
-            rsvpStatus: 'going',
-            tags: ['meeting', 'weekly'],
-            isRecurring: true,
-            recurringPattern: 'Every Thursday',
-            spaceId: spaceId,
-            visibility: 'members'
+    // Real-time events data
+    const { data: realtimeEvents, loading: realtimeLoading, error: realtimeError } = useRealtimeEvents(spaceId);
+    const { data: optimisticEvents, addOptimisticItem, removeOptimisticItem } = useOptimisticUpdates((propEvents || realtimeEvents || []));
+    // No mock data - use real events only
+    const emptyEvents = [];
+    /* Removed mock data
+    const mockEvents: SpaceEvent[] = useMemo(() => [
+      {
+        id: '1',
+        title: 'Weekly Team Sync',
+        description: 'Regular team sync to discuss progress and blockers. Everyone is welcome to join and share updates.',
+        startTime: new Date(Date.now() + 1000 * 60 * 60 * 2),
+        endTime: new Date(Date.now() + 1000 * 60 * 60 * 3),
+        location: {
+          type: 'hybrid',
+          name: 'Room 301 + Zoom',
+          address: 'Engineering Building',
+          url: 'https://zoom.us/j/123456'
         },
-        {
-            id: '2',
-            title: 'Design Workshop',
-            description: 'Hands-on workshop covering UI/UX best practices and design thinking methodology.',
-            startTime: addDays(new Date(), 1),
-            endTime: addDays(new Date(), 1),
-            location: {
-                type: 'physical',
-                name: 'Design Lab',
-                address: 'Art Building, Room 205'
-            },
-            organizer: {
-                id: '3',
-                name: 'Emily Rodriguez'
-            },
-            attendees: {
-                going: 8,
-                maybe: 5,
-                invited: 15
-            },
-            rsvpStatus: 'maybe',
-            tags: ['workshop', 'design'],
-            spaceId: spaceId,
-            visibility: 'public'
+        organizer: {
+          id: '1',
+          name: 'Sarah Chen'
         },
-        {
-            id: '3',
-            title: 'Hackathon Planning Session',
-            description: 'Planning session for the upcoming campus hackathon. Looking for volunteers!',
-            startTime: addDays(new Date(), 3),
-            endTime: addDays(new Date(), 3),
-            location: {
-                type: 'virtual',
-                name: 'Discord',
-                url: 'https://discord.gg/hive'
-            },
-            organizer: {
-                id: '2',
-                name: 'Marcus Johnson'
-            },
-            attendees: {
-                going: 15,
-                maybe: 7,
-                invited: 30
-            },
-            tags: ['hackathon', 'planning'],
-            spaceId: spaceId,
-            visibility: 'members'
-        }
+        attendees: {
+          going: 12,
+          maybe: 3,
+          invited: 20
+        },
+        rsvpStatus: 'going',
+        tags: ['meeting', 'weekly'],
+        isRecurring: true,
+        recurringPattern: 'Every Thursday',
+        spaceId: spaceId,
+        visibility: 'members'
+      },
+      {
+        id: '2',
+        title: 'Design Workshop',
+        description: 'Hands-on workshop covering UI/UX best practices and design thinking methodology.',
+        startTime: addDays(new Date(), 1),
+        endTime: addDays(new Date(), 1),
+        location: {
+          type: 'physical',
+          name: 'Design Lab',
+          address: 'Art Building, Room 205'
+        },
+        organizer: {
+          id: '3',
+          name: 'Emily Rodriguez'
+        },
+        attendees: {
+          going: 8,
+          maybe: 5,
+          invited: 15
+        },
+        rsvpStatus: 'maybe',
+        tags: ['workshop', 'design'],
+        spaceId: spaceId,
+        visibility: 'public'
+      },
+      {
+        id: '3',
+        title: 'Hackathon Planning Session',
+        description: 'Planning session for the upcoming campus hackathon. Looking for volunteers!',
+        startTime: addDays(new Date(), 3),
+        endTime: addDays(new Date(), 3),
+        location: {
+          type: 'virtual',
+          name: 'Discord',
+          url: 'https://discord.gg/hive'
+        },
+        organizer: {
+          id: '2',
+          name: 'Marcus Johnson'
+        },
+        attendees: {
+          going: 15,
+          maybe: 7,
+          invited: 30
+        },
+        tags: ['hackathon', 'planning'],
+        spaceId: spaceId,
+        visibility: 'members'
+      }
     ], [spaceId]);
-    const events = propEvents || mockEvents;
+    */
+    // Use optimistic events for immediate UI updates
+    const events = optimisticEvents || emptyEvents;
+    const isLoading = loading || realtimeLoading;
+    const displayError = error || realtimeError;
     // Filter events
     const filteredEvents = useMemo(() => {
         let filtered = [...events];
@@ -174,11 +184,11 @@ export const HiveEventsSurface = ({ spaceId, spaceName, isLeader = false, curren
         filtered.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
         return filtered;
     }, [events, filter]);
-    if (loading) {
+    if (isLoading) {
         return (_jsx("div", { className: cn("space-y-4", className), children: _jsxs("div", { className: "animate-pulse", children: [_jsx("div", { className: "bg-gray-200 rounded-lg h-20 mb-4" }), _jsx("div", { className: "space-y-3", children: [1, 2, 3].map((i) => (_jsx("div", { className: "bg-gray-100 rounded-lg h-32" }, i))) })] }) }));
     }
-    if (error) {
-        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load events" }), _jsx("p", { className: "text-sm text-gray-500", children: error.message })] }) }));
+    if (displayError) {
+        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load events" }), _jsx("p", { className: "text-sm text-gray-500", children: displayError.message })] }) }));
     }
     return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: variant === 'full' && spaceName ? `${spaceName} Events` : 'Events' }), _jsxs("p", { className: "text-sm text-gray-500 mt-1", children: [filteredEvents.length, " ", filter === 'upcoming' ? 'upcoming' : filter, " events"] })] }), _jsxs("div", { className: "flex items-center gap-2", children: [variant === 'full' && (_jsxs(_Fragment, { children: [_jsxs("div", { className: "flex border border-gray-200 rounded-lg", children: [_jsx("button", { onClick: () => setView('list'), className: cn("px-3 py-1.5 text-sm", view === 'list' ? "bg-gray-100" : "hover:bg-gray-50"), children: "List" }), _jsx("button", { onClick: () => setView('calendar'), className: cn("px-3 py-1.5 text-sm", view === 'calendar' ? "bg-gray-100" : "hover:bg-gray-50"), children: "Calendar" })] }), _jsxs("select", { value: filter, onChange: (e) => setFilter(e.target.value), className: "px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]", children: [_jsx("option", { value: "all", children: "All Events" }), _jsx("option", { value: "upcoming", children: "Upcoming" }), _jsx("option", { value: "past", children: "Past" })] })] })), isLeader && (_jsxs(HiveButton, { variant: "primary", size: "sm", onClick: onCreateEvent, className: "flex items-center gap-2", children: [_jsx(Plus, { className: "h-4 w-4" }), variant === 'widget' ? 'New' : 'Create Event'] }))] })] }), view === 'calendar' && variant === 'full' && (_jsx(CalendarView, { events: filteredEvents, onDateSelect: (date) => console.log('Selected date:', date) })), view === 'list' && (_jsx("div", { className: "space-y-3", children: filteredEvents.length === 0 ? (_jsx(HiveCard, { className: "p-8", children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx(CalendarDays, { className: "h-12 w-12 text-gray-400 mx-auto" }), _jsx("p", { className: "text-gray-600", children: "No events scheduled" }), _jsx("p", { className: "text-sm text-gray-500", children: isLeader ? "Create an event to bring your community together" : "Check back later for upcoming events" })] }) })) : (filteredEvents
                     .slice(0, variant === 'widget' ? 3 : undefined)

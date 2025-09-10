@@ -20,6 +20,7 @@ import {
   UserMinus,
   Settings
 } from 'lucide-react';
+import { useRealtimeMembers, useOptimisticUpdates } from '../../hooks/use-live-updates';
 
 // Types
 interface SpaceMember {
@@ -286,7 +287,14 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filterRole, setFilterRole] = useState<SpaceMember['role'] | 'all'>('all');
 
-  // Mock data for development
+  // Real-time members data
+  const { data: realtimeMembers, loading: realtimeLoading, error: realtimeError } = useRealtimeMembers(spaceId);
+  const { data: optimisticMembers } = useOptimisticUpdates<SpaceMember>((propMembers || realtimeMembers || []) as SpaceMember[]);
+
+  // No mock data - use real members only
+  const emptyMembers: SpaceMember[] = [];
+  
+  /* Removed mock data
   const mockMembers: SpaceMember[] = useMemo(() => [
     {
       id: '1',
@@ -345,8 +353,12 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
       contributions: { posts: 8, events: 2, tools: 0 }
     }
   ], []);
+  */
 
-  const members = propMembers || mockMembers;
+  // Use optimistic members for immediate UI updates
+  const members = optimisticMembers || emptyMembers;
+  const isLoading = loading || realtimeLoading;
+  const displayError = error || realtimeError;
 
   // Filter and sort members
   const filteredMembers = useMemo(() => {
@@ -388,7 +400,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
     return { roleCount, onlineCount, total: members.length };
   }, [members]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className={cn("space-y-4", className)}>
         <div className="animate-pulse">
@@ -403,12 +415,12 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
     );
   }
 
-  if (error) {
+  if (displayError) {
     return (
       <HiveCard className={cn("p-6", className)}>
         <div className="text-center space-y-2">
           <p className="text-gray-600">Unable to load members</p>
-          <p className="text-sm text-gray-500">{error.message}</p>
+          <p className="text-sm text-gray-500">{displayError.message}</p>
         </div>
       </HiveCard>
     );

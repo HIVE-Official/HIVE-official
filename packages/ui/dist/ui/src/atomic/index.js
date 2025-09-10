@@ -1,20 +1,20 @@
 // HIVE Atomic Design System
 // Complete UI/UX foundation for the entire app
 // === ATOMS ===
-export * from './atoms/index.js';
+export * from './atoms';
 // === MOLECULES === 
-export * from './molecules/index.js';
+export * from './molecules';
 // === ORGANISMS ===
-export * from './organisms/index.js';
+export * from './organisms';
 // === TEMPLATES ===
-export * from './templates/index.js';
+export * from './templates';
 // === PAGES ===
-export * from './pages/index.js';
+export * from './pages';
 // === FOUNDATIONS ===
 // Design tokens are handled by @hive/tokens package
-export * from './foundations/index.js';
+export * from './foundations';
 // === UI COMPONENTS ===
 // Legacy UI components - export selectively to avoid conflicts
-export { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from './ui/card.js';
-export { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs.js';
+export { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from './ui/card';
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 //# sourceMappingURL=index.js.map

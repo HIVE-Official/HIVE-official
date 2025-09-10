@@ -301,31 +301,52 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
     }
 
     try {
-      const postRef = doc(db, 'spaces', spaceId, 'posts', postId);
-      const post = posts.find(p => p.id === postId);
-      
-      if (!post || !post.coordinationData) return;
-
-      const updatedResponses = [
-        ...(post.coordinationData.responses?.filter(r => r.userId !== user.uid) || []),
-        {
-          ...response,
-          userId: user.uid,
-          userName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
-          timestamp: new Date()
-        }
-      ];
-
-      // Check if we've reached capacity
-      const status = post.coordinationData.capacity && 
-                    updatedResponses.filter(r => r.response === 'yes').length >= post.coordinationData.capacity
-                    ? 'full' 
-                    : post.coordinationData.status;
-
-      await updateDoc(postRef, {
-        'coordinationData.responses': updatedResponses,
-        'coordinationData.status': status
+      // Use the coordination API endpoint
+      const idToken = await user.getIdToken();
+      const apiResponse = await fetch(`/api/spaces/${spaceId}/coordination`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          postId,
+          action: response.response === 'yes' ? 'join' : 
+                  response.response === 'no' ? 'cant_make_it' : 
+                  response.response === 'maybe' ? 'interested' : 'maybe',
+          message: response.details || '',
+          availability: response.availability || null,
+          preferences: response.preferences || null
+        })
       });
+
+      if (!apiResponse.ok) {
+        throw new Error('Failed to respond to coordination');
+      }
+
+      const result = await apiResponse.json();
+      
+      // Update local state with the new coordination stats
+      if (result.coordinationStats) {
+        const postRef = doc(db, 'spaces', spaceId, 'posts', postId);
+        const post = posts.find(p => p.id === postId);
+        
+        if (post && post.coordinationData) {
+          // Check if we've reached capacity
+          const joinCount = result.coordinationStats.join || 0;
+          const status = post.coordinationData.capacity && 
+                        joinCount >= post.coordinationData.capacity
+                        ? 'full' 
+                        : 'open';
+
+          // Update the post with new stats and status
+          await updateDoc(postRef, {
+            'coordinationStats': result.coordinationStats,
+            'coordinationData.status': status,
+            'updatedAt': serverTimestamp()
+          });
+        }
+      }
     } catch (err) {
       console.error('Error responding to coordination:', err);
       throw err;

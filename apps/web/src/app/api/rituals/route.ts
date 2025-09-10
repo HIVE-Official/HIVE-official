@@ -2,30 +2,15 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
-// Temporary ritual types for development
-interface Ritual {
-  id: string;
-  name: string;
-  title: string;
-  description: string;
-  type: RitualType;
-  status: string;
-  startTime: Date;
-  endTime?: Date;
-}
-
-type RitualType = 'onboarding' | 'seasonal' | 'achievement' | 'community' | 'creative' | 'emergency' | 'legacy';
-type ParticipationType = 'individual' | 'collective' | 'progressive' | 'competitive' | 'collaborative' | 'creative' | 'social';
-
-// Mock ritual framework for development
-const ritualFramework = {
-  createRitual: async (ritual: any): Promise<string> => {
-    return `ritual_${Date.now()}`;
-  }
-};
+import { RitualScheduler } from '@/lib/rituals/ritual-scheduler';
+import { RitualParticipationTracker } from '@/lib/rituals/ritual-participation';
+import { RitualEngine } from '@/lib/ritual-engine';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+
+type RitualType = 'onboarding' | 'seasonal' | 'achievement' | 'community' | 'creative' | 'emergency' | 'legacy';
+type ParticipationType = 'individual' | 'collective' | 'progressive' | 'competitive' | 'collaborative' | 'creative' | 'social';
 
 // Ritual query schema
 const RitualQuerySchema = z.object({
@@ -131,141 +116,10 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 
     logger.info('🎭 Rituals query', { queryParams: JSON.stringify({ status, type, university, limit, offset }), endpoint: '/api/rituals' });
 
-    // For development mode, return mock ritual data
-    if ((userId === 'test-user' || userId === 'dev_user_123') && process.env.NODE_ENV !== 'production') {
-      const mockRituals = [
-        {
-          id: 'focus_ritual_1',
-          name: 'Focus Flow',
-          title: 'Daily Focus Session',
-          description: 'A structured 25-minute focus session to help you maintain concentration and productivity throughout your day.',
-          tagline: 'Stay focused, stay productive',
-          type: 'community' as const,
-          category: 'productivity',
-          tags: ['focus', 'pomodoro', 'productivity', 'habits'],
-          status: 'active' as const,
-          startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // Started a week ago
-          endTime: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Ends in 30 days
-          duration: 25, // 25 minutes
-          timezone: 'America/New_York',
-          universities: ['university_buffalo'],
-          isGlobal: false,
-          participationType: 'individual' as const,
-          maxParticipants: 100,
-          requiresInvitation: false,
-          totalParticipants: 42,
-          activeParticipants: 28,
-          completionRate: 0.73,
-          userParticipation: {
-            id: 'user_participation_1',
-            status: 'active',
-            joinedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-            sessionsCompleted: 12,
-            currentStreak: 3,
-            longestStreak: 7,
-            lastSessionAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-            progressPercentage: 85
-          },
-          milestones: [
-            {
-              id: 'milestone_1',
-              name: 'First Focus',
-              description: 'Complete your first focus session',
-              progressThreshold: 1,
-              isReached: true,
-              reachedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
-            },
-            {
-              id: 'milestone_2',
-              name: 'Focus Streak',
-              description: 'Complete 5 consecutive days of focus sessions',
-              progressThreshold: 5,
-              isReached: true,
-              reachedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-            },
-            {
-              id: 'milestone_3',
-              name: 'Focus Master',
-              description: 'Complete 20 focus sessions',
-              progressThreshold: 20,
-              isReached: false,
-              progress: 12
-            }
-          ],
-          actions: [
-            {
-              id: 'focus_session',
-              type: 'interact' as const,
-              name: 'Complete Focus Session',
-              description: 'Complete a 25-minute focused work session',
-              isRequired: true,
-              weight: 100,
-              maxOccurrences: 3, // Up to 3 sessions per day
-              timeLimit: 25 * 60 * 1000 // 25 minutes in milliseconds
-            }
-          ],
-          rewards: [
-            {
-              id: 'focus_badge',
-              type: 'badge' as const,
-              name: 'Focus Champion',
-              description: 'Awarded for consistent focus session completion',
-              rarity: 'common' as const,
-              isUnlocked: true
-            },
-            {
-              id: 'productivity_feature',
-              type: 'feature' as const,
-              name: 'Advanced Timer',
-              description: 'Unlock advanced pomodoro timer features',
-              rarity: 'uncommon' as const,
-              isUnlocked: false
-            }
-          ]
-        },
-        {
-          id: 'study_ritual_2',
-          name: 'Study Squad',
-          title: 'Collaborative Study Sessions',
-          description: 'Join your classmates for structured study sessions and knowledge sharing.',
-          tagline: 'Study together, succeed together',
-          type: 'community' as const,
-          category: 'academic',
-          tags: ['study', 'collaboration', 'academic', 'groups'],
-          status: 'scheduled' as const,
-          startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Starts tomorrow
-          endTime: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // Ends in 2 weeks
-          duration: 90, // 90 minutes
-          timezone: 'America/New_York',
-          universities: ['university_buffalo'],
-          isGlobal: false,
-          participationType: 'collaborative' as const,
-          maxParticipants: 50,
-          requiresInvitation: false,
-          totalParticipants: 24,
-          activeParticipants: 0, // Not started yet
-          completionRate: 0,
-          userParticipation: {
-            id: 'user_participation_2',
-            status: 'registered',
-            joinedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-            sessionsCompleted: 0,
-            currentStreak: 0,
-            longestStreak: 0,
-            progressPercentage: 0
-          },
-          milestones: [
-            {
-              id: 'study_milestone_1',
-              name: 'Study Squad Member',
-              description: 'Join your first collaborative study session',
-              progressThreshold: 1,
-              isReached: false,
-              progress: 0
-            }
-          ]
-        }
-      ];
+    // Rituals will be fully implemented in v1
+    // Return empty array instead of mock data to prevent confusion
+    if (process.env.NODE_ENV !== 'production') {
+      const mockRituals: any[] = [];
 
       // Filter based on query parameters
       let filteredRituals = mockRituals;
@@ -436,8 +290,20 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       })),
     };
 
-    // Create ritual using framework
-    const ritualId = await ritualFramework.createRitual(processedRitual);
+    // Create ritual using the real engine
+    const ritualId = await RitualEngine.createRitual(processedRitual);
+
+    // Schedule the ritual if it has a start time
+    if (processedRitual.startTime) {
+      await RitualScheduler.scheduleRitual(ritualId, {
+        ritualId,
+        frequency: processedRitual.frequency || 'once',
+        startDate: new Date(processedRitual.startTime),
+        endDate: processedRitual.endTime ? new Date(processedRitual.endTime) : undefined,
+        timezone: processedRitual.timezone || 'America/New_York',
+        isActive: true
+      });
+    }
 
     return NextResponse.json({
       success: true,

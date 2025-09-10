@@ -33,8 +33,8 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
         referrer?: string | undefined;
         ip?: string | undefined;
     } | undefined;
-    userId?: string | undefined;
     properties?: Record<string, any> | undefined;
+    userId?: string | undefined;
 }, {
     id: string;
     type: string;
@@ -46,8 +46,8 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
         referrer?: string | undefined;
         ip?: string | undefined;
     } | undefined;
-    userId?: string | undefined;
     properties?: Record<string, any> | undefined;
+    userId?: string | undefined;
 }>;
 export type AnalyticsEvent = z.infer<typeof AnalyticsEventSchema>;
 export declare const AnalyticsEventType: z.ZodEnum<["user_signup", "user_login", "user_logout", "user_profile_updated", "page_view", "navigation", "feature_used", "button_clicked", "form_submitted", "error_occurred", "api_error", "performance_metric", "load_time"]>;

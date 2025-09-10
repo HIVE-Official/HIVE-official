@@ -1336,7 +1336,7 @@ export declare const heroABTestSchema: z.ZodObject<{
         conversions: number[];
     }>;
 }, "strip", z.ZodTypeAny, {
-    status: "draft" | "completed" | "running" | "paused";
+    status: "draft" | "running" | "completed" | "paused";
     id: string;
     name: string;
     metrics: {
@@ -1424,7 +1424,7 @@ export declare const heroABTestSchema: z.ZodObject<{
     startDate: Date;
     endDate?: Date | undefined;
 }, {
-    status: "draft" | "completed" | "running" | "paused";
+    status: "draft" | "running" | "completed" | "paused";
     id: string;
     name: string;
     metrics: {

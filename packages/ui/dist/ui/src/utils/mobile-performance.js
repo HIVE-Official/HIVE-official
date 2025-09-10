@@ -4,7 +4,7 @@
  * Battery-efficient patterns and performance monitoring for mobile devices
  */
 import { useState, useEffect } from 'react';
-import { getNetworkInfo, getBatteryInfo, getDeviceMemory, getHardwareConcurrency } from './mobile-native-features.js';
+import { getNetworkInfo, getBatteryInfo, getDeviceMemory, getHardwareConcurrency } from './mobile-native-features';
 export class MobilePerformanceManager {
     metrics = null;
     observers = [];

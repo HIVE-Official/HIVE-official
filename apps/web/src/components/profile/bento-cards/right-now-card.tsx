@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@hive/ui';
 import { 
   Clock,
@@ -16,10 +16,32 @@ interface RightNowCardProps {
 export function RightNowCard({ className, onUpdate }: RightNowCardProps) {
   const [status, setStatus] = useState({
     emoji: '🎯',
-    text: 'Thriving',
+    text: 'Focused',
     availability: 'Available 2hr',
     expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000)
   });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch current status from API
+    const fetchStatus = async () => {
+      try {
+        const response = await fetch('/api/profile/status');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status) {
+            setStatus(data.status);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching status:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStatus();
+  }, []);
 
   const getAvailabilityColor = () => {
     if (status.availability.includes('Available')) {
@@ -43,21 +65,31 @@ export function RightNowCard({ className, onUpdate }: RightNowCardProps) {
 
       {/* Main Content - Centered */}
       <div className="flex-1 flex flex-col items-center justify-center">
-        {/* Large Emoji */}
-        <div className="text-5xl mb-3">
-          {status.emoji}
-        </div>
-        
-        {/* Status Text */}
-        <div className="text-lg font-medium text-foreground mb-2">
-          {status.text}
-        </div>
-        
-        {/* Availability Badge */}
-        <div className={`px-3 py-1.5 rounded-full text-xs font-medium ${getAvailabilityColor()}`}>
-          <Clock className="h-3 w-3 inline mr-1" />
-          {status.availability}
-        </div>
+        {isLoading ? (
+          <div className="animate-pulse">
+            <div className="w-12 h-12 bg-muted rounded-full mb-3" />
+            <div className="w-20 h-4 bg-muted rounded mb-2" />
+            <div className="w-24 h-6 bg-muted rounded-full" />
+          </div>
+        ) : (
+          <>
+            {/* Large Emoji */}
+            <div className="text-5xl mb-3">
+              {status.emoji}
+            </div>
+            
+            {/* Status Text */}
+            <div className="text-lg font-medium text-foreground mb-2">
+              {status.text}
+            </div>
+            
+            {/* Availability Badge */}
+            <div className={`px-3 py-1.5 rounded-full text-xs font-medium ${getAvailabilityColor()}`}>
+              <Clock className="h-3 w-3 inline mr-1" />
+              {status.availability}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Update Hint */}

@@ -175,6 +175,7 @@ export { HiveToolsSurface, type HiveToolsSurfaceProps, type SpaceTool, type Tool
 
 // Space Dashboard
 export { SpaceDashboard, type SpaceDashboardProps } from './atomic/organisms/space-dashboard';
+export { CompleteHIVEToolsSystem } from './atomic/organisms/complete-hive-tools-system';
 
 // Space Utilities
 export { SpaceExploreHub, type SpaceExploreHubProps } from './atomic/organisms/space-explore-hub';

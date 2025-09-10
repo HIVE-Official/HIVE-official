@@ -7,7 +7,7 @@ import { useProfileStore, type ProfileData, type SpaceMembership, type ProfileAn
 // API client functions
 async function fetchUserProfile(userId: string): Promise<ProfileData> {
   const token = await useAuthStore.getState().user?.getIdToken();
-  const response = await fetch(`/api/profile/${userId === 'me' ? 'me' : userId}`, {
+  const response = await fetch(`/api/profile/me`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ async function fetchUserSpaceMemberships(userId: string, includeActivity = true)
     timeRange: 'week',
   });
   
-  const response = await fetch(`/api/profile/${userId === 'me' ? 'me' : userId}/spaces?${params}`, {
+  const response = await fetch(`/api/profile/spaces?${params}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ async function fetchUserSpaceMemberships(userId: string, includeActivity = true)
 
 async function fetchUserAnalytics(userId: string): Promise<ProfileAnalytics> {
   const token = await useAuthStore.getState().user?.getIdToken();
-  const response = await fetch(`/api/profile/${userId === 'me' ? 'me' : userId}/analytics`, {
+  const response = await fetch(`/api/profile/analytics`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ async function fetchUserAnalytics(userId: string): Promise<ProfileAnalytics> {
 
 async function updateUserProfile(userId: string, updates: Partial<ProfileData>): Promise<ProfileData> {
   const token = await useAuthStore.getState().user?.getIdToken();
-  const response = await fetch(`/api/profile/${userId === 'me' ? 'me' : userId}`, {
+  const response = await fetch(`/api/profile/me`, {
     method: 'PATCH',
     headers: {
       'Authorization': `Bearer ${token}`,

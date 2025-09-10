@@ -1,13 +1,14 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar.js';
-import { HiveBadge } from '../hive-badge.js';
-import { HiveInput } from '../hive-input.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
+import { HiveBadge } from '../hive-badge';
+import { HiveInput } from '../hive-input';
 import { Users, UserPlus, Crown, Shield, Star, MoreVertical, Mail, MessageCircle, UserMinus } from 'lucide-react';
+import { useRealtimeMembers, useOptimisticUpdates } from '../../hooks/use-live-updates';
 // Role configuration
 const roleConfig = {
     leader: {
@@ -63,66 +64,75 @@ export const HiveMembersSurface = ({ spaceId, spaceName, isLeader = false, curre
     const [searchQuery, setSearchQuery] = useState('');
     const [viewMode, setViewMode] = useState('grid');
     const [filterRole, setFilterRole] = useState('all');
-    // Mock data for development
-    const mockMembers = useMemo(() => [
-        {
-            id: '1',
-            name: 'Sarah Chen',
-            email: 'sarah.chen@university.edu',
-            role: 'leader',
-            joinedAt: new Date('2024-01-15'),
-            bio: 'Computer Science major passionate about building communities',
-            major: 'Computer Science',
-            year: '2025',
-            isOnline: true,
-            contributions: { posts: 45, events: 12, tools: 3 }
-        },
-        {
-            id: '2',
-            name: 'Marcus Johnson',
-            email: 'marcus.j@university.edu',
-            role: 'admin',
-            joinedAt: new Date('2024-01-20'),
-            bio: 'Business & Tech double major. Always looking to help!',
-            major: 'Business',
-            year: '2024',
-            isOnline: true,
-            contributions: { posts: 28, events: 8, tools: 2 }
-        },
-        {
-            id: '3',
-            name: 'Emily Rodriguez',
-            role: 'moderator',
-            joinedAt: new Date('2024-02-01'),
-            bio: 'Design enthusiast and UX researcher',
-            major: 'Design',
-            year: '2025',
-            isOnline: false,
-            contributions: { posts: 34, events: 5, tools: 1 }
-        },
-        {
-            id: '4',
-            name: 'Alex Kim',
-            role: 'member',
-            joinedAt: new Date('2024-02-15'),
-            major: 'Engineering',
-            year: '2026',
-            isOnline: false,
-            contributions: { posts: 12, events: 3, tools: 0 }
-        },
-        {
-            id: '5',
-            name: 'Jordan Lee',
-            role: 'member',
-            joinedAt: new Date('2024-03-01'),
-            bio: 'Freshman exploring tech and entrepreneurship',
-            major: 'Undeclared',
-            year: '2027',
-            isOnline: true,
-            contributions: { posts: 8, events: 2, tools: 0 }
-        }
+    // Real-time members data
+    const { data: realtimeMembers, loading: realtimeLoading, error: realtimeError } = useRealtimeMembers(spaceId);
+    const { data: optimisticMembers } = useOptimisticUpdates((propMembers || realtimeMembers || []));
+    // No mock data - use real members only
+    const emptyMembers = [];
+    /* Removed mock data
+    const mockMembers: SpaceMember[] = useMemo(() => [
+      {
+        id: '1',
+        name: 'Sarah Chen',
+        email: 'sarah.chen@university.edu',
+        role: 'leader',
+        joinedAt: new Date('2024-01-15'),
+        bio: 'Computer Science major passionate about building communities',
+        major: 'Computer Science',
+        year: '2025',
+        isOnline: true,
+        contributions: { posts: 45, events: 12, tools: 3 }
+      },
+      {
+        id: '2',
+        name: 'Marcus Johnson',
+        email: 'marcus.j@university.edu',
+        role: 'admin',
+        joinedAt: new Date('2024-01-20'),
+        bio: 'Business & Tech double major. Always looking to help!',
+        major: 'Business',
+        year: '2024',
+        isOnline: true,
+        contributions: { posts: 28, events: 8, tools: 2 }
+      },
+      {
+        id: '3',
+        name: 'Emily Rodriguez',
+        role: 'moderator',
+        joinedAt: new Date('2024-02-01'),
+        bio: 'Design enthusiast and UX researcher',
+        major: 'Design',
+        year: '2025',
+        isOnline: false,
+        contributions: { posts: 34, events: 5, tools: 1 }
+      },
+      {
+        id: '4',
+        name: 'Alex Kim',
+        role: 'member',
+        joinedAt: new Date('2024-02-15'),
+        major: 'Engineering',
+        year: '2026',
+        isOnline: false,
+        contributions: { posts: 12, events: 3, tools: 0 }
+      },
+      {
+        id: '5',
+        name: 'Jordan Lee',
+        role: 'member',
+        joinedAt: new Date('2024-03-01'),
+        bio: 'Freshman exploring tech and entrepreneurship',
+        major: 'Undeclared',
+        year: '2027',
+        isOnline: true,
+        contributions: { posts: 8, events: 2, tools: 0 }
+      }
     ], []);
-    const members = propMembers || mockMembers;
+    */
+    // Use optimistic members for immediate UI updates
+    const members = optimisticMembers || emptyMembers;
+    const isLoading = loading || realtimeLoading;
+    const displayError = error || realtimeError;
     // Filter and sort members
     const filteredMembers = useMemo(() => {
         let filtered = [...members];
@@ -154,11 +164,11 @@ export const HiveMembersSurface = ({ spaceId, spaceName, isLeader = false, curre
         const onlineCount = members.filter(m => m.isOnline).length;
         return { roleCount, onlineCount, total: members.length };
     }, [members]);
-    if (loading) {
+    if (isLoading) {
         return (_jsx("div", { className: cn("space-y-4", className), children: _jsxs("div", { className: "animate-pulse", children: [_jsx("div", { className: "bg-gray-200 rounded-lg h-20 mb-4" }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [1, 2, 3, 4].map((i) => (_jsx("div", { className: "bg-gray-100 rounded-lg h-32" }, i))) })] }) }));
     }
-    if (error) {
-        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load members" }), _jsx("p", { className: "text-sm text-gray-500", children: error.message })] }) }));
+    if (displayError) {
+        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load members" }), _jsx("p", { className: "text-sm text-gray-500", children: displayError.message })] }) }));
     }
     return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: variant === 'full' && spaceName ? `${spaceName} Members` : 'Members' }), _jsxs("p", { className: "text-sm text-gray-500 mt-1", children: [stats.total, " members \u2022 ", stats.onlineCount, " online"] })] }), isLeader && variant === 'full' && (_jsxs(HiveButton, { variant: "primary", size: "sm", onClick: onInviteMember, className: "flex items-center gap-2", children: [_jsx(UserPlus, { className: "h-4 w-4" }), "Invite Members"] }))] }), variant === 'full' && (_jsxs("div", { className: "flex flex-col sm:flex-row gap-3", children: [_jsx("div", { className: "flex-1", children: _jsx(HiveInput, { type: "text", placeholder: "Search members...", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value) }) }), _jsxs("div", { className: "flex gap-2", children: [_jsxs("select", { value: filterRole, onChange: (e) => setFilterRole(e.target.value), className: "px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]", children: [_jsx("option", { value: "all", children: "All Roles" }), _jsx("option", { value: "leader", children: "Leaders" }), _jsx("option", { value: "admin", children: "Admins" }), _jsx("option", { value: "moderator", children: "Moderators" }), _jsx("option", { value: "member", children: "Members" })] }), _jsxs("div", { className: "flex border border-gray-200 rounded-lg", children: [_jsx("button", { onClick: () => setViewMode('grid'), className: cn("px-3 py-2 text-sm", viewMode === 'grid' ? "bg-gray-100" : "hover:bg-gray-50"), children: "Grid" }), _jsx("button", { onClick: () => setViewMode('list'), className: cn("px-3 py-2 text-sm", viewMode === 'list' ? "bg-gray-100" : "hover:bg-gray-50"), children: "List" })] })] })] })), _jsx("div", { className: cn("grid gap-4", viewMode === 'grid' && variant === 'full'
                     ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"

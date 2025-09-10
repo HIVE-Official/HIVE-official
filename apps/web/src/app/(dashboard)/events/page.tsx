@@ -191,7 +191,7 @@ export default function EventsPage() {
                 
                 // Map raw event data to EventData format
                 return {
-                  id: String((eventData as RawEventData).id || `event-${Date.now()}-${Math.random()}`),
+                  id: String((eventData as RawEventData).id || `event-${Date.now()}-${(eventData as RawEventData).title?.slice(0,5) || 'untitled'}`),
                   title: String((eventData as RawEventData).title || 'Untitled Event'),
                   description: String((eventData as RawEventData).description || ''),
                   type: ((eventData as RawEventData).type as EventData['type']) || 'social',

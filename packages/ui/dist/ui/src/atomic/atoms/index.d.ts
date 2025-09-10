@@ -41,5 +41,7 @@ export type { TextProps } from './text';
 export * from './tooltip';
 export * from './typography';
 export * from './navigation-preferences';
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+export { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 export * from './space-category-card';
 //# sourceMappingURL=index.d.ts.map

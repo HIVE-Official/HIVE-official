@@ -15,7 +15,8 @@ interface SearchResult {
 }
 
 // Mock data for comprehensive search
-const MOCK_SEARCH_DATA = {
+// Removed mock data
+/* const MOCK_SEARCH_DATA = {
   spaces: [
     {
       id: 'space-cs-majors',
@@ -196,7 +197,7 @@ const MOCK_SEARCH_DATA = {
       keywords: ['tool', 'scheduler', 'course', 'planning', 'semester']
     }
   ]
-};
+}; */
 
 function calculateRelevanceScore(
   item: any, 
@@ -288,28 +289,8 @@ export async function GET(request: NextRequest) {
     } catch (firebaseError) {
       logger.warn('Firebase search failed, falling back to mock data', { error: firebaseError });
       
-      // Fallback to mock data if Firebase fails
-      let allItems: any[] = [];
-      if (!category || category === 'all') {
-        allItems = [
-          ...MOCK_SEARCH_DATA.spaces,
-          ...MOCK_SEARCH_DATA.tools,
-          ...MOCK_SEARCH_DATA.people,
-          ...MOCK_SEARCH_DATA.events,
-          ...MOCK_SEARCH_DATA.posts
-        ];
-      } else {
-        allItems = MOCK_SEARCH_DATA[category as keyof typeof MOCK_SEARCH_DATA] || [];
-      }
-
-      results = allItems
-        .map(item => ({
-          ...item,
-          relevanceScore: calculateRelevanceScore(item, query, category ?? undefined)
-        }))
-        .filter(item => item.relevanceScore > 0)
-        .sort((a, b) => b.relevanceScore - a.relevanceScore)
-        .slice(0, limit);
+      // No mock data fallback - return empty results if Firebase fails
+      results = [];
     }
 
     return NextResponse.json({

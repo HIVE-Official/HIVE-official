@@ -28,6 +28,11 @@ export * from './planted-tool-widget';
 export * from './ritual-action-button';
 export * from './milestone-celebration';
 
+// === MOBILE UX COMPONENTS ===
+export * from './mobile-touch-target';
+export * from './mobile-input-handler';
+export * from './pull-to-refresh';
+
 // === PLANNED MOLECULES ===
 // These will be implemented as part of the atomic design system completion
 // export * from './stat-card';

@@ -241,8 +241,8 @@ export declare const PostSchema: z.ZodObject<{
     status: "archived" | "draft" | "published" | "flagged";
     visibility: "public" | "space-only" | "followers-only";
     reactions: Record<string, number>;
-    updatedAt: Date;
     createdAt: Date;
+    updatedAt: Date;
     viewCount: number;
     authorId: string;
     reactionCount: number;
@@ -290,8 +290,8 @@ export declare const PostSchema: z.ZodObject<{
     };
     status: "archived" | "draft" | "published" | "flagged";
     visibility: "public" | "space-only" | "followers-only";
-    updatedAt: Date;
     createdAt: Date;
+    updatedAt: Date;
     authorId: string;
     authorHandle: string;
     authorDisplayName: string;

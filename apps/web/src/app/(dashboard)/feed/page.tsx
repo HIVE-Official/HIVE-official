@@ -39,10 +39,13 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { useFirebaseFeed } from '@/hooks/use-firebase-feed';
+import { useFeed, useCoordinationFeed } from '@/hooks/use-feed';
 import { RitualsStrip } from '@/components/feed/rituals-strip';
 import { PostComposer } from '@/components/feed/post-composer';
 import { useActiveUsers } from '@/hooks/use-active-users';
+import { RitualEngine, type RitualStrip } from '@/lib/rituals/ritual-engine';
+import { useUnifiedAuth } from '@hive/ui';
+import { useQuery } from '@tanstack/react-query';
 
 // Feed stats component with real data
 interface FeedStatsProps {
@@ -498,45 +501,57 @@ function PostCard({ post, onLike, onBookmark, onShare, onComment, hasLiked, hasB
 export default function FeedPageV2() {
   const [showComposer, setShowComposer] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [currentFeedType, setCurrentFeedType] = useState<'personal' | 'campus' | 'trending'>('personal');
 
-  // Use the new feed aggregation hook
+  // Use the new working feed hook
   const {
     posts,
-    loading: isLoading,
+    isLoading,
     error,
     hasMore,
+    isLoadingMore,
     loadMore,
     refresh,
-    feedType,
-    setFeedType
-  } = useFeedAggregation();
+    createPost: createFeedPost,
+    analytics,
+    feedType
+  } = useFeed(currentFeedType);
 
-  // Keep the old Firebase feed hook for actions
-  const {
-    createPost,
-    toggleLike,
-    toggleBookmark,
-    addComment,
-    sharePost,
-    hasLiked,
-    hasBookmarked
-  } = useFirebaseFeed({
-    feedType: 'personal',
-    sortBy: 'recent',
-    pageSize: 20,
-    realtime: false,
-    autoLoad: false
-  });
+  // Use coordination feed for specific filter
+  const coordinationFeed = useCoordinationFeed();
+
+  // Switch between feeds based on filter
+  const activeFeed = selectedFilter === 'coordination' ? coordinationFeed : { posts, isLoading, error, hasMore, loadMore, refresh };
+
+  // Mock functions for interactions (will be implemented later)
+  const toggleLike = async (postId: string) => {
+    console.log('Like post:', postId);
+  };
+
+  const toggleBookmark = async (postId: string) => {
+    console.log('Bookmark post:', postId);
+  };
+
+  const addComment = async (postId: string, comment: string) => {
+    console.log('Add comment to post:', postId, comment);
+  };
+
+  const sharePost = async (postId: string) => {
+    console.log('Share post:', postId);
+  };
+
+  const hasLiked = (postId: string) => false;
+  const hasBookmarked = (postId: string) => false;
 
   // Intersection observer for infinite scroll
   const loadMoreRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (!loadMoreRef.current || !hasMore || isLoading) return;
+    if (!loadMoreRef.current || !activeFeed.hasMore || activeFeed.isLoading) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadMore();
+          activeFeed.loadMore();
         }
       },
       { threshold: 0.1 }
@@ -615,7 +630,7 @@ export default function FeedPageV2() {
                 return (
                   <button
                     key={filter.value}
-                    onClick={() => setFeedType(filter.value as any)}
+                    onClick={() => setCurrentFeedType(filter.value as any)}
                     className={cn(
                       "flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md transition-all text-sm font-medium",
                       isActive 
@@ -672,7 +687,7 @@ export default function FeedPageV2() {
             ) : (
               <AnimatePresence mode="popLayout">
                 <div className="space-y-4">
-                  {posts.map((post) => (
+                  {activeFeed.posts.map((post) => (
                     <PostCard
                       key={post.id}
                       post={post}

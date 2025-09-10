@@ -15,7 +15,7 @@ const profile_store_1 = require("../stores/profile-store");
 // API client functions
 async function fetchUserProfile(userId) {
     const token = await auth_store_1.useAuthStore.getState().user?.getIdToken();
-    const response = await fetch(`/api/profile/${userId === 'me' ? 'me' : userId}`, {
+    const response = await fetch(`/api/profile/me`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ async function fetchUserSpaceMemberships(userId, includeActivity = true) {
         includeActivity: includeActivity.toString(),
         timeRange: 'week',
     });
-    const response = await fetch(`/api/profile/${userId === 'me' ? 'me' : userId}/spaces?${params}`, {
+    const response = await fetch(`/api/profile/spaces?${params}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ async function fetchUserSpaceMemberships(userId, includeActivity = true) {
 }
 async function fetchUserAnalytics(userId) {
     const token = await auth_store_1.useAuthStore.getState().user?.getIdToken();
-    const response = await fetch(`/api/profile/${userId === 'me' ? 'me' : userId}/analytics`, {
+    const response = await fetch(`/api/profile/analytics`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ async function fetchUserAnalytics(userId) {
 }
 async function updateUserProfile(userId, updates) {
     const token = await auth_store_1.useAuthStore.getState().user?.getIdToken();
-    const response = await fetch(`/api/profile/${userId === 'me' ? 'me' : userId}`, {
+    const response = await fetch(`/api/profile/me`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,

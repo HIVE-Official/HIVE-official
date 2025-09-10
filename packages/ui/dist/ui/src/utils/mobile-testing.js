@@ -4,7 +4,7 @@
  * Comprehensive testing tools for mobile experience validation
  */
 import { useState } from 'react';
-import { mobilePerformanceManager } from './mobile-performance.js';
+import { mobilePerformanceManager } from './mobile-performance';
 // Common mobile device profiles for testing
 export const DEVICE_PROFILES = {
     'iPhone SE': {

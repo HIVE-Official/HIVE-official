@@ -363,26 +363,53 @@ export const PUT = withAuth(async (request: NextRequest, authContext) => {
       }
     }
 
-    // For development, simulate update
-    if (process.env.NODE_ENV !== 'production') {
-      const updatedEvent = {
-        id,
-        ...updates,
-        updatedAt: new Date().toISOString(),
-        updatedBy: userId
-      };
+    // Get the event to verify ownership
+    const eventRef = dbAdmin.collection('userCalendarEvents').doc(id);
+    const eventDoc = await eventRef.get();
 
-      return NextResponse.json({
-        success: true,
-        event: updatedEvent,
-        message: 'Event updated successfully'
-      });
+    if (!eventDoc.exists) {
+      return NextResponse.json(
+        { success: false, error: 'Event not found' },
+        { status: 404 }
+      );
     }
 
-    // Production implementation would update in Firestore
-    // TODO: Implement Firestore update for calendar events
+    const eventData = eventDoc.data();
+    if (eventData?.userId !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Not authorized to update this event' },
+        { status: 403 }
+      );
+    }
+
+    // Prepare update data
+    const updateData = {
+      ...updates,
+      updatedAt: FieldValue.serverTimestamp(),
+      updatedBy: userId
+    };
+
+    // Remove undefined/null values
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] === undefined || updateData[key] === null) {
+        delete updateData[key];
+      }
+    });
+
+    // Update in Firestore
+    await eventRef.update(updateData);
+
+    // Get updated document
+    const updatedDoc = await eventRef.get();
+    const updatedEvent = {
+      id: updatedDoc.id,
+      ...updatedDoc.data(),
+      updatedAt: new Date().toISOString()
+    };
+
     return NextResponse.json({
       success: true,
+      event: updatedEvent,
       message: 'Event updated successfully'
     });
 
@@ -412,20 +439,44 @@ export const DELETE = withAuth(async (request: NextRequest, authContext) => {
       );
     }
 
-    // For development, simulate deletion
-    if (process.env.NODE_ENV !== 'production') {
-      return NextResponse.json({
-        success: true,
-        message: 'Event deleted successfully',
-        eventId
-      });
+    // Get the event to verify ownership
+    const eventRef = dbAdmin.collection('userCalendarEvents').doc(eventId);
+    const eventDoc = await eventRef.get();
+
+    if (!eventDoc.exists) {
+      return NextResponse.json(
+        { success: false, error: 'Event not found' },
+        { status: 404 }
+      );
     }
 
-    // Production implementation would delete from Firestore
-    // TODO: Implement Firestore deletion for calendar events
+    const eventData = eventDoc.data();
+    if (eventData?.userId !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Not authorized to delete this event' },
+        { status: 403 }
+      );
+    }
+
+    // Delete from Firestore
+    await eventRef.delete();
+
+    // Log activity
+    await dbAdmin.collection('activityEvents').add({
+      userId,
+      type: 'content_deletion',
+      contentType: 'calendar_event',
+      contentId: eventId,
+      metadata: {
+        eventTitle: eventData.title
+      },
+      timestamp: FieldValue.serverTimestamp()
+    });
+
     return NextResponse.json({
       success: true,
-      message: 'Event deleted successfully'
+      message: 'Event deleted successfully',
+      eventId
     });
 
   } catch (error) {

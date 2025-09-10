@@ -1,0 +1,69 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { useRealtimePosts, useRealtimeEvents, useRealtimeMembers, usePresence, useTypingIndicators, useLiveActivityFeed } from './use-live-updates';
+export function useSpaceLiveUpdates(spaceId, userId) {
+    const [lastUpdate, setLastUpdate] = useState(null);
+    // Real-time data hooks
+    const { data: posts = [] } = useRealtimePosts(spaceId);
+    const { data: events = [] } = useRealtimeEvents(spaceId);
+    const { data: members = [] } = useRealtimeMembers(spaceId);
+    // Presence and activity
+    const { onlineUsers } = usePresence(spaceId, userId);
+    const { typingUsers } = useTypingIndicators(spaceId, userId);
+    const { activities, unreadCount } = useLiveActivityFeed(userId);
+    // Update timestamp when any data changes
+    useEffect(() => {
+        setLastUpdate(new Date());
+    }, [posts, events, members, onlineUsers, typingUsers, activities]);
+    return {
+        posts,
+        events,
+        members,
+        onlineUsers,
+        typingUsers,
+        activities,
+        unreadCount,
+        lastUpdate
+    };
+}
+export function useSpaceActivityStatus(spaceId, userId) {
+    const { posts, events, members, onlineUsers, typingUsers, lastUpdate } = useSpaceLiveUpdates(spaceId, userId);
+    const isActive = onlineUsers.length > 0 || typingUsers.length > 0;
+    const recentActivity = lastUpdate && (Date.now() - lastUpdate.getTime()) < 60000; // Activity in last minute
+    const activitySummary = {
+        totalMembers: members.length,
+        onlineMembers: onlineUsers.length,
+        recentPosts: posts.filter(p => Date.now() - new Date(p.timestamp).getTime() < 3600000).length, // Last hour
+        upcomingEvents: events.filter(e => new Date(e.startTime) > new Date()).length,
+        isLive: isActive,
+        hasRecentActivity: recentActivity
+    };
+    return activitySummary;
+}
+// Hook for space leaders to get real-time insights
+export function useSpaceLeaderInsights(spaceId) {
+    const { posts, events, members } = useSpaceLiveUpdates(spaceId, '');
+    const insights = {
+        engagement: {
+            postsToday: posts.filter(p => {
+                const postDate = new Date(p.timestamp);
+                const today = new Date();
+                return postDate.toDateString() === today.toDateString();
+            }).length,
+            activeMembers: members.filter(m => {
+                // Consider members active if they've posted or commented recently
+                return posts.some(p => p.authorId === m.id &&
+                    Date.now() - new Date(p.timestamp).getTime() < 7 * 24 * 60 * 60 * 1000 // Last week
+                );
+            }).length,
+            upcomingEvents: events.filter(e => new Date(e.startTime) > new Date()).length
+        },
+        trends: {
+            growthRate: members.length > 0 ? (members.length / 30) : 0, // Rough monthly growth estimate
+            popularTimes: [], // Could track when most posts/activity happen
+            engagementRate: posts.length > 0 ? (posts.reduce((sum, p) => sum + (p.likes || 0), 0) / posts.length) : 0
+        }
+    };
+    return insights;
+}
+//# sourceMappingURL=use-space-live-updates.js.map

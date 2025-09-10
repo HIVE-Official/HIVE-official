@@ -414,6 +414,168 @@ export interface SpaceMember {
   suspendedUntil?: Timestamp;
 }
 
+// ==== TOOLS & HIVELAB COLLECTIONS ====
+
+export interface ToolDocument {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: 'study' | 'social' | 'productivity' | 'coordination' | 'analytics' | 'communication' | 'resources' | 'fun';
+  
+  // Creator information
+  creatorId: string;
+  creatorName: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  
+  // Versioning
+  version: string;
+  changelog?: string;
+  
+  // Tool configuration
+  elements: any[]; // Stored as JSON
+  configuration: any; // Stored as JSON
+  permissions: {
+    visibility: 'public' | 'space' | 'private';
+    installation: 'anyone' | 'leaders' | 'owner';
+    execution: 'anyone' | 'members' | 'leaders' | 'configured';
+    dataAccess: string[];
+  };
+  
+  // Marketplace info
+  isPublished: boolean;
+  publishedAt?: Timestamp;
+  installCount: number;
+  rating: number;
+  ratingCount: number;
+  tags: string[];
+  
+  // Analytics
+  totalExecutions: number;
+  activeInstalls: number;
+  lastExecuted?: Timestamp;
+  
+  // Status
+  status: 'draft' | 'testing' | 'published' | 'deprecated';
+  isTemplate: boolean;
+  templateId?: string;
+}
+
+export interface ToolInstallationDocument {
+  id: string;
+  toolId: string;
+  toolVersion: string;
+  spaceId: string;
+  
+  // Installation details
+  installedBy: string;
+  installedAt: Timestamp;
+  updatedAt: Timestamp;
+  
+  // Configuration overrides
+  configuration?: any; // JSON
+  permissions?: any; // JSON
+  
+  // Custom settings for this Space
+  customSettings: any; // JSON
+  
+  // Status
+  isEnabled: boolean;
+  isPinned: boolean;
+  position?: number;
+  
+  // Usage tracking
+  executionCount: number;
+  lastExecuted?: Timestamp;
+  uniqueUsers: number;
+}
+
+export interface ToolExecutionDocument {
+  id: string;
+  toolId: string;
+  installationId: string;
+  spaceId: string;
+  userId: string;
+  
+  // Execution details
+  startedAt: Timestamp;
+  completedAt?: Timestamp;
+  duration?: number;
+  
+  // Input/Output
+  inputs: any; // JSON
+  outputs?: any; // JSON
+  
+  // Status
+  status: 'running' | 'completed' | 'failed' | 'cancelled';
+  error?: {
+    message: string;
+    code: string;
+    details?: any;
+  };
+  
+  // Audit trail
+  logs: any[]; // JSON array
+  dataAccessed: string[];
+  externalCalls: string[];
+}
+
+export interface PlatformUpdateDocument {
+  id: string;
+  title: string;
+  description: string;
+  type: 'feature' | 'fix' | 'improvement' | 'security';
+  
+  // Development tracking
+  status: 'planned' | 'in_progress' | 'testing' | 'deployed';
+  progress: number;
+  startedAt?: Timestamp;
+  completedAt?: Timestamp;
+  
+  // Impact and visibility
+  impact: 'low' | 'medium' | 'high';
+  affectedAreas: string[];
+  
+  // Community involvement
+  proposedBy?: string;
+  votes: number;
+  comments: number;
+  
+  // Technical details
+  commits?: string[];
+  pullRequest?: string;
+  documentation?: string;
+}
+
+export interface FeatureProposalDocument {
+  id: string;
+  title: string;
+  description: string;
+  problem: string;
+  solution: string;
+  
+  // Proposer
+  proposerId: string;
+  proposerName: string;
+  proposedAt: Timestamp;
+  
+  // Voting
+  votingStarted?: Timestamp;
+  votingEnded?: Timestamp;
+  votesFor: number;
+  votesAgainst: number;
+  totalVoters: number;
+  
+  // Status
+  status: 'draft' | 'voting' | 'approved' | 'rejected' | 'implemented';
+  implementationId?: string;
+  
+  // Discussion
+  commentCount: number;
+  tags: string[];
+}
+
 export interface SpacePost {
   id: string;
   spaceId: string;

@@ -3,28 +3,34 @@ import type { Space } from '../../types';
 export type ToolStatus = 'active' | 'paused' | 'configuring' | 'error';
 export type ToolType = 'automation' | 'coordination' | 'analytics' | 'utility' | 'integration';
 export interface SpaceTool {
-    id: string;
+    deploymentId: string;
+    toolId: string;
     name: string;
     description: string;
-    type: ToolType;
-    status: ToolStatus;
-    icon?: string;
-    isConfigured: boolean;
-    configuredBy: {
+    category: string;
+    version: string;
+    status: string;
+    configuration: any;
+    permissions: {
+        canEdit: string[];
+        canView: string[];
+        isPublic: boolean;
+    };
+    isShared: boolean;
+    deployer: {
         id: string;
         name: string;
-        role?: string;
-    };
-    configuredAt: Date;
-    executions?: number;
-    lastRun?: Date;
-    errorCount?: number;
-    successRate?: number;
-    outputChannel?: string;
-    permissions: {
-        canExecute: string[];
-        canConfigure: string[];
-        canView: string[];
+        avatar: string | null;
+    } | null;
+    deployedAt: string;
+    lastUsed: string | null;
+    usageCount: number;
+    originalTool: {
+        averageRating: number;
+        ratingCount: number;
+        totalDeployments: number;
+        isVerified: boolean;
+        creatorId: string;
     };
 }
 export interface HiveToolsSurfaceProps {

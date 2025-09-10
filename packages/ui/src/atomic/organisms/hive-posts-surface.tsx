@@ -137,8 +137,8 @@ export interface HivePostsSurfaceProps {
   onDelete?: (postId: string) => void;
 }
 
-// Mock posts data for demo
-const mockPosts: HiveSpacePost[] = [
+// Removed mock data - using real posts only
+/* const mockPosts: HiveSpacePost[] = [
   {
     id: '1',
     type: 'study_session',
@@ -215,7 +215,7 @@ const mockPosts: HiveSpacePost[] = [
     ],
     commentCount: 5
   }
-];
+]; */
 
 export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
   space,
@@ -242,8 +242,8 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
   const [showCreateMenu, setShowCreateMenu] = useState(false);
 
   const filteredPosts = useMemo(() => {
-    // Use props posts if provided, otherwise fall back to mock data for development
-    let posts = propsPosts || mockPosts;
+    // Use real posts from props only - no mock data
+    let posts = propsPosts || [];
     
     if (filter === 'coordination') {
       posts = posts.filter(post => ['study_session', 'food_run', 'ride_share', 'meetup'].includes(post.type));
@@ -257,6 +257,15 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
     
     return posts;
   }, [filter, maxPosts, propsPosts]);
+  
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)]" />
+      </div>
+    );
+  }
 
   const getPostIcon = (type: HivePostType) => {
     switch (type) {

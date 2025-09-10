@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
-import { Button, Progress } from '../atoms/index.js';
-import { Card } from '../molecules/index.js';
+import { Button, Progress } from '../atoms';
+import { Card } from '../molecules';
 import { Lock, Calendar, Heart, MessageCircle, Share, Bookmark, User, Hash, Clock, Sparkles, Target, ArrowRight } from 'lucide-react';
 export function LockedFeedSkeleton({ activationDate = new Date('2024-08-15'), // Default fall semester start
 currentRitualProgress = 45, className = '' }) {

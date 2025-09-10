@@ -5361,8 +5361,8 @@ export declare const ElementPresetSchema: z.ZodObject<{
     id: string;
     name: string;
     description: string;
-    popularity: number;
     elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
+    popularity: number;
     config?: unknown;
     tags?: string[] | undefined;
 }, {
@@ -5371,8 +5371,8 @@ export declare const ElementPresetSchema: z.ZodObject<{
     description: string;
     elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
     config?: unknown;
-    popularity?: number | undefined;
     tags?: string[] | undefined;
+    popularity?: number | undefined;
 }>;
 export declare const ElementSchema: z.ZodObject<{
     id: z.ZodString;
@@ -5396,8 +5396,8 @@ export declare const ElementSchema: z.ZodObject<{
         id: string;
         name: string;
         description: string;
-        popularity: number;
         elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
+        popularity: number;
         config?: unknown;
         tags?: string[] | undefined;
     }, {
@@ -5406,8 +5406,8 @@ export declare const ElementSchema: z.ZodObject<{
         description: string;
         elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
         config?: unknown;
-        popularity?: number | undefined;
         tags?: string[] | undefined;
+        popularity?: number | undefined;
     }>, "many">>;
     isOfficial: z.ZodDefault<z.ZodBoolean>;
     isDeprecated: z.ZodDefault<z.ZodBoolean>;
@@ -5424,18 +5424,18 @@ export declare const ElementSchema: z.ZodObject<{
     version: number;
     category: "Display & Layout" | "Inputs & Choices" | "Logic & Dynamics";
     usageCount: number;
+    createdAt: Date;
     updatedAt: Date;
     configSchema: string;
     isOfficial: boolean;
     isDeprecated: boolean;
-    createdAt: Date;
     defaultConfig?: unknown;
     presets?: {
         id: string;
         name: string;
         description: string;
-        popularity: number;
         elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
+        popularity: number;
         config?: unknown;
         tags?: string[] | undefined;
     }[] | undefined;
@@ -5448,9 +5448,9 @@ export declare const ElementSchema: z.ZodObject<{
     description: string;
     version: number;
     category: "Display & Layout" | "Inputs & Choices" | "Logic & Dynamics";
+    createdAt: Date;
     updatedAt: Date;
     configSchema: string;
-    createdAt: Date;
     usageCount?: number | undefined;
     defaultConfig?: unknown;
     presets?: {
@@ -5459,8 +5459,8 @@ export declare const ElementSchema: z.ZodObject<{
         description: string;
         elementType: "button" | "textBlock" | "imageBlock" | "divider" | "stack" | "choiceSelect" | "textInput" | "ratingStars" | "countdownTimer" | "progressBar" | "conditionGate" | "pingTrigger";
         config?: unknown;
-        popularity?: number | undefined;
         tags?: string[] | undefined;
+        popularity?: number | undefined;
     }[] | undefined;
     isOfficial?: boolean | undefined;
     isDeprecated?: boolean | undefined;

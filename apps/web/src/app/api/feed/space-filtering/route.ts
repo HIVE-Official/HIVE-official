@@ -275,7 +275,7 @@ async function applySpaceAwareFiltering(params: {
   sortBy: string;
   timeRange: string;
 }): Promise<FilteredFeedResult[]> {
-  const { userId, userSpaceContexts, visibilityRules, contentTypes, maxContentPerSpace, sortBy, timeRange } = params;
+  const { userId, userSpaceContexts, visibilityRules, contentTypes, maxContentPerSpace, sortBy, timeRange } = await params;
   
   const results: FilteredFeedResult[] = [];
 

@@ -3,86 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Crown, Shield, Eye, UserPlus, UserMinus, MoreHorizontal, Search, MapPin, GraduationCap, TrendingUp, AlertTriangle, Clock, MessageCircle } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-// Mock members data
-const mockMembers = [
-    {
-        id: '1',
-        name: 'Sarah Chen',
-        email: 'schen@buffalo.edu',
-        role: 'owner',
-        status: 'active',
-        joinedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-        lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        major: 'Computer Science',
-        year: 'Junior',
-        dorm: 'Ellicott Complex',
-        postsCount: 15,
-        engagementScore: 92,
-        coordinationParticipation: 8
-    },
-    {
-        id: '2',
-        name: 'Alex Rodriguez',
-        email: 'alexr@buffalo.edu',
-        role: 'admin',
-        status: 'active',
-        joinedAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000), // 25 days ago
-        lastActive: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-        major: 'Engineering',
-        year: 'Senior',
-        dorm: 'Governors',
-        postsCount: 12,
-        engagementScore: 85,
-        coordinationParticipation: 6
-    },
-    {
-        id: '3',
-        name: 'Jordan Martinez',
-        email: 'jmart@buffalo.edu',
-        role: 'moderator',
-        status: 'active',
-        joinedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
-        lastActive: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
-        major: 'Business Administration',
-        year: 'Sophomore',
-        dorm: 'South Campus',
-        postsCount: 8,
-        engagementScore: 78,
-        coordinationParticipation: 4
-    },
-    {
-        id: '4',
-        name: 'Taylor Kim',
-        email: 'tkim@buffalo.edu',
-        role: 'member',
-        status: 'active',
-        joinedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
-        lastActive: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
-        major: 'Psychology',
-        year: 'Freshman',
-        dorm: 'Ellicott Complex',
-        postsCount: 5,
-        engagementScore: 65,
-        coordinationParticipation: 3
-    },
-    {
-        id: '5',
-        name: 'Morgan Davis',
-        email: 'mdavis@buffalo.edu',
-        role: 'member',
-        status: 'inactive',
-        joinedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-        lastActive: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-        major: 'Biology',
-        year: 'Junior',
-        dorm: 'Governors',
-        postsCount: 2,
-        engagementScore: 32,
-        coordinationParticipation: 1
-    }
-];
-export const HiveMembersSurface = ({ space, members = mockMembers, maxMembers, isBuilder = false, leaderMode, canManageMembers = false, onChangeRole, onRemoveMember, onBlockMember, onInviteMember, onMessageMember }) => {
+import { cn } from '../../lib/utils';
+export const HiveMembersSurface = ({ space, members = [], maxMembers, isBuilder = false, leaderMode, canManageMembers = false, onChangeRole, onRemoveMember, onBlockMember, onInviteMember, onMessageMember }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState('all');

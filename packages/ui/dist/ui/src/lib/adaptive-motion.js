@@ -1,5 +1,5 @@
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
-import { motion } from '../../../tokens/src/motion.js';
+import { motion } from '../../../tokens/src/motion';
 /**
  * Detect current student energy state based on time and context
  */
@@ -211,5 +211,5 @@ export function AdaptiveMotionProvider({ children, energyState, context = 'navig
     // For now, components can call useAdaptiveMotion directly
     return _jsx(_Fragment, { children: children });
 }
-export { motion } from '../../../tokens/src/motion.js';
+export { motion } from '../../../tokens/src/motion';
 //# sourceMappingURL=adaptive-motion.js.map

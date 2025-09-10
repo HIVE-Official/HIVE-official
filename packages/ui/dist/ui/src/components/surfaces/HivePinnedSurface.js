@@ -1,12 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
 import { Pin, Link, FileText, AlertCircle, Download, ExternalLink, MoreVertical, Edit, Trash2, Plus, Info, ChevronRight, File } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useFirebaseRealtime, useOptimisticUpdates } from '../../hooks/use-live-updates';
 // Pinned Item Card Component
 const PinnedItemCard = ({ item, isLeader, variant = 'widget', onEdit, onUnpin, onView }) => {
     const [showActions, setShowActions] = useState(false);
@@ -58,60 +59,69 @@ const PinnedItemCard = ({ item, isLeader, variant = 'widget', onEdit, onUnpin, o
 };
 // Main Surface Component
 export const HivePinnedSurface = ({ spaceId, spaceName, isLeader = false, currentUserId, className, variant = 'widget', pinnedItems: propItems, loading = false, error = null, onPinItem, onUnpinItem, onEditItem, }) => {
-    // Mock data for development
-    const mockPinnedItems = useMemo(() => [
-        {
-            id: '1',
-            type: 'alert',
-            title: 'Important: Space Guidelines Updated',
-            description: 'We\'ve updated our community guidelines to better reflect our values and ensure a positive environment for everyone.',
-            content: 'Please review the following changes:\n\n1. Respectful communication is mandatory\n2. No spam or self-promotion without approval\n3. Share resources that benefit the community\n4. Report any issues to space leaders immediately',
-            priority: 'high',
-            authorId: '1',
-            authorName: 'Sarah Chen',
-            pinnedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
-            tags: ['guidelines', 'important']
-        },
-        {
-            id: '2',
-            type: 'resource',
-            title: 'Project Resources & Templates',
-            description: 'Collection of useful templates and resources for our projects.',
-            fileUrl: '#',
-            fileName: 'project-templates.zip',
-            fileSize: '2.4 MB',
-            priority: 'medium',
-            authorId: '2',
-            authorName: 'Marcus Johnson',
-            pinnedAt: new Date(Date.now() - 1000 * 60 * 60 * 48),
-            tags: ['resources', 'templates']
-        },
-        {
-            id: '3',
-            type: 'link',
-            title: 'Team Collaboration Board',
-            description: 'Our shared Notion workspace for project planning and collaboration.',
-            url: 'https://notion.so/workspace',
-            priority: 'medium',
-            authorId: '3',
-            authorName: 'Emily Rodriguez',
-            pinnedAt: new Date(Date.now() - 1000 * 60 * 60 * 72),
-            tags: ['collaboration', 'planning']
-        },
-        {
-            id: '4',
-            type: 'announcement',
-            title: 'Welcome New Members!',
-            description: 'A warm welcome to everyone who joined this week. Feel free to introduce yourself in the feed!',
-            priority: 'low',
-            authorId: '1',
-            authorName: 'Sarah Chen',
-            pinnedAt: new Date(Date.now() - 1000 * 60 * 60 * 96),
-            expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-            tags: ['welcome']
-        }
+    // No mock data - use real pinned items only
+    const emptyPinnedItems = [];
+    /* Removed mock data
+    const mockPinnedItems: PinnedItem[] = useMemo(() => [
+      {
+        id: '1',
+        type: 'alert',
+        title: 'Important: Space Guidelines Updated',
+        description: 'We\'ve updated our community guidelines to better reflect our values and ensure a positive environment for everyone.',
+        content: 'Please review the following changes:\n\n1. Respectful communication is mandatory\n2. No spam or self-promotion without approval\n3. Share resources that benefit the community\n4. Report any issues to space leaders immediately',
+        priority: 'high',
+        authorId: '1',
+        authorName: 'Sarah Chen',
+        pinnedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+        tags: ['guidelines', 'important']
+      },
+      {
+        id: '2',
+        type: 'resource',
+        title: 'Project Resources & Templates',
+        description: 'Collection of useful templates and resources for our projects.',
+        fileUrl: '#',
+        fileName: 'project-templates.zip',
+        fileSize: '2.4 MB',
+        priority: 'medium',
+        authorId: '2',
+        authorName: 'Marcus Johnson',
+        pinnedAt: new Date(Date.now() - 1000 * 60 * 60 * 48),
+        tags: ['resources', 'templates']
+      },
+      {
+        id: '3',
+        type: 'link',
+        title: 'Team Collaboration Board',
+        description: 'Our shared Notion workspace for project planning and collaboration.',
+        url: 'https://notion.so/workspace',
+        priority: 'medium',
+        authorId: '3',
+        authorName: 'Emily Rodriguez',
+        pinnedAt: new Date(Date.now() - 1000 * 60 * 60 * 72),
+        tags: ['collaboration', 'planning']
+      },
+      {
+        id: '4',
+        type: 'announcement',
+        title: 'Welcome New Members!',
+        description: 'A warm welcome to everyone who joined this week. Feel free to introduce yourself in the feed!',
+        priority: 'low',
+        authorId: '1',
+        authorName: 'Sarah Chen',
+        pinnedAt: new Date(Date.now() - 1000 * 60 * 60 * 96),
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        tags: ['welcome']
+      }
     ], []);
-    const pinnedItems = propItems || mockPinnedItems;
+    */
+    // Real-time pinned items data
+    const { data: realtimePinnedItems, loading: realtimeLoading, error: realtimeError } = useFirebaseRealtime('pinned', [{ field: 'spaceId', operator: '==', value: spaceId }], 'pinnedAt', 10, [spaceId]);
+    const { data: optimisticPinnedItems } = useOptimisticUpdates(propItems || realtimePinnedItems || []);
+    // Use optimistic pinned items for immediate UI updates
+    const pinnedItems = optimisticPinnedItems || emptyPinnedItems;
+    const isLoading = loading || realtimeLoading;
+    const displayError = error || realtimeError;
     // Sort by priority then by date
     const sortedItems = useMemo(() => {
         const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -122,11 +132,11 @@ export const HivePinnedSurface = ({ spaceId, spaceName, isLeader = false, curren
             return b.pinnedAt.getTime() - a.pinnedAt.getTime();
         });
     }, [pinnedItems]);
-    if (loading) {
+    if (isLoading) {
         return (_jsx("div", { className: cn("space-y-4", className), children: _jsxs("div", { className: "animate-pulse", children: [_jsx("div", { className: "bg-gray-200 rounded-lg h-16 mb-4" }), _jsx("div", { className: "space-y-3", children: [1, 2, 3].map((i) => (_jsx("div", { className: "bg-gray-100 rounded-lg h-24" }, i))) })] }) }));
     }
-    if (error) {
-        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load pinned items" }), _jsx("p", { className: "text-sm text-gray-500", children: error.message })] }) }));
+    if (displayError) {
+        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load pinned items" }), _jsx("p", { className: "text-sm text-gray-500", children: displayError.message })] }) }));
     }
     return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Pin, { className: "h-5 w-5 text-gray-600" }), _jsx("h2", { className: "text-xl font-semibold text-gray-900", children: variant === 'full' && spaceName ? `${spaceName} Pinned` : 'Pinned' }), _jsx(HiveBadge, { variant: "secondary", className: "text-xs", children: sortedItems.length })] }), isLeader && (_jsxs(HiveButton, { variant: "ghost", size: "sm", onClick: onPinItem, className: "flex items-center gap-2", children: [_jsx(Plus, { className: "h-4 w-4" }), "Pin Item"] }))] }), _jsx("div", { className: "space-y-3", children: sortedItems.length === 0 ? (_jsx(HiveCard, { className: "p-8", children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx(Pin, { className: "h-12 w-12 text-gray-400 mx-auto" }), _jsx("p", { className: "text-gray-600", children: "No pinned items" }), _jsx("p", { className: "text-sm text-gray-500", children: isLeader
                                     ? "Pin important announcements, resources, or links for your space"

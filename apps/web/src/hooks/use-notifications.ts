@@ -1,212 +1,282 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { 
-  collection, 
-  query, 
-  where, 
-  orderBy, 
-  limit,
-  onSnapshot,
-  updateDoc,
-  deleteDoc,
-  doc,
-  addDoc,
-  serverTimestamp,
-  Timestamp
-} from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import { useUnifiedAuth } from '@hive/ui';
+import { fcmService, NotificationPayload, NotificationBuilder } from '@/lib/notifications/fcm-service';
+import { useAppStore } from '@/store/app-store';
+import { useToast } from './use-toast';
 
-export interface Notification {
-  id: string;
-  userId: string;
-  type: 'follow' | 'comment' | 'like' | 'mention' | 'event' | 'announcement' | 'trending';
-  title: string;
-  body?: string;
-  link?: string;
-  read: boolean;
-  timestamp: Date;
-  data?: Record<string, any>;
+interface UseNotificationsOptions {
+  autoRequest?: boolean;
+  onNotification?: (payload: NotificationPayload) => void;
+  showInAppToast?: boolean;
 }
 
-interface UseNotificationsReturn {
-  notifications: Notification[];
-  unreadCount: number;
-  loading: boolean;
-  error: Error | null;
-  markAsRead: (notificationId: string) => Promise<void>;
-  markAllAsRead: () => Promise<void>;
-  deleteNotification: (notificationId: string) => Promise<void>;
-  createNotification: (data: Partial<Notification>) => Promise<void>;
-}
+export function useNotifications(options: UseNotificationsOptions = {}) {
+  const {
+    autoRequest = false,
+    onNotification,
+    showInAppToast = true,
+  } = options;
 
-export function useNotifications(): UseNotificationsReturn {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const { user } = useUnifiedAuth();
+  const { toast } = useToast();
+  const { addNotification, notifications, unreadCount } = useAppStore();
+  
+  const [isSupported, setIsSupported] = useState(false);
+  const [permission, setPermission] = useState<NotificationPermission | null>(null);
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Subscribe to real-time notifications
+  // Check support on mount
   useEffect(() => {
-    if (!user?.uid) {
-      setNotifications([]);
-      setLoading(false);
+    const supported = fcmService.isSupported();
+    setIsSupported(supported);
+    
+    if (supported) {
+      setPermission(fcmService.getPermissionStatus());
+    }
+  }, []);
+
+  // Auto request permission if enabled
+  useEffect(() => {
+    if (autoRequest && isSupported && permission === 'default') {
+      requestPermission();
+    }
+  }, [autoRequest, isSupported, permission]);
+
+  // Subscribe to foreground notifications
+  useEffect(() => {
+    if (!isSupported) return;
+
+    const unsubscribe = fcmService.subscribe((payload) => {
+      // Add to store
+      addNotification({
+        id: `notif-${Date.now()}`,
+        userId: 'current-user',
+        type: payload.data?.type || 'system',
+        title: payload.title,
+        message: payload.body,
+        data: payload.data,
+        isRead: false,
+        createdAt: new Date(),
+      });
+
+      // Show in-app toast if enabled
+      if (showInAppToast && !document.hidden) {
+        toast({
+          title: payload.title,
+          description: payload.body,
+          variant: 'default',
+          duration: 5000,
+        });
+      }
+
+      // Call custom handler
+      onNotification?.(payload);
+    });
+
+    return unsubscribe;
+  }, [isSupported, showInAppToast, onNotification, addNotification, toast]);
+
+  // Request notification permission
+  const requestPermission = useCallback(async () => {
+    if (!isSupported) {
+      console.warn('Notifications not supported');
+      return false;
+    }
+
+    setIsLoading(true);
+    try {
+      const token = await fcmService.requestPermission();
+      
+      if (token) {
+        setFcmToken(token);
+        setPermission('granted');
+        
+        toast({
+          title: 'Notifications Enabled',
+          description: 'You will receive notifications for important updates',
+          variant: 'default',
+        });
+        
+        return true;
+      } else {
+        setPermission('denied');
+        
+        toast({
+          title: 'Notifications Blocked',
+          description: 'You can enable notifications in your browser settings',
+          variant: 'destructive',
+        });
+        
+        return false;
+      }
+    } catch (error) {
+      console.error('Error requesting notification permission:', error);
+      
+      toast({
+        title: 'Error',
+        description: 'Failed to enable notifications',
+        variant: 'destructive',
+      });
+      
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isSupported, toast]);
+
+  // Send notification to user
+  const sendNotification = useCallback(async (
+    userId: string,
+    notification: NotificationPayload
+  ): Promise<boolean> => {
+    try {
+      return await fcmService.sendNotification(userId, notification);
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      return false;
+    }
+  }, []);
+
+  // Send bulk notifications
+  const sendBulkNotifications = useCallback(async (
+    userIds: string[],
+    notification: NotificationPayload
+  ): Promise<boolean> => {
+    try {
+      return await fcmService.sendBulkNotifications(userIds, notification);
+    } catch (error) {
+      console.error('Error sending bulk notifications:', error);
+      return false;
+    }
+  }, []);
+
+  // Mark notification as read
+  const markAsRead = useCallback((notificationId: string) => {
+    useAppStore.getState().markAsRead(notificationId);
+  }, []);
+
+  // Mark all as read
+  const markAllAsRead = useCallback(() => {
+    useAppStore.getState().markAllAsRead();
+  }, []);
+
+  // Clear all notifications
+  const clearAll = useCallback(() => {
+    useAppStore.getState().clearNotifications();
+  }, []);
+
+  // Send test notification
+  const sendTestNotification = useCallback(() => {
+    if (!isSupported || permission !== 'granted') {
+      toast({
+        title: 'Enable Notifications First',
+        description: 'Please enable notifications to test',
+        variant: 'destructive',
+      });
       return;
     }
 
-    const notificationsRef = collection(db, 'users', user.uid, 'notifications');
-    const q = query(
-      notificationsRef,
-      orderBy('timestamp', 'desc'),
-      limit(50)
-    );
+    const testNotification = new NotificationBuilder()
+      .setTitle('Test Notification')
+      .setBody('This is a test notification from HIVE')
+      .setData({ type: 'test', timestamp: new Date().toISOString() })
+      .build();
 
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const notificationsData = snapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            userId: user.uid,
-            type: data.type || 'announcement',
-            title: data.title || '',
-            body: data.body,
-            link: data.link,
-            read: data.read || false,
-            timestamp: data.timestamp?.toDate?.() || new Date(),
-            data: data.data
-          } as Notification;
-        });
-        
-        setNotifications(notificationsData);
-        setLoading(false);
-        setError(null);
-
-        // Update browser notification badge (if supported)
-        if ('setAppBadge' in navigator) {
-          const unreadCount = notificationsData.filter(n => !n.read).length;
-          (navigator as any).setAppBadge(unreadCount || undefined);
-        }
-      },
-      (err) => {
-        console.error('Error fetching notifications:', err);
-        setError(err as Error);
-        setLoading(false);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [user?.uid]);
-
-  // Mark notification as read
-  const markAsRead = useCallback(async (notificationId: string) => {
-    if (!user?.uid) return;
-
-    try {
-      const notificationRef = doc(db, 'users', user.uid, 'notifications', notificationId);
-      await updateDoc(notificationRef, {
-        read: true,
-        readAt: serverTimestamp()
-      });
-    } catch (err) {
-      console.error('Error marking notification as read:', err);
-      throw err;
-    }
-  }, [user?.uid]);
-
-  // Mark all notifications as read
-  const markAllAsRead = useCallback(async () => {
-    if (!user?.uid) return;
-
-    try {
-      const unreadNotifications = notifications.filter(n => !n.read);
-      const promises = unreadNotifications.map(n => markAsRead(n.id));
-      await Promise.all(promises);
-    } catch (err) {
-      console.error('Error marking all as read:', err);
-      throw err;
-    }
-  }, [user?.uid, notifications, markAsRead]);
-
-  // Delete notification
-  const deleteNotification = useCallback(async (notificationId: string) => {
-    if (!user?.uid) return;
-
-    try {
-      const notificationRef = doc(db, 'users', user.uid, 'notifications', notificationId);
-      await deleteDoc(notificationRef);
-    } catch (err) {
-      console.error('Error deleting notification:', err);
-      throw err;
-    }
-  }, [user?.uid]);
-
-  // Create notification (for testing or internal use)
-  const createNotification = useCallback(async (data: Partial<Notification>) => {
-    if (!user?.uid) return;
-
-    try {
-      const notificationsRef = collection(db, 'users', user.uid, 'notifications');
-      await addDoc(notificationsRef, {
-        ...data,
-        userId: user.uid,
-        read: false,
-        timestamp: serverTimestamp()
-      });
-
-      // Request browser notification permission if not granted
-      if ('Notification' in window && Notification.permission === 'default') {
-        await Notification.requestPermission();
-      }
-
-      // Show browser notification if permitted
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(data.title || 'New Notification', {
-          body: data.body,
-          icon: '/hive-logo.png',
-          badge: '/hive-badge.png',
-          tag: data.type || 'notification',
-          renotify: true
-        });
-      }
-    } catch (err) {
-      console.error('Error creating notification:', err);
-      throw err;
-    }
-  }, [user?.uid]);
-
-  // Calculate unread count
-  const unreadCount = notifications.filter(n => !n.read).length;
+    // Simulate receiving a notification
+    fcmService['handleForegroundMessage']({
+      notification: testNotification,
+      data: testNotification.data,
+    });
+  }, [isSupported, permission, toast]);
 
   return {
+    // State
+    isSupported,
+    permission,
+    fcmToken,
+    isLoading,
     notifications,
     unreadCount,
-    loading,
-    error,
+    
+    // Actions
+    requestPermission,
+    sendNotification,
+    sendBulkNotifications,
     markAsRead,
     markAllAsRead,
-    deleteNotification,
-    createNotification
+    clearAll,
+    sendTestNotification,
+    
+    // Helpers
+    NotificationBuilder,
   };
 }
 
-// Helper function to create notifications from other parts of the app
-export async function sendNotification(
-  userId: string,
-  notification: Omit<Notification, 'id' | 'userId' | 'timestamp' | 'read'>
-) {
-  try {
-    const notificationsRef = collection(db, 'users', userId, 'notifications');
-    await addDoc(notificationsRef, {
-      ...notification,
-      userId,
-      read: false,
-      timestamp: serverTimestamp()
-    });
-  } catch (error) {
-    console.error('Error sending notification:', error);
-    throw error;
-  }
+// Hook for notification triggers
+export function useNotificationTriggers() {
+  const { sendNotification } = useNotifications();
+  const currentUser = useAppStore(state => state.user);
+
+  // Trigger notification when someone posts in a space
+  const notifySpacePost = useCallback(async (
+    spaceMembers: string[],
+    spaceName: string,
+    authorName: string
+  ) => {
+    const notification = NotificationBuilder.postCreated(spaceName, authorName);
+    
+    // Don't notify the author
+    const recipients = spaceMembers.filter(id => id !== currentUser?.id);
+    
+    for (const userId of recipients) {
+      await sendNotification(userId, notification);
+    }
+  }, [currentUser, sendNotification]);
+
+  // Trigger notification for event reminder
+  const notifyEventReminder = useCallback(async (
+    attendees: string[],
+    eventName: string,
+    timeUntil: string
+  ) => {
+    const notification = NotificationBuilder.eventReminder(eventName, timeUntil);
+    
+    for (const userId of attendees) {
+      await sendNotification(userId, notification);
+    }
+  }, [sendNotification]);
+
+  // Trigger notification for space invite
+  const notifySpaceInvite = useCallback(async (
+    invitedUserId: string,
+    spaceName: string
+  ) => {
+    const notification = NotificationBuilder.spaceInvite(
+      spaceName,
+      currentUser?.displayName || 'Someone'
+    );
+    
+    await sendNotification(invitedUserId, notification);
+  }, [currentUser, sendNotification]);
+
+  // Trigger notification for mention
+  const notifyMention = useCallback(async (
+    mentionedUserId: string,
+    context: string
+  ) => {
+    const notification = NotificationBuilder.mention(
+      currentUser?.displayName || 'Someone',
+      context
+    );
+    
+    await sendNotification(mentionedUserId, notification);
+  }, [currentUser, sendNotification]);
+
+  return {
+    notifySpacePost,
+    notifyEventReminder,
+    notifySpaceInvite,
+    notifyMention,
+  };
 }

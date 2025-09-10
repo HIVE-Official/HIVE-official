@@ -193,8 +193,20 @@ export function EnhancedSpacesSystem({
         break;
       case 'trending':
         sorted.sort((a, b) => {
-          const aTrending = (a.memberCount || 0) * Math.random() * 2;
-          const bTrending = (b.memberCount || 0) * Math.random() * 2;
+          // Calculate trending score based on recent activity and growth
+          const now = Date.now();
+          const dayMs = 24 * 60 * 60 * 1000;
+          
+          const aCreated = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const bCreated = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          
+          const aAge = Math.max(1, (now - aCreated) / dayMs);
+          const bAge = Math.max(1, (now - bCreated) / dayMs);
+          
+          // Trending = members / sqrt(age) - recent spaces with members trend higher
+          const aTrending = (a.memberCount || 0) / Math.sqrt(aAge);
+          const bTrending = (b.memberCount || 0) / Math.sqrt(bAge);
+          
           return bTrending - aTrending;
         });
         break;

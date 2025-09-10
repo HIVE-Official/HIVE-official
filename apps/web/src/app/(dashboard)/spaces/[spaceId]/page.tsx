@@ -7,6 +7,10 @@ import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface,
 import { useSpacePosts } from '../../../../hooks/use-space-posts';
 import { useSpaceEvents } from '../../../../hooks/use-space-events';
 import { useSpaceMembers } from '../../../../hooks/use-space-members';
+import { useSpacePinned } from '../../../../hooks/use-space-pinned';
+import { useSpaceTools } from '../../../../hooks/use-space-tools';
+import { useSpaceAnalytics } from '../../../../hooks/use-space-analytics';
+import { useSpaceManagement } from '../../../../hooks/use-space-management';
 import { PostWithComments } from '../../../../components/posts/post-with-comments';
 import { SpaceManagementPanel } from '../../../../components/spaces/space-management-panel';
 import { PageContainer } from "@/components/temp-stubs";
@@ -172,38 +176,7 @@ export default function SpaceDetailPage({
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [editedDescription, setEditedDescription] = useState('');
   
-  // Insights mode state
-  const [analyticsData, setAnalyticsData] = useState<{
-    contentData?: {
-      postsThisWeek?: number;
-      averageEngagement?: number;
-      totalPosts?: number;
-      contentGrowthRate?: number;
-    };
-    membershipData?: {
-      activeMembers?: number;
-      newMembers?: number;
-      averageEngagement?: number;
-    };
-    eventsData?: {
-      upcomingEvents?: number;
-      averageAttendance?: number;
-      totalEvents?: number;
-    };
-    toolsData?: {
-      activeTools?: number;
-      toolUsage?: number;
-      topTools?: string[];
-    };
-    resourcesData?: {
-      items?: number;
-      totalViews?: number;
-      mostViewed?: string;
-    };
-    overallHealth?: number;
-    activity?: any;
-  } | null>(null);
-  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  // Insights mode - Real analytics data
   
   // Space membership and permissions state
   const [spaceMembership, setSpaceMembership] = useState<SpaceMembership | null>(null);
@@ -238,6 +211,43 @@ export default function SpaceDetailPage({
     summary: membersSummary,
     refresh: refreshMembers
   } = useSpaceMembers(spaceId);
+  
+  // Use real-time pinned items hook
+  const {
+    items: pinnedItems,
+    loading: pinnedLoading,
+    pinItem,
+    unpinItem,
+    trackAction: trackPinnedAction,
+    refresh: refreshPinned
+  } = useSpacePinned(spaceId);
+  
+  // Use real tools hook
+  const {
+    tools,
+    loading: toolsLoading,
+    installTool,
+    uninstallTool,
+    updateToolConfig,
+    refresh: refreshTools
+  } = useSpaceTools(spaceId);
+  
+  // Use real analytics hook (only enabled for leaders in insights mode)
+  const {
+    analytics: analyticsData,
+    loading: analyticsLoading,
+    refresh: refreshAnalytics
+  } = useSpaceAnalytics(spaceId, isLeader && currentMode === 'insights');
+  
+  // Use space management hook for leader tools
+  const {
+    updateSettings,
+    changeUserRole,
+    removeMember: removeMemberFromSpace,
+    blockMember: blockSpaceMember,
+    inviteMember,
+    updating: managementUpdating
+  } = useSpaceManagement(spaceId);
 
   const handleJoinSpace = async () => {
     try {
@@ -328,6 +338,15 @@ export default function SpaceDetailPage({
     // Navigate to tool analytics
     window.location.href = `/tools/${toolId}/analytics`;
   };
+  
+  const handleRemoveTool = async (deploymentId: string) => {
+    try {
+      await uninstallTool(deploymentId);
+      await refreshTools();
+    } catch (error) {
+      console.error('Failed to remove tool:', error);
+    }
+  };
 
   const handleCreatePost = (type: 'activity' | 'discussion' | 'question' | 'poll' | 'announcement' | 'link' | 'study_session' | 'food_run' | 'ride_share' | 'meetup') => {
     // Map all types to supported modal types
@@ -374,21 +393,21 @@ export default function SpaceDetailPage({
 
   // Member Management Handlers
   const handleChangeRole = async (memberId: string, role: string) => {
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: memberId, role })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json() as { error?: string };
-      throw new Error(errorData.error || 'Failed to change member role');
+    try {
+      await changeUserRole(memberId, role as 'admin' | 'moderator' | 'member');
+      // Refresh members list to show updated roles
+      refreshMembers();
+    } catch (error) {
+      console.error('Failed to change role:', error);
+      // Show error toast if available
+      if (typeof window !== 'undefined' && (window as any).showToast) {
+        (window as any).showToast({
+          title: 'Error',
+          description: 'Failed to change member role',
+          type: 'error'
+        });
+      }
     }
-
-    // Refresh the page to show updated member roles
-    window.location.reload();
   };
 
   const handleRemoveMember = async (memberId: string) => {
@@ -396,37 +415,41 @@ export default function SpaceDetailPage({
       return;
     }
 
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members?userId=${memberId}`, {
-      method: 'DELETE'
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json() as { error?: string };
-      throw new Error(errorData.error || 'Failed to remove member');
+    try {
+      await removeMemberFromSpace(memberId);
+      // Refresh members list to show updated list
+      refreshMembers();
+    } catch (error) {
+      console.error('Failed to remove member:', error);
+      // Show error toast if available
+      if (typeof window !== 'undefined' && (window as any).showToast) {
+        (window as any).showToast({
+          title: 'Error',
+          description: 'Failed to remove member',
+          type: 'error'
+        });
+      }
     }
-
-    // Refresh the page to show updated member list
-    window.location.reload();
   };
 
   const handleBlockMember = async (memberId: string) => {
     const reason = prompt('Reason for suspension (optional):');
     
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: memberId, action: 'suspend', reason })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json() as { error?: string };
-      throw new Error(errorData.error || 'Failed to suspend member');
+    try {
+      await blockSpaceMember(memberId, 'suspend');
+      // Refresh members list to show updated status
+      refreshMembers();
+    } catch (error) {
+      console.error('Failed to suspend member:', error);
+      // Show error toast if available
+      if (typeof window !== 'undefined' && (window as any).showToast) {
+        (window as any).showToast({
+          title: 'Error',
+          description: 'Failed to suspend member',
+          type: 'error'
+        });
+      }
     }
-
-    // Refresh the page to show updated member status
-    window.location.reload();
   };
 
   React.useEffect(() => {
@@ -683,7 +706,8 @@ export default function SpaceDetailPage({
                     <Component
                       space={space}
                       posts={activeWidget.id === 'posts' ? posts : undefined}
-                      isLoading={activeWidget.id === 'posts' ? postsLoading : undefined}
+                      tools={activeWidget.id === 'tools' ? tools : undefined}
+                      isLoading={activeWidget.id === 'posts' ? postsLoading : activeWidget.id === 'tools' ? toolsLoading : undefined}
                       mode="view"
                       maxItems={5}
                       showCompact={true}
@@ -1029,9 +1053,13 @@ export default function SpaceDetailPage({
                     {widget.id === 'members' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                       <HiveMembersSurface
                         space={space}
+                        members={members}
                         isBuilder={isLeader}
                         leaderMode={currentMode === 'manage' ? 'manage' : 'insights'}
                         maxMembers={5}
+                        canManageMembers={isLeader}
+                        onInviteMember={() => console.log('Invite member')}
+                        onMessageMember={(memberId) => console.log('Message member:', memberId)}
                       />
                     ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                       <HiveEventsSurface
@@ -1049,17 +1077,26 @@ export default function SpaceDetailPage({
                       <Component
                         space={space}
                         posts={widget.id === 'posts' ? posts : undefined}
-                        isLoading={widget.id === 'posts' ? postsLoading : undefined}
+                        members={widget.id === 'members' ? members : undefined}
+                        items={widget.id === 'pinned' ? pinnedItems : undefined}
+                        tools={widget.id === 'tools' ? tools : undefined}
+                        isLoading={widget.id === 'posts' ? postsLoading : widget.id === 'members' ? membersLoading : widget.id === 'pinned' ? pinnedLoading : widget.id === 'tools' ? toolsLoading : undefined}
                         mode="view"
                         showCompact={true}
                         maxItems={3}
                         isBuilder={isAdmin}
+                        canPin={widget.id === 'pinned' ? isLeader : undefined}
                         canModerate={isLeader}
                         leaderMode={currentMode}
                         canManageTools={isAdmin}
                         onAddTool={widget.id === 'tools' ? handleAddTool : undefined}
                         onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
                         onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
+                        onRemoveTool={widget.id === 'tools' ? handleRemoveTool : undefined}
+                        onAddPinned={widget.id === 'pinned' ? () => console.log('Add pinned item') : undefined}
+                        onViewItem={widget.id === 'pinned' ? (itemId) => trackPinnedAction(itemId, 'view') : undefined}
+                        onDownloadItem={widget.id === 'pinned' ? (itemId) => trackPinnedAction(itemId, 'download') : undefined}
+                        onUnpinItem={widget.id === 'pinned' ? unpinItem : undefined}
                       />
                     )}
                   </motion.div>
@@ -1207,31 +1244,40 @@ export default function SpaceDetailPage({
                         Cancel
                       </motion.button>
                       <motion.button
-                        className="px-3 py-1 bg-green-500 hover:bg-green-600 text-[var(--hive-text-inverse)] text-xs rounded-md transition-colors"
+                        className="px-3 py-1 bg-green-500 hover:bg-green-600 text-[var(--hive-text-inverse)] text-xs rounded-md transition-colors disabled:opacity-50"
+                        disabled={managementUpdating}
                         onClick={async () => {
                           try {
-                            const response = await authenticatedFetch(`/api/spaces/${spaceId}`, {
-                              method: 'PATCH',
-                              headers: {
-                                'Content-Type': 'application/json'
-                              },
-                              body: JSON.stringify({ description: editedDescription })
-                            });
-                            
-                            if (response.ok) {
-                              setIsEditingDescription(false);
-                              window.location.reload(); // Refresh to show updated description
-                            } else {
-                              alert('Failed to update description');
+                            await updateSettings({ description: editedDescription });
+                            setIsEditingDescription(false);
+                            // Update local space object to reflect changes
+                            if (space) {
+                              space.description = editedDescription;
                             }
-                          } catch {
-                            alert('Failed to update description');
+                            // Show success toast if available
+                            if (typeof window !== 'undefined' && (window as any).showToast) {
+                              (window as any).showToast({
+                                title: 'Success',
+                                description: 'Space description updated',
+                                type: 'success'
+                              });
+                            }
+                          } catch (error) {
+                            console.error('Failed to update description:', error);
+                            // Show error toast if available
+                            if (typeof window !== 'undefined' && (window as any).showToast) {
+                              (window as any).showToast({
+                                title: 'Error',
+                                description: 'Failed to update description',
+                                type: 'error'
+                              });
+                            }
                           }
                         }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        Save
+                        {managementUpdating ? 'Saving...' : 'Save'}
                       </motion.button>
                     </div>
                   </div>
@@ -1359,9 +1405,16 @@ export default function SpaceDetailPage({
                         {widget.id === 'members' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                           <HiveMembersSurface
                             space={space}
+                            members={members}
                             isBuilder={isLeader}
                             leaderMode={currentMode === 'manage' ? 'manage' : 'insights'}
                             maxMembers={50}
+                            canManageMembers={isLeader}
+                            onInviteMember={() => console.log('Invite member')}
+                            onMessageMember={(memberId) => console.log('Message member:', memberId)}
+                            onChangeRole={handleChangeRole}
+                            onRemoveMember={handleRemoveMember}
+                            onBlockMember={handleBlockMember}
                           />
                         ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                           <HiveEventsSurface
@@ -1379,10 +1432,14 @@ export default function SpaceDetailPage({
                           <Component
                             space={space}
                             posts={widget.id === 'posts' ? posts : undefined}
-                            isLoading={widget.id === 'posts' ? postsLoading : undefined}
+                            members={widget.id === 'members' ? members : undefined}
+                            items={widget.id === 'pinned' ? pinnedItems : undefined}
+                            tools={widget.id === 'tools' ? tools : undefined}
+                            isLoading={widget.id === 'posts' ? postsLoading : widget.id === 'members' ? membersLoading : widget.id === 'pinned' ? pinnedLoading : widget.id === 'tools' ? toolsLoading : undefined}
                             mode="view"
                             viewMode={widgetViews[activeModal] || widget.allowedViews?.[0] || 'default'}
                             canPost={isJoined && space.status === 'activated'}
+                            canPin={widget.id === 'pinned' ? isLeader : undefined}
                             canModerate={isAdmin}
                             leaderMode={currentMode}
                             isBuilder={isAdmin}
@@ -1390,11 +1447,18 @@ export default function SpaceDetailPage({
                             onAddTool={widget.id === 'tools' ? handleAddTool : undefined}
                             onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
                             onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
+                            onRemoveTool={widget.id === 'tools' ? handleRemoveTool : undefined}
                             onCreateComment={widget.id === 'posts' ? handleCreateComment : undefined}
                             onLoadComments={widget.id === 'posts' ? handleLoadComments : undefined}
                             onChangeRole={widget.id === 'members' ? handleChangeRole : undefined}
                             onRemoveMember={widget.id === 'members' ? handleRemoveMember : undefined}
                             onBlockMember={widget.id === 'members' ? handleBlockMember : undefined}
+                            onInviteMember={widget.id === 'members' ? () => console.log('Invite member') : undefined}
+                            onMessageMember={widget.id === 'members' ? (memberId) => console.log('Message member:', memberId) : undefined}
+                            onAddPinned={widget.id === 'pinned' ? () => console.log('Add pinned item') : undefined}
+                            onViewItem={widget.id === 'pinned' ? (itemId) => trackPinnedAction(itemId, 'view') : undefined}
+                            onDownloadItem={widget.id === 'pinned' ? (itemId) => trackPinnedAction(itemId, 'download') : undefined}
+                            onUnpinItem={widget.id === 'pinned' ? unpinItem : undefined}
                           />
                         )}
                       </>

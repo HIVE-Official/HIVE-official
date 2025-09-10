@@ -16,9 +16,11 @@ import {
   Image,
   Link,
   Hash,
-  Smile
+  Smile,
+  Plus
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useRealtimePosts, useOptimisticUpdates } from '../../hooks/use-live-updates';
 
 // Types
 interface Post {
@@ -344,7 +346,11 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
   loading = false,
   error = null,
 }) => {
-  // Mock data for development
+  // Real-time posts data
+  const { data: realtimePosts, loading: realtimeLoading, error: realtimeError } = useRealtimePosts(spaceId);
+  const { data: optimisticPosts, addOptimisticItem, removeOptimisticItem } = useOptimisticUpdates<Post>((propPosts || realtimePosts || []) as Post[]);
+  
+  // Mock data for development (fallback)
   const mockPosts: Post[] = useMemo(() => [
     {
       id: '1',
@@ -391,15 +397,38 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
     }
   ], []);
 
-  const posts = propPosts || mockPosts;
+  // Use optimistic posts for immediate UI updates, fallback to empty array
+  const posts = optimisticPosts || [];
+  const isLoading = loading || realtimeLoading;
+  const displayError = error || realtimeError;
 
   const handlePostCreate = useCallback(async (content: string) => {
-    if (onPostCreate) {
-      await onPostCreate(content);
-    } else {
-      console.log('Creating post:', content);
-    }
-  }, [onPostCreate]);
+    if (!currentUserId) return;
+    
+    // Create optimistic post
+    const optimisticPost: Post = {
+      id: `temp-${Date.now()}`,
+      content,
+      authorId: currentUserId,
+      authorName: 'You', // Will be updated when real data comes back
+      authorRole: isLeader ? 'leader' : 'member',
+      timestamp: new Date(),
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      hasLiked: false,
+      tags: []
+    };
+
+    // Add optimistically
+    addOptimisticItem(optimisticPost, async () => {
+      if (onPostCreate) {
+        await onPostCreate(content);
+      } else {
+        console.log('Creating post:', content);
+      }
+    });
+  }, [onPostCreate, currentUserId, isLeader, addOptimisticItem]);
 
   const handlePostLike = useCallback(async (postId: string) => {
     if (onPostLike) {
@@ -417,7 +446,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
     }
   }, [onPostComment]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className={cn("space-y-4", className)}>
         <div className="animate-pulse">
@@ -432,12 +461,12 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
     );
   }
 
-  if (error) {
+  if (displayError) {
     return (
       <HiveCard className={cn("p-6", className)}>
         <div className="text-center space-y-2">
           <p className="text-gray-600">Unable to load posts</p>
-          <p className="text-sm text-gray-500">{error.message}</p>
+          <p className="text-sm text-gray-500">{displayError.message}</p>
         </div>
       </HiveCard>
     );
@@ -466,11 +495,27 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
       <div className="space-y-4">
         {posts.length === 0 ? (
           <HiveCard className="p-8">
-            <div className="text-center space-y-2">
-              <p className="text-gray-600">No posts yet</p>
-              <p className="text-sm text-gray-500">
-                {isLeader ? "Be the first to share something with your space!" : "Check back later for updates"}
-              </p>
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                <MessageCircle className="h-8 w-8 text-gray-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No posts yet</h3>
+                <p className="text-gray-600">
+                  {isLeader ? "Be the first to share something with your space!" : "Check back later for updates"}
+                </p>
+              </div>
+              {isLeader && (
+                <HiveButton
+                  variant="primary"
+                  size="sm"
+                  onClick={() => handlePostCreate('')}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Create First Post
+                </HiveButton>
+              )}
             </div>
           </HiveCard>
         ) : (

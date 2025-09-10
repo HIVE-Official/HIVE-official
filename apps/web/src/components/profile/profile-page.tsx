@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Users, TrendingUp, Eye } from 'lucide-react';
 import { Button } from '@hive/ui';
@@ -109,6 +109,26 @@ export function ProfilePage() {
 
 // Profile Views Card
 function ProfileViewsCard() {
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await fetch('/api/profile/analytics?timeRange=week');
+        if (response.ok) {
+          const data = await response.json();
+          setAnalytics(data.analytics);
+        }
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAnalytics();
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -116,27 +136,55 @@ function ProfileViewsCard() {
       className="bg-card border border-border rounded-lg p-4"
     >
       <h3 className="font-semibold mb-3">Profile Views</h3>
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">This week</span>
-          <span className="text-lg font-bold text-accent">23</span>
+      {isLoading ? (
+        <div className="space-y-2">
+          <div className="h-6 bg-muted rounded animate-pulse" />
+          <div className="h-6 bg-muted rounded animate-pulse" />
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">New connections</span>
-          <span className="text-lg font-bold text-green-400">5</span>
+      ) : (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">This week</span>
+            <span className="text-lg font-bold text-accent">
+              {analytics?.overview?.profileViewsThisWeek || 0}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">New connections</span>
+            <span className="text-lg font-bold text-green-400">
+              {analytics?.overview?.connectionsAccepted || 0}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
     </motion.div>
   );
 }
 
 // Friend Activity Card
 function FriendActivityCard() {
-  const activities = [
-    { name: 'Sarah Chen', action: 'joined CS 220 Study Group', time: '2m ago' },
-    { name: 'Mike Johnson', action: 'is looking for a ride to North Campus', time: '15m ago' },
-    { name: 'Emily Davis', action: 'created a new study tool', time: '1h ago' }
-  ];
+  const [activities, setActivities] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        // For now, we'll use mock data since friend activity requires a more complex query
+        // This would typically fetch from a real-time activity feed
+        const mockActivities = [
+          { name: 'Sarah Chen', action: 'joined CS 220 Study Group', time: '2m ago' },
+          { name: 'Mike Johnson', action: 'is looking for a ride to North Campus', time: '15m ago' },
+          { name: 'Emily Davis', action: 'created a new study tool', time: '1h ago' }
+        ];
+        setActivities(mockActivities);
+      } catch (error) {
+        console.error('Error fetching activities:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchActivities();
+  }, []);
 
   return (
     <motion.div
@@ -146,7 +194,20 @@ function FriendActivityCard() {
       className="bg-card border border-border rounded-lg p-4"
     >
       <h3 className="font-semibold mb-3">Friend Activity</h3>
-      <div className="space-y-3">
+      {isLoading ? (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-start gap-2">
+              <div className="w-8 h-8 rounded-full bg-muted animate-pulse flex-shrink-0" />
+              <div className="flex-1">
+                <div className="h-4 bg-muted rounded animate-pulse mb-1" />
+                <div className="h-3 w-16 bg-muted rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-3">
         {activities.map((activity, idx) => (
           <div key={idx} className="flex items-start gap-2">
             <div className="w-8 h-8 rounded-full bg-accent/20 flex-shrink-0" />
@@ -159,7 +220,8 @@ function FriendActivityCard() {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -199,21 +261,114 @@ function QuickActionsCard({ onBrowseProfiles }: { onBrowseProfiles: () => void }
 // Profile Viewer Modal (Tinder-style)
 function ProfileViewerModal({ onClose }: { onClose: () => void }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Mock profiles for demonstration
-  const profiles = [
-    {
-      id: '1',
-      name: 'Jessica Liu',
-      year: 'Junior',
-      major: 'Computer Science',
-      photo: '/default-avatar.png',
-      status: '📚 Studying for finals',
-      availability: 'Available 1hr',
-      mutualSpaces: 3,
-      mutualFriends: 5
+  const [profiles, setProfiles] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  useEffect(() => {
+    // Fetch profile suggestions from API
+    const fetchProfiles = async () => {
+      try {
+        const response = await fetch('/api/profile/suggestions?limit=10', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setProfiles(data.profiles || []);
+        }
+      } catch (error) {
+        console.error('Error fetching profile suggestions:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchProfiles();
+  }, []);
+
+  // Handle swipe gestures
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      handleSkip();
+    } else if (isRightSwipe) {
+      handleConnect();
     }
-  ];
+  };
+
+  const handleSkip = () => {
+    if (currentIndex < profiles.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      // Loop back to start or close
+      setCurrentIndex(0);
+    }
+  };
+
+  const handleConnect = async () => {
+    const profile = profiles[currentIndex];
+    if (!profile) return;
+
+    try {
+      const response = await fetch('/api/profile/connections/requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
+        },
+        body: JSON.stringify({
+          toUserId: profile.uid,
+          message: 'Let\'s connect!'
+        })
+      });
+
+      if (response.ok) {
+        // Move to next profile
+        handleSkip();
+      }
+    } catch (error) {
+      console.error('Error sending connection request:', error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
+        <div className="animate-pulse">
+          <div className="w-64 h-96 bg-muted rounded-lg" />
+        </div>
+      </div>
+    );
+  }
+
+  if (profiles.length === 0) {
+    return (
+      <div className="fixed inset-0 bg-background z-50 flex flex-col items-center justify-center p-4">
+        <h2 className="text-xl font-semibold mb-2">No More Profiles</h2>
+        <p className="text-muted-foreground mb-4">Check back later for more suggestions</p>
+        <Button onClick={onClose}>Close</Button>
+      </div>
+    );
+  }
+
+  const profile = profiles[currentIndex];
 
   return (
     <div className="fixed inset-0 bg-background z-50 flex flex-col">

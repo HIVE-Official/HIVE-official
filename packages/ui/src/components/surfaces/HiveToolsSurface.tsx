@@ -30,6 +30,7 @@ import {
   Database,
   Cloud
 } from 'lucide-react';
+import { useFirebaseRealtime, useOptimisticUpdates } from '../../hooks/use-live-updates';
 import { formatDistanceToNow } from 'date-fns';
 
 // Types
@@ -409,7 +410,10 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
   const [filter, setFilter] = useState<'all' | 'installed' | 'available'>('all');
   const [categoryFilter, setCategoryFilter] = useState<SpaceTool['category'] | 'all'>('all');
 
-  // Mock data for development
+  // No mock data - use real tools only
+  const emptyTools: SpaceTool[] = [];
+  
+  /* Removed mock data
   const mockTools: SpaceTool[] = useMemo(() => [
     {
       id: '1',
@@ -525,8 +529,22 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
       isInstalled: false
     }
   ], []);
+  */
 
-  const tools = propTools || mockTools;
+  // Real-time tools data
+  const { data: realtimeTools, loading: realtimeLoading, error: realtimeError } = useFirebaseRealtime<SpaceTool>(
+    'tools',
+    [{ field: 'spaceId', operator: '==', value: spaceId }],
+    'createdAt',
+    20,
+    [spaceId]
+  );
+  const { data: optimisticTools } = useOptimisticUpdates<SpaceTool>(propTools || realtimeTools || []);
+  
+  // Use optimistic tools for immediate UI updates
+  const tools = optimisticTools || emptyTools;
+  const isLoading = loading || realtimeLoading;
+  const displayError = error || realtimeError;
 
   // Filter tools
   const filteredTools = useMemo(() => {
@@ -562,7 +580,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
     return { installed, favorites, total: tools.length };
   }, [tools]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className={cn("space-y-4", className)}>
         <div className="animate-pulse">
@@ -577,12 +595,12 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
     );
   }
 
-  if (error) {
+  if (displayError) {
     return (
       <HiveCard className={cn("p-6", className)}>
         <div className="text-center space-y-2">
           <p className="text-gray-600">Unable to load tools</p>
-          <p className="text-sm text-gray-500">{error.message}</p>
+          <p className="text-sm text-gray-500">{displayError.message}</p>
         </div>
       </HiveCard>
     );

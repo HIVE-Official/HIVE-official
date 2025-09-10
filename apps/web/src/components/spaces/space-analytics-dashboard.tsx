@@ -170,13 +170,27 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       }
     };
 
-    // Generate time series data
-    const mockTimeSeries: TimeSeriesData[] = Array.from({ length: 30 }, (_, i) => ({
-      date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      members: 100 + Math.floor(Math.random() * 27),
-      posts: 5 + Math.floor(Math.random() * 15),
-      engagement: 60 + Math.floor(Math.random() * 30)
-    }));
+    // Generate time series data with realistic trends
+    const mockTimeSeries: TimeSeriesData[] = Array.from({ length: 30 }, (_, i) => {
+      // Create realistic growth trends instead of random numbers
+      const baseMembers = 100;
+      const basePosts = 5;
+      const baseEngagement = 60;
+      
+      // Simulate weekend patterns (lower on weekends)
+      const dayOfWeek = new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).getDay();
+      const weekendFactor = (dayOfWeek === 0 || dayOfWeek === 6) ? 0.7 : 1.0;
+      
+      // Gradual growth over time
+      const growthFactor = 1 + (i * 0.01); // 1% growth per day
+      
+      return {
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        members: Math.floor(baseMembers * growthFactor),
+        posts: Math.floor(basePosts * weekendFactor * growthFactor + (i % 3)), // Variation based on day
+        engagement: Math.floor(baseEngagement * weekendFactor + (i % 7) * 2) // Weekly cycle
+      };
+    });
 
       setMetrics(mockMetrics);
       setTimeSeriesData(mockTimeSeries);

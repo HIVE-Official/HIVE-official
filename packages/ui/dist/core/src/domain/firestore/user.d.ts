@@ -85,11 +85,11 @@ export declare const UserSchema: z.ZodObject<{
     isBuilder: boolean;
     isVerified: boolean;
     isPublic: boolean;
+    createdAt: number;
     fullName: string;
     builderOptIn: boolean;
     consentGiven: boolean;
     updatedAt: number;
-    createdAt: number;
     builderAnalyticsEnabled: boolean;
     avatarUrl?: string | undefined;
     bio?: string | undefined;
@@ -102,10 +102,10 @@ export declare const UserSchema: z.ZodObject<{
     schoolId: string;
     uid: string;
     major: string;
+    createdAt: number;
     fullName: string;
     consentGiven: boolean;
     updatedAt: number;
-    createdAt: number;
     avatarUrl?: string | undefined;
     status?: "active" | "suspended" | "deleted" | undefined;
     onboardingCompleted?: boolean | undefined;
@@ -140,7 +140,7 @@ export declare const CreateUserSchema: z.ZodObject<Omit<{
     createdAt: z.ZodNumber;
     updatedAt: z.ZodNumber;
     lastActiveAt: z.ZodOptional<z.ZodNumber>;
-}, "id" | "uid" | "updatedAt" | "createdAt" | "lastActiveAt">, "strip", z.ZodTypeAny, {
+}, "id" | "uid" | "createdAt" | "updatedAt" | "lastActiveAt">, "strip", z.ZodTypeAny, {
     email: string;
     handle: string;
     schoolId: string;

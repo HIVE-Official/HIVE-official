@@ -96,6 +96,16 @@ const buttonVariants = cva(
           "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
           "shadow-sm hover:shadow-md",
         ],
+        
+        // Outline button (alias for secondary)
+        outline: [
+          "border border-[var(--hive-border-default)]",
+          "bg-[var(--hive-background-secondary)]",
+          "text-[var(--hive-text-primary)]",
+          "hover:bg-[var(--hive-interactive-hover)]",
+          "hover:border-[var(--hive-border-hover)]",
+          "active:bg-[var(--hive-interactive-active)]",
+        ],
       },
       
       size: {

@@ -127,7 +127,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
       state
     });
 
-    const authUrl = `${config.authUrl}?${params.toString()}`;
+    const authUrl = `${config.authUrl}?${(await params).toString()}`;
 
     return NextResponse.json({
       success: true,

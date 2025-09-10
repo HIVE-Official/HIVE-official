@@ -3,7 +3,7 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 // HIVE Button System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const buttonVariants = cva(
@@ -84,6 +84,15 @@ const buttonVariants = cva(
                 "hover:border-[var(--hive-brand-secondary)]",
                 "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
                 "shadow-sm hover:shadow-md",
+            ],
+            // Outline button (alias for secondary)
+            outline: [
+                "border border-[var(--hive-border-default)]",
+                "bg-[var(--hive-background-secondary)]",
+                "text-[var(--hive-text-primary)]",
+                "hover:bg-[var(--hive-interactive-hover)]",
+                "hover:border-[var(--hive-border-hover)]",
+                "active:bg-[var(--hive-interactive-active)]",
             ],
         },
         size: {

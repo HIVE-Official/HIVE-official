@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { motion } from '../../components/framer-motion-proxy.js';
-import { cn } from '../../lib/utils.js';
+import { motion } from '../../components/framer-motion-proxy';
+import { cn } from '../../lib/utils';
 import { ArrowRight, GraduationCap, Home, Users, Star } from 'lucide-react';
 // Default category configurations
 export const SPACE_CATEGORIES = {

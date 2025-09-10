@@ -7,6 +7,7 @@ import { env, isFirebaseAdminConfigured, currentEnvironment } from "./env";
 let firebaseInitialized = false;
 let dbAdmin: admin.firestore.Firestore;
 let authAdmin: admin.auth.Auth;
+let storageAdmin: admin.storage.Storage;
 
 try {
   if (!admin.apps.length) {
@@ -49,10 +50,12 @@ try {
       admin.initializeApp({
         credential: credential,
         projectId: env.FIREBASE_PROJECT_ID,
+        storageBucket: `${env.FIREBASE_PROJECT_ID}.appspot.com`
       });
 
       dbAdmin = admin.firestore();
       authAdmin = admin.auth();
+      storageAdmin = admin.storage();
       firebaseInitialized = true;
 
     } else {
@@ -62,6 +65,7 @@ try {
     // App already initialized
     dbAdmin = admin.firestore();
     authAdmin = admin.auth();
+    storageAdmin = admin.storage();
     firebaseInitialized = true;
   }
 } catch (error) {
@@ -94,6 +98,18 @@ try {
           return { id: `mock-${Date.now()}` };
         },
         where: () => ({ get: async () => ({ docs: [] }) }),
+      }),
+    } as any;
+
+    storageAdmin = {
+      bucket: () => ({
+        file: (path: string) => ({
+          save: async (buffer: Buffer) => console.log(`🔄 Mock Storage save: ${path}`),
+          delete: async () => console.log(`🔄 Mock Storage delete: ${path}`),
+          getSignedUrl: async () => [`https://mock-storage.com/${path}`],
+          exists: async () => [false],
+        }),
+        upload: async (filepath: string) => console.log(`🔄 Mock Storage upload: ${filepath}`),
       }),
     } as any;
 
@@ -154,11 +170,12 @@ try {
   }
 }
 
-export { dbAdmin, authAdmin };
+export { dbAdmin, authAdmin, storageAdmin };
 
 // Re-export for compatibility with existing code
 export const db = dbAdmin;
 export const auth = authAdmin;
+export const storage = storageAdmin;
 export const isFirebaseConfigured = firebaseInitialized;
 
 // Re-export environment utilities

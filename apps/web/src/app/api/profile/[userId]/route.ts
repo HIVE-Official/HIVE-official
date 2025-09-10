@@ -5,10 +5,10 @@ import * as admin from 'firebase-admin';
 // GET /api/profile/[userId] - Get a user's profile
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
     
     // Get auth token from header
     const authHeader = request.headers.get('Authorization');
@@ -150,10 +150,10 @@ export async function GET(
 // PUT /api/profile/[userId] - Update a user's profile
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
     
     // Verify authentication
     const authHeader = request.headers.get('Authorization');
@@ -234,10 +234,10 @@ export async function PUT(
 // DELETE /api/profile/[userId] - Delete a user's profile
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
     
     // Verify authentication
     const authHeader = request.headers.get('Authorization');

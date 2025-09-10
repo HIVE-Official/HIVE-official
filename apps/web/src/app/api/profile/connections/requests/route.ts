@@ -227,9 +227,9 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     let query = dbAdmin.collection('connection_requests') as any;
 
     // Filter by request direction
-    if (params.type === 'sent') {
+    if ((await params).type === 'sent') {
       query = query.where('fromUserId', '==', userId);
-    } else if (params.type === 'received') {
+    } else if ((await params).type === 'received') {
       query = query.where('toUserId', '==', userId);
     } else {
       // Get both sent and received (more complex query)
@@ -237,12 +237,12 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         dbAdmin.collection('connection_requests')
           .where('fromUserId', '==', userId)
           .orderBy('createdAt', 'desc')
-          .limit(Math.ceil(params.limit / 2))
+          .limit(Math.ceil((await params).limit / 2))
           .get(),
         dbAdmin.collection('connection_requests')
           .where('toUserId', '==', userId)
           .orderBy('createdAt', 'desc')
-          .limit(Math.ceil(params.limit / 2))
+          .limit(Math.ceil((await params).limit / 2))
           .get()
       ]);
 
@@ -250,24 +250,24 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         ...sentSnapshot.docs.map(doc => ({ ...doc.data(), direction: 'sent' })),
         ...receivedSnapshot.docs.map(doc => ({ ...doc.data(), direction: 'received' }))
       ].sort((a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime())
-        .slice(0, params.limit);
+        .slice(0, (await params).limit);
 
       return NextResponse.json({
         success: true,
         requests: allRequests,
-        hasMore: allRequests.length === params.limit
+        hasMore: allRequests.length === (await params).limit
       });
     }
 
     // Apply status filter if specified
-    if (params.status) {
-      query = query.where('status', '==', params.status);
+    if ((await params).status) {
+      query = query.where('status', '==', (await params).status);
     }
 
     // Execute query
     const snapshot = await query
       .orderBy('createdAt', 'desc')
-      .limit(params.limit)
+      .limit((await params).limit)
       .get();
 
     const requests = await Promise.all(
@@ -275,22 +275,22 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         const requestData = doc.data();
         
         // Get user info for display (respect privacy)
-        const otherUserId = params.type === 'sent' ? requestData.toUserId : requestData.fromUserId;
+        const otherUserId = (await params).type === 'sent' ? requestData.toUserId : requestData.fromUserId;
         const otherUserDoc = await dbAdmin.collection('users').doc(otherUserId).get();
         const otherUserData = otherUserDoc.exists ? otherUserDoc.data() : {};
 
         return {
           ...requestData,
-          direction: params.type,
+          direction: (await params).type,
           otherUser: {
             id: otherUserId,
-            fullName: requestData.anonymous && params.type === 'received' 
+            fullName: requestData.anonymous && (await params).type === 'received' 
               ? 'Anonymous User' 
               : otherUserData.fullName || 'Unknown User',
-            handle: requestData.anonymous && params.type === 'received'
+            handle: requestData.anonymous && (await params).type === 'received'
               ? null
               : otherUserData.handle,
-            avatarUrl: requestData.anonymous && params.type === 'received'
+            avatarUrl: requestData.anonymous && (await params).type === 'received'
               ? null
               : otherUserData.profilePhoto || otherUserData.avatarUrl,
             major: otherUserData.major,
@@ -305,10 +305,10 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     return NextResponse.json({
       success: true,
       requests,
-      hasMore: requests.length === params.limit,
+      hasMore: requests.length === (await params).limit,
       summary: {
-        type: params.type,
-        status: params.status,
+        type: (await params).type,
+        status: (await params).status,
         total: requests.length
       }
     });

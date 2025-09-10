@@ -301,7 +301,7 @@ async function getEnhancedFeedContent(params: {
   diversityMode: string;
   timeRange: string;
 }): Promise<EnhancedFeedItem[]> {
-  const { userId, memberships, config, limit, feedType, timeRange, offset: _offset, includeTrending: _includeTrending, diversityMode: _diversityMode } = params;
+  const { userId, memberships, config, limit, feedType, timeRange, offset: _offset, includeTrending: _includeTrending, diversityMode: _diversityMode } = await params;
   
   try {
     const feedItems: EnhancedFeedItem[] = [];

@@ -233,7 +233,7 @@ async function executeToolAction(params: {
   data: Record<string, unknown>;
   context: Record<string, unknown>;
 }): Promise<ToolExecutionResult> {
-  const { deployment, tool, user, action, elementId, data } = params;
+  const { deployment, tool, user, action, elementId, data } = await params;
 
   try {
     // Get or create tool state

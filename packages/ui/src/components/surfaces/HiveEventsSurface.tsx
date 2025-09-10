@@ -24,6 +24,7 @@ import {
   Bell
 } from 'lucide-react';
 import { format, isPast, isToday, isTomorrow, addDays, startOfWeek } from 'date-fns';
+import { useRealtimeEvents, useOptimisticUpdates } from '../../hooks/use-live-updates';
 
 // Types
 interface SpaceEvent {
@@ -369,7 +370,14 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
   const [view, setView] = useState<'list' | 'calendar'>('list');
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'past'>('upcoming');
 
-  // Mock data for development
+  // Real-time events data
+  const { data: realtimeEvents, loading: realtimeLoading, error: realtimeError } = useRealtimeEvents(spaceId);
+  const { data: optimisticEvents, addOptimisticItem, removeOptimisticItem } = useOptimisticUpdates<SpaceEvent>((propEvents || realtimeEvents || []) as SpaceEvent[]);
+
+  // No mock data - use real events only
+  const emptyEvents: SpaceEvent[] = [];
+  
+  /* Removed mock data
   const mockEvents: SpaceEvent[] = useMemo(() => [
     {
       id: '1',
@@ -449,8 +457,12 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
       visibility: 'members'
     }
   ], [spaceId]);
+  */
 
-  const events = propEvents || mockEvents;
+  // Use optimistic events for immediate UI updates
+  const events = optimisticEvents || emptyEvents;
+  const isLoading = loading || realtimeLoading;
+  const displayError = error || realtimeError;
 
   // Filter events
   const filteredEvents = useMemo(() => {
@@ -471,7 +483,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
     return filtered;
   }, [events, filter]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className={cn("space-y-4", className)}>
         <div className="animate-pulse">
@@ -486,12 +498,12 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
     );
   }
 
-  if (error) {
+  if (displayError) {
     return (
       <HiveCard className={cn("p-6", className)}>
         <div className="text-center space-y-2">
           <p className="text-gray-600">Unable to load events</p>
-          <p className="text-sm text-gray-500">{error.message}</p>
+          <p className="text-sm text-gray-500">{displayError.message}</p>
         </div>
       </HiveCard>
     );

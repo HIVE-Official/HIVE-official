@@ -29,34 +29,34 @@ export type ToolStatus = 'active' | 'paused' | 'configuring' | 'error';
 export type ToolType = 'automation' | 'coordination' | 'analytics' | 'utility' | 'integration';
 
 export interface SpaceTool {
-  id: string;
+  deploymentId: string;
+  toolId: string;
   name: string;
   description: string;
-  type: ToolType;
-  status: ToolStatus;
-  icon?: string;
-  
-  // Configuration
-  isConfigured: boolean;
-  configuredBy: {
+  category: string;
+  version: string;
+  status: string;
+  configuration: any;
+  permissions: {
+    canEdit: string[];
+    canView: string[];
+    isPublic: boolean;
+  };
+  isShared: boolean;
+  deployer: {
     id: string;
     name: string;
-    role?: string;
-  };
-  configuredAt: Date;
-  
-  // Activity metrics
-  executions?: number;
-  lastRun?: Date;
-  errorCount?: number;
-  successRate?: number;
-  
-  // Space integration
-  outputChannel?: string; // Where tool posts results
-  permissions: {
-    canExecute: string[]; // Role names
-    canConfigure: string[]; // Role names
-    canView: string[]; // Role names
+    avatar: string | null;
+  } | null;
+  deployedAt: string;
+  lastUsed: string | null;
+  usageCount: number;
+  originalTool: {
+    averageRating: number;
+    ratingCount: number;
+    totalDeployments: number;
+    isVerified: boolean;
+    creatorId: string;
   };
 }
 
@@ -78,109 +78,9 @@ export interface HiveToolsSurfaceProps {
   onRemoveTool?: (toolId: string) => void;
 }
 
-// Mock tools data
-const mockTools: SpaceTool[] = [
-  {
-    id: '1',
-    name: 'Study Session Coordinator',
-    description: 'Automatically matches students for study sessions based on courses and availability.',
-    type: 'coordination',
-    status: 'active',
-    icon: '📚',
-    isConfigured: true,
-    configuredBy: {
-      id: 'ra1',
-      name: 'Jordan Martinez',
-      role: 'RA'
-    },
-    configuredAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-    executions: 23,
-    lastRun: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-    errorCount: 1,
-    successRate: 96,
-    outputChannel: 'posts',
-    permissions: {
-      canExecute: ['member', 'moderator', 'admin', 'owner'],
-      canConfigure: ['admin', 'owner'],
-      canView: ['member', 'moderator', 'admin', 'owner']
-    }
-  },
-  {
-    id: '2',
-    name: 'Food Run Organizer',
-    description: 'Helps coordinate group food orders with automatic order collection and payment tracking.',
-    type: 'coordination',
-    status: 'active',
-    icon: '🍕',
-    isConfigured: true,
-    configuredBy: {
-      id: 'u1',
-      name: 'Sarah Chen',
-      role: 'admin'
-    },
-    configuredAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-    executions: 8,
-    lastRun: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-    errorCount: 0,
-    successRate: 100,
-    outputChannel: 'posts',
-    permissions: {
-      canExecute: ['member', 'moderator', 'admin', 'owner'],
-      canConfigure: ['admin', 'owner'],
-      canView: ['member', 'moderator', 'admin', 'owner']
-    }
-  },
-  {
-    id: '3',
-    name: 'Event Attendance Tracker',
-    description: 'Tracks attendance at floor events and generates participation reports.',
-    type: 'analytics',
-    status: 'configuring',
-    icon: '📊',
-    isConfigured: false,
-    configuredBy: {
-      id: 'ra1',
-      name: 'Jordan Martinez',
-      role: 'RA'
-    },
-    configuredAt: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
-    executions: 0,
-    errorCount: 0,
-    permissions: {
-      canExecute: ['admin', 'owner'],
-      canConfigure: ['admin', 'owner'],
-      canView: ['moderator', 'admin', 'owner']
-    }
-  },
-  {
-    id: '4',
-    name: 'Maintenance Request Bot',
-    description: 'Automatically submits maintenance requests to campus facilities.',
-    type: 'integration',
-    status: 'error',
-    icon: '🔧',
-    isConfigured: true,
-    configuredBy: {
-      id: 'ra1',
-      name: 'Jordan Martinez',
-      role: 'RA'
-    },
-    configuredAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
-    executions: 12,
-    lastRun: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-    errorCount: 3,
-    successRate: 75,
-    permissions: {
-      canExecute: ['member', 'moderator', 'admin', 'owner'],
-      canConfigure: ['admin', 'owner'],
-      canView: ['member', 'moderator', 'admin', 'owner']
-    }
-  }
-];
-
 export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
   space,
-  tools = mockTools,
+  tools = [],
   maxTools,
   canManageTools = false,
   leaderMode,
@@ -193,19 +93,18 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
   onPauseTool,
   onRemoveTool
 }) => {
-  const [filter, setFilter] = useState<ToolType | 'all'>('all');
-  const [statusFilter, setStatusFilter] = useState<ToolStatus | 'all'>('all');
+  const [filter, setFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const filteredTools = useMemo(() => {
     let filtered = tools.filter(tool => {
-      const matchesType = filter === 'all' || tool.type === filter;
+      const matchesType = filter === 'all' || tool.category === filter;
       const matchesStatus = statusFilter === 'all' || tool.status === statusFilter;
       return matchesType && matchesStatus;
     });
 
-    // Sort by status priority: active > configuring > paused > error
-    const statusPriority = { active: 0, configuring: 1, paused: 2, error: 3 };
-    filtered.sort((a, b) => statusPriority[a.status] - statusPriority[b.status]);
+    // Sort by deployment count
+    filtered.sort((a, b) => b.originalTool.totalDeployments - a.originalTool.totalDeployments);
 
     if (maxTools) {
       filtered = filtered.slice(0, maxTools);
@@ -214,29 +113,35 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
     return filtered;
   }, [tools, filter, statusFilter, maxTools]);
 
-  const getToolTypeIcon = (type: ToolType) => {
-    switch (type) {
-      case 'automation': return <Zap className="h-4 w-4" />;
-      case 'coordination': return <Activity className="h-4 w-4" />;
-      case 'analytics': return <BarChart3 className="h-4 w-4" />;
-      case 'utility': return <Settings className="h-4 w-4" />;
-      case 'integration': return <Code className="h-4 w-4" />;
-      default: return <Hash className="h-4 w-4" />;
+  const getToolCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'study': return '📚';
+      case 'social': return '👥';
+      case 'productivity': return '⚡';
+      case 'coordination': return '🎯';
+      case 'analytics': return '📊';
+      case 'communication': return '💬';
+      case 'resources': return '📁';
+      case 'fun': return '🎮';
+      default: return '🔧';
     }
   };
 
-  const getToolTypeColor = (type: ToolType) => {
-    switch (type) {
-      case 'automation': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
-      case 'coordination': return 'text-purple-400 bg-purple-400/10 border-purple-400/20';
-      case 'analytics': return 'text-blue-400 bg-blue-400/10 border-blue-400/20';
-      case 'utility': return 'text-green-400 bg-green-400/10 border-green-400/20';
-      case 'integration': return 'text-orange-400 bg-orange-400/10 border-orange-400/20';
+  const getToolCategoryColor = (category: string) => {
+    switch (category) {
+      case 'study': return 'text-blue-400 bg-blue-400/10 border-blue-400/20';
+      case 'social': return 'text-purple-400 bg-purple-400/10 border-purple-400/20';
+      case 'productivity': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
+      case 'coordination': return 'text-green-400 bg-green-400/10 border-green-400/20';
+      case 'analytics': return 'text-cyan-400 bg-cyan-400/10 border-cyan-400/20';
+      case 'communication': return 'text-pink-400 bg-pink-400/10 border-pink-400/20';
+      case 'resources': return 'text-orange-400 bg-orange-400/10 border-orange-400/20';
+      case 'fun': return 'text-red-400 bg-red-400/10 border-red-400/20';
       default: return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
     }
   };
 
-  const getStatusIndicator = (status: ToolStatus) => {
+  const getStatusIndicator = (status: string) => {
     switch (status) {
       case 'active':
         return (
@@ -252,6 +157,8 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
             <span className="text-xs">Paused</span>
           </div>
         );
+      default:
+        return null;
       case 'configuring':
         return (
           <div className="flex items-center gap-1 text-blue-400">
@@ -269,9 +176,10 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
     }
   };
 
-  const formatLastRun = (date?: Date) => {
-    if (!date) return 'Never';
+  const formatLastRun = (dateStr?: string | null) => {
+    if (!dateStr) return 'Never';
     
+    const date = new Date(dateStr);
     const diff = Date.now() - date.getTime();
     const minutes = Math.floor(diff / (1000 * 60));
     const hours = Math.floor(minutes / 60);
@@ -287,9 +195,9 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
     return {
       total: tools.length,
       active: tools.filter(t => t.status === 'active').length,
-      totalExecutions: tools.reduce((sum, tool) => sum + (tool.executions || 0), 0),
-      avgSuccessRate: tools.length > 0 
-        ? Math.round(tools.reduce((sum, tool) => sum + (tool.successRate || 0), 0) / tools.length)
+      totalUsage: tools.reduce((sum, tool) => sum + tool.usageCount, 0),
+      avgRating: tools.length > 0 
+        ? Math.round(tools.reduce((sum, tool) => sum + tool.originalTool.averageRating, 0) / tools.length * 10) / 10
         : 0
     };
   }, [tools]);
@@ -340,12 +248,12 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
             <div className="text-xs text-neutral-400">Active Tools</div>
           </div>
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
-            <div className="text-lg font-bold text-blue-400">{toolStats.totalExecutions}</div>
-            <div className="text-xs text-neutral-400">Executions</div>
+            <div className="text-lg font-bold text-blue-400">{toolStats.totalUsage}</div>
+            <div className="text-xs text-neutral-400">Total Usage</div>
           </div>
           <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
-            <div className="text-lg font-bold text-yellow-400">{toolStats.avgSuccessRate}%</div>
-            <div className="text-xs text-neutral-400">Success Rate</div>
+            <div className="text-lg font-bold text-yellow-400">{toolStats.avgRating}/5</div>
+            <div className="text-xs text-neutral-400">Avg Rating</div>
           </div>
         </div>
       )}
@@ -361,12 +269,15 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
             onChange={(e) => setFilter(e.target.value as ToolType | 'all')}
             className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
           >
-            <option value="all">All Types</option>
+            <option value="all">All Categories</option>
+            <option value="study">Study</option>
+            <option value="social">Social</option>
+            <option value="productivity">Productivity</option>
             <option value="coordination">Coordination</option>
             <option value="analytics">Analytics</option>
-            <option value="automation">Automation</option>
-            <option value="integration">Integration</option>
-            <option value="utility">Utility</option>
+            <option value="communication">Communication</option>
+            <option value="resources">Resources</option>
+            <option value="fun">Fun</option>
           </select>
 
           {/* Status Filter */}
@@ -377,9 +288,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
-            <option value="paused">Paused</option>
-            <option value="configuring">Configuring</option>
-            <option value="error">Error</option>
+            <option value="inactive">Inactive</option>
           </select>
         </div>
       )}
@@ -393,7 +302,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
         <AnimatePresence>
           {filteredTools.map((tool, index) => (
             <motion.div
-              key={tool.id}
+              key={tool.deploymentId}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -407,18 +316,17 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="text-lg">{tool.icon || '🔧'}</div>
+                    <div className="text-lg">{getToolCategoryIcon(tool.category)}</div>
                     <h4 className="font-medium text-[var(--hive-text-inverse)] truncate">
                       {tool.name}
                     </h4>
 
-                    {/* Type Badge */}
+                    {/* Category Badge */}
                     <span className={cn(
-                      "px-2 py-0.5 text-xs font-medium rounded-full border capitalize flex items-center gap-1",
-                      getToolTypeColor(tool.type)
+                      "px-2 py-0.5 text-xs font-medium rounded-full border capitalize",
+                      getToolCategoryColor(tool.category)
                     )}>
-                      {getToolTypeIcon(tool.type)}
-                      {tool.type}
+                      {tool.category}
                     </span>
                   </div>
 
@@ -430,58 +338,50 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
                   <div className="flex items-center justify-between mb-3">
                     {getStatusIndicator(tool.status)}
                     
-                    {tool.isConfigured ? (
+                    {tool.originalTool.isVerified && (
                       <CheckCircle2 className="h-4 w-4 text-green-400" />
-                    ) : (
-                      <AlertTriangle className="h-4 w-4 text-yellow-400" />
                     )}
                   </div>
 
                   {/* Tool Metrics */}
-                  {tool.executions !== undefined && (
-                    <div className="space-y-1 text-xs text-neutral-400">
-                      <div className="flex items-center justify-between">
-                        <span>Executions:</span>
-                        <span className="text-[var(--hive-text-inverse)]">{tool.executions}</span>
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <span>Last run:</span>
-                        <span className="text-[var(--hive-text-inverse)]">{formatLastRun(tool.lastRun)}</span>
-                      </div>
-
-                      {tool.successRate !== undefined && (
-                        <div className="flex items-center justify-between">
-                          <span>Success rate:</span>
-                          <span className={cn(
-                            "font-medium",
-                            tool.successRate >= 95 ? "text-green-400" :
-                            tool.successRate >= 80 ? "text-yellow-400" : "text-red-400"
-                          )}>
-                            {tool.successRate}%
-                          </span>
-                        </div>
-                      )}
-
-                      {tool.errorCount !== undefined && tool.errorCount > 0 && (
-                        <div className="flex items-center justify-between">
-                          <span>Recent errors:</span>
-                          <span className="text-red-400">{tool.errorCount}</span>
-                        </div>
-                      )}
+                  <div className="space-y-1 text-xs text-neutral-400">
+                    <div className="flex items-center justify-between">
+                      <span>Usage:</span>
+                      <span className="text-[var(--hive-text-inverse)]">{tool.usageCount}</span>
                     </div>
-                  )}
+                    
+                    <div className="flex items-center justify-between">
+                      <span>Last used:</span>
+                      <span className="text-[var(--hive-text-inverse)]">{formatLastRun(tool.lastUsed)}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span>Rating:</span>
+                      <span className={cn(
+                        "font-medium",
+                        tool.originalTool.averageRating >= 4.5 ? "text-green-400" :
+                        tool.originalTool.averageRating >= 3.5 ? "text-yellow-400" : "text-orange-400"
+                      )}>
+                        {tool.originalTool.averageRating}/5 ({tool.originalTool.ratingCount})
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span>Deployments:</span>
+                      <span className="text-[var(--hive-text-inverse)]">{tool.originalTool.totalDeployments}</span>
+                    </div>
+                  </div>
 
                   {/* Insights Mode Additional Metrics */}
                   {leaderMode === 'insights' && (
                     <div className="mt-3 pt-3 border-t border-purple-500/20 text-xs">
                       <div className="flex items-center justify-between">
-                        <span className="text-neutral-400">Output:</span>
-                        <span className="text-purple-400 capitalize">{tool.outputChannel || 'none'}</span>
+                        <span className="text-neutral-400">Version:</span>
+                        <span className="text-purple-400">{tool.version}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-neutral-400">Configured by:</span>
-                        <span className="text-purple-400">{tool.configuredBy.name}</span>
+                        <span className="text-neutral-400">Deployed by:</span>
+                        <span className="text-purple-400">{tool.deployer?.name || 'Unknown'}</span>
                       </div>
                     </div>
                   )}
@@ -492,7 +392,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
                   {/* Primary Actions */}
                   {tool.status === 'active' && canManageTools && (
                     <button
-                      onClick={() => onRunTool?.(tool.id)}
+                      onClick={() => onRunTool?.(tool.deploymentId)}
                       className="p-2 bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30 rounded-lg hover:bg-[var(--hive-brand-secondary)]/20 transition-colors"
                       title="Run tool"
                     >
@@ -502,7 +402,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
 
                   {tool.status === 'active' && canManageTools && (
                     <button
-                      onClick={() => onPauseTool?.(tool.id)}
+                      onClick={() => onPauseTool?.(tool.deploymentId)}
                       className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                       title="Pause tool"
                     >
@@ -513,7 +413,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
                   {/* Configuration */}
                   {canManageTools && (
                     <button
-                      onClick={() => onConfigureTool?.(tool.id)}
+                      onClick={() => onConfigureTool?.(tool.deploymentId)}
                       className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                       title="Configure tool"
                     >
@@ -524,7 +424,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
                   {/* Analytics */}
                   {(isBuilder || leaderMode === 'insights') && (
                     <button
-                      onClick={() => onViewToolAnalytics?.(tool.id)}
+                      onClick={() => onViewToolAnalytics?.(tool.deploymentId)}
                       className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                       title="View analytics"
                     >
@@ -544,7 +444,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
                   {/* Remove */}
                   {canManageTools && (
                     <button
-                      onClick={() => onRemoveTool?.(tool.id)}
+                      onClick={() => onRemoveTool?.(tool.deploymentId)}
                       className="p-2 hover:bg-red-500/10 rounded-lg transition-colors"
                       title="Remove tool"
                     >

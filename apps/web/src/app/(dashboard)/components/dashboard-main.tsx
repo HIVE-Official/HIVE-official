@@ -107,6 +107,7 @@ export function DashboardMain() {
         setError(null);
 
         // In development, use mock data while APIs are being integrated
+        /* Removed mock data
         const mockData: DashboardData = {
           user: {
             id: user?.uid || 'mock_user',
@@ -208,13 +209,30 @@ export function DashboardMain() {
               unread: true
             }
           ]
+        }; */
+        
+        // Fetch real data from API
+        const emptyData: DashboardData = {
+          user: {
+            id: user?.uid || '',
+            name: user?.displayName || '',
+            handle: user?.email?.split('@')[0] || '',
+            avatar: user?.photoURL || undefined,
+            spaces: 0,
+            tools: 0,
+            reputation: 0
+          },
+          spaces: [],
+          recentActivity: [],
+          tools: [],
+          notifications: []
         };
 
         // TODO: Replace with actual API calls
         // const response = await fetch('/api/profile/dashboard');
-        // const data = await response.json();
+        const data = await response.json();
         
-        setDashboardData(mockData);
+        setDashboardData(data as DashboardData);
         setIsLoading(false);
       } catch (err) {
         console.error('Failed to load dashboard:', err);

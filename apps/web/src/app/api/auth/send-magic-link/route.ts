@@ -242,9 +242,9 @@ export async function POST(request: NextRequest) {
       email: email
     });
     if (schoolId && schoolId !== 'undefined' && schoolId !== 'null') {
-      params.append('schoolId', schoolId);
+      (await params).append('schoolId', schoolId);
     }
-    const magicLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/verify?${params.toString()}`;
+    const magicLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/verify?${(await params).toString()}`;
 
     // Use the school name from database or generic fallback
     const schoolName = school.name || 'Your University';

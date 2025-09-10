@@ -29,15 +29,15 @@ export declare const ToolMetadataSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     language: string;
     category?: string | undefined;
+    tags?: string[] | undefined;
     estimatedTime?: number | undefined;
     difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-    tags?: string[] | undefined;
 }, {
     language?: string | undefined;
     category?: string | undefined;
+    tags?: string[] | undefined;
     estimatedTime?: number | undefined;
     difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-    tags?: string[] | undefined;
 }>;
 export declare const ToolDataSchemaSchema: z.ZodObject<{
     fields: z.ZodArray<z.ZodObject<{
@@ -557,15 +557,15 @@ export declare const ToolSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         language: string;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     }, {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     }>>;
     isPublic: z.ZodDefault<z.ZodBoolean>;
     shareToken: z.ZodOptional<z.ZodString>;
@@ -589,9 +589,9 @@ export declare const ToolSchema: z.ZodObject<{
     metadata: {
         language: string;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     };
     config: {
         autoSave: boolean;
@@ -633,19 +633,7 @@ export declare const ToolSchema: z.ZodObject<{
         addedAt: Date;
         addedBy: string;
     }[];
-    isPublic: boolean;
-    updatedAt: Date;
-    createdAt: Date;
-    ownerId: string;
-    currentVersion: string;
-    versions: {
-        version: string;
-        createdAt: Date;
-        createdBy: string;
-        isStable: boolean;
-        changelog?: string | undefined;
-        deprecatedAt?: Date | undefined;
-    }[];
+    ratingCount: number;
     elements: {
         id: string;
         order: number;
@@ -661,24 +649,33 @@ export declare const ToolSchema: z.ZodObject<{
         config?: unknown;
         parentId?: string | undefined;
     }[];
+    isPublic: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    ownerId: string;
+    currentVersion: string;
+    versions: {
+        version: string;
+        createdAt: Date;
+        createdBy: string;
+        isStable: boolean;
+        changelog?: string | undefined;
+        deprecatedAt?: Date | undefined;
+    }[];
     forkCount: number;
     viewCount: number;
     useCount: number;
-    ratingCount: number;
     isSpaceTool: boolean;
     spaceId?: string | undefined;
+    rating?: number | undefined;
     shareToken?: string | undefined;
     originalToolId?: string | undefined;
-    rating?: number | undefined;
     publishedAt?: Date | undefined;
     lastUsedAt?: Date | undefined;
 }, {
     id: string;
     name: string;
     description: string;
-    updatedAt: Date;
-    createdAt: Date;
-    ownerId: string;
     elements: {
         id: string;
         order: number;
@@ -694,13 +691,16 @@ export declare const ToolSchema: z.ZodObject<{
         isLocked?: boolean | undefined;
         parentId?: string | undefined;
     }[];
+    createdAt: Date;
+    updatedAt: Date;
+    ownerId: string;
     status?: "draft" | "published" | "preview" | undefined;
     metadata?: {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     } | undefined;
     config?: {
         autoSave?: boolean | undefined;
@@ -743,6 +743,8 @@ export declare const ToolSchema: z.ZodObject<{
         addedAt: Date;
         addedBy: string;
     }[] | undefined;
+    rating?: number | undefined;
+    ratingCount?: number | undefined;
     isPublic?: boolean | undefined;
     currentVersion?: string | undefined;
     versions?: {
@@ -758,8 +760,6 @@ export declare const ToolSchema: z.ZodObject<{
     originalToolId?: string | undefined;
     viewCount?: number | undefined;
     useCount?: number | undefined;
-    rating?: number | undefined;
-    ratingCount?: number | undefined;
     isSpaceTool?: boolean | undefined;
     publishedAt?: Date | undefined;
     lastUsedAt?: Date | undefined;
@@ -941,15 +941,15 @@ export declare const CreateToolSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     }, {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
     name: string;
@@ -958,9 +958,9 @@ export declare const CreateToolSchema: z.ZodObject<{
     metadata?: {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     } | undefined;
     config?: {
         autoSave?: boolean | undefined;
@@ -1003,9 +1003,9 @@ export declare const CreateToolSchema: z.ZodObject<{
     metadata?: {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     } | undefined;
     config?: {
         autoSave?: boolean | undefined;
@@ -1268,15 +1268,15 @@ export declare const UpdateToolSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     }, {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     }>>;
     changelog: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
@@ -1285,9 +1285,9 @@ export declare const UpdateToolSchema: z.ZodObject<{
     metadata?: {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     } | undefined;
     config?: {
         autoSave?: boolean | undefined;
@@ -1323,7 +1323,6 @@ export declare const UpdateToolSchema: z.ZodObject<{
         trackingEnabled?: boolean | undefined;
         allowAnalyticsOptOut?: boolean | undefined;
     } | undefined;
-    changelog?: string | undefined;
     elements?: {
         id: string;
         order: number;
@@ -1339,15 +1338,16 @@ export declare const UpdateToolSchema: z.ZodObject<{
         config?: unknown;
         parentId?: string | undefined;
     }[] | undefined;
+    changelog?: string | undefined;
 }, {
     name?: string | undefined;
     description?: string | undefined;
     metadata?: {
         language?: string | undefined;
         category?: string | undefined;
+        tags?: string[] | undefined;
         estimatedTime?: number | undefined;
         difficulty?: "beginner" | "intermediate" | "advanced" | undefined;
-        tags?: string[] | undefined;
     } | undefined;
     config?: {
         autoSave?: boolean | undefined;
@@ -1383,7 +1383,6 @@ export declare const UpdateToolSchema: z.ZodObject<{
         trackingEnabled?: boolean | undefined;
         allowAnalyticsOptOut?: boolean | undefined;
     } | undefined;
-    changelog?: string | undefined;
     elements?: {
         id: string;
         order: number;
@@ -1399,6 +1398,7 @@ export declare const UpdateToolSchema: z.ZodObject<{
         isLocked?: boolean | undefined;
         parentId?: string | undefined;
     }[] | undefined;
+    changelog?: string | undefined;
 }>;
 export type UpdateTool = z.infer<typeof UpdateToolSchema>;
 export declare const ShareToolSchema: z.ZodObject<{

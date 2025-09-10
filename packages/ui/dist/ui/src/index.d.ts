@@ -84,6 +84,7 @@ export { HiveEventsSurface, type HiveEventsSurfaceProps, type SpaceEvent, type E
 export { HivePinnedSurface, type HivePinnedSurfaceProps, type PinnedItem, type PinnedItemType } from './atomic/organisms/hive-pinned-surface';
 export { HiveToolsSurface, type HiveToolsSurfaceProps, type SpaceTool, type ToolType } from './atomic/organisms/hive-tools-surface';
 export { SpaceDashboard, type SpaceDashboardProps } from './atomic/organisms/space-dashboard';
+export { CompleteHIVEToolsSystem } from './atomic/organisms/complete-hive-tools-system';
 export { SpaceExploreHub, type SpaceExploreHubProps } from './atomic/organisms/space-explore-hub';
 export { SpaceSurfaceErrorBoundary, useSpaceSurfaceErrorHandler } from './atomic/organisms/space-surface-error-boundary';
 export { SpaceSurfaceSkeleton } from './atomic/organisms/space-surface-skeleton';

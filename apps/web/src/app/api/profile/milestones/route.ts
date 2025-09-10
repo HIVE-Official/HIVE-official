@@ -163,7 +163,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 }, { allowDevelopmentBypass: true });
 
 // PUT /api/profile/milestones/:id - Update milestone progress
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const authHeader = request.headers.get('Authorization');
     if (!authHeader?.startsWith('Bearer ')) {
@@ -188,7 +188,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
     
     // Get the milestone
-    const milestoneDoc = await db.collection('userMilestones').doc(params.id).get();
+    const milestoneDoc = await db.collection('userMilestones').doc((await params).id).get();
     
     if (!milestoneDoc.exists) {
       return NextResponse.json(
@@ -220,7 +220,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       } : {})
     };
     
-    await db.collection('userMilestones').doc(params.id).update(updates);
+    await db.collection('userMilestones').doc((await params).id).update(updates);
     
     // Track completion if newly completed
     if (isNowCompleted && !wasCompleted) {

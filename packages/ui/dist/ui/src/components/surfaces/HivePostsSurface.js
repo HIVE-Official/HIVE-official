@@ -1,14 +1,15 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveTextarea } from '../hive-textarea.js';
-import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar.js';
-import { HiveBadge } from '../hive-badge.js';
-import { MessageCircle, Heart, Share2, MoreVertical, Send, Image, Link, Hash, Smile } from 'lucide-react';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveTextarea } from '../hive-textarea';
+import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
+import { HiveBadge } from '../hive-badge';
+import { MessageCircle, Heart, Share2, MoreVertical, Send, Image, Link, Hash, Smile, Plus } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useRealtimePosts, useOptimisticUpdates } from '../../hooks/use-live-updates';
 // Individual Post Component
 const PostCard = ({ post, onLike, onComment, onShare, variant = 'widget' }) => {
     const [showCommentInput, setShowCommentInput] = useState(false);
@@ -56,7 +57,10 @@ const CreatePost = ({ onSubmit, variant = 'widget' }) => {
 };
 // Main Surface Component
 export const HivePostsSurface = ({ spaceId, spaceName, isLeader = false, currentUserId, className, variant = 'widget', onPostCreate, onPostLike, onPostComment, posts: propPosts, loading = false, error = null, }) => {
-    // Mock data for development
+    // Real-time posts data
+    const { data: realtimePosts, loading: realtimeLoading, error: realtimeError } = useRealtimePosts(spaceId);
+    const { data: optimisticPosts, addOptimisticItem, removeOptimisticItem } = useOptimisticUpdates((propPosts || realtimePosts || []));
+    // Mock data for development (fallback)
     const mockPosts = useMemo(() => [
         {
             id: '1',
@@ -102,15 +106,37 @@ export const HivePostsSurface = ({ spaceId, spaceName, isLeader = false, current
             tags: ['meeting-notes', 'updates']
         }
     ], []);
-    const posts = propPosts || mockPosts;
+    // Use optimistic posts for immediate UI updates, fallback to empty array
+    const posts = optimisticPosts || [];
+    const isLoading = loading || realtimeLoading;
+    const displayError = error || realtimeError;
     const handlePostCreate = useCallback(async (content) => {
-        if (onPostCreate) {
-            await onPostCreate(content);
-        }
-        else {
-            console.log('Creating post:', content);
-        }
-    }, [onPostCreate]);
+        if (!currentUserId)
+            return;
+        // Create optimistic post
+        const optimisticPost = {
+            id: `temp-${Date.now()}`,
+            content,
+            authorId: currentUserId,
+            authorName: 'You', // Will be updated when real data comes back
+            authorRole: isLeader ? 'leader' : 'member',
+            timestamp: new Date(),
+            likes: 0,
+            comments: 0,
+            shares: 0,
+            hasLiked: false,
+            tags: []
+        };
+        // Add optimistically
+        addOptimisticItem(optimisticPost, async () => {
+            if (onPostCreate) {
+                await onPostCreate(content);
+            }
+            else {
+                console.log('Creating post:', content);
+            }
+        });
+    }, [onPostCreate, currentUserId, isLeader, addOptimisticItem]);
     const handlePostLike = useCallback(async (postId) => {
         if (onPostLike) {
             await onPostLike(postId);
@@ -127,13 +153,13 @@ export const HivePostsSurface = ({ spaceId, spaceName, isLeader = false, current
             console.log('Commenting on post:', postId, comment);
         }
     }, [onPostComment]);
-    if (loading) {
+    if (isLoading) {
         return (_jsx("div", { className: cn("space-y-4", className), children: _jsxs("div", { className: "animate-pulse", children: [_jsx("div", { className: "bg-gray-200 rounded-lg h-32 mb-4" }), _jsx("div", { className: "space-y-3", children: [1, 2, 3].map((i) => (_jsx("div", { className: "bg-gray-100 rounded-lg h-40" }, i))) })] }) }));
     }
-    if (error) {
-        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load posts" }), _jsx("p", { className: "text-sm text-gray-500", children: error.message })] }) }));
+    if (displayError) {
+        return (_jsx(HiveCard, { className: cn("p-6", className), children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "Unable to load posts" }), _jsx("p", { className: "text-sm text-gray-500", children: displayError.message })] }) }));
     }
-    return (_jsxs("div", { className: cn("space-y-4", className), children: [variant === 'full' && (_jsxs("div", { className: "flex items-center justify-between mb-4", children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: spaceName ? `${spaceName} Posts` : 'Posts' }), _jsx(HiveButton, { variant: "ghost", size: "sm", children: "Filter" })] })), (isLeader || variant === 'full') && (_jsx(CreatePost, { onSubmit: handlePostCreate, variant: variant })), _jsx("div", { className: "space-y-4", children: posts.length === 0 ? (_jsx(HiveCard, { className: "p-8", children: _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-gray-600", children: "No posts yet" }), _jsx("p", { className: "text-sm text-gray-500", children: isLeader ? "Be the first to share something with your space!" : "Check back later for updates" })] }) })) : (posts.map((post) => (_jsx(PostCard, { post: post, variant: variant, onLike: () => handlePostLike(post.id), onComment: () => handlePostComment(post.id, ''), onShare: () => console.log('Share:', post.id) }, post.id)))) }), variant === 'widget' && posts.length > 3 && (_jsx("button", { className: "w-full py-2 text-sm text-[var(--hive-gold-dark)] hover:text-orange-700 font-medium", children: "View all posts \u2192" }))] }));
+    return (_jsxs("div", { className: cn("space-y-4", className), children: [variant === 'full' && (_jsxs("div", { className: "flex items-center justify-between mb-4", children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: spaceName ? `${spaceName} Posts` : 'Posts' }), _jsx(HiveButton, { variant: "ghost", size: "sm", children: "Filter" })] })), (isLeader || variant === 'full') && (_jsx(CreatePost, { onSubmit: handlePostCreate, variant: variant })), _jsx("div", { className: "space-y-4", children: posts.length === 0 ? (_jsx(HiveCard, { className: "p-8", children: _jsxs("div", { className: "text-center space-y-4", children: [_jsx("div", { className: "w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto", children: _jsx(MessageCircle, { className: "h-8 w-8 text-gray-400" }) }), _jsxs("div", { children: [_jsx("h3", { className: "text-lg font-semibold text-gray-900 mb-2", children: "No posts yet" }), _jsx("p", { className: "text-gray-600", children: isLeader ? "Be the first to share something with your space!" : "Check back later for updates" })] }), isLeader && (_jsxs(HiveButton, { variant: "primary", size: "sm", onClick: () => handlePostCreate(''), className: "flex items-center gap-2", children: [_jsx(Plus, { className: "h-4 w-4" }), "Create First Post"] }))] }) })) : (posts.map((post) => (_jsx(PostCard, { post: post, variant: variant, onLike: () => handlePostLike(post.id), onComment: () => handlePostComment(post.id, ''), onShare: () => console.log('Share:', post.id) }, post.id)))) }), variant === 'widget' && posts.length > 3 && (_jsx("button", { className: "w-full py-2 text-sm text-[var(--hive-gold-dark)] hover:text-orange-700 font-medium", children: "View all posts \u2192" }))] }));
 };
 // Export display name for debugging
 HivePostsSurface.displayName = 'HivePostsSurface';
