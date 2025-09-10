@@ -1,13 +1,13 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Badge } from '../atoms/badge';
-import { Button } from '../atoms/button-enhanced';
-import { Avatar, AvatarImage, AvatarFallback } from '../atoms/avatar';
-import { SearchInput } from '../atoms/input-enhanced';
-import { Alert, AlertDescription } from '../atoms/alert';
-import { Select } from '../atoms/select-enhanced';
+import { cn } from '../../lib/utils.js';
+import { Badge } from '../atoms/badge.js';
+import { Button } from '../atoms/button-enhanced.js';
+import { Avatar, AvatarImage, AvatarFallback } from '../atoms/avatar.js';
+import { SearchInput } from '../atoms/input-enhanced.js';
+import { Alert, AlertDescription } from '../atoms/alert.js';
+import { Select } from '../atoms/select-enhanced.js';
 const StudyGroupMatcher = React.forwardRef(({ currentUser, availableMembers = [], existingGroups = [], userCourses = [], onCreateGroup, onJoinGroup, onConnectMember, onSendMessage, showMatchScore = true, maxSuggestions = 6, loading = false, error, className, ...props }, ref) => {
     const [activeTab, setActiveTab] = React.useState('discover');
     const [searchTerm, setSearchTerm] = React.useState('');

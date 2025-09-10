@@ -5,9 +5,9 @@
  */
 import { cva } from 'class-variance-authority';
 import React from 'react';
-import { cn } from './utils';
-import { focusStyles } from './accessibility-foundation';
-import { responsiveAnimations, touchTargets } from './responsive-foundation';
+import { cn } from './utils.js';
+import { focusStyles } from './accessibility-foundation.js';
+import { responsiveAnimations, touchTargets } from './responsive-foundation.js';
 // Standard Component Base Classes
 export const componentBase = {
     // Interactive elements (buttons, links, etc.)

@@ -2,374 +2,252 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // =====================================
-    // HELPER FUNCTIONS
-    // =====================================
-    
+    // Helper functions
     function isAuthenticated() {
       return request.auth != null;
     }
     
-    function isUser(userId) {
+    function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
     
-    function isEmailVerified() {
-      return isAuthenticated() && request.auth.token.email_verified == true;
-    }
-    
-    function hasRole(role) {
-      return isAuthenticated() && request.auth.token.get(role, false) == true;
-    }
-    
-    // Check if user is member of space using flat spaceMembers collection
-    function isSpaceMember(spaceId) {
-      let compositeKey = spaceId + '_' + request.auth.uid;
+    function isVerifiedStudent() {
       return isAuthenticated() && 
-        exists(/databases/$(database)/documents/spaceMembers/$(compositeKey));
+        request.auth.token.email_verified == true &&
+        request.auth.token.email.matches('.*@(buffalo|cornell|syracuse|rit)\\.edu$');
     }
     
-    // Check user's role in space
-    function getSpaceRole(spaceId) {
-      let compositeKey = spaceId + '_' + request.auth.uid;
-      return get(/databases/$(database)/documents/spaceMembers/$(compositeKey)).data.role;
+    function isSpaceMember(spaceId) {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/spaces/$(spaceId)/members/$(request.auth.uid));
     }
     
-    function isSpaceOwner(spaceId) {
-      return isSpaceMember(spaceId) && getSpaceRole(spaceId) == 'owner';
+    function isSpaceLeader(spaceId) {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/spaces/$(spaceId)/members/$(request.auth.uid)).data.role in ['leader', 'admin'];
     }
     
-    function isSpaceAdmin(spaceId) {
-      return isSpaceMember(spaceId) && 
-        getSpaceRole(spaceId) in ['owner', 'admin'];
+    function canModerateSpace(spaceId) {
+      return isSpaceLeader(spaceId) || 
+        get(/databases/$(database)/documents/spaces/$(spaceId)/members/$(request.auth.uid)).data.role == 'moderator';
     }
     
-    function isSpaceModerator(spaceId) {
-      return isSpaceMember(spaceId) && 
-        getSpaceRole(spaceId) in ['owner', 'admin', 'moderator'];
-    }
-    
-    // Check if users are connected
-    function areConnected(user1, user2) {
-      let key1 = user1 < user2 ? user1 + '_' + user2 : user2 + '_' + user1;
-      return exists(/databases/$(database)/documents/connections/$(key1)) &&
-        get(/databases/$(database)/documents/connections/$(key1)).data.status == 'connected';
-    }
-    
-    // =====================================
-    // 1. USERS - Profile System
-    // =====================================
-    
+    // User documents
     match /users/{userId} {
       allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
       
-      allow create: if isUser(userId) && 
-        request.resource.data.email.matches('.*@buffalo\\.edu$') &&
-        request.resource.data.keys().hasAll(['email', 'fullName', 'handle', 'schoolId']);
+      // User subcollections
+      match /notifications/{notificationId} {
+        allow read: if isOwner(userId);
+        allow create: if isAuthenticated();
+        allow update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
       
-      allow update: if isUser(userId) && 
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['id', 'email', 'createdAt']);
+      match /achievements/{achievementId} {
+        allow read: if isAuthenticated();
+        allow write: if isOwner(userId);
+      }
       
-      allow delete: if false; // Soft delete only
+      match /milestones/{milestoneId} {
+        allow read: if isOwner(userId) || 
+          (isAuthenticated() && resource.data.visibility == 'public');
+        allow write: if isOwner(userId);
+      }
+      
+      match /activities/{activityId} {
+        allow read: if isOwner(userId) || 
+          (isAuthenticated() && resource.data.visibility != 'private');
+        allow create: if isAuthenticated();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      match /integrations/{integrationId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      match /preferences/{preferenceId} {
+        allow read, write: if isOwner(userId);
+      }
     }
     
-    // =====================================
-    // 2. POSTS - Feed System
-    // =====================================
-    
-    match /posts/{postId} {
-      // Public feed for authenticated users
-      allow read: if isAuthenticated();
-      
-      // Create post
-      allow create: if isAuthenticated() &&
-        request.resource.data.authorId == request.auth.uid &&
-        request.resource.data.keys().hasAll(['type', 'content', 'authorId', 'authorName', 'visibility']) &&
-        request.resource.data.type in ['post', 'tool_share', 'event', 'announcement', 'achievement'];
-      
-      // Update own posts
-      allow update: if resource.data.authorId == request.auth.uid &&
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['id', 'authorId', 'createdAt']);
-      
-      // Delete own posts or moderation
-      allow delete: if resource.data.authorId == request.auth.uid ||
-        (resource.data.spaceId != null && isSpaceModerator(resource.data.spaceId)) ||
-        hasRole('admin');
-    }
-    
-    // =====================================
-    // 3. SPACES - Community System
-    // =====================================
-    
+    // Spaces documents
     match /spaces/{spaceId} {
-      // Public spaces are readable
-      allow read: if resource.data.type == 'open' || 
-        isSpaceMember(spaceId) ||
-        hasRole('admin');
+      allow read: if isAuthenticated();
+      allow create: if isVerifiedStudent();
+      allow update: if isSpaceLeader(spaceId);
+      allow delete: if false; // Spaces cannot be deleted, only archived
       
-      // Create space (verified users)
-      allow create: if isEmailVerified() &&
-        request.resource.data.createdBy == request.auth.uid &&
-        request.resource.data.keys().hasAll(['name', 'handle', 'description', 'category', 'type', 'schoolId']);
+      // Space subcollections
+      match /posts/{postId} {
+        allow read: if isAuthenticated();
+        allow create: if isSpaceMember(spaceId);
+        allow update: if request.auth.uid == resource.data.authorId || 
+          canModerateSpace(spaceId);
+        allow delete: if request.auth.uid == resource.data.authorId || 
+          canModerateSpace(spaceId);
+        
+        // Post interactions
+        match /comments/{commentId} {
+          allow read: if isAuthenticated();
+          allow create: if isSpaceMember(spaceId);
+          allow update: if request.auth.uid == resource.data.authorId;
+          allow delete: if request.auth.uid == resource.data.authorId || 
+            canModerateSpace(spaceId);
+        }
+        
+        match /reactions/{userId} {
+          allow read: if isAuthenticated();
+          allow write: if isOwner(userId) && isSpaceMember(spaceId);
+        }
+      }
       
-      // Update space (admins only)
-      allow update: if isSpaceAdmin(spaceId) &&
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['id', 'createdBy', 'createdAt']);
+      match /events/{eventId} {
+        allow read: if isAuthenticated();
+        allow create: if isSpaceMember(spaceId);
+        allow update: if request.auth.uid == resource.data.createdBy || 
+          canModerateSpace(spaceId);
+        allow delete: if request.auth.uid == resource.data.createdBy || 
+          isSpaceLeader(spaceId);
+        
+        match /attendees/{userId} {
+          allow read: if isAuthenticated();
+          allow write: if isOwner(userId) && isSpaceMember(spaceId);
+        }
+      }
       
-      // Delete space (owner only)
-      allow delete: if isSpaceOwner(spaceId) || hasRole('admin');
+      match /members/{userId} {
+        allow read: if isAuthenticated();
+        allow create: if isOwner(userId) && isVerifiedStudent();
+        allow update: if isSpaceLeader(spaceId) || 
+          (isOwner(userId) && resource.data.role == request.resource.data.role);
+        allow delete: if isOwner(userId) || isSpaceLeader(spaceId);
+      }
+      
+      match /tools/{toolId} {
+        allow read: if isSpaceMember(spaceId);
+        allow create: if isSpaceMember(spaceId);
+        allow update: if request.auth.uid == resource.data.createdBy || 
+          isSpaceLeader(spaceId);
+        allow delete: if isSpaceLeader(spaceId);
+      }
+      
+      match /rituals/{ritualId} {
+        allow read: if isSpaceMember(spaceId);
+        allow create: if isSpaceMember(spaceId);
+        allow update: if request.auth.uid == resource.data.createdBy || 
+          canModerateSpace(spaceId);
+        allow delete: if isSpaceLeader(spaceId);
+        
+        match /participants/{userId} {
+          allow read: if isAuthenticated();
+          allow write: if isOwner(userId) && isSpaceMember(spaceId);
+        }
+      }
+      
+      match /pinned/{itemId} {
+        allow read: if isSpaceMember(spaceId);
+        allow write: if canModerateSpace(spaceId);
+      }
     }
     
-    // =====================================
-    // 4. SPACEMEMBERS - Flat membership
-    // =====================================
-    
-    match /spaceMembers/{memberKey} {
-      // Members can see membership
-      allow read: if isAuthenticated() &&
-        (memberKey.matches('.*_' + request.auth.uid + '$') ||
-         isSpaceMember(memberKey.split('_')[0]));
-      
-      // Join space (or admin invite)
-      allow create: if (memberKey.matches('.*_' + request.auth.uid + '$') ||
-        isSpaceAdmin(memberKey.split('_')[0])) &&
-        request.resource.data.keys().hasAll(['userId', 'spaceId', 'role', 'status']);
-      
-      // Update membership (admin or self for certain fields)
-      allow update: if memberKey.matches('.*_' + request.auth.uid + '$') ?
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastActiveAt', 'postCount']) :
-        isSpaceAdmin(resource.data.spaceId);
-      
-      // Leave space or admin remove
-      allow delete: if memberKey.matches('.*_' + request.auth.uid + '$') ||
-        isSpaceAdmin(resource.data.spaceId);
-    }
-    
-    // =====================================
-    // 5. RITUALS - Engagement System
-    // =====================================
-    
-    match /rituals/{ritualId} {
-      // Public rituals
-      allow read: if resource.data.status == 'active' || 
-        hasRole('admin');
-      
-      // Create ritual (admins and verified builders)
-      allow create: if (hasRole('admin') || hasRole('builder')) &&
-        request.resource.data.createdBy == request.auth.uid;
-      
-      // Update ritual
-      allow update: if resource.data.createdBy == request.auth.uid ||
-        hasRole('admin');
-      
-      // Archive ritual (no hard delete)
-      allow delete: if false;
-    }
-    
-    // =====================================
-    // 6. RITUALPARTICIPATION - User progress
-    // =====================================
-    
-    match /ritualParticipation/{participationKey} {
-      // User can see own participation
-      allow read: if participationKey.matches('.*_' + request.auth.uid + '$') ||
-        hasRole('admin');
-      
-      // Join ritual
-      allow create: if participationKey.matches('.*_' + request.auth.uid + '$') &&
-        request.resource.data.userId == request.auth.uid;
-      
-      // Update own progress
-      allow update: if participationKey.matches('.*_' + request.auth.uid + '$') &&
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['ritualId', 'userId', 'joinedAt']);
-      
-      // Leave ritual
-      allow delete: if participationKey.matches('.*_' + request.auth.uid + '$');
-    }
-    
-    // =====================================
-    // 7. TOOLS - Creation Engine
-    // =====================================
-    
+    // Tools marketplace
     match /tools/{toolId} {
-      // Public tools marketplace
-      allow read: if resource.data.visibility in ['public', 'campus'] ||
-        (resource.data.visibility == 'space' && isSpaceMember(resource.data.spaceId)) ||
-        resource.data.createdBy == request.auth.uid;
+      allow read: if isAuthenticated();
+      allow create: if isVerifiedStudent();
+      allow update: if request.auth.uid == resource.data.createdBy;
+      allow delete: if request.auth.uid == resource.data.createdBy;
       
-      // Create tool (builders)
-      allow create: if isEmailVerified() &&
-        request.resource.data.createdBy == request.auth.uid;
+      match /versions/{versionId} {
+        allow read: if isAuthenticated();
+        allow write: if request.auth.uid == 
+          get(/databases/$(database)/documents/tools/$(toolId)).data.createdBy;
+      }
       
-      // Update own tools
-      allow update: if resource.data.createdBy == request.auth.uid ||
-        hasRole('admin');
+      match /analytics/{date} {
+        allow read: if request.auth.uid == 
+          get(/databases/$(database)/documents/tools/$(toolId)).data.createdBy;
+        allow create, update: if isAuthenticated();
+        allow delete: if false;
+      }
       
-      // Deprecate tool (no hard delete)
+      match /reviews/{userId} {
+        allow read: if isAuthenticated();
+        allow write: if isOwner(userId);
+      }
+    }
+    
+    // Rituals (campus-wide)
+    match /rituals/{ritualId} {
+      allow read: if isAuthenticated();
+      allow create: if isVerifiedStudent();
+      allow update: if request.auth.uid == resource.data.createdBy || 
+        resource.data.moderators.hasAny([request.auth.uid]);
+      allow delete: if false; // Rituals are never deleted, only archived
+      
+      match /instances/{instanceId} {
+        allow read: if isAuthenticated();
+        allow write: if request.auth.uid == 
+          get(/databases/$(database)/documents/rituals/$(ritualId)).data.createdBy;
+      }
+      
+      match /participants/{userId} {
+        allow read: if isAuthenticated();
+        allow write: if isOwner(userId);
+      }
+    }
+    
+    // Feed aggregation
+    match /feed/{userId}/items/{itemId} {
+      allow read: if isOwner(userId);
+      allow write: if false; // Feed items are written by Cloud Functions only
+    }
+    
+    // Chat messages (DMs)
+    match /conversations/{conversationId} {
+      allow read: if isAuthenticated() && 
+        request.auth.uid in resource.data.participants;
+      allow create: if isAuthenticated() && 
+        request.auth.uid in request.resource.data.participants;
+      allow update: if isAuthenticated() && 
+        request.auth.uid in resource.data.participants;
       allow delete: if false;
+      
+      match /messages/{messageId} {
+        allow read: if isAuthenticated() && 
+          request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
+        allow create: if isAuthenticated() && 
+          request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants &&
+          request.auth.uid == request.resource.data.senderId;
+        allow update: if request.auth.uid == resource.data.senderId;
+        allow delete: if request.auth.uid == resource.data.senderId;
+      }
     }
     
-    // =====================================
-    // 8. TOOLINSTALLS - Usage tracking
-    // =====================================
-    
-    match /toolInstalls/{installKey} {
-      // User can see own installs
-      allow read: if installKey.matches('.*_' + request.auth.uid + '$');
-      
-      // Install tool
-      allow create: if installKey.matches('.*_' + request.auth.uid + '$') &&
-        request.resource.data.userId == request.auth.uid;
-      
-      // Update settings
-      allow update: if installKey.matches('.*_' + request.auth.uid + '$');
-      
-      // Uninstall
-      allow delete: if installKey.matches('.*_' + request.auth.uid + '$');
+    // Reports and moderation
+    match /reports/{reportId} {
+      allow read: if false; // Only admins via Admin SDK
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
     }
     
-    // =====================================
-    // 9. CONNECTIONS - Social Graph
-    // =====================================
-    
-    match /connections/{connectionKey} {
-      // Users can see their connections
-      allow read: if connectionKey.matches('.*' + request.auth.uid + '.*');
-      
-      // Request connection
-      allow create: if isAuthenticated() &&
-        (connectionKey.matches(request.auth.uid + '_.*') || 
-         connectionKey.matches('.*_' + request.auth.uid)) &&
-        request.resource.data.initiatedBy == request.auth.uid;
-      
-      // Accept/reject connection
-      allow update: if connectionKey.matches('.*' + request.auth.uid + '.*') &&
-        resource.data.status == 'pending';
-      
-      // Remove connection
-      allow delete: if connectionKey.matches('.*' + request.auth.uid + '.*');
-    }
-    
-    // =====================================
-    // 10. EVENTS - Calendar System
-    // =====================================
-    
-    match /events/{eventId} {
-      // Public events or space events
-      allow read: if resource.data.visibility == 'public' ||
-        (resource.data.spaceId != null && isSpaceMember(resource.data.spaceId)) ||
-        resource.data.hostId == request.auth.uid;
-      
-      // Create event
-      allow create: if isAuthenticated() &&
-        request.resource.data.createdBy == request.auth.uid;
-      
-      // Update own events
-      allow update: if resource.data.createdBy == request.auth.uid ||
-        (resource.data.spaceId != null && isSpaceAdmin(resource.data.spaceId));
-      
-      // Cancel event (soft delete)
-      allow delete: if resource.data.createdBy == request.auth.uid ||
-        (resource.data.spaceId != null && isSpaceAdmin(resource.data.spaceId));
-    }
-    
-    // =====================================
-    // 11. EVENTRSVPS - Attendance
-    // =====================================
-    
-    match /eventRSVPs/{rsvpKey} {
-      // See RSVPs for events you can access
-      allow read: if rsvpKey.matches('.*_' + request.auth.uid + '$') ||
-        hasRole('admin');
-      
-      // RSVP to event
-      allow create: if rsvpKey.matches('.*_' + request.auth.uid + '$') &&
-        request.resource.data.userId == request.auth.uid;
-      
-      // Update RSVP
-      allow update: if rsvpKey.matches('.*_' + request.auth.uid + '$');
-      
-      // Cancel RSVP
-      allow delete: if rsvpKey.matches('.*_' + request.auth.uid + '$');
-    }
-    
-    // =====================================
-    // 12. NOTIFICATIONS - Real-time
-    // =====================================
-    
-    match /notifications/{notificationId} {
-      // Users see own notifications
-      allow read: if resource.data.userId == request.auth.uid;
-      
-      // System-only creation
-      allow create: if false;
-      
-      // Mark as read/archived
-      allow update: if resource.data.userId == request.auth.uid &&
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead', 'isArchived', 'readAt']);
-      
-      // Delete old notifications
-      allow delete: if resource.data.userId == request.auth.uid;
-    }
-    
-    // =====================================
-    // 13. ACTIVITYFEED - Pre-aggregated
-    // =====================================
-    
-    match /activityFeed/{feedItem} {
-      // Users see their feed
-      allow read: if resource.data.userId == request.auth.uid;
-      
-      // System-only writes
-      allow write: if false;
-    }
-    
-    // =====================================
-    // SYSTEM COLLECTIONS
-    // =====================================
-    
-    // Handle reservations (prevent duplicate handles)
-    match /handleReservations/{handle} {
+    // System collections (read-only for users)
+    match /campus_events/{eventId} {
       allow read: if isAuthenticated();
-      allow create: if isUser(request.resource.data.userId);
-      allow update: if false;
-      allow delete: if isUser(resource.data.userId);
+      allow write: if false; // Admin only via Admin SDK
     }
     
-    // Analytics (read-only for users)
+    match /announcements/{announcementId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Admin only via Admin SDK
+    }
+    
+    // Analytics (write-only for users)
     match /analytics/{document=**} {
-      allow read: if hasRole('admin');
-      allow write: if false;
-    }
-    
-    // System config (admin only)
-    match /config/{document=**} {
-      allow read: if isAuthenticated();
-      allow write: if hasRole('admin');
-    }
-    
-    // Feature Flags (admin read/write, users read for evaluation)
-    match /featureFlags/{flagId} {
-      allow read: if isAuthenticated();
-      allow write: if hasRole('admin');
-    }
-    
-    // Platform Configuration (admin only)
-    match /platformConfig/{configId} {
-      allow read: if hasRole('admin');
-      allow write: if hasRole('admin');
-    }
-    
-    // System Health Metrics (admin only)
-    match /systemHealth/{document=**} {
-      allow read: if hasRole('admin');
-      allow write: if hasRole('admin');
-    }
-    
-    // Emergency Actions Log (admin only)
-    match /emergencyLog/{document=**} {
-      allow read: if hasRole('admin');
-      allow write: if hasRole('admin');
+      allow read: if false; // Admin only via Admin SDK
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
     }
   }
 }

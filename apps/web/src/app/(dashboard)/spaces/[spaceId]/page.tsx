@@ -25,6 +25,7 @@ import { SpaceErrorBoundaryWrapper } from "../components/space-error-boundary";
 import { SpaceLoadingSkeleton } from "../components/space-loading-skeleton";
 import { LeaveSpaceButton } from "../../../../components/spaces/leave-space-button";
 import { PostCreationModal } from "../../../../components/spaces/post-creation-modal";
+import { EventCreationModal } from "../../../../components/spaces/event-creation-modal";
 import { LeaderToolbar, useLeaderMode /* , type LeaderMode */ } from "../../../../components/spaces/leader-toolbar";
 import { getUserSpaceMembership, type SpaceMembership } from "../../../../lib/space-permissions";
 
@@ -168,6 +169,7 @@ export default function SpaceDetailPage({
   });
   const [showPostCreation, setShowPostCreation] = useState(false);
   const [postCreationType, setPostCreationType] = useState<'discussion' | 'question' | 'poll' | 'announcement' | 'link'>('discussion');
+  const [showEventCreation, setShowEventCreation] = useState(false);
   
   // Leader mode management
   const { currentMode, toggleMode, /* exitMode, */ isInMode, /* isInAnyMode */ } = useLeaderMode(); // TODO: exitMode and isInAnyMode for future leader features
@@ -1068,7 +1070,7 @@ export default function SpaceDetailPage({
                         canCreateEvents={isLeader}
                         canModerate={isLeader}
                         leaderMode={currentMode === 'manage' ? 'moderate' : 'insights'}
-                        onCreateEvent={() => createEvent({})}
+                        onCreateEvent={() => setShowEventCreation(true)}
                         onEditEvent={(eventId) => updateEvent(eventId, {})}
                         onCancelEvent={(eventId) => deleteEvent(eventId)}
                         onRSVPEvent={(eventId, status) => rsvpToEvent(eventId, status as any)}
@@ -1423,10 +1425,10 @@ export default function SpaceDetailPage({
                             isLoading={eventsLoading}
                             canCreateEvents={isLeader}
                             canModerate={isLeader}
-                            onCreateEvent={createEvent}
-                            onUpdateEvent={updateEvent}
-                            onDeleteEvent={deleteEvent}
-                            onRSVP={rsvpToEvent}
+                            onCreateEvent={() => setShowEventCreation(true)}
+                            onEditEvent={(eventId) => updateEvent(eventId, {})}
+                            onCancelEvent={(eventId) => deleteEvent(eventId)}
+                            onRSVPEvent={(eventId, status) => rsvpToEvent(eventId, status as any)}
                           />
                         ) : (
                           <Component
@@ -1479,6 +1481,20 @@ export default function SpaceDetailPage({
             spaceName={space?.name || 'Space'}
             initialPostType={postCreationType}
             canCreateAnnouncements={isAdmin}
+          />
+        )}
+
+        {/* Event Creation Modal */}
+        {showEventCreation && spaceId && (
+          <EventCreationModal
+            isOpen={showEventCreation}
+            onClose={() => setShowEventCreation(false)}
+            spaceId={spaceId}
+            spaceName={space?.name || 'Space'}
+            onEventCreated={() => {
+              // Trigger a refresh of events
+              window.location.reload();
+            }}
           />
         )}
 

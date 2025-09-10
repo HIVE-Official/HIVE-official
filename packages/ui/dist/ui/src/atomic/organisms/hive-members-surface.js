@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Crown, Shield, Eye, UserPlus, UserMinus, MoreHorizontal, Search, MapPin, GraduationCap, TrendingUp, AlertTriangle, Clock, MessageCircle } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export const HiveMembersSurface = ({ space, members = [], maxMembers, isBuilder = false, leaderMode, canManageMembers = false, onChangeRole, onRemoveMember, onBlockMember, onInviteMember, onMessageMember }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');

@@ -2,12 +2,12 @@
  * HIVE Theme System
  * Campus-first theme system with dark mode and accessibility support
  */
-export { baseTheme } from './base';
-export { darkTheme, darkThemeCSS } from './dark';
-export { accessibilityTheme, accessibilityThemeCSS, accessibilityUtils } from './accessibility';
+export { baseTheme } from './base.js';
+export { darkTheme, darkThemeCSS } from './dark.js';
+export { accessibilityTheme, accessibilityThemeCSS, accessibilityUtils } from './accessibility.js';
 // Import CSS strings for internal use
-import { darkThemeCSS as _darkThemeCSS } from './dark';
-import { accessibilityThemeCSS as _accessibilityThemeCSS } from './accessibility';
+import { darkThemeCSS as _darkThemeCSS } from './dark.js';
+import { accessibilityThemeCSS as _accessibilityThemeCSS } from './accessibility.js';
 // Theme utilities
 export const themes = {
     base: 'hive-base',

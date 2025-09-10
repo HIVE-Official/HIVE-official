@@ -8,31 +8,31 @@
 // ============================================================================
 // MAIN NAVIGATION COMPONENTS
 // ============================================================================
-export { default as NavigationContainer } from './components/NavigationContainer';
-export { withNavigation } from './components/NavigationContainer';
+export { default as NavigationContainer } from './components/NavigationContainer.js';
+export { withNavigation } from './components/NavigationContainer.js';
 // Individual navigation components
-export { MobileNavigation } from './components/MobileNavigation';
-export { DesktopSidebar, SidebarOverlay } from './components/DesktopSidebar';
-export { DesktopTopbar } from './components/DesktopTopbar';
-export { TabletDrawer, TabletDrawerTrigger } from './components/TabletDrawer';
+export { MobileNavigation } from './components/MobileNavigation.js';
+export { DesktopSidebar, SidebarOverlay } from './components/DesktopSidebar.js';
+export { DesktopTopbar } from './components/DesktopTopbar.js';
+export { TabletDrawer, TabletDrawerTrigger } from './components/TabletDrawer.js';
 // ============================================================================
 // HOOKS AND STATE MANAGEMENT
 // ============================================================================
-export { useNavigationState, useCurrentNavigationSection, useIsMobileNavigation, useNavigationPreferences } from './hooks/useNavigationState';
-export { NAVIGATION_SECTIONS, BREAKPOINTS } from './core/types';
+export { useNavigationState, useCurrentNavigationSection, useIsMobileNavigation, useNavigationPreferences } from './hooks/useNavigationState.js';
+export { NAVIGATION_SECTIONS, BREAKPOINTS } from './core/types.js';
 // ============================================================================
 // NAVIGATION ENGINE AND UTILITIES
 // ============================================================================
-export { calculateNavigationState, calculateNavigationLayout, resolveNavigationMode, getScreenSize, createResizeHandler, safeCalculateNavigationState } from './core/engine';
+export { calculateNavigationState, calculateNavigationLayout, resolveNavigationMode, getScreenSize, createResizeHandler, safeCalculateNavigationState } from './core/engine.js';
 // ============================================================================
 // BRAND DATA AND CONSTANTS
 // ============================================================================
-export { createNavigationItems, getNavigationItemsWithActiveState, NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y, NAVIGATION_MEDIA_QUERIES, NAVIGATION_CSS_VARS } from './core/data';
+export { createNavigationItems, getNavigationItemsWithActiveState, NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y, NAVIGATION_MEDIA_QUERIES, NAVIGATION_CSS_VARS } from './core/data.js';
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
-export { getMobileSafeAreaStyles, getTouchTargetStyles, mobileNavItemVariants, useMobileNavigationAnalytics } from './components/MobileNavigation';
-export { useDrawerSwipeGesture } from './components/TabletDrawer';
+export { getMobileSafeAreaStyles, getTouchTargetStyles, mobileNavItemVariants, useMobileNavigationAnalytics } from './components/MobileNavigation.js';
+export { useDrawerSwipeGesture } from './components/TabletDrawer.js';
 // ============================================================================
 // VERSION AND METADATA
 // ============================================================================

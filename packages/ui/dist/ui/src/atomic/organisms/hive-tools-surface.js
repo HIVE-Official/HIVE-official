@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Plus, Settings, BarChart3, Play, Pause, Trash2, MoreHorizontal, Hash, CheckCircle2, AlertTriangle, Clock, TrendingUp, Filter } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export const HiveToolsSurface = ({ space, tools = [], maxTools, canManageTools = false, leaderMode, isBuilder = false, viewMode = 'grid', onAddTool, onConfigureTool, onViewToolAnalytics, onRunTool, onPauseTool, onRemoveTool }) => {
     const [filter, setFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');

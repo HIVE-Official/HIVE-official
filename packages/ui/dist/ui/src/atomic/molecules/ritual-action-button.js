@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { Button } from '../atoms';
+import { Button } from '../atoms/index.js';
 import { Target, Compass, UserPlus, Sparkles, ChevronRight, Clock, Users, CheckCircle, Play, RotateCcw } from 'lucide-react';
 const getRitualConfig = (ritualType) => {
     const configs = {

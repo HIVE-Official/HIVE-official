@@ -4,7 +4,7 @@
  * Flexible input, consistent output
  */
 import { useMemo } from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 // Legacy support - extract standard properties from any existing config
 export function extractStandardStyle(config) {
     if (!config || typeof config !== 'object')

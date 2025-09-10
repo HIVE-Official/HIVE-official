@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { Button, Input } from '../atoms';
-import { Card } from '../molecules';
+import { Button, Input } from '../atoms/index.js';
+import { Card } from '../molecules/index.js';
 import { Compass, Users, BookOpen, Code, Palette, Dumbbell, Briefcase, Search, CheckCircle, Star, MapPin, Calendar, TrendingUp, UserPlus, Filter } from 'lucide-react';
 // Mock space data based on user interests
 const generateSpaceRecommendations = (interests = [], goals = []) => {

@@ -1,14 +1,14 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../lib/utils';
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
-import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
-import { HiveBadge } from '../hive-badge';
-import { HiveInput } from '../hive-input';
+import { cn } from '../../lib/utils.js';
+import { HiveCard } from '../hive-card.js';
+import { HiveButton } from '../hive-button.js';
+import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar.js';
+import { HiveBadge } from '../hive-badge.js';
+import { HiveInput } from '../hive-input.js';
 import { Users, UserPlus, Crown, Shield, Star, MoreVertical, Mail, MessageCircle, UserMinus } from 'lucide-react';
-import { useRealtimeMembers, useOptimisticUpdates } from '../../hooks/use-live-updates';
+import { useRealtimeMembers, useOptimisticUpdates } from '../../hooks/use-live-updates.js';
 // Role configuration
 const roleConfig = {
     leader: {

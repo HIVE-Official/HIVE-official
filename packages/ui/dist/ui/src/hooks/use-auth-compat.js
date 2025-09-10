@@ -2,7 +2,7 @@
  * Backward-compatible auth hook
  * Provides the same interface as existing hooks while using UnifiedAuthContext
  */
-import { useUnifiedAuth } from '../contexts/unified-auth-context';
+import { useUnifiedAuth } from '../contexts/unified-auth-context.js';
 // Helper function for converting HiveUser to legacy User interface
 const convertToLegacyUser = (hiveUser) => {
     if (!hiveUser)

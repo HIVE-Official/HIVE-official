@@ -46,6 +46,10 @@ import { useActiveUsers } from '@/hooks/use-active-users';
 import { RitualEngine, type RitualStrip } from '@/lib/rituals/ritual-engine';
 import { useUnifiedAuth } from '@hive/ui';
 import { useQuery } from '@tanstack/react-query';
+import { RealTimeFeedManager } from '@/components/feed/real-time-feed-manager';
+import { FeedPreferencesButton } from '@/components/feed/feed-preferences-modal';
+import { FeedNotifications } from '@/components/feed/feed-notifications';
+import { CrossSpaceDiscovery } from '@/components/feed/cross-space-discovery';
 
 // Feed stats component with real data
 interface FeedStatsProps {
@@ -502,6 +506,10 @@ export default function FeedPageV2() {
   const [showComposer, setShowComposer] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const [currentFeedType, setCurrentFeedType] = useState<'personal' | 'campus' | 'trending'>('personal');
+  const [showDiscovery, setShowDiscovery] = useState(false);
+  
+  // Get auth context
+  const { user } = useUnifiedAuth();
 
   // Use the new working feed hook
   const {
@@ -522,6 +530,18 @@ export default function FeedPageV2() {
 
   // Switch between feeds based on filter
   const activeFeed = selectedFilter === 'coordination' ? coordinationFeed : { posts, isLoading, error, hasMore, loadMore, refresh };
+  
+  // Get user's spaces for real-time manager
+  const { data: userSpaces = [] } = useQuery({
+    queryKey: ['user-spaces', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const response = await fetch(`/api/users/${user.id}/spaces`);
+      const data = await response.json();
+      return data.spaces?.map((s: any) => s.id) || [];
+    },
+    enabled: !!user?.id
+  });
 
   // Mock functions for interactions (will be implemented later)
   const toggleLike = async (postId: string) => {
@@ -605,13 +625,26 @@ export default function FeedPageV2() {
                 <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
               </button>
               
-              <button className="p-2 rounded-lg bg-[var(--hive-white)]/[0.03] hover:bg-[var(--hive-white)]/[0.05] border border-[var(--hive-white)]/[0.08] text-gray-400 hover:text-[var(--hive-text-primary)] transition-all">
-                <Bell className="h-4 w-4" />
-              </button>
+              {/* Feed Notifications */}
+              {user?.id && (
+                <FeedNotifications 
+                  userId={user.id}
+                  onNotificationClick={(notification) => {
+                    console.log('Notification clicked:', notification);
+                  }}
+                />
+              )}
 
-              <button className="p-2 rounded-lg bg-[var(--hive-white)]/[0.03] hover:bg-[var(--hive-white)]/[0.05] border border-[var(--hive-white)]/[0.08] text-gray-400 hover:text-[var(--hive-text-primary)] transition-all">
-                <Settings className="h-4 w-4" />
-              </button>
+              {/* Feed Preferences */}
+              {user?.id && (
+                <FeedPreferencesButton
+                  userId={user.id}
+                  onSettingsChange={(settings) => {
+                    console.log('Settings changed:', settings);
+                    refresh();
+                  }}
+                />
+              )}
             </div>
           </div>
 
@@ -622,6 +655,20 @@ export default function FeedPageV2() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Feed Column */}
           <div className="lg:col-span-2 space-y-4">
+            {/* Real-Time Feed Manager */}
+            {user?.id && userSpaces.length > 0 && (
+              <RealTimeFeedManager
+                userId={user.id}
+                userSpaces={userSpaces}
+                onNewItems={(count) => {
+                  console.log(`${count} new items available`);
+                }}
+                onItemClick={(item) => {
+                  console.log('Feed item clicked:', item);
+                }}
+                className="mb-4"
+              />
+            )}
             {/* Feed Type Selector */}
             <div className="flex items-center gap-2 p-1 bg-[var(--hive-white)]/[0.03] backdrop-blur-sm border border-[var(--hive-white)]/[0.08] rounded-lg">
               {feedFilters.map((filter) => {
@@ -714,7 +761,20 @@ export default function FeedPageV2() {
           </div>
 
           {/* Sidebar */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block space-y-6">
+            {/* Cross-Space Discovery */}
+            {user?.id && (
+              <CrossSpaceDiscovery
+                userId={user.id}
+                currentSpaceId={userSpaces[0]}
+                onItemClick={(item) => {
+                  console.log('Discovery item clicked:', item);
+                }}
+                className="mb-6"
+              />
+            )}
+            
+            {/* Trending Sidebar */}
             <TrendingSidebar />
           </div>
         </div>

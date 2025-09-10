@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { PageLayout } from '../templates/page-layout';
-import { Card, CardContent, CardHeader } from '../molecules/card';
-import { Button } from '../atoms/button-enhanced';
-import { Text } from '../atoms/text';
+import { PageLayout } from '../templates/page-layout.js';
+import { Card, CardContent, CardHeader } from '../molecules/card.js';
+import { Button } from '../atoms/button-enhanced.js';
+import { Text } from '../atoms/text.js';
 import { Plus, Users, TrendingUp, Zap } from 'lucide-react';
 export const DashboardPage = ({ user, loading, error }) => {
     const firstName = user?.firstName || user?.name?.split(' ')[0];

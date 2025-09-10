@@ -2,16 +2,16 @@
 // This file contains only verified, working components
 import React from 'react';
 // === CORE UTILITIES ===
-export { cn } from './lib/utils';
+export { cn } from './lib/utils.js';
 // === AUTH CONTEXT ===
-export { HiveAuthProvider, useHiveAuth } from './contexts/hive-auth-context';
-export { useHiveAuth as useAuth } from './contexts/hive-auth-context';
+export { HiveAuthProvider, useHiveAuth } from './contexts/hive-auth-context.js';
+export { useHiveAuth as useAuth } from './contexts/hive-auth-context.js';
 // === AUTH COMPONENTS (verified working) ===
-export { EmailGate } from './components/auth/email-gate';
-export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
-export { SchoolPick } from './components/auth/school-pick';
+export { EmailGate } from './components/auth/email-gate.js';
+export { CheckEmailInfo } from './components/auth/CheckEmailInfo.js';
+export { SchoolPick } from './components/auth/school-pick.js';
 // === LOADING COMPONENTS ===
-export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator.js';
 // === ONBOARDING COMPONENTS (temporarily commented - components need to be created) ===
 // export { CreateProfileStep } from './components/onboarding/create-profile-step';
 // export { AcademicStep } from './components/onboarding/academic-step';
@@ -58,16 +58,16 @@ export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingO
 // === SPACES COMPONENTS (temporarily commented - components need to be created) ===
 // export { SpaceRequestForm } from './components/spaces/space-request-form';
 // === BASIC UI COMPONENTS (from existing system) ===
-export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
-export { HiveInput as Input } from './components/hive-input';
-export { HiveCard as Card, HiveCard } from './components/hive-card';
-export { HiveBadge as Badge, HiveBadge } from './components/hive-badge';
-export { HiveModal } from './components/hive-modal';
-export { HiveLogo } from './components/hive-logo';
+export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced.js';
+export { HiveInput as Input } from './components/hive-input.js';
+export { HiveCard as Card, HiveCard } from './components/hive-card.js';
+export { HiveBadge as Badge, HiveBadge } from './components/hive-badge.js';
+export { HiveModal } from './components/hive-modal.js';
+export { HiveLogo } from './components/hive-logo.js';
 // === FORM COMPONENTS ===
-export { FormField } from './atomic/molecules/form-field';
+export { FormField } from './atomic/molecules/form-field.js';
 // === MOTION SYSTEM ===
-export { hiveVariants } from './lib/motion';
+export { hiveVariants } from './lib/motion.js';
 // === CHECKBOX (stub for now) ===
 export const Checkbox = (props) => {
     return React.createElement('input', { type: 'checkbox', ...props });

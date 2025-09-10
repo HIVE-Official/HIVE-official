@@ -2,7 +2,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { createContext, useContext, useState } from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 const TabsContext = createContext(undefined);
 const useTabsContext = () => {
     const context = useContext(TabsContext);

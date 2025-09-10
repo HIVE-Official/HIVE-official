@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 export const HiveTable = ({ className, ...props }) => {
     return (_jsx("div", { className: "relative w-full overflow-auto", children: _jsx("table", { className: cn('w-full caption-bottom text-sm', className), ...props }) }));
 };

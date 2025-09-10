@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth, Badge } from '@hive/ui';
 import { ErrorBoundary } from '../../../components/error-boundary';
+import { RitualCreationWizard } from '../../../components/rituals/ritual-creation-wizard';
 import { 
   Sparkles, 
   Calendar, 
@@ -17,7 +18,8 @@ import {
   ArrowRight,
   Play,
   CheckCircle,
-  Timer
+  Timer,
+  Plus
 } from 'lucide-react';
 
 // Types from rituals framework
@@ -140,6 +142,7 @@ const PARTICIPATION_TYPES = {
 
 export default function RitualsPage() {
   const [activeTab, setActiveTab] = useState<'active' | 'upcoming' | 'completed'>('active');
+  const [showCreationWizard, setShowCreationWizard] = useState(false);
   const { user, getAuthToken } = useAuth();
   const isAuthenticated = !!user;
 
@@ -264,14 +267,25 @@ export default function RitualsPage() {
         {/* Header */}
         <div className="border-b border-hive-border bg-hive-surface">
           <div className="max-w-7xl mx-auto px-6 py-8">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-[var(--hive-text-inverse)]" />
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center">
+                  <Sparkles className="h-5 w-5 text-[var(--hive-text-inverse)]" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-hive-text-primary">Campus Rituals</h1>
+                  <p className="text-hive-text-secondary">Shared experiences that build campus culture</p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-hive-text-primary">Campus Rituals</h1>
-                <p className="text-hive-text-secondary">Shared experiences that build campus culture</p>
-              </div>
+              
+              {/* Create Ritual Button - visible for leaders/admins */}
+              <button
+                onClick={() => setShowCreationWizard(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition-opacity"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Create Ritual</span>
+              </button>
             </div>
 
             {/* Navigation Tabs */}
@@ -452,6 +466,16 @@ export default function RitualsPage() {
             </div>
           )}
         </div>
+        
+        {/* Ritual Creation Wizard */}
+        <RitualCreationWizard
+          isOpen={showCreationWizard}
+          onClose={() => setShowCreationWizard(false)}
+          onRitualCreated={(ritualId) => {
+            // Refresh the page or redirect to the new ritual
+            window.location.href = `/rituals/${ritualId}`;
+          }}
+        />
       </div>
     </ErrorBoundary>
   );

@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useRef, useMemo } from 'react';
 import { Plus, Search, Download, Star, Eye, Settings, Code, Play, Save, Share2, Edit, Layout, Type, Image, Link, MousePointer, Sparkles, Zap, Target } from 'lucide-react';
-import { Button, Input, Card, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '../atoms';
+import { Button, Input, Card, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '../atoms/index.js';
 // Available element types for the visual builder
 const ELEMENT_TYPES = [
     {

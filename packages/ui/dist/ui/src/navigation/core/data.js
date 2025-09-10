@@ -6,7 +6,7 @@
  * product requirements with pixel-perfect brand consistency.
  */
 import { User, Activity, Users, Zap } from 'lucide-react';
-import { NAVIGATION_SECTIONS } from './types';
+import { NAVIGATION_SECTIONS } from './types.js';
 // ============================================================================
 // BRAND-CONSISTENT NAVIGATION ITEMS
 // ============================================================================

@@ -15,14 +15,14 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Foundation system imports
-import { typographyComposition } from '../foundations/typography-composition';
-import { layoutComposition } from '../foundations/layout-composition';
-import { iconComposition, CheckCircle, Crown, Zap } from '../foundations/icon-composition';
-import { shadowComposition } from '../foundations/shadow-composition';
-import { borderComposition } from '../foundations/border-composition';
-import { motionComposition } from '../foundations/motion-composition';
+import { typographyComposition } from '../foundations/typography-composition.js';
+import { layoutComposition } from '../foundations/layout-composition.js';
+import { iconComposition, CheckCircle, Crown, Zap } from '../foundations/icon-composition.js';
+import { shadowComposition } from '../foundations/shadow-composition.js';
+import { borderComposition } from '../foundations/border-composition.js';
+import { motionComposition } from '../foundations/motion-composition.js';
 // === USER IDENTITY VARIANTS ===
 const userIdentityVariants = cva(
 // Base styles using foundation systems

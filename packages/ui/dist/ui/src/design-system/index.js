@@ -10,17 +10,17 @@
  * └── themes/        # Base, dark, accessibility themes
  */
 // Design tokens
-export * from './tokens';
+export * from './tokens/index.js';
 // Base components
-export * from './components/base';
+export * from './components/base/index.js';
 // Layout components  
-export * from './layout';
+export * from './layout/index.js';
 // Theme system
-export * from './themes';
+export * from './themes/index.js';
 // Foundation utilities
-export { responsiveBreakpoints, responsiveSpace, touchTargets } from '../lib/responsive-foundation';
-export { getFormA11yProps, getInteractiveA11yProps, getTestProps } from '../lib/accessibility-foundation';
-export { componentBase } from '../lib/component-foundation';
+export { responsiveBreakpoints, responsiveSpace, touchTargets } from '../lib/responsive-foundation.js';
+export { getFormA11yProps, getInteractiveA11yProps, getTestProps } from '../lib/accessibility-foundation.js';
+export { componentBase } from '../lib/component-foundation.js';
 // Design system metadata
 export const designSystem = {
     name: 'HIVE Design System',
