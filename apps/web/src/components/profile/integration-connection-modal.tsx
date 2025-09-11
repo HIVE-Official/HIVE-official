@@ -224,7 +224,7 @@ export function IntegrationConnectionModal({
               <span>Permissions</span>
             </h3>
             <div className="space-y-3">
-              {integration.permissions.map((permission) => (
+              {integration.permissions.map((permission: any) => (
                 <div key={permission.id} className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">

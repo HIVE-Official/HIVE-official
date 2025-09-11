@@ -33,7 +33,7 @@ export function useUserProfile(uid: string) {
     // Set up real-time listener
     unsubscribeRef.current = profileFirebaseService.subscribeToProfile(
       uid,
-      (profileData) => {
+      (profileData: any) => {
         setProfile(profileData);
         setLoading(false);
       }
@@ -41,7 +41,7 @@ export function useUserProfile(uid: string) {
 
     // Initial fetch
     profileFirebaseService.getUserProfile(uid)
-      .then((profileData) => {
+      .then((profileData: any) => {
         setProfile(profileData);
         setLoading(false);
       })
@@ -109,7 +109,7 @@ export function useNotifications(uid: string) {
 
     setLoading(true);
     profileFirebaseService.getUserNotifications(uid)
-      .then((notificationData) => {
+      .then((notificationData: any) => {
         setNotifications(notificationData);
         setLoading(false);
       })
@@ -178,7 +178,7 @@ export function useUserSpaces(uid: string) {
 
     setLoading(true);
     profileFirebaseService.getUserSpaces(uid)
-      .then((spaceData) => {
+      .then((spaceData: any) => {
         setSpaces(spaceData);
         setLoading(false);
       })
@@ -276,7 +276,7 @@ export function useUserTools(uid: string) {
 
     setLoading(true);
     profileFirebaseService.getUserTools(uid)
-      .then((toolData) => {
+      .then((toolData: any) => {
         setTools(toolData);
         setLoading(false);
       })

@@ -504,7 +504,7 @@ export function ActivityFeed({
                     <input
                       type="checkbox"
                       checked={filters.postTypes.includes(type)}
-                      onChange={(e) => {
+                      onChange={(e: any) => {
                         if (e.target.checked) {
                           setFilters(prev => ({ ...prev, postTypes: [...prev.postTypes, type] }));
                         } else {
@@ -527,7 +527,7 @@ export function ActivityFeed({
               </label>
               <select
                 value={filters.timeRange}
-                onChange={(e) => setFilters(prev => ({ ...prev, timeRange: e.target.value as any }))}
+                onChange={(e: any) => setFilters(prev => ({ ...prev, timeRange: e.target.value as any }))}
                 className="w-full p-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
               >
                 <option value="today">Today</option>
@@ -543,7 +543,7 @@ export function ActivityFeed({
               </label>
               <select
                 value={filters.sortBy}
-                onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
+                onChange={(e: any) => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
                 className="w-full p-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
               >
                 <option value="recent">Most Recent</option>
@@ -557,7 +557,7 @@ export function ActivityFeed({
 
       {/* Posts */}
       <div className="space-y-6">
-        {feedState.posts.map((post) => {
+        {feedState.posts.map((post: any) => {
           const PostIcon = getPostIcon(post.type);
           const typeColor = getPostTypeColor(post.type);
           
@@ -614,7 +614,7 @@ export function ActivityFeed({
               {/* Attachments */}
               {post.attachments && post.attachments.length > 0 && (
                 <div className="mb-4">
-                  {post.attachments.map((attachment, index) => (
+                  {post.attachments.map((attachment: { type: string; name: string; url?: string; title?: string; description?: string }, index: number) => (
                     <div
                       key={index}
                       className="p-3 bg-hive-surface-elevated rounded-lg border border-hive-border-subtle"

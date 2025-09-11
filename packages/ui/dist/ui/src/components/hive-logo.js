@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 const sizeClasses = {
     sm: 'w-8 h-8',
     md: 'w-12 h-12',

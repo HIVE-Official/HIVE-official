@@ -1,9 +1,9 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const inputVariants: (props?: ({
-    variant?: "error" | "ghost" | "success" | "warning" | "default" | "filled" | "brand" | null | undefined;
-    size?: "sm" | "default" | "md" | "lg" | "xl" | null | undefined;
-    radius?: "sm" | "default" | "lg" | "none" | "full" | null | undefined;
+    variant?: "error" | "default" | "ghost" | "success" | "warning" | "filled" | "brand" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | "md" | null | undefined;
+    radius?: "default" | "sm" | "lg" | "none" | "full" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>, VariantProps<typeof inputVariants> {
     leftIcon?: React.ReactNode;

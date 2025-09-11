@@ -363,7 +363,7 @@ export class PlatformIntegration {
         });
       };
 
-      this.websocket.onmessage = (event) => {
+      this.websocket.onmessage = (event: any) => {
         try {
           const message = JSON.parse(event.data);
           this.handleWebSocketMessage(message);
@@ -377,7 +377,7 @@ export class PlatformIntegration {
         this.handleWebSocketReconnect();
       };
 
-      this.websocket.onerror = (error) => {
+      this.websocket.onerror = (error: any) => {
         console.error('🔌 WebSocket error:', error);
       };
     } catch (error) {

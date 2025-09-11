@@ -425,7 +425,7 @@ class FeedManagerRegistry {
       for (let i = 0; i < userDocs.length; i += batchSize) {
         const batch = userDocs.slice(i, i + batchSize);
         
-        const promises = batch.map(async (doc) => {
+        const promises = batch.map(async (doc: any) => {
           try {
             const manager = await this.getManager(doc.id);
             await manager.checkForUpdates();

@@ -208,7 +208,7 @@ export default function FeedPage() {
               {/* Sort By */}
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e: any) => setSortBy(e.target.value as any)}
                 className="text-sm bg-hive-background-tertiary border border-hive-border-default rounded px-3 py-1"
               >
                 <option value="recent">Recent</option>
@@ -363,7 +363,7 @@ export default function FeedPage() {
               </div>
             </Card>
           ) : (
-            feedPosts.map((post) => (
+            feedPosts.map((post: any) => (
               <PostCard
                 key={post.id}
                 post={{

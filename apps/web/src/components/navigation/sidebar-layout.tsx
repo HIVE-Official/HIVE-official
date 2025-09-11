@@ -293,7 +293,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                 </div>
               )}
               <div className="space-y-1">
-                {quickActions.map((action) => {
+                {quickActions.map((action: any) => {
                   const Icon = action.icon;
                   
                   return (

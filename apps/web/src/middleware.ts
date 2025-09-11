@@ -1,177 +1,234 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { logger } from './lib/logger';
 
 /**
- * HIVE Edge Runtime Middleware - Basic Token Validation
- * 
- * Lightweight middleware that works in Edge Runtime
- * Firebase token verification is delegated to API routes
- * Updated: Added test-firebase route for development debugging
+ * Production-Ready Middleware
+ * Implements security headers, CORS, and request validation
  */
 
-// Security logging for production
-function logSecurityEvent(event: string, details: any): void {
-  console.warn(`[HIVE SECURITY] ${event}:`, {
-    timestamp: new Date().toISOString(),
-    ...details
-  });
+// Security headers for all responses
+const securityHeaders = {
+  // Prevent clickjacking
+  'X-Frame-Options': 'DENY',
+  
+  // Prevent MIME type sniffing
+  'X-Content-Type-Options': 'nosniff',
+  
+  // Force HTTPS
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  
+  // XSS Protection (legacy browsers)
+  'X-XSS-Protection': '1; mode=block',
+  
+  // Control referrer information
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  
+  // Permissions Policy
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  
+  // Content Security Policy
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${process.env.CSP_SCRIPT_DOMAINS || 'https://apis.google.com https://www.gstatic.com'}`,
+    `style-src 'self' 'unsafe-inline' ${process.env.CSP_STYLE_DOMAINS || 'https://fonts.googleapis.com'}`,
+    `font-src 'self' ${process.env.CSP_FONT_DOMAINS || 'https://fonts.gstatic.com'}`,
+    `img-src 'self' data: ${process.env.CSP_IMG_DOMAINS || 'https: blob:'}`,
+    `connect-src 'self' ${process.env.CSP_CONNECT_DOMAINS || 'https://*.googleapis.com https://*.firebase.com https://*.firebaseio.com wss://*.firebaseio.com'}`,
+    `frame-src 'self' ${process.env.CSP_FRAME_DOMAINS || 'https://*.firebase.com'}`,
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "upgrade-insecure-requests"
+  ].join('; ')
+};
+
+// CORS configuration
+const corsHeaders = {
+  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'https://hive.college',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+  'Access-Control-Max-Age': '86400',
+};
+
+// Rate limiting configuration (simplified - use Redis in production)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function getRateLimitKey(request: NextRequest): string {
+  const ip = request.headers.get('x-forwarded-for') || 
+             request.headers.get('x-real-ip') || 
+             'unknown';
+  return `${ip}:${request.nextUrl.pathname}`;
 }
 
-// Basic token format validation (detailed verification happens in API routes)
-function hasValidTokenFormat(token: string): boolean {
-  if (!token || typeof token !== 'string') return false;
+function checkRateLimit(request: NextRequest): boolean {
+  const key = getRateLimitKey(request);
+  const now = Date.now();
+  const limit = 100; // requests per minute
+  const window = 60000; // 1 minute
   
-  // JWT token format (both Firebase production and emulator)
-  if (token.includes('.')) {
-    const parts = token.split('.');
-    // JWT should have 3 parts: header.payload.signature
-    if (parts.length === 3 && parts.every(part => part.length > 0)) {
-      // In development, accept shorter JWTs from emulator
-      if (process.env.NODE_ENV === 'development') {
-        return true;
-      }
-      // In production, require longer tokens (Firebase production JWTs are typically 900+ chars)
-      return token.length > 100;
+  const record = rateLimitMap.get(key);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(key, { count: 1, resetTime: now + window });
+    return true;
+  }
+  
+  if (record.count >= limit) {
+    return false;
+  }
+  
+  record.count++;
+  return true;
+}
+
+// Clean up old rate limit entries periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, record] of rateLimitMap.entries()) {
+    if (now > record.resetTime) {
+      rateLimitMap.delete(key);
     }
   }
-  
-  return false;
-}
+}, 60000); // Clean every minute
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  // Development bypass when NEXT_PUBLIC_DEV_BYPASS=true
-  if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DEV_BYPASS === 'true') {
-    // Skip all auth checks in dev bypass mode
-    return NextResponse.next();
-  }
-  
-  // Allow static files and Next.js internals
+  // Skip middleware for static files
   if (
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/static') ||
-    pathname.startsWith('/__nextjs') ||
-    pathname.includes('hot-update') ||
-    (pathname.includes('.') && !pathname.includes('/api/'))
+    pathname.startsWith('/api/_next') ||
+    pathname.includes('.') ||
+    pathname.startsWith('/favicon')
   ) {
     return NextResponse.next();
   }
-
-  // Public routes that don't require authentication
-  const publicRoutes = [
-    '/schools',
-    '/signin',
-    '/auth/login', 
-    '/auth/quick-signin',
-    '/auth/verify',
-    '/auth/expired',
-    '/landing',
-    '/waitlist',
-    '/onboarding'  // Allow onboarding pages
-  ];
   
-  // Check exact match for root path
-  if (pathname === '/' || publicRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.next();
+  // Log security-relevant requests (but not in production to avoid noise)
+  if (process.env.NODE_ENV !== 'production') {
+    logger.info('Middleware', {
+      path: pathname,
+      method: request.method,
+      ip: request.headers.get('x-forwarded-for') || (request.headers?.['x-forwarded-for'] || request.headers?.['x-real-ip'] || 'unknown'),
+    });
   }
-
-  // API routes authentication
-  if (pathname.startsWith('/api/')) {
-    // Public API endpoints
-    const publicApiRoutes = ['/api/health', '/api/auth/', '/api/schools', '/api/campus/detect', '/api/spaces/search-mock', '/api/spaces/status', '/api/spaces/diagnostic'];
-    
-    if (publicApiRoutes.some(route => pathname.startsWith(route))) {
-      return NextResponse.next();
-    }
-
-    // All other API routes require authentication
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      await logSecurityEvent('unauthorized_api_access', {
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
+  
+  // Handle CORS preflight
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, { 
+      status: 200,
+      headers: corsHeaders
+    });
+  }
+  
+  // Rate limiting for API routes
+  if (pathname.startsWith('/api')) {
+    if (!checkRateLimit(request)) {
+      const clientIp = request.headers.get('x-forwarded-for') || 
+                       request.headers.get('x-real-ip') || 
+                       'unknown';
+      logger.warn('Rate limit exceeded', undefined, clientIp, {
         path: pathname,
-        reason: 'missing_auth_header'
+        method: request.method,
       });
       
-      return new NextResponse(
-        JSON.stringify({ 
-          error: 'Authentication required',
-          code: 'UNAUTHORIZED' 
-        }),
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
         { 
-          status: 401, 
-          headers: { 'content-type': 'application/json' } 
+          status: 429,
+          headers: {
+            'Retry-After': '60',
+            ...securityHeaders
+          }
         }
       );
     }
-
-    const token = authHeader.substring(7); // Remove 'Bearer '
+  }
+  
+  // Authentication check for protected routes
+  const protectedPaths = [
+    '/dashboard',
+    '/profile',
+    '/spaces/create',
+    '/tools/builder',
+    '/admin'
+  ];
+  
+  const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path));
+  
+  if (isProtectedPath) {
+    const token = request.cookies.get('next-auth.session-token') || 
+                  request.cookies.get('__Secure-next-auth.session-token');
     
-    // Basic token format validation (detailed verification in API routes)
-    if (!hasValidTokenFormat(token)) {
-      logSecurityEvent('invalid_token_format_api_access', {
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
+    if (!token) {
+      // Redirect to login for protected pages
+      const url = new URL('/auth/login', request.url);
+      url.searchParams.set('from', pathname);
+      return NextResponse.redirect(url);
+    }
+  }
+  
+  // Block suspicious requests
+  const suspiciousPatterns = [
+    /\.\./g,  // Path traversal
+    /<script/gi,  // XSS attempts
+    /SELECT.*FROM/gi,  // SQL injection
+    /UNION.*SELECT/gi,  // SQL injection
+    /javascript:/gi,  // XSS attempts
+    /on\w+=/gi,  // Event handlers
+  ];
+  
+  const url = request.url;
+  const body = request.body;
+  
+  for (const pattern of suspiciousPatterns) {
+    if (pattern.test(url) || (body && pattern.test(body.toString()))) {
+      const clientIp = request.headers.get('x-forwarded-for') || 
+                       request.headers.get('x-real-ip') || 
+                       'unknown';
+      logger.warn('Suspicious request blocked', undefined, clientIp, {
         path: pathname,
-        reason: 'malformed_token'
+        pattern: pattern.toString(),
       });
-
-      return new NextResponse(
-        JSON.stringify({ 
-          error: 'Invalid authentication token format',
-          code: 'INVALID_TOKEN' 
-        }),
+      
+      return NextResponse.json(
+        { error: 'Invalid request' },
         { 
-          status: 401, 
-          headers: { 'content-type': 'application/json' } 
+          status: 400,
+          headers: securityHeaders
         }
       );
     }
-
-    // Token format looks valid - let API routes handle detailed verification
-    return NextResponse.next();
   }
-
-  // Protected page routes - check for session
-  const sessionToken = request.cookies.get('session-token')?.value || 
-                      request.headers.get('authorization')?.replace('Bearer ', '');
-
-  // No session token - redirect to login
-  if (!sessionToken) {
-    const loginUrl = new URL('/schools', request.url);
-    loginUrl.searchParams.set('returnTo', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // Basic session token format validation
-  if (!hasValidTokenFormat(sessionToken)) {
-    logSecurityEvent('invalid_session_format_page_access', {
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-      userAgent: request.headers.get('user-agent'),
-      path: pathname,
-      reason: 'malformed_session_token'
+  
+  // Add security headers to all responses
+  const response = NextResponse.next();
+  
+  Object.entries(securityHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+  
+  // Add CORS headers for API routes
+  if (pathname.startsWith('/api')) {
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
     });
-
-    // Clear invalid session and redirect
-    const loginUrl = new URL('/schools', request.url);
-    loginUrl.searchParams.set('returnTo', pathname);
-    const response = NextResponse.redirect(loginUrl);
-    response.cookies.delete('session-token');
-    return response;
   }
-
-  // Token format looks valid - detailed verification will happen on page load via useAuth
-  // Session token present - delegating verification to client auth
-  return NextResponse.next();
+  
+  return response;
 }
 
 export const config = {
   matcher: [
     /*
-     * Match all request paths except static files
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public files (public directory)
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

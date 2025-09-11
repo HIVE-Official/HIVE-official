@@ -557,14 +557,14 @@ export function OnboardingProgress({ userId, className = '', onComplete }: Onboa
                 <input
                   type={field.type}
                   value={formData[field.id] || ''}
-                  onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                  onChange={(e: any) => handleFieldChange(field.id, e.target.value)}
                   placeholder={field.placeholder}
                   className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
                 />
               ) : field.type === 'textarea' ? (
                 <textarea
                   value={formData[field.id] || ''}
-                  onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                  onChange={(e: any) => handleFieldChange(field.id, e.target.value)}
                   placeholder={field.placeholder}
                   rows={3}
                   className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20 resize-none"
@@ -572,7 +572,7 @@ export function OnboardingProgress({ userId, className = '', onComplete }: Onboa
               ) : field.type === 'select' ? (
                 <select
                   value={formData[field.id] || ''}
-                  onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                  onChange={(e: any) => handleFieldChange(field.id, e.target.value)}
                   className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-white/20"
                 >
                   <option value="">{field.placeholder}</option>
@@ -623,7 +623,7 @@ export function OnboardingProgress({ userId, className = '', onComplete }: Onboa
                         name={field.id}
                         value={option.value}
                         checked={formData[field.id] === option.value}
-                        onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                        onChange={(e: any) => handleFieldChange(field.id, e.target.value)}
                         className="text-[var(--hive-brand-secondary)]"
                       />
                       <span className="text-sm text-neutral-300">{option.label}</span>
@@ -635,7 +635,7 @@ export function OnboardingProgress({ userId, className = '', onComplete }: Onboa
                   <input
                     type="checkbox"
                     checked={formData[field.id] || false}
-                    onChange={(e) => handleFieldChange(field.id, e.target.checked)}
+                    onChange={(e: any) => handleFieldChange(field.id, e.target.checked)}
                     className="text-[var(--hive-brand-secondary)]"
                   />
                   <span className="text-sm text-neutral-300">{field.label}</span>

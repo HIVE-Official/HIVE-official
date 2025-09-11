@@ -31,7 +31,7 @@ export class TestHelpers {
    */
   async mockAuthenticatedUser(user: MockUser): Promise<void> {
     // Mock Firebase auth state
-    await this.page.addInitScript((userData) => {
+    await this.page.addInitScript((userData: any) => {
       // Mock Firebase user object
       window.__mockFirebaseUser = {
         uid: userData.id,
@@ -266,7 +266,7 @@ export class TestHelpers {
    * Mock Firebase authentication state
    */
   async mockFirebaseAuth(user?: MockUser): Promise<void> {
-    await this.page.addInitScript((userData) => {
+    await this.page.addInitScript((userData: any) => {
       // Mock Firebase Auth module
       window.__mockFirebaseAuth = {
         currentUser: userData ? {

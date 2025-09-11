@@ -154,7 +154,7 @@ export function RealtimeFeed() {
 
     const unsubscribe = onSnapshot(
       q,
-      async (snapshot) => {
+      async (snapshot: any) => {
         const feedPosts: FeedPost[] = [];
         
         // Process posts and fetch space names
@@ -209,7 +209,7 @@ export function RealtimeFeed() {
         setPosts(feedPosts);
         setLoading(false);
       },
-      (error) => {
+      (error: any) => {
         console.error('Error fetching feed:', error);
         setLoading(false);
       }
@@ -365,7 +365,7 @@ export function RealtimeFeed() {
         <h1 className="text-2xl font-bold mb-4">Your Feed</h1>
         
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
+        <Tabs value={activeTab} onValueChange={(v: any) => setActiveTab(v as any)}>
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="for-you">
               <Sparkles className="h-4 w-4 mr-2" />
@@ -386,7 +386,7 @@ export function RealtimeFeed() {
         <div className="flex gap-2 mt-4">
           <select
             value={filters.type}
-            onChange={(e) => setFilters({ ...filters, type: e.target.value as any })}
+            onChange={(e: any) => setFilters({ ...filters, type: e.target.value as any })}
             className="px-3 py-1 text-sm border rounded-lg dark:bg-gray-800 dark:border-gray-700"
           >
             <option value="all">All Types</option>
@@ -397,7 +397,7 @@ export function RealtimeFeed() {
           
           <select
             value={filters.timeRange}
-            onChange={(e) => setFilters({ ...filters, timeRange: e.target.value as any })}
+            onChange={(e: any) => setFilters({ ...filters, timeRange: e.target.value as any })}
             className="px-3 py-1 text-sm border rounded-lg dark:bg-gray-800 dark:border-gray-700"
           >
             <option value="today">Today</option>

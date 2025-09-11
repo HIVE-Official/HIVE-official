@@ -213,7 +213,7 @@ export class MobileServiceWorker {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
       
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = (event: any) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains('sync-items')) {
           db.createObjectStore('sync-items', { keyPath: 'id', autoIncrement: true });
@@ -416,7 +416,7 @@ function openDB(dbName: string): Promise<IDBDatabase> {
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
     
-    request.onupgradeneeded = (event) => {
+    request.onupgradeneeded = (event: any) => {
       const db = (event.target as IDBOpenDBRequest).result;
       if (!db.objectStoreNames.contains(dbName)) {
         db.createObjectStore(dbName, { keyPath: 'id' });

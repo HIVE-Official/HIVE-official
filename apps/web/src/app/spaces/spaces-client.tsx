@@ -236,7 +236,7 @@ export function SpacesClient() {
                 <Input
                   placeholder="Search spaces..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                   className="pl-10"
                 />
               </div>
@@ -297,7 +297,7 @@ export function SpacesClient() {
             if (!categorySpaces?.length) return null;
 
             // Filter spaces based on preview mode toggle
-            const filteredSpaces = categorySpaces.filter((space) => {
+            const filteredSpaces = categorySpaces.filter((space: any) => {
               if (!showPreviewSpaces && space.status === 'preview') return false;
               return true;
             });
@@ -328,7 +328,7 @@ export function SpacesClient() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {filteredSpaces.map((space) => {
+                  {filteredSpaces.map((space: any) => {
                     // Use SpaceCardPreview for preview mode spaces
                     if (space.status === 'preview') {
                       return (

@@ -69,7 +69,7 @@ export function useRealtimeComments(
       // Set up real-time listener
       const unsubscribe = onSnapshot(
         q,
-        (snapshot) => {
+        (snapshot: any) => {
           const commentsData = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
@@ -78,7 +78,7 @@ export function useRealtimeComments(
           setComments(commentsData);
           setLoading(false);
         },
-        (err) => {
+        (err: any) => {
           console.error('Error fetching comments:', err);
           setError(err as Error);
           setLoading(false);

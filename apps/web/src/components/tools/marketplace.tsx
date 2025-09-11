@@ -334,14 +334,14 @@ export function ToolsMarketplace({
             type="text"
             placeholder="Search tools..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)] placeholder:text-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
           />
         </div>
 
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
+          onChange={(e: any) => setSortBy(e.target.value)}
           className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
         >
           {SORT_OPTIONS.map(option => (
@@ -376,7 +376,7 @@ export function ToolsMarketplace({
                   <input
                     type="checkbox"
                     checked={verifiedOnly}
-                    onChange={(e) => setVerifiedOnly(e.target.checked)}
+                    onChange={(e: any) => setVerifiedOnly(e.target.checked)}
                     className="w-4 h-4 bg-white/10 border border-white/20 rounded"
                   />
                   <span className="text-sm text-[var(--hive-text-inverse)]">
@@ -387,7 +387,7 @@ export function ToolsMarketplace({
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-neutral-400">Price:</span>
                   <div className="flex gap-2">
-                    {['all', 'free', 'paid'].map((option) => (
+                    {['all', 'free', 'paid'].map((option: any) => (
                       <button
                         key={option}
                         onClick={() => setPriceFilter(option as any)}
@@ -460,7 +460,7 @@ export function ToolsMarketplace({
         
         {loading ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {[1, 2, 3, 4, 5, 6].map((i: any) => (
               <div key={i} className="h-64 bg-white/5 rounded-lg animate-pulse" />
             ))}
           </div>
@@ -569,7 +569,7 @@ function ToolCard({
 
       {/* Tags */}
       <div className="flex flex-wrap gap-1 mb-3">
-        {tool.tags.slice(0, 3).map((tag) => (
+        {tool.tags.slice(0, 3).map((tag: any) => (
           <span
             key={tag}
             className="px-2 py-0.5 bg-white/10 text-xs text-neutral-300 rounded"
@@ -587,7 +587,7 @@ function ToolCard({
         <Button
           size="sm"
           variant="primary"
-          onClick={(e) => {
+          onClick={(e: any) => {
             e.stopPropagation();
             onInstall();
           }}
@@ -626,7 +626,7 @@ function ToolDetailModal({
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e: any) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
@@ -700,7 +700,7 @@ function ToolDetailModal({
                   Tags
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {tool.tags.map((tag) => (
+                  {tool.tags.map((tag: any) => (
                     <span
                       key={tag}
                       className="px-3 py-1 bg-white/10 text-sm text-neutral-300 rounded-lg flex items-center gap-1"
@@ -782,7 +782,7 @@ function ToolDetailModal({
                   <div>
                     <span className="text-xs text-neutral-400">Platforms</span>
                     <div className="flex gap-2 mt-1">
-                      {tool.compatibility.platforms.map((platform) => (
+                      {tool.compatibility.platforms.map((platform: any) => (
                         <span
                           key={platform}
                           className="px-2 py-0.5 bg-white/10 text-xs text-neutral-300 rounded"

@@ -406,7 +406,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
         <div className="animate-pulse">
           <div className="bg-gray-200 rounded-lg h-20 mb-4" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4].map((i: any) => (
               <div key={i} className="bg-gray-100 rounded-lg h-32" />
             ))}
           </div>
@@ -460,7 +460,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
               type="text"
               placeholder="Search members..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               // icon={<Search className="h-4 w-4 text-gray-400" />}
             />
           </div>
@@ -468,7 +468,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
           <div className="flex gap-2">
             <select
               value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value as any)}
+              onChange={(e: any) => setFilterRole(e.target.value as any)}
               className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]"
             >
               <option value="all">All Roles</option>
@@ -521,7 +521,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
         ) : (
           filteredMembers
             .slice(0, variant === 'widget' ? 5 : undefined)
-            .map((member) => (
+            .map((member: any) => (
               <MemberCard
                 key={member.id}
                 member={member}

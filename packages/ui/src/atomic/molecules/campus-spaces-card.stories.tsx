@@ -35,7 +35,7 @@ const meta: Meta<typeof CampusSpacesCard> = {
     },
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-md mx-auto">
           <Story />
@@ -221,7 +221,7 @@ export const BentoGridLayout: Story = {
     showQuickActions: true,
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-6xl mx-auto">
           {/* BentoGrid Layout Context */}

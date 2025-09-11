@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { ImageIcon } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function ImageDisplayRenderer({
   element,

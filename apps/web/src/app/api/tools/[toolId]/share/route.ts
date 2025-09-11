@@ -1,8 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getAuth } from "firebase-admin/auth";
-import { getFirestore } from "firebase-admin/firestore";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin, authAdmin } from "@/lib/firebase-admin";
 import { z } from "zod";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import {
@@ -13,7 +11,7 @@ import {
   createToolDefaults,
 } from "@hive/core";
 
-const db = getFirestore();
+const db = dbAdmin;
 
 // POST /api/tools/[toolId]/share - Create share link or fork tool
 export async function POST(
@@ -27,7 +25,7 @@ export async function POST(
     }
 
     const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await authAdmin.verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { toolId } = await params;
@@ -114,7 +112,7 @@ export async function POST(
 
       const forkedTool = {
         ...toolDefaults,
-        elements: originalTool.elements.map((element) => ({
+        elements: originalTool.elements.map((element: any) => ({
           ...element,
           id: `${element.id}_${Date.now()}`, // Ensure unique IDs in the fork
         })),
@@ -212,7 +210,7 @@ export async function GET(
     }
 
     const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await authAdmin.verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { toolId } = await params;
@@ -237,7 +235,7 @@ export async function GET(
       .limit(10)
       .get();
 
-    const forks = forksSnapshot.docs.map((doc) => ({
+    const forks = forksSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       name: doc.data().name,
       ownerId: doc.data().ownerId,

@@ -244,7 +244,7 @@ export function SpaceTransferInterface({
           <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Transfer to</h3>
           
           <div className="grid gap-3">
-            {availableSpaces.filter(space => space.id !== currentSpace.id).map((space) => (
+            {availableSpaces.filter(space => space.id !== currentSpace.id).map((space: any) => (
               <motion.div
                 key={space.id}
                 className={`p-4 rounded-lg border transition-all cursor-pointer ${
@@ -287,7 +287,7 @@ export function SpaceTransferInterface({
           <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Transfer Reason</h3>
           <textarea
             value={transferReason}
-            onChange={(e) => setTransferReason(e.target.value)}
+            onChange={(e: any) => setTransferReason(e.target.value)}
             placeholder="Why are you transferring? (optional)"
             className="w-full h-24 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
             maxLength={200}

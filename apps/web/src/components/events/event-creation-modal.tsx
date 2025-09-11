@@ -197,7 +197,7 @@ export function EventCreationModalMigrated({
                 id="title"
                 placeholder="e.g., Study Session, Club Meeting, Game Night"
                 value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e: any) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 maxLength={100}
               />
               <p className="text-xs text-muted mt-1">
@@ -211,7 +211,7 @@ export function EventCreationModalMigrated({
                 id="description"
                 placeholder="Describe your event..."
                 value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e: any) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 rows={4}
                 maxLength={500}
               />
@@ -235,7 +235,7 @@ export function EventCreationModalMigrated({
                   id="startDate"
                   type="date"
                   value={formData.startDate}
-                  onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
+                  onChange={(e: any) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
                   min={new Date().toISOString().split('T')[0]}
                 />
               </div>
@@ -246,7 +246,7 @@ export function EventCreationModalMigrated({
                   id="startTime"
                   type="time"
                   value={formData.startTime}
-                  onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                  onChange={(e: any) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
                 />
               </div>
               
@@ -256,7 +256,7 @@ export function EventCreationModalMigrated({
                   id="endDate"
                   type="date"
                   value={formData.endDate}
-                  onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
+                  onChange={(e: any) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
                   min={formData.startDate}
                 />
               </div>
@@ -267,7 +267,7 @@ export function EventCreationModalMigrated({
                   id="endTime"
                   type="time"
                   value={formData.endTime}
-                  onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                  onChange={(e: any) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
                 />
               </div>
             </div>
@@ -284,7 +284,7 @@ export function EventCreationModalMigrated({
               <Switch
                 id="virtual"
                 checked={formData.isVirtual}
-                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isVirtual: checked }))}
+                onCheckedChange={(checked: any) => setFormData(prev => ({ ...prev, isVirtual: checked }))}
               />
               <Label htmlFor="virtual">Virtual Event</Label>
             </div>
@@ -299,7 +299,7 @@ export function EventCreationModalMigrated({
                     type="url"
                     placeholder="https://zoom.us/..."
                     value={formData.virtualLink}
-                    onChange={(e) => setFormData(prev => ({ ...prev, virtualLink: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, virtualLink: e.target.value }))}
                     className="pl-10"
                   />
                 </div>
@@ -313,7 +313,7 @@ export function EventCreationModalMigrated({
                     id="location"
                     placeholder="e.g., Capen Hall Room 110"
                     value={formData.location}
-                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                     className="pl-10"
                   />
                 </div>
@@ -330,7 +330,7 @@ export function EventCreationModalMigrated({
                 <Label htmlFor="space">Space *</Label>
                 <Select
                   value={formData.spaceId}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, spaceId: value }))}
+                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, spaceId: value }))}
                 >
                   <SelectTrigger id="space">
                     <SelectValue placeholder="Select a space" />
@@ -349,7 +349,7 @@ export function EventCreationModalMigrated({
                 <Label htmlFor="category">Category</Label>
                 <Select
                   value={formData.category}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, category: value }))}
                 >
                   <SelectTrigger id="category">
                     <SelectValue />
@@ -374,7 +374,7 @@ export function EventCreationModalMigrated({
                     type="number"
                     placeholder="Unlimited"
                     value={formData.capacity || ''}
-                    onChange={(e) => setFormData(prev => ({ ...prev, capacity: e.target.value ? Number(e.target.value) : null }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, capacity: e.target.value ? Number(e.target.value) : null }))}
                     className="pl-10"
                     min="1"
                   />
@@ -387,7 +387,7 @@ export function EventCreationModalMigrated({
                 <Switch
                   id="rsvp"
                   checked={formData.requiresRSVP}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, requiresRSVP: checked }))}
+                  onCheckedChange={(checked: any) => setFormData(prev => ({ ...prev, requiresRSVP: checked }))}
                 />
                 <Label htmlFor="rsvp">Require RSVP</Label>
               </div>
@@ -396,7 +396,7 @@ export function EventCreationModalMigrated({
                 <Switch
                   id="public"
                   checked={formData.isPublic}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isPublic: checked }))}
+                  onCheckedChange={(checked: any) => setFormData(prev => ({ ...prev, isPublic: checked }))}
                 />
                 <Label htmlFor="public">Public Event</Label>
               </div>
@@ -410,8 +410,8 @@ export function EventCreationModalMigrated({
               <Input
                 placeholder="Add a tag..."
                 value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
+                onChange={(e: any) => setNewTag(e.target.value)}
+                onKeyPress={(e: any) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
               />
               <Button
                 type="button"

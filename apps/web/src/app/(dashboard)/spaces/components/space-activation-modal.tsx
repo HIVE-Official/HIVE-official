@@ -255,7 +255,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
                 {/* Progress Indicator */}
                 <div className="flex items-center justify-center mb-8">
                   <div className="flex items-center gap-2">
-                    {[1, 2, 3].map((stepNum) => (
+                    {[1, 2, 3].map((stepNum: any) => (
                       <div key={stepNum} className="flex items-center">
                         <div className={`h-8 w-8 rounded-full border-2 flex items-center justify-center text-sm font-medium transition-all ${
                           step >= stepNum 
@@ -309,7 +309,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
                           <Textarea
                             placeholder="Explain why you're the right person to lead this space. What's your connection to this community?"
                             value={formData.leadershipReason}
-                            onChange={(e) => setFormData(prev => ({ ...prev, leadershipReason: e.target.value }))}
+                            onChange={(e: any) => setFormData(prev => ({ ...prev, leadershipReason: e.target.value }))}
                             rows={4}
                             className="resize-none"
                           />
@@ -330,7 +330,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
                           <Textarea
                             placeholder="What experience, skills, or qualities make you qualified to lead?"
                             value={formData.qualifications}
-                            onChange={(e) => setFormData(prev => ({ ...prev, qualifications: e.target.value }))}
+                            onChange={(e: any) => setFormData(prev => ({ ...prev, qualifications: e.target.value }))}
                             rows={3}
                             className="resize-none"
                           />
@@ -409,7 +409,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
                           <Textarea
                             placeholder="Describe your vision for this space. What activities, events, or initiatives will you launch?"
                             value={formData.visionStatement}
-                            onChange={(e) => setFormData(prev => ({ ...prev, visionStatement: e.target.value }))}
+                            onChange={(e: any) => setFormData(prev => ({ ...prev, visionStatement: e.target.value }))}
                             rows={4}
                             className="resize-none"
                           />
@@ -429,7 +429,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
                           </Label>
                           <Select 
                             value={formData.firstToolChoice} 
-                            onValueChange={(value) => setFormData(prev => ({ ...prev, firstToolChoice: value }))}
+                            onValueChange={(value: any) => setFormData(prev => ({ ...prev, firstToolChoice: value }))}
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="Choose your first tool to activate the space" />
@@ -453,7 +453,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
                           type="email"
                           placeholder="your.email@buffalo.edu"
                           value={formData.contactEmail}
-                          onChange={(e) => setFormData(prev => ({ ...prev, contactEmail: e.target.value }))}
+                          onChange={(e: any) => setFormData(prev => ({ ...prev, contactEmail: e.target.value }))}
                           helperText="We'll use this for activation updates and space leadership communications"
                           required
                         />
@@ -505,7 +505,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
                               <input
                                 type="file"
                                 accept=".pdf,.doc,.docx,.jpg,.png,.jpeg"
-                                onChange={(e) => setFormData(prev => ({ 
+                                onChange={(e: any) => setFormData(prev => ({ 
                                   ...prev, 
                                   verificationFile: e.target.files?.[0] || null 
                                 }))}
@@ -556,7 +556,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
                             type="checkbox"
                             id="agree-terms"
                             checked={formData.agreeToTerms}
-                            onChange={(e) => setFormData(prev => ({ ...prev, agreeToTerms: e.target.checked }))}
+                            onChange={(e: any) => setFormData(prev => ({ ...prev, agreeToTerms: e.target.checked }))}
                             className="mt-1"
                           />
                           <Label htmlFor="agree-terms" className="text-sm cursor-pointer">

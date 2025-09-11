@@ -320,7 +320,7 @@ export function EnhancedSpacesSystem({
                   type="text"
                   placeholder="Search UB communities, courses, dorms..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e: any) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-[var(--hive-background-secondary)] border border-[var(--hive-border-default)] rounded-lg text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-secondary)] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                 />
               </div>
@@ -330,7 +330,7 @@ export function EnhancedSpacesSystem({
                   <ArrowUpDown className="h-4 w-4 text-[var(--hive-text-secondary)] mx-2" />
                   <select
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as any)}
+                    onChange={(e: any) => setSortBy(e.target.value as any)}
                     className="bg-transparent text-[var(--hive-text-primary)] text-sm focus:outline-none border-none"
                   >
                     <option value="popular" className="bg-[var(--hive-background-primary)]">Popular</option>
@@ -363,7 +363,7 @@ export function EnhancedSpacesSystem({
 
             {/* Enhanced Category Filters */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-              {enhancedSpaceTypeFilters.map((filterOption) => (
+              {enhancedSpaceTypeFilters.map((filterOption: any) => (
                 <Button
                   key={filterOption.id}
                   variant="ghost"
@@ -495,7 +495,7 @@ export function EnhancedSpacesSystem({
 
             {/* My Spaces Tab Navigation */}
             <div className="flex border-b border-[var(--hive-border-default)]">
-              {mySpaceTabs.map((tab) => {
+              {mySpaceTabs.map((tab: any) => {
                 const Icon = tab.icon;
                 return (
                   <button

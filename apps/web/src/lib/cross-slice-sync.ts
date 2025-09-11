@@ -297,7 +297,7 @@ export class CrossSliceSyncService {
 
     // User notifications channel
     const userChannel = `user:${this.userId}:crossslice`;
-    const cleanup = realtimeService.listenToChannel(userChannel, (messages) => {
+    const cleanup = realtimeService.listenToChannel(userChannel, (messages: any) => {
       messages.forEach(message => {
         if (message.content.crossSliceEvent) {
           this.processIncomingEvent(message.content as CrossSliceEventData);
@@ -309,7 +309,7 @@ export class CrossSliceSyncService {
 
     // User activity feed channel
     const feedChannel = `user:${this.userId}:activity`;
-    const feedCleanup = realtimeService.listenToChannel(feedChannel, (messages) => {
+    const feedCleanup = realtimeService.listenToChannel(feedChannel, (messages: any) => {
       messages.forEach(message => {
         if (message.content.crossSliceEvent) {
           this.processIncomingEvent(message.content as CrossSliceEventData);
@@ -329,7 +329,7 @@ export class CrossSliceSyncService {
     spaceIds.forEach(spaceId => {
       // Space activity channel
       const spaceChannel = `space:${spaceId}:crossslice`;
-      const cleanup = realtimeService.listenToChannel(spaceChannel, (messages) => {
+      const cleanup = realtimeService.listenToChannel(spaceChannel, (messages: any) => {
         messages.forEach(message => {
           if (message.content.crossSliceEvent) {
             this.processIncomingEvent(message.content as CrossSliceEventData);
@@ -341,7 +341,7 @@ export class CrossSliceSyncService {
 
       // Space tools channel
       const toolsChannel = `space:${spaceId}:tools`;
-      const toolsCleanup = realtimeService.listenToChannel(toolsChannel, (messages) => {
+      const toolsCleanup = realtimeService.listenToChannel(toolsChannel, (messages: any) => {
         messages.forEach(message => {
           if (message.content.crossSliceEvent) {
             this.processIncomingEvent(message.content as CrossSliceEventData);

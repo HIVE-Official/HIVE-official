@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useRealtimePosts, useRealtimeEvents, useRealtimeMembers, usePresence, useTypingIndicators, useLiveActivityFeed } from './use-live-updates.js';
+import { useRealtimePosts, useRealtimeEvents, useRealtimeMembers, usePresence, useTypingIndicators, useLiveActivityFeed } from './use-live-updates';
 export function useSpaceLiveUpdates(spaceId, userId) {
     const [lastUpdate, setLastUpdate] = useState(null);
     // Real-time data hooks

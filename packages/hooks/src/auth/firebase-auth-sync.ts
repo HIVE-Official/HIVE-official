@@ -44,7 +44,7 @@ export function initializeAuthSync(auth: Auth, db: Firestore) {
             // Set up real-time profile listener
             const unsubscribeProfile = onSnapshot(
               doc(db, 'users', firebaseUser.uid),
-              (doc) => {
+              (doc: any) => {
                 if (doc.exists()) {
                   const data = doc.data();
                   useAuthStore.getState().updateProfile({
@@ -54,7 +54,7 @@ export function initializeAuthSync(auth: Auth, db: Firestore) {
                   });
                 }
               },
-              (error) => {
+              (error: any) => {
                 console.error('Profile listener error:', error);
               }
             );
@@ -84,7 +84,7 @@ export function initializeAuthSync(auth: Auth, db: Firestore) {
         setLoading(false);
       }
     },
-    (error) => {
+    (error: any) => {
       console.error('Auth state change error:', error);
       setError(error.message);
       setLoading(false);

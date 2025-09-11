@@ -369,7 +369,7 @@ export function ModerationQueue() {
             </CardContent>
           </Card>
         ) : (
-          reports.map((report) => (
+          reports.map((report: any) => (
             <Card key={report.id} className="bg-[var(--hive-background-primary)] border-gray-800 hover:border-gray-700 transition-colors">
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between">
@@ -508,7 +508,7 @@ export function ModerationQueue() {
       {/* Moderation Action Dialog */}
       <Dialog 
         open={actionDialog.isOpen} 
-        onOpenChange={(open) => !open && setActionDialog({ isOpen: false, report: null, action: '' })}
+        onOpenChange={(open: any) => !open && setActionDialog({ isOpen: false, report: null, action: '' })}
       >
         <DialogContent>
           <DialogHeader>
@@ -532,7 +532,7 @@ export function ModerationQueue() {
               </label>
               <Textarea
                 value={actionReason}
-                onChange={(e) => setActionReason(e.target.value)}
+                onChange={(e: any) => setActionReason(e.target.value)}
                 placeholder="Provide a detailed reason for this action..."
                 className="min-h-[80px]"
               />
@@ -544,7 +544,7 @@ export function ModerationQueue() {
               </label>
               <Textarea
                 value={actionNotes}
-                onChange={(e) => setActionNotes(e.target.value)}
+                onChange={(e: any) => setActionNotes(e.target.value)}
                 placeholder="Any additional context or notes..."
                 className="min-h-[60px]"
               />

@@ -325,7 +325,7 @@ function UserTypeSelection({ state, dispatch }: {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {userTypes.map((userType) => (
+        {userTypes.map((userType: any) => (
           <Card 
             key={userType.type}
             className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${
@@ -399,7 +399,7 @@ function PersonalInformation({ state, dispatch }: {
               <Input
                 id="firstName"
                 value={state.personalInfo.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                onChange={(e: any) => handleInputChange('firstName', e.target.value)}
                 placeholder="Enter your first name"
               />
             </div>
@@ -409,7 +409,7 @@ function PersonalInformation({ state, dispatch }: {
               <Input
                 id="lastName"
                 value={state.personalInfo.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                onChange={(e: any) => handleInputChange('lastName', e.target.value)}
                 placeholder="Enter your last name"
               />
             </div>
@@ -420,7 +420,7 @@ function PersonalInformation({ state, dispatch }: {
             <Input
               id="preferredName"
               value={state.personalInfo.preferredName}
-              onChange={(e) => handleInputChange('preferredName', e.target.value)}
+              onChange={(e: any) => handleInputChange('preferredName', e.target.value)}
               placeholder="What would you like to be called?"
             />
           </div>
@@ -431,7 +431,7 @@ function PersonalInformation({ state, dispatch }: {
               id="email"
               type="email"
               value={state.personalInfo.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
+              onChange={(e: any) => handleInputChange('email', e.target.value)}
               placeholder="yourname@buffalo.edu"
             />
             <p className="text-sm text-gray-500 mt-1">
@@ -445,7 +445,7 @@ function PersonalInformation({ state, dispatch }: {
               id="phoneNumber"
               type="tel"
               value={state.personalInfo.phoneNumber}
-              onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+              onChange={(e: any) => handleInputChange('phoneNumber', e.target.value)}
               placeholder="(716) 123-4567"
             />
           </div>
@@ -517,13 +517,13 @@ function AcademicInformation({ state, dispatch }: {
             <Label htmlFor="major">Major/Program *</Label>
             <Select 
               value={state.academicInfo.major} 
-              onValueChange={(value) => handleInputChange('major', value)}
+              onValueChange={(value: any) => handleInputChange('major', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select your major" />
               </SelectTrigger>
               <SelectContent>
-                {ubSpecificData.majors.map((major) => (
+                {ubSpecificData.majors.map((major: any) => (
                   <SelectItem key={major} value={major}>
                     {major}
                   </SelectItem>
@@ -537,7 +537,7 @@ function AcademicInformation({ state, dispatch }: {
               <Label htmlFor="year">Academic Year *</Label>
               <Select 
                 value={state.academicInfo.year} 
-                onValueChange={(value) => handleInputChange('year', value)}
+                onValueChange={(value: any) => handleInputChange('year', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select your year" />
@@ -558,7 +558,7 @@ function AcademicInformation({ state, dispatch }: {
               <Input
                 id="previousInstitution"
                 value={state.academicInfo.previousInstitution || ''}
-                onChange={(e) => handleInputChange('previousInstitution', e.target.value)}
+                onChange={(e: any) => handleInputChange('previousInstitution', e.target.value)}
                 placeholder="Name of your previous college/university"
               />
             </div>
@@ -568,7 +568,7 @@ function AcademicInformation({ state, dispatch }: {
             <Label htmlFor="expectedGraduation">Expected Graduation</Label>
             <Select 
               value={state.academicInfo.expectedGraduation} 
-              onValueChange={(value) => handleInputChange('expectedGraduation', value)}
+              onValueChange={(value: any) => handleInputChange('expectedGraduation', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Expected graduation" />
@@ -672,13 +672,13 @@ function CampusLifePreferences({ state, dispatch }: {
               <Label htmlFor="housing">Housing Preference</Label>
               <Select 
                 value={state.campusPreferences.housing} 
-                onValueChange={(value) => handlePreferenceChange('housing', value)}
+                onValueChange={(value: any) => handlePreferenceChange('housing', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select housing option" />
                 </SelectTrigger>
                 <SelectContent>
-                  {ubSpecificData.housingOptions.map((option) => (
+                  {ubSpecificData.housingOptions.map((option: any) => (
                     <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>
@@ -693,13 +693,13 @@ function CampusLifePreferences({ state, dispatch }: {
               <Label htmlFor="diningPlan">Dining Plan</Label>
               <Select 
                 value={state.campusPreferences.diningPlan} 
-                onValueChange={(value) => handlePreferenceChange('diningPlan', value)}
+                onValueChange={(value: any) => handlePreferenceChange('diningPlan', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select dining plan" />
                 </SelectTrigger>
                 <SelectContent>
-                  {ubSpecificData.diningPlans.map((plan) => (
+                  {ubSpecificData.diningPlans.map((plan: any) => (
                     <SelectItem key={plan} value={plan}>
                       {plan}
                     </SelectItem>
@@ -838,7 +838,7 @@ function SocialPreferencesStep({ state, dispatch }: {
             <Label htmlFor="studyGroupPreference">Study Group Preference</Label>
             <Select 
               value={state.socialPreferences.studyGroupPreference} 
-              onValueChange={(value) => handleSocialChange('studyGroupPreference', value)}
+              onValueChange={(value: any) => handleSocialChange('studyGroupPreference', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="How do you prefer to study?" />
@@ -857,7 +857,7 @@ function SocialPreferencesStep({ state, dispatch }: {
             <Label htmlFor="communicationStyle">Communication Style</Label>
             <Select 
               value={state.socialPreferences.communicationStyle} 
-              onValueChange={(value) => handleSocialChange('communicationStyle', value)}
+              onValueChange={(value: any) => handleSocialChange('communicationStyle', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="How do you prefer to communicate?" />
@@ -966,7 +966,7 @@ function AccessibilityNeeds({ state, dispatch }: {
             <Switch
               id="needsAccommodations"
               checked={state.accessibility.needsAccommodations}
-              onCheckedChange={(checked) => handleAccessibilityChange('needsAccommodations', checked)}
+              onCheckedChange={(checked: any) => handleAccessibilityChange('needsAccommodations', checked)}
             />
             <Label htmlFor="needsAccommodations" className="text-base">
               I need accessibility accommodations or support
@@ -1072,7 +1072,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Label htmlFor="visaStatus">Visa Status</Label>
             <Select 
               value={state.internationalNeeds?.visaStatus || ''} 
-              onValueChange={(value) => handleInternationalChange('visaStatus', value)}
+              onValueChange={(value: any) => handleInternationalChange('visaStatus', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select your visa status" />
@@ -1092,7 +1092,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Label htmlFor="englishProficiency">English Proficiency Level</Label>
             <Select 
               value={state.internationalNeeds?.englishProficiency || ''} 
-              onValueChange={(value) => handleInternationalChange('englishProficiency', value)}
+              onValueChange={(value: any) => handleInternationalChange('englishProficiency', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Rate your English proficiency" />
@@ -1111,7 +1111,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Switch
               id="culturalSupport"
               checked={state.internationalNeeds?.culturalSupport || false}
-              onCheckedChange={(checked) => handleInternationalChange('culturalSupport', checked)}
+              onCheckedChange={(checked: any) => handleInternationalChange('culturalSupport', checked)}
             />
             <Label htmlFor="culturalSupport" className="text-base">
               I'm interested in cultural support and community connections
@@ -1122,7 +1122,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Switch
               id="previousUSExperience"
               checked={state.internationalNeeds?.previousUSExperience || false}
-              onCheckedChange={(checked) => handleInternationalChange('previousUSExperience', checked)}
+              onCheckedChange={(checked: any) => handleInternationalChange('previousUSExperience', checked)}
             />
             <Label htmlFor="previousUSExperience" className="text-base">
               I have previous experience living/studying in the US

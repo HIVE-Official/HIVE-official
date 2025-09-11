@@ -421,7 +421,7 @@ export default function ProfileIntegrationsPage() {
             {/* All Integrations */}
             <TabsContent value="all" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {integrations.map((integration) => {
+                {integrations.map((integration: any) => {
                   const IconComponent = integration.icon;
                   const CategoryIcon = getCategoryIcon(integration.category);
                   
@@ -537,7 +537,7 @@ export default function ProfileIntegrationsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {integrations
                     .filter(integration => integration.category === category)
-                    .map((integration) => {
+                    .map((integration: any) => {
                       const IconComponent = integration.icon;
                       
                       return (
@@ -561,7 +561,7 @@ export default function ProfileIntegrationsPage() {
                           <div className="space-y-2 mb-4">
                             <div className="text-xs text-[var(--hive-text-inverse)] font-medium">Features:</div>
                             <div className="flex flex-wrap gap-1">
-                              {integration.features.slice(0, 3).map((feature) => (
+                              {integration.features.slice(0, 3).map((feature: any) => (
                                 <Badge key={feature} variant="outline" className="text-xs">
                                   {feature}
                                 </Badge>
@@ -666,7 +666,7 @@ export default function ProfileIntegrationsPage() {
                     Permissions
                   </h5>
                   <div className="space-y-2">
-                    {selectedIntegration.permissions.map((permission) => (
+                    {selectedIntegration.permissions.map((permission: any) => (
                       <FormField 
                         key={permission}
                         label={permission.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -688,7 +688,7 @@ export default function ProfileIntegrationsPage() {
                     Data Shared
                   </h5>
                   <div className="space-y-1">
-                    {selectedIntegration.dataShared.map((data) => (
+                    {selectedIntegration.dataShared.map((data: any) => (
                       <div key={data} className="flex items-center gap-2 text-sm">
                         <Check className="h-3 w-3 text-green-400" />
                         <span className="text-gray-300">{data}</span>
@@ -734,7 +734,7 @@ export default function ProfileIntegrationsPage() {
                   Available Features
                 </h5>
                 <div className="grid grid-cols-2 gap-2">
-                  {selectedIntegration.features.map((feature) => (
+                  {selectedIntegration.features.map((feature: any) => (
                     <Badge key={feature} variant="outline" className="justify-center">
                       {feature}
                     </Badge>

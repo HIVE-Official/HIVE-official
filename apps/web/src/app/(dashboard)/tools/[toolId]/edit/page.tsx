@@ -326,7 +326,7 @@ export default function ToolEditPage() {
                   <input
                     type="text"
                     value={tool.name}
-                    onChange={(e) => {
+                    onChange={(e: any) => {
                       setTool({ ...tool, name: e.target.value });
                       setHasChanges(true);
                     }}
@@ -337,7 +337,7 @@ export default function ToolEditPage() {
                   <label className="block text-xs text-[var(--hive-text-muted)] mb-1">Privacy</label>
                   <select
                     value={tool.privacy}
-                    onChange={(e) => {
+                    onChange={(e: any) => {
                       setTool({ ...tool, privacy: e.target.value as any });
                       setHasChanges(true);
                     }}

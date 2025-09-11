@@ -14,6 +14,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        // Default button (alias for secondary)
+        default: [
+          "border border-[var(--hive-border-default)]",
+          "bg-[var(--hive-background-secondary)]",
+          "text-[var(--hive-text-primary)]",
+          "hover:bg-[var(--hive-interactive-hover)]",
+          "hover:border-[var(--hive-border-hover)]",
+          "active:bg-[var(--hive-interactive-active)]",
+        ],
+        
         // Primary button - neutral white/gray, not gold
         primary: [
           "border border-[var(--hive-border-default)]",
@@ -105,6 +115,16 @@ const buttonVariants = cva(
           "hover:bg-[var(--hive-interactive-hover)]",
           "hover:border-[var(--hive-border-hover)]",
           "active:bg-[var(--hive-interactive-active)]",
+        ],
+        
+        // Premium button - Gold filled for premium features
+        premium: [
+          "bg-[var(--hive-brand-secondary)]",
+          "text-[var(--hive-background-primary)]",
+          "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_90%,transparent)]",
+          "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",
+          "shadow-lg hover:shadow-xl",
+          "font-semibold",
         ],
       },
       

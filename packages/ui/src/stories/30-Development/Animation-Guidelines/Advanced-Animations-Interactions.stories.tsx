@@ -743,7 +743,7 @@ const AnimationControls = () => {
           <Label className="text-white">Animation Speed: {animationSpeed}x</Label>
           <Slider
             value={[animationSpeed]}
-            onValueChange={(value) => setAnimationSpeed(value[0])}
+            onValueChange={(value: any) => setAnimationSpeed(value[0])}
             min={0.5}
             max={2}
             step={0.1}

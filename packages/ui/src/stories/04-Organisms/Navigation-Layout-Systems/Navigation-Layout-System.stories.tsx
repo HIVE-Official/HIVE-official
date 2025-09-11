@@ -251,7 +251,7 @@ const FeedContent = ({ mobile = false }: { mobile?: boolean }) => (
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {ubCampusData.spaces.feed.map((space) => (
+        {ubCampusData.spaces.feed.map((space: any) => (
           <div key={space.id} className="flex items-center space-x-3 p-3 rounded-lg bg-[var(--hive-bg-tertiary)]/30">
             <div className="text-2xl">{space.icon}</div>
             <div className="flex-1">
@@ -278,7 +278,7 @@ const SpacesContent = ({ mobile = false }: { mobile?: boolean }) => (
   <div className="space-y-6">
     {/* Spaces Categories */}
     <div className={`grid gap-4 ${mobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
-      {ubCampusData.spaces.spaces.map((space) => (
+      {ubCampusData.spaces.spaces.map((space: any) => (
         <Card key={space.id} className="bg-[var(--hive-bg-secondary)]/50 border-[var(--hive-border-default)] hover:border-[var(--hive-brand-secondary)]/30 transition-colors cursor-pointer">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
@@ -326,7 +326,7 @@ const HiveLabContent = ({ mobile = false }: { mobile?: boolean }) => (
   <div className="space-y-6">
     {/* Popular Tools */}
     <div className={`grid gap-4 ${mobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
-      {ubCampusData.spaces.hivelab.map((tool) => (
+      {ubCampusData.spaces.hivelab.map((tool: any) => (
         <Card key={tool.id} className="bg-[var(--hive-bg-secondary)]/50 border-[var(--hive-border-default)] hover:border-[var(--hive-brand-secondary)]/30 transition-colors cursor-pointer">
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
@@ -684,7 +684,7 @@ const ResponsiveShowcase = () => {
         
         <div className="flex items-center space-x-2">
           <span className="text-[var(--hive-text-secondary)] text-sm mr-2">Section:</span>
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section}
               size="sm"

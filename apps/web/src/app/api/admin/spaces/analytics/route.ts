@@ -186,7 +186,7 @@ export async function GET(request: NextRequest) {
           .get();
 
         const spaces = await Promise.all(
-          spacesSnapshot.docs.map(async (doc) => {
+          spacesSnapshot.docs.map(async (doc: any) => {
             const spaceData = {
               id: doc.id,
               type: type,

@@ -181,7 +181,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                   placeholder="Search tools..."
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-primary)]/50 transition-colors duration-200"
                 />
@@ -195,7 +195,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                 </h3>
                 
                 <div className="space-y-2">
-                  {categories.map((category) => {
+                  {categories.map((category: any) => {
                     const isSelected = selectedCategory === category;
                     const categoryInfo = category !== 'all' ? CATEGORY_INFO[category as keyof typeof CATEGORY_INFO] : null;
                     
@@ -400,7 +400,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                             </div>
                             
                             <button
-                              onClick={(e) => {
+                              onClick={(e: any) => {
                                 e.stopPropagation();
                                 handlePlantTool(tool);
                               }}

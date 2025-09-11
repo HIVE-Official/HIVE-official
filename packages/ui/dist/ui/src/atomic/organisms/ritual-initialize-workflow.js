@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { Button, Progress, Input, Textarea } from '../atoms/index.js';
-import { Card } from '../molecules/index.js';
+import { Button, Progress, Input, Textarea } from '../atoms';
+import { Card } from '../molecules';
 import { Target, User, Heart, CheckCircle, ChevronRight, ChevronLeft, Sparkles, Users, Clock, Badge } from 'lucide-react';
 // Step Components
 const ProfileBasicsStep = ({ onComplete, initialData }) => {

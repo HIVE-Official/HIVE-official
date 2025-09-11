@@ -271,7 +271,7 @@ const ButtonSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-6">
-            {sizes.map((size) => (
+            {sizes.map((size: any) => (
               <div key={size.name} className="flex items-center gap-6">
                 <div className="w-32">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -493,7 +493,7 @@ const ButtonEnhancedShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

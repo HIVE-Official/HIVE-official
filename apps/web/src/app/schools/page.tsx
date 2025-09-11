@@ -600,7 +600,7 @@ export default function SchoolsPage() {
                     src="/assets/hive-logo-white.svg" 
                     alt="HIVE Logo" 
                     className="h-10 w-10 object-contain transition-transform duration-200 hover:scale-105"
-                    onError={(e) => {
+                    onError={(e: any) => {
                       const target = e.target as HTMLImageElement;
                       target.src = "/assets/whitelogo.svg";
                     }}
@@ -638,7 +638,7 @@ export default function SchoolsPage() {
                 type="text"
                 placeholder="Search universities..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e: any) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-hive-background-secondary/50 border border-hive-border-primary rounded-xl text-hive-text-primary placeholder-hive-text-placeholder focus:outline-none focus:border-hive-brand-primary/50 focus:bg-hive-background-secondary transition-all"
               />
             </div>
@@ -669,7 +669,7 @@ export default function SchoolsPage() {
                   ? 'border-hive-brand-primary/50 bg-hive-brand-primary/5 scale-[0.98]' 
                   : 'border-hive-border-primary hover:border-hive-border-primary/30'
               }`}
-              onClick={(event) => handleSchoolSelect(school, event)}
+              onClick={(event: any) => handleSchoolSelect(school, event)}
               style={{
                 background: 'rgba(255, 255, 255, 0.02)',
                 backdropFilter: 'blur(20px)',

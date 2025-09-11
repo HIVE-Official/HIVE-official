@@ -308,7 +308,7 @@ function QuickStartGuide() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {steps.map((step) => {
+          {steps.map((step: any) => {
             const Icon = step.icon;
             return (
               <div key={step.title} className="flex items-center gap-4 p-3 border rounded-lg">
@@ -340,7 +340,7 @@ function SystemStatus() {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {componentStatus.map((component) => {
+          {componentStatus.map((component: any) => {
             const Icon = component.icon;
             return (
               <div key={component.name} className="flex items-center justify-between p-2 border rounded">
@@ -410,7 +410,7 @@ export const ProfileSystemIndex: StoryObj = {
         <div className="max-w-6xl mx-auto p-6 space-y-8">
           {/* Feature Highlights */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {features.map((feature) => {
+            {features.map((feature: any) => {
               const Icon = feature.icon;
               return (
                 <Card key={feature.title} className="p-4 text-center">
@@ -441,7 +441,7 @@ export const ProfileSystemIndex: StoryObj = {
             <div className="lg:col-span-2 space-y-6">
               <Tabs value={activeSection} onValueChange={setActiveSection}>
                 <TabsList className="grid w-full grid-cols-4">
-                  {sections.map((section) => {
+                  {sections.map((section: any) => {
                     const Icon = section.icon;
                     return (
                       <TabsTrigger key={section.id} value={section.id} className="text-xs">
@@ -452,7 +452,7 @@ export const ProfileSystemIndex: StoryObj = {
                   })}
                 </TabsList>
 
-                {sections.map((section) => {
+                {sections.map((section: any) => {
                   const Icon = section.icon;
                   return (
                     <TabsContent key={section.id} value={section.id} className="space-y-4">

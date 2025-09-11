@@ -197,7 +197,7 @@ export const useNavigationState = ({
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    const handleResize = createResizeHandler((width) => {
+    const handleResize = createResizeHandler((width: any) => {
       setScreenWidth(width);
       
       // Auto-close mobile nav on screen size change

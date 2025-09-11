@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const textVariants = {
     variant: {
         // Display Scale
@@ -45,12 +45,37 @@ export const textVariants = {
         right: 'text-right'
     }
 };
-export const Text = ({ as = 'p', variant = 'body-md', color = 'primary', weight, align = 'left', truncate = false, className, children, ...props }) => {
-    const Component = as;
+// Map level prop to variant
+const levelToVariant = {
+    1: 'heading-xl',
+    2: 'heading-lg',
+    3: 'heading-md',
+    4: 'heading-sm',
+    5: 'body-lg',
+    6: 'body-md'
+};
+// Map size prop to variant
+const sizeToVariant = {
+    'xs': 'body-xs',
+    'sm': 'body-sm',
+    'md': 'body-md',
+    'lg': 'body-lg',
+    'xl': 'heading-sm',
+    '2xl': 'heading-md'
+};
+export const Text = ({ as = 'p', variant = 'body-md', color = 'primary', weight, align = 'left', truncate = false, className, children, level, size, ...props }) => {
+    // Handle legacy props
+    const computedAs = level ? `h${level}` : as;
+    const computedVariant = level
+        ? levelToVariant[level]
+        : size
+            ? (sizeToVariant[size] || variant)
+            : variant;
+    const Component = computedAs;
     const baseClasses = [
         // Base typography
-        textVariants.variant[variant],
-        textVariants.color[color],
+        textVariants.variant[computedVariant],
+        textVariants.color[color] || color,
         textVariants.align[align],
         // Weight override if specified
         weight && textVariants.weight[weight],

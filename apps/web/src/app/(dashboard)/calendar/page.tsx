@@ -387,7 +387,7 @@ export default function CalendarPage() {
             
             {/* View Mode Toggle */}
             <div className="flex items-center bg-zinc-800 rounded-lg p-1">
-              {['day', 'week', 'month'].map((mode) => (
+              {['day', 'week', 'month'].map((mode: any) => (
                 <Button
                   key={mode}
                   variant={viewMode === mode ? 'primary' : 'ghost'}
@@ -463,7 +463,7 @@ export default function CalendarPage() {
             <Filter className="h-4 w-4 text-zinc-400" />
             <select
               value={eventTypeFilter}
-              onChange={(e) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
+              onChange={(e: any) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Events</option>
@@ -478,7 +478,7 @@ export default function CalendarPage() {
 
         {/* Integration Status */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {integrations.filter(i => i.isConnected).map((integration) => (
+          {integrations.filter(i => i.isConnected).map((integration: any) => (
             <Card key={integration.id} className="p-4 bg-zinc-800/50 border-zinc-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -595,7 +595,7 @@ export default function CalendarPage() {
         <CreateEventModal
           isOpen={showAddEvent}
           onClose={() => setShowAddEvent(false)}
-          onCreateEvent={(eventData) => {
+          onCreateEvent={(eventData: any) => {
             // Convert CreateEventData to CalendarEvent format
             const newEvent: CalendarEvent = {
               id: `event-${Date.now()}`,
@@ -632,7 +632,7 @@ export default function CalendarPage() {
         >
           <div className="space-y-6">
             <div className="space-y-4">
-              {integrations.map((integration) => (
+              {integrations.map((integration: any) => (
                 <div key={integration.id} className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className={`w-3 h-3 rounded-full ${integration.isConnected ? 'bg-green-400' : 'bg-zinc-500'}`}></div>
@@ -714,7 +714,7 @@ export default function CalendarPage() {
               )
             );
           }}
-          onBookmark={(_eventId) => {
+          onBookmark={(_eventId: any) => {
             
           }}
         />

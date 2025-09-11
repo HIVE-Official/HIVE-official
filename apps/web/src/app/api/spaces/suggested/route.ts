@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       .limit(10);
 
     const spacesSnapshot = await query.get();
-    const spaces = spacesSnapshot.docs.map((doc) => ({
+    const spaces = spacesSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data(),
     }));

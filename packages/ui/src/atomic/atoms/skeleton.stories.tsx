@@ -82,7 +82,7 @@ export const Default: Story = {
     height: '2rem',
     animate: true,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -349,7 +349,7 @@ export const CompleteShowcase: Story = {
                 </div>
                 
                 <div className="space-y-4">
-                  {[1, 2, 3, 4].map((course) => (
+                  {[1, 2, 3, 4].map((course: any) => (
                     <div key={course} className="p-4 bg-[var(--hive-background-primary)] rounded-lg space-y-3">
                       <div className="flex items-center gap-4">
                         <Skeleton variant="rectangular" width="4rem" height="1.5rem" />
@@ -409,7 +409,7 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-4">
                   <Skeleton variant="text" width="8rem" />
                   <div className="space-y-2">
-                    {[1, 2, 3].map((course) => (
+                    {[1, 2, 3].map((course: any) => (
                       <div key={course} className="flex items-center justify-between p-3 bg-[var(--hive-background-primary)] rounded-lg">
                         <div className="flex items-center gap-3">
                           <Skeleton variant="text" width="4rem" />
@@ -437,7 +437,7 @@ export const CompleteShowcase: Story = {
               </div>
 
               <div className="space-y-4">
-                {[1, 2, 3, 4, 5].map((semester) => (
+                {[1, 2, 3, 4, 5].map((semester: any) => (
                   <div key={semester} className="space-y-3">
                     <Skeleton variant="text" width="8rem" />
                     <div className="grid grid-cols-4 gap-4 p-4 bg-[var(--hive-background-primary)] rounded-lg">
@@ -462,7 +462,7 @@ export const CompleteShowcase: Story = {
 
               <div className="grid md:grid-cols-2 gap-6">
                 
-                {[1, 2, 3, 4].map((event) => (
+                {[1, 2, 3, 4].map((event: any) => (
                   <div key={event} className="p-4 bg-[var(--hive-background-primary)] rounded-lg space-y-4">
                     <Skeleton variant="rounded" width="100%" height="8rem" />
                     <div className="space-y-2">
@@ -496,11 +496,11 @@ export const CompleteShowcase: Story = {
               </div>
 
               <div className="space-y-4">
-                {['Breakfast', 'Lunch', 'Dinner'].map((meal) => (
+                {['Breakfast', 'Lunch', 'Dinner'].map((meal: any) => (
                   <div key={meal} className="space-y-3">
                     <Skeleton variant="text" width="6rem" />
                     <div className="grid md:grid-cols-3 gap-4">
-                      {[1, 2, 3].map((item) => (
+                      {[1, 2, 3].map((item: any) => (
                         <div key={item} className="p-3 bg-[var(--hive-background-primary)] rounded-lg space-y-2">
                           <Skeleton variant="text" width="80%" />
                           <Skeleton variant="text" width="100%" lines={2} />
@@ -526,7 +526,7 @@ export const CompleteShowcase: Story = {
               </div>
 
               <div className="space-y-4">
-                {[1, 2, 3, 4, 5].map((result) => (
+                {[1, 2, 3, 4, 5].map((result: any) => (
                   <div key={result} className="p-4 bg-[var(--hive-background-primary)] rounded-lg space-y-3">
                     <div className="flex items-start gap-4">
                       <Skeleton variant="rectangular" width="4rem" height="6rem" />
@@ -553,7 +553,7 @@ export const CompleteShowcase: Story = {
             <h4 className="font-semibold text-[var(--hive-text-primary)]">Campus Social Feed Loading:</h4>
             <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-6">
               
-              {[1, 2, 3].map((post) => (
+              {[1, 2, 3].map((post: any) => (
                 <SkeletonCard key={post} className="bg-[var(--hive-background-primary)] rounded-lg" />
               ))}
 
@@ -575,7 +575,7 @@ export const Playground: Story = {
     height: '4rem',
     animate: true,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

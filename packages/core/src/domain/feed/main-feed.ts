@@ -101,7 +101,7 @@ export class MainFeedRanker {
     const cappedEvents = recentEvents
       .sort((a, b) => b.engagementCount - a.engagementCount)
       .slice(0, this.EVENT_DENSITY_CAP);
-    const cappedEventIds = new Set(cappedEvents.map((e) => e.id));
+    const cappedEventIds = new Set(cappedEvents.map((e: any) => e.id));
 
     // Filter out excess events
     const filteredContents = contents.filter(
@@ -241,7 +241,7 @@ export class ToolSurgeTracker {
    */
   static isToolSurging(toolId: string, surgeStates: ToolSurgeState[]): boolean {
     const now = new Date();
-    const toolState = surgeStates.find((state) => state.toolId === toolId);
+    const toolState = surgeStates.find((state: any) => state.toolId === toolId);
 
     if (!toolState || !toolState.isActive) return false;
 
@@ -288,7 +288,7 @@ export class ToolSurgeTracker {
     ); // 1 hour window
 
     const existingState = existingStates.find(
-      (state) => state.toolId === toolId
+      (state: any) => state.toolId === toolId
     );
 
     return {

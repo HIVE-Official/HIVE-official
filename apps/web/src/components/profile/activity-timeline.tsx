@@ -387,7 +387,7 @@ export function ActivityTimeline({ userId, className = '' }: ActivityTimelinePro
         <div className="flex gap-2">
           <select
             value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value as any)}
+            onChange={(e: any) => setTimeRange(e.target.value as any)}
             className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)]"
           >
             <option value="today">Today</option>

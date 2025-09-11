@@ -255,11 +255,11 @@ export const InteractiveDemo: Story = {
           stats={defaultStats}
           categories={defaultCategories}
           searchQuery={searchQuery}
-          onCategoryClick={(type) => {
+          onCategoryClick={(type: any) => {
             action('category-clicked')(type);
             console.log(`Navigating to ${type} spaces`);
           }}
-          onSearch={(query) => {
+          onSearch={(query: any) => {
             action('search-performed')(query);
             setSearchQuery(query);
             console.log(`Searching for: ${query}`);

@@ -92,7 +92,7 @@ const InteractiveDemo = ({ Component, initialPath = '/', ...props }: any) => {
 
 // 1. Minimal Floating Sidebar
 export const MinimalFloating: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={MinimalFloatingSidebar}
       user={sampleUser}
@@ -109,7 +109,7 @@ export const MinimalFloating: Story = {
 };
 
 export const MinimalFloatingWithoutUser: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={MinimalFloatingSidebar}
       user={null}
@@ -119,7 +119,7 @@ export const MinimalFloatingWithoutUser: Story = {
 };
 
 export const MinimalFloatingActive: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={MinimalFloatingSidebar}
       user={sampleUser}
@@ -131,7 +131,7 @@ export const MinimalFloatingActive: Story = {
 
 // 2. Clean Vertical Sidebar
 export const CleanVertical: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={CleanVerticalSidebar}
       user={sampleUser}
@@ -148,7 +148,7 @@ export const CleanVertical: Story = {
 };
 
 export const CleanVerticalWithoutUser: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={CleanVerticalSidebar}
       user={null}
@@ -158,7 +158,7 @@ export const CleanVerticalWithoutUser: Story = {
 };
 
 export const CleanVerticalActive: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={CleanVerticalSidebar}
       user={sampleUser}
@@ -170,7 +170,7 @@ export const CleanVerticalActive: Story = {
 
 // 3. Top Horizontal Navigation
 export const TopHorizontal: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <div className="h-screen bg-[var(--hive-background-primary)]">
       <InteractiveDemo 
         Component={TopHorizontalNav}
@@ -189,7 +189,7 @@ export const TopHorizontal: Story = {
 };
 
 export const TopHorizontalWithoutUser: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <div className="h-screen bg-[var(--hive-background-primary)]">
       <InteractiveDemo 
         Component={TopHorizontalNav}
@@ -201,7 +201,7 @@ export const TopHorizontalWithoutUser: Story = {
 };
 
 export const TopHorizontalActive: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <div className="h-screen bg-[var(--hive-background-primary)]">
       <InteractiveDemo 
         Component={TopHorizontalNav}
@@ -215,7 +215,7 @@ export const TopHorizontalActive: Story = {
 
 // 4. Bottom Tab Navigation
 export const BottomTabs: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <div className="h-screen bg-[var(--hive-background-primary)] pb-20">
       <InteractiveDemo 
         Component={BottomTabNav}
@@ -233,7 +233,7 @@ export const BottomTabs: Story = {
 };
 
 export const BottomTabsActive: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <div className="h-screen bg-[var(--hive-background-primary)] pb-20">
       <InteractiveDemo 
         Component={BottomTabNav}
@@ -246,7 +246,7 @@ export const BottomTabsActive: Story = {
 
 // 5. Compact Icon Rail
 export const CompactIcons: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={CompactIconRail}
       user={sampleUser}
@@ -263,7 +263,7 @@ export const CompactIcons: Story = {
 };
 
 export const CompactIconsWithoutUser: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={CompactIconRail}
       user={null}
@@ -273,7 +273,7 @@ export const CompactIconsWithoutUser: Story = {
 };
 
 export const CompactIconsActive: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveDemo 
       Component={CompactIconRail}
       user={sampleUser}

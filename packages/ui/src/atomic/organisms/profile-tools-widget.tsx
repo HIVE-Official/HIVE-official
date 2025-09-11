@@ -294,7 +294,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.stopPropagation();
                         onEditTool(featuredTool.id);
                       }}
@@ -306,7 +306,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={(e) => {
+                    onClick={(e: any) => {
                       e.stopPropagation();
                       onViewTool?.(featuredTool.id);
                     }}
@@ -332,7 +332,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
               )}
             </div>
             <div className="space-y-1">
-              {recentTools.map((tool) => {
+              {recentTools.map((tool: any) => {
                 const categoryConfig = getToolCategoryConfig(tool.category);
                 const statusConfig = getToolStatusConfig(tool.status);
                 return (

@@ -127,7 +127,7 @@ export const Default: Story = {
     editable: false,
     loading: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -604,7 +604,7 @@ export const CompleteShowcase: Story = {
                         name="Upload Photo"
                         size="lg"
                         editable
-                        onUpload={(file) => console.log('Upload:', file.name)}
+                        onUpload={(file: any) => console.log('Upload:', file.name)}
                       />
                       <Text variant="body-xs" color="secondary">Upload Enabled</Text>
                     </div>
@@ -866,7 +866,7 @@ export const CompleteShowcase: Story = {
                         src={sampleAvatars.student2}
                         size="xl"
                         editable
-                        onUpload={(file) => console.log('Upload new photo:', file.name)}
+                        onUpload={(file: any) => console.log('Upload new photo:', file.name)}
                         onEdit={() => console.log('Edit profile')}
                       />
                       <div>
@@ -984,7 +984,7 @@ export const Playground: Story = {
     editable: true,
     loading: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>
@@ -998,7 +998,7 @@ export const Playground: Story = {
             <ProfileAvatar 
               {...args}
               onEdit={() => alert('Edit profile clicked!')}
-              onUpload={(file) => alert(`Upload file: ${file.name}`)}
+              onUpload={(file: any) => alert(`Upload file: ${file.name}`)}
             />
             <Text variant="body-sm" color="secondary">
               Interactive profile avatar testing for University at Buffalo campus identity display

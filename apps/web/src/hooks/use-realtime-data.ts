@@ -24,11 +24,11 @@ export function useRealtimeSpacePosts(spaceId: string | null) {
 
     const listenerId = realtimeManager.subscribeToSpacePosts(
       spaceId,
-      (updatedPosts) => {
+      (updatedPosts: any) => {
         setPosts(updatedPosts);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         setError(err);
         setLoading(false);
       }
@@ -62,11 +62,11 @@ export function useRealtimeSpaceMembers(spaceId: string | null) {
 
     const listenerId = realtimeManager.subscribeToSpaceMembers(
       spaceId,
-      (updatedMembers) => {
+      (updatedMembers: any) => {
         setMembers(updatedMembers);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         setError(err);
         setLoading(false);
       }
@@ -100,11 +100,11 @@ export function useRealtimeSpaceEvents(spaceId: string | null) {
 
     const listenerId = realtimeManager.subscribeToSpaceEvents(
       spaceId,
-      (updatedEvents) => {
+      (updatedEvents: any) => {
         setEvents(updatedEvents);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         setError(err);
         setLoading(false);
       }
@@ -141,12 +141,12 @@ export function useRealtimeNotifications() {
 
     const listenerId = realtimeManager.subscribeToUserNotifications(
       session.user.id,
-      (updatedNotifications) => {
+      (updatedNotifications: any) => {
         setNotifications(updatedNotifications);
         setUnreadCount(updatedNotifications.filter(n => !n.read).length);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         setError(err);
         setLoading(false);
       }
@@ -226,11 +226,11 @@ export function useRealtimeFeed() {
 
     const listenerId = realtimeManager.subscribeToUserFeed(
       session.user.id,
-      (updatedFeed) => {
+      (updatedFeed: any) => {
         setFeedItems(updatedFeed);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         setError(err);
         setLoading(false);
       }
@@ -265,11 +265,11 @@ export function useRealtimePostComments(spaceId: string | null, postId: string |
     const listenerId = realtimeManager.subscribeToPostComments(
       spaceId,
       postId,
-      (updatedComments) => {
+      (updatedComments: any) => {
         setComments(updatedComments);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         setError(err);
         setLoading(false);
       }
@@ -303,11 +303,11 @@ export function useRealtimeRituals(spaceIds: string[]) {
 
     const listenerId = realtimeManager.subscribeToRituals(
       spaceIds,
-      (updatedRituals) => {
+      (updatedRituals: any) => {
         setRituals(updatedRituals);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         setError(err);
         setLoading(false);
       }
@@ -341,11 +341,11 @@ export function useRealtimeDocument(path: string[] | null) {
 
     const listenerId = realtimeManager.subscribeToDocument(
       path,
-      (docData) => {
+      (docData: any) => {
         setData(docData);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         setError(err);
         setLoading(false);
       }

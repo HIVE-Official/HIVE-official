@@ -748,11 +748,11 @@ const HiveLABShowcase = () => {
                               borderColor: selectedElement?.name === element.name ? category.color : 'var(--hive-border-primary)'
                             }}
                             onClick={() => setSelectedElement(element)}
-                            onMouseEnter={(e) => {
+                            onMouseEnter={(e: any) => {
                               e.currentTarget.style.borderColor = category.color;
                               e.currentTarget.style.backgroundColor = 'var(--hive-background-interactive)';
                             }}
-                            onMouseLeave={(e) => {
+                            onMouseLeave={(e: any) => {
                               if (selectedElement?.name !== element.name) {
                                 e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                               }

@@ -114,7 +114,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
 
     const q = query(eventsRef, ...constraints);
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, (snapshot: any) => {
       const eventsData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -297,7 +297,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
               <Button
                 size="sm"
                 variant={isAttending ? 'default' : 'outline'}
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   handleRSVP(event.id, isAttending);
                 }}
@@ -320,7 +320,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
             <Button
               size="sm"
               variant="ghost"
-              onClick={(e) => {
+              onClick={(e: any) => {
                 e.stopPropagation();
                 handleInterested(event.id, isInterested);
               }}
@@ -332,7 +332,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
             <Button
               size="sm"
               variant="ghost"
-              onClick={(e) => {
+              onClick={(e: any) => {
                 e.stopPropagation();
                 // Share functionality
               }}
@@ -454,7 +454,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
             <Input
               placeholder="Search events..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: any) => setSearchTerm(e.target.value)}
               className="pl-10 w-full sm:w-64"
             />
           </div>
@@ -469,7 +469,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
             <option value="meeting">Meetings</option>
           </Select>
 
-          <Select value={viewMode} onValueChange={(v) => setViewMode(v as any)}>
+          <Select value={viewMode} onValueChange={(v: any) => setViewMode(v as any)}>
             <option value="grid">Grid</option>
             <option value="list">List</option>
             <option value="calendar">Calendar</option>

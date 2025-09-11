@@ -97,7 +97,7 @@ export const Default: Story = {
     arrow: true,
     disabled: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="flex justify-center items-center h-32 p-6 bg-[var(--hive-background-primary)]">
       <Tooltip {...args}>
         <Button variant="secondary">
@@ -817,7 +817,7 @@ export const Playground: Story = {
     arrow: true,
     disabled: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="flex justify-center items-center h-48 p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

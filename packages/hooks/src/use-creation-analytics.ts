@@ -225,7 +225,7 @@ export const useCreationAnalytics = (
   // Update context
   const updateContext = useCallback(
     (context: Partial<CreationAnalyticsContext>) => {
-      setCurrentContext((prev) => ({ ...prev, ...context }));
+      setCurrentContext((prev: any) => ({ ...prev, ...context }));
     },
     []
   );
@@ -436,7 +436,7 @@ export const useCreationAnalytics = (
   // Privacy controls
   const updatePrivacyPreferences = useCallback(
     (preferences: { analyticsOptOut?: boolean; anonymizeData?: boolean }) => {
-      setUserPreferences((prev) => ({ ...prev, ...preferences }));
+      setUserPreferences((prev: any) => ({ ...prev, ...preferences }));
 
       // Save to localStorage
       if (user) {

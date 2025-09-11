@@ -4,7 +4,9 @@ import {
   getDownloadURL, 
   deleteObject,
   uploadBytesResumable,
-  UploadTask
+  UploadTask,
+  UploadTaskSnapshot,
+  StorageError
 } from 'firebase/storage';
 import { storage } from './firebase';
 
@@ -39,11 +41,11 @@ export async function uploadImage(
       return new Promise((resolve, reject) => {
         uploadTask.on(
           'state_changed',
-          (snapshot) => {
+          (snapshot: UploadTaskSnapshot) => {
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             onProgress(progress);
           },
-          (error) => {
+          (error: StorageError) => {
             console.error('Upload error:', error);
             reject(error);
           },
@@ -178,7 +180,7 @@ export async function compressImage(
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     
-    reader.onload = (e) => {
+    reader.onload = (e: any) => {
       const img = new Image();
       
       img.onload = () => {
@@ -204,7 +206,7 @@ export async function compressImage(
         ctx.drawImage(img, 0, 0, width, height);
         
         canvas.toBlob(
-          (blob) => {
+          (blob: any) => {
             if (!blob) {
               reject(new Error('Failed to compress image'));
               return;

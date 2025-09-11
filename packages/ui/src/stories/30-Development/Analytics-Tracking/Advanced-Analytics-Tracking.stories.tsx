@@ -645,7 +645,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.functional}
-              onCheckedChange={(checked) => 
+              onCheckedChange={(checked: any) => 
                 setPrivacySettings(prev => ({...prev, functional: checked}))
               }
             />
@@ -658,7 +658,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.analytics}
-              onCheckedChange={(checked) => 
+              onCheckedChange={(checked: any) => 
                 setPrivacySettings(prev => ({...prev, analytics: checked}))
               }
             />
@@ -671,7 +671,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.marketing}
-              onCheckedChange={(checked) => 
+              onCheckedChange={(checked: any) => 
                 setPrivacySettings(prev => ({...prev, marketing: checked}))
               }
             />

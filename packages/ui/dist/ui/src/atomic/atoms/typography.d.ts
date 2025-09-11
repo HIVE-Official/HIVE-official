@@ -6,7 +6,7 @@ declare const headingVariants: (props?: ({
     weight?: "bold" | "light" | "normal" | "medium" | "semibold" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const textVariants: (props?: ({
-    size?: "xs" | "sm" | "lg" | "xl" | "base" | null | undefined;
+    size?: "sm" | "lg" | "xl" | "xs" | "base" | null | undefined;
     color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "disabled" | "brand" | "tertiary" | "inverse" | null | undefined;
     weight?: "bold" | "light" | "normal" | "medium" | "semibold" | null | undefined;
     decoration?: "none" | "line-through" | "underline" | null | undefined;

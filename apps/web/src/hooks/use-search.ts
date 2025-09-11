@@ -109,7 +109,7 @@ export function useSearch(options: UseSearchOptions = {}) {
 
         const spacesSnapshot = await getDocs(spacesQuery);
         
-        spacesSnapshot.forEach((doc) => {
+        spacesSnapshot.forEach((doc: any) => {
           const data = doc.data();
           const name = data.name?.toLowerCase() || '';
           const description = data.description?.toLowerCase() || '';
@@ -152,7 +152,7 @@ export function useSearch(options: UseSearchOptions = {}) {
 
         const postsSnapshot = await getDocs(postsQuery);
         
-        postsSnapshot.forEach((doc) => {
+        postsSnapshot.forEach((doc: any) => {
           const data = doc.data();
           const content = data.content?.toLowerCase() || '';
           
@@ -191,7 +191,7 @@ export function useSearch(options: UseSearchOptions = {}) {
 
         const usersSnapshot = await getDocs(usersQuery);
         
-        usersSnapshot.forEach((doc) => {
+        usersSnapshot.forEach((doc: any) => {
           const data = doc.data();
           const name = data.displayName?.toLowerCase() || '';
           const email = data.email?.toLowerCase() || '';
@@ -232,7 +232,7 @@ export function useSearch(options: UseSearchOptions = {}) {
 
         const eventsSnapshot = await getDocs(eventsQuery);
         
-        eventsSnapshot.forEach((doc) => {
+        eventsSnapshot.forEach((doc: any) => {
           const data = doc.data();
           const title = data.title?.toLowerCase() || '';
           const description = data.description?.toLowerCase() || '';
@@ -345,7 +345,7 @@ export function useSearchSuggestions(query: string, limit = 5) {
         const snapshot = await getDocs(spacesQuery);
         const terms = new Set<string>();
         
-        snapshot.forEach((doc) => {
+        snapshot.forEach((doc: any) => {
           const data = doc.data();
           if (data.name?.toLowerCase().includes(query.toLowerCase())) {
             terms.add(data.name);

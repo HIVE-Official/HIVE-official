@@ -4,6 +4,8 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
     description?: string;
     size?: 'sm' | 'md' | 'lg';
     variant?: 'default' | 'ghost';
+    onCheckedChange?: (checked: boolean) => void;
+    checked?: boolean;
 }
 export declare const Switch: React.ForwardRefExoticComponent<SwitchProps & React.RefAttributes<HTMLInputElement>>;
 //# sourceMappingURL=switch.d.ts.map

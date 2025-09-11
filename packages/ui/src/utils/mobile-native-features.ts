@@ -86,8 +86,8 @@ export async function capturePhoto(options: CameraOptions = {}): Promise<File[]>
       stream.getTracks().forEach(track => track.stop());
       
       // Convert canvas to file
-      return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
+      return new Promise((resolve: any) => {
+        canvas.toBlob((blob: any) => {
           if (blob) {
             const file = new File([blob], `photo-${Date.now()}.jpg`, {
               type: 'image/jpeg'
@@ -167,7 +167,7 @@ export async function getCurrentLocation(options: LocationOptions = {}): Promise
     }
     
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      (position: any) => {
         resolve({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -178,7 +178,7 @@ export async function getCurrentLocation(options: LocationOptions = {}): Promise
           speed: position.coords.speed || undefined
         });
       },
-      (error) => {
+      (error: any) => {
         reject(new Error(`Geolocation error: ${error.message}`));
       },
       {
@@ -320,7 +320,7 @@ export class InstallPrompt {
   private deferredPrompt: any = null;
 
   constructor() {
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener('beforeinstallprompt', (e: any) => {
       e.preventDefault();
       this.deferredPrompt = e;
     });

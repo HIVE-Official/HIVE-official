@@ -363,7 +363,7 @@ const CommandInterfaceDemo = () => {
 
   // Keyboard navigation simulation
   useEffect(() => {
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: any) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setCommandPaletteOpen(true);
@@ -464,7 +464,7 @@ const CommandInterfaceDemo = () => {
                     type="text"
                     placeholder={searchMode ? "Search across HIVE platform..." : "Type a command or search..."}
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e: any) => setSearchQuery(e.target.value)}
                     className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 pl-12 text-lg"
                     autoFocus
                   />
@@ -523,7 +523,7 @@ const CommandInterfaceDemo = () => {
                 ) : (
                   // Command Mode
                   <div className="p-2">
-                    {commandCategories.map((category) => (
+                    {commandCategories.map((category: any) => (
                       <div key={category} className="mb-4">
                         <h3 className="text-gray-400 text-xs font-semibold uppercase tracking-wider px-3 py-2">
                           {category}
@@ -607,7 +607,7 @@ const CommandInterfaceDemo = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {mockCommands.filter(cmd => cmd.shortcut).slice(0, 8).map((command) => (
+              {mockCommands.filter(cmd => cmd.shortcut).slice(0, 8).map((command: any) => (
                 <div key={command.id} className="flex items-center justify-between">
                   <div className="flex items-center">
                     <command.icon className="w-4 h-4 mr-2 text-gray-400" />
@@ -630,7 +630,7 @@ const CommandInterfaceDemo = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {mockCommands.filter(cmd => cmd.category === 'Actions').map((action) => (
+              {mockCommands.filter(cmd => cmd.category === 'Actions').map((action: any) => (
                 <Button
                   key={action.id}
                   variant="secondary"
@@ -653,7 +653,7 @@ const CommandInterfaceDemo = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {mockCommands.filter(cmd => cmd.category === 'Campus').map((campus) => (
+              {mockCommands.filter(cmd => cmd.category === 'Campus').map((campus: any) => (
                 <Button
                   key={campus.id}
                   variant="secondary"
@@ -690,7 +690,7 @@ const CommandInterfaceDemo = () => {
                     { name: 'Real-time Indexing', description: 'Fresh results from live platform activity', icon: Refresh },
                     { name: 'Contextual Ranking', description: 'Results prioritized by user context', icon: Target },
                     { name: 'Smart Suggestions', description: 'AI-powered query completion', icon: Lightbulb }
-                  ].map((feature) => (
+                  ].map((feature: any) => (
                     <div key={feature.name} className="flex items-start">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 bg-gray-700">
                         <feature.icon className="w-4 h-4 text-gray-300" />
@@ -715,7 +715,7 @@ const CommandInterfaceDemo = () => {
                     { type: 'Content', description: 'Posts, discussions, and shared resources', icon: MessageSquare, count: '1.2k' },
                     { type: 'Events', description: 'Campus events and coordination activities', icon: Calendar, count: '234' },
                     { type: 'Locations', description: 'UB buildings, rooms, and campus facilities', icon: MapPin, count: '67' }
-                  ].map((resultType) => (
+                  ].map((resultType: any) => (
                     <div key={resultType.type} className="flex items-center justify-between p-3 bg-black/30 rounded-lg">
                       <div className="flex items-center">
                         <resultType.icon className="w-4 h-4 mr-3 text-gray-400" />

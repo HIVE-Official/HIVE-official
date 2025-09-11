@@ -143,7 +143,7 @@ export class TopStripEngine {
     const now = new Date();
 
     // Filter out expired tiles
-    const activeTiles = tiles.filter((tile) => tile.expiresAt > now);
+    const activeTiles = tiles.filter((tile: any) => tile.expiresAt > now);
 
     // Sort by priority (type) then by creation time (newest first)
     const sortedTiles = activeTiles.sort((a, b) => {
@@ -176,7 +176,7 @@ export class TopStripEngine {
     // Campus unlock overrides everything except rituals
     if (newTile.type === TopStripTileType.CAMPUS_UNLOCK) {
       return !existingTiles.some(
-        (tile) => tile.type === TopStripTileType.ACTIVE_RITUAL
+        (tile: any) => tile.type === TopStripTileType.ACTIVE_RITUAL
       );
     }
 

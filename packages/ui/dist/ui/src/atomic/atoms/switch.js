@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const switchSizes = {
     sm: {
         track: 'h-5 w-9',
@@ -22,7 +22,7 @@ const switchSizes = {
         text: 'text-lg'
     }
 };
-export const Switch = React.forwardRef(({ label, description, size = 'md', variant = 'default', checked = false, disabled = false, className, ...props }, ref) => {
+export const Switch = React.forwardRef(({ label, description, size = 'md', variant = 'default', checked = false, disabled = false, className, onCheckedChange, onChange, ...props }, ref) => {
     const trackClasses = [
         'relative inline-flex flex-shrink-0',
         'border-2 border-transparent rounded-full',
@@ -62,7 +62,10 @@ export const Switch = React.forwardRef(({ label, description, size = 'md', varia
                     if (input && !disabled) {
                         input.click();
                     }
-                }, children: [_jsx("input", { ref: ref, type: "checkbox", checked: checked, disabled: disabled, className: "sr-only", ...props }), _jsx("span", { className: thumbClasses })] }), (label || description) && (_jsxs("div", { className: "flex-1 min-w-0", children: [label && (_jsx("div", { className: cn('font-medium text-hive-text-primary', switchSizes[size].text, disabled && 'text-[var(--hive-text-disabled)]'), children: label })), description && (_jsx("div", { className: cn('text-hive-text-secondary', size === 'sm' && 'text-xs', size === 'md' && 'text-sm', size === 'lg' && 'text-base', disabled && 'text-[var(--hive-text-disabled)]'), children: description }))] }))] }));
+                }, children: [_jsx("input", { ref: ref, type: "checkbox", checked: checked, disabled: disabled, className: "sr-only", onChange: (e) => {
+                            onChange?.(e);
+                            onCheckedChange?.(e.target.checked);
+                        }, ...props }), _jsx("span", { className: thumbClasses })] }), (label || description) && (_jsxs("div", { className: "flex-1 min-w-0", children: [label && (_jsx("div", { className: cn('font-medium text-hive-text-primary', switchSizes[size].text, disabled && 'text-[var(--hive-text-disabled)]'), children: label })), description && (_jsx("div", { className: cn('text-hive-text-secondary', size === 'sm' && 'text-xs', size === 'md' && 'text-sm', size === 'lg' && 'text-base', disabled && 'text-[var(--hive-text-disabled)]'), children: description }))] }))] }));
 });
 Switch.displayName = 'Switch';
 //# sourceMappingURL=switch.js.map

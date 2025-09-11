@@ -105,10 +105,10 @@ export default function AuthPageClient() {
                 style={{
                   border: '1px solid rgba(255, 215, 0, 0.15)',
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.6)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.15)';
                 }}
               >

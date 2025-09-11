@@ -257,27 +257,27 @@ const InteractiveCalendarWidget: React.FC<{
             type="text"
             placeholder="Event title"
             value={createForm.title}
-            onChange={(e) => setCreateForm(prev => ({ ...prev, title: e.target.value }))}
+            onChange={(e: any) => setCreateForm(prev => ({ ...prev, title: e.target.value }))}
             className="w-full px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
           />
           <div className="grid grid-cols-2 gap-2">
             <input
               type="datetime-local"
               value={createForm.startDate}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, startDate: e.target.value }))}
+              onChange={(e: any) => setCreateForm(prev => ({ ...prev, startDate: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
             <input
               type="datetime-local"
               value={createForm.endDate}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, endDate: e.target.value }))}
+              onChange={(e: any) => setCreateForm(prev => ({ ...prev, endDate: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
             <select
               value={createForm.type}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, type: e.target.value as CalendarEvent['type'] }))}
+              onChange={(e: any) => setCreateForm(prev => ({ ...prev, type: e.target.value as CalendarEvent['type'] }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             >
               <option value="personal">Personal</option>
@@ -289,7 +289,7 @@ const InteractiveCalendarWidget: React.FC<{
               type="text"
               placeholder="Location"
               value={createForm.location}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, location: e.target.value }))}
+              onChange={(e: any) => setCreateForm(prev => ({ ...prev, location: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
           </div>
@@ -774,11 +774,11 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
 };
 
 // Compound components for specific use cases
-export const CompactProfileDashboard: React.FC<Omit<ProfileDashboardProps, 'variant'>> = (props) => (
+export const CompactProfileDashboard: React.FC<Omit<ProfileDashboardProps, 'variant'>> = (props: any) => (
   <ProfileDashboard {...props} variant="compact" />
 );
 
-export const FocusedProfileDashboard: React.FC<Omit<ProfileDashboardProps, 'variant' | 'showBuilder'>> = (props) => (
+export const FocusedProfileDashboard: React.FC<Omit<ProfileDashboardProps, 'variant' | 'showBuilder'>> = (props: any) => (
   <ProfileDashboard {...props} variant="focused" showBuilder={false} />
 );
 

@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
           if (descriptionMatch) relevanceScore += 60;
           
           // Boost upcoming events
-          const isUpcoming = eventData.startDate && eventData.startDate.toDate() > new Date();
+          const isUpcoming = eventData.startDate && eventData.startDate?.toDate ? startDate.toDate() : new Date(startDate) > new Date();
           if (isUpcoming) relevanceScore += 40;
           
           // Boost based on RSVP count (approximated)

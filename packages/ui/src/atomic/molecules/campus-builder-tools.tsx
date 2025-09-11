@@ -447,7 +447,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
           {[
             { id: 'available', label: 'Create New', count: availableTools?.length ?? 0 },
             { id: 'created', label: 'My Tools', count: createdTools?.length ?? 0 }
-          ].map((tab) => (
+          ].map((tab: any) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as 'available' | 'created')}

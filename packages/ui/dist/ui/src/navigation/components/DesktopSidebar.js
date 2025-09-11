@@ -10,8 +10,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { memo, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Hash } from 'lucide-react';
-import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data.js';
-import { cn } from '../../lib/utils.js';
+import { NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
+import { cn } from '../../lib/utils';
 // ============================================================================
 // SIDEBAR HEADER
 // ============================================================================

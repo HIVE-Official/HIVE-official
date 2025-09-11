@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '@hive/ui';
 import { Loader2 } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function ButtonRenderer({
   element,

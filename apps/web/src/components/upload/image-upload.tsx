@@ -303,7 +303,7 @@ export function ImageUpload({
           </h4>
           
           <div className="space-y-3">
-            {uploadedFiles.map((uploadFile) => (
+            {uploadedFiles.map((uploadFile: any) => (
               <div key={uploadFile.id} className="bg-white border rounded-lg p-4">
                 <div className="flex items-start space-x-3">
                   {/* Preview Thumbnail */}

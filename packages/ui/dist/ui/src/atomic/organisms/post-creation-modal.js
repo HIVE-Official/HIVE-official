@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
-import { cn } from '../../lib/utils.js';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { cn } from '../../lib/utils';
 import { X, Type, Calendar, BarChart3, Megaphone, Plus, Minus, Eye, EyeOff, AlertCircle, CheckCircle, Send } from 'lucide-react';
 const POST_TYPES = [
     {

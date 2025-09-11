@@ -90,14 +90,14 @@ export const useEventStore = create<EventState>()(
       (set, get) => ({
         // View preferences
         viewMode: 'list',
-        setViewMode: (mode) => set({ viewMode: mode }, false, 'setViewMode'),
+        setViewMode: (mode: 'calendar' | 'list' | 'grid') => set({ viewMode: mode }, false, 'setViewMode'),
         
         selectedDate: null,
-        setSelectedDate: (date) => set({ selectedDate: date }, false, 'setSelectedDate'),
+        setSelectedDate: (date: Date | null) => set({ selectedDate: date }, false, 'setSelectedDate'),
         
         // Filters
         filters: defaultFilters,
-        setFilters: (filters) =>
+        setFilters: (filters: Partial<EventFilters>) =>
           set(
             (state) => ({
               filters: { ...state.filters, ...filters }
@@ -109,7 +109,7 @@ export const useEventStore = create<EventState>()(
         
         // Draft management
         drafts: new Map(),
-        saveDraft: (id, draft) =>
+        saveDraft: (id: string, draft: EventDraft) =>
           set(
             (state) => {
               const drafts = new Map(state.drafts);
@@ -119,8 +119,8 @@ export const useEventStore = create<EventState>()(
             false,
             'saveDraft'
           ),
-        getDraft: (id) => get().drafts.get(id),
-        clearDraft: (id) =>
+        getDraft: (id: string) => get().drafts.get(id),
+        clearDraft: (id: string) =>
           set(
             (state) => {
               const drafts = new Map(state.drafts);
@@ -133,7 +133,7 @@ export const useEventStore = create<EventState>()(
         
         // RSVP tracking
         rsvpEvents: new Set(),
-        addRSVP: (eventId) =>
+        addRSVP: (eventId: string) =>
           set(
             (state) => {
               const rsvpEvents = new Set(state.rsvpEvents);
@@ -143,7 +143,7 @@ export const useEventStore = create<EventState>()(
             false,
             'addRSVP'
           ),
-        removeRSVP: (eventId) =>
+        removeRSVP: (eventId: string) =>
           set(
             (state) => {
               const rsvpEvents = new Set(state.rsvpEvents);
@@ -153,11 +153,11 @@ export const useEventStore = create<EventState>()(
             false,
             'removeRSVP'
           ),
-        hasRSVP: (eventId) => get().rsvpEvents.has(eventId),
+        hasRSVP: (eventId: string) => get().rsvpEvents.has(eventId),
         
         // Interested events
         interestedEvents: new Set(),
-        toggleInterested: (eventId) =>
+        toggleInterested: (eventId: string) =>
           set(
             (state) => {
               const interestedEvents = new Set(state.interestedEvents);
@@ -171,11 +171,11 @@ export const useEventStore = create<EventState>()(
             false,
             'toggleInterested'
           ),
-        isInterested: (eventId) => get().interestedEvents.has(eventId),
+        isInterested: (eventId: string) => get().interestedEvents.has(eventId),
         
         // Calendar sync
         syncedCalendars: [],
-        addSyncedCalendar: (calendarId) =>
+        addSyncedCalendar: (calendarId: string) =>
           set(
             (state) => ({
               syncedCalendars: [...state.syncedCalendars, calendarId]
@@ -183,10 +183,10 @@ export const useEventStore = create<EventState>()(
             false,
             'addSyncedCalendar'
           ),
-        removeSyncedCalendar: (calendarId) =>
+        removeSyncedCalendar: (calendarId: string) =>
           set(
             (state) => ({
-              syncedCalendars: state.syncedCalendars.filter(id => id !== calendarId)
+              syncedCalendars: state.syncedCalendars.filter((id: string) => id !== calendarId)
             }),
             false,
             'removeSyncedCalendar'
@@ -194,7 +194,7 @@ export const useEventStore = create<EventState>()(
         
         // Notifications
         eventReminders: new Map(),
-        setEventReminder: (eventId, minutes) =>
+        setEventReminder: (eventId: string, minutes: number) =>
           set(
             (state) => {
               const eventReminders = new Map(state.eventReminders);
@@ -204,7 +204,7 @@ export const useEventStore = create<EventState>()(
             false,
             'setEventReminder'
           ),
-        removeEventReminder: (eventId) =>
+        removeEventReminder: (eventId: string) =>
           set(
             (state) => {
               const eventReminders = new Map(state.eventReminders);
@@ -217,12 +217,12 @@ export const useEventStore = create<EventState>()(
         
         // Recent searches
         recentSearches: [],
-        addRecentSearch: (query) =>
+        addRecentSearch: (query: string) =>
           set(
             (state) => ({
               recentSearches: [
                 query,
-                ...state.recentSearches.filter(q => q !== query)
+                ...state.recentSearches.filter((q: string) => q !== query)
               ].slice(0, 5)
             }),
             false,
@@ -256,7 +256,7 @@ export const useEventStore = create<EventState>()(
 );
 
 // Selectors
-export const useEventFilters = () => useEventStore((state) => state.filters);
-export const useEventViewMode = () => useEventStore((state) => state.viewMode);
-export const useRSVPEvents = () => useEventStore((state) => state.rsvpEvents);
-export const useInterestedEvents = () => useEventStore((state) => state.interestedEvents);
+export const useEventFilters = () => useEventStore((state: any) => state.filters);
+export const useEventViewMode = () => useEventStore((state: any) => state.viewMode);
+export const useRSVPEvents = () => useEventStore((state: any) => state.rsvpEvents);
+export const useInterestedEvents = () => useEventStore((state: any) => state.interestedEvents);

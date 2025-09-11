@@ -318,7 +318,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
               </Text>
             </div>
             <div className="space-y-1">
-              {todayEvents.slice(0, 3).map((event) => {
+              {todayEvents.slice(0, 3).map((event: any) => {
                 const config = getEventTypeConfig(event.type);
                 return (
                   <div 

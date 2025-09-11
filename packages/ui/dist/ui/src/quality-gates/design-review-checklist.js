@@ -242,7 +242,7 @@ export function checkMobileOptimization(componentCode) {
 }
 // Usage example for component reviews
 export const exampleUsage = `
-import { checkAIPatterns, checkMobileOptimization, componentQualityGates } from './design-review-checklist.js';
+import { checkAIPatterns, checkMobileOptimization, componentQualityGates } from './design-review-checklist';
 
 // Before merging any component
 const componentCode = readFileSync('./Button.tsx', 'utf8');

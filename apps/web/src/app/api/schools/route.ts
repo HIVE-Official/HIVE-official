@@ -10,7 +10,7 @@ export async function GET() {
     // PRODUCTION: Always use Firebase database
     const schoolsSnapshot = await dbAdmin.collection("schools").get();
     const schools = schoolsSnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as School
+      (doc: any) => ({ id: doc.id, ...doc.data() }) as School
     );
     
     // In development, always include test university at the top

@@ -493,7 +493,7 @@ function EnhancedFeedDiscoverySystem() {
 
           {/* Enhanced Feed Content */}
           <div className="space-y-6">
-            {filteredContent.map((item) => (
+            {filteredContent.map((item: any) => (
               <Card key={item.id} className={`p-6 border-2 hover:shadow-xl transition-all duration-200 ${getContentPriorityColor(item.priority)}`}>
                 
                 {/* Content Header */}
@@ -596,7 +596,7 @@ function EnhancedFeedDiscoverySystem() {
                         <div className="mb-3">
                           <span className="text-sm text-gray-400 block mb-2">Skills Needed:</span>
                           <div className="flex flex-wrap gap-1">
-                            {item.content.skillsNeeded.map((skill) => (
+                            {item.content.skillsNeeded.map((skill: any) => (
                               <Badge key={skill} variant="secondary" className="text-xs bg-blue-500/10 text-blue-400">
                                 {skill}
                               </Badge>
@@ -631,7 +631,7 @@ function EnhancedFeedDiscoverySystem() {
                   {/* Tags */}
                   {item.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {item.tags.map((tag) => (
+                      {item.tags.map((tag: any) => (
                         <Badge key={tag} variant="secondary" className="text-xs bg-gray-800 text-gray-400">
                           #{tag}
                         </Badge>
@@ -775,7 +775,7 @@ function EnhancedFeedDiscoverySystem() {
                       <div>
                         <span className="text-sm text-gray-400 block mb-1">Priority Communities:</span>
                         <div className="space-y-1">
-                          {mockPersonalizationFactors.userPreferences.priorityCommunities.slice(0, 2).map((community) => (
+                          {mockPersonalizationFactors.userPreferences.priorityCommunities.slice(0, 2).map((community: any) => (
                             <div key={community} className="text-xs text-[var(--hive-text-primary)] bg-gray-700 rounded px-2 py-1">
                               {community}
                             </div>
@@ -846,7 +846,7 @@ function EnhancedFeedDiscoverySystem() {
                       { name: 'Profile', count: 12, status: 'active' },
                       { name: 'HiveLAB', count: 8, status: 'active' },
                       { name: 'Admin', count: 3, status: 'active' }
-                    ].map((source) => (
+                    ].map((source: any) => (
                       <div key={source.name} className="bg-gray-700 rounded p-3">
                         <div className="text-lg font-bold text-[var(--hive-text-primary)]">{source.count}</div>
                         <div className="text-xs text-gray-400">{source.name} Events</div>

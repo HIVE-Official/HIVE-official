@@ -95,7 +95,7 @@ export const Default: Story = {
     onItemClick: action('navigation-clicked'),
     onToggle: action('sidebar-toggled'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="flex h-screen bg-[var(--hive-background-primary)]">
       <Sidebar {...args} />
       <div className="flex-1 p-6">
@@ -555,7 +555,7 @@ export const Playground: Story = {
     onItemClick: action('playground-navigation'),
     onToggle: action('playground-toggle'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="flex h-screen bg-[var(--hive-background-primary)]">
       <Sidebar {...args} />
       <div className="flex-1 p-6">

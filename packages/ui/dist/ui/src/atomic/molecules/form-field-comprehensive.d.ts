@@ -16,10 +16,10 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const formFieldVariants: (props?: ({
     size?: "small" | "base" | "large" | null | undefined;
-    variant?: "ghost" | "default" | "filled" | null | undefined;
+    variant?: "default" | "ghost" | "filled" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const inputVariants: (props?: ({
-    state?: "error" | "success" | "warning" | "default" | null | undefined;
+    state?: "error" | "default" | "success" | "warning" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export type ValidationState = 'default' | 'error' | 'success' | 'warning';
 export type InputType = 'text' | 'email' | 'password' | 'search' | 'tel' | 'url' | 'number';

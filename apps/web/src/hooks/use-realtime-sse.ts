@@ -75,7 +75,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
         });
       };
 
-      eventSource.onmessage = (event) => {
+      eventSource.onmessage = (event: any) => {
         try {
           const data = JSON.parse(event.data);
           
@@ -100,7 +100,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
         }
       };
 
-      eventSource.onerror = (error) => {
+      eventSource.onerror = (error: any) => {
         console.error('SSE connection error:', error);
         
         updateState({

@@ -250,7 +250,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {/* Child Items */}
                 {!collapsed && hasChildren && isItemExpanded && (
                   <div className="ml-6 mt-1 space-y-1 border-l border-[var(--hive-border-default)] pl-4">
-                    {item.children!.map((child) => {
+                    {item.children!.map((child: any) => {
                       const ChildIcon = child.icon;
                       const isChildActive = isItemActive(child);
 

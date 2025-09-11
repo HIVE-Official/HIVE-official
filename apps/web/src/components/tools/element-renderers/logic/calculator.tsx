@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Calculator } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function CalculatorRenderer({
   element,

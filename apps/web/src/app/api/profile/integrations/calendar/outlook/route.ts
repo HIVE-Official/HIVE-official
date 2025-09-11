@@ -10,21 +10,33 @@ import { FieldValue } from 'firebase-admin/firestore';
 import { Client } from '@microsoft/microsoft-graph-client';
 import { ConfidentialClientApplication } from '@azure/msal-node';
 
-const msalConfig = {
-  auth: {
-    clientId: process.env.OUTLOOK_CALENDAR_CLIENT_ID!,
-    clientSecret: process.env.OUTLOOK_CALENDAR_CLIENT_SECRET!,
-    authority: 'https://login.microsoftonline.com/common'
-  }
-};
+// Only initialize MSAL if credentials are available
+let msalClient: ConfidentialClientApplication | null = null;
 
-const msalClient = new ConfidentialClientApplication(msalConfig);
+if (process.env.OUTLOOK_CALENDAR_CLIENT_ID && process.env.OUTLOOK_CALENDAR_CLIENT_SECRET) {
+  const msalConfig = {
+    auth: {
+      clientId: process.env.OUTLOOK_CALENDAR_CLIENT_ID,
+      clientSecret: process.env.OUTLOOK_CALENDAR_CLIENT_SECRET,
+      authority: 'https://login.microsoftonline.com/common'
+    }
+  };
+  msalClient = new ConfidentialClientApplication(msalConfig);
+}
 
 /**
  * GET /api/profile/integrations/calendar/outlook
  * Initiate Outlook Calendar OAuth flow
  */
 export const GET = withAuth(async (request: NextRequest, { userId }) => {
+  // Check if Outlook integration is configured
+  if (!msalClient) {
+    return NextResponse.json(
+      { error: 'Outlook integration not configured' },
+      { status: 503 }
+    );
+  }
+  
   try {
     // Generate OAuth URL with state parameter for security
     const state = Buffer.from(JSON.stringify({
@@ -63,6 +75,14 @@ export const GET = withAuth(async (request: NextRequest, { userId }) => {
  * Sync Outlook Calendar events
  */
 export const POST = withAuth(async (request: NextRequest, { userId }) => {
+  // Check if Outlook integration is configured
+  if (!msalClient) {
+    return NextResponse.json(
+      { error: 'Outlook integration not configured' },
+      { status: 503 }
+    );
+  }
+  
   try {
     // Get user's Outlook Calendar integration
     const integrationsDoc = await dbAdmin
@@ -90,7 +110,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
     let accessToken = outlookCalendar.accessToken;
 
     // Check if token needs refresh
-    if (outlookCalendar.expiresAt && outlookCalendar.expiresAt.toDate() < new Date()) {
+    if (outlookCalendar.expiresAt && outlookCalendar.expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt) < new Date()) {
       if (!outlookCalendar.refreshToken) {
         return NextResponse.json(
           { error: 'Outlook Calendar token expired. Please reconnect.' },
@@ -117,7 +137,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
 
     // Create Graph client
     const graphClient = Client.init({
-      authProvider: (done) => {
+      authProvider: (done: any) => {
         done(null, accessToken);
       }
     });

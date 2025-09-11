@@ -40,7 +40,7 @@ const meta: Meta<typeof CampusBuilderTools> = {
     },
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-md mx-auto">
           <Story />
@@ -265,7 +265,7 @@ export const BentoGridLayout: Story = {
     isBuilder: true,
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-6xl mx-auto">
           {/* BentoGrid Layout Context */}
@@ -323,7 +323,7 @@ export const NonBuilderInContext: Story = {
     showBecomeBuilder: true,
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

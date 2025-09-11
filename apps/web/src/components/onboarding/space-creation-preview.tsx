@@ -146,7 +146,7 @@ export function SpaceCreationPreview({
             Auto-joined Communities ({autoJoinSpaces.length})
           </h3>
           <div className="space-y-3">
-            {autoJoinSpaces.map((space) => {
+            {autoJoinSpaces.map((space: any) => {
               const IconComponent = typeIcons[space.type];
               const colorClass = typeColors[space.type];
               
@@ -190,7 +190,7 @@ export function SpaceCreationPreview({
             Recommended for You ({recommendedSpaces.length})
           </h3>
           <div className="space-y-3">
-            {recommendedSpaces.map((space) => {
+            {recommendedSpaces.map((space: any) => {
               const IconComponent = typeIcons[space.type];
               const colorClass = typeColors[space.type];
               

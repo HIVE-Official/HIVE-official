@@ -1,4 +1,9 @@
+// === TYPE DEFINITIONS ===
+export type { HiveUser } from './types/user';
+export { isHiveUser, mapFirebaseUserToHiveUser } from './types/user';
+
 // === CORE UI COMPONENTS ===
+
 // Button system
 export { ButtonEnhanced, type ButtonProps } from './atomic/atoms/button-enhanced';
 export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
@@ -22,8 +27,27 @@ export { Avatar, AvatarImage, AvatarFallback } from './atomic/atoms/avatar';
 // Badge
 export { Badge } from './atomic/atoms/badge';
 
+// Checkbox
+export { Checkbox as CheckboxEnhanced } from './atomic/atoms/checkbox-enhanced';
+
+// Radio Group
+export { Radio as RadioGroup, Radio as RadioGroupItem, RadioGroup as RadioEnhanced } from './atomic/atoms/radio-enhanced';
+
 // Alert system
 export { Alert, AlertTitle, AlertDescription } from './atomic/atoms/alert';
+export { Alert as AlertDialog, AlertTitle as AlertDialogAction, AlertDescription as AlertDialogCancel } from './atomic/atoms/alert';
+export { AlertDescription as AlertDialogFooter } from './atomic/atoms/alert';
+
+// Dropdown components
+export { 
+  Dropdown, 
+  DropdownTrigger, 
+  DropdownMenu, 
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownItem 
+} from './components/dropdown';
 
 // Container
 export { Container, PageContainer } from './atomic/atoms/container';
@@ -37,11 +61,14 @@ export {
   FirebaseAuthProvider as UnifiedAuthProvider,
   useFirebaseAuth,
   useUnifiedAuth,
-  useUnifiedAuth as useAuth
+  useUnifiedAuth as useAuth,
+  useUnifiedAuth as useHiveAuth
 } from './contexts/unified-auth-context';
 
 // === AUTH COMPONENTS ===
-// TODO: Auth components need to be recreated or paths fixed
+export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
+export { SchoolPick } from './components/auth/school-pick';
 
 // === MODALS ===
 export { HiveModal, HiveConfirmModal, HiveAlertModal } from './components/hive-modal';
@@ -50,7 +77,16 @@ export {
   HiveModal as DialogContent,
   HiveModal as DialogHeader,
   HiveModal as DialogTitle,
-  HiveModal as DialogTrigger 
+  HiveModal as DialogTrigger,
+  HiveModal as DialogDescription,
+  HiveModal as DialogFooter,
+  HiveModal as DialogOverlay
+} from './components/hive-modal';
+export {
+  HiveModal as ModalContent,
+  HiveModal as ModalHeader,
+  HiveModal as ModalTitle,
+  HiveModal as ModalFooter
 } from './components/hive-modal';
 
 // === FORM COMPONENTS ===
@@ -80,6 +116,18 @@ export { Grid } from './components/Grid';
 export { Stack } from './components/Stack';
 export { AppHeader } from './components/AppHeader';
 export { BottomNavBar } from './components/BottomNavBar';
+
+// Search
+export { SearchBar } from './components/search-bar';
+
+// ScrollArea (using div as fallback for now)
+import * as React from 'react';
+export const ScrollArea: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => 
+  React.createElement('div', { className }, children);
+
+// === PROFILE COMPONENTS ===
+export { ProfileDashboard as BentoProfileDashboard } from './atomic/organisms/profile-dashboard';
+export { UnifiedProfileDashboard } from './atomic/organisms/unified-profile-dashboard';
 
 // === BRAND COMPONENTS ===
 export { HiveLogo } from './components/hive-logo';

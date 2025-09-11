@@ -83,7 +83,7 @@ export { FormField } from './atomic/molecules/form-field';
 export { hiveVariants } from './lib/motion';
 
 // === CHECKBOX (stub for now) ===
-export const Checkbox: React.FC<any> = (props) => {
+export const Checkbox: React.FC<any> = (props: any) => {
   return React.createElement('input', { type: 'checkbox', ...props });
 };
 

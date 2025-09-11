@@ -409,7 +409,7 @@ export class ProfileFirebaseService {
   // Cleanup
   cleanup(): void {
     console.log('Cleaning up Firebase listeners');
-    this.listeners.forEach((unsubscribe) => unsubscribe());
+    this.listeners.forEach((unsubscribe: any) => unsubscribe());
     this.listeners.clear();
   }
 }

@@ -294,7 +294,7 @@ export default function RitualsPage() {
                 { id: 'active', label: 'Active Now', icon: Play },
                 { id: 'upcoming', label: 'Coming Soon', icon: Clock },
                 { id: 'completed', label: 'Completed', icon: CheckCircle },
-              ].map((tab) => {
+              ].map((tab: any) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
                 return (
@@ -336,7 +336,7 @@ export default function RitualsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredRituals.map((ritual) => {
+              {filteredRituals.map((ritual: any) => {
                 const typeConfig = RITUAL_TYPES[ritual.type];
                 const participationConfig = PARTICIPATION_TYPES[ritual.participationType];
                 const userParticipation = getRitualParticipation(ritual.id);

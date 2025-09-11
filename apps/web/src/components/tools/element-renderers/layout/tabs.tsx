@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Tabs as TabsIcon } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function TabsRenderer({
   element,

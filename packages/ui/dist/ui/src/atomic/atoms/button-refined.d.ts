@@ -5,8 +5,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const buttonVariants: (props?: ({
-    variant?: "primary" | "secondary" | "ghost" | "destructive" | null | undefined;
-    size?: "sm" | "default" | "lg" | "icon" | null | undefined;
+    variant?: "ghost" | "primary" | "secondary" | "destructive" | null | undefined;
+    size?: "default" | "sm" | "lg" | "icon" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
     asChild?: boolean;

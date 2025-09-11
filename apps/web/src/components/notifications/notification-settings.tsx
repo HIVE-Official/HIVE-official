@@ -230,7 +230,7 @@ export function NotificationSettings() {
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-gray-200 rounded w-1/3"></div>
           <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map((i: any) => (
               <div key={i} className="h-12 bg-gray-100 rounded"></div>
             ))}
           </div>
@@ -422,7 +422,7 @@ export function NotificationSettings() {
                 <input
                   type="time"
                   value={preferences.quietHours.start}
-                  onChange={(e) => updateQuietHours('start', e.target.value)}
+                  onChange={(e: any) => updateQuietHours('start', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-hive-primary focus:border-transparent"
                 />
               </div>
@@ -431,7 +431,7 @@ export function NotificationSettings() {
                 <input
                   type="time"
                   value={preferences.quietHours.end}
-                  onChange={(e) => updateQuietHours('end', e.target.value)}
+                  onChange={(e: any) => updateQuietHours('end', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-hive-primary focus:border-transparent"
                 />
               </div>
@@ -480,7 +480,7 @@ export function NotificationSettings() {
                         { key: 'push', label: 'Push', enabled: isEnabled },
                         { key: 'desktop', label: 'Desktop', enabled: preferences.enableDesktop },
                         { key: 'email', label: 'Email', enabled: preferences.enableEmail }
-                      ].map((channel) => (
+                      ].map((channel: any) => (
                         <button
                           key={channel.key}
                           onClick={() => channel.enabled && toggleCategoryChannel(categoryKey, channel.key)}

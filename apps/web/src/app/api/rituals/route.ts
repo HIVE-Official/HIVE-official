@@ -191,7 +191,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 
     // Get user's participation status for each ritual
     const ritualsWithParticipation = await Promise.all(
-      rituals.map(async (ritual) => {
+      rituals.map(async (ritual: any) => {
         const participationSnapshot = await dbAdmin.collection('ritual_participation')
           .where('ritualId', '==', ritual.id)
           .where('userId', '==', userId)

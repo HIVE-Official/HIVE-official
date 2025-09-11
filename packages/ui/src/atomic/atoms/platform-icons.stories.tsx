@@ -564,7 +564,7 @@ export const Playground: Story = {
     size: 'md',
     className: 'text-[var(--hive-brand-secondary)]',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Label, Button } from '@hive/ui';
 import { Upload, X, File } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function FileUploadRenderer({
   element,

@@ -410,7 +410,7 @@ export default function ProfileEditPage() {
                 <Label>Pronouns</Label>
                 <Select
                   value={formData.pronouns}
-                  onValueChange={(value) => handleInputChange('pronouns', value)}
+                  onValueChange={(value: any) => handleInputChange('pronouns', value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select pronouns" />
@@ -498,7 +498,7 @@ export default function ProfileEditPage() {
                   <Label>Major</Label>
                   <Select
                     value={formData.major}
-                    onValueChange={(value) => handleInputChange('major', value)}
+                    onValueChange={(value: any) => handleInputChange('major', value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select your major" />
@@ -517,7 +517,7 @@ export default function ProfileEditPage() {
                   <Label>Academic Year</Label>
                   <Select
                     value={formData.academicYear}
-                    onValueChange={(value) => handleInputChange('academicYear', value)}
+                    onValueChange={(value: any) => handleInputChange('academicYear', value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select your year" />
@@ -549,7 +549,7 @@ export default function ProfileEditPage() {
                   <Label>Housing</Label>
                   <Select
                     value={formData.housing}
-                    onValueChange={(value) => handleInputChange('housing', value)}
+                    onValueChange={(value: any) => handleInputChange('housing', value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select housing" />
@@ -587,7 +587,7 @@ export default function ProfileEditPage() {
                 </div>
                 <Switch
                   checked={formData.isPublic}
-                  onCheckedChange={(checked) => handleInputChange('isPublic', checked)}
+                  onCheckedChange={(checked: any) => handleInputChange('isPublic', checked)}
                 />
               </div>
 
@@ -602,7 +602,7 @@ export default function ProfileEditPage() {
                 </div>
                 <Switch
                   checked={formData.showActivity}
-                  onCheckedChange={(checked) => handleInputChange('showActivity', checked)}
+                  onCheckedChange={(checked: any) => handleInputChange('showActivity', checked)}
                 />
               </div>
 
@@ -615,7 +615,7 @@ export default function ProfileEditPage() {
                 </div>
                 <Switch
                   checked={formData.showSpaces}
-                  onCheckedChange={(checked) => handleInputChange('showSpaces', checked)}
+                  onCheckedChange={(checked: any) => handleInputChange('showSpaces', checked)}
                 />
               </div>
 
@@ -628,7 +628,7 @@ export default function ProfileEditPage() {
                 </div>
                 <Switch
                   checked={formData.showConnections}
-                  onCheckedChange={(checked) => handleInputChange('showConnections', checked)}
+                  onCheckedChange={(checked: any) => handleInputChange('showConnections', checked)}
                 />
               </div>
             </CardContent>
@@ -651,7 +651,7 @@ export default function ProfileEditPage() {
                 </div>
                 <Switch
                   checked={formData.allowDirectMessages}
-                  onCheckedChange={(checked) => handleInputChange('allowDirectMessages', checked)}
+                  onCheckedChange={(checked: any) => handleInputChange('allowDirectMessages', checked)}
                 />
               </div>
 
@@ -664,7 +664,7 @@ export default function ProfileEditPage() {
                 </div>
                 <Switch
                   checked={formData.showOnlineStatus}
-                  onCheckedChange={(checked) => handleInputChange('showOnlineStatus', checked)}
+                  onCheckedChange={(checked: any) => handleInputChange('showOnlineStatus', checked)}
                 />
               </div>
             </CardContent>
@@ -687,7 +687,7 @@ export default function ProfileEditPage() {
                 </div>
                 <Switch
                   checked={formData.ghostModeEnabled}
-                  onCheckedChange={(checked) => handleInputChange('ghostModeEnabled', checked)}
+                  onCheckedChange={(checked: any) => handleInputChange('ghostModeEnabled', checked)}
                 />
               </div>
 
@@ -696,7 +696,7 @@ export default function ProfileEditPage() {
                   <Label>Ghost Mode Level</Label>
                   <Select
                     value={formData.ghostModeLevel}
-                    onValueChange={(value) => handleInputChange('ghostModeLevel', value)}
+                    onValueChange={(value: any) => handleInputChange('ghostModeLevel', value)}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -762,7 +762,7 @@ export default function ProfileEditPage() {
                 </div>
                 <Switch
                   checked={formData.builderOptIn}
-                  onCheckedChange={(checked) => handleInputChange('builderOptIn', checked)}
+                  onCheckedChange={(checked: any) => handleInputChange('builderOptIn', checked)}
                 />
               </div>
 

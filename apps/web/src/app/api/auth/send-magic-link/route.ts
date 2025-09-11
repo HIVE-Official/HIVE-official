@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
       const now = new Date();
       for (const doc of existingTokens.docs) {
         const tokenData = doc.data();
-        if (tokenData.expiresAt && tokenData.expiresAt.toDate() < now) {
+        if (tokenData.expiresAt && tokenData.expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt) < now) {
           await doc.ref.delete();
           console.log('🧹 Cleaned up expired token', { tokenId: doc.id.substring(0, 8) + '...' });
         } else {

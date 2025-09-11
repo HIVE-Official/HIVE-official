@@ -42,7 +42,7 @@ const completeOnboardingSchema = z.object({
   interests: z.array(z.string()).default([]), // Added interests array
   consentGiven: z
     .boolean()
-    .refine((val) => val === true, "Consent must be given") });
+    .refine((val: any) => val === true, "Consent must be given") });
 
 interface _UserData {
   handle?: string;

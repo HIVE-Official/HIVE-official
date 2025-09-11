@@ -120,7 +120,7 @@ const PostCard: React.FC<{
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
+          {post.tags.map((tag: any) => (
             <span key={tag} className="text-sm text-blue-600 hover:underline cursor-pointer">
               #{tag}
             </span>
@@ -211,10 +211,10 @@ const PostCard: React.FC<{
             <input
               type="text"
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e: any) => setComment(e.target.value)}
               placeholder="Write a comment..."
               className="flex-1 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)] focus:border-transparent"
-              onKeyDown={(e) => {
+              onKeyDown={(e: any) => {
                 if (e.key === 'Enter' && comment.trim()) {
                   onComment?.();
                   setComment('');
@@ -281,7 +281,7 @@ const CreatePost: React.FC<{
       <div className="space-y-3">
         <HiveTextarea
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e: any) => setContent(e.target.value)}
           placeholder="Share something with the space..."
           className="min-h-[100px] resize-none"
           autoFocus={isExpanded}
@@ -452,7 +452,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
         <div className="animate-pulse">
           <div className="bg-gray-200 rounded-lg h-32 mb-4" />
           <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map((i: any) => (
               <div key={i} className="bg-gray-100 rounded-lg h-40" />
             ))}
           </div>
@@ -519,7 +519,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
             </div>
           </HiveCard>
         ) : (
-          posts.map((post) => (
+          posts.map((post: any) => (
             <PostCard
               key={post.id}
               post={post}

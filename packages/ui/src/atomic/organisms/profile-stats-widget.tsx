@@ -314,7 +314,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
               )}
             </div>
             <div className="space-y-1">
-              {topMetrics.map((metric) => {
+              {topMetrics.map((metric: any) => {
                 const config = getMetricCategoryConfig(metric.category);
                 const TrendIcon = getTrendIcon(metric.trend);
                 const trendColor = getTrendColor(metric.trend);
@@ -360,7 +360,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
               </Text>
             </div>
             <div className="space-y-2">
-              {activeGoals.slice(0, 2).map((goal) => {
+              {activeGoals.slice(0, 2).map((goal: any) => {
                 const config = getGoalCategoryConfig(goal.category);
                 const progress = Math.min((goal.current / goal.target) * 100, 100);
                 const isCompleted = goal.current >= goal.target;

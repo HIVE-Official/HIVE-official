@@ -177,7 +177,7 @@ export const SpaceBrowseCards: Story = {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        {campusSpaceData.map((space) => (
+        {campusSpaceData.map((space: any) => (
           <Card key={space.id} className={`overflow-hidden hover:shadow-lg transition-shadow ${
             space.featured ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
           }`}>
@@ -344,7 +344,7 @@ export const CompactSpaceCards: Story = {
       </div>
 
       <div className="space-y-4">
-        {campusSpaceData.map((space) => (
+        {campusSpaceData.map((space: any) => (
           <Card key={space.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4">
               <div className="flex items-center gap-4">
@@ -436,7 +436,7 @@ export const InteractiveSpaceCards: Story = {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {campusSpaceData.slice(0, 4).map((space) => {
+          {campusSpaceData.slice(0, 4).map((space: any) => {
             const isJoined = joinedSpaces.includes(space.id);
             const isHovered = hoveredCard === space.id;
 
@@ -492,7 +492,7 @@ export const InteractiveSpaceCards: Story = {
                   {/* Member Preview */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex -space-x-2">
-                      {space.members.slice(0, 3).map((member) => (
+                      {space.members.slice(0, 3).map((member: any) => (
                         <Avatar key={member.id} className="h-6 w-6 border-2 border-white">
                           <AvatarImage src={member.avatar} alt={member.name} />
                           <AvatarFallback className="text-xs bg-gray-100">

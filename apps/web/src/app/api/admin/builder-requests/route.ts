@@ -258,7 +258,7 @@ export async function GET(request: NextRequest) {
         expiresAt: data.expiresAt?.toDate?.()?.toISOString(),
         // Calculate time since submission
         hoursWaiting: data.submittedAt ? 
-          Math.floor((Date.now() - data.submittedAt.toDate().getTime()) / (1000 * 60 * 60)) : 0
+          Math.floor((Date.now() - data.submittedAt?.toDate ? submittedAt.toDate() : new Date(submittedAt).getTime()) / (1000 * 60 * 60)) : 0
       };
     });
 

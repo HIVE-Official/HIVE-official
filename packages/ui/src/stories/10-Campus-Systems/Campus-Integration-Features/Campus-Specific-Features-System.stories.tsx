@@ -225,14 +225,14 @@ const CampusDirectory = () => {
         <Input
           placeholder="Search buildings, facilities, or services..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e: any) => setSearchQuery(e.target.value)}
           className="bg-gray-800 border-gray-700 text-white pl-4"
         />
       </div>
 
       {/* Buildings Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredBuildings.map((building) => (
+        {filteredBuildings.map((building: any) => (
           <Card 
             key={building.id} 
             className="bg-gray-900 border-gray-800 cursor-pointer hover:border-blue-600 transition-colors"
@@ -267,7 +267,7 @@ const CampusDirectory = () => {
                   {building.hours}
                 </div>
                 <div className="flex flex-wrap gap-1">
-                  {building.amenities.slice(0, 3).map((amenity) => (
+                  {building.amenities.slice(0, 3).map((amenity: any) => (
                     <Badge key={amenity} variant="secondary" className="bg-gray-800 text-gray-300 text-xs">
                       {amenity}
                     </Badge>
@@ -334,7 +334,7 @@ const CampusDirectory = () => {
               <div>
                 <Label className="text-white text-sm font-medium">Amenities & Services</Label>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {selectedBuilding.amenities.map((amenity) => (
+                  {selectedBuilding.amenities.map((amenity: any) => (
                     <Badge key={amenity} variant="secondary" className="border-blue-700 text-blue-300">
                       {amenity}
                     </Badge>
@@ -402,7 +402,7 @@ const BuffaloWeatherWidget = () => {
 
         {/* Forecast */}
         <div className="grid grid-cols-3 gap-3">
-          {BUFFALO_WEATHER.forecast.map((day) => (
+          {BUFFALO_WEATHER.forecast.map((day: any) => (
             <div key={day.day} className="text-center p-2 bg-gray-800 rounded-lg">
               <p className="text-xs text-gray-400 mb-1">{day.day}</p>
               <div className="flex justify-center mb-1">
@@ -451,7 +451,7 @@ const CampusEvents = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {UB_EVENTS.map((event) => {
+        {UB_EVENTS.map((event: any) => {
           const eventDate = formatEventDate(event.date);
           return (
             <div key={event.id} className="flex items-start space-x-4 p-4 bg-gray-800 rounded-lg">
@@ -491,7 +491,7 @@ const CampusEvents = () => {
                 
                 <div className="flex items-center justify-between">
                   <div className="flex flex-wrap gap-1">
-                    {event.tags.slice(0, 3).map((tag) => (
+                    {event.tags.slice(0, 3).map((tag: any) => (
                       <Badge key={tag} variant="secondary" className="bg-gray-700 text-gray-300 text-xs">
                         #{tag}
                       </Badge>
@@ -554,7 +554,7 @@ const DiningAndLocal = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {UB_DINING.map((place) => (
+        {UB_DINING.map((place: any) => (
           <div key={place.id} className="p-4 bg-gray-800 rounded-lg">
             <div className="flex items-start justify-between mb-3">
               <div>

@@ -176,7 +176,7 @@ export function EnhancedSpaceDiscoveryMigrated() {
           type: 'success',
         });
       },
-      onError: (error) => {
+      onError: (error: any) => {
         addToast({
           title: 'Failed to join',
           description: error.message || 'Something went wrong',
@@ -364,7 +364,7 @@ export function EnhancedSpaceDiscoveryMigrated() {
             <Input
               placeholder="Search spaces, tags, or descriptions..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               className="pl-10"
             />
           </div>
@@ -396,7 +396,7 @@ export function EnhancedSpaceDiscoveryMigrated() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Categories</SelectItem>
-                      {SPACE_CATEGORIES.map((category) => (
+                      {SPACE_CATEGORIES.map((category: any) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
@@ -413,7 +413,7 @@ export function EnhancedSpaceDiscoveryMigrated() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {SORT_OPTIONS.map((option) => (
+                      {SORT_OPTIONS.map((option: any) => (
                         <SelectItem key={option.value} value={option.value}>
                           {option.label}
                         </SelectItem>
@@ -428,7 +428,7 @@ export function EnhancedSpaceDiscoveryMigrated() {
                     type="checkbox"
                     id="showPrivate"
                     checked={showPrivateSpaces}
-                    onChange={(e) => setShowPrivateSpaces(e.target.checked)}
+                    onChange={(e: any) => setShowPrivateSpaces(e.target.checked)}
                   />
                   <label htmlFor="showPrivate" className="text-sm">
                     Show private spaces

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-client-admin';
+import { db } from '@/lib/firebase-client';
 import { 
   collection,
   query,

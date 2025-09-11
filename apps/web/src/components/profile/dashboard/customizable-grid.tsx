@@ -21,16 +21,16 @@ import {
 import { CardLayout, DashboardLayout } from '@/lib/firebase-collections';
 
 // Import all card components
-import { AvatarIdentityCard } from '../cards/avatar-identity-card';
-import { PersonalCalendarCard } from '../cards/personal-calendar-card';
-import { PersonalToolsCard } from '../personal-tools-card';
-import { UserSpacesCard } from '../cards/user-spaces-card';
-import { ActivityHistoryCard } from '../cards/activity-history-card';
-import { GhostModeCard } from '../cards/ghost-mode-card';
-import { SocialConnectionsCard } from '../cards/social-connections-card';
-import { PersonalAnalyticsCard } from '../cards/personal-analytics-card';
-import { CampusDiscoveryCard } from '../cards/campus-discovery-card';
-import { QuickActionsCard } from '../cards/quick-actions-card';
+import { AvatarIdentityCard } from '../bento-cards/avatar-identity-card';
+import { PersonalCalendarCard } from '../bento-cards/personal-calendar-card';
+import { PersonalToolsCard } from '../bento-cards/personal-tools-card';
+import { UserSpacesCard } from '../bento-cards/user-spaces-card';
+import { ActivityHistoryCard } from '../bento-cards/activity-history-card';
+import { GhostModeCard } from '../bento-cards/ghost-mode-card';
+import { SocialConnectionsCard } from '../bento-cards/social-connections-card';
+import { PersonalAnalyticsCard } from '../bento-cards/personal-analytics-card';
+import { CampusDiscoveryCard } from '../bento-cards/campus-discovery-card';
+import { QuickActionsCard } from '../bento-cards/quick-actions-card';
 
 interface CustomizableGridProps {
   layout?: DashboardLayout;
@@ -109,9 +109,9 @@ export function CustomizableGrid({
     const { active, over } = event;
 
     if (active.id !== over?.id) {
-      setCurrentLayout((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
+      setCurrentLayout((items: any) => {
+        const oldIndex = items.findIndex((item: any) => item.id === active.id);
+        const newIndex = items.findIndex((item: any) => item.id === over.id);
 
         const newLayout = arrayMove(items, oldIndex, newIndex);
         
@@ -259,7 +259,7 @@ export function CustomizableGrid({
         <Card className="mb-6 p-4">
           <h3 className="font-medium mb-3 text-foreground">Card Visibility</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-            {currentLayout.map((card) => (
+            {currentLayout.map((card: any) => (
               <button
                 key={card.id}
                 onClick={() => toggleCardVisibility(card.id)}
@@ -300,7 +300,7 @@ export function CustomizableGrid({
           >
             {currentLayout
               .filter(card => card.visible || isEditMode)
-              .map((card) => (
+              .map((card: any) => (
                 <SortableGridItem
                   key={card.id}
                   card={card}

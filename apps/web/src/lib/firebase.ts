@@ -48,9 +48,11 @@ try {
     
     // Validate direct access
     if (firebaseConfig.apiKey && firebaseConfig.projectId) {
-      console.log('✅ Direct environment variable access succeeded');
+      // Direct environment variable access succeeded
     } else {
-      console.error('❌ Even direct environment access failed, using demo config');
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Direct environment access failed, using demo config');
+      }
       firebaseConfig = {
         apiKey: 'demo-api-key',
         authDomain: 'demo.firebaseapp.com',
@@ -94,7 +96,7 @@ export const storage = getStorage(app);
 // Initialize Analytics (only in browser and if supported)
 export let analytics: ReturnType<typeof getAnalytics> | null = null;
 if (typeof window !== "undefined") {
-  isSupported().then((supported) => {
+  isSupported().then((supported: any) => {
     if (supported) {
       analytics = getAnalytics(app);
     }

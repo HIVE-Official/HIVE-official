@@ -1,17 +1,17 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const spacerVariants: (props?: ({
-    size?: "xs" | "sm" | "default" | "md" | "lg" | "xl" | "2xl" | "3xl" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | "xs" | "md" | "2xl" | "3xl" | null | undefined;
     direction?: "horizontal" | "vertical" | "both" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const containerVariants: (props?: ({
-    size?: "sm" | "md" | "lg" | "xl" | "full" | "2xl" | null | undefined;
-    padding?: "sm" | "default" | "lg" | "xl" | "none" | null | undefined;
+    size?: "sm" | "lg" | "xl" | "full" | "md" | "2xl" | null | undefined;
+    padding?: "default" | "sm" | "lg" | "xl" | "none" | null | undefined;
     center?: boolean | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const stackVariants: (props?: ({
     direction?: "horizontal" | "vertical" | null | undefined;
-    spacing?: "xs" | "sm" | "default" | "md" | "lg" | "xl" | "none" | "2xl" | "3xl" | null | undefined;
+    spacing?: "default" | "sm" | "lg" | "xl" | "none" | "xs" | "md" | "2xl" | "3xl" | null | undefined;
     align?: "end" | "baseline" | "center" | "start" | "stretch" | null | undefined;
     justify?: "end" | "center" | "start" | "between" | "around" | "evenly" | null | undefined;
     wrap?: boolean | null | undefined;

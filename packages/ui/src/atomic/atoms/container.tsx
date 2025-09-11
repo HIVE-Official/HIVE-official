@@ -4,7 +4,7 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 
 export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | 'none';
+  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | 'none' | string;
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   center?: boolean;
   fluid?: boolean;
@@ -12,6 +12,11 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'card' | 'panel' | 'section';
   gutter?: boolean;
   children: React.ReactNode;
+  // Additional props for compatibility
+  title?: string;
+  subtitle?: string;
+  breadcrumbs?: Array<{ label: string; href?: string; icon?: React.ReactNode }>;
+  actions?: React.ReactNode;
 }
 
 // Max width variants based on Tailwind responsive breakpoints
@@ -81,6 +86,10 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(({
   gutter = false,
   className,
   children,
+  title,
+  subtitle,
+  breadcrumbs,
+  actions,
   ...props
 }, ref) => {
   const baseClasses = [
@@ -88,7 +97,7 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(({
     'w-full',
     
     // Max width (unless fluid or breakout)
-    !fluid && !breakout && maxWidthVariants[maxWidth],
+    !fluid && !breakout && (maxWidthVariants[maxWidth as keyof typeof maxWidthVariants] || maxWidth),
     
     // Centering
     center && 'mx-auto',
@@ -122,6 +131,35 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(({
       className={cn(baseClasses, className)}
       {...props}
     >
+      {/* Optional header section */}
+      {(title || subtitle || breadcrumbs || actions) && (
+        <div className="mb-6">
+          {breadcrumbs && (
+            <nav className="flex space-x-2 text-sm mb-2">
+              {breadcrumbs.map((crumb, index) => (
+                <span key={index} className="flex items-center">
+                  {index > 0 && <span className="mx-2 text-[var(--hive-text-tertiary)]">/</span>}
+                  {crumb.icon}
+                  {crumb.href ? (
+                    <a href={crumb.href} className="text-[var(--hive-brand-secondary)] hover:underline">
+                      {crumb.label}
+                    </a>
+                  ) : (
+                    <span className="text-[var(--hive-text-secondary)]">{crumb.label}</span>
+                  )}
+                </span>
+              ))}
+            </nav>
+          )}
+          <div className="flex justify-between items-start">
+            <div>
+              {title && <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">{title}</h1>}
+              {subtitle && <p className="text-[var(--hive-text-secondary)] mt-1">{subtitle}</p>}
+            </div>
+            {actions && <div>{actions}</div>}
+          </div>
+        </div>
+      )}
       {children}
     </div>
   );
@@ -130,56 +168,56 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(({
 Container.displayName = 'Container';
 
 // Convenient preset components
-export const PageContainer: React.FC<Omit<ContainerProps, 'maxWidth' | 'gutter'>> = (props) => (
+export const PageContainer: React.FC<Omit<ContainerProps, 'maxWidth' | 'gutter'>> = (props: any) => (
   <Container maxWidth="7xl" gutter {...props} />
 );
 
-export const ContentContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props) => (
+export const ContentContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
   <Container maxWidth="4xl" {...props} />
 );
 
-export const NarrowContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props) => (
+export const NarrowContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
   <Container maxWidth="2xl" {...props} />
 );
 
-export const WideContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props) => (
+export const WideContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
   <Container maxWidth="6xl" {...props} />
 );
 
-export const FluidContainer: React.FC<Omit<ContainerProps, 'fluid'>> = (props) => (
+export const FluidContainer: React.FC<Omit<ContainerProps, 'fluid'>> = (props: any) => (
   <Container fluid {...props} />
 );
 
-export const CardContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props) => (
+export const CardContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: any) => (
   <Container variant="card" {...props} />
 );
 
-export const PanelContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props) => (
+export const PanelContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: any) => (
   <Container variant="panel" {...props} />
 );
 
-export const SectionContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props) => (
+export const SectionContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: any) => (
   <Container variant="section" {...props} />
 );
 
-export const BreakoutContainer: React.FC<Omit<ContainerProps, 'breakout'>> = (props) => (
+export const BreakoutContainer: React.FC<Omit<ContainerProps, 'breakout'>> = (props: any) => (
   <Container breakout {...props} />
 );
 
 // Size-specific containers
-export const SmallContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props) => (
+export const SmallContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
   <Container maxWidth="sm" {...props} />
 );
 
-export const MediumContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props) => (
+export const MediumContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
   <Container maxWidth="md" {...props} />
 );
 
-export const LargeContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props) => (
+export const LargeContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
   <Container maxWidth="lg" {...props} />
 );
 
-export const ExtraLargeContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props) => (
+export const ExtraLargeContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
   <Container maxWidth="xl" {...props} />
 );
 

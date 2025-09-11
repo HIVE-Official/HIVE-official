@@ -38,7 +38,7 @@ const meta: Meta<typeof CampusActivityFeed> = {
     },
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-2xl mx-auto">
           <Story />
@@ -291,7 +291,7 @@ export const BentoGridLayout: Story = {
     maxItems: 5,
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-6xl mx-auto">
           {/* BentoGrid Layout Context */}

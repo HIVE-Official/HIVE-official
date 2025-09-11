@@ -29,6 +29,8 @@ import { EventCreationModal } from "../../../../components/spaces/event-creation
 import { LeaderToolbar, useLeaderMode /* , type LeaderMode */ } from "../../../../components/spaces/leader-toolbar";
 import { getUserSpaceMembership, type SpaceMembership } from "../../../../lib/space-permissions";
 
+interface Comment { id: string; text: string; userId: string; createdAt: any; }
+
 async function fetchSpaceById(spaceId: string): Promise<Space> {
   const response = await authenticatedFetch(`/api/spaces/${spaceId}`);
   if (response.status === 404) {
@@ -497,24 +499,10 @@ export default function SpaceDetailPage({
   // Fetch analytics data when Insights Mode is activated
   React.useEffect(() => {
     if (currentMode === 'insights' && spaceId && isLeader && !analyticsData) {
-      const fetchAnalytics = async () => {
-        try {
-          setAnalyticsLoading(true);
-          const response = await authenticatedFetch(`/api/spaces/${spaceId}/analytics`);
-          if (response.ok) {
-            const data = await response.json() as { analytics: Record<string, unknown> };
-            setAnalyticsData(data.analytics);
-          }
-        } catch (error) {
-          console.error('Failed to fetch analytics:', error);
-        } finally {
-          setAnalyticsLoading(false);
-        }
-      };
-
-      fetchAnalytics();
+      // Analytics are now handled by useSpaceAnalytics hook
+      refreshAnalytics();
     }
-  }, [currentMode, spaceId, isLeader, analyticsData]);
+  }, [currentMode, spaceId, isLeader, analyticsData, refreshAnalytics]);
 
   const {
     data: space,
@@ -661,7 +649,7 @@ export default function SpaceDetailPage({
           <div className="space-y-4">
             {/* Tab Navigation */}
             <div className="flex overflow-x-auto pb-2 gap-2">
-              {availableWidgets.map((widget) => {
+              {availableWidgets.map((widget: any) => {
                 const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                 const isActive = currentTab === widget.id;
                 
@@ -862,11 +850,11 @@ export default function SpaceDetailPage({
                   }}
                   PostRenderer={PostWithComments}
                   onReaction={toggleReaction}
-                  onShare={async (postId) => {
+                  onShare={async (postId: any) => {
                     // Share functionality can be implemented later
                     console.log('Share post:', postId);
                   }}
-                  onDelete={async (postId) => {
+                  onDelete={async (postId: any) => {
                     if (confirm('Are you sure you want to delete this post?')) {
                       try {
                         await deletePost(postId);
@@ -882,7 +870,7 @@ export default function SpaceDetailPage({
             
             {/* Secondary Widgets (40%) */}
             <div className="lg:col-span-2 space-y-6">
-              {availableWidgets.filter(w => w.id !== 'posts').map((widget) => {
+              {availableWidgets.filter(w => w.id !== 'posts').map((widget: any) => {
                 const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                 const Component = widget.component;
                 
@@ -1071,8 +1059,8 @@ export default function SpaceDetailPage({
                         canModerate={isLeader}
                         leaderMode={currentMode === 'manage' ? 'moderate' : 'insights'}
                         onCreateEvent={() => setShowEventCreation(true)}
-                        onEditEvent={(eventId) => updateEvent(eventId, {})}
-                        onCancelEvent={(eventId) => deleteEvent(eventId)}
+                        onEditEvent={(eventId: any) => updateEvent(eventId, {})}
+                        onCancelEvent={(eventId: any) => deleteEvent(eventId)}
                         onRSVPEvent={(eventId, status) => rsvpToEvent(eventId, status as any)}
                       />
                     ) : (
@@ -1096,8 +1084,8 @@ export default function SpaceDetailPage({
                         onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
                         onRemoveTool={widget.id === 'tools' ? handleRemoveTool : undefined}
                         onAddPinned={widget.id === 'pinned' ? () => console.log('Add pinned item') : undefined}
-                        onViewItem={widget.id === 'pinned' ? (itemId) => trackPinnedAction(itemId, 'view') : undefined}
-                        onDownloadItem={widget.id === 'pinned' ? (itemId) => trackPinnedAction(itemId, 'download') : undefined}
+                        onViewItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'view') : undefined}
+                        onDownloadItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'download') : undefined}
                         onUnpinItem={widget.id === 'pinned' ? unpinItem : undefined}
                       />
                     )}
@@ -1231,7 +1219,7 @@ export default function SpaceDetailPage({
                       placeholder="Describe your space..."
                       rows={4}
                       value={editedDescription}
-                      onChange={(e) => setEditedDescription(e.target.value)}
+                      onChange={(e: any) => setEditedDescription(e.target.value)}
                     />
                     <div className="flex justify-end gap-2">
                       <motion.button
@@ -1331,7 +1319,7 @@ export default function SpaceDetailPage({
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: any) => e.stopPropagation()}
               >
                 {/* Modal Header */}
                 <div className="flex items-center justify-between p-6 border-b border-[var(--hive-white)]/[0.06]">
@@ -1362,7 +1350,7 @@ export default function SpaceDetailPage({
                       
                       return (
                         <div className="flex items-center gap-1 mr-4">
-                          {widget.allowedViews.map((view) => (
+                          {widget.allowedViews.map((view: any) => (
                             <Button
                               key={view}
                               size="sm"
@@ -1426,8 +1414,8 @@ export default function SpaceDetailPage({
                             canCreateEvents={isLeader}
                             canModerate={isLeader}
                             onCreateEvent={() => setShowEventCreation(true)}
-                            onEditEvent={(eventId) => updateEvent(eventId, {})}
-                            onCancelEvent={(eventId) => deleteEvent(eventId)}
+                            onEditEvent={(eventId: any) => updateEvent(eventId, {})}
+                            onCancelEvent={(eventId: any) => deleteEvent(eventId)}
                             onRSVPEvent={(eventId, status) => rsvpToEvent(eventId, status as any)}
                           />
                         ) : (
@@ -1458,8 +1446,8 @@ export default function SpaceDetailPage({
                             onInviteMember={widget.id === 'members' ? () => console.log('Invite member') : undefined}
                             onMessageMember={widget.id === 'members' ? (memberId) => console.log('Message member:', memberId) : undefined}
                             onAddPinned={widget.id === 'pinned' ? () => console.log('Add pinned item') : undefined}
-                            onViewItem={widget.id === 'pinned' ? (itemId) => trackPinnedAction(itemId, 'view') : undefined}
-                            onDownloadItem={widget.id === 'pinned' ? (itemId) => trackPinnedAction(itemId, 'download') : undefined}
+                            onViewItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'view') : undefined}
+                            onDownloadItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'download') : undefined}
                             onUnpinItem={widget.id === 'pinned' ? unpinItem : undefined}
                           />
                         )}

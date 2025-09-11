@@ -294,7 +294,7 @@ export default function OnboardingPage() {
 
   // Check Firebase auth state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
       if (user) {
         setFirebaseUser(user);
         
@@ -316,23 +316,7 @@ export default function OnboardingPage() {
             logger.info('Loaded onboarding draft');
           }
           
-          // BYPASS: Pre-fill for jwrhineh@buffalo.edu
-          if (user.email === 'jwrhineh@buffalo.edu') {
-            setProfile(prev => ({
-              ...prev,
-              firstName: 'Jacob',
-              lastName: 'Rhineheart',
-              handle: 'jacobrhineheart',
-              graduationYear: '2025',
-              major: 'computer-science',
-              userType: 'student',
-              academicLevel: 'senior',
-              interests: ['Technology', 'Entrepreneurship', 'AI/ML'],
-              goals: ['Build innovative products', 'Connect with founders'],
-              consentGiven: true
-            }));
-            logger.info('Applied jwrhineh bypass pre-fill');
-          }
+          // No bypass - all users must complete onboarding normally
           
         } catch (error) {
           logger.error('Error checking onboarding status', { error });
@@ -622,7 +606,7 @@ export default function OnboardingPage() {
                 width={32}
                 height={32}
                 className="w-8 h-8"
-                onError={(e) => {
+                onError={(e: any) => {
                   const target = e.target as HTMLImageElement;
                   target.src = "/assets/whitelogo.svg";
                 }}
@@ -819,7 +803,7 @@ export default function OnboardingPage() {
                           width={64}
                           height={64}
                           className="w-16 h-16 mx-auto mb-4"
-                          onError={(e) => {
+                          onError={(e: any) => {
                             const target = e.target as HTMLImageElement;
                             target.src = "/assets/whitelogo.svg";
                           }}
@@ -858,7 +842,7 @@ export default function OnboardingPage() {
                         <label className="flex items-start gap-3 cursor-pointer">
                           <Checkbox
                             checked={profile.consentGiven}
-                            onChange={(e) => setProfile(prev => ({ 
+                            onChange={(e: any) => setProfile(prev => ({ 
                               ...prev, 
                               consentGiven: e.target.checked 
                             }))}
@@ -868,7 +852,7 @@ export default function OnboardingPage() {
                             I agree to HIVE's{' '}
                             <button
                               type="button"
-                              onClick={(e) => {
+                              onClick={(e: any) => {
                                 e.stopPropagation();
                                 setShowTermsModal(true);
                               }}
@@ -879,7 +863,7 @@ export default function OnboardingPage() {
                             {' '}and{' '}
                             <button
                               type="button"
-                              onClick={(e) => {
+                              onClick={(e: any) => {
                                 e.stopPropagation();
                                 setShowPrivacyModal(true);
                               }}
@@ -945,7 +929,7 @@ export default function OnboardingPage() {
                         description: 'I work at the university in any capacity',
                         icon: <UserIcon className="w-5 h-5" />
                       }
-                    ].map((option) => (
+                    ].map((option: any) => (
                       <motion.div
                         key={option.value}
                         variants={staggerItem}
@@ -1054,7 +1038,7 @@ export default function OnboardingPage() {
                         <Input
                           label="First Name *"
                           value={profile.firstName}
-                          onChange={(e) => setProfile(prev => ({ ...prev, firstName: e.target.value }))}
+                          onChange={(e: any) => setProfile(prev => ({ ...prev, firstName: e.target.value }))}
                           placeholder="First name"
                           autoFocus
                           className="focus:border-[var(--hive-gold)] focus:ring-[var(--hive-gold)]/20"
@@ -1065,7 +1049,7 @@ export default function OnboardingPage() {
                         <Input
                           label="Last Name *"
                           value={profile.lastName}
-                          onChange={(e) => setProfile(prev => ({ ...prev, lastName: e.target.value }))}
+                          onChange={(e: any) => setProfile(prev => ({ ...prev, lastName: e.target.value }))}
                           placeholder="Last name"
                           className="focus:border-[var(--hive-gold)] focus:ring-[var(--hive-gold)]/20"
                         />
@@ -1116,7 +1100,7 @@ export default function OnboardingPage() {
                             { value: 'graduate', label: 'Graduate Student' }
                           ]}
                           value={profile.academicLevel}
-                          onChange={(value) => setProfile(prev => ({ ...prev, academicLevel: Array.isArray(value) ? value[0] : value }))}
+                          onChange={(value: any) => setProfile(prev => ({ ...prev, academicLevel: Array.isArray(value) ? value[0] : value }))}
                           placeholder="Select your academic level"
                         />
                       </motion.div>
@@ -1131,7 +1115,7 @@ export default function OnboardingPage() {
                             label: major.label
                           }))}
                           value={profile.major}
-                          onChange={(value) => setProfile(prev => ({ ...prev, major: Array.isArray(value) ? value[0] : value }))}
+                          onChange={(value: any) => setProfile(prev => ({ ...prev, major: Array.isArray(value) ? value[0] : value }))}
                           placeholder="Select your major"
                         />
                       </motion.div>
@@ -1149,7 +1133,7 @@ export default function OnboardingPage() {
                             }))
                           ]}
                           value={profile.minor}
-                          onChange={(value) => {
+                          onChange={(value: any) => {
                             const selectedValue = Array.isArray(value) ? value[0] : value;
                             setProfile(prev => ({ ...prev, minor: selectedValue === '' ? '' : selectedValue }));
                           }}
@@ -1166,7 +1150,7 @@ export default function OnboardingPage() {
                             label: year.label
                           }))}
                           value={profile.graduationYear}
-                          onChange={(value) => setProfile(prev => ({ ...prev, graduationYear: Array.isArray(value) ? value[0] : value }))}
+                          onChange={(value: any) => setProfile(prev => ({ ...prev, graduationYear: Array.isArray(value) ? value[0] : value }))}
                           placeholder="Select your graduation year"
                         />
                       </motion.div>
@@ -1255,7 +1239,7 @@ export default function OnboardingPage() {
                           <Input
                             label="Department/Unit *"
                             value={profile.department || ''}
-                            onChange={(e) => setProfile(prev => ({ ...prev, department: e.target.value }))}
+                            onChange={(e: any) => setProfile(prev => ({ ...prev, department: e.target.value }))}
                             placeholder="e.g. Computer Science, Student Life, etc."
                             className="focus:border-[var(--hive-gold)] focus:ring-[var(--hive-gold)]/20 mb-4"
                           />
@@ -1267,7 +1251,7 @@ export default function OnboardingPage() {
                           </label>
                           <textarea
                             value={profile.spaceRequest || ''}
-                            onChange={(e) => setProfile(prev => ({ ...prev, spaceRequest: e.target.value }))}
+                            onChange={(e: any) => setProfile(prev => ({ ...prev, spaceRequest: e.target.value }))}
                             placeholder="Describe the space you'd like to create and how students would benefit..."
                             rows={4}
                             className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors resize-none"
@@ -1293,7 +1277,7 @@ export default function OnboardingPage() {
                     <motion.div variants={staggerItem}>
                       <LivingSituationSelector
                         value={profile.livingSituation}
-                        onChange={(value) => setProfile(prev => ({ ...prev, livingSituation: value }))}
+                        onChange={(value: any) => setProfile(prev => ({ ...prev, livingSituation: value }))}
                       />
                     </motion.div>
 
@@ -1313,7 +1297,7 @@ export default function OnboardingPage() {
                           <Input
                             label="Room Number (optional)"
                             value={profile.roomNumber}
-                            onChange={(e) => setProfile(prev => ({ ...prev, roomNumber: e.target.value }))}
+                            onChange={(e: any) => setProfile(prev => ({ ...prev, roomNumber: e.target.value }))}
                             placeholder="e.g., Porter 312B"
                             className="mt-4"
                           />
@@ -1679,7 +1663,7 @@ export default function OnboardingPage() {
                                   <input
                                     type="text"
                                     value={spaceSearchQuery}
-                                    onChange={(e) => setSpaceSearchQuery(e.target.value)}
+                                    onChange={(e: any) => setSpaceSearchQuery(e.target.value)}
                                     placeholder="Search clubs, teams, orgs..."
                                     className="w-full pl-10 pr-10 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]/50 focus:border-[var(--hive-gold)] transition-all"
                                     autoFocus
@@ -1856,7 +1840,7 @@ export default function OnboardingPage() {
                                       Selected for leadership access ({profile.builderRequestSpaces.length})
                                     </p>
                                     <div className="flex flex-wrap gap-2">
-                                      {profile.builderRequestSpaces.map((spaceId) => {
+                                      {profile.builderRequestSpaces.map((spaceId: any) => {
                                         const space = searchResults.find(s => s.id === spaceId);
                                         return space ? (
                                           <div

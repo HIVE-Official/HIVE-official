@@ -421,7 +421,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Activity Trends</h3>
           <div className="flex items-center space-x-2">
-            {['members', 'posts', 'engagement'].map((metric) => (
+            {['members', 'posts', 'engagement'].map((metric: any) => (
               <Button
                 key={metric}
                 variant={selectedMetric === metric ? "primary" : "outline"}

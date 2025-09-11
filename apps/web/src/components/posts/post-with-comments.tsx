@@ -87,7 +87,7 @@ export function PostWithComments({
                 <span>•</span>
                 <span>
                   {post.timestamp 
-                    ? formatDistanceToNow(post.timestamp instanceof Date ? post.timestamp : post.timestamp.toDate(), { addSuffix: true })
+                    ? formatDistanceToNow(post.timestamp instanceof Date ? post.timestamp : post.timestamp?.toDate ? timestamp.toDate() : new Date(timestamp), { addSuffix: true })
                     : 'just now'}
                 </span>
               </div>
@@ -275,7 +275,7 @@ export function PostWithComments({
               src={post.images[selectedImageIndex]}
               alt={`Post image ${selectedImageIndex + 1}`}
               className="max-w-full max-h-[90vh] object-contain"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: any) => e.stopPropagation()}
             />
             <button
               onClick={() => setShowImageModal(false)}
@@ -288,7 +288,7 @@ export function PostWithComments({
                 {post.images.map((_: string, index: number) => (
                   <button
                     key={index}
-                    onClick={(e) => {
+                    onClick={(e: any) => {
                       e.stopPropagation();
                       setSelectedImageIndex(index);
                     }}

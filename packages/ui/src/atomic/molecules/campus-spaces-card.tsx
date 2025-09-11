@@ -308,7 +308,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       className="flex items-center gap-1"
                     >
                       <button
-                        onClick={(e) => {
+                        onClick={(e: any) => {
                           e.stopPropagation();
                           toggleQuickPost(space.id);
                         }}
@@ -319,7 +319,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       </button>
                       
                       <button
-                        onClick={(e) => {
+                        onClick={(e: any) => {
                           e.stopPropagation();
                           onPinSpace?.(space.id, !space.isPinned);
                         }}
@@ -334,7 +334,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       </button>
 
                       <button
-                        onClick={(e) => {
+                        onClick={(e: any) => {
                           e.stopPropagation();
                           onMuteSpace?.(space.id, !space.isMuted);
                         }}
@@ -350,7 +350,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
 
                       {space.userRole === 'member' && (
                         <button
-                          onClick={(e) => {
+                          onClick={(e: any) => {
                             e.stopPropagation();
                             onLeaveSpace?.(space.id);
                           }}
@@ -390,8 +390,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       <input
                         type="text"
                         value={quickPostMessage}
-                        onChange={(e) => setQuickPostMessage(e.target.value)}
-                        onKeyDown={(e) => {
+                        onChange={(e: any) => setQuickPostMessage(e.target.value)}
+                        onKeyDown={(e: any) => {
                           if (e.key === 'Enter') {
                             handleQuickPost(space.id);
                           } else if (e.key === 'Escape') {

@@ -260,7 +260,7 @@ const AnimationShowcase = () => {
           
           {/* Timeline markers */}
           <div className="absolute bottom-1 left-0 right-0 flex justify-between px-2">
-            {[0, 25, 50, 75, 100].map((percent) => (
+            {[0, 25, 50, 75, 100].map((percent: any) => (
               <div key={percent} className="w-0.5 h-2" 
                    style={{ backgroundColor: 'var(--hive-border-subtle)' }} />
             ))}
@@ -418,7 +418,7 @@ const AnimationShowcase = () => {
                 className="mt-4 pt-4 border-t space-y-3"
                 style={{ borderColor: 'var(--hive-border-subtle)' }}
               >
-                {[1, 2].map((i) => (
+                {[1, 2].map((i: any) => (
                   <motion.div 
                     key={i}
                     className="flex space-x-2"

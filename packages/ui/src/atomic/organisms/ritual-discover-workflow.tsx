@@ -246,7 +246,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-hive-text-secondary" />
           <Input
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             placeholder="Search spaces..."
             className="pl-10"
           />
@@ -255,7 +255,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
           <Filter className="h-4 w-4 text-hive-text-secondary" />
           <select
             value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            onChange={(e: any) => setCategoryFilter(e.target.value)}
             className="p-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
           >
             {categories.map(category => (

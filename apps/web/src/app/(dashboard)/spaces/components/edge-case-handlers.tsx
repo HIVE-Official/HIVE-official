@@ -105,7 +105,7 @@ export function EmptySearchResults({
             Try these popular spaces instead:
           </h4>
           <div className="space-y-2">
-            {alternativeSuggestions.slice(0, 3).map((space) => (
+            {alternativeSuggestions.slice(0, 3).map((space: any) => (
               <div 
                 key={space.id}
                 className="flex items-center justify-between p-3 bg-[var(--hive-white)]/5 rounded-lg"
@@ -192,7 +192,7 @@ export function SpaceOverloadHandler({
               >
                 <h4 className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Spaces you might consider leaving:</h4>
                 <div className="space-y-2">
-                  {inactiveSpaces.slice(0, 3).map((space) => (
+                  {inactiveSpaces.slice(0, 3).map((space: any) => (
                     <div key={space.id} className="flex items-center justify-between p-2 bg-[var(--hive-white)]/5 rounded">
                       <div>
                         <div className="text-sm text-[var(--hive-text-inverse)]">{space.name}</div>
@@ -313,7 +313,7 @@ export function InclusiveCommunityFinder({
 
           {/* Inclusive Spaces Preview */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-            {inclusiveSpaces.slice(0, 4).map((space) => (
+            {inclusiveSpaces.slice(0, 4).map((space: any) => (
               <div key={space.id} className="p-3 bg-[var(--hive-white)]/5 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 bg-gradient-to-br from-[var(--hive-gold)]/20 to-pink-500/20 rounded flex items-center justify-center">
@@ -477,7 +477,7 @@ export function TransferStudentHelper({
             <div className="mb-6">
               <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Recommended communities:</h4>
               <div className="space-y-2">
-                {specificSpaces.slice(0, 3).map((space) => (
+                {specificSpaces.slice(0, 3).map((space: any) => (
                   <div key={space.id} className="flex items-center justify-between p-3 bg-[var(--hive-white)]/5 rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-blue-500/20 to-green-500/20 rounded-lg flex items-center justify-center">
@@ -600,7 +600,7 @@ export function VirtualizedSpaceList({
     <div 
       className="overflow-auto"
       style={{ height: containerHeight }}
-      onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
+      onScroll={(e: any) => setScrollTop(e.currentTarget.scrollTop)}
     >
       <div style={{ height: spaces.length * itemHeight, position: "relative" }}>
         <div 

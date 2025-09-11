@@ -186,7 +186,7 @@ export function HiveProfileCard({
           </div>
           
           <div className="space-y-3">
-            {displayActivities.map((activity) => (
+            {displayActivities.map((activity: any) => (
               <div
                 key={activity.id}
                 className="flex items-start gap-3 p-3 bg-hive-background-primary/50 rounded-lg hover:bg-hive-background-interactive transition-colors"

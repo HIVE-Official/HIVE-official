@@ -274,7 +274,7 @@ export function PostCreator({
             <Textarea
               ref={textareaRef}
               value={draft.content}
-              onChange={(e) => handleContentChange(e.target.value)}
+              onChange={(e: any) => handleContentChange(e.target.value)}
               onFocus={handleExpand}
               onBlur={handleCollapse}
               placeholder={placeholder}

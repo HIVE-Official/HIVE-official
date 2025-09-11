@@ -267,7 +267,7 @@ export const Default: Story = {
     onViewAllSpaces: action('view-all-spaces-clicked'),
     onExploreSpaces: action('explore-spaces-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)] max-w-md">
       <Text variant="body-md" color="primary" className="mb-4">
         HIVE profile spaces widget for University at Buffalo student communities:
@@ -1236,7 +1236,7 @@ export const Playground: Story = {
     onViewAllSpaces: action('playground-view-all-spaces'),
     onExploreSpaces: action('playground-explore-spaces'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

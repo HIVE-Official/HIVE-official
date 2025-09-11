@@ -1,6 +1,6 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 const options = [
     {
         value: 'auto',

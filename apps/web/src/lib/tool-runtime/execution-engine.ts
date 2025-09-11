@@ -323,7 +323,7 @@ export class ToolExecutionEngine {
    */
   private createApiService(): ApiService {
     return {
-      fetch: (url: string, options?: RequestInit) => {
+      fetch: (url: string, options?: globalThis.RequestInit) => {
         return fetch(url, {
           ...options,
           signal: this.abortController.signal

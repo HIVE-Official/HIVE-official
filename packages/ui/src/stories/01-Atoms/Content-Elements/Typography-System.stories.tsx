@@ -565,7 +565,7 @@ const AccessibilityShowcase = () => {
               Text Scaling Support
             </h4>
             <div className="flex flex-wrap gap-2 mb-4">
-              {textSizeOptions.map((option) => (
+              {textSizeOptions.map((option: any) => (
                 <Button
                   key={option.value}
                   variant={textSize === option.value ? 'primary' : 'secondary'}
@@ -673,7 +673,7 @@ const TypographySystemShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-client-admin';
+import { db } from '@/lib/firebase-client';
 import { 
   collection,
   doc,
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     // Get nested replies for each comment
     const commentsWithReplies = await Promise.all(
-      comments.map(async (comment) => {
+      comments.map(async (comment: any) => {
         const repliesRef = collection(db, 'posts', postId, 'comments', comment.id, 'replies');
         const repliesQuery = query(
           repliesRef,
@@ -350,12 +350,57 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const commentData = commentDoc.data();
     
     // Check if user is the author or has moderation rights
-    if (commentData.authorId !== session.user.id) {
-      // TODO: Add moderation rights check
-      return NextResponse.json(
-        { error: 'You can only delete your own comments' },
-        { status: 403 }
-      );
+    const isAuthor = commentData.authorId === session.user.id;
+    
+    // Check moderation rights if not the author
+    if (!isAuthor) {
+      // Get the post to check if user is space moderator
+      const postRef = doc(db, 'posts', postId);
+      const postDoc = await getDoc(postRef);
+      
+      if (postDoc.exists()) {
+        const postData = postDoc.data();
+        const spaceId = postData.spaceId;
+        
+        if (spaceId) {
+          // Check if user is a moderator/leader of the space
+          const memberRef = doc(db, 'spaces', spaceId, 'members', session.user.id);
+          const memberDoc = await getDoc(memberRef);
+          
+          if (memberDoc.exists()) {
+            const memberData = memberDoc.data();
+            const canModerate = memberData.role === 'admin' || 
+                              memberData.role === 'moderator' || 
+                              memberData.role === 'leader' ||
+                              memberData.isLeader === true;
+            
+            if (!canModerate) {
+              return NextResponse.json(
+                { error: 'You do not have permission to delete this comment' },
+                { status: 403 }
+              );
+            }
+            
+            logger.info('Moderator deleting comment', {
+              moderatorId: session.user.id,
+              commentAuthorId: commentData.authorId,
+              spaceId,
+              role: memberData.role
+            });
+          } else {
+            return NextResponse.json(
+              { error: 'You do not have permission to delete this comment' },
+              { status: 403 }
+            );
+          }
+        } else {
+          // Post doesn't belong to a space, only author can delete
+          return NextResponse.json(
+            { error: 'You can only delete your own comments' },
+            { status: 403 }
+          );
+        }
+      }
     }
 
     // Delete the comment

@@ -79,7 +79,7 @@ export function createApiHandler(
         const clientId = request.headers.get('x-forwarded-for') ||
                         request.headers.get('x-real-ip') ||
                         request.headers.get('cf-connecting-ip') ||
-                        request.ip ||
+                        (request.headers?.['x-forwarded-for'] || request.headers?.['x-real-ip'] || 'unknown') ||
                         'unknown';
 
         const result = rateLimiter.check(clientId);
@@ -220,13 +220,13 @@ export function createApiHandler(
 /**
  * Utility function for simple GET endpoints
  */
-export function createGetHandler(
-  handler: (_context: ApiContext, _params?: any) => Promise<any>,
+export function createGetHandler<TParams = Record<string, any>, TResponse = any>(
+  handler: (context: ApiContext, params?: TParams) => Promise<TResponse>,
   config: Omit<ApiConfig, 'methods'> = {}
 ) {
   return createApiHandler(
     async (context, params) => {
-      const result = await handler(context, params);
+      const result = await handler(context, params as TParams);
       return NextResponse.json(result);
     },
     { ...config, methods: ['GET'] }
@@ -236,13 +236,13 @@ export function createGetHandler(
 /**
  * Utility function for simple POST endpoints
  */
-export function createPostHandler(
-  handler: (_context: ApiContext, _params?: any) => Promise<any>,
+export function createPostHandler<TParams = Record<string, any>, TResponse = any>(
+  handler: (context: ApiContext, params?: TParams) => Promise<TResponse>,
   config: Omit<ApiConfig, 'methods'> = {}
 ) {
   return createApiHandler(
     async (context, params) => {
-      const result = await handler(context, params);
+      const result = await handler(context, params as TParams);
       return NextResponse.json(result);
     },
     { ...config, methods: ['POST'] }
@@ -333,14 +333,14 @@ export function createAuthenticatedHandler(
 /**
  * Example usage in API routes:
  * 
- * export const GET = createGetHandler(async (context) => {
+ * export const GET = createGetHandler(async (context: any) => {
  *   return { message: 'Hello world', userId: context.auth?.userId };
  * }, {
  *   auth: { required: false },
  *   rateLimit: 'API'
  * });
  * 
- * export const POST = createPostHandler(async (context) => {
+ * export const POST = createPostHandler(async (context: any) => {
  *   const { name } = context.body;
  *   return { message: `Hello ${name}` };
  * }, {

@@ -486,7 +486,7 @@ function CrossSystemIntegration() {
 
             {/* Integrated Activity Stream */}
             <div className="space-y-6">
-              {filteredActivities.map((activity) => (
+              {filteredActivities.map((activity: any) => (
                 <Card key={activity.id} className="bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-all duration-200">
                   <CardContent className="p-6">
                     
@@ -678,7 +678,7 @@ function CrossSystemIntegration() {
                             </div>
                           </div>
                           <div className="flex flex-wrap gap-2">
-                            {activity.data.tool.deploymentSpaces.map((space) => (
+                            {activity.data.tool.deploymentSpaces.map((space: any) => (
                               <Badge key={space} variant="secondary" className="text-xs bg-[var(--hive-gold)]/10 text-[var(--hive-gold)]">
                                 {space}
                               </Badge>

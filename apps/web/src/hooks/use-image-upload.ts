@@ -28,7 +28,7 @@ export function useImageUpload(): UseImageUploadReturn {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = (event) => {
+      reader.onload = (event: any) => {
         const img = new Image();
         img.src = event.target?.result as string;
         img.onload = () => {
@@ -61,7 +61,7 @@ export function useImageUpload(): UseImageUploadReturn {
           ctx.drawImage(img, 0, 0, width, height);
 
           canvas.toBlob(
-            (blob) => {
+            (blob: any) => {
               if (blob) {
                 resolve(blob);
               } else {

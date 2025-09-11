@@ -1,9 +1,9 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const checkboxVariants: (props?: ({
-    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
-    variant?: "error" | "success" | "warning" | "info" | "default" | null | undefined;
-    radius?: "sm" | "default" | "lg" | "none" | "full" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | null | undefined;
+    variant?: "error" | "default" | "success" | "warning" | "info" | null | undefined;
+    radius?: "default" | "sm" | "lg" | "none" | "full" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const checkboxLabelVariants: (props?: ({
     color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary" | null | undefined;

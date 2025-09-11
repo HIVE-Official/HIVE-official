@@ -197,7 +197,7 @@ class RitualsService {
   ): () => void {
     const unsubscribe = onSnapshot(
       doc(db, 'rituals', ritualId),
-      (snapshot) => {
+      (snapshot: any) => {
         if (snapshot.exists()) {
           callback({
             id: snapshot.id,
@@ -205,7 +205,7 @@ class RitualsService {
           } as Ritual);
         }
       },
-      (error) => {
+      (error: any) => {
         console.error('Error in ritual subscription:', error);
       }
     );

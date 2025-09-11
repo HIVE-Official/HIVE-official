@@ -603,7 +603,7 @@ const PerformanceShowcase = () => {
 
                       {/* Network Condition Metrics */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {Object.keys(metric.target).map((networkType) => (
+                        {Object.keys(metric.target).map((networkType: any) => (
                           <MetricVisualization 
                             key={networkType}
                             metric={metric}

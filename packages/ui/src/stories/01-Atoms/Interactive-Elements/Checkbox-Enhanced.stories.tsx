@@ -426,7 +426,7 @@ const CheckboxSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-6">
-            {checkboxSizes.map((size) => (
+            {checkboxSizes.map((size: any) => (
               <div key={size.name} className="flex items-center gap-6">
                 <div className="w-32">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -667,7 +667,7 @@ const AccessibilityShowcase = () => {
                   { id: 'focus-high-contrast', label: 'High Contrast', description: 'Enhanced visual contrast' },
                   { id: 'focus-screen-reader', label: 'Screen Reader Mode', description: 'Optimized for assistive technology' },
                   { id: 'focus-keyboard-nav', label: 'Keyboard Navigation', description: 'Keyboard-only operation' }
-                ].map((option) => (
+                ].map((option: any) => (
                   <div key={option.id} className="flex items-start gap-3">
                     <Checkbox
                       id={option.id}
@@ -792,7 +792,7 @@ const CheckboxEnhancedShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

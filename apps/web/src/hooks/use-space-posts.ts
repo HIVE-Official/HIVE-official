@@ -115,7 +115,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
 
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
+      (snapshot: any) => {
         const postsData = snapshot.docs.map(doc => {
           const data = doc.data();
           return {
@@ -161,7 +161,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         setPosts(postsData);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         console.error('Error fetching posts:', err);
         setError(err as Error);
         setLoading(false);

@@ -235,7 +235,7 @@ function generateCacheKey(params: {
   timeRange: string;
   qualityThreshold: number;
 }): string {
-  const { userId, feedType, spaceIds, contentTypes, timeRange, qualityThreshold } = await params;
+  const { userId, feedType, spaceIds, contentTypes, timeRange, qualityThreshold } = params;
   
   const keyData = {
     userId,

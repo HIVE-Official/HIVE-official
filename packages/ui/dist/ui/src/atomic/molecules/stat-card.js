@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
-import { Card } from '../../components/ui/card.js';
-import { Text } from '../atoms/text.js';
-import { Badge } from '../atoms/badge.js';
+import { cn } from '../../lib/utils';
+import { Card } from '../../components/ui/card';
+import { Text } from '../atoms/text';
+import { Badge } from '../atoms/badge';
 export function StatCard({ title, value, description, trend, icon, variant = 'default', className }) {
     const getTrendColor = (direction) => {
         switch (direction) {

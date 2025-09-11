@@ -224,7 +224,7 @@ export function ProfileStats({
       className={cn(profileStatsVariants({ layout, columns: determinedColumns, variant, spacing }), className)}
       {...props}
     >
-      {displayStats.map((stat) => (
+      {displayStats.map((stat: any) => (
         <ProfileStatistic
           key={stat.key}
           value={stat.value}

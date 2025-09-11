@@ -10,8 +10,6 @@ import {
   Calendar, 
   Zap,
   Heart,
-  Bell,
-  Settings,
   Globe,
   Loader2,
   RefreshCw,
@@ -20,7 +18,6 @@ import {
   Bookmark,
   MoreHorizontal,
   Search,
-  Filter,
   ChevronDown
 } from 'lucide-react';
 import { 

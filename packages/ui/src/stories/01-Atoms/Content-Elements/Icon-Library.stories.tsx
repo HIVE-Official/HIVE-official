@@ -497,7 +497,7 @@ const IconCategoriesShowcase = () => {
           <Input
             placeholder="Search icons..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: any) => setSearchTerm(e.target.value)}
             className="w-64"
           />
         </div>
@@ -505,7 +505,7 @@ const IconCategoriesShowcase = () => {
 
       {/* Category Navigation */}
       <div className="flex flex-wrap gap-2">
-        {iconCategories.map((category) => (
+        {iconCategories.map((category: any) => (
           <Button
             key={category.category}
             variant={activeCategory === category.category ? 'primary' : 'secondary'}
@@ -573,7 +573,7 @@ const IconSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-8">
-            {iconSizes.map((size) => (
+            {iconSizes.map((size: any) => (
               <div key={size.size} className="flex items-center gap-8">
                 <div className="w-24 shrink-0">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -834,7 +834,7 @@ const IconLibraryShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

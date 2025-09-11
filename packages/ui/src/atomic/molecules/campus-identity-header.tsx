@@ -309,7 +309,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
 };
 
 // Compact variant for use in navigation or cards
-export const CompactCampusIdentity: React.FC<Omit<CampusIdentityHeaderProps, 'variant'>> = (props) => (
+export const CompactCampusIdentity: React.FC<Omit<CampusIdentityHeaderProps, 'variant'>> = (props: any) => (
   <CampusIdentityHeader {...props} variant="compact" />
 );
 

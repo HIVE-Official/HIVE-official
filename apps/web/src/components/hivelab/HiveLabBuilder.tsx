@@ -467,7 +467,7 @@ export function HiveLabBuilder({
               toolConfig={tool.config}
               elements={tool.elements}
               connections={tool.connections}
-              onTest={(result) => {
+              onTest={(result: any) => {
                 toast({
                   title: 'Test Complete',
                   description: `Tool executed in ${result.duration.toFixed(2)}ms`,

@@ -13,7 +13,7 @@ export const HiveMenu: React.FC<HiveMenuProps> = ({
 }) => {
   return (
     <div className={cn('space-y-1', className)} {...props}>
-      {items.map((item) => (
+      {items.map((item: any) => (
         <button
           key={item.value}
           onClick={item.onClick}

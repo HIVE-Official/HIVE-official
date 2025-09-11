@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { forwardRef } from 'react';
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 import { cva } from 'class-variance-authority';
 import { X } from 'lucide-react';
 const hiveModalVariants = cva('', {

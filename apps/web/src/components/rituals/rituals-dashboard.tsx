@@ -228,7 +228,7 @@ export function RitualsDashboard({ className = '' }: RitualsDashboardProps) {
                   <span className="text-sm text-gray-400">Milestones</span>
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                  {ritual.milestones.slice(0, 3).map((milestone) => (
+                  {ritual.milestones.slice(0, 3).map((milestone: any) => (
                     <div
                       key={milestone.id}
                       className={`px-2 py-1 rounded text-xs flex items-center gap-1 ${
@@ -258,7 +258,7 @@ export function RitualsDashboard({ className = '' }: RitualsDashboardProps) {
                   <span className="text-sm text-gray-400">Rewards</span>
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                  {ritual.rewards.slice(0, 4).map((reward) => (
+                  {ritual.rewards.slice(0, 4).map((reward: any) => (
                     <div
                       key={reward.id}
                       className={`px-2 py-1 rounded text-xs ${getRarityColor(reward.rarity)} bg-current/20`}
@@ -352,7 +352,7 @@ export function RitualsDashboard({ className = '' }: RitualsDashboardProps) {
           { id: 'active' as const, label: 'Active', count: activeRituals.length },
           { id: 'upcoming' as const, label: 'Upcoming', count: upcomingRituals.length },
           { id: 'completed' as const, label: 'Completed', count: completedRituals.length }
-        ].map((tab) => (
+        ].map((tab: any) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}

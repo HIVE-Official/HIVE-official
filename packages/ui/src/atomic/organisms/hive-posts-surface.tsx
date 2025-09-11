@@ -377,7 +377,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
                   role="menu"
                   aria-label="Post creation options"
                 >
-                  {postTypes.map((postType) => (
+                  {postTypes.map((postType: any) => (
                     <button
                       key={postType.type}
                       onClick={() => {
@@ -411,7 +411,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
             { id: 'all', label: 'All Posts' },
             { id: 'coordination', label: 'Coordination' },
             { id: 'discussion', label: 'Discussion' }
-          ].map((filterOption) => (
+          ].map((filterOption: any) => (
             <button
               key={filterOption.id}
               onClick={() => setFilter(filterOption.id as any)}
@@ -433,7 +433,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
         {isLoading ? (
           // Loading skeleton
           <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map((i: any) => (
               <div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 animate-pulse">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-lg bg-white/10"></div>
@@ -587,7 +587,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = React.memo(({
                   {/* Quick Response Buttons */}
                   {post.coordinationData.status === 'open' && currentUserId && (
                     <div className="mt-3 flex items-center gap-2">
-                      {['yes', 'maybe', 'no'].map((response) => (
+                      {['yes', 'maybe', 'no'].map((response: any) => (
                         <button
                           key={response}
                           onClick={() => onCoordinationResponse?.(post.id, {

@@ -20,7 +20,8 @@ interface LeaveSpaceButtonMigratedProps {
   className?: string;
 }
 
-export function LeaveSpaceButtonMigrated({
+// Export both names for compatibility
+export function LeaveSpaceButton({
   spaceId,
   spaceName,
   spaceType,
@@ -85,7 +86,7 @@ export function LeaveSpaceButtonMigrated({
         // Redirect to spaces page
         window.location.href = '/spaces';
       },
-      onError: (error) => {
+      onError: (error: any) => {
         addToast({
           title: 'Failed to leave space',
           description: error.message || 'Something went wrong',

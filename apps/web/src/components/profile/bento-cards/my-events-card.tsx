@@ -96,7 +96,7 @@ export function MyEventsCard({ className }: MyEventsCardProps) {
           <div
             key={event.id}
             className="p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-            onClick={(e) => {
+            onClick={(e: any) => {
               e.stopPropagation();
               router.push(`/events/${event.id}`);
             }}
@@ -137,7 +137,7 @@ export function MyEventsCard({ className }: MyEventsCardProps) {
             <Calendar className="h-8 w-8 text-muted-foreground/50 mb-2" />
             <p className="text-sm text-muted-foreground">No events today</p>
             <button
-              onClick={(e) => {
+              onClick={(e: any) => {
                 e.stopPropagation();
                 router.push('/events/create');
               }}

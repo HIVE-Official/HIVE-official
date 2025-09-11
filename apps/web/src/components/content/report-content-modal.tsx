@@ -208,7 +208,7 @@ export function ReportContentModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => {
+    <Dialog open={isOpen} onOpenChange={(open: any) => {
       setIsOpen(open);
       if (!open) {
         resetForm();
@@ -267,7 +267,7 @@ export function ReportContentModal({
               </div>
 
               <div className="space-y-2">
-                {reportCategories.map((category) => (
+                {reportCategories.map((category: any) => (
                   <div
                     key={category.value}
                     onClick={() => setFormData(prev => ({ ...prev, category: category.value }))}
@@ -308,14 +308,14 @@ export function ReportContentModal({
                   <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     Specific issue (optional)
                   </label>
-                  <Select value={formData.subCategory} onValueChange={(value) => 
+                  <Select value={formData.subCategory} onValueChange={(value: any) => 
                     setFormData(prev => ({ ...prev, subCategory: value }))
                   }>
                     <SelectTrigger>
                       <SelectValue placeholder="Select specific issue" />
                     </SelectTrigger>
                     <SelectContent>
-                      {subCategories[formData.category as keyof typeof subCategories].map((sub) => (
+                      {subCategories[formData.category as keyof typeof subCategories].map((sub: any) => (
                         <SelectItem key={sub} value={sub}>{sub}</SelectItem>
                       ))}
                     </SelectContent>
@@ -330,7 +330,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e: any) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Describe specifically what you think violates our community guidelines..."
                   className="min-h-[100px]"
                   maxLength={1000}
@@ -370,7 +370,7 @@ export function ReportContentModal({
                 <div className="flex space-x-2 mb-2">
                   <Input
                     value={newUrl}
-                    onChange={(e) => setNewUrl(e.target.value)}
+                    onChange={(e: any) => setNewUrl(e.target.value)}
                     placeholder="https://example.com/related-content"
                     className="flex-1"
                   />
@@ -410,7 +410,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.additionalContext}
-                  onChange={(e) => setFormData(prev => ({ ...prev, additionalContext: e.target.value }))}
+                  onChange={(e: any) => setFormData(prev => ({ ...prev, additionalContext: e.target.value }))}
                   placeholder="Any additional information that might help us review this report..."
                   className="min-h-[80px]"
                   maxLength={500}

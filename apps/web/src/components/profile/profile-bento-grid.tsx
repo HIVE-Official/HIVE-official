@@ -203,7 +203,7 @@ function StatusUpdateModal({ onClose }: { onClose: () => void }) {
             Current Vibe
           </label>
           <div className="grid grid-cols-4 gap-2">
-            {vibeOptions.map((vibe) => (
+            {vibeOptions.map((vibe: any) => (
               <button
                 key={vibe.text}
                 onClick={() => {
@@ -232,7 +232,7 @@ function StatusUpdateModal({ onClose }: { onClose: () => void }) {
           <input
             type="text"
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e: any) => setText(e.target.value)}
             className="w-full px-3 py-2 bg-muted rounded-lg border border-border focus:border-accent focus:outline-none"
             placeholder="How are you feeling?"
           />
@@ -245,10 +245,10 @@ function StatusUpdateModal({ onClose }: { onClose: () => void }) {
           </label>
           <select
             value={availability}
-            onChange={(e) => setAvailability(e.target.value)}
+            onChange={(e: any) => setAvailability(e.target.value)}
             className="w-full px-3 py-2 bg-muted rounded-lg border border-border focus:border-accent focus:outline-none"
           >
-            {availabilityOptions.map((option) => (
+            {availabilityOptions.map((option: any) => (
               <option key={option} value={option}>{option}</option>
             ))}
           </select>

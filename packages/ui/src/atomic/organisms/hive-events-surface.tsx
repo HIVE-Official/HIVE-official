@@ -268,7 +268,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
           {/* Type Filter */}
           <select
             value={filter}
-            onChange={(e) => setFilter(e.target.value as EventType | 'all')}
+            onChange={(e: any) => setFilter(e.target.value as EventType | 'all')}
             className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
           >
             <option value="all">All Types</option>
@@ -282,7 +282,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
           {/* Status Filter */}
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as EventStatus | 'all')}
+            onChange={(e: any) => setStatusFilter(e.target.value as EventStatus | 'all')}
             className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
           >
             <option value="all">All Status</option>

@@ -1,6 +1,6 @@
 import React from 'react';
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-    variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost' | 'builder' | 'verified' | 'leader' | 'ghost-mode' | 'achievement' | 'streak' | 'scholar' | 'connector' | 'dean' | 'developer' | 'organizer' | 'helper';
+    variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost' | 'destructive' | 'outline' | 'builder' | 'verified' | 'leader' | 'ghost-mode' | 'achievement' | 'streak' | 'scholar' | 'connector' | 'dean' | 'developer' | 'organizer' | 'helper' | 'skill-tag' | 'building-tools';
     size?: 'sm' | 'md' | 'lg';
     dot?: boolean;
     count?: number;
@@ -9,6 +9,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
     children?: React.ReactNode;
 }
 export declare const badgeVariants: {
+    default: string;
     primary: string;
     secondary: string;
     success: string;
@@ -28,6 +29,10 @@ export declare const badgeVariants: {
     developer: string;
     organizer: string;
     helper: string;
+    destructive: string;
+    outline: string;
+    'skill-tag': string;
+    'building-tools': string;
 };
 export declare const Badge: React.FC<BadgeProps>;
 export declare const RecognitionBadges: {

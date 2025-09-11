@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Table } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function TableDisplayRenderer({
   element,
@@ -76,7 +76,7 @@ export function TableDisplayRenderer({
           type="text"
           placeholder="Search..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: any) => setSearchTerm(e.target.value)}
           className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
         />
       )}

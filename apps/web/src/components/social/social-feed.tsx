@@ -161,7 +161,7 @@ export function SocialFeedMigrated({
     }
 
     likePost.mutate(postId, {
-      onError: (error) => {
+      onError: (error: any) => {
         addToast({
           title: 'Failed to like post',
           description: error.message || 'Something went wrong',
@@ -182,14 +182,14 @@ export function SocialFeedMigrated({
     }
 
     bookmarkPost.mutate(postId, {
-      onSuccess: (data) => {
+      onSuccess: (data: any) => {
         addToast({
           title: data.isBookmarked ? 'Bookmarked' : 'Removed from bookmarks',
           description: data.isBookmarked ? 'Post saved to your bookmarks' : 'Post removed from bookmarks',
           type: 'success',
         });
       },
-      onError: (error) => {
+      onError: (error: any) => {
         addToast({
           title: 'Failed to bookmark post',
           description: error.message || 'Something went wrong',
@@ -208,7 +208,7 @@ export function SocialFeedMigrated({
           type: 'success',
         });
       },
-      onError: (error) => {
+      onError: (error: any) => {
         addToast({
           title: 'Failed to share post',
           description: error.message || 'Something went wrong',
@@ -271,7 +271,7 @@ export function SocialFeedMigrated({
 
       {/* Posts Feed */}
       <div className="space-y-4">
-        {allPosts.map((post) => (
+        {allPosts.map((post: any) => (
           <Card key={post.id} className="overflow-hidden">
             {/* Post Header */}
             <div className="p-4 flex items-start justify-between">
@@ -326,7 +326,7 @@ export function SocialFeedMigrated({
             {/* Post Tags */}
             {post.tags && post.tags.length > 0 && (
               <div className="px-4 pb-3 flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
+                {post.tags.map((tag: any) => (
                   <span
                     key={tag}
                     className="inline-flex items-center text-xs text-accent hover:underline cursor-pointer"
@@ -395,7 +395,7 @@ export function SocialFeedMigrated({
                 <div className="text-xs text-muted-foreground mb-2">
                   {post.comments.length} comment{post.comments.length !== 1 ? 's' : ''}
                 </div>
-                {post.comments.slice(0, 2).map((comment) => (
+                {post.comments.slice(0, 2).map((comment: any) => (
                   <div key={comment.id} className="mb-2">
                     <div className="flex items-start gap-2">
                       <div className="w-6 h-6 rounded-full bg-muted flex-shrink-0" />

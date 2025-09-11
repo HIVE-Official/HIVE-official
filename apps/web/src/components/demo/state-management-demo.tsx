@@ -95,7 +95,7 @@ export function StateManagementDemo() {
           <h3 className="font-semibold mb-2">Feed Filter (Zustand)</h3>
           <p>Current Filter: {feedFilter}</p>
           <div className="space-x-2 mt-2">
-            {['all', 'spaces', 'following', 'rituals'].map((filter) => (
+            {['all', 'spaces', 'following', 'rituals'].map((filter: any) => (
               <Button
                 key={filter}
                 onClick={() => setFeedFilter(filter as any)}
@@ -115,7 +115,7 @@ export function StateManagementDemo() {
           {error && <p className="text-red-500">Error loading spaces</p>}
           {spaces && (
             <div className="space-y-2 mt-2">
-              {spaces.slice(0, 3).map((space) => (
+              {spaces.slice(0, 3).map((space: any) => (
                 <div key={space.id} className="flex items-center justify-between p-2 border rounded">
                   <div>
                     <p className="font-medium">{space.name}</p>

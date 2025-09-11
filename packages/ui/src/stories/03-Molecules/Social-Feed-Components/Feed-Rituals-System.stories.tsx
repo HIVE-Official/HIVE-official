@@ -272,7 +272,7 @@ export const CampusFeedInterface: Story = {
                 <CardTitle className="text-lg">Activity Feed</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {filterOptions.map((option) => (
+                {filterOptions.map((option: any) => (
                   <button
                     key={option.id}
                     onClick={() => setFilter(option.id)}
@@ -298,7 +298,7 @@ export const CampusFeedInterface: Story = {
                 <CardDescription>Regular campus activities</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {ritualCategories.map((category) => {
+                {ritualCategories.map((category: any) => {
                   const IconComponent = category.icon;
                   return (
                     <div key={category.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
@@ -359,7 +359,7 @@ export const CampusFeedInterface: Story = {
 
             {/* Feed Posts */}
             <div className="space-y-6">
-              {filteredFeed.map((post) => (
+              {filteredFeed.map((post: any) => (
                 <Card key={post.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -561,7 +561,7 @@ export const RitualCreationInterface: Story = {
                 <CardDescription>What type of activity?</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {ritualCategories.map((category) => {
+                {ritualCategories.map((category: any) => {
                   const IconComponent = category.icon;
                   return (
                     <button
@@ -614,7 +614,7 @@ export const RitualCreationInterface: Story = {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4">
-                  {templates.map((template) => (
+                  {templates.map((template: any) => (
                     <div
                       key={template.id}
                       onClick={() => setRitualType(template.id)}
@@ -652,7 +652,7 @@ export const RitualCreationInterface: Story = {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
-                    {frequencyOptions.map((option) => (
+                    {frequencyOptions.map((option: any) => (
                       <div
                         key={option.id}
                         onClick={() => setFrequency(option.id)}
@@ -863,7 +863,7 @@ export const RitualParticipationDashboard: Story = {
             {[
               { id: 'my-rituals', label: 'My Rituals', count: myRituals.length },
               { id: 'discover', label: 'Discover', count: discoveredRituals.length }
-            ].map((tab) => (
+            ].map((tab: any) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -906,7 +906,7 @@ export const RitualParticipationDashboard: Story = {
 
             {/* Ritual Cards */}
             <div className="grid lg:grid-cols-2 gap-6">
-              {myRituals.map((ritual) => (
+              {myRituals.map((ritual: any) => (
                 <Card key={ritual.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -990,7 +990,7 @@ export const RitualParticipationDashboard: Story = {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-6">
-              {discoveredRituals.map((ritual) => (
+              {discoveredRituals.map((ritual: any) => (
                 <Card key={ritual.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">

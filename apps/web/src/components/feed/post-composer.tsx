@@ -308,7 +308,7 @@ export function PostComposer({
               <input
                 type="text"
                 value={postData.content.title || ''}
-                onChange={(e) => handleTextChange('title', e.target.value)}
+                onChange={(e: any) => handleTextChange('title', e.target.value)}
                 placeholder={
                   postData.type === 'tool_share' ? 'Enter tool name...' :
                   postData.type === 'event' ? 'Enter event name...' : 'Enter title...'
@@ -326,7 +326,7 @@ export function PostComposer({
                 <input
                   type="datetime-local"
                   value={postData.content.eventDetails?.date || ''}
-                  onChange={(e) => handleEventDetailsChange('date', e.target.value)}
+                  onChange={(e: any) => handleEventDetailsChange('date', e.target.value)}
                   className="w-full px-4 py-3 bg-[var(--hive-white)]/[0.03] border border-[var(--hive-white)]/[0.08] rounded-lg text-[var(--hive-text-primary)] focus:border-[var(--hive-gold)] focus:outline-none transition-all"
                 />
               </div>
@@ -335,7 +335,7 @@ export function PostComposer({
                 <input
                   type="text"
                   value={postData.content.eventDetails?.location || ''}
-                  onChange={(e) => handleEventDetailsChange('location', e.target.value)}
+                  onChange={(e: any) => handleEventDetailsChange('location', e.target.value)}
                   placeholder="Enter location..."
                   className="w-full px-4 py-3 bg-[var(--hive-white)]/[0.03] border border-[var(--hive-white)]/[0.08] rounded-lg text-[var(--hive-text-primary)] placeholder:text-gray-400 focus:border-[var(--hive-gold)] focus:outline-none transition-all"
                 />
@@ -350,7 +350,7 @@ export function PostComposer({
             </label>
             <textarea
               value={postData.content.text || ''}
-              onChange={(e) => handleTextChange('text', e.target.value)}
+              onChange={(e: any) => handleTextChange('text', e.target.value)}
               placeholder={
                 postData.type === 'post' ? 'Share what\'s on your mind...' :
                 postData.type === 'tool_share' ? 'Describe this tool and how it helps...' :
@@ -366,7 +366,7 @@ export function PostComposer({
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Tags</label>
             <div className="flex flex-wrap gap-2 mb-2">
-              {postData.tags.map((tag) => (
+              {postData.tags.map((tag: any) => (
                 <span
                   key={tag}
                   className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] text-xs rounded-md"
@@ -385,8 +385,8 @@ export function PostComposer({
               <input
                 type="text"
                 value={currentTag}
-                onChange={(e) => setCurrentTag(e.target.value)}
-                onKeyDown={(e) => {
+                onChange={(e: any) => setCurrentTag(e.target.value)}
+                onKeyDown={(e: any) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     addTag();
@@ -410,7 +410,7 @@ export function PostComposer({
             <label className="block text-sm font-medium text-gray-300 mb-2">Visibility</label>
             <select
               value={postData.visibility}
-              onChange={(e) => setPostData(prev => ({ ...prev, visibility: e.target.value as any }))}
+              onChange={(e: any) => setPostData(prev => ({ ...prev, visibility: e.target.value as any }))}
               className="w-full px-4 py-3 bg-[var(--hive-white)]/[0.03] border border-[var(--hive-white)]/[0.08] rounded-lg text-[var(--hive-text-primary)] focus:border-[var(--hive-gold)] focus:outline-none transition-all"
             >
               <option value="public" className="bg-[var(--hive-background-tertiary)]">Public</option>

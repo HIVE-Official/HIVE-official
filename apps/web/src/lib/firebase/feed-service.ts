@@ -183,7 +183,7 @@ export class FeedService {
       const posts: FeedPost[] = [];
       let lastDoc: QueryDocumentSnapshot<DocumentData> | null = null;
 
-      snapshot.forEach((doc) => {
+      snapshot.forEach((doc: any) => {
         posts.push({
           id: doc.id,
           ...doc.data()
@@ -219,16 +219,16 @@ export class FeedService {
 
       q = query(q, orderBy('createdAt', 'desc'), limit(50));
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
+      const unsubscribe = onSnapshot(q, (snapshot: any) => {
         const posts: FeedPost[] = [];
-        snapshot.forEach((doc) => {
+        snapshot.forEach((doc: any) => {
           posts.push({
             id: doc.id,
             ...doc.data()
           } as FeedPost);
         });
         onUpdate(posts);
-      }, (error) => {
+      }, (error: any) => {
         console.error('Feed subscription error:', error);
       });
 

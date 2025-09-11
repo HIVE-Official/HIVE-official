@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch space details for each membership
     const spaceMemberships: (ProfileSpaceMembership | null)[] = await Promise.all(
-      memberships.map(async (membership) => {
+      memberships.map(async (membership: any) => {
         try {
           const spaceDoc = await dbAdmin.collection('spaces').doc(membership.id).get();
           if (!spaceDoc.exists) {

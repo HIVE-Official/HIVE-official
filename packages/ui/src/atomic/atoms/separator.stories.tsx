@@ -85,7 +85,7 @@ export const Default: Story = {
     spacing: 'md',
     decorative: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -661,7 +661,7 @@ export const Playground: Story = {
     spacing: 'md',
     decorative: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

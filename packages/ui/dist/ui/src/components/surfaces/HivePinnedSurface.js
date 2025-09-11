@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
 import { Pin, Link, FileText, AlertCircle, Download, ExternalLink, MoreVertical, Edit, Trash2, Plus, Info, ChevronRight, File } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { useFirebaseRealtime, useOptimisticUpdates } from '../../hooks/use-live-updates.js';
+import { useFirebaseRealtime, useOptimisticUpdates } from '../../hooks/use-live-updates';
 // Pinned Item Card Component
 const PinnedItemCard = ({ item, isLeader, variant = 'widget', onEdit, onUnpin, onView }) => {
     const [showActions, setShowActions] = useState(false);

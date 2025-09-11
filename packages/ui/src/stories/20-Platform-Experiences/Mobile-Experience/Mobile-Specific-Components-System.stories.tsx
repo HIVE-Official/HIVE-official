@@ -501,7 +501,7 @@ const MobilePushNotifications = () => {
           <div className="space-y-2">
             <h4 className="text-white font-medium">Recent Notifications</h4>
             <div className="space-y-1" ref={swipeRef}>
-              {notifications.map((notification) => (
+              {notifications.map((notification: any) => (
                 <div 
                   key={notification.id}
                   className={`p-3 rounded-lg border transition-all ${
@@ -612,7 +612,7 @@ const MobileOfflineSupport = () => {
             <span className="text-white">Offline Mode</span>
             <Switch 
               checked={!isOnline} 
-              onCheckedChange={(checked) => setIsOnline(!checked)}
+              onCheckedChange={(checked: any) => setIsOnline(!checked)}
               className="data-[state=checked]:bg-yellow-500"
             />
           </div>
@@ -649,7 +649,7 @@ const MobileOfflineSupport = () => {
               )}
 
               <div className="space-y-2">
-                {offlineQueue.map((item) => (
+                {offlineQueue.map((item: any) => (
                   <div key={item.id} className="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
                     <div className="flex-1">
@@ -691,7 +691,7 @@ const MobileLocationServices = () => {
   const requestLocation = async () => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        (position: any) => {
           setLocationPermission('granted');
           // Simulate campus building detection
           setCurrentLocation({ building: 'Lockwood Library', area: '3rd Floor Study Area' });

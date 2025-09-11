@@ -303,26 +303,26 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
 Slider.displayName = 'Slider';
 
 // Convenient preset components
-export const RangeSlider: React.FC<Omit<SliderProps, 'range'>> = (props) => (
+export const RangeSlider: React.FC<Omit<SliderProps, 'range'>> = (props: any) => (
   <Slider range {...props} />
 );
 
-export const VerticalSlider: React.FC<Omit<SliderProps, 'vertical'>> = (props) => (
+export const VerticalSlider: React.FC<Omit<SliderProps, 'vertical'>> = (props: any) => (
   <Slider vertical {...props} />
 );
 
-export const PrimarySlider: React.FC<Omit<SliderProps, 'color'>> = (props) => (
+export const PrimarySlider: React.FC<Omit<SliderProps, 'color'>> = (props: any) => (
   <Slider color="primary" {...props} />
 );
 
-export const SuccessSlider: React.FC<Omit<SliderProps, 'color'>> = (props) => (
+export const SuccessSlider: React.FC<Omit<SliderProps, 'color'>> = (props: any) => (
   <Slider color="success" {...props} />
 );
 
-export const WarningSlider: React.FC<Omit<SliderProps, 'color'>> = (props) => (
+export const WarningSlider: React.FC<Omit<SliderProps, 'color'>> = (props: any) => (
   <Slider color="warning" {...props} />
 );
 
-export const ErrorSlider: React.FC<Omit<SliderProps, 'color'>> = (props) => (
+export const ErrorSlider: React.FC<Omit<SliderProps, 'color'>> = (props: any) => (
   <Slider color="error" {...props} />
 );

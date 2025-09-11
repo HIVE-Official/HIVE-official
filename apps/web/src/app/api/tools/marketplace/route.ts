@@ -131,7 +131,7 @@ export async function GET(request: NextRequest) {
         } : null,
         isInstalled: userInstallDoc.exists,
         recentReviews: reviews,
-        publishedAt: toolData.publishedAt?.toDate ? toolData.publishedAt.toDate() : toolData.publishedAt
+        publishedAt: toolData.publishedAt?.toDate ? toolData.publishedAt?.toDate ? publishedAt.toDate() : new Date(publishedAt) : toolData.publishedAt
       });
     }
 

@@ -135,7 +135,7 @@ export function SpaceManagementDashboardMigrated({ space, userRole }: SpaceManag
             ...spaceSettings
           }));
         },
-        onError: (error) => {
+        onError: (error: any) => {
           addToast({
             title: 'Failed to update settings',
             description: error.message || 'Something went wrong',
@@ -157,7 +157,7 @@ export function SpaceManagementDashboardMigrated({ space, userRole }: SpaceManag
             type: 'success',
           });
         },
-        onError: (error) => {
+        onError: (error: any) => {
           addToast({
             title: 'Failed to update role',
             description: error.message || 'Something went wrong',
@@ -179,7 +179,7 @@ export function SpaceManagementDashboardMigrated({ space, userRole }: SpaceManag
             type: 'info',
           });
         },
-        onError: (error) => {
+        onError: (error: any) => {
           addToast({
             title: 'Failed to remove member',
             description: error.message || 'Something went wrong',
@@ -331,7 +331,7 @@ export function SpaceManagementDashboardMigrated({ space, userRole }: SpaceManag
 
           <div className="space-y-2">
             <AnimatePresence>
-              {members?.map((member) => (
+              {members?.map((member: any) => (
                 <motion.div
                   key={member.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -368,7 +368,7 @@ export function SpaceManagementDashboardMigrated({ space, userRole }: SpaceManag
                           <div className="flex gap-1">
                             <Select
                               value={member.role}
-                              onValueChange={(value) => handleUpdateMemberRole(member.id, value)}
+                              onValueChange={(value: any) => handleUpdateMemberRole(member.id, value)}
                               disabled={updateMemberRole.isPending}
                             >
                               <SelectTrigger className="w-32">
@@ -458,14 +458,14 @@ export function SpaceManagementDashboardMigrated({ space, userRole }: SpaceManag
                     <label className="text-sm font-medium">Space Name</label>
                     <Input 
                       value={spaceSettings.name}
-                      onChange={(e) => setSpaceSettings(prev => ({ ...prev, name: e.target.value }))}
+                      onChange={(e: any) => setSpaceSettings(prev => ({ ...prev, name: e.target.value }))}
                     />
                   </div>
                   <div>
                     <label className="text-sm font-medium">Visibility</label>
                     <Select 
                       value={spaceSettings.isPrivate ? 'private' : 'public'}
-                      onValueChange={(value) => setSpaceSettings(prev => ({ ...prev, isPrivate: value === 'private' }))}
+                      onValueChange={(value: any) => setSpaceSettings(prev => ({ ...prev, isPrivate: value === 'private' }))}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -481,7 +481,7 @@ export function SpaceManagementDashboardMigrated({ space, userRole }: SpaceManag
                   <label className="text-sm font-medium">Description</label>
                   <Input 
                     value={spaceSettings.description}
-                    onChange={(e) => setSpaceSettings(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={(e: any) => setSpaceSettings(prev => ({ ...prev, description: e.target.value }))}
                   />
                 </div>
                 <div className="flex gap-2">
@@ -537,14 +537,14 @@ export function SpaceManagementDashboardMigrated({ space, userRole }: SpaceManag
               <label className="text-sm font-medium">Space Name</label>
               <Input 
                 value={spaceSettings.name}
-                onChange={(e) => setSpaceSettings(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e: any) => setSpaceSettings(prev => ({ ...prev, name: e.target.value }))}
               />
             </div>
             <div>
               <label className="text-sm font-medium">Description</label>
               <Input 
                 value={spaceSettings.description}
-                onChange={(e) => setSpaceSettings(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e: any) => setSpaceSettings(prev => ({ ...prev, description: e.target.value }))}
               />
             </div>
           </div>

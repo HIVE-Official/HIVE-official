@@ -359,7 +359,7 @@ export const Default: Story = {
     onCreatePost: action('create-post'),
     onEngageMore: action('engage-more'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -840,7 +840,7 @@ export const Playground: Story = {
     onCreatePost: action('playground-post'),
     onEngageMore: action('playground-engage'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

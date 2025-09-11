@@ -951,10 +951,10 @@ const RealTimeFeed = () => {
             <div className="flex-1 space-y-3">
               <Input
                 value={newPostContent}
-                onChange={(e) => setNewPostContent(e.target.value)}
+                onChange={(e: any) => setNewPostContent(e.target.value)}
                 placeholder="What's happening on campus?"
                 className="bg-gray-800 border-gray-700 text-white"
-                onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleCreatePost()}
+                onKeyPress={(e: any) => e.key === 'Enter' && !e.shiftKey && handleCreatePost()}
               />
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -983,7 +983,7 @@ const RealTimeFeed = () => {
 
       {/* Feed Posts */}
       <div className="space-y-4">
-        {state.feed.posts.map((post) => (
+        {state.feed.posts.map((post: any) => (
           <Card 
             key={post.id} 
             className={`bg-gray-900 border-gray-800 ${
@@ -1128,7 +1128,7 @@ const SyncControls = () => {
           <div className="mt-4">
             <Label className="text-white text-sm">Queued Operations</Label>
             <div className="mt-2 space-y-2">
-              {state.sync.queuedOperations.map((op) => (
+              {state.sync.queuedOperations.map((op: any) => (
                 <div key={op.id} className="flex items-center justify-between text-sm bg-gray-800 rounded p-2">
                   <span className="text-gray-300">{op.type}</span>
                   <Badge variant="secondary" className="bg-gray-700 text-gray-300 text-xs">

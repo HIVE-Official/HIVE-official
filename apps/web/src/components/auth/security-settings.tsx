@@ -580,7 +580,7 @@ export function SecuritySettings({ userId, className = '' }: SecuritySettingsPro
                     <input
                       type={showPasswords ? 'text' : 'password'}
                       value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      onChange={(e: any) => setCurrentPassword(e.target.value)}
                       className="w-full px-3 py-2 pr-10 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
                     />
                     <button
@@ -600,7 +600,7 @@ export function SecuritySettings({ userId, className = '' }: SecuritySettingsPro
                   <input
                     type={showPasswords ? 'text' : 'password'}
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={(e: any) => setNewPassword(e.target.value)}
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
                   />
                 </div>
@@ -612,7 +612,7 @@ export function SecuritySettings({ userId, className = '' }: SecuritySettingsPro
                   <input
                     type={showPasswords ? 'text' : 'password'}
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e: any) => setConfirmPassword(e.target.value)}
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
                   />
                 </div>

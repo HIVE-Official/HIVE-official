@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion } from '../../components/framer-motion-proxy.js';
-import { cn } from '../../lib/utils.js';
+import { motion } from '../../components/framer-motion-proxy';
+import { cn } from '../../lib/utils';
 import { Users, Zap, MapPin, Edit3, Sparkles, Camera, ChevronRight, Plus } from 'lucide-react';
 // Widget components
 const ProfileHeaderWidget = ({ user, stats = {}, isLoading, onEditProfile, onAvatarChange, onStatClick }) => {

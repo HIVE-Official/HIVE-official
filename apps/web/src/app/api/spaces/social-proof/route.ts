@@ -302,7 +302,7 @@ async function getSpaceMembers(spaceType: string, spaceId: string) {
       .get();
 
     const members = await Promise.all(
-      membersSnapshot.docs.map(async (memberDoc) => {
+      membersSnapshot.docs.map(async (memberDoc: any) => {
         const memberData = memberDoc.data();
         
         // Get user profile
@@ -454,7 +454,7 @@ async function getRecentSpaceActivity(spaceType: string, spaceId: string) {
       .get();
 
     const recentJoins = await Promise.all(
-      membersSnapshot.docs.map(async (memberDoc) => {
+      membersSnapshot.docs.map(async (memberDoc: any) => {
         const memberData = memberDoc.data();
         
         try {

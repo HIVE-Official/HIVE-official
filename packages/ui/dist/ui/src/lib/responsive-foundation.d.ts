@@ -28,11 +28,11 @@ export declare const touchTargets: {
     readonly spacious: "min-h-[56px] min-w-[56px]";
 };
 export declare const responsiveSpace: (props?: ({
-    size?: "xs" | "sm" | "md" | "lg" | "xl" | null | undefined;
-    gap?: "xs" | "sm" | "md" | "lg" | "xl" | null | undefined;
+    size?: "sm" | "lg" | "xl" | "xs" | "md" | null | undefined;
+    gap?: "sm" | "lg" | "xl" | "xs" | "md" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export declare const responsiveText: (props?: ({
-    size?: "xs" | "sm" | "lg" | "xl" | "base" | "2xl" | "3xl" | null | undefined;
+    size?: "sm" | "lg" | "xl" | "xs" | "2xl" | "base" | "3xl" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export declare const responsiveContainer: (props?: ({
     size?: "full" | "content" | "feed" | "app" | null | undefined;

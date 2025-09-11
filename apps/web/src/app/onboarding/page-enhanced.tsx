@@ -169,16 +169,7 @@ export default function EnhancedOnboardingPage() {
     if (authSession) {
       const sessionData = JSON.parse(authSession);
       
-      // Pre-fill for jwrhineh@buffalo.edu
-      if (sessionData.email === 'jwrhineh@buffalo.edu') {
-        setProfile(prev => ({
-          ...prev,
-          displayName: 'Jacob Rhineheart',
-          handle: 'jwrhineh',
-          graduationYear: '2025',
-          major: 'computer-science'
-        }));
-      }
+      // No bypass - all users must complete onboarding normally
       
       setIsLoading(false);
     } else {
@@ -274,7 +265,7 @@ export default function EnhancedOnboardingPage() {
                 width={32}
                 height={32}
                 className="w-8 h-8"
-                onError={(e) => {
+                onError={(e: any) => {
                   const target = e.target as HTMLImageElement;
                   target.src = "/assets/whitelogo.svg";
                 }}
@@ -416,7 +407,7 @@ export default function EnhancedOnboardingPage() {
                         width={64}
                         height={64}
                         className="w-16 h-16 mx-auto mb-4"
-                        onError={(e) => {
+                        onError={(e: any) => {
                           const target = e.target as HTMLImageElement;
                           target.src = "/assets/whitelogo.svg";
                         }}
@@ -463,7 +454,7 @@ export default function EnhancedOnboardingPage() {
                     <input
                       type="text"
                       value={profile.displayName}
-                      onChange={(e) => setProfile(prev => ({ ...prev, displayName: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, displayName: e.target.value }))}
                       placeholder="How should we call you?"
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors"
                       autoFocus
@@ -479,7 +470,7 @@ export default function EnhancedOnboardingPage() {
                       <input
                         type="text"
                         value={profile.handle}
-                        onChange={(e) => setProfile(prev => ({ ...prev, handle: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))}
+                        onChange={(e: any) => setProfile(prev => ({ ...prev, handle: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))}
                         placeholder="yourhandle"
                         className="w-full pl-8 pr-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors"
                       />
@@ -493,7 +484,7 @@ export default function EnhancedOnboardingPage() {
                     <input
                       type="text"
                       value={profile.pronouns}
-                      onChange={(e) => setProfile(prev => ({ ...prev, pronouns: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, pronouns: e.target.value }))}
                       placeholder="she/her, he/him, they/them, etc."
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors"
                     />
@@ -505,7 +496,7 @@ export default function EnhancedOnboardingPage() {
                     </label>
                     <textarea
                       value={profile.bio}
-                      onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
                       placeholder="Tell us a bit about yourself..."
                       rows={3}
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors resize-none"
@@ -523,7 +514,7 @@ export default function EnhancedOnboardingPage() {
                     </label>
                     <select
                       value={profile.graduationYear}
-                      onChange={(e) => setProfile(prev => ({ ...prev, graduationYear: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, graduationYear: e.target.value }))}
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] focus:outline-none focus:border-[var(--hive-gold)] transition-colors appearance-none cursor-pointer"
                     >
                       <option value="" className="bg-[var(--hive-background-tertiary)]">Select your graduation year</option>
@@ -541,7 +532,7 @@ export default function EnhancedOnboardingPage() {
                     </label>
                     <select
                       value={profile.major}
-                      onChange={(e) => setProfile(prev => ({ ...prev, major: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, major: e.target.value }))}
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] focus:outline-none focus:border-[var(--hive-gold)] transition-colors appearance-none cursor-pointer"
                     >
                       <option value="" className="bg-[var(--hive-background-tertiary)]">Select your major</option>
@@ -560,7 +551,7 @@ export default function EnhancedOnboardingPage() {
                     <input
                       type="text"
                       value={profile.minor}
-                      onChange={(e) => setProfile(prev => ({ ...prev, minor: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, minor: e.target.value }))}
                       placeholder="Enter your minor if applicable"
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors"
                     />
@@ -573,7 +564,7 @@ export default function EnhancedOnboardingPage() {
                     <input
                       type="text"
                       value={profile.gpa}
-                      onChange={(e) => setProfile(prev => ({ ...prev, gpa: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, gpa: e.target.value }))}
                       placeholder="e.g., 3.75"
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors"
                     />
@@ -590,7 +581,7 @@ export default function EnhancedOnboardingPage() {
                     </label>
                     <select
                       value={profile.livingSituation}
-                      onChange={(e) => setProfile(prev => ({ ...prev, livingSituation: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, livingSituation: e.target.value }))}
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] focus:outline-none focus:border-[var(--hive-gold)] transition-colors appearance-none cursor-pointer"
                     >
                       <option value="" className="bg-[var(--hive-background-tertiary)]">Select your living situation</option>
@@ -633,7 +624,7 @@ export default function EnhancedOnboardingPage() {
                       <input
                         type="text"
                         value={profile.roomNumber}
-                        onChange={(e) => setProfile(prev => ({ ...prev, roomNumber: e.target.value }))}
+                        onChange={(e: any) => setProfile(prev => ({ ...prev, roomNumber: e.target.value }))}
                         placeholder="e.g., Porter 312B"
                         className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] placeholder-[#6B6B6F] focus:outline-none focus:border-[var(--hive-gold)] transition-colors"
                       />
@@ -826,7 +817,7 @@ export default function EnhancedOnboardingPage() {
                           <input
                             type="checkbox"
                             checked={profile.notifications[key as keyof typeof profile.notifications]}
-                            onChange={(e) => setProfile(prev => ({
+                            onChange={(e: any) => setProfile(prev => ({
                               ...prev,
                               notifications: {
                                 ...prev.notifications,
@@ -846,7 +837,7 @@ export default function EnhancedOnboardingPage() {
                     </h3>
                     <select
                       value={profile.visibility}
-                      onChange={(e) => setProfile(prev => ({ ...prev, visibility: e.target.value }))}
+                      onChange={(e: any) => setProfile(prev => ({ ...prev, visibility: e.target.value }))}
                       className="w-full px-4 py-3 bg-[var(--hive-background-tertiary)] border border-[var(--hive-gray-700)] rounded-xl text-[var(--hive-text-primary)] focus:outline-none focus:border-[var(--hive-gold)] transition-colors appearance-none cursor-pointer"
                     >
                       <option value="public" className="bg-[var(--hive-background-tertiary)]">Public - Anyone can see</option>

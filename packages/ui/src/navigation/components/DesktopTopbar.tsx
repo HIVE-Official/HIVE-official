@@ -218,7 +218,7 @@ const UserMenu = memo<UserMenuProps>(({ user, onNavigate }) => {
               </div>
               
               <div className="py-1">
-                {menuItems.map((item) => (
+                {menuItems.map((item: any) => (
                   <button
                     key={item.href}
                     onClick={() => {
@@ -340,7 +340,7 @@ export const DesktopTopbar = memo<DesktopTopbarProps>(({
         
         {/* Navigation items */}
         <nav className="hidden md:flex items-center gap-2">
-          {items.map((item) => (
+          {items.map((item: any) => (
             <TopbarItem
               key={item.id}
               item={item}

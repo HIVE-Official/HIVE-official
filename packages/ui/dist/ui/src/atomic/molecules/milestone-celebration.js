@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
-import { Button } from '../atoms/index.js';
-import { Card } from './index.js';
+import { Button } from '../atoms';
+import { Card } from '.';
 import { Trophy, Sparkles, CheckCircle, Users, Target, Award, Star, ChevronRight, Share, Heart, Zap } from 'lucide-react';
 const getRarityConfig = (rarity) => {
     const configs = {

@@ -31,7 +31,7 @@ const meta: Meta<typeof CampusIdentityHeader> = {
     },
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <Story />
       </div>
@@ -204,7 +204,7 @@ export const BentoGridLayout: Story = {
     showStatus: true,
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-4xl mx-auto">
           {/* BentoGrid Layout Context */}

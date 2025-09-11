@@ -235,7 +235,7 @@ export const Default: Story = {
     onConfigureGhostMode: action('configure-ghost-mode'),
     onViewDataExport: action('view-data-export'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -870,7 +870,7 @@ export const Playground: Story = {
     onConfigureGhostMode: action('playground-ghost-config'),
     onViewDataExport: action('playground-data-export'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

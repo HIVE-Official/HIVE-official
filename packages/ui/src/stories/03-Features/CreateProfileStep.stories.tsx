@@ -22,7 +22,7 @@ const meta: Meta<typeof CreateProfileStep> = {
 export default meta;
 
 const Template: StoryObj<CreateProfileStepProps> = {
-  render: (args) => <CreateProfileStep {...args} />,
+  render: (args: any) => <CreateProfileStep {...args} />,
 };
 
 export const Default: StoryObj<CreateProfileStepProps> = {

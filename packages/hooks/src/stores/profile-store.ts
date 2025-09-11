@@ -159,14 +159,14 @@ export const useProfileStore = create<ProfileState>()(
         ...initialState,
 
         // Profile actions
-        setProfile: (profile) => {
+        setProfile: (profile: ProfileData | null) => {
           set({ profile }, false, 'setProfile');
           get().calculateUnlocks();
         },
 
-        updateProfile: (updates) =>
+        updateProfile: (updates: Partial<ProfileData>) =>
           set(
-            (state) => {
+            (state: ProfileState) => {
               if (!state.profile) return state;
               
               const updatedProfile = {
@@ -192,22 +192,22 @@ export const useProfileStore = create<ProfileState>()(
             'updateProfile'
           ),
 
-        setProfileLoading: (isProfileLoading) =>
+        setProfileLoading: (isProfileLoading: boolean) =>
           set({ isProfileLoading }, false, 'setProfileLoading'),
 
-        setProfileError: (profileError) =>
+        setProfileError: (profileError: string | null) =>
           set({ profileError, isProfileLoading: false }, false, 'setProfileError'),
 
         // Spaces actions
-        setSpaceMemberships: (spaceMemberships) => {
+        setSpaceMemberships: (spaceMemberships: SpaceMembership[]) => {
           set({ spaceMemberships }, false, 'setSpaceMemberships');
           get().calculateUnlocks();
         },
 
-        updateSpaceMembership: (spaceId, updates) =>
+        updateSpaceMembership: (spaceId: string, updates: Partial<SpaceMembership>) =>
           set(
-            (state) => ({
-              spaceMemberships: state.spaceMemberships.map((membership) =>
+            (state: ProfileState) => ({
+              spaceMemberships: state.spaceMemberships.map((membership: SpaceMembership) =>
                 membership.spaceId === spaceId
                   ? { ...membership, ...updates, lastActivity: new Date() }
                   : membership
@@ -217,9 +217,9 @@ export const useProfileStore = create<ProfileState>()(
             'updateSpaceMembership'
           ),
 
-        addSpaceMembership: (membership) => {
+        addSpaceMembership: (membership: SpaceMembership) => {
           set(
-            (state) => ({
+            (state: ProfileState) => ({
               spaceMemberships: [...state.spaceMemberships, membership],
             }),
             false,
@@ -228,11 +228,11 @@ export const useProfileStore = create<ProfileState>()(
           get().calculateUnlocks();
         },
 
-        removeSpaceMembership: (spaceId) => {
+        removeSpaceMembership: (spaceId: string) => {
           set(
-            (state) => ({
+            (state: ProfileState) => ({
               spaceMemberships: state.spaceMemberships.filter(
-                (membership) => membership.spaceId !== spaceId
+                (membership: SpaceMembership) => membership.spaceId !== spaceId
               ),
             }),
             false,
@@ -241,19 +241,19 @@ export const useProfileStore = create<ProfileState>()(
           get().calculateUnlocks();
         },
 
-        setSpacesLoading: (isSpacesLoading) =>
+        setSpacesLoading: (isSpacesLoading: boolean) =>
           set({ isSpacesLoading }, false, 'setSpacesLoading'),
 
-        setSpacesError: (spacesError) =>
+        setSpacesError: (spacesError: string | null) =>
           set({ spacesError, isSpacesLoading: false }, false, 'setSpacesError'),
 
         // Analytics actions
-        setAnalytics: (analytics) =>
+        setAnalytics: (analytics: ProfileAnalytics | null) =>
           set({ analytics }, false, 'setAnalytics'),
 
-        updateAnalytics: (updates) =>
+        updateAnalytics: (updates: Partial<ProfileAnalytics>) =>
           set(
-            (state) => ({
+            (state: ProfileState) => ({
               analytics: state.analytics
                 ? { ...state.analytics, ...updates }
                 : null,
@@ -262,26 +262,26 @@ export const useProfileStore = create<ProfileState>()(
             'updateAnalytics'
           ),
 
-        setAnalyticsLoading: (isAnalyticsLoading) =>
+        setAnalyticsLoading: (isAnalyticsLoading: boolean) =>
           set({ isAnalyticsLoading }, false, 'setAnalyticsLoading'),
 
-        setAnalyticsError: (analyticsError) =>
+        setAnalyticsError: (analyticsError: string | null) =>
           set({ analyticsError, isAnalyticsLoading: false }, false, 'setAnalyticsError'),
 
         // UI actions
-        setUnlockStatus: (status) =>
+        setUnlockStatus: (status: Partial<CardUnlockStatus>) =>
           set(
-            (state) => ({
+            (state: ProfileState) => ({
               unlockStatus: { ...state.unlockStatus, ...status },
             }),
             false,
             'setUnlockStatus'
           ),
 
-        setEditing: (isEditing) =>
+        setEditing: (isEditing: boolean) =>
           set({ isEditing }, false, 'setEditing'),
 
-        setSelectedCard: (selectedCard) =>
+        setSelectedCard: (selectedCard: string | null) =>
           set({ selectedCard }, false, 'setSelectedCard'),
 
         // Calculate unlocks based on current state
@@ -313,7 +313,7 @@ export const useProfileStore = create<ProfileState>()(
           newUnlocks.activityHistory = totalInteractions >= 10;
           
           set(
-            (state) => ({
+            (state: ProfileState) => ({
               unlockStatus: { ...state.unlockStatus, ...newUnlocks },
             }),
             false,
@@ -326,7 +326,7 @@ export const useProfileStore = create<ProfileState>()(
       }),
       {
         name: 'hive-profile',
-        partialize: (state) => ({
+        partialize: (state: ProfileState) => ({
           // Persist UI preferences and unlock status
           unlockStatus: state.unlockStatus,
           selectedCard: state.selectedCard,
@@ -340,16 +340,16 @@ export const useProfileStore = create<ProfileState>()(
 );
 
 // Selectors for common use cases
-export const useProfileData = () => useProfileStore((state) => state.profile);
-export const useSpaceMemberships = () => useProfileStore((state) => state.spaceMemberships);
-export const useProfileAnalytics = () => useProfileStore((state) => state.analytics);
-export const useProfileUnlocks = () => useProfileStore((state) => state.unlockStatus);
-export const useProfileLoading = () => useProfileStore((state) => ({
+export const useProfileData = () => useProfileStore((state: ProfileState) => state.profile);
+export const useSpaceMemberships = () => useProfileStore((state: ProfileState) => state.spaceMemberships);
+export const useProfileAnalytics = () => useProfileStore((state: ProfileState) => state.analytics);
+export const useProfileUnlocks = () => useProfileStore((state: ProfileState) => state.unlockStatus);
+export const useProfileLoading = () => useProfileStore((state: ProfileState) => ({
   profile: state.isProfileLoading,
   spaces: state.isSpacesLoading,
   analytics: state.isAnalyticsLoading,
 }));
-export const useProfileErrors = () => useProfileStore((state) => ({
+export const useProfileErrors = () => useProfileStore((state: ProfileState) => ({
   profile: state.profileError,
   spaces: state.spacesError,
   analytics: state.analyticsError,

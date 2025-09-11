@@ -1,24 +1,24 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const cardVariants: (props?: ({
-    variant?: "ghost" | "default" | "elevated" | "minimal" | null | undefined;
-    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
-    radius?: "sm" | "default" | "lg" | "none" | "full" | null | undefined;
+    variant?: "default" | "elevated" | "minimal" | "ghost" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | null | undefined;
+    radius?: "default" | "sm" | "lg" | "none" | "full" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const cardHeaderVariants: (props?: ({
-    spacing?: "sm" | "default" | "lg" | "none" | null | undefined;
+    spacing?: "default" | "sm" | "lg" | "none" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const cardTitleVariants: (props?: ({
-    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const cardDescriptionVariants: (props?: ({
-    size?: "sm" | "default" | "lg" | null | undefined;
+    size?: "default" | "sm" | "lg" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const cardContentVariants: (props?: ({
-    spacing?: "sm" | "default" | "lg" | "none" | null | undefined;
+    spacing?: "default" | "sm" | "lg" | "none" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const cardFooterVariants: (props?: ({
-    spacing?: "sm" | "default" | "lg" | "none" | null | undefined;
+    spacing?: "default" | "sm" | "lg" | "none" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 interface CardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {
 }

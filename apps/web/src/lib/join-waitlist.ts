@@ -9,7 +9,7 @@ export async function joinWaitlist(email: string, schoolId: string): Promise<{ s
   const schoolRef = db.collection("schools").doc(schoolId);
   const waitlistRef = schoolRef.collection("waitlist_entries").doc(email);
 
-  await db.runTransaction(async (transaction) => {
+  await db.runTransaction(async (transaction: any) => {
     const schoolDoc = await transaction.get(schoolRef);
     const waitlistDoc = await transaction.get(waitlistRef);
 

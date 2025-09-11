@@ -375,15 +375,62 @@ export function HiveOnboardingWizard() {
         builderRequestsCreated: result.builderRequestsCreated
       });
 
-      // Auto-create spaces after onboarding
-      // TODO: Implement post-onboarding space creation
-      // This will create cohort spaces based on major/graduation year
-      const spaceResults = {
-        cohortSpaces: [],
-        joinedSpaces: [],
-        totalSpaces: 0,
-      };
-      console.log('🏗️ Post-onboarding spaces:', spaceResults);
+      // Auto-create and join relevant spaces after onboarding
+      try {
+        const spaceCreationPromises = [];
+        
+        // Create/join cohort spaces based on major and graduation year
+        if (data.userType === 'student' && data.majors && data.graduationYear) {
+          data.majors.forEach(major => {
+            // Create cohort space ID (e.g., "cs-2025", "psychology-2026")
+            const cohortSpaceId = `${major.toLowerCase().replace(/\s+/g, '-')}-${data.graduationYear}`;
+            spaceCreationPromises.push(
+              fetch('/api/spaces/auto-join', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  spaceType: 'cohort',
+                  spaceId: cohortSpaceId,
+                  spaceName: `${major} ${data.graduationYear}`,
+                  userId: result.user?.id
+                })
+              })
+            );
+          });
+        }
+        
+        // Join interest-based spaces
+        if (data.interests && data.interests.length > 0) {
+          data.interests.slice(0, 3).forEach(interest => {
+            const interestSpaceId = `interest-${interest.toLowerCase().replace(/\s+/g, '-')}`;
+            spaceCreationPromises.push(
+              fetch('/api/spaces/auto-join', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  spaceType: 'interest',
+                  spaceId: interestSpaceId,
+                  spaceName: interest,
+                  userId: result.user?.id
+                })
+              })
+            );
+          });
+        }
+        
+        // Execute all space joins in parallel
+        const spaceResponses = await Promise.allSettled(spaceCreationPromises);
+        const successfulJoins = spaceResponses.filter(r => r.status === 'fulfilled').length;
+        
+        console.log('🏗️ Post-onboarding spaces joined:', {
+          attempted: spaceCreationPromises.length,
+          successful: successfulJoins,
+          failed: spaceCreationPromises.length - successfulJoins
+        });
+      } catch (spaceError) {
+        // Don't fail onboarding if space creation fails
+        console.error('Space auto-join failed (non-critical):', spaceError);
+      }
 
       // Show success animation
       setCurrentStep(TOTAL_STEPS);

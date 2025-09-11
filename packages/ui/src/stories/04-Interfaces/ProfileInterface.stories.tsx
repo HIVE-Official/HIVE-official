@@ -212,7 +212,7 @@ export const UtilityFirstProfile: Story = {
         <BentoCard size="2x2" title="Your Tools">
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-3">
-              {mockTools.map((tool) => (
+              {mockTools.map((tool: any) => (
                 <div key={tool.id} className="p-3 bg-background rounded-lg text-center space-y-2">
                   <div className="text-2xl">{tool.icon}</div>
                   <div>
@@ -243,7 +243,7 @@ export const UtilityFirstProfile: Story = {
         <BentoCard size="2x1" title="Your Spaces">
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              {mockSpaces.slice(0, 4).map((space) => (
+              {mockSpaces.slice(0, 4).map((space: any) => (
                 <div key={space.id} className="p-3 bg-background rounded-lg">
                   <div className="flex items-center justify-between">
                     <div>
@@ -379,7 +379,7 @@ export const ProgressiveSocialDisclosure: Story = {
           <BentoCard size="2x2" title="Your Tools">
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-3">
-                {mockTools.map((tool) => (
+                {mockTools.map((tool: any) => (
                   <div key={tool.id} className="p-3 bg-background rounded-lg text-center space-y-2">
                     <div className="text-2xl">{tool.icon}</div>
                     <div>

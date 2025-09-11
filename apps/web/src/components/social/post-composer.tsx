@@ -322,7 +322,7 @@ export function PostComposer({
           <Textarea
             ref={textareaRef}
             value={content}
-            onChange={(e) => handleContentChange(e.target.value)}
+            onChange={(e: any) => handleContentChange(e.target.value)}
             placeholder={placeholder}
             className={`min-h-[80px] resize-none border-none bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight focus:outline-none ${
               isOverLimit ? 'text-red-400' : ''
@@ -347,7 +347,7 @@ export function PostComposer({
               <input
                 type="text"
                 value={poll.question}
-                onChange={(e) => setPoll(prev => ({ ...prev, question: e.target.value }))}
+                onChange={(e: any) => setPoll(prev => ({ ...prev, question: e.target.value }))}
                 placeholder="Ask a question..."
                 className="w-full bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight border-none outline-none"
               />
@@ -359,7 +359,7 @@ export function PostComposer({
                     <input
                       type="text"
                       value={option}
-                      onChange={(e) => updatePollOption(index, e.target.value)}
+                      onChange={(e: any) => updatePollOption(index, e.target.value)}
                       placeholder={`Option ${index + 1}`}
                       className="flex-1 bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight border-none outline-none"
                     />
@@ -392,7 +392,7 @@ export function PostComposer({
                   <input
                     type="checkbox"
                     checked={poll.allowMultiple}
-                    onChange={(e) => setPoll(prev => ({ ...prev, allowMultiple: e.target.checked }))}
+                    onChange={(e: any) => setPoll(prev => ({ ...prev, allowMultiple: e.target.checked }))}
                     className="rounded"
                   />
                   <span>Allow multiple choices</span>
@@ -406,14 +406,14 @@ export function PostComposer({
               <input
                 type="text"
                 value={event.title}
-                onChange={(e) => setEvent(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e: any) => setEvent(prev => ({ ...prev, title: e.target.value }))}
                 placeholder="Event title"
                 className="w-full bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight border-none outline-none font-medium"
               />
               
               <textarea
                 value={event.description}
-                onChange={(e) => setEvent(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e: any) => setEvent(prev => ({ ...prev, description: e.target.value }))}
                 placeholder="Event description"
                 rows={2}
                 className="w-full bg-transparent text-[var(--hive-text-inverse)] placeholder:text-hive-text-mutedLight border-none outline-none resize-none"
@@ -425,7 +425,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.startTime}
-                    onChange={(e) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
+                    onChange={(e: any) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
                     className="w-full mt-1 bg-transparent text-[var(--hive-text-inverse)] border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
@@ -434,7 +434,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.endTime || ''}
-                    onChange={(e) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
+                    onChange={(e: any) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
                     className="w-full mt-1 bg-transparent text-[var(--hive-text-inverse)] border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>

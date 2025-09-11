@@ -1,11 +1,11 @@
 'use client';
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils.js';
-import { Badge } from '../atoms/badge.js';
-import { SearchInput } from '../atoms/input-enhanced.js';
-import { Button } from '../atoms/button-enhanced.js';
-import { Alert, AlertDescription } from '../atoms/alert.js';
+import { cn } from '../../lib/utils';
+import { Badge } from '../atoms/badge';
+import { SearchInput } from '../atoms/input-enhanced';
+import { Button } from '../atoms/button-enhanced';
+import { Alert, AlertDescription } from '../atoms/alert';
 const CoursePicker = React.forwardRef(({ courses = [], selectedCourses = [], onCourseSelect, onCourseRemove, maxCourses = 6, searchable = true, showPrerequisites = true, showScheduleConflicts = true, semester, departments = [], onDepartmentFilter, loading = false, error, className, ...props }, ref) => {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [selectedDepartment, setSelectedDepartment] = React.useState(null);

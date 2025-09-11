@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { authenticatedFetch } from '../../../lib/auth-utils';
 import { Button, Card } from "@hive/ui";
 import { PageContainer } from "@/components/temp-stubs";
+import toast from '@/hooks/use-toast-notifications';
 import { Heart, Users, Settings as _Settings, Star, Clock, Activity, Plus, Crown, Search, Grid, List, TrendingUp, ArrowUpDown, Compass, AlertCircle } from "lucide-react";
 import { type Space, type SpaceType } from "@hive/core";
 import { useDebounce } from "@hive/hooks";
@@ -136,7 +137,7 @@ export default function UnifiedSpacesPage() {
       }
       return failureCount < 3;
     },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex: any) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   // Fetch browse spaces with retry and better error handling
@@ -151,7 +152,7 @@ export default function UnifiedSpacesPage() {
       }
       return failureCount < 3;
     },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex: any) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   // Filter and sort browse spaces
@@ -245,11 +246,14 @@ export default function UnifiedSpacesPage() {
       // Close modal first
       setShowCreateModal(false);
       
+      // Show success toast
+      toast.success(`${spaceData.name} created!`, 'Your new space is ready');
+      
       // Invalidate caches
       queryClient.invalidateQueries({ queryKey: ["spaces"] });
       queryClient.invalidateQueries({ queryKey: ["my-spaces"] });
       
-      // Show success feedback
+      // Navigate to new space
       if (newSpace?.id) {
         // Small delay to let user see success state
         setTimeout(() => {
@@ -258,7 +262,9 @@ export default function UnifiedSpacesPage() {
       }
     } catch (error) {
       console.error('Failed to create space:', error);
-      _setCreateError(error instanceof Error ? error.message : 'Failed to create space. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create space';
+      _setCreateError(errorMessage);
+      toast.error('Failed to create space', errorMessage);
     } finally {
       _setIsCreatingSpace(false);
     }
@@ -294,15 +300,18 @@ export default function UnifiedSpacesPage() {
       queryClient.invalidateQueries({ queryKey: ["spaces"] });
       queryClient.invalidateQueries({ queryKey: ["my-spaces"] });
       
-      // Show success feedback - could add toast here
-      
+      // Show success toast
+      const spaceName = browseSpaces?.find(s => s.id === spaceId)?.name || 'the space';
+      toast.spaceJoined(spaceName);
       
     } catch (error) {
       console.error('Failed to join space:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to join space';
       _setJoinErrors(prev => ({
         ...prev,
-        [spaceId]: error instanceof Error ? error.message : 'Failed to join space'
+        [spaceId]: errorMessage
       }));
+      toast.error('Failed to join space', errorMessage);
     } finally {
       setJoiningSpaces(prev => {
         const updated = new Set(prev);
@@ -433,7 +442,7 @@ export default function UnifiedSpacesPage() {
 
             {/* My Spaces Tab Navigation */}
             <div className="flex border-b border-[var(--hive-white)]/10 mb-8">
-              {mySpaceTabs.map((tab) => {
+              {mySpaceTabs.map((tab: any) => {
                 const Icon = tab.icon;
                 return (
                   <button
@@ -476,7 +485,7 @@ export default function UnifiedSpacesPage() {
                   type="text"
                   placeholder="Search spaces, descriptions, or keywords..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e: any) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg text-[var(--hive-text-inverse)] placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none"
                 />
               </div>
@@ -485,7 +494,7 @@ export default function UnifiedSpacesPage() {
                 <ArrowUpDown className="h-4 w-4 text-neutral-400 mx-2" />
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
+                  onChange={(e: any) => setSortBy(e.target.value as any)}
                   className="bg-transparent text-[var(--hive-text-inverse)] text-sm focus:outline-none border-none"
                 >
                   <option value="popular" className="bg-neutral-950">Popular</option>
@@ -517,7 +526,7 @@ export default function UnifiedSpacesPage() {
 
             {/* Category Filter Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mb-8">
-              {spaceTypeFilters.map((filterOption) => (
+              {spaceTypeFilters.map((filterOption: any) => (
                 <Button
                   key={filterOption.id}
                   variant="ghost"

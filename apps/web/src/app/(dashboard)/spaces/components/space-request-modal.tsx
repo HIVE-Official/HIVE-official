@@ -206,7 +206,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                 {/* Progress Indicator */}
                 <div className="flex items-center justify-center mb-8">
                   <div className="flex items-center gap-2">
-                    {[1, 2, 3].map((stepNum) => (
+                    {[1, 2, 3].map((stepNum: any) => (
                       <div key={stepNum} className="flex items-center">
                         <div className={`h-8 w-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
                           step >= stepNum 
@@ -242,7 +242,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
 
                     <RadioGroup value={selectedCategory} onValueChange={setSelectedCategory}>
                       <div className="grid gap-4">
-                        {SPACE_CATEGORIES.map((category) => {
+                        {SPACE_CATEGORIES.map((category: any) => {
                           const IconComponent = category.icon;
                           return (
                             <div key={category.id}>
@@ -330,7 +330,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                         label="Space Name"
                         placeholder="Enter the name of your space"
                         value={formData.name}
-                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        onChange={(e: any) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                         required
                       />
 
@@ -338,13 +338,13 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                         <Label className="text-sm font-medium mb-2 block">Space Type</Label>
                         <Select 
                           value={formData.type} 
-                          onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
+                          onValueChange={(value: any) => setFormData(prev => ({ ...prev, type: value }))}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select space type" />
                           </SelectTrigger>
                           <SelectContent>
-                            {availableTypes.map((type) => (
+                            {availableTypes.map((type: any) => (
                               <SelectItem key={type.value} value={type.value}>
                                 {type.label}
                               </SelectItem>
@@ -358,7 +358,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                         <Textarea
                           placeholder="Describe the purpose and goals of your space"
                           value={formData.description}
-                          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                          onChange={(e: any) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                           rows={3}
                         />
                       </div>
@@ -367,7 +367,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                         label="Expected Members"
                         placeholder="How many members do you expect to join?"
                         value={formData.expectedMembers}
-                        onChange={(e) => setFormData(prev => ({ ...prev, expectedMembers: e.target.value }))}
+                        onChange={(e: any) => setFormData(prev => ({ ...prev, expectedMembers: e.target.value }))}
                       />
 
                       <FormField
@@ -375,7 +375,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                         type="email"
                         placeholder="your.email@buffalo.edu"
                         value={formData.contactEmail}
-                        onChange={(e) => setFormData(prev => ({ ...prev, contactEmail: e.target.value }))}
+                        onChange={(e: any) => setFormData(prev => ({ ...prev, contactEmail: e.target.value }))}
                         required
                       />
                     </div>
@@ -419,7 +419,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                         <Textarea
                           placeholder="Explain why this space is needed and how it will benefit the UB community"
                           value={formData.justification}
-                          onChange={(e) => setFormData(prev => ({ ...prev, justification: e.target.value }))}
+                          onChange={(e: any) => setFormData(prev => ({ ...prev, justification: e.target.value }))}
                           rows={3}
                         />
                       </div>
@@ -431,7 +431,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                         <Textarea
                           placeholder="Describe your qualifications to lead this space"
                           value={formData.leadershipQualification}
-                          onChange={(e) => setFormData(prev => ({ ...prev, leadershipQualification: e.target.value }))}
+                          onChange={(e: any) => setFormData(prev => ({ ...prev, leadershipQualification: e.target.value }))}
                           rows={2}
                         />
                       </div>
@@ -447,7 +447,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
                             <input
                               type="file"
                               accept=".pdf,.doc,.docx,.jpg,.png"
-                              onChange={(e) => setFormData(prev => ({ 
+                              onChange={(e: any) => setFormData(prev => ({ 
                                 ...prev, 
                                 verificationDocument: e.target.files?.[0] || null 
                               }))}

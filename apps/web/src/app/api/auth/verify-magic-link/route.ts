@@ -236,10 +236,10 @@ async function validateMagicLinkToken(token: string, email: string): Promise<any
     
     // Check if token has expired
     const expiresAt = tokenData?.expiresAt;
-    if (expiresAt && expiresAt.toDate() < new Date()) {
+    if (expiresAt && (expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt)) < new Date()) {
       console.log('❌ Magic link token expired', { 
         tokenId: `${token.substring(0, 8)}...`,
-        expiredAt: expiresAt.toDate()
+        expiredAt: (expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt))
       });
       // Delete expired token
       await tokenDoc.ref.delete();

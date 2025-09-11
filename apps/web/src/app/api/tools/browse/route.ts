@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
     
     // Process tools and enrich with user info
     const tools = await Promise.all(
-      snapshot.docs.map(async (doc) => {
+      snapshot.docs.map(async (doc: any) => {
         const toolData = doc.data();
         
         // Get creator info

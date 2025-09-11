@@ -99,7 +99,7 @@ describe('CampusActivityFeed', () => {
   });
 
   it('calls onActivityClick when activity is clicked', () => {
-    const onActivityClick = jest.fn();
+    const onActivityClick = (() => {});
     render(<CampusActivityFeed activities={mockActivities} onActivityClick={onActivityClick} />);
     
     fireEvent.click(screen.getByText('Midterm Exam Schedule Released'));
@@ -107,7 +107,7 @@ describe('CampusActivityFeed', () => {
   });
 
   it('calls onViewAll when view all button is clicked', () => {
-    const onViewAll = jest.fn();
+    const onViewAll = (() => {});
     render(<CampusActivityFeed activities={mockActivities} onViewAll={onViewAll} />);
     
     fireEvent.click(screen.getByText('View All'));

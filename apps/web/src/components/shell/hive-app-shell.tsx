@@ -140,11 +140,14 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)]" style={{ fontFamily: "'Geist Sans', system-ui, sans-serif" }}>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col border-r border-[var(--hive-white)]/5 bg-gradient-to-b from-[var(--hive-background-primary)] to-[#0F0F10]">
+      <aside 
+        className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col border-r border-[var(--hive-white)]/5 bg-gradient-to-b from-[var(--hive-background-primary)] to-[#0F0F10]"
+        role="navigation"
+        aria-label="Main navigation">
         <div className="flex flex-1 flex-col overflow-y-auto">
           {/* Logo */}
           <div className="flex h-20 items-center gap-3 px-6 border-b border-[var(--hive-white)]/5 bg-[var(--hive-black)]/30">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3" role="banner">
               {/* Animated HIVE Logo */}
               <div className="relative">
                 <div className="absolute inset-0 bg-[var(--hive-gold)] rounded-xl blur-xl opacity-30 animate-pulse" />
@@ -195,8 +198,8 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Main Navigation */}
-          <nav className="flex-1 px-3 py-4 space-y-1">
-            {mainNavItems.map((item) => {
+          <nav className="flex-1 px-3 py-4 space-y-1" aria-label="Main menu">
+            {mainNavItems.map((item: any) => {
               const Icon = item.icon;
               const isActive = isActiveRoute(item.href);
               
@@ -204,6 +207,8 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-label={item.description || item.label}
+                  aria-current={isActive ? 'page' : undefined}
                   className={cn(
                     "group relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all duration-200",
                     "hover:bg-[var(--hive-white)]/5",
@@ -251,7 +256,7 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
               <Zap className="h-3 w-3 text-[var(--hive-gold)]" />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {quickActions.map((item) => {
+              {quickActions.map((item: any) => {
                 const Icon = item.icon;
                 const isActive = isActiveRoute(item.href);
                 
@@ -259,6 +264,8 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-label={item.label}
+                    aria-current={isActive ? 'page' : undefined}
                     className={cn(
                       "group relative flex flex-col items-center gap-2 rounded-lg px-3 py-3 transition-all",
                       "hover:bg-[var(--hive-white)]/5 hover:scale-105",
@@ -318,6 +325,8 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] transition-colors"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -328,7 +337,10 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-          <nav className="fixed top-0 left-0 bottom-0 w-72 bg-gradient-to-b from-[var(--hive-background-primary)] to-[#0F0F10] border-r border-[var(--hive-white)]/5">
+          <nav 
+            className="fixed top-0 left-0 bottom-0 w-72 bg-gradient-to-b from-[var(--hive-background-primary)] to-[#0F0F10] border-r border-[var(--hive-white)]/5"
+            role="navigation"
+            aria-label="Mobile navigation">
             {/* Mobile menu content - similar structure to desktop */}
             <div className="flex h-16 items-center justify-between px-4 border-b border-[var(--hive-white)]/5">
               <div className="flex items-center gap-2">
@@ -374,7 +386,7 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
             {/* Mobile Nav Items */}
             <div className="px-3 py-4">
               <div className="space-y-1">
-                {mainNavItems.map((item) => {
+                {mainNavItems.map((item: any) => {
                   const Icon = item.icon;
                   const isActive = isActiveRoute(item.href);
                   
@@ -410,7 +422,7 @@ export function HiveAppShell({ children }: { children: React.ReactNode }) {
                 Quick Actions
               </p>
               <div className="grid grid-cols-2 gap-3">
-                {quickActions.map((item) => {
+                {quickActions.map((item: any) => {
                   const Icon = item.icon;
                   
                   return (

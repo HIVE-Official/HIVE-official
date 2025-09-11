@@ -103,7 +103,7 @@ export const Default: Story = {
     participantCount: 1247,
     onClick: action('ritual-started'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -671,7 +671,7 @@ export const Playground: Story = {
     participantCount: 1247,
     onClick: action('playground-ritual'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

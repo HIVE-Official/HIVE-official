@@ -10,8 +10,8 @@ jest.mock('../../components/framer-motion-proxy', () => ({
 }));
 
 // Mock window.addEventListener
-const mockAddEventListener = jest.fn();
-const mockRemoveEventListener = jest.fn();
+const mockAddEventListener = (() => {});
+const mockRemoveEventListener = (() => {});
 
 Object.defineProperty(window, 'addEventListener', {
   value: mockAddEventListener,
@@ -160,10 +160,10 @@ describe('ProfilePageTemplate', () => {
 
   it('handles navigation callbacks correctly', () => {
     const mockCallbacks = {
-      onNavigationClick: jest.fn(),
-      onNotificationsClick: jest.fn(),
-      onUserMenuClick: jest.fn(),
-      onLogoClick: jest.fn(),
+      onNavigationClick: (() => {}),
+      onNotificationsClick: (() => {}),
+      onUserMenuClick: (() => {}),
+      onLogoClick: (() => {}),
     };
 
     render(<ProfilePageTemplate {...defaultProps} {...mockCallbacks} />);
@@ -176,10 +176,10 @@ describe('ProfilePageTemplate', () => {
 
   it('handles profile dashboard callbacks correctly', () => {
     const mockCallbacks = {
-      onEditProfile: jest.fn(),
-      onSpaceClick: jest.fn(),
-      onActivityClick: jest.fn(),
-      onToolClick: jest.fn(),
+      onEditProfile: (() => {}),
+      onSpaceClick: (() => {}),
+      onActivityClick: (() => {}),
+      onToolClick: (() => {}),
     };
 
     render(<ProfilePageTemplate {...defaultProps} {...mockCallbacks} />);

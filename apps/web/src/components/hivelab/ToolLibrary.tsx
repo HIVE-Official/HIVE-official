@@ -249,7 +249,7 @@ export function ToolLibrary({
                 </div>
               </div>
               <button
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   handleToggleFavorite(tool.id);
                 }}
@@ -292,7 +292,7 @@ export function ToolLibrary({
             {/* Actions */}
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   onLoadTool(tool);
                 }}
@@ -301,7 +301,7 @@ export function ToolLibrary({
                 Open
               </button>
               <button
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   onDuplicateTool(tool.id);
                 }}
@@ -310,7 +310,7 @@ export function ToolLibrary({
                 <Copy className="h-3 w-3" />
               </button>
               <button
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   handleDeleteTool(tool.id);
                 }}
@@ -351,7 +351,7 @@ export function ToolLibrary({
 
           <div className="flex items-center gap-1">
             <button
-              onClick={(e) => {
+              onClick={(e: any) => {
                 e.stopPropagation();
                 onDuplicateTool(tool.id);
               }}
@@ -360,7 +360,7 @@ export function ToolLibrary({
               <Copy className="h-3 w-3" />
             </button>
             <button
-              onClick={(e) => {
+              onClick={(e: any) => {
                 e.stopPropagation();
                 handleDeleteTool(tool.id);
               }}
@@ -405,7 +405,7 @@ export function ToolLibrary({
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             placeholder="Search tools..."
             className="w-full pl-10 pr-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gray-700"
           />
@@ -424,7 +424,7 @@ export function ToolLibrary({
                 <span className="text-xs text-gray-500">Sort by:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
+                  onChange={(e: any) => setSortBy(e.target.value as any)}
                   className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-xs text-white focus:outline-none focus:border-gray-700"
                 >
                   <option value="date">Date</option>

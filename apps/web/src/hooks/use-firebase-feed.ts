@@ -89,7 +89,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
     unsubscribeRef.current = feedService.subscribeFeedUpdates(
       user.id,
       options,
-      (posts) => {
+      (posts: any) => {
         setState(prev => ({
           ...prev,
           posts: posts,

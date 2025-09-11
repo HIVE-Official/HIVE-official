@@ -182,7 +182,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
             : "Search for communities you want to help build..."
           }
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: any) => setSearchTerm(e.target.value)}
           leftIcon={<Search className="w-4 h-4" />}
           variant="premium"
           size="lg"

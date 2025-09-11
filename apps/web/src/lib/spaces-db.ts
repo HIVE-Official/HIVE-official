@@ -306,7 +306,7 @@ export async function addSpaceMember(
     };
     
     // Transaction to update member count
-    await dbAdmin.runTransaction(async (transaction) => {
+    await dbAdmin.runTransaction(async (transaction: any) => {
       const spaceRef = dbAdmin.collection('spaces').doc(spaceId);
       const spaceDoc = await transaction.get(spaceRef);
       
@@ -339,7 +339,7 @@ export async function removeSpaceMember(spaceId: string, userId: string): Promis
     const memberId = `${spaceId}_${userId}`;
     
     // Transaction to update member count
-    await dbAdmin.runTransaction(async (transaction) => {
+    await dbAdmin.runTransaction(async (transaction: any) => {
       const memberRef = dbAdmin.collection('spaceMembers').doc(memberId);
       const memberDoc = await transaction.get(memberRef);
       
@@ -417,7 +417,7 @@ export async function createSpacePost(
     };
     
     // Transaction to update post count
-    const postRef = await dbAdmin.runTransaction(async (transaction) => {
+    const postRef = await dbAdmin.runTransaction(async (transaction: any) => {
       const spaceRef = dbAdmin.collection('spaces').doc(spaceId);
       const spaceDoc = await transaction.get(spaceRef);
       
@@ -488,7 +488,7 @@ export async function createSpaceEvent(
     };
     
     // Transaction to update event count
-    const eventRef = await dbAdmin.runTransaction(async (transaction) => {
+    const eventRef = await dbAdmin.runTransaction(async (transaction: any) => {
       const spaceRef = dbAdmin.collection('spaces').doc(spaceId);
       const spaceDoc = await transaction.get(spaceRef);
       

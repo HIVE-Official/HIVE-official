@@ -540,7 +540,7 @@ class WebSocketClient extends EventTarget {
       this.eventListeners.set(event, []);
     }
     this.eventListeners.get(event)!.push(callback);
-    this.addEventListener(event, callback as EventListener);
+    this.addEventListener(event, callback as EventListenerOrEventListenerObject);
   }
 
   off(event: string, callback: Function): void {
@@ -549,7 +549,7 @@ class WebSocketClient extends EventTarget {
       const index = listeners.indexOf(callback);
       if (index > -1) {
         listeners.splice(index, 1);
-        this.removeEventListener(event, callback as EventListener);
+        this.removeEventListener(event, callback as EventListenerOrEventListenerObject);
       }
     }
   }

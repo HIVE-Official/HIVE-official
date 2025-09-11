@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef, useEffect } from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { RefreshCw, ChevronDown } from 'lucide-react';
 export function PullToRefresh({ children, onRefresh, refreshThreshold = 80, disabled = false, className }) {
     const [pullDistance, setPullDistance] = useState(0);

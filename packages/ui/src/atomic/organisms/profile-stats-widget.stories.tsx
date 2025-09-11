@@ -292,7 +292,7 @@ export const Default: Story = {
     onExportData: action('export-data'),
     onViewInsights: action('view-insights'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -1117,7 +1117,7 @@ export const Playground: Story = {
     onExportData: action('playground-export'),
     onViewInsights: action('playground-insights'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

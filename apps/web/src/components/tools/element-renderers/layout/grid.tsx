@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Grid3x3 } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function GridRenderer({
   element,

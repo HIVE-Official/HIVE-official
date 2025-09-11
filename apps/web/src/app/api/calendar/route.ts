@@ -122,95 +122,17 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     const userId = authContext.userId;
     
-    // Try to fetch real calendar events from Firebase
-    try {
-      const realEvents = await fetchUserCalendarEvents(userId);
-      if (realEvents.length > 0) {
-        return NextResponse.json({
-          success: true,
-          events: realEvents,
-          totalCount: realEvents.length,
-          userId,
-          message: 'Calendar events retrieved successfully'
-        });
-      }
-    } catch (error) {
-      logger.error('Failed to fetch real calendar events, using mock data');
-    }
-
-    // For development mode or fallback, return mock calendar events
-    if ((userId === 'test-user' || userId === 'dev_user_123') && process.env.NODE_ENV !== 'production') {
-      const mockEvents: CalendarEvent[] = [
-        {
-          id: 'event_1',
-          title: 'Data Structures Study Session',
-          description: 'Review binary trees and graph algorithms',
-          startDate: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString(), // 3 hours from now
-          endDate: new Date(Date.now() + 5 * 60 * 60 * 1000).toISOString(), // 5 hours from now
-          location: 'Library Study Room 3',
-          isAllDay: false,
-          type: 'space',
-          source: 'CS Study Group',
-          spaceId: 'cs_study_group',
-          spaceName: 'CS Study Group',
-          canEdit: false,
-          eventType: 'study',
-          organizerName: 'Study Group Admin'
-        },
-        {
-          id: 'event_2',
-          title: 'Math Homework Due',
-          description: 'Calculus problem set 7',
-          startDate: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
-          endDate: new Date(Date.now() + 86400000 + 60*60*1000).toISOString(), // Tomorrow + 1 hour
-          isAllDay: false,
-          type: 'personal',
-          canEdit: true,
-          eventType: 'assignment'
-        },
-        {
-          id: 'event_3',
-          title: 'Debate Club Meeting',
-          description: 'Weekly debate practice session',
-          startDate: new Date(Date.now() + 2 * 86400000).toISOString(), // Day after tomorrow
-          endDate: new Date(Date.now() + 2 * 86400000 + 2*60*60*1000).toISOString(), // +2 hours
-          location: 'Student Center Room 204',
-          isAllDay: false,
-          type: 'space',
-          source: 'Debate Club',
-          spaceId: 'debate_club',
-          spaceName: 'Debate Club',
-          canEdit: false,
-          eventType: 'meeting',
-          organizerName: 'Debate Club President'
-        }
-      ];
-      
-      const { searchParams } = new URL(request.url);
-      const startDate = searchParams.get('startDate');
-      const endDate = searchParams.get('endDate');
-      
-      // Filter events by date range if provided
-      let filteredEvents = mockEvents;
-      if (startDate) {
-        filteredEvents = filteredEvents.filter(event => new Date(event.startDate) >= new Date(startDate));
-      }
-      if (endDate) {
-        filteredEvents = filteredEvents.filter(event => new Date(event.endDate) <= new Date(endDate));
-      }
-      
-      logger.info('Development mode: Returning mock calendar events', { 
-        eventCount: filteredEvents.length, 
-        endpoint: '/api/calendar' 
-      });
-      
-      return NextResponse.json({
-        success: true,
-        events: filteredEvents,
-        message: 'Calendar events retrieved successfully (development mode)',
-        // SECURITY: Development mode removed for production safety
-      });
-    }
+    // Always fetch real calendar events from Firebase - no mock data fallback
+    const realEvents = await fetchUserCalendarEvents(userId);
+    
+    // Return events even if empty array - this is valid state
+    return NextResponse.json({
+      success: true,
+      events: realEvents,
+      totalCount: realEvents.length,
+      userId,
+      message: 'Calendar events retrieved successfully'
+    });
 
     const { searchParams } = new URL(request.url);
     const startDate = searchParams.get('startDate');
@@ -282,7 +204,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch calendar events", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, { 
-  allowDevelopmentBypass: true,
+  allowDevelopmentBypass: false,
   operation: 'get_calendar_events' 
 });
 
@@ -333,6 +255,6 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     return NextResponse.json(ApiResponseHelper.error("Failed to create personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, { 
-  allowDevelopmentBypass: true,
+  allowDevelopmentBypass: false,
   operation: 'create_calendar_event' 
 });

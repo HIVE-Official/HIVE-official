@@ -105,113 +105,8 @@ export function DashboardMain() {
       try {
         setIsLoading(true);
         setError(null);
-
-        // In development, use mock data while APIs are being integrated
-        /* Removed mock data
-        const mockData: DashboardData = {
-          user: {
-            id: user?.uid || 'mock_user',
-            name: user?.displayName || 'UB Student',
-            handle: user?.email?.split('@')[0] || 'student',
-            avatar: user?.photoURL || undefined,
-            spaces: 5,
-            tools: 3,
-            reputation: 1250
-          },
-          spaces: [
-            {
-              id: 'cs250-study',
-              name: 'CS 250 Study Group',
-              description: 'Collaborative learning for Data Structures',
-              memberCount: 24,
-              unreadCount: 3,
-              lastActivity: '2 hours ago',
-              category: 'Academic',
-              isPrivate: false
-            },
-            {
-              id: 'ellicott-floor',
-              name: 'Ellicott 3rd Floor',
-              description: 'Floor community and events',
-              memberCount: 18,
-              unreadCount: 1,
-              lastActivity: '4 hours ago',
-              category: 'Residential',
-              isPrivate: true
-            },
-            {
-              id: 'ub-engineering',
-              name: 'UB Engineering',
-              description: 'School of Engineering community',
-              memberCount: 156,
-              unreadCount: 0,
-              lastActivity: '1 day ago',
-              category: 'Academic',
-              isPrivate: false
-            }
-          ],
-          recentActivity: [
-            {
-              id: '1',
-              type: 'post',
-              title: 'Study session for midterm',
-              description: 'Tomorrow at Lockwood Library, 2pm',
-              timestamp: '1 hour ago',
-              spaceName: 'CS 250 Study Group',
-              spaceId: 'cs250-study'
-            },
-            {
-              id: '2',
-              type: 'tool',
-              title: 'Built GPA Calculator',
-              description: 'Tool to help track semester progress',
-              timestamp: '3 hours ago'
-            },
-            {
-              id: '3',
-              type: 'join',
-              title: 'Joined UB Engineering',
-              description: 'Connected with 156 engineering students',
-              timestamp: '1 day ago',
-              spaceName: 'UB Engineering',
-              spaceId: 'ub-engineering'
-            }
-          ],
-          upcomingEvents: [
-            {
-              id: 'evt1',
-              title: 'CS Study Session',
-              time: 'Tomorrow at 2:00 PM',
-              spaceName: 'CS 250 Study Group',
-              spaceId: 'cs250-study'
-            },
-            {
-              id: 'evt2',
-              title: 'Floor Movie Night',
-              time: 'Friday at 8:00 PM',
-              spaceName: 'Ellicott 3rd Floor',
-              spaceId: 'ellicott-floor'
-            }
-          ],
-          notifications: [
-            {
-              id: 'n1',
-              type: 'mention',
-              title: 'Mentioned in CS study group',
-              timestamp: '30 minutes ago',
-              unread: true
-            },
-            {
-              id: 'n2',
-              type: 'invite',
-              title: 'Invited to Math Tutoring',
-              timestamp: '2 hours ago',
-              unread: true
-            }
-          ]
-        }; */
         
-        // Fetch real data from API
+        // Fetch real data from API - using empty data structure for now
         const emptyData: DashboardData = {
           user: {
             id: user?.uid || '',
@@ -229,10 +124,8 @@ export function DashboardMain() {
         };
 
         // TODO: Replace with actual API calls
-        // const response = await fetch('/api/profile/dashboard');
-        const data = await response.json();
-        
-        setDashboardData(data as DashboardData);
+        // For now, use empty data structure
+        setDashboardData(emptyData);
         setIsLoading(false);
       } catch (err) {
         console.error('Failed to load dashboard:', err);

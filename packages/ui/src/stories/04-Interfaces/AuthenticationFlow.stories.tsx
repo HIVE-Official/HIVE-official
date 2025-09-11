@@ -273,7 +273,7 @@ export const SchoolSelection: Story = {
           
           {/* School List */}
           <div className="space-y-2 max-h-60 overflow-y-auto">
-            {filteredSchools.map((school) => (
+            {filteredSchools.map((school: any) => (
               <SchoolCard
                 key={school.id}
                 school={school}
@@ -411,7 +411,7 @@ export const EmailConfirmation: Story = {
     // Countdown timer
     React.useEffect(() => {
       const timer = setInterval(() => {
-        setTimeLeft((prev) => {
+        setTimeLeft((prev: any) => {
           if (prev <= 1) {
             setCanResend(true);
             return 0;

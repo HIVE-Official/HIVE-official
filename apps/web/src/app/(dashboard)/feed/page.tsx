@@ -214,7 +214,7 @@ function TrendingSidebar() {
         </div>
         
         <div className="space-y-3">
-          {suggestedSpaces.map((space) => (
+          {suggestedSpaces.map((space: any) => (
             <div key={space.name} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="h-8 w-8 rounded-lg bg-[var(--hive-white)]/[0.05] flex items-center justify-center">
@@ -569,7 +569,7 @@ export default function FeedPageV2() {
     if (!loadMoreRef.current || !activeFeed.hasMore || activeFeed.isLoading) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
+      (entries: any) => {
         if (entries[0].isIntersecting) {
           activeFeed.loadMore();
         }
@@ -629,7 +629,7 @@ export default function FeedPageV2() {
               {user?.id && (
                 <FeedNotifications 
                   userId={user.id}
-                  onNotificationClick={(notification) => {
+                  onNotificationClick={(notification: any) => {
                     console.log('Notification clicked:', notification);
                   }}
                 />
@@ -639,7 +639,7 @@ export default function FeedPageV2() {
               {user?.id && (
                 <FeedPreferencesButton
                   userId={user.id}
-                  onSettingsChange={(settings) => {
+                  onSettingsChange={(settings: any) => {
                     console.log('Settings changed:', settings);
                     refresh();
                   }}
@@ -660,10 +660,10 @@ export default function FeedPageV2() {
               <RealTimeFeedManager
                 userId={user.id}
                 userSpaces={userSpaces}
-                onNewItems={(count) => {
+                onNewItems={(count: any) => {
                   console.log(`${count} new items available`);
                 }}
-                onItemClick={(item) => {
+                onItemClick={(item: any) => {
                   console.log('Feed item clicked:', item);
                 }}
                 className="mb-4"
@@ -671,7 +671,7 @@ export default function FeedPageV2() {
             )}
             {/* Feed Type Selector */}
             <div className="flex items-center gap-2 p-1 bg-[var(--hive-white)]/[0.03] backdrop-blur-sm border border-[var(--hive-white)]/[0.08] rounded-lg">
-              {feedFilters.map((filter) => {
+              {feedFilters.map((filter: any) => {
                 const Icon = filter.icon;
                 const isActive = feedType === filter.value;
                 return (
@@ -734,7 +734,7 @@ export default function FeedPageV2() {
             ) : (
               <AnimatePresence mode="popLayout">
                 <div className="space-y-4">
-                  {activeFeed.posts.map((post) => (
+                  {activeFeed.posts.map((post: any) => (
                     <PostCard
                       key={post.id}
                       post={post}
@@ -767,7 +767,7 @@ export default function FeedPageV2() {
               <CrossSpaceDiscovery
                 userId={user.id}
                 currentSpaceId={userSpaces[0]}
-                onItemClick={(item) => {
+                onItemClick={(item: any) => {
                   console.log('Discovery item clicked:', item);
                 }}
                 className="mb-6"

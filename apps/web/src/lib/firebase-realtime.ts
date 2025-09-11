@@ -344,7 +344,7 @@ export class FirebaseRealtimeService {
     
     const listener = onValue(channelRef, (snapshot: DataSnapshot) => {
       const messages: RealtimeMessage[] = [];
-      snapshot.forEach((childSnapshot) => {
+      snapshot.forEach((childSnapshot: any) => {
         messages.push(childSnapshot.val());
       });
       
@@ -380,7 +380,7 @@ export class FirebaseRealtimeService {
     
     const listener = onValue(chatRef, (snapshot: DataSnapshot) => {
       const messages: ChatMessage[] = [];
-      snapshot.forEach((childSnapshot) => {
+      snapshot.forEach((childSnapshot: any) => {
         messages.push(childSnapshot.val());
       });
       
@@ -416,7 +416,7 @@ export class FirebaseRealtimeService {
     
     const listener = onValue(presenceRef, (snapshot: DataSnapshot) => {
       const allPresence: Record<string, PresenceData> = {};
-      snapshot.forEach((childSnapshot) => {
+      snapshot.forEach((childSnapshot: any) => {
         const presenceData = childSnapshot.val();
         if (presenceData.currentSpace === spaceId) {
           allPresence[childSnapshot.key!] = presenceData;
@@ -452,7 +452,7 @@ export class FirebaseRealtimeService {
     
     const listener = onValue(typingRef, (snapshot: DataSnapshot) => {
       const typing: Record<string, TypingIndicator> = {};
-      snapshot.forEach((childSnapshot) => {
+      snapshot.forEach((childSnapshot: any) => {
         typing[childSnapshot.key!] = childSnapshot.val();
       });
       
@@ -489,7 +489,7 @@ export class FirebaseRealtimeService {
       return new Promise((resolve, reject) => {
         onValue(messagesRef, (snapshot: DataSnapshot) => {
           const messages: RealtimeMessage[] = [];
-          snapshot.forEach((childSnapshot) => {
+          snapshot.forEach((childSnapshot: any) => {
             messages.push(childSnapshot.val());
           });
           

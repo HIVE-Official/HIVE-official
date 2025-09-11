@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const logoVariants: (props?: ({
-    size?: "xs" | "sm" | "default" | "md" | "lg" | "xl" | "2xl" | "3xl" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | "xs" | "md" | "2xl" | "3xl" | null | undefined;
     color?: "auto" | "gold" | "black" | "white" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveLogoProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'>, VariantProps<typeof logoVariants> {
@@ -14,7 +14,7 @@ export interface HiveLogoProps extends Omit<React.HTMLAttributes<HTMLDivElement>
 export declare const HiveLogo: React.ForwardRefExoticComponent<HiveLogoProps & React.RefAttributes<HTMLDivElement>>;
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Menu, X, Home, Search, Filter, Plus, Minus, Edit, Trash2, Save, Share2, Copy, Download, Upload, RefreshCw, Settings, MoreHorizontal, MoreVertical, Check, CheckCircle, XCircle, AlertTriangle, Info, AlertCircle, Loader2, Wifi, WifiOff, Signal, User, Users, Building, Calendar, Clock, MapPin, Bell, MessageCircle, Heart, Bookmark, Flag, Eye, EyeOff, Wrench, Hammer, Code, Palette, Layers, Grid3X3, GraduationCap, Book, School, Home as House, Users2, File, FileText, Image, Video, Music, Paperclip, ThumbsUp, ThumbsDown, Star, Send, Reply, Forward, Lock, Unlock, Shield, Key, type LucideIcon } from "lucide-react";
 declare const iconVariants: (props?: ({
-    size?: "xs" | "sm" | "default" | "md" | "lg" | "xl" | "2xl" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | "xs" | "md" | "2xl" | null | undefined;
     color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "disabled" | "current" | "brand" | "tertiary" | null | undefined;
     interactive?: boolean | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;

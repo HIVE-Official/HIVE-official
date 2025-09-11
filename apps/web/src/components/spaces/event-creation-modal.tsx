@@ -268,7 +268,7 @@ export function EventCreationModal({
                   Event Type *
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {eventTypes.map((type) => (
+                  {eventTypes.map((type: any) => (
                     <button
                       key={type.value}
                       type="button"

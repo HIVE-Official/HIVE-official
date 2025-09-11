@@ -104,11 +104,11 @@ export function RealTimeFeedManager({
 
       // Setup listeners for each query
       queries.forEach(({ query: q, type }) => {
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        const unsubscribe = onSnapshot(q, (snapshot: any) => {
           const newItems: FeedItem[] = [];
           let hasNewItems = false;
 
-          snapshot.docChanges().forEach((change) => {
+          snapshot.docChanges().forEach((change: any) => {
             if (change.type === 'added' || change.type === 'modified') {
               const data = change.doc.data();
               const itemId = `${type}-${change.doc.id}`;
@@ -184,14 +184,14 @@ export function RealTimeFeedManager({
   const determinePriority = (type: string, data: any): FeedItem['priority'] => {
     // Urgent: Coordinations happening soon, emergency announcements
     if (type === 'coordination' && data.startTime) {
-      const startTime = data.startTime.toDate();
+      const startTime = data.startTime?.toDate ? startTime.toDate() : new Date(startTime);
       const hoursUntil = (startTime.getTime() - Date.now()) / (1000 * 60 * 60);
       if (hoursUntil < 2) return 'urgent';
     }
 
     // High: Events today, trending posts, active rituals
     if (type === 'event' && data.startDate) {
-      const eventDate = data.startDate.toDate();
+      const eventDate = data.startDate?.toDate ? startDate.toDate() : new Date(startDate);
       const isToday = new Date().toDateString() === eventDate.toDateString();
       if (isToday) return 'high';
     }

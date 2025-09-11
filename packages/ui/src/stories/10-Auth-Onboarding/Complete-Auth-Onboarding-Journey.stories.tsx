@@ -328,8 +328,8 @@ export const IntegratedUserJourney: Story = {
       schoolId="ub-buffalo"
       schoolName="University of Buffalo"
       schoolDomain="buffalo.edu"
-      onAuthComplete={(user) => console.log('Auth completed:', user)}
-      onOnboardingComplete={(data) => console.log('Onboarding completed:', data)}
+      onAuthComplete={(user: any) => console.log('Auth completed:', user)}
+      onOnboardingComplete={(data: any) => console.log('Onboarding completed:', data)}
     />
   ),
   parameters: {

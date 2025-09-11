@@ -313,7 +313,7 @@ export function AchievementsSystem({ userId, className = '' }: AchievementsSyste
             type="text"
             placeholder="Search achievements..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-white/20"
           />
         </div>
@@ -333,7 +333,7 @@ export function AchievementsSystem({ userId, className = '' }: AchievementsSyste
           
           <select
             value={filterRarity}
-            onChange={(e) => setFilterRarity(e.target.value)}
+            onChange={(e: any) => setFilterRarity(e.target.value)}
             className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-white/20"
           >
             <option value="all">All Rarities</option>

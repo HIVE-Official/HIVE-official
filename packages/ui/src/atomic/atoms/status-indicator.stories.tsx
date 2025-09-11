@@ -805,7 +805,7 @@ export const Playground: Story = {
     animate: true,
     label: 'Campus Activity Status',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const alertVariants: (props?: ({
-    variant?: "error" | "success" | "warning" | "info" | "default" | "hive" | null | undefined;
-    size?: "sm" | "default" | "lg" | null | undefined;
+    variant?: "error" | "default" | "success" | "warning" | "info" | "hive" | null | undefined;
+    size?: "default" | "sm" | "lg" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof alertVariants> {
     dismissible?: boolean;

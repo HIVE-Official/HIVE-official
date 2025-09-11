@@ -492,7 +492,7 @@ export default function AdminDashboard() {
                     </div>
                   ) : (
                     <div className="grid gap-4">
-                      {featureFlags.map((flag) => (
+                      {featureFlags.map((flag: any) => (
                         <Card key={flag.id} className="border-l-4 border-l-blue-500">
                           <CardContent className="pt-6">
                             <div className="flex items-center justify-between">
@@ -522,7 +522,7 @@ export default function AdminDashboard() {
                                 <input
                                   type="checkbox"
                                   checked={flag.enabled}
-                                  onChange={(e) => toggleFeatureFlag(flag.id, e.target.checked)}
+                                  onChange={(e: any) => toggleFeatureFlag(flag.id, e.target.checked)}
                                   className="w-4 h-4 text-accent bg-background border-2 rounded border-border focus:ring-accent focus:ring-2"
                                 />
                               </div>

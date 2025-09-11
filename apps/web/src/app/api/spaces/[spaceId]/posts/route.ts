@@ -24,7 +24,7 @@ const db = dbAdmin;
 // Simple profanity check - in production, use a proper service
 const checkProfanity = (text: string): boolean => {
   const profanityWords = ["spam", "scam"]; // Minimal list for demo
-  return profanityWords.some((word) => text.toLowerCase().includes(word));
+  return profanityWords.some((word: any) => text.toLowerCase().includes(word));
 };
 
 // GET /api/spaces/[spaceId]/posts - Get posts for a space

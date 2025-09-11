@@ -68,7 +68,7 @@ export class MobilePerformanceManager {
     // Monitor long tasks
     if ('PerformanceObserver' in window) {
       try {
-        const longTaskObserver = new PerformanceObserver((list) => {
+        const longTaskObserver = new PerformanceObserver((list: any) => {
           for (const entry of list.getEntries()) {
             if (entry.duration > 50) { // Tasks longer than 50ms
               this.handleLongTask(entry);
@@ -83,7 +83,7 @@ export class MobilePerformanceManager {
 
       // Monitor memory usage
       try {
-        const memoryObserver = new PerformanceObserver((list) => {
+        const memoryObserver = new PerformanceObserver((list: any) => {
           for (const entry of list.getEntries()) {
             this.handleMemoryPressure(entry);
           }
@@ -198,7 +198,7 @@ export function useMobilePerformance() {
   useEffect(() => {
     let mounted = true;
 
-    performanceManager.initialize().then((initialMetrics) => {
+    performanceManager.initialize().then((initialMetrics: any) => {
       if (mounted) {
         setMetrics(initialMetrics);
         setIsInitialized(true);

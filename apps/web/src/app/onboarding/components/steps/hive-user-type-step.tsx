@@ -155,7 +155,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                     type="email"
                     placeholder="Enter your email address"
                     value={waitlistEmail}
-                    onChange={(e) => setWaitlistEmail(e.target.value)}
+                    onChange={(e: any) => setWaitlistEmail(e.target.value)}
                     variant="premium"
                     size="lg"
                     floatingLabel={false}

@@ -281,7 +281,7 @@ export const Default: Story = {
     onViewAllBuilds: action('view-all-builds'),
     onViewBuildLab: action('view-build-lab'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -1025,7 +1025,7 @@ export const Playground: Story = {
     onViewAllBuilds: action('playground-view-all'),
     onViewBuildLab: action('playground-view-lab'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -260,7 +260,7 @@ export const CompleteShowcase: Story = {
               label="Available Study Hours" 
               color="primary" 
               showValue
-              formatValue={(val) => `${val}:00`}
+              formatValue={(val: any) => `${val}:00`}
             />
             <RangeSlider 
               min={18} 
@@ -269,7 +269,7 @@ export const CompleteShowcase: Story = {
               label="Age Range for Events" 
               color="success" 
               showValue
-              formatValue={(val) => `${val} years`}
+              formatValue={(val: any) => `${val} years`}
             />
             <RangeSlider 
               min={0} 
@@ -278,7 +278,7 @@ export const CompleteShowcase: Story = {
               label="Budget Range (Monthly)" 
               color="gold" 
               showValue
-              formatValue={(val) => `$${val}`}
+              formatValue={(val: any) => `$${val}`}
             />
             <RangeSlider 
               min={0} 
@@ -288,7 +288,7 @@ export const CompleteShowcase: Story = {
               label="Target GPA Range" 
               color="emerald" 
               showValue
-              formatValue={(val) => val.toFixed(1)}
+              formatValue={(val: any) => val.toFixed(1)}
             />
           </div>
         </CardContent>
@@ -408,7 +408,7 @@ export const CompleteShowcase: Story = {
                   label="Study Session Duration" 
                   color="sapphire" 
                   showValue
-                  formatValue={(val) => `${val} hours`}
+                  formatValue={(val: any) => `${val} hours`}
                 />
                 <Slider 
                   min={0} 
@@ -418,7 +418,7 @@ export const CompleteShowcase: Story = {
                   label="Monthly Dining Budget" 
                   color="gold" 
                   showValue
-                  formatValue={(val) => `$${val}.00`}
+                  formatValue={(val: any) => `$${val}.00`}
                 />
                 <Slider 
                   min={0} 
@@ -427,7 +427,7 @@ export const CompleteShowcase: Story = {
                   label="Assignment Completion" 
                   color="success" 
                   showValue
-                  formatValue={(val) => `${val}% complete`}
+                  formatValue={(val: any) => `${val}% complete`}
                 />
               </div>
             </div>
@@ -493,7 +493,7 @@ export const CompleteShowcase: Story = {
                 step={0.1}
                 label="Current GPA" 
                 showValue
-                formatValue={(val) => val.toFixed(1)}
+                formatValue={(val: any) => val.toFixed(1)}
               />
             </div>
             <div className="space-y-4">
@@ -504,7 +504,7 @@ export const CompleteShowcase: Story = {
                 value={7} 
                 label="Stress Level" 
                 showValue
-                formatValue={(val) => `${val}/10`}
+                formatValue={(val: any) => `${val}/10`}
               />
             </div>
             <div className="space-y-4">
@@ -515,7 +515,7 @@ export const CompleteShowcase: Story = {
                 value={2} 
                 label="Assignment Overdue Count" 
                 showValue
-                formatValue={(val) => `${val} assignments`}
+                formatValue={(val: any) => `${val} assignments`}
               />
             </div>
           </div>
@@ -546,7 +546,7 @@ export const CompleteShowcase: Story = {
                 label="Preferred Class Start Time" 
                 color="primary" 
                 showValue
-                formatValue={(val) => `${val}:00 AM`}
+                formatValue={(val: any) => `${val}:00 AM`}
                 marks={{
                   8: '8 AM',
                   10: '10 AM',
@@ -565,7 +565,7 @@ export const CompleteShowcase: Story = {
                 label="Preferred Days (Monday=1, Sunday=7)" 
                 color="success" 
                 showValue
-                formatValue={(val) => {
+                formatValue={(val: any) => {
                   const days = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
                   return days[val];
                 }}
@@ -577,7 +577,7 @@ export const CompleteShowcase: Story = {
                 label="Maximum Credit Hours" 
                 color="warning" 
                 showValue
-                formatValue={(val) => `${val} credits`}
+                formatValue={(val: any) => `${val} credits`}
               />
             </div>
           </div>
@@ -593,7 +593,7 @@ export const CompleteShowcase: Story = {
                 label="Ideal Group Size" 
                 color="emerald" 
                 showValue
-                formatValue={(val) => `${val} students`}
+                formatValue={(val: any) => `${val} students`}
                 marks={{
                   2: '2',
                   3: '3',
@@ -612,7 +612,7 @@ export const CompleteShowcase: Story = {
                 label="Session Duration Range" 
                 color="sapphire" 
                 showValue
-                formatValue={(val) => `${Math.floor(val/60)}h ${val%60}m`}
+                formatValue={(val: any) => `${Math.floor(val/60)}h ${val%60}m`}
               />
               <Slider 
                 min={1} 
@@ -644,7 +644,7 @@ export const CompleteShowcase: Story = {
                 label="Monthly Dining Budget" 
                 color="gold" 
                 showValue
-                formatValue={(val) => `$${val}`}
+                formatValue={(val: any) => `$${val}`}
               />
               <RangeSlider 
                 min={8000} 
@@ -654,7 +654,7 @@ export const CompleteShowcase: Story = {
                 label="Annual Housing Budget" 
                 color="success" 
                 showValue
-                formatValue={(val) => `$${val.toLocaleString()}`}
+                formatValue={(val: any) => `$${val.toLocaleString()}`}
               />
               <Slider 
                 min={1} 
@@ -686,7 +686,7 @@ export const CompleteShowcase: Story = {
                 label="Current Semester GPA" 
                 color="emerald" 
                 showValue
-                formatValue={(val) => val.toFixed(1)}
+                formatValue={(val: any) => val.toFixed(1)}
               />
               <Slider 
                 min={2.0} 
@@ -696,7 +696,7 @@ export const CompleteShowcase: Story = {
                 label="Target Graduation GPA" 
                 color="primary" 
                 showValue
-                formatValue={(val) => val.toFixed(1)}
+                formatValue={(val: any) => val.toFixed(1)}
               />
               <RangeSlider 
                 min={0} 
@@ -705,7 +705,7 @@ export const CompleteShowcase: Story = {
                 label="Weekly Study Hours" 
                 color="sapphire" 
                 showValue
-                formatValue={(val) => `${val} hours`}
+                formatValue={(val: any) => `${val} hours`}
               />
               <Slider 
                 min={0} 
@@ -714,7 +714,7 @@ export const CompleteShowcase: Story = {
                 label="Course Completion Progress" 
                 color="success" 
                 showValue
-                formatValue={(val) => `${val}% complete`}
+                formatValue={(val: any) => `${val}% complete`}
               />
             </div>
           </div>
@@ -731,7 +731,7 @@ export const CompleteShowcase: Story = {
                 label="Expected Attendance" 
                 color="primary" 
                 showValue
-                formatValue={(val) => `${val} people`}
+                formatValue={(val: any) => `${val} people`}
               />
               <Slider 
                 min={0} 
@@ -741,7 +741,7 @@ export const CompleteShowcase: Story = {
                 label="Event Budget" 
                 color="gold" 
                 showValue
-                formatValue={(val) => `$${val}`}
+                formatValue={(val: any) => `$${val}`}
               />
               <RangeSlider 
                 min={18} 
@@ -750,7 +750,7 @@ export const CompleteShowcase: Story = {
                 label="Event Time Window" 
                 color="warning" 
                 showValue
-                formatValue={(val) => `${val}:00`}
+                formatValue={(val: any) => `${val}:00`}
               />
               <Slider 
                 min={1} 
@@ -811,7 +811,7 @@ export const CompleteShowcase: Story = {
                 label="Quiet Hours (No Notifications)" 
                 color="sapphire" 
                 showValue
-                formatValue={(val) => `${val}:00`}
+                formatValue={(val: any) => `${val}:00`}
               />
             </div>
           </div>
@@ -835,7 +835,7 @@ export const Playground: Story = {
     color: 'primary',
     range: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

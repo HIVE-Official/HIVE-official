@@ -372,7 +372,7 @@ export function SpaceEventCalendar({
         
         <div className="flex items-center space-x-3">
           <div className="flex items-center bg-zinc-800 rounded-lg p-1">
-            {['month', 'week', 'day', 'list'].map((mode) => (
+            {['month', 'week', 'day', 'list'].map((mode: any) => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode as any)}
@@ -406,7 +406,7 @@ export function SpaceEventCalendar({
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             placeholder="Search events..."
             className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
           />
@@ -414,7 +414,7 @@ export function SpaceEventCalendar({
         
         <select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={(e: any) => setTypeFilter(e.target.value)}
           className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Types</option>
@@ -427,7 +427,7 @@ export function SpaceEventCalendar({
         
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          onChange={(e: any) => setStatusFilter(e.target.value)}
           className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Status</option>
@@ -478,7 +478,7 @@ export function SpaceEventCalendar({
           {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-1">
             {/* Day Headers */}
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day: any) => (
               <div key={day} className="p-2 text-center text-sm font-medium text-zinc-400">
                 {day}
               </div>
@@ -725,7 +725,7 @@ export function SpaceEventCalendar({
                       <div>
                         <span className="text-sm text-zinc-400">Available Tools:</span>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {selectedEvent.spaceIntegration.spaceTools.map((tool) => (
+                          {selectedEvent.spaceIntegration.spaceTools.map((tool: any) => (
                             <Badge key={tool} variant="skill-tag" className="text-xs">
                               {tool}
                             </Badge>
@@ -745,7 +745,7 @@ export function SpaceEventCalendar({
                       <div>
                         <span className="text-sm text-zinc-400">Partner Spaces:</span>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {selectedEvent.spaceIntegration.partnerSpaces.map((space) => (
+                          {selectedEvent.spaceIntegration.partnerSpaces.map((space: any) => (
                             <Badge key={space} variant="building-tools" className="text-xs">
                               {space}
                             </Badge>

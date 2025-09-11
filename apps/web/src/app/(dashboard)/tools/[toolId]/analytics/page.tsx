@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Grid } from "@hive/ui";
 import { ArrowLeft, TrendingUp, Users, /* Eye as _Eye, */ Download, /* Calendar as _Calendar, BarChart3 as _BarChart3, PieChart as _PieChart, */ Activity, Star, Share, MessageSquare } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
+import { useQuery } from "@tanstack/react-query";
 
 interface AnalyticsData {
   overview: {
@@ -24,52 +25,40 @@ interface AnalyticsData {
   };
 }
 
-// Mock analytics data
-const MOCK_ANALYTICS: AnalyticsData = {
-  overview: {
-    totalUsage: 1247,
-    activeUsers: 342,
-    avgRating: 4.8,
-    downloads: 892
-  },
-  usage: {
-    daily: [
-      { date: '2024-01-15', usage: 45, users: 23 },
-      { date: '2024-01-16', usage: 52, users: 28 },
-      { date: '2024-01-17', usage: 38, users: 19 },
-      { date: '2024-01-18', usage: 61, users: 34 },
-      { date: '2024-01-19', usage: 73, users: 41 },
-      { date: '2024-01-20', usage: 58, users: 29 },
-      { date: '2024-01-21', usage: 42, users: 25 }
-    ],
-    spaces: [
-      { name: 'CS Majors', usage: 156, members: 234 },
-      { name: 'Student Government', usage: 89, members: 67 },
-      { name: 'Engineering Club', usage: 72, members: 145 },
-      { name: 'Study Groups', usage: 45, members: 89 },
-      { name: 'Greek Life', usage: 38, members: 123 }
-    ],
-    features: [
-      { feature: 'Poll Creation', usage: 456, percentage: 65 },
-      { feature: 'Vote Casting', usage: 378, percentage: 54 },
-      { feature: 'Results Viewing', usage: 289, percentage: 41 },
-      { feature: 'Share Poll', usage: 124, percentage: 18 }
-    ]
-  },
-  feedback: {
-    ratings: [
-      { rating: 5, count: 234 },
-      { rating: 4, count: 156 },
-      { rating: 3, count: 45 },
-      { rating: 2, count: 12 },
-      { rating: 1, count: 5 }
-    ],
-    comments: [
-      { user: 'Sarah M.', comment: 'Perfect for class polls! Easy to use and great results visualization.', rating: 5, date: '2024-01-20' },
-      { user: 'Alex K.', comment: 'Works well for our study group decisions. Would love more customization options.', rating: 4, date: '2024-01-19' },
-      { user: 'Jamie L.', comment: 'Simple and effective. Helps our organization make better decisions together.', rating: 5, date: '2024-01-18' }
-    ]
+// Fetch analytics data from Firebase via API
+const fetchToolAnalytics = async (toolId: string, timeRange: string): Promise<AnalyticsData> => {
+  const response = await fetch(`/api/tools/${toolId}/analytics?timeRange=${timeRange}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include'
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch analytics');
   }
+
+  const data = await response.json();
+  
+  // Transform API response to match AnalyticsData interface
+  return {
+    overview: {
+      totalUsage: data.overview?.totalUsage || 0,
+      activeUsers: data.overview?.activeUsers || 0,
+      avgRating: data.overview?.avgRating || 0,
+      downloads: data.overview?.downloads || 0
+    },
+    usage: {
+      daily: data.usage?.daily || [],
+      spaces: data.usage?.spaces || [],
+      features: data.usage?.features || []
+    },
+    feedback: {
+      ratings: data.feedback?.ratings || [],
+      comments: data.feedback?.comments || []
+    }
+  };
 };
 
 const MetricCard = ({ title, value, change, icon: Icon, format = 'number' }: {
@@ -143,7 +132,7 @@ const SimpleChart = ({ data, title, type: _type = 'bar' }: { // TODO: type param
   );
 };
 
-const FeedbackCard = ({ _comment }: { _comment: typeof MOCK_ANALYTICS.feedback.comments[0] }) => (
+const FeedbackCard = ({ _comment }: { _comment: { user: string; comment: string; rating: number; date: string } }) => (
   <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
@@ -166,12 +155,49 @@ export default function ToolAnalyticsPage() {
   const params = useParams();
   const router = useRouter();
   const [timeRange, setTimeRange] = useState('7d');
-  const [analytics] = useState<AnalyticsData>(MOCK_ANALYTICS);
   const flags = useFeatureFlags();
+  const toolId = params.toolId as string;
+
+  // Fetch real analytics data from Firebase
+  const { data: analytics, isLoading, error } = useQuery<AnalyticsData>({
+    queryKey: ['tool-analytics', toolId, timeRange],
+    queryFn: () => fetchToolAnalytics(toolId, timeRange),
+    enabled: !!toolId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 60 * 1000 // Refresh every minute
+  });
 
   useEffect(() => {
     flags.trackEvent('tools', 'view', { page: 'tool-analytics', toolId: params.toolId });
   }, [flags, params.toolId]);
+
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[var(--hive-background-primary)] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--hive-brand-secondary)] mx-auto mb-4"></div>
+          <p className="text-[var(--hive-text-muted)]">Loading analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error || !analytics) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[var(--hive-background-primary)] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">⚠️</div>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Failed to load analytics</h2>
+          <p className="text-[var(--hive-text-muted)] mb-4">Unable to fetch analytics data. Please try again later.</p>
+          <Button onClick={() => router.back()} variant="outline">
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const dailyUsageData = analytics.usage.daily.map(d => ({
     label: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
@@ -217,7 +243,7 @@ export default function ToolAnalyticsPage() {
             <div className="flex items-center gap-3">
               <select
                 value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value)}
+                onChange={(e: any) => setTimeRange(e.target.value)}
                 className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               >
                 <option value="7d">Last 7 days</option>

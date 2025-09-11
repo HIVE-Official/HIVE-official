@@ -175,7 +175,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
   elements: ${JSON.stringify(composition.elements, null, 2)},
   connections: ${JSON.stringify(composition.connections, null, 2)},
   layout: '${composition.layout}',
-  render: (props) => {
+  render: (props: any) => {
     // Tool rendering logic using element system
     return <ToolRuntime composition={this} {...props} />;
   }

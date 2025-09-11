@@ -8,6 +8,8 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   description?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'ghost';
+  onCheckedChange?: (checked: boolean) => void;
+  checked?: boolean;
 }
 
 const switchSizes = {
@@ -39,6 +41,8 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(({
   checked = false,
   disabled = false,
   className,
+  onCheckedChange,
+  onChange,
   ...props
 }, ref) => {
   const trackClasses = [
@@ -105,6 +109,10 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(({
           checked={checked}
           disabled={disabled}
           className="sr-only"
+          onChange={(e) => {
+            onChange?.(e);
+            onCheckedChange?.(e.target.checked);
+          }}
           {...props}
         />
         <span className={thumbClasses} />

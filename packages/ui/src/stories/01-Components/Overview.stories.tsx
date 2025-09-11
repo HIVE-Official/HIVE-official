@@ -191,7 +191,7 @@ export const ComponentShowcase: Story = {
               
               <TabsContent value="spaces" className="mt-6">
                 <div className="grid gap-3">
-                  {['CS Study Group', 'Engineering Lounge', 'Dorm Floor 3'].map((space) => (
+                  {['CS Study Group', 'Engineering Lounge', 'Dorm Floor 3'].map((space: any) => (
                     <div key={space} className="flex items-center justify-between p-3 border border-border rounded-lg">
                       <div>
                         <div className="font-medium text-white">{space}</div>

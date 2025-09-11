@@ -559,7 +559,7 @@ function SpacePreviewActivationFlow() {
 
             {/* Universal Surfaces Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {WIDGET_CONFIGS.map((widget) => (
+              {WIDGET_CONFIGS.map((widget: any) => (
                 <UniversalSurfaceCard key={widget.id} widget={widget} space={mockActiveSpace} />
               ))}
             </div>
@@ -708,11 +708,11 @@ function UniversalSurfaceCard({ widget, space }: { widget: any; space: any }) {
   
   return (
     <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: any) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
             e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: any) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
             e.currentTarget.style.boxShadow = 'none';
           }}>

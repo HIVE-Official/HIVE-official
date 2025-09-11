@@ -1,6 +1,6 @@
 import React from 'react';
 export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-    maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | 'none';
+    maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | 'full' | 'none' | string;
     padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     center?: boolean;
     fluid?: boolean;
@@ -8,6 +8,14 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
     variant?: 'default' | 'card' | 'panel' | 'section';
     gutter?: boolean;
     children: React.ReactNode;
+    title?: string;
+    subtitle?: string;
+    breadcrumbs?: Array<{
+        label: string;
+        href?: string;
+        icon?: React.ReactNode;
+    }>;
+    actions?: React.ReactNode;
 }
 export declare const Container: React.ForwardRefExoticComponent<ContainerProps & React.RefAttributes<HTMLDivElement>>;
 export declare const PageContainer: React.FC<Omit<ContainerProps, 'maxWidth' | 'gutter'>>;

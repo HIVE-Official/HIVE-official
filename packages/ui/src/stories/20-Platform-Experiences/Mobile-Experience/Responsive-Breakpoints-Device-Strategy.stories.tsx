@@ -274,7 +274,7 @@ const ResponsiveShowcase = () => {
               device === 'tablet' ? 'grid-cols-2' : 
               'grid-cols-3'
             }`}>
-              {[1, 2, device === 'desktop' ? 3 : null].filter(Boolean).map((i) => (
+              {[1, 2, device === 'desktop' ? 3 : null].filter(Boolean).map((i: any) => (
                 <div key={i} className="p-3 rounded-lg border" style={{ 
                   backgroundColor: 'var(--hive-background-secondary)',
                   borderColor: 'var(--hive-border-primary)'
@@ -297,7 +297,7 @@ const ResponsiveShowcase = () => {
             {/* Touch Target Visualization */}
             <div className="flex items-center justify-between pt-2">
               <div className="flex space-x-2">
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3].map((i: any) => (
                   <div 
                     key={i} 
                     className="rounded flex items-center justify-center text-xs font-medium"
@@ -375,7 +375,7 @@ const ResponsiveShowcase = () => {
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <div className="flex flex-wrap gap-3 mb-6">
-            {(['mobile', 'tablet', 'desktop'] as const).map((device) => {
+            {(['mobile', 'tablet', 'desktop'] as const).map((device: any) => {
               const isActive = activeDevice === device;
               const IconComponent = device === 'mobile' ? Smartphone : device === 'tablet' ? Tablet : Monitor;
               

@@ -128,7 +128,7 @@ export async function PATCH(
     }
 
     // Check if post is within edit window (15 minutes)
-    const createdAt = postData.createdAt.toDate();
+    const createdAt = postData.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt);
     const now = new Date();
     const editWindowMs = 15 * 60 * 1000; // 15 minutes
 

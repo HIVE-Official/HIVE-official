@@ -203,7 +203,7 @@ export const Default: Story = {
     onEditEvent: action('edit-event-clicked'),
     onUpdateAvailability: action('availability-updated'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)] max-w-md">
       <Text variant="body-md" color="primary" className="mb-4">
         HIVE profile calendar widget for University at Buffalo student scheduling:
@@ -962,7 +962,7 @@ export const Playground: Story = {
     onEditEvent: action('playground-edit-event'),
     onUpdateAvailability: action('playground-update-availability'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

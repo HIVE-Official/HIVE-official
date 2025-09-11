@@ -150,7 +150,7 @@ export const AllVariants: Story = {
                 Welcome back! Your campus has 247 active students across 12 spaces today.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3].map((i: any) => (
                   <div key={i} className="border border-white/10 rounded-xl p-4">
                     <h4 className="font-medium text-white mb-2">Space {i}</h4>
                     <p className="text-sm text-white/60">Active community with great discussions</p>

@@ -17,7 +17,7 @@ import { type VariantProps } from 'class-variance-authority';
 declare const socialInteractionVariants: (props?: ({
     size?: "small" | "base" | "large" | null | undefined;
     layout?: "horizontal" | "vertical" | "compact" | null | undefined;
-    variant?: "ghost" | "default" | "contrast" | null | undefined;
+    variant?: "default" | "ghost" | "contrast" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export type SocialActionType = 'like' | 'comment' | 'share';
 export interface SocialActionData {

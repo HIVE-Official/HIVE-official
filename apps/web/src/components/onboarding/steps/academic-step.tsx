@@ -108,7 +108,7 @@ export function OnboardingAcademicStep() {
                   <SelectValue placeholder="Select your academic level" />
                 </SelectTrigger>
                 <SelectContent>
-                  {ACADEMIC_LEVELS.map((level) => (
+                  {ACADEMIC_LEVELS.map((level: any) => (
                     <SelectItem key={level.value} value={level.value}>
                       {level.label}
                     </SelectItem>
@@ -202,7 +202,7 @@ export function OnboardingAcademicStep() {
                   <SelectValue placeholder="Select graduation year" />
                 </SelectTrigger>
                 <SelectContent>
-                  {GRADUATION_YEARS.map((year) => (
+                  {GRADUATION_YEARS.map((year: any) => (
                     <SelectItem key={year} value={year.toString()}>
                       {year}
                     </SelectItem>

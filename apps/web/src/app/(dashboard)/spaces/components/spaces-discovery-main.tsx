@@ -225,7 +225,7 @@ export function SpacesDiscoveryMain() {
             placeholder="Search spaces, communities, departments..."
             value={searchQuery}
             onValueChange={setSearchQuery}
-            onSearch={(query) => setSearchQuery(query)}
+            onSearch={(query: any) => setSearchQuery(query)}
           />
         </div>
         <div className="flex items-center gap-3">
@@ -254,7 +254,7 @@ export function SpacesDiscoveryMain() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {SPACE_CATEGORIES.map((category) => {
+              {SPACE_CATEGORIES.map((category: any) => {
                 const IconComponent = category.icon;
                 const stats = categoryStats[category.id] || { total: 0, active: 0 };
                 
@@ -329,7 +329,7 @@ export function SpacesDiscoveryMain() {
               <Sparkles className="h-4 w-4" />
               <span className="hidden sm:inline">All</span>
             </TabsTrigger>
-            {SPACE_CATEGORIES.map((category) => {
+            {SPACE_CATEGORIES.map((category: any) => {
               const IconComponent = category.icon;
               return (
                 <TabsTrigger key={category.id} value={category.id} className="flex items-center gap-2">
@@ -350,7 +350,7 @@ export function SpacesDiscoveryMain() {
             />
           </TabsContent>
 
-          {SPACE_CATEGORIES.map((category) => (
+          {SPACE_CATEGORIES.map((category: any) => (
             <TabsContent key={category.id} value={category.id} className="mt-6">
               <div className="mb-4">
                 <Typography size="large" weight="semibold" className="mb-2">
@@ -586,7 +586,7 @@ function SpaceCard({ space, onClick, onActivate, delay, viewMode }: SpaceCardPro
                   size="sm" 
                   variant="outline" 
                   className="border-accent hover:bg-accent hover:text-accent-foreground"
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.stopPropagation();
                     onActivate();
                   }}

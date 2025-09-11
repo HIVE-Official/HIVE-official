@@ -566,7 +566,7 @@ export function FeedMain() {
           <Input
             placeholder="Search posts, tools, events, people..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             className="pl-9"
           />
         </div>
@@ -763,7 +763,7 @@ export function FeedMain() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {campusEvents.map((event) => (
+                {campusEvents.map((event: any) => (
                   <div
                     key={event.id}
                     className="p-3 rounded-lg border border-border hover:border-accent/50 cursor-pointer transition-all"

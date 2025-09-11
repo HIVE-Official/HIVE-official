@@ -283,7 +283,7 @@ export function SpacesDashboardClient() {
           <Input
             placeholder="Search spaces, majors, interests..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
         </div>

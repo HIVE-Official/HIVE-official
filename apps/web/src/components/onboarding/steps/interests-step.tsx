@@ -48,7 +48,7 @@ export function OnboardingInterestsStep() {
 
   const handleInterestToggle = (interest: string) => {
     if (selectedInterests.includes(interest)) {
-      setSelectedInterests(selectedInterests.filter((i) => i !== interest));
+      setSelectedInterests(selectedInterests.filter((i: any) => i !== interest));
     } else {
       setSelectedInterests([...selectedInterests, interest]);
     }
@@ -125,7 +125,7 @@ export function OnboardingInterestsStep() {
               <Input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 placeholder="Search for interests..."
                 className="h-12 pl-10"
               />

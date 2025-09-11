@@ -186,7 +186,7 @@ export function DashboardMainPremium() {
               
               <button
                 onClick={() => router.push('/spaces/create')}
-                className="px-4 py-2 border-2 border-black rounded-lg hover:bg-black hover:text-white transition-all duration-200 flex items-center gap-2 text-sm font-medium text-black">
+                className="px-4 py-2 border-2 border-black rounded-lg hover:bg-black hover:text-white transition-all duration-200 flex items-center gap-2 text-sm font-medium text-black"
               >
                 <Plus className="h-4 w-4" />
                 <span>Create</span>
@@ -217,7 +217,7 @@ export function DashboardMainPremium() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="bg-white border border-gray-200)] rounded-xl p-6 hover:shadow-md transition-shadow duration-300"
+            className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="p-2 bg-gray-100 rounded-lg">
@@ -225,17 +225,17 @@ export function DashboardMainPremium() {
               </div>
               <TrendingUp className="h-4 w-4 text-[#FFD700]" />
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900)]">
+            <h3 className="text-2xl font-semibold text-gray-900">
               {dashboardData.user.spaces}
             </h3>
-            <p className="text-sm text-gray-600)] mt-1">Active Spaces</p>
+            <p className="text-sm text-gray-600 mt-1">Active Spaces</p>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="bg-white border border-gray-200)] rounded-xl p-6 hover:shadow-md transition-shadow duration-300"
+            className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="p-2 bg-[#FFFACD] rounded-lg">
@@ -243,17 +243,17 @@ export function DashboardMainPremium() {
               </div>
               <TrendingUp className="h-4 w-4 text-[#FFD700]" />
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900)]">
+            <h3 className="text-2xl font-semibold text-gray-900">
               {dashboardData.user.tools}
             </h3>
-            <p className="text-sm text-gray-600)] mt-1">Tools Created</p>
+            <p className="text-sm text-gray-600 mt-1">Tools Created</p>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.2 }}
-            className="bg-white border border-gray-200)] rounded-xl p-6 hover:shadow-md transition-shadow duration-300"
+            className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="p-2 bg-gray-100 rounded-lg">
@@ -261,10 +261,10 @@ export function DashboardMainPremium() {
               </div>
               <Sparkles className="h-4 w-4 text-[#FFD700]" />
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900)]">
+            <h3 className="text-2xl font-semibold text-gray-900">
               {dashboardData.user.reputation.toLocaleString()}
             </h3>
-            <p className="text-sm text-gray-600)] mt-1">Reputation Points</p>
+            <p className="text-sm text-gray-600 mt-1">Reputation Points</p>
           </motion.div>
         </div>
 
@@ -277,13 +277,13 @@ export function DashboardMainPremium() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.3 }}
-              className="bg-white border border-gray-200)] rounded-xl"
+              className="bg-white border border-gray-200 rounded-xl"
             >
-              <div className="p-6 border-b border-gray-200)]">
+              <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Grid3X3 className="h-5 w-5 text-gray-700)]" />
-                    <h2 className="text-lg font-semibold text-gray-900)]">My Spaces</h2>
+                    <h2 className="text-lg font-semibold text-gray-900">My Spaces</h2>
                   </div>
                   <button 
                     onClick={() => router.push('/spaces')}
@@ -298,24 +298,24 @@ export function DashboardMainPremium() {
               <div className="p-6">
                 {dashboardData.spaces.length > 0 ? (
                   <div className="space-y-4">
-                    {dashboardData.spaces.map((space) => (
+                    {dashboardData.spaces.map((space: any) => (
                       <div
                         key={space.id}
-                        className="p-4 rounded-lg border border-gray-200)] hover:border-gray-300)] transition-colors cursor-pointer"
+                        className="p-4 rounded-lg border border-gray-200 hover:border-gray-300)] transition-colors cursor-pointer"
                         onClick={() => router.push(`/spaces/${space.id}`)}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               {space.isPrivate && (
-                                <span className="px-2 py-0.5 bg-gray-100)] text-gray-600)] text-xs font-medium rounded">
+                                <span className="px-2 py-0.5 bg-gray-100)] text-gray-600 text-xs font-medium rounded">
                                   Private
                                 </span>
                               )}
-                              <h3 className="font-medium text-gray-900)]">{space.name}</h3>
+                              <h3 className="font-medium text-gray-900">{space.name}</h3>
                             </div>
-                            <p className="text-sm text-gray-600)] mb-2">{space.description}</p>
-                            <div className="flex items-center gap-4 text-xs text-gray-500)]">
+                            <p className="text-sm text-gray-600 mb-2">{space.description}</p>
+                            <div className="flex items-center gap-4 text-xs text-gray-500">
                               <span className="flex items-center gap-1">
                                 <Users className="h-3 w-3" />
                                 {space.memberCount} members
@@ -338,9 +338,9 @@ export function DashboardMainPremium() {
                 ) : (
                   <div className="text-center py-12">
                     <div className="h-12 w-12 bg-gray-100)] rounded-xl flex items-center justify-center mx-auto mb-4">
-                      <Grid3X3 className="h-6 w-6 text-gray-400)]" />
+                      <Grid3X3 className="h-6 w-6 text-gray-400" />
                     </div>
-                    <p className="text-gray-600)] mb-4">No spaces joined yet</p>
+                    <p className="text-gray-600 mb-4">No spaces joined yet</p>
                     <button
                       onClick={() => router.push('/spaces')}
                       className="px-4 py-2 bg-[#FFD700] text-black rounded-lg hover:bg-[#F5C500] transition-colors text-sm font-medium shadow-sm hover:shadow-md"
@@ -357,43 +357,43 @@ export function DashboardMainPremium() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
-              className="bg-white border border-gray-200)] rounded-xl"
+              className="bg-white border border-gray-200 rounded-xl"
             >
-              <div className="p-6 border-b border-gray-200)]">
+              <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center gap-3">
                   <Activity className="h-5 w-5 text-gray-700)]" />
-                  <h2 className="text-lg font-semibold text-gray-900)]">Recent Activity</h2>
+                  <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
                 </div>
               </div>
               
               <div className="p-6">
                 {dashboardData.recentActivity.length > 0 ? (
                   <div className="space-y-3">
-                    {dashboardData.recentActivity.map((activity) => (
+                    {dashboardData.recentActivity.map((activity: any) => (
                       <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50)] transition-colors">
                         <div className="p-2 bg-gray-100)] rounded-lg">
-                          {activity.type === 'post' && <MessageSquare className="h-4 w-4 text-gray-600)]" />}
-                          {activity.type === 'join' && <Users className="h-4 w-4 text-gray-600)]" />}
-                          {activity.type === 'tool' && <Zap className="h-4 w-4 text-gray-600)]" />}
-                          {activity.type === 'event' && <Calendar className="h-4 w-4 text-gray-600)]" />}
+                          {activity.type === 'post' && <MessageSquare className="h-4 w-4 text-gray-600" />}
+                          {activity.type === 'join' && <Users className="h-4 w-4 text-gray-600" />}
+                          {activity.type === 'tool' && <Zap className="h-4 w-4 text-gray-600" />}
+                          {activity.type === 'event' && <Calendar className="h-4 w-4 text-gray-600" />}
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-900)]">{activity.title}</p>
-                          <p className="text-xs text-gray-600)] mt-0.5">{activity.description}</p>
+                          <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                          <p className="text-xs text-gray-600 mt-0.5">{activity.description}</p>
                           {activity.spaceName && (
-                            <p className="text-xs text-gray-500)] mt-1 flex items-center gap-1">
+                            <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
                               <Hash className="h-3 w-3" />
                               {activity.spaceName}
                             </p>
                           )}
                         </div>
-                        <span className="text-xs text-gray-500)]">{activity.timestamp}</span>
+                        <span className="text-xs text-gray-500">{activity.timestamp}</span>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-gray-600)]">No recent activity</p>
+                    <p className="text-gray-600">No recent activity</p>
                   </div>
                 )}
               </div>
@@ -407,13 +407,13 @@ export function DashboardMainPremium() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
-              className="bg-white border border-gray-200)] rounded-xl"
+              className="bg-white border border-gray-200 rounded-xl"
             >
-              <div className="p-6 border-b border-gray-200)]">
+              <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Calendar className="h-5 w-5 text-gray-700)]" />
-                    <h2 className="text-lg font-semibold text-gray-900)]">Upcoming</h2>
+                    <h2 className="text-lg font-semibold text-gray-900">Upcoming</h2>
                   </div>
                   <button className="text-sm text-black hover:text-[#FFD700] font-medium">
                     View all
@@ -424,14 +424,14 @@ export function DashboardMainPremium() {
               <div className="p-6">
                 {dashboardData.upcomingEvents.length > 0 ? (
                   <div className="space-y-3">
-                    {dashboardData.upcomingEvents.map((event) => (
-                      <div key={event.id} className="p-3 rounded-lg border border-gray-200)] hover:border-gray-300)] transition-colors cursor-pointer">
-                        <h4 className="text-sm font-medium text-gray-900)] mb-1">{event.title}</h4>
-                        <div className="flex items-center gap-2 text-xs text-gray-600)]">
+                    {dashboardData.upcomingEvents.map((event: any) => (
+                      <div key={event.id} className="p-3 rounded-lg border border-gray-200 hover:border-gray-300)] transition-colors cursor-pointer">
+                        <h4 className="text-sm font-medium text-gray-900 mb-1">{event.title}</h4>
+                        <div className="flex items-center gap-2 text-xs text-gray-600">
                           <Clock className="h-3 w-3" />
                           <span>{event.time}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500)] mt-1">
+                        <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
                           <MapPin className="h-3 w-3" />
                           <span>{event.spaceName}</span>
                         </div>
@@ -439,7 +439,7 @@ export function DashboardMainPremium() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center text-gray-600)] py-4">No upcoming events</p>
+                  <p className="text-center text-gray-600 py-4">No upcoming events</p>
                 )}
               </div>
             </motion.div>
@@ -449,9 +449,9 @@ export function DashboardMainPremium() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.6 }}
-              className="bg-white border border-gray-200)] rounded-xl p-6"
+              className="bg-white border border-gray-200 rounded-xl p-6"
             >
-              <h2 className="text-lg font-semibold text-gray-900)] mb-4">Quick Links</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h2>
               <div className="space-y-2">
                 <button
                   onClick={() => router.push('/profile')}

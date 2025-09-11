@@ -97,7 +97,7 @@ export const Default: Story = {
     disabled: false,
     onChange: action('checkbox-changed'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -837,7 +837,7 @@ export const Playground: Story = {
     indeterminate: false,
     onChange: action('playground-changed'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

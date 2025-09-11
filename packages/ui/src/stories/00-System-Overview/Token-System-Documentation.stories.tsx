@@ -141,7 +141,7 @@ export const TokenSystemOverview: Story = {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                {tokens.map((token) => (
+                {tokens.map((token: any) => (
                   <div 
                     key={token.name}
                     className="flex items-center justify-between p-3 rounded-lg border border-[var(--hive-border-subtle)] bg-[var(--hive-background-secondary)]"

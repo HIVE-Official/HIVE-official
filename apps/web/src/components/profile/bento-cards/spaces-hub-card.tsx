@@ -73,7 +73,7 @@ export function SpacesHubCard() {
         {spacePreviews.map((space, idx) => (
           <div
             key={space.id}
-            onClick={(e) => {
+            onClick={(e: any) => {
               e.stopPropagation();
               router.push(`/spaces/${space.id}`);
             }}
@@ -102,7 +102,7 @@ export function SpacesHubCard() {
         
         {/* Add Space Button */}
         <div
-          onClick={(e) => {
+          onClick={(e: any) => {
             e.stopPropagation();
             router.push('/spaces/discover');
           }}

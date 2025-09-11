@@ -467,7 +467,7 @@ function EnhancedSpaceDiscovery() {
                 type="text"
                 placeholder="Search spaces by name, topic, or tags..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 pl-10"
               />
             </div>
@@ -484,7 +484,7 @@ function EnhancedSpaceDiscovery() {
               
               <select 
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e: any) => setSortBy(e.target.value as any)}
                 className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
               >
                 <option value="popular">Most Popular</option>
@@ -626,7 +626,7 @@ function EnhancedSpaceDiscovery() {
             </div>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-              {spaceTypeFilters.map((filterOption) => (
+              {spaceTypeFilters.map((filterOption: any) => (
                 <Button
                   key={filterOption.id}
                   variant="ghost"
@@ -678,13 +678,13 @@ function EnhancedSpaceDiscovery() {
         {/* Enhanced Spaces Display */}
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredSpaces.map((space) => (
+            {filteredSpaces.map((space: any) => (
               <SpacePreviewCard key={space.id} space={space} />
             ))}
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredSpaces.map((space) => (
+            {filteredSpaces.map((space: any) => (
               <SpaceListCard key={space.id} space={space} />
             ))}
           </div>
@@ -949,11 +949,11 @@ function SpacePreviewCard({ space }: { space: any }) {
 function SpaceListCard({ space }: { space: any }) {
   return (
     <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer transition-all duration-200"
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: any) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
             e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: any) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
             e.currentTarget.style.boxShadow = 'none';
           }}>

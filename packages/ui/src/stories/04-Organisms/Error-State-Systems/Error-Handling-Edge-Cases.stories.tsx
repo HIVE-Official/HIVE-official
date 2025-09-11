@@ -907,7 +907,7 @@ const ErrorHandlingSystem = () => {
                     type="checkbox"
                     id="technical"
                     checked={showTechnical}
-                    onChange={(e) => setShowTechnical(e.target.checked)}
+                    onChange={(e: any) => setShowTechnical(e.target.checked)}
                     className="rounded border-gray-600"
                   />
                   <Label htmlFor="technical" className="text-white text-sm">

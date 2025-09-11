@@ -298,7 +298,7 @@ export function ToolAnalyticsDashboard({
         <div className="flex items-center gap-3">
           <select
             value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value as any)}
+            onChange={(e: any) => setTimeRange(e.target.value as any)}
             className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)] focus:outline-none"
           >
             <option value="daily">Last 7 Days</option>
@@ -455,7 +455,7 @@ export function ToolAnalyticsDashboard({
             <div className="pt-4 border-t border-white/10">
               <p className="text-sm text-neutral-400 mb-3">Most Used Features</p>
               <div className="space-y-2">
-                {analytics.performance.mostUsedFeatures.map((feature) => (
+                {analytics.performance.mostUsedFeatures.map((feature: any) => (
                   <div key={feature.feature} className="flex items-center justify-between">
                     <span className="text-sm text-[var(--hive-text-inverse)]">
                       {feature.feature}
@@ -574,7 +574,7 @@ export function ToolAnalyticsDashboard({
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {analytics.deploymentStats.spaces.map((space) => (
+              {analytics.deploymentStats.spaces.map((space: any) => (
                 <tr key={space.spaceId} className="hover:bg-white/5 transition-colors">
                   <td className="py-3 text-sm text-[var(--hive-text-inverse)]">
                     {space.spaceName}
@@ -606,7 +606,7 @@ export function ToolAnalyticsDashboard({
           Recent Reviews
         </h3>
         <div className="space-y-4">
-          {analytics.feedback.recentReviews.map((review) => (
+          {analytics.feedback.recentReviews.map((review: any) => (
             <div key={review.userId} className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
               <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Users className="h-5 w-5 text-neutral-400" />

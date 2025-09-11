@@ -232,7 +232,7 @@ export const Default: Story = {
     onViewAllTools: action('view-all-tools-clicked'),
     onToolMarketplace: action('tool-marketplace-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)] max-w-md">
       <Text variant="body-md" color="primary" className="mb-4">
         HIVE profile tools widget for University at Buffalo student tool portfolio:
@@ -1112,7 +1112,7 @@ export const Playground: Story = {
     onViewAllTools: action('playground-view-all-tools'),
     onToolMarketplace: action('playground-tool-marketplace'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

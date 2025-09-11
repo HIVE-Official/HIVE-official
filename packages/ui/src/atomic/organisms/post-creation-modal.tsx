@@ -403,7 +403,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
               <textarea
                 ref={textareaRef}
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e: any) => setContent(e.target.value)}
                 placeholder={
                   selectedType === 'event'
                     ? 'Describe your event and what people can expect...'
@@ -443,7 +443,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                   <input
                     type="text"
                     value={eventTitle}
-                    onChange={(e) => setEventTitle(e.target.value)}
+                    onChange={(e: any) => setEventTitle(e.target.value)}
                     placeholder="Enter event title"
                     className={cn(
                       'w-full px-4 py-3 rounded-xl border transition-all duration-200',
@@ -467,7 +467,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="date"
                       value={eventDate}
-                      onChange={(e) => setEventDate(e.target.value)}
+                      onChange={(e: any) => setEventDate(e.target.value)}
                       className={cn(
                         'w-full px-4 py-3 rounded-xl border transition-all duration-200',
                         'bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)]',
@@ -489,7 +489,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="time"
                       value={eventTime}
-                      onChange={(e) => setEventTime(e.target.value)}
+                      onChange={(e: any) => setEventTime(e.target.value)}
                       className={cn(
                         'w-full px-4 py-3 rounded-xl border transition-all duration-200',
                         'bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)]',
@@ -512,7 +512,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                   <input
                     type="text"
                     value={eventLocation}
-                    onChange={(e) => setEventLocation(e.target.value)}
+                    onChange={(e: any) => setEventLocation(e.target.value)}
                     placeholder="Where will this event take place?"
                     className="w-full px-4 py-3 rounded-xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                   />
@@ -523,7 +523,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="checkbox"
                       checked={requireRsvp}
-                      onChange={(e) => setRequireRsvp(e.target.checked)}
+                      onChange={(e: any) => setRequireRsvp(e.target.checked)}
                       className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
                     />
                     <span className="text-sm text-[var(--hive-text-primary)]">Require RSVP</span>
@@ -535,7 +535,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                       <input
                         type="number"
                         value={eventCapacity}
-                        onChange={(e) => setEventCapacity(Number(e.target.value) || undefined)}
+                        onChange={(e: any) => setEventCapacity(Number(e.target.value) || undefined)}
                         min="1"
                         className="w-20 px-2 py-1 rounded border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] text-sm focus:outline-none focus:border-[var(--hive-brand-primary)]/50"
                       />
@@ -558,7 +558,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                   <input
                     type="text"
                     value={pollQuestion}
-                    onChange={(e) => setPollQuestion(e.target.value)}
+                    onChange={(e: any) => setPollQuestion(e.target.value)}
                     placeholder="What would you like to ask?"
                     className={cn(
                       'w-full px-4 py-3 rounded-xl border transition-all duration-200',
@@ -584,7 +584,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                         <input
                           type="text"
                           value={option}
-                          onChange={(e) => updatePollOption(index, e.target.value)}
+                          onChange={(e: any) => updatePollOption(index, e.target.value)}
                           placeholder={`Option ${index + 1}`}
                           className="flex-1 px-4 py-2 rounded-xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                         />
@@ -619,7 +619,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="checkbox"
                       checked={allowMultiple}
-                      onChange={(e) => setAllowMultiple(e.target.checked)}
+                      onChange={(e: any) => setAllowMultiple(e.target.checked)}
                       className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
                     />
                     <span className="text-sm text-[var(--hive-text-primary)]">Allow multiple choices</span>
@@ -629,7 +629,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="checkbox"
                       checked={anonymousPoll}
-                      onChange={(e) => setAnonymousPoll(e.target.checked)}
+                      onChange={(e: any) => setAnonymousPoll(e.target.checked)}
                       className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
                     />
                     <span className="text-sm text-[var(--hive-text-primary)]">Anonymous voting</span>
@@ -642,7 +642,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                   </label>
                   <select
                     value={pollExpiresIn || ''}
-                    onChange={(e) => setPollExpiresIn(Number(e.target.value) || undefined)}
+                    onChange={(e: any) => setPollExpiresIn(Number(e.target.value) || undefined)}
                     className="px-4 py-2 rounded-xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                   >
                     <option value="">No expiration</option>
@@ -667,7 +667,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     Priority Level
                   </label>
                   <div className="grid grid-cols-2 gap-2">
-                    {PRIORITY_OPTIONS.map((priority) => (
+                    {PRIORITY_OPTIONS.map((priority: any) => (
                       <button
                         key={priority.value}
                         onClick={() => setAnnouncementPriority(priority.value as any)}
@@ -691,7 +691,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="checkbox"
                       checked={pinnedAnnouncement}
-                      onChange={(e) => setPinnedAnnouncement(e.target.checked)}
+                      onChange={(e: any) => setPinnedAnnouncement(e.target.checked)}
                       className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
                     />
                     <span className="text-sm text-[var(--hive-text-primary)]">Pin to top</span>

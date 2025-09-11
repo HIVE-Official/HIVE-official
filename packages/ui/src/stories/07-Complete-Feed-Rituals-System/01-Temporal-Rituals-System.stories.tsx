@@ -500,7 +500,7 @@ function TemporalRitualsSystem() {
                     <div>
                       <h4 className="font-semibold text-[var(--hive-text-primary)] mb-3">Daily Missions</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {currentRitual.dailyMissions.map((mission) => (
+                        {currentRitual.dailyMissions.map((mission: any) => (
                           <div key={mission.day} className={`p-3 rounded-lg border ${
                             mission.completed 
                               ? 'bg-green-500/10 border-green-500/30' 
@@ -697,7 +697,7 @@ function TemporalRitualsSystem() {
                       { label: 'Cross-Community Bridges', value: 67, color: 'green' },
                       { label: 'Leadership Emergence', value: 72, color: 'purple' },
                       { label: 'Platform Investment', value: 89, color: 'orange' }
-                    ].map((metric) => (
+                    ].map((metric: any) => (
                       <div key={metric.label}>
                         <div className="flex justify-between text-sm mb-2">
                           <span className="text-gray-400">{metric.label}</span>
@@ -763,7 +763,7 @@ function TemporalRitualsSystem() {
                 { label: 'Bridge Connections', value: currentRitual.personalProgress?.bridgeConnections || 4, icon: Link2, color: 'green' },
                 { label: 'Leadership Score', value: currentRitual.personalProgress?.leadershipScore || 67, icon: Crown, color: 'purple' },
                 { label: 'Invitations Left', value: currentRitual.networkingTools?.invitationsRemaining || 3, icon: UserPlus, color: 'orange' }
-              ].map((stat) => (
+              ].map((stat: any) => (
                 <Card key={stat.label} className="bg-gray-800/50 border-gray-700">
                   <CardContent className="pt-4 text-center">
                     <div className={`w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center ${
@@ -803,7 +803,7 @@ function TemporalRitualsSystem() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {mockPeerNetwork.map((peer) => (
+                  {mockPeerNetwork.map((peer: any) => (
                     <Card key={peer.id} className="bg-gray-700 border-gray-600">
                       <CardContent className="p-4">
                         <div className="flex items-center space-x-3 mb-3">
@@ -826,7 +826,7 @@ function TemporalRitualsSystem() {
                           <div>
                             <div className="text-xs text-gray-400 mb-1">Shared Communities:</div>
                             <div className="flex flex-wrap gap-1">
-                              {peer.sharedCommunities.slice(0, 2).map((community) => (
+                              {peer.sharedCommunities.slice(0, 2).map((community: any) => (
                                 <Badge key={community} variant="secondary" className="text-xs bg-blue-500/10 text-blue-400">
                                   {community.split(' ')[0]}
                                 </Badge>

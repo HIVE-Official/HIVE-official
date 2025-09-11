@@ -70,7 +70,7 @@ export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
 
   // Data management
   updateData: (newData) =>
-    set((state) => {
+    set((state: any) => {
       const updatedData = { ...state.data, ...newData };
       logger.info("Updating onboarding data:", newData);
       return { data: updatedData };
@@ -165,7 +165,7 @@ export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
 
   // Legacy compatibility methods (for existing components)
   setStudentLeader: (isLeader) =>
-    set((state) => {
+    set((state: any) => {
       const updatedData = {
         ...state.data,
         builderRequestSpaces: isLeader ? ['student-government'] : [],
@@ -175,7 +175,7 @@ export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
     }),
 
   addSpaceClaim: (claim) =>
-    set((state) => {
+    set((state: any) => {
       const currentSpaces = state.data?.builderRequestSpaces || [];
       const updatedData = {
         ...state.data,
@@ -185,8 +185,8 @@ export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
       return { data: updatedData };
     }),
 
-  setVerificationLevel: (level) =>
-    set((state) => {
+  setVerificationLevel: (level: any) =>
+    set((state: any) => {
       // Map verification level to academic level for compatibility
       const levelMapping = {
         'verified': 'undergraduate',

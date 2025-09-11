@@ -297,7 +297,7 @@ const VirtualScrollDemo = () => {
     >
       <div style={{ height: totalHeight, position: 'relative' }}>
         <div style={{ transform: `translateY(${offsetY}px)` }}>
-          {visibleItems.map((item) => (
+          {visibleItems.map((item: any) => (
             <div
               key={item.id}
               className="flex items-center space-x-3 p-3 border-b border-gray-800 hover:bg-gray-800"
@@ -338,7 +338,7 @@ const VirtualScrollDemo = () => {
       className="overflow-auto bg-gray-900 border border-gray-800 rounded-lg"
       style={{ height: containerHeight }}
     >
-      {items.slice(0, 100).map((item) => (
+      {items.slice(0, 100).map((item: any) => (
         <div
           key={item.id}
           className="flex items-center space-x-3 p-3 border-b border-gray-800 hover:bg-gray-800"

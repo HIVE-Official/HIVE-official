@@ -338,7 +338,7 @@ async function updateSessionAnalytics(
   try {
     const sessionRef = dbAdmin.collection('sessionAnalytics').doc(`${userId}_${sessionId}`);
     
-    await dbAdmin.runTransaction(async (transaction) => {
+    await dbAdmin.runTransaction(async (transaction: any) => {
       const sessionDoc = await transaction.get(sessionRef);
       
       if (sessionDoc.exists) {

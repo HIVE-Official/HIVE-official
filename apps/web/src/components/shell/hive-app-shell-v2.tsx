@@ -101,7 +101,7 @@ export function HiveAppShellV2({ children }: { children: React.ReactNode }) {
         {/* Main Navigation */}
         <nav className="flex-1 px-3 py-4">
           <div className="space-y-1">
-            {mainNavItems.map((item) => {
+            {mainNavItems.map((item: any) => {
               const Icon = item.icon;
               const isActive = isActiveRoute(item.href);
               
@@ -326,7 +326,7 @@ export function HiveAppShellV2({ children }: { children: React.ReactNode }) {
             {/* Mobile Navigation */}
             <div className="flex-1 overflow-y-auto p-4">
               {/* Similar nav structure as desktop */}
-              {mainNavItems.map((item) => {
+              {mainNavItems.map((item: any) => {
                 const Icon = item.icon;
                 const isActive = isActiveRoute(item.href);
                 

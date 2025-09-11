@@ -411,7 +411,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.stopPropagation();
                         onEditTool(featuredBuild.id);
                       }}
@@ -424,7 +424,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.stopPropagation();
                         onDeployTool(featuredBuild.id);
                       }}
@@ -451,7 +451,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
               )}
             </div>
             <div className="space-y-1">
-              {recentBuilds.map((tool) => {
+              {recentBuilds.map((tool: any) => {
                 const categoryConfig = getToolCategoryConfig(tool.category);
                 const statusConfig = getBuildStatusConfig(tool.buildStatus);
                 return (
@@ -486,7 +486,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
           <div className="space-y-2 pt-2 border-t border-[var(--hive-border-primary)]">
             <Text variant="body-sm" color="primary" weight="medium">Active Projects:</Text>
             <div className="space-y-1">
-              {activeProjects.slice(0, 2).map((project) => (
+              {activeProjects.slice(0, 2).map((project: any) => (
                 <div 
                   key={project.id}
                   className="flex items-center gap-2 p-2 rounded hover:bg-[var(--hive-background-secondary)] transition-colors"

@@ -37,7 +37,7 @@ export function useFocusTrap<T extends HTMLElement>({
       elementRef.current.querySelectorAll<HTMLElement>(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       )
-    ).filter((element) => {
+    ).filter((element: any) => {
       // Filter out hidden or disabled elements
       return (
         !element.hasAttribute('disabled') &&
@@ -45,7 +45,7 @@ export function useFocusTrap<T extends HTMLElement>({
         element.getAttribute('aria-hidden') !== 'true' &&
         // Check if the element or its ancestors are visible
         !Array.from(element.getClientRects()).every(
-          (rect) => rect.width === 0 && rect.height === 0
+          (rect: any) => rect.width === 0 && rect.height === 0
         )
       )
     })

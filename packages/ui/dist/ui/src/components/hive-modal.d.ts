@@ -1,8 +1,8 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveModalVariants: (props?: ({
-    size?: "sm" | "default" | "lg" | "xl" | "full" | null | undefined;
-    variant?: "destructive" | "success" | "default" | "premium" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | "full" | null | undefined;
+    variant?: "default" | "destructive" | "success" | "premium" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface HiveModalProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragEnd' | 'onDragStart'>, VariantProps<typeof hiveModalVariants> {
     isOpen?: boolean;

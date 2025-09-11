@@ -1,5 +1,5 @@
-// Temporary stub for firebase-admin utilities
-// TODO: Use proper firebase-admin from @hive/core
+// Firebase Admin SDK configuration and initialization
+// Server-side Firebase setup for administrative operations
 
 import * as admin from "firebase-admin";
 import { env, isFirebaseAdminConfigured, currentEnvironment } from "./env";
@@ -16,12 +16,46 @@ try {
     // Try different credential formats
     if (env.FIREBASE_PRIVATE_KEY && env.FIREBASE_CLIENT_EMAIL) {
       // Format 1: Individual environment variables (Vercel recommended)
-      credential = admin.credential.cert({
-        projectId: env.FIREBASE_PROJECT_ID,
-        clientEmail: env.FIREBASE_CLIENT_EMAIL,
-        privateKey: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-      });
-    } else if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+      try {
+        // Handle different private key formats
+        let privateKey = env.FIREBASE_PRIVATE_KEY;
+        
+        // If the key doesn't start with -----BEGIN, it might be escaped or encoded
+        if (!privateKey.includes('-----BEGIN')) {
+          // Try to decode if it's base64 encoded
+          try {
+            const decoded = Buffer.from(privateKey, 'base64').toString('utf-8');
+            if (decoded.includes('-----BEGIN')) {
+              privateKey = decoded;
+            }
+          } catch (e) {
+            // Not base64, continue with original
+          }
+        }
+        
+        // Replace escaped newlines with actual newlines
+        privateKey = privateKey.replace(/\\n/g, '\n');
+        
+        // Ensure proper formatting
+        if (!privateKey.includes('\n') && privateKey.includes('-----BEGIN')) {
+          // Add newlines after BEGIN and before END if missing
+          privateKey = privateKey
+            .replace(/-----BEGIN PRIVATE KEY-----/, '-----BEGIN PRIVATE KEY-----\n')
+            .replace(/-----END PRIVATE KEY-----/, '\n-----END PRIVATE KEY-----');
+        }
+        
+        credential = admin.credential.cert({
+          projectId: env.FIREBASE_PROJECT_ID,
+          clientEmail: env.FIREBASE_CLIENT_EMAIL,
+          privateKey: privateKey,
+        });
+      } catch (certError) {
+        console.warn("Failed to create certificate credential:", certError);
+        // Fall through to other methods
+      }
+    }
+    
+    if (!credential && process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
       // Format 2: Base64 encoded service account (existing packages/core pattern)
       try {
         const serviceAccountJson = JSON.parse(
@@ -170,12 +204,18 @@ try {
   }
 }
 
+// Primary exports
 export { dbAdmin, authAdmin, storageAdmin };
 
 // Re-export for compatibility with existing code
 export const db = dbAdmin;
 export const auth = authAdmin;
 export const storage = storageAdmin;
+
+// Additional aliases for backward compatibility
+export const adminDb = dbAdmin;
+export const adminAuth = authAdmin;
+export const adminStorage = storageAdmin;
 export const isFirebaseConfigured = firebaseInitialized;
 
 // Re-export environment utilities

@@ -299,7 +299,7 @@ function AcademicInfoComponent({
             Academic Level
           </label>
           <div className="grid grid-cols-1 gap-2">
-            {academicYears.map((yearOption) => (
+            {academicYears.map((yearOption: any) => (
               <button
                 key={yearOption}
                 onClick={() => handleYearChange(yearOption)}
@@ -323,7 +323,7 @@ function AcademicInfoComponent({
               Major/Field of Study
             </label>
             <div className="flex flex-wrap gap-2">
-              {popularMajors.map((majorOption) => (
+              {popularMajors.map((majorOption: any) => (
                 <button
                   key={majorOption}
                   onClick={() => handleMajorChange(majorOption)}
@@ -449,7 +449,7 @@ function BuilderAssessmentComponent({
             How do you feel about building campus tools?
           </label>
           <div className="space-y-2">
-            {interestLevels.map((level) => (
+            {interestLevels.map((level: any) => (
               <button
                 key={level.value}
                 onClick={() => handleInterestChange(level.value)}

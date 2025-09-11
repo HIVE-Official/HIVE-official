@@ -308,7 +308,7 @@ export function ToolRuntime({
                     id: element.instanceId,
                     config: element.config,
                     data: elementState?.data,
-                    onChange: (data) => handleElementChange(element.instanceId, data),
+                    onChange: (data: any) => handleElementChange(element.instanceId, data),
                     onAction: (action, payload) => handleElementAction(element.instanceId, action, payload)
                   })}
                 </CardContent>

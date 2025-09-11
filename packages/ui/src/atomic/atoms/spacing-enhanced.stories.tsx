@@ -102,7 +102,7 @@ export const Default: Story = {
     align: 'stretch',
     justify: 'start',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -656,7 +656,7 @@ export const Playground: Story = {
     align: 'stretch',
     justify: 'start',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

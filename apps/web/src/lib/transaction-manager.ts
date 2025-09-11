@@ -189,7 +189,7 @@ export class TransactionManager {
     operationsFailed: string[],
     context?: { userId?: string; requestId?: string; operation?: string }
   ): Promise<T> {
-    return dbAdmin.runTransaction(async (transaction) => {
+    return dbAdmin.runTransaction(async (transaction: any) => {
       const results: any[] = [];
       
       // Set transaction timeout
@@ -396,7 +396,7 @@ export async function executeOnboardingTransaction(
     {
       id: 'validate_user_exists',
       description: 'Check if user exists and can be onboarded',
-      execute: async (transaction) => {
+      execute: async (transaction: any) => {
         const userDoc = await transaction.get(dbAdmin.collection('users').doc(userId));
         
         if (!userDoc.exists) {
@@ -418,7 +418,7 @@ export async function executeOnboardingTransaction(
     {
       id: 'validate_handle_availability',
       description: 'Check if handle is available',
-      execute: async (transaction) => {
+      execute: async (transaction: any) => {
         const { checkHandleAvailabilityInTransaction } = await import('./handle-service');
         return checkHandleAvailabilityInTransaction(transaction, normalizedHandle);
       }
@@ -426,7 +426,7 @@ export async function executeOnboardingTransaction(
     {
       id: 'update_user_profile',
       description: 'Update user profile with onboarding data',
-      execute: async (transaction) => {
+      execute: async (transaction: any) => {
         const now = new Date();
         
         const updatedUserData = {
@@ -458,7 +458,7 @@ export async function executeOnboardingTransaction(
     {
       id: 'reserve_handle',
       description: 'Reserve the handle in handles collection',
-      execute: async (transaction) => {
+      execute: async (transaction: any) => {
         const { reserveHandleInTransaction } = await import('./handle-service');
         return reserveHandleInTransaction(transaction, normalizedHandle, userId, userEmail);
       }
@@ -489,7 +489,7 @@ export async function executeBuilderRequestCreation(
     operations.push({
       id: `builder_request_${spaceId}`,
       description: `Create builder request for space ${spaceId}`,
-      execute: (batch) => {
+      execute: (batch: any) => {
         const now = new Date();
         const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
         const requestId = `${userId}_${spaceId}_${Date.now()}`;

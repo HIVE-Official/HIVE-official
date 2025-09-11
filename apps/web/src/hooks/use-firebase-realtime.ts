@@ -10,14 +10,16 @@ import {
   QueryConstraint,
   DocumentData,
   FirestoreError,
-  Unsubscribe
+  Unsubscribe,
+  QuerySnapshot,
+  DocumentSnapshot
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { logger } from '@/lib/logger';
 
 interface UseFirebaseRealtimeOptions {
   enabled?: boolean;
-  dependencies?: any[];
+  dependencies?: unknown[];
 }
 
 interface UseFirebaseRealtimeReturn<T> {
@@ -53,7 +55,7 @@ export function useFirebaseRealtime<T extends DocumentData>(
 
       const unsubscribe = onSnapshot(
         q,
-        (snapshot) => {
+        (snapshot: QuerySnapshot<DocumentData>) => {
           const items: T[] = [];
           snapshot.forEach((doc) => {
             items.push({
@@ -192,7 +194,7 @@ export function useFirebaseDocRealtime<T extends DocumentData>(
     
     const unsubscribe = onSnapshot(
       docRef,
-      (snapshot) => {
+      (snapshot: DocumentSnapshot<DocumentData>) => {
         if (snapshot.exists()) {
           setData({
             id: snapshot.id,
@@ -227,7 +229,7 @@ export function usePresence(userId: string) {
 
     const presenceRef = doc(db, `presence/${userId}`);
     
-    const unsubscribe = onSnapshot(presenceRef, (snapshot) => {
+    const unsubscribe = onSnapshot(presenceRef, (snapshot: DocumentSnapshot<DocumentData>) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
         setIsOnline(data.status === 'online');

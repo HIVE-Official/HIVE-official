@@ -219,7 +219,7 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
     };
     
     // Clone children and add necessary props
-    const radioChildren = React.Children.map(children, (child) => {
+    const radioChildren = React.Children.map(children, (child: any) => {
       if (React.isValidElement(child) && child.type === Radio) {
         const childProps = child.props as RadioProps;
         return React.cloneElement(child as React.ReactElement<RadioProps>, {
@@ -348,7 +348,7 @@ export const RadioPresets = {
   // Payment Method
   PaymentMethod: ({ options, ...props }: { options: Array<{ value: string; label: string; icon?: React.ReactNode }> } & Omit<RadioGroupProps, 'children'>) => (
     <RadioGroup {...props}>
-      {options.map((option) => (
+      {options.map((option: any) => (
         <RadioCard
           key={option.value}
           value={option.value}

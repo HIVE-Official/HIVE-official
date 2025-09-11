@@ -67,7 +67,7 @@ export function useFileUpload() {
       const xhr = new XMLHttpRequest();
 
       // Track upload progress
-      xhr.upload.addEventListener('progress', (event) => {
+      xhr.upload.addEventListener('progress', (event: any) => {
         if (event.lengthComputable) {
           const progress = {
             loaded: event.loaded,
@@ -196,7 +196,7 @@ export function useImageUpload() {
 
     // Create preview
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = (e: any) => {
       setPreview(e.target?.result as string);
     };
     reader.readAsDataURL(file);

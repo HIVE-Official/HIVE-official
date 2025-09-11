@@ -461,7 +461,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 placeholder="Search tools..."
                 className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-64"
               />
@@ -469,7 +469,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             
             <select
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value as 'all' | 'academic' | 'engagement' | 'productivity' | 'communication' | 'collaboration' | 'organization')}
+              onChange={(e: any) => setCategoryFilter(e.target.value as 'all' | 'academic' | 'engagement' | 'productivity' | 'communication' | 'collaboration' | 'organization')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Categories</option>
@@ -483,7 +483,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+              onChange={(e: any) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Status</option>
@@ -500,7 +500,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
 
         {/* Tools Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredTools.map((tool) => (
+          {filteredTools.map((tool: any) => (
             <Card 
               key={tool.id} 
               className={`p-6 border transition-all duration-200 ${
@@ -656,7 +656,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {availableTemplates.map((template) => (
+              {availableTemplates.map((template: any) => (
                 <Card 
                   key={template.id} 
                   className="p-4 bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-colors cursor-pointer"
@@ -683,7 +683,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                   </div>
                   
                   <div className="flex flex-wrap gap-1">
-                    {template.features.slice(0, 3).map((feature) => (
+                    {template.features.slice(0, 3).map((feature: any) => (
                       <span key={feature} className="text-xs text-zinc-500 bg-zinc-800 px-2 py-1 rounded">
                         {feature}
                       </span>

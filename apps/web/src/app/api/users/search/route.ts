@@ -11,7 +11,7 @@ import * as admin from 'firebase-admin';
 function toDateSafe(timestamp: any): Date | null {
   if (!timestamp) return null;
   if (typeof timestamp === 'string') return new Date(timestamp);
-  if (timestamp && typeof timestamp.toDate === 'function') return timestamp.toDate();
+  if (timestamp && typeof timestamp.toDate === 'function') return (timestamp?.toDate ? timestamp.toDate() : new Date(timestamp));
   if (timestamp instanceof Date) return timestamp;
   return null;
 }

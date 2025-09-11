@@ -57,7 +57,7 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
     });
 
     // Listen for errors
-    const unsubscribeErrors = notificationRealtime.onError((error) => {
+    const unsubscribeErrors = notificationRealtime.onError((error: any) => {
       logger.error('Realtime connection error', { error });
     });
 

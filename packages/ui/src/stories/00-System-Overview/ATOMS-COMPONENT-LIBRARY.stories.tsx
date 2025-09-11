@@ -327,7 +327,7 @@ const InteractiveShowcase = () => {
               type="email"
               placeholder="student@buffalo.edu"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e: any) => setInputValue(e.target.value)}
               className="mt-1"
             />
           </div>
@@ -433,7 +433,7 @@ const AtomicComponentsLibrary = () => {
               type="text"
               placeholder="Search atomic components..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               className="pl-10 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)]"
             />
           </div>
@@ -457,7 +457,7 @@ const AtomicComponentsLibrary = () => {
 
         {/* Category Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {atomicCategories.map((category) => (
+          {atomicCategories.map((category: any) => (
             <Button
               key={category.id}
               variant={activeCategory === category.id ? 'primary' : 'secondary'}
@@ -472,7 +472,7 @@ const AtomicComponentsLibrary = () => {
 
         {/* Component Categories */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {filteredCategories.map((category) => (
+          {filteredCategories.map((category: any) => (
             <Card 
               key={category.id} 
               className={`border-2 bg-gradient-to-br ${getColorClasses(category.color)} ${activeCategory === category.id ? 'ring-2 ring-[var(--hive-brand-primary)]' : ''}`}

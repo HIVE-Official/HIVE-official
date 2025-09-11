@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       .where("status", "==", "active")
       .get();
 
-    const spaces = spacesSnapshot.docs.map((doc) => ({
+    const spaces = spacesSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data(),
     }));

@@ -1,15 +1,15 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveTextarea } from '../hive-textarea.js';
-import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar.js';
-import { HiveBadge } from '../hive-badge.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveTextarea } from '../hive-textarea';
+import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
+import { HiveBadge } from '../hive-badge';
 import { MessageCircle, Heart, Share2, MoreVertical, Send, Image, Link, Hash, Smile, Plus } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { useRealtimePosts, useOptimisticUpdates } from '../../hooks/use-live-updates.js';
+import { useRealtimePosts, useOptimisticUpdates } from '../../hooks/use-live-updates';
 // Individual Post Component
 const PostCard = ({ post, onLike, onComment, onShare, variant = 'widget' }) => {
     const [showCommentInput, setShowCommentInput] = useState(false);

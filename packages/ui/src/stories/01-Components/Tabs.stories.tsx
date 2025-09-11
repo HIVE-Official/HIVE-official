@@ -214,7 +214,7 @@ export const AllVariants: Story = {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  {[1, 2, 3].map((i) => (
+                  {[1, 2, 3].map((i: any) => (
                     <Card key={i} variant="minimal">
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">

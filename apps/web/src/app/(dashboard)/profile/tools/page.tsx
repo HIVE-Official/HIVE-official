@@ -219,7 +219,7 @@ export default function ProfileToolsPage() {
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {builderToolCategories.map((category) => {
+              {builderToolCategories.map((category: any) => {
                 const IconComponent = category.icon;
                 return (
                   <Card 
@@ -368,7 +368,7 @@ export default function ProfileToolsPage() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: any) => setEmail(e.target.value)}
                 placeholder="your.name@buffalo.edu"
                 className="w-full p-3 bg-hive-background-overlay border border-hive-border-default rounded-lg text-[var(--hive-text-inverse)] placeholder-gray-400 focus:border-hive-gold focus:outline-none"
               />

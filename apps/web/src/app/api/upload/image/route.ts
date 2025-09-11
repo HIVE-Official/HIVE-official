@@ -335,7 +335,7 @@ async function updateUserQuota(userId: string, uploadSize: number): Promise<void
   try {
     const quotaRef = dbAdmin.collection('userQuotas').doc(userId);
     
-    await dbAdmin.runTransaction(async (transaction) => {
+    await dbAdmin.runTransaction(async (transaction: any) => {
       const doc = await transaction.get(quotaRef);
       
       if (!doc.exists) {

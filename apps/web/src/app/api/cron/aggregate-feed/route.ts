@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     const userBatches = [];
     let currentBatch: any[] = [];
 
-    activeUsersSnapshot.forEach((doc) => {
+    activeUsersSnapshot.forEach((doc: any) => {
       currentBatch.push({ id: doc.id, data: doc.data() });
       if (currentBatch.length >= batchSize) {
         userBatches.push(currentBatch);
@@ -129,7 +129,7 @@ async function aggregateFeedForUser(
       .limit(30)
       .get();
 
-    postsSnapshot.forEach((doc) => {
+    postsSnapshot.forEach((doc: any) => {
       const postData = doc.data();
       feedItems.push({
         id: doc.id,
@@ -151,7 +151,7 @@ async function aggregateFeedForUser(
       .limit(10)
       .get();
 
-    eventsSnapshot.forEach((doc) => {
+    eventsSnapshot.forEach((doc: any) => {
       const eventData = doc.data();
       feedItems.push({
         id: doc.id,
@@ -172,7 +172,7 @@ async function aggregateFeedForUser(
       .limit(5)
       .get();
 
-    ritualsSnapshot.forEach((doc) => {
+    ritualsSnapshot.forEach((doc: any) => {
       const ritualData = doc.data();
       feedItems.push({
         id: doc.id,
@@ -233,12 +233,12 @@ async function saveFeedItems(userId: string, feedItems: any[]): Promise<void> {
     .offset(100)
     .get();
 
-  oldItemsSnapshot.forEach((doc) => {
+  oldItemsSnapshot.forEach((doc: any) => {
     batch.delete(doc.ref);
   });
 
   // Add new items
-  feedItems.slice(0, 50).forEach((item) => {
+  feedItems.slice(0, 50).forEach((item: any) => {
     const newDocRef = userFeedRef.doc();
     batch.set(newDocRef, {
       ...item,

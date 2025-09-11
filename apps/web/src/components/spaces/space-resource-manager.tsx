@@ -259,7 +259,7 @@ export function SpaceResourceManager({
             type="text"
             placeholder="Search resources, tags, or descriptions..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: any) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-zinc-800/50 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
           />
         </div>
@@ -267,7 +267,7 @@ export function SpaceResourceManager({
           <Filter className="h-4 w-4 text-zinc-400" />
           <select
             value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value as any)}
+            onChange={(e: any) => setSelectedType(e.target.value as any)}
             className="bg-zinc-800/50 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none"
           >
             <option value="all">All Types</option>
@@ -329,7 +329,7 @@ export function SpaceResourceManager({
               {/* Tags */}
               {resource.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-4">
-                  {resource.tags.slice(0, 3).map((tag) => (
+                  {resource.tags.slice(0, 3).map((tag: any) => (
                     <Badge key={tag} variant="skill-tag" className="text-xs">
                       {tag}
                     </Badge>
@@ -430,7 +430,7 @@ export function SpaceResourceManager({
               <div>
                 <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Features</h4>
                 <div className="grid grid-cols-2 gap-2">
-                  {selectedResource.features.map((feature) => (
+                  {selectedResource.features.map((feature: any) => (
                     <div key={feature} className="flex items-center text-sm text-zinc-300">
                       <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
                       {feature}
@@ -444,7 +444,7 @@ export function SpaceResourceManager({
               <div>
                 <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Current Bookings</h4>
                 <div className="space-y-2">
-                  {selectedResource.bookings.map((booking) => (
+                  {selectedResource.bookings.map((booking: any) => (
                     <div key={booking.id} className="p-3 bg-zinc-800/30 rounded-lg">
                       <div className="flex items-center justify-between">
                         <div>

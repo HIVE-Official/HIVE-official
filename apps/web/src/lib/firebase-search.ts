@@ -57,7 +57,7 @@ export async function performFirebaseSearch(options: SearchOptions): Promise<Sea
       // In production, use a search service
       const spacesSnapshot = await getDocs(query(spacesRef, ...constraints));
       
-      spacesSnapshot.forEach((doc) => {
+      spacesSnapshot.forEach((doc: any) => {
         const data = doc.data();
         const name = (data.name || '').toLowerCase();
         const description = (data.description || '').toLowerCase();
@@ -98,7 +98,7 @@ export async function performFirebaseSearch(options: SearchOptions): Promise<Sea
           query(postsRef, orderBy('timestamp', 'desc'), firestoreLimit(limit))
         );
         
-        postsSnapshot.forEach((doc) => {
+        postsSnapshot.forEach((doc: any) => {
           const data = doc.data();
           const content = (data.content || '').toLowerCase();
           const title = (data.title || '').toLowerCase();
@@ -135,7 +135,7 @@ export async function performFirebaseSearch(options: SearchOptions): Promise<Sea
         query(usersRef, firestoreLimit(limit))
       );
       
-      usersSnapshot.forEach((doc) => {
+      usersSnapshot.forEach((doc: any) => {
         const data = doc.data();
         const displayName = (data.displayName || '').toLowerCase();
         const email = (data.email || '').toLowerCase();
@@ -173,7 +173,7 @@ export async function performFirebaseSearch(options: SearchOptions): Promise<Sea
         query(eventsRef, orderBy('startDateTime', 'desc'), firestoreLimit(limit))
       );
       
-      eventsSnapshot.forEach((doc) => {
+      eventsSnapshot.forEach((doc: any) => {
         const data = doc.data();
         const title = (data.title || '').toLowerCase();
         const description = (data.description || '').toLowerCase();

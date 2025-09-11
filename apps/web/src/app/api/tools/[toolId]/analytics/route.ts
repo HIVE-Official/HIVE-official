@@ -422,7 +422,7 @@ async function calculateDemographics(events: any[]) {
   const uniqueUsers = [...new Set(events.map(e => e.userId))];
   
   // Get user details
-  const userPromises = uniqueUsers.map(async (userId) => {
+  const userPromises = uniqueUsers.map(async (userId: any) => {
     const userDoc = await adminDb.collection('users').doc(userId).get();
     return userDoc.exists ? { id: userId, ...userDoc.data() } : null;
   });

@@ -2,10 +2,10 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import type { LucideIcon } from 'lucide-react';
 declare const profileActionVariants: (props?: ({
-    size?: "xs" | "sm" | "md" | "lg" | null | undefined;
-    variant?: "primary" | "secondary" | "ghost" | "destructive" | "success" | "outline" | null | undefined;
+    size?: "sm" | "lg" | "xs" | "md" | null | undefined;
+    variant?: "ghost" | "primary" | "secondary" | "destructive" | "success" | "outline" | null | undefined;
     shape?: "square" | "rounded" | "pill" | null | undefined;
-    width?: "icon" | "full" | "auto" | null | undefined;
+    width?: "full" | "auto" | "icon" | null | undefined;
     interactive?: boolean | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export declare const ACTION_TYPES: {

@@ -243,7 +243,7 @@ export const ElementLibraryBrowser: Story = {
                 <CardDescription>Choose your building blocks</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                {categories.map((category) => {
+                {categories.map((category: any) => {
                   const IconComponent = category.icon;
                   return (
                     <button
@@ -288,7 +288,7 @@ export const ElementLibraryBrowser: Story = {
           {/* Elements Grid */}
           <div className="lg:col-span-3">
             <div className="grid md:grid-cols-2 gap-6">
-              {elements.map((element) => {
+              {elements.map((element: any) => {
                 const IconComponent = element.icon;
                 const isSelected = selectedElement === element.id;
                 
@@ -404,7 +404,7 @@ export const StudentCreatedTools: Story = {
 
         {/* Filter Bar */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {filters.map((filterOption) => (
+          {filters.map((filterOption: any) => (
             <button
               key={filterOption.id}
               onClick={() => setFilter(filterOption.id)}
@@ -420,7 +420,7 @@ export const StudentCreatedTools: Story = {
         </div>
 
         <div className="space-y-6">
-          {filteredTools.map((tool) => {
+          {filteredTools.map((tool: any) => {
             const isExpanded = selectedTool === tool.id;
             
             return (
@@ -625,7 +625,7 @@ export const ToolCreationInterface: Story = {
                     { step: 2, title: 'Select Elements', description: 'Choose building blocks for your solution' },
                     { step: 3, title: 'Configure & Test', description: 'Set up the tool and test with your community' },
                     { step: 4, title: 'Deploy & Share', description: 'Launch in your space and share with others' }
-                  ].map((item) => (
+                  ].map((item: any) => (
                     <div key={item.step} className={`flex gap-3 p-3 rounded-lg ${
                       creationStep === item.step ? 'bg-purple-100' : 'bg-gray-50'
                     }`}>
@@ -684,7 +684,7 @@ export const ToolCreationInterface: Story = {
                     type="text"
                     placeholder="e.g., Floor movie night, Study session for CSE 474, Food order..."
                     value={toolName}
-                    onChange={(e) => setToolName(e.target.value)}
+                    onChange={(e: any) => setToolName(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--hive-gold)] focus:border-transparent"
                   />
                 </div>
@@ -709,7 +709,7 @@ export const ToolCreationInterface: Story = {
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-4">
-                  {availableElements.map((element) => {
+                  {availableElements.map((element: any) => {
                     const IconComponent = element.icon;
                     const isSelected = selectedElements.includes(element.id);
                     

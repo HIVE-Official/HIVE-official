@@ -445,8 +445,8 @@ export function useFeedAggregation(): UseFeedAggregationReturn {
       const postsRef = collection(db, 'spaces', mostActiveSpace, 'posts');
       const q = query(postsRef, orderBy('createdAt', 'desc'), limit(1));
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
+      const unsubscribe = onSnapshot(q, (snapshot: any) => {
+        snapshot.docChanges().forEach((change: any) => {
           if (change.type === 'added' && change.doc.data().createdAt) {
             // Refresh feed when new post is added
             fetchPosts(true);

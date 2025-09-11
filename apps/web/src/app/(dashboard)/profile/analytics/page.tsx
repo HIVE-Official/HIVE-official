@@ -238,7 +238,7 @@ export default function ProfileAnalyticsStorybook() {
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {analyticsFeatures.map((feature) => {
+            {analyticsFeatures.map((feature: any) => {
               const IconComponent = feature.icon;
               return (
                 <Card 
@@ -287,7 +287,7 @@ export default function ProfileAnalyticsStorybook() {
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            {analyticsFeatures.map((feature) => (
+            {analyticsFeatures.map((feature: any) => (
               <div 
                 key={feature.id}
                 className={`text-center p-4 rounded-lg border ${getFeatureColorClasses(feature.color)}`}

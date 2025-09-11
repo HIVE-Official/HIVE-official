@@ -33,7 +33,7 @@ export async function DELETE(request: NextRequest) {
         .where('authorId', '==', doc.id)
         .get();
       
-      postsQuery.docs.forEach((postDoc) => {
+      postsQuery.docs.forEach((postDoc: any) => {
         batch.delete(postDoc.ref);
       });
     }
@@ -76,7 +76,7 @@ export async function DELETE(request: NextRequest) {
       .where('isTestSpace', '==', true)
       .get();
     
-    testSpacesQuery.docs.forEach((doc) => {
+    testSpacesQuery.docs.forEach((doc: any) => {
       batch.delete(doc.ref);
     });
 

@@ -198,7 +198,7 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
       .get();
     
     // Update visibility in each space membership
-    const updates = membershipsSnapshot.docs.map(async (memberDoc) => {
+    const updates = membershipsSnapshot.docs.map(async (memberDoc: any) => {
       const memberData = memberDoc.data();
       
       const updatedMemberData = {

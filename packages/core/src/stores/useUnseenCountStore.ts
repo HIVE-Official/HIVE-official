@@ -11,11 +11,11 @@ interface UnseenCountState {
 
 export const useUnseenCountStore = create<UnseenCountState>()(
   persist(
-    (set) => ({
+    (set: any) => ({
       count: 0,
-      increment: () => set((state) => ({ count: state.count + 1 })),
+      increment: () => set((state: any) => ({ count: state.count + 1 })),
       decrement: () =>
-        set((state) => ({ count: Math.max(0, state.count - 1) })),
+        set((state: any) => ({ count: Math.max(0, state.count - 1) })),
       setCount: (count) => set({ count }),
       reset: () => set({ count: 0 }),
     }),

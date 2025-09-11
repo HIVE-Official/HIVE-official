@@ -204,7 +204,7 @@ export default function ToolSettingsPage() {
               <input
                 type="text"
                 value={settings.name}
-                onChange={(e) => updateSettings({ name: e.target.value })}
+                onChange={(e: any) => updateSettings({ name: e.target.value })}
                 className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               />
             </div>
@@ -213,7 +213,7 @@ export default function ToolSettingsPage() {
               <label className="block text-sm font-medium text-[var(--hive-text-muted)] mb-2">Description</label>
               <textarea
                 value={settings.description}
-                onChange={(e) => updateSettings({ description: e.target.value })}
+                onChange={(e: any) => updateSettings({ description: e.target.value })}
                 rows={3}
                 className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none resize-none"
               />
@@ -224,7 +224,7 @@ export default function ToolSettingsPage() {
                 <label className="block text-sm font-medium text-[var(--hive-text-muted)] mb-2">Category</label>
                 <select
                   value={settings.metadata.category}
-                  onChange={(e) => updateSettings({ 
+                  onChange={(e: any) => updateSettings({ 
                     metadata: { ...settings.metadata, category: e.target.value }
                   })}
                   className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
@@ -243,7 +243,7 @@ export default function ToolSettingsPage() {
                 <input
                   type="text"
                   value={settings.metadata.version}
-                  onChange={(e) => updateSettings({
+                  onChange={(e: any) => updateSettings({
                     metadata: { ...settings.metadata, version: e.target.value }
                   })}
                   className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[var(--hive-text-inverse)] focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
@@ -256,7 +256,7 @@ export default function ToolSettingsPage() {
               <input
                 type="text"
                 value={settings.metadata.tags.join(', ')}
-                onChange={(e) => updateSettings({
+                onChange={(e: any) => updateSettings({
                   metadata: { ...settings.metadata, tags: e.target.value.split(', ').filter(tag => tag.trim()) }
                 })}
                 placeholder="polling, engagement, voting"
@@ -313,7 +313,7 @@ export default function ToolSettingsPage() {
           <div className="space-y-1 divide-y divide-[rgba(255,255,255,0.06)]">
             <ToggleSwitch
               enabled={settings.permissions.allowInstall}
-              onToggle={(enabled) => updateSettings({
+              onToggle={(enabled: any) => updateSettings({
                 permissions: { ...settings.permissions, allowInstall: enabled }
               })}
               label="Allow Installation"
@@ -322,7 +322,7 @@ export default function ToolSettingsPage() {
             
             <ToggleSwitch
               enabled={settings.permissions.allowFork}
-              onToggle={(enabled) => updateSettings({
+              onToggle={(enabled: any) => updateSettings({
                 permissions: { ...settings.permissions, allowFork: enabled }
               })}
               label="Allow Forking"
@@ -331,7 +331,7 @@ export default function ToolSettingsPage() {
             
             <ToggleSwitch
               enabled={settings.permissions.allowRating}
-              onToggle={(enabled) => updateSettings({
+              onToggle={(enabled: any) => updateSettings({
                 permissions: { ...settings.permissions, allowRating: enabled }
               })}
               label="Allow Ratings & Reviews"
@@ -340,7 +340,7 @@ export default function ToolSettingsPage() {
             
             <ToggleSwitch
               enabled={settings.permissions.requireAuth}
-              onToggle={(enabled) => updateSettings({
+              onToggle={(enabled: any) => updateSettings({
                 permissions: { ...settings.permissions, requireAuth: enabled }
               })}
               label="Require Authentication"
@@ -357,7 +357,7 @@ export default function ToolSettingsPage() {
           <div className="space-y-1 divide-y divide-[rgba(255,255,255,0.06)]">
             <ToggleSwitch
               enabled={settings.notifications.onInstall}
-              onToggle={(enabled) => updateSettings({
+              onToggle={(enabled: any) => updateSettings({
                 notifications: { ...settings.notifications, onInstall: enabled }
               })}
               label="Installation Notifications"
@@ -366,7 +366,7 @@ export default function ToolSettingsPage() {
             
             <ToggleSwitch
               enabled={settings.notifications.onRating}
-              onToggle={(enabled) => updateSettings({
+              onToggle={(enabled: any) => updateSettings({
                 notifications: { ...settings.notifications, onRating: enabled }
               })}
               label="Rating Notifications"
@@ -375,7 +375,7 @@ export default function ToolSettingsPage() {
             
             <ToggleSwitch
               enabled={settings.notifications.onComment}
-              onToggle={(enabled) => updateSettings({
+              onToggle={(enabled: any) => updateSettings({
                 notifications: { ...settings.notifications, onComment: enabled }
               })}
               label="Comment Notifications"
@@ -384,7 +384,7 @@ export default function ToolSettingsPage() {
             
             <ToggleSwitch
               enabled={settings.notifications.weeklyReport}
-              onToggle={(enabled) => updateSettings({
+              onToggle={(enabled: any) => updateSettings({
                 notifications: { ...settings.notifications, weeklyReport: enabled }
               })}
               label="Weekly Usage Report"

@@ -9,21 +9,33 @@ import { FieldValue } from 'firebase-admin/firestore';
 import { ConfidentialClientApplication } from '@azure/msal-node';
 import { Client } from '@microsoft/microsoft-graph-client';
 
-const msalConfig = {
-  auth: {
-    clientId: process.env.OUTLOOK_CALENDAR_CLIENT_ID!,
-    clientSecret: process.env.OUTLOOK_CALENDAR_CLIENT_SECRET!,
-    authority: 'https://login.microsoftonline.com/common'
-  }
-};
+// Only initialize MSAL if credentials are available
+let msalClient: ConfidentialClientApplication | null = null;
 
-const msalClient = new ConfidentialClientApplication(msalConfig);
+if (process.env.OUTLOOK_CALENDAR_CLIENT_ID && process.env.OUTLOOK_CALENDAR_CLIENT_SECRET) {
+  const msalConfig = {
+    auth: {
+      clientId: process.env.OUTLOOK_CALENDAR_CLIENT_ID,
+      clientSecret: process.env.OUTLOOK_CALENDAR_CLIENT_SECRET,
+      authority: 'https://login.microsoftonline.com/common'
+    }
+  };
+  msalClient = new ConfidentialClientApplication(msalConfig);
+}
 
 /**
  * GET /api/profile/integrations/calendar/outlook/callback
  * Handle OAuth callback from Microsoft
  */
 export async function GET(request: NextRequest) {
+  // Check if Outlook integration is configured
+  if (!msalClient) {
+    console.warn('Outlook integration not configured - missing CLIENT_ID or CLIENT_SECRET');
+    return NextResponse.redirect(
+      new URL('/profile?error=outlook_not_configured', request.url)
+    );
+  }
+  
   try {
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code');
@@ -73,7 +85,7 @@ export async function GET(request: NextRequest) {
 
     // Get user info
     const graphClient = Client.init({
-      authProvider: (done) => {
+      authProvider: (done: any) => {
         done(null, response.accessToken);
       }
     });
@@ -146,7 +158,7 @@ export async function GET(request: NextRequest) {
  */
 async function syncInitialEvents(userId: string, accessToken: string) {
   const graphClient = Client.init({
-    authProvider: (done) => {
+    authProvider: (done: any) => {
       done(null, accessToken);
     }
   });

@@ -415,7 +415,7 @@ export const profileUtils = {
   getTopSpaces: (profileData: AggregatedProfileData, limit: number = 3): Array<Record<string, unknown>> => {
     const spaces = (profileData.spaces as { memberships?: Array<Record<string, unknown>> })?.memberships || [];
     return spaces
-      .filter((space) => (space.status as string) === 'active')
+      .filter((space: any) => (space.status as string) === 'active')
       .sort((a, b) => {
         const aTime = ((a.recentActivity as Record<string, unknown>)?.timeSpent as number) || 0;
         const bTime = ((b.recentActivity as Record<string, unknown>)?.timeSpent as number) || 0;

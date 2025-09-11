@@ -101,7 +101,7 @@ Touch-optimized bottom tab navigation designed for mobile devices (< 768px).
     }
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div style={{ 
         minHeight: '100vh', 
         backgroundColor: 'var(--hive-background-primary)',
@@ -293,7 +293,7 @@ export const AccessibilityDemo: Story = {
     user: mockUser,
     onNavigate: action('navigate')
   },
-  render: (args) => (
+  render: (args: any) => (
     <div>
       <div className="p-6 pb-20 bg-[var(--hive-background-primary)]">
         <div className="bg-[var(--hive-bg-secondary)] rounded-xl p-6 border border-[var(--hive-border-default)] mb-6">

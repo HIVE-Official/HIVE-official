@@ -357,7 +357,7 @@ export default function ToolsPage() {
         }}
         initialTab={activeTab}
         onToolInstall={handleToolInstall}
-        onToolCreate={(tool) => {
+        onToolCreate={(tool: any) => {
           flags.trackEvent('tools', 'created', { toolId: tool.id });
         }}
         onToolDeploy={(toolId, spaceId) => {

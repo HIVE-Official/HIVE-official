@@ -397,7 +397,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                 type="text"
                 placeholder="Search members..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg text-[var(--hive-text-inverse)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50 focus:border-[var(--hive-brand-secondary)]/30"
               />
             </div>
@@ -405,7 +405,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Role Filter */}
             <select
               value={selectedRole}
-              onChange={(e) => setSelectedRole(e.target.value)}
+              onChange={(e: any) => setSelectedRole(e.target.value)}
               className="px-3 py-2 bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg text-[var(--hive-text-inverse)] focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50"
             >
               <option value="all">All Roles</option>
@@ -418,7 +418,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Status Filter */}
             <select
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
+              onChange={(e: any) => setSelectedStatus(e.target.value)}
               className="px-3 py-2 bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg text-[var(--hive-text-inverse)] focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/50"
             >
               <option value="all">All Status</option>

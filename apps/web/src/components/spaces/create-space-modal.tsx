@@ -169,7 +169,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, error: extern
   // React Query mutation for creating space
   const createSpaceMutation = useMutation({
     mutationFn: createSpace,
-    onSuccess: (newSpace) => {
+    onSuccess: (newSpace: any) => {
       // Optimistically update spaces cache
       queryClient.setQueryData(['spaces'], (old: any) => {
         return old ? [...old, { ...newSpace, isMember: true }] : [newSpace];
@@ -236,7 +236,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, error: extern
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {SPACE_TYPES.map((type) => {
+        {SPACE_TYPES.map((type: any) => {
           const Icon = type.icon;
           return (
             <Card
@@ -325,7 +325,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, error: extern
             <Input
               placeholder="e.g., CS Study Group"
               value={spaceData.name}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 const value = e.target.value;
                 setSpaceData({ ...spaceData, name: value });
                 if (value) validateName(value);
@@ -351,7 +351,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, error: extern
               rows={4}
               placeholder="Describe what your space is about and what members can expect..."
               value={spaceData.description}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 const value = e.target.value;
                 setSpaceData({ ...spaceData, description: value });
                 if (value) validateDescription(value);
@@ -368,7 +368,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, error: extern
             <select
               className="w-full p-2 border rounded-lg"
               value={spaceData.visibility}
-              onChange={(e) => setSpaceData({ 
+              onChange={(e: any) => setSpaceData({ 
                 ...spaceData, 
                 visibility: e.target.value as 'public' | 'private' | 'invite_only'
               })}
@@ -384,7 +384,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, error: extern
             <select
               className="w-full p-2 border rounded-lg"
               value={spaceData.joinProcess}
-              onChange={(e) => setSpaceData({ 
+              onChange={(e: any) => setSpaceData({ 
                 ...spaceData, 
                 joinProcess: e.target.value as 'instant' | 'approval' | 'invite_only'
               })}
@@ -476,7 +476,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, error: extern
       <div className="p-6 w-full max-w-2xl">
         {/* Progress Steps */}
         <div className="flex items-center justify-between mb-8">
-          {[1, 2, 3].map((step) => (
+          {[1, 2, 3].map((step: any) => (
             <div key={step} className="flex items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${

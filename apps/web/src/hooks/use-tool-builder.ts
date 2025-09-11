@@ -362,7 +362,7 @@ export function useToolBuilder(options: UseToolBuilderOptions) {
   const importTool = useCallback((file: File) => {
     const reader = new FileReader();
     
-    reader.onload = (e) => {
+    reader.onload = (e: any) => {
       try {
         const importedTool = JSON.parse(e.target?.result as string);
         

@@ -310,7 +310,7 @@ test.describe('2️⃣ SPACES - Complete Functionality Tests', () => {
       // Non-moderator shouldn't see manage button
       await page.evaluate(() => {
         // Mock as regular member
-        window.currentUserRole = 'member';
+        (window as any).currentUserRole = 'member';
       });
       
       const manageButton = page.locator('button:has-text("Manage")');
@@ -387,7 +387,7 @@ test.describe('2️⃣ SPACES - Complete Functionality Tests', () => {
 
 // Helper function to mock authentication
 async function mockLogin(page: Page, email: string = 'test@buffalo.edu') {
-  await page.evaluate((userEmail) => {
+  await page.evaluate((userEmail: any) => {
     localStorage.setItem('session', JSON.stringify({
       user: { 
         id: 'test-user-123',

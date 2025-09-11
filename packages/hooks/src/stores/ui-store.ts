@@ -70,7 +70,7 @@ interface UIState {
 
 export const useUIStore = create<UIState>()(
   devtools(
-    (set) => ({
+    (set, get) => ({
       // Initial state
       sidebarOpen: true,
       mobileMenuOpen: false,
@@ -83,28 +83,28 @@ export const useUIStore = create<UIState>()(
 
       // Sidebar actions
       toggleSidebar: () =>
-        set((state) => ({ sidebarOpen: !state.sidebarOpen }), false, 'toggleSidebar'),
+        set((state: UIState) => ({ sidebarOpen: !state.sidebarOpen }), false, 'toggleSidebar'),
       
-      setSidebarOpen: (sidebarOpen) =>
+      setSidebarOpen: (sidebarOpen: boolean) =>
         set({ sidebarOpen }, false, 'setSidebarOpen'),
 
       toggleMobileMenu: () =>
-        set((state) => ({ mobileMenuOpen: !state.mobileMenuOpen }), false, 'toggleMobileMenu'),
+        set((state: UIState) => ({ mobileMenuOpen: !state.mobileMenuOpen }), false, 'toggleMobileMenu'),
       
-      setMobileMenuOpen: (mobileMenuOpen) =>
+      setMobileMenuOpen: (mobileMenuOpen: boolean) =>
         set({ mobileMenuOpen }, false, 'setMobileMenuOpen'),
 
       toggleCommandPalette: () =>
         set(
-          (state) => ({ commandPaletteOpen: !state.commandPaletteOpen }),
+          (state: UIState) => ({ commandPaletteOpen: !state.commandPaletteOpen }),
           false,
           'toggleCommandPalette'
         ),
 
       // Modal actions
-      openModal: (modalId, data) =>
+      openModal: (modalId: string, data?: unknown) =>
         set(
-          (state) => ({
+          (state: UIState) => ({
             modals: {
               ...state.modals,
               [modalId]: { id: modalId, isOpen: true, data },
@@ -114,9 +114,9 @@ export const useUIStore = create<UIState>()(
           'openModal'
         ),
 
-      closeModal: (modalId) =>
+      closeModal: (modalId: string) =>
         set(
-          (state) => ({
+          (state: UIState) => ({
             modals: {
               ...state.modals,
               [modalId]: { ...state.modals[modalId], isOpen: false },
@@ -126,9 +126,9 @@ export const useUIStore = create<UIState>()(
           'closeModal'
         ),
 
-      toggleModal: (modalId) =>
+      toggleModal: (modalId: string) =>
         set(
-          (state) => ({
+          (state: UIState) => ({
             modals: {
               ...state.modals,
               [modalId]: {
@@ -143,7 +143,7 @@ export const useUIStore = create<UIState>()(
         ),
 
       // Confirm dialog actions
-      showConfirm: (config) =>
+      showConfirm: (config: Omit<ConfirmDialog, 'isOpen'>) =>
         set(
           {
             confirmDialog: {
@@ -163,9 +163,9 @@ export const useUIStore = create<UIState>()(
         ),
 
       // Toast actions
-      addToast: (toast) =>
+      addToast: (toast: Omit<UIState['toasts'][0], 'id'>) =>
         set(
-          (state) => ({
+          (state: UIState) => ({
             toasts: [
               ...state.toasts,
               {
@@ -178,9 +178,9 @@ export const useUIStore = create<UIState>()(
           'addToast'
         ),
 
-      removeToast: (id) =>
+      removeToast: (id: string) =>
         set(
-          (state) => ({
+          (state: UIState) => ({
             toasts: state.toasts.filter((t) => t.id !== id),
           }),
           false,
@@ -191,7 +191,7 @@ export const useUIStore = create<UIState>()(
         set({ toasts: [] }, false, 'clearToasts'),
 
       // Loading actions
-      setGlobalLoading: (globalLoading, loadingMessage = null) =>
+      setGlobalLoading: (globalLoading: boolean, loadingMessage: string | null = null) =>
         set({ globalLoading, loadingMessage: loadingMessage ?? null }, false, 'setGlobalLoading'),
     }),
     {
@@ -201,8 +201,8 @@ export const useUIStore = create<UIState>()(
 );
 
 // Selectors
-export const useSidebarOpen = () => useUIStore((state) => state.sidebarOpen);
-export const useMobileMenuOpen = () => useUIStore((state) => state.mobileMenuOpen);
-export const useModal = (modalId: string) => useUIStore((state) => state.modals[modalId]);
-export const useToasts = () => useUIStore((state) => state.toasts);
-export const useGlobalLoading = () => useUIStore((state) => state.globalLoading);
+export const useSidebarOpen = () => useUIStore((state: UIState) => state.sidebarOpen);
+export const useMobileMenuOpen = () => useUIStore((state: UIState) => state.mobileMenuOpen);
+export const useModal = (modalId: string) => useUIStore((state: UIState) => state.modals[modalId]);
+export const useToasts = () => useUIStore((state: UIState) => state.toasts);
+export const useGlobalLoading = () => useUIStore((state: UIState) => state.globalLoading);

@@ -273,7 +273,7 @@ export const Step2ProfileCreation: Story = {
               type="text"
               placeholder="Your full name"
               value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
+              onChange={(e: any) => setDisplayName(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
               This is how other students will see you
@@ -288,7 +288,7 @@ export const Step2ProfileCreation: Story = {
                 type="text"
                 placeholder="your.handle"
                 value={handle}
-                onChange={(e) => setHandle(e.target.value)}
+                onChange={(e: any) => setHandle(e.target.value)}
                 className="pl-12"
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
@@ -326,7 +326,7 @@ export const Step2ProfileCreation: Story = {
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">Try these instead:</p>
                 <div className="flex flex-wrap gap-2">
-                  {[`${handle}1`, `${handle}.2025`, `${handle}.ub`].map((suggestion) => (
+                  {[`${handle}1`, `${handle}.2025`, `${handle}.ub`].map((suggestion: any) => (
                     <button
                       key={suggestion}
                       onClick={() => setHandle(suggestion)}
@@ -425,7 +425,7 @@ export const Step3SchoolPledge: Story = {
                 type="checkbox"
                 id="terms"
                 checked={agreedToTerms}
-                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                onChange={(e: any) => setAgreedToTerms(e.target.checked)}
                 className="mt-1"
               />
               <label htmlFor="terms" className="text-sm">
@@ -438,7 +438,7 @@ export const Step3SchoolPledge: Story = {
                 type="checkbox"
                 id="community"
                 checked={agreedToCommunity}
-                onChange={(e) => setAgreedToCommunity(e.target.checked)}
+                onChange={(e: any) => setAgreedToCommunity(e.target.checked)}
                 className="mt-1"
               />
               <label htmlFor="community" className="text-sm">
@@ -495,7 +495,7 @@ export const Step4AcademicInfo: Story = {
                 { value: 'graduate', label: 'Graduate' },
                 { value: 'phd', label: 'PhD' },
                 { value: 'faculty', label: 'Faculty' },
-              ].map((level) => (
+              ].map((level: any) => (
                 <button
                   key={level.value}
                   onClick={() => setAcademicLevel(level.value)}
@@ -517,11 +517,11 @@ export const Step4AcademicInfo: Story = {
             <label className="text-sm font-medium">Graduation Year</label>
             <select
               value={graduationYear}
-              onChange={(e) => setGraduationYear(e.target.value)}
+              onChange={(e: any) => setGraduationYear(e.target.value)}
               className="w-full p-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
             >
               <option value="">Select year</option>
-              {years.map((year) => (
+              {years.map((year: any) => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>
@@ -534,7 +534,7 @@ export const Step4AcademicInfo: Story = {
               type="text"
               placeholder="e.g., Computer Science"
               value={major}
-              onChange={(e) => setMajor(e.target.value)}
+              onChange={(e: any) => setMajor(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
               This helps us recommend relevant academic spaces
@@ -609,7 +609,7 @@ export const Step5InterestSelection: Story = {
           
           {/* Interest Categories */}
           <div className="space-y-3 max-h-80 overflow-y-auto">
-            {INTEREST_CATEGORIES.map((category) => (
+            {INTEREST_CATEGORIES.map((category: any) => (
               <div key={category.id} className="border rounded-lg">
                 <button
                   onClick={() => setExpandedCategory(

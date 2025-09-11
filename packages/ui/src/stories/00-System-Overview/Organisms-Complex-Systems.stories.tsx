@@ -356,7 +356,7 @@ const NavigationSystemShowcase = () => {
       
       {/* Navigation Type Selector */}
       <div className="flex flex-wrap gap-2">
-        {['desktop', 'mobile', 'header'].map((type) => (
+        {['desktop', 'mobile', 'header'].map((type: any) => (
           <Button
             key={type}
             variant={activeTab === type ? 'primary' : 'secondary'}
@@ -640,7 +640,7 @@ const OrganismSystemsLibrary = () => {
               type="text"
               placeholder="Search organism systems..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               className="pl-10 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)]"
             />
           </div>
@@ -653,7 +653,7 @@ const OrganismSystemsLibrary = () => {
 
         {/* Category Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {organismCategories.map((category) => (
+          {organismCategories.map((category: any) => (
             <Button
               key={category.id}
               variant={activeCategory === category.id ? 'primary' : 'secondary'}
@@ -668,7 +668,7 @@ const OrganismSystemsLibrary = () => {
 
         {/* Component Categories */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {filteredCategories.map((category) => (
+          {filteredCategories.map((category: any) => (
             <Card 
               key={category.id} 
               className={`border-2 bg-gradient-to-br ${getColorClasses(category.color)} ${activeCategory === category.id ? 'ring-2 ring-[var(--hive-brand-primary)]' : ''}`}

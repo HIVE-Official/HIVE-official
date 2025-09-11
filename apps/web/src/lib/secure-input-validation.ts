@@ -89,14 +89,14 @@ export const SecureSchemas = {
     .min(1, 'Email is required')
     .max(254, 'Email too long')
     .email('Invalid email format')
-    .refine((email) => {
+    .refine((email: any) => {
       // Check for email injection patterns
       const hasInjection = SECURITY_PATTERNS.EMAIL_INJECTION.some(pattern => 
         pattern.test(email)
       );
       return !hasInjection;
     }, 'Invalid email format')
-    .refine((email) => {
+    .refine((email: any) => {
       // Validate domain part
       const domain = email.split('@')[1];
       if (!domain) return false;
@@ -113,7 +113,7 @@ export const SecureSchemas = {
     .min(3, 'Handle must be at least 3 characters')
     .max(30, 'Handle must be at most 30 characters')
     .regex(/^[a-zA-Z0-9_-]+$/, 'Handle can only contain letters, numbers, underscores, and hyphens')
-    .refine((handle) => {
+    .refine((handle: any) => {
       // Reserved handles
       const reserved = [
         'admin', 'root', 'api', 'www', 'mail', 'ftp', 'localhost',
@@ -123,7 +123,7 @@ export const SecureSchemas = {
       ];
       return !reserved.includes(handle.toLowerCase());
     }, 'Handle is reserved')
-    .transform((handle) => handle.toLowerCase()),
+    .transform((handle: any) => handle.toLowerCase()),
 
   /**
    * Secure name validation
@@ -132,7 +132,7 @@ export const SecureSchemas = {
     .min(1, 'Name is required')
     .max(100, 'Name too long')
     .regex(/^[a-zA-Z\s\-'.]+$/, 'Name contains invalid characters')
-    .refine((name) => {
+    .refine((name: any) => {
       // Check for suspicious patterns
       const suspicious = [
         /<[^>]*>/,  // HTML tags
@@ -148,14 +148,14 @@ export const SecureSchemas = {
    */
   textContent: z.string()
     .max(5000, 'Content too long')
-    .refine((content) => {
+    .refine((content: any) => {
       // Check for XSS patterns
       const hasXSS = SECURITY_PATTERNS.XSS.some(pattern => 
         pattern.test(content)
       );
       return !hasXSS;
     }, 'Content contains invalid markup')
-    .refine((content) => {
+    .refine((content: any) => {
       // Check for excessive special characters (potential encoding attacks)
       const specialCharCount = (content.match(/[<>'"&%$#@!]/g) || []).length;
       return specialCharCount / content.length < 0.1; // Less than 10% special chars
@@ -166,7 +166,7 @@ export const SecureSchemas = {
    */
   url: z.string()
     .url('Invalid URL format')
-    .refine((url) => {
+    .refine((url: any) => {
       try {
         const parsed = new URL(url);
         // Only allow HTTP and HTTPS
@@ -175,7 +175,7 @@ export const SecureSchemas = {
         return false;
       }
     }, 'Only HTTP and HTTPS URLs are allowed')
-    .refine((url) => {
+    .refine((url: any) => {
       // Block potentially dangerous URLs
       const dangerous = [
         'localhost',
@@ -193,14 +193,14 @@ export const SecureSchemas = {
    */
   filePath: z.string()
     .max(255, 'File path too long')
-    .refine((path) => {
+    .refine((path: any) => {
       // Check for path traversal
       const hasTraversal = SECURITY_PATTERNS.PATH_TRAVERSAL.some(pattern => 
         pattern.test(path)
       );
       return !hasTraversal;
     }, 'Invalid file path')
-    .refine((path) => {
+    .refine((path: any) => {
       // Only allow safe characters
       const safePattern = /^[a-zA-Z0-9/_\-.]+$/;
       return safePattern.test(path);
@@ -212,14 +212,14 @@ export const SecureSchemas = {
   searchQuery: z.string()
     .min(1, 'Search query required')
     .max(200, 'Search query too long')
-    .refine((query) => {
+    .refine((query: any) => {
       // Check for SQL injection patterns
       const hasSQL = SECURITY_PATTERNS.SQL_INJECTION.some(pattern => 
         pattern.test(query)
       );
       return !hasSQL;
     }, 'Invalid search query')
-    .refine((query) => {
+    .refine((query: any) => {
       // Check for NoSQL injection patterns
       const hasNoSQL = SECURITY_PATTERNS.NOSQL_INJECTION.some(pattern => 
         pattern.test(query)
@@ -240,7 +240,7 @@ export const SecureSchemas = {
    */
   phone: z.string()
     .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format')
-    .refine((phone) => {
+    .refine((phone: any) => {
       // Remove common formatting and validate length
       const cleaned = phone.replace(/[\s\-().]/g, '');
       return cleaned.length >= 10 && cleaned.length <= 15;
@@ -252,7 +252,7 @@ export const SecureSchemas = {
   password: z.string()
     .min(8, 'Password must be at least 8 characters')
     .max(128, 'Password too long')
-    .refine((password) => {
+    .refine((password: any) => {
       // Must contain lowercase, uppercase, number
       const hasLower = /[a-z]/.test(password);
       const hasUpper = /[A-Z]/.test(password);
@@ -267,7 +267,7 @@ export const SecureSchemas = {
     .min(10, 'Token too short')
     .max(500, 'Token too long')
     .regex(/^[a-zA-Z0-9._-]+$/, 'Token contains invalid characters')
-    .refine((token) => {
+    .refine((token: any) => {
       // Block development tokens in production
       if (currentEnvironment === 'production') {
         const devTokens = [
@@ -529,7 +529,7 @@ export const ApiSchemas = {
 
   // Content creation
   postCreation: z.object({
-    title: z.string().min(1).max(200).refine((content) => {
+    title: z.string().min(1).max(200).refine((content: any) => {
       // Check for XSS patterns
       const hasXSS = SECURITY_PATTERNS.XSS.some(pattern => 
         pattern.test(content)

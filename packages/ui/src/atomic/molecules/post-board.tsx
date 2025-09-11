@@ -258,7 +258,7 @@ const PostPollCard: React.FC<{
       </div>
 
       <div className="space-y-2 mb-4">
-        {poll.options.map((option) => {
+        {poll.options.map((option: any) => {
           const percentage = poll.totalVotes > 0 ? (option.votes / poll.totalVotes) * 100 : 0;
           
           return (
@@ -634,7 +634,7 @@ export const PostBoard: React.FC<PostBoardProps> = ({
   return (
     <div className={cn('space-y-6', className)}>
       <AnimatePresence>
-        {sortedPosts.map((post) => (
+        {sortedPosts.map((post: any) => (
           <PostCard
             key={post.id}
             post={post}

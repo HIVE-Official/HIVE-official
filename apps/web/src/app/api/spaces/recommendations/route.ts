@@ -198,7 +198,7 @@ async function getAllSpaces(): Promise<any[]> {
         .get();
 
       const spaces = await Promise.all(
-        spacesSnapshot.docs.map(async (doc) => {
+        spacesSnapshot.docs.map(async (doc: any) => {
           const data = doc.data();
           
           // Get member count
@@ -320,7 +320,7 @@ function calculateRecommendationScore(userProfile: UserProfile, space: any) {
 
   // Freshness boost for new spaces (0-5 points)
   if (space.createdAt) {
-    const daysSinceCreated = (Date.now() - space.createdAt.toDate().getTime()) / (1000 * 60 * 60 * 24);
+    const daysSinceCreated = (Date.now() - space.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24);
     if (daysSinceCreated < 30) {
       factors.freshness = 5 - (daysSinceCreated / 6);
     }

@@ -360,7 +360,7 @@ const SystemNavigation = () => {
 
         {/* System Categories Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {systemCategories.map((category) => (
+          {systemCategories.map((category: any) => (
             <Card 
               key={category.id} 
               className={`border-2 bg-gradient-to-br ${getColorClasses(category.color)} hover:scale-[1.02] transition-all duration-300`}

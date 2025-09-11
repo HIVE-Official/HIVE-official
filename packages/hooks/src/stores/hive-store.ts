@@ -114,13 +114,13 @@ export const useHiveStore = create<HiveState>()(
         ...initialState,
 
         // Space actions
-        setActiveSpace: (activeSpace) =>
+        setActiveSpace: (activeSpace: Space | null) =>
           set({ activeSpace }, false, 'setActiveSpace'),
 
-        setUserSpaces: (userSpaces) =>
+        setUserSpaces: (userSpaces: Space[]) =>
           set({ userSpaces }, false, 'setUserSpaces'),
 
-        joinSpace: (space) =>
+        joinSpace: (space: Space) =>
           set(
             (state) => ({
               userSpaces: [...state.userSpaces, { ...space, isMember: true }],
@@ -129,7 +129,7 @@ export const useHiveStore = create<HiveState>()(
             'joinSpace'
           ),
 
-        leaveSpace: (spaceId) =>
+        leaveSpace: (spaceId: string) =>
           set(
             (state) => ({
               userSpaces: state.userSpaces.filter((s) => s.id !== spaceId),
@@ -140,10 +140,10 @@ export const useHiveStore = create<HiveState>()(
           ),
 
         // Tool actions
-        setActiveTools: (activeTools) =>
+        setActiveTools: (activeTools: Tool[]) =>
           set({ activeTools }, false, 'setActiveTools'),
 
-        deployTool: (tool, spaceId) =>
+        deployTool: (tool: Tool, spaceId: string) =>
           set(
             (state) => ({
               activeTools: [
@@ -155,7 +155,7 @@ export const useHiveStore = create<HiveState>()(
             'deployTool'
           ),
 
-        removeTool: (toolId) =>
+        removeTool: (toolId: string) =>
           set(
             (state) => ({
               activeTools: state.activeTools.filter((t) => t.id !== toolId),
@@ -165,10 +165,10 @@ export const useHiveStore = create<HiveState>()(
           ),
 
         // Feed actions
-        setFeedItems: (feedItems) =>
+        setFeedItems: (feedItems: FeedItem[]) =>
           set({ feedItems }, false, 'setFeedItems'),
 
-        addFeedItem: (item) =>
+        addFeedItem: (item: FeedItem) =>
           set(
             (state) => ({
               feedItems: [item, ...state.feedItems],
@@ -177,10 +177,10 @@ export const useHiveStore = create<HiveState>()(
             'addFeedItem'
           ),
 
-        setFeedFilter: (feedFilter) =>
+        setFeedFilter: (feedFilter: HiveState['feedFilter']) =>
           set({ feedFilter }, false, 'setFeedFilter'),
 
-        likeFeedItem: (itemId) =>
+        likeFeedItem: (itemId: string) =>
           set(
             (state) => ({
               feedItems: state.feedItems.map((item) =>
@@ -198,10 +198,10 @@ export const useHiveStore = create<HiveState>()(
           ),
 
         // Ritual actions
-        setActiveRituals: (activeRituals) =>
+        setActiveRituals: (activeRituals: Ritual[]) =>
           set({ activeRituals }, false, 'setActiveRituals'),
 
-        joinRitual: (ritual) =>
+        joinRitual: (ritual: Ritual) =>
           set(
             (state) => ({
               activeRituals: [...state.activeRituals, ritual],
@@ -210,7 +210,7 @@ export const useHiveStore = create<HiveState>()(
             'joinRitual'
           ),
 
-        leaveRitual: (ritualId) =>
+        leaveRitual: (ritualId: string) =>
           set(
             (state) => ({
               activeRituals: state.activeRituals.filter((r) => r.id !== ritualId),

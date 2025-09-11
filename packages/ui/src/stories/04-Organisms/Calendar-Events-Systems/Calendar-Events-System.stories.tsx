@@ -167,7 +167,7 @@ const CalendarSystem = () => {
                   </CardTitle>
                   <div className="flex items-center space-x-2">
                     <div className="flex bg-gray-700 rounded-lg p-1">
-                      {['day', 'week', 'month'].map((mode) => (
+                      {['day', 'week', 'month'].map((mode: any) => (
                         <button
                           key={mode}
                           onClick={() => setViewMode(mode as any)}
@@ -228,7 +228,7 @@ const CalendarSystem = () => {
                   </div>
 
                   {/* Time Slots */}
-                  {Array.from({ length: 12 }, (_, i) => i + 8).map((hour) => (
+                  {Array.from({ length: 12 }, (_, i) => i + 8).map((hour: any) => (
                     <div key={hour} className="grid grid-cols-8 border-b border-gray-700/50">
                       <div className="p-3 text-gray-500 text-sm border-r border-gray-700">
                         {hour}:00
@@ -313,7 +313,7 @@ const CalendarSystem = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {mockEvents.map((event) => (
+                  {mockEvents.map((event: any) => (
                     <div key={event.id} className="p-4 bg-gray-800 rounded-lg">
                       
                       {/* Event Header */}

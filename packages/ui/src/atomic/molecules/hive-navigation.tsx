@@ -53,7 +53,7 @@ export const HiveNavigation: React.FC<HiveNavigationProps> = ({
 
         {/* Navigation Items */}
         <nav className="space-y-3">
-          {coreItems.map((item) => {
+          {coreItems.map((item: any) => {
             const Icon = item.icon;
             const isActive = isItemActive(item.href);
             
@@ -123,7 +123,7 @@ export const HiveNavigation: React.FC<HiveNavigationProps> = ({
         {/* Navigation */}
         <nav className="flex-1 p-4">
           <div className="space-y-2">
-            {coreItems.map((item) => {
+            {coreItems.map((item: any) => {
               const Icon = item.icon;
               const isActive = isItemActive(item.href);
               

@@ -444,7 +444,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {spaceData.recentMembers.map((member) => (
+                    {spaceData.recentMembers.map((member: any) => (
                       <div key={member.id} className="flex items-center space-x-3">
                         <Avatar className="h-10 w-10">
                           {member.avatar ? (
@@ -479,7 +479,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {spaceData.leaders.map((leader) => (
+                    {spaceData.leaders.map((leader: any) => (
                       <div key={leader.id} className="flex items-center space-x-3">
                         <Avatar className="h-8 w-8">
                           {leader.avatar ? (
@@ -523,7 +523,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
               <CardContent>
                 {spaceData.upcomingEvents.length > 0 ? (
                   <div className="space-y-4">
-                    {spaceData.upcomingEvents.map((event) => (
+                    {spaceData.upcomingEvents.map((event: any) => (
                       <div key={event.id} className="border border-border rounded-lg p-4">
                         <div className="flex items-center justify-between">
                           <div>

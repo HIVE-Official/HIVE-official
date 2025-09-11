@@ -66,7 +66,7 @@ describe('CampusSpacesCard', () => {
   });
 
   it('calls onSpaceClick when space is clicked', () => {
-    const onSpaceClick = jest.fn();
+    const onSpaceClick = (() => {});
     render(<CampusSpacesCard spaces={mockSpaces} onSpaceClick={onSpaceClick} />);
     
     fireEvent.click(screen.getByText('CS 101: Intro to Programming'));
@@ -74,7 +74,7 @@ describe('CampusSpacesCard', () => {
   });
 
   it('calls onJoinSpace when join button is clicked', () => {
-    const onJoinSpace = jest.fn();
+    const onJoinSpace = (() => {});
     render(<CampusSpacesCard spaces={mockSpaces} onJoinSpace={onJoinSpace} />);
     
     fireEvent.click(screen.getByText('Join New Space'));
@@ -82,7 +82,7 @@ describe('CampusSpacesCard', () => {
   });
 
   it('calls onViewAll when view all is clicked', () => {
-    const onViewAll = jest.fn();
+    const onViewAll = (() => {});
     render(<CampusSpacesCard spaces={mockSpaces} onViewAll={onViewAll} />);
     
     fireEvent.click(screen.getByText('View All'));
@@ -111,7 +111,7 @@ describe('CampusSpacesCard', () => {
       name: `Space ${i}`,
     }));
     
-    const onViewAll = jest.fn();
+    const onViewAll = (() => {});
     render(<CampusSpacesCard spaces={manySpaces} onViewAll={onViewAll} />);
     
     // Should show "more spaces" indicator

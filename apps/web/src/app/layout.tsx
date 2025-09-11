@@ -7,6 +7,7 @@ import { WelcomeMatProvider } from "../components/welcome-mat-provider";
 import { FeedbackToast } from "../components/feedback-toast";
 import { ErrorBoundary } from "../components/error-boundary";
 import { ProductionSafetyCheck } from "../components/dev/ProductionSafetyCheck";
+import { Toaster } from "sonner";
 
 // Using Geist Sans via CSS import in globals.css instead of Next.js font optimization
 // to match the HIVE design system approach
@@ -62,6 +63,19 @@ export default function RootLayout({
           <Providers>
             <WelcomeMatProvider>{children}</WelcomeMatProvider>
             <FeedbackToast />
+            <Toaster 
+              position="bottom-right"
+              toastOptions={{
+                style: {
+                  background: 'var(--hive-background-secondary)',
+                  color: 'var(--hive-text-primary)',
+                  border: '1px solid var(--hive-border-default)',
+                },
+                className: 'hive-toast',
+              }}
+              theme="dark"
+              richColors
+            />
           </Providers>
         </ErrorBoundary>
       </body>

@@ -320,7 +320,7 @@ const ToolCard: React.FC<{
         {/* Features (Full variant only) */}
         {variant === 'full' && tool.features && tool.features.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {tool.features.slice(0, 3).map((feature) => (
+            {tool.features.slice(0, 3).map((feature: any) => (
               <span key={feature} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
                 {feature}
               </span>
@@ -586,7 +586,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
         <div className="animate-pulse">
           <div className="bg-gray-200 rounded-lg h-20 mb-4" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4].map((i: any) => (
               <div key={i} className="bg-gray-100 rounded-lg h-32" />
             ))}
           </div>
@@ -624,7 +624,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
             <>
               <select
                 value={filter}
-                onChange={(e) => setFilter(e.target.value as any)}
+                onChange={(e: any) => setFilter(e.target.value as any)}
                 className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]"
               >
                 <option value="all">All Tools</option>
@@ -634,7 +634,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
               
               <select
                 value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value as any)}
+                onChange={(e: any) => setCategoryFilter(e.target.value as any)}
                 className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]"
               >
                 <option value="all">All Categories</option>
@@ -684,7 +684,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
         ) : (
           filteredTools
             .slice(0, variant === 'widget' ? 4 : undefined)
-            .map((tool) => (
+            .map((tool: any) => (
               <ToolCard
                 key={tool.id}
                 tool={tool}

@@ -1,358 +1,135 @@
-// Temporary stub components to unblock production build
-// TODO: Fix @hive/ui export resolution and remove these stubs
+// Temporary stub components for components under development
 
 import React from 'react';
-import Image from 'next/image';
 
-export function PageContainer({ 
-  children, 
+export const TempSpaceCard = ({ space }: { space: any }) => (
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-medium">{space.name}</h3>
+    <p className="text-sm text-gray-600">{space.description}</p>
+  </div>
+);
+
+export const TempEventCard = ({ event }: { event: any }) => (
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-medium">{event.title}</h3>
+    <p className="text-sm text-gray-600">{event.description}</p>
+  </div>
+);
+
+export const TempToolCard = ({ tool }: { tool: any }) => (
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-medium">{tool.name}</h3>
+    <p className="text-sm text-gray-600">{tool.description}</p>
+  </div>
+);
+
+// Loading components
+export const LoadingSpinner = () => (
+  <div className="animate-spin h-5 w-5 border-2 border-gray-300 border-t-gray-600 rounded-full" />
+);
+
+export const LoadingSkeleton = ({ className = "" }: { className?: string }) => (
+  <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
+);
+
+// Empty state components
+export const EmptyState = ({ 
   title, 
-  subtitle, 
-  className = "",
-  ...props 
-}: {
-  children: React.ReactNode;
-  title?: string;
-  subtitle?: string;
-  className?: string;
-  [key: string]: any;
-}) {
-  return (
-    <div className={`w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 ${className}`} {...props}>
-      {title && (
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-2">{title}</h1>
-          {subtitle && <p className="text-gray-400">{subtitle}</p>}
-        </div>
-      )}
-      {children}
-    </div>
-  );
-}
-
-export function Alert({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`p-4 border rounded-lg bg-yellow-50 border-yellow-200 text-yellow-800 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-export function AlertDescription({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`text-sm ${className}`}>{children}</div>;
-}
-
-// Header components stubs
-export function LandingPageHeader() {
-  return (
-    <div className="bg-black border-b border-white/10 p-4">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 flex items-center justify-center">
-            <Image
-              src="/assets/hive-logo-white.svg"
-              alt="HIVE Logo"
-              width={32}
-              height={32}
-              className="w-8 h-8"
-            />
-          </div>
-          <div className="text-xl font-bold text-[var(--hive-text-inverse)]">HIVE</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function SchoolsPageHeader(props: any) {
-  return <LandingPageHeader />;
-}
-
-export function AuthPageHeader() {
-  return <LandingPageHeader />;
-}
-
-export function DashboardPageHeader() {
-  return <LandingPageHeader />;
-}
-
-// Modal component stubs
-export function Modal({ 
-  children, 
-  open, 
-  isOpen, 
-  onOpenChange, 
-  onClose, 
-  size,
-  title,
-  showCloseButton 
+  description, 
+  action 
 }: { 
-  children: React.ReactNode; 
-  open?: boolean; 
-  isOpen?: boolean;
-  onOpenChange?: () => void; 
-  onClose?: () => void;
-  size?: string;
-  title?: string;
-  showCloseButton?: boolean;
-}) {
-  const modalIsOpen = open ?? isOpen ?? false;
-  const handleClose = onOpenChange || onClose || (() => {});
-  
-  if (!modalIsOpen) return null;
+  title: string; 
+  description: string; 
+  action?: React.ReactNode; 
+}) => (
+  <div className="text-center py-8">
+    <h3 className="font-medium text-gray-900">{title}</h3>
+    <p className="text-gray-600 mt-1">{description}</p>
+    {action && <div className="mt-4">{action}</div>}
+  </div>
+);
+
+// Additional UI components needed by the app
+export const Modal = ({ children, isOpen, onClose }: { children: React.ReactNode; isOpen: boolean; onClose: () => void }) => {
+  if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleClose}>
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
-        {title && (
-          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">{title}</h2>
-            {showCloseButton && (
-              <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
-                ×
-              </button>
-            )}
-          </div>
-        )}
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={onClose}>
+      <div className="bg-white rounded-lg p-6 max-w-lg w-full" onClick={(e: any) => e.stopPropagation()}>
         {children}
       </div>
     </div>
   );
-}
+};
 
-export function ModalContent({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`p-6 ${className}`}>{children}</div>;
-}
+export const PageContainer = ({ children }: { children: React.ReactNode }) => (
+  <div className="container mx-auto px-4 py-6">{children}</div>
+);
 
-export function ModalHeader({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`mb-4 ${className}`}>{children}</div>;
-}
+export const useUnifiedAuth = () => ({
+  user: { id: 'temp-user', email: 'user@example.com' },
+  isLoading: false,
+  error: null
+});
 
-export function ModalTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <h2 className={`text-lg font-semibold ${className}`}>{children}</h2>;
-}
+export const Display = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-2xl font-bold">{children}</div>
+);
 
-export function ModalFooter({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`mt-6 flex gap-3 ${className}`}>{children}</div>;
-}
+export const Heading = ({ children }: { children: React.ReactNode }) => (
+  <h1 className="text-xl font-semibold">{children}</h1>
+);
 
-// Modal component is already exported above
+export const Typography = ({ children }: { children: React.ReactNode }) => (
+  <p className="text-base">{children}</p>
+);
 
-// Hook stubs
-export function useOnboardingBridge() {
-  return {
-    currentStep: 0,
-    totalSteps: 8,
-    nextStep: () => {},
-    prevStep: () => {},
-    completeOnboarding: () => {},
-    isLoading: false,
-    error: null
-  };
-}
+export const Button = ({ children, onClick, ...props }: any) => (
+  <button 
+    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    onClick={onClick}
+    {...props}
+  >
+    {children}
+  </button>
+);
 
-// Type stubs for missing @hive/ui types
-export interface User {
-  id: string;
-  handle: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  school: string;
-  preferences: {
-    privacy: 'public' | 'private' | 'friends-only';
-    notifications: boolean;
-  };
-  isPrivate: boolean;
-}
+export const Card = ({ children }: { children: React.ReactNode }) => (
+  <div className="bg-white rounded-lg shadow p-4">{children}</div>
+);
 
-export interface Space {
-  id: string;
-  name: string;
-  description: string;
-  type: string;
-  memberCount: number;
-}
+export const CardHeader = ({ children }: { children: React.ReactNode }) => (
+  <div className="mb-4">{children}</div>
+);
 
-export interface Event {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  location?: string;
-}
+export const CardTitle = ({ children }: { children: React.ReactNode }) => (
+  <h3 className="text-lg font-semibold">{children}</h3>
+);
 
-export interface Connection {
-  id: string;
-  userId: string;
-  connectedUserId: string;
-  type: 'friend' | 'follow';
-}
+export const CardContent = ({ children }: { children: React.ReactNode }) => (
+  <div>{children}</div>
+);
 
-export interface HiveLabSection {
-  id: string;
-  title: string;
-  description: string;
-  tools: any[];
-}
+export const Badge = ({ children }: { children: React.ReactNode }) => (
+  <span className="inline-block px-2 py-1 text-xs bg-gray-200 rounded">{children}</span>
+);
 
-// Additional missing component exports
-export function Text({ 
-  children, 
-  className = "", 
-  as = "p",
-  color,
-  size,
-  ...props 
-}: { 
-  children: React.ReactNode; 
-  className?: string; 
-  as?: keyof JSX.IntrinsicElements;
-  color?: string;
-  size?: string;
-  [key: string]: any;
-}) {
-  const Component = as;
-  const colorClasses = {
-    medium: "text-gray-600",
-    muted: "text-gray-500",
-    primary: "text-gray-900",
-    secondary: "text-gray-700",
-  };
-  const sizeClasses = {
-    small: "text-sm",
-    medium: "text-base",
-    large: "text-lg",
-    xl: "text-xl",
-  };
-  const colorClass = color ? (colorClasses[color as keyof typeof colorClasses] || '') : '';
-  const sizeClass = size ? (sizeClasses[size as keyof typeof sizeClasses] || '') : '';
-  return React.createElement(Component, { 
-    className: `${colorClass} ${sizeClass} ${className}`,
-    ...props 
-  }, children);
-}
-
-export const Typography = Text;
-
-export function Button({ 
-  children, 
-  className = "", 
-  variant = "default",
-  size = "md",
-  disabled = false,
-  ...props 
-}: { 
-  children: React.ReactNode; 
-  className?: string; 
-  variant?: string;
-  size?: string;
-  disabled?: boolean;
-  [key: string]: any;
-}) {
-  const baseStyles = "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
-  const variantStyles = {
-    default: "bg-black text-white hover:bg-gray-800",
-    secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
-    outline: "border border-gray-300 bg-transparent hover:bg-gray-50",
-  };
-  const sizeStyles = {
-    sm: "h-8 px-3 text-sm",
-    md: "h-10 px-4",
-    lg: "h-12 px-6 text-lg",
-  };
-  
-  return (
-    <button
-      className={`${baseStyles} ${variantStyles[variant as keyof typeof variantStyles] || variantStyles.default} ${sizeStyles[size as keyof typeof sizeStyles] || sizeStyles.md} ${className}`}
-      disabled={disabled}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-}
-
-export const ButtonEnhanced = Button;
-
-export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`bg-white rounded-lg shadow-sm border ${className}`}>{children}</div>;
-}
-
-export function CardContent({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`p-6 ${className}`}>{children}</div>;
-}
-
-export function CardHeader({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`p-6 pb-3 ${className}`}>{children}</div>;
-}
-
-export function CardTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <h3 className={`text-lg font-semibold ${className}`}>{children}</h3>;
-}
-
-export function Badge({ children, className = "", variant, ...props }: { children: React.ReactNode; className?: string; variant?: string; [key: string]: any }) {
-  const variantClasses = {
-    default: "bg-gray-100 text-gray-800",
-    secondary: "bg-gray-200 text-gray-900",
-    success: "bg-green-100 text-green-800",
-    warning: "bg-yellow-100 text-yellow-800",
-    danger: "bg-red-100 text-red-800",
-    primary: "bg-blue-100 text-blue-800",
-  };
-  const variantClass = variant ? (variantClasses[variant as keyof typeof variantClasses] || variantClasses.default) : variantClasses.default;
-  return <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${variantClass} ${className}`} {...props}>{children}</span>;
-}
-
-export function Container({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`w-full max-w-6xl mx-auto px-4 sm:px-6 ${className}`}>{children}</div>;
-}
-
-export function Input({ className = "", ...props }: { className?: string; [key: string]: any }) {
-  return <input className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`} {...props} />;
-}
-
-export function FormField({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`space-y-2 ${className}`}>{children}</div>;
-}
-
-export function Display({ children, className = "", size, ...props }: { children: React.ReactNode; className?: string; size?: string; [key: string]: any }) {
-  const sizeClasses = {
-    small: "text-2xl font-bold",
-    medium: "text-3xl font-bold",
-    large: "text-4xl font-bold",
-    xl: "text-5xl font-bold",
-  };
-  const sizeClass = size ? (sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.large) : "text-4xl font-bold";
-  return <h1 className={`${sizeClass} ${className}`} {...props}>{children}</h1>;
-}
-
-export function Heading({ children, className = "", level = 2, ...props }: { children: React.ReactNode; className?: string; level?: number; [key: string]: any }) {
-  const Component = `h${level}` as keyof JSX.IntrinsicElements;
-  const sizeClasses = {
-    1: "text-4xl font-bold",
-    2: "text-2xl font-semibold", 
-    3: "text-xl font-semibold",
-    4: "text-lg font-medium",
-    5: "text-base font-medium",
-    6: "text-sm font-medium"
-  };
-  return React.createElement(Component, { 
-    className: `${sizeClasses[level as keyof typeof sizeClasses] || sizeClasses[2]} ${className}`,
-    ...props 
-  }, children);
-}
-
-// Auth hook stub
-export function useUnifiedAuth() {
-  return {
-    user: {
-      uid: 'mock_user_123',
-      displayName: 'UB Student',
-      email: 'student@buffalo.edu',
-      photoURL: null,
-    },
-    isLoading: false,
-    isAuthenticated: true,
-    signOut: () => Promise.resolve(),
-  };
-}
+export default {
+  TempSpaceCard,
+  TempEventCard,
+  TempToolCard,
+  LoadingSpinner,
+  LoadingSkeleton,
+  EmptyState,
+  Modal,
+  PageContainer,
+  useUnifiedAuth,
+  Display,
+  Heading,
+  Typography,
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Badge
+};

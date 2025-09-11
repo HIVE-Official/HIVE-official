@@ -121,7 +121,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
             <div className="flex items-start space-x-4">
               {/* Checkbox */}
               <motion.button
-                onClick={(e) => { e.stopPropagation(); agreement.toggle(); }}
+                onClick={(e: any) => { e.stopPropagation(); agreement.toggle(); }}
                 className={cn(
                   "flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95",
                   agreement.checked
@@ -158,7 +158,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
                 
                 {/* View Link */}
                 <button
-                  onClick={(e) => { e.stopPropagation(); window.open(agreement.link, '_blank'); }}
+                  onClick={(e: any) => { e.stopPropagation(); window.open(agreement.link, '_blank'); }}
                   className="inline-flex items-center space-x-1 text-xs text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-secondary)] transition-colors"
                 >
                   <span>Read full document</span>

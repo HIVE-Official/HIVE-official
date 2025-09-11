@@ -186,7 +186,7 @@ export const CreatePostSchema = z.object({
         .max(10)
         .optional(),
     })
-    .refine((data) => data.text || data.media, {
+    .refine((data: any) => data.text || data.media, {
       message: "Post must have either text content or media",
     }),
   spaceId: z.string().optional(),
@@ -275,7 +275,7 @@ export class ContentProcessor {
     text: string
   ): Pick<PostContent, "mentions" | "hashtags" | "links"> {
     return {
-      mentions: this.extractMentions(text).map((m) => ({
+      mentions: this.extractMentions(text).map((m: any) => ({
         ...m,
         userId: "", // Will be resolved by mention resolution service
         displayName: "", // Will be resolved by mention resolution service
@@ -393,7 +393,7 @@ export class PostCreationEngine {
       if (!validation.success) {
         return {
           success: false,
-          errors: validation.error.errors.map((e) => e.message),
+          errors: validation.error.errors.map((e: any) => e.message),
         };
       }
 

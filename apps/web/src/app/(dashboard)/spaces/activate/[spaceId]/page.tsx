@@ -339,7 +339,7 @@ export default function SpaceActivationPage() {
                 {categoryLabels[category as keyof typeof categoryLabels]}
               </h3>
               <Grid cols={2} gap="md">
-                {features.map((feature) => (
+                {features.map((feature: any) => (
                   <FeatureCard
                     key={feature.id}
                     feature={feature}

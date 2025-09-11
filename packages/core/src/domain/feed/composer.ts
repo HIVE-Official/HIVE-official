@@ -178,8 +178,8 @@ export class ComposerEngine {
 
     // Check required fields
     toolConfig.fields
-      .filter((field) => field.required)
-      .forEach((field) => {
+      .filter((field: any) => field.required)
+      .forEach((field: any) => {
         if (!metadata[field.id] && field.id !== "content") {
           errors.push(`${field.label} is required`);
         }
@@ -456,7 +456,7 @@ export class ComposerEngine {
             typeof metadata.pollOptions === "string"
               ? (metadata.pollOptions as string)
                   .split("\n")
-                  .filter((opt) => opt.trim())
+                  .filter((opt: any) => opt.trim())
               : metadata.pollOptions,
           allowMultiple: metadata.allowMultiple === "true",
         };

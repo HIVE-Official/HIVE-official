@@ -104,7 +104,7 @@ export const Default: Story = {
     onChange: action('search-changed'),
     onClear: action('search-cleared'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -608,7 +608,7 @@ export const Playground: Story = {
     onChange: action('playground-change'),
     onClear: action('playground-clear'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

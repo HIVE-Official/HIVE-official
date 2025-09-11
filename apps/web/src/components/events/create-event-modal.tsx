@@ -245,7 +245,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               </label>
               <Input
                 value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                onChange={(e: any) => handleInputChange('title', e.target.value)}
                 placeholder="Enter event title..."
                 className="w-full"
                 maxLength={100}
@@ -259,7 +259,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
+                onChange={(e: any) => handleInputChange('description', e.target.value)}
                 placeholder="Describe your event, what to expect, and any important details..."
                 className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
                 rows={4}
@@ -273,7 +273,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             <div>
               <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Event Type</label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {EVENT_TYPES.map((type) => (
+                {EVENT_TYPES.map((type: any) => (
                   <button
                     key={type.id}
                     onClick={() => handleInputChange('type', type.id)}
@@ -306,7 +306,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <input
                   type="datetime-local"
                   value={formData.datetime.start}
-                  onChange={(e) => handleNestedInputChange('datetime', 'start', e.target.value)}
+                  onChange={(e: any) => handleNestedInputChange('datetime', 'start', e.target.value)}
                   className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none"
                   min={new Date().toISOString().slice(0, 16)}
                 />
@@ -320,7 +320,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <input
                   type="datetime-local"
                   value={formData.datetime.end}
-                  onChange={(e) => handleNestedInputChange('datetime', 'end', e.target.value)}
+                  onChange={(e: any) => handleNestedInputChange('datetime', 'end', e.target.value)}
                   className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none"
                   min={formData.datetime.start || new Date().toISOString().slice(0, 16)}
                 />
@@ -331,7 +331,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Timezone</label>
               <select
                 value={formData.datetime.timezone}
-                onChange={(e) => handleNestedInputChange('datetime', 'timezone', e.target.value)}
+                onChange={(e: any) => handleNestedInputChange('datetime', 'timezone', e.target.value)}
                 className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none"
               >
                 <option value="America/New_York">Eastern Time (ET)</option>
@@ -353,7 +353,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                   { id: 'physical', label: 'In-Person', icon: '📍' },
                   { id: 'virtual', label: 'Virtual', icon: '💻' },
                   { id: 'hybrid', label: 'Hybrid', icon: '🔗' }
-                ].map((locType) => (
+                ].map((locType: any) => (
                   <button
                     key={locType.id}
                     onClick={() => handleNestedInputChange('location', 'type', locType.id)}
@@ -379,7 +379,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               </label>
               <Input
                 value={formData.location.name}
-                onChange={(e) => handleNestedInputChange('location', 'name', e.target.value)}
+                onChange={(e: any) => handleNestedInputChange('location', 'name', e.target.value)}
                 placeholder={
                   formData.location.type === 'virtual' 
                     ? 'e.g., Zoom Meeting, Discord Channel'
@@ -394,7 +394,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Full Address</label>
                 <Input
                   value={formData.location.address || ''}
-                  onChange={(e) => handleNestedInputChange('location', 'address', e.target.value)}
+                  onChange={(e: any) => handleNestedInputChange('location', 'address', e.target.value)}
                   placeholder="Enter full address with building and room number..."
                   className="w-full"
                 />
@@ -406,7 +406,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Virtual Link</label>
                 <Input
                   value={formData.location.virtualLink || ''}
-                  onChange={(e) => handleNestedInputChange('location', 'virtualLink', e.target.value)}
+                  onChange={(e: any) => handleNestedInputChange('location', 'virtualLink', e.target.value)}
                   placeholder="https://zoom.us/j/... or Discord invite link"
                   className="w-full"
                 />
@@ -427,7 +427,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <Input
                   type="number"
                   value={formData.capacity.toString()}
-                  onChange={(e) => handleInputChange('capacity', parseInt(e.target.value) || 0)}
+                  onChange={(e: any) => handleInputChange('capacity', parseInt(e.target.value) || 0)}
                   placeholder="50"
                   className="w-32"
                   min="1"
@@ -447,7 +447,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                   { id: 'public', label: 'Public', desc: 'Anyone can discover and join this event', icon: '🌍' },
                   { id: 'space_only', label: 'Space Members Only', desc: 'Only members of your space can see this event', icon: '👥' },
                   { id: 'invited_only', label: 'Invite Only', desc: 'Only people you invite can join', icon: '🔒' }
-                ].map((vis) => (
+                ].map((vis: any) => (
                   <label
                     key={vis.id}
                     className={`flex items-start space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
@@ -461,7 +461,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                       name="visibility"
                       value={vis.id}
                       checked={formData.visibility === vis.id}
-                      onChange={(e) => handleInputChange('visibility', e.target.value)}
+                      onChange={(e: any) => handleInputChange('visibility', e.target.value)}
                       className="mt-1"
                     />
                     <div>
@@ -490,7 +490,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 Select tools that attendees can use during your event
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {AVAILABLE_TOOLS.map((tool) => (
+                {AVAILABLE_TOOLS.map((tool: any) => (
                   <label
                     key={tool.id}
                     className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
@@ -521,10 +521,10 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <div className="flex items-center space-x-2 mb-3">
                 <Input
                   value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
+                  onChange={(e: any) => setNewTag(e.target.value)}
                   placeholder="Add a tag..."
                   className="flex-1"
-                  onKeyPress={(e) => e.key === 'Enter' && addTag()}
+                  onKeyPress={(e: any) => e.key === 'Enter' && addTag()}
                 />
                 <Button onClick={addTag} size="sm">
                   <Plus className="h-4 w-4" />
@@ -547,17 +547,17 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <div className="flex items-center space-x-2 mb-3">
                 <Input
                   value={newRequirement}
-                  onChange={(e) => setNewRequirement(e.target.value)}
+                  onChange={(e: any) => setNewRequirement(e.target.value)}
                   placeholder="e.g., Laptop, Professional attire..."
                   className="flex-1"
-                  onKeyPress={(e) => e.key === 'Enter' && addRequirement()}
+                  onKeyPress={(e: any) => e.key === 'Enter' && addRequirement()}
                 />
                 <Button onClick={addRequirement} size="sm">
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
               <div className="space-y-2">
-                {formData.requirements?.map((req) => (
+                {formData.requirements?.map((req: any) => (
                   <div key={req} className="flex items-center justify-between p-2 bg-zinc-800 rounded">
                     <span className="text-[var(--hive-text-inverse)] text-sm">{req}</span>
                     <button onClick={() => removeRequirement(req)}>

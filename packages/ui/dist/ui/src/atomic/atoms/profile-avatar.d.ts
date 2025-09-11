@@ -1,9 +1,9 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const profileAvatarVariants: (props?: ({
-    size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | null | undefined;
+    size?: "sm" | "lg" | "xl" | "xs" | "md" | "xxl" | null | undefined;
     shape?: "circle" | "square" | "rounded" | null | undefined;
-    border?: "primary" | "none" | "subtle" | "builder" | "verified" | null | undefined;
+    border?: "none" | "primary" | "subtle" | "builder" | "verified" | null | undefined;
     status?: "none" | "online" | "offline" | "away" | "busy" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface ProfileAvatarProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof profileAvatarVariants> {

@@ -311,7 +311,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
             <textarea
               {...commonInputProps}
               value={value}
-              onChange={(e) => handleValueChange(field.id, e.target.value)}
+              onChange={(e: any) => handleValueChange(field.id, e.target.value)}
               placeholder={field.placeholder}
               rows={4}
               className={cn(commonInputProps.className, 'resize-none')}
@@ -321,7 +321,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
               <input
                 type="checkbox"
                 checked={value}
-                onChange={(e) => handleValueChange(field.id, e.target.checked)}
+                onChange={(e: any) => handleValueChange(field.id, e.target.checked)}
                 className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
               />
               <span className="text-[var(--hive-text-primary)]">{field.placeholder || 'Enabled'}</span>
@@ -330,10 +330,10 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
             <select
               {...commonInputProps}
               value={value}
-              onChange={(e) => handleValueChange(field.id, e.target.value)}
+              onChange={(e: any) => handleValueChange(field.id, e.target.value)}
             >
               <option value="">{field.placeholder || 'Select an option'}</option>
-              {field.options?.map((option) => (
+              {field.options?.map((option: any) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -342,9 +342,9 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
           ) : field.type === 'file' ? (
             <div>
               <input
-                ref={(el) => { fileInputRefs.current[field.id] = el; }}
+                ref={(el: any) => { fileInputRefs.current[field.id] = el; }}
                 type="file"
-                onChange={(e) => {
+                onChange={(e: any) => {
                   const file = e.target.files?.[0];
                   if (file) {
                     handleValueChange(field.id, file);
@@ -373,7 +373,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
               {...commonInputProps}
               type={isPassword && !showValue ? 'password' : field.type === 'number' ? 'number' : field.type}
               value={value}
-              onChange={(e) => handleValueChange(field.id, field.type === 'number' ? Number(e.target.value) : e.target.value)}
+              onChange={(e: any) => handleValueChange(field.id, field.type === 'number' ? Number(e.target.value) : e.target.value)}
               placeholder={field.placeholder}
               min={field.validation?.min}
               max={field.validation?.max}
@@ -483,7 +483,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
               { id: 'config', label: 'Configuration', icon: Settings },
               { id: 'advanced', label: 'Advanced', icon: Code },
               { id: 'permissions', label: 'Permissions', icon: Shield },
-            ].map((tab) => (
+            ].map((tab: any) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}

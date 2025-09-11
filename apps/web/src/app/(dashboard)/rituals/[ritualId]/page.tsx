@@ -391,7 +391,7 @@ export default function RitualDetailPage() {
               <div className="bg-hive-surface border border-hive-border rounded-xl p-6">
                 <h2 className="text-xl font-semibold text-hive-text-primary mb-4">Actions to Complete</h2>
                 <div className="space-y-4">
-                  {ritual.actions.map((action) => {
+                  {ritual.actions.map((action: any) => {
                     const ActionIcon = ACTION_TYPES[action.type].icon;
                     const isCompleted = ritual.userParticipation?.actionsCompleted.includes(action.id);
                     
@@ -544,7 +544,7 @@ export default function RitualDetailPage() {
               <div className="bg-hive-surface border border-hive-border rounded-xl p-6">
                 <h3 className="font-semibold text-hive-text-primary mb-4">Rewards</h3>
                 <div className="space-y-3">
-                  {ritual.rewards.map((reward) => (
+                  {ritual.rewards.map((reward: any) => (
                     <div key={reward.id} className="flex items-center space-x-3">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                         reward.rarity === 'legendary' ? 'bg-[var(--hive-gold)]' :

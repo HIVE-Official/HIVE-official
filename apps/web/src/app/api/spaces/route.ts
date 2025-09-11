@@ -62,7 +62,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       return NextResponse.json(ApiResponseHelper.success([]), { status: HttpStatus.OK });
     }
 
-    const spaces = snapshot.docs.map((doc) => ({
+    const spaces = snapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data(),
     })) as Space[];

@@ -410,7 +410,7 @@ export function PropertyPanel({
         return (
           <Input
             value={value || ''}
-            onChange={(e) => handlePropertyChange(field.key, e.target.value)}
+            onChange={(e: any) => handlePropertyChange(field.key, e.target.value)}
             placeholder={field.placeholder}
           />
         );
@@ -420,7 +420,7 @@ export function PropertyPanel({
           <Input
             type="number"
             value={value || ''}
-            onChange={(e) => handlePropertyChange(field.key, e.target.value ? Number(e.target.value) : undefined)}
+            onChange={(e: any) => handlePropertyChange(field.key, e.target.value ? Number(e.target.value) : undefined)}
             placeholder={field.placeholder}
           />
         );
@@ -429,13 +429,13 @@ export function PropertyPanel({
         return (
           <Switch
             checked={value || false}
-            onCheckedChange={(checked) => handlePropertyChange(field.key, checked)}
+            onCheckedChange={(checked: any) => handlePropertyChange(field.key, checked)}
           />
         );
         
       case 'select':
         return (
-          <Select value={value || ''} onValueChange={(v) => handlePropertyChange(field.key, v)}>
+          <Select value={value || ''} onValueChange={(v: any) => handlePropertyChange(field.key, v)}>
             <SelectTrigger>
               <SelectValue placeholder="Select..." />
             </SelectTrigger>
@@ -455,12 +455,12 @@ export function PropertyPanel({
             <input
               type="color"
               value={value || '#000000'}
-              onChange={(e) => handlePropertyChange(field.key, e.target.value)}
+              onChange={(e: any) => handlePropertyChange(field.key, e.target.value)}
               className="w-10 h-10 rounded border cursor-pointer"
             />
             <Input
               value={value || ''}
-              onChange={(e) => handlePropertyChange(field.key, e.target.value)}
+              onChange={(e: any) => handlePropertyChange(field.key, e.target.value)}
               placeholder="#000000"
             />
           </div>
@@ -473,7 +473,7 @@ export function PropertyPanel({
               <div key={index} className="flex gap-2">
                 <Input
                   value={item.label || ''}
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     const newArray = [...(value || [])];
                     newArray[index] = { ...item, label: e.target.value };
                     handlePropertyChange(field.key, newArray);
@@ -482,7 +482,7 @@ export function PropertyPanel({
                 />
                 <Input
                   value={item.value || ''}
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     const newArray = [...(value || [])];
                     newArray[index] = { ...item, value: e.target.value };
                     handlePropertyChange(field.key, newArray);
@@ -515,7 +515,7 @@ export function PropertyPanel({
           <div>
             <textarea
               value={typeof value === 'object' ? JSON.stringify(value, null, 2) : value || ''}
-              onChange={(e) => handleJsonProperty(field.key, e.target.value)}
+              onChange={(e: any) => handleJsonProperty(field.key, e.target.value)}
               className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-xs"
               rows={3}
               placeholder={field.placeholder}

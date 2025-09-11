@@ -279,7 +279,7 @@ const EventCard: React.FC<{
           {/* Tags */}
           {event.tags && event.tags.length > 0 && variant === 'full' && (
             <div className="flex flex-wrap gap-1">
-              {event.tags.map((tag) => (
+              {event.tags.map((tag: any) => (
                 <span key={tag} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
                   {tag}
                 </span>
@@ -316,7 +316,7 @@ const CalendarView: React.FC<{
   return (
     <div className="bg-[var(--hive-white)] rounded-lg border border-gray-200 p-4">
       <div className="grid grid-cols-7 gap-2">
-        {weekDays.map((day) => {
+        {weekDays.map((day: any) => {
           const dayEvents = getEventsForDay(day);
           const isToday = format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
           
@@ -489,7 +489,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
         <div className="animate-pulse">
           <div className="bg-gray-200 rounded-lg h-20 mb-4" />
           <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map((i: any) => (
               <div key={i} className="bg-gray-100 rounded-lg h-32" />
             ))}
           </div>
@@ -548,7 +548,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
               
               <select
                 value={filter}
-                onChange={(e) => setFilter(e.target.value as any)}
+                onChange={(e: any) => setFilter(e.target.value as any)}
                 className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]"
               >
                 <option value="all">All Events</option>
@@ -596,7 +596,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
           ) : (
             filteredEvents
               .slice(0, variant === 'widget' ? 3 : undefined)
-              .map((event) => (
+              .map((event: any) => (
                 <EventCard
                   key={event.id}
                   event={event}

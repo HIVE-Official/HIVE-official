@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
     );
     const userSpacesSnapshot = await getDocs(userSpacesQuery);
     const joinedSpaces = userSpacesSnapshot.docs.map(
-      (doc) => doc.data().spaceId
+      (doc: any) => doc.data().spaceId
     );
 
     // Build user context for personalization
@@ -139,7 +139,7 @@ export async function GET(request: NextRequest) {
     const spacesSnapshot = await getDocs(query(spacesQuery, ...constraints));
 
     // Convert Firestore data to SpaceDiscoveryData
-    const spaces: SpaceDiscoveryData[] = spacesSnapshot.docs.map((doc) => {
+    const spaces: SpaceDiscoveryData[] = spacesSnapshot.docs.map((doc: any) => {
       const data = doc.data();
       return {
         id: doc.id,

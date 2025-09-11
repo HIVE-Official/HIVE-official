@@ -2,8 +2,8 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import type { LucideIcon } from 'lucide-react';
 declare const profileStatisticVariants: (props?: ({
-    size?: "xs" | "sm" | "md" | "lg" | null | undefined;
-    variant?: "ghost" | "default" | "compact" | "highlight" | null | undefined;
+    size?: "sm" | "lg" | "xs" | "md" | null | undefined;
+    variant?: "default" | "ghost" | "compact" | "highlight" | null | undefined;
     interactive?: boolean | null | undefined;
     trend?: "none" | "up" | "down" | "neutral" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;

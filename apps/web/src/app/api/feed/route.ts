@@ -53,7 +53,7 @@ function createFeedAggregator(userId: string, spaceIds: string[]) {
         
         // Query posts from each space the user is a member of
         // Use Promise.all for parallel fetching
-        const spacePromises = spaceIds.slice(0, 10).map(async (spaceId) => {
+        const spacePromises = spaceIds.slice(0, 10).map(async (spaceId: any) => {
           try {
             // Direct query to posts collection in each space
             const postsQuery = dbAdmin

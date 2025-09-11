@@ -421,7 +421,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.isPublic}
-                onCheckedChange={(checked) => handlePrivacyChange('isPublic', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('isPublic', checked)}
               />
             </FormField>
             
@@ -431,7 +431,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.showActivity}
-                onCheckedChange={(checked) => handlePrivacyChange('showActivity', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('showActivity', checked)}
               />
             </FormField>
             
@@ -441,7 +441,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.showSpaces}
-                onCheckedChange={(checked) => handlePrivacyChange('showSpaces', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('showSpaces', checked)}
               />
             </FormField>
             
@@ -451,7 +451,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.showConnections}
-                onCheckedChange={(checked) => handlePrivacyChange('showConnections', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('showConnections', checked)}
               />
             </FormField>
             
@@ -461,7 +461,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.showOnlineStatus}
-                onCheckedChange={(checked) => handlePrivacyChange('showOnlineStatus', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('showOnlineStatus', checked)}
               />
             </FormField>
           </div>
@@ -481,7 +481,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowDirectMessages}
-                onCheckedChange={(checked) => handlePrivacyChange('allowDirectMessages', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowDirectMessages', checked)}
               />
             </FormField>
             
@@ -491,7 +491,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowSpaceInvites}
-                onCheckedChange={(checked) => handlePrivacyChange('allowSpaceInvites', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowSpaceInvites', checked)}
               />
             </FormField>
             
@@ -501,7 +501,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowEventInvites}
-                onCheckedChange={(checked) => handlePrivacyChange('allowEventInvites', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowEventInvites', checked)}
               />
             </FormField>
           </div>
@@ -544,21 +544,21 @@ export default function ProfilePrivacyStorybook() {
                 <FormField label="Hide Activity Feed">
                   <Switch
                     checked={privacySettings.ghostMode.hideActivity}
-                    onCheckedChange={(checked) => handleGhostModeChange('hideActivity', checked)}
+                    onCheckedChange={(checked: any) => handleGhostModeChange('hideActivity', checked)}
                   />
                 </FormField>
                 
                 <FormField label="Hide Online Status">
                   <Switch
                     checked={privacySettings.ghostMode.hideOnlineStatus}
-                    onCheckedChange={(checked) => handleGhostModeChange('hideOnlineStatus', checked)}
+                    onCheckedChange={(checked: any) => handleGhostModeChange('hideOnlineStatus', checked)}
                   />
                 </FormField>
                 
                 <FormField label="Hide Space Memberships">
                   <Switch
                     checked={privacySettings.ghostMode.hideMemberships}
-                    onCheckedChange={(checked) => handleGhostModeChange('hideMemberships', checked)}
+                    onCheckedChange={(checked: any) => handleGhostModeChange('hideMemberships', checked)}
                   />
                 </FormField>
               </div>
@@ -580,7 +580,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowAnalytics}
-                onCheckedChange={(checked) => handlePrivacyChange('allowAnalytics', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowAnalytics', checked)}
               />
             </FormField>
             
@@ -590,7 +590,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowPersonalization}
-                onCheckedChange={(checked) => handlePrivacyChange('allowPersonalization', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowPersonalization', checked)}
               />
             </FormField>
           </div>

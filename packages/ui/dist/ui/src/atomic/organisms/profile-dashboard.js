@@ -1,14 +1,14 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
-import { cn } from '../../lib/utils.js';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { cn } from '../../lib/utils';
 import { Calendar, MapPin, Plus, AlertTriangle, Edit, Trash2, Loader2 } from 'lucide-react';
 // Import our sophisticated molecules
-import { CampusIdentityHeader } from '../molecules/campus-identity-header.js';
-import { CampusSpacesCard } from '../molecules/campus-spaces-card.js';
-import { CampusActivityFeed } from '../molecules/campus-activity-feed.js';
-import { CampusBuilderTools } from '../molecules/campus-builder-tools.js';
+import { CampusIdentityHeader } from '../molecules/campus-identity-header';
+import { CampusSpacesCard } from '../molecules/campus-spaces-card';
+import { CampusActivityFeed } from '../molecules/campus-activity-feed';
+import { CampusBuilderTools } from '../molecules/campus-builder-tools';
 // Interactive Calendar Widget Component
 const InteractiveCalendarWidget = React.memo(({ events, conflicts, isLoading = false, onCreateEvent, onUpdateEvent, onDeleteEvent, onResolveConflict }) => {
     const [showCreateForm, setShowCreateForm] = useState(false);

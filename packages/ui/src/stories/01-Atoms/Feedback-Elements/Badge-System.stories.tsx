@@ -414,7 +414,7 @@ const CampusBadgeShowcase = () => {
       
       {/* Category Navigation */}
       <div className="flex flex-wrap gap-2">
-        {campusBadgeCategories.map((category) => (
+        {campusBadgeCategories.map((category: any) => (
           <Button
             key={category.category}
             variant={activeCategory === category.category ? 'primary' : 'secondary'}
@@ -479,7 +479,7 @@ const BadgeSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-8">
-            {badgeSizes.map((size) => (
+            {badgeSizes.map((size: any) => (
               <div key={size.size} className="flex items-center gap-8">
                 <div className="w-32">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -867,7 +867,7 @@ const BadgeSystemShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

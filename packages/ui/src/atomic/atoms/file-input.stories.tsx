@@ -99,7 +99,7 @@ export const Default: Story = {
     label: 'Upload Assignment',
     helperText: 'Select your assignment file (PDF, DOC, DOCX, TXT)',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -802,7 +802,7 @@ export const Playground: Story = {
     label: 'Upload Files',
     helperText: 'Select files to upload',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

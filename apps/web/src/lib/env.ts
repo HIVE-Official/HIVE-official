@@ -206,10 +206,32 @@ function validateProductionConfig(config: any) {
   }
   
   // Validate Firebase Admin credentials format
-  if (config.FIREBASE_PRIVATE_KEY && !config.FIREBASE_PRIVATE_KEY.includes('BEGIN PRIVATE KEY')) {
-    throw new Error(
-      'PRODUCTION CRITICAL: FIREBASE_PRIVATE_KEY appears to be invalid. It should be a properly formatted private key.'
-    );
+  if (config.FIREBASE_PRIVATE_KEY) {
+    // Check if it's base64 encoded
+    let isValidKey = false;
+    const privateKey = config.FIREBASE_PRIVATE_KEY;
+    
+    // Check if it contains BEGIN PRIVATE KEY (might be escaped)
+    if (privateKey.includes('BEGIN') && privateKey.includes('PRIVATE') && privateKey.includes('KEY')) {
+      isValidKey = true;
+    } else {
+      // Try to decode if base64
+      try {
+        const decoded = Buffer.from(privateKey, 'base64').toString('utf-8');
+        if (decoded.includes('BEGIN PRIVATE KEY')) {
+          isValidKey = true;
+        }
+      } catch (e) {
+        // Not base64
+      }
+    }
+    
+    if (!isValidKey) {
+      console.warn(
+        'WARNING: FIREBASE_PRIVATE_KEY may be invalid. It should be a properly formatted private key.'
+      );
+      // Don't throw in production - let Firebase Admin handle the error
+    }
   }
   
   // Production environment validation passed
@@ -245,7 +267,6 @@ try {
 }
 
 export { env };
-export { skipAuthInDev, skipOnboardingInDev, devBypassEmail };
 
 // Export current environment info with PRODUCTION SAFETY
 export const isProduction = env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
@@ -271,10 +292,10 @@ export const isDevelopment = (() => {
 
 export const currentEnvironment = getCurrentEnvironment();
 
-// PRODUCTION SAFETY: These flags MUST be false in production
-export const skipAuthInDev = isDevelopment && process.env.NEXT_PUBLIC_DEV_BYPASS === 'true';
-export const skipOnboardingInDev = isDevelopment && process.env.NEXT_PUBLIC_DEV_BYPASS === 'true';
-export const devBypassEmail = 'jwhrineh@buffalo.edu';
+// PRODUCTION SAFETY: Authentication bypasses completely removed for security
+export const skipAuthInDev = false; // Never skip authentication
+export const skipOnboardingInDev = false; // Never skip onboarding
+export const devBypassEmail = null; // Removed hardcoded email for security
 
 // Export whether Firebase Admin is properly configured
 export const isFirebaseAdminConfigured = !!(

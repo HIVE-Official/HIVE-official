@@ -347,7 +347,7 @@ export const CampusFeed: Story = {
             
             {/* Filter Tabs */}
             <div className="flex space-x-2 overflow-x-auto pb-2">
-              {filters.map((filterItem) => (
+              {filters.map((filterItem: any) => (
                 <button
                   key={filterItem.id}
                   onClick={() => setFilter(filterItem.id)}
@@ -366,7 +366,7 @@ export const CampusFeed: Story = {
           
           {/* Feed Items */}
           <div className="space-y-4">
-            {mockFeedItems.map((item) => (
+            {mockFeedItems.map((item: any) => (
               <FeedItem
                 key={item.id}
                 item={item}
@@ -429,7 +429,7 @@ export const RitualCenter: Story = {
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">Upcoming Rituals</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {mockRituals.slice(1).map((ritual) => (
+              {mockRituals.slice(1).map((ritual: any) => (
                 <RitualCard
                   key={ritual.id}
                   ritual={ritual}
@@ -517,7 +517,7 @@ export const FeedRitualIntegration: Story = {
             
             {/* View Toggle */}
             <div className="flex space-x-2">
-              {views.map((view) => (
+              {views.map((view: any) => (
                 <button
                   key={view.id}
                   onClick={() => setSelectedView(view.id)}

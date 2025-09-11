@@ -127,7 +127,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
       {/* Mobile Bottom Navigation - Thumb-reachable */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[var(--hive-background-primary)]/95 backdrop-blur border-t border-gray-800 safe-bottom">
         <div className="grid grid-cols-4 h-16">
-          {primaryTabs.map((tab) => {
+          {primaryTabs.map((tab: any) => {
             const Icon = tab.icon;
             const isActive = currentTab === tab.id;
             
@@ -171,7 +171,7 @@ export function MobileFirstLayout({ children }: MobileFirstLayoutProps) {
             
             {/* Primary Navigation */}
             <nav className="flex items-center space-x-1">
-              {primaryTabs.map((tab) => {
+              {primaryTabs.map((tab: any) => {
                 const Icon = tab.icon;
                 const isActive = currentTab === tab.id;
                 

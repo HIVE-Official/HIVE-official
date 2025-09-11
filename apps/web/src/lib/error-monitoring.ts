@@ -282,7 +282,7 @@ export class ErrorMonitor {
     await this.ensureInitialized();
 
     if (sentryHub) {
-      sentryHub.withScope((scope) => {
+      sentryHub.withScope((scope: any) => {
         scope.setUser(user);
       });
     }
@@ -350,8 +350,8 @@ export class ErrorMonitor {
   }
 
   private async sendToSentry(error: Error, context?: ErrorContext, errorId?: string): Promise<string> {
-    return new Promise((resolve) => {
-      sentryHub!.withScope((scope) => {
+    return new Promise((resolve: any) => {
+      sentryHub!.withScope((scope: any) => {
         // Set user context
         if (context?.userId) {
           scope.setUser({ id: context.userId });

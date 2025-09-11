@@ -61,12 +61,12 @@ export const GET = withAuth(async (request: NextRequest, { userId }) => {
     const integrationStatus = {
       google: {
         connected: !!(calendar.google?.accessToken),
-        expired: calendar.google?.expiresAt && calendar.google.expiresAt.toDate() < now,
+        expired: calendar.google?.expiresAt && calendar.google.expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt) < now,
         lastSync: data.external?.lastSync?.google?.toDate() || null
       },
       outlook: {
         connected: !!(calendar.outlook?.accessToken),
-        expired: calendar.outlook?.expiresAt && calendar.outlook.expiresAt.toDate() < now,
+        expired: calendar.outlook?.expiresAt && calendar.outlook.expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt) < now,
         lastSync: data.external?.lastSync?.outlook?.toDate() || null
       },
       apple: {
@@ -236,7 +236,7 @@ export const PUT = withAuth(async (request: NextRequest, { userId }) => {
     }
 
     // Check if token is expired and refresh if needed
-    if (providerConfig.expiresAt && providerConfig.expiresAt.toDate() < new Date()) {
+    if (providerConfig.expiresAt && providerConfig.expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt) < new Date()) {
       const refreshResult = await refreshAccessToken(provider, providerConfig.refreshToken);
       
       if (!refreshResult.success) {

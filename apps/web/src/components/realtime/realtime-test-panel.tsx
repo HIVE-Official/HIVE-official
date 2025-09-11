@@ -23,10 +23,10 @@ export function RealtimeTestPanel({ userId, spaceId, toolId = 'test-tool' }: Rea
   // Initialize realtime hooks for testing
   const chatHook = useRealtimeChat({
     spaceId,
-    onNewMessage: (message) => {
+    onNewMessage: (message: any) => {
       addTestResult(`✅ Chat: Received message from ${message.userId}: ${message.content}`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       addTestResult(`❌ Chat: Error - ${error.message}`);
     }
   });
@@ -34,21 +34,21 @@ export function RealtimeTestPanel({ userId, spaceId, toolId = 'test-tool' }: Rea
   const presenceHook = useRealtimePresence({
     spaceId,
     userId,
-    onPresenceChange: (presence) => {
+    onPresenceChange: (presence: any) => {
       const onlineCount = Object.values(presence).filter(p => p.status === 'online').length;
       addTestResult(`✅ Presence: ${onlineCount} users online`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       addTestResult(`❌ Presence: Error - ${error.message}`);
     }
   });
 
   const notificationHook = useRealtimeNotifications({
     userId,
-    onNewNotification: (notification) => {
+    onNewNotification: (notification: any) => {
       addTestResult(`✅ Notifications: Received ${notification.type} - ${notification.title}`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       addTestResult(`❌ Notifications: Error - ${error.message}`);
     }
   });
@@ -59,13 +59,13 @@ export function RealtimeTestPanel({ userId, spaceId, toolId = 'test-tool' }: Rea
     toolId,
     spaceId,
     userId,
-    onToolUpdate: (update) => {
+    onToolUpdate: (update: any) => {
       addTestResult(`✅ Tool Sync: Update ${update.updateType} from ${update.userId}`);
     },
-    onStateChange: (state) => {
+    onStateChange: (state: any) => {
       addTestResult(`✅ Tool Sync: State changed, version ${state.version}`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       addTestResult(`❌ Tool Sync: Error - ${error.message}`);
     }
   });

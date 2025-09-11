@@ -149,7 +149,7 @@ const MobileNavItem = memo<MobileNavItemProps>(({ item, onNavigate, isActive }) 
       </span>
 
       {/* Touch ripple effects */}
-      {ripples.map((ripple) => (
+      {ripples.map((ripple: any) => (
         <div
           key={ripple.id}
           className="absolute inset-0 pointer-events-none"
@@ -209,7 +209,7 @@ export const MobileNavigation = memo<MobileNavigationProps>(({
       
       {/* Navigation items container */}
       <div className="relative flex items-center justify-around h-full px-2">
-        {items.map((item) => (
+        {items.map((item: any) => (
           <div key={item.id} className="flex-1 max-w-[80px]">
             <MobileNavItem
               item={item}

@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const Skeleton = ({ variant = 'rectangular', width, height, lines = 1, animate = true, className, style, ...props }) => {
     const baseClasses = [
         'bg-[var(--hive-background-tertiary)]',

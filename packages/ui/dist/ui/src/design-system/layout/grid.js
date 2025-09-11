@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { cva } from 'class-variance-authority';
 export const gridVariants = cva('grid', {
     variants: {

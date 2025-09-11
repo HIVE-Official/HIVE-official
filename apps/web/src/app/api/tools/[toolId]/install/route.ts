@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
+import { dbAdmin, authAdmin } from "@/lib/firebase-admin";
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import * as admin from 'firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const InstallToolSchema = z.object({
   spaceId: z.string().optional(),
@@ -36,7 +35,7 @@ export async function POST(
       );
     }
 
-    const auth = getAuth();
+    const auth = authAdmin;
     const decodedToken = await auth.verifyIdToken(token);
 
     const body = await request.json();
@@ -199,8 +198,8 @@ export async function POST(
 
     // Update tool analytics
     await toolDoc.ref.update({
-      "analytics.deployments": admin.firestore.FieldValue.increment(1),
-      "analytics.totalUsers": admin.firestore.FieldValue.increment(1)
+      "analytics.deployments": FieldValue.increment(1),
+      "analytics.totalUsers": FieldValue.increment(1)
     });
 
     return NextResponse.json(
@@ -249,7 +248,7 @@ export async function DELETE(
       );
     }
 
-    const auth = getAuth();
+    const auth = authAdmin;
     const decodedToken = await auth.verifyIdToken(token);
 
     const { searchParams } = new URL(request.url);
@@ -369,8 +368,8 @@ export async function DELETE(
     const toolDoc = await db.collection("tools").doc(toolId).get();
     if (toolDoc.exists) {
       await toolDoc.ref.update({
-        "analytics.deployments": admin.firestore.FieldValue.increment(-1),
-        "analytics.totalUsers": admin.firestore.FieldValue.increment(-1)
+        "analytics.deployments": FieldValue.increment(-1),
+        "analytics.totalUsers": FieldValue.increment(-1)
       });
     }
 

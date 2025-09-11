@@ -114,8 +114,8 @@ export declare const PostSchema: z.ZodObject<{
                 width: number;
             }>>;
         }, "strip", z.ZodTypeAny, {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -123,8 +123,8 @@ export declare const PostSchema: z.ZodObject<{
                 width: number;
             } | undefined;
         }, {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -135,8 +135,8 @@ export declare const PostSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -164,8 +164,8 @@ export declare const PostSchema: z.ZodObject<{
     }, {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -207,12 +207,11 @@ export declare const PostSchema: z.ZodObject<{
     toolData: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "strip", z.ZodTypeAny, {
     id: string;
-    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     content: {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -239,6 +238,7 @@ export declare const PostSchema: z.ZodObject<{
         }[] | undefined;
     };
     status: "archived" | "draft" | "published" | "flagged";
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     visibility: "public" | "space-only" | "followers-only";
     reactions: Record<string, number>;
     createdAt: Date;
@@ -257,12 +257,11 @@ export declare const PostSchema: z.ZodObject<{
     toolData?: Record<string, unknown> | undefined;
 }, {
     id: string;
-    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     content: {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -289,6 +288,7 @@ export declare const PostSchema: z.ZodObject<{
         }[] | undefined;
     };
     status: "archived" | "draft" | "published" | "flagged";
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     visibility: "public" | "space-only" | "followers-only";
     createdAt: Date;
     updatedAt: Date;
@@ -379,8 +379,8 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
                 width: number;
             }>>;
         }, "strip", z.ZodTypeAny, {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -388,8 +388,8 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
                 width: number;
             } | undefined;
         }, {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -400,8 +400,8 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
     }, "strip", z.ZodTypeAny, {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -429,8 +429,8 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
     }, {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -470,14 +470,13 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
     shareCount: z.ZodDefault<z.ZodNumber>;
     viewCount: z.ZodDefault<z.ZodNumber>;
     toolData: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
-}, "id" | "type" | "content" | "visibility" | "spaceId" | "publishedAt" | "authorId" | "reactionCount" | "authorHandle" | "authorDisplayName" | "commentCount">, "strip", z.ZodTypeAny, {
+}, "id" | "content" | "type" | "visibility" | "spaceId" | "publishedAt" | "authorId" | "reactionCount" | "authorHandle" | "authorDisplayName" | "commentCount">, "strip", z.ZodTypeAny, {
     id: string;
-    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     content: {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -503,6 +502,7 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
             description?: string | undefined;
         }[] | undefined;
     };
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     visibility: "public" | "space-only" | "followers-only";
     authorId: string;
     reactionCount: number;
@@ -513,12 +513,11 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
     publishedAt?: Date | undefined;
 }, {
     id: string;
-    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     content: {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -544,6 +543,7 @@ export declare const MinimalPostSchema: z.ZodObject<Pick<{
             description?: string | undefined;
         }[] | undefined;
     };
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     visibility: "public" | "space-only" | "followers-only";
     authorId: string;
     authorHandle: string;
@@ -577,8 +577,8 @@ export declare const CreatePostSchema: z.ZodObject<{
                 width: number;
             }>>;
         }, "strip", z.ZodTypeAny, {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -586,8 +586,8 @@ export declare const CreatePostSchema: z.ZodObject<{
                 width: number;
             } | undefined;
         }, {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -598,8 +598,8 @@ export declare const CreatePostSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -610,8 +610,8 @@ export declare const CreatePostSchema: z.ZodObject<{
     }, {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -622,8 +622,8 @@ export declare const CreatePostSchema: z.ZodObject<{
     }>, {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -634,8 +634,8 @@ export declare const CreatePostSchema: z.ZodObject<{
     }, {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -649,12 +649,11 @@ export declare const CreatePostSchema: z.ZodObject<{
     scheduledAt: z.ZodOptional<z.ZodDate>;
     toolData: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "strip", z.ZodTypeAny, {
-    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     content: {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -663,17 +662,17 @@ export declare const CreatePostSchema: z.ZodObject<{
             } | undefined;
         }[] | undefined;
     };
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     visibility: "public" | "space-only" | "followers-only";
     spaceId?: string | undefined;
     scheduledAt?: Date | undefined;
     toolData?: Record<string, unknown> | undefined;
 }, {
-    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     content: {
         text?: string | undefined;
         media?: {
-            type: "image" | "audio" | "video";
             url: string;
+            type: "image" | "audio" | "video";
             alt?: string | undefined;
             thumbnail?: string | undefined;
             dimensions?: {
@@ -682,6 +681,7 @@ export declare const CreatePostSchema: z.ZodObject<{
             } | undefined;
         }[] | undefined;
     };
+    type: "pulse" | "poll" | "prompt-post" | "event-card" | "join-form" | "media-post";
     visibility?: "public" | "space-only" | "followers-only" | undefined;
     spaceId?: string | undefined;
     scheduledAt?: Date | undefined;

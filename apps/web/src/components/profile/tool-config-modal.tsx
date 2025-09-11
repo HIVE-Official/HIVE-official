@@ -181,7 +181,7 @@ export function ToolConfigModal({
                     <span>Required Permissions</span>
                   </h3>
                   <div className="space-y-3">
-                    {requiredPermissions.map((permission) => (
+                    {requiredPermissions.map((permission: any) => (
                       <div key={permission.id} className="flex items-center justify-between">
                         <div>
                           <div className="font-medium text-[var(--hive-text-inverse)]">{permission.name}</div>
@@ -203,7 +203,7 @@ export function ToolConfigModal({
                     <span>Optional Permissions</span>
                   </h3>
                   <div className="space-y-3">
-                    {optionalPermissions.map((permission) => (
+                    {optionalPermissions.map((permission: any) => (
                       <div key={permission.id} className="flex items-center justify-between">
                         <div>
                           <div className="font-medium text-[var(--hive-text-inverse)]">{permission.name}</div>
@@ -211,7 +211,7 @@ export function ToolConfigModal({
                         </div>
                         <Switch
                           checked={config.permissions[permission.id] || false}
-                          onCheckedChange={(checked) => handlePermissionChange(permission.id, checked)}
+                          onCheckedChange={(checked: any) => handlePermissionChange(permission.id, checked)}
                         />
                       </div>
                     ))}
@@ -235,7 +235,7 @@ export function ToolConfigModal({
                     </div>
                     <Switch
                       checked={config.notifications.updates}
-                      onCheckedChange={(checked) => handleNotificationChange('updates', checked)}
+                      onCheckedChange={(checked: any) => handleNotificationChange('updates', checked)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -245,7 +245,7 @@ export function ToolConfigModal({
                     </div>
                     <Switch
                       checked={config.notifications.usage}
-                      onCheckedChange={(checked) => handleNotificationChange('usage', checked)}
+                      onCheckedChange={(checked: any) => handleNotificationChange('usage', checked)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -255,7 +255,7 @@ export function ToolConfigModal({
                     </div>
                     <Switch
                       checked={config.notifications.sharing}
-                      onCheckedChange={(checked) => handleNotificationChange('sharing', checked)}
+                      onCheckedChange={(checked: any) => handleNotificationChange('sharing', checked)}
                     />
                   </div>
                 </div>
@@ -277,7 +277,7 @@ export function ToolConfigModal({
                     </div>
                     <Switch
                       checked={config.sharing.allowSpaceSharing}
-                      onCheckedChange={(checked) => handleSharingChange('allowSpaceSharing', checked)}
+                      onCheckedChange={(checked: any) => handleSharingChange('allowSpaceSharing', checked)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -287,7 +287,7 @@ export function ToolConfigModal({
                     </div>
                     <Switch
                       checked={config.sharing.allowPublicSharing}
-                      onCheckedChange={(checked) => handleSharingChange('allowPublicSharing', checked)}
+                      onCheckedChange={(checked: any) => handleSharingChange('allowPublicSharing', checked)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -297,7 +297,7 @@ export function ToolConfigModal({
                     </div>
                     <Switch
                       checked={config.sharing.shareUsageStats}
-                      onCheckedChange={(checked) => handleSharingChange('shareUsageStats', checked)}
+                      onCheckedChange={(checked: any) => handleSharingChange('shareUsageStats', checked)}
                     />
                   </div>
                 </div>

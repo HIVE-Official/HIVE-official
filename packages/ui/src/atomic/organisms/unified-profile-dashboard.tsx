@@ -263,7 +263,7 @@ const ProfileHeaderWidget: React.FC<{
               const input = document.createElement('input');
               input.type = 'file';
               input.accept = 'image/*';
-              input.onchange = (e) => {
+              input.onchange = (e: any) => {
                 const file = (e.target as HTMLInputElement).files?.[0];
                 if (file && onAvatarChange) onAvatarChange(file);
               };
@@ -379,7 +379,7 @@ const ActivitiesWidget: React.FC<{
       
       {activities.length > 0 ? (
         <div className="space-y-3">
-          {activities.slice(0, 4).map((activity) => (
+          {activities.slice(0, 4).map((activity: any) => (
             <button
               key={activity.id}
               onClick={() => onActivityClick?.(activity.id)}
@@ -462,7 +462,7 @@ const ToolsWidget: React.FC<{
       
       {allTools.length > 0 ? (
         <div className="grid grid-cols-2 gap-3">
-          {allTools.slice(0, 4).map((tool) => (
+          {allTools.slice(0, 4).map((tool: any) => (
             <button
               key={tool.id}
               onClick={() => onToolClick?.(tool.id)}
@@ -554,7 +554,7 @@ const SpacesWidget: React.FC<{
       
       {spaces.length > 0 ? (
         <div className="space-y-3 mb-4">
-          {spaces.slice(0, 4).map((space) => (
+          {spaces.slice(0, 4).map((space: any) => (
             <button
               key={space.id}
               onClick={() => onSpaceClick?.(space.id)}

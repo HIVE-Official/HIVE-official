@@ -105,11 +105,11 @@ const MoleculeShowcase = () => {
             onHoverEnd={() => setHoveredMolecule(null)}
           >
             <Card className="hive-interactive cursor-pointer" style={{ backgroundColor: 'var(--hive-background-secondary)', borderColor: 'var(--hive-border-primary)' }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}>
@@ -125,11 +125,11 @@ const MoleculeShowcase = () => {
                 
                 {/* Academic Space */}
                 <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
-                     onMouseEnter={(e) => {
+                     onMouseEnter={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                      }}
-                     onMouseLeave={(e) => {
+                     onMouseLeave={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                        e.currentTarget.style.boxShadow = 'none';
                      }}>
@@ -184,11 +184,11 @@ const MoleculeShowcase = () => {
 
                 {/* Housing Space */}
                 <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
-                     onMouseEnter={(e) => {
+                     onMouseEnter={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                      }}
-                     onMouseLeave={(e) => {
+                     onMouseLeave={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                        e.currentTarget.style.boxShadow = 'none';
                      }}>
@@ -225,7 +225,7 @@ const MoleculeShowcase = () => {
                   
                   <div className="flex items-center justify-between">
                     <div className="flex -space-x-2">
-                      {[1, 2, 3, 4].map((i) => (
+                      {[1, 2, 3, 4].map((i: any) => (
                         <Avatar key={i} className="w-6 h-6 border-2" style={{ borderColor: 'var(--hive-border-primary)' }}>
                           <AvatarFallback className="bg-gradient-to-r from-pink-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)] text-xs">
                             {String.fromCharCode(65 + i)}
@@ -241,11 +241,11 @@ const MoleculeShowcase = () => {
 
                 {/* Social Space */}
                 <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
-                     onMouseEnter={(e) => {
+                     onMouseEnter={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                      }}
-                     onMouseLeave={(e) => {
+                     onMouseLeave={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                        e.currentTarget.style.boxShadow = 'none';
                      }}>
@@ -310,11 +310,11 @@ const MoleculeShowcase = () => {
             onHoverEnd={() => setHoveredMolecule(null)}
           >
             <Card className="hive-interactive cursor-pointer" style={{ backgroundColor: 'var(--hive-background-secondary)', borderColor: 'var(--hive-border-primary)' }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}>
@@ -460,11 +460,11 @@ const MoleculeShowcase = () => {
                   borderColor: 'var(--hive-border-subtle)',
                   transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}>
@@ -501,9 +501,9 @@ const MoleculeShowcase = () => {
                     </Button>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Academic</Badge>
-                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Social</Badge>
-                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Housing</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Academic</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Social</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Housing</Badge>
                   </div>
                 </div>
 
@@ -555,11 +555,11 @@ const MoleculeShowcase = () => {
                   borderColor: 'var(--hive-border-subtle)',
                   transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}>

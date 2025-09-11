@@ -588,7 +588,7 @@ export default function EventsPage() {
               {/* Tags */}
               {event.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {event.tags.slice(0, 3).map((tag) => (
+                  {event.tags.slice(0, 3).map((tag: any) => (
                     <Badge key={tag} variant="skill-tag" className="text-xs">
                       #{tag}
                     </Badge>
@@ -676,7 +676,7 @@ export default function EventsPage() {
         <CreateEventModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
-          onCreateEvent={(eventData) => {
+          onCreateEvent={(eventData: any) => {
             // Generate new event with mock data
             const newEvent: EventData = {
               id: `event-${Date.now()}`,

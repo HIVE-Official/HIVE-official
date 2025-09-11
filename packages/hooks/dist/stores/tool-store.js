@@ -67,11 +67,10 @@ exports.useToolStore = (0, zustand_1.create)()((0, middleware_1.devtools)((0, mi
         recentTools: state.recentTools,
         favoriteTools: Array.from(state.favoriteTools),
     }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     merge: (persistedState, currentState) => ({
         ...currentState,
         ...persistedState,
-        favoriteTools: new Set(persistedState.favoriteTools || []),
+        favoriteTools: new Set(persistedState?.favoriteTools || []),
     }),
 })));
 // Selectors

@@ -96,9 +96,9 @@ export declare const useEventStore: import("zustand").UseBoundStore<Omit<Omit<im
         }>>;
     };
 }>;
-export declare const useEventFilters: () => EventFilters;
-export declare const useEventViewMode: () => "list" | "grid" | "calendar";
-export declare const useRSVPEvents: () => Set<string>;
-export declare const useInterestedEvents: () => Set<string>;
+export declare const useEventFilters: () => any;
+export declare const useEventViewMode: () => any;
+export declare const useRSVPEvents: () => any;
+export declare const useInterestedEvents: () => any;
 export {};
 //# sourceMappingURL=event-store.d.ts.map

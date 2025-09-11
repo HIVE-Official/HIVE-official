@@ -405,7 +405,7 @@ const CampusFeedSystem = () => {
                 <Input
                   placeholder="What's happening on campus?"
                   value={postText}
-                  onChange={(e) => setPostText(e.target.value)}
+                  onChange={(e: any) => setPostText(e.target.value)}
                   className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 mb-3"
                 />
                 <div className="flex items-center justify-between">
@@ -438,7 +438,7 @@ const CampusFeedSystem = () => {
 
         {/* Feed Posts */}
         <div className="space-y-6">
-          {mockFeedPosts.map((post) => (
+          {mockFeedPosts.map((post: any) => (
             <Card key={post.id} className="bg-gray-800/50 border-gray-700">
               <CardContent className="p-4">
                 
@@ -581,7 +581,7 @@ const CampusFeedSystem = () => {
                 {/* Tags */}
                 {post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-4">
-                    {post.tags.map((tag) => (
+                    {post.tags.map((tag: any) => (
                       <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                         #{tag}
                       </Badge>
@@ -610,7 +610,7 @@ const CampusFeedSystem = () => {
                     </Button>
                   </div>
                   <div className="flex -space-x-2">
-                    {[1, 2, 3].map((i) => (
+                    {[1, 2, 3].map((i: any) => (
                       <Avatar key={i} className="w-6 h-6 border-2 border-gray-800">
                         <AvatarFallback className="bg-gradient-to-r from-[var(--hive-gold)] to-pink-500 text-[var(--hive-text-primary)] text-xs">
                           {String.fromCharCode(65 + i)}
@@ -760,7 +760,7 @@ const CampusRitualsSystem = () => {
 
         {/* Rituals Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredRituals.map((ritual) => (
+          {filteredRituals.map((ritual: any) => (
             <Card key={ritual.id} className="bg-gray-800/50 border-gray-700">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">

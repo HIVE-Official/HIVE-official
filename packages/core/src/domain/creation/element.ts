@@ -364,7 +364,7 @@ export const getLatestElementVersion = (
   baseName: string
 ): Element | null => {
   const matching = elements.filter(
-    (el) => parseElementId(el.id).name === baseName
+    (el: any) => parseElementId(el.id).name === baseName
   );
   if (matching.length === 0) return null;
 

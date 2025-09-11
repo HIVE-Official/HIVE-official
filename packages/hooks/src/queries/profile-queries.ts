@@ -188,7 +188,7 @@ export function useUserAnalytics(userId = 'me') {
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
   const { updateProfile } = useProfileStore();
-  const _user = useAuthStore((state) => state.user);
+  const _user = useAuthStore((state: any) => state.user);
   
   return useMutation({
     mutationFn: (updates: Partial<ProfileData>) => updateUserProfile('me', updates),
@@ -214,7 +214,7 @@ export function useUpdateProfile() {
       // Set error in store
       useProfileStore.getState().setProfileError(error.message);
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       // Update cache with server response
       queryClient.setQueryData(queryKeys.profile('me'), data);
       
@@ -235,7 +235,7 @@ export function useUploadProfilePhoto() {
   
   return useMutation({
     mutationFn: uploadProfilePhoto,
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       // Update profile with new avatar URL
       updateProfile({ avatarUrl: data.avatarUrl });
       

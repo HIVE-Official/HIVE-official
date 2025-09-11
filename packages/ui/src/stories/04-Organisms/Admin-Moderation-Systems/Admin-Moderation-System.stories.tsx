@@ -369,7 +369,7 @@ const AdminDashboard = () => (
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {mockReports.slice(0, 3).map((report) => (
+          {mockReports.slice(0, 3).map((report: any) => (
             <div key={report.id} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
@@ -472,7 +472,7 @@ const ModerationQueue = ({
             <Filter className="h-4 w-4 text-gray-400" />
             <Label className="text-sm text-[var(--hive-text-primary)]">Filters:</Label>
           </div>
-          <Select value={state.filters.status} onValueChange={(value) => 
+          <Select value={state.filters.status} onValueChange={(value: any) => 
             state.setFilters({...state.filters, status: value})
           }>
             <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
@@ -486,7 +486,7 @@ const ModerationQueue = ({
             </SelectContent>
           </Select>
 
-          <Select value={state.filters.priority} onValueChange={(value) => 
+          <Select value={state.filters.priority} onValueChange={(value: any) => 
             state.setFilters({...state.filters, priority: value})
           }>
             <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
@@ -500,7 +500,7 @@ const ModerationQueue = ({
             </SelectContent>
           </Select>
 
-          <Select value={state.filters.type} onValueChange={(value) => 
+          <Select value={state.filters.type} onValueChange={(value: any) => 
             state.setFilters({...state.filters, type: value})
           }>
             <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
@@ -525,7 +525,7 @@ const ModerationQueue = ({
 
     {/* Reports List */}
     <div className="space-y-4">
-      {mockReports.map((report) => (
+      {mockReports.map((report: any) => (
         <Card key={report.id} className="bg-gray-900 border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
@@ -717,7 +717,7 @@ const UserManagement = ({
 
     {/* Users List */}
     <div className="space-y-4">
-      {mockUsers.map((user) => (
+      {mockUsers.map((user: any) => (
         <Card key={user.id} className="bg-gray-900 border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
@@ -842,7 +842,7 @@ const SpaceManagement = () => (
 
     {/* Spaces List */}
     <div className="space-y-4">
-      {mockSpaces.map((space) => (
+      {mockSpaces.map((space: any) => (
         <Card key={space.id} className="bg-gray-900 border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
@@ -894,7 +894,7 @@ const SpaceManagement = () => (
                 {space.flags.length > 0 && (
                   <div className="space-y-1">
                     <p className="text-xs text-gray-500">Flags:</p>
-                    {space.flags.map((flag) => (
+                    {space.flags.map((flag: any) => (
                       <div key={flag} className="text-xs text-red-400 bg-red-900/20 px-2 py-1 rounded inline-block mr-2">
                         {flag}
                       </div>

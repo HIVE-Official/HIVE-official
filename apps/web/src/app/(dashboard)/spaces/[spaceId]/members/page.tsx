@@ -320,7 +320,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
               <Input
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 placeholder="Search members..."
                 className="pl-10 w-64"
               />
@@ -328,7 +328,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             
             <select
               value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value as 'all' | 'admin' | 'moderator' | 'member')}
+              onChange={(e: any) => setRoleFilter(e.target.value as 'all' | 'admin' | 'moderator' | 'member')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Roles</option>
@@ -339,7 +339,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+              onChange={(e: any) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Status</option>
@@ -403,7 +403,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
 
         {/* Members List */}
         <div className="space-y-3">
-          {filteredMembers.map((member) => {
+          {filteredMembers.map((member: any) => {
             const RoleIcon = getRoleIcon(member.role);
             
             return (

@@ -325,7 +325,7 @@ export function EventDetailsModal({
             { id: 'tools', label: 'Tools', icon: Zap, count: event.tools.length },
             { id: 'attendees', label: 'Attendees', icon: Users, count: event.capacity.current },
             { id: 'discussion', label: 'Discussion', icon: MessageCircle, count: event.engagement.comments }
-          ].map((tab) => {
+          ].map((tab: any) => {
             const Icon = tab.icon;
             return (
               <button
@@ -412,7 +412,7 @@ export function EventDetailsModal({
                 <div>
                   <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-3">Tags</h3>
                   <div className="flex flex-wrap gap-2">
-                    {event.tags.map((tag) => (
+                    {event.tags.map((tag: any) => (
                       <Badge key={tag} variant="skill-tag">
                         #{tag}
                       </Badge>

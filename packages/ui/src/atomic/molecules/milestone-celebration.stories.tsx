@@ -93,7 +93,7 @@ export const Default: Story = {
     onClose: action('celebration-closed'),
     onShare: action('achievement-shared'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="relative h-screen bg-[var(--hive-background-primary)]">
       <Text variant="body-md" color="primary" className="p-6">
         HIVE milestone celebration for University at Buffalo student achievement recognition:
@@ -572,7 +572,7 @@ export const Playground: Story = {
     onClose: action('playground-close'),
     onShare: action('playground-share'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="relative h-screen bg-[var(--hive-background-primary)]">
       <Card className="m-6">
         <CardHeader>

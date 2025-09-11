@@ -48,16 +48,16 @@ export const useToolStore = create<ToolState>()(
       (set, get) => ({
         // UI State
         activeTab: 'editor',
-        setActiveTab: (tab) => set({ activeTab: tab }, false, 'setActiveTab'),
+        setActiveTab: (tab: string) => set({ activeTab: tab }, false, 'setActiveTab'),
         
         showPreview: false,
-        setShowPreview: (show) => set({ showPreview: show }, false, 'setShowPreview'),
+        setShowPreview: (show: boolean) => set({ showPreview: show }, false, 'setShowPreview'),
         
         // Draft Management
         drafts: new Map(),
-        saveDraft: (id, draft) =>
+        saveDraft: (id: string, draft: ToolDraft) =>
           set(
-            (state) => {
+            (state: ToolState) => {
               const drafts = new Map(state.drafts);
               drafts.set(id, draft);
               return { drafts };
@@ -65,10 +65,10 @@ export const useToolStore = create<ToolState>()(
             false,
             'saveDraft'
           ),
-        getDraft: (id) => get().drafts.get(id),
-        clearDraft: (id) =>
+        getDraft: (id: string) => get().drafts.get(id),
+        clearDraft: (id: string) =>
           set(
-            (state) => {
+            (state: ToolState) => {
               const drafts = new Map(state.drafts);
               drafts.delete(id);
               return { drafts };
@@ -79,9 +79,9 @@ export const useToolStore = create<ToolState>()(
         
         // Execution State
         executingTools: new Set(),
-        setToolExecuting: (toolId, executing) =>
+        setToolExecuting: (toolId: string, executing: boolean) =>
           set(
-            (state) => {
+            (state: ToolState) => {
               const executingTools = new Set(state.executingTools);
               if (executing) {
                 executingTools.add(toolId);
@@ -93,16 +93,16 @@ export const useToolStore = create<ToolState>()(
             false,
             'setToolExecuting'
           ),
-        isToolExecuting: (toolId) => get().executingTools.has(toolId),
+        isToolExecuting: (toolId: string) => get().executingTools.has(toolId),
         
         // Recent Tools
         recentTools: [],
-        addRecentTool: (toolId) =>
+        addRecentTool: (toolId: string) =>
           set(
-            (state) => {
+            (state: ToolState) => {
               const recentTools = [
                 toolId,
-                ...state.recentTools.filter((id) => id !== toolId)
+                ...state.recentTools.filter((id: string) => id !== toolId)
               ].slice(0, 10);
               return { recentTools };
             },
@@ -114,9 +114,9 @@ export const useToolStore = create<ToolState>()(
         
         // Favorite Tools
         favoriteTools: new Set(),
-        toggleFavoriteTool: (toolId) =>
+        toggleFavoriteTool: (toolId: string) =>
           set(
-            (state) => {
+            (state: ToolState) => {
               const favoriteTools = new Set(state.favoriteTools);
               if (favoriteTools.has(toolId)) {
                 favoriteTools.delete(toolId);
@@ -128,24 +128,23 @@ export const useToolStore = create<ToolState>()(
             false,
             'toggleFavoriteTool'
           ),
-        isFavoriteTool: (toolId) => get().favoriteTools.has(toolId),
+        isFavoriteTool: (toolId: string) => get().favoriteTools.has(toolId),
         
         // Tool Templates
         selectedTemplate: null,
-        setSelectedTemplate: (templateId) =>
+        setSelectedTemplate: (templateId: string | null) =>
           set({ selectedTemplate: templateId }, false, 'setSelectedTemplate'),
       }),
       {
         name: 'ToolStore',
-        partialize: (state) => ({
+        partialize: (state: ToolState) => ({
           recentTools: state.recentTools,
           favoriteTools: Array.from(state.favoriteTools),
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        merge: (persistedState: any, currentState) => ({
+        merge: (persistedState: unknown, currentState: ToolState) => ({
           ...currentState,
-          ...persistedState,
-          favoriteTools: new Set(persistedState.favoriteTools || []),
+          ...(persistedState as Partial<ToolState>),
+          favoriteTools: new Set((persistedState as any)?.favoriteTools || []),
         }),
       }
     )
@@ -153,6 +152,6 @@ export const useToolStore = create<ToolState>()(
 );
 
 // Selectors
-export const useRecentTools = () => useToolStore((state) => state.recentTools);
-export const useFavoriteTools = () => useToolStore((state) => state.favoriteTools);
-export const useToolDrafts = () => useToolStore((state) => state.drafts);
+export const useRecentTools = () => useToolStore((state: ToolState) => state.recentTools);
+export const useFavoriteTools = () => useToolStore((state: ToolState) => state.favoriteTools);
+export const useToolDrafts = () => useToolStore((state: ToolState) => state.drafts);

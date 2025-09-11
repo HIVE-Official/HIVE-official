@@ -99,7 +99,7 @@ export const Default: Story = {
     flexible: false,
     debug: true,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -719,7 +719,7 @@ export const Playground: Story = {
     flexible: false,
     debug: true,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

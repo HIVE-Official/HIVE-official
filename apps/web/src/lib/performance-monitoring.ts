@@ -455,7 +455,7 @@ class PerformanceMonitor {
 
   private trackLCP() {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((entryList) => {
+      const observer = new PerformanceObserver((entryList: any) => {
         const entries = entryList.getEntries();
         const lastEntry = entries[entries.length - 1] as any;
         
@@ -475,7 +475,7 @@ class PerformanceMonitor {
 
   private trackFID() {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((entryList) => {
+      const observer = new PerformanceObserver((entryList: any) => {
         const entries = entryList.getEntries();
         entries.forEach((entry: any) => {
           this.metrics.FID = {
@@ -497,7 +497,7 @@ class PerformanceMonitor {
     if ('PerformanceObserver' in window) {
       let clsValue = 0;
       
-      const observer = new PerformanceObserver((entryList) => {
+      const observer = new PerformanceObserver((entryList: any) => {
         const entries = entryList.getEntries();
         entries.forEach((entry: any) => {
           if (!entry.hadRecentInput) {
@@ -521,7 +521,7 @@ class PerformanceMonitor {
 
   private trackFCP() {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((entryList) => {
+      const observer = new PerformanceObserver((entryList: any) => {
         const entries = entryList.getEntries();
         entries.forEach((entry: any) => {
           if (entry.name === 'first-contentful-paint') {
@@ -676,7 +676,7 @@ export function initializePerformanceMonitoring(config?: {
     });
 
     // Error tracking
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', (event: any) => {
       globalCollector?.record({
         type: MetricType._ERROR_COUNT,
         value: 1,
@@ -690,7 +690,7 @@ export function initializePerformanceMonitoring(config?: {
     });
 
     // Unhandled promise rejection tracking
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', (event: any) => {
       globalCollector?.record({
         type: MetricType._ERROR_COUNT,
         value: 1,

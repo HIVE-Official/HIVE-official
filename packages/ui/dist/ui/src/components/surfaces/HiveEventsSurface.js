@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../hive-card.js';
-import { HiveButton } from '../hive-button.js';
-import { HiveBadge } from '../hive-badge.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../hive-card';
+import { HiveButton } from '../hive-button';
+import { HiveBadge } from '../hive-badge';
 import { Clock, Users, Plus, ChevronRight, Video, Globe, Building, CalendarDays, UserCheck, Edit, Trash2, Share2 } from 'lucide-react';
 import { format, isPast, isToday, isTomorrow, addDays, startOfWeek } from 'date-fns';
-import { useRealtimeEvents, useOptimisticUpdates } from '../../hooks/use-live-updates.js';
+import { useRealtimeEvents, useOptimisticUpdates } from '../../hooks/use-live-updates';
 // Event Card Component
 const EventCard = ({ event, isLeader, currentUserId, variant = 'widget', onEdit, onDelete, onRSVP, onShare }) => {
     const [showActions, setShowActions] = useState(false);

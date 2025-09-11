@@ -88,7 +88,7 @@ export const Default: Story = {
     showNotifications: true,
     unreadCount: 3,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="bg-[var(--hive-background-primary)]">
       <NavBar {...args} />
       <div className="p-6">
@@ -686,7 +686,7 @@ export const Playground: Story = {
     showNotifications: true,
     unreadCount: 3,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="bg-[var(--hive-background-primary)]">
       <NavBar {...args} />
       <div className="p-6">

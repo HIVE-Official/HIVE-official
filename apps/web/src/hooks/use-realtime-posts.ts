@@ -117,7 +117,7 @@ export function useRealtimePosts({
       // Subscribe to real-time updates
       const unsub = onSnapshot(
         q,
-        (snapshot) => {
+        (snapshot: any) => {
           const newPosts: RealtimePost[] = [];
           
           snapshot.forEach((doc) => {
@@ -132,7 +132,7 @@ export function useRealtimePosts({
           // Log for debugging
           console.log(`[Realtime] Received ${newPosts.length} posts for space ${spaceId}`);
         },
-        (err) => {
+        (err: any) => {
           console.error('[Realtime] Error subscribing to posts:', err);
           setError(err as Error);
           setLoading(false);
@@ -204,7 +204,7 @@ export function useRealtimeComments(postId: string, enabled = true) {
 
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
+      (snapshot: any) => {
         const newComments: any[] = [];
         snapshot.forEach((doc) => {
           newComments.push({
@@ -216,7 +216,7 @@ export function useRealtimeComments(postId: string, enabled = true) {
         setComments(newComments);
         setLoading(false);
       },
-      (err) => {
+      (err: any) => {
         console.error('[Realtime] Error subscribing to comments:', err);
         setError(err as Error);
         setLoading(false);
@@ -246,7 +246,7 @@ export function useRealtimeMembers(spaceId: string, enabled = true) {
 
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
+      (snapshot: any) => {
         const newMembers: any[] = [];
         let online = 0;
 
@@ -293,7 +293,7 @@ export function useRealtimeNotifications(userId: string, enabled = true) {
 
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
+      (snapshot: any) => {
         const newNotifications: any[] = [];
         
         snapshot.forEach((doc) => {

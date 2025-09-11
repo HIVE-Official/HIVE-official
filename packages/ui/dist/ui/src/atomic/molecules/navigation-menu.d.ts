@@ -16,7 +16,7 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const navigationItemVariants: (props?: ({
     size?: "small" | "base" | "large" | null | undefined;
-    variant?: "ghost" | "default" | "tab" | "sidebar" | "pill" | null | undefined;
+    variant?: "default" | "ghost" | "tab" | "sidebar" | "pill" | null | undefined;
     state?: "default" | "disabled" | "active" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const navigationContainerVariants: (props?: ({

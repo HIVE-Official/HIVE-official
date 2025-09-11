@@ -282,7 +282,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">First Name</Label>
             <Input
               value={settings.profile.firstName}
-              onChange={(e) => updateSetting('profile.firstName', e.target.value)}
+              onChange={(e: any) => updateSetting('profile.firstName', e.target.value)}
               className="bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -290,7 +290,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Last Name</Label>
             <Input
               value={settings.profile.lastName}
-              onChange={(e) => updateSetting('profile.lastName', e.target.value)}
+              onChange={(e: any) => updateSetting('profile.lastName', e.target.value)}
               className="bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -302,7 +302,7 @@ const ProfileSettingsTab = ({
             <span className="absolute left-3 top-3 text-gray-500">@</span>
             <Input
               value={settings.profile.handle}
-              onChange={(e) => updateSetting('profile.handle', e.target.value)}
+              onChange={(e: any) => updateSetting('profile.handle', e.target.value)}
               className="pl-8 bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -313,7 +313,7 @@ const ProfileSettingsTab = ({
           <Label className="text-white">Bio</Label>
           <Textarea
             value={settings.profile.bio}
-            onChange={(e) => updateSetting('profile.bio', e.target.value)}
+            onChange={(e: any) => updateSetting('profile.bio', e.target.value)}
             className="bg-gray-800 border-gray-700 text-white resize-none"
             rows={3}
             maxLength={150}
@@ -342,7 +342,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Graduation Year</Label>
             <Select
               value={settings.profile.graduationYear}
-              onValueChange={(value) => updateSetting('profile.graduationYear', value)}
+              onValueChange={(value: any) => updateSetting('profile.graduationYear', value)}
             >
               <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                 <SelectValue />
@@ -360,7 +360,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Major</Label>
             <Select
               value={settings.profile.major}
-              onValueChange={(value) => updateSetting('profile.major', value)}
+              onValueChange={(value: any) => updateSetting('profile.major', value)}
             >
               <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                 <SelectValue />
@@ -381,7 +381,7 @@ const ProfileSettingsTab = ({
           <Label className="text-white">Housing</Label>
           <Select
             value={settings.profile.dorm}
-            onValueChange={(value) => updateSetting('profile.dorm', value)}
+            onValueChange={(value: any) => updateSetting('profile.dorm', value)}
           >
             <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
               <SelectValue />
@@ -471,7 +471,7 @@ const PrivacySettingsTab = ({
           <Label className="text-white">Who can see your profile?</Label>
           <Select
             value={settings.privacy.profileVisibility}
-            onValueChange={(value) => updateSetting('privacy.profileVisibility', value)}
+            onValueChange={(value: any) => updateSetting('privacy.profileVisibility', value)}
           >
             <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
               <SelectValue />
@@ -497,7 +497,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showMajor}
-                onCheckedChange={(checked) => updateSetting('privacy.showMajor', checked)}
+                onCheckedChange={(checked: any) => updateSetting('privacy.showMajor', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -509,7 +509,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showGraduationYear}
-                onCheckedChange={(checked) => updateSetting('privacy.showGraduationYear', checked)}
+                onCheckedChange={(checked: any) => updateSetting('privacy.showGraduationYear', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -521,7 +521,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showDorm}
-                onCheckedChange={(checked) => updateSetting('privacy.showDorm', checked)}
+                onCheckedChange={(checked: any) => updateSetting('privacy.showDorm', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -533,7 +533,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showActivity}
-                onCheckedChange={(checked) => updateSetting('privacy.showActivity', checked)}
+                onCheckedChange={(checked: any) => updateSetting('privacy.showActivity', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -561,7 +561,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.allowMessages}
-            onCheckedChange={(checked) => updateSetting('privacy.allowMessages', checked)}
+            onCheckedChange={(checked: any) => updateSetting('privacy.allowMessages', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -575,7 +575,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.allowSpaceInvites}
-            onCheckedChange={(checked) => updateSetting('privacy.allowSpaceInvites', checked)}
+            onCheckedChange={(checked: any) => updateSetting('privacy.allowSpaceInvites', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -589,7 +589,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.searchable}
-            onCheckedChange={(checked) => updateSetting('privacy.searchable', checked)}
+            onCheckedChange={(checked: any) => updateSetting('privacy.searchable', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -699,7 +699,7 @@ const SettingsSystem = () => {
                     </div>
                     <Switch
                       checked={settingsState.settings.preferences.theme === 'dark'}
-                      onCheckedChange={(checked) => settingsState.updateSetting('preferences.theme', checked ? 'dark' : 'light')}
+                      onCheckedChange={(checked: any) => settingsState.updateSetting('preferences.theme', checked ? 'dark' : 'light')}
                       className="data-[state=checked]:bg-yellow-500"
                     />
                   </div>
@@ -711,7 +711,7 @@ const SettingsSystem = () => {
                     </div>
                     <Switch
                       checked={settingsState.settings.preferences.reduceMotion}
-                      onCheckedChange={(checked) => settingsState.updateSetting('preferences.reduceMotion', checked)}
+                      onCheckedChange={(checked: any) => settingsState.updateSetting('preferences.reduceMotion', checked)}
                       className="data-[state=checked]:bg-yellow-500"
                     />
                   </div>

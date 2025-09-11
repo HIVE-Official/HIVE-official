@@ -249,7 +249,7 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-medium text-sm">{comment.userName}</span>
                 <span className="text-xs text-[var(--hive-text-tertiary)]">
-                  {comment.createdAt && formatDistanceToNow(comment.createdAt.toDate(), { addSuffix: true })}
+                  {comment.createdAt && formatDistanceToNow(comment.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt), { addSuffix: true })}
                 </span>
                 {comment.edited && !comment.deleted && (
                   <span className="text-xs text-[var(--hive-text-tertiary)]">(edited)</span>
@@ -260,7 +260,7 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
                 <div className="space-y-2">
                   <textarea
                     value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
+                    onChange={(e: any) => setEditText(e.target.value)}
                     className="w-full p-2 bg-[var(--hive-background-primary)] border border-[var(--hive-border)] rounded-lg resize-none"
                     rows={3}
                     autoFocus
@@ -441,8 +441,8 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
               <input
                 type="text"
                 value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                onKeyDown={(e) => {
+                onChange={(e: any) => setCommentText(e.target.value)}
+                onKeyDown={(e: any) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     handleSubmitComment();

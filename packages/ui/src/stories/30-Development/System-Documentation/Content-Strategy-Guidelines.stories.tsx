@@ -656,7 +656,7 @@ const ContentStrategyShowcase = () => {
                       <Textarea
                         placeholder="Try: 'CS 220 study group forming! We meet Tuesdays 7pm in library room 204 to work through programming assignments. Looking for 2 more committed people. Message me!'"
                         value={contentAnalysis}
-                        onChange={(e) => setContentAnalysis(e.target.value)}
+                        onChange={(e: any) => setContentAnalysis(e.target.value)}
                         className="min-h-24"
                         style={{
                           backgroundColor: 'var(--hive-background-secondary)',

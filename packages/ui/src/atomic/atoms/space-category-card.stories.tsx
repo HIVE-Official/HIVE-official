@@ -79,7 +79,7 @@ export const Default: Story = {
     variant: 'default',
     onClick: action('university-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -535,7 +535,7 @@ export const Playground: Story = {
     variant: 'default',
     onClick: action('playground-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

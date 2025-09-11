@@ -470,7 +470,7 @@ export function FeedPersonalization({
                     min="0"
                     max="100"
                     value={value}
-                    onChange={(e) => updateAlgorithmWeight(weight as any, parseInt(e.target.value))}
+                    onChange={(e: any) => updateAlgorithmWeight(weight as any, parseInt(e.target.value))}
                     className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer slider"
                   />
                 </div>

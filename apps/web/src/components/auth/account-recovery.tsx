@@ -351,7 +351,7 @@ export function AccountRecovery({ mode = 'password', className = '' }: AccountRe
               <input
                 type="text"
                 value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
+                onChange={(e: any) => setIdentifier(e.target.value)}
                 placeholder="Enter your email or username"
                 className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
               />
@@ -473,8 +473,8 @@ export function AccountRecovery({ mode = 'password', className = '' }: AccountRe
                           type="text"
                           maxLength={1}
                           value={digit}
-                          onChange={(e) => handleCodeInput(index, e.target.value)}
-                          onKeyDown={(e) => handleKeyDown(index, e)}
+                          onChange={(e: any) => handleCodeInput(index, e.target.value)}
+                          onKeyDown={(e: any) => handleKeyDown(index, e)}
                           className="w-12 h-12 text-center text-xl font-bold bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)] focus:bg-white/10 transition-all"
                         />
                       ))}
@@ -501,7 +501,7 @@ export function AccountRecovery({ mode = 'password', className = '' }: AccountRe
                   <input
                     type="text"
                     value={securityAnswer}
-                    onChange={(e) => setSecurityAnswer(e.target.value)}
+                    onChange={(e: any) => setSecurityAnswer(e.target.value)}
                     placeholder="Your answer"
                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
                   />
@@ -545,7 +545,7 @@ export function AccountRecovery({ mode = 'password', className = '' }: AccountRe
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={(e: any) => setNewPassword(e.target.value)}
                   placeholder="Enter new password"
                   className="w-full px-3 py-2 pr-10 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
                 />
@@ -584,7 +584,7 @@ export function AccountRecovery({ mode = 'password', className = '' }: AccountRe
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e: any) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
                 className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
               />

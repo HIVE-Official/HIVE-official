@@ -65,7 +65,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center space-x-1 ml-10">
-                {NAVIGATION_ITEMS.map((item) => {
+                {NAVIGATION_ITEMS.map((item: any) => {
                   const Icon = item.icon;
                   const isActive = pathname === item.href;
                   
@@ -192,7 +192,7 @@ export function TopNavLayout({ children }: TopNavLayoutProps) {
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-zinc-800">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {NAVIGATION_ITEMS.map((item) => {
+              {NAVIGATION_ITEMS.map((item: any) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
                 

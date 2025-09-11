@@ -3,7 +3,7 @@
  */
 
 export const sentryMock = {init: () => {  },
-  getCurrentHub: () => ({withScope: (callback) => callback({ setUser: () => {  },
+  getCurrentHub: () => ({withScope: (callback: any) => callback({ setUser: () => {  },
       setTag: () => { },
       setContext: () => { },
       setLevel: () => { },

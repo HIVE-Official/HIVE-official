@@ -370,7 +370,7 @@ function ConfigureMode() {
               <input
                 type="text"
                 value={settings.general.name}
-                onChange={(e) => updateSetting('general', 'name', e.target.value)}
+                onChange={(e: any) => updateSetting('general', 'name', e.target.value)}
                 className="w-full mt-1 bg-gray-900 border border-green-500/30 rounded-lg px-3 py-2 text-[var(--hive-text-primary)]"
               />
             </div>
@@ -379,7 +379,7 @@ function ConfigureMode() {
               <label className="text-[var(--hive-text-primary)] text-sm font-medium">Description</label>
               <textarea
                 value={settings.general.description}
-                onChange={(e) => updateSetting('general', 'description', e.target.value)}
+                onChange={(e: any) => updateSetting('general', 'description', e.target.value)}
                 rows={3}
                 className="w-full mt-1 bg-gray-900 border border-green-500/30 rounded-lg px-3 py-2 text-[var(--hive-text-primary)] resize-none"
               />
@@ -390,14 +390,14 @@ function ConfigureMode() {
                 <span className="text-[var(--hive-text-primary)] text-sm">Public Discovery</span>
                 <Switch 
                   checked={settings.general.discoverability}
-                  onCheckedChange={(checked) => updateSetting('general', 'discoverability', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('general', 'discoverability', checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[var(--hive-text-primary)] text-sm">Auto-approve Members</span>
                 <Switch 
                   checked={settings.general.autoApprove}
-                  onCheckedChange={(checked) => updateSetting('general', 'autoApprove', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('general', 'autoApprove', checked)}
                 />
               </div>
             </div>
@@ -420,7 +420,7 @@ function ConfigureMode() {
                 </span>
                 <Switch 
                   checked={enabled as boolean}
-                  onCheckedChange={(checked) => updateSetting('features', feature, checked)}
+                  onCheckedChange={(checked: any) => updateSetting('features', feature, checked)}
                 />
               </div>
             ))}
@@ -443,7 +443,7 @@ function ConfigureMode() {
                 </span>
                 <Switch 
                   checked={enabled as boolean}
-                  onCheckedChange={(checked) => updateSetting('moderation', setting, checked)}
+                  onCheckedChange={(checked: any) => updateSetting('moderation', setting, checked)}
                 />
               </div>
             ))}
@@ -466,7 +466,7 @@ function ConfigureMode() {
                 </span>
                 <Switch 
                   checked={enabled as boolean}
-                  onCheckedChange={(checked) => updateSetting('notifications', notification, checked)}
+                  onCheckedChange={(checked: any) => updateSetting('notifications', notification, checked)}
                 />
               </div>
             ))}
@@ -811,7 +811,7 @@ function ContentAnalytics({ isLoading }: { isLoading: boolean }) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockAnalyticsData.contentMetrics.topPosts.map((post) => (
+            {mockAnalyticsData.contentMetrics.topPosts.map((post: any) => (
               <div key={post.id} className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg">
                 <div className="flex-1">
                   <h4 className="text-[var(--hive-text-primary)] font-medium">{post.title}</h4>
@@ -915,7 +915,7 @@ function ToolAnalytics({ isLoading }: { isLoading: boolean }) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockAnalyticsData.toolsMetrics.toolPerformance.map((tool) => (
+            {mockAnalyticsData.toolsMetrics.toolPerformance.map((tool: any) => (
               <div key={tool.name} className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg">
                 <div className="flex items-center">
                   <Code className="w-6 h-6 text-cyan-400 mr-3" />
@@ -965,7 +965,7 @@ function ContentModeration() {
 function ModerationQueue() {
   return (
     <div className="space-y-4">
-      {mockModerationQueue.map((item) => (
+      {mockModerationQueue.map((item: any) => (
         <Card key={item.id} className="bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/30">
           <CardContent className="p-4">
             <div className="flex items-start justify-between">

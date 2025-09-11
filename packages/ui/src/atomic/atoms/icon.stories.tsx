@@ -95,7 +95,7 @@ export const Default: Story = {
     color: 'primary',
     variant: 'default',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="p-6">
@@ -608,7 +608,7 @@ export const Playground: Story = {
     color: 'gold',
     variant: 'default',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

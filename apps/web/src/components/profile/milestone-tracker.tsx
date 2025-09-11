@@ -394,7 +394,7 @@ export function MilestoneTracker({ userId, className = '' }: MilestoneTrackerPro
       ) : (
         <div className="space-y-4">
           <AnimatePresence mode="popLayout">
-            {filteredMilestones.map((milestone) => {
+            {filteredMilestones.map((milestone: any) => {
               const category = categories.find(c => c.id === milestone.category);
               const Icon = category?.icon || Flag;
               

@@ -55,7 +55,7 @@ export function useRealtimeChat(options: UseRealtimeChatOptions): UseRealtimeCha
 
     try {
       // Listen to chat messages
-      const unsubscribe = realtimeService.listenToChat(spaceId, (newMessages) => {
+      const unsubscribe = realtimeService.listenToChat(spaceId, (newMessages: any) => {
         setMessages(newMessages);
         setIsLoading(false);
         setIsConnected(true);

@@ -1,7 +1,7 @@
 'use client';
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Max width variants based on Tailwind responsive breakpoints
 const maxWidthVariants = {
     xs: 'max-w-xs', // 320px
@@ -55,12 +55,12 @@ const containerVariants = {
         'border-y border-[var(--hive-border-tertiary)]'
     ].join(' ')
 };
-export const Container = React.forwardRef(({ maxWidth = '7xl', padding = 'md', center = true, fluid = false, breakout = false, variant = 'default', gutter = false, className, children, ...props }, ref) => {
+export const Container = React.forwardRef(({ maxWidth = '7xl', padding = 'md', center = true, fluid = false, breakout = false, variant = 'default', gutter = false, className, children, title, subtitle, breadcrumbs, actions, ...props }, ref) => {
     const baseClasses = [
         // Container basics
         'w-full',
         // Max width (unless fluid or breakout)
-        !fluid && !breakout && maxWidthVariants[maxWidth],
+        !fluid && !breakout && (maxWidthVariants[maxWidth] || maxWidth),
         // Centering
         center && 'mx-auto',
         // Padding
@@ -82,7 +82,7 @@ export const Container = React.forwardRef(({ maxWidth = '7xl', padding = 'md', c
         // Variant styles
         containerVariants[variant]
     ].filter(Boolean).join(' ');
-    return (_jsx("div", { ref: ref, className: cn(baseClasses, className), ...props, children: children }));
+    return (_jsxs("div", { ref: ref, className: cn(baseClasses, className), ...props, children: [(title || subtitle || breadcrumbs || actions) && (_jsxs("div", { className: "mb-6", children: [breadcrumbs && (_jsx("nav", { className: "flex space-x-2 text-sm mb-2", children: breadcrumbs.map((crumb, index) => (_jsxs("span", { className: "flex items-center", children: [index > 0 && _jsx("span", { className: "mx-2 text-[var(--hive-text-tertiary)]", children: "/" }), crumb.icon, crumb.href ? (_jsx("a", { href: crumb.href, className: "text-[var(--hive-brand-secondary)] hover:underline", children: crumb.label })) : (_jsx("span", { className: "text-[var(--hive-text-secondary)]", children: crumb.label }))] }, index))) })), _jsxs("div", { className: "flex justify-between items-start", children: [_jsxs("div", { children: [title && _jsx("h1", { className: "text-2xl font-bold text-[var(--hive-text-primary)]", children: title }), subtitle && _jsx("p", { className: "text-[var(--hive-text-secondary)] mt-1", children: subtitle })] }), actions && _jsx("div", { children: actions })] })] })), children] }));
 });
 Container.displayName = 'Container';
 // Convenient preset components

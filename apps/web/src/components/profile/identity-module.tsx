@@ -87,11 +87,11 @@ export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps)
   }, [profile]);
 
   const nextPhoto = () => {
-    setCurrentPhotoIndex((prev) => (prev + 1) % photos.length);
+    setCurrentPhotoIndex((prev: any) => (prev + 1) % photos.length);
   };
 
   const prevPhoto = () => {
-    setCurrentPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
+    setCurrentPhotoIndex((prev: any) => (prev - 1 + photos.length) % photos.length);
   };
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {

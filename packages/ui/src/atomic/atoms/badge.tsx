@@ -6,13 +6,17 @@ import { cn } from '../../lib/utils';
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: 
     // Core system variants
-    | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost'
+    | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost'
+    // Aliases
+    | 'destructive' | 'outline'
     // HIVE recognition variants
     | 'builder' | 'verified' | 'leader' | 'ghost-mode' 
     // Achievement variants 
     | 'achievement' | 'streak' | 'scholar' | 'connector'
     // Custom role variants
-    | 'dean' | 'developer' | 'organizer' | 'helper';
+    | 'dean' | 'developer' | 'organizer' | 'helper'
+    // Additional variants for compatibility
+    | 'skill-tag' | 'building-tools';
   size?: 'sm' | 'md' | 'lg';
   dot?: boolean;
   count?: number;
@@ -23,6 +27,8 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 export const badgeVariants = {
   // === CORE SYSTEM VARIANTS ===
+  // Default (alias for secondary)
+  default: 'bg-[var(--hive-background-tertiary)] text-[var(--hive-text-secondary)] border-[var(--hive-border-default)]',
   // GOLD OUTLINE ONLY (never fill) - Primary brand badge
   primary: 'bg-transparent text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]',
   // Secondary with semantic tokens
@@ -62,7 +68,17 @@ export const badgeVariants = {
   // Event Organizer - Pink for event organizers
   organizer: 'bg-[color-mix(in_srgb,#EC4899_15%,transparent)] text-[#EC4899] border-[#EC4899]',
   // Community Helper - Warm orange
-  helper: 'bg-[color-mix(in_srgb,#F59E0B_15%,transparent)] text-[#F59E0B] border-[#F59E0B]'
+  helper: 'bg-[color-mix(in_srgb,#F59E0B_15%,transparent)] text-[#F59E0B] border-[#F59E0B]',
+  
+  // === ALIASES ===
+  destructive: 'bg-[color-mix(in_srgb,var(--hive-status-error)_10%,transparent)] text-[var(--hive-status-error)] border-[var(--hive-status-error)]',
+  outline: 'bg-transparent text-[var(--hive-text-tertiary)] border-[var(--hive-border-subtle)]',
+  
+  // === ADDITIONAL VARIANTS ===
+  // Skill tag - for skills and technologies
+  'skill-tag': 'bg-[color-mix(in_srgb,#6366F1_15%,transparent)] text-[#6366F1] border-[#6366F1]',
+  // Building tools - for tool builder status
+  'building-tools': 'bg-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)] text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)] font-medium'
 };
 
 const badgeSizes = {

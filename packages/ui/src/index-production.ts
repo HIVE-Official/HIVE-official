@@ -32,42 +32,42 @@ export { hiveVariants } from './lib/motion';
 // === STUB COMPONENTS (for complex ones that have deep dependencies) ===
 
 // Onboarding Components (stubs - to be replaced with working versions)
-export const CreateProfileStep: React.FC<any> = (props) => {
+export const CreateProfileStep: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Create Profile'),
     React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Complete your profile to get started with HIVE.')
   );
 };
 
-export const AcademicStep: React.FC<any> = (props) => {
+export const AcademicStep: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Academic Information'),
     React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Tell us about your academic journey.')
   );
 };
 
-export const InterestsSelectionStep: React.FC<any> = (props) => {
+export const InterestsSelectionStep: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Select Your Interests'),
     React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Choose topics that interest you most.')
   );
 };
 
-export const WelcomeRoleStep: React.FC<any> = (props) => {
+export const WelcomeRoleStep: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE'),
     React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Select your role to personalize your experience.')
   );
 };
 
-export const AlumniComingSoonStep: React.FC<any> = (props) => {
+export const AlumniComingSoonStep: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Alumni Access Coming Soon'),
     React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Alumni features will be available soon!')
   );
 };
 
-export const OnboardingCompleteStep: React.FC<any> = (props) => {
+export const OnboardingCompleteStep: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'p-8 text-center' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Welcome to HIVE!'),
     React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Your profile is complete. Start exploring!')
@@ -75,7 +75,7 @@ export const OnboardingCompleteStep: React.FC<any> = (props) => {
 };
 
 // Profile Components (stubs)
-export const BentoProfileDashboard: React.FC<any> = (props) => {
+export const BentoProfileDashboard: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'p-8' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Profile Dashboard'),
     React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Your personalized dashboard will appear here.')
@@ -83,7 +83,7 @@ export const BentoProfileDashboard: React.FC<any> = (props) => {
 };
 
 // Spaces Components (stubs)
-export const SpaceRequestForm: React.FC<any> = (props) => {
+export const SpaceRequestForm: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'p-8' }, 
     React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Request a Space'),
     React.createElement('p', { className: 'text-[var(--hive-text-muted)]' }, 'Space request form will appear here.')
@@ -91,12 +91,12 @@ export const SpaceRequestForm: React.FC<any> = (props) => {
 };
 
 // Form Components (stubs)
-export const FormField: React.FC<any> = (props) => {
+export const FormField: React.FC<any> = (props: any) => {
   return React.createElement('div', { className: 'mb-4' }, props.children);
 };
 
 // Basic UI Stubs
-export const Checkbox: React.FC<any> = (props) => {
+export const Checkbox: React.FC<any> = (props: any) => {
   return React.createElement('input', { type: 'checkbox', className: 'rounded border-[var(--hive-border-default)]', ...props });
 };
 

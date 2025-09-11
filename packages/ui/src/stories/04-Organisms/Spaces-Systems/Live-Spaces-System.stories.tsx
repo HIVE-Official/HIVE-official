@@ -275,7 +275,7 @@ const SpaceDiscoverySystem = () => {
                 type="text"
                 placeholder="Search spaces by name, topic, or tags..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 pl-10"
               />
             </div>
@@ -285,7 +285,7 @@ const SpaceDiscoverySystem = () => {
               </Button>
               <select 
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e: any) => setSelectedCategory(e.target.value)}
                 className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
               >
                 {categories.map(cat => (
@@ -332,13 +332,13 @@ const SpaceDiscoverySystem = () => {
 
         {/* Spaces Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredSpaces.map((space) => (
+          {filteredSpaces.map((space: any) => (
             <Card key={space.id} className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer transition-all duration-200"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -408,7 +408,7 @@ const SpaceDiscoverySystem = () => {
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1">
-                  {space.tags.slice(0, 3).map((tag) => (
+                  {space.tags.slice(0, 3).map((tag: any) => (
                     <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       {tag}
                     </Badge>
@@ -566,11 +566,11 @@ const SpaceManagementSystem = () => {
             
             {/* Post Composer */}
             <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -608,11 +608,11 @@ const SpaceManagementSystem = () => {
             <div className="space-y-4">
               {/* Study Session Post */}
               <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -665,7 +665,7 @@ const SpaceManagementSystem = () => {
                       </Button>
                     </div>
                     <div className="flex -space-x-2">
-                      {[1, 2, 3].map((i) => (
+                      {[1, 2, 3].map((i: any) => (
                         <Avatar key={i} className="w-6 h-6 border-2 border-gray-800">
                           <AvatarFallback className="bg-gradient-to-r from-green-500 to-teal-500 text-[var(--hive-text-primary)] text-xs">
                             {String.fromCharCode(65 + i)}
@@ -679,11 +679,11 @@ const SpaceManagementSystem = () => {
 
               {/* Resource Share Post */}
               <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -742,11 +742,11 @@ const SpaceManagementSystem = () => {
             
             {/* Space Stats */}
             <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -782,11 +782,11 @@ const SpaceManagementSystem = () => {
 
             {/* Recent Members */}
             <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -824,7 +824,7 @@ const SpaceManagementSystem = () => {
                   </div>
                 ))}
                 
-                <Button variant="ghost" className="w-full hive-interactive" style={{ color: 'var(--hive-brand-primary)' }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--hive-overlay-gold-subtle)'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}>
+                <Button variant="ghost" className="w-full hive-interactive" style={{ color: 'var(--hive-brand-primary)' }} onMouseEnter={(e: any) => { e.currentTarget.style.backgroundColor = 'var(--hive-overlay-gold-subtle)'; }} onMouseLeave={(e: any) => { e.currentTarget.style.backgroundColor = 'transparent'; }}>
                   View All {activeSpace.memberCount} Members
                 </Button>
               </CardContent>
@@ -832,11 +832,11 @@ const SpaceManagementSystem = () => {
 
             {/* Quick Actions */}
             <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>

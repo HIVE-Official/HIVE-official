@@ -2,8 +2,8 @@ import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const radioVariants: (props?: import("class-variance-authority/types").ClassProp | undefined) => string;
 declare const radioIndicatorVariants: (props?: ({
-    size?: "sm" | "default" | "lg" | "xl" | null | undefined;
-    variant?: "error" | "success" | "warning" | "info" | "default" | null | undefined;
+    size?: "default" | "sm" | "lg" | "xl" | null | undefined;
+    variant?: "error" | "default" | "success" | "warning" | "info" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 declare const radioLabelVariants: (props?: ({
     color?: "error" | "primary" | "secondary" | "success" | "warning" | "info" | "tertiary" | null | undefined;

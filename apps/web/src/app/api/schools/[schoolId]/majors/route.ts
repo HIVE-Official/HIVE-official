@@ -28,7 +28,7 @@ export async function GET(
       return NextResponse.json([]);
     }
 
-    const majors = majorsSnapshot.docs.map((doc) => ({
+    const majors = majorsSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data(),
     }));

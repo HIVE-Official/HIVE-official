@@ -50,7 +50,7 @@ export function useSpaceEvents(spaceId: string | undefined): UseSpaceEventsRetur
 
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
+      (snapshot: any) => {
         const eventsData = snapshot.docs.map(doc => {
           const data = doc.data();
           return {
@@ -86,7 +86,7 @@ export function useSpaceEvents(spaceId: string | undefined): UseSpaceEventsRetur
         setLoading(false);
         setError(null);
       },
-      (err) => {
+      (err: any) => {
         console.error('Error fetching events:', err);
         setError(err as Error);
         setLoading(false);

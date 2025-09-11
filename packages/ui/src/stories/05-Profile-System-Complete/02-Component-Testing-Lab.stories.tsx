@@ -206,7 +206,7 @@ function TestControlPanel({
               Test Component
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {cardConfigs.map((config) => {
+              {cardConfigs.map((config: any) => {
                 const Icon = config.icon;
                 const isSelected = selectedCard === config.id;
                 return (
@@ -641,7 +641,7 @@ export const ComponentTestingLab: StoryObj = {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {cardConfigs.map((config) => {
+                {cardConfigs.map((config: any) => {
                   const Icon = config.icon;
                   const isSelected = selectedCard === config.id;
                   

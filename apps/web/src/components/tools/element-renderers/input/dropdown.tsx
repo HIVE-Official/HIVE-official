@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@hive/ui';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function DropdownRenderer({
   element,

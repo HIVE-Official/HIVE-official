@@ -165,7 +165,7 @@ export const DesktopHeaderNavigation: Story = {
                   type="search"
                   placeholder="Search students, spaces, events..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                   onFocus={() => setShowSearch(true)}
                   className="pl-10 pr-4 bg-gray-50 border-gray-200 focus:bg-white"
                 />
@@ -250,7 +250,7 @@ export const DesktopHeaderNavigation: Story = {
                       </div>
                     </div>
                     <div className="max-h-80 overflow-y-auto">
-                      {campusNavigationData.notifications.map((notification) => (
+                      {campusNavigationData.notifications.map((notification: any) => (
                         <div 
                           key={notification.id}
                           className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${
@@ -436,7 +436,7 @@ export const MobileHeaderNavigation: Story = {
                   type="search"
                   placeholder="Search campus..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-4"
                   autoFocus
                 />
@@ -620,7 +620,7 @@ export const InteractiveHeaderDemo: Story = {
 
               {/* Navigation Tabs */}
               <nav className="flex items-center gap-1">
-                {navigationTabs.map((tab) => {
+                {navigationTabs.map((tab: any) => {
                   const IconComponent = tab.icon;
                   return (
                     <button
@@ -680,7 +680,7 @@ export const InteractiveHeaderDemo: Story = {
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Notifications</h3>
               <div className="space-y-3">
-                {notifications.slice(0, 3).map((notification) => (
+                {notifications.slice(0, 3).map((notification: any) => (
                   <div 
                     key={notification.id}
                     className={`flex items-start gap-3 p-3 rounded-lg border ${

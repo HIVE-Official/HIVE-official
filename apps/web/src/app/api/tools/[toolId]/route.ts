@@ -1,8 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getAuth } from "firebase-admin/auth";
-import { getFirestore } from "firebase-admin/firestore";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin, authAdmin } from "@/lib/firebase-admin";
 import { z } from "zod";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import {
@@ -16,7 +14,7 @@ import {
   validateElementConfig,
 } from "@hive/core";
 
-const db = getFirestore();
+const db = dbAdmin;
 
 // GET /api/tools/[toolId] - Get tool details
 export async function GET(
@@ -30,7 +28,7 @@ export async function GET(
     }
 
     const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await authAdmin.verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { toolId } = await params;
@@ -64,7 +62,7 @@ export async function GET(
         .limit(10)
         .get();
 
-      versions = versionsSnapshot.docs.map((doc) => ({
+      versions = versionsSnapshot.docs.map((doc: any) => ({
         version: doc.id,
         ...doc.data(),
       }));
@@ -90,7 +88,7 @@ export async function PUT(
     }
 
     const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await authAdmin.verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { toolId } = await params;
@@ -126,7 +124,7 @@ export async function PUT(
       // Validate each element configuration
       const elementsSnapshot = await dbAdmin.collection("elements").get();
       const elementsMap = new Map();
-      elementsSnapshot.docs.forEach((doc) => {
+      elementsSnapshot.docs.forEach((doc: any) => {
         elementsMap.set(doc.id, doc.data());
       });
 
@@ -239,7 +237,7 @@ export async function DELETE(
     }
 
     const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await authAdmin.verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { toolId } = await params;
@@ -278,13 +276,13 @@ export async function DELETE(
 
     // Delete versions
     const versionsSnapshot = await toolDoc.ref.collection("versions").get();
-    versionsSnapshot.docs.forEach((doc) => {
+    versionsSnapshot.docs.forEach((doc: any) => {
       batch.delete(doc.ref);
     });
 
     // Delete data records
     const recordsSnapshot = await toolDoc.ref.collection("records").get();
-    recordsSnapshot.docs.forEach((doc) => {
+    recordsSnapshot.docs.forEach((doc: any) => {
       batch.delete(doc.ref);
     });
 

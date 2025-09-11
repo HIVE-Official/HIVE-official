@@ -360,7 +360,7 @@ export function CompleteHIVEToolsSystem({
               href={builderMode === 'preview' ? properties.url : '#'}
               target={properties.target}
               className="text-blue-600 hover:text-blue-800 underline"
-              onClick={(e) => builderMode === 'design' && e.preventDefault()}
+              onClick={(e: any) => builderMode === 'design' && e.preventDefault()}
             >
               {properties.text}
             </a>
@@ -390,7 +390,7 @@ export function CompleteHIVEToolsSystem({
       </div>
 
       {/* Main Content */}
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "builder" | "personal" | "marketplace")} className="flex-1 flex flex-col">
+      <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value as "builder" | "personal" | "marketplace")} className="flex-1 flex flex-col">
         <TabsList className="w-full bg-white/5 p-1">
           <TabsTrigger value="marketplace" className="flex-1">
             <Target className="h-4 w-4 mr-2" />
@@ -415,13 +415,13 @@ export function CompleteHIVEToolsSystem({
                 <Input
                   placeholder="Search tools..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                   className="pl-10"
                 />
               </div>
               <select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e: any) => setSelectedCategory(e.target.value)}
                 className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)]"
               >
                 {categories.map(cat => (
@@ -469,7 +469,7 @@ export function CompleteHIVEToolsSystem({
                     </div>
 
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {tool.tags.slice(0, 3).map((tag) => (
+                      {tool.tags.slice(0, 3).map((tag: any) => (
                         <Badge key={tag} variant="secondary" className="text-xs">
                           {tag}
                         </Badge>
@@ -582,7 +582,7 @@ export function CompleteHIVEToolsSystem({
                       <div
                         key={elementType.type}
                         draggable
-                        onDragStart={(e) => handleElementDrag(elementType.type, e)}
+                        onDragStart={(e: any) => handleElementDrag(elementType.type, e)}
                         className="flex items-center gap-2 p-3 rounded-lg border border-white/10 cursor-move hover:bg-white/5 transition-colors"
                       >
                         <IconComponent className={`h-4 w-4 ${elementType.color}`} />
@@ -600,7 +600,7 @@ export function CompleteHIVEToolsSystem({
                 <div className="flex items-center gap-2 p-4 border-b border-white/10">
                   <Input
                     value={currentTool.name || ''}
-                    onChange={(e) => setCurrentTool(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e: any) => setCurrentTool(prev => ({ ...prev, name: e.target.value }))}
                     className="flex-1"
                     placeholder="Tool name..."
                   />

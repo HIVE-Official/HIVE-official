@@ -207,7 +207,7 @@ export const PrivacyControls: Story = {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {campusToggleSettings.privacy.map((setting) => {
+          {campusToggleSettings.privacy.map((setting: any) => {
             const IconComponent = setting.icon;
             const isEnabled = privacySettings[setting.id as keyof typeof privacySettings];
             
@@ -313,7 +313,7 @@ export const NotificationSettings: Story = {
               </h3>
               
               <div className="space-y-4">
-                {settings.map((setting) => {
+                {settings.map((setting: any) => {
                   const IconComponent = setting.icon;
                   const isEnabled = notificationSettings[setting.id as keyof typeof notificationSettings];
                   
@@ -397,7 +397,7 @@ export const FeatureToggles: Story = {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {campusToggleSettings.features.map((setting) => {
+          {campusToggleSettings.features.map((setting: any) => {
             const IconComponent = setting.icon;
             const isEnabled = featureSettings[setting.id as keyof typeof featureSettings];
             
@@ -545,7 +545,7 @@ export const SwitchStatesShowcase: Story = {
                   <Switch
                     id="demo-enabled"
                     checked={interactiveStates.enabled}
-                    onCheckedChange={(checked) => setInteractiveStates(prev => ({ ...prev, enabled: checked }))}
+                    onCheckedChange={(checked: any) => setInteractiveStates(prev => ({ ...prev, enabled: checked }))}
                   />
                 </div>
                 <p className="text-sm text-gray-600">

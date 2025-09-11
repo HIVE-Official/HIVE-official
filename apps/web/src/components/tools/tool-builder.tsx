@@ -223,7 +223,7 @@ export function ToolBuilderMigrated({
         clearDraft(spaceId || 'personal');
         onSave(toolData);
       },
-      onError: (error) => {
+      onError: (error: any) => {
         addToast({
           title: `Failed to ${isEditing ? 'update' : 'create'} tool`,
           description: error.message || 'Something went wrong',
@@ -290,7 +290,7 @@ export function ToolBuilderMigrated({
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => setValue('name', e.target.value)}
+                  onChange={(e: any) => setValue('name', e.target.value)}
                   onBlur={() => setFieldTouched('name')}
                   placeholder="My Awesome Tool"
                   disabled={isProcessing}
@@ -305,7 +305,7 @@ export function ToolBuilderMigrated({
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setValue('description', e.target.value)}
+                  onChange={(e: any) => setValue('description', e.target.value)}
                   onBlur={() => setFieldTouched('description')}
                   placeholder="Describe what your tool does..."
                   rows={3}
@@ -321,7 +321,7 @@ export function ToolBuilderMigrated({
                   <Label htmlFor="language">Language</Label>
                   <Select 
                     value={formData.language} 
-                    onValueChange={(value) => setValue('language', value)}
+                    onValueChange={(value: any) => setValue('language', value)}
                     disabled={isProcessing}
                   >
                     <SelectTrigger>
@@ -339,7 +339,7 @@ export function ToolBuilderMigrated({
                   <Label htmlFor="category">Category</Label>
                   <Select 
                     value={formData.category} 
-                    onValueChange={(value) => setValue('category', value)}
+                    onValueChange={(value: any) => setValue('category', value)}
                     disabled={isProcessing}
                   >
                     <SelectTrigger>
@@ -360,7 +360,7 @@ export function ToolBuilderMigrated({
                 <Textarea
                   id="code"
                   value={formData.code}
-                  onChange={(e) => setValue('code', e.target.value)}
+                  onChange={(e: any) => setValue('code', e.target.value)}
                   onBlur={() => setFieldTouched('code')}
                   placeholder="// Your tool code here..."
                   rows={15}
@@ -398,7 +398,7 @@ export function ToolBuilderMigrated({
                       <Input
                         placeholder="Field name"
                         value={field.key}
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                           const updated = [...inputFields];
                           updated[index].key = e.target.value;
                           setInputFields(updated);
@@ -407,7 +407,7 @@ export function ToolBuilderMigrated({
                       />
                       <Select
                         value={field.type}
-                        onValueChange={(value) => {
+                        onValueChange={(value: any) => {
                           const updated = [...inputFields];
                           updated[index].type = value;
                           setInputFields(updated);
@@ -427,7 +427,7 @@ export function ToolBuilderMigrated({
                       <div className="flex items-center gap-2">
                         <Switch
                           checked={field.required}
-                          onCheckedChange={(checked) => {
+                          onCheckedChange={(checked: any) => {
                             const updated = [...inputFields];
                             updated[index].required = checked;
                             setInputFields(updated);
@@ -469,7 +469,7 @@ export function ToolBuilderMigrated({
                       <Input
                         placeholder="Field name"
                         value={field.key}
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                           const updated = [...outputFields];
                           updated[index].key = e.target.value;
                           setOutputFields(updated);
@@ -478,7 +478,7 @@ export function ToolBuilderMigrated({
                       />
                       <Select
                         value={field.type}
-                        onValueChange={(value) => {
+                        onValueChange={(value: any) => {
                           const updated = [...outputFields];
                           updated[index].type = value;
                           setOutputFields(updated);
@@ -566,7 +566,7 @@ export function ToolBuilderMigrated({
                 <Switch
                   id="public"
                   checked={formData.isPublic}
-                  onCheckedChange={(checked) => setValue('isPublic', checked)}
+                  onCheckedChange={(checked: any) => setValue('isPublic', checked)}
                   disabled={isProcessing}
                 />
               </div>

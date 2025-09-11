@@ -566,7 +566,7 @@ function PostBoardSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
 
       {/* Posts List */}
       <div className="space-y-4">
-        {mockPosts.map((post) => (
+        {mockPosts.map((post: any) => (
           <PostCard key={post.id} post={post} viewMode={viewMode} />
         ))}
       </div>
@@ -620,7 +620,7 @@ function EventsSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
 
       {/* Events List */}
       <div className="space-y-4">
-        {mockEvents.map((event) => (
+        {mockEvents.map((event: any) => (
           <EventCard key={event.id} event={event} viewMode={viewMode} />
         ))}
       </div>
@@ -671,14 +671,14 @@ function MembersSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
           <Input
             placeholder="Search members..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: any) => setSearchTerm(e.target.value)}
             className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] pl-10"
           />
         </div>
         
         <select 
           value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value)}
+          onChange={(e: any) => setRoleFilter(e.target.value)}
           className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
         >
           <option value="all">All Roles</option>
@@ -690,7 +690,7 @@ function MembersSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
 
       {/* Members Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {mockMembers.map((member) => (
+        {mockMembers.map((member: any) => (
           <MemberCard key={member.id} member={member} viewMode={viewMode} />
         ))}
       </div>
@@ -729,7 +729,7 @@ function ToolsSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
 
       {/* Tools Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockTools.map((tool) => (
+        {mockTools.map((tool: any) => (
           <ToolCard key={tool.id} tool={tool} viewMode={viewMode} />
         ))}
       </div>
@@ -761,7 +761,7 @@ function PinnedSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
         <div className="flex items-center gap-3">
           <select 
             value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            onChange={(e: any) => setCategoryFilter(e.target.value)}
             className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
           >
             {categories.map(cat => (
@@ -781,7 +781,7 @@ function PinnedSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
 
       {/* Pinned Items */}
       <div className="space-y-4">
-        {mockPinnedItems.map((item) => (
+        {mockPinnedItems.map((item: any) => (
           <PinnedItemCard key={item.id} item={item} viewMode={viewMode} />
         ))}
       </div>

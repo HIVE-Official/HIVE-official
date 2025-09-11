@@ -53,7 +53,7 @@ export async function DELETE(request: NextRequest) {
       .where('authorId', '==', userToDelete)
       .get();
     
-    postsQuery.docs.forEach((doc) => {
+    postsQuery.docs.forEach((doc: any) => {
       batch.delete(doc.ref);
     });
 
@@ -63,7 +63,7 @@ export async function DELETE(request: NextRequest) {
       .where('memberIds', 'array-contains', userToDelete)
       .get();
     
-    spacesQuery.docs.forEach((doc) => {
+    spacesQuery.docs.forEach((doc: any) => {
       const spaceData = doc.data();
       const updatedMemberIds = (spaceData.memberIds || []).filter((id: string) => id !== userToDelete);
       const updatedLeaderIds = (spaceData.leaderIds || []).filter((id: string) => id !== userToDelete);

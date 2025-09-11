@@ -25,7 +25,7 @@ import { useUIStore, useAuthStore } from '@hive/hooks';
 
 export type LeaderMode = 'moderate' | 'manage' | 'configure' | 'insights' | null;
 
-interface LeaderToolbarMigratedProps {
+interface LeaderToolbarProps {
   isVisible: boolean;
   currentMode: LeaderMode;
   onModeChange: (mode: LeaderMode) => void;
@@ -68,7 +68,8 @@ const LEADER_MODES = {
   }
 } as const;
 
-export function LeaderToolbarMigrated({ 
+// Export both names for compatibility
+export function LeaderToolbar({ 
   isVisible, 
   currentMode, 
   onModeChange, 
@@ -77,7 +78,7 @@ export function LeaderToolbarMigrated({
 }: LeaderToolbarMigratedProps) {
   // Global state
   const { profile } = useAuthStore();
-  const isExpanded = useUIStore((state) => state.modals['leader-toolbar']?.isOpen || false);
+  const isExpanded = useUIStore((state: any) => state.modals['leader-toolbar']?.isOpen || false);
   const { openModal, closeModal } = useUIStore();
 
   const handleToggleExpanded = () => {
@@ -286,7 +287,7 @@ export function LeaderToolbarMigrated({
 // Updated hook for leader mode context with store integration
 export function useLeaderMode() {
   const { openModal, closeModal } = useUIStore();
-  const currentMode = useUIStore((state) => state.modals['leader-mode']?.data as LeaderMode) || null;
+  const currentMode = useUIStore((state: any) => state.modals['leader-mode']?.data as LeaderMode) || null;
   
   const toggleMode = (mode: LeaderMode) => {
     const newMode = currentMode === mode ? null : mode;

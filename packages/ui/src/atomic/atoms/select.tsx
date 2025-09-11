@@ -179,7 +179,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
             {clearable && selectedOptions.length > 0 && (
               <button
                 type="button"
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   handleClear();
                 }}
@@ -204,7 +204,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     setSearchQuery(e.target.value);
                     onSearch?.(e.target.value);
                   }}

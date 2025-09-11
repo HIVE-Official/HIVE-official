@@ -39,7 +39,7 @@ export default function RootPage() {
         .then(() => {
           console.log('🔧 Dev login successful, will redirect via auth state change');
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.error('🔧 Dev login failed:', error);
           router.push('/schools');
         });

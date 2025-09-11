@@ -153,7 +153,7 @@ export const InteractiveShowcase: Story = {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-center">Choose Design Philosophy</h2>
               <div className="flex flex-wrap justify-center gap-3">
-                {styles.map((style) => (
+                {styles.map((style: any) => (
                   <button
                     key={style.id}
                     onClick={() => setSelectedStyle(style.id)}
@@ -174,7 +174,7 @@ export const InteractiveShowcase: Story = {
             <div className="space-y-4 mt-6">
               <h2 className="text-lg font-semibold text-center">Component Type</h2>
               <div className="flex justify-center gap-3">
-                {components.map((comp) => (
+                {components.map((comp: any) => (
                   <button
                     key={comp.id}
                     onClick={() => setSelectedComponent(comp.id)}

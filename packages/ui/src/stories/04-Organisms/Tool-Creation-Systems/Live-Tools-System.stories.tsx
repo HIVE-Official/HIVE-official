@@ -236,7 +236,7 @@ const ToolsCreationSystem = () => {
                 type="text"
                 placeholder="Search tools by name, category, or functionality..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 pl-10"
               />
             </div>
@@ -246,7 +246,7 @@ const ToolsCreationSystem = () => {
               </Button>
               <select 
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e: any) => setSelectedCategory(e.target.value)}
                 className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
               >
                 {categories.map(cat => (
@@ -293,13 +293,13 @@ const ToolsCreationSystem = () => {
 
         {/* Tools Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredTools.map((tool) => (
+          {filteredTools.map((tool: any) => (
             <Card key={tool.id} className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer transition-all duration-200"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -381,7 +381,7 @@ const ToolsCreationSystem = () => {
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1">
-                  {tool.tags.slice(0, 3).map((tag) => (
+                  {tool.tags.slice(0, 3).map((tag: any) => (
                     <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       {tag}
                     </Badge>

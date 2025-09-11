@@ -652,7 +652,7 @@ export const Playground: Story = {
     name: 'campus-notifications',
     value: 'immediate',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

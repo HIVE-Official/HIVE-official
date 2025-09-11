@@ -289,7 +289,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
               )}
             </div>
             <div className="space-y-1">
-              {displayActivities.map((activity) => {
+              {displayActivities.map((activity: any) => {
                 const config = getActivityTypeConfig(activity.type);
                 const SpaceIcon = activity.contextSpace ? getSpaceTypeIcon(activity.contextSpace.type) : null;
                 return (

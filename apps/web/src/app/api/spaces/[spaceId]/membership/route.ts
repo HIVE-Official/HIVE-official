@@ -118,7 +118,7 @@ export async function GET(
     const totalCount = totalMembersSnapshot.size;
 
     // Fetch user details for each member
-    const memberPromises = membersSnapshot.docs.map(async (memberDoc) => {
+    const memberPromises = membersSnapshot.docs.map(async (memberDoc: any) => {
       const memberData = memberDoc.data();
       const userId = memberDoc.id;
 

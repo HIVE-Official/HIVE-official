@@ -153,11 +153,11 @@ const HiveOverview = () => {
                   style={{ 
                     transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
                   }}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -234,10 +234,10 @@ const HiveOverview = () => {
                 transformOrigin: 'center',
                 willChange: 'transform, border-color'
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={(e: any) => {
                 e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={(e: any) => {
                 e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
               }}>
               <div className="text-3xl font-bold mb-2" style={{ color: 'var(--hive-brand-primary)' }}>
@@ -267,10 +267,10 @@ const HiveOverview = () => {
                       backgroundColor: 'var(--hive-brand-primary)',
                       color: 'var(--hive-text-inverse)'
                     }}
-                    onMouseEnter={(e) => {
+                    onMouseEnter={(e: any) => {
                       e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow-strong)';
                     }}
-                    onMouseLeave={(e) => {
+                    onMouseLeave={(e: any) => {
                       e.currentTarget.style.boxShadow = 'none';
                     }}>
               Start Exploring
@@ -282,10 +282,10 @@ const HiveOverview = () => {
                       borderColor: 'var(--hive-border-gold)',
                       color: 'var(--hive-brand-primary)'
                     }}
-                    onMouseEnter={(e) => {
+                    onMouseEnter={(e: any) => {
                       e.currentTarget.style.backgroundColor = 'var(--hive-overlay-gold-subtle)';
                     }}
-                    onMouseLeave={(e) => {
+                    onMouseLeave={(e: any) => {
                       e.currentTarget.style.backgroundColor = 'transparent';
                     }}>
               View Live Platform

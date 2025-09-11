@@ -123,7 +123,7 @@ describe('Tools Integration Tests', () => {
     });
 
     it('should handle form submission', async () => {
-      const onSave = jest.fn();
+      const onSave = (() => {});
 
       render(
         <ToolExecutor
@@ -167,7 +167,7 @@ describe('Tools Integration Tests', () => {
     });
 
     it('should handle tool installation', async () => {
-      const onInstall = jest.fn().mockResolvedValue(undefined);
+      const onInstall = (() => {}).mockResolvedValue(undefined);
       const mockTools: Tool[] = [mockTool];
 
       render(
@@ -203,7 +203,7 @@ describe('Tools Integration Tests', () => {
     });
 
     it('should allow saving a tool', async () => {
-      const onSave = jest.fn().mockResolvedValue(undefined);
+      const onSave = (() => {}).mockResolvedValue(undefined);
 
       render(
         <DragDropProvider>
@@ -258,7 +258,7 @@ describe('Tools Integration Tests', () => {
 
   describe('End-to-End Tool Creation Flow', () => {
     it('should create, save, and execute a tool', async () => {
-      const onSave = jest.fn().mockResolvedValue(mockTool);
+      const onSave = (() => {}).mockResolvedValue(mockTool);
 
       // Step 1: Create tool in builder
       const { rerender } = render(

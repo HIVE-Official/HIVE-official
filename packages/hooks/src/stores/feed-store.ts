@@ -57,9 +57,9 @@ export const useFeedStore = create<FeedState>()(
       (set, get) => ({
         // Filters
         filters: defaultFilters,
-        setFilters: (newFilters) =>
+        setFilters: (newFilters: Partial<FeedFilters>) =>
           set(
-            (state) => ({
+            (state: FeedState) => ({
               filters: { ...state.filters, ...newFilters },
             }),
             false,
@@ -70,9 +70,9 @@ export const useFeedStore = create<FeedState>()(
 
         // UI State
         expandedPosts: new Set(),
-        togglePostExpanded: (postId) =>
+        togglePostExpanded: (postId: string) =>
           set(
-            (state) => {
+            (state: FeedState) => {
               const expanded = new Set(state.expandedPosts);
               if (expanded.has(postId)) {
                 expanded.delete(postId);
@@ -88,7 +88,7 @@ export const useFeedStore = create<FeedState>()(
         // Composer State
         composerOpen: false,
         composerType: null,
-        setComposerOpen: (open, type = null) =>
+        setComposerOpen: (open: boolean, type: FeedState['composerType'] = null) =>
           set(
             { composerOpen: open, composerType: type },
             false,
@@ -97,9 +97,9 @@ export const useFeedStore = create<FeedState>()(
 
         // Draft Management
         drafts: new Map(),
-        saveDraft: (id, content) =>
+        saveDraft: (id: string, content: Record<string, unknown>) =>
           set(
-            (state) => {
+            (state: FeedState) => {
               const drafts = new Map(state.drafts);
               drafts.set(id, content);
               return { drafts };
@@ -107,10 +107,10 @@ export const useFeedStore = create<FeedState>()(
             false,
             'saveDraft'
           ),
-        getDraft: (id) => get().drafts.get(id),
-        deleteDraft: (id) =>
+        getDraft: (id: string) => get().drafts.get(id),
+        deleteDraft: (id: string) =>
           set(
-            (state) => {
+            (state: FeedState) => {
               const drafts = new Map(state.drafts);
               drafts.delete(id);
               return { drafts };
@@ -122,7 +122,7 @@ export const useFeedStore = create<FeedState>()(
         // Notification State
         hasNewPosts: false,
         newPostCount: 0,
-        setHasNewPosts: (has, count = 0) =>
+        setHasNewPosts: (has: boolean, count = 0) =>
           set(
             { hasNewPosts: has, newPostCount: count },
             false,
@@ -131,15 +131,15 @@ export const useFeedStore = create<FeedState>()(
 
         // View Preferences
         viewMode: 'card',
-        setViewMode: (mode) =>
+        setViewMode: (mode: FeedState['viewMode']) =>
           set({ viewMode: mode }, false, 'setViewMode'),
 
         // Search History
         recentSearches: [],
-        addRecentSearch: (query) =>
+        addRecentSearch: (query: string) =>
           set(
-            (state) => {
-              const searches = [query, ...state.recentSearches.filter(s => s !== query)].slice(0, 10);
+            (state: FeedState) => {
+              const searches = [query, ...state.recentSearches.filter((s: string) => s !== query)].slice(0, 10);
               return { recentSearches: searches };
             },
             false,
@@ -150,7 +150,7 @@ export const useFeedStore = create<FeedState>()(
       }),
       {
         name: 'FeedStore',
-        partialize: (state) => ({
+        partialize: (state: FeedState) => ({
           filters: state.filters,
           viewMode: state.viewMode,
           recentSearches: state.recentSearches,
@@ -161,7 +161,7 @@ export const useFeedStore = create<FeedState>()(
 );
 
 // Selectors
-export const useFeedFilters = () => useFeedStore((state) => state.filters);
-export const useFeedViewMode = () => useFeedStore((state) => state.viewMode);
-export const useRecentSearches = () => useFeedStore((state) => state.recentSearches);
-export const useExpandedPosts = () => useFeedStore((state) => state.expandedPosts);
+export const useFeedFilters = () => useFeedStore((state: FeedState) => state.filters);
+export const useFeedViewMode = () => useFeedStore((state: FeedState) => state.viewMode);
+export const useRecentSearches = () => useFeedStore((state: FeedState) => state.recentSearches);
+export const useExpandedPosts = () => useFeedStore((state: FeedState) => state.expandedPosts);

@@ -215,7 +215,7 @@ export const CreateSpaceModal: Story = {
                         id="space-name"
                         placeholder="e.g., CSE 115 Study Group"
                         value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        onChange={(e: any) => handleInputChange('name', e.target.value)}
                         className={errors.name ? 'border-red-500' : ''}
                       />
                       {errors.name && (
@@ -229,7 +229,7 @@ export const CreateSpaceModal: Story = {
                         id="space-description"
                         placeholder="Describe your space's purpose and what members can expect..."
                         value={formData.description}
-                        onChange={(e) => handleInputChange('description', e.target.value)}
+                        onChange={(e: any) => handleInputChange('description', e.target.value)}
                         className={`min-h-[100px] ${errors.description ? 'border-red-500' : ''}`}
                       />
                       {errors.description && (
@@ -239,12 +239,12 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-type">Space Type</Label>
-                      <Select onValueChange={(value) => handleInputChange('type', value)}>
+                      <Select onValueChange={(value: any) => handleInputChange('type', value)}>
                         <SelectTrigger className={errors.type ? 'border-red-500' : ''}>
                           <SelectValue placeholder="What type of space is this?" />
                         </SelectTrigger>
                         <SelectContent>
-                          {campusModalData.spaceTypes.map((type) => (
+                          {campusModalData.spaceTypes.map((type: any) => (
                             <SelectItem key={type.value} value={type.value}>
                               <div>
                                 <div className="font-medium">{type.label}</div>
@@ -271,12 +271,12 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-privacy">Privacy Level</Label>
-                      <Select onValueChange={(value) => handleInputChange('privacy', value)}>
+                      <Select onValueChange={(value: any) => handleInputChange('privacy', value)}>
                         <SelectTrigger className={errors.privacy ? 'border-red-500' : ''}>
                           <SelectValue placeholder="Who can see and join this space?" />
                         </SelectTrigger>
                         <SelectContent>
-                          {campusModalData.privacyLevels.map((level) => (
+                          {campusModalData.privacyLevels.map((level: any) => (
                             <SelectItem key={level.value} value={level.value}>
                               <div>
                                 <div className="font-medium">{level.label}</div>
@@ -293,12 +293,12 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-location">Primary Meeting Location</Label>
-                      <Select onValueChange={(value) => handleInputChange('location', value)}>
+                      <Select onValueChange={(value: any) => handleInputChange('location', value)}>
                         <SelectTrigger className={errors.location ? 'border-red-500' : ''}>
                           <SelectValue placeholder="Where does your space typically meet?" />
                         </SelectTrigger>
                         <SelectContent>
-                          {campusModalData.campusLocations.map((location) => (
+                          {campusModalData.campusLocations.map((location: any) => (
                             <SelectItem key={location} value={location}>
                               {location}
                             </SelectItem>
@@ -317,7 +317,7 @@ export const CreateSpaceModal: Story = {
                         type="number"
                         placeholder="Leave empty for unlimited"
                         value={formData.maxMembers}
-                        onChange={(e) => handleInputChange('maxMembers', e.target.value)}
+                        onChange={(e: any) => handleInputChange('maxMembers', e.target.value)}
                         min="2"
                         max="500"
                       />
@@ -446,7 +446,7 @@ export const ConfirmationModal: Story = {
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          {confirmationModals.map((modal) => (
+          {confirmationModals.map((modal: any) => (
             <Button 
               key={modal.id}
               variant="secondary" 
@@ -463,7 +463,7 @@ export const ConfirmationModal: Story = {
         </div>
 
         {/* Modal Overlays */}
-        {confirmationModals.map((modal) => {
+        {confirmationModals.map((modal: any) => {
           const IconComponent = modal.icon;
           return activeModal === modal.id ? (
             <div key={modal.id} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -575,7 +575,7 @@ export const InteractiveModalDemo: Story = {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {modalActions.map((action) => {
+          {modalActions.map((action: any) => {
             const IconComponent = action.icon;
             return (
               <button
@@ -617,7 +617,7 @@ export const InteractiveModalDemo: Story = {
                     id="event-title"
                     placeholder="Study session, social event, meeting..."
                     value={formData.eventTitle}
-                    onChange={(e) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
                   />
                 </div>
 
@@ -628,7 +628,7 @@ export const InteractiveModalDemo: Story = {
                       id="event-date"
                       type="date"
                       value={formData.eventDate}
-                      onChange={(e) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
+                      onChange={(e: any) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
                     />
                   </div>
                   <div className="space-y-2">
@@ -637,19 +637,19 @@ export const InteractiveModalDemo: Story = {
                       id="event-time"
                       type="time"
                       value={formData.eventTime}
-                      onChange={(e) => setFormData(prev => ({ ...prev, eventTime: e.target.value }))}
+                      onChange={(e: any) => setFormData(prev => ({ ...prev, eventTime: e.target.value }))}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="event-location">Location</Label>
-                  <Select onValueChange={(value) => setFormData(prev => ({ ...prev, eventLocation: value }))}>
+                  <Select onValueChange={(value: any) => setFormData(prev => ({ ...prev, eventLocation: value }))}>
                     <SelectTrigger>
                       <SelectValue placeholder="Choose a campus location" />
                     </SelectTrigger>
                     <SelectContent>
-                      {campusModalData.campusLocations.map((location) => (
+                      {campusModalData.campusLocations.map((location: any) => (
                         <SelectItem key={location} value={location}>
                           {location}
                         </SelectItem>

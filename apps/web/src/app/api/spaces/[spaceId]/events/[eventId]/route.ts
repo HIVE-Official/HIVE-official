@@ -317,7 +317,7 @@ export async function DELETE(
       .get();
 
     const batch = db.batch();
-    rsvpSnapshot.docs.forEach((doc) => {
+    rsvpSnapshot.docs.forEach((doc: any) => {
       batch.delete(doc.ref);
     });
 

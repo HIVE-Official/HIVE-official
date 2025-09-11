@@ -402,7 +402,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
               {viewMode === 'list' && showJoinActions && (
                 <div className="flex items-center gap-2 ml-4">
                   <button
-                    onClick={(e) => {
+                    onClick={(e: any) => {
                       e.stopPropagation();
                       handleBookmarkSpace(space.id, !space.isBookmarked);
                     }}
@@ -417,7 +417,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
 
                   {space.isJoined ? (
                     <button
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.stopPropagation();
                         handleLeaveSpace(space.id);
                       }}
@@ -427,7 +427,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                     </button>
                   ) : (
                     <button
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.stopPropagation();
                         handleJoinSpace(space.id);
                       }}
@@ -461,7 +461,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             {/* Tags */}
             {space.tags.length > 0 && viewMode === 'grid' && (
               <div className="flex items-center gap-1 flex-wrap">
-                {space.tags.slice(0, 3).map((tag) => (
+                {space.tags.slice(0, 3).map((tag: any) => (
                   <span
                     key={tag}
                     className="px-2 py-1 rounded-lg bg-[var(--hive-background-tertiary)]/40 text-[var(--hive-text-muted)] text-xs"
@@ -482,7 +482,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
           {viewMode === 'grid' && showJoinActions && (
             <div className="flex items-center justify-between">
               <button
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   handleBookmarkSpace(space.id, !space.isBookmarked);
                 }}
@@ -501,7 +501,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                     {space.userRole && space.userRole !== 'member' ? space.userRole.replace('_', ' ') : 'Member'}
                   </span>
                   <button
-                    onClick={(e) => {
+                    onClick={(e: any) => {
                       e.stopPropagation();
                       handleLeaveSpace(space.id);
                     }}
@@ -512,7 +512,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 </div>
               ) : (
                 <button
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.stopPropagation();
                     handleJoinSpace(space.id);
                   }}
@@ -627,7 +627,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               placeholder="Search spaces by name, description, or tags..."
               className="w-full pl-10 pr-4 py-3 rounded-2xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
             />
@@ -655,7 +655,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
               className="space-y-3"
             >
               <div className="flex items-center gap-2 flex-wrap">
-                {FILTER_OPTIONS.map((option) => (
+                {FILTER_OPTIONS.map((option: any) => (
                   <button
                     key={option.value}
                     onClick={() => setSelectedFilter(option.value)}
@@ -676,10 +676,10 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 <span className="text-sm text-[var(--hive-text-secondary)]">Sort by:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  onChange={(e: any) => setSortBy(e.target.value as SortOption)}
                   className="px-3 py-1.5 rounded-lg border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] text-sm focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                 >
-                  {SORT_OPTIONS.map((option) => (
+                  {SORT_OPTIONS.map((option: any) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
@@ -700,7 +700,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
                 : 'space-y-4'
             )}>
-              {filteredSpaces.map((space) => (
+              {filteredSpaces.map((space: any) => (
                 <SpaceCard key={space.id} space={space} />
               ))}
             </div>

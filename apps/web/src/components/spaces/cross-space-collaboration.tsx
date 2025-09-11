@@ -313,7 +313,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
           { id: 'projects', label: 'Joint Projects', icon: Target },
           { id: 'events', label: 'Shared Events', icon: Calendar },
           { id: 'workspace', label: 'Planning Workspace', icon: Lightbulb }
-        ].map((tab) => {
+        ].map((tab: any) => {
           const Icon = tab.icon;
           return (
             <button
@@ -339,7 +339,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             placeholder="Search collaborations..."
             className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
           />
@@ -347,7 +347,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
         
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as any)}
+          onChange={(e: any) => setStatusFilter(e.target.value as any)}
           className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Status</option>
@@ -359,7 +359,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
       {/* Tab Content */}
       {activeTab === 'spaces' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredSpaces.map((space) => (
+          {filteredSpaces.map((space: any) => (
             <Card key={space.id} className="p-6 bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-colors">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start space-x-3">
@@ -416,7 +416,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
 
       {activeTab === 'projects' && (
         <div className="space-y-4">
-          {collaborationProjects.map((project) => (
+          {collaborationProjects.map((project: any) => (
             <Card key={project.id} className="p-6 bg-zinc-800/50 border-zinc-700">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -448,7 +448,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  {project.participatingSpaces.map((space) => (
+                  {project.participatingSpaces.map((space: any) => (
                     <div key={space.id} className="flex items-center space-x-1">
                       <div className="w-6 h-6 bg-zinc-600 rounded-full flex items-center justify-center">
                         <span className="text-xs text-[var(--hive-text-inverse)] font-medium">
@@ -468,7 +468,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                     <span className="text-sm text-[var(--hive-text-inverse)]">{project.nextMilestone}</span>
                   </div>
                   <div className="flex flex-wrap gap-1">
-                    {project.tags.slice(0, 3).map((tag) => (
+                    {project.tags.slice(0, 3).map((tag: any) => (
                       <Badge key={tag} variant="skill-tag" className="text-xs">
                         #{tag}
                       </Badge>
@@ -507,7 +507,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
 
       {activeTab === 'events' && (
         <div className="space-y-4">
-          {jointEvents.map((event) => (
+          {jointEvents.map((event: any) => (
             <Card key={event.id} className="p-6 bg-zinc-800/50 border-zinc-700">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -609,7 +609,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
           </div>
           
           <div className="space-y-2 max-h-48 overflow-y-auto">
-            {['AI Research Group', 'Design Studio', 'Business Club'].map((spaceName) => (
+            {['AI Research Group', 'Design Studio', 'Business Club'].map((spaceName: any) => (
               <div key={spaceName} className="flex items-center justify-between p-3 bg-zinc-800/30 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-zinc-600 rounded-lg flex items-center justify-center">

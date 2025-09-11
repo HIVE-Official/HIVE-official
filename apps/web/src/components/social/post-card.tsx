@@ -625,7 +625,7 @@ export function PostCard({
               <Textarea
                 ref={commentInputRef}
                 value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
+                onChange={(e: any) => setCommentText(e.target.value)}
                 placeholder="Write a comment..."
                 rows={2}
                 className="resize-none"

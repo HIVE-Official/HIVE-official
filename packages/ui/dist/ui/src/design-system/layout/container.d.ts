@@ -5,8 +5,8 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 export declare const containerVariants: (props?: ({
-    size?: "xs" | "sm" | "md" | "lg" | "xl" | "full" | "screen" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | null | undefined;
-    padding?: "sm" | "md" | "lg" | "xl" | "none" | null | undefined;
+    size?: "sm" | "lg" | "xl" | "full" | "xs" | "md" | "2xl" | "screen" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | null | undefined;
+    padding?: "sm" | "lg" | "xl" | "none" | "md" | null | undefined;
     campusLayout?: "page-content" | "course-content" | "profile-content" | "auth-content" | "dashboard-content" | "modal-content" | null | undefined;
 } & import("class-variance-authority/types").ClassProp) | undefined) => string;
 export interface ContainerProps extends VariantProps<typeof containerVariants> {

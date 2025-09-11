@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 import { cn } from '@/lib/utils';
 
 export function TextDisplayRenderer({

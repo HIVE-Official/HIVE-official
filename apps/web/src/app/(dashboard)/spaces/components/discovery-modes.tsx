@@ -115,7 +115,7 @@ export function DiscoveryModes({ onModeSelect, userProfile }: DiscoveryModesProp
 
       {/* Mode Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {discoveryModes.map((mode) => {
+        {discoveryModes.map((mode: any) => {
           const Icon = mode.icon;
           const isRecommended = mode.id === recommendedMode;
           const isSelected = selectedMode === mode.id;
@@ -335,7 +335,7 @@ export function QuickStartSurvey({ onComplete, onSkip }: QuickStartSurveyProps) 
 
         {/* Options */}
         <div className="grid grid-cols-1 gap-3 mb-8">
-          {currentQuestion.options.map((option) => {
+          {currentQuestion.options.map((option: any) => {
             const isSelected = currentQuestion.type === "multi-select"
               ? answers.interests.includes(option.id)
               : answers[currentQuestion.id as keyof typeof answers] === option.id;

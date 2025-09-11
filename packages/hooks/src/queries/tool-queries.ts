@@ -140,7 +140,7 @@ export function useCreateTool() {
         ratingCount: 0
       } as Tool;
     },
-    onSuccess: (newTool) => {
+    onSuccess: (newTool: any) => {
       // Invalidate tools list
       queryClient.invalidateQueries({ queryKey: ['tools'] });
       
@@ -149,7 +149,7 @@ export function useCreateTool() {
       
       logger.info('Tool created successfully', { toolId: newTool.id });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       logger.error('Failed to create tool', { error });
     }
   });
@@ -195,7 +195,7 @@ export function useUpdateTool() {
       }
       logger.error('Failed to update tool', { error });
     },
-    onSettled: (data) => {
+    onSettled: (data: any) => {
       if (data) {
         queryClient.invalidateQueries({ queryKey: ['tool', data.toolId] });
         queryClient.invalidateQueries({ queryKey: ['tools'] });
@@ -219,7 +219,7 @@ export function useDeleteTool() {
       
       logger.info('Tool deleted successfully', { toolId });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       logger.error('Failed to delete tool', { error });
     }
   });
@@ -277,7 +277,7 @@ export function useExecuteTool() {
         status: 'completed'
       };
     },
-    onSuccess: (execution) => {
+    onSuccess: (execution: any) => {
       // Invalidate tool to update execution count
       queryClient.invalidateQueries({ queryKey: ['tool', execution.toolId] });
       queryClient.invalidateQueries({ queryKey: ['tool-executions', execution.toolId] });
@@ -287,7 +287,7 @@ export function useExecuteTool() {
         executionId: execution.id 
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       logger.error('Failed to execute tool', { error });
     }
   });
@@ -353,7 +353,7 @@ export function useRateTool() {
       queryClient.invalidateQueries({ queryKey: ['tool', toolId] });
       logger.info('Tool rated successfully', { toolId });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       logger.error('Failed to rate tool', { error });
     }
   });
@@ -382,7 +382,7 @@ export function useUpdateToolPermissions() {
       queryClient.invalidateQueries({ queryKey: ['tool', toolId] });
       logger.info('Tool permissions updated', { toolId });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       logger.error('Failed to update tool permissions', { error });
     }
   });
@@ -411,7 +411,7 @@ export function useShareTool() {
       queryClient.invalidateQueries({ queryKey: ['tool', toolId] });
       logger.info('Tool shared successfully', { toolId });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       logger.error('Failed to share tool', { error });
     }
   });

@@ -142,7 +142,7 @@ export class AuthPerformanceOptimizer {
    * Async localStorage operations to avoid blocking
    */
   async setStorageAsync(key: string, value: string): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise((resolve: any) => {
       // Use MessageChannel for non-blocking storage
       const channel = new MessageChannel();
       channel.port2.onmessage = () => resolve();
@@ -163,7 +163,7 @@ export class AuthPerformanceOptimizer {
    * Async localStorage read
    */
   async getStorageAsync(key: string): Promise<string | null> {
-    return new Promise((resolve) => {
+    return new Promise((resolve: any) => {
       setTimeout(() => {
         try {
           const value = localStorage.getItem(key);
@@ -252,7 +252,7 @@ export class AuthPerformanceOptimizer {
 
   private async fetchUserData(userId: string): Promise<any> {
     // Placeholder for actual API call
-    return new Promise((resolve) => {
+    return new Promise((resolve: any) => {
       setTimeout(() => {
         resolve({
           id: userId,

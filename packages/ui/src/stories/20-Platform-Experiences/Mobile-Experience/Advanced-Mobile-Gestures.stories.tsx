@@ -874,7 +874,7 @@ const GestureSettings = () => {
           </div>
           <Switch
             checked={gestures.settings.hapticFeedback}
-            onCheckedChange={(checked) => 
+            onCheckedChange={(checked: any) => 
               gestures.setSettings(prev => ({ ...prev, hapticFeedback: checked }))
             }
           />
@@ -886,7 +886,7 @@ const GestureSettings = () => {
           </label>
           <Slider
             value={[gestures.settings.swipeSensitivity]}
-            onValueChange={(value) => 
+            onValueChange={(value: any) => 
               gestures.setSettings(prev => ({ ...prev, swipeSensitivity: value[0] }))
             }
             min={0.5}
@@ -902,7 +902,7 @@ const GestureSettings = () => {
           </label>
           <Slider
             value={[gestures.settings.gestureThreshold]}
-            onValueChange={(value) => 
+            onValueChange={(value: any) => 
               gestures.setSettings(prev => ({ ...prev, gestureThreshold: value[0] }))
             }
             min={20}
@@ -919,7 +919,7 @@ const GestureSettings = () => {
           </div>
           <Switch
             checked={gestures.settings.enableLongPress}
-            onCheckedChange={(checked) => 
+            onCheckedChange={(checked: any) => 
               gestures.setSettings(prev => ({ ...prev, enableLongPress: checked }))
             }
           />
@@ -931,7 +931,7 @@ const GestureSettings = () => {
           </label>
           <Slider
             value={[gestures.settings.longPressDuration]}
-            onValueChange={(value) => 
+            onValueChange={(value: any) => 
               gestures.setSettings(prev => ({ ...prev, longPressDuration: value[0] }))
             }
             min={200}
@@ -987,7 +987,7 @@ const CampusQuickActions = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          {quickActions.map((action) => {
+          {quickActions.map((action: any) => {
             const Icon = action.icon;
             const isSelected = selectedAction === action.id;
             

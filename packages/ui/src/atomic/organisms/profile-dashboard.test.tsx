@@ -169,13 +169,13 @@ describe('ProfileDashboard', () => {
 
   it('calls appropriate callbacks when interactive elements are clicked', () => {
     const mockCallbacks = {
-      onAvatarClick: jest.fn(),
-      onEditProfile: jest.fn(),
-      onSpaceClick: jest.fn(),
-      onActivityClick: jest.fn(),
-      onToolClick: jest.fn(),
-      onCreateTool: jest.fn(),
-      onBecomeBuilder: jest.fn(),
+      onAvatarClick: (() => {}),
+      onEditProfile: (() => {}),
+      onSpaceClick: (() => {}),
+      onActivityClick: (() => {}),
+      onToolClick: (() => {}),
+      onCreateTool: (() => {}),
+      onBecomeBuilder: (() => {}),
     };
 
     render(<ProfileDashboard {...defaultProps} {...mockCallbacks} />);

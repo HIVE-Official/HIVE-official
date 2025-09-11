@@ -250,7 +250,7 @@ const InteractiveTopbarDemo = ({
         >
           <div 
             className="bg-[var(--hive-bg-secondary)] rounded-xl p-6 border border-[var(--hive-border-default)] max-w-2xl w-full mx-4"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: any) => e.stopPropagation()}
           >
             <h3 className="text-lg font-semibold mb-4">Command Palette</h3>
             <div className="space-y-3">
@@ -312,7 +312,7 @@ export const Default: Story = {
     user: mockUser,
     unreadNotificationCount: 5
   },
-  render: (args) => <InteractiveTopbarDemo {...args} />
+  render: (args: any) => <InteractiveTopbarDemo {...args} />
 };
 
 export const ProfileActive: Story = {
@@ -321,7 +321,7 @@ export const ProfileActive: Story = {
     user: mockUser,
     unreadNotificationCount: 0
   },
-  render: (args) => <InteractiveTopbarDemo {...args} />,
+  render: (args: any) => <InteractiveTopbarDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -337,7 +337,7 @@ export const WithBadges: Story = {
     user: mockUser,
     unreadNotificationCount: 12
   },
-  render: (args) => <InteractiveTopbarDemo {...args} />,
+  render: (args: any) => <InteractiveTopbarDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -353,7 +353,7 @@ export const BuilderUser: Story = {
     user: builderUser,
     unreadNotificationCount: 3
   },
-  render: (args) => <InteractiveTopbarDemo {...args} />,
+  render: (args: any) => <InteractiveTopbarDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -369,7 +369,7 @@ export const FacultyUser: Story = {
     user: facultyUser,
     unreadNotificationCount: 25
   },
-  render: (args) => <InteractiveTopbarDemo {...args} />,
+  render: (args: any) => <InteractiveTopbarDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -385,7 +385,7 @@ export const HighNotifications: Story = {
     user: mockUser,
     unreadNotificationCount: 150
   },
-  render: (args) => <InteractiveTopbarDemo {...args} />,
+  render: (args: any) => <InteractiveTopbarDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -404,7 +404,7 @@ export const CleanState: Story = {
     user: mockUser,
     unreadNotificationCount: 0
   },
-  render: (args) => <InteractiveTopbarDemo {...args} />,
+  render: (args: any) => <InteractiveTopbarDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -424,7 +424,7 @@ export const SearchFocused: Story = {
     user: mockUser,
     unreadNotificationCount: 2
   },
-  render: (args) => (
+  render: (args: any) => (
     <div style={{ 
       minHeight: '100vh', 
       backgroundColor: 'var(--hive-background-primary)',

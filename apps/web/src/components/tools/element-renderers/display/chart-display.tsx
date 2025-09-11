@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { BarChart3, PieChart, LineChart, TrendingUp } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function ChartDisplayRenderer({
   element,

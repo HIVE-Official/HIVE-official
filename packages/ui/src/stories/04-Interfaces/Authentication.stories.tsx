@@ -73,7 +73,7 @@ export const EmailEntry: Story = {
                   type="email"
                   placeholder="yourname@university.edu"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: any) => setEmail(e.target.value)}
                   variant="primary"
                 />
               </div>
@@ -207,7 +207,7 @@ export const SchoolSelection: Story = {
               <Input
                 placeholder="Search universities..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 variant="search"
               />
 
@@ -397,7 +397,7 @@ export const CompleteAuthFlow: Story = {
           return (
             <SchoolSearch
               onSchoolSelect={handleSchoolSelect}
-              onRequestSchool={(name) => console.log('Requesting:', name)}
+              onRequestSchool={(name: any) => console.log('Requesting:', name)}
             />
           )
 
@@ -418,7 +418,7 @@ export const CompleteAuthFlow: Story = {
                     type="email"
                     placeholder={`you@${selectedSchool?.domain}`}
                     value={emailAddress}
-                    onChange={(e) => setEmailAddress(e.target.value)}
+                    onChange={(e: any) => setEmailAddress(e.target.value)}
                     variant="primary"
                   />
                 </div>

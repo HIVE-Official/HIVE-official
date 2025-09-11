@@ -55,7 +55,7 @@ exports.useFeedStore = (0, zustand_1.create)()((0, middleware_1.devtools)((0, mi
     // Search History
     recentSearches: [],
     addRecentSearch: (query) => set((state) => {
-        const searches = [query, ...state.recentSearches.filter(s => s !== query)].slice(0, 10);
+        const searches = [query, ...state.recentSearches.filter((s) => s !== query)].slice(0, 10);
         return { recentSearches: searches };
     }, false, 'addRecentSearch'),
     clearRecentSearches: () => set({ recentSearches: [] }, false, 'clearRecentSearches'),

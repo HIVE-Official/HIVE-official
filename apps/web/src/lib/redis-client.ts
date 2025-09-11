@@ -82,7 +82,7 @@ export function initializeRedis(): Redis | null {
       isConnected = true;
     });
 
-    redis.on('error', (error) => {
+    redis.on('error', (error: any) => {
       console.error('❌ Redis connection error:', error);
       isConnected = false;
     });
@@ -97,7 +97,7 @@ export function initializeRedis(): Redis | null {
     });
 
     // Test the connection
-    redis.ping().catch((error) => {
+    redis.ping().catch((error: any) => {
       console.error('❌ Redis ping failed:', error);
       isConnected = false;
     });

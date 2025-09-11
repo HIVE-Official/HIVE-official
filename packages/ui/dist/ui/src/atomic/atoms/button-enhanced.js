@@ -3,7 +3,7 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 // HIVE Button System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const buttonVariants = cva(
@@ -11,6 +11,15 @@ const buttonVariants = cva(
 "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-border-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", {
     variants: {
         variant: {
+            // Default button (alias for secondary)
+            default: [
+                "border border-[var(--hive-border-default)]",
+                "bg-[var(--hive-background-secondary)]",
+                "text-[var(--hive-text-primary)]",
+                "hover:bg-[var(--hive-interactive-hover)]",
+                "hover:border-[var(--hive-border-hover)]",
+                "active:bg-[var(--hive-interactive-active)]",
+            ],
             // Primary button - neutral white/gray, not gold
             primary: [
                 "border border-[var(--hive-border-default)]",
@@ -93,6 +102,15 @@ const buttonVariants = cva(
                 "hover:bg-[var(--hive-interactive-hover)]",
                 "hover:border-[var(--hive-border-hover)]",
                 "active:bg-[var(--hive-interactive-active)]",
+            ],
+            // Premium button - Gold filled for premium features
+            premium: [
+                "bg-[var(--hive-brand-secondary)]",
+                "text-[var(--hive-background-primary)]",
+                "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_90%,transparent)]",
+                "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",
+                "shadow-lg hover:shadow-xl",
+                "font-semibold",
             ],
         },
         size: {

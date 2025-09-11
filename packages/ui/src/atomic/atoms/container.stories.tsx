@@ -111,7 +111,7 @@ export const Default: Story = {
     variant: 'default',
     gutter: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="min-h-32 bg-[var(--hive-background-primary)]">
       <Container {...args}>
         <div className="bg-[var(--hive-brand-secondary)] bg-opacity-10 border border-[var(--hive-brand-secondary)] border-dashed rounded-lg p-6 text-center">
@@ -801,7 +801,7 @@ export const Playground: Story = {
     variant: 'default',
     gutter: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="min-h-64 p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

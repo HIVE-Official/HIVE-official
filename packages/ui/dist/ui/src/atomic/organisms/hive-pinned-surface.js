@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Pin, Plus, FileText, Link as LinkIcon, Calendar, AlertCircle, Download, Eye, MoreHorizontal, Clock, User, TrendingUp, Trash2 } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const HivePinnedSurface = ({ space, items = [], maxItems, canPin = false, canModerate = false, leaderMode, viewMode = 'list', onAddPinned, onViewItem, onDownloadItem, onUnpinItem }) => {
     const [filter, setFilter] = useState('all');
     const filteredItems = useMemo(() => {

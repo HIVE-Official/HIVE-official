@@ -67,7 +67,7 @@ export function RealtimePerformanceDashboard() {
     enableMetrics: true,
     enableAlerts: true,
     alertThresholds: config.alertThresholds,
-    onAlert: (alert) => {
+    onAlert: (alert: any) => {
       
     },
     onQualityChange: (quality) => {
@@ -210,7 +210,7 @@ export function RealtimePerformanceDashboard() {
       {/* Alerts */}
       {alerts.length > 0 && (
         <div className="space-y-2">
-          {alerts.filter(alert => !alert.acknowledged).slice(0, 3).map((alert) => (
+          {alerts.filter(alert => !alert.acknowledged).slice(0, 3).map((alert: any) => (
             <Alert key={alert.id} variant={alert.severity === 'critical' ? 'destructive' : 'default'}>
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription className="flex items-center justify-between">
@@ -477,7 +477,7 @@ export function RealtimePerformanceDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {alerts.slice(0, 5).map((alert) => (
+              {alerts.slice(0, 5).map((alert: any) => (
                 <div key={alert.id} className="flex items-center justify-between p-2 rounded border border-gray-800">
                   <div className="flex items-center space-x-3">
                     <Badge 

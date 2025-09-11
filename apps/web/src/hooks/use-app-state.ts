@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useAppStore } from '@/store/app-store';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase-client';
 import { 
   collection, 
@@ -12,22 +12,73 @@ import {
   where, 
   orderBy, 
   limit,
-  getDocs 
+  getDocs,
+  QuerySnapshot,
+  DocumentData,
+  Timestamp
 } from 'firebase/firestore';
+
+// Type definitions
+interface UserData {
+  uid?: string;
+  displayName?: string;
+  photoURL?: string;
+  handle?: string;
+  role?: 'student' | 'faculty' | 'admin';
+  spaces?: string[];
+  createdAt?: Timestamp;
+}
+
+interface SpaceData {
+  name: string;
+  description: string;
+  type: 'academic' | 'social' | 'dorm' | 'organization' | 'interest';
+  memberCount: number;
+  isPublic: boolean;
+  createdBy: string;
+  members?: string[];
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+}
+
+interface PostData {
+  content: string;
+  authorId: string;
+  authorName?: string;
+  spaceName?: string;
+  type?: 'discussion' | 'coordination' | 'event' | 'announcement' | 'tool_share';
+  images?: string[];
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+  reactions?: Record<string, number>;
+  commentCount?: number;
+  isPinned?: boolean;
+  metadata?: Record<string, any>;
+}
+
+interface NotificationData {
+  userId: string;
+  type: 'post' | 'comment' | 'reaction' | 'follow' | 'mention' | 'event';
+  title: string;
+  message: string;
+  data?: Record<string, any>;
+  isRead: boolean;
+  createdAt?: Timestamp;
+}
 
 // Hook to sync auth state
 export function useAuthSync() {
   const { setUser, setAuthenticated } = useAppStore();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
         // Get additional user data from Firestore
         const userDoc = await getDocs(
           query(collection(db, 'users'), where('uid', '==', firebaseUser.uid), limit(1))
         );
         
-        const userData = userDoc.docs[0]?.data();
+        const userData = userDoc.docs[0]?.data() as UserData | undefined;
         
         setUser({
           id: firebaseUser.uid,
@@ -63,13 +114,16 @@ export function useSpacesSync() {
       orderBy('updatedAt', 'desc')
     );
 
-    const unsubscribe = onSnapshot(spacesQuery, (snapshot) => {
-      const spaces = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate() || new Date(),
-        updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-      })) as any[];
+    const unsubscribe = onSnapshot(spacesQuery, (snapshot: QuerySnapshot<DocumentData>) => {
+      const spaces = snapshot.docs.map(doc => {
+        const data = doc.data() as SpaceData;
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate() || new Date(),
+          updatedAt: data.updatedAt?.toDate() || new Date(),
+        };
+      });
       
       setSpaces(spaces);
       setUserSpaces(spaces.map(s => s.id));
@@ -89,7 +143,7 @@ export function useFeedSync() {
     // For now, fetch recent posts from user's spaces
     // In production, this would be optimized with a feed collection
     const fetchFeedPosts = async () => {
-      const allPosts: any[] = [];
+      const allPosts: Array<PostData & { id: string; spaceId: string; createdAt: Date; updatedAt: Date }> = [];
       
       // Fetch posts from each space (limited for performance)
       for (const spaceId of userSpaces.slice(0, 5)) {
@@ -100,13 +154,16 @@ export function useFeedSync() {
         );
         
         const snapshot = await getDocs(postsQuery);
-        const posts = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          spaceId,
-          createdAt: doc.data().createdAt?.toDate() || new Date(),
-          updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-        }));
+        const posts = snapshot.docs.map(doc => {
+          const data = doc.data() as PostData;
+          return {
+            id: doc.id,
+            ...data,
+            spaceId,
+            createdAt: data.createdAt?.toDate() || new Date(),
+            updatedAt: data.updatedAt?.toDate() || new Date(),
+          };
+        });
         
         allPosts.push(...posts);
       }
@@ -134,12 +191,15 @@ export function useNotificationsSync() {
       limit(50)
     );
 
-    const unsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
-      const notifications = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate() || new Date(),
-      })) as any[];
+    const unsubscribe = onSnapshot(notificationsQuery, (snapshot: QuerySnapshot<DocumentData>) => {
+      const notifications = snapshot.docs.map(doc => {
+        const data = doc.data() as NotificationData;
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate() || new Date(),
+        };
+      });
       
       setNotifications(notifications);
     });
@@ -161,14 +221,17 @@ export function useSpacePostsSync(spaceId: string | null) {
       limit(50)
     );
 
-    const unsubscribe = onSnapshot(postsQuery, (snapshot) => {
-      const posts = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        spaceId,
-        createdAt: doc.data().createdAt?.toDate() || new Date(),
-        updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-      })) as any[];
+    const unsubscribe = onSnapshot(postsQuery, (snapshot: QuerySnapshot<DocumentData>) => {
+      const posts = snapshot.docs.map(doc => {
+        const data = doc.data() as PostData;
+        return {
+          id: doc.id,
+          ...data,
+          spaceId,
+          createdAt: data.createdAt?.toDate() || new Date(),
+          updatedAt: data.updatedAt?.toDate() || new Date(),
+        };
+      });
       
       setSpacePosts(spaceId, posts);
     });

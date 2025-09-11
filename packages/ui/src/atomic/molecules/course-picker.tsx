@@ -141,7 +141,7 @@ const CoursePicker = React.forwardRef<HTMLDivElement, CoursePickerProps>(
             <SearchInput
               placeholder="Search courses by code, title, or instructor..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: any) => setSearchTerm(e.target.value)}
               onClear={() => setSearchTerm('')}
               className="w-full"
             />

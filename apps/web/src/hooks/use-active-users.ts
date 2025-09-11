@@ -1,7 +1,18 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { doc, setDoc, onSnapshot, collection, query, where, serverTimestamp, deleteDoc } from 'firebase/firestore';
+import { 
+  doc, 
+  setDoc, 
+  onSnapshot, 
+  collection, 
+  query, 
+  where, 
+  serverTimestamp, 
+  deleteDoc,
+  QuerySnapshot,
+  DocumentData
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useUnifiedAuth } from '@hive/ui';
 
@@ -94,7 +105,7 @@ export function useActiveUsers(spaceId?: string) {
       );
     }
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
       const users: ActiveUser[] = [];
       const now = new Date();
       
@@ -116,7 +127,7 @@ export function useActiveUsers(spaceId?: string) {
       setActiveUsers(users);
       setActiveCount(users.length);
       setIsLoading(false);
-    }, (error) => {
+    }, (error: any) => {
       console.error('Failed to fetch active users:', error);
       setIsLoading(false);
       // Fallback to at least counting current user
@@ -159,7 +170,7 @@ export function useSpacesActiveUsers(spaceIds: string[]) {
       where('isOnline', '==', true)
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
       // Reset counts
       spaceIds.forEach(id => counts[id] = 0);
       
@@ -176,7 +187,7 @@ export function useSpacesActiveUsers(spaceIds: string[]) {
 
       setSpaceCounts(counts);
       setIsLoading(false);
-    }, (error) => {
+    }, (error: any) => {
       console.error('Failed to fetch space active users:', error);
       setIsLoading(false);
     });

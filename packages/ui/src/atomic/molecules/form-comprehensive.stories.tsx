@@ -74,7 +74,7 @@ const InteractiveField = ({ Component, initialData = {}, ...props }: any) => {
 
 // 1. University Email Field
 export const UniversityEmailField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={UniversityEmailFieldMolecule}
       initialData={{ value: '' }}
@@ -91,7 +91,7 @@ export const UniversityEmailField: Story = {
 };
 
 export const UniversityEmailWithValue: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={UniversityEmailFieldMolecule}
       initialData={{ value: 'sarah.chen@stanford.edu' }}
@@ -102,7 +102,7 @@ export const UniversityEmailWithValue: Story = {
 };
 
 export const UniversityEmailWithError: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={UniversityEmailFieldMolecule}
       initialData={{ value: 'notvalid@gmail.com' }}
@@ -114,7 +114,7 @@ export const UniversityEmailWithError: Story = {
 
 // 2. Student ID Field
 export const StudentIDField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={StudentIDFieldMolecule}
       initialData={{ value: '' }}
@@ -131,7 +131,7 @@ export const StudentIDField: Story = {
 };
 
 export const StudentIDWithValue: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={StudentIDFieldMolecule}
       initialData={{ value: '123456789' }}
@@ -141,7 +141,7 @@ export const StudentIDWithValue: Story = {
 };
 
 export const StudentIDWithError: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={StudentIDFieldMolecule}
       initialData={{ value: '' }}
@@ -154,7 +154,7 @@ export const StudentIDWithError: Story = {
 
 // 3. Major Selection Field
 export const MajorSelectionField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={MajorSelectionFieldMolecule}
       initialData={{ major: '', year: '' }}
@@ -171,7 +171,7 @@ export const MajorSelectionField: Story = {
 };
 
 export const MajorSelectionWithValues: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={MajorSelectionFieldMolecule}
       initialData={{ major: 'computer-science', year: 'senior' }}
@@ -181,7 +181,7 @@ export const MajorSelectionWithValues: Story = {
 };
 
 export const MajorSelectionWithErrors: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={MajorSelectionFieldMolecule}
       initialData={{ major: '', year: '' }}
@@ -195,7 +195,7 @@ export const MajorSelectionWithErrors: Story = {
 
 // 4. Dorm Selection Field
 export const DormSelectionField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={DormSelectionFieldMolecule}
       initialData={{ dormBuilding: '', roomNumber: '' }}
@@ -212,7 +212,7 @@ export const DormSelectionField: Story = {
 };
 
 export const DormSelectionWithValues: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={DormSelectionFieldMolecule}
       initialData={{ dormBuilding: 'Smith Hall', roomNumber: '314' }}
@@ -223,7 +223,7 @@ export const DormSelectionWithValues: Story = {
 
 // 5. Greek Affiliation Field
 export const GreekAffiliationField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={GreekAffiliationFieldMolecule}
       initialData={{ organization: '', position: '' }}
@@ -240,7 +240,7 @@ export const GreekAffiliationField: Story = {
 };
 
 export const GreekAffiliationWithValues: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={GreekAffiliationFieldMolecule}
       initialData={{ organization: 'Alpha Beta Gamma', position: 'president' }}
@@ -251,7 +251,7 @@ export const GreekAffiliationWithValues: Story = {
 
 // 6. Calendar Connection Field
 export const CalendarConnectionField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={CalendarConnectionFieldMolecule}
       initialData={{ googleCalendar: false, outlookCalendar: false, appleCalendar: false }}
@@ -268,7 +268,7 @@ export const CalendarConnectionField: Story = {
 };
 
 export const CalendarConnectionWithConnections: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={CalendarConnectionFieldMolecule}
       initialData={{ googleCalendar: true, outlookCalendar: false, appleCalendar: true }}
@@ -279,7 +279,7 @@ export const CalendarConnectionWithConnections: Story = {
 
 // 7. Privacy Level Field
 export const PrivacyLevelField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={PrivacyLevelFieldMolecule}
       initialData={{ value: 'friends' }}
@@ -296,7 +296,7 @@ export const PrivacyLevelField: Story = {
 };
 
 export const PrivacyLevelPublic: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={PrivacyLevelFieldMolecule}
       initialData={{ value: 'public' }}
@@ -306,7 +306,7 @@ export const PrivacyLevelPublic: Story = {
 };
 
 export const PrivacyLevelGhost: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={PrivacyLevelFieldMolecule}
       initialData={{ value: 'ghost' }}
@@ -317,7 +317,7 @@ export const PrivacyLevelGhost: Story = {
 
 // 8. Builder Verification Field
 export const BuilderVerificationField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={BuilderVerificationFieldMolecule}
       initialData={{ portfolioUrl: '', githubUrl: '', experience: '' }}
@@ -334,7 +334,7 @@ export const BuilderVerificationField: Story = {
 };
 
 export const BuilderVerificationWithValues: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={BuilderVerificationFieldMolecule}
       initialData={{ 
@@ -348,7 +348,7 @@ export const BuilderVerificationWithValues: Story = {
 };
 
 export const BuilderVerificationWithErrors: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={BuilderVerificationFieldMolecule}
       initialData={{ portfolioUrl: '', githubUrl: '', experience: '' }}
@@ -360,7 +360,7 @@ export const BuilderVerificationWithErrors: Story = {
 
 // 9. Space Activation Field
 export const SpaceActivationField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={SpaceActivationFieldMolecule}
       initialData={{ spaceName: '', spaceType: '', description: '', expectedMembers: '' }}
@@ -377,7 +377,7 @@ export const SpaceActivationField: Story = {
 };
 
 export const SpaceActivationWithValues: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={SpaceActivationFieldMolecule}
       initialData={{ 
@@ -392,7 +392,7 @@ export const SpaceActivationWithValues: Story = {
 };
 
 export const SpaceActivationWithErrors: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={SpaceActivationFieldMolecule}
       initialData={{ spaceName: '', spaceType: '', description: '', expectedMembers: '' }}
@@ -406,7 +406,7 @@ export const SpaceActivationWithErrors: Story = {
 
 // 10. Tool Publishing Field
 export const ToolPublishingField: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={ToolPublishingFieldMolecule}
       initialData={{ toolName: '', toolDescription: '', toolCategory: '', repositoryUrl: '' }}
@@ -423,7 +423,7 @@ export const ToolPublishingField: Story = {
 };
 
 export const ToolPublishingWithValues: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={ToolPublishingFieldMolecule}
       initialData={{ 
@@ -438,7 +438,7 @@ export const ToolPublishingWithValues: Story = {
 };
 
 export const ToolPublishingWithErrors: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <InteractiveField
       Component={ToolPublishingFieldMolecule}
       initialData={{ toolName: '', toolDescription: '', toolCategory: '', repositoryUrl: '' }}

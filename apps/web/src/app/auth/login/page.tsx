@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Mail, Loader2, ArrowLeft, CheckCircle } from 'lucide-react'
 import Image from 'next/image'
@@ -15,7 +15,7 @@ import { useAuthStore, useUIStore } from '@hive/hooks'
 // Auth mutations - use local client-side hooks
 import { useSendMagicLink, useVerifyMagicLink } from '@/hooks/use-auth-mutations'
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || ROUTES.APP.FEED
@@ -37,7 +37,7 @@ export default function LoginPage() {
   
   // Check if user is already authenticated
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: any) => {
       if (firebaseUser) {
         // User is already signed in
         logger.info('User already authenticated, redirecting...', { uid: firebaseUser.uid })
@@ -113,24 +113,21 @@ export default function LoginPage() {
       return
     }
     
-    // BYPASS: Skip validation for jwrhineh@buffalo.edu
-    if (email !== 'jwrhineh@buffalo.edu') {
-      // Validate email domain for other users
-      if (schoolId && schoolId === 'ub-buffalo' && !email.endsWith('@buffalo.edu')) {
-        addToast({
-          title: 'School email required',
-          description: 'Please use your @buffalo.edu email address.',
-          type: 'error'
-        })
-        return
-      } else if (!schoolId && !email.endsWith('.edu')) {
-        addToast({
-          title: 'Educational email required',
-          description: 'Please use a valid .edu email address.',
-          type: 'error'
-        })
-        return
-      }
+    // Validate email domain
+    if (schoolId && schoolId === 'ub-buffalo' && !email.endsWith('@buffalo.edu')) {
+      addToast({
+        title: 'School email required',
+        description: 'Please use your @buffalo.edu email address.',
+        type: 'error'
+      })
+      return
+    } else if (!schoolId && !email.endsWith('.edu')) {
+      addToast({
+        title: 'Educational email required',
+        description: 'Please use a valid .edu email address.',
+        type: 'error'
+      })
+      return
     }
     
     try {
@@ -341,5 +338,17 @@ export default function LoginPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-hive-primary" />
+      </div>
+    }>
+      <LoginPageContent />
+    </Suspense>
   )
 }

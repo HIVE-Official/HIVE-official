@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Box } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function ContainerRenderer({
   element,

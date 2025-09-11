@@ -197,7 +197,7 @@ export function EventToolIntegration({
         <div>
           <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Active Tools</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activeSessions.map((session) => {
+            {activeSessions.map((session: any) => {
               const toolDef = getToolDefinition(session.toolId);
               return (
                 <Card key={session.id} className="p-4 bg-zinc-800/50 border-green-500/30">
@@ -323,7 +323,7 @@ export function EventToolIntegration({
                 {/* Tool Features */}
                 <div className="space-y-2">
                   <div className="flex flex-wrap gap-1">
-                    {toolDef.features.slice(0, 3).map((feature) => (
+                    {toolDef.features.slice(0, 3).map((feature: any) => (
                       <span key={feature} className="text-xs text-zinc-500 bg-zinc-800 px-2 py-1 rounded">
                         {feature}
                       </span>
@@ -376,7 +376,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-[var(--hive-text-inverse)]"
                       value={toolConfig.duration || '25'}
-                      onChange={(e) => setToolConfig((prev: any) => ({...prev, duration: e.target.value}))}
+                      onChange={(e: any) => setToolConfig((prev: any) => ({...prev, duration: e.target.value}))}
                     >
                       <option value="15">15 minutes</option>
                       <option value="25">25 minutes</option>
@@ -389,7 +389,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.autoBreaks || false}
-                        onChange={(e) => setToolConfig((prev: any) => ({...prev, autoBreaks: e.target.checked}))}
+                        onChange={(e: any) => setToolConfig((prev: any) => ({...prev, autoBreaks: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Automatic break reminders</span>
                     </label>
@@ -406,7 +406,7 @@ export function EventToolIntegration({
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-[var(--hive-text-inverse)]"
                       placeholder="Enter poll question..."
                       value={toolConfig.title || ''}
-                      onChange={(e) => setToolConfig((prev: any) => ({...prev, title: e.target.value}))}
+                      onChange={(e: any) => setToolConfig((prev: any) => ({...prev, title: e.target.value}))}
                     />
                   </div>
                   <div>
@@ -414,7 +414,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.anonymous || true}
-                        onChange={(e) => setToolConfig((prev: any) => ({...prev, anonymous: e.target.checked}))}
+                        onChange={(e: any) => setToolConfig((prev: any) => ({...prev, anonymous: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Anonymous responses</span>
                     </label>
@@ -429,7 +429,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-[var(--hive-text-inverse)]"
                       value={toolConfig.method || 'code'}
-                      onChange={(e) => setToolConfig((prev: any) => ({...prev, method: e.target.value}))}
+                      onChange={(e: any) => setToolConfig((prev: any) => ({...prev, method: e.target.value}))}
                     >
                       <option value="code">Check-in Code</option>
                       <option value="location">Location Verification</option>
@@ -441,7 +441,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.certificates || false}
-                        onChange={(e) => setToolConfig((prev: any) => ({...prev, certificates: e.target.checked}))}
+                        onChange={(e: any) => setToolConfig((prev: any) => ({...prev, certificates: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Generate attendance certificates</span>
                     </label>

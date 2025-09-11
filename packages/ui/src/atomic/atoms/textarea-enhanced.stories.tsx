@@ -642,7 +642,7 @@ export const Playground: Story = {
     showCharCount: true,
     maxLength: 1000,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

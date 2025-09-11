@@ -366,7 +366,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
           <div className="flex items-center gap-2">
             <Select
               value={member.role}
-              onValueChange={(value) => updateMemberRole(member.id, value)}
+              onValueChange={(value: any) => updateMemberRole(member.id, value)}
               disabled={!canManage}
             >
               <option value="member">Member</option>
@@ -456,7 +456,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
                   <Input
                     placeholder="Search members..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e: any) => setSearchTerm(e.target.value)}
                     className="pl-10"
                   />
                 </div>
@@ -545,7 +545,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
                       </div>
                       <Select
                         value={settings.visibility}
-                        onValueChange={(value) => setSettings({...settings, visibility: value as any})}
+                        onValueChange={(value: any) => setSettings({...settings, visibility: value as any})}
                       >
                         <option value="public">Public</option>
                         <option value="private">Private</option>
@@ -560,7 +560,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
                       </div>
                       <Switch
                         checked={settings.joinApproval}
-                        onCheckedChange={(checked) => setSettings({...settings, joinApproval: checked})}
+                        onCheckedChange={(checked: any) => setSettings({...settings, joinApproval: checked})}
                       />
                     </div>
 
@@ -571,7 +571,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
                       </div>
                       <Switch
                         checked={settings.postApproval}
-                        onCheckedChange={(checked) => setSettings({...settings, postApproval: checked})}
+                        onCheckedChange={(checked: any) => setSettings({...settings, postApproval: checked})}
                       />
                     </div>
 
@@ -582,7 +582,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
                       </div>
                       <Switch
                         checked={settings.allowInvites}
-                        onCheckedChange={(checked) => setSettings({...settings, allowInvites: checked})}
+                        onCheckedChange={(checked: any) => setSettings({...settings, allowInvites: checked})}
                       />
                     </div>
                   </div>
@@ -637,7 +637,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
                       </div>
                       <Switch
                         checked={settings.autoModeration.enabled}
-                        onCheckedChange={(checked) => setSettings({
+                        onCheckedChange={(checked: any) => setSettings({
                           ...settings,
                           autoModeration: { ...settings.autoModeration, enabled: checked }
                         })}
@@ -653,7 +653,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
                             rows={3}
                             placeholder="Enter words to flag, separated by commas"
                             value={settings.autoModeration.flagWords.join(', ')}
-                            onChange={(e) => setSettings({
+                            onChange={(e: any) => setSettings({
                               ...settings,
                               autoModeration: {
                                 ...settings.autoModeration,
@@ -672,7 +672,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
                           </div>
                           <Switch
                             checked={settings.autoModeration.autoKickAfterWarnings}
-                            onCheckedChange={(checked) => setSettings({
+                            onCheckedChange={(checked: any) => setSettings({
                               ...settings,
                               autoModeration: { ...settings.autoModeration, autoKickAfterWarnings: checked }
                             })}

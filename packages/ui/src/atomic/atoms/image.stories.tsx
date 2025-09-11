@@ -117,7 +117,7 @@ export const Default: Story = {
     blur: false,
     priority: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -798,7 +798,7 @@ export const CompleteShowcase: Story = {
                     specialties: "Software Engineering, HCI",
                     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face"
                   }
-                ].map((faculty) => (
+                ].map((faculty: any) => (
                   <div key={faculty.name} className="flex items-center gap-4 p-4 bg-[var(--hive-background-primary)] rounded-lg">
                     <ProfileImage
                       src={faculty.image}
@@ -840,7 +840,7 @@ export const Playground: Story = {
     blur: false,
     priority: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

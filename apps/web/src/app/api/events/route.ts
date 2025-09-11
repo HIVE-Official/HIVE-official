@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-client-admin';
+import { db } from '@/lib/firebase-client';
 import { 
   collection, 
   query, 
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     // If userId is provided, check RSVP status for each event
     if (userId) {
       const eventsWithRsvp = await Promise.all(
-        events.map(async (event) => {
+        events.map(async (event: any) => {
           const rsvpRef = collection(db, 'events', event.id, 'attendees');
           const rsvpQuery = query(rsvpRef, where('userId', '==', userId));
           const rsvpSnapshot = await getDocs(rsvpQuery);

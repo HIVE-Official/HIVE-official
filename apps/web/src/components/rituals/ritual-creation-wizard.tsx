@@ -237,7 +237,7 @@ export function RitualCreationWizard({
 
   const renderStepIndicator = () => (
     <div className="flex items-center justify-center mb-8">
-      {[1, 2, 3, 4, 5].map((step) => (
+      {[1, 2, 3, 4, 5].map((step: any) => (
         <React.Fragment key={step}>
           <div
             className={cn(
@@ -283,7 +283,7 @@ export function RitualCreationWizard({
                 Ritual Type
               </label>
               <div className="grid grid-cols-2 gap-3">
-                {RITUAL_TYPES.map((type) => {
+                {RITUAL_TYPES.map((type: any) => {
                   const Icon = type.icon;
                   return (
                     <button
@@ -317,7 +317,7 @@ export function RitualCreationWizard({
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 placeholder="e.g., fall-2024-welcome-week"
               />
@@ -330,7 +330,7 @@ export function RitualCreationWizard({
               <input
                 type="text"
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, title: e.target.value })}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 placeholder="e.g., Welcome Week Challenge"
               />
@@ -343,7 +343,7 @@ export function RitualCreationWizard({
               <input
                 type="text"
                 value={formData.tagline}
-                onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, tagline: e.target.value })}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 placeholder="e.g., Connect, explore, and make your mark"
                 maxLength={100}
@@ -356,7 +356,7 @@ export function RitualCreationWizard({
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, description: e.target.value })}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30 resize-none"
                 placeholder="Describe what participants will do and experience..."
                 rows={4}
@@ -385,7 +385,7 @@ export function RitualCreationWizard({
                 <input
                   type="date"
                   value={formData.startDate}
-                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                  onChange={(e: any) => setFormData({ ...formData, startDate: e.target.value })}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 />
               </div>
@@ -396,7 +396,7 @@ export function RitualCreationWizard({
                 <input
                   type="time"
                   value={formData.startTime}
-                  onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+                  onChange={(e: any) => setFormData({ ...formData, startTime: e.target.value })}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 />
               </div>
@@ -410,7 +410,7 @@ export function RitualCreationWizard({
                 <input
                   type="date"
                   value={formData.endDate || ''}
-                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                  onChange={(e: any) => setFormData({ ...formData, endDate: e.target.value })}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 />
               </div>
@@ -421,7 +421,7 @@ export function RitualCreationWizard({
                 <input
                   type="time"
                   value={formData.endTime || ''}
-                  onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+                  onChange={(e: any) => setFormData({ ...formData, endTime: e.target.value })}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 />
               </div>
@@ -434,7 +434,7 @@ export function RitualCreationWizard({
               <input
                 type="number"
                 value={formData.duration || ''}
-                onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) || undefined })}
+                onChange={(e: any) => setFormData({ ...formData, duration: parseInt(e.target.value) || undefined })}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                 placeholder="How many days will this ritual run?"
                 min="1"
@@ -448,7 +448,7 @@ export function RitualCreationWizard({
               </label>
               <select
                 value={formData.recurrence}
-                onChange={(e) => setFormData({ ...formData, recurrence: e.target.value as RecurrencePattern })}
+                onChange={(e: any) => setFormData({ ...formData, recurrence: e.target.value as RecurrencePattern })}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
               >
                 <option value="none">One-time ritual</option>
@@ -479,7 +479,7 @@ export function RitualCreationWizard({
                 Participation Type
               </label>
               <div className="grid grid-cols-2 gap-3">
-                {PARTICIPATION_TYPES.map((type) => (
+                {PARTICIPATION_TYPES.map((type: any) => (
                   <button
                     key={type.value}
                     type="button"
@@ -510,7 +510,7 @@ export function RitualCreationWizard({
                 <input
                   type="number"
                   value={formData.minParticipants || ''}
-                  onChange={(e) => setFormData({ ...formData, minParticipants: parseInt(e.target.value) || undefined })}
+                  onChange={(e: any) => setFormData({ ...formData, minParticipants: parseInt(e.target.value) || undefined })}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   placeholder="Optional"
                   min="1"
@@ -523,7 +523,7 @@ export function RitualCreationWizard({
                 <input
                   type="number"
                   value={formData.maxParticipants || ''}
-                  onChange={(e) => setFormData({ ...formData, maxParticipants: parseInt(e.target.value) || undefined })}
+                  onChange={(e: any) => setFormData({ ...formData, maxParticipants: parseInt(e.target.value) || undefined })}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   placeholder="Unlimited"
                   min="1"
@@ -583,7 +583,7 @@ export function RitualCreationWizard({
                 <input
                   type="checkbox"
                   checked={formData.requiresApproval}
-                  onChange={(e) => setFormData({ ...formData, requiresApproval: e.target.checked })}
+                  onChange={(e: any) => setFormData({ ...formData, requiresApproval: e.target.checked })}
                   className="w-4 h-4 bg-white/10 border border-white/20 rounded text-[var(--hive-brand-secondary)] focus:ring-[var(--hive-brand-secondary)]"
                 />
                 <span className="text-sm text-[var(--hive-text-inverse)]">
@@ -629,7 +629,7 @@ export function RitualCreationWizard({
                       <input
                         type="text"
                         value={milestone.name}
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                           const newMilestones = [...formData.milestones];
                           newMilestones[index].name = e.target.value;
                           setFormData({ ...formData, milestones: newMilestones });
@@ -648,7 +648,7 @@ export function RitualCreationWizard({
                     <input
                       type="text"
                       value={milestone.description}
-                      onChange={(e) => {
+                      onChange={(e: any) => {
                         const newMilestones = [...formData.milestones];
                         newMilestones[index].description = e.target.value;
                         setFormData({ ...formData, milestones: newMilestones });
@@ -689,7 +689,7 @@ export function RitualCreationWizard({
                       <input
                         type="text"
                         value={reward.name}
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                           const newRewards = [...formData.rewards];
                           newRewards[index].name = e.target.value;
                           setFormData({ ...formData, rewards: newRewards });
@@ -708,7 +708,7 @@ export function RitualCreationWizard({
                     <div className="flex items-center gap-2 mt-2">
                       <select
                         value={reward.type}
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                           const newRewards = [...formData.rewards];
                           newRewards[index].type = e.target.value as any;
                           setFormData({ ...formData, rewards: newRewards });
@@ -724,7 +724,7 @@ export function RitualCreationWizard({
                       </select>
                       <select
                         value={reward.rarity}
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                           const newRewards = [...formData.rewards];
                           newRewards[index].rarity = e.target.value as any;
                           setFormData({ ...formData, rewards: newRewards });
@@ -767,7 +767,7 @@ export function RitualCreationWizard({
                 <input
                   type="checkbox"
                   checked={formData.reminderSettings.enabled}
-                  onChange={(e) => setFormData({
+                  onChange={(e: any) => setFormData({
                     ...formData,
                     reminderSettings: { ...formData.reminderSettings, enabled: e.target.checked }
                   })}
@@ -788,7 +788,7 @@ export function RitualCreationWizard({
                     <input
                       type="number"
                       value={formData.reminderSettings.beforeStart}
-                      onChange={(e) => setFormData({
+                      onChange={(e: any) => setFormData({
                         ...formData,
                         reminderSettings: { ...formData.reminderSettings, beforeStart: parseInt(e.target.value) || 60 }
                       })}
@@ -801,7 +801,7 @@ export function RitualCreationWizard({
                     <input
                       type="checkbox"
                       checked={formData.reminderSettings.duringActive}
-                      onChange={(e) => setFormData({
+                      onChange={(e: any) => setFormData({
                         ...formData,
                         reminderSettings: { ...formData.reminderSettings, duringActive: e.target.checked }
                       })}
@@ -816,7 +816,7 @@ export function RitualCreationWizard({
                     <input
                       type="checkbox"
                       checked={formData.reminderSettings.nearCompletion}
-                      onChange={(e) => setFormData({
+                      onChange={(e: any) => setFormData({
                         ...formData,
                         reminderSettings: { ...formData.reminderSettings, nearCompletion: e.target.checked }
                       })}
@@ -902,7 +902,7 @@ export function RitualCreationWizard({
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: any) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/10">

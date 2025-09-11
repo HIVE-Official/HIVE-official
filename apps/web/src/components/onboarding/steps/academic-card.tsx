@@ -74,7 +74,7 @@ export function AcademicCard() {
   };
 
   const removeMajor = (major: string) => {
-    setMajors(majors.filter((m) => m !== major));
+    setMajors(majors.filter((m: any) => m !== major));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -126,7 +126,7 @@ export function AcademicCard() {
                 <SelectValue placeholder="Select your academic level" />
               </SelectTrigger>
               <SelectContent className="bg-surface-02 border-border">
-                {ACADEMIC_LEVELS.map((level) => (
+                {ACADEMIC_LEVELS.map((level: any) => (
                   <SelectItem 
                     key={level.value} 
                     value={level.value}
@@ -200,7 +200,7 @@ export function AcademicCard() {
                 <SelectValue placeholder="Select graduation year" />
               </SelectTrigger>
               <SelectContent className="bg-surface-02 border-border">
-                {GRADUATION_YEARS.map((year) => (
+                {GRADUATION_YEARS.map((year: any) => (
                   <SelectItem 
                     key={year} 
                     value={year.toString()}

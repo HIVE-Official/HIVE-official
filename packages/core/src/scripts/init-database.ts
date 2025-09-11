@@ -689,7 +689,7 @@ async function initializeDatabase() {
 if (require.main === module) {
   initializeDatabase()
     .then(() => process.exit(0))
-    .catch((error) => {
+    .catch((error: any) => {
       console.error('❌ Initialization error:', error);
       process.exit(1);
     });

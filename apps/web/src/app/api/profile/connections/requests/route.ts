@@ -249,7 +249,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       const allRequests = [
         ...sentSnapshot.docs.map(doc => ({ ...doc.data(), direction: 'sent' })),
         ...receivedSnapshot.docs.map(doc => ({ ...doc.data(), direction: 'received' }))
-      ].sort((a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime())
+      ].sort((a, b) => b.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt).getTime() - a.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt).getTime())
         .slice(0, (await params).limit);
 
       return NextResponse.json({
@@ -271,7 +271,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       .get();
 
     const requests = await Promise.all(
-      snapshot.docs.map(async (doc) => {
+      snapshot.docs.map(async (doc: any) => {
         const requestData = doc.data();
         
         // Get user info for display (respect privacy)
@@ -296,7 +296,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
             major: otherUserData.major,
             academicYear: otherUserData.academicYear
           },
-          createdAt: requestData.createdAt.toDate().toISOString(),
+          createdAt: requestData.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt).toISOString(),
           expiresAt: requestData.expiresAt?.toDate?.()?.toISOString()
         };
       })

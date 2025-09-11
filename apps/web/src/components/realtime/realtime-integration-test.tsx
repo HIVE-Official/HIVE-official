@@ -45,10 +45,10 @@ export function RealtimeIntegrationTest({
   // Initialize hooks for testing
   const chatHook = useRealtimeChat({
     spaceId,
-    onNewMessage: (message) => {
+    onNewMessage: (message: any) => {
       updateTestResult('Chat Hook Integration', 'passed', `✅ Received message: ${message.content.slice(0, 30)}...`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       updateTestResult('Chat Hook Integration', 'failed', `❌ Chat error: ${error.message}`);
     }
   });
@@ -56,21 +56,21 @@ export function RealtimeIntegrationTest({
   const presenceHook = useRealtimePresence({
     spaceId,
     userId,
-    onPresenceChange: (presence) => {
+    onPresenceChange: (presence: any) => {
       const onlineCount = Object.values(presence).filter(p => p.status === 'online').length;
       updateTestResult('Presence Hook Integration', 'passed', `✅ Presence updated: ${onlineCount} users online`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       updateTestResult('Presence Hook Integration', 'failed', `❌ Presence error: ${error.message}`);
     }
   });
 
   const notificationHook = useRealtimeNotifications({
     userId,
-    onNewNotification: (notification) => {
+    onNewNotification: (notification: any) => {
       updateTestResult('Notifications Hook Integration', 'passed', `✅ Received notification: ${notification.title}`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       updateTestResult('Notifications Hook Integration', 'failed', `❌ Notification error: ${error.message}`);
     }
   });
@@ -79,13 +79,13 @@ export function RealtimeIntegrationTest({
     toolId,
     spaceId,
     userId,
-    onToolUpdate: (update) => {
+    onToolUpdate: (update: any) => {
       updateTestResult('Tool Sync Hook Integration', 'passed', `✅ Tool update: ${update.updateType}`);
     },
-    onStateChange: (state) => {
+    onStateChange: (state: any) => {
       updateTestResult('Tool Sync Hook Integration', 'passed', `✅ Tool state changed: v${state.version}`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       updateTestResult('Tool Sync Hook Integration', 'failed', `❌ Tool sync error: ${error.message}`);
     }
   });

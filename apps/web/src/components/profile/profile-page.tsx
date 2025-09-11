@@ -196,7 +196,7 @@ function FriendActivityCard() {
       <h3 className="font-semibold mb-3">Friend Activity</h3>
       {isLoading ? (
         <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3].map((i: any) => (
             <div key={i} className="flex items-start gap-2">
               <div className="w-8 h-8 rounded-full bg-muted animate-pulse flex-shrink-0" />
               <div className="flex-1">

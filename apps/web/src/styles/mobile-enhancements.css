@@ -1,0 +1,507 @@
+/* Mobile-First Responsive Enhancements for HIVE Platform */
+/* Priority: Post-launch optimization */
+
+/* ===== Mobile Breakpoints ===== */
+/* 
+  xs: 375px  - Small phones (iPhone SE)
+  sm: 640px  - Standard phones
+  md: 768px  - Tablets portrait
+  lg: 1024px - Tablets landscape / Desktop
+  xl: 1280px - Desktop
+  2xl: 1536px - Large desktop
+*/
+
+/* ===== Tablet-Specific Layouts ===== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Grid adjustments for tablets */
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem;
+  }
+
+  /* Space cards - 2 column layout */
+  .spaces-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Profile bento grid optimization */
+  .bento-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Tools marketplace grid */
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  /* Feed layout - wider on tablets */
+  .feed-container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Modal sizes for tablets */
+  .modal-content {
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+
+  /* Navigation drawer width */
+  .nav-drawer {
+    width: 280px;
+  }
+}
+
+/* ===== Landscape Orientation Handling ===== */
+@media (orientation: landscape) and (max-height: 600px) {
+  /* Reduce vertical padding in landscape */
+  .header-mobile {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Adjust modal heights for landscape */
+  .modal-mobile {
+    max-height: 85vh;
+  }
+
+  /* Compact bottom navigation */
+  .bottom-nav {
+    padding: 0.5rem 0;
+  }
+
+  /* Reduce spacing in cards */
+  .card-mobile {
+    padding: 0.75rem;
+  }
+}
+
+/* ===== Enhanced Touch Targets ===== */
+.touchable,
+.btn,
+button,
+a,
+[role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  position: relative;
+}
+
+/* Expand touch target without visual change */
+.touchable::before,
+.btn::before,
+button::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  z-index: -1;
+}
+
+/* ===== Swipe Gestures Support ===== */
+.swipeable {
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.swipeable-horizontal {
+  touch-action: pan-x;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.swipeable-card {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* ===== Mobile Modal Improvements ===== */
+@media (max-width: 640px) {
+  .modal-mobile,
+  [role="dialog"] {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    max-height: 90vh !important;
+    border-radius: 1rem 1rem 0 0 !important;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  /* Full screen modals for critical actions */
+  .modal-fullscreen-mobile {
+    top: 0 !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+  }
+
+  /* Modal drag handle */
+  .modal-mobile::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+}
+
+/* ===== Bottom Navigation Enhancement ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--hive-background-primary);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 0;
+  z-index: 40;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  min-width: 64px;
+  color: var(--hive-text-secondary);
+  transition: all 0.2s;
+}
+
+.bottom-nav-item.active {
+  color: var(--hive-gold);
+}
+
+/* Safe area padding for modern phones */
+.bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* ===== Pull-to-Refresh Indicator ===== */
+.pull-to-refresh {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hive-gold);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.pull-to-refresh.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(80px);
+}
+
+/* ===== Mobile Navigation Drawer ===== */
+@media (max-width: 768px) {
+  .nav-drawer {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    bottom: 0;
+    width: 85vw;
+    max-width: 320px;
+    background: var(--hive-background-primary);
+    z-index: 60;
+    transition: left 0.3s ease-out;
+    overflow-y: auto;
+  }
+
+  .nav-drawer.open {
+    left: 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 59;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .nav-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ===== Optimized Image Loading ===== */
+.image-mobile {
+  background-color: rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.image-mobile img {
+  loading: lazy;
+  decoding: async;
+}
+
+/* Low quality image placeholder */
+.image-mobile.loading::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* ===== Haptic Feedback Styles ===== */
+.haptic-light {
+  transition: transform 0.05s;
+}
+
+.haptic-light:active {
+  transform: scale(0.98);
+}
+
+.haptic-medium {
+  transition: transform 0.08s;
+}
+
+.haptic-medium:active {
+  transform: scale(0.95);
+}
+
+.haptic-heavy {
+  transition: transform 0.1s;
+}
+
+.haptic-heavy:active {
+  transform: scale(0.92);
+}
+
+/* ===== Mobile Form Enhancements ===== */
+@media (max-width: 640px) {
+  /* Larger input fields on mobile */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="url"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevent iOS zoom */
+    padding: 0.875rem !important;
+    min-height: 48px;
+  }
+
+  /* Stacked form layouts */
+  .form-group-horizontal {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Full width buttons on mobile */
+  .btn-group-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-group-mobile button {
+    width: 100%;
+  }
+}
+
+/* ===== Floating Action Button ===== */
+.fab {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--hive-gold);
+  color: var(--hive-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  z-index: 30;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.fab:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+}
+
+/* FAB menu for tablets */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .fab-menu {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 30;
+  }
+
+  .fab-menu-items {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+
+  .fab-menu.open .fab-menu-items {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+}
+
+/* ===== Mobile Performance Optimizations ===== */
+/* Reduce animations on low-end devices */
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Hardware acceleration for smooth scrolling */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
+}
+
+/* Optimize repaints for list items */
+.list-item-mobile {
+  contain: layout style paint;
+  transform: translateZ(0);
+}
+
+/* ===== Animations ===== */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ===== Utility Classes ===== */
+/* Hide on mobile */
+@media (max-width: 640px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Show only on mobile */
+.show-mobile {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .show-mobile {
+    display: block !important;
+  }
+}
+
+/* Hide on tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+/* Show only on tablet */
+.show-tablet {
+  display: none !important;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .show-tablet {
+    display: block !important;
+  }
+}
+
+/* ===== Safe Areas for Notched Devices ===== */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.safe-left {
+  padding-left: env(safe-area-inset-left, 0);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+/* ===== Dark Mode Adjustments for Mobile ===== */
+@media (prefers-color-scheme: dark) {
+  .modal-mobile {
+    background: #0A0A0A;
+  }
+
+  .bottom-nav {
+    background: #0A0A0A;
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-drawer {
+    background: #0A0A0A;
+  }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  .no-print,
+  .bottom-nav,
+  .fab,
+  .nav-drawer,
+  button,
+  [role="button"] {
+    display: none !important;
+  }
+}

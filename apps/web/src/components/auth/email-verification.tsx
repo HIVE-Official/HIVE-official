@@ -318,15 +318,18 @@ export function EmailVerification({
           animate={{ opacity: 1, y: 0 }}
           className="bg-white/5 rounded-lg border border-white/10 p-4"
         >
-          <label className="block text-sm text-neutral-400 mb-2">
+          <label htmlFor="new-email" className="block text-sm text-neutral-400 mb-2">
             New Email Address
           </label>
           <div className="flex gap-2">
             <input
+              id="new-email"
               type="email"
               value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
+              onChange={(e: any) => setNewEmail(e.target.value)}
               placeholder="your.email@buffalo.edu"
+              aria-label="New email address"
+              aria-required="true"
               className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[var(--hive-text-inverse)] placeholder-neutral-500 focus:outline-none focus:border-white/20"
             />
             <Button
@@ -360,8 +363,12 @@ export function EmailVerification({
                   type="text"
                   maxLength={1}
                   value={digit}
-                  onChange={(e) => handleCodeInput(index, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  onChange={(e: any) => handleCodeInput(index, e.target.value)}
+                  onKeyDown={(e: any) => handleKeyDown(index, e)}
+                  aria-label={`Verification code digit ${index + 1}`}
+                  aria-required="true"
+                  inputMode="numeric"
+                  pattern="[0-9]"
                   className="w-12 h-12 text-center text-xl font-bold bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)] focus:bg-white/10 transition-all"
                 />
               ))}

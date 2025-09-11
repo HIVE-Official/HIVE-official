@@ -234,7 +234,7 @@ async function applyGhostModeChanges(userId: string, ghostMode: any) {
 
     const membershipsSnapshot = await membershipsQuery.get();
     
-    const updates = membershipsSnapshot.docs.map(async (memberDoc) => {
+    const updates = membershipsSnapshot.docs.map(async (memberDoc: any) => {
       const memberData = memberDoc.data();
       
       const updatedMemberData = {

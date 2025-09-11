@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Label } from '@hive/ui';
 import { Calendar } from 'lucide-react';
-import { ElementRendererProps } from '../index';
+import { ElementRendererProps } from '../types';
 
 export function DatePickerRenderer({
   element,

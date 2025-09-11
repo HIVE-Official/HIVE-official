@@ -275,7 +275,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
           { key: "posts", label: "New Posts", description: "When someone shares something new" },
           { key: "events", label: "Upcoming Events", description: "Event reminders and updates" },
           { key: "mentions", label: "Mentions & Replies", description: "When someone mentions or replies to you" }
-        ].map((item) => (
+        ].map((item: any) => (
           <Card key={item.key} className="p-4 bg-[var(--hive-white)]/5">
             <div className="flex items-center justify-between">
               <div>
@@ -316,7 +316,7 @@ function NotificationStep({ onNext, onUpdatePreferences }: {
               { value: "daily", label: "Daily" },
               { value: "weekly", label: "Weekly" },
               { value: "off", label: "Off" }
-            ].map((option) => (
+            ].map((option: any) => (
               <button
                 key={option.value}
                 onClick={() => handleDigestChange(option.value as any)}

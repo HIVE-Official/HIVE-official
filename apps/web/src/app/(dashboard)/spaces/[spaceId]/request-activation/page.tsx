@@ -185,7 +185,7 @@ export default function RequestActivationPage() {
               How are you connected to this space?
             </p>
             <div className="space-y-3">
-              {connectionOptions.map((option) => (
+              {connectionOptions.map((option: any) => (
                 <label
                   key={option.value}
                   className="flex items-start gap-3 p-4 rounded-lg border border-white/10 hover:bg-white/[0.02] cursor-pointer transition-colors"

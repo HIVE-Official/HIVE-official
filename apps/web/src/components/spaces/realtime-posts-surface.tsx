@@ -82,7 +82,7 @@ export function RealtimePostsSurface({
           compressedImages,
           user.uid,
           spaceId,
-          (progress) => {
+          (progress: any) => {
             console.log(`Upload progress: ${progress}%`);
           }
         );
@@ -342,7 +342,7 @@ export function RealtimePostsSurface({
             <div className="flex-1">
               <Textarea
                 value={newPostContent}
-                onChange={(e) => setNewPostContent(e.target.value)}
+                onChange={(e: any) => setNewPostContent(e.target.value)}
                 placeholder={`Share with ${spaceName}...`}
                 className="min-h-[100px] mb-3"
                 autoFocus
@@ -385,7 +385,7 @@ export function RealtimePostsSurface({
                     accept="image/*"
                     multiple
                     className="hidden"
-                    onChange={(e) => setSelectedImages(Array.from(e.target.files || []))}
+                    onChange={(e: any) => setSelectedImages(Array.from(e.target.files || []))}
                   />
                   
                   {selectedImages.length > 0 && (
@@ -494,9 +494,9 @@ function CommentsSection({
       <div className="flex gap-2 mb-3">
         <Input
           value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
+          onChange={(e: any) => setNewComment(e.target.value)}
           placeholder="Add a comment..."
-          onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+          onKeyPress={(e: any) => e.key === 'Enter' && handleSubmit()}
           disabled={isSubmitting}
         />
         <Button 

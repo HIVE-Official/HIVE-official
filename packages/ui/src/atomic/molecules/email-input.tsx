@@ -57,7 +57,7 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(({
             ref={ref}
             type="text"
             value={value}
-            onChange={(e) => onChange?.(e.target.value)}
+            onChange={(e: any) => onChange?.(e.target.value)}
             placeholder={placeholder}
             className={cn(
               'flex-1 bg-transparent outline-none',

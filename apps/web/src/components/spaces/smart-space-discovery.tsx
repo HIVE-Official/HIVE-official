@@ -477,7 +477,7 @@ export function SmartSpaceDiscovery({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               placeholder="Search spaces by name, description, or tags..."
               className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
             />
@@ -504,7 +504,7 @@ export function SmartSpaceDiscovery({
                 <label className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2 block">Category</label>
                 <select
                   value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value as FilterCategory)}
+                  onChange={(e: any) => setCategoryFilter(e.target.value as FilterCategory)}
                   className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
                 >
                   <option value="all">All Categories</option>
@@ -603,7 +603,7 @@ export function SmartSpaceDiscovery({
               
               {/* Tags */}
               <div className="flex flex-wrap gap-1 mb-4">
-                {space.tags.slice(0, 3).map((tag) => (
+                {space.tags.slice(0, 3).map((tag: any) => (
                   <Badge key={tag.id} variant="skill-tag" className="text-xs">
                     #{tag.name}
                   </Badge>
@@ -636,7 +636,7 @@ export function SmartSpaceDiscovery({
                     <Button
                       size="sm"
                       className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.stopPropagation();
                         handleJoinSpace(space.id);
                       }}
@@ -721,7 +721,7 @@ export function SmartSpaceDiscovery({
                     <Button
                       size="sm"
                       className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-                      onClick={(e) => {
+                      onClick={(e: any) => {
                         e.stopPropagation();
                         handleJoinSpace(space.id);
                       }}
@@ -839,7 +839,7 @@ export function SmartSpaceDiscovery({
             <div>
               <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Leadership</h4>
               <div className="space-y-2">
-                {selectedSpace.leadership.map((leader) => (
+                {selectedSpace.leadership.map((leader: any) => (
                   <div key={leader.id} className="flex items-center space-x-3 p-2 bg-zinc-800/30 rounded-lg">
                     <div className="w-8 h-8 bg-zinc-600 rounded-full flex items-center justify-center">
                       <span className="text-[var(--hive-text-inverse)] text-xs font-medium">
@@ -860,7 +860,7 @@ export function SmartSpaceDiscovery({
             <div>
               <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Topics & Interests</h4>
               <div className="flex flex-wrap gap-2">
-                {selectedSpace.tags.map((tag) => (
+                {selectedSpace.tags.map((tag: any) => (
                   <Badge key={tag.id} variant="skill-tag" className="text-xs">
                     #{tag.name}
                   </Badge>

@@ -553,7 +553,7 @@ function FlowStats({ profile }: { profile: any }) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-      {stats.map((stat) => (
+      {stats.map((stat: any) => (
         <Card key={stat.label}>
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-[var(--hive-text-primary)] mb-1">

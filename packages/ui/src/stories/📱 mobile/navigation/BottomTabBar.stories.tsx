@@ -16,7 +16,7 @@ const BottomTabBar = ({ activeTab, notifications }: {
   return (
     <div className="bg-white border-t border-gray-200 px-2 py-1">
       <div className="flex justify-around">
-        {tabs.map((tab) => (
+        {tabs.map((tab: any) => (
           <div
             key={tab.id}
             className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${

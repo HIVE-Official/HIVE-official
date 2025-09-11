@@ -78,7 +78,7 @@ export function OnboardingLegalStep() {
               <CheckboxEnhanced
                 id="accept-terms"
                 checked={acceptTerms}
-                onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
+                onCheckedChange={(checked: any) => setAcceptTerms(checked as boolean)}
                 className="mt-1"
               />
               <label 
@@ -114,7 +114,7 @@ export function OnboardingLegalStep() {
               <CheckboxEnhanced
                 id="accept-privacy"
                 checked={acceptPrivacy}
-                onCheckedChange={(checked) => setAcceptPrivacy(checked as boolean)}
+                onCheckedChange={(checked: any) => setAcceptPrivacy(checked as boolean)}
                 className="mt-1"
               />
               <label 

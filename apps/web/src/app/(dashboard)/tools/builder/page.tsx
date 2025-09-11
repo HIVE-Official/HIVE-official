@@ -16,7 +16,7 @@ import {
   List,
   Calendar,
   Users,
-  Poll,
+  BarChart3 as Poll,
   Link,
   Image,
   ArrowLeft
@@ -278,7 +278,7 @@ export default function ToolsBuilderPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {TOOL_CATEGORIES.map((category) => {
+        {TOOL_CATEGORIES.map((category: any) => {
           const Icon = category.icon;
           const isSelected = tool.category === category.id;
 
@@ -327,7 +327,7 @@ export default function ToolsBuilderPage() {
           <Input
             placeholder="e.g., Study Group Sign-up, Midterm Poll, Resource Collection"
             value={tool.name}
-            onChange={(e) => setTool(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e: any) => setTool(prev => ({ ...prev, name: e.target.value }))}
             className="w-full"
           />
         </div>
@@ -337,7 +337,7 @@ export default function ToolsBuilderPage() {
           <Textarea
             placeholder="Describe what this tool is for and how it will be used..."
             value={tool.description}
-            onChange={(e) => setTool(prev => ({ ...prev, description: e.target.value }))}
+            onChange={(e: any) => setTool(prev => ({ ...prev, description: e.target.value }))}
             className="w-full"
             rows={3}
           />
@@ -372,7 +372,7 @@ export default function ToolsBuilderPage() {
                 <SelectValue placeholder="Choose a space..." />
               </SelectTrigger>
               <SelectContent>
-                {userSpaces.map((space) => (
+                {userSpaces.map((space: any) => (
                   <SelectItem key={space.id} value={space.id}>
                     {space.name} ({space.memberCount} members)
                   </SelectItem>
@@ -416,7 +416,7 @@ export default function ToolsBuilderPage() {
         <div>
           <h3 className="font-medium text-foreground mb-3">Add Elements</h3>
           <div className="space-y-2">
-            {ELEMENT_TYPES.map((elementType) => {
+            {ELEMENT_TYPES.map((elementType: any) => {
               const Icon = elementType.icon;
               return (
                 <Button
@@ -490,7 +490,7 @@ export default function ToolsBuilderPage() {
                         <Input
                           placeholder="Enter field label..."
                           value={element.label}
-                          onChange={(e) => updateElement(element.id, { label: e.target.value })}
+                          onChange={(e: any) => updateElement(element.id, { label: e.target.value })}
                         />
                       </div>
 
@@ -517,7 +517,7 @@ export default function ToolsBuilderPage() {
                         <Input
                           placeholder="Optional help text..."
                           value={element.description || ''}
-                          onChange={(e) => updateElement(element.id, { description: e.target.value })}
+                          onChange={(e: any) => updateElement(element.id, { description: e.target.value })}
                         />
                       </div>
                     )}
@@ -528,7 +528,7 @@ export default function ToolsBuilderPage() {
                         <Input
                           placeholder="Placeholder text..."
                           value={element.placeholder || ''}
-                          onChange={(e) => updateElement(element.id, { placeholder: e.target.value })}
+                          onChange={(e: any) => updateElement(element.id, { placeholder: e.target.value })}
                         />
                       </div>
                     )}
@@ -542,7 +542,7 @@ export default function ToolsBuilderPage() {
                               <Input
                                 placeholder={`Option ${optIndex + 1}`}
                                 value={option}
-                                onChange={(e) => {
+                                onChange={(e: any) => {
                                   const newOptions = [...(element.options || [])];
                                   newOptions[optIndex] = e.target.value;
                                   updateElement(element.id, { options: newOptions });
@@ -662,7 +662,7 @@ export default function ToolsBuilderPage() {
               <Input
                 type="datetime-local"
                 value={tool.settings.deadline || ''}
-                onChange={(e) => setTool(prev => ({
+                onChange={(e: any) => setTool(prev => ({
                   ...prev,
                   settings: { ...prev.settings, deadline: e.target.value || undefined }
                 }))}
@@ -676,7 +676,7 @@ export default function ToolsBuilderPage() {
                 min="1"
                 placeholder="No limit"
                 value={tool.settings.maxSubmissions || ''}
-                onChange={(e) => setTool(prev => ({
+                onChange={(e: any) => setTool(prev => ({
                   ...prev,
                   settings: { 
                     ...prev.settings, 
@@ -758,7 +758,7 @@ export default function ToolsBuilderPage() {
           <h3 className="font-medium text-foreground mb-4">Form Preview</h3>
           <Card className="p-4">
             <form className="space-y-4">
-              {tool.elements.map((element) => (
+              {tool.elements.map((element: any) => (
                 <div key={element.id}>
                   <label className="block text-sm font-medium text-foreground mb-1">
                     {element.label}

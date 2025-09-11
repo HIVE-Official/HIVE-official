@@ -493,7 +493,7 @@ test.describe('3️⃣ TOOLS & HIVELAB + 6️⃣ RITUALS - Complete Tests', () =
 
 // Helper function
 async function mockLogin(page: Page, email: string = 'test@buffalo.edu') {
-  await page.evaluate((userEmail) => {
+  await page.evaluate((userEmail: any) => {
     localStorage.setItem('session', JSON.stringify({
       user: { 
         id: 'test-user-123',

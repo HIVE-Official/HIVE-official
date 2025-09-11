@@ -326,7 +326,7 @@ This story demonstrates the entire HIVE user experience from first visit to acti
     },
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <FullWebsiteWrapper>
         <Story />
       </FullWebsiteWrapper>

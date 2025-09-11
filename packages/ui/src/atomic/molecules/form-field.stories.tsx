@@ -84,7 +84,7 @@ export const Default: Story = {
     description: 'Select your primary academic major at University at Buffalo',
     required: true,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -780,7 +780,7 @@ export const Playground: Story = {
     required: false,
     error: '',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

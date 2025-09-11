@@ -73,7 +73,7 @@ export interface StorageService {
 }
 
 export interface ApiService {
-  fetch(url: string, options?: RequestInit): Promise<Response>;
+  fetch(url: string, options?: globalThis.RequestInit): Promise<Response>;
   spaceData(path: string): Promise<any>;
   userData(path: string): Promise<any>;
 }

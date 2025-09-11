@@ -154,7 +154,7 @@ export const SpacingScale: Story = {
           HIVE also extends Tailwind's standard spacing scale for more granular control.
         </p>
         <div className="grid grid-cols-8 gap-2 text-xs">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i: any) => (
             <div key={i} className="text-center space-y-1">
               <div className={`bg-accent rounded h-${i} w-full`} />
               <span className="font-mono">{i}</span>
@@ -302,7 +302,7 @@ export const LayoutPrinciples: Story = {
           description="Predictable spacing patterns create comfort"
         >
           <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map((i: any) => (
               <div key={i} className="flex items-center gap-4 p-4 bg-background border rounded-lg">
                 <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center text-accent-foreground font-semibold">
                   {i}

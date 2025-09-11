@@ -13,7 +13,7 @@ interface HiveFacultyInfoStepProps {
 
 // Auto-capitalize first letter of each word
 const autoCapitalize = (value: string): string => {
-  return value.replace(/\b\w/g, (char) => char.toUpperCase());
+  return value.replace(/\b\w/g, (char: any) => char.toUpperCase());
 };
 
 export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepProps) {
@@ -84,7 +84,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="First Name"
                 placeholder="First name"
                 value={firstName}
-                onChange={(e) => handleFirstNameChange(e.target.value)}
+                onChange={(e: any) => handleFirstNameChange(e.target.value)}
                 variant="premium"
                 size="lg"
                 floatingLabel={false}
@@ -96,7 +96,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="Last Name"
                 placeholder="Last name"
                 value={lastName}
-                onChange={(e) => handleLastNameChange(e.target.value)}
+                onChange={(e: any) => handleLastNameChange(e.target.value)}
                 variant="premium"
                 size="lg"
                 floatingLabel={false}

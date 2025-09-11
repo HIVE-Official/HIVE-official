@@ -782,7 +782,7 @@ export const Playground: Story = {
     weight: 'semibold',
     children: 'University at Buffalo Campus Experience',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

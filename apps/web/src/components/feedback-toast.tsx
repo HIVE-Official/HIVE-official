@@ -89,7 +89,7 @@ export function FeedbackToast() {
               width={20}
               height={20}
               className="w-5 h-5"
-              onError={(e) => {
+              onError={(e: any) => {
                 const target = e.target as HTMLImageElement;
                 target.src = "/assets/hive-logo-white.svg";
               }}
@@ -119,7 +119,7 @@ export function FeedbackToast() {
                       width={20}
                       height={20}
                       className="w-5 h-5"
-                      onError={(e) => {
+                      onError={(e: any) => {
                         const target = e.target as HTMLImageElement;
                         target.src = "/assets/hive-logo-white.svg";
                       }}
@@ -174,7 +174,7 @@ export function FeedbackToast() {
                     <textarea
                       placeholder="Tell us what's on your mind..."
                       value={feedback}
-                      onChange={(e) => setFeedback(e.target.value)}
+                      onChange={(e: any) => setFeedback(e.target.value)}
                       rows={3}
                       maxLength={500}
                       className="w-full px-3 py-2 bg-[var(--hive-background-secondary)] 

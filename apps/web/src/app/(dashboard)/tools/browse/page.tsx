@@ -121,130 +121,52 @@ export default function BrowseToolsPage() {
 
   const fetchTools = async () => {
     try {
-      // Mock data for development - replace with actual API call
-      const mockTools: Tool[] = [
-        {
-          id: 'tool-public-1',
-          name: 'UB Course Rating Poll',
-          description: 'Help fellow students by rating your courses this semester. Anonymous feedback to improve course selection.',
-          category: 'polls',
-          visibility: 'public',
-          status: 'active',
-          createdAt: '2024-01-10T08:00:00Z',
-          createdBy: 'user-123',
-          creatorName: 'Academic Senate',
-          creatorHandle: 'ub_academics',
-          stats: { views: 1247, submissions: 389, shares: 67, uniqueUsers: 389, likes: 124 },
-          tags: ['courses', 'ratings', 'academics'],
-          featured: true,
-          trending: true
+      // Fetch tools from Firebase via API
+      const response = await fetch('/api/tools/browse', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        {
-          id: 'tool-public-2',
-          name: 'Spring Break Travel Buddy Matcher',
-          description: 'Find travel companions for spring break! Share your destination and connect with other UB students.',
-          category: 'signups',
-          visibility: 'public',
-          status: 'active',
-          createdAt: '2024-01-18T14:30:00Z',
-          createdBy: 'user-456',
-          creatorName: 'Travel Club UB',
-          creatorHandle: 'ub_travel',
-          stats: { views: 892, submissions: 156, shares: 89, uniqueUsers: 156, likes: 67 },
-          tags: ['travel', 'spring break', 'social'],
-          trending: true
-        },
-        {
-          id: 'tool-public-3',
-          name: 'Campus Resource Directory',
-          description: 'Comprehensive collection of helpful resources for UB students - from tutoring to mental health support.',
-          category: 'resources',
-          visibility: 'public',
-          status: 'active',
-          createdAt: '2024-01-05T10:15:00Z',
-          createdBy: 'user-789',
-          creatorName: 'Student Life',
-          creatorHandle: 'ub_studentlife',
-          stats: { views: 2156, submissions: 78, shares: 134, uniqueUsers: 567, likes: 234 },
-          tags: ['resources', 'support', 'academics', 'wellness'],
-          featured: true
-        },
-        {
-          id: 'tool-public-4',
-          name: 'Finals Week Stress Check-in',
-          description: 'How are you feeling about finals? Anonymous mental health check-in with resources and support.',
-          category: 'forms',
-          visibility: 'public',
-          status: 'active',
-          createdAt: '2024-01-20T09:45:00Z',
-          createdBy: 'user-101',
-          creatorName: 'UB Counseling Center',
-          creatorHandle: 'ub_counseling',
-          stats: { views: 756, submissions: 234, shares: 45, uniqueUsers: 234, likes: 89 },
-          tags: ['mental health', 'finals', 'support', 'wellness'],
-          trending: true
-        },
-        {
-          id: 'tool-public-5',
-          name: 'Buffalo Food Truck Schedule',
-          description: 'Never miss your favorite food truck! Community-maintained schedule of food trucks around campus.',
-          category: 'coordination',
-          visibility: 'public',
-          status: 'active',
-          createdAt: '2024-01-12T11:20:00Z',
-          createdBy: 'user-202',
-          creatorName: 'Foodie Bulls',
-          creatorHandle: 'ub_foodies',
-          stats: { views: 1489, submissions: 67, shares: 178, uniqueUsers: 445, likes: 156 },
-          tags: ['food', 'schedule', 'campus life'],
-          featured: true
-        },
-        {
-          id: 'tool-public-6',
-          name: 'Study Spot Availability Tracker',
-          description: 'Real-time updates on study spot availability across campus libraries and study areas.',
-          category: 'coordination',
-          visibility: 'public',
-          status: 'active',
-          createdAt: '2024-01-15T16:10:00Z',
-          createdBy: 'user-303',
-          creatorName: 'Library Student Workers',
-          creatorHandle: 'ub_library',
-          stats: { views: 2034, submissions: 445, shares: 89, uniqueUsers: 567, likes: 201 },
-          tags: ['study', 'library', 'availability', 'academics']
-        },
-        {
-          id: 'tool-public-7',
-          name: 'Campus Event Interest Survey',
-          description: 'What kinds of events would you like to see more of on campus? Help us plan better programming!',
-          category: 'polls',
-          visibility: 'public',
-          status: 'active',
-          createdAt: '2024-01-08T13:25:00Z',
-          createdBy: 'user-404',
-          creatorName: 'Student Activities',
-          creatorHandle: 'ub_activities',
-          stats: { views: 934, submissions: 178, shares: 34, uniqueUsers: 178, likes: 67 }
-        },
-        {
-          id: 'tool-public-8',
-          name: 'Textbook Exchange Network',
-          description: 'Buy, sell, and trade textbooks with fellow UB students. Save money and reduce waste!',
-          category: 'resources',
-          visibility: 'public',
-          status: 'active',
-          createdAt: '2024-01-14T12:40:00Z',
-          createdBy: 'user-505',
-          creatorName: 'Sustainable UB',
-          creatorHandle: 'ub_green',
-          stats: { views: 1678, submissions: 234, shares: 123, uniqueUsers: 387, likes: 145 },
-          tags: ['textbooks', 'money saving', 'sustainability']
-        }
-      ];
+        credentials: 'include'
+      });
 
-      setTools(mockTools);
+      if (!response.ok) {
+        throw new Error('Failed to fetch tools');
+      }
+
+      const data = await response.json();
+      
+      // Transform Firebase data to match Tool interface
+      const transformedTools: Tool[] = data.tools?.map((tool: any) => ({
+        id: tool.id,
+        name: tool.name || 'Untitled Tool',
+        description: tool.description || '',
+        category: tool.category || 'forms',
+        visibility: tool.visibility || 'public',
+        status: tool.status || 'active',
+        createdAt: tool.createdAt || new Date().toISOString(),
+        createdBy: tool.createdBy || tool.authorId || '',
+        creatorName: tool.creatorName || tool.authorName || 'Anonymous',
+        creatorHandle: tool.creatorHandle || tool.authorHandle || 'anonymous',
+        spaceId: tool.spaceId,
+        spaceName: tool.spaceName,
+        stats: {
+          views: tool.stats?.views || 0,
+          submissions: tool.stats?.submissions || tool.stats?.uses || 0,
+          shares: tool.stats?.shares || 0,
+          uniqueUsers: tool.stats?.uniqueUsers || tool.stats?.users || 0,
+          likes: tool.stats?.likes || 0
+        },
+        tags: tool.tags || [],
+        featured: tool.featured || false,
+        trending: tool.trending || false
+      })) || [];
+
+      setTools(transformedTools);
     } catch (error) {
       console.error('Error fetching tools:', error);
+      // Set empty array on error - no fallback to mock data
+      setTools([]);
     } finally {
       setIsLoading(false);
     }
@@ -439,7 +361,7 @@ export default function BrowseToolsPage() {
             <Input
               placeholder="Search tools by name, description, or tags..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
               className="pl-9"
             />
           </div>

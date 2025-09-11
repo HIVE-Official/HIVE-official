@@ -207,7 +207,7 @@ export default function SpaceDiscoveryStep() {
             <div className="space-y-2">
               {spaces?.university_organizations
                 .filter(space => autoJoinSpaces.includes(space.id))
-                .map((space) => (
+                .map((space: any) => (
                   <div key={space.id} className="flex items-center justify-between p-3 bg-surface-02 rounded-lg">
                     <div className="flex items-center gap-3">
                       <GraduationCap className="h-4 w-4 text-accent" />
@@ -242,7 +242,7 @@ export default function SpaceDiscoveryStep() {
 
         {/* Space Categories */}
         <div className="space-y-6">
-          {SPACE_CATEGORIES.map((category) => {
+          {SPACE_CATEGORIES.map((category: any) => {
             const Icon = category.icon;
             const categorySpaces = spaces?.[category.id as keyof typeof spaces] || [];
             const filteredSpaces = getFilteredSpaces(categorySpaces);
@@ -262,7 +262,7 @@ export default function SpaceDiscoveryStep() {
                 </div>
                 
                 <div className="grid gap-3">
-                  {filteredSpaces.slice(0, 6).map((space) => {
+                  {filteredSpaces.slice(0, 6).map((space: any) => {
                     const isSelected = selectedSpaces.includes(space.id);
                     const isAutoJoin = autoJoinSpaces.includes(space.id);
                     

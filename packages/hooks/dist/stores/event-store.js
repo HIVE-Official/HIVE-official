@@ -68,7 +68,7 @@ exports.useEventStore = (0, zustand_1.create)()((0, middleware_1.devtools)((0, m
         syncedCalendars: [...state.syncedCalendars, calendarId]
     }), false, 'addSyncedCalendar'),
     removeSyncedCalendar: (calendarId) => set((state) => ({
-        syncedCalendars: state.syncedCalendars.filter(id => id !== calendarId)
+        syncedCalendars: state.syncedCalendars.filter((id) => id !== calendarId)
     }), false, 'removeSyncedCalendar'),
     // Notifications
     eventReminders: new Map(),
@@ -87,7 +87,7 @@ exports.useEventStore = (0, zustand_1.create)()((0, middleware_1.devtools)((0, m
     addRecentSearch: (query) => set((state) => ({
         recentSearches: [
             query,
-            ...state.recentSearches.filter(q => q !== query)
+            ...state.recentSearches.filter((q) => q !== query)
         ].slice(0, 5)
     }), false, 'addRecentSearch'),
     clearRecentSearches: () => set({ recentSearches: [] }, false, 'clearRecentSearches'),

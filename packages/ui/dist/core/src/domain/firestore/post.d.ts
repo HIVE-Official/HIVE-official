@@ -429,8 +429,8 @@ export declare const PostSchema: z.ZodObject<{
     hardDeleteAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
     id: string;
-    type: "text" | "image" | "event" | "poll" | "toolshare";
     content: string;
+    type: "text" | "image" | "event" | "poll" | "toolshare";
     spaceId: string;
     reactions: {
         heart: number;
@@ -727,8 +727,8 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         toolDescription?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    type: "text" | "image" | "event" | "poll" | "toolshare";
     content: string;
+    type: "text" | "image" | "event" | "poll" | "toolshare";
     richContent?: {
         text: string;
         formatting?: {
@@ -819,8 +819,8 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
         toolDescription?: string | undefined;
     } | undefined;
 }>, {
-    type: "text" | "image" | "event" | "poll" | "toolshare";
     content: string;
+    type: "text" | "image" | "event" | "poll" | "toolshare";
     richContent?: {
         text: string;
         formatting?: {

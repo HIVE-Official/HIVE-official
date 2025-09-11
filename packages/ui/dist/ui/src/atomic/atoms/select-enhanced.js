@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 // HIVE Select System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const selectVariants = cva(
@@ -36,12 +36,15 @@ const selectVariants = cva(
         radius: "default",
     },
 });
-const Select = React.forwardRef(({ className, variant, size, radius, options, placeholder, error, success, helperText, label, required, allowClear, onClear, value, id, ...props }, ref) => {
+const Select = React.forwardRef(({ className, variant, size, radius, options, placeholder, error, success, helperText, label, required, allowClear, onClear, value, id, onValueChange, onChange, ...props }, ref) => {
     const selectId = id || React.useId();
     const hasValue = Boolean(value);
     // Determine variant based on state
     const computedVariant = error ? "error" : success ? "success" : variant;
-    const selectElement = (_jsxs("div", { className: "relative", children: [_jsxs("select", { id: selectId, className: cn(selectVariants({ variant: computedVariant, size, radius }), "appearance-none cursor-pointer pr-10", className), ref: ref, value: value, ...props, children: [placeholder && (_jsx("option", { value: "", disabled: true, children: placeholder })), options.map((option) => (_jsx("option", { value: option.value, disabled: option.disabled, children: option.label }, option.value)))] }), _jsx("div", { className: "absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--hive-brand-secondary)] transition-colors duration-200", children: _jsx(ChevronDownIcon, {}) }), allowClear && hasValue && onClear && (_jsx("button", { type: "button", onClick: onClear, className: "absolute right-8 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full hover:bg-[var(--hive-interactive-hover)] text-[var(--hive-text-tertiary)] hover:text-[var(--hive-text-primary)]", "aria-label": "Clear selection", children: _jsx(ClearIcon, {}) }))] }));
+    const selectElement = (_jsxs("div", { className: "relative", children: [_jsxs("select", { id: selectId, className: cn(selectVariants({ variant: computedVariant, size, radius }), "appearance-none cursor-pointer pr-10", className), ref: ref, value: value, onChange: (e) => {
+                    onChange?.(e);
+                    onValueChange?.(e.target.value);
+                }, ...props, children: [placeholder && (_jsx("option", { value: "", disabled: true, children: placeholder })), options.map((option) => (_jsx("option", { value: option.value, disabled: option.disabled, children: option.label }, option.value)))] }), _jsx("div", { className: "absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--hive-brand-secondary)] transition-colors duration-200", children: _jsx(ChevronDownIcon, {}) }), allowClear && hasValue && onClear && (_jsx("button", { type: "button", onClick: onClear, className: "absolute right-8 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full hover:bg-[var(--hive-interactive-hover)] text-[var(--hive-text-tertiary)] hover:text-[var(--hive-text-primary)]", "aria-label": "Clear selection", children: _jsx(ClearIcon, {}) }))] }));
     if (label || error || success || helperText) {
         return (_jsxs("div", { className: "space-y-2", children: [label && (_jsxs("label", { htmlFor: selectId, className: "text-sm font-medium text-[var(--hive-text-primary)]", children: [label, required && (_jsx("span", { className: "ml-1 text-[var(--hive-status-error)]", children: "*" }))] })), selectElement, (error || success || helperText) && (_jsx("p", { className: cn("text-xs", error && "text-[var(--hive-status-error)]", success && "text-[var(--hive-status-success)]", !error && !success && "text-[var(--hive-text-tertiary)]"), children: error || success || helperText }))] }));
     }

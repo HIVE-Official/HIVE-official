@@ -105,7 +105,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
     );
 
     // Convert to blob and update state
-    canvas.toBlob((blob) => {
+    canvas.toBlob((blob: any) => {
       if (blob) {
         const croppedUrl = URL.createObjectURL(blob);
         updateData({ profilePhoto: croppedUrl });

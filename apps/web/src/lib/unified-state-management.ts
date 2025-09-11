@@ -187,16 +187,16 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
         },
 
         // Authentication Actions
-        setUser: (user) => set((state) => {
+        setUser: (user) => set((state: any) => {
           state.user = user;
           state.isAuthenticated = !!user;
         }),
 
-        setAuthLoading: (loading) => set((state) => {
+        setAuthLoading: (loading) => set((state: any) => {
           state.authLoading = loading;
         }),
 
-        logout: () => set((state) => {
+        logout: () => set((state: any) => {
           state.user = null;
           state.isAuthenticated = false;
           state.feedItems = [];
@@ -209,162 +209,162 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
         }),
 
         // Feed Actions
-        setFeedItems: (items) => set((state) => {
+        setFeedItems: (items) => set((state: any) => {
           state.feedItems = items;
         }),
 
-        addFeedItem: (item) => set((state) => {
+        addFeedItem: (item) => set((state: any) => {
           state.feedItems.unshift(item);
         }),
 
-        updateFeedItem: (id, updates) => set((state) => {
+        updateFeedItem: (id, updates) => set((state: any) => {
           const index = state.feedItems.findIndex(item => item.id === id);
           if (index !== -1) {
             Object.assign(state.feedItems[index], updates);
           }
         }),
 
-        removeFeedItem: (id) => set((state) => {
+        removeFeedItem: (id) => set((state: any) => {
           state.feedItems = state.feedItems.filter(item => item.id !== id);
         }),
 
         // Spaces Actions
-        setUserSpaces: (spaces) => set((state) => {
+        setUserSpaces: (spaces) => set((state: any) => {
           state.userSpaces = spaces;
         }),
 
-        addUserSpace: (space) => set((state) => {
+        addUserSpace: (space) => set((state: any) => {
           state.userSpaces.push(space);
         }),
 
-        updateUserSpace: (id, updates) => set((state) => {
+        updateUserSpace: (id, updates) => set((state: any) => {
           const index = state.userSpaces.findIndex(space => space.id === id);
           if (index !== -1) {
             Object.assign(state.userSpaces[index], updates);
           }
         }),
 
-        removeUserSpace: (id) => set((state) => {
+        removeUserSpace: (id) => set((state: any) => {
           state.userSpaces = state.userSpaces.filter(space => space.id !== id);
         }),
 
         // Tools Actions
-        setUserTools: (tools) => set((state) => {
+        setUserTools: (tools) => set((state: any) => {
           state.userTools = tools;
         }),
 
-        addUserTool: (tool) => set((state) => {
+        addUserTool: (tool) => set((state: any) => {
           state.userTools.push(tool);
         }),
 
-        updateUserTool: (id, updates) => set((state) => {
+        updateUserTool: (id, updates) => set((state: any) => {
           const index = state.userTools.findIndex(tool => tool.id === id);
           if (index !== -1) {
             Object.assign(state.userTools[index], updates);
           }
         }),
 
-        removeUserTool: (id) => set((state) => {
+        removeUserTool: (id) => set((state: any) => {
           state.userTools = state.userTools.filter(tool => tool.id !== id);
         }),
 
         // Notifications Actions
-        setNotifications: (notifications) => set((state) => {
+        setNotifications: (notifications) => set((state: any) => {
           state.notifications = notifications;
         }),
 
-        addNotification: (notification) => set((state) => {
+        addNotification: (notification) => set((state: any) => {
           state.notifications.unshift(notification);
         }),
 
-        markNotificationRead: (id) => set((state) => {
+        markNotificationRead: (id) => set((state: any) => {
           const notification = state.notifications.find(n => n.id === id);
           if (notification) {
             notification.metadata.read = true;
           }
         }),
 
-        removeNotification: (id) => set((state) => {
+        removeNotification: (id) => set((state: any) => {
           state.notifications = state.notifications.filter(n => n.id !== id);
         }),
 
         // UI Actions
-        setCurrentSlice: (slice) => set((state) => {
+        setCurrentSlice: (slice) => set((state: any) => {
           state.currentSlice = slice;
         }),
 
-        setActiveSpaceId: (id) => set((state) => {
+        setActiveSpaceId: (id) => set((state: any) => {
           state.activeSpaceId = id;
           if (id) {
             state.currentSlice = 'spaces';
           }
         }),
 
-        setActiveToolId: (id) => set((state) => {
+        setActiveToolId: (id) => set((state: any) => {
           state.activeToolId = id;
           if (id) {
             state.currentSlice = 'tools';
           }
         }),
 
-        setSidebarOpen: (open) => set((state) => {
+        setSidebarOpen: (open) => set((state: any) => {
           state.sidebarOpen = open;
         }),
 
-        setCommandPaletteOpen: (open) => set((state) => {
+        setCommandPaletteOpen: (open) => set((state: any) => {
           state.commandPaletteOpen = open;
         }),
 
         // Real-time Actions
-        setOnlineStatus: (online) => set((state) => {
+        setOnlineStatus: (online) => set((state: any) => {
           state.isOnline = online;
           if (!online) {
             state.websocketConnected = false;
           }
         }),
 
-        setWebsocketStatus: (connected) => set((state) => {
+        setWebsocketStatus: (connected) => set((state: any) => {
           state.websocketConnected = connected;
         }),
 
-        updateLastSyncTime: () => set((state) => {
+        updateLastSyncTime: () => set((state: any) => {
           state.lastSyncTime = new Date().toISOString();
         }),
 
-        setSyncInProgress: (inProgress) => set((state) => {
+        setSyncInProgress: (inProgress) => set((state: any) => {
           state.syncInProgress = inProgress;
         }),
 
         // Loading Actions
-        setFeedLoading: (loading) => set((state) => {
+        setFeedLoading: (loading) => set((state: any) => {
           state.feedLoading = loading;
         }),
 
-        setSpacesLoading: (loading) => set((state) => {
+        setSpacesLoading: (loading) => set((state: any) => {
           state.spacesLoading = loading;
         }),
 
-        setToolsLoading: (loading) => set((state) => {
+        setToolsLoading: (loading) => set((state: any) => {
           state.toolsLoading = loading;
         }),
 
-        setProfileLoading: (loading) => set((state) => {
+        setProfileLoading: (loading) => set((state: any) => {
           state.profileLoading = loading;
         }),
 
         // Error Actions
-        setError: (slice, error) => set((state) => {
+        setError: (slice, error) => set((state: any) => {
           state.errors[slice] = error;
         }),
 
-        clearErrors: () => set((state) => {
+        clearErrors: () => set((state: any) => {
           Object.keys(state.errors).forEach(key => {
             state.errors[key as keyof typeof state.errors] = null;
           });
         }),
 
         // Cache Actions
-        setCacheItem: (key, value, ttl = 300000) => set((state) => { // 5 minutes default TTL
+        setCacheItem: (key, value, ttl = 300000) => set((state: any) => { // 5 minutes default TTL
           state.cache.set(key, value);
           state.cacheTimestamps.set(key, Date.now() + ttl);
         }),
@@ -381,7 +381,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           return null;
         },
 
-        invalidateCache: (pattern) => set((state) => {
+        invalidateCache: (pattern: any) => set((state: any) => {
           if (pattern) {
             for (const key of state.cache.keys()) {
               if (key.includes(pattern)) {
@@ -396,11 +396,11 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
         }),
 
         // Optimistic Updates
-        addOptimisticUpdate: (key, update) => set((state) => {
+        addOptimisticUpdate: (key, update) => set((state: any) => {
           state.optimisticUpdates.set(key, update);
         }),
 
-        resolveOptimisticUpdate: (key, success, actualData) => set((state) => {
+        resolveOptimisticUpdate: (key, success, actualData) => set((state: any) => {
           const update = state.optimisticUpdates.get(key);
           if (update) {
             if (success && actualData) {
@@ -430,7 +430,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           }
         }),
 
-        clearOptimisticUpdates: () => set((state) => {
+        clearOptimisticUpdates: () => set((state: any) => {
           state.optimisticUpdates.clear();
         }),
 

@@ -32,7 +32,7 @@ export default function EntryPage() {
             height={80}
             className="w-20 h-20"
             priority
-            onError={(e) => {
+            onError={(e: any) => {
               const target = e.target as HTMLImageElement;
               target.src = "/assets/whitelogo.svg";
             }}

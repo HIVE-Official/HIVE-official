@@ -60,7 +60,7 @@ Clean, accessible tooltips for tech social platform with minimal gold usage.
   },
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <TooltipProvider>
         <Story />
       </TooltipProvider>

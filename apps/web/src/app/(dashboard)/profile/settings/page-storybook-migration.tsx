@@ -361,7 +361,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.spaceInvites}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'spaceInvites', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'spaceInvites', checked)}
                   />
                 </FormField>
                 
@@ -371,7 +371,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.eventReminders}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'eventReminders', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'eventReminders', checked)}
                   />
                 </FormField>
                 
@@ -381,7 +381,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.toolUpdates}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'toolUpdates', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'toolUpdates', checked)}
                   />
                 </FormField>
                 
@@ -391,7 +391,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.weeklyDigest}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'weeklyDigest', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'weeklyDigest', checked)}
                   />
                 </FormField>
                 
@@ -401,7 +401,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.securityAlerts}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'securityAlerts', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'securityAlerts', checked)}
                   />
                 </FormField>
               </div>
@@ -421,7 +421,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.push.spaceActivity}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'spaceActivity', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('push', 'spaceActivity', checked)}
                   />
                 </FormField>
                 
@@ -431,7 +431,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.push.toolLaunches}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'toolLaunches', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('push', 'toolLaunches', checked)}
                   />
                 </FormField>
                 
@@ -441,7 +441,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.push.directMessages}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'directMessages', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('push', 'directMessages', checked)}
                   />
                 </FormField>
               </div>
@@ -464,7 +464,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.showActivity}
-                    onCheckedChange={(checked) => handlePrivacyChange('showActivity', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('showActivity', checked)}
                   />
                 </FormField>
                 
@@ -474,7 +474,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.showSpaces}
-                    onCheckedChange={(checked) => handlePrivacyChange('showSpaces', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('showSpaces', checked)}
                   />
                 </FormField>
                 
@@ -484,7 +484,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.showConnections}
-                    onCheckedChange={(checked) => handlePrivacyChange('showConnections', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('showConnections', checked)}
                   />
                 </FormField>
                 
@@ -494,7 +494,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.showOnlineStatus}
-                    onCheckedChange={(checked) => handlePrivacyChange('showOnlineStatus', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('showOnlineStatus', checked)}
                   />
                 </FormField>
                 
@@ -504,7 +504,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.allowDirectMessages}
-                    onCheckedChange={(checked) => handlePrivacyChange('allowDirectMessages', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('allowDirectMessages', checked)}
                   />
                 </FormField>
               </div>
@@ -572,7 +572,7 @@ export default function ProfileSettingsStorybook() {
                   description="How often you receive email updates"
                 >
                   <div className="flex items-center gap-2">
-                    {['immediate', 'daily', 'weekly', 'never'].map((freq) => (
+                    {['immediate', 'daily', 'weekly', 'never'].map((freq: any) => (
                       <Badge 
                         key={freq}
                         variant={accountSettings.emailFrequency === freq ? 'primary' : 'secondary'}

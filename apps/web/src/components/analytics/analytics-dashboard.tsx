@@ -171,7 +171,7 @@ export function AnalyticsDashboard({
             {/* Time Range */}
             <select
               value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value as any)}
+              onChange={(e: any) => setTimeRange(e.target.value as any)}
               className="text-sm border border-gray-300 rounded-md px-3 py-1"
             >
               <option value="1h">Last Hour</option>
@@ -183,7 +183,7 @@ export function AnalyticsDashboard({
             {/* Category Filter */}
             <select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              onChange={(e: any) => setSelectedCategory(e.target.value)}
               className="text-sm border border-gray-300 rounded-md px-3 py-1"
             >
               <option value="">All Categories</option>
@@ -202,7 +202,7 @@ export function AnalyticsDashboard({
             {/* Severity Filter */}
             <select
               value={selectedSeverity}
-              onChange={(e) => setSelectedSeverity(e.target.value)}
+              onChange={(e: any) => setSelectedSeverity(e.target.value)}
               className="text-sm border border-gray-300 rounded-md px-3 py-1"
             >
               <option value="">All Severities</option>
@@ -390,7 +390,7 @@ export function AnalyticsDashboard({
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {errors.slice(0, 10).map((error) => {
+                    {errors.slice(0, 10).map((error: any) => {
                       const severityClass = SEVERITY_COLORS[error.severity] || 'text-gray-600 bg-gray-100';
                       
                       return (

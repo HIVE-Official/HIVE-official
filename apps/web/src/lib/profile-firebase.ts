@@ -391,7 +391,7 @@ export function subscribeToProfile(
 ): () => void {
   const unsubscribe = onSnapshot(
     doc(db, 'users', userId),
-    (doc) => {
+    (doc: any) => {
       if (doc.exists()) {
         callback({
           uid: doc.id,
@@ -399,7 +399,7 @@ export function subscribeToProfile(
         } as ProfileData);
       }
     },
-    (error) => {
+    (error: any) => {
       console.error('Profile subscription error:', error);
     }
   );
@@ -431,7 +431,7 @@ export function subscribeToConnectionStatuses(
       limit(50)
     );
     
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, (snapshot: any) => {
       const statuses = new Map();
       snapshot.forEach(doc => {
         const data = doc.data();

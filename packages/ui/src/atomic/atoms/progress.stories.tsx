@@ -704,7 +704,7 @@ export const Playground: Story = {
     animated: false,
     indeterminate: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

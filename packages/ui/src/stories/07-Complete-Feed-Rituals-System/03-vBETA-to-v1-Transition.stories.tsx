@@ -379,7 +379,7 @@ const TransitionSystemDemo = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {mockTransitionData.transitionMilestones.map((milestone) => (
+                {mockTransitionData.transitionMilestones.map((milestone: any) => (
                   <div key={milestone.id} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
@@ -404,7 +404,7 @@ const TransitionSystemDemo = () => {
                     <div className="ml-8">
                       <HiveProgress value={milestone.progress} className="h-1 mb-2" />
                       <div className="flex flex-wrap gap-1">
-                        {milestone.unlocks.map((unlock) => (
+                        {milestone.unlocks.map((unlock: any) => (
                           <Badge key={unlock} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                             {unlock}
                           </Badge>
@@ -456,7 +456,7 @@ const TransitionSystemDemo = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {mockTransitionData.celebrationMoments.map((moment) => (
+                {mockTransitionData.celebrationMoments.map((moment: any) => (
                   <div key={moment.id} className="flex items-start space-x-4 p-4 bg-[var(--hive-black)]/30 rounded-lg">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
