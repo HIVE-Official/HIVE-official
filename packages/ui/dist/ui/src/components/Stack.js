@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 export const Stack = ({ direction = 'vertical', spacing = '1rem', align = 'stretch', justify = 'start', className, children, style, ...props }) => {
     const flexDirection = direction === 'horizontal' ? 'row' : 'column';
     const alignMap = {

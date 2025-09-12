@@ -72,7 +72,7 @@ export const MotionSystem: Story = {
       <div className="space-y-6">
         <MotionDemo
           curve="cubic-bezier(0.33, 0.65, 0, 1)"
-          duration="duration-[180ms]"
+          duration="duration-180"
           label="HIVE Primary Curve"
           description="Our signature motion curve for all standard interactions"
         />
@@ -168,7 +168,7 @@ export const InteractionStates: Story = {
                 <div
                   key={variant}
                   className={`
-                    p-4 rounded-lg border transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]
+                    p-4 rounded-lg border transition-all duration-180 ease-hive
                     ${variant === 'default' ? 'border-border hover:border-accent/50' : ''}
                     ${variant === 'interactive' ? 'border-border hover:border-accent cursor-pointer hover:scale-[1.02]' : ''}
                     ${variant === 'accent' ? 'border-accent bg-accent/5' : ''}

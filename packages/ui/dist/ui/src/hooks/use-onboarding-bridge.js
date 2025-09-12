@@ -3,8 +3,8 @@
  * Bridges onboarding completion to UnifiedAuth and Profile hydration
  */
 import { useCallback } from 'react';
-import { useUnifiedAuth } from '../contexts/unified-auth-context';
-import { logger } from '../lib/logger';
+import { useUnifiedAuth } from '../contexts/unified-auth-context.js';
+import { logger } from '../lib/logger.js';
 /**
  * Hook for managing onboarding completion and profile hydration
  */

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { Card, Button, Textarea } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
+import { Alert, AlertDescription } from "@/components/layout/page-container";
 import {
   Send,
   Image,

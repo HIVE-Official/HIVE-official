@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { authenticatedFetch } from '../../../lib/auth-utils';
 import { Button, Card } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@/components/layout/page-container";
 import toast from '@/hooks/use-toast-notifications';
 import { Heart, Users, Settings as _Settings, Star, Clock, Activity, Plus, Crown, Search, Grid, List, TrendingUp, ArrowUpDown, Compass, AlertCircle } from "lucide-react";
 import { type Space, type SpaceType } from "@hive/core";

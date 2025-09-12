@@ -48,7 +48,7 @@ export const CountdownTimerShowcase: Story = {
           {/* HIVE Logo */}
           <div className="space-y-6">
             <div className="flex items-center justify-center">
-              <div className="w-24 h-24 bg-accent/10 rounded-3xl flex items-center justify-center border-2 border-accent/50 hover:border-accent transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] hover:scale-105">
+              <div className="w-24 h-24 bg-accent/10 rounded-3xl flex items-center justify-center border-2 border-accent/50 hover:border-accent transition-all duration-180 ease-hive hover:scale-105">
                 <span className="text-5xl">🐝</span>
               </div>
             </div>
@@ -116,7 +116,7 @@ export const HeroSection: Story = {
           {/* Logo & Brand */}
           <div className="space-y-6">
             <div className="flex items-center justify-center mb-8">
-              <div className="w-24 h-24 bg-accent/10 rounded-3xl flex items-center justify-center border-2 border-accent/50 hover:border-accent transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] hover:scale-105">
+              <div className="w-24 h-24 bg-accent/10 rounded-3xl flex items-center justify-center border-2 border-accent/50 hover:border-accent transition-all duration-180 ease-hive hover:scale-105">
                 <span className="text-5xl">🐝</span>
               </div>
             </div>

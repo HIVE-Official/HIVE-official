@@ -3,7 +3,7 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Alert } from "@/components/layout/page-container";
 import { Card, CardContent } from "@hive/ui";
 
 interface Props {

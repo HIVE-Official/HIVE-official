@@ -74,7 +74,7 @@ function AuthErrorContent() {
         >
           <Button asChild variant="ghost" className="text-muted hover:text-foreground group">
             <Link href="/welcome">
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" />
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-180 ease-hive" />
               Back to welcome
             </Link>
           </Button>

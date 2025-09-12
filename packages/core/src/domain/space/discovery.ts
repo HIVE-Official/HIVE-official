@@ -381,7 +381,7 @@ export class SpaceDiscoveryEngine {
     filters: DiscoveryFilters = {}
   ): Promise<DiscoveryResult> {
     // Apply basic filters
-    const filteredSpaces = spaces.filter((space: any) => {
+    const filteredSpaces = spaces.filter((space) => {
       // Section filter
       if (filters.section && space.section !== filters.section) {
         return false;
@@ -437,7 +437,7 @@ export class SpaceDiscoveryEngine {
     });
 
     // Calculate discovery scores for each space
-    const spacesWithScores = filteredSpaces.map((space: any) => {
+    const spacesWithScores = filteredSpaces.map((space) => {
       const discoveryScore = this.calculateDiscoveryScore(space, userContext);
       return {
         ...space,
@@ -470,10 +470,10 @@ export class SpaceDiscoveryEngine {
     const paginatedSpaces = spacesWithScores.slice(offset, offset + limit);
 
     // Group by sections
-    const sections = Object.values(SpaceSection).map((section: any) => ({
+    const sections = Object.values(SpaceSection).map((section) => ({
       section,
-      count: spacesWithScores.filter((s: any) => s.section === section).length,
-      spaces: spacesWithScores.filter((s: any) => s.section === section).slice(0, 5), // Top 5 per section
+      count: spacesWithScores.filter((s) => s.section === section).length,
+      spaces: spacesWithScores.filter((s) => s.section === section).slice(0, 5), // Top 5 per section
     }));
 
     return {
@@ -511,7 +511,7 @@ export class SpaceDiscoveryEngine {
     limit: number = 5
   ): Promise<SpaceDiscoveryData[]> {
     // Filter for spaces with recent activity and high engagement
-    const trendingCandidates = spaces.filter((space: any) => {
+    const trendingCandidates = spaces.filter((space) => {
       if (!space.lastActivity) return false;
 
       const daysSinceActivity =

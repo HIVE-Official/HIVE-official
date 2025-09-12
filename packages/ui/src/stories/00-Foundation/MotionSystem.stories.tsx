@@ -118,7 +118,7 @@ export const DurationScale: Story = {
           duration="50ms"
           easing="cubic-bezier(0.33, 0.65, 0, 1)"
         >
-          <AnimationTrigger className="duration-[50ms] scale-95 bg-accent">
+          <AnimationTrigger className="duration-50 scale-95 bg-accent">
             Click me - Instant
           </AnimationTrigger>
         </MotionDemo>

@@ -3,7 +3,7 @@
  * Real-time state synchronization and updates for tools
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { apiClient } from '../lib/api-client';
+import { apiClient } from '../lib/api-client.js';
 export function useRealtimeTool(options) {
     const { toolId, deploymentId, spaceId, initialState = {}, autoConnect = true, syncInterval = 5000, maxRetries = 3, onStateChange, onUpdate, onError, onConnectionChange, } = options;
     // State

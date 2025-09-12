@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useEffect } from 'react';
-import { Button, Progress } from '../atoms';
-import { Card } from '../molecules';
+import { Button, Progress } from '../atoms/index.js';
+import { Card } from '../molecules/index.js';
 import { Clock, Users, CheckCircle, Sparkles, ChevronRight, Trophy, Target, UserPlus, Compass } from 'lucide-react';
 const WEEK_THEMES = {
     1: { title: "Initialize", description: "Build your foundation", icon: Target, color: "hive-gold" },

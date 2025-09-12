@@ -18,11 +18,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   Input,
   Textarea,
   Label,
-  Separator,
   Progress,
   Alert,
   AlertDescription
@@ -30,7 +28,6 @@ import {
 import { 
   Plus, 
   Search, 
-  Filter, 
   Settings, 
   AlertTriangle, 
   Target,
@@ -38,25 +35,13 @@ import {
   Clock,
   Users,
   Activity,
-  Zap,
   Eye,
-  EyeOff,
-  Trash2,
-  Edit,
   PlayCircle,
-  PauseCircle,
-  RotateCcw,
-  Calendar,
-  TrendingUp,
   Shield,
-  AlertCircle
 } from "lucide-react";
 import { 
   FeatureFlag, 
-  UserSegment, 
-  FeatureFlagVariant, 
   featureFlagService,
-  ExperimentConfig 
 } from "../lib/feature-flags";
 import { useAdminAuth } from "../lib/auth";
 import { toast } from "sonner";
@@ -665,7 +650,7 @@ interface FeatureFlagDetailsDialogProps {
   onUpdated: () => void;
 }
 
-function FeatureFlagDetailsDialog({ flag, onClose, onUpdated }: FeatureFlagDetailsDialogProps) {
+function FeatureFlagDetailsDialog({ flag, onClose, onUpdated }: FeatureFlagDetailsDialogProps & { _onUpdated?: () => void }) {
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">

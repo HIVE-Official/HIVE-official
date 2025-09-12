@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Modal, Button, Card, Badge, Input } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Alert } from "@/components/layout/page-container";
 import { authenticatedFetch } from "@/lib/auth-utils";
 import { 
   ArrowRight, 

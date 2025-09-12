@@ -13,7 +13,7 @@ import { useSpaceAnalytics } from '../../../../hooks/use-space-analytics';
 import { useSpaceManagement } from '../../../../hooks/use-space-management';
 import { PostWithComments } from '../../../../components/posts/post-with-comments';
 import { SpaceManagementPanel } from '../../../../components/spaces/space-management-panel';
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@/components/layout/page-container";
 import { Users, AlertTriangle, Loader2, Hash, /* Heart as _Heart, */ MessageSquare, /* Camera as _Camera, */ Code, Calendar, /* ArrowRight as _ArrowRight, */ Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

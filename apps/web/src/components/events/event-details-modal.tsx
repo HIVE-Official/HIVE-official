@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Badge, Card } from "@hive/ui";
-import { Alert, Modal } from "@/components/temp-stubs";
+import { Alert, Modal } from "@/components/layout/page-container";
 import { 
   Calendar, 
   MapPin, 

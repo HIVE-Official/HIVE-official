@@ -147,8 +147,8 @@ border-accent     /* var(--hive-gold) */
 text-muted        /* #6B7280 */
 
 /* Motion Classes */
-duration-[180ms]
-ease-[cubic-bezier(0.33,0.65,0,1)]`}
+duration-180
+ease-hive`}
           </pre>
         </div>
       </div>

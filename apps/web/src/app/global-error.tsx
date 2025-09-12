@@ -114,7 +114,7 @@ export default function GlobalError({
                 <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                   <motion.button
                     onClick={handleReset}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-[var(--hive-gray-700)] rounded-lg hover:bg-[var(--hive-background-secondary)] hover:border-[var(--hive-brand-secondary)]/50 text-[var(--hive-text-inverse)] transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[var(--hive-brand-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-[var(--hive-gray-700)] rounded-lg hover:bg-[var(--hive-background-secondary)] hover:border-[var(--hive-brand-secondary)]/50 text-[var(--hive-text-inverse)] transition-all duration-180 ease-hive focus:ring-2 focus:ring-[var(--hive-brand-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]"
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
                     style={{
@@ -127,7 +127,7 @@ export default function GlobalError({
                   </motion.button>
                   <motion.button
                     onClick={handleGoHome}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] rounded-lg hover:bg-[var(--hive-brand-secondary)]/90 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] focus:ring-2 focus:ring-[var(--hive-brand-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] rounded-lg hover:bg-[var(--hive-brand-secondary)]/90 transition-all duration-180 ease-hive focus:ring-2 focus:ring-[var(--hive-brand-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)]"
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
                     style={{
@@ -170,7 +170,7 @@ export default function GlobalError({
                   Need help? Contact{' '}
                   <a
                     href="mailto:support@thehiveuni.com"
-                    className="text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
+                    className="text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary)]/80 transition-colors duration-180 ease-hive"
                     style={{
                       fontFamily: 'Geist Sans, system-ui, sans-serif',
                       fontWeight: 500

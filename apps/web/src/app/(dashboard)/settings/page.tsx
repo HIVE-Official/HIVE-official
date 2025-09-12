@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { Button, Card, NavigationPreferences, useShell } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@/components/layout/page-container";
+import { ErrorBoundary } from '../../../components/error-boundary';
 import { Settings, User, Bell, Shield, Palette, Globe, Smartphone, LogOut, Download, Trash2, Navigation } from 'lucide-react';
 import { useSession } from '../../../hooks/use-session';
 
-export default function SettingsPage() {
+function SettingsPageContent() {
   const { user, logout } = useSession();
   const { navigationPreference, setNavigationPreference, navigationLayout } = useShell();
   const [isSaving, setIsSaving] = useState(false);
@@ -344,5 +345,13 @@ export default function SettingsPage() {
         </div>
       )}
     </PageContainer>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <ErrorBoundary>
+      <SettingsPageContent />
+    </ErrorBoundary>
   );
 }

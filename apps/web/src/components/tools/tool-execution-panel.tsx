@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Card, Button, Input, Label, Textarea, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Progress } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
+import { Alert, AlertDescription } from "@/components/layout/page-container";
 import {
   Play,
   Square,

@@ -7,9 +7,9 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // Import our composition system for consistent styling
-import { buttonComposition } from "../foundations/component-composition";
+import { buttonComposition } from "../foundations/component-composition.js";
 // Button variants using CSS variables instead of hardcoded values
 const buttonVariants = cva(
 // Base styles using our CSS variables and composition rules
@@ -18,7 +18,7 @@ const buttonVariants = cva(
     "whitespace-nowrap font-medium",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
     "disabled:pointer-events-none disabled:opacity-50",
-    "transition-all duration-[var(--hive-duration-fast)] ease-out",
+    "transition-all duration-180 ease-out",
     // Default border radius from composition
     "rounded-[var(--hive-radius-base)]"
 ], {

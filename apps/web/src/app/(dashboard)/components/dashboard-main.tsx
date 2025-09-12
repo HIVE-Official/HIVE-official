@@ -26,22 +26,28 @@ import {
 //   Button,
 // } from '@hive/ui';
 
-// Temporary imports from temp-stubs until @hive/ui export resolution is fixed
+// Import proper UI components
 import { 
-  Display,
-  Heading,
-  Typography,
   Button,
   Card, 
   CardHeader, 
   CardTitle, 
   CardContent,
-  Badge
-} from '@/components/temp-stubs';
+  Badge,
+  Typography
+} from '@hive/ui';
 
 // Hooks and API
-// import { useUnifiedAuth } from '@hive/ui';
-import { useUnifiedAuth } from '@/components/temp-stubs';
+import { useUnifiedAuth } from '@hive/ui';
+
+// Additional components
+const Display = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div className={`text-2xl font-bold ${className || ''}`}>{children}</div>
+);
+
+const Heading = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <h1 className={`text-xl font-semibold ${className || ''}`}>{children}</h1>
+);
 
 // Components
 import { FeedDisplay } from '../../../components/social/feed-display';

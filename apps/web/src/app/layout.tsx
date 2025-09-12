@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk as SpaceGrotesk } from "next/font/google";
 import { Providers } from "./providers";
-import "@hive/ui/styles.css";
+import "../../../packages/ui/dist/styles.css";
 import "./globals.css";
 import { WelcomeMatProvider } from "../components/welcome-mat-provider";
 import { FeedbackToast } from "../components/feedback-toast";
@@ -21,17 +21,6 @@ const spaceGrotesk = SpaceGrotesk({
 export const metadata: Metadata = {
   title: "HIVE",
   description: "The social platform for builders.",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: 'cover', // For iOS safe areas
-  },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0A0A0B' }
-  ],
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -40,6 +29,18 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false, // Prevent iOS from making phone numbers clickable
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover', // For iOS safe areas
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A0A0B' }
+  ],
 };
 
 export default function RootLayout({

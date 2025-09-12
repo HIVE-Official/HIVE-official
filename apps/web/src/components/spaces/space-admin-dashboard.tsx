@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card, Button, Badge, Modal } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Alert } from "@/components/layout/page-container";
 import { 
   Users, 
   Settings, 

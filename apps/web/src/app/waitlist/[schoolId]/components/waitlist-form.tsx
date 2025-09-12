@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // UI Components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
+import { Alert, AlertDescription } from "@hive/ui";
 import { Input } from "@hive/ui";
 import { Label } from "@hive/ui";
 import { Button } from "@hive/ui";

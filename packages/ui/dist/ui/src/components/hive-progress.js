@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 export const HiveProgress = ({ className, value = 0, max = 100, variant = 'default', ...props }) => {
     const percentage = Math.min(100, Math.max(0, (value / max) * 100));
     const variantColors = {

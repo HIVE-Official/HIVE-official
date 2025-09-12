@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card } from "@hive/ui";
-import { Alert as _Alert } from "@/components/temp-stubs";
+import { Alert as _Alert } from "@hive/ui";
+import { PageContainer } from "@/components/layout/page-container";
 import { LiveToolRuntime as _LiveToolRuntime } from "@hive/ui";
 import { ArrowLeft, Settings, Share, Download, Activity, Zap, Clock, AlertCircle } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";

@@ -14,7 +14,7 @@ const HiveWelcomeFlow = () => (
       className="w-full max-w-md"
     >
       <div 
-        className="bg-[var(--hive-background-secondary)] rounded-xl p-8 text-center space-y-6 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
+        className="bg-[var(--hive-background-secondary)] rounded-xl p-8 text-center space-y-6 transition-all duration-180 ease-hive"
         style={{
           border: '1px solid rgba(var(--hive-gold-rgb), 0.15)',
         }}

@@ -8,12 +8,12 @@ export class ContentProcessor {
 
   static extractMentions(text: string): string[] {
     const mentions = text.match(/@[\w]+/g) || [];
-    return mentions.map((mention: any) => mention.slice(1));
+    return mentions.map((mention: string) => mention.slice(1));
   }
 
   static extractHashtags(text: string): string[] {
     const hashtags = text.match(/#[\w]+/g) || [];
-    return hashtags.map((tag: any) => tag.slice(1));
+    return hashtags.map((tag: string) => tag.slice(1));
   }
 
   static sanitizeContent(content: string): string {

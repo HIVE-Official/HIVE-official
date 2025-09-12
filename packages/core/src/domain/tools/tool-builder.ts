@@ -14,8 +14,8 @@ import {
   ThemeConfig,
   ToolType,
   ToolCategory,
-  ToolStatus,
-  ToolVisibility
+  ToolVisibility,
+  DataType
 } from './tool';
 import { ElementRegistry } from './element-registry';
 import { v4 as uuidv4 } from 'uuid';
@@ -91,7 +91,7 @@ export class ToolBuilder {
   // Composition methods
   addElement(
     elementId: string, 
-    config?: Record<string, any>,
+    config?: Record<string, unknown>,
     position?: { x: number; y: number }
   ): string {
     const element = this.registry.getElement(elementId);
@@ -152,7 +152,7 @@ export class ToolBuilder {
     return this;
   }
 
-  addVariable(name: string, type: Variable['type'], defaultValue?: any): ToolBuilder {
+  addVariable(name: string, type: Variable['type'], defaultValue?: unknown): ToolBuilder {
     const variable: Variable = {
       id: uuidv4(),
       name,
@@ -325,17 +325,17 @@ export class ToolBuilder {
   }
 
   private generateDataSchema(): Tool['configuration']['dataSchema'] {
-    const inputs: Record<string, any> = {};
-    const outputs: Record<string, any> = {};
+    const inputs: Record<string, DataType> = {};
+    const outputs: Record<string, DataType> = {};
 
     this.composition.elements.forEach(el => {
       const element = this.registry.getElement(el.elementId);
       if (element) {
         element.inputs?.forEach(input => {
-          inputs[`${el.instanceId}.${input.id}`] = input.type;
+          inputs[`${el.instanceId}.${input.id}`] = input.type as DataType;
         });
         element.outputs?.forEach(output => {
-          outputs[`${el.instanceId}.${output.id}`] = output.type;
+          outputs[`${el.instanceId}.${output.id}`] = output.type as DataType;
         });
       }
     });
@@ -405,7 +405,7 @@ export class ToolTemplateFactory {
       .setVisibility('space');
 
     // Add question display
-    const questionId = builder.addElement('display-text', {
+    const _questionId = builder.addElement('display-text', {
       text: question,
       variant: 'h2'
     }, { x: 100, y: 50 });
@@ -425,13 +425,13 @@ export class ToolTemplateFactory {
     });
 
     // Add submit button
-    const submitId = builder.addElement('button', {
+    const _submitId = builder.addElement('button', {
       label: 'Submit Vote',
       variant: 'primary'
     }, { x: 100, y: yPos });
 
     // Add results display
-    const resultsId = builder.addElement('display-chart', {
+    const _resultsId = builder.addElement('display-chart', {
       type: 'bar',
       title: 'Results'
     }, { x: 400, y: 150 });
@@ -494,13 +494,13 @@ export class ToolTemplateFactory {
     }, { x: 100, y: 150 });
 
     // Add description field
-    const descriptionId = builder.addElement('text-input', {
+    const _descriptionId = builder.addElement('text-input', {
       label: 'Description',
       placeholder: 'What is this appointment for?'
     }, { x: 100, y: 250 });
 
     // Add book button
-    const bookId = builder.addElement('button', {
+    const _bookId = builder.addElement('button', {
       label: 'Book Appointment',
       variant: 'primary'
     }, { x: 100, y: 350 });

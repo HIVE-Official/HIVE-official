@@ -77,7 +77,7 @@ export function ProfileClient() {
             </p>
             <button 
               onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-[var(--hive-brand-secondary)] text-[var(--hive-text-primary)] rounded-lg font-medium text-sm hover:bg-[var(--hive-brand-secondary)]/90 transition-colors duration-[180ms]"
+              className="mt-4 px-4 py-2 bg-[var(--hive-brand-secondary)] text-[var(--hive-text-primary)] rounded-lg font-medium text-sm hover:bg-[var(--hive-brand-secondary)]/90 transition-colors duration-180"
             >
               Try Again
             </button>

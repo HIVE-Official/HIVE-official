@@ -16,12 +16,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React, { useState, useCallback } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Foundation system imports
-import { typographyComposition } from '../foundations/typography-composition';
-import { layoutComposition } from '../foundations/layout-composition';
-import { iconComposition, AlertCircle, CheckCircle, Eye, EyeOff, Search, Mail, Lock, User } from '../foundations/icon-composition';
-import { motionComposition } from '../foundations/motion-composition';
+import { typographyComposition } from '../foundations/typography-composition.js';
+import { layoutComposition } from '../foundations/layout-composition.js';
+import { iconComposition, AlertCircle, CheckCircle, Eye, EyeOff, Search, Mail, Lock, User } from '../foundations/icon-composition.js';
+import { motionComposition } from '../foundations/motion-composition.js';
 // === FORM FIELD VARIANTS ===
 const formFieldVariants = cva(
 // Base container styles

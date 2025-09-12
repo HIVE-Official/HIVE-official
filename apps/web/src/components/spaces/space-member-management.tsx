@@ -39,7 +39,7 @@ import {
 } from 'lucide-react';
 import { Button, Badge } from "@hive/ui";
 
-import { Alert } from "@/components/temp-stubs";
+import { Alert } from "@/components/layout/page-container";
 // Space Member Management Interface for Claimed Leaders
 export interface MemberManagementProps {
   spaceId: string;

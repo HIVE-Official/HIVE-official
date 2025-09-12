@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button, Card, Badge, Modal, Input } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@/components/layout/page-container";
 import { 
   Users, 
   UserPlus, 

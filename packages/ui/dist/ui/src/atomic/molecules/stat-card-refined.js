@@ -6,10 +6,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
-import { Card, CardContent } from "../ui/card";
+import { cn } from "../../lib/utils.js";
+import { Card, CardContent } from "../ui/card.js";
 // Import our composition system
-import { statCardComposition } from "../foundations/component-composition";
+import { statCardComposition } from "../foundations/component-composition.js";
 // Icon size mapping from composition system
 const iconSizes = {
     sm: "w-[var(--hive-icon-large)] h-[var(--hive-icon-large)]", // 24px
@@ -26,7 +26,7 @@ const statCardVariants = cva(
     "bg-[var(--hive-bg-secondary)]", // Card background
     "border border-[var(--hive-border-subtle)]", // Subtle border
     // Interactive states
-    "transition-all duration-[var(--hive-duration-fast)] ease-out",
+    "transition-all duration-180 ease-out",
     "hover:bg-[var(--hive-bg-interactive)]",
     "hover:border-[var(--hive-border-glass)]",
     "hover:shadow-[var(--hive-shadow-md)]",

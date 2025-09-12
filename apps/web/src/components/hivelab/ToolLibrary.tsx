@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search,
@@ -23,7 +24,9 @@ import {
   TrendingUp,
   Calendar,
   Tag,
-  MoreVertical
+  MoreVertical,
+  X,
+  RotateCcw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -123,14 +126,74 @@ export function ToolLibrary({
   onDuplicateTool,
   className 
 }: ToolLibraryProps) {
-  const [tools, setTools] = useState<Tool[]>(SAMPLE_TOOLS);
-  const [filteredTools, setFilteredTools] = useState<Tool[]>(SAMPLE_TOOLS);
+  const { toast } = useToast();
+  const [tools, setTools] = useState<Tool[]>([]);
+  const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'date' | 'downloads' | 'rating'>('date');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  // Load tools from API
+  const loadTools = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const response = await fetch('/api/tools?limit=50');
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to load tools');
+      }
+      
+      const data = await response.json();
+      
+      // Transform API data to match our Tool interface
+      const transformedTools: Tool[] = (data.tools || []).map((apiTool: any) => ({
+        id: apiTool.id,
+        name: apiTool.name,
+        description: apiTool.description || '',
+        category: apiTool.category || 'utility',
+        elements: apiTool.elements || [],
+        connections: apiTool.connections || [],
+        createdAt: new Date(apiTool.createdAt),
+        updatedAt: new Date(apiTool.updatedAt),
+        author: apiTool.ownerId === userId ? 'current-user' : apiTool.ownerId,
+        downloads: apiTool.analytics?.usage?.allTime || 0,
+        rating: apiTool.analytics?.rating || 0,
+        tags: apiTool.metadata?.tags || [],
+        isPublic: apiTool.visibility === 'public',
+        isFavorite: false, // TODO: Load from user preferences
+        version: apiTool.metadata?.version || '1.0.0'
+      }));
+      
+      setTools(transformedTools);
+    } catch (err) {
+      console.error('Failed to load tools:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load tools');
+      
+      // Fallback to sample data for demo purposes
+      setTools(SAMPLE_TOOLS);
+      
+      toast({
+        title: 'Loading Error',
+        description: 'Using demo data. Please check your connection.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Load tools on component mount
+  useEffect(() => {
+    loadTools();
+  }, [userId, toast]);
 
   // Filter and sort tools
   useEffect(() => {
@@ -212,10 +275,42 @@ export function ToolLibrary({
     ));
   };
 
-  const handleDeleteTool = (toolId: string) => {
-    if (confirm('Are you sure you want to delete this tool?')) {
+  const handleDeleteTool = async (toolId: string) => {
+    if (!confirm('Are you sure you want to delete this tool? This action cannot be undone.')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/tools/${toolId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete tool');
+      }
+
+      // Remove from local state
       setTools(prev => prev.filter(t => t.id !== toolId));
+      
+      toast({
+        title: 'Tool Deleted',
+        description: 'Tool has been permanently deleted',
+        variant: 'default'
+      });
+      
+      // Notify parent component
       onDeleteTool(toolId);
+    } catch (err) {
+      console.error('Failed to delete tool:', err);
+      toast({
+        title: 'Delete Failed',
+        description: err instanceof Error ? err.message : 'Unable to delete tool. Please try again.',
+        variant: 'destructive'
+      });
     }
   };
 
@@ -465,7 +560,30 @@ export function ToolLibrary({
 
       {/* Tools Grid/List */}
       <div className="flex-1 overflow-y-auto p-4">
-        {filteredTools.length > 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="animate-spin h-8 w-8 border-2 border-gray-600 border-t-[var(--hive-brand-primary)] rounded-full mx-auto mb-4" />
+              <p className="text-sm text-gray-500">Loading your tools...</p>
+            </div>
+          </div>
+        ) : error && tools.length === 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-800/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <X className="h-8 w-8 text-red-500" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-400 mb-2">Failed to Load Tools</h3>
+              <p className="text-sm text-gray-500 mb-4">{error}</p>
+              <button
+                onClick={loadTools}
+                className="px-4 py-2 bg-[var(--hive-brand-primary)] text-white rounded-lg text-sm hover:opacity-90 transition-opacity"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        ) : filteredTools.length > 0 ? (
           <div className={cn(
             viewMode === 'grid' 
               ? "grid grid-cols-1 gap-3"
@@ -481,10 +599,20 @@ export function ToolLibrary({
               <div className="w-16 h-16 bg-gray-800 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <FolderOpen className="h-8 w-8 text-gray-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-400 mb-2">No Tools Found</h3>
-              <p className="text-sm text-gray-500">
-                {searchQuery ? 'Try adjusting your search' : 'Create your first tool to get started'}
+              <h3 className="text-lg font-medium text-gray-400 mb-2">
+                {searchQuery ? 'No Tools Found' : 'No Tools Yet'}
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                {searchQuery ? 'Try adjusting your search criteria' : 'Create your first tool to get started'}
               </p>
+              {!searchQuery && (
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent('createNewTool'))}
+                  className="px-4 py-2 bg-[var(--hive-brand-primary)] text-white rounded-lg text-sm hover:opacity-90 transition-opacity"
+                >
+                  Create Your First Tool
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -493,11 +621,51 @@ export function ToolLibrary({
       {/* Footer Stats */}
       <div className="p-3 border-t border-gray-800 bg-gray-900/50 text-xs text-gray-500">
         <div className="flex items-center justify-between">
-          <span>{filteredTools.length} tools</span>
-          <button className="flex items-center gap-1 hover:text-gray-400">
-            <Upload className="h-3 w-3" />
-            Import Tool
-          </button>
+          <span>
+            {isLoading ? 'Loading...' : `${filteredTools.length} of ${tools.length} tools`}
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json,.hive-tool.json';
+                input.onchange = async (e) => {
+                  const file = (e.target as HTMLInputElement).files?.[0];
+                  if (file) {
+                    try {
+                      const text = await file.text();
+                      const toolData = JSON.parse(text);
+                      onLoadTool(toolData);
+                      toast({
+                        title: 'Tool Imported',
+                        description: `${toolData.name} has been imported successfully`,
+                        variant: 'default'
+                      });
+                    } catch (err) {
+                      toast({
+                        title: 'Import Failed',
+                        description: 'Invalid tool file format',
+                        variant: 'destructive'
+                      });
+                    }
+                  }
+                };
+                input.click();
+              }}
+              className="flex items-center gap-1 hover:text-gray-400 transition-colors"
+            >
+              <Upload className="h-3 w-3" />
+              Import Tool
+            </button>
+            <button
+              onClick={loadTools}
+              className="p-1 hover:text-gray-400 transition-colors"
+              title="Refresh Tools"
+            >
+              <RotateCcw className="h-3 w-3" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

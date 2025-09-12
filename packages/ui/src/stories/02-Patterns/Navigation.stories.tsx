@@ -39,7 +39,7 @@ function CampusCommandStrip() {
       <header className="bg-[var(--hive-background-primary)] border-b border-[var(--hive-gray-700)] sticky top-0 z-50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           {/* Logo */}
-          <button className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]">
+          <button className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-180 ease-hive">
             <HiveLogoStorybook size="md" />
             <span 
               className="text-lg font-bold text-[var(--hive-text-primary)] tracking-tight" 
@@ -53,26 +53,26 @@ function CampusCommandStrip() {
           <nav className="flex items-center">
             <div className="flex items-center bg-[var(--hive-background-secondary)] rounded-lg p-1">
               <button 
-                className="px-4 py-1.5 rounded-md bg-[var(--hive-gray-700)] border border-[var(--hive-gold)] text-[var(--hive-text-primary)] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] relative" 
+                className="px-4 py-1.5 rounded-md bg-[var(--hive-gray-700)] border border-[var(--hive-gold)] text-[var(--hive-text-primary)] text-sm font-medium transition-all duration-180 ease-hive relative" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 Feed
                 <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-[var(--hive-gold)] rounded-full"></div>
               </button>
               <button 
-                className="px-4 py-1.5 rounded-md text-[var(--hive-text-primary)]/70 hover:text-[var(--hive-text-primary)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+                className="px-4 py-1.5 rounded-md text-[var(--hive-text-primary)]/70 hover:text-[var(--hive-text-primary)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-180 ease-hive" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 Spaces
               </button>
               <button 
-                className="px-4 py-1.5 rounded-md text-[var(--hive-text-primary)]/70 hover:text-[var(--hive-text-primary)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+                className="px-4 py-1.5 rounded-md text-[var(--hive-text-primary)]/70 hover:text-[var(--hive-text-primary)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-180 ease-hive" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 Profile
               </button>
               <button 
-                className="px-4 py-1.5 rounded-md text-[var(--hive-gold)] hover:text-[var(--hive-gold)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+                className="px-4 py-1.5 rounded-md text-[var(--hive-gold)] hover:text-[var(--hive-gold)]/90 hover:bg-[var(--hive-gray-700)] text-sm font-medium transition-all duration-180 ease-hive" 
                 style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
               >
                 HiveLAB
@@ -83,7 +83,7 @@ function CampusCommandStrip() {
           {/* Right Actions */}
           <div className="flex items-center">
             {/* Command Palette */}
-            <button className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-[var(--hive-background-secondary)] border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)]/50 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] group min-w-[200px]">
+            <button className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-[var(--hive-background-secondary)] border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)]/50 transition-all duration-180 ease-hive group min-w-[200px]">
               <Search className="w-4 h-4 text-[#6B7280] group-hover:text-[var(--hive-text-primary)]" />
               <span 
                 className="text-sm text-[#6B7280] group-hover:text-[var(--hive-text-primary)] flex-1 text-left" 
@@ -121,19 +121,19 @@ function NavigationVariant1() {
           
           <nav className="flex items-center space-x-8">
             <button 
-              className="text-sm font-medium text-[var(--hive-text-primary)] hover:text-[var(--hive-gold)] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+              className="text-sm font-medium text-[var(--hive-text-primary)] hover:text-[var(--hive-gold)] transition-colors duration-180 ease-hive" 
               style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
             >
               Feed
             </button>
             <button 
-              className="text-sm font-medium text-[#6B7280] hover:text-[var(--hive-gold)] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+              className="text-sm font-medium text-[#6B7280] hover:text-[var(--hive-gold)] transition-colors duration-180 ease-hive" 
               style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
             >
               Spaces
             </button>
             <button 
-              className="text-sm font-medium text-[#6B7280] hover:text-[var(--hive-gold)] transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]" 
+              className="text-sm font-medium text-[#6B7280] hover:text-[var(--hive-gold)] transition-colors duration-180 ease-hive" 
               style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}
             >
               Profile
@@ -141,11 +141,11 @@ function NavigationVariant1() {
           </nav>
 
           <div className="flex items-center space-x-3">
-            <button className="h-8 px-3 bg-[var(--hive-gray-700)] text-[var(--hive-text-primary)] hover:bg-[#3A3A3A] border border-[var(--hive-gray-700)] focus:ring-2 focus:ring-[var(--hive-gold)] focus:ring-offset-2 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] rounded-md flex items-center text-sm font-medium">
+            <button className="h-8 px-3 bg-[var(--hive-gray-700)] text-[var(--hive-text-primary)] hover:bg-[#3A3A3A] border border-[var(--hive-gray-700)] focus:ring-2 focus:ring-[var(--hive-gold)] focus:ring-offset-2 transition-all duration-180 ease-hive rounded-md flex items-center text-sm font-medium">
               <Plus className="w-4 h-4 mr-1" />
               Create
             </button>
-            <div className="w-8 h-8 rounded-full bg-[var(--hive-background-secondary)] border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[var(--hive-background-secondary)] border border-[var(--hive-gray-700)] hover:border-[var(--hive-gold)]/50 transition-colors duration-180 ease-hive flex items-center justify-center">
               <span className="text-[var(--hive-text-primary)] text-sm font-medium">U</span>
             </div>
           </div>
@@ -171,7 +171,7 @@ function MobileNavigationVariant1() {
               Feed
             </span>
           </button>
-          <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] hover:bg-[var(--hive-background-secondary)] transition-colors duration-[180ms]">
+          <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] hover:bg-[var(--hive-background-secondary)] transition-colors duration-180">
             <Compass className="w-5 h-5 text-[#6B7280] mb-1" />
             <span 
               className="text-xs font-medium text-[#6B7280]" 
@@ -180,7 +180,7 @@ function MobileNavigationVariant1() {
               Spaces
             </span>
           </button>
-          <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] hover:bg-[var(--hive-background-secondary)] transition-colors duration-[180ms]">
+          <button className="flex-1 flex flex-col items-center py-2 px-1 min-h-[64px] hover:bg-[var(--hive-background-secondary)] transition-colors duration-180">
             <User className="w-5 h-5 text-[#6B7280] mb-1" />
             <span 
               className="text-xs font-medium text-[#6B7280]" 

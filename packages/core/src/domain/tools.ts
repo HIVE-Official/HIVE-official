@@ -56,7 +56,7 @@ export interface ToolElement {
   subType: string;
   position: { x: number; y: number };
   size: { width: number; height: number };
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   connections: ElementConnection[];
   validation?: ElementValidation;
 }
@@ -109,7 +109,7 @@ export interface ToolIntegration {
   type: 'space' | 'platform' | 'external';
   service: string; // e.g., 'posts', 'members', 'canvas', 'google'
   permissions: string[];
-  configuration: Record<string, any>;
+  configuration: Record<string, unknown>;
 }
 
 export interface WebhookConfig {
@@ -153,7 +153,7 @@ export interface ToolInstallation {
   permissions?: Partial<ToolPermissions>;
   
   // Custom settings for this Space
-  customSettings: Record<string, any>;
+  customSettings: Record<string, unknown>;
   
   // Status
   isEnabled: boolean;
@@ -180,15 +180,15 @@ export interface ToolExecution {
   duration?: number;
   
   // Input/Output
-  inputs: Record<string, any>;
-  outputs?: Record<string, any>;
+  inputs: Record<string, unknown>;
+  outputs?: Record<string, unknown>;
   
   // Status
   status: 'running' | 'completed' | 'failed' | 'cancelled';
   error?: {
     message: string;
     code: string;
-    details?: any;
+    details?: unknown;
   };
   
   // Audit trail
@@ -201,7 +201,7 @@ export interface ExecutionLog {
   timestamp: Date;
   level: 'debug' | 'info' | 'warning' | 'error';
   message: string;
-  data?: any;
+  data?: unknown;
 }
 
 // Platform transparency types

@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Users, Search, Filter, UserPlus, MoreVertical, Crown, Shield, User, X, Check, Clock, UserMinus, Settings, Eye, Hash, Calendar, Activity, MessageCircle } from 'lucide-react';
 const ROLE_CONFIG = {
     leader: {

@@ -8,9 +8,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
-import { cn } from '../../lib/utils';
-import { useHapticFeedback, useTouchRipple } from '../../hooks/use-mobile-interactions';
+import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data.js';
+import { cn } from '../../lib/utils.js';
+import { useHapticFeedback, useTouchRipple } from '../../hooks/use-mobile-interactions.js';
 // ============================================================================
 // MOBILE NAVIGATION ITEM
 // ============================================================================

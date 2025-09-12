@@ -21,7 +21,7 @@ const buttonVariants = cva(
     "whitespace-nowrap font-medium",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
     "disabled:pointer-events-none disabled:opacity-50",
-    "transition-all duration-[var(--hive-duration-fast)] ease-out",
+    "transition-all duration-180 ease-out",
     // Default border radius from composition
     "rounded-[var(--hive-radius-base)]"
   ],

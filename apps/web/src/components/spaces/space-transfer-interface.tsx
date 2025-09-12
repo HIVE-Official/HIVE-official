@@ -4,7 +4,7 @@ import React, { useState, useEffect as _useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { authenticatedFetch } from '../../lib/auth-utils';
 import { Button, Badge } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Alert } from "@/components/layout/page-container";
 import { 
   ArrowRight, 
   Clock, 

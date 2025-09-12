@@ -35,7 +35,7 @@ function initializeFirebase() {
       throw new Error('No Firebase admin credentials found');
     }
 
-    const app = admin.initializeApp({
+    const _app = admin.initializeApp({
       credential,
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
@@ -176,7 +176,7 @@ async function seedSpaces() {
   try {
     console.log('🚀 Starting spaces seed...\n');
     
-    const app = initializeFirebase();
+    const _app = initializeFirebase();
     const db = admin.firestore();
     
     console.log('📁 Creating flat spaces collection...\n');

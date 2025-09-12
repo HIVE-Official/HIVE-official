@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { Button, Progress, Input } from '../atoms';
-import { Card } from '../molecules';
+import { Button, Progress, Input } from '../atoms/index.js';
+import { Card } from '../molecules/index.js';
 import { UserPlus, Users, Mail, MessageCircle, Copy, CheckCircle, ChevronRight, Sparkles, Heart, Link, QrCode, Clock, Award, Target } from 'lucide-react';
 const InvitationMethodStep = ({ onComplete, userProfile }) => {
     const [invitesSent, setInvitesSent] = useState(0);

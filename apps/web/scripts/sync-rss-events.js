@@ -23,7 +23,7 @@ function initializeFirebase() {
       });
     }
 
-    const app = admin.initializeApp({
+    const _app = admin.initializeApp({
       credential,
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
@@ -229,7 +229,7 @@ async function saveEventToSpace(event, space, db) {
 }
 
 async function syncRSSEvents() {
-  const app = initializeFirebase();
+  const _app = initializeFirebase();
   const db = admin.firestore();
   
   console.log('🔄 Syncing RSS Events to Firebase Spaces');

@@ -75,7 +75,7 @@ export default function AuthPageClient() {
           className="w-full max-w-md"
         >
           <div 
-            className="bg-surface rounded-xl p-8 text-center space-y-6 transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]"
+            className="bg-surface rounded-xl p-8 text-center space-y-6 transition-all duration-180 ease-hive"
             style={{
               border: '1px solid rgba(255, 215, 0, 0.15)',
             }}
@@ -101,7 +101,7 @@ export default function AuthPageClient() {
             <div className="pt-4">
               <button
                 onClick={() => router.push(ROUTES.AUTH.SCHOOL_SELECT)}
-                className="w-full px-6 py-3 font-sans font-bold rounded-xl transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] hover:scale-[1.02] focus:outline-none text-white"
+                className="w-full px-6 py-3 font-sans font-bold rounded-xl transition-all duration-180 ease-hive hover:scale-[1.02] focus:outline-none text-white"
                 style={{
                   border: '1px solid rgba(255, 215, 0, 0.15)',
                 }}

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from '../../../../../components/error-boundary';
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@/components/layout/page-container";
 
 import { BarChart3, ArrowLeft } from 'lucide-react';
 

@@ -3,7 +3,7 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home, ArrowLeft } from 'lucide-react';
 import { Button, Card } from "@hive/ui";
-import { Alert as _Alert } from "@/components/temp-stubs";
+import { Alert as _Alert } from "@/components/layout/page-container";
 import { logger } from '../../../../lib/logger';
 
 interface SpaceErrorBoundaryState {

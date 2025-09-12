@@ -27,7 +27,7 @@ function initializeFirebase() {
       credential = admin.credential.cert(serviceAccount);
     }
 
-    const app = admin.initializeApp({
+    const _app = admin.initializeApp({
       credential,
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
@@ -43,7 +43,7 @@ async function listRealSpaces() {
   try {
     console.log('📋 Listing all real spaces from Firebase RSS data...\n');
     
-    const app = initializeFirebase();
+    const _app = initializeFirebase();
     const db = admin.firestore();
     
     const spaceTypes = [

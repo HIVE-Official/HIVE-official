@@ -11,7 +11,7 @@ import {
   Button,
   Badge,
 } from "@hive/ui";
-import { PageContainer, Modal } from "@/components/temp-stubs";
+import { PageContainer, Modal } from "@/components/layout/page-container";
 import { useHiveProfile } from '../../../../hooks/use-hive-profile';
 import { ErrorBoundary } from '../../../../components/error-boundary';
 import { 

@@ -67,7 +67,7 @@ export {
 
 // === AUTH COMPONENTS ===
 export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
-export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
 export { SchoolPick } from './components/auth/school-pick';
 
 // === MODALS ===
@@ -228,4 +228,11 @@ export { CompleteHIVEToolsSystem } from './atomic/organisms/complete-hive-tools-
 // Space Utilities
 export { SpaceExploreHub, type SpaceExploreHubProps } from './atomic/organisms/space-explore-hub';
 export { SpaceSurfaceErrorBoundary, useSpaceSurfaceErrorHandler } from './atomic/organisms/space-surface-error-boundary';
-export { SpaceSurfaceSkeleton } from './atomic/organisms/space-surface-skeleton'; 
+export { SpaceSurfaceSkeleton } from './atomic/organisms/space-surface-skeleton';
+
+// === RITUALS SYSTEM ===
+// Ritual Components
+export { RitualCreationModal, type RitualCreationModalProps } from './atomic/organisms/ritual-creation-modal';
+export { RitualParticipationTracker, type RitualParticipationTrackerProps } from './atomic/organisms/ritual-participation-tracker';
+export { RitualCalendar, type RitualCalendarProps } from './atomic/organisms/ritual-calendar';
+export { RitualRewards, type RitualRewardsProps } from './atomic/organisms/ritual-rewards'; 

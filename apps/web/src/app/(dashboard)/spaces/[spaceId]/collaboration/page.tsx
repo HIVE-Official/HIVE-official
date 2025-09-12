@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@/components/layout/page-container";
 
 import { Handshake, ArrowLeft } from "lucide-react";
 import { ErrorBoundary } from "../../../../../components/error-boundary";

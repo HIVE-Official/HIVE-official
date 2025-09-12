@@ -14,7 +14,7 @@ interface Tool {
   elements?: any[];
   config?: any;
 }
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@/components/layout/page-container";
 import { Zap, Wrench, Code, Palette, Database, BarChart3, Users, Rocket, ArrowLeft } from 'lucide-react';
 
 export default function HiveLabPage() {

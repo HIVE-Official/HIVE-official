@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 
 // Temporary imports
-import { useUnifiedAuth } from '@/components/temp-stubs';
+import { useUnifiedAuth } from '@hive/ui';
 
 // Dashboard Data Types
 interface DashboardData {

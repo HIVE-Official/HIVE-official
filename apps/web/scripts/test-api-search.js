@@ -22,7 +22,7 @@ function initializeFirebase() {
       });
     }
 
-    const app = admin.initializeApp({
+    const _app = admin.initializeApp({
       credential,
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
@@ -35,7 +35,7 @@ function initializeFirebase() {
 }
 
 async function getTestToken() {
-  const app = initializeFirebase();
+  const _app = initializeFirebase();
   
   // Create a custom token for testing
   const uid = 'test-user-' + Date.now();

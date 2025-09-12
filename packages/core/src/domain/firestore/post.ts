@@ -195,7 +195,7 @@ export const CreatePostSchema = z.object({
   pollMetadata: PollMetadataSchema.optional(),
   eventMetadata: EventMetadataSchema.optional(),
   toolShareMetadata: ToolShareMetadataSchema.optional(),
-}).refine((data: any) => {
+}).refine((data) => {
   // Ensure metadata matches post type
   if (data.type === 'image' && !data.imageMetadata) return false
   if (data.type === 'poll' && !data.pollMetadata) return false

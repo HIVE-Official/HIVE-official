@@ -78,12 +78,12 @@ function DesktopDevNav() {
 						<Button 
 							variant='outline'
 							size="sm"
-							className="border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)] hover:text-[var(--hive-text-primary)] transition-colors duration-[180ms]"
+							className="border-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)] hover:text-[var(--hive-text-primary)] transition-colors duration-180"
 						>
 							Create
 						</Button>
 						<Link href="/dev/profile">
-							<Avatar className="border border-border hover:border-[var(--hive-brand-secondary)]/50 transition-colors duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)] w-8 h-8">
+							<Avatar className="border border-border hover:border-[var(--hive-brand-secondary)]/50 transition-colors duration-180 ease-hive w-8 h-8">
 								<AvatarFallback className="bg-[#2A2A2A] text-foreground text-sm">
 									{mockUser.fullName.charAt(0)}
 								</AvatarFallback>

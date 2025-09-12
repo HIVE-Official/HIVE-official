@@ -31,7 +31,7 @@ const statCardVariants = cva(
     "border border-[var(--hive-border-subtle)]",  // Subtle border
     
     // Interactive states
-    "transition-all duration-[var(--hive-duration-fast)] ease-out",
+    "transition-all duration-180 ease-out",
     "hover:bg-[var(--hive-bg-interactive)]",
     "hover:border-[var(--hive-border-glass)]",
     "hover:shadow-[var(--hive-shadow-md)]",

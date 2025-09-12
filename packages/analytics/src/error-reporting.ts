@@ -225,7 +225,7 @@ export function setupGlobalErrorHandling(): void {
   };
 
   // Handle unhandled promise rejections
-  window.onunhandledrejection = (event: any) => {
+  window.onunhandledrejection = (event: PromiseRejectionEvent) => {
     // Handle various types of rejection reasons
     let errorToReport: Error | string;
     

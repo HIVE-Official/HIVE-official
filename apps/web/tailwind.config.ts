@@ -140,6 +140,18 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // HIVE Motion System - Standard durations
+      transitionDuration: {
+        '50': '50ms',
+        '90': '90ms',      // micro interactions
+        '180': '180ms',    // standard transitions
+        '240': '240ms',    // complex animations
+        '400': '400ms',    // cinematic moments
+      },
+      // HIVE Motion Curve
+      transitionTimingFunction: {
+        'hive': 'cubic-bezier(0.33, 0.65, 0, 1)',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

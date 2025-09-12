@@ -6,13 +6,9 @@ import {
   Tool,
   ToolComposition,
   ComposedElement,
-  ElementConnection,
-  Variable,
-  Trigger,
   Action,
   ToolInstance,
-  InstanceState,
-  DataType
+  Element
 } from './tool';
 import { ElementRegistry } from './element-registry';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,58 +16,101 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * Runtime Context - Manages execution state
  */
+interface RuntimeVariable {
+  value: unknown;
+  type?: string;
+}
+
+type DynamicRecord = Record<string, unknown>;
+type ValidationRule = {
+  type?: string;
+  required?: boolean;
+  operator?: string;
+  value?: unknown;
+  pattern?: string;
+  min?: number;
+  max?: number;
+  minLength?: number;
+  maxLength?: number;
+};
+type Transform = {
+  type: 'map' | 'filter' | 'reduce' | 'custom';
+  function?: string;
+  initialValue?: unknown;
+};
+type ElementDefinition = Element & {
+  [key: string]: unknown;
+};
+
+interface ElementState {
+  data?: unknown;
+  status?: 'idle' | 'loading' | 'error';
+  visible?: boolean;
+  config?: Record<string, unknown>;
+  [key: string]: unknown; // Allow dynamic properties for port values
+}
+
+interface RuntimeSnapshot {
+  instanceId: string;
+  variables: Record<string, RuntimeVariable>;
+  elementStates: Record<string, ElementState>;
+  errors: string[];
+}
+
+type EventHandler = (...args: unknown[]) => void;
+
 export class RuntimeContext {
-  private variables: Map<string, any> = new Map();
-  private elementStates: Map<string, any> = new Map();
-  private eventHandlers: Map<string, Function[]> = new Map();
+  private variables: Map<string, RuntimeVariable> = new Map();
+  private elementStates: Map<string, ElementState> = new Map();
+  private eventHandlers: Map<string, EventHandler[]> = new Map();
   private errors: Error[] = [];
 
   constructor(
     private instanceId: string,
     private composition: ToolComposition,
-    initialVariables?: Record<string, any>
+    initialVariables?: Record<string, unknown>
   ) {
     // Initialize variables
     composition.variables.forEach(variable => {
       const value = initialVariables?.[variable.name] ?? variable.defaultValue ?? null;
-      this.variables.set(variable.id, value);
+      this.variables.set(variable.id, { value });
     });
   }
 
   // Variable management
-  getVariable(id: string): any {
-    return this.variables.get(id);
+  getVariable(id: string): unknown {
+    return this.variables.get(id)?.value;
   }
 
-  setVariable(id: string, value: any): void {
-    this.variables.set(id, value);
+  setVariable(id: string, value: unknown): void {
+    this.variables.set(id, { value });
     this.emit('variable:changed', { id, value });
   }
 
   // Element state management
-  getElementState(instanceId: string): any {
-    return this.elementStates.get(instanceId) || {};
+  getElementState(instanceId: string): ElementState {
+    return this.elementStates.get(instanceId) || { data: null };
   }
 
-  setElementState(instanceId: string, state: any): void {
+  setElementState(instanceId: string, state: ElementState): void {
     this.elementStates.set(instanceId, state);
     this.emit('element:stateChanged', { instanceId, state });
   }
 
-  updateElementState(instanceId: string, updates: any): void {
+  updateElementState(instanceId: string, updates: Partial<ElementState>): void {
     const current = this.getElementState(instanceId);
     this.setElementState(instanceId, { ...current, ...updates });
   }
 
   // Event handling
-  on(event: string, handler: Function): void {
+  on(event: string, handler: EventHandler): void {
     if (!this.eventHandlers.has(event)) {
       this.eventHandlers.set(event, []);
     }
     this.eventHandlers.get(event)!.push(handler);
   }
 
-  off(event: string, handler: Function): void {
+  off(event: string, handler: EventHandler): void {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
       const index = handlers.indexOf(handler);
@@ -81,7 +120,7 @@ export class RuntimeContext {
     }
   }
 
-  emit(event: string, data?: any): void {
+  emit(event: string, data?: unknown): void {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
       handlers.forEach(handler => {
@@ -113,7 +152,7 @@ export class RuntimeContext {
   }
 
   // Snapshot for persistence
-  snapshot(): any {
+  snapshot(): RuntimeSnapshot {
     return {
       instanceId: this.instanceId,
       variables: Object.fromEntries(this.variables),
@@ -122,15 +161,15 @@ export class RuntimeContext {
     };
   }
 
-  static restore(composition: ToolComposition, snapshot: any): RuntimeContext {
+  static restore(composition: ToolComposition, snapshot: RuntimeSnapshot): RuntimeContext {
     const context = new RuntimeContext(snapshot.instanceId, composition);
     
     Object.entries(snapshot.variables).forEach(([id, value]) => {
-      context.variables.set(id, value);
+      context.variables.set(id, value as RuntimeVariable);
     });
     
     Object.entries(snapshot.elementStates).forEach(([id, state]) => {
-      context.elementStates.set(id, state);
+      context.elementStates.set(id, state as ElementState);
     });
     
     snapshot.errors?.forEach((message: string) => {
@@ -171,7 +210,7 @@ export class ToolRuntimeEngine {
     composition: ToolComposition,
     userId: string,
     spaceId: string,
-    initialData?: Record<string, any>
+    initialData?: Record<string, unknown>
   ): Promise<ToolInstance> {
     const instanceId = uuidv4();
     
@@ -296,13 +335,13 @@ export class ToolRuntimeEngine {
     composition: ToolComposition,
     context: RuntimeContext
   ): Promise<void> {
-    const elementDef = this.registry.getElement(element.elementId);
+    const elementDef = this.registry.getElement(element.elementId) as ElementDefinition;
     if (!elementDef) {
       throw new Error(`Element ${element.elementId} not found`);
     }
 
     // Get input data from connections
-    const inputData: Record<string, any> = {};
+    const inputData: DynamicRecord = {};
     const incomingConnections = composition.connections.filter(
       conn => conn.to.instanceId === element.instanceId
     );
@@ -362,12 +401,12 @@ export class ToolRuntimeEngine {
    * Execute element-specific logic
    */
   private async executeElementLogic(
-    elementDef: any,
+    elementDef: ElementDefinition,
     element: ComposedElement,
-    inputData: Record<string, any>,
+    inputData: DynamicRecord,
     context: RuntimeContext
-  ): Promise<Record<string, any>> {
-    const output: Record<string, any> = {};
+  ): Promise<DynamicRecord> {
+    const output: DynamicRecord = {};
 
     switch (elementDef.category) {
       case 'input':
@@ -398,15 +437,15 @@ export class ToolRuntimeEngine {
           const result = this.evaluateOperator(
             inputData.value,
             inputData.compare,
-            element.config.operator
+            String(element.config.operator || '')
           );
           output.true = result ? inputData.value : null;
           output.false = !result ? inputData.value : null;
         } else if (elementDef.type === 'calculation') {
           output.result = this.calculate(
-            inputData.a,
-            inputData.b,
-            element.config.operation
+            Number(inputData.a || 0),
+            Number(inputData.b || 0),
+            String(element.config.operation || 'add')
           );
         }
         break;
@@ -427,25 +466,25 @@ export class ToolRuntimeEngine {
   /**
    * Helper methods
    */
-  private async applyTransform(value: any, transform: any): Promise<any> {
+  private async applyTransform(value: unknown, transform: Transform): Promise<unknown> {
     switch (transform.type) {
       case 'map':
         return Array.isArray(value) 
-          ? value.map((v: any) => eval(transform.function)(v))
-          : eval(transform.function)(value);
+          ? (value as unknown[]).map((v: unknown) => eval(transform.function as string)(v))
+          : eval(transform.function as string)(value);
       
       case 'filter':
         return Array.isArray(value)
-          ? value.filter((v: any) => eval(transform.function)(v))
+          ? (value as unknown[]).filter((v: unknown) => eval(transform.function as string)(v))
           : value;
       
       case 'reduce':
         return Array.isArray(value)
-          ? value.reduce(eval(transform.function))
+          ? (value as unknown[]).reduce(eval(transform.function as string), transform.initialValue)
           : value;
       
       case 'custom':
-        return eval(transform.function)(value);
+        return eval(transform.function as string)(value);
       
       default:
         return value;
@@ -463,33 +502,33 @@ export class ToolRuntimeEngine {
     }
   }
 
-  private async validateRule(data: any, rule: any, context: RuntimeContext): Promise<boolean> {
+  private async validateRule(data: unknown, rule: ValidationRule, context: RuntimeContext): Promise<boolean> {
     switch (rule.type) {
       case 'required':
         return data != null && data !== '';
       case 'min':
-        return data >= rule.value;
+        return Number(data) >= Number(rule.value || 0);
       case 'max':
-        return data <= rule.value;
+        return Number(data) <= Number(rule.value || Infinity);
       case 'pattern':
-        return new RegExp(rule.value).test(data);
+        return rule.pattern ? new RegExp(rule.pattern).test(String(data)) : true;
       case 'custom':
-        return await this.evaluateCondition(rule.value, context);
+        return await this.evaluateCondition(String(rule.value || ''), context);
       default:
         return true;
     }
   }
 
-  private evaluateOperator(a: any, b: any, operator: string): boolean {
+  private evaluateOperator(a: unknown, b: unknown, operator: string): boolean {
     switch (operator) {
       case 'equals':
         return a === b;
       case 'not-equals':
         return a !== b;
       case 'greater':
-        return a > b;
+        return Number(a) > Number(b);
       case 'less':
-        return a < b;
+        return Number(a) < Number(b);
       case 'contains':
         return String(a).includes(String(b));
       default:
@@ -574,7 +613,7 @@ export class ToolRuntimeEngine {
     }
   }
 
-  private async getComposition(toolId: string): Promise<ToolComposition | null> {
+  private async getComposition(_toolId: string): Promise<ToolComposition | null> {
     // In production, this would fetch from database
     return null;
   }

@@ -22,7 +22,7 @@ function initializeFirebase() {
       });
     }
 
-    const app = admin.initializeApp({
+    const _app = admin.initializeApp({
       credential,
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
@@ -35,7 +35,7 @@ function initializeFirebase() {
 }
 
 async function setupUBRSSFeed() {
-  const app = initializeFirebase();
+  const _app = initializeFirebase();
   const db = admin.firestore();
   
   console.log('🔧 Setting up UB RSS Feed for Events');
