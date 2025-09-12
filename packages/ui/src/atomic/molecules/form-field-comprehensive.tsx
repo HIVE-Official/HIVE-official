@@ -130,7 +130,7 @@ const inputVariants = cva(
     
     // Interaction foundation
     'transition-all',
-    `duration-[${motionComposition.durations.fast.ms}]`,
+    'duration-[150ms]',
     
     // Focus styles using color foundation
     'focus:outline-none',
@@ -284,7 +284,7 @@ const ValidationMessage = React.forwardRef<HTMLDivElement, ValidationMessageProp
           config.bgColor,
           config.borderColor && `border ${config.borderColor}`,
           // Motion foundation
-          `transition-all duration-[${motionComposition.durations.fast.ms}]`,
+          'transition-all duration-[150ms]',
           'animate-in slide-in-from-top-1 fade-in-50',
           className
         )}
@@ -387,7 +387,7 @@ export const ComprehensiveFormField = React.forwardRef<HTMLInputElement, Compreh
               // Required indicator
               required && "after:content-['*'] after:ml-1 after:text-[var(--hive-error-primary)]",
               // Motion foundation
-              `transition-colors duration-[${motionComposition.durations.fast.ms}]`,
+              'transition-colors duration-[150ms]',
               // Focus state
               isFocused && 'text-[var(--hive-gold-primary)]'
             )}
@@ -411,7 +411,7 @@ export const ComprehensiveFormField = React.forwardRef<HTMLInputElement, Compreh
                 // Focus color
                 isFocused && validationState === 'default' && 'text-[var(--hive-gold-primary)]',
                 // Motion foundation
-                `transition-colors duration-[${motionComposition.durations.fast.ms}]`
+                'transition-colors duration-[150ms]'
               )} />
             </div>
           )}
@@ -459,7 +459,7 @@ export const ComprehensiveFormField = React.forwardRef<HTMLInputElement, Compreh
                 'hover:text-[var(--hive-text-primary)]',
                 'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20',
                 // Motion foundation
-                `transition-colors duration-[${motionComposition.durations.fast.ms}]`,
+                'transition-colors duration-[150ms]',
                 disabled && 'opacity-50 cursor-not-allowed'
               )}
               onClick={() => setShowPassword(!showPassword)}

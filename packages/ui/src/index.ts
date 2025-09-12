@@ -67,7 +67,7 @@ export {
 
 // === AUTH COMPONENTS ===
 export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
 export { SchoolPick } from './components/auth/school-pick';
 
 // === MODALS ===

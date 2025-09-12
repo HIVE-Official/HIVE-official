@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
-import { Button } from '../atoms/button-enhanced.js';
-import { Card } from '../../components/ui/card.js';
-import { Text } from '../atoms/text.js';
+import { cn } from '../../lib/utils';
+import { Button } from '../atoms/button-enhanced';
+import { Card } from '../../components/ui/card';
+import { Text } from '../atoms/text';
 import { Inbox, Search, Users, FileX, Wifi, RefreshCw } from 'lucide-react';
 export function EmptyState({ variant = 'default', icon, title, description, action, secondaryAction, size = 'md', className, children }) {
     const getDefaultIcon = (variant) => {

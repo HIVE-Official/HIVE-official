@@ -39,7 +39,7 @@ const userIdentityVariants = cva(
     // Interaction foundation
     'cursor-pointer',
     'transition-all',
-    `duration-[${motionComposition.durations.fast.ms}]`,
+    'duration-[150ms]',
     
     // Campus social context
     'group'
@@ -193,7 +193,7 @@ const StatusIndicator = ({ status, className }: { status: string; className?: st
         // Position
         'absolute -bottom-0.5 -right-0.5',
         // Animation using motion foundation
-        `transition-all duration-[${motionComposition.durations.fast.ms}]`,
+        'transition-all duration-[150ms]',
         className
       )}
       title={config.label}
@@ -275,7 +275,7 @@ export const UserIdentity = React.forwardRef<HTMLDivElement, UserIdentityProps>(
               
               // Hover effects using interaction foundation
               'transition-all',
-              `duration-[${motionComposition.durations.fast.ms}]`,
+              'duration-[150ms]',
               onAvatarClick && 'cursor-pointer hover:scale-105',
               
               // Status ring for online users
@@ -331,7 +331,7 @@ export const UserIdentity = React.forwardRef<HTMLDivElement, UserIdentityProps>(
                 // Hover effect for interactive
                 interactive !== 'none' && 'group-hover:text-[var(--hive-gold-primary)]',
                 // Transition using motion foundation
-                `transition-colors duration-[${motionComposition.durations.fast.ms}]`
+                'transition-colors duration-[150ms]'
               )}
             >
               {name}
@@ -362,7 +362,7 @@ export const UserIdentity = React.forwardRef<HTMLDivElement, UserIdentityProps>(
                 // Campus social styling
                 'opacity-80',
                 // Transition
-                `transition-all duration-[${motionComposition.durations.fast.ms}]`
+                'transition-all duration-[150ms]'
               )}
             >
               @{handle}

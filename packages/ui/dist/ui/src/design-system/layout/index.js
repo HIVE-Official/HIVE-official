@@ -2,9 +2,9 @@
  * HIVE Layout Components
  * Campus-first responsive layout system
  */
-export { Grid } from './grid.js';
-export { Container } from './container.js';
-export { Stack } from './stack.js';
+export { Grid } from './grid';
+export { Container } from './container';
+export { Stack } from './stack';
 // Re-export layout utilities
-export { responsiveBreakpoints, responsiveSpace, touchTargets } from '../../lib/responsive-foundation.js';
+export { responsiveBreakpoints, responsiveSpace, touchTargets } from '../../lib/responsive-foundation';
 //# sourceMappingURL=index.js.map

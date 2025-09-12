@@ -1410,8 +1410,8 @@ export declare const ShareToolSchema: z.ZodObject<{
     requiresApproval: boolean;
     expiresAt?: Date | undefined;
 }, {
-    permission?: "view" | "edit" | "comment" | undefined;
     expiresAt?: Date | undefined;
+    permission?: "view" | "edit" | "comment" | undefined;
     requiresApproval?: boolean | undefined;
 }>;
 export type ShareTool = z.infer<typeof ShareToolSchema>;

@@ -242,21 +242,23 @@ export const useEventStore = create<EventState>()(
           eventReminders: Array.from(state.eventReminders),
           recentSearches: state.recentSearches
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        merge: (persistedState: any, currentState) => ({
-          ...currentState,
-          ...persistedState,
-          rsvpEvents: new Set(persistedState.rsvpEvents || []),
-          interestedEvents: new Set(persistedState.interestedEvents || []),
-          eventReminders: new Map(persistedState.eventReminders || [])
-        })
+        merge: (persistedState: unknown, currentState) => {
+          const state = persistedState as Partial<EventState>;
+          return {
+            ...currentState,
+            ...state,
+            rsvpEvents: new Set(state.rsvpEvents || []),
+            interestedEvents: new Set(state.interestedEvents || []),
+            eventReminders: new Map(state.eventReminders || [])
+          };
+        }
       }
     )
   )
 );
 
 // Selectors
-export const useEventFilters = () => useEventStore((state: any) => state.filters);
-export const useEventViewMode = () => useEventStore((state: any) => state.viewMode);
-export const useRSVPEvents = () => useEventStore((state: any) => state.rsvpEvents);
-export const useInterestedEvents = () => useEventStore((state: any) => state.interestedEvents);
+export const useEventFilters = () => useEventStore((state) => state.filters);
+export const useEventViewMode = () => useEventStore((state) => state.viewMode);
+export const useRSVPEvents = () => useEventStore((state) => state.rsvpEvents);
+export const useInterestedEvents = () => useEventStore((state) => state.interestedEvents);

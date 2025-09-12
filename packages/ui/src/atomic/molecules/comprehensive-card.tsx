@@ -59,7 +59,7 @@ const comprehensiveCardVariants = cva(
     
     // Motion foundation
     'transition-all',
-    `duration-[${motionComposition.durations.standard.ms}]`,
+    'duration-[200ms]',
     
     // Campus social context
     'group'
@@ -354,7 +354,7 @@ const CardHeaderComponent = React.forwardRef<HTMLDivElement, CardHeaderComponent
                 'hover:text-[var(--hive-text-primary)]',
                 'hover:bg-[var(--hive-bg-subtle)]',
                 'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20',
-                `transition-colors duration-[${motionComposition.durations.fast.ms}]`
+                'transition-colors duration-[150ms]'
               )}
               onClick={() => setShowMenu(!showMenu)}
               aria-label="Card menu"
@@ -388,7 +388,7 @@ const CardHeaderComponent = React.forwardRef<HTMLDivElement, CardHeaderComponent
                         ? 'text-[var(--hive-error-primary)] hover:bg-[var(--hive-error-background)]'
                         : 'text-[var(--hive-text-primary)] hover:bg-[var(--hive-bg-subtle)]',
                       'disabled:opacity-50 disabled:cursor-not-allowed',
-                      `transition-colors duration-[${motionComposition.durations.fast.ms}]`
+                      'transition-colors duration-[150ms]'
                     )}
                     disabled={action.disabled}
                     onClick={() => {
@@ -473,7 +473,7 @@ const CardActionsComponent = React.forwardRef<HTMLDivElement, CardActionsCompone
                   // States
                   'disabled:opacity-50 disabled:cursor-not-allowed',
                   'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20',
-                  `transition-all duration-[${motionComposition.durations.fast.ms}]`
+                  'transition-all duration-[150ms]'
                 )}
                 disabled={action.disabled}
                 onClick={() => {

@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/auth-store';
 import { useProfileStore, type ProfileData, type SpaceMembership, type ProfileAnalytics } from '../stores/profile-store';
 
 // API client functions
-async function fetchUserProfile(userId: string): Promise<ProfileData> {
+async function fetchUserProfile(_userId: string): Promise<ProfileData> {
   const token = await useAuthStore.getState().user?.getIdToken();
   const response = await fetch(`/api/profile/me`, {
     headers: {
@@ -188,7 +188,7 @@ export function useUserAnalytics(userId = 'me') {
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
   const { updateProfile } = useProfileStore();
-  const _user = useAuthStore((state: any) => state.user);
+  const _user = useAuthStore((state) => state.user);
   
   return useMutation({
     mutationFn: (updates: Partial<ProfileData>) => updateUserProfile('me', updates),
@@ -214,7 +214,7 @@ export function useUpdateProfile() {
       // Set error in store
       useProfileStore.getState().setProfileError(error.message);
     },
-    onSuccess: (data: any) => {
+    onSuccess: (data: ProfileData) => {
       // Update cache with server response
       queryClient.setQueryData(queryKeys.profile('me'), data);
       
@@ -235,7 +235,7 @@ export function useUploadProfilePhoto() {
   
   return useMutation({
     mutationFn: uploadProfilePhoto,
-    onSuccess: (data: any) => {
+    onSuccess: (data: { avatarUrl: string }) => {
       // Update profile with new avatar URL
       updateProfile({ avatarUrl: data.avatarUrl });
       

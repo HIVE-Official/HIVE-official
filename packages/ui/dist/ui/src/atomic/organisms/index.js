@@ -2,48 +2,48 @@
 // Built using molecules and atoms with consistent HIVE patterns
 // === IMPLEMENTED ORGANISMS ===
 // Only export what actually exists to avoid build errors
-export * from './hive-space-card.js';
-export * from './header.js';
-export { ProfileCard } from './profile-card.js';
-export * from './profile-dashboard.js';
-export * from './profile-system.js';
+export * from './hive-space-card';
+export * from './header';
+export { ProfileCard } from './profile-card';
+export * from './profile-dashboard';
+export * from './profile-system';
 // === HIVE SPACES SYSTEM ===
-export * from './space-explore-hub.js';
-export * from './space-dashboard.js';
-export * from './space-member-directory.js';
-export * from './space-category-browser.js';
+export * from './space-explore-hub';
+export * from './space-dashboard';
+export * from './space-member-directory';
+export * from './space-category-browser';
 // === HIVE SPACE SURFACES ===
-export * from './hive-posts-surface.js';
-export * from './hive-members-surface.js';
-export * from './hive-events-surface.js';
-export * from './hive-pinned-surface.js';
-export * from './hive-tools-surface.js';
+export * from './hive-posts-surface';
+export * from './hive-members-surface';
+export * from './hive-events-surface';
+export * from './hive-pinned-surface';
+export * from './hive-tools-surface';
 // === SPACE UTILITY COMPONENTS ===
-export * from './space-surface-error-boundary.js';
-export * from './space-surface-skeleton.js';
+export * from './space-surface-error-boundary';
+export * from './space-surface-skeleton';
 // === HIVE TOOLS SYSTEM ===
-export * from './tool-library-modal.js';
-export * from './tool-configuration-panel.js';
+export * from './tool-library-modal';
+export * from './tool-configuration-panel';
 // === HIVE CONTENT CREATION ===
-export * from './post-creation-modal.js';
+export * from './post-creation-modal';
 // === HIVE FEED COMPONENTS ===
 // Note: Feed components deleted in nuclear rebuild
 // === HIVE FEED & RITUALS SYSTEM ===
-export * from './rituals-hub.js';
-export * from './locked-feed-skeleton.js';
-export * from './ritual-initialize-workflow.js';
-export * from './ritual-discover-workflow.js';
-export * from './ritual-connect-workflow.js';
-export * from './activity-feed.js';
+export * from './rituals-hub';
+export * from './locked-feed-skeleton';
+export * from './ritual-initialize-workflow';
+export * from './ritual-discover-workflow';
+export * from './ritual-connect-workflow';
+export * from './activity-feed';
 // === HIVE PROFILE SYSTEM ===
-export * from './profile-avatar-widget.js';
-export * from './profile-calendar-widget.js';
-export * from './profile-tools-widget.js';
-export * from './profile-spaces-widget.js';
-export { ProfileActivityWidget } from './profile-activity-widget.js';
-export * from './profile-ghost-mode-widget.js';
-export * from './profile-hivelab-widget.js';
-export * from './profile-stats-widget.js';
+export * from './profile-avatar-widget';
+export * from './profile-calendar-widget';
+export * from './profile-tools-widget';
+export * from './profile-spaces-widget';
+export { ProfileActivityWidget } from './profile-activity-widget';
+export * from './profile-ghost-mode-widget';
+export * from './profile-hivelab-widget';
+export * from './profile-stats-widget';
 // === PLANNED ORGANISMS ===
 // These will be implemented as part of the atomic design system completion
 // export * from './sidebar';

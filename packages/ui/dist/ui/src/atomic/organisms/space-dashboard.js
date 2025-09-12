@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
-import { cn } from '../../lib/utils.js';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { cn } from '../../lib/utils';
 import { Users, Settings, Plus, MoreHorizontal, Crown, UserPlus, Share2, Bell, Calendar, Hash, MessageSquare, Activity } from 'lucide-react';
 export const SpaceDashboard = ({ space, posts, plantedTools, currentUser, onJoinSpace, onLeaveSpace, onPlantTool, onConfigureTool, onRemoveTool, onCreatePost, onPostReaction, onShareSpace, onManageSpace, variant = 'default', showToolGrid = true, className }) => {
     const [activeTab, setActiveTab] = useState('posts');

@@ -143,7 +143,7 @@ export function useLikePost() {
           
           return {
             ...old,
-            pages: old.pages.map((page: any) => ({
+            pages: old.pages.map((page) => ({
               ...page,
               posts: page.posts.map((post: Post) =>
                 post.id === postId
@@ -201,7 +201,7 @@ export function useBookmarkPost() {
           
           return {
             ...old,
-            pages: old.pages.map((page: any) => ({
+            pages: old.pages.map((page) => ({
               ...page,
               posts: page.posts.map((post: Post) =>
                 post.id === postId
@@ -255,7 +255,7 @@ export function useSharePost() {
           
           return {
             ...old,
-            pages: old.pages.map((page: any) => ({
+            pages: old.pages.map((page) => ({
               ...page,
               posts: page.posts.map((post: Post) =>
                 post.id === postId
@@ -305,7 +305,7 @@ export function useDeletePost() {
           
           return {
             ...old,
-            pages: old.pages.map((page: any) => ({
+            pages: old.pages.map((page) => ({
               ...page,
               posts: page.posts.filter((post: Post) => post.id !== postId),
             })),

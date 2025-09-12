@@ -1441,7 +1441,7 @@ export declare const BuilderBehaviorSchema: z.ZodObject<{
             intermediateElements: number;
             advancedElements: number;
         };
-        collaborationStyle: "mixed" | "solo" | "collaborative";
+        collaborationStyle: "mixed" | "collaborative" | "solo";
         shareFrequency: "always" | "never" | "rarely" | "sometimes" | "often";
     }, {
         preferredElements: string[];
@@ -1453,7 +1453,7 @@ export declare const BuilderBehaviorSchema: z.ZodObject<{
             intermediateElements: number;
             advancedElements: number;
         };
-        collaborationStyle: "mixed" | "solo" | "collaborative";
+        collaborationStyle: "mixed" | "collaborative" | "solo";
         shareFrequency: "always" | "never" | "rarely" | "sometimes" | "often";
     }>;
     timeframe: z.ZodObject<{
@@ -1477,7 +1477,7 @@ export declare const BuilderBehaviorSchema: z.ZodObject<{
             intermediateElements: number;
             advancedElements: number;
         };
-        collaborationStyle: "mixed" | "solo" | "collaborative";
+        collaborationStyle: "mixed" | "collaborative" | "solo";
         shareFrequency: "always" | "never" | "rarely" | "sometimes" | "often";
     };
     userIdHash: string;
@@ -1496,7 +1496,7 @@ export declare const BuilderBehaviorSchema: z.ZodObject<{
             intermediateElements: number;
             advancedElements: number;
         };
-        collaborationStyle: "mixed" | "solo" | "collaborative";
+        collaborationStyle: "mixed" | "collaborative" | "solo";
         shareFrequency: "always" | "never" | "rarely" | "sometimes" | "often";
     };
     userIdHash: string;

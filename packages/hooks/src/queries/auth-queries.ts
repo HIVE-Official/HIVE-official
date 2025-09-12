@@ -67,7 +67,7 @@ export function useSendMagicLink() {
       
       return response.json();
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to send magic link', { error });
     }
   });
@@ -110,7 +110,7 @@ export function useVerifyMagicLink() {
       queryClient.setQueryData(['auth', 'user'], user);
       logger.info('Magic link verified successfully', { userId: user.id });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to verify magic link', { error });
     }
   });
@@ -154,11 +154,11 @@ export function useSignUp() {
       
       return profile;
     },
-    onSuccess: (user: any) => {
+    onSuccess: (user: UserProfile) => {
       queryClient.setQueryData(['auth', 'user'], user);
       logger.info('User signed up successfully', { userId: user.id });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to sign up', { error });
     }
   });
@@ -182,11 +182,11 @@ export function useSignIn() {
       
       return profile;
     },
-    onSuccess: (user: any) => {
+    onSuccess: (user: UserProfile) => {
       queryClient.setQueryData(['auth', 'user'], user);
       logger.info('User signed in successfully', { userId: user.id });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to sign in', { error });
     }
   });
@@ -204,7 +204,7 @@ export function useSignOut() {
       queryClient.clear();
       logger.info('User signed out successfully');
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to sign out', { error });
     }
   });
@@ -219,7 +219,7 @@ export function useResetPassword() {
     onSuccess: () => {
       logger.info('Password reset email sent');
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to send password reset email', { error });
     }
   });
@@ -312,7 +312,7 @@ export function useCompleteOnboarding() {
       
       return response.json();
     },
-    onSuccess: (data: any) => {
+    onSuccess: (data: UserProfile) => {
       // Update user in cache
       queryClient.setQueryData(['auth', 'user'], (old: UserProfile | undefined) => ({
         ...old,
@@ -322,7 +322,7 @@ export function useCompleteOnboarding() {
       
       logger.info('Onboarding completed successfully');
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to complete onboarding', { error });
     }
   });
@@ -413,7 +413,7 @@ export function useDeleteAccount() {
       queryClient.clear();
       logger.info('Account deleted successfully');
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to delete account', { error });
     }
   });

@@ -15,13 +15,13 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React, { useState } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Foundation system imports
-import { motionComposition } from '../foundations/motion-composition.js';
-import { typographyComposition } from '../foundations/typography-composition.js';
-import { layoutComposition } from '../foundations/layout-composition.js';
-import { iconComposition, Heart, MessageCircle, Share2 } from '../foundations/icon-composition.js';
-import { shadowComposition } from '../foundations/shadow-composition.js';
+import { motionComposition } from '../foundations/motion-composition';
+import { typographyComposition } from '../foundations/typography-composition';
+import { layoutComposition } from '../foundations/layout-composition';
+import { iconComposition, Heart, MessageCircle, Share2 } from '../foundations/icon-composition';
+import { shadowComposition } from '../foundations/shadow-composition';
 // === SOCIAL INTERACTION VARIANTS ===
 const socialInteractionVariants = cva(
 // Base styles using foundation systems
@@ -169,7 +169,7 @@ const SocialActionButton = React.forwardRef(({ action, showLabel, showCount, dis
         // Border foundation
         'border border-transparent', 
         // Interaction foundation
-        'cursor-pointer', 'transition-all', `duration-[${motionComposition.durations.fast.ms}]`, 'active:scale-95', 
+        'cursor-pointer', 'transition-all', 'duration-[150ms]', 'active:scale-95', 
         // Focus ring using border foundation
         'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20', 
         // Campus social hover effects
@@ -196,13 +196,13 @@ const SocialActionButton = React.forwardRef(({ action, showLabel, showCount, dis
             'hover:text-[var(--hive-text-secondary)]'
         ].join(' ')), disabled: disabled, onClick: handleClick, "aria-pressed": action.isActive, title: `${action.label || config.defaultLabel}${showCount ? ` (${action.count})` : ''}`, children: [_jsx(IconComponent, { className: cn('hive-social-icon', 'shrink-0', 
                 // Motion foundation - smooth icon transitions
-                `transition-transform duration-[${motionComposition.durations.fast.ms}]`, 
+                'transition-transform duration-[150ms]', 
                 // Social animation on active
                 action.isActive && isAnimating && 'scale-110 rotate-6') }), (showLabel || showCount) && (_jsxs("div", { className: "flex items-center gap-1.5", children: [showLabel && (_jsx("span", { className: "hive-social-label", children: action.label || config.defaultLabel })), showCount && action.count > 0 && (_jsx("span", { className: cn('hive-social-count', 'font-[var(--hive-font-family-primary)]', 'font-medium', 'tabular-nums', // Consistent number width
                         // Slightly muted when not active
                         !action.isActive && 'text-[var(--hive-text-muted)]', 
                         // Motion foundation - smooth count updates
-                        `transition-all duration-[${motionComposition.durations.fast.ms}]`), children: formatCount(action.count) }))] }))] }));
+                        'transition-all duration-[150ms]'), children: formatCount(action.count) }))] }))] }));
 });
 SocialActionButton.displayName = 'SocialActionButton';
 // === MAIN COMPONENT ===

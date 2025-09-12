@@ -2,7 +2,7 @@
  * HIVE Dark Theme
  * Campus-optimized dark theme with reduced eye strain for late-night study sessions
  */
-import { baseTheme } from './base.js';
+import { baseTheme } from './base';
 export const darkTheme = {
     ...baseTheme,
     name: 'hive-dark',

@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useRef, useEffect, useState } from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export function MobileInputHandler({ children, className, preventViewportShift = true, autoScrollToInput = true, onKeyboardShow, onKeyboardHide }) {
     const containerRef = useRef(null);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);

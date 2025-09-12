@@ -140,7 +140,7 @@ export function useCreateTool() {
         ratingCount: 0
       } as Tool;
     },
-    onSuccess: (newTool: any) => {
+    onSuccess: (newTool: Tool) => {
       // Invalidate tools list
       queryClient.invalidateQueries({ queryKey: ['tools'] });
       
@@ -149,7 +149,7 @@ export function useCreateTool() {
       
       logger.info('Tool created successfully', { toolId: newTool.id });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to create tool', { error });
     }
   });
@@ -158,7 +158,12 @@ export function useCreateTool() {
 export function useUpdateTool() {
   const queryClient = useQueryClient();
   
-  return useMutation({
+  return useMutation<
+    { toolId: string; updates: Partial<Tool> },
+    Error,
+    { toolId: string; updates: Partial<Tool> },
+    { previousTool?: Tool }
+  >({
     mutationFn: async ({ toolId, updates }: { 
       toolId: string; 
       updates: Partial<Tool> 
@@ -171,7 +176,7 @@ export function useUpdateTool() {
       
       await updateDoc(toolRef, updateData);
       
-      return { toolId, updates: updateData };
+      return { toolId, updates };
     },
     onMutate: async ({ toolId, updates }) => {
       // Cancel queries
@@ -188,14 +193,14 @@ export function useUpdateTool() {
       
       return { previousTool };
     },
-    onError: (error, variables, context) => {
+    onError: (error: Error, variables, context) => {
       // Rollback on error
       if (context?.previousTool) {
         queryClient.setQueryData(['tool', variables.toolId], context.previousTool);
       }
       logger.error('Failed to update tool', { error });
     },
-    onSettled: (data: any) => {
+    onSettled: (data: { toolId: string; updates: Partial<Tool> } | undefined) => {
       if (data) {
         queryClient.invalidateQueries({ queryKey: ['tool', data.toolId] });
         queryClient.invalidateQueries({ queryKey: ['tools'] });
@@ -219,7 +224,7 @@ export function useDeleteTool() {
       
       logger.info('Tool deleted successfully', { toolId });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to delete tool', { error });
     }
   });
@@ -274,10 +279,10 @@ export function useExecuteTool() {
       return {
         ...execution,
         outputs,
-        status: 'completed'
+        status: 'completed' as const
       };
     },
-    onSuccess: (execution: any) => {
+    onSuccess: (execution: ToolExecution) => {
       // Invalidate tool to update execution count
       queryClient.invalidateQueries({ queryKey: ['tool', execution.toolId] });
       queryClient.invalidateQueries({ queryKey: ['tool-executions', execution.toolId] });
@@ -287,7 +292,7 @@ export function useExecuteTool() {
         executionId: execution.id 
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to execute tool', { error });
     }
   });
@@ -353,7 +358,7 @@ export function useRateTool() {
       queryClient.invalidateQueries({ queryKey: ['tool', toolId] });
       logger.info('Tool rated successfully', { toolId });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to rate tool', { error });
     }
   });
@@ -382,7 +387,7 @@ export function useUpdateToolPermissions() {
       queryClient.invalidateQueries({ queryKey: ['tool', toolId] });
       logger.info('Tool permissions updated', { toolId });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to update tool permissions', { error });
     }
   });
@@ -411,7 +416,7 @@ export function useShareTool() {
       queryClient.invalidateQueries({ queryKey: ['tool', toolId] });
       logger.info('Tool shared successfully', { toolId });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       logger.error('Failed to share tool', { error });
     }
   });

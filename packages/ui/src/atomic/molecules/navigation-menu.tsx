@@ -55,7 +55,7 @@ const navigationItemVariants = cva(
     
     // Interaction foundation
     'transition-all',
-    `duration-[${motionComposition.durations.fast.ms}]`,
+    'duration-[150ms]',
     
     // Focus ring using border foundation
     'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20',
@@ -291,7 +291,7 @@ const NavigationBadge = React.forwardRef<HTMLSpanElement, NavigationBadgeProps>(
         'text-[var(--hive-bg-primary)]',
         
         // Motion foundation
-        `transition-all duration-[${motionComposition.durations.fast.ms}]`,
+        'transition-all duration-[150ms]',
         'animate-in zoom-in-50',
         
         className
@@ -359,7 +359,7 @@ const NavigationItemComponent = React.forwardRef<HTMLButtonElement, NavigationIt
             'hive-nav-icon',
             'shrink-0',
             // Motion foundation - smooth icon transitions
-            `transition-transform duration-[${motionComposition.durations.fast.ms}]`,
+            'transition-transform duration-[150ms]',
             // Active state animation
             isActive && 'scale-110'
           )} />

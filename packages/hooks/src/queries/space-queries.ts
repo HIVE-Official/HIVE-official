@@ -128,9 +128,9 @@ export function useJoinSpace() {
       const previousSpace = queryClient.getQueryData(queryKeys.space(spaceId));
 
       // Optimistically update spaces list
-      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old: any) => {
+      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old) => {
         if (!old) return old;
-        return old.map((space: any) =>
+        return old.map((space) =>
           space.id === spaceId
             ? { ...space, isMember: true, memberCount: space.memberCount + 1 }
             : space
@@ -138,7 +138,7 @@ export function useJoinSpace() {
       });
 
       // Optimistically update single space
-      queryClient.setQueryData<Space>(queryKeys.space(spaceId), (old: any) => {
+      queryClient.setQueryData<Space>(queryKeys.space(spaceId), (old) => {
         if (!old) return old;
         return { ...old, isMember: true, memberCount: old.memberCount + 1 };
       });
@@ -181,16 +181,16 @@ export function useLeaveSpace() {
       const previousSpace = queryClient.getQueryData(queryKeys.space(spaceId));
 
       // Optimistically update
-      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old: any) => {
+      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old) => {
         if (!old) return old;
-        return old.map((space: any) =>
+        return old.map((space) =>
           space.id === spaceId
             ? { ...space, isMember: false, memberCount: Math.max(0, space.memberCount - 1) }
             : space
         );
       });
 
-      queryClient.setQueryData<Space>(queryKeys.space(spaceId), (old: any) => {
+      queryClient.setQueryData<Space>(queryKeys.space(spaceId), (old) => {
         if (!old) return old;
         return { ...old, isMember: false, memberCount: Math.max(0, old.memberCount - 1) };
       });
@@ -257,9 +257,9 @@ export function useUpdateSpaceSettings() {
       queryClient.setQueryData(queryKeys.space(spaceId), updatedSpace);
       
       // Update spaces list
-      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old: any) => {
+      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old) => {
         if (!old) return old;
-        return old.map((space: any) =>
+        return old.map((space) =>
           space.id === spaceId ? { ...space, ...updatedSpace } : space
         );
       });
@@ -278,9 +278,9 @@ export function useUpdateMemberRole() {
     
     onSuccess: (_, { spaceId, memberId, role }) => {
       // Update members cache
-      queryClient.setQueryData<SpaceMember[]>(queryKeys.spaceMembers(spaceId), (old: any) => {
+      queryClient.setQueryData<SpaceMember[]>(queryKeys.spaceMembers(spaceId), (old) => {
         if (!old) return old;
-        return old.map((member: any) =>
+        return old.map((member) =>
           member.id === memberId 
             ? { ...member, role: role as 'member' | 'moderator' | 'admin' | 'owner' }
             : member
@@ -299,21 +299,21 @@ export function useRemoveMember() {
     
     onSuccess: (_, { spaceId, memberId }) => {
       // Remove member from cache
-      queryClient.setQueryData<SpaceMember[]>(queryKeys.spaceMembers(spaceId), (old: any) => {
+      queryClient.setQueryData<SpaceMember[]>(queryKeys.spaceMembers(spaceId), (old) => {
         if (!old) return old;
-        return old.filter((member: any) => member.id !== memberId);
+        return old.filter((member) => member.id !== memberId);
       });
 
       // Update member count in space
-      queryClient.setQueryData<Space>(queryKeys.space(spaceId), (old: any) => {
+      queryClient.setQueryData<Space>(queryKeys.space(spaceId), (old) => {
         if (!old) return old;
         return { ...old, memberCount: Math.max(0, old.memberCount - 1) };
       });
 
       // Update spaces list
-      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old: any) => {
+      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old) => {
         if (!old) return old;
-        return old.map((space: any) =>
+        return old.map((space) =>
           space.id === spaceId 
             ? { ...space, memberCount: Math.max(0, space.memberCount - 1) }
             : space
@@ -334,7 +334,7 @@ export function useCreatePost() {
       queryClient.invalidateQueries({ queryKey: ['space-posts', spaceId] });
       
       // Update space metrics if available
-      queryClient.setQueryData<Space>(queryKeys.space(spaceId), (old: any) => {
+      queryClient.setQueryData<Space>(queryKeys.space(spaceId), (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -346,9 +346,9 @@ export function useCreatePost() {
       });
 
       // Update spaces list metrics
-      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old: any) => {
+      queryClient.setQueryData<Space[]>(queryKeys.spaces(), (old) => {
         if (!old) return old;
-        return old.map((space: any) =>
+        return old.map((space) =>
           space.id === spaceId && space.metrics
             ? {
                 ...space,

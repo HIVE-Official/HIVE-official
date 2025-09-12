@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Plus, Calendar, MapPin, Users, Clock, ChevronDown, MessageCircle, Share2, Pin, MoreHorizontal, AlertCircle, CheckCircle2, Timer, Car, Coffee, BookOpen, Crown, TrendingUp } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Removed mock data - using real posts only
 /* const mockPosts: HiveSpacePost[] = [
   {

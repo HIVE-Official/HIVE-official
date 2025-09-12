@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../lib/utils.js';
-import { darkLuxury, luxuryShadows, luxuryRadius, luxurySpacing } from '../theme/dark-luxury.js';
-import { HiveMagneticHover, HiveCascade } from '../components/hive-motion-wrapper.js';
+import { cn } from '../lib/utils';
+import { darkLuxury, luxuryShadows, luxuryRadius, luxurySpacing } from '../theme/dark-luxury';
+import { HiveMagneticHover, HiveCascade } from '../components/hive-motion-wrapper';
 // Main Layout Container - Refined Density
 export const HiveLayout = ({ children, className }) => {
     return (_jsx("div", { className: cn('min-h-screen', className), style: {

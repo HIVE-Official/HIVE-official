@@ -249,7 +249,7 @@ const SocialActionButton = React.forwardRef<HTMLButtonElement, SocialActionButto
           // Interaction foundation
           'cursor-pointer',
           'transition-all',
-          `duration-[${motionComposition.durations.fast.ms}]`,
+          'duration-[150ms]',
           'active:scale-95',
           
           // Focus ring using border foundation
@@ -293,7 +293,7 @@ const SocialActionButton = React.forwardRef<HTMLButtonElement, SocialActionButto
             'hive-social-icon',
             'shrink-0',
             // Motion foundation - smooth icon transitions
-            `transition-transform duration-[${motionComposition.durations.fast.ms}]`,
+            'transition-transform duration-[150ms]',
             // Social animation on active
             action.isActive && isAnimating && 'scale-110 rotate-6'
           )}
@@ -320,7 +320,7 @@ const SocialActionButton = React.forwardRef<HTMLButtonElement, SocialActionButto
                   // Slightly muted when not active
                   !action.isActive && 'text-[var(--hive-text-muted)]',
                   // Motion foundation - smooth count updates
-                  `transition-all duration-[${motionComposition.durations.fast.ms}]`
+                  'transition-all duration-[150ms]'
                 )}
               >
                 {formatCount(action.count)}

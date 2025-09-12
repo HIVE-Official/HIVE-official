@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 import { Upload, X, File, Image as ImageIcon, FileText } from 'lucide-react';
 const fileInputSizes = {
     sm: {

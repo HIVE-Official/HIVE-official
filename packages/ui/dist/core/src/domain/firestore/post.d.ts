@@ -151,8 +151,8 @@ export declare const PollMetadataSchema: z.ZodObject<{
 }, {
     options: string[];
     question: string;
-    allowMultiple?: boolean | undefined;
     expiresAt?: Date | undefined;
+    allowMultiple?: boolean | undefined;
     votes?: Record<string, string[]> | undefined;
 }>;
 export declare const EventMetadataSchema: z.ZodObject<{
@@ -357,8 +357,8 @@ export declare const PostSchema: z.ZodObject<{
     }, {
         options: string[];
         question: string;
-        allowMultiple?: boolean | undefined;
         expiresAt?: Date | undefined;
+        allowMultiple?: boolean | undefined;
         votes?: Record<string, string[]> | undefined;
     }>>;
     eventMetadata: z.ZodOptional<z.ZodObject<{
@@ -547,8 +547,8 @@ export declare const PostSchema: z.ZodObject<{
     pollMetadata?: {
         options: string[];
         question: string;
-        allowMultiple?: boolean | undefined;
         expiresAt?: Date | undefined;
+        allowMultiple?: boolean | undefined;
         votes?: Record<string, string[]> | undefined;
     } | undefined;
     eventMetadata?: {
@@ -684,8 +684,8 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     }, {
         options: string[];
         question: string;
-        allowMultiple?: boolean | undefined;
         expiresAt?: Date | undefined;
+        allowMultiple?: boolean | undefined;
         votes?: Record<string, string[]> | undefined;
     }>>;
     eventMetadata: z.ZodOptional<z.ZodObject<{
@@ -800,8 +800,8 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     pollMetadata?: {
         options: string[];
         question: string;
-        allowMultiple?: boolean | undefined;
         expiresAt?: Date | undefined;
+        allowMultiple?: boolean | undefined;
         votes?: Record<string, string[]> | undefined;
     } | undefined;
     eventMetadata?: {
@@ -892,8 +892,8 @@ export declare const CreatePostSchema: z.ZodEffects<z.ZodObject<{
     pollMetadata?: {
         options: string[];
         question: string;
-        allowMultiple?: boolean | undefined;
         expiresAt?: Date | undefined;
+        allowMultiple?: boolean | undefined;
         votes?: Record<string, string[]> | undefined;
     } | undefined;
     eventMetadata?: {

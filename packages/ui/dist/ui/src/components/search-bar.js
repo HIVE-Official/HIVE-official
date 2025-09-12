@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Search } from 'lucide-react';
-import { cn } from '../lib/utils.js';
-import { InputEnhanced } from '../atomic/atoms/input-enhanced.js';
+import { cn } from '../lib/utils';
+import { InputEnhanced } from '../atomic/atoms/input-enhanced';
 export const SearchBar = ({ onSearch, placeholder = "Search...", showIcon = true, className, onChange, ...props }) => {
     const handleChange = (e) => {
         onChange?.(e);

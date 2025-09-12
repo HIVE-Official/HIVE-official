@@ -2,7 +2,7 @@
  * HIVE Motion Utilities - Framer Motion Bridge
  * Connects HIVE design tokens with Framer Motion for consistent animations
  */
-import { motion } from '../../../tokens/src/motion.js';
+import { motion } from '../../../tokens/src/motion';
 // HIVE Transition Presets
 export const hiveTransitions = {
     // Core HIVE transitions using design tokens
@@ -275,5 +275,5 @@ export const withReducedMotion = (animation) => {
     };
 };
 // Export adaptive motion utilities
-export { useAdaptiveMotion } from './adaptive-motion.js';
+export { useAdaptiveMotion } from './adaptive-motion';
 //# sourceMappingURL=motion.js.map

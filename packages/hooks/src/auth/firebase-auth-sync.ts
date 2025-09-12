@@ -1,5 +1,5 @@
 import { onAuthStateChanged, type User, type Auth } from 'firebase/auth';
-import { doc, onSnapshot, getDoc, type Firestore } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc, type Firestore, type DocumentSnapshot, type FirestoreError } from 'firebase/firestore';
 import { useAuthStore } from '../stores/auth-store';
 
 /**
@@ -44,7 +44,7 @@ export function initializeAuthSync(auth: Auth, db: Firestore) {
             // Set up real-time profile listener
             const unsubscribeProfile = onSnapshot(
               doc(db, 'users', firebaseUser.uid),
-              (doc: any) => {
+              (doc: DocumentSnapshot) => {
                 if (doc.exists()) {
                   const data = doc.data();
                   useAuthStore.getState().updateProfile({
@@ -54,7 +54,7 @@ export function initializeAuthSync(auth: Auth, db: Firestore) {
                   });
                 }
               },
-              (error: any) => {
+              (error: FirestoreError) => {
                 console.error('Profile listener error:', error);
               }
             );
@@ -84,7 +84,7 @@ export function initializeAuthSync(auth: Auth, db: Firestore) {
         setLoading(false);
       }
     },
-    (error: any) => {
+    (error: Error) => {
       console.error('Auth state change error:', error);
       setError(error.message);
       setLoading(false);

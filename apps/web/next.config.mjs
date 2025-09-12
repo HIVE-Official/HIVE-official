@@ -6,6 +6,9 @@ const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Use default .next directory
+  distDir: '.next',
+  
   // Enable strict validation for production safety
   eslint: {
     ignoreDuringBuilds: false,
@@ -33,10 +36,12 @@ const nextConfig = {
   // Disable source maps in production for faster builds
   productionBrowserSourceMaps: false,
   
-  // Reduce build parallelism to avoid memory issues
+  // Reduce build parallelism and disable tracing
   experimental: {
     workerThreads: false,
     cpus: 1,
+    isrMemoryCacheSize: 0, // Disable ISR cache
+    disableOptimizedLoading: true, // Disable optimized loading
   },
   
   // Webpack configuration

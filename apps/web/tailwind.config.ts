@@ -12,6 +12,7 @@ const config: Config = {
   ],
   blocklist: [],
   prefix: "",
+  safelist: [],
   theme: {
     container: {
       center: true,
@@ -142,11 +143,10 @@ const config: Config = {
       },
       // HIVE Motion System - Standard durations
       transitionDuration: {
-        '50': '50ms',
-        '90': '90ms',      // micro interactions
-        '180': '180ms',    // standard transitions
-        '240': '240ms',    // complex animations
-        '400': '400ms',    // cinematic moments
+        'micro': '90ms',      // micro interactions
+        'fast': '180ms',      // standard transitions
+        'normal': '240ms',    // complex animations
+        'slow': '400ms',      // cinematic moments
       },
       // HIVE Motion Curve
       transitionTimingFunction: {

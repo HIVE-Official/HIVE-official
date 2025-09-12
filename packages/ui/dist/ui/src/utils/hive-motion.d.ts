@@ -52,10 +52,10 @@ export declare const hiveTransition: {
 };
 export declare const hiveTailwindTransition: {
     /** Standard transition classes for Tailwind */
-    readonly standard: "transition-all duration-[180ms] ease-[cubic-bezier(0.33, 0.65, 0, 1)]";
-    readonly micro: "transition-all duration-[90ms] ease-[cubic-bezier(0.33, 0.65, 0, 1)]";
-    readonly complex: "transition-all duration-[240ms] ease-[cubic-bezier(0.33, 0.65, 0, 1)]";
-    readonly cinematic: "transition-all duration-[400ms] ease-[cubic-bezier(0.33, 0.65, 0, 1)]";
+    readonly standard: "transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]";
+    readonly micro: "transition-all duration-[90ms] ease-[cubic-bezier(0.33,0.65,0,1)]";
+    readonly complex: "transition-all duration-[240ms] ease-[cubic-bezier(0.33,0.65,0,1)]";
+    readonly cinematic: "transition-all duration-[400ms] ease-[cubic-bezier(0.33,0.65,0,1)]";
 };
 export declare const hiveAnimations: {
     /** Fade in animation */
@@ -201,10 +201,10 @@ declare const _default: {
     };
     tailwind: {
         /** Standard transition classes for Tailwind */
-        readonly standard: "transition-all duration-[180ms] ease-[cubic-bezier(0.33, 0.65, 0, 1)]";
-        readonly micro: "transition-all duration-[90ms] ease-[cubic-bezier(0.33, 0.65, 0, 1)]";
-        readonly complex: "transition-all duration-[240ms] ease-[cubic-bezier(0.33, 0.65, 0, 1)]";
-        readonly cinematic: "transition-all duration-[400ms] ease-[cubic-bezier(0.33, 0.65, 0, 1)]";
+        readonly standard: "transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]";
+        readonly micro: "transition-all duration-[90ms] ease-[cubic-bezier(0.33,0.65,0,1)]";
+        readonly complex: "transition-all duration-[240ms] ease-[cubic-bezier(0.33,0.65,0,1)]";
+        readonly cinematic: "transition-all duration-[400ms] ease-[cubic-bezier(0.33,0.65,0,1)]";
     };
     animations: {
         /** Fade in animation */

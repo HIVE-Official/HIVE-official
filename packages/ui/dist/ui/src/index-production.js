@@ -2,25 +2,25 @@
 // Minimal working version with stubs for complex components
 import React from 'react';
 // === CORE UTILITIES ===
-export { cn } from './lib/utils.js';
+export { cn } from './lib/utils';
 // === AUTH CONTEXT (working) ===
-export { HiveAuthProvider, useHiveAuth } from './contexts/hive-auth-context.js';
-export { useHiveAuth as useAuth } from './contexts/hive-auth-context.js';
+export { HiveAuthProvider, useHiveAuth } from './contexts/hive-auth-context';
+export { useHiveAuth as useAuth } from './contexts/hive-auth-context';
 // === AUTH COMPONENTS (working) ===
-export { EmailGate } from './components/auth/email-gate.js';
-export { CheckEmailInfo } from './components/auth/CheckEmailInfo.js';
-export { SchoolPick } from './components/auth/school-pick.js';
+export { EmailGate } from './components/auth/email-gate';
+export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
+export { SchoolPick } from './components/auth/school-pick';
 // === LOADING COMPONENTS (working) ===
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator.js';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
 // === BASIC UI COMPONENTS (working) ===
-export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced.js';
-export { InputEnhanced as Input } from './atomic/atoms/input-enhanced.js';
-export { HiveCard as Card, HiveCard } from './components/hive-card.js';
-export { HiveBadge as Badge, HiveBadge } from './components/hive-badge.js';
-export { HiveModal } from './components/hive-modal.js';
-export { HiveLogo } from './components/hive-logo.js';
+export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
+export { InputEnhanced as Input } from './atomic/atoms/input-enhanced';
+export { HiveCard as Card, HiveCard } from './components/hive-card';
+export { HiveBadge as Badge, HiveBadge } from './components/hive-badge';
+export { HiveModal } from './components/hive-modal';
+export { HiveLogo } from './components/hive-logo';
 // === MOTION SYSTEM (working) ===
-export { hiveVariants } from './lib/motion.js';
+export { hiveVariants } from './lib/motion';
 // === STUB COMPONENTS (for complex ones that have deep dependencies) ===
 // Onboarding Components (stubs - to be replaced with working versions)
 export const CreateProfileStep = (props) => {

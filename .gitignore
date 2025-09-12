@@ -107,6 +107,7 @@ jspm_packages/
 
 # Build outputs
 .next/
+.next-build/
 /dist
 /out
 /build

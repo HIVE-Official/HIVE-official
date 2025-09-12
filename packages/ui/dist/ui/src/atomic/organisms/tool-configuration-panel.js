@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
-import { cn } from '../../lib/utils.js';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { cn } from '../../lib/utils';
 import { Settings, Save, X, AlertCircle, CheckCircle, Eye, EyeOff, RefreshCw, Trash2, ExternalLink, Copy, Zap, Shield, Globe, Lock, RotateCcw, Code, Database, Key, Link as LinkIcon, FileText, Image as ImageIcon, Calendar, Clock, Hash, Type, ListIcon, CheckSquare } from 'lucide-react';
 const FIELD_ICONS = {
     text: Type,

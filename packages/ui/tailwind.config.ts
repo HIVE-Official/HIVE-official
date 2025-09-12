@@ -9,6 +9,20 @@ const config = {
     './src/**/*.{ts,tsx}',
   ],
   prefix: "",
+  safelist: [
+    // HIVE motion system durations - these are intentional and not ambiguous
+    'duration-[50ms]',
+    'duration-[90ms]',
+    'duration-[120ms]',
+    'duration-[150ms]',
+    'duration-[180ms]',
+    'duration-[200ms]',
+    'duration-[240ms]',
+    'duration-[280ms]',
+    'duration-[400ms]',
+    // HIVE motion easing
+    'ease-[cubic-bezier(0.33,0.65,0,1)]',
+  ],
   theme: {
     spacing: {
       '0': '0',

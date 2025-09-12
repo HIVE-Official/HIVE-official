@@ -15,13 +15,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Foundation system imports
-import { typographyComposition } from '../foundations/typography-composition.js';
-import { layoutComposition } from '../foundations/layout-composition.js';
-import { iconComposition, MoreVertical, ExternalLink, Heart, MessageCircle, Share2, Bookmark, Clock, Users } from '../foundations/icon-composition.js';
-import { shadowComposition } from '../foundations/shadow-composition.js';
-import { motionComposition } from '../foundations/motion-composition.js';
+import { typographyComposition } from '../foundations/typography-composition';
+import { layoutComposition } from '../foundations/layout-composition';
+import { iconComposition, MoreVertical, ExternalLink, Heart, MessageCircle, Share2, Bookmark, Clock, Users } from '../foundations/icon-composition';
+import { shadowComposition } from '../foundations/shadow-composition';
 // === CARD VARIANTS ===
 const comprehensiveCardVariants = cva(
 // Base card styles using foundation systems
@@ -39,7 +38,7 @@ const comprehensiveCardVariants = cva(
     `shadow-[${shadowComposition.scale.raised.shadow}]`,
     // Motion foundation
     'transition-all',
-    `duration-[${motionComposition.durations.standard.ms}]`,
+    'duration-[200ms]',
     // Campus social context
     'group'
 ].join(' '), {
@@ -147,9 +146,9 @@ const CardHeaderComponent = React.forwardRef(({ title, subtitle, avatar, icon: I
     const [showMenu, setShowMenu] = React.useState(false);
     if (!title && !subtitle && !avatar && !IconComponent)
         return null;
-    return (_jsxs("div", { ref: ref, className: cn('hive-card-header', 'flex items-start justify-between', className), children: [_jsxs("div", { className: "flex items-center gap-3 min-w-0 flex-1", children: [avatar && (_jsx("img", { src: avatar, alt: title || 'Card avatar', className: cn('w-10 h-10 rounded-full object-cover', 'border border-[var(--hive-border-subtle)]', `shadow-[${shadowComposition.scale.raised.shadow}]`) })), IconComponent && !avatar && (_jsx("div", { className: cn('w-10 h-10 rounded-lg flex items-center justify-center', 'bg-[var(--hive-bg-subtle)]', 'border border-[var(--hive-border-subtle)]'), children: _jsx(IconComponent, { className: cn(iconComposition.sizes.base.className, 'text-[var(--hive-text-secondary)]') }) })), _jsxs("div", { className: "min-w-0 flex-1", children: [_jsxs("div", { className: "flex items-center gap-2", children: [title && (_jsx("h3", { className: cn('font-[var(--hive-font-family-primary)]', 'font-semibold', `text-[${typographyComposition.scale.base.size}]`, 'text-[var(--hive-text-primary)]', 'truncate'), children: title })), badge && (_jsx("span", { className: cn('inline-flex items-center px-2 py-0.5', 'rounded-full', 'font-[var(--hive-font-family-primary)]', 'font-medium', `text-[${typographyComposition.scale.caption.size}]`, 'bg-[var(--hive-gold-background)]', 'text-[var(--hive-gold-primary)]', 'border border-[var(--hive-gold-border)]'), children: badge }))] }), subtitle && (_jsx("p", { className: cn('font-[var(--hive-font-family-primary)]', `text-[${typographyComposition.scale.small.size}]`, 'text-[var(--hive-text-secondary)]', 'truncate'), children: subtitle })), timestamp && (_jsxs("div", { className: "flex items-center gap-1 mt-1", children: [_jsx(Clock, { className: cn(iconComposition.sizes.micro.className, 'text-[var(--hive-text-muted)]') }), _jsx("span", { className: cn('font-[var(--hive-font-family-primary)]', `text-[${typographyComposition.scale.caption.size}]`, 'text-[var(--hive-text-muted)]'), children: timestamp })] }))] })] }), menuActions && menuActions.length > 0 && (_jsxs("div", { className: "relative", children: [_jsx("button", { className: cn('p-1.5 rounded-md', 'text-[var(--hive-text-muted)]', 'hover:text-[var(--hive-text-primary)]', 'hover:bg-[var(--hive-bg-subtle)]', 'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20', `transition-colors duration-[${motionComposition.durations.fast.ms}]`), onClick: () => setShowMenu(!showMenu), "aria-label": "Card menu", children: _jsx(MoreVertical, { className: iconComposition.sizes.base.className }) }), showMenu && (_jsx("div", { className: cn('absolute top-full right-0 mt-1 z-10', 'min-w-[160px]', 'bg-[var(--hive-bg-tertiary)]', 'border border-[var(--hive-border-glass)]', 'rounded-lg', `shadow-[${shadowComposition.scale.floating.shadow}]`, 'backdrop-blur-lg', 'p-1', 'animate-in slide-in-from-top-1 fade-in-50'), children: menuActions.map(action => (_jsxs("button", { className: cn('w-full flex items-center gap-3 px-3 py-2', 'rounded-md', 'font-[var(--hive-font-family-primary)]', `text-[${typographyComposition.scale.small.size}]`, 'text-left', action.destructive
+    return (_jsxs("div", { ref: ref, className: cn('hive-card-header', 'flex items-start justify-between', className), children: [_jsxs("div", { className: "flex items-center gap-3 min-w-0 flex-1", children: [avatar && (_jsx("img", { src: avatar, alt: title || 'Card avatar', className: cn('w-10 h-10 rounded-full object-cover', 'border border-[var(--hive-border-subtle)]', `shadow-[${shadowComposition.scale.raised.shadow}]`) })), IconComponent && !avatar && (_jsx("div", { className: cn('w-10 h-10 rounded-lg flex items-center justify-center', 'bg-[var(--hive-bg-subtle)]', 'border border-[var(--hive-border-subtle)]'), children: _jsx(IconComponent, { className: cn(iconComposition.sizes.base.className, 'text-[var(--hive-text-secondary)]') }) })), _jsxs("div", { className: "min-w-0 flex-1", children: [_jsxs("div", { className: "flex items-center gap-2", children: [title && (_jsx("h3", { className: cn('font-[var(--hive-font-family-primary)]', 'font-semibold', `text-[${typographyComposition.scale.base.size}]`, 'text-[var(--hive-text-primary)]', 'truncate'), children: title })), badge && (_jsx("span", { className: cn('inline-flex items-center px-2 py-0.5', 'rounded-full', 'font-[var(--hive-font-family-primary)]', 'font-medium', `text-[${typographyComposition.scale.caption.size}]`, 'bg-[var(--hive-gold-background)]', 'text-[var(--hive-gold-primary)]', 'border border-[var(--hive-gold-border)]'), children: badge }))] }), subtitle && (_jsx("p", { className: cn('font-[var(--hive-font-family-primary)]', `text-[${typographyComposition.scale.small.size}]`, 'text-[var(--hive-text-secondary)]', 'truncate'), children: subtitle })), timestamp && (_jsxs("div", { className: "flex items-center gap-1 mt-1", children: [_jsx(Clock, { className: cn(iconComposition.sizes.micro.className, 'text-[var(--hive-text-muted)]') }), _jsx("span", { className: cn('font-[var(--hive-font-family-primary)]', `text-[${typographyComposition.scale.caption.size}]`, 'text-[var(--hive-text-muted)]'), children: timestamp })] }))] })] }), menuActions && menuActions.length > 0 && (_jsxs("div", { className: "relative", children: [_jsx("button", { className: cn('p-1.5 rounded-md', 'text-[var(--hive-text-muted)]', 'hover:text-[var(--hive-text-primary)]', 'hover:bg-[var(--hive-bg-subtle)]', 'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20', 'transition-colors duration-[150ms]'), onClick: () => setShowMenu(!showMenu), "aria-label": "Card menu", children: _jsx(MoreVertical, { className: iconComposition.sizes.base.className }) }), showMenu && (_jsx("div", { className: cn('absolute top-full right-0 mt-1 z-10', 'min-w-[160px]', 'bg-[var(--hive-bg-tertiary)]', 'border border-[var(--hive-border-glass)]', 'rounded-lg', `shadow-[${shadowComposition.scale.floating.shadow}]`, 'backdrop-blur-lg', 'p-1', 'animate-in slide-in-from-top-1 fade-in-50'), children: menuActions.map(action => (_jsxs("button", { className: cn('w-full flex items-center gap-3 px-3 py-2', 'rounded-md', 'font-[var(--hive-font-family-primary)]', `text-[${typographyComposition.scale.small.size}]`, 'text-left', action.destructive
                                 ? 'text-[var(--hive-error-primary)] hover:bg-[var(--hive-error-background)]'
-                                : 'text-[var(--hive-text-primary)] hover:bg-[var(--hive-bg-subtle)]', 'disabled:opacity-50 disabled:cursor-not-allowed', `transition-colors duration-[${motionComposition.durations.fast.ms}]`), disabled: action.disabled, onClick: () => {
+                                : 'text-[var(--hive-text-primary)] hover:bg-[var(--hive-bg-subtle)]', 'disabled:opacity-50 disabled:cursor-not-allowed', 'transition-colors duration-[150ms]'), disabled: action.disabled, onClick: () => {
                                 action.onClick?.();
                                 onMenuActionClick?.(action.id);
                                 setShowMenu(false);
@@ -182,7 +181,7 @@ const CardActionsComponent = React.forwardRef(({ actions, onActionClick, classNa
                         'hover:text-[var(--hive-text-primary)]'
                     ].join(' '), 
                     // States
-                    'disabled:opacity-50 disabled:cursor-not-allowed', 'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20', `transition-all duration-[${motionComposition.durations.fast.ms}]`), disabled: action.disabled, onClick: () => {
+                    'disabled:opacity-50 disabled:cursor-not-allowed', 'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20', 'transition-all duration-[150ms]'), disabled: action.disabled, onClick: () => {
                         action.onClick?.();
                         onActionClick?.(action.id);
                     }, children: [IconComponent && (_jsx(IconComponent, { className: iconComposition.sizes.small.className })), action.label] }, action.id));

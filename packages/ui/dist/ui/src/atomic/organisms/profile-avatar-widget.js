@@ -1,12 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { cn } from '../../lib/utils.js';
-import { Card, CardContent, CardHeader } from '../../components/ui/card.js';
-import { Avatar } from '../atoms/avatar.js';
-import { Badge } from '../atoms/badge.js';
-import { Text } from '../atoms/text.js';
-import { ButtonEnhanced as Button } from '../atoms/button-enhanced.js';
+import { cn } from '../../lib/utils';
+import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Avatar } from '../atoms/avatar';
+import { Badge } from '../atoms/badge';
+import { Text } from '../atoms/text';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
 import { Camera, Edit3, MapPin, GraduationCap, Calendar, Users, Star, Award, Eye, EyeOff, Settings } from 'lucide-react';
 export const ProfileAvatarWidget = ({ user, isEditable = true, onEditProfile, onUploadPhoto, onToggleVisibility, onViewProfile, className }) => {
     const [isHovered, setIsHovered] = useState(false);

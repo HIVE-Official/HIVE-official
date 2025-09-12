@@ -70,7 +70,7 @@ interface UIState {
 
 export const useUIStore = create<UIState>()(
   devtools(
-    (set, get) => ({
+    (set, _get) => ({
       // Initial state
       sidebarOpen: true,
       mobileMenuOpen: false,

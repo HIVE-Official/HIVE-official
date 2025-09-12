@@ -1,21 +1,42 @@
-# 🐝 HIVE - The Campus Social Platform
+# HIVE - Campus Coordination Platform
 
 [![Status](https://img.shields.io/badge/Status-Production_Ready-success.svg)](https://github.com/hive/platform)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-Realtime-orange.svg)](https://firebase.google.com/)
-[![Completion](https://img.shields.io/badge/Completion-100%25-gold.svg)](./FRONTEND_100_PERCENT_COMPLETE.md)
 
 **Ship Fast, Ship Real - A complete social platform for university communities**
 
-## 🚀 Platform Status: PRODUCTION READY
+## 🚀 Quick Start
 
-**Current State**: 100% Complete and ready for deployment
-- ✅ All features fully implemented
-- ✅ All UI/UX polished and responsive
-- ✅ Real-time Firebase integration complete
-- ✅ Zero mock data - everything is real
-- ✅ Production-ready with error handling
+```bash
+# Install dependencies
+pnpm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Start development server
+pnpm dev
+
+# Open http://localhost:3000
+```
+
+## 📖 Documentation
+
+### Core Documentation
+- [`CLAUDE.md`](./CLAUDE.md) - Main development guidelines and AI collaboration rules
+- [`apps/web/CLAUDE.md`](./apps/web/CLAUDE.md) - Web app specific guidelines
+
+### Technical Documentation
+- [`AI_DEVELOPMENT_RULES.md`](./AI_DEVELOPMENT_RULES.md) - AI collaboration best practices
+- [`TECH_STACK_2025.md`](./TECH_STACK_2025.md) - Technology stack overview
+- [`HIVE_DATA_SCHEMA.md`](./HIVE_DATA_SCHEMA.md) - Database schema and collections
+
+### Product Documentation
+- [`USER_STORIES.md`](./USER_STORIES.md) - User stories and use cases
+- [`HIVE_PRODUCT_CONTEXT.md`](./HIVE_PRODUCT_CONTEXT.md) - Product vision and context
+- [`VISION_2025.md`](./VISION_2025.md) - Long-term platform vision
 
 ## 🎯 What is HIVE?
 
@@ -27,131 +48,56 @@ HIVE is a comprehensive social platform designed specifically for university com
 - **Track Rituals** - Participate in recurring campus traditions
 - **Stay Connected** - Real-time feed, notifications, and messaging
 
-## ✨ Key Features
+## 🏗️ Architecture
 
-### 🏠 **Spaces System** (100% Complete)
-- Create and manage community spaces
-- 5-Surface Architecture: Posts, Events, Members, Pinned, Tools
-- Leader tools for moderation and analytics
-- Auto-discovery and recommendations
-
-### 📱 **Feed & Posts** (100% Complete)
-- Real-time aggregated feed across all spaces
-- Coordination-focused content (study sessions, ride shares, food runs)
-- Rich media support with images and links
-- Comments, reactions, and sharing
-
-### 📅 **Events** (100% Complete)
-- Create and RSVP to events
-- Recurring events support
-- Virtual and in-person options
-- Calendar integration
-- Automated reminders
-
-### 🛠️ **Tools & HiveLab** (100% Complete)
-- Visual no-code tool builder
-- Marketplace for discovering tools
-- Cross-space tool sharing
-- Analytics and version control
-- 40+ pre-built elements
-
-### 🎭 **Rituals** (100% Complete)
-- Campus-wide recurring activities
-- Progress tracking and milestones
-- Streak counters and rewards
-- Community participation metrics
-
-### 👤 **Profile System** (100% Complete)
-- Customizable bento grid dashboard
-- Privacy controls with Ghost Mode
-- Academic information and interests
-- Activity history and achievements
-
-### 🔔 **Notifications** (100% Complete)
-- Real-time notification system
-- Dropdown with categorized notifications
-- Push notification support
-- Customizable preferences
-
-### 🔍 **Search** (100% Complete)
-- Unified search across all content types
-- Advanced filters and sorting
-- Recent and popular searches
-- Real-time search suggestions
-
-## 🏗️ Technical Architecture
-
-### Tech Stack
-- **Frontend**: Next.js 15 (App Router), React 18, TypeScript 5
-- **Styling**: Tailwind CSS, Radix UI, shadcn/ui
-- **State**: Zustand, React Query, Context API
-- **Backend**: Firebase (Firestore, Auth, Storage, Functions)
-- **Real-time**: WebSockets, Firebase Listeners
-- **Monorepo**: Turborepo, pnpm workspaces
-- **Testing**: Playwright, Vitest
-- **CI/CD**: GitHub Actions, Vercel
-
-### Project Structure
 ```
 hive/
 ├── apps/
-│   ├── web/                 # Main Next.js application
-│   └── admin/               # Admin dashboard
+│   ├── web/           # Next.js 15 web application
+│   └── admin/         # Admin dashboard
 ├── packages/
-│   ├── ui/                  # Component library (200+ components)
-│   ├── core/                # Business logic and types
-│   ├── hooks/               # Shared React hooks (50+)
-│   ├── api-client/          # API client utilities
-│   ├── auth-logic/          # Authentication logic
-│   └── tokens/              # Design tokens
-├── firebase/                # Firebase configuration
-├── scripts/                 # Build and deployment scripts
-└── docs/                    # Documentation
+│   ├── ui/            # Shared UI component library
+│   ├── core/          # Core business logic
+│   ├── hooks/         # Shared React hooks
+│   └── auth-logic/    # Authentication utilities
+└── docs/              # Additional documentation
 ```
 
-## 🚀 Getting Started
+## 🛠️ Tech Stack
 
-### Prerequisites
-- Node.js 18+ 
-- pnpm 9.x
-- Firebase project
-- Git
+- **Frontend**: Next.js 15, React 18, TypeScript
+- **UI**: TailwindCSS, Framer Motion, @hive/ui components
+- **Backend**: Firebase (Firestore, Auth, Storage)
+- **Architecture**: Monorepo with Turborepo and pnpm
+- **Testing**: Playwright, Vitest, React Testing Library
+- **CI/CD**: Vercel, GitHub Actions
 
-### Quick Start
+## 📦 Available Scripts
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/hive.git
-   cd hive
-   ```
+```bash
+# Development
+pnpm dev              # Start all apps in development mode
+pnpm build            # Build all apps for production
+pnpm test             # Run all tests
+pnpm lint             # Lint all packages
+pnpm typecheck        # TypeScript type checking
 
-2. **Install dependencies**
-   ```bash
-   pnpm install
-   ```
+# App-specific
+pnpm --filter web dev         # Start web app only
+pnpm --filter admin dev       # Start admin app only
+pnpm --filter @hive/ui dev    # Start Storybook
 
-3. **Configure environment**
-   ```bash
-   cp .env.example .env.local
-   # Add your Firebase credentials
-   ```
+# Firebase
+firebase emulators:start      # Start local Firebase emulators
+firebase deploy              # Deploy to production
+```
 
-4. **Start development server**
-   ```bash
-   pnpm dev
-   ```
+## 🔐 Environment Variables
 
-5. **Open browser**
-   ```
-   http://localhost:3000
-   ```
+Create `.env.local` in `apps/web/`:
 
-### Environment Variables
-
-Create `.env.local` with:
-
-```env
-# Firebase Client
+```bash
+# Firebase Configuration
 NEXT_PUBLIC_FIREBASE_API_KEY=
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=
@@ -159,44 +105,29 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
 
-# Firebase Admin
-FIREBASE_PROJECT_ID=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_PRIVATE_KEY=
+# Firebase Admin SDK
+FIREBASE_SERVICE_ACCOUNT_KEY=
+
+# Email Service
+RESEND_API_KEY=
 
 # NextAuth
-NEXTAUTH_SECRET=
 NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=
 ```
 
-## 📦 Development Commands
+## 🚢 Deployment
 
+### Vercel (Recommended)
+1. Connect your GitHub repository to Vercel
+2. Configure environment variables in Vercel dashboard
+3. Deploy with `git push` to main branch
+
+### Manual Deployment
 ```bash
-# Development
-pnpm dev              # Start dev server
-pnpm build           # Build for production
-pnpm start           # Start production server
-
-# Code Quality
-pnpm lint            # Run ESLint
-pnpm typecheck       # TypeScript checking
-pnpm test            # Run tests
-pnpm test:e2e        # Run E2E tests
-
-# Storybook
-pnpm storybook       # Start Storybook
-pnpm build-storybook # Build Storybook
-
-# Utilities
-pnpm clean           # Clean all artifacts
-pnpm format          # Format code with Prettier
+pnpm build
+pnpm start
 ```
-
-## 🌐 Deployment
-
-### Production Deployment (Vercel)
-
-1. **Connect to Vercel**
    ```bash
    vercel
    ```
@@ -286,17 +217,14 @@ pnpm format          # Format code with Prettier
 ## 🧪 Testing
 
 ```bash
-# Unit Tests
+# Unit tests
 pnpm test
 
-# Integration Tests
-pnpm test:integration
-
-# E2E Tests
+# E2E tests
 pnpm test:e2e
 
-# Coverage Report
-pnpm test:coverage
+# Component tests with Storybook
+pnpm --filter @hive/ui storybook
 ```
 
 ## 📝 Documentation

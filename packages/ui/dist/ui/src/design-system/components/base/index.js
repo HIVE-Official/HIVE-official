@@ -2,16 +2,16 @@
  * HIVE Base Components
  * Foundational components for the design system
  */
-export { Button } from './button.js';
-export { Input } from './input.js';
-export { Textarea } from './textarea.js';
-export { Select } from './select.js';
-export { Card } from './card.js';
-export { Badge } from './badge.js';
-export { Modal } from './modal.js';
-export { Progress } from './progress.js';
-export { MultiSelect } from './multi-select.js';
-export { Charts } from './charts.js';
-export { Table } from './table.js';
-export { Menu } from './menu.js';
+export { Button } from './button';
+export { Input } from './input';
+export { Textarea } from './textarea';
+export { Select } from './select';
+export { Card } from './card';
+export { Badge } from './badge';
+export { Modal } from './modal';
+export { Progress } from './progress';
+export { MultiSelect } from './multi-select';
+export { Charts } from './charts';
+export { Table } from './table';
+export { Menu } from './menu';
 //# sourceMappingURL=index.js.map

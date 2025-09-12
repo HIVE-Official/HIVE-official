@@ -15,14 +15,13 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Foundation system imports
-import { typographyComposition } from '../foundations/typography-composition.js';
-import { layoutComposition } from '../foundations/layout-composition.js';
-import { iconComposition, CheckCircle, Crown, Zap } from '../foundations/icon-composition.js';
-import { shadowComposition } from '../foundations/shadow-composition.js';
-import { borderComposition } from '../foundations/border-composition.js';
-import { motionComposition } from '../foundations/motion-composition.js';
+import { typographyComposition } from '../foundations/typography-composition';
+import { layoutComposition } from '../foundations/layout-composition';
+import { iconComposition, CheckCircle, Crown, Zap } from '../foundations/icon-composition';
+import { shadowComposition } from '../foundations/shadow-composition';
+import { borderComposition } from '../foundations/border-composition';
 // === USER IDENTITY VARIANTS ===
 const userIdentityVariants = cva(
 // Base styles using foundation systems
@@ -34,7 +33,7 @@ const userIdentityVariants = cva(
     // Interaction foundation
     'cursor-pointer',
     'transition-all',
-    `duration-[${motionComposition.durations.fast.ms}]`,
+    'duration-[150ms]',
     // Campus social context
     'group'
 ].join(' '), {
@@ -147,7 +146,7 @@ const StatusIndicator = ({ status, className }) => {
         // Position
         'absolute -bottom-0.5 -right-0.5', 
         // Animation using motion foundation
-        `transition-all duration-[${motionComposition.durations.fast.ms}]`, className), title: config.label }));
+        'transition-all duration-[150ms]', className), title: config.label }));
 };
 // === ROLE BADGES ===
 const RoleBadge = ({ role, className }) => {
@@ -171,7 +170,7 @@ export const UserIdentity = React.forwardRef(({ className, size, layout, interac
                         // Shadow using shadow foundation
                         `shadow-[${shadowComposition.scale.raised.shadow}]`, 
                         // Hover effects using interaction foundation
-                        'transition-all', `duration-[${motionComposition.durations.fast.ms}]`, onAvatarClick && 'cursor-pointer hover:scale-105', 
+                        'transition-all', 'duration-[150ms]', onAvatarClick && 'cursor-pointer hover:scale-105', 
                         // Status ring for online users
                         status === 'online' && [
                             'ring-2 ring-[var(--hive-success-primary)]/30',
@@ -182,11 +181,11 @@ export const UserIdentity = React.forwardRef(({ className, size, layout, interac
                                 // Hover effect for interactive
                                 interactive !== 'none' && 'group-hover:text-[var(--hive-gold-primary)]', 
                                 // Transition using motion foundation
-                                `transition-colors duration-[${motionComposition.durations.fast.ms}]`), children: name }), showRole && (_jsx(RoleBadge, { role: role })), verified && (_jsx(CheckCircle, { className: cn('hive-status-icon', 'text-[var(--hive-gold-primary)]') }))] }), showHandle && handle && (_jsxs("span", { className: cn('hive-handle', 'font-[var(--hive-font-family-primary)]', 'text-[var(--hive-text-secondary)]', 'truncate', 
+                                'transition-colors duration-[150ms]'), children: name }), showRole && (_jsx(RoleBadge, { role: role })), verified && (_jsx(CheckCircle, { className: cn('hive-status-icon', 'text-[var(--hive-gold-primary)]') }))] }), showHandle && handle && (_jsxs("span", { className: cn('hive-handle', 'font-[var(--hive-font-family-primary)]', 'text-[var(--hive-text-secondary)]', 'truncate', 
                         // Campus social styling
                         'opacity-80', 
                         // Transition
-                        `transition-all duration-[${motionComposition.durations.fast.ms}]`), children: ["@", handle] }))] })] }));
+                        'transition-all duration-[150ms]'), children: ["@", handle] }))] })] }));
 });
 UserIdentity.displayName = 'UserIdentity';
 // Type already exported inline above

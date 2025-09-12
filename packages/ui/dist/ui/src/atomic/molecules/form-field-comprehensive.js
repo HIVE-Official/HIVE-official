@@ -16,12 +16,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React, { useState, useCallback } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Foundation system imports
-import { typographyComposition } from '../foundations/typography-composition.js';
-import { layoutComposition } from '../foundations/layout-composition.js';
-import { iconComposition, AlertCircle, CheckCircle, Eye, EyeOff, Search, Mail, Lock, User } from '../foundations/icon-composition.js';
-import { motionComposition } from '../foundations/motion-composition.js';
+import { typographyComposition } from '../foundations/typography-composition';
+import { layoutComposition } from '../foundations/layout-composition';
+import { iconComposition, AlertCircle, CheckCircle, Eye, EyeOff, Search, Mail, Lock, User } from '../foundations/icon-composition';
 // === FORM FIELD VARIANTS ===
 const formFieldVariants = cva(
 // Base container styles
@@ -104,7 +103,7 @@ const inputVariants = cva(
     'placeholder:text-[var(--hive-text-muted)]',
     // Interaction foundation
     'transition-all',
-    `duration-[${motionComposition.durations.fast.ms}]`,
+    'duration-[150ms]',
     // Focus styles using color foundation
     'focus:outline-none',
     'focus:ring-2',
@@ -188,7 +187,7 @@ const ValidationMessage = React.forwardRef(({ state, message, className }, ref) 
         // Color foundation
         config.color, config.bgColor, config.borderColor && `border ${config.borderColor}`, 
         // Motion foundation
-        `transition-all duration-[${motionComposition.durations.fast.ms}]`, 'animate-in slide-in-from-top-1 fade-in-50', className), children: [IconComponent && (_jsx(IconComponent, { className: cn('hive-input-icon shrink-0', config.color) })), _jsx("span", { children: message })] }));
+        'transition-all duration-[150ms]', 'animate-in slide-in-from-top-1 fade-in-50', className), children: [IconComponent && (_jsx(IconComponent, { className: cn('hive-input-icon shrink-0', config.color) })), _jsx("span", { children: message })] }));
 });
 ValidationMessage.displayName = 'ValidationMessage';
 // === MAIN COMPONENT ===
@@ -228,7 +227,7 @@ export const ComprehensiveFormField = React.forwardRef(({ className, size, varia
                 // Required indicator
                 required && "after:content-['*'] after:ml-1 after:text-[var(--hive-error-primary)]", 
                 // Motion foundation
-                `transition-colors duration-[${motionComposition.durations.fast.ms}]`, 
+                'transition-colors duration-[150ms]', 
                 // Focus state
                 isFocused && 'text-[var(--hive-gold-primary)]'), children: label })), _jsxs("div", { className: "relative", children: [IconComponent && (_jsx("div", { className: "absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none", children: _jsx(IconComponent, { className: cn('hive-input-icon', 'text-[var(--hive-text-muted)]', 
                             // State colors
@@ -236,7 +235,7 @@ export const ComprehensiveFormField = React.forwardRef(({ className, size, varia
                             // Focus color
                             isFocused && validationState === 'default' && 'text-[var(--hive-gold-primary)]', 
                             // Motion foundation
-                            `transition-colors duration-[${motionComposition.durations.fast.ms}]`) }) })), _jsx("input", { ref: ref, id: id, type: actualType, placeholder: placeholder, value: value, defaultValue: defaultValue, required: required, disabled: disabled, readOnly: readOnly, onChange: handleChange, onFocus: handleFocus, onBlur: handleBlur, className: cn(inputVariants({ state: validationState }), 
+                            'transition-colors duration-[150ms]') }) })), _jsx("input", { ref: ref, id: id, type: actualType, placeholder: placeholder, value: value, defaultValue: defaultValue, required: required, disabled: disabled, readOnly: readOnly, onChange: handleChange, onFocus: handleFocus, onBlur: handleBlur, className: cn(inputVariants({ state: validationState }), 
                         // Icon padding adjustments
                         IconComponent && 'pl-10', (showPasswordToggle && type === 'password') && 'pr-10', 
                         // Campus optimizations
@@ -249,7 +248,7 @@ export const ComprehensiveFormField = React.forwardRef(({ className, size, varia
                             'focus:ring-4'
                         ].join(' ')), ...props }), showPasswordToggle && type === 'password' && (_jsx("button", { type: "button", className: cn('absolute right-3 top-1/2 -translate-y-1/2', 'p-1 rounded-md', 'text-[var(--hive-text-muted)]', 'hover:text-[var(--hive-text-primary)]', 'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20', 
                         // Motion foundation
-                        `transition-colors duration-[${motionComposition.durations.fast.ms}]`, disabled && 'opacity-50 cursor-not-allowed'), onClick: () => setShowPassword(!showPassword), disabled: disabled, "aria-label": showPassword ? 'Hide password' : 'Show password', children: showPassword ? (_jsx(EyeOff, { className: "hive-input-icon" })) : (_jsx(Eye, { className: "hive-input-icon" })) }))] }), validationMessage && (_jsx(ValidationMessage, { state: validationState, message: validationMessage })), helpText && !validationMessage && (_jsx("div", { className: cn('font-[var(--hive-font-family-primary)]', `text-[${typographyComposition.scale.small.size}]`, // 14px
+                        'transition-colors duration-[150ms]', disabled && 'opacity-50 cursor-not-allowed'), onClick: () => setShowPassword(!showPassword), disabled: disabled, "aria-label": showPassword ? 'Hide password' : 'Show password', children: showPassword ? (_jsx(EyeOff, { className: "hive-input-icon" })) : (_jsx(Eye, { className: "hive-input-icon" })) }))] }), validationMessage && (_jsx(ValidationMessage, { state: validationState, message: validationMessage })), helpText && !validationMessage && (_jsx("div", { className: cn('font-[var(--hive-font-family-primary)]', `text-[${typographyComposition.scale.small.size}]`, // 14px
                 'text-[var(--hive-text-muted)]', 'px-1'), children: helpText }))] }));
 });
 ComprehensiveFormField.displayName = 'ComprehensiveFormField';

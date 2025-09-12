@@ -15,13 +15,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React, { useCallback } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 // Foundation system imports
-import { typographyComposition } from '../foundations/typography-composition.js';
-import { layoutComposition } from '../foundations/layout-composition.js';
-import { iconComposition, Home, Users, Hammer, Activity, User, Settings, Bell, ExternalLink } from '../foundations/icon-composition.js';
-import { shadowComposition } from '../foundations/shadow-composition.js';
-import { motionComposition } from '../foundations/motion-composition.js';
+import { typographyComposition } from '../foundations/typography-composition';
+import { layoutComposition } from '../foundations/layout-composition';
+import { iconComposition, Home, Users, Hammer, Activity, User, Settings, Bell, ExternalLink } from '../foundations/icon-composition';
+import { shadowComposition } from '../foundations/shadow-composition';
 // === NAVIGATION ITEM VARIANTS ===
 const navigationItemVariants = cva(
 // Base nav item styles using foundation systems
@@ -35,7 +34,7 @@ const navigationItemVariants = cva(
     'text-[var(--hive-text-secondary)]',
     // Interaction foundation
     'transition-all',
-    `duration-[${motionComposition.durations.fast.ms}]`,
+    'duration-[150ms]',
     // Focus ring using border foundation
     'focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20',
     'rounded-lg',
@@ -188,7 +187,7 @@ const NavigationBadge = React.forwardRef(({ children, className }, ref) => (_jsx
     // Color foundation
     'bg-[var(--hive-error-primary)]', 'text-[var(--hive-bg-primary)]', 
     // Motion foundation
-    `transition-all duration-[${motionComposition.durations.fast.ms}]`, 'animate-in zoom-in-50', className), children: children })));
+    'transition-all duration-[150ms]', 'animate-in zoom-in-50', className), children: children })));
 NavigationBadge.displayName = 'NavigationBadge';
 const NavigationItemComponent = React.forwardRef(({ item, isActive, size, variant, showIcon, showBadge, onClick }, ref) => {
     const IconComponent = item.icon;
@@ -214,7 +213,7 @@ const NavigationItemComponent = React.forwardRef(({ item, isActive, size, varian
         // Icon and text gap
         showIcon && 'gap-2.5'), disabled: item.disabled, "data-active": isActive, onClick: handleClick, onKeyDown: handleKeyDown, "aria-current": isActive ? 'page' : undefined, title: item.label, children: [showIcon && IconComponent && (_jsx(IconComponent, { className: cn('hive-nav-icon', 'shrink-0', 
                 // Motion foundation - smooth icon transitions
-                `transition-transform duration-[${motionComposition.durations.fast.ms}]`, 
+                'transition-transform duration-[150ms]', 
                 // Active state animation
                 isActive && 'scale-110') })), _jsx("span", { className: "truncate", children: item.label }), item.external && (_jsx(ExternalLink, { className: cn('hive-nav-icon', 'shrink-0', 'opacity-60') })), showBadge && hasNotification && (_jsx(NavigationBadge, { children: typeof item.badge === 'number' && item.badge > 99 ? '99+' : item.badge }))] }));
 });

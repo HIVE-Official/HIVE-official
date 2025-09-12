@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 export const HiveSelect = ({ className, options = [], variant = 'default', children, ...props }) => {
     const variantClasses = {
         default: 'border border-input bg-background',

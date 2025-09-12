@@ -144,7 +144,7 @@ export const useToolStore = create<ToolState>()(
         merge: (persistedState: unknown, currentState: ToolState) => ({
           ...currentState,
           ...(persistedState as Partial<ToolState>),
-          favoriteTools: new Set((persistedState as any)?.favoriteTools || []),
+          favoriteTools: new Set((persistedState as Partial<ToolState>)?.favoriteTools || []),
         }),
       }
     )

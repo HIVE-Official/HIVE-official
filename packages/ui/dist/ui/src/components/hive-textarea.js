@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 export const HiveTextarea = React.forwardRef(({ className, variant = 'default', ...props }, ref) => {
     const variantClasses = {
         default: 'border border-input bg-background',
