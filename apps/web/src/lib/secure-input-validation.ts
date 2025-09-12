@@ -347,8 +347,9 @@ export class SecurityScanner {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      // Remove control characters using string method
-      .replace(/[\p{C}]/gu, '')
+      // Remove control characters using char code ranges (ES5 compatible)
+      // eslint-disable-next-line no-control-regex
+      .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
       // Trim whitespace
       .trim();
   }
@@ -394,7 +395,7 @@ export async function validateWithSecurity<T>(
 
     // Log security events for suspicious/dangerous inputs
     if (securityLevel !== 'safe') {
-      await logSecurityEvent('input_validation', {
+      await logSecurityEvent('invalid_token', {
         operation: `suspicious_input_${context.operation}`,
         tags: {
           securityLevel,

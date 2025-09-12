@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, Users, MapPin, Sparkles, Trophy, Target, Zap, Gift, Eye, Bell, Filter, Grid3X3, List } from 'lucide-react';
 const RITUAL_TYPE_CONFIG = {
     onboarding: { icon: Sparkles, color: 'text-purple-400', bgColor: 'bg-purple-500/20', label: 'Welcome' },

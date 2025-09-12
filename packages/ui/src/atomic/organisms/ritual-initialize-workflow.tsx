@@ -343,7 +343,7 @@ export function RitualInitializeWorkflow({
   className = '' 
 }: InitializeRitualProps) {
   const [activeStep, setActiveStep] = useState(currentStep);
-  const [stepData, setStepData] = useState<Record<string, any>>({});
+  const [stepData, setStepData] = useState<Record<string, unknown>>({});
   const [isComplete, setIsComplete] = useState(false);
 
   const steps: RitualStep[] = [
@@ -376,7 +376,7 @@ export function RitualInitializeWorkflow({
     }
   ];
 
-  const handleStepComplete = (data: any) => {
+  const handleStepComplete = (data: unknown) => {
     const step = steps[activeStep];
     const newStepData = { ...stepData, [step.id]: data };
     setStepData(newStepData);

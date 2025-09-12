@@ -3,7 +3,7 @@
  * This test can be run independently without global setup
  */
 
-const { test, expect } = require('@playwright/test');
+import { test, expect } from '@playwright/test';
 
 // Simple test without describe blocks to avoid conflicts
 test('Entry page displays correctly', async ({ page }) => {

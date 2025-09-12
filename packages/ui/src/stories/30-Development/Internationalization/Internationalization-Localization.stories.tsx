@@ -709,7 +709,7 @@ const TRANSLATIONS: Translations = {
 interface LocalizationContextType {
   currentLanguage: Language;
   currentLocale: string;
-  t: (key: string, params?: Record<string, any>) => string;
+  t: (key: string, params?: Record<string, unknown>) => string;
   formatDate: (date: Date) => string;
   formatTime: (date: Date) => string;
   formatNumber: (num: number) => string;
@@ -737,7 +737,7 @@ const LocalizationProvider = ({ children }: { children: React.ReactNode }) => {
     SUPPORTED_LANGUAGES.find(lang => lang.code === currentLocale) || SUPPORTED_LANGUAGES[0]
   , [currentLocale]);
 
-  const t = useCallback((key: string, params?: Record<string, any>) => {
+  const t = useCallback((key: string, params?: Record<string, unknown>) => {
     const keys = key.split('.');
     let translation: any = TRANSLATIONS[currentLocale];
     

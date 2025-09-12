@@ -296,7 +296,7 @@ export function useUserTools(uid: string) {
 
 // Custom hook for analytics tracking
 export function useProfileAnalytics(uid: string) {
-  const trackEvent = useCallback(async (event: string, data?: Record<string, any>) => {
+  const trackEvent = useCallback(async (event: string, data?: Record<string, unknown>) => {
     if (!uid) return;
 
     try {

@@ -112,22 +112,22 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         isOwnPost: z.ZodBoolean;
     }, "strip", z.ZodTypeAny, {
         action: "add" | "remove";
-        authorId: string;
         reaction: "heart";
+        authorId: string;
         postAge: number;
         isOwnPost: boolean;
     }, {
         action: "add" | "remove";
-        authorId: string;
         reaction: "heart";
+        authorId: string;
         postAge: number;
         isOwnPost: boolean;
     }>;
 }, "strip", z.ZodTypeAny, {
     metadata: {
         action: "add" | "remove";
-        authorId: string;
         reaction: "heart";
+        authorId: string;
         postAge: number;
         isOwnPost: boolean;
     };
@@ -139,8 +139,8 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
 }, {
     metadata: {
         action: "add" | "remove";
-        authorId: string;
         reaction: "heart";
+        authorId: string;
         postAge: number;
         isOwnPost: boolean;
     };

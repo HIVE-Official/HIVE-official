@@ -617,7 +617,7 @@ const AccessibilitySettingsPanel = () => {
                 <Label className="text-white">Font Size: {settings.visual.fontSize}px</Label>
                 <Slider
                   value={[settings.visual.fontSize]}
-                  onValueChange={(value: any) => updateSetting('visual', 'fontSize', value[0])}
+                  onValueChange={(value: unknown) => updateSetting('visual', 'fontSize', value[0])}
                   min={12}
                   max={24}
                   step={1}
@@ -632,7 +632,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Select
                   value={settings.visual.contrast}
-                  onValueChange={(value: any) => updateSetting('visual', 'contrast', value)}
+                  onValueChange={(value: unknown) => updateSetting('visual', 'contrast', value)}
                 >
                   <SelectTrigger className="w-32 bg-gray-800 border-gray-700">
                     <SelectValue />
@@ -663,7 +663,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Select
                   value={settings.visual.colorBlindMode}
-                  onValueChange={(value: any) => updateSetting('visual', 'colorBlindMode', value)}
+                  onValueChange={(value: unknown) => updateSetting('visual', 'colorBlindMode', value)}
                 >
                   <SelectTrigger className="w-40 bg-gray-800 border-gray-700">
                     <SelectValue />
@@ -684,7 +684,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Select
                   value={settings.visual.focusIndicator}
-                  onValueChange={(value: any) => updateSetting('visual', 'focusIndicator', value)}
+                  onValueChange={(value: unknown) => updateSetting('visual', 'focusIndicator', value)}
                 >
                   <SelectTrigger className="w-40 bg-gray-800 border-gray-700">
                     <SelectValue />
@@ -747,7 +747,7 @@ const AccessibilitySettingsPanel = () => {
                   <Label className="text-white">Dwell Time: {settings.motor.dwellTime}ms</Label>
                   <Slider
                     value={[settings.motor.dwellTime]}
-                    onValueChange={(value: any) => updateSetting('motor', 'dwellTime', value[0])}
+                    onValueChange={(value: unknown) => updateSetting('motor', 'dwellTime', value[0])}
                     min={500}
                     max={3000}
                     step={100}
@@ -784,7 +784,7 @@ const AccessibilitySettingsPanel = () => {
                   <Label className="text-white">Volume: {settings.auditory.soundVolume}%</Label>
                   <Slider
                     value={[settings.auditory.soundVolume]}
-                    onValueChange={(value: any) => updateSetting('auditory', 'soundVolume', value[0])}
+                    onValueChange={(value: unknown) => updateSetting('auditory', 'soundVolume', value[0])}
                     min={0}
                     max={100}
                     step={5}
@@ -886,7 +886,7 @@ const AccessibilitySettingsPanel = () => {
                 <Label className="text-white">Session Timeout: {settings.cognitive.sessionTimeout} minutes</Label>
                 <Slider
                   value={[settings.cognitive.sessionTimeout]}
-                  onValueChange={(value: any) => updateSetting('cognitive', 'sessionTimeout', value[0])}
+                  onValueChange={(value: unknown) => updateSetting('cognitive', 'sessionTimeout', value[0])}
                   min={15}
                   max={120}
                   step={15}
@@ -946,7 +946,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Select
                   value={settings.keyboard.tabOrder}
-                  onValueChange={(value: any) => updateSetting('keyboard', 'tabOrder', value)}
+                  onValueChange={(value: unknown) => updateSetting('keyboard', 'tabOrder', value)}
                 >
                   <SelectTrigger className="w-32 bg-gray-800 border-gray-700">
                     <SelectValue />
@@ -1180,7 +1180,7 @@ const AccessibilitySystem = () => {
                             { name: 'Profile', icon: User, shortcut: 'P' },
                             { name: 'Calendar', icon: Calendar, shortcut: 'C' },
                             { name: 'Settings', icon: Settings, shortcut: ',' }
-                          ].map((item: any) => (
+                          ].map((item) => (
                             <AccessibleButton
                               key={item.name}
                               variant="secondary"

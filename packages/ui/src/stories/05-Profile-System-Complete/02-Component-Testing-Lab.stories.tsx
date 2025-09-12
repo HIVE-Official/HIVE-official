@@ -262,7 +262,7 @@ function TestControlPanel({
                   key={key}
                   size="sm"
                   variant={deviceMode === key ? "default" : "outline"}
-                  onClick={() => onDeviceChange(key as any)}
+                  onClick={() => onDeviceChange(key as unknown)}
                   className="flex-1"
                 >
                   <Icon className="w-4 h-4" />

@@ -493,7 +493,7 @@ function EnhancedFeedDiscoverySystem() {
 
           {/* Enhanced Feed Content */}
           <div className="space-y-6">
-            {filteredContent.map((item: any) => (
+            {filteredContent.map((item) => (
               <Card key={item.id} className={`p-6 border-2 hover:shadow-xl transition-all duration-200 ${getContentPriorityColor(item.priority)}`}>
                 
                 {/* Content Header */}

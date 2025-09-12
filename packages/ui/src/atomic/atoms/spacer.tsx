@@ -193,44 +193,44 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
 Spacer.displayName = 'Spacer';
 
 // Convenient preset components
-export const VerticalSpacer: React.FC<Omit<SpacerProps, 'direction'>> = (props: any) => (
+export const VerticalSpacer: React.FC<Omit<SpacerProps, 'direction'>> = (props: Omit<SpacerProps, 'direction'>) => (
   <Spacer direction="vertical" {...props} />
 );
 
-export const HorizontalSpacer: React.FC<Omit<SpacerProps, 'direction'>> = (props: any) => (
+export const HorizontalSpacer: React.FC<Omit<SpacerProps, 'direction'>> = (props: Omit<SpacerProps, 'direction'>) => (
   <Spacer direction="horizontal" {...props} />
 );
 
-export const FlexibleSpacer: React.FC<Omit<SpacerProps, 'flexible'>> = (props: any) => (
+export const FlexibleSpacer: React.FC<Omit<SpacerProps, 'flexible'>> = (props: Omit<SpacerProps, 'flexible'>) => (
   <Spacer flexible {...props} />
 );
 
-export const ResponsiveSpacer: React.FC<Omit<SpacerProps, 'responsive'>> = (props: any) => (
+export const ResponsiveSpacer: React.FC<Omit<SpacerProps, 'responsive'>> = (props: Omit<SpacerProps, 'responsive'>) => (
   <Spacer responsive {...props} />
 );
 
 // Size-specific presets
-export const TinySpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: any) => (
+export const TinySpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="xs" {...props} />
 );
 
-export const SmallSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: any) => (
+export const SmallSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="sm" {...props} />
 );
 
-export const MediumSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: any) => (
+export const MediumSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="md" {...props} />
 );
 
-export const LargeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: any) => (
+export const LargeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="lg" {...props} />
 );
 
-export const ExtraLargeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: any) => (
+export const ExtraLargeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="xl" {...props} />
 );
 
-export const HugeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: any) => (
+export const HugeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="2xl" {...props} />
 );
 

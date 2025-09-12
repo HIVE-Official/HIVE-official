@@ -47,7 +47,7 @@ export interface StandardFormProps extends StandardComponentProps {
  * Standard Component Factory
  * Creates consistent components following HiveButton pattern
  */
-export declare function createStandardComponent<T extends Record<string, any>>(displayName: string, baseClassName: string, variants: any, defaultVariants?: Record<string, any>): React.ForwardRefExoticComponent<React.PropsWithoutRef<T & VariantProps<any>> & React.RefAttributes<HTMLElement>>;
+export declare function createStandardComponent<T extends Record<string, unknown>>(displayName: string, baseClassName: string, variants: any, defaultVariants?: Record<string, unknown>): React.ForwardRefExoticComponent<React.PropsWithoutRef<T & VariantProps<any>> & React.RefAttributes<HTMLElement>>;
 /**
  * Motion Props Factory (based on HiveButton pattern)
  */

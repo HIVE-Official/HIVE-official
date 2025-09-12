@@ -3,7 +3,7 @@ interface ToolElement {
     id: string;
     type: 'input' | 'button' | 'text' | 'image' | 'container' | 'link';
     label: string;
-    properties: Record<string, any>;
+    properties: Record<string, unknown>;
     position: {
         x: number;
         y: number;
@@ -12,7 +12,7 @@ interface ToolElement {
         width: number;
         height: number;
     };
-    style?: Record<string, any>;
+    style?: Record<string, unknown>;
     events?: Array<{
         trigger: string;
         action: string;
@@ -39,7 +39,7 @@ interface Tool {
     isFavorite?: boolean;
     lastUsed?: string;
     elements?: ToolElement[];
-    config?: Record<string, any>;
+    config?: Record<string, unknown>;
 }
 interface CompleteHIVEToolsSystemProps {
     tools: Tool[];

@@ -351,7 +351,7 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
     } catch (error) {
       logger.error('Magic link sign-in failed', { error });
       updateAuthState({
-        error: error instanceof Error ? error.message : 'Sign-in failed',
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Sign-in failed',
         isLoading: false,
       });
       throw error;
@@ -423,7 +423,7 @@ export function FirebaseAuthProvider({ children }: { children: React.ReactNode }
       logger.error('Onboarding completion failed', { error });
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }, [authState.user, authState.firebaseUser, getAuthToken, refreshUserData]);

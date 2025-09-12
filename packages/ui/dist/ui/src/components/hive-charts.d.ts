@@ -1,6 +1,6 @@
 import React from 'react';
 export interface HiveChartProps extends React.HTMLAttributes<HTMLDivElement> {
-    data?: any[];
+    data?: unknown[];
     type?: 'line' | 'bar' | 'pie' | 'area';
 }
 export declare const HiveChart: React.FC<HiveChartProps>;

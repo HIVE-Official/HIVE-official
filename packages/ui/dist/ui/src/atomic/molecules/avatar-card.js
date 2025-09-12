@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { Avatar } from '../atoms/avatar';
+import { cn } from '../../lib/utils.js';
+import { Avatar } from '../atoms/avatar.js';
 import { Check, Star, Crown, GraduationCap } from 'lucide-react';
 const roleBadges = {
     student: { icon: GraduationCap, color: 'text-[var(--hive-status-info)]' },
@@ -30,7 +30,7 @@ const cardSizes = {
         subtitleSize: 'text-base'
     }
 };
-export const AvatarCard = ({ src, name, subtitle, size = 'md', status, role, affiliation, privacy = 'public', interactive = false, layout = 'horizontal', className, onClick, }) => {
+export const AvatarCard = ({ src, name, subtitle, size = 'md', status, role, affiliation: _affiliation, privacy = 'public', interactive = false, layout = 'horizontal', className, onClick, }) => {
     const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2);
     const sizeConfig = cardSizes[size];
     const baseClasses = [

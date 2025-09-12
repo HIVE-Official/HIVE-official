@@ -236,7 +236,7 @@ const ToolsCreationSystem = () => {
                 type="text"
                 placeholder="Search tools by name, category, or functionality..."
                 value={searchQuery}
-                onChange={(e: any) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                 className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 pl-10"
               />
             </div>
@@ -246,7 +246,7 @@ const ToolsCreationSystem = () => {
               </Button>
               <select 
                 value={selectedCategory}
-                onChange={(e: any) => setSelectedCategory(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedCategory(e.target.value)}
                 className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
               >
                 {categories.map(cat => (

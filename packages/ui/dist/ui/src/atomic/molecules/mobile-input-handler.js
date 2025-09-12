@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useRef, useEffect, useState } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export function MobileInputHandler({ children, className, preventViewportShift = true, autoScrollToInput = true, onKeyboardShow, onKeyboardHide }) {
     const containerRef = useRef(null);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
@@ -39,7 +39,7 @@ export function MobileInputHandler({ children, className, preventViewportShift =
         };
         window.addEventListener('resize', handleResize);
         // Also listen for visual viewport changes (better for modern browsers)
-        if ('visualViewport' in window) {
+        if ('visualViewport' in window && window.visualViewport) {
             const visualViewport = window.visualViewport;
             visualViewport.addEventListener('resize', handleResize);
             return () => {

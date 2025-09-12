@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Card, CardContent, Button, Badge } from '@hive/ui';
-import { BarChart3, TrendingUp, Clock, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { BarChart3, TrendingUp, Target } from 'lucide-react';
 
 export function PersonalAnalyticsCard() {
   const stats = [

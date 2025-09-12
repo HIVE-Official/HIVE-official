@@ -191,7 +191,7 @@ const StudyGroupMatcher = React.forwardRef<HTMLDivElement, StudyGroupMatcherProp
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as 'create' | 'discover' | 'groups')}
               className={cn(
                 'px-4 py-2 text-sm font-medium transition-colors relative',
                 activeTab === tab.id

@@ -443,7 +443,7 @@ function UniversalSurfacesDemo() {
             {surfaces.map(({ id, label, icon: Icon, count }) => (
               <button
                 key={id}
-                onClick={() => setActiveSurface(id as any)}
+                onClick={() => setActiveSurface(id as unknown)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeSurface === id
                     ? 'text-[var(--hive-black)] hive-interactive'
@@ -671,14 +671,14 @@ function MembersSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
           <Input
             placeholder="Search members..."
             value={searchTerm}
-            onChange={(e: any) => setSearchTerm(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchTerm(e.target.value)}
             className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] pl-10"
           />
         </div>
         
         <select 
           value={roleFilter}
-          onChange={(e: any) => setRoleFilter(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRoleFilter(e.target.value)}
           className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
         >
           <option value="all">All Roles</option>
@@ -761,7 +761,7 @@ function PinnedSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
         <div className="flex items-center gap-3">
           <select 
             value={categoryFilter}
-            onChange={(e: any) => setCategoryFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategoryFilter(e.target.value)}
             className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
           >
             {categories.map(cat => (
@@ -781,7 +781,7 @@ function PinnedSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
 
       {/* Pinned Items */}
       <div className="space-y-4">
-        {mockPinnedItems.map((item: any) => (
+        {mockPinnedItems.map((item) => (
           <PinnedItemCard key={item.id} item={item} viewMode={viewMode} />
         ))}
       </div>

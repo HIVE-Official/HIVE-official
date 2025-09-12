@@ -27,7 +27,7 @@ export default function DashboardPage() {
 
       // Fetch user profile from Firestore
       try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const userDoc = await getDoc(doc(db, 'users', user.id));
         if (userDoc.exists()) {
           const data = userDoc.data();
           setUserData({

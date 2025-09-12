@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useEffect, useCallback } from 'react';
-import { Button } from '../atoms';
-import { Card } from '../molecules';
+import { Button } from '../atoms/index.js';
+import { Card } from '../molecules/index.js';
 import { Heart, MessageCircle, Share, Bookmark, MoreHorizontal, User, Hash, ArrowUp, RefreshCw, Calendar, Target, Users, Sparkles, Award, Filter } from 'lucide-react';
 export function ActivityFeed({ feedType = 'personal', userId, spaceFilter = [], className = '' }) {
     const [feedState, setFeedState] = useState({
@@ -218,7 +218,7 @@ export function ActivityFeed({ feedType = 'personal', userId, spaceFilter = [], 
                 setFeedState(prev => ({
                     ...prev,
                     isLoading: false,
-                    error: error instanceof Error ? error.message : 'Failed to load posts'
+                    error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Failed to load posts'
                 }));
             }
         };

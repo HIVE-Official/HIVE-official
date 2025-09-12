@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Badge } from '../atoms/badge';
-import { Button } from '../atoms/button-enhanced';
-import { Avatar, AvatarImage, AvatarFallback } from '../atoms/avatar';
+import { cn } from '../../lib/utils.js';
+import { Badge } from '../atoms/badge.js';
+import { Button } from '../atoms/button-enhanced.js';
+import { Avatar, AvatarImage, AvatarFallback } from '../atoms/avatar.js';
 const ResourceSharingCard = React.forwardRef(({ resource, compact = false, showOwnerInfo = true, onContact, onFavorite, onShare, onReport, currentUserId, className, ...props }, ref) => {
     const isOwner = currentUserId === resource.owner.id;
     const isAvailable = resource.availability === 'available';

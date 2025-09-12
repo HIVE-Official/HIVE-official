@@ -11,12 +11,12 @@ import {
 } from './use-live-updates';
 
 interface SpaceLiveData {
-  posts: any[];
-  events: any[];
-  members: any[];
+  posts: unknown[];
+  events: unknown[];
+  members: unknown[];
   onlineUsers: string[];
   typingUsers: string[];
-  activities: any[];
+  activities: unknown[];
   unreadCount: number;
   lastUpdate: Date | null;
 }
@@ -60,8 +60,8 @@ export function useSpaceActivityStatus(spaceId: string, userId: string) {
   const activitySummary = {
     totalMembers: members.length,
     onlineMembers: onlineUsers.length,
-    recentPosts: posts.filter(p => Date.now() - new Date(p.timestamp).getTime() < 3600000).length, // Last hour
-    upcomingEvents: events.filter(e => new Date(e.startTime) > new Date()).length,
+    recentPosts: posts.filter((p: any) => Date.now() - new Date(p.timestamp).getTime() < 3600000).length, // Last hour
+    upcomingEvents: events.filter((e: any) => new Date(e.startTime) > new Date()).length,
     isLive: isActive,
     hasRecentActivity: recentActivity
   };
@@ -75,26 +75,26 @@ export function useSpaceLeaderInsights(spaceId: string) {
   
   const insights = {
     engagement: {
-      postsToday: posts.filter(p => {
+      postsToday: posts.filter((p: any) => {
         const postDate = new Date(p.timestamp);
         const today = new Date();
         return postDate.toDateString() === today.toDateString();
       }).length,
       
-      activeMembers: members.filter(m => {
+      activeMembers: members.filter((m: any) => {
         // Consider members active if they've posted or commented recently
-        return posts.some(p => p.authorId === m.id && 
+        return posts.some((p: any) => p.authorId === m.id && 
           Date.now() - new Date(p.timestamp).getTime() < 7 * 24 * 60 * 60 * 1000 // Last week
         );
       }).length,
       
-      upcomingEvents: events.filter(e => new Date(e.startTime) > new Date()).length
+      upcomingEvents: events.filter((e: any) => new Date(e.startTime) > new Date()).length
     },
     
     trends: {
       growthRate: members.length > 0 ? (members.length / 30) : 0, // Rough monthly growth estimate
       popularTimes: [], // Could track when most posts/activity happen
-      engagementRate: posts.length > 0 ? (posts.reduce((sum, p) => sum + (p.likes || 0), 0) / posts.length) : 0
+      engagementRate: posts.length > 0 ? (posts.reduce((sum: number, p: any) => sum + (p.likes || 0), 0) / posts.length) : 0
     }
   };
   

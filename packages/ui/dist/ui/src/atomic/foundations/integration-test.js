@@ -2,14 +2,14 @@
  * HIVE Foundation Systems Integration Test
  * Simple validation that all foundation systems work together
  */
-import { motionComposition } from './motion-composition';
-import { typographyComposition } from './typography-composition';
-import { colorComposition } from './color-composition';
-import { layoutComposition } from './layout-composition';
-import { iconComposition } from './icon-composition';
-import { interactionComposition } from './interaction-composition';
-import { shadowComposition } from './shadow-composition';
-import { borderComposition } from './border-composition';
+import { motionComposition } from './motion-composition.js';
+import { typographyComposition } from './typography-composition.js';
+import { colorComposition } from './color-composition.js';
+import { layoutComposition } from './layout-composition.js';
+import { iconComposition } from './icon-composition.js';
+import { interactionComposition } from './interaction-composition.js';
+import { shadowComposition } from './shadow-composition.js';
+import { borderComposition } from './border-composition.js';
 // === BASIC INTEGRATION VALIDATION ===
 export const integrationTest = {
     // All 8 foundation systems

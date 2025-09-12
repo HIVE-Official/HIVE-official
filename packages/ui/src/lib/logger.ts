@@ -2,29 +2,29 @@
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 export const logger = {
-  log: (...args: any[]) => {
+  log: (...args: unknown[]) => {
     if (isDevelopment) {
       console.log('[HIVE]', ...args);
     }
   },
   
-  error: (...args: any[]) => {
+  error: (...args: unknown[]) => {
     console.error('[HIVE ERROR]', ...args);
   },
   
-  warn: (...args: any[]) => {
+  warn: (...args: unknown[]) => {
     if (isDevelopment) {
       console.warn('[HIVE WARN]', ...args);
     }
   },
   
-  info: (...args: any[]) => {
+  info: (...args: unknown[]) => {
     if (isDevelopment) {
       console.info('[HIVE INFO]', ...args);
     }
   },
   
-  debug: (...args: any[]) => {
+  debug: (...args: unknown[]) => {
     if (isDevelopment) {
       console.debug('[HIVE DEBUG]', ...args);
     }

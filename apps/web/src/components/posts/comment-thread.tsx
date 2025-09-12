@@ -112,7 +112,7 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
       const commentData = {
         postId,
         parentId: replyingTo || null,
-        userId: user.uid,
+        userId: user.id,
         userName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
         userAvatar: user.photoURL,
         content: commentText.trim(),
@@ -187,10 +187,10 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
     
     try {
       const commentRef = doc(db, 'spaces', spaceId, 'posts', postId, 'comments', commentId);
-      const isLiked = currentLikes.includes(user.uid);
+      const isLiked = currentLikes.includes(user.id);
       
       await updateDoc(commentRef, {
-        likes: isLiked ? arrayRemove(user.uid) : arrayUnion(user.uid)
+        likes: isLiked ? arrayRemove(user.id) : arrayUnion(user.id)
       });
     } catch (error) {
       console.error('Error liking comment:', error);
@@ -222,9 +222,9 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
   const renderComment = (comment: Comment, depth: number = 0) => {
     const isExpanded = expandedThreads.has(comment.id);
     const hasReplies = comment.replies && comment.replies.length > 0;
-    const isAuthor = user?.uid === comment.userId;
+    const isAuthor = user?.id === comment.userId;
     const isEditing = editingComment === comment.id;
-    const isLiked = user && comment.likes.includes(user.uid);
+    const isLiked = user && comment.likes.includes(user.id);
     
     return (
       <div key={comment.id} className={cn("relative", depth > 0 && "ml-8 mt-2")}>

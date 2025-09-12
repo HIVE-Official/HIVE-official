@@ -148,7 +148,7 @@ export default function ProfileAnalyticsStorybook() {
 
   if (isLoading || !profile) {
     return (
-      <PageContainer title="Loading..." maxWidth="4xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
@@ -184,7 +184,7 @@ export default function ProfileAnalyticsStorybook() {
             </Button>
           </div>
         }
-        maxWidth="4xl"
+       
       >
         {/* 🎯 **ANALYTICS HERO SECTION** */}
         <Card className="p-8 mb-8 bg-gradient-to-br from-hive-gold/5 to-[var(--hive-gold)]/5 border-hive-gold/20">

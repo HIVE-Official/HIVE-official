@@ -272,7 +272,7 @@ export const DormSelectionFieldMolecule: React.FC<DormSelectionFieldProps> = ({
 }) => {
   const handleRoomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Allow alphanumeric room numbers
-    const sanitized = e.target.value.replace(/[^a-zA-Z0-9\-]/g, '');
+    const sanitized = e.target.value.replace(/[^a-zA-Z0-9-]/g, '');
     onRoomChange?.(sanitized);
   };
 

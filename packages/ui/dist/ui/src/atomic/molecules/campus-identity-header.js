@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { motion } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
-export const CampusIdentityHeader = ({ user, variant = 'default', showStatus = true, onAvatarClick, onEditClick, className }) => {
+import { motion } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
+export const CampusIdentityHeader = ({ user, showStatus = true, onAvatarClick, onEditClick, className }) => {
     const { name, handle, avatar, year, major, dorm, isOnline = false, isBuilder = false, completionPercentage = 0 } = user || {};
     const getInitials = (name) => {
         if (!name)

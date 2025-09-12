@@ -4,7 +4,7 @@
  */
 
 import { currentEnvironment } from './env';
-import { captureError } from './error-monitoring';
+import { captureError, LogLevel as ErrorLogLevel } from './error-monitoring';
 
 /**
  * Log levels in order of severity
@@ -420,7 +420,7 @@ async function sendToRemoteService(entry: LogEntry): Promise<void> {
         error.stack = entry.error.stack;
         
         await captureError(error, {
-          level: entry.level === LogLevel.ERROR ? ('error' as const) : ('fatal' as const),
+          level: entry.level === LogLevel.ERROR ? ErrorLogLevel.ERROR : ErrorLogLevel.FATAL,
           userId: entry.context.userId,
           requestId: entry.context.requestId,
           tags: {
@@ -438,7 +438,7 @@ async function sendToRemoteService(entry: LogEntry): Promise<void> {
       } else {
         // Log message without error object
         await captureError(new Error(entry.message), {
-          level: entry.level === LogLevel.ERROR ? ('error' as const) : ('fatal' as const),
+          level: entry.level === LogLevel.ERROR ? ErrorLogLevel.ERROR : ErrorLogLevel.FATAL,
           userId: entry.context.userId,
           requestId: entry.context.requestId,
           tags: {

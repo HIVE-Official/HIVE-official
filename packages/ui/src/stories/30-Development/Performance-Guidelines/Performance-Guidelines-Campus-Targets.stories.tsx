@@ -37,6 +37,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '10-Performance/Campus Guidelines & Targets',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {

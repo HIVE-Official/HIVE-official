@@ -379,7 +379,7 @@ export const SocialInteraction = React.forwardRef<HTMLDivElement, SocialInteract
         aria-label="Social actions"
         {...props}
       >
-        {actions.map((action: any) => (
+        {actions.map((action: SocialActionData) => (
           <SocialActionButton
             key={action.type}
             action={action}

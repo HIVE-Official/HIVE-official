@@ -194,7 +194,7 @@ export function getFormA11yProps(
   error?: string,
   required?: boolean
 ) {
-  const props: Record<string, any> = {
+  const props: Record<string, unknown> = {
     id,
     'aria-label': label,
     className: focusStyles({ type: 'default' }),

@@ -227,7 +227,7 @@ const ButtonVariantsShowcase = () => {
               </div>
               
               <Button
-                variant={variant.name as any}
+                variant={variant.name as unknown}
                 onClick={() => handleClick(variant.name)}
                 disabled={loadingStates[variant.name]}
                 className="w-full"
@@ -289,16 +289,16 @@ const ButtonSizesShowcase = () => {
                   
                   <div className="flex items-center gap-3">
                     {size.name === 'icon' ? (
-                      <Button variant="primary" size={size.name as any}>
+                      <Button variant="primary" size={size.name as unknown}>
                         <Settings className="w-4 h-4" />
                       </Button>
                     ) : (
-                      <Button variant="primary" size={size.name as any}>
+                      <Button variant="primary" size={size.name as unknown}>
                         Campus Action
                       </Button>
                     )}
                     
-                    <Button variant="secondary" size={size.name as any}>
+                    <Button variant="secondary" size={size.name as unknown}>
                       {size.name === 'icon' ? (
                         <Bell className="w-4 h-4" />
                       ) : (
@@ -306,7 +306,7 @@ const ButtonSizesShowcase = () => {
                       )}
                     </Button>
                     
-                    <Button variant="secondary" size={size.name as any}>
+                    <Button variant="secondary" size={size.name as unknown}>
                       {size.name === 'icon' ? (
                         <Search className="w-4 h-4" />
                       ) : (
@@ -347,7 +347,7 @@ const CampusActionPresetsShowcase = () => {
                 {category.actions.map((action, actionIndex) => (
                   <div key={actionIndex} className="space-y-2">
                     <Button
-                      variant={action.variant as any}
+                      variant={action.variant as unknown}
                       className="w-full flex items-center gap-2"
                     >
                       <action.icon className="w-4 h-4" />
@@ -393,7 +393,7 @@ const AccessibilityShowcase = () => {
               {['primary', 'secondary', 'outline'].map((variant) => (
                 <Button
                   key={variant}
-                  variant={variant as any}
+                  variant={variant as unknown}
                   onFocus={() => setFocusedButton(variant)}
                   onBlur={() => setFocusedButton(null)}
                   className={`transition-all ${focusedButton === variant ? 'ring-2 ring-[var(--hive-brand-primary)] ring-offset-2' : ''}`}

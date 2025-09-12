@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { motion } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
-import { SpaceCategoryCard, SPACE_CATEGORIES } from '../atoms/space-category-card';
+import { motion } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
+import { SpaceCategoryCard, SPACE_CATEGORIES } from '../atoms/space-category-card.js';
 import { Search, Filter, TrendingUp, Clock } from 'lucide-react';
 export const SpaceExploreHub = ({ stats, categories, onCategoryClick, onSearch, onShowFilters, searchQuery = '', isLoading = false, className }) => {
     const [localSearchQuery, setLocalSearchQuery] = React.useState(searchQuery);

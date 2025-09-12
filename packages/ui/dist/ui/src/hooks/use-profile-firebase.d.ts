@@ -41,7 +41,7 @@ export declare function useUserTools(uid: string): {
     clearError: () => void;
 };
 export declare function useProfileAnalytics(uid: string): {
-    trackEvent: (event: string, data?: Record<string, any>) => Promise<void>;
+    trackEvent: (event: string, data?: Record<string, unknown>) => Promise<void>;
     trackProfileView: () => void;
     trackCardInteraction: (cardType: string, action: string) => void;
     trackLayoutChange: (layoutData: any) => void;
@@ -62,7 +62,7 @@ export declare function useProfileData(uid: string): {
         markAllNotificationsAsRead: () => Promise<void>;
         updateGhostMode: (settings: Partial<GhostModeDocument>) => Promise<void>;
         toggleGhostMode: (enabled: boolean) => Promise<void>;
-        trackEvent: (event: string, data?: Record<string, any>) => Promise<void>;
+        trackEvent: (event: string, data?: Record<string, unknown>) => Promise<void>;
         trackProfileView: () => void;
         trackCardInteraction: (cardType: string, action: string) => void;
         trackLayoutChange: (layoutData: any) => void;

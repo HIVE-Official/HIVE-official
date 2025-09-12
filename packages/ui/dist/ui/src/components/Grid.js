@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 export const Grid = ({ cols = 1, gap = '1rem', responsive = true, className, children, style, ...props }) => {
     const gridCols = typeof cols === 'number'
         ? responsive

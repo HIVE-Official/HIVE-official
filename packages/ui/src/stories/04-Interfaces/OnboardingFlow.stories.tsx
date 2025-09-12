@@ -274,7 +274,7 @@ export const Step2ProfileCreation: Story = {
               type="text"
               placeholder="Your full name"
               value={displayName}
-              onChange={(e: any) => setDisplayName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setDisplayName(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
               This is how other students will see you
@@ -289,7 +289,7 @@ export const Step2ProfileCreation: Story = {
                 type="text"
                 placeholder="your.handle"
                 value={handle}
-                onChange={(e: any) => setHandle(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setHandle(e.target.value)}
                 className="pl-12"
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
@@ -426,7 +426,7 @@ export const Step3SchoolPledge: Story = {
                 type="checkbox"
                 id="terms"
                 checked={agreedToTerms}
-                onChange={(e: any) => setAgreedToTerms(e.target.checked)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAgreedToTerms(e.target.checked)}
                 className="mt-1"
               />
               <label htmlFor="terms" className="text-sm">
@@ -439,7 +439,7 @@ export const Step3SchoolPledge: Story = {
                 type="checkbox"
                 id="community"
                 checked={agreedToCommunity}
-                onChange={(e: any) => setAgreedToCommunity(e.target.checked)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAgreedToCommunity(e.target.checked)}
                 className="mt-1"
               />
               <label htmlFor="community" className="text-sm">
@@ -518,7 +518,7 @@ export const Step4AcademicInfo: Story = {
             <label className="text-sm font-medium">Graduation Year</label>
             <select
               value={graduationYear}
-              onChange={(e: any) => setGraduationYear(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setGraduationYear(e.target.value)}
               className="w-full p-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
             >
               <option value="">Select year</option>
@@ -535,7 +535,7 @@ export const Step4AcademicInfo: Story = {
               type="text"
               placeholder="e.g., Computer Science"
               value={major}
-              onChange={(e: any) => setMajor(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setMajor(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
               This helps us recommend relevant academic spaces

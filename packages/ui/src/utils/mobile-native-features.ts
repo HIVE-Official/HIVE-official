@@ -178,8 +178,8 @@ export async function getCurrentLocation(options: LocationOptions = {}): Promise
           speed: position.coords.speed || undefined
         });
       },
-      (error: any) => {
-        reject(new Error(`Geolocation error: ${error.message}`));
+      (error: unknown) => {
+        reject(new Error(`Geolocation error: ${(error instanceof Error ? error.message : "Unknown error")}`));
       },
       {
         enableHighAccuracy: options.enableHighAccuracy || true,

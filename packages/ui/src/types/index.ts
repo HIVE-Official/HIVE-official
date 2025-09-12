@@ -4,7 +4,7 @@ export interface OnboardingData {
   email: string;
   step: number;
   completed: boolean;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 }
 
 export type UserRole = 'student' | 'faculty' | 'alumni' | 'staff';
@@ -52,8 +52,8 @@ export interface CalendarCardData {
   upcomingEvents?: Event[];
   todaysEvents?: Event[];
   nextEvent?: Event;
-  connections?: any[];
-  conflicts?: any[];
+  connections?: unknown[];
+  conflicts?: unknown[];
   lastUpdated?: Date;
 }
 

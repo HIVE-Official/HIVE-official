@@ -33,6 +33,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '08-Animation-Guidelines/Motion System',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {

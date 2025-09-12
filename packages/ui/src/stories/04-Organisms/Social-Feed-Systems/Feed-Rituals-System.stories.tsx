@@ -405,7 +405,7 @@ const CampusFeedSystem = () => {
                 <Input
                   placeholder="What's happening on campus?"
                   value={postText}
-                  onChange={(e: any) => setPostText(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPostText(e.target.value)}
                   className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 mb-3"
                 />
                 <div className="flex items-center justify-between">

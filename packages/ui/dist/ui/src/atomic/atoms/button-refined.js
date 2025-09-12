@@ -7,9 +7,9 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // Import our composition system for consistent styling
-import { buttonComposition } from "../foundations/component-composition";
+import { buttonComposition } from "../foundations/component-composition.js";
 // Button variants using CSS variables instead of hardcoded values
 const buttonVariants = cva(
 // Base styles using our CSS variables and composition rules

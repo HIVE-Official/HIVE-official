@@ -120,7 +120,7 @@ export async function validateRequest(
     if (securityConfig.requireSecureHeaders) {
       const headerValidation = validateSecureHeaders(request);
       if (!headerValidation.valid) {
-        await logSecurityEvent('input_validation', {
+        await logSecurityEvent('invalid_token', {
           operation: `${operation}_header_validation_failed`,
           tags: {
             clientId,
@@ -162,7 +162,7 @@ export async function validateRequest(
 
           // Block dangerous inputs if configured
           if (securityConfig.blockDangerous && bodyValidation.securityLevel === 'dangerous') {
-            await logSecurityEvent('input_validation', {
+            await logSecurityEvent('invalid_token', {
               operation: `${operation}_dangerous_input_blocked`,
               tags: {
                 clientId,
@@ -181,7 +181,7 @@ export async function validateRequest(
 
           // Log suspicious inputs if configured
           if (securityConfig.logSuspicious && bodyValidation.securityLevel === 'suspicious') {
-            await logSecurityEvent('input_validation', {
+            await logSecurityEvent('invalid_token', {
               operation: `${operation}_suspicious_input`,
               tags: {
                 clientId,
@@ -198,7 +198,7 @@ export async function validateRequest(
           const securityScan = SecurityScanner.scanInput(bodyStr, 'request_body');
           
           if (securityConfig.blockDangerous && securityScan.level === 'dangerous') {
-            await logSecurityEvent('input_validation', {
+            await logSecurityEvent('invalid_token', {
               operation: `${operation}_dangerous_content_blocked`,
               tags: {
                 clientId,
@@ -241,7 +241,7 @@ export async function validateRequest(
         const securityScan = SecurityScanner.scanInput(value, `query_${key}`);
         
         if (securityConfig.blockDangerous && securityScan.level === 'dangerous') {
-          await logSecurityEvent('input_validation', {
+          await logSecurityEvent('invalid_token', {
             operation: `${operation}_dangerous_query_blocked`,
             tags: {
               clientId,
@@ -295,7 +295,7 @@ export async function validateRequest(
   } catch (error) {
     console.error('Validation middleware error:', error);
     
-    await logSecurityEvent('input_validation', {
+    await logSecurityEvent('invalid_token', {
       operation: `${operation}_validation_error`,
       tags: {
         clientId,

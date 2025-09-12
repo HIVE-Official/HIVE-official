@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export function TouchTarget({ children, onClick, onLongPress, onSwipeLeft, onSwipeRight, className, disabled = false, hapticFeedback = false, rippleEffect = true, minTouchTarget = true }) {
     const [isPressed, setIsPressed] = useState(false);
     const [ripples, setRipples] = useState([]);

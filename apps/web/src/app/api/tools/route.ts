@@ -5,7 +5,7 @@ import { CreateToolSchema, ToolSchema, createToolDefaults } from "@hive/core";
 import { dbAdmin as adminDb } from "@/lib/firebase-admin";
 import { getCurrentUser } from "../../../lib/auth-server";
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 // Rate limiting: 10 tool creations per hour per user
 // // const createToolLimiter = rateLimit({

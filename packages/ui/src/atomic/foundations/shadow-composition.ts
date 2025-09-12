@@ -360,7 +360,7 @@ export const createShadowClass = (elevation: keyof typeof elevationScale) => {
 };
 
 export const createInteractiveShadowClass = (component: 'buttons' | 'cards', variant: string) => {
-  const componentShadows = interactiveShadows[component] as any;
+  const componentShadows = interactiveShadows[component] as Record<string, Record<string, string>>;
   const variantShadows = componentShadows[variant];
   if (!variantShadows) return '';
   
@@ -368,7 +368,7 @@ export const createInteractiveShadowClass = (component: 'buttons' | 'cards', var
 };
 
 export const createCampusShadowClass = (category: keyof typeof campusShadowPatterns, variant: string) => {
-  const categoryShadows = campusShadowPatterns[category] as any;
+  const categoryShadows = campusShadowPatterns[category] as Record<string, { shadow: string; class: string; interaction: string; use: string }>;
   const variantShadow = categoryShadows[variant];
   if (!variantShadow) return '';
   

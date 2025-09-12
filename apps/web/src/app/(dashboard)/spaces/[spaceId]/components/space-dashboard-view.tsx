@@ -188,7 +188,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
         }
         
         // Transform API data to component format
-        const transformedData = transformApiSpaceToComponent(apiData.space, user?.uid);
+        const transformedData = transformApiSpaceToComponent(apiData.space, user?.id);
         setSpaceData(transformedData);
         
       } catch (error) {
@@ -199,7 +199,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
     };
 
     loadSpaceData();
-  }, [spaceId, user?.uid]);
+  }, [spaceId, user?.id]);
 
   const handleJoinSpace = async () => {
     if (isJoining || !spaceData) return;

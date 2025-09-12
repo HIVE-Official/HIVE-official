@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Bell, BellOff, MessageSquare, UserMinus, Pin, PinOff, Send, X } from 'lucide-react';
 const spaceTypeIcons = {
     course: '📚',
@@ -24,7 +24,7 @@ const spaceTypeColors = {
     graduation: 'from-gold/20 to-champagne/10',
     mentoring: 'from-teal-500/20 to-teal-600/10'
 };
-export const CampusSpacesCard = ({ spaces, isLoading = false, variant = 'default', showQuickActions = true, onSpaceClick, onJoinSpace, onViewAll, onMuteSpace, onPinSpace, onLeaveSpace, onQuickPost, className }) => {
+export const CampusSpacesCard = ({ spaces, isLoading = false, showQuickActions = true, onSpaceClick, onJoinSpace, onViewAll, onMuteSpace, onPinSpace, onLeaveSpace, onQuickPost, className }) => {
     const [hoveredSpace, setHoveredSpace] = useState(null);
     const [showQuickPostFor, setShowQuickPostFor] = useState(null);
     const [quickPostMessage, setQuickPostMessage] = useState('');

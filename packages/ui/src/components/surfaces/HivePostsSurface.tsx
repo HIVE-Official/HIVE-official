@@ -211,10 +211,10 @@ const PostCard: React.FC<{
             <input
               type="text"
               value={comment}
-              onChange={(e: any) => setComment(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setComment(e.target.value)}
               placeholder="Write a comment..."
               className="flex-1 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)] focus:border-transparent"
-              onKeyDown={(e: any) => {
+              onKeyDown={(e: React.KeyboardEvent) => {
                 if (e.key === 'Enter' && comment.trim()) {
                   onComment?.();
                   setComment('');
@@ -281,7 +281,7 @@ const CreatePost: React.FC<{
       <div className="space-y-3">
         <HiveTextarea
           value={content}
-          onChange={(e: any) => setContent(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
           placeholder="Share something with the space..."
           className="min-h-[100px] resize-none"
           autoFocus={isExpanded}

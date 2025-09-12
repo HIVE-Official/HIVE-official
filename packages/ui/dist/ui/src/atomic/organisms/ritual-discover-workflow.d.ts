@@ -1,6 +1,6 @@
 export interface DiscoverRitualProps {
     currentStep?: number;
-    onStepComplete?: (stepId: string, data: any) => void;
+    onStepComplete?: (stepId: string, data: Record<string, unknown>) => void;
     onRitualComplete?: () => void;
     userInterests?: string[];
     userGoals?: string[];

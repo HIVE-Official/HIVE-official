@@ -267,17 +267,17 @@ export class MobileServiceWorker {
     }
   }
 
-  private async syncFeedPost(data: any): Promise<void> {
+  private async syncFeedPost(data: unknown): Promise<void> {
     // Implement feed post sync logic
     console.log('Syncing feed post:', data);
   }
 
-  private async syncSpaceAction(data: any): Promise<void> {
+  private async syncSpaceAction(data: unknown): Promise<void> {
     // Implement space action sync logic
     console.log('Syncing space action:', data);
   }
 
-  private async syncToolSave(data: any): Promise<void> {
+  private async syncToolSave(data: unknown): Promise<void> {
     // Implement tool save sync logic
     console.log('Syncing tool save:', data);
   }

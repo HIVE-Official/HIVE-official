@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createContext, useContext, useState, useCallback } from 'react';
-import { cn } from '../../lib/utils';
-import { Button } from '../atoms/button-enhanced';
+import { cn } from '../../lib/utils.js';
+import { Button } from '../atoms/button-enhanced.js';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/card.js';
 // Alert Component
 export function Alert({ variant = 'default', size = 'md', title, description, icon, dismissible = false, onDismiss, actions, className, children }) {
     const getVariantStyles = (variant) => {

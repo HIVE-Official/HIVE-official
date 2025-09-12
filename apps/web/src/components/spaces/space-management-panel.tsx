@@ -139,7 +139,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
       setMembers(membersData);
 
       // Find current user's role
-      const currentMember = membersData.find(m => m.userId === user?.uid);
+      const currentMember = membersData.find(m => m.userId === user?.id);
       if (currentMember) {
         setCurrentUserRole(currentMember.role);
       }
@@ -232,7 +232,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
       await setDoc(doc(db, 'spaces', spaceId, 'banned', userId), {
         userId,
         userName,
-        bannedBy: user?.uid,
+        bannedBy: user?.id,
         bannedAt: serverTimestamp(),
         reason: reason || 'No reason provided'
       });
@@ -294,7 +294,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
       // Update request status
       await updateDoc(requestRef, {
         status: approved ? 'approved' : 'rejected',
-        processedBy: user?.uid,
+        processedBy: user?.id,
         processedAt: serverTimestamp()
       });
 

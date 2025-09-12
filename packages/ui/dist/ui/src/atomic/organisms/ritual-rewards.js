@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Award, Trophy, Crown, Star, Shield, Medal, Zap, Heart, Target, Sparkles, Unlock, Share2, Lock, Check, Clock, Users, Filter, Grid3X3, List, Search } from 'lucide-react';
 const RARITY_CONFIG = {
     common: {

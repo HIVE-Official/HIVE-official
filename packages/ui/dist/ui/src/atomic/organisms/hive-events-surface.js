@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Plus, Clock, MapPin, Users, CheckCircle2, XCircle, AlertCircle, Eye, Settings, TrendingUp, Activity, Filter } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export const HiveEventsSurface = ({ space, events = [], maxEvents, canCreateEvents = false, canModerate = false, leaderMode, viewMode = 'list', onCreateEvent, onRSVPEvent, onEditEvent, onCancelEvent }) => {
     const [filter, setFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('upcoming');

@@ -100,7 +100,7 @@ export const Text: React.FC<TextProps> = ({
   ...props
 }) => {
   // Handle legacy props
-  const computedAs = level ? (`h${level}` as any) : as;
+  const computedAs = level ? (`h${level}` as React.ElementType) : as;
   const computedVariant = level 
     ? levelToVariant[level as keyof typeof levelToVariant] 
     : size 

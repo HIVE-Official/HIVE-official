@@ -64,8 +64,8 @@ export function MobileInputHandler({
     window.addEventListener('resize', handleResize);
     
     // Also listen for visual viewport changes (better for modern browsers)
-    if ('visualViewport' in window) {
-      const visualViewport = window.visualViewport as any;
+    if ('visualViewport' in window && window.visualViewport) {
+      const visualViewport = window.visualViewport;
       visualViewport.addEventListener('resize', handleResize);
       
       return () => {

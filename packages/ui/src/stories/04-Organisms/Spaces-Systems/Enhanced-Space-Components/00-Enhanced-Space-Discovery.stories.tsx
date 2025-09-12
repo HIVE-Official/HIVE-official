@@ -439,7 +439,7 @@ function EnhancedSpaceDiscovery() {
             ].map(({ id, label, icon: Icon, count }) => (
               <button
                 key={id}
-                onClick={() => setActiveView(id as any)}
+                onClick={() => setActiveView(id as unknown)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeView === id
                     ? 'text-[var(--hive-black)] hive-interactive'
@@ -467,7 +467,7 @@ function EnhancedSpaceDiscovery() {
                 type="text"
                 placeholder="Search spaces by name, topic, or tags..."
                 value={searchQuery}
-                onChange={(e: any) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                 className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 pl-10"
               />
             </div>
@@ -484,7 +484,7 @@ function EnhancedSpaceDiscovery() {
               
               <select 
                 value={sortBy}
-                onChange={(e: any) => setSortBy(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as string)}
                 className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
               >
                 <option value="popular">Most Popular</option>

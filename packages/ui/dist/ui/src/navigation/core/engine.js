@@ -8,7 +8,7 @@
  * - Layout mode calculation
  * - Performance optimization
  */
-import { BREAKPOINTS } from './types';
+import { BREAKPOINTS } from './types.js';
 // ============================================================================
 // RESPONSIVE ENGINE
 // ============================================================================

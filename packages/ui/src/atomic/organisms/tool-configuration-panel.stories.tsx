@@ -441,7 +441,7 @@ export const InteractiveDemo: Story = {
     const [isSaving, setIsSaving] = useState(false);
     const [tool, setTool] = useState<ToolConfigurationData>(mockAdvancedTool);
 
-    const handleSave = async (toolId: string, values: Record<string, any>) => {
+    const handleSave = async (toolId: string, values: Record<string, unknown>) => {
       setIsSaving(true);
       
       try {
@@ -464,7 +464,7 @@ export const InteractiveDemo: Story = {
       }
     };
 
-    const handleTestConfiguration = async (toolId: string, values: Record<string, any>) => {
+    const handleTestConfiguration = async (toolId: string, values: Record<string, unknown>) => {
       // Simulate test based on API key
       await new Promise(resolve => setTimeout(resolve, 2000));
       

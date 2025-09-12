@@ -344,7 +344,7 @@ const CheckboxPatternsShowcase = () => {
     setSelections(prev => ({ ...prev, [id]: checked }));
   };
 
-  const getGroupProgress = (options: any[]) => {
+  const getGroupProgress = (options: unknown[]) => {
     const selected = options.filter(option => selections[option.id]).length;
     return `${selected}/${options.length} selected`;
   };
@@ -446,7 +446,7 @@ const CheckboxSizesShowcase = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id={`${size.name}-unchecked`}
-                        size={size.name as any}
+                        size={size.name as unknown}
                         checked={false}
                       />
                       <Label htmlFor={`${size.name}-unchecked`} className="text-sm text-[var(--hive-text-secondary)]">
@@ -457,7 +457,7 @@ const CheckboxSizesShowcase = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id={`${size.name}-checked`}
-                        size={size.name as any}
+                        size={size.name as unknown}
                         checked={true}
                       />
                       <Label htmlFor={`${size.name}-checked`} className="text-sm text-[var(--hive-text-secondary)]">
@@ -468,7 +468,7 @@ const CheckboxSizesShowcase = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id={`${size.name}-disabled`}
-                        size={size.name as any}
+                        size={size.name as unknown}
                         checked={false}
                         disabled={true}
                       />

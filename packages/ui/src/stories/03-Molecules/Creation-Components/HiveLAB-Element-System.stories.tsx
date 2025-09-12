@@ -625,7 +625,7 @@ export const ToolCreationInterface: Story = {
                     { step: 2, title: 'Select Elements', description: 'Choose building blocks for your solution' },
                     { step: 3, title: 'Configure & Test', description: 'Set up the tool and test with your community' },
                     { step: 4, title: 'Deploy & Share', description: 'Launch in your space and share with others' }
-                  ].map((item: any) => (
+                  ].map((item) => (
                     <div key={item.step} className={`flex gap-3 p-3 rounded-lg ${
                       creationStep === item.step ? 'bg-purple-100' : 'bg-gray-50'
                     }`}>
@@ -684,7 +684,7 @@ export const ToolCreationInterface: Story = {
                     type="text"
                     placeholder="e.g., Floor movie night, Study session for CSE 474, Food order..."
                     value={toolName}
-                    onChange={(e: any) => setToolName(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolName(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--hive-gold)] focus:border-transparent"
                   />
                 </div>

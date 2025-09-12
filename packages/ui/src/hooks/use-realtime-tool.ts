@@ -139,8 +139,8 @@ export function useRealtimeTool(options: UseRealtimeToolOptions): [RealtimeToolS
       lastSequenceNumberRef.current = response.lastSequenceNumber;
 
       retryCountRef.current = 0;
-    } catch (error: any) {
-      const errorMessage = `Failed to load tool state: ${error.message}`;
+    } catch (error: unknown) {
+      const errorMessage = `Failed to load tool state: ${error instanceof Error ? error.message : "Unknown error"}`;
       setState(prev => ({
         ...prev,
         error: errorMessage,
@@ -220,14 +220,14 @@ export function useRealtimeTool(options: UseRealtimeToolOptions): [RealtimeToolS
       }));
 
       retryCountRef.current = 0;
-    } catch (error: any) {
+    } catch (error: unknown) {
       retryCountRef.current++;
       
       if (retryCountRef.current >= maxRetries) {
         setState(prev => ({
           ...prev,
           syncStatus: 'error',
-          error: `Connection lost: ${error.message}`,
+          error: `Connection lost: ${error instanceof Error ? error.message : "Unknown error"}`,
         }));
         
         if (onError) {
@@ -345,7 +345,7 @@ export function useRealtimeTool(options: UseRealtimeToolOptions): [RealtimeToolS
         }
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Revert optimistic update on error
       if (optimistic && optimisticUpdatesRef.current.has(updateId)) {
         setState(prev => ({
@@ -361,7 +361,7 @@ export function useRealtimeTool(options: UseRealtimeToolOptions): [RealtimeToolS
         }
       }
 
-      const errorMessage = `Failed to update tool state: ${error.message}`;
+      const errorMessage = `Failed to update tool state: ${error instanceof Error ? error.message : "Unknown error"}`;
       setState(prev => ({ ...prev, error: errorMessage }));
       
       if (onError) {
@@ -400,15 +400,15 @@ export function useRealtimeTool(options: UseRealtimeToolOptions): [RealtimeToolS
         onStateChange(response.serverState, state.toolState);
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       setState(prev => ({
         ...prev,
         syncStatus: 'error',
-        error: `Sync failed: ${error.message}`,
+        error: `Sync failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       }));
       
       if (onError) {
-        onError(`Sync failed: ${error.message}`);
+        onError(`Sync failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       }
     }
   }, [toolId, deploymentId, state, onStateChange, onError]);
@@ -445,15 +445,15 @@ export function useRealtimeTool(options: UseRealtimeToolOptions): [RealtimeToolS
         onStateChange(serverState, state.toolState);
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       setState(prev => ({
         ...prev,
-        error: `Failed to reset state: ${error.message}`,
+        error: `Failed to reset state: ${error instanceof Error ? error.message : "Unknown error"}`,
         isLoading: false,
       }));
       
       if (onError) {
-        onError(`Failed to reset state: ${error.message}`);
+        onError(`Failed to reset state: ${error instanceof Error ? error.message : "Unknown error"}`);
       }
     }
   }, [toolId, deploymentId, spaceId, state.toolState, onStateChange, onError]);
@@ -477,11 +477,11 @@ export function useRealtimeTool(options: UseRealtimeToolOptions): [RealtimeToolS
         },
         broadcastToSpace: true,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to send tool update:', error);
       
       if (onError) {
-        onError(`Failed to send update: ${error.message}`);
+        onError(`Failed to send update: ${error instanceof Error ? error.message : "Unknown error"}`);
       }
     }
   }, [toolId, deploymentId, spaceId, state.toolState, state.connectionId, onError]);

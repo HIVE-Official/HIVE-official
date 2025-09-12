@@ -10,12 +10,12 @@ export declare const ToolCollaboratorSchema: z.ZodObject<{
     addedAt: z.ZodDate;
     addedBy: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    permission: "view" | "edit" | "comment";
+    permission: "view" | "comment" | "edit";
     userId: string;
     addedAt: Date;
     addedBy: string;
 }, {
-    permission: "view" | "edit" | "comment";
+    permission: "view" | "comment" | "edit";
     userId: string;
     addedAt: Date;
     addedBy: string;
@@ -303,12 +303,12 @@ export declare const ToolSchema: z.ZodObject<{
         addedAt: z.ZodDate;
         addedBy: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        permission: "view" | "edit" | "comment";
+        permission: "view" | "comment" | "edit";
         userId: string;
         addedAt: Date;
         addedBy: string;
     }, {
-        permission: "view" | "edit" | "comment";
+        permission: "view" | "comment" | "edit";
         userId: string;
         addedAt: Date;
         addedBy: string;
@@ -628,7 +628,7 @@ export declare const ToolSchema: z.ZodObject<{
         notificationEmail?: string | undefined;
     };
     collaborators: {
-        permission: "view" | "edit" | "comment";
+        permission: "view" | "comment" | "edit";
         userId: string;
         addedAt: Date;
         addedBy: string;
@@ -738,7 +738,7 @@ export declare const ToolSchema: z.ZodObject<{
         allowAnalyticsOptOut?: boolean | undefined;
     } | undefined;
     collaborators?: {
-        permission: "view" | "edit" | "comment";
+        permission: "view" | "comment" | "edit";
         userId: string;
         addedAt: Date;
         addedBy: string;
@@ -1406,12 +1406,12 @@ export declare const ShareToolSchema: z.ZodObject<{
     expiresAt: z.ZodOptional<z.ZodDate>;
     requiresApproval: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
-    permission: "view" | "edit" | "comment";
+    permission: "view" | "comment" | "edit";
     requiresApproval: boolean;
     expiresAt?: Date | undefined;
 }, {
     expiresAt?: Date | undefined;
-    permission?: "view" | "edit" | "comment" | undefined;
+    permission?: "view" | "comment" | "edit" | undefined;
     requiresApproval?: boolean | undefined;
 }>;
 export type ShareTool = z.infer<typeof ShareToolSchema>;

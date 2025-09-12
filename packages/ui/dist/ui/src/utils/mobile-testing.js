@@ -4,7 +4,7 @@
  * Comprehensive testing tools for mobile experience validation
  */
 import { useState } from 'react';
-import { mobilePerformanceManager } from './mobile-performance';
+import { mobilePerformanceManager } from './mobile-performance.js';
 // Common mobile device profiles for testing
 export const DEVICE_PROFILES = {
     'iPhone SE': {
@@ -201,7 +201,7 @@ export class MobileTester {
             result.passed = result.errors.length === 0;
         }
         catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorMessage = error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error);
             result.errors.push(`Scenario execution failed: ${errorMessage}`);
             result.passed = false;
         }
@@ -248,7 +248,7 @@ export class MobileTester {
         }
         catch (error) {
             stepResult.passed = false;
-            stepResult.error = error instanceof Error ? error.message : String(error);
+            stepResult.error = error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error);
         }
         stepResult.endTime = performance.now();
         stepResult.duration = stepResult.endTime - stepResult.startTime;

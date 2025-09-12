@@ -2,11 +2,13 @@ export declare const adminFirestore: {
     collection: (name: string) => {
         doc: (id: string) => {
             get: () => Promise<null>;
-            set: (data: any) => Promise<any>;
-            update: (data: any) => Promise<any>;
+            set: (data: unknown) => Promise<unknown>;
+            update: (data: unknown) => Promise<unknown>;
             delete: () => Promise<boolean>;
         };
-        add: (data: any) => Promise<any>;
+        add: (data: any) => Promise<{
+            id: string;
+        }>;
         where: (field: string, op: string, value: any) => {
             get: () => Promise<{
                 docs: never[];

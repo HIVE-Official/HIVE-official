@@ -282,7 +282,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">First Name</Label>
             <Input
               value={settings.profile.firstName}
-              onChange={(e: any) => updateSetting('profile.firstName', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSetting('profile.firstName', e.target.value)}
               className="bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -290,7 +290,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Last Name</Label>
             <Input
               value={settings.profile.lastName}
-              onChange={(e: any) => updateSetting('profile.lastName', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSetting('profile.lastName', e.target.value)}
               className="bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -302,7 +302,7 @@ const ProfileSettingsTab = ({
             <span className="absolute left-3 top-3 text-gray-500">@</span>
             <Input
               value={settings.profile.handle}
-              onChange={(e: any) => updateSetting('profile.handle', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSetting('profile.handle', e.target.value)}
               className="pl-8 bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -313,7 +313,7 @@ const ProfileSettingsTab = ({
           <Label className="text-white">Bio</Label>
           <Textarea
             value={settings.profile.bio}
-            onChange={(e: any) => updateSetting('profile.bio', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSetting('profile.bio', e.target.value)}
             className="bg-gray-800 border-gray-700 text-white resize-none"
             rows={3}
             maxLength={150}
@@ -342,7 +342,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Graduation Year</Label>
             <Select
               value={settings.profile.graduationYear}
-              onValueChange={(value: any) => updateSetting('profile.graduationYear', value)}
+              onValueChange={(value: unknown) => updateSetting('profile.graduationYear', value)}
             >
               <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                 <SelectValue />
@@ -360,7 +360,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Major</Label>
             <Select
               value={settings.profile.major}
-              onValueChange={(value: any) => updateSetting('profile.major', value)}
+              onValueChange={(value: unknown) => updateSetting('profile.major', value)}
             >
               <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                 <SelectValue />
@@ -381,7 +381,7 @@ const ProfileSettingsTab = ({
           <Label className="text-white">Housing</Label>
           <Select
             value={settings.profile.dorm}
-            onValueChange={(value: any) => updateSetting('profile.dorm', value)}
+            onValueChange={(value: unknown) => updateSetting('profile.dorm', value)}
           >
             <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
               <SelectValue />
@@ -471,7 +471,7 @@ const PrivacySettingsTab = ({
           <Label className="text-white">Who can see your profile?</Label>
           <Select
             value={settings.privacy.profileVisibility}
-            onValueChange={(value: any) => updateSetting('privacy.profileVisibility', value)}
+            onValueChange={(value: unknown) => updateSetting('privacy.profileVisibility', value)}
           >
             <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
               <SelectValue />

@@ -2,7 +2,7 @@
  * HIVE Accessibility Theme
  * High-contrast theme optimized for accessibility and visual impairments
  */
-import { baseTheme } from './base';
+import { baseTheme } from './base.js';
 export const accessibilityTheme = {
     ...baseTheme,
     name: 'hive-accessibility',

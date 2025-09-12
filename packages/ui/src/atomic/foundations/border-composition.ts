@@ -389,7 +389,7 @@ export const createCampusBorderClass = (
   category: keyof typeof campusBorderPatterns,
   variant: string
 ) => {
-  const categoryBorders = campusBorderPatterns[category] as any;
+  const categoryBorders = campusBorderPatterns[category] as Record<string, { border: string; radius: string; interactive: string; use: string }>;
   const variantBorder = categoryBorders[variant];
   if (!variantBorder) return '';
   
@@ -401,7 +401,7 @@ export const createComponentBorderClass = (
   variant: string,
   state: string = 'default'
 ) => {
-  const componentBorders = componentBorderPatterns[component] as any;
+  const componentBorders = componentBorderPatterns[component] as Record<string, Record<string, string>>;
   const variantBorders = componentBorders[variant];
   if (!variantBorders) return '';
   

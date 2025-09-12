@@ -50,7 +50,7 @@ export const MinimalFloatingSidebar: React.FC<NavigationProps> = ({
         )}
         
         {/* Navigation Items */}
-        {coreItems.map((item: any) => {
+        {coreItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentPath === item.href || currentPath.startsWith(item.href + '/');
           
@@ -107,7 +107,7 @@ export const CleanVerticalSidebar: React.FC<NavigationProps> = ({
 
         {/* Navigation */}
         <nav className="space-y-2">
-          {coreItems.map((item: any) => {
+          {coreItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPath === item.href || currentPath.startsWith(item.href + '/');
             
@@ -150,7 +150,7 @@ export const TopHorizontalNav: React.FC<NavigationProps> = ({
     )}>
       {/* Navigation Items */}
       <div className="flex items-center space-x-2">
-        {coreItems.map((item: any) => {
+        {coreItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentPath === item.href || currentPath.startsWith(item.href + '/');
           
@@ -202,7 +202,7 @@ export const BottomTabNav: React.FC<NavigationProps> = ({
       'flex items-center justify-around px-4',
       className
     )}>
-      {coreItems.map((item: any) => {
+      {coreItems.map((item) => {
         const Icon = item.icon;
         const isActive = currentPath === item.href || currentPath.startsWith(item.href + '/');
         
@@ -257,7 +257,7 @@ export const CompactIconRail: React.FC<NavigationProps> = ({
 
       {/* Navigation Items */}
       <div className="space-y-4">
-        {coreItems.map((item: any) => {
+        {coreItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentPath === item.href || currentPath.startsWith(item.href + '/');
           

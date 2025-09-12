@@ -91,11 +91,11 @@ export function EmptyState({
       </div>
       
       <div className="space-y-2 mb-6">
-        <Text variant={sizeClasses[size].title as any} className="font-semibold text-[var(--hive-text-primary)]">
+        <Text variant={sizeClasses[size].title as "display-2xl" | "display-xl" | "display-lg" | "display-md" | "display-sm" | "heading-xl" | "heading-lg" | "heading-md" | "heading-sm" | "body-lg" | "body-md" | "body-sm" | "body-xs" | "body-2xs" | undefined} className="font-semibold text-[var(--hive-text-primary)]">
           {title}
         </Text>
         {description && (
-          <Text variant={sizeClasses[size].description as any} className="text-[var(--hive-text-secondary)] max-w-md">
+          <Text variant={sizeClasses[size].description as "display-2xl" | "display-xl" | "display-lg" | "display-md" | "display-sm" | "heading-xl" | "heading-lg" | "heading-md" | "heading-sm" | "body-lg" | "body-md" | "body-sm" | "body-xs" | "body-2xs" | undefined} className="text-[var(--hive-text-secondary)] max-w-md">
             {description}
           </Text>
         )}

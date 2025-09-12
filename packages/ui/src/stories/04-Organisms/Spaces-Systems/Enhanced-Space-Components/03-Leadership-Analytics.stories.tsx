@@ -281,7 +281,7 @@ function LeadershipAnalyticsDemo() {
             ].map(({ id, label, icon: Icon, description }) => (
               <button
                 key={id}
-                onClick={() => setLeaderMode(id as any)}
+                onClick={() => setLeaderMode(id as unknown)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   leaderMode === id
                     ? 'text-[var(--hive-black)] hive-interactive'
@@ -370,7 +370,7 @@ function ConfigureMode() {
               <input
                 type="text"
                 value={settings.general.name}
-                onChange={(e: any) => updateSetting('general', 'name', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSetting('general', 'name', e.target.value)}
                 className="w-full mt-1 bg-gray-900 border border-green-500/30 rounded-lg px-3 py-2 text-[var(--hive-text-primary)]"
               />
             </div>
@@ -379,7 +379,7 @@ function ConfigureMode() {
               <label className="text-[var(--hive-text-primary)] text-sm font-medium">Description</label>
               <textarea
                 value={settings.general.description}
-                onChange={(e: any) => updateSetting('general', 'description', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSetting('general', 'description', e.target.value)}
                 rows={3}
                 className="w-full mt-1 bg-gray-900 border border-green-500/30 rounded-lg px-3 py-2 text-[var(--hive-text-primary)] resize-none"
               />
@@ -604,7 +604,7 @@ function ManageMode() {
         ].map(({ id, label, icon: Icon }) => (
           <button
             key={id}
-            onClick={() => setActiveManageTab(id as any)}
+            onClick={() => setActiveManageTab(id as unknown)}
             className={`flex items-center px-4 py-2 rounded-md transition-colors ${
               activeManageTab === id
                 ? 'bg-red-500 text-[var(--hive-text-primary)]'
@@ -965,7 +965,7 @@ function ContentModeration() {
 function ModerationQueue() {
   return (
     <div className="space-y-4">
-      {mockModerationQueue.map((item: any) => (
+      {mockModerationQueue.map((item) => (
         <Card key={item.id} className="bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/30">
           <CardContent className="p-4">
             <div className="flex items-start justify-between">

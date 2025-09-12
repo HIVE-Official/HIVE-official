@@ -294,7 +294,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e: any) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         onEditTool(featuredTool.id);
                       }}
@@ -306,7 +306,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={(e: any) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       onViewTool?.(featuredTool.id);
                     }}

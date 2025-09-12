@@ -131,7 +131,7 @@ export default function PublicProfilePage() {
 
   if (error) {
     return (
-      <PageContainer title="Profile Not Found" maxWidth="xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -153,7 +153,7 @@ export default function PublicProfilePage() {
 
   if (!profileData || isLoading) {
     return (
-      <PageContainer title="Loading Profile..." maxWidth="xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-12 h-12 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4 flex items-center justify-center">
@@ -210,7 +210,7 @@ export default function PublicProfilePage() {
             </Button>
           </div>
         }
-        maxWidth="xl"
+       
       >
         {/* Profile Header */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">

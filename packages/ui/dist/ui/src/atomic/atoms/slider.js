@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 const sliderColors = {
     primary: {
         track: 'bg-[var(--hive-brand-secondary)]',
@@ -49,7 +49,7 @@ const sliderSizes = {
         container: 'h-10'
     }
 };
-export const Slider = React.forwardRef(({ min = 0, max = 100, step = 1, value, defaultValue, range = false, marks, size = 'md', variant = 'default', color = 'primary', showValue = false, showMarks = true, vertical = false, disabled = false, label, formatValue, className, onChange, onChangeEnd, ...props }, ref) => {
+export const Slider = React.forwardRef(({ min = 0, max = 100, step: _step = 1, value, defaultValue, range = false, marks, size = 'md', variant: _variant = 'default', color = 'primary', showValue = false, showMarks = true, vertical = false, disabled = false, label, formatValue, className, onChange, onChangeEnd: _onChangeEnd, ...props }, ref) => {
     const [internalValue, setInternalValue] = React.useState(() => {
         if (value !== undefined)
             return value;
@@ -64,7 +64,7 @@ export const Slider = React.forwardRef(({ min = 0, max = 100, step = 1, value, d
             setInternalValue(value);
         }
     }, [value]);
-    const handleChange = (newValue) => {
+    const _handleChange = (newValue) => {
         if (value === undefined) {
             setInternalValue(newValue);
         }

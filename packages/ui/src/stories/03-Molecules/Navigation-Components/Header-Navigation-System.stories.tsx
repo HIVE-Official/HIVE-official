@@ -165,7 +165,7 @@ export const DesktopHeaderNavigation: Story = {
                   type="search"
                   placeholder="Search students, spaces, events..."
                   value={searchQuery}
-                  onChange={(e: any) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                   onFocus={() => setShowSearch(true)}
                   className="pl-10 pr-4 bg-gray-50 border-gray-200 focus:bg-white"
                 />
@@ -436,7 +436,7 @@ export const MobileHeaderNavigation: Story = {
                   type="search"
                   placeholder="Search campus..."
                   value={searchQuery}
-                  onChange={(e: any) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-4"
                   autoFocus
                 />

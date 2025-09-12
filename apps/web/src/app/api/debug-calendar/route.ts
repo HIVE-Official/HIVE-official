@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus as _HttpStatus } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus as _HttpStatus } from "@/lib/api-response-types";
 
 export async function GET(_request: NextRequest) {
   try {

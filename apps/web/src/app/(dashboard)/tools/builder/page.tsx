@@ -250,7 +250,7 @@ export default function ToolsBuilderPage() {
         },
         body: JSON.stringify({
           ...tool,
-          createdBy: user?.uid,
+          createdBy: user?.id,
           createdAt: new Date().toISOString(),
           status: 'draft'
         })

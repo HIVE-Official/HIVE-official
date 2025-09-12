@@ -161,7 +161,7 @@ export function useRouteTransitions() {
             await router.push(path);
         }
         catch (error) {
-            setNavigationError(error instanceof Error ? error.message : 'Navigation failed');
+            setNavigationError(error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Navigation failed');
         }
         finally {
             setIsNavigating(false);

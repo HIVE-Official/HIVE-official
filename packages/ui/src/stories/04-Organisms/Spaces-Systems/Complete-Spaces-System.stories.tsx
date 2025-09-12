@@ -291,7 +291,7 @@ const CompleteSpacesSystem = () => {
         <Button
           key={id}
           variant={activeView === id ? 'primary' : 'secondary'}
-          onClick={() => setActiveView(id as any)}
+          onClick={() => setActiveView(id as unknown)}
           className="flex items-center gap-2"
         >
           <Icon className="w-4 h-4" />

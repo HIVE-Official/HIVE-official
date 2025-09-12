@@ -237,7 +237,7 @@ export function FeedDisplay({
             >
               <PostDisplay
                 post={post}
-                currentUserId={user?.uid}
+                currentUserId={user?.id}
                 onLike={handleLike}
                 onComment={handleComment}
                 onShare={handleShare}

@@ -300,7 +300,7 @@ export default function OnboardingPage() {
         
         // Check if already onboarded
         try {
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          const userDoc = await getDoc(doc(db, 'users', user.id));
           if (userDoc.exists() && userDoc.data()?.onboardingCompletedAt) {
             logger.info('User already onboarded, redirecting to dashboard');
             router.push('/dashboard');
@@ -308,7 +308,7 @@ export default function OnboardingPage() {
           }
           
           // Load draft if exists
-          const draftDoc = await getDoc(doc(db, 'onboardingDrafts', user.uid));
+          const draftDoc = await getDoc(doc(db, 'onboardingDrafts', user.id));
           if (draftDoc.exists()) {
             const draft = draftDoc.data();
             setProfile(prev => ({ ...prev, ...draft }));

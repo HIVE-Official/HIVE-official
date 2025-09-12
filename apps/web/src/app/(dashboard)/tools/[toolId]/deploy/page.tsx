@@ -63,7 +63,7 @@ export default function ToolDeployPage() {
   
   const [deploymentConfig, setDeploymentConfig] = useState<DeploymentConfig>({
     targetType: 'profile',
-    targetId: user?.uid || 'test-user-id',
+    targetId: user?.id || 'test-user-id',
     permissions: {
       canInteract: true,
       canView: true,
@@ -80,7 +80,7 @@ export default function ToolDeployPage() {
   // Mock data for available targets
   const availableTargets: DeploymentTarget[] = [
     {
-      id: user?.uid || 'test-user-id',
+      id: user?.id || 'test-user-id',
       name: 'My Profile',
       type: 'profile',
       icon: <User className="h-5 w-5" />,

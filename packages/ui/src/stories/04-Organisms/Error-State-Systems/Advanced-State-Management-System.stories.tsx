@@ -231,7 +231,7 @@ interface Notification {
   actionUrl?: string;
   isRead: boolean;
   createdAt: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
 
 interface OptimisticUpdate {
@@ -699,7 +699,7 @@ const useRealTimeSync = () => {
       if (Math.random() < 0.3) {
         const notification: Notification = {
           id: Date.now().toString(),
-          type: ['like', 'comment', 'follow', 'space_invite'][Math.floor(Math.random() * 4)] as any,
+          type: ['like', 'comment', 'follow', 'space_invite'][Math.floor(Math.random() * 4)] as unknown,
           title: 'New Activity',
           message: 'Someone interacted with your content',
           isRead: false,
@@ -951,7 +951,7 @@ const RealTimeFeed = () => {
             <div className="flex-1 space-y-3">
               <Input
                 value={newPostContent}
-                onChange={(e: any) => setNewPostContent(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setNewPostContent(e.target.value)}
                 placeholder="What's happening on campus?"
                 className="bg-gray-800 border-gray-700 text-white"
                 onKeyPress={(e: any) => e.key === 'Enter' && !e.shiftKey && handleCreatePost()}

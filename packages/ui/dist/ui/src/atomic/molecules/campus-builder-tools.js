@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Lock, Star, Zap, Clock, Users } from 'lucide-react';
 const toolTypeConfig = {
     template: {
@@ -41,22 +41,10 @@ const difficultyConfig = {
     intermediate: { icon: '🟡', label: 'Intermediate' },
     advanced: { icon: '🔴', label: 'Advanced' }
 };
-export const CampusBuilderTools = ({ availableTools, createdTools, isBuilder = false, isLoading = false, variant = 'default', showBecomeBuilder = true, isLocked = true, // Default to locked for vBETA
+export const CampusBuilderTools = ({ availableTools, createdTools, isBuilder = false, isLoading = false, variant: _variant = 'default', showBecomeBuilder = true, isLocked = true, // Default to locked for vBETA
 onToolClick, onCreateTool, onViewTool, onBecomeBuilder, onViewAllCreated, onJoinWaitlist, className }) => {
     const [hoveredTool, setHoveredTool] = useState(null);
     const [activeTab, setActiveTab] = useState('available');
-    const formatLastUsed = (timestamp) => {
-        const now = new Date();
-        const used = new Date(timestamp);
-        const diffInHours = Math.floor((now.getTime() - used.getTime()) / (1000 * 60 * 60));
-        if (diffInHours < 1)
-            return 'Just now';
-        if (diffInHours < 24)
-            return `${diffInHours}h ago`;
-        if (diffInHours < 168)
-            return `${Math.floor(diffInHours / 24)}d ago`;
-        return `${Math.floor(diffInHours / 168)}w ago`;
-    };
     const displayedAvailableTools = availableTools?.slice(0, 4) ?? [];
     const displayedCreatedTools = createdTools?.slice(0, 3) ?? [];
     if (isLoading) {

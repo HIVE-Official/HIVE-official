@@ -96,6 +96,7 @@ interface DashboardData {
     timestamp: string;
     unread: boolean;
   }>;
+  tools: Array<any>; // Add tools property for compatibility
 }
 
 export function DashboardMain() {
@@ -115,7 +116,7 @@ export function DashboardMain() {
         // Fetch real data from API - using empty data structure for now
         const emptyData: DashboardData = {
           user: {
-            id: user?.uid || '',
+            id: user?.id || '',
             name: user?.displayName || '',
             handle: user?.email?.split('@')[0] || '',
             avatar: user?.photoURL || undefined,

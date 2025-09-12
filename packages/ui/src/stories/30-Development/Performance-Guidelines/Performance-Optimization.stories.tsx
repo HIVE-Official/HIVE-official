@@ -198,7 +198,7 @@ const HeavyComponent = memo(({
   onAction, 
   theme = 'dark' 
 }: { 
-  data: any[]; 
+  data: unknown[]; 
   onAction: (id: string) => void;
   theme?: string;
 }) => {
@@ -297,7 +297,7 @@ const VirtualScrollDemo = () => {
     >
       <div style={{ height: totalHeight, position: 'relative' }}>
         <div style={{ transform: `translateY(${offsetY}px)` }}>
-          {visibleItems.map((item: any) => (
+          {visibleItems.map((item) => (
             <div
               key={item.id}
               className="flex items-center space-x-3 p-3 border-b border-gray-800 hover:bg-gray-800"
@@ -338,7 +338,7 @@ const VirtualScrollDemo = () => {
       className="overflow-auto bg-gray-900 border border-gray-800 rounded-lg"
       style={{ height: containerHeight }}
     >
-      {items.slice(0, 100).map((item: any) => (
+      {items.slice(0, 100).map((item) => (
         <div
           key={item.id}
           className="flex items-center space-x-3 p-3 border-b border-gray-800 hover:bg-gray-800"

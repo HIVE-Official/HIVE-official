@@ -24,7 +24,6 @@ import {
   MapPin,
   UserPlus,
   Award,
-  Target,
   Flame
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -33,7 +32,7 @@ import { useFeed, useCoordinationFeed } from '@/hooks/use-feed';
 import { RitualsStrip } from '@/components/feed/rituals-strip';
 import { PostComposer } from '@/components/feed/post-composer';
 import { useActiveUsers } from '@/hooks/use-active-users';
-import { RitualEngine, type RitualStrip } from '@/lib/rituals/ritual-engine';
+// import { RitualEngine, type RitualStrip } from '@/lib/rituals/ritual-engine';
 import { useUnifiedAuth } from '@hive/ui';
 import { useQuery } from '@tanstack/react-query';
 import { RealTimeFeedManager } from '@/components/feed/real-time-feed-manager';
@@ -496,7 +495,7 @@ export default function FeedPageV2() {
   const [showComposer, setShowComposer] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const [currentFeedType, setCurrentFeedType] = useState<'personal' | 'campus' | 'trending'>('personal');
-  const [showDiscovery, setShowDiscovery] = useState(false);
+  const [_showDiscovery, _setShowDiscovery] = useState(false);
   
   // Get auth context
   const { user } = useUnifiedAuth();
@@ -525,11 +524,11 @@ export default function FeedPageV2() {
     isLoading,
     error,
     hasMore,
-    isLoadingMore,
+    _isLoadingMore,
     loadMore,
     refresh,
-    createPost: createFeedPost,
-    analytics,
+    _createFeedPost,
+    _analytics,
     feedType
   } = useFeed(currentFeedType);
 

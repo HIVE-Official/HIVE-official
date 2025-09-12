@@ -13,7 +13,7 @@ export function useFirebaseRealtime<T>(
   }>,
   orderByField?: string,
   limitCount?: number,
-  dependencies: any[] = []
+  dependencies: unknown[] = []
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);

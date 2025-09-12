@@ -1,10 +1,10 @@
 interface SpaceLiveData {
-    posts: any[];
-    events: any[];
-    members: any[];
+    posts: unknown[];
+    events: unknown[];
+    members: unknown[];
     onlineUsers: string[];
     typingUsers: string[];
-    activities: any[];
+    activities: unknown[];
     unreadCount: number;
     lastUpdate: Date | null;
 }

@@ -25,7 +25,6 @@ export interface CampusIdentityHeaderProps {
 
 export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
   user,
-  variant = 'default',
   showStatus = true,
   onAvatarClick,
   onEditClick,
@@ -309,7 +308,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
 };
 
 // Compact variant for use in navigation or cards
-export const CompactCampusIdentity: React.FC<Omit<CampusIdentityHeaderProps, 'variant'>> = (props: any) => (
+export const CompactCampusIdentity: React.FC<Omit<CampusIdentityHeaderProps, 'variant'>> = (props: Omit<CampusIdentityHeaderProps, 'variant'>) => (
   <CampusIdentityHeader {...props} variant="compact" />
 );
 

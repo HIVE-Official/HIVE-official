@@ -165,7 +165,8 @@ export const Tag = React.forwardRef<HTMLDivElement, TagProps>(({
       onKeyDown={interactive && !disabled ? (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onClick?.(e as any);
+          // Call the click handler - it's expected to handle the interaction
+          (e.currentTarget as HTMLDivElement).click();
         }
       } : undefined}
       {...props}

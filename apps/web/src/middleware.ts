@@ -86,7 +86,7 @@ function checkRateLimit(request: NextRequest): boolean {
 // Clean up old rate limit entries periodically
 setInterval(() => {
   const now = Date.now();
-  for (const [key, record] of rateLimitMap.entries()) {
+  for (const [key, record] of Array.from(rateLimitMap.entries())) {
     if (now > record.resetTime) {
       rateLimitMap.delete(key);
     }
@@ -109,9 +109,8 @@ export function middleware(request: NextRequest) {
   // Log security-relevant requests (but not in production to avoid noise)
   if (process.env.NODE_ENV !== 'production') {
     logger.info('Middleware', {
-      path: pathname,
       method: request.method,
-      ip: request.headers.get('x-forwarded-for') || (request.headers?.['x-forwarded-for'] || request.headers?.['x-real-ip'] || 'unknown'),
+      clientIP: request.headers.get('x-forwarded-for') || (request.headers?.['x-forwarded-for'] || request.headers?.['x-real-ip'] || 'unknown'),
     });
   }
   
@@ -129,9 +128,9 @@ export function middleware(request: NextRequest) {
       const clientIp = request.headers.get('x-forwarded-for') || 
                        request.headers.get('x-real-ip') || 
                        'unknown';
-      logger.warn('Rate limit exceeded', undefined, clientIp, {
-        path: pathname,
+      logger.warn('Rate limit exceeded', {
         method: request.method,
+        clientIP: clientIp,
       });
       
       return NextResponse.json(
@@ -188,9 +187,9 @@ export function middleware(request: NextRequest) {
       const clientIp = request.headers.get('x-forwarded-for') || 
                        request.headers.get('x-real-ip') || 
                        'unknown';
-      logger.warn('Suspicious request blocked', undefined, clientIp, {
-        path: pathname,
-        pattern: pattern.toString(),
+      logger.warn('Suspicious request blocked', {
+        metadata: { pattern: pattern.toString() },
+        clientIP: clientIp,
       });
       
       return NextResponse.json(

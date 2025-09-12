@@ -42,7 +42,7 @@ interface ToolDeploymentConfig {
     deployTo: 'profile' | 'space';
     targetId: string;
     surface?: 'pinned' | 'posts' | 'events' | 'tools' | 'chat' | 'members';
-    config?: Record<string, any>;
+    config?: Record<string, unknown>;
     permissions?: {
         canInteract?: boolean;
         canView?: boolean;
@@ -64,7 +64,7 @@ interface ToolDeployment {
     targetId: string;
     surface?: string;
     position?: number;
-    config?: Record<string, any>;
+    config?: Record<string, unknown>;
     permissions: {
         canInteract: boolean;
         canView: boolean;
@@ -81,13 +81,13 @@ interface ToolDeployment {
         collectAnalytics: boolean;
         notifyOnInteraction: boolean;
     };
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
     toolData?: {
         id: string;
         name: string;
         description: string;
         currentVersion: string;
-        elements: any[];
+        elements: unknown[];
     };
 }
 interface DeployedToolsResponse {
@@ -108,7 +108,7 @@ interface ToolUpdateEvent {
         changedFields: string[];
         executionResult?: any;
         errorMessage?: string;
-        metadata: Record<string, any>;
+        metadata: Record<string, unknown>;
     };
     affectedUsers: string[];
     timestamp: string;
@@ -258,7 +258,7 @@ declare class ApiClient {
         syncResult: string;
         serverState: any;
         serverVersion: number;
-        conflicts: any[];
+        conflicts: unknown[];
         resolutionStrategy?: string;
     }>;
     getSpaces(): Promise<SpacesResponse>;
@@ -272,7 +272,7 @@ declare class ApiClient {
         userId: string;
         dataType: 'usage' | 'rating' | 'feedback' | 'share' | 'like';
         value?: any;
-        metadata?: Record<string, any>;
+        metadata?: Record<string, unknown>;
     }): Promise<{
         success: boolean;
     }>;
@@ -303,15 +303,15 @@ export declare const apiUtils: {
             autoLaunch: boolean;
             requirePermission: boolean;
             maxConcurrentUsers: undefined;
-            customConfig: Record<string, any> | undefined;
+            customConfig: Record<string, unknown> | undefined;
         };
         integrations: never[];
         createdBy: string;
         createdAt: string;
         updatedAt: string;
     };
-    convertApiSpacesToProps: (spaces: any[]) => Space[];
-    handleApiError: (error: any) => any;
+    convertApiSpacesToProps: (spaces: unknown[]) => Space[];
+    handleApiError: (error: unknown) => string;
     generateMockCommunityTools: (count?: number) => {
         id: string;
         tool: {
@@ -342,7 +342,7 @@ export declare const apiUtils: {
             publishedAt: string;
             updatedAt: string;
             tags: string[];
-            category: any;
+            category: unknown;
             compatibility: string[];
             featured: boolean;
             verified: boolean;

@@ -83,7 +83,7 @@ export function RealtimeFeed() {
       try {
         const membershipQuery = query(
           collection(db, 'spaceMemberships'),
-          where('userId', '==', user.uid)
+          where('userId', '==', user.id)
         );
         
         const snapshot = await getDocs(membershipQuery);

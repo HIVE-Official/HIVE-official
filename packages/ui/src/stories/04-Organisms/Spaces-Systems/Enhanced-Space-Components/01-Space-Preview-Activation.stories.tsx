@@ -257,7 +257,7 @@ function SpacePreviewActivationFlow() {
             ].map(({ id, label, icon: Icon, description }) => (
               <button
                 key={id}
-                onClick={() => setActiveDemo(id as any)}
+                onClick={() => setActiveDemo(id as unknown)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeDemo === id
                     ? 'text-[var(--hive-black)] hive-interactive'

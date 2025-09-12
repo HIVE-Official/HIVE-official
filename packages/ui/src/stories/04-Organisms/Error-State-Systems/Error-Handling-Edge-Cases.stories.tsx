@@ -400,7 +400,7 @@ const ErrorDisplay = ({
           
           <div className="flex-1 space-y-2">
             <AlertTitle className="text-white flex items-center space-x-2">
-              <span>{error.message}</span>
+              <span>{(error instanceof Error ? error.message : "Unknown error")}</span>
               {error.code && (
                 <Badge variant="secondary" className="text-xs">
                   {error.code}
@@ -907,7 +907,7 @@ const ErrorHandlingSystem = () => {
                     type="checkbox"
                     id="technical"
                     checked={showTechnical}
-                    onChange={(e: any) => setShowTechnical(e.target.checked)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowTechnical(e.target.checked)}
                     className="rounded border-gray-600"
                   />
                   <Label htmlFor="technical" className="text-white text-sm">

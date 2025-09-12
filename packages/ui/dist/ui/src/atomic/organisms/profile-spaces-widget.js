@@ -1,11 +1,11 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Badge } from '../atoms/badge';
-import { Text } from '../atoms/text';
-import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
+import { cn } from '../../lib/utils.js';
+import { Card, CardContent, CardHeader } from '../../components/ui/card.js';
+import { Badge } from '../atoms/badge.js';
+import { Text } from '../atoms/text.js';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced.js';
 import { Users, Plus, Crown, Star, MessageSquare, Calendar, BookOpen, Coffee, Code, Heart, Settings, ChevronRight, ExternalLink, Search, TrendingUp, Award } from 'lucide-react';
 const getSpaceTypeConfig = (type) => {
     const configs = {

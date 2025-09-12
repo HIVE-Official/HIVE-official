@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '../lib/utils';
 
 export interface HiveChartProps extends React.HTMLAttributes<HTMLDivElement> {
-  data?: any[];
+  data?: unknown[];
   type?: 'line' | 'bar' | 'pie' | 'area';
 }
 

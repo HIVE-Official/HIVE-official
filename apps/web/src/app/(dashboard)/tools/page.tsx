@@ -261,7 +261,7 @@ export default function ToolsPage() {
         // Deploy campus template as working tool
         const deploymentRequest = {
           templateId: toolId,
-          userId: _user?.uid || 'anonymous',
+          userId: _user?.id || 'anonymous',
           socialSettings: DEPLOYMENT_PRESETS.space_shared // Default to viral sharing
         };
 
@@ -348,7 +348,7 @@ export default function ToolsPage() {
   return (
     <ErrorBoundary>
       <CompleteHIVEToolsSystem
-        userId={_user?.uid || 'anonymous'}
+        userId={_user?.id || 'anonymous'}
         userProfile={{
           name: _user?.displayName || 'Student',
           handle: _user?.email?.split('@')[0] || 'student',

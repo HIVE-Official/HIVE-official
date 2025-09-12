@@ -464,7 +464,7 @@ const CommandInterfaceDemo = () => {
                     type="text"
                     placeholder={searchMode ? "Search across HIVE platform..." : "Type a command or search..."}
                     value={searchQuery}
-                    onChange={(e: any) => setSearchQuery(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                     className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 pl-12 text-lg"
                     autoFocus
                   />

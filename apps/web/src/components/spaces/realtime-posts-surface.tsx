@@ -53,7 +53,7 @@ export function RealtimePostsSurface({
   const { user } = useAuth();
   const { posts, loading, error, refresh, subscribed } = useRealtimePosts({ 
     spaceId, 
-    userId: user?.uid 
+    userId: user?.id 
   });
   
   const [isCreating, setIsCreating] = useState(false);
@@ -80,7 +80,7 @@ export function RealtimePostsSurface({
         // Upload compressed images
         imageUrls = await uploadPostImages(
           compressedImages,
-          user.uid,
+          user.id,
           spaceId,
           (progress: any) => {
             console.log(`Upload progress: ${progress}%`);
@@ -90,7 +90,7 @@ export function RealtimePostsSurface({
       
       const postData = {
         content: newPostContent,
-        authorId: user.uid,
+        authorId: user.id,
         authorName: user.displayName || 'Anonymous',
         authorAvatar: user.photoURL,
         spaceId,
@@ -133,12 +133,12 @@ export function RealtimePostsSurface({
       if (post.isLiked) {
         await updateDoc(postRef, {
           likes: increment(-1),
-          likedBy: arrayRemove(user.uid)
+          likedBy: arrayRemove(user.id)
         });
       } else {
         await updateDoc(postRef, {
           likes: increment(1),
-          likedBy: arrayUnion(user.uid)
+          likedBy: arrayUnion(user.id)
         });
       }
     } catch (err) {
@@ -153,7 +153,7 @@ export function RealtimePostsSurface({
     try {
       await addDoc(collection(db, `posts/${postId}/comments`), {
         content,
-        authorId: user.uid,
+        authorId: user.id,
         authorName: user.displayName || 'Anonymous',
         authorAvatar: user.photoURL,
         createdAt: new Date(),

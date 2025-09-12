@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { X } from 'lucide-react';
 const tagColors = {
     default: {
@@ -120,7 +120,8 @@ export const Tag = React.forwardRef(({ variant = 'default', size = 'md', color =
     return (_jsxs("div", { ref: ref, className: cn(baseClasses, className), onClick: interactive && !disabled ? onClick : undefined, role: interactive ? 'button' : undefined, tabIndex: interactive && !disabled ? 0 : undefined, onKeyDown: interactive && !disabled ? (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                onClick?.(e);
+                // Call the click handler - it's expected to handle the interaction
+                e.currentTarget.click();
             }
         } : undefined, ...props, children: [leftIcon && (_jsx("span", { className: cn('flex-shrink-0', iconSize), children: leftIcon })), _jsx("span", { className: "truncate", children: children }), rightIcon && !removable && (_jsx("span", { className: cn('flex-shrink-0', iconSize), children: rightIcon })), removable && (_jsx("button", { type: "button", onClick: handleRemove, disabled: disabled, className: cn('flex-shrink-0 rounded-full', 'transition-all duration-200 ease-out', 'hover:bg-[color-mix(in_srgb,var(--hive-text-primary)_10%,transparent)]', 'focus:outline-none focus:bg-[color-mix(in_srgb,var(--hive-text-primary)_10%,transparent)]', 'active:scale-90', removeButtonSize, disabled && 'cursor-not-allowed opacity-50'), "aria-label": "Remove tag", children: _jsx(X, { className: "w-full h-full" }) }))] }));
 });

@@ -8,7 +8,6 @@ import {
   BellOff, 
   MessageSquare, 
   UserMinus, 
-  MoreHorizontal, 
   Pin, 
   PinOff,
   Send,
@@ -76,7 +75,6 @@ const spaceTypeColors: Record<CampusSpace['type'], string> = {
 export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
   spaces,
   isLoading = false,
-  variant = 'default',
   showQuickActions = true,
   onSpaceClick,
   onJoinSpace,
@@ -308,7 +306,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       className="flex items-center gap-1"
                     >
                       <button
-                        onClick={(e: any) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           toggleQuickPost(space.id);
                         }}
@@ -319,7 +317,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       </button>
                       
                       <button
-                        onClick={(e: any) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           onPinSpace?.(space.id, !space.isPinned);
                         }}
@@ -334,7 +332,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       </button>
 
                       <button
-                        onClick={(e: any) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           onMuteSpace?.(space.id, !space.isMuted);
                         }}
@@ -350,7 +348,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
 
                       {space.userRole === 'member' && (
                         <button
-                          onClick={(e: any) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             onLeaveSpace?.(space.id);
                           }}
@@ -390,8 +388,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       <input
                         type="text"
                         value={quickPostMessage}
-                        onChange={(e: any) => setQuickPostMessage(e.target.value)}
-                        onKeyDown={(e: any) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuickPostMessage(e.target.value)}
+                        onKeyDown={(e: React.KeyboardEvent) => {
                           if (e.key === 'Enter') {
                             handleQuickPost(space.id);
                           } else if (e.key === 'Escape') {

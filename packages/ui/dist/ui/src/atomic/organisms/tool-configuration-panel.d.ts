@@ -30,7 +30,7 @@ export interface ToolConfigurationData {
     category: 'productivity' | 'social' | 'academic' | 'coordination';
     description: string;
     fields: ConfigField[];
-    currentValues: Record<string, any>;
+    currentValues: Record<string, unknown>;
     permissions: {
         canConfigure: boolean;
         canView: boolean;
@@ -54,12 +54,12 @@ export interface ToolConfigurationPanelProps {
     tool: ToolConfigurationData;
     isOpen: boolean;
     onClose: () => void;
-    onSave: (toolId: string, values: Record<string, any>) => Promise<void>;
+    onSave: (toolId: string, values: Record<string, unknown>) => Promise<void>;
     onActivate?: (toolId: string) => Promise<void>;
     onDeactivate?: (toolId: string) => Promise<void>;
     onReset?: (toolId: string) => Promise<void>;
     onRemove?: (toolId: string) => Promise<void>;
-    onTestConfiguration?: (toolId: string, values: Record<string, any>) => Promise<{
+    onTestConfiguration?: (toolId: string, values: Record<string, unknown>) => Promise<{
         success: boolean;
         message: string;
     }>;

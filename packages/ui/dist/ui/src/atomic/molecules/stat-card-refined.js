@@ -6,10 +6,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
-import { Card, CardContent } from "../ui/card";
+import { cn } from "../../lib/utils.js";
+import { Card, CardContent } from "../ui/card.js";
 // Import our composition system
-import { statCardComposition } from "../foundations/component-composition";
+import { statCardComposition } from "../foundations/component-composition.js";
 // Icon size mapping from composition system
 const iconSizes = {
     sm: "w-[var(--hive-icon-large)] h-[var(--hive-icon-large)]", // 24px

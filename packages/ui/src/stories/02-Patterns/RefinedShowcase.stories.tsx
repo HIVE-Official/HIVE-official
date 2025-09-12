@@ -82,7 +82,7 @@ export const RefinedShowcase: Story = {
                     { id: 'spaces', label: 'Spaces' },
                     { id: 'feed', label: 'Feed' },
                     { id: 'tools', label: 'Tools' }
-                  ].map((item: any) => (
+                  ].map((item) => (
                     <RefinedButton
                       key={item.id}
                       variant={activeTab === item.id ? 'accent' : 'ghost'}
@@ -100,7 +100,7 @@ export const RefinedShowcase: Story = {
                   <RefinedInput
                     placeholder="Search campus..."
                     value={searchValue}
-                    onChange={(e: any) => setSearchValue(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchValue(e.target.value)}
                     className="w-64 pl-10"
                   />
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />

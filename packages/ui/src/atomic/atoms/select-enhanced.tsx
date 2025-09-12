@@ -116,7 +116,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               {placeholder}
             </option>
           )}
-          {options.map((option: any) => (
+          {options.map((option: SelectOption) => (
             <option 
               key={option.value} 
               value={option.value}
@@ -207,7 +207,7 @@ const MultiSelect = React.forwardRef<HTMLSelectElement, MultiSelectProps>(
     return (
       <Select
         ref={ref}
-        value={value as any}
+        value={value as unknown as string}
         onChange={handleChange}
         multiple
         className="min-h-20"

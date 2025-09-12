@@ -798,7 +798,7 @@ export default function SpaceDetailPage({
                   <SpaceManagementPanel
                     spaceId={spaceId}
                     isOwner={spaceMembership?.role === 'owner'}
-                    currentUserId={user?.uid || ''}
+                    currentUserId={user?.id || ''}
                   />
                 ) : (
                 <HivePostsSurface
@@ -817,7 +817,7 @@ export default function SpaceDetailPage({
                   // NEW: Enhanced coordination features
                   showLiveActivity={true}
                   liveActivityCount={analyticsData?.membershipData?.activeMembers || 0}
-                  currentUserId={user?.uid}
+                  currentUserId={user?.id}
                   onCoordinationResponse={async (postId, response) => {
                     try {
                       const apiResponse = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/coordination`, {

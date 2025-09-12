@@ -189,7 +189,7 @@ export default function FeedPage() {
                 <DropdownMenu align="end">
                   <DropdownItem>Copy link</DropdownItem>
                   <DropdownItem>Report</DropdownItem>
-                  {post.authorId === user?.uid && (
+                  {post.authorId === user?.id && (
                     <>
                       <DropdownItem>Edit</DropdownItem>
                       <DropdownItem className="text-destructive">Delete</DropdownItem>

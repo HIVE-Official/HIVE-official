@@ -125,7 +125,7 @@ const useUserFlows = () => {
     setCompletedSteps([]);
   };
 
-  const nextStep = (flowSteps: any[]) => {
+  const nextStep = (flowSteps: unknown[]) => {
     if (currentStep < flowSteps.length - 1) {
       setCompletedSteps(prev => [...prev, currentStep]);
       setCurrentStep(prev => prev + 1);

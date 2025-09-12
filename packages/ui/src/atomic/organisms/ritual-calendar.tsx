@@ -112,12 +112,13 @@ export function RitualCalendar({
       case 'month':
         return instanceDate.getMonth() === currentDate.getMonth() && 
                instanceDate.getFullYear() === currentDate.getFullYear();
-      case 'week':
+      case 'week': {
         const weekStart = new Date(currentDate);
         weekStart.setDate(currentDate.getDate() - currentDate.getDay());
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekStart.getDate() + 6);
         return instanceDate >= weekStart && instanceDate <= weekEnd;
+      }
       case 'day':
         return instanceDate.toDateString() === currentDate.toDateString();
       case 'list':
@@ -396,7 +397,7 @@ export function RitualCalendar({
               ].map(({ key, icon: Icon }) => (
                 <button
                   key={key}
-                  onClick={() => setView(key as any)}
+                  onClick={() => setView(key as 'month' | 'week' | 'day' | 'list')}
                   className={cn(
                     "p-2 rounded-lg transition-all",
                     view === key

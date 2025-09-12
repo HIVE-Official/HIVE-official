@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Input System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const inputVariants = cva(
@@ -40,8 +40,8 @@ const inputVariants = cva(
     },
 });
 const Input = React.forwardRef(({ className, variant, size, radius, leftIcon, rightIcon, leftElement, rightElement, error, success, helperText, label, required, id, ...htmlProps }, ref) => {
-    // Filter out any conflicting HTML size attribute
-    const { size: _htmlSize, ...props } = htmlProps;
+    // Use htmlProps directly since we've already omitted 'size' from InputProps
+    const props = htmlProps;
     const inputId = id || React.useId();
     const hasLeftElement = leftIcon || leftElement;
     const hasRightElement = rightIcon || rightElement;

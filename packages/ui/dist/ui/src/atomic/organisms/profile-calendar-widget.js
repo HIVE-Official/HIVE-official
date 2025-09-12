@@ -1,11 +1,11 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Badge } from '../atoms/badge';
-import { Text } from '../atoms/text';
-import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
+import { cn } from '../../lib/utils.js';
+import { Card, CardContent, CardHeader } from '../../components/ui/card.js';
+import { Badge } from '../atoms/badge.js';
+import { Text } from '../atoms/text.js';
+import { ButtonEnhanced as Button } from '../atoms/button-enhanced.js';
 import { Calendar, Clock, MapPin, Plus, ChevronRight, Users, BookOpen, Coffee, Zap, Settings, ExternalLink, AlertCircle, CheckCircle2 } from 'lucide-react';
 const getEventTypeConfig = (type) => {
     const configs = {

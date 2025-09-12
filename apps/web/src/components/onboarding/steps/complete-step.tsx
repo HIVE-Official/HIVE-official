@@ -32,7 +32,7 @@ export function OnboardingCompleteStep() {
 
       try {
         setCompletionState('loading');
-        logger.info("Completing onboarding", { userId: user.uid });
+        logger.info("Completing onboarding", { userId: user.id });
 
         const response = await fetch('/api/auth/complete-onboarding', {
           method: 'POST',

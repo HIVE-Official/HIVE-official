@@ -82,14 +82,14 @@ export function useOnboardingBridge() {
 
     } catch (error) {
       logger.error('Onboarding completion failed', {
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error),
         userId: unifiedAuth.user?.id,
         handle: onboardingData.handle,
       });
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Onboarding completion failed',
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Onboarding completion failed',
       };
     }
   }, [unifiedAuth]);
@@ -189,7 +189,7 @@ export function useOnboardingBridge() {
 
     } catch (error) {
       logger.error('Post-onboarding space creation failed', {
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error),
         userId: unifiedAuth.user?.id,
       });
       
@@ -198,7 +198,7 @@ export function useOnboardingBridge() {
         cohortSpaces: [],
         joinedSpaces: [],
         totalSpaces: 0,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error),
       };
     }
   }, [unifiedAuth]);

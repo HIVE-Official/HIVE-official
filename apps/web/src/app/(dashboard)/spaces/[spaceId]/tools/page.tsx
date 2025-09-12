@@ -355,7 +355,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading..." maxWidth="7xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
@@ -408,7 +408,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             )}
           </div>
         }
-        maxWidth="7xl"
+       
       >
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

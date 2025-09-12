@@ -316,7 +316,7 @@ export function ActivityFeed({
         setFeedState(prev => ({
           ...prev,
           isLoading: false,
-          error: error instanceof Error ? error.message : 'Failed to load posts'
+          error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Failed to load posts'
         }));
       }
     };
@@ -504,7 +504,7 @@ export function ActivityFeed({
                     <input
                       type="checkbox"
                       checked={filters.postTypes.includes(type)}
-                      onChange={(e: any) => {
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         if (e.target.checked) {
                           setFilters(prev => ({ ...prev, postTypes: [...prev.postTypes, type] }));
                         } else {
@@ -527,7 +527,7 @@ export function ActivityFeed({
               </label>
               <select
                 value={filters.timeRange}
-                onChange={(e: any) => setFilters(prev => ({ ...prev, timeRange: e.target.value as any }))}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters(prev => ({ ...prev, timeRange: e.target.value as 'today' | 'week' | 'month' | 'all' }))}
                 className="w-full p-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
               >
                 <option value="today">Today</option>
@@ -543,7 +543,7 @@ export function ActivityFeed({
               </label>
               <select
                 value={filters.sortBy}
-                onChange={(e: any) => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters(prev => ({ ...prev, sortBy: e.target.value as 'recent' | 'popular' | 'trending' }))}
                 className="w-full p-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
               >
                 <option value="recent">Most Recent</option>

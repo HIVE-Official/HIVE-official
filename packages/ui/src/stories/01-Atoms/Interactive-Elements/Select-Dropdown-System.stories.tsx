@@ -548,7 +548,7 @@ export const InteractiveSelectDemo: Story = {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">Academic Major</label>
-              <Select onValueChange={(value: any) => handleSelectionChange('major', value)}>
+              <Select onValueChange={(value: unknown) => handleSelectionChange('major', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose your major" />
                 </SelectTrigger>
@@ -567,7 +567,7 @@ export const InteractiveSelectDemo: Story = {
 
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">Academic Year</label>
-              <Select onValueChange={(value: any) => handleSelectionChange('year', value)}>
+              <Select onValueChange={(value: unknown) => handleSelectionChange('year', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your year" />
                 </SelectTrigger>
@@ -583,7 +583,7 @@ export const InteractiveSelectDemo: Story = {
 
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">Preferred Building</label>
-              <Select onValueChange={(value: any) => handleSelectionChange('building', value)}>
+              <Select onValueChange={(value: unknown) => handleSelectionChange('building', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose a building" />
                 </SelectTrigger>
@@ -599,7 +599,7 @@ export const InteractiveSelectDemo: Story = {
 
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">Privacy Level</label>
-              <Select onValueChange={(value: any) => handleSelectionChange('privacy', value)}>
+              <Select onValueChange={(value: unknown) => handleSelectionChange('privacy', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose privacy setting" />
                 </SelectTrigger>

@@ -70,9 +70,9 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & VariantProps<typeof selectTriggerVariants>
->(({ className, variant, size, radius, children, ...props }, ref) => (
+>(({ className, variant, size, radius, children, ...props }, _ref) => (
   <SelectPrimitive.Trigger
-    ref={ref}
+    ref={_ref}
     className={cn(selectTriggerVariants({ variant, size, radius }), className)}
     {...props}
   >
@@ -87,9 +87,9 @@ SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, _ref) => (
   <SelectPrimitive.ScrollUpButton
-    ref={ref}
+    ref={_ref}
     className={cn(
       "flex cursor-default items-center justify-center py-1 text-[var(--hive-text-secondary)]",
       className
@@ -104,9 +104,9 @@ SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
 const SelectScrollDownButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, _ref) => (
   <SelectPrimitive.ScrollDownButton
-    ref={ref}
+    ref={_ref}
     className={cn(
       "flex cursor-default items-center justify-center py-1 text-[var(--hive-text-secondary)]",
       className
@@ -121,10 +121,10 @@ SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayNam
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> & VariantProps<typeof selectContentVariants>
->(({ className, children, position = "popper", ...props }, ref) => (
+>(({ className, children, position = "popper", ...props }, _ref) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
-      ref={ref}
+      ref={_ref}
       className={cn(selectContentVariants({ position }), className)}
       position={position}
       {...props}
@@ -148,9 +148,9 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, _ref) => (
   <SelectPrimitive.Label
-    ref={ref}
+    ref={_ref}
     className={cn(
       "py-1.5 pl-8 pr-2 text-sm font-semibold text-[var(--hive-text-secondary)]",
       className
@@ -163,9 +163,9 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, ...props }, _ref) => (
   <SelectPrimitive.Item
-    ref={ref}
+    ref={_ref}
     className={cn(
       "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm text-[var(--hive-text-primary)] outline-none focus:bg-[var(--hive-interactive-hover)] focus:text-[var(--hive-text-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
@@ -186,9 +186,9 @@ SelectItem.displayName = SelectPrimitive.Item.displayName;
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, _ref) => (
   <SelectPrimitive.Separator
-    ref={ref}
+    ref={_ref}
     className={cn("-mx-1 my-1 h-px bg-[var(--hive-border-subtle)]", className)}
     {...props}
   />
@@ -230,7 +230,7 @@ const HiveSelect = React.forwardRef<
   children,
   disabled,
   ...props 
-}, ref) => {
+}, _ref) => {
   const selectId = React.useId();
   
   // Determine variant based on state
@@ -296,9 +296,9 @@ HiveSelect.displayName = "HiveSelect";
 const ChevronDownIcon = React.forwardRef<
   SVGSVGElement,
   React.ComponentPropsWithoutRef<"svg">
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, _ref) => (
   <svg
-    ref={ref}
+    ref={_ref}
     className={className}
     width="16"
     height="16"
@@ -318,9 +318,9 @@ ChevronDownIcon.displayName = "ChevronDownIcon";
 const ChevronUpIcon = React.forwardRef<
   SVGSVGElement,
   React.ComponentPropsWithoutRef<"svg">
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, _ref) => (
   <svg
-    ref={ref}
+    ref={_ref}
     className={className}
     width="16"
     height="16"
@@ -340,9 +340,9 @@ ChevronUpIcon.displayName = "ChevronUpIcon";
 const CheckIcon = React.forwardRef<
   SVGSVGElement,
   React.ComponentPropsWithoutRef<"svg">
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, _ref) => (
   <svg
-    ref={ref}
+    ref={_ref}
     className={className}
     width="16"
     height="16"

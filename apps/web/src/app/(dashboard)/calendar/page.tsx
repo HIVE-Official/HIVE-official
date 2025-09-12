@@ -352,7 +352,7 @@ export default function CalendarPage() {
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading Calendar..." maxWidth="7xl">
+      <PageContainer size="xl">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
@@ -365,18 +365,19 @@ export default function CalendarPage() {
 
   return (
     <ErrorBoundary>
-      <PageContainer
-        title="Calendar"
-        subtitle="Your personal schedule and campus coordination hub"
-        breadcrumbs={[
-          { label: "Calendar", icon: Calendar }
-        ]}
-        actions={
-          <div className="flex items-center space-x-3">
-            {/* Conflict Warning */}
-            {conflictEvents.length > 0 && (
-              <Button
-                variant="outline"
+      <PageContainer size="xl">
+        <div className="space-y-6">
+          {/* Page Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Calendar</h1>
+              <p className="text-sm text-muted-foreground">Your personal schedule and campus coordination hub</p>
+            </div>
+            <div className="flex items-center space-x-3">
+              {/* Conflict Warning */}
+              {conflictEvents.length > 0 && (
+                <Button
+                  variant="outline"
                 size="sm"
                 onClick={() => setShowConflicts(true)}
                 className="border-red-500 text-red-400 hover:bg-red-500/10"
@@ -420,9 +421,8 @@ export default function CalendarPage() {
               Add Event
             </Button>
           </div>
-        }
-        maxWidth="7xl"
-      >
+        </div>
+        
         {/* Calendar Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
@@ -719,6 +719,7 @@ export default function CalendarPage() {
             
           }}
         />
+        </div>
       </PageContainer>
     </ErrorBoundary>
   );

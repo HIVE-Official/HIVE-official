@@ -73,7 +73,7 @@ export const EmailEntry: Story = {
                   type="email"
                   placeholder="yourname@university.edu"
                   value={email}
-                  onChange={(e: any) => setEmail(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setEmail(e.target.value)}
                   variant="primary"
                 />
               </div>
@@ -207,7 +207,7 @@ export const SchoolSelection: Story = {
               <Input
                 placeholder="Search universities..."
                 value={searchQuery}
-                onChange={(e: any) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                 variant="search"
               />
 
@@ -418,7 +418,7 @@ export const CompleteAuthFlow: Story = {
                     type="email"
                     placeholder={`you@${selectedSchool?.domain}`}
                     value={emailAddress}
-                    onChange={(e: any) => setEmailAddress(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setEmailAddress(e.target.value)}
                     variant="primary"
                   />
                 </div>

@@ -5,7 +5,7 @@ import { Search } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { InputEnhanced } from '../atomic/atoms/input-enhanced';
 
-export interface SearchBarProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface SearchBarProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   onSearch?: (query: string) => void;
   placeholder?: string;
   showIcon?: boolean;
@@ -34,7 +34,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         placeholder={placeholder}
         onChange={handleChange}
         className={cn(showIcon && "pl-10")}
-        {...(props as any)}
+        {...props}
       />
     </div>
   );

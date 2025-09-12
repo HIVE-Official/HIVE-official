@@ -4,9 +4,9 @@ import { ProfilePageTemplate } from './profile-page-template';
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('../../components/framer-motion-proxy', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 // Mock window.addEventListener

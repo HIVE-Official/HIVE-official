@@ -173,7 +173,7 @@ export function ErrorState({
 }) {
   return (
     <EmptyState
-      variant="error"
+      variant="destructive"
       title="Something went wrong"
       description={error || "An error occurred while loading this content"}
       action={onRetry ? {

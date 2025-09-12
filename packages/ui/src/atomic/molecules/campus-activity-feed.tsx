@@ -97,15 +97,14 @@ const activityTypeConfig = {
 export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
   activities,
   isLoading = false,
-  variant = 'default',
-  showFilters = false,
+  variant: _variant = 'default',
+  showFilters: _showFilters = false,
   maxItems = 8,
   onActivityClick,
   onViewAll,
-  onFilterChange,
+  onFilterChange: _onFilterChange,
   className
 }) => {
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [hoveredActivity, setHoveredActivity] = useState<string | null>(null);
 
   const formatTimestamp = (timestamp: string): string => {
@@ -120,26 +119,10 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
     return `${Math.floor(diffInMinutes / 10080)}w ago`;
   };
 
-  const getInitials = (name: string): string => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   const displayedActivities = activities?.slice(0, maxItems) ?? [];
   const hasMoreActivities = (activities?.length ?? 0) > maxItems;
 
-  const handleFilterToggle = (filter: string) => {
-    const newFilters = activeFilters.includes(filter)
-      ? activeFilters.filter(f => f !== filter)
-      : [...activeFilters, filter];
-    
-    setActiveFilters(newFilters);
-    onFilterChange?.(newFilters);
-  };
 
   if (isLoading) {
     return (

@@ -52,7 +52,7 @@ interface ToolDeploymentConfig {
   deployTo: 'profile' | 'space';
   targetId: string;
   surface?: 'pinned' | 'posts' | 'events' | 'tools' | 'chat' | 'members';
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
   permissions?: {
     canInteract?: boolean;
     canView?: boolean;
@@ -75,7 +75,7 @@ interface ToolDeployment {
   targetId: string;
   surface?: string;
   position?: number;
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
   permissions: {
     canInteract: boolean;
     canView: boolean;
@@ -92,13 +92,13 @@ interface ToolDeployment {
     collectAnalytics: boolean;
     notifyOnInteraction: boolean;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   toolData?: {
     id: string;
     name: string;
     description: string;
     currentVersion: string;
-    elements: any[];
+    elements: unknown[];
   };
 }
 
@@ -122,7 +122,7 @@ interface ToolUpdateEvent {
     changedFields: string[];
     executionResult?: any;
     errorMessage?: string;
-    metadata: Record<string, any>;
+    metadata: Record<string, unknown>;
   };
   affectedUsers: string[];
   timestamp: string;
@@ -373,7 +373,7 @@ class ApiClient {
     syncResult: string;
     serverState: any;
     serverVersion: number;
-    conflicts: any[];
+    conflicts: unknown[];
     resolutionStrategy?: string;
   }> {
     return this.request<{
@@ -381,7 +381,7 @@ class ApiClient {
       syncResult: string;
       serverState: any;
       serverVersion: number;
-      conflicts: any[];
+      conflicts: unknown[];
       resolutionStrategy?: string;
     }>('/realtime/tool-updates', {
       method: 'PUT',
@@ -414,7 +414,7 @@ class ApiClient {
     userId: string;
     dataType: 'usage' | 'rating' | 'feedback' | 'share' | 'like';
     value?: any;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
   }): Promise<{ success: boolean }> {
     // Store community data for future API implementation
     const communityData = {
@@ -504,8 +504,8 @@ export const apiUtils = {
   }),
 
   // Convert API spaces to component props
-  convertApiSpacesToProps: (spaces: any[]): Space[] => {
-    return spaces.map(space => ({
+  convertApiSpacesToProps: (spaces: unknown[]): Space[] => {
+    return spaces.map((space: any) => ({
       id: space.id,
       name: space.name || 'Unnamed Space',
       description: space.description || '',
@@ -517,22 +517,22 @@ export const apiUtils = {
   },
 
   // Handle API errors gracefully
-  handleApiError: (error: any) => {
+  handleApiError: (error: unknown) => {
     console.error('API Error:', error);
     
-    if (error.message?.includes('Unauthorized')) {
+    if ((error instanceof Error ? error.message : "Unknown error")?.includes('Unauthorized')) {
       return 'You need to be logged in to perform this action.';
     }
     
-    if (error.message?.includes('Forbidden')) {
+    if ((error instanceof Error ? error.message : "Unknown error")?.includes('Forbidden')) {
       return 'You don\'t have permission to perform this action.';
     }
     
-    if (error.message?.includes('Not Found')) {
+    if ((error instanceof Error ? error.message : "Unknown error")?.includes('Not Found')) {
       return 'The requested resource could not be found.';
     }
     
-    return error.message || 'An unexpected error occurred. Please try again.';
+    return (error instanceof Error ? error.message : "Unknown error") || 'An unexpected error occurred. Please try again.';
   },
 
   // Generate mock community data for development
@@ -570,7 +570,7 @@ export const apiUtils = {
         publishedAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
         updatedAt: new Date().toISOString(),
         tags: ['popular', 'useful', categories[i % categories.length]],
-        category: categories[i % categories.length] as any,
+        category: categories[i % categories.length] as unknown,
         compatibility: ['web', 'mobile'],
         featured: i < 3,
         verified: authors[i % authors.length].isVerified,

@@ -90,7 +90,7 @@ export function DashboardMainPremium() {
         // Real data structure with empty values
         const emptyData: DashboardData = {
           user: {
-            id: user?.uid || '',
+            id: user?.id || '',
             name: user?.displayName || 'User',
             handle: user?.email?.split('@')[0] || 'user',
             avatar: user?.photoURL || undefined,

@@ -424,7 +424,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e: any) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               placeholder="Search members by name, handle, or major..."
               className="w-full pl-10 pr-4 py-3 rounded-2xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
             />
@@ -473,7 +473,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
                 <span className="text-sm text-[var(--hive-text-secondary)]">Sort by:</span>
                 <select
                   value={sortBy}
-                  onChange={(e: any) => setSortBy(e.target.value as MemberSortType)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as MemberSortType)}
                   className="px-3 py-1.5 rounded-lg border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] text-sm focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                 >
                   <option value="name">Name</option>

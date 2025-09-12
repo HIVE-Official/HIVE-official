@@ -213,7 +213,7 @@ const LoginScreen = ({ auth }: { auth: ReturnType<typeof useAuth> }) => (
                 type="email"
                 placeholder="your.name@buffalo.edu"
                 value={auth.email}
-                onChange={(e: any) => auth.setEmail(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => auth.setEmail(e.target.value)}
                 className="pl-10 bg-gray-800 border-gray-700 text-white"
               />
             </div>
@@ -400,7 +400,7 @@ const Step2BasicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOnboa
           <Label className="text-white">First Name</Label>
           <Input
             value={onboarding.userData.firstName}
-            onChange={(e: any) => onboarding.updateUserData('firstName', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onboarding.updateUserData('firstName', e.target.value)}
             className="bg-gray-800 border-gray-700 text-white"
             placeholder="Sarah"
           />
@@ -409,7 +409,7 @@ const Step2BasicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOnboa
           <Label className="text-white">Last Name</Label>
           <Input
             value={onboarding.userData.lastName}
-            onChange={(e: any) => onboarding.updateUserData('lastName', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onboarding.updateUserData('lastName', e.target.value)}
             className="bg-gray-800 border-gray-700 text-white"
             placeholder="Johnson"
           />
@@ -422,7 +422,7 @@ const Step2BasicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOnboa
           <span className="absolute left-3 top-3 text-gray-500">@</span>
           <Input
             value={onboarding.userData.handle}
-            onChange={(e: any) => onboarding.updateUserData('handle', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onboarding.updateUserData('handle', e.target.value)}
             className="pl-8 bg-gray-800 border-gray-700 text-white"
             placeholder="sarah.johnson"
           />
@@ -434,7 +434,7 @@ const Step2BasicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOnboa
         <Label className="text-white">Bio (Optional)</Label>
         <Textarea
           value={onboarding.userData.bio}
-          onChange={(e: any) => onboarding.updateUserData('bio', e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onboarding.updateUserData('bio', e.target.value)}
           className="bg-gray-800 border-gray-700 text-white resize-none"
           rows={3}
           placeholder="Computer Science major, love hiking and trying new restaurants around Buffalo..."
@@ -520,7 +520,7 @@ const Step4AcademicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOn
         <Label className="text-white">Expected Graduation Year</Label>
         <Select
           value={onboarding.userData.graduationYear}
-          onValueChange={(value: any) => onboarding.updateUserData('graduationYear', value)}
+          onValueChange={(value: unknown) => onboarding.updateUserData('graduationYear', value)}
         >
           <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
             <SelectValue placeholder="Select year" />
@@ -539,7 +539,7 @@ const Step4AcademicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOn
         <Label className="text-white">Major/Field of Study</Label>
         <Select
           value={onboarding.userData.major}
-          onValueChange={(value: any) => onboarding.updateUserData('major', value)}
+          onValueChange={(value: unknown) => onboarding.updateUserData('major', value)}
         >
           <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
             <SelectValue placeholder="Select your major" />
@@ -582,7 +582,7 @@ const Step5CampusLife = ({ onboarding }: { onboarding: ReturnType<typeof useOnbo
         <Label className="text-white">Housing</Label>
         <Select
           value={onboarding.userData.dorm}
-          onValueChange={(value: any) => onboarding.updateUserData('dorm', value)}
+          onValueChange={(value: unknown) => onboarding.updateUserData('dorm', value)}
         >
           <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
             <SelectValue placeholder="Where do you live?" />

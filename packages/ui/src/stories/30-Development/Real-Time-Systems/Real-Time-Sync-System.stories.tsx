@@ -403,7 +403,7 @@ const useRealTime = () => {
     const interval = setInterval(() => {
       // Random live updates
       const updateTypes = ['post_liked', 'comment_added', 'user_joined'];
-      const randomType = updateTypes[Math.floor(Math.random() * updateTypes.length)] as any;
+      const randomType = updateTypes[Math.floor(Math.random() * updateTypes.length)] as unknown;
       
       if (Math.random() < 0.3) {
         const liveUpdate: LiveUpdate = {

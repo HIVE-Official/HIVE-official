@@ -2,7 +2,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Spacing System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const spacerVariants = cva("flex-shrink-0", {

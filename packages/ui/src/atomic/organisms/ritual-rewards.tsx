@@ -238,9 +238,10 @@ export function RitualRewards({
         if (!a.unlockedAt) return 1;
         if (!b.unlockedAt) return -1;
         return new Date(b.unlockedAt).getTime() - new Date(a.unlockedAt).getTime();
-      case 'rarity':
+      case 'rarity': {
         const rarityOrder = { legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
         return rarityOrder[b.rarity] - rarityOrder[a.rarity];
+      }
       case 'name':
         return a.name.localeCompare(b.name);
       case 'category':
@@ -600,7 +601,7 @@ export function RitualRewards({
             ].map(({ key, icon: Icon }) => (
               <button
                 key={key}
-                onClick={() => setSelectedView(key as any)}
+                onClick={() => setSelectedView(key as 'grid' | 'list' | 'showcase')}
                 className={cn(
                   "p-2 rounded-lg transition-all",
                   selectedView === key
@@ -660,7 +661,7 @@ export function RitualRewards({
             {/* Status Filter */}
             <select
               value={selectedFilters.status}
-              onChange={(e) => setSelectedFilters(prev => ({ ...prev, status: e.target.value as any }))}
+              onChange={(e) => setSelectedFilters(prev => ({ ...prev, status: e.target.value as 'all' | 'unlocked' | 'locked' }))}
               className="px-3 py-1 bg-[var(--hive-background-tertiary)] border border-[var(--hive-border-subtle)] rounded-lg text-sm text-[var(--hive-text-primary)]"
             >
               <option value="all">All</option>
@@ -671,7 +672,7 @@ export function RitualRewards({
             {/* Sort */}
             <select
               value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value as any)}
+              onChange={(e) => setSortOrder(e.target.value as 'date' | 'rarity' | 'name' | 'category')}
               className="px-3 py-1 bg-[var(--hive-background-tertiary)] border border-[var(--hive-border-subtle)] rounded-lg text-sm text-[var(--hive-text-primary)]"
             >
               <option value="date">Recent</option>

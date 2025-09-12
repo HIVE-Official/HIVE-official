@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Search, Filter, Grid3X3, List, Users, Zap, Building2, Home, GraduationCap, UserCheck, Sparkles, TrendingUp, MapPin, Hash, Eye, UserPlus, Bookmark, BookmarkCheck } from 'lucide-react';
 const CATEGORY_CONFIG = {
     university: {

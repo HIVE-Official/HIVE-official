@@ -78,8 +78,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     id,
     ...htmlProps 
   }, ref) => {
-    // Filter out any conflicting HTML size attribute
-    const { size: _htmlSize, ...props } = htmlProps as React.InputHTMLAttributes<HTMLInputElement>;
+    // Use htmlProps directly since we've already omitted 'size' from InputProps
+    const props = htmlProps;
     const inputId = id || React.useId();
     const hasLeftElement = leftIcon || leftElement;
     const hasRightElement = rightIcon || rightElement;

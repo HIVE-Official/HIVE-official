@@ -29,7 +29,7 @@ export async function executeOnboardingTransaction(
   userEmail: string,
   onboardingData: any,
   normalizedHandle: string,
-  context?: { requestId?: string }
+  _context?: { requestId?: string }
 ): Promise<TransactionResult<{ updatedUserData: any; normalizedHandle: string }>> {
   const startTime = Date.now();
   const operationsCompleted: string[] = [];
@@ -100,7 +100,7 @@ export async function executeBuilderRequestCreation(
   userName: string,
   spaceIds: string[],
   userType: 'student' | 'alumni' | 'faculty',
-  context?: { requestId?: string }
+  _context?: { requestId?: string }
 ): Promise<TransactionResult<void>> {
   const startTime = Date.now();
   const operationsCompleted: string[] = [];

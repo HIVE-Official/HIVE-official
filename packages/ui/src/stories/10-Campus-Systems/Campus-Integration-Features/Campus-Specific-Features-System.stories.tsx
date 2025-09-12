@@ -225,7 +225,7 @@ const CampusDirectory = () => {
         <Input
           placeholder="Search buildings, facilities, or services..."
           value={searchQuery}
-          onChange={(e: any) => setSearchQuery(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
           className="bg-gray-800 border-gray-700 text-white pl-4"
         />
       </div>

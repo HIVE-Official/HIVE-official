@@ -456,7 +456,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setError('feed', null);
 
             const integration = getPlatformIntegration();
-            const feedData = await integration.getUnifiedFeed(state.user.uid, {
+            const feedData = await integration.getUnifiedFeedData(state.user.uid, {
               limit: 20,
               sources: ['feed', 'spaces', 'tools', 'profile']
             });

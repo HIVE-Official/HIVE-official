@@ -460,7 +460,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
               type="text"
               placeholder="Search members..."
               value={searchQuery}
-              onChange={(e: any) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               // icon={<Search className="h-4 w-4 text-gray-400" />}
             />
           </div>
@@ -468,7 +468,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
           <div className="flex gap-2">
             <select
               value={filterRole}
-              onChange={(e: any) => setFilterRole(e.target.value as any)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterRole(e.target.value as 'all' | 'leader' | 'member' | 'moderator' | 'admin')}
               className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]"
             >
               <option value="all">All Roles</option>

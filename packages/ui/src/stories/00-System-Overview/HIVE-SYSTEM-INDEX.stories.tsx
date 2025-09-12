@@ -381,7 +381,7 @@ const HIVESystemIndex = () => {
               type="text"
               placeholder="Search components, systems, or patterns..."
               value={searchQuery}
-              onChange={(e: any) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
               className="pl-10 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)] text-[var(--hive-text-primary)]"
             />
           </div>

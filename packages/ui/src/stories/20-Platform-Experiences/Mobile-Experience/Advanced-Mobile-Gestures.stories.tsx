@@ -886,7 +886,7 @@ const GestureSettings = () => {
           </label>
           <Slider
             value={[gestures.settings.swipeSensitivity]}
-            onValueChange={(value: any) => 
+            onValueChange={(value: unknown) => 
               gestures.setSettings(prev => ({ ...prev, swipeSensitivity: value[0] }))
             }
             min={0.5}
@@ -902,7 +902,7 @@ const GestureSettings = () => {
           </label>
           <Slider
             value={[gestures.settings.gestureThreshold]}
-            onValueChange={(value: any) => 
+            onValueChange={(value: unknown) => 
               gestures.setSettings(prev => ({ ...prev, gestureThreshold: value[0] }))
             }
             min={20}
@@ -931,7 +931,7 @@ const GestureSettings = () => {
           </label>
           <Slider
             value={[gestures.settings.longPressDuration]}
-            onValueChange={(value: any) => 
+            onValueChange={(value: unknown) => 
               gestures.setSettings(prev => ({ ...prev, longPressDuration: value[0] }))
             }
             min={200}

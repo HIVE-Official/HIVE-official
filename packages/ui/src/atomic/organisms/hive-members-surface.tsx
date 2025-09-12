@@ -246,7 +246,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
               type="text"
               placeholder="Search members..."
               value={searchTerm}
-              onChange={(e: any) => setSearchTerm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)] placeholder:text-neutral-400 focus:border-[var(--hive-brand-secondary)]/30 focus:outline-none text-sm"
             />
           </div>
@@ -254,7 +254,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
           <div className="flex items-center gap-2">
             <select
               value={roleFilter}
-              onChange={(e: any) => setRoleFilter(e.target.value as HiveMemberRole | 'all')}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRoleFilter(e.target.value as HiveMemberRole | 'all')}
               className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
             >
               <option value="all">All Roles</option>
@@ -266,7 +266,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
 
             <select
               value={statusFilter}
-              onChange={(e: any) => setStatusFilter(e.target.value as HiveMemberStatus | 'all')}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatusFilter(e.target.value as HiveMemberStatus | 'all')}
               className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
             >
               <option value="all">All Status</option>

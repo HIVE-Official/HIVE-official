@@ -257,27 +257,27 @@ const InteractiveCalendarWidget: React.FC<{
             type="text"
             placeholder="Event title"
             value={createForm.title}
-            onChange={(e: any) => setCreateForm(prev => ({ ...prev, title: e.target.value }))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateForm(prev => ({ ...prev, title: e.target.value }))}
             className="w-full px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
           />
           <div className="grid grid-cols-2 gap-2">
             <input
               type="datetime-local"
               value={createForm.startDate}
-              onChange={(e: any) => setCreateForm(prev => ({ ...prev, startDate: e.target.value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateForm(prev => ({ ...prev, startDate: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
             <input
               type="datetime-local"
               value={createForm.endDate}
-              onChange={(e: any) => setCreateForm(prev => ({ ...prev, endDate: e.target.value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateForm(prev => ({ ...prev, endDate: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
             <select
               value={createForm.type}
-              onChange={(e: any) => setCreateForm(prev => ({ ...prev, type: e.target.value as CalendarEvent['type'] }))}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCreateForm(prev => ({ ...prev, type: e.target.value as CalendarEvent['type'] }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             >
               <option value="personal">Personal</option>
@@ -289,7 +289,7 @@ const InteractiveCalendarWidget: React.FC<{
               type="text"
               placeholder="Location"
               value={createForm.location}
-              onChange={(e: any) => setCreateForm(prev => ({ ...prev, location: e.target.value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateForm(prev => ({ ...prev, location: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
           </div>

@@ -2,7 +2,7 @@ export declare function useFirebaseRealtime<T>(collectionName: string, filters?:
     field: string;
     operator: any;
     value: any;
-}>, orderByField?: string, limitCount?: number, dependencies?: any[]): {
+}>, orderByField?: string, limitCount?: number, dependencies?: unknown[]): {
     data: T[];
     loading: boolean;
     error: Error | null;

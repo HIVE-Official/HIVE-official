@@ -75,7 +75,7 @@ export interface NotificationDocument {
     priority: 'low' | 'medium' | 'high' | 'urgent';
     sourceId: string;
     sourceType: 'user' | 'space' | 'tool' | 'system';
-    actionData?: Record<string, any>;
+    actionData?: Record<string, unknown>;
     expiresAt?: Date;
     createdAt: Date;
 }
@@ -111,7 +111,7 @@ export interface ToolDocument {
     description: string;
     type: 'form' | 'calculator' | 'tracker' | 'game' | 'utility' | 'social' | 'academic';
     status: 'draft' | 'testing' | 'published' | 'archived';
-    config: Record<string, any>;
+    config: Record<string, unknown>;
     permissions: {
         isPublic: boolean;
         allowedSpaces: string[];
@@ -150,7 +150,7 @@ export declare class ProfileFirebaseService {
     markNotificationRead(notificationId: string): Promise<void>;
     updateGhostMode(uid: string, settings: Partial<GhostModeDocument>): Promise<void>;
     getUserTools(uid: string): Promise<ToolDocument[]>;
-    updateProfileAnalytics(uid: string, event: string, data?: Record<string, any>): Promise<void>;
+    updateProfileAnalytics(uid: string, event: string, data?: Record<string, unknown>): Promise<void>;
     cleanup(): void;
 }
 export declare const FIRESTORE_SECURITY_RULES = "\nrules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    // Profile documents\n    match /profiles/{userId} {\n      allow read: if request.auth != null && \n        (request.auth.uid == userId || \n         resource.data.privacy.profileVisibility == 'public' ||\n         (resource.data.privacy.profileVisibility == 'university' && \n          request.auth.token.email.matches('.*@buffalo\\.edu$')));\n      \n      allow write: if request.auth != null && \n        request.auth.uid == userId &&\n        request.auth.token.email.matches('.*@buffalo\\.edu$') &&\n        resource.data.campusId == 'ub-buffalo';\n    }\n    \n    // Space memberships\n    match /spaceMemberships/{membershipId} {\n      allow read: if request.auth != null &&\n        (request.auth.uid == resource.data.uid ||\n         exists(/databases/$(database)/documents/spaceMemberships/$(request.auth.uid + '_' + resource.data.spaceId)));\n      \n      allow write: if request.auth != null &&\n        request.auth.uid == resource.data.uid &&\n        resource.data.campusId == 'ub-buffalo';\n    }\n    \n    // Notifications\n    match /notifications/{notificationId} {\n      allow read, write: if request.auth != null &&\n        request.auth.uid == resource.data.recipientId &&\n        resource.data.campusId == 'ub-buffalo';\n    }\n    \n    // Ghost mode settings\n    match /ghostMode/{userId} {\n      allow read, write: if request.auth != null &&\n        request.auth.uid == userId;\n    }\n    \n    // Tools\n    match /tools/{toolId} {\n      allow read: if request.auth != null &&\n        (resource.data.permissions.isPublic == true ||\n         request.auth.uid == resource.data.creatorId ||\n         request.auth.uid in resource.data.permissions.collaborators[].uid);\n      \n      allow write: if request.auth != null &&\n        request.auth.uid == resource.data.creatorId &&\n        resource.data.campusId == 'ub-buffalo';\n    }\n  }\n}\n";

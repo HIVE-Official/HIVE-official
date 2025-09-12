@@ -622,7 +622,7 @@ const AccessibilityShowcase = () => {
                             </span>
                             {guideline.title === 'Color Contrast' && guideline.examples ? (
                               <div className="space-y-3">
-                                {(guideline.examples as any[]).map((example: any, idx: number) => (
+                                {(guideline.examples as unknown[]).map((example: any, idx: number) => (
                                   <ContrastChecker
                                     key={idx}
                                     foreground={example.colors?.[0] || 'var(--hive-text-primary)'}
@@ -633,7 +633,7 @@ const AccessibilityShowcase = () => {
                               </div>
                             ) : guideline.title === 'Touch Targets' && guideline.examples ? (
                               <div className="space-y-3">
-                                {(guideline.examples as any[]).map((example: any, idx: number) => (
+                                {(guideline.examples as unknown[]).map((example: any, idx: number) => (
                                   <div key={idx} className="flex items-center space-x-3">
                                     <div 
                                       className="rounded flex items-center justify-center text-sm font-medium"

@@ -21,7 +21,7 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 declare const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<HTMLTextAreaElement>>;
 export interface CodeTextareaProps extends Omit<TextareaProps, 'className'> {
     language?: string;
-    showLineNumbers?: boolean;
+    _showLineNumbers?: boolean;
 }
 declare const CodeTextarea: React.ForwardRefExoticComponent<CodeTextareaProps & React.RefAttributes<HTMLTextAreaElement>>;
 export interface TextareaGroupProps extends React.HTMLAttributes<HTMLDivElement> {

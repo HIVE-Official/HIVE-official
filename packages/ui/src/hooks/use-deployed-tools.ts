@@ -32,7 +32,7 @@ export interface DeployedTool {
   };
   position: number;
   toolData: {
-    elements: any[];
+    elements: unknown[];
     currentVersion: string;
     status: string;
   };

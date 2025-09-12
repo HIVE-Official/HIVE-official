@@ -547,7 +547,7 @@ export const UserAsLeader: Story = {
     spaces: mockSpaces.map(space => ({
       ...space,
       isJoined: Math.random() > 0.5,
-      userRole: space.isJoined ? (['leader', 'co_leader', 'member'][Math.floor(Math.random() * 3)] as any) : undefined,
+      userRole: space.isJoined ? (['leader', 'co_leader', 'member'][Math.floor(Math.random() * 3)] as unknown) : undefined,
     })),
     showCategoryFilter: true,
     showJoinActions: true,

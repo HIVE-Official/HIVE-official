@@ -30,7 +30,7 @@ export const HiveSelect: React.FC<HiveSelectProps> = ({
       )} 
       {...props}
     >
-      {options.map((option: any) => (
+      {options.map((option: { label: string; value: string }) => (
         <option key={option.value} value={option.value}>
           {option.label}
         </option>

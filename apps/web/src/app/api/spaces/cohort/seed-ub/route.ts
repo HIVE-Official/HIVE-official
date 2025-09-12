@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { UB_MAJORS, createMajorAbbreviation } from '@hive/core';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 /**
  * Seed UB-specific cohort spaces based on actual UB majors and graduation years

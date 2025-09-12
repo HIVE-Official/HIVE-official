@@ -500,7 +500,7 @@ export const CompleteShowcase: Story = {
                   <div key={meal} className="space-y-3">
                     <Skeleton variant="text" width="6rem" />
                     <div className="grid md:grid-cols-3 gap-4">
-                      {[1, 2, 3].map((item: any) => (
+                      {[1, 2, 3].map((item) => (
                         <div key={item} className="p-3 bg-[var(--hive-background-primary)] rounded-lg space-y-2">
                           <Skeleton variant="text" width="80%" />
                           <Skeleton variant="text" width="100%" lines={2} />

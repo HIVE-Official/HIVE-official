@@ -36,7 +36,7 @@ export interface SpaceTool {
   category: string;
   version: string;
   status: string;
-  configuration: any;
+  configuration: Record<string, unknown>;
   permissions: {
     canEdit: string[];
     canView: string[];
@@ -266,7 +266,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
           {/* Type Filter */}
           <select
             value={filter}
-            onChange={(e: any) => setFilter(e.target.value as ToolType | 'all')}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilter(e.target.value as ToolType | 'all')}
             className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
           >
             <option value="all">All Categories</option>
@@ -283,7 +283,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
           {/* Status Filter */}
           <select
             value={statusFilter}
-            onChange={(e: any) => setStatusFilter(e.target.value as ToolStatus | 'all')}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatusFilter(e.target.value as ToolStatus | 'all')}
             className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm text-[var(--hive-text-inverse)] focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
           >
             <option value="all">All Status</option>

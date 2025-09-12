@@ -83,7 +83,7 @@ export class SpaceSurfaceErrorBoundary extends Component<Props, State> {
                 Error Details (Development Only)
               </summary>
               <pre className="text-xs text-red-400 bg-red-900/10 p-3 rounded-lg mt-2 overflow-auto">
-                {this.state.error.message}
+                {this.state.error instanceof Error ? this.state.error.message : String(this.state.error)}
                 {this.state.errorInfo?.componentStack && (
                   <>
                     {'\n\nComponent Stack:'}

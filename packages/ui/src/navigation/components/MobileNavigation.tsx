@@ -209,7 +209,7 @@ export const MobileNavigation = memo<MobileNavigationProps>(({
       
       {/* Navigation items container */}
       <div className="relative flex items-center justify-around h-full px-2">
-        {items.map((item: any) => (
+        {items.map((item) => (
           <div key={item.id} className="flex-1 max-w-[80px]">
             <MobileNavItem
               item={item}

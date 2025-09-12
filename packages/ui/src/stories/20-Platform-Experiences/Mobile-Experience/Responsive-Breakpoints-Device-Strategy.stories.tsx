@@ -32,6 +32,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '07-Responsive/Breakpoints & Device Strategy',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {

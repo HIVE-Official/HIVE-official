@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // HIVE Alert Component - Campus-Ready Feedback System
 // Designed for mobile-first student experience with HIVE brand tokens
 const alertVariants = cva("relative w-full rounded-lg border px-4 py-3 text-sm [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground", {

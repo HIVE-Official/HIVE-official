@@ -215,7 +215,7 @@ export const CreateSpaceModal: Story = {
                         id="space-name"
                         placeholder="e.g., CSE 115 Study Group"
                         value={formData.name}
-                        onChange={(e: any) => handleInputChange('name', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('name', e.target.value)}
                         className={errors.name ? 'border-red-500' : ''}
                       />
                       {errors.name && (
@@ -229,7 +229,7 @@ export const CreateSpaceModal: Story = {
                         id="space-description"
                         placeholder="Describe your space's purpose and what members can expect..."
                         value={formData.description}
-                        onChange={(e: any) => handleInputChange('description', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('description', e.target.value)}
                         className={`min-h-[100px] ${errors.description ? 'border-red-500' : ''}`}
                       />
                       {errors.description && (
@@ -239,7 +239,7 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-type">Space Type</Label>
-                      <Select onValueChange={(value: any) => handleInputChange('type', value)}>
+                      <Select onValueChange={(value: unknown) => handleInputChange('type', value)}>
                         <SelectTrigger className={errors.type ? 'border-red-500' : ''}>
                           <SelectValue placeholder="What type of space is this?" />
                         </SelectTrigger>
@@ -271,7 +271,7 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-privacy">Privacy Level</Label>
-                      <Select onValueChange={(value: any) => handleInputChange('privacy', value)}>
+                      <Select onValueChange={(value: unknown) => handleInputChange('privacy', value)}>
                         <SelectTrigger className={errors.privacy ? 'border-red-500' : ''}>
                           <SelectValue placeholder="Who can see and join this space?" />
                         </SelectTrigger>
@@ -293,7 +293,7 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-location">Primary Meeting Location</Label>
-                      <Select onValueChange={(value: any) => handleInputChange('location', value)}>
+                      <Select onValueChange={(value: unknown) => handleInputChange('location', value)}>
                         <SelectTrigger className={errors.location ? 'border-red-500' : ''}>
                           <SelectValue placeholder="Where does your space typically meet?" />
                         </SelectTrigger>
@@ -317,7 +317,7 @@ export const CreateSpaceModal: Story = {
                         type="number"
                         placeholder="Leave empty for unlimited"
                         value={formData.maxMembers}
-                        onChange={(e: any) => handleInputChange('maxMembers', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('maxMembers', e.target.value)}
                         min="2"
                         max="500"
                       />
@@ -617,7 +617,7 @@ export const InteractiveModalDemo: Story = {
                     id="event-title"
                     placeholder="Study session, social event, meeting..."
                     value={formData.eventTitle}
-                    onChange={(e: any) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
                   />
                 </div>
 
@@ -628,7 +628,7 @@ export const InteractiveModalDemo: Story = {
                       id="event-date"
                       type="date"
                       value={formData.eventDate}
-                      onChange={(e: any) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
                     />
                   </div>
                   <div className="space-y-2">
@@ -637,14 +637,14 @@ export const InteractiveModalDemo: Story = {
                       id="event-time"
                       type="time"
                       value={formData.eventTime}
-                      onChange={(e: any) => setFormData(prev => ({ ...prev, eventTime: e.target.value }))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, eventTime: e.target.value }))}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="event-location">Location</Label>
-                  <Select onValueChange={(value: any) => setFormData(prev => ({ ...prev, eventLocation: value }))}>
+                  <Select onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, eventLocation: value }))}>
                     <SelectTrigger>
                       <SelectValue placeholder="Choose a campus location" />
                     </SelectTrigger>

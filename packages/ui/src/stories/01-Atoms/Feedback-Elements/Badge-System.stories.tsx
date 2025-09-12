@@ -371,7 +371,7 @@ const BadgeVariantsShowcase = () => {
           <Card key={index} className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
             <CardContent className="p-4 text-center">
               <div className="mb-4">
-                <Badge variant={badge.variant as any} className="text-sm">
+                <Badge variant={badge.variant as unknown} className="text-sm">
                   {badge.example}
                 </Badge>
               </div>
@@ -448,7 +448,7 @@ const CampusBadgeShowcase = () => {
                       className="p-4 rounded-lg bg-[var(--hive-background-secondary)] border border-[var(--hive-border-default)]"
                     >
                       <div className="flex items-center justify-center mb-3">
-                        <Badge variant={badge.variant as any} className="flex items-center gap-1">
+                        <Badge variant={badge.variant as unknown} className="flex items-center gap-1">
                           <badge.icon className="w-3 h-3" />
                           {badge.text}
                         </Badge>
@@ -491,18 +491,18 @@ const BadgeSizesShowcase = () => {
                 </div>
                 
                 <div className="flex items-center gap-4">
-                  <Badge variant="primary" size={size.size as any}>
+                  <Badge variant="primary" size={size.size as unknown}>
                     {size.example}
                   </Badge>
-                  <Badge variant="primary" size={size.size as any}>
+                  <Badge variant="primary" size={size.size as unknown}>
                     <Star className="w-3 h-3 mr-1" />
                     Featured
                   </Badge>
-                  <Badge variant="success" size={size.size as any}>
+                  <Badge variant="success" size={size.size as unknown}>
                     <CheckCircle className="w-3 h-3 mr-1" />
                     Completed
                   </Badge>
-                  <Badge variant="warning" size={size.size as any}>
+                  <Badge variant="warning" size={size.size as unknown}>
                     <Clock className="w-3 h-3 mr-1" />
                     Due Soon
                   </Badge>
@@ -764,7 +764,7 @@ const AccessibilityShowcase = () => {
                         aria-label={badge.action}
                       >
                         <Badge 
-                          variant={badge.variant as any}
+                          variant={badge.variant as unknown}
                           className={`cursor-pointer transition-all ${
                             focusedBadge === `${featureIndex}-${badgeIndex}` ? 'scale-105' : ''
                           }`}
@@ -774,7 +774,7 @@ const AccessibilityShowcase = () => {
                       </button>
                     ) : (
                       <Badge 
-                        variant={badge.variant as any}
+                        variant={badge.variant as unknown}
                         aria-label={badge.ariaLabel}
                       >
                         {badge.text}

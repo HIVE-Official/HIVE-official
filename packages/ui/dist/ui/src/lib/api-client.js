@@ -195,7 +195,7 @@ export const apiUtils = {
     }),
     // Convert API spaces to component props
     convertApiSpacesToProps: (spaces) => {
-        return spaces.map(space => ({
+        return spaces.map((space) => ({
             id: space.id,
             name: space.name || 'Unnamed Space',
             description: space.description || '',
@@ -208,16 +208,16 @@ export const apiUtils = {
     // Handle API errors gracefully
     handleApiError: (error) => {
         console.error('API Error:', error);
-        if (error.message?.includes('Unauthorized')) {
+        if ((error instanceof Error ? error.message : "Unknown error")?.includes('Unauthorized')) {
             return 'You need to be logged in to perform this action.';
         }
-        if (error.message?.includes('Forbidden')) {
+        if ((error instanceof Error ? error.message : "Unknown error")?.includes('Forbidden')) {
             return 'You don\'t have permission to perform this action.';
         }
-        if (error.message?.includes('Not Found')) {
+        if ((error instanceof Error ? error.message : "Unknown error")?.includes('Not Found')) {
             return 'The requested resource could not be found.';
         }
-        return error.message || 'An unexpected error occurred. Please try again.';
+        return (error instanceof Error ? error.message : "Unknown error") || 'An unexpected error occurred. Please try again.';
     },
     // Generate mock community data for development
     generateMockCommunityTools: (count = 10) => {

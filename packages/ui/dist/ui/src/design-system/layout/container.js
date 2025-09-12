@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { cva } from 'class-variance-authority';
 export const containerVariants = cva('mx-auto px-4', {
     variants: {

@@ -264,7 +264,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading..." maxWidth="7xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
@@ -311,7 +311,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             )}
           </div>
         }
-        maxWidth="7xl"
+       
       >
         {/* Search and Filters */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 mb-6">

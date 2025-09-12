@@ -116,7 +116,7 @@ export default function HiveLabPage() {
     );
   }
   return (
-    <PageContainer title="HiveLAB" maxWidth="xl">
+    <PageContainer>
       <div className="space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">

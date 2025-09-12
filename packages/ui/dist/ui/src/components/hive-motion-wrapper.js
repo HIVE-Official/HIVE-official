@@ -1,5 +1,5 @@
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
-import { motion, AnimatePresence } from './framer-motion-proxy';
+import { motion, AnimatePresence } from './framer-motion-proxy.js';
 export const HiveMotionWrapper = ({ children, animate = true, initial = { opacity: 0 }, exit = { opacity: 0 }, transition = { duration: 0.3 }, }) => {
     if (!animate) {
         return _jsx(_Fragment, { children: children });

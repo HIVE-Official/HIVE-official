@@ -315,7 +315,7 @@ export const BasicGridDemo: StoryObj = {
             >
               {items
                 .filter(item => item.isVisible)
-                .map((item: any) => (
+                .map((item) => (
                   <MockCard key={item.id} item={item} />
                 ))}
             </BentoGridLayout>
@@ -388,7 +388,7 @@ export const ResponsiveBehaviorDemo: StoryObj = {
                       max="1400"
                       step="10"
                       value={containerWidth}
-                      onChange={(e: any) => setContainerWidth(Number(e.target.value))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setContainerWidth(Number(e.target.value))}
                       className="w-full"
                     />
                     <div className="flex justify-between text-xs text-[var(--hive-text-muted)]">
@@ -436,7 +436,7 @@ export const ResponsiveBehaviorDemo: StoryObj = {
             >
               {items
                 .filter(item => item.isVisible)
-                .map((item: any) => (
+                .map((item) => (
                   <MockCard key={item.id} item={item} />
                 ))}
             </BentoGridLayout>
@@ -589,7 +589,7 @@ export const EditModeFeaturesDemo: StoryObj = {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {items.map((item: any) => {
+                {items.map((item) => {
                   const config = cardTypeConfig[item.cardType as keyof typeof cardTypeConfig];
                   const Icon = config.icon;
                   
@@ -622,7 +622,7 @@ export const EditModeFeaturesDemo: StoryObj = {
           >
             {items
               .filter(item => item.isVisible)
-              .map((item: any) => (
+              .map((item) => (
                 <MockCard key={item.id} item={item} />
               ))}
           </BentoGridLayout>

@@ -548,7 +548,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
               
               <select
                 value={filter}
-                onChange={(e: any) => setFilter(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilter(e.target.value as 'all' | 'upcoming' | 'past')}
                 className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--hive-gold)]"
               >
                 <option value="all">All Events</option>

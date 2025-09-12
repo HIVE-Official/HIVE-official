@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { type HiveNotification } from "@/lib/notifications-service";
 
 // Real notification fetching from Firebase

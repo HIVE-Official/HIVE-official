@@ -89,7 +89,7 @@ export interface ToolConfigurationData {
   
   // Configuration
   fields: ConfigField[];
-  currentValues: Record<string, any>;
+  currentValues: Record<string, unknown>;
   
   // Permissions
   permissions: {
@@ -118,12 +118,12 @@ export interface ToolConfigurationPanelProps {
   tool: ToolConfigurationData;
   isOpen: boolean;
   onClose: () => void;
-  onSave: (toolId: string, values: Record<string, any>) => Promise<void>;
+  onSave: (toolId: string, values: Record<string, unknown>) => Promise<void>;
   onActivate?: (toolId: string) => Promise<void>;
   onDeactivate?: (toolId: string) => Promise<void>;
   onReset?: (toolId: string) => Promise<void>;
   onRemove?: (toolId: string) => Promise<void>;
-  onTestConfiguration?: (toolId: string, values: Record<string, any>) => Promise<{ success: boolean; message: string }>;
+  onTestConfiguration?: (toolId: string, values: Record<string, unknown>) => Promise<{ success: boolean; message: string }>;
   isSaving?: boolean;
   className?: string;
 }
@@ -159,7 +159,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
   isSaving = false,
   className
 }) => {
-  const [values, setValues] = useState<Record<string, any>>(tool.currentValues);
+  const [values, setValues] = useState<Record<string, unknown>>(tool.currentValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSensitive, setShowSensitive] = useState<Record<string, boolean>>({});
   const [isDirty, setIsDirty] = useState(false);
@@ -311,7 +311,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
             <textarea
               {...commonInputProps}
               value={value}
-              onChange={(e: any) => handleValueChange(field.id, e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleValueChange(field.id, e.target.value)}
               placeholder={field.placeholder}
               rows={4}
               className={cn(commonInputProps.className, 'resize-none')}
@@ -321,7 +321,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
               <input
                 type="checkbox"
                 checked={value}
-                onChange={(e: any) => handleValueChange(field.id, e.target.checked)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleValueChange(field.id, e.target.checked)}
                 className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
               />
               <span className="text-[var(--hive-text-primary)]">{field.placeholder || 'Enabled'}</span>
@@ -330,7 +330,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
             <select
               {...commonInputProps}
               value={value}
-              onChange={(e: any) => handleValueChange(field.id, e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleValueChange(field.id, e.target.value)}
             >
               <option value="">{field.placeholder || 'Select an option'}</option>
               {field.options?.map((option: any) => (
@@ -344,7 +344,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
               <input
                 ref={(el: any) => { fileInputRefs.current[field.id] = el; }}
                 type="file"
-                onChange={(e: any) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const file = e.target.files?.[0];
                   if (file) {
                     handleValueChange(field.id, file);
@@ -373,7 +373,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
               {...commonInputProps}
               type={isPassword && !showValue ? 'password' : field.type === 'number' ? 'number' : field.type}
               value={value}
-              onChange={(e: any) => handleValueChange(field.id, field.type === 'number' ? Number(e.target.value) : e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleValueChange(field.id, field.type === 'number' ? Number(e.target.value) : e.target.value)}
               placeholder={field.placeholder}
               min={field.validation?.min}
               max={field.validation?.max}
@@ -486,7 +486,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
             ].map((tab: any) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'config' | 'advanced' | 'permissions')}
                 className={cn(
                   'flex items-center gap-2 px-4 py-3 border-b-2 transition-all duration-200',
                   activeTab === tab.id

@@ -103,12 +103,18 @@ export {
 export { Label } from './atomic/atoms/label';
 
 // === SELECT COMPONENTS ===
-export { SelectEnhanced as Select } from './atomic/atoms/select-enhanced';
+// Export both Select systems - enhanced for options API, radix for children API
+export { SelectEnhanced } from './atomic/atoms/select-enhanced';
 export { 
+  Select,  // Radix Select root component for children-based API
   SelectTrigger, 
   SelectValue, 
   SelectContent, 
-  SelectItem 
+  SelectItem,
+  SelectGroup,
+  SelectLabel,
+  SelectSeparator,
+  HiveSelect
 } from './atomic/atoms/select-radix';
 
 // === LAYOUT COMPONENTS ===

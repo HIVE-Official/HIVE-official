@@ -5,7 +5,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { generateCohortSpaces, type CohortSpaceConfig } from '@hive/core';
 import { z } from 'zod';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 const createCohortSpacesSchema = z.object({
   major: z.string().min(1),

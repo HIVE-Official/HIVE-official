@@ -7,7 +7,6 @@ import {
   orderBy, 
   limit as firebaseLimit,
   getDocs,
-  DocumentData,
   startAt,
   endAt
 } from 'firebase/firestore';
@@ -333,7 +332,7 @@ class SearchService {
     searchQuery: string,
     tokens: string[],
     limit: number,
-    filters: SearchFilters
+    _filters: SearchFilters
   ): Promise<SearchResult[]> {
     try {
       const results: SearchResult[] = [];

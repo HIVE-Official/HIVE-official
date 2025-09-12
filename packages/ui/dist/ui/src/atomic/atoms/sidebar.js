@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState } from 'react';
-import { cn } from '../../lib/utils';
-import { Home, Compass, Zap, Calendar, User, Settings, ChevronRight, ChevronDown } from 'lucide-react';
-import { Button } from './button-enhanced';
+import { cn } from '../../lib/utils.js';
+import { Button } from './button-enhanced.js';
+import { Home, User, Compass, Zap, Calendar, Settings, ChevronRight, ChevronDown } from 'lucide-react';
 const navigationItems = [
     {
         id: 'feed',
@@ -60,7 +60,7 @@ const navigationItems = [
 const bottomItems = [
     { id: 'settings', icon: Settings, label: 'Settings', href: '/settings' },
 ];
-export const Sidebar = ({ user, currentPath = '/', collapsed = false, onItemClick, onToggle, breadcrumbs = [], currentSection, className, }) => {
+export const Sidebar = ({ user, currentPath = '/', collapsed = false, onItemClick, onToggle: _onToggle, breadcrumbs = [], currentSection: _currentSection, className, }) => {
     const initials = user?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '';
     const [expandedItems, setExpandedItems] = useState([]);
     const isItemActive = (item) => {

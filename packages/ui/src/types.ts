@@ -81,7 +81,7 @@ export interface Tool {
   creatorId: string;
   spaceId?: string;
   isPublic: boolean;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   createdAt: Date;
   updatedAt?: Date;
 }

@@ -510,7 +510,7 @@ export function RitualParticipationTracker({
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              onClick={() => setSelectedTab(id as any)}
+              onClick={() => setSelectedTab(id as 'progress' | 'actions' | 'milestones' | 'achievements')}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors",
                 selectedTab === id

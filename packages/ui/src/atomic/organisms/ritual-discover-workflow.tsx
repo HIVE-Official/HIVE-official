@@ -27,7 +27,7 @@ import {
 
 export interface DiscoverRitualProps {
   currentStep?: number;
-  onStepComplete?: (stepId: string, data: any) => void;
+  onStepComplete?: (stepId: string, data: Record<string, unknown>) => void;
   onRitualComplete?: () => void;
   userInterests?: string[];
   userGoals?: string[];
@@ -246,7 +246,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-hive-text-secondary" />
           <Input
             value={searchQuery}
-            onChange={(e: any) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             placeholder="Search spaces..."
             className="pl-10"
           />
@@ -255,7 +255,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
           <Filter className="h-4 w-4 text-hive-text-secondary" />
           <select
             value={categoryFilter}
-            onChange={(e: any) => setCategoryFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategoryFilter(e.target.value)}
             className="p-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
           >
             {categories.map(category => (
@@ -445,8 +445,8 @@ export function RitualDiscoverWorkflow({
   const [isComplete, setIsComplete] = useState(false);
   const [joinedSpaces, setJoinedSpaces] = useState<string[]>([]);
 
-  const handleStepComplete = (data: any) => {
-    setJoinedSpaces(data.selectedSpaces);
+  const handleStepComplete = (data: Record<string, unknown>) => {
+    setJoinedSpaces((data as { selectedSpaces: string[] }).selectedSpaces);
     onStepComplete?.('space_discovery', data);
     setIsComplete(true);
     onRitualComplete?.();

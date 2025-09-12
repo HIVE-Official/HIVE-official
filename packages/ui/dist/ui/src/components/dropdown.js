@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.js';
 export const Dropdown = ({ children, className }) => {
     return _jsx("div", { className: cn("relative inline-block text-left", className), children: children });
 };

@@ -640,7 +640,7 @@ const OrganismSystemsLibrary = () => {
               type="text"
               placeholder="Search organism systems..."
               value={searchQuery}
-              onChange={(e: any) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
               className="pl-10 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)]"
             />
           </div>

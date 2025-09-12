@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 // HIVE Textarea System - Semantic Token Perfection
 // Zero hardcoded values - complete semantic token usage
 const textareaVariants = cva(
@@ -108,7 +108,7 @@ minRows = 1, maxRows = 10, value, onChange, id, ...props }, ref) => {
     return textareaElement;
 });
 Textarea.displayName = "Textarea";
-const CodeTextarea = React.forwardRef(({ language, showLineNumbers, ...props }, ref) => {
+const CodeTextarea = React.forwardRef(({ language, _showLineNumbers, ...props }, ref) => {
     return (_jsx(Textarea, { ref: ref, className: "font-mono text-sm bg-[color-mix(in_srgb,var(--hive-interactive-hover)_60%,transparent)] border-[var(--hive-border-default)]", placeholder: language ? `Enter ${language} code...` : "Enter code...", ...props }));
 });
 CodeTextarea.displayName = "CodeTextarea";

@@ -250,7 +250,7 @@ const InteractiveTopbarDemo = ({
         >
           <div 
             className="bg-[var(--hive-bg-secondary)] rounded-xl p-6 border border-[var(--hive-border-default)] max-w-2xl w-full mx-4"
-            onClick={(e: any) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             <h3 className="text-lg font-semibold mb-4">Command Palette</h3>
             <div className="space-y-3">

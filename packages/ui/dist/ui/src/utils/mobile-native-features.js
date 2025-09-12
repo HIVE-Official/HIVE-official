@@ -121,7 +121,7 @@ export async function getCurrentLocation(options = {}) {
                 speed: position.coords.speed || undefined
             });
         }, (error) => {
-            reject(new Error(`Geolocation error: ${error.message}`));
+            reject(new Error(`Geolocation error: ${(error instanceof Error ? error.message : "Unknown error")}`));
         }, {
             enableHighAccuracy: options.enableHighAccuracy || true,
             timeout: options.timeout || 10000,

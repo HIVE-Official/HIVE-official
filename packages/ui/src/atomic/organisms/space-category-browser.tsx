@@ -402,7 +402,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
               {viewMode === 'list' && showJoinActions && (
                 <div className="flex items-center gap-2 ml-4">
                   <button
-                    onClick={(e: any) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleBookmarkSpace(space.id, !space.isBookmarked);
                     }}
@@ -417,7 +417,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
 
                   {space.isJoined ? (
                     <button
-                      onClick={(e: any) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleLeaveSpace(space.id);
                       }}
@@ -427,7 +427,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                     </button>
                   ) : (
                     <button
-                      onClick={(e: any) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleJoinSpace(space.id);
                       }}
@@ -482,7 +482,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
           {viewMode === 'grid' && showJoinActions && (
             <div className="flex items-center justify-between">
               <button
-                onClick={(e: any) => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   handleBookmarkSpace(space.id, !space.isBookmarked);
                 }}
@@ -501,7 +501,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                     {space.userRole && space.userRole !== 'member' ? space.userRole.replace('_', ' ') : 'Member'}
                   </span>
                   <button
-                    onClick={(e: any) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleLeaveSpace(space.id);
                     }}
@@ -512,7 +512,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 </div>
               ) : (
                 <button
-                  onClick={(e: any) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleJoinSpace(space.id);
                   }}
@@ -627,7 +627,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e: any) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               placeholder="Search spaces by name, description, or tags..."
               className="w-full pl-10 pr-4 py-3 rounded-2xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
             />
@@ -676,7 +676,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 <span className="text-sm text-[var(--hive-text-secondary)]">Sort by:</span>
                 <select
                   value={sortBy}
-                  onChange={(e: any) => setSortBy(e.target.value as SortOption)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as SortOption)}
                   className="px-3 py-1.5 rounded-lg border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] text-sm focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                 >
                   {SORT_OPTIONS.map((option: any) => (

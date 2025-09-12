@@ -497,7 +497,7 @@ const IconCategoriesShowcase = () => {
           <Input
             placeholder="Search icons..."
             value={searchTerm}
-            onChange={(e: any) => setSearchTerm(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchTerm(e.target.value)}
             className="w-64"
           />
         </div>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { globalSearch, searchSpaces, searchUsers, searchWithinSpace } from "@/lib/firebase-search";
 
 interface SearchResult {

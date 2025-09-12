@@ -270,7 +270,7 @@ export default function ProfileSettingsStorybook() {
 
   if (isLoading || !profile) {
     return (
-      <PageContainer title="Loading..." maxWidth="4xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
@@ -312,7 +312,7 @@ export default function ProfileSettingsStorybook() {
             )}
           </div>
         }
-        maxWidth="4xl"
+       
       >
         {/* ✅ **SUCCESS MESSAGE** */}
         {saveSuccess && (

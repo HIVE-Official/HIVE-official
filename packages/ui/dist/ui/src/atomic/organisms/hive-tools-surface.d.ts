@@ -10,7 +10,7 @@ export interface SpaceTool {
     category: string;
     version: string;
     status: string;
-    configuration: any;
+    configuration: Record<string, unknown>;
     permissions: {
         canEdit: string[];
         canView: string[];

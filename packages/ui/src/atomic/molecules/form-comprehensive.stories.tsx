@@ -63,9 +63,9 @@ const InteractiveField = ({ Component, initialData = {}, ...props }: any) => {
         {...data}
         {...Object.keys(initialData).reduce((acc, key) => {
           const changeHandler = `on${key.charAt(0).toUpperCase() + key.slice(1)}Change`;
-          acc[changeHandler] = (value: any) => updateData(key, value);
+          acc[changeHandler] = (value: unknown) => updateData(key, value);
           return acc;
-        }, {} as any)}
+        }, {} as unknown)}
         {...props}
       />
     </div>

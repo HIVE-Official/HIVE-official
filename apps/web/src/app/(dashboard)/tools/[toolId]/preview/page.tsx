@@ -105,7 +105,7 @@ const ToolRuntimeWrapper = ({ composition, mode }: { composition: ToolCompositio
     <div className="space-y-4">
       <ToolRuntime
         composition={composition}
-        userId={user?.uid || 'anonymous'}
+        userId={user?.id || 'anonymous'}
         mode={mode}
         onExecutionResult={handleExecutionResult}
         onError={handleError}

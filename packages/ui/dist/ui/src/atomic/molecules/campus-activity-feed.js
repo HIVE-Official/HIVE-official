@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 const activityTypeConfig = {
     message: {
         icon: '💬',
@@ -53,8 +53,7 @@ const activityTypeConfig = {
         label: 'Tool Created'
     }
 };
-export const CampusActivityFeed = ({ activities, isLoading = false, variant = 'default', showFilters = false, maxItems = 8, onActivityClick, onViewAll, onFilterChange, className }) => {
-    const [activeFilters, setActiveFilters] = useState([]);
+export const CampusActivityFeed = ({ activities, isLoading = false, variant: _variant = 'default', showFilters: _showFilters = false, maxItems = 8, onActivityClick, onViewAll, onFilterChange: _onFilterChange, className }) => {
     const [hoveredActivity, setHoveredActivity] = useState(null);
     const formatTimestamp = (timestamp) => {
         const now = new Date();
@@ -70,23 +69,8 @@ export const CampusActivityFeed = ({ activities, isLoading = false, variant = 'd
             return `${Math.floor(diffInMinutes / 1440)}d ago`;
         return `${Math.floor(diffInMinutes / 10080)}w ago`;
     };
-    const getInitials = (name) => {
-        return name
-            .split(' ')
-            .map(n => n[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
-    };
     const displayedActivities = activities?.slice(0, maxItems) ?? [];
     const hasMoreActivities = (activities?.length ?? 0) > maxItems;
-    const handleFilterToggle = (filter) => {
-        const newFilters = activeFilters.includes(filter)
-            ? activeFilters.filter(f => f !== filter)
-            : [...activeFilters, filter];
-        setActiveFilters(newFilters);
-        onFilterChange?.(newFilters);
-    };
     if (isLoading) {
         return (_jsx(motion.div, { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, className: cn('relative overflow-hidden rounded-2xl', 'bg-gradient-to-br from-charcoal/90 via-charcoal/80 to-graphite/90', 'backdrop-blur-xl border border-steel/10', 'shadow-[inset_0_1px_0_0_var(--hive-interactive-hover)]', 'p-6', className), children: _jsxs("div", { className: "space-y-4", children: [_jsx("div", { className: "h-6 bg-steel/20 rounded animate-pulse" }), [...Array(4)].map((_, i) => (_jsxs("div", { className: "flex items-start gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-steel/20 rounded-xl animate-pulse" }), _jsxs("div", { className: "flex-1 space-y-2", children: [_jsx("div", { className: "h-4 bg-steel/20 rounded animate-pulse" }), _jsx("div", { className: "h-3 bg-steel/20 rounded animate-pulse w-3/4" }), _jsx("div", { className: "h-3 bg-steel/20 rounded animate-pulse w-1/2" })] })] }, i)))] }) }));
     }

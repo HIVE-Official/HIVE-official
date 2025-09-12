@@ -351,7 +351,7 @@ const InputVariantsShowcase = () => {
                         type={input.type}
                         placeholder={input.placeholder}
                         value={inputValues[inputId] || ''}
-                        onChange={(e: any) => handleInputChange(inputId, e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange(inputId, e.target.value)}
                         onFocus={() => setFocusedInput(inputId)}
                         onBlur={() => setFocusedInput(null)}
                         className={`transition-all ${
@@ -411,20 +411,20 @@ const InputSizesShowcase = () => {
                   
                   <div className="flex items-center gap-3">
                     <Input
-                      size={size.name as any}
+                      size={size.name as unknown}
                       placeholder={`${size.label} input example`}
                       className="max-w-xs"
                     />
                     
                     <Input
-                      size={size.name as any}
+                      size={size.name as unknown}
                       type="search"
                       placeholder="Search..."
                       className="max-w-xs"
                     />
                     
                     <Input
-                      size={size.name as any}
+                      size={size.name as unknown}
                       type="email"
                       placeholder="student@buffalo.edu"
                       className="max-w-xs"
@@ -475,7 +475,7 @@ const ValidationShowcase = () => {
                     <Input
                       id={`test-${index}`}
                       value={testInputs[validation.type] || ''}
-                      onChange={(e: any) => setTestInputs(prev => ({ ...prev, [validation.type]: e.target.value }))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTestInputs(prev => ({ ...prev, [validation.type]: e.target.value }))}
                       placeholder={`Enter ${validation.type.toLowerCase()}...`}
                       className="flex-1"
                     />

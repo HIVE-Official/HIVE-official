@@ -399,7 +399,7 @@ function PersonalInformation({ state, dispatch }: {
               <Input
                 id="firstName"
                 value={state.personalInfo.firstName}
-                onChange={(e: any) => handleInputChange('firstName', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('firstName', e.target.value)}
                 placeholder="Enter your first name"
               />
             </div>
@@ -409,7 +409,7 @@ function PersonalInformation({ state, dispatch }: {
               <Input
                 id="lastName"
                 value={state.personalInfo.lastName}
-                onChange={(e: any) => handleInputChange('lastName', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('lastName', e.target.value)}
                 placeholder="Enter your last name"
               />
             </div>
@@ -420,7 +420,7 @@ function PersonalInformation({ state, dispatch }: {
             <Input
               id="preferredName"
               value={state.personalInfo.preferredName}
-              onChange={(e: any) => handleInputChange('preferredName', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('preferredName', e.target.value)}
               placeholder="What would you like to be called?"
             />
           </div>
@@ -431,7 +431,7 @@ function PersonalInformation({ state, dispatch }: {
               id="email"
               type="email"
               value={state.personalInfo.email}
-              onChange={(e: any) => handleInputChange('email', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('email', e.target.value)}
               placeholder="yourname@buffalo.edu"
             />
             <p className="text-sm text-gray-500 mt-1">
@@ -445,7 +445,7 @@ function PersonalInformation({ state, dispatch }: {
               id="phoneNumber"
               type="tel"
               value={state.personalInfo.phoneNumber}
-              onChange={(e: any) => handleInputChange('phoneNumber', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('phoneNumber', e.target.value)}
               placeholder="(716) 123-4567"
             />
           </div>
@@ -517,7 +517,7 @@ function AcademicInformation({ state, dispatch }: {
             <Label htmlFor="major">Major/Program *</Label>
             <Select 
               value={state.academicInfo.major} 
-              onValueChange={(value: any) => handleInputChange('major', value)}
+              onValueChange={(value: unknown) => handleInputChange('major', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select your major" />
@@ -537,7 +537,7 @@ function AcademicInformation({ state, dispatch }: {
               <Label htmlFor="year">Academic Year *</Label>
               <Select 
                 value={state.academicInfo.year} 
-                onValueChange={(value: any) => handleInputChange('year', value)}
+                onValueChange={(value: unknown) => handleInputChange('year', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select your year" />
@@ -558,7 +558,7 @@ function AcademicInformation({ state, dispatch }: {
               <Input
                 id="previousInstitution"
                 value={state.academicInfo.previousInstitution || ''}
-                onChange={(e: any) => handleInputChange('previousInstitution', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('previousInstitution', e.target.value)}
                 placeholder="Name of your previous college/university"
               />
             </div>
@@ -568,7 +568,7 @@ function AcademicInformation({ state, dispatch }: {
             <Label htmlFor="expectedGraduation">Expected Graduation</Label>
             <Select 
               value={state.academicInfo.expectedGraduation} 
-              onValueChange={(value: any) => handleInputChange('expectedGraduation', value)}
+              onValueChange={(value: unknown) => handleInputChange('expectedGraduation', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Expected graduation" />
@@ -672,7 +672,7 @@ function CampusLifePreferences({ state, dispatch }: {
               <Label htmlFor="housing">Housing Preference</Label>
               <Select 
                 value={state.campusPreferences.housing} 
-                onValueChange={(value: any) => handlePreferenceChange('housing', value)}
+                onValueChange={(value: unknown) => handlePreferenceChange('housing', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select housing option" />
@@ -693,7 +693,7 @@ function CampusLifePreferences({ state, dispatch }: {
               <Label htmlFor="diningPlan">Dining Plan</Label>
               <Select 
                 value={state.campusPreferences.diningPlan} 
-                onValueChange={(value: any) => handlePreferenceChange('diningPlan', value)}
+                onValueChange={(value: unknown) => handlePreferenceChange('diningPlan', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select dining plan" />
@@ -838,7 +838,7 @@ function SocialPreferencesStep({ state, dispatch }: {
             <Label htmlFor="studyGroupPreference">Study Group Preference</Label>
             <Select 
               value={state.socialPreferences.studyGroupPreference} 
-              onValueChange={(value: any) => handleSocialChange('studyGroupPreference', value)}
+              onValueChange={(value: unknown) => handleSocialChange('studyGroupPreference', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="How do you prefer to study?" />
@@ -857,7 +857,7 @@ function SocialPreferencesStep({ state, dispatch }: {
             <Label htmlFor="communicationStyle">Communication Style</Label>
             <Select 
               value={state.socialPreferences.communicationStyle} 
-              onValueChange={(value: any) => handleSocialChange('communicationStyle', value)}
+              onValueChange={(value: unknown) => handleSocialChange('communicationStyle', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="How do you prefer to communicate?" />
@@ -1072,7 +1072,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Label htmlFor="visaStatus">Visa Status</Label>
             <Select 
               value={state.internationalNeeds?.visaStatus || ''} 
-              onValueChange={(value: any) => handleInternationalChange('visaStatus', value)}
+              onValueChange={(value: unknown) => handleInternationalChange('visaStatus', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select your visa status" />
@@ -1092,7 +1092,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Label htmlFor="englishProficiency">English Proficiency Level</Label>
             <Select 
               value={state.internationalNeeds?.englishProficiency || ''} 
-              onValueChange={(value: any) => handleInternationalChange('englishProficiency', value)}
+              onValueChange={(value: unknown) => handleInternationalChange('englishProficiency', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Rate your English proficiency" />

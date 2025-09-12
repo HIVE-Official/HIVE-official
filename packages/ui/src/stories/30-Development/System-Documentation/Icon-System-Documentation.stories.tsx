@@ -33,6 +33,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '11-Icon-System/Documentation',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -344,7 +345,7 @@ const IconSystemShowcase = () => {
               placeholder="Search icons by name, usage, or context..."
               className="pl-10 text-lg py-3"
               value={searchQuery}
-              onChange={(e: any) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
               style={{
                 backgroundColor: 'var(--hive-background-secondary)',
                 borderColor: 'var(--hive-border-primary)',

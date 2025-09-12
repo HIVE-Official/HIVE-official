@@ -103,7 +103,7 @@ interface AnalyticsState {
     element: string;
     timestamp: number;
     userId?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
   }>;
   userJourneys: Array<{
     userId: string;

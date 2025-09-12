@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { 
   HiveCard as Card, 
   CardContent, 
@@ -84,8 +84,9 @@ export function PlatformHealthMonitor() {
   // Mock data initialization - In production, this would come from monitoring systems
   useEffect(() => {
     initializeMockData();
-    setupRealTimeSubscriptions();
-  }, []);
+    const cleanup = setupRealTimeSubscriptions();
+    return cleanup;
+  }, [setupRealTimeSubscriptions]);
 
   const initializeMockData = () => {
     const mockMetrics: HealthMetric[] = [
@@ -223,7 +224,7 @@ export function PlatformHealthMonitor() {
     setLoading(false);
   };
 
-  const setupRealTimeSubscriptions = () => {
+  const setupRealTimeSubscriptions = useCallback(() => {
     // In production, set up real-time subscriptions to monitoring data
     // For now, simulate real-time updates
     const interval = setInterval(() => {
@@ -231,16 +232,16 @@ export function PlatformHealthMonitor() {
     }, 10000); // Update every 10 seconds
 
     return () => clearInterval(interval);
-  };
+  }, [updateMetricsWithRandomData]);
 
-  const updateMetricsWithRandomData = () => {
+  const updateMetricsWithRandomData = useCallback(() => {
     setHealthMetrics(prev => prev.map(metric => ({
       ...metric,
       value: metric.value + (Math.random() - 0.5) * (metric.value * 0.1),
       lastUpdated: new Date(),
       status: calculateMetricStatus(metric.value, metric.threshold)
     })));
-  };
+  }, []);
 
   const calculateMetricStatus = (value: number, threshold?: { warning: number; critical: number }): HealthMetric['status'] => {
     if (!threshold) return 'healthy';

@@ -103,7 +103,7 @@ export default function ToolPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Loading Tool...">
+      <PageContainer>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
         </div>
@@ -113,7 +113,7 @@ export default function ToolPage() {
 
   if (error || !tool) {
     return (
-      <PageContainer title="Tool Not Found">
+      <PageContainer>
         <Card className="p-8 text-center">
           <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Tool Not Found</h2>
           <p className="text-neutral-400 mb-4">{error || 'The requested tool could not be found.'}</p>

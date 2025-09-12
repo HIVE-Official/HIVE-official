@@ -472,7 +472,7 @@ const ModerationQueue = ({
             <Filter className="h-4 w-4 text-gray-400" />
             <Label className="text-sm text-[var(--hive-text-primary)]">Filters:</Label>
           </div>
-          <Select value={state.filters.status} onValueChange={(value: any) => 
+          <Select value={state.filters.status} onValueChange={(value: unknown) => 
             state.setFilters({...state.filters, status: value})
           }>
             <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
@@ -486,7 +486,7 @@ const ModerationQueue = ({
             </SelectContent>
           </Select>
 
-          <Select value={state.filters.priority} onValueChange={(value: any) => 
+          <Select value={state.filters.priority} onValueChange={(value: unknown) => 
             state.setFilters({...state.filters, priority: value})
           }>
             <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
@@ -500,7 +500,7 @@ const ModerationQueue = ({
             </SelectContent>
           </Select>
 
-          <Select value={state.filters.type} onValueChange={(value: any) => 
+          <Select value={state.filters.type} onValueChange={(value: unknown) => 
             state.setFilters({...state.filters, type: value})
           }>
             <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]">
@@ -563,7 +563,7 @@ const ModerationQueue = ({
                     <span className="text-sm text-[var(--hive-text-primary)]">{report.content.author.name}</span>
                     <span className="text-xs text-gray-500">@{report.content.author.handle}</span>
                     {report.content.type === 'post' && (
-                      <span className="text-xs text-gray-500">in {(report.content as any).space}</span>
+                      <span className="text-xs text-gray-500">in {(report.content as unknown).space}</span>
                     )}
                   </div>
                   <p className="text-sm text-gray-300">

@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
-import { HiveModal } from '../../components/hive-modal';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
+import { HiveModal } from '../../components/hive-modal.js';
 import { X, Plus, Calendar, Users, Target, Sparkles, Trophy, Gift, CheckCircle, ArrowLeft, ArrowRight, Hash, Zap } from 'lucide-react';
 const RITUAL_TYPE_CONFIG = {
     onboarding: { icon: Sparkles, color: 'text-purple-400', bgColor: 'bg-purple-500/20', label: 'Welcome Journey' },

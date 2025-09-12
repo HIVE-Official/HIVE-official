@@ -281,7 +281,7 @@ export default function RealtimeMonitor() {
 
       {/* System Alerts */}
       {alertLevel !== 'normal' && (
-        <Alert variant={alertLevel === 'critical' ? 'destructive' : 'default'}>
+        <Alert variant={alertLevel === 'critical' ? 'error' : 'default'}>
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
             System is experiencing {alertLevel} issues. Check metrics below for details.

@@ -495,7 +495,7 @@ export const RegistrationFormSystem: Story = {
                   <Label htmlFor="major">Major</Label>
                   <div className="relative">
                     <School className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
-                    <Select onValueChange={(value: any) => handleInputChange('major', value)}>
+                    <Select onValueChange={(value: unknown) => handleInputChange('major', value)}>
                       <SelectTrigger className={`pl-10 ${errors.major ? 'border-red-500' : ''}`}>
                         <SelectValue placeholder="Choose your major" />
                       </SelectTrigger>
@@ -520,7 +520,7 @@ export const RegistrationFormSystem: Story = {
                   <Label htmlFor="academicYear">Academic Year</Label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
-                    <Select onValueChange={(value: any) => handleInputChange('academicYear', value)}>
+                    <Select onValueChange={(value: unknown) => handleInputChange('academicYear', value)}>
                       <SelectTrigger className={`pl-10 ${errors.academicYear ? 'border-red-500' : ''}`}>
                         <SelectValue placeholder="Select your year" />
                       </SelectTrigger>
@@ -553,7 +553,7 @@ export const RegistrationFormSystem: Story = {
 
                 <div className="space-y-2">
                   <Label htmlFor="dorm">Housing Situation</Label>
-                  <Select onValueChange={(value: any) => handleInputChange('dorm', value)}>
+                  <Select onValueChange={(value: unknown) => handleInputChange('dorm', value)}>
                     <SelectTrigger className={errors.dorm ? 'border-red-500' : ''}>
                       <SelectValue placeholder="Where do you live?" />
                     </SelectTrigger>

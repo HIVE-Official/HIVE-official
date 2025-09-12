@@ -107,7 +107,7 @@ const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {
             className="bg-gray-700"
             style={{ 
               '--progress-foreground': 'var(--hive-brand-primary)' 
-            } as any}
+            } as unknown}
           />
         </div>
 

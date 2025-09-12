@@ -44,10 +44,10 @@ interface ToolElement {
   id: string;
   type: 'input' | 'button' | 'text' | 'image' | 'container' | 'link';
   label: string;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   position: { x: number; y: number };
   size: { width: number; height: number };
-  style?: Record<string, any>;
+  style?: Record<string, unknown>;
   events?: Array<{
     trigger: string;
     action: string;
@@ -75,7 +75,7 @@ interface Tool {
   isFavorite?: boolean;
   lastUsed?: string;
   elements?: ToolElement[];
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 interface CompleteHIVEToolsSystemProps {
@@ -225,7 +225,7 @@ export function CompleteHIVEToolsSystem({
 
     const newElement: ToolElement = {
       id: `element-${Date.now()}`,
-      type: elementType as any,
+      type: elementType as 'input' | 'button' | 'text' | 'image' | 'container' | 'link',
       label: elementTemplate.label,
       properties: { ...elementTemplate.defaultProps },
       position: { x, y },
@@ -295,7 +295,7 @@ export function CompleteHIVEToolsSystem({
           <div key={element.id} style={elementStyle} onClick={handleElementClick}>
             <input
               type="text"
-              placeholder={properties.placeholder}
+              placeholder={properties.placeholder as string}
               disabled={builderMode === 'design'}
               className="w-full border-0 bg-transparent outline-none"
             />
@@ -307,11 +307,11 @@ export function CompleteHIVEToolsSystem({
           <div key={element.id} style={elementStyle} onClick={handleElementClick}>
             <Button
               size="sm"
-              variant={properties.variant}
+              variant={properties.variant as 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'}
               disabled={builderMode === 'design'}
               className="w-full"
             >
-              {properties.text}
+              {properties.text as React.ReactNode}
             </Button>
           </div>
         );
@@ -321,9 +321,9 @@ export function CompleteHIVEToolsSystem({
           <div key={element.id} style={elementStyle} onClick={handleElementClick}>
             <span style={{ 
               fontSize: properties.size === 'large' ? '18px' : properties.size === 'small' ? '12px' : '14px',
-              fontWeight: properties.weight 
+              fontWeight: properties.weight as React.CSSProperties['fontWeight'] 
             }}>
-              {properties.content}
+              {properties.content as React.ReactNode}
             </span>
           </div>
         );
@@ -332,8 +332,8 @@ export function CompleteHIVEToolsSystem({
         return (
           <div key={element.id} style={elementStyle} onClick={handleElementClick}>
             <img 
-              src={properties.src} 
-              alt={properties.alt}
+              src={properties.src as string} 
+              alt={properties.alt as string}
               className="w-full h-full object-cover rounded"
             />
           </div>
@@ -343,8 +343,8 @@ export function CompleteHIVEToolsSystem({
         return (
           <div key={element.id} style={{
             ...elementStyle,
-            backgroundColor: properties.backgroundColor || 'rgba(249, 250, 251, 0.8)',
-            padding: properties.padding || 16,
+            backgroundColor: (properties.backgroundColor as string) || 'rgba(249, 250, 251, 0.8)',
+            padding: (properties.padding as number) || 16,
             minHeight: 100
           }} onClick={handleElementClick}>
             <div className="text-sm text-gray-500 text-center">
@@ -357,12 +357,12 @@ export function CompleteHIVEToolsSystem({
         return (
           <div key={element.id} style={elementStyle} onClick={handleElementClick}>
             <a 
-              href={builderMode === 'preview' ? properties.url : '#'}
-              target={properties.target}
+              href={builderMode === 'preview' ? (properties.url as string) : '#'}
+              target={properties.target as React.HTMLAttributeAnchorTarget}
               className="text-blue-600 hover:text-blue-800 underline"
-              onClick={(e: any) => builderMode === 'design' && e.preventDefault()}
+              onClick={(e: React.MouseEvent) => builderMode === 'design' && e.preventDefault()}
             >
-              {properties.text}
+              {properties.text as React.ReactNode}
             </a>
           </div>
         );
@@ -390,7 +390,7 @@ export function CompleteHIVEToolsSystem({
       </div>
 
       {/* Main Content */}
-      <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value as "builder" | "personal" | "marketplace")} className="flex-1 flex flex-col">
+      <Tabs value={activeTab} onValueChange={(value: string) => setActiveTab(value as 'marketplace' | 'personal' | 'builder')} className="flex-1 flex flex-col">
         <TabsList className="w-full bg-white/5 p-1">
           <TabsTrigger value="marketplace" className="flex-1">
             <Target className="h-4 w-4 mr-2" />
@@ -415,13 +415,13 @@ export function CompleteHIVEToolsSystem({
                 <Input
                   placeholder="Search tools..."
                   value={searchQuery}
-                  onChange={(e: any) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                   className="pl-10"
                 />
               </div>
               <select
                 value={selectedCategory}
-                onChange={(e: any) => setSelectedCategory(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedCategory(e.target.value)}
                 className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[var(--hive-text-inverse)]"
               >
                 {categories.map(cat => (
@@ -469,7 +469,7 @@ export function CompleteHIVEToolsSystem({
                     </div>
 
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {tool.tags.slice(0, 3).map((tag: any) => (
+                      {tool.tags.slice(0, 3).map((tag: string) => (
                         <Badge key={tag} variant="secondary" className="text-xs">
                           {tag}
                         </Badge>
@@ -582,7 +582,7 @@ export function CompleteHIVEToolsSystem({
                       <div
                         key={elementType.type}
                         draggable
-                        onDragStart={(e: any) => handleElementDrag(elementType.type, e)}
+                        onDragStart={(e: React.DragEvent) => handleElementDrag(elementType.type, e)}
                         className="flex items-center gap-2 p-3 rounded-lg border border-white/10 cursor-move hover:bg-white/5 transition-colors"
                       >
                         <IconComponent className={`h-4 w-4 ${elementType.color}`} />
@@ -600,7 +600,7 @@ export function CompleteHIVEToolsSystem({
                 <div className="flex items-center gap-2 p-4 border-b border-white/10">
                   <Input
                     value={currentTool.name || ''}
-                    onChange={(e: any) => setCurrentTool(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentTool(prev => ({ ...prev, name: e.target.value }))}
                     className="flex-1"
                     placeholder="Tool name..."
                   />

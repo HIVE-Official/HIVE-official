@@ -230,7 +230,7 @@ function secureCleanup() {
     const maxAge = 60 * 60 * 1000; // 1 hour
     const beforeSize = clients.size;
     
-    for (const [clientId, client] of clients.entries()) {
+    for (const [clientId, client] of Array.from(clients.entries())) {
       if (now - client.windowStart > maxAge) {
         clients.delete(clientId);
       }

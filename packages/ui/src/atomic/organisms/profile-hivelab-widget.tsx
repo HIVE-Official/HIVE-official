@@ -411,7 +411,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e: any) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         onEditTool(featuredBuild.id);
                       }}
@@ -424,7 +424,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e: any) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         onDeployTool(featuredBuild.id);
                       }}

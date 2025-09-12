@@ -144,7 +144,7 @@ export function PostCreator({
         id: Date.now().toString(),
         content: draft.content,
         author: {
-          id: user?.uid || 'mock',
+          id: user?.id || 'mock',
           name: user?.displayName || 'UB Student',
           handle: user?.email?.split('@')[0] || 'student',
           avatar: user?.photoURL

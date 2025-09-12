@@ -106,7 +106,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
     } else if (activeTab === 'past') {
       constraints.push(where('startDateTime', '<', new Date()));
     } else if (activeTab === 'my' && user) {
-      constraints.push(where('attendees', 'array-contains', user.uid));
+      constraints.push(where('attendees', 'array-contains', user.id));
     }
 
     constraints.push(orderBy('startDateTime', activeTab === 'past' ? 'desc' : 'asc'));
@@ -152,16 +152,16 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
 
       if (isAttending) {
         await updateDoc(eventRef, {
-          attendees: arrayRemove(user.uid),
+          attendees: arrayRemove(user.id),
           attendeeCount: Math.max(0, event.attendeeCount - 1),
-          interested: arrayUnion(user.uid),
+          interested: arrayUnion(user.id),
           interestedCount: event.interestedCount + 1
         });
       } else {
         await updateDoc(eventRef, {
-          attendees: arrayUnion(user.uid),
+          attendees: arrayUnion(user.id),
           attendeeCount: event.attendeeCount + 1,
-          interested: arrayRemove(user.uid),
+          interested: arrayRemove(user.id),
           interestedCount: Math.max(0, event.interestedCount - 1)
         });
       }
@@ -180,12 +180,12 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
 
       if (isInterested) {
         await updateDoc(eventRef, {
-          interested: arrayRemove(user.uid),
+          interested: arrayRemove(user.id),
           interestedCount: Math.max(0, event.interestedCount - 1)
         });
       } else {
         await updateDoc(eventRef, {
-          interested: arrayUnion(user.uid),
+          interested: arrayUnion(user.id),
           interestedCount: event.interestedCount + 1
         });
       }
@@ -203,8 +203,8 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
   });
 
   const renderEventCard = (event: Event) => {
-    const isAttending = user && event.attendees.includes(user.uid);
-    const isInterested = user && event.interested.includes(user.uid);
+    const isAttending = user && event.attendees.includes(user.id);
+    const isInterested = user && event.interested.includes(user.id);
     const startDate = event.startDateTime?.toDate?.() || new Date();
     const endDate = event.endDateTime?.toDate?.() || new Date();
     const isFull = event.maxAttendees && event.attendeeCount >= event.maxAttendees;

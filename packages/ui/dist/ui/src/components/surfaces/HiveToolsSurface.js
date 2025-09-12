@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../lib/utils';
-import { HiveCard } from '../hive-card';
-import { HiveButton } from '../hive-button';
-import { HiveBadge } from '../hive-badge';
-import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
+import { cn } from '../../lib/utils.js';
+import { HiveCard } from '../hive-card.js';
+import { HiveButton } from '../hive-button.js';
+import { HiveBadge } from '../hive-badge.js';
+import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar.js';
 import { Wrench, Plus, ExternalLink, Star, Users, Settings, Share2, Heart, MoreVertical, Zap, Calendar, FileText, BarChart, Globe, Lock, Unlock, Code, Palette, Database, Cloud } from 'lucide-react';
-import { useFirebaseRealtime, useOptimisticUpdates } from '../../hooks/use-live-updates';
+import { useFirebaseRealtime, useOptimisticUpdates } from '../../hooks/use-live-updates.js';
 import { formatDistanceToNow } from 'date-fns';
 // Category configuration
 const categoryConfig = {

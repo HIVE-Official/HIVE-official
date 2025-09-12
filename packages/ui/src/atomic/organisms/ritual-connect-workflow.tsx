@@ -249,7 +249,7 @@ export function RitualConnectWorkflow({
   const [isComplete, setIsComplete] = useState(false);
   const [connectData, setConnectData] = useState<any>({});
 
-  const handleStepComplete = (data: any) => {
+  const handleStepComplete = (data: unknown) => {
     setConnectData(data);
     onStepComplete?.('friend_invitations', data);
     setIsComplete(true);

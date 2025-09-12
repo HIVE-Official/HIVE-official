@@ -104,7 +104,7 @@ export interface NotificationDocument {
   priority: 'low' | 'medium' | 'high' | 'urgent';
   sourceId: string;
   sourceType: 'user' | 'space' | 'tool' | 'system';
-  actionData?: Record<string, any>;
+  actionData?: Record<string, unknown>;
   expiresAt?: Date;
   createdAt: Date;
 }
@@ -142,7 +142,7 @@ export interface ToolDocument {
   description: string;
   type: 'form' | 'calculator' | 'tracker' | 'game' | 'utility' | 'social' | 'academic';
   status: 'draft' | 'testing' | 'published' | 'archived';
-  config: Record<string, any>; // Tool-specific configuration
+  config: Record<string, unknown>; // Tool-specific configuration
   permissions: {
     isPublic: boolean;
     allowedSpaces: string[];
@@ -389,7 +389,7 @@ export class ProfileFirebaseService {
   }
 
   // Analytics
-  async updateProfileAnalytics(uid: string, event: string, data?: Record<string, any>): Promise<void> {
+  async updateProfileAnalytics(uid: string, event: string, data?: Record<string, unknown>): Promise<void> {
     try {
       console.log(`Recording analytics event ${event} for ${uid}:`, data);
       

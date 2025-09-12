@@ -31,8 +31,9 @@ export { FormField } from './atomic/molecules/form-field';
 export { ComprehensiveFormField, type ComprehensiveFormFieldProps } from './atomic/molecules/form-field-comprehensive';
 export { UniversityEmailFieldMolecule, StudentIDFieldMolecule, MajorSelectionFieldMolecule, type UniversityEmailFieldProps, type StudentIDFieldProps, type MajorSelectionFieldProps } from './atomic/molecules/form-comprehensive';
 export { Label } from './atomic/atoms/label';
-export { SelectEnhanced as Select } from './atomic/atoms/select-enhanced';
-export { SelectTrigger, SelectValue, SelectContent, SelectItem } from './atomic/atoms/select-radix';
+export { SelectEnhanced } from './atomic/atoms/select-enhanced';
+export { Select, // Radix Select root component for children-based API
+SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator, HiveSelect } from './atomic/atoms/select-radix';
 export { Grid } from './components/Grid';
 export { Stack } from './components/Stack';
 export { AppHeader } from './components/AppHeader';

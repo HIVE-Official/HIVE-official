@@ -96,7 +96,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
   createdTools,
   isBuilder = false,
   isLoading = false,
-  variant = 'default',
+  variant: _variant = 'default',
   showBecomeBuilder = true,
   isLocked = true, // Default to locked for vBETA
   onToolClick,
@@ -110,16 +110,6 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
   const [hoveredTool, setHoveredTool] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'available' | 'created'>('available');
 
-  const formatLastUsed = (timestamp: string): string => {
-    const now = new Date();
-    const used = new Date(timestamp);
-    const diffInHours = Math.floor((now.getTime() - used.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return `${Math.floor(diffInHours / 168)}w ago`;
-  };
 
   const displayedAvailableTools = availableTools?.slice(0, 4) ?? [];
   const displayedCreatedTools = createdTools?.slice(0, 3) ?? [];
@@ -447,7 +437,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
           {[
             { id: 'available', label: 'Create New', count: availableTools?.length ?? 0 },
             { id: 'created', label: 'My Tools', count: createdTools?.length ?? 0 }
-          ].map((tab: any) => (
+          ].map((tab: { id: string; label: string; count: number }) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as 'available' | 'created')}

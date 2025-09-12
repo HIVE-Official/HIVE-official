@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useRealtimePosts, useRealtimeEvents, useRealtimeMembers, usePresence, useTypingIndicators, useLiveActivityFeed } from './use-live-updates';
+import { useRealtimePosts, useRealtimeEvents, useRealtimeMembers, usePresence, useTypingIndicators, useLiveActivityFeed } from './use-live-updates.js';
 export function useSpaceLiveUpdates(spaceId, userId) {
     const [lastUpdate, setLastUpdate] = useState(null);
     // Real-time data hooks
@@ -33,8 +33,8 @@ export function useSpaceActivityStatus(spaceId, userId) {
     const activitySummary = {
         totalMembers: members.length,
         onlineMembers: onlineUsers.length,
-        recentPosts: posts.filter(p => Date.now() - new Date(p.timestamp).getTime() < 3600000).length, // Last hour
-        upcomingEvents: events.filter(e => new Date(e.startTime) > new Date()).length,
+        recentPosts: posts.filter((p) => Date.now() - new Date(p.timestamp).getTime() < 3600000).length, // Last hour
+        upcomingEvents: events.filter((e) => new Date(e.startTime) > new Date()).length,
         isLive: isActive,
         hasRecentActivity: recentActivity
     };
@@ -45,18 +45,18 @@ export function useSpaceLeaderInsights(spaceId) {
     const { posts, events, members } = useSpaceLiveUpdates(spaceId, '');
     const insights = {
         engagement: {
-            postsToday: posts.filter(p => {
+            postsToday: posts.filter((p) => {
                 const postDate = new Date(p.timestamp);
                 const today = new Date();
                 return postDate.toDateString() === today.toDateString();
             }).length,
-            activeMembers: members.filter(m => {
+            activeMembers: members.filter((m) => {
                 // Consider members active if they've posted or commented recently
-                return posts.some(p => p.authorId === m.id &&
+                return posts.some((p) => p.authorId === m.id &&
                     Date.now() - new Date(p.timestamp).getTime() < 7 * 24 * 60 * 60 * 1000 // Last week
                 );
             }).length,
-            upcomingEvents: events.filter(e => new Date(e.startTime) > new Date()).length
+            upcomingEvents: events.filter((e) => new Date(e.startTime) > new Date()).length
         },
         trends: {
             growthRate: members.length > 0 ? (members.length / 30) : 0, // Rough monthly growth estimate

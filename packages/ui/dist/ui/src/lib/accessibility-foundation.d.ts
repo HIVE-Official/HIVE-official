@@ -111,7 +111,7 @@ export declare function getInteractiveA11yProps(type: keyof typeof ariaPatterns.
 /**
  * Get form accessibility props
  */
-export declare function getFormA11yProps(id: string, label: string, description?: string, error?: string, required?: boolean): Record<string, any>;
+export declare function getFormA11yProps(id: string, label: string, description?: string, error?: string, required?: boolean): Record<string, unknown>;
 /**
  * Get live region props for dynamic content
  */

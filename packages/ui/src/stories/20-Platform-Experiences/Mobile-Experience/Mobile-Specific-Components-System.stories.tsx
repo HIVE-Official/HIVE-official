@@ -649,7 +649,7 @@ const MobileOfflineSupport = () => {
               )}
 
               <div className="space-y-2">
-                {offlineQueue.map((item: any) => (
+                {offlineQueue.map((item) => (
                   <div key={item.id} className="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
                     <div className="flex-1">
@@ -824,7 +824,7 @@ const MobileSystemDemo = () => {
               key={id}
               size="sm"
               variant={activeDemo === id ? 'default' : 'ghost'}
-              onClick={() => setActiveDemo(id as any)}
+              onClick={() => setActiveDemo(id as unknown)}
               className={`flex-1 text-xs ${
                 activeDemo === id 
                   ? 'bg-yellow-500 text-black' 

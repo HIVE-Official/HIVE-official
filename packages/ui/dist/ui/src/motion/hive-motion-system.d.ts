@@ -58,7 +58,7 @@ export declare const butteryInteractions: {
             readonly rotateZ: 0;
             readonly transition: {
                 readonly duration: 0.4;
-                readonly ease: any;
+                readonly ease: unknown;
                 readonly type: "spring";
                 readonly stiffness: 300;
                 readonly damping: 20;
@@ -69,7 +69,7 @@ export declare const butteryInteractions: {
             readonly y: -1;
             readonly transition: {
                 readonly duration: 0.2;
-                readonly ease: any;
+                readonly ease: unknown;
                 readonly type: "spring";
                 readonly stiffness: 500;
                 readonly damping: 12;
@@ -160,7 +160,7 @@ export declare const butteryInteractions: {
             readonly y: -80;
             readonly transition: {
                 readonly duration: 0.3;
-                readonly ease: any;
+                readonly ease: unknown;
             };
         };
     };
@@ -179,7 +179,7 @@ export declare const butteryInteractions: {
             readonly y: 0;
             readonly transition: {
                 readonly duration: 0.2;
-                readonly ease: any;
+                readonly ease: unknown;
                 readonly type: "spring";
                 readonly stiffness: 400;
                 readonly damping: 20;
@@ -239,7 +239,7 @@ export declare const butteryInteractions: {
                 readonly scale: 1;
                 readonly transition: {
                     readonly duration: 0.6;
-                    readonly ease: any;
+                    readonly ease: unknown;
                     readonly type: "spring";
                     readonly stiffness: 300;
                     readonly damping: 25;
@@ -254,7 +254,7 @@ export declare const butteryInteractions: {
                 readonly rotate: 0;
                 readonly transition: {
                     readonly duration: 0.4;
-                    readonly ease: any;
+                    readonly ease: unknown;
                 };
             };
             readonly liked: {
@@ -280,7 +280,7 @@ export declare const butteryInteractions: {
                 readonly opacity: 0;
                 readonly transition: {
                     readonly duration: 0.4;
-                    readonly ease: any;
+                    readonly ease: unknown;
                 };
             };
             readonly expanded: {
@@ -288,7 +288,7 @@ export declare const butteryInteractions: {
                 readonly opacity: 1;
                 readonly transition: {
                     readonly duration: 0.6;
-                    readonly ease: any;
+                    readonly ease: unknown;
                     readonly staggerChildren: 0.1;
                 };
             };
@@ -299,7 +299,7 @@ export declare const butteryInteractions: {
                 readonly boxShadow: "0 0 0 0 transparent";
                 readonly transition: {
                     readonly duration: 0.4;
-                    readonly ease: any;
+                    readonly ease: unknown;
                 };
             };
             readonly shared: {
@@ -307,7 +307,7 @@ export declare const butteryInteractions: {
                 readonly boxShadow: readonly ["0 0 0 0 color-mix(in_srgb,var(--hive-brand-secondary)_40%,transparent)", "0 0 0 5 transparent", "0 0 0 0 transparent"];
                 readonly transition: {
                     readonly duration: 0.6;
-                    readonly ease: any;
+                    readonly ease: unknown;
                     readonly times: readonly [0, 0.5, 1];
                 };
             };
@@ -320,7 +320,7 @@ export declare const rippleCascade: {
         opacity: number[];
         transition: {
             duration: 0.8;
-            ease: any;
+            ease: unknown;
         };
     };
     connected: (distance: number) => {
@@ -329,7 +329,7 @@ export declare const rippleCascade: {
         transition: {
             delay: number;
             duration: 0.6;
-            ease: any;
+            ease: unknown;
         };
     };
 };
@@ -348,7 +348,7 @@ export declare const milestoneSequence: {
             rotate: number;
             transition: {
                 duration: 1.2;
-                ease: any;
+                ease: unknown;
                 type: "spring";
                 stiffness: number;
                 damping: number;
@@ -371,7 +371,7 @@ export declare const milestoneSequence: {
                 damping: 25;
                 velocity: 0;
                 duration: 0.8;
-                ease: any;
+                ease: unknown;
                 type: "spring";
             };
         };
@@ -388,7 +388,7 @@ export declare const milestoneSequence: {
             opacity: number;
             transition: {
                 duration: 1.2;
-                ease: any;
+                ease: unknown;
                 times: number[];
             };
         };
@@ -417,7 +417,7 @@ export declare const motionUtils: {
         damping: 25;
         velocity: 0;
         duration: 1.2 | 0.8 | 0.1 | 0.6 | 0.4 | 0.2;
-        ease: any;
+        ease: unknown;
         type: "spring";
     };
 };

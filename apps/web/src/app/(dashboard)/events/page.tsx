@@ -405,7 +405,7 @@ export default function EventsPage() {
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading Events..." maxWidth="4xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
@@ -484,7 +484,7 @@ export default function EventsPage() {
             </Button>
           </div>
         }
-        maxWidth="4xl"
+       
       >
         {/* Event Type Filter */}
         <div className="flex flex-wrap gap-2 mb-6">

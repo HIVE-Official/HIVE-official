@@ -171,7 +171,7 @@ const CalendarSystem = () => {
                       {['day', 'week', 'month'].map((mode: any) => (
                         <button
                           key={mode}
-                          onClick={() => setViewMode(mode as any)}
+                          onClick={() => setViewMode(mode as unknown)}
                           className={`px-3 py-1 rounded-md text-sm transition-colors ${
                             viewMode === mode
                               ? 'bg-[var(--hive-gold)] text-[var(--hive-black)]'

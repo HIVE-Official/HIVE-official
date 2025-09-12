@@ -367,7 +367,7 @@ export const CampusFeed: Story = {
           
           {/* Feed Items */}
           <div className="space-y-4">
-            {mockFeedItems.map((item: any) => (
+            {mockFeedItems.map((item) => (
               <FeedItem
                 key={item.id}
                 item={item}

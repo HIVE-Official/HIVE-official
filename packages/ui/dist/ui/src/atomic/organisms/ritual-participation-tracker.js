@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy.js';
+import { cn } from '../../lib/utils.js';
 import { Trophy, Target, Clock, Users, CheckCircle, Circle, Star, Flame, TrendingUp, Award, Calendar, Share2 } from 'lucide-react';
 const RARITY_CONFIG = {
     common: { color: 'text-gray-400', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },

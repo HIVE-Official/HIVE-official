@@ -64,7 +64,7 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading..." maxWidth="7xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
@@ -77,7 +77,7 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
 
   if (!spaceData) {
     return (
-      <PageContainer title="Space Not Found" maxWidth="7xl">
+      <PageContainer>
         <div className="text-center py-12">
           <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Space Not Found</h3>
           <p className="text-zinc-400 mb-6">The space you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.</p>
@@ -112,7 +112,7 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
             icon: BookOpen 
           }
         ]}
-        maxWidth="7xl"
+       
       >
         <SpaceResourceManager
           spaceId={spaceId}

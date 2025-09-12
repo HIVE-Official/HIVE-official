@@ -387,7 +387,7 @@ export const DesktopSidebar = memo<DesktopSidebarProps>(({
       {/* Navigation items */}
       <nav className="flex-1 px-2 py-4 overflow-y-auto">
         <div className="space-y-1">
-          {items.map((item: any) => (
+          {items.map((item) => (
             <SidebarItem
               key={item.id}
               item={item}
