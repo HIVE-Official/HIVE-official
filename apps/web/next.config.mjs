@@ -40,8 +40,8 @@ const nextConfig = {
   experimental: {
     workerThreads: false,
     cpus: 1,
-    isrMemoryCacheSize: 0, // Disable ISR cache
-    disableOptimizedLoading: true, // Disable optimized loading
+    // Removed deprecated isrMemoryCacheSize
+    // Removed unrecognized disableOptimizedLoading
   },
   
   // Webpack configuration

@@ -1,3 +1,4 @@
+/// <reference path="../types/global.d.ts" />
 import { LRUCache } from 'lru-cache';
 import { unstable_cache } from 'next/cache';
 
@@ -299,7 +300,7 @@ export const cacheStrategies = {
  */
 export async function cachedFetch(
   url: string,
-  options: RequestInit & {
+  options: RequestInit | any & {
     cacheStrategy?: CacheStrategy;
     cacheConfig?: CacheConfig;
   } = {}
@@ -357,7 +358,7 @@ export async function cachedFetch(
 export async function warmCache(
   requests: Array<{
     url: string;
-    options?: RequestInit;
+    options?: RequestInit | any;
     cacheConfig?: CacheConfig;
   }>
 ): Promise<void> {

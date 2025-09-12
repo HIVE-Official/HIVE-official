@@ -1,10 +1,12 @@
+/// <reference path="../types/global.d.ts" />
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 // Re-export authenticatedFetch from auth-utils
 export { authenticatedFetch } from './auth-utils';
 
 class ApiClient {
-  private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  private async request<T>(endpoint: string, options?: RequestInit | any): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     
     const response = await fetch(url, {

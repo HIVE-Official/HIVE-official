@@ -26,6 +26,7 @@ import { Heart, Zap, Sparkles, Star, Users, Coffee } from 'lucide-react';
 
 const meta = {
   title: 'Visual Improvements/🎨 Enhanced UI Showcase',
+  component: EnhancedCard,
   parameters: {
     layout: 'fullscreen',
     docs: {

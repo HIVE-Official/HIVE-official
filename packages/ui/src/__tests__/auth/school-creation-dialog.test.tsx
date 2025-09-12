@@ -87,7 +87,7 @@ describe('SchoolCreationDialog', () => {
       'special@characters.edu',
     ]
 
-    invalidDomains.forEach((domain: any) => {
+    invalidDomains.forEach((domain: string) => {
       fireEvent.change(domainInput, { target: { value: domain } })
       expect(domainInput).toBeInvalid()
     })
@@ -100,7 +100,7 @@ describe('SchoolCreationDialog', () => {
       'example.com',
     ]
 
-    validDomains.forEach((domain: any) => {
+    validDomains.forEach((domain: string) => {
       fireEvent.change(domainInput, { target: { value: domain } })
       expect(domainInput).toBeValid()
     })

@@ -797,7 +797,7 @@ export default function SpaceDetailPage({
                 {isLeader && currentMode === 'manage' ? (
                   <SpaceManagementPanel
                     spaceId={spaceId}
-                    isOwner={membership?.role === 'owner'}
+                    isOwner={spaceMembership?.role === 'owner'}
                     currentUserId={user?.uid || ''}
                   />
                 ) : (

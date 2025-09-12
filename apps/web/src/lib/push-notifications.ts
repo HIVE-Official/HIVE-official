@@ -1,3 +1,4 @@
+/// <reference path="../types/global.d.ts" />
 import { getMessaging, getToken, onMessage, deleteToken } from 'firebase/messaging';
 import { app } from '@/lib/firebase-client';
 import { logger } from '@/lib/structured-logger';
@@ -85,7 +86,7 @@ export class PushNotificationManager {
   /**
    * Get current permission status
    */
-  getPermissionStatus(): NotificationPermissionState {
+  getPermissionStatus(): NotificationPermission | string {
     if (!('Notification' in window)) {
       return { granted: false, denied: false, default: true };
     }
@@ -232,7 +233,7 @@ export class PushNotificationManager {
     if (Notification.permission !== 'granted') return;
 
     const notificationTitle = payload.notification?.title || 'HIVE Notification';
-    const notificationOptions: NotificationOptions = {
+    const notificationOptions: any = {
       body: payload.notification?.body || 'You have a new notification',
       icon: payload.notification?.icon || '/icon-192x192.png',
       badge: '/badge-72x72.png',

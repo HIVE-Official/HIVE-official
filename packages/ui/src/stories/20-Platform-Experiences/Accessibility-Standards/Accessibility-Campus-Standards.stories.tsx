@@ -38,6 +38,7 @@ import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion
 import '../../../hive-tokens.css';
 
 const meta = {
+  component: () => null,
   title: '09-Accessibility/Campus Standards',
   parameters: {
     layout: 'fullscreen',

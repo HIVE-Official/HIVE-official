@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.useGlobalLoading = exports.useToasts = exports.useModal = exports.useMobileMenuOpen = exports.useSidebarOpen = exports.useUIStore = void 0;
 const zustand_1 = require("zustand");
 const middleware_1 = require("zustand/middleware");
-exports.useUIStore = (0, zustand_1.create)()((0, middleware_1.devtools)((set, get) => ({
+exports.useUIStore = (0, zustand_1.create)()((0, middleware_1.devtools)((set, _get) => ({
     // Initial state
     sidebarOpen: true,
     mobileMenuOpen: false,

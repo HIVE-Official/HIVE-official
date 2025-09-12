@@ -161,7 +161,6 @@ export const EventRSVP: Story = {
 };
 
 export const CampusToolTemplates: Story = {
-  name: 'Campus Tool Templates',
   render: () => (
     <div className="space-y-8 p-6">
       <div>

@@ -207,11 +207,12 @@ export function ToolLibrary({
       case 'favorites':
         filtered = filtered.filter(t => t.isFavorite);
         break;
-      case 'recent':
+      case 'recent': {
         const weekAgo = new Date();
         weekAgo.setDate(weekAgo.getDate() - 7);
         filtered = filtered.filter(t => t.updatedAt > weekAgo);
         break;
+      }
       case 'popular':
         filtered = filtered.filter(t => t.downloads > 200);
         break;

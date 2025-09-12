@@ -391,14 +391,14 @@ async function calculateRelevanceFactors(
   post: any, 
   membership: any, 
   config: FeedAlgorithmConfig, 
-  userId: string
+  _userId: string
 ): Promise<RelevanceFactors> {
   const now = new Date();
   const postTime = new Date(post.createdAt);
   const ageHours = (now.getTime() - postTime.getTime()) / (1000 * 60 * 60);
 
   // Space engagement factor
-  const spaceEngagement = membership.engagementScore || 20;
+  const spaceEngagement = membership?.engagementScore || 20;
 
   // Content recency factor
   const contentRecency = Math.max(0, 100 - (ageHours / config.maxContentAge) * 100);
@@ -416,7 +416,7 @@ async function calculateRelevanceFactors(
   const socialSignals = Math.min(100, totalEngagement * 5);
 
   // Creator influence
-  const creatorInfluence = await getCreatorInfluence(post.authorId, membership.spaceId);
+  const creatorInfluence = await getCreatorInfluence(post.authorId, membership?.spaceId);
 
   // Diversity factor (bonus for content type variety)
   const diversityFactor = 50; // Base value, calculated contextually in final ranking

@@ -1,3 +1,4 @@
+/// <reference path="../types/global.d.ts" />
 import { NextResponse } from 'next/server';
 
 /**
@@ -433,7 +434,7 @@ export const requestDeduplicator = new RequestDeduplicator();
 // Utility function for resilient API calls
 export async function resilientFetch(
   url: string,
-  options: RequestInit = {},
+  options: RequestInit | any = {},
   retryConfig?: ErrorRecoveryConfig
 ): Promise<Response> {
   return withRetry(

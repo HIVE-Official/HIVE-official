@@ -282,7 +282,7 @@ export function validateFileUpload(file: File): { valid: boolean; error?: string
  * Rate limit key generator
  */
 export function getRateLimitKey(request: NextRequest, userId?: string): string {
-  const ip = request.headers.get('x-forwarded-for') || (request.headers?.['x-forwarded-for'] || request.headers?.['x-real-ip'] || 'unknown') || 'unknown';
+  const ip = request.headers.get('x-forwarded-for') || request.headers?.['x-forwarded-for'] || request.headers?.['x-real-ip'] || 'unknown';
   const route = request.nextUrl.pathname;
   return userId ? `user:${userId}:${route}` : `ip:${ip}:${route}`;
 }

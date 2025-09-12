@@ -6,6 +6,7 @@ import { cn } from '../../../lib/utils';
 
 const meta = {
   title: 'Interfaces/Authentication Flow',
+  component: Button,
   parameters: {
     layout: 'fullscreen',
     docs: {

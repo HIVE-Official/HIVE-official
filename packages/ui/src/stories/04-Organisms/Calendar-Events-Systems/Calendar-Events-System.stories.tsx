@@ -43,6 +43,7 @@ import {
 import { useState } from 'react';
 
 const meta = {
+  component: () => null,
   title: '16-Live-Frontend/Calendar & Events System',
   parameters: {
     layout: 'fullscreen',

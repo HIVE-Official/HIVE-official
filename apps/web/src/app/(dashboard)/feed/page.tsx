@@ -4,34 +4,24 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Activity, 
-  Plus, 
   TrendingUp, 
   Users, 
   Calendar, 
   Zap,
   Heart,
   Bell,
-  Settings,
-  Globe,
   Loader2,
   RefreshCw,
   MessageCircle,
   Share2,
   Bookmark,
   MoreHorizontal,
-  Search,
-  Filter,
-  ChevronDown,
   Sparkles,
   Hash,
   Image as ImageIcon,
   Link2,
   Smile,
   MapPin,
-  PlusCircle,
-  Eye,
-  Clock,
-  ArrowUp,
   UserPlus,
   Award,
   Target,
@@ -180,7 +170,7 @@ function TrendingSidebar() {
         </div>
         
         <div className="space-y-3">
-          {trendingTopics.map((topic, idx) => (
+          {trendingTopics.map((topic, _idx) => (
             <div key={topic.tag} className="group cursor-pointer">
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
@@ -511,6 +501,24 @@ export default function FeedPageV2() {
   // Get auth context
   const { user } = useUnifiedAuth();
 
+  // Handle post creation
+  const createPost = async (postData: any) => {
+    try {
+      console.log('Creating post:', postData);
+      // TODO: Implement actual post creation via API
+      // const response = await fetch('/api/posts', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(postData)
+      // });
+      // const newPost = await response.json();
+      setShowComposer(false);
+      // Refresh feed or add post to the feed
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
   // Use the new working feed hook
   const {
     posts,
@@ -560,8 +568,8 @@ export default function FeedPageV2() {
     console.log('Share post:', postId);
   };
 
-  const hasLiked = (postId: string) => false;
-  const hasBookmarked = (postId: string) => false;
+  const hasLiked = (_postId: string) => false;
+  const hasBookmarked = (_postId: string) => false;
 
   // Intersection observer for infinite scroll
   const loadMoreRef = useRef<HTMLDivElement>(null);

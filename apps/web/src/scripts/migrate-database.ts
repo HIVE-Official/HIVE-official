@@ -1,4 +1,5 @@
 /**
+import { setDoc, doc } from "firebase/firestore";
  * DATABASE MIGRATION SCRIPT
  * Migrates from nested to flat structure using client SDK
  * Run from web app context with existing Firebase configuration

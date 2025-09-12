@@ -27,7 +27,7 @@ try {
     if (process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
       // Format 1: Individual environment variables (Vercel recommended)
       credential = admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
+        projectId: process.env.FIREBASE_PROJECT_ID || "hive-9265c",
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
         privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
       });
@@ -68,7 +68,7 @@ try {
     if (credential) {
       admin.initializeApp({
         credential: credential,
-        projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
+        projectId: process.env.FIREBASE_PROJECT_ID || "hive-9265c",
       });
 
       dbAdmin = admin.firestore();
@@ -171,7 +171,7 @@ export const getAuthAdmin = () => authAdmin;
 export const environmentInfo = {
   environment: currentEnvironment,
   firebaseConfigured: firebaseInitialized,
-  projectId: process.env.FIREBASE_PROJECT_ID || "hive-dev-2025",
+  projectId: process.env.FIREBASE_PROJECT_ID || "hive-9265c",
   credentialSource: firebaseInitialized
     ? process.env.FIREBASE_PRIVATE_KEY
       ? "individual_vars"

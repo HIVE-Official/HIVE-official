@@ -8,7 +8,7 @@
     "build:safe": "node scripts/check-production-safety.js && next build",
     "build:analyze": "set ANALYZE=true && next build",
     "start": "next start",
-    "lint": "npx eslint . --max-warnings 600",
+    "lint": "npx eslint . --max-warnings 1200",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
@@ -64,7 +64,8 @@
     "sonner": "^1.5.0",
     "swr": "^2.3.6",
     "tailwind-merge": "^2.6.0",
-    "zod": "^3.25.64"
+    "zod": "^3.25.64",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.4",

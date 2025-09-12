@@ -1,4 +1,5 @@
 /**
+import { setDoc, doc } from "firebase/firestore";
  * Database Resilience System for HIVE Platform
  * 
  * Provides comprehensive error handling, retry logic, and recovery mechanisms

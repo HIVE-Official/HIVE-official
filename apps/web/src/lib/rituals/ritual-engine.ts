@@ -459,7 +459,7 @@ export class RitualEngine {
    */
   private static calculateNextTrigger(ritual: Ritual): Timestamp {
     const now = new Date();
-    let nextTrigger = new Date(now);
+    const nextTrigger = new Date(now);
     
     switch (ritual.schedule.type) {
       case 'daily':

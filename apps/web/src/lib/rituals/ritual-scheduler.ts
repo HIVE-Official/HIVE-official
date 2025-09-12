@@ -358,7 +358,7 @@ export class RitualScheduler {
             ...ritualDoc.data(),
             id: ritualDoc.id,
             scheduleId: scheduleDoc.id,
-            nextOccurrence: schedule.nextOccurrence?.toDate ? nextOccurrence.toDate() : new Date(nextOccurrence),
+            nextOccurrence: schedule.nextOccurrence?.toDate ? schedule.nextOccurrence.toDate() : new Date(schedule.nextOccurrence),
             frequency: schedule.frequency
           });
         }

@@ -27,6 +27,7 @@ import {
 
 const meta = {
   title: 'Visual Improvements/🎯 Refined HIVE Components',
+  component: RefinedCard,
   parameters: {
     layout: 'fullscreen',
     docs: {

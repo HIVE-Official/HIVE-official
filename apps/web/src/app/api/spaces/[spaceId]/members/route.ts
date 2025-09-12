@@ -97,8 +97,8 @@ export async function GET(
         bio: userData.bio || userData.about,
         role: memberData.role || 'member',
         status: 'online', // Simplified - would need real presence tracking
-        joinedAt: memberData.joinedAt?.toDate ? memberData.joinedAt?.toDate ? joinedAt.toDate() : new Date(joinedAt) : new Date(memberData.joinedAt || Date.now()),
-        lastActive: memberData.lastActiveAt?.toDate ? memberData.lastActiveAt?.toDate ? lastActiveAt.toDate() : new Date(lastActiveAt) : new Date(),
+        joinedAt: memberData.joinedAt?.toDate ? memberData.joinedAt.toDate() : new Date(memberData.joinedAt || Date.now()),
+        lastActive: memberData.lastActiveAt?.toDate ? memberData.lastActiveAt.toDate() : new Date(),
         isVerified: userData.isVerified || false,
         badges: userData.badges || [],
         stats: {

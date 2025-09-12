@@ -108,9 +108,9 @@ export default [
     },
   },
 
-  // Node.js CJS files - allow require() and Node globals
+  // Node.js CJS files and scripts - allow require() and Node globals
   {
-    files: ["**/*.cjs"],
+    files: ["**/*.cjs", "scripts/**/*.js"],
     languageOptions: {
       globals: {
         require: "readonly",
@@ -120,6 +120,8 @@ export default [
         console: "readonly",
         __dirname: "readonly",
         __filename: "readonly",
+        Buffer: "readonly",
+        global: "readonly",
       },
     },
     rules: {

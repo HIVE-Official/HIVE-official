@@ -8,7 +8,7 @@ import {
   query, 
   where, 
   orderBy, 
-  limit,
+  limit as _limit,
   Timestamp,
   serverTimestamp
 } from 'firebase/firestore';
@@ -385,11 +385,12 @@ export class FeatureFlagService {
       case 'role':
         userValue = userProfile.role;
         break;
-      case 'random':
+      case 'random': {
         // For random segments, use consistent hash of user ID
         const hash = this.hashUserId(userEvaluator.userId);
         userValue = hash % 100;
         break;
+      }
       case 'custom':
         // Extract custom attribute from user profile
         userValue = userProfile.customAttributes?.[segment.value as string];
@@ -586,7 +587,7 @@ export class FeatureFlagService {
   }
 
   // Analytics
-  async getFeatureFlagAnalytics(flagId: string, days: number = 7): Promise<{
+  async getFeatureFlagAnalytics(flagId: string, _days: number = 7): Promise<{
     totalEvaluations: number;
     enabledEvaluations: number;
     uniqueUsers: number;

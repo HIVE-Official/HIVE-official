@@ -109,7 +109,7 @@ function useUpdateTool() {
                 updatedAt: (0, firestore_1.serverTimestamp)()
             };
             await (0, firestore_1.updateDoc)(toolRef, updateData);
-            return { toolId, updates: updateData };
+            return { toolId, updates };
         },
         onMutate: async ({ toolId, updates }) => {
             // Cancel queries

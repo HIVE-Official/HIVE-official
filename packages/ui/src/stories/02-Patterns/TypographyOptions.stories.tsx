@@ -13,6 +13,7 @@ import {
 
 const meta = {
   title: 'Visual Improvements/🔤 Typography Options',
+  component: MinimalTypography,
   parameters: {
     layout: 'padded',
     docs: {

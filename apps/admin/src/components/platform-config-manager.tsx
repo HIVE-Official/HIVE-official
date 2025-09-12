@@ -11,7 +11,6 @@ import {
   Input,
   Textarea,
   Label,
-  Switch,
   Select,
   SelectContent,
   SelectItem,
@@ -21,14 +20,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
   Alert,
-  AlertDescription,
-  Separator
+  AlertDescription
 } from "@hive/ui";
 import { 
   Settings,
@@ -36,26 +29,15 @@ import {
   Search,
   Edit,
   Save,
-  RotateCcw,
   Shield,
-  Database,
   Zap,
-  Users,
-  MessageSquare,
-  Image,
-  Clock,
   AlertTriangle,
-  CheckCircle,
   XCircle,
-  Globe,
   Lock,
-  Unlock,
   FileText,
   BarChart3,
   Eye,
-  EyeOff,
-  History,
-  AlertCircle
+  History
 } from "lucide-react";
 import { PlatformConfig, featureFlagService } from "../lib/feature-flags";
 import { useAdminAuth } from "../lib/auth";
@@ -77,7 +59,6 @@ export function PlatformConfigManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [editingConfig, setEditingConfig] = useState<PlatformConfig | null>(null);
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showHistoryDialog, setShowHistoryDialog] = useState<PlatformConfig | null>(null);
 
   useEffect(() => {
@@ -99,9 +80,9 @@ export function PlatformConfigManager() {
           environment: 'all',
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
         {
@@ -114,9 +95,9 @@ export function PlatformConfigManager() {
           environment: 'all',
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
         {
@@ -129,9 +110,9 @@ export function PlatformConfigManager() {
           environment: 'all',
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
 
@@ -148,9 +129,9 @@ export function PlatformConfigManager() {
           isEmergencyActive: false,
           emergencyValue: 10,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
         {
@@ -164,9 +145,9 @@ export function PlatformConfigManager() {
           validation: { min: 1, max: 100 },
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
         {
@@ -180,9 +161,9 @@ export function PlatformConfigManager() {
           validation: { min: 10, max: 10000 },
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
 
@@ -197,9 +178,9 @@ export function PlatformConfigManager() {
           environment: 'all',
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
         {
@@ -213,9 +194,9 @@ export function PlatformConfigManager() {
           validation: { min: 100, max: 10000 },
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
 
@@ -232,9 +213,9 @@ export function PlatformConfigManager() {
           isEmergencyActive: false,
           emergencyValue: 15,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
         {
@@ -248,9 +229,9 @@ export function PlatformConfigManager() {
           validation: { min: 6, max: 128 },
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
 
@@ -266,9 +247,9 @@ export function PlatformConfigManager() {
           validation: { min: 30, max: 3600 },
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         },
 
@@ -284,9 +265,9 @@ export function PlatformConfigManager() {
           validation: { allowedValues: ['light', 'dark', 'auto'] },
           isEmergencyActive: false,
           createdBy: 'system',
-          createdAt: new Date() as any,
+          createdAt: new Date(),
           updatedBy: 'admin',
-          updatedAt: new Date() as any,
+          updatedAt: new Date(),
           auditLog: []
         }
       ];
@@ -351,7 +332,7 @@ export function PlatformConfigManager() {
     }
   };
 
-  const handleUpdateConfig = async (config: PlatformConfig, newValue: any, reason?: string) => {
+  const handleUpdateConfig = async (config: PlatformConfig, newValue: unknown, reason?: string) => {
     if (!admin) return;
 
     try {
@@ -368,7 +349,7 @@ export function PlatformConfigManager() {
       setConfigCategories(prev => prev.map(category => ({
         ...category,
         configs: category.configs.map(c => 
-          c.id === config.id ? { ...c, value: newValue, updatedAt: new Date() as any } : c
+          c.id === config.id ? { ...c, value: newValue, updatedAt: new Date() } : c
         )
       })));
 
@@ -406,16 +387,6 @@ export function PlatformConfigManager() {
     }
   };
 
-  const getConfigIcon = (type: string) => {
-    switch (type) {
-      case 'boolean': return <CheckCircle className="w-4 h-4" />;
-      case 'number': return <BarChart3 className="w-4 h-4" />;
-      case 'string': return <FileText className="w-4 h-4" />;
-      case 'object': return <Database className="w-4 h-4" />;
-      case 'array': return <Database className="w-4 h-4" />;
-      default: return <Settings className="w-4 h-4" />;
-    }
-  };
 
   const filteredConfigs = configCategories.reduce((acc, category) => {
     if (selectedCategory !== 'all' && selectedCategory !== category.id) return acc;
@@ -451,7 +422,7 @@ export function PlatformConfigManager() {
         
         <div className="flex items-center gap-4">
           <Button
-            onClick={() => setShowCreateDialog(true)}
+            onClick={() => {}}
             className="bg-orange-600 hover:bg-orange-700"
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -558,13 +529,13 @@ export function PlatformConfigManager() {
 
 interface ConfigurationItemProps {
   config: PlatformConfig;
-  onUpdate: (newValue: any, reason?: string) => void;
+  onUpdate: (newValue: unknown, reason?: string) => void;
   onEmergencyToggle: () => void;
   onEdit: () => void;
   onShowHistory: () => void;
 }
 
-function ConfigurationItem({ config, onUpdate, onEmergencyToggle, onEdit, onShowHistory }: ConfigurationItemProps) {
+function ConfigurationItem({ config, onUpdate, onEmergencyToggle, onShowHistory }: ConfigurationItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(config.value);
 
@@ -616,7 +587,7 @@ function ConfigurationItem({ config, onUpdate, onEmergencyToggle, onEdit, onShow
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {config.validation.allowedValues.map((value: any) => (
+              {config.validation.allowedValues.map((value: unknown) => (
                 <SelectItem key={value} value={value.toString()}>
                   {value.toString()}
                 </SelectItem>
@@ -653,7 +624,7 @@ function ConfigurationItem({ config, onUpdate, onEmergencyToggle, onEdit, onShow
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            {getConfigIcon(config.type)}
+            <Settings className="w-4 h-4" />
             <div>
               <h4 className="font-medium text-white font-mono text-sm">{config.key}</h4>
               <p className="text-gray-400 text-sm">{config.description}</p>
@@ -736,7 +707,7 @@ function ConfigurationItem({ config, onUpdate, onEmergencyToggle, onEdit, onShow
 interface ConfigEditDialogProps {
   config: PlatformConfig;
   onClose: () => void;
-  onUpdate: (config: PlatformConfig, newValue: any, reason?: string) => void;
+  onUpdate: (config: PlatformConfig, newValue: unknown, reason?: string) => void;
 }
 
 function ConfigEditDialog({ config, onClose, onUpdate }: ConfigEditDialogProps) {
@@ -889,13 +860,3 @@ function ConfigHistoryDialog({ config, onClose }: ConfigHistoryDialogProps) {
   );
 }
 
-const getConfigIcon = (type: string) => {
-  switch (type) {
-    case 'boolean': return <CheckCircle className="w-4 h-4" />;
-    case 'number': return <BarChart3 className="w-4 h-4" />;
-    case 'string': return <FileText className="w-4 h-4" />;
-    case 'object': return <Database className="w-4 h-4" />;
-    case 'array': return <Database className="w-4 h-4" />;
-    default: return <Settings className="w-4 h-4" />;
-  }
-};

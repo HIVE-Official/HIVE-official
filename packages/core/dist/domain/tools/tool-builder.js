@@ -303,7 +303,7 @@ class ToolTemplateFactory {
             .setCategory('social')
             .setVisibility('space');
         // Add question display
-        const questionId = builder.addElement('display-text', {
+        const _questionId = builder.addElement('display-text', {
             text: question,
             variant: 'h2'
         }, { x: 100, y: 50 });
@@ -319,12 +319,12 @@ class ToolTemplateFactory {
             yPos += 60;
         });
         // Add submit button
-        const submitId = builder.addElement('button', {
+        const _submitId = builder.addElement('button', {
             label: 'Submit Vote',
             variant: 'primary'
         }, { x: 100, y: yPos });
         // Add results display
-        const resultsId = builder.addElement('display-chart', {
+        const _resultsId = builder.addElement('display-chart', {
             type: 'bar',
             title: 'Results'
         }, { x: 400, y: 150 });
@@ -373,12 +373,12 @@ class ToolTemplateFactory {
             options: ['9:00 AM', '10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM', '4:00 PM']
         }, { x: 100, y: 150 });
         // Add description field
-        const descriptionId = builder.addElement('text-input', {
+        const _descriptionId = builder.addElement('text-input', {
             label: 'Description',
             placeholder: 'What is this appointment for?'
         }, { x: 100, y: 250 });
         // Add book button
-        const bookId = builder.addElement('button', {
+        const _bookId = builder.addElement('button', {
             label: 'Book Appointment',
             variant: 'primary'
         }, { x: 100, y: 350 });

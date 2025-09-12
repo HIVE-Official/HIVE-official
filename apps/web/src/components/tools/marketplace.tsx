@@ -24,7 +24,8 @@ import {
   Heart,
   Share2,
   ExternalLink,
-  BarChart3
+  BarChart3,
+  X
 } from 'lucide-react';
 import { Button, Badge } from '@hive/ui';
 import { authenticatedFetch } from '../../lib/auth-utils';

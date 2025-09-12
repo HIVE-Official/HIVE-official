@@ -13,7 +13,6 @@ import {
   Activity,
   Star,
   Clock,
-  Home,
   TrendingUp,
   Grid3X3,
   Compass,

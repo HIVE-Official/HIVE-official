@@ -87,14 +87,14 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
           tags: spaceData.tags || [],
           // Include membership info
           membership: {
-            role: membership.role,
-            joinedAt: membership.joinedAt,
-            permissions: membership.permissions,
-            isOwner: membership.role === 'owner',
-            isAdmin: membership.role === 'owner' || membership.role === 'admin',
-            canModerate: membership.permissions.includes('moderate'),
-            canPost: membership.permissions.includes('post'),
-            canInvite: membership.permissions.includes('invite')
+            role: membership?.role,
+            joinedAt: membership?.joinedAt,
+            permissions: membership?.permissions,
+            isOwner: membership?.role === 'owner',
+            isAdmin: membership?.role === 'owner' || membership?.role === 'admin',
+            canModerate: membership?.permissions?.includes('moderate'),
+            canPost: membership?.permissions?.includes('post'),
+            canInvite: membership?.permissions?.includes('invite')
           }
         };
       });

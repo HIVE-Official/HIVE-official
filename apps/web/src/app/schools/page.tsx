@@ -516,7 +516,7 @@ export default function SchoolsPage() {
     if (school.isActive) {
       // Navigate to login for active schools
       const params = new URLSearchParams({
-        schoolId: school.id,
+        school: school.id,  // Changed from schoolId to school to match login page expectations
         schoolName: school.name,
         domain: school.domain,
       });

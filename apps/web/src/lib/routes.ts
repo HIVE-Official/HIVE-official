@@ -24,10 +24,12 @@ export const ROUTES = {
   // Single Onboarding Page
   ONBOARDING: {
     ROOT: '/onboarding',  // All onboarding steps in one page
+    STEP_1: '/onboarding', // Alias for compatibility
   },
   
   // Main App
   APP: {
+    DASHBOARD: '/dashboard',  // Simple dashboard page
     FEED: '/feed',
     PROFILE: '/profile',
     SPACES: '/spaces',

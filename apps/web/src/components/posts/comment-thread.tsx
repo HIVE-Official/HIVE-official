@@ -249,7 +249,7 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-medium text-sm">{comment.userName}</span>
                 <span className="text-xs text-[var(--hive-text-tertiary)]">
-                  {comment.createdAt && formatDistanceToNow(comment.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt), { addSuffix: true })}
+                  {comment.createdAt && formatDistanceToNow(comment.createdAt?.toDate ? comment.createdAt.toDate() : new Date(comment.createdAt), { addSuffix: true })}
                 </span>
                 {comment.edited && !comment.deleted && (
                   <span className="text-xs text-[var(--hive-text-tertiary)]">(edited)</span>

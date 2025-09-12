@@ -1,13 +1,18 @@
+node:internal/modules/cjs/loader:1404
+  throw err;
+  ^
 
-> hive-ui@1.0.0 lint
-> turbo run lint --format=json
+Error: Cannot find module '/Users/laneyfraass/hive_ui/eslint'
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1401:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
 
- ERROR  unexpected argument '--format' found
-
-  tip: a similar argument exists: '--force'
-  tip: to pass '--format' as a value, use '-- --format'
-
-Usage: turbo run <--cache-dir <CACHE_DIR>|--concurrency <CONCURRENCY>|--continue[=<CONTINUE>]|--single-package|--framework-inference [<BOOL>]|--global-deps <GLOBAL_DEPS>|--env-mode [<ENV_MODE>]|--filter <FILTER>|--affected|--output-logs <OUTPUT_LOGS>|--log-order <LOG_ORDER>|--only|--pkg-inference-root <PKG_INFERENCE_ROOT>|--log-prefix <LOG_PREFIX>|TASKS|PASS_THROUGH_ARGS> <--cache <CACHE>|--force [<FORCE>]|--remote-only [<REMOTE_ONLY>]|--remote-cache-read-only [<REMOTE_CACHE_READ_ONLY>]|--no-cache|--cache-workers <CACHE_WORKERS>|--dry-run [<DRY_RUN>]|--graph [<GRAPH>]|--daemon|--no-daemon|--profile <PROFILE>|--anon-profile <ANON_PROFILE>|--summarize [<SUMMARIZE>]|--parallel>
-
-For more information, try '--help'.
-
+Node.js v22.16.0

@@ -1,3 +1,4 @@
+/// <reference path="../types/global.d.ts" />
 /**
  * Production Optimizations for HIVE Platform
  * Performance enhancements and production-ready configurations
@@ -87,7 +88,7 @@ export const bundleOptimization = {
 /**
  * Security headers for production
  */
-export function getSecurityHeaders(): HeadersInit {
+export function getSecurityHeaders(): HeadersInit | Record<string, string> {
   return {
     'X-DNS-Prefetch-Control': 'on',
     'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',

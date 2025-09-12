@@ -1,4 +1,5 @@
 /**
+import { setDoc, doc } from "firebase/firestore";
  * COMPLETE NESTED COLLECTIONS MIGRATION
  * Moves ALL nested collections to top-level flat structure
  */

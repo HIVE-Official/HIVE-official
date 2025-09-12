@@ -219,7 +219,9 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
     };
     
     // Clone children and add necessary props
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const radioChildren = React.Children.map(children, (child: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
       if (React.isValidElement(child) && child.type === Radio) {
         const childProps = child.props as RadioProps;
         return React.cloneElement(child as React.ReactElement<RadioProps>, {

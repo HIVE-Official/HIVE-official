@@ -1,4 +1,5 @@
 "use client";
+import { setDoc, doc } from "firebase/firestore";
 
 import { useEffect, useState } from 'react';
 import { 
@@ -38,8 +39,6 @@ export function useActiveUsers(spaceId?: string) {
     if (!user?.id) return;
 
     const presenceRef = doc(db, 'presence', user.id);
-    let interval: NodeJS.Timeout;
-
     const updatePresence = async () => {
       try {
         await setDoc(presenceRef, {
@@ -58,7 +57,7 @@ export function useActiveUsers(spaceId?: string) {
     updatePresence();
 
     // Update presence every 30 seconds
-    interval = setInterval(updatePresence, 30000);
+    const interval = setInterval(updatePresence, 30000);
 
     // Set offline on page unload
     const handleUnload = () => {

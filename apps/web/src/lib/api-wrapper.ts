@@ -79,7 +79,6 @@ export function createApiHandler(
         const clientId = request.headers.get('x-forwarded-for') ||
                         request.headers.get('x-real-ip') ||
                         request.headers.get('cf-connecting-ip') ||
-                        (request.headers?.['x-forwarded-for'] || request.headers?.['x-real-ip'] || 'unknown') ||
                         'unknown';
 
         const result = rateLimiter.check(clientId);

@@ -35,7 +35,7 @@ export { Tabs, TabsContent, TabsList, TabsTrigger } from './atomic/ui/tabs';
 export { FirebaseAuthProvider, FirebaseAuthProvider as UnifiedAuthProvider, useFirebaseAuth, useUnifiedAuth, useUnifiedAuth as useAuth, useUnifiedAuth as useHiveAuth } from './contexts/unified-auth-context';
 // === AUTH COMPONENTS ===
 export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
-export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
 export { SchoolPick } from './components/auth/school-pick';
 // === MODALS ===
 export { HiveModal, HiveConfirmModal, HiveAlertModal } from './components/hive-modal';

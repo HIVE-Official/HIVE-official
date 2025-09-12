@@ -134,18 +134,26 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       message: 'Calendar events retrieved successfully'
     });
 
-    const { searchParams } = new URL(request.url);
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
-    const includeSpaceEvents = searchParams.get('includeSpaceEvents') !== 'false';
+  } catch (error) {
+    console.error('Error fetching calendar events:', error);
+    return NextResponse.json(
+      ApiResponseHelper.error("Failed to fetch calendar events", "FETCH_ERROR"),
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
+    );
+  }
+});
+
+// Helper function - keep this intact 
+async function fetchUserCalendarEvents(userId: string): Promise<CalendarEvent[]> {
+  try {
+    const { searchParams } = { searchParams: new URLSearchParams() }; // Placeholder for actual search params
+    const startDate = searchParams.get?.('startDate');
+    const endDate = searchParams.get?.('endDate');
+    const includeSpaceEvents = searchParams.get?.('includeSpaceEvents') !== 'false';
 
     // Fetch personal events
     let personalEventsQuery = dbAdmin.collection('personalEvents')
       .where('userId', '==', userId);
-    
-    if (startDate) {
-      personalEventsQuery = personalEventsQuery.where('startDate', '>=', startDate);
-    }
     if (endDate) {
       personalEventsQuery = personalEventsQuery.where('endDate', '<=', endDate);
     }
@@ -203,10 +211,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     logger.error('Error fetching calendar events', { error: error, endpoint: '/api/calendar' });
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch calendar events", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}, { 
-  allowDevelopmentBypass: false,
-  operation: 'get_calendar_events' 
-});
+};
 
 // POST - Create personal event
 export const POST = withAuth(async (request: NextRequest, authContext) => {

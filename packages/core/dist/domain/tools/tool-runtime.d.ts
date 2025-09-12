@@ -5,6 +5,24 @@ import { Tool, ToolComposition, ToolInstance } from './tool';
 /**
  * Runtime Context - Manages execution state
  */
+interface RuntimeVariable {
+    value: unknown;
+    type?: string;
+}
+interface ElementState {
+    data?: unknown;
+    status?: 'idle' | 'loading' | 'error';
+    visible?: boolean;
+    config?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+interface RuntimeSnapshot {
+    instanceId: string;
+    variables: Record<string, RuntimeVariable>;
+    elementStates: Record<string, ElementState>;
+    errors: string[];
+}
+type EventHandler = (...args: unknown[]) => void;
 export declare class RuntimeContext {
     private instanceId;
     private composition;
@@ -12,21 +30,21 @@ export declare class RuntimeContext {
     private elementStates;
     private eventHandlers;
     private errors;
-    constructor(instanceId: string, composition: ToolComposition, initialVariables?: Record<string, any>);
-    getVariable(id: string): any;
-    setVariable(id: string, value: any): void;
-    getElementState(instanceId: string): any;
-    setElementState(instanceId: string, state: any): void;
-    updateElementState(instanceId: string, updates: any): void;
-    on(event: string, handler: Function): void;
-    off(event: string, handler: Function): void;
-    emit(event: string, data?: any): void;
+    constructor(instanceId: string, composition: ToolComposition, initialVariables?: Record<string, unknown>);
+    getVariable(id: string): unknown;
+    setVariable(id: string, value: unknown): void;
+    getElementState(instanceId: string): ElementState;
+    setElementState(instanceId: string, state: ElementState): void;
+    updateElementState(instanceId: string, updates: Partial<ElementState>): void;
+    on(event: string, handler: EventHandler): void;
+    off(event: string, handler: EventHandler): void;
+    emit(event: string, data?: unknown): void;
     addError(error: Error): void;
     getErrors(): Error[];
     clearErrors(): void;
     hasErrors(): boolean;
-    snapshot(): any;
-    static restore(composition: ToolComposition, snapshot: any): RuntimeContext;
+    snapshot(): RuntimeSnapshot;
+    static restore(composition: ToolComposition, snapshot: RuntimeSnapshot): RuntimeContext;
 }
 /**
  * Tool Runtime Engine - Main execution engine
@@ -43,7 +61,7 @@ export declare class ToolRuntimeEngine {
     /**
      * Create and start a new tool instance
      */
-    createInstance(tool: Tool, composition: ToolComposition, userId: string, spaceId: string, initialData?: Record<string, any>): Promise<ToolInstance>;
+    createInstance(tool: Tool, composition: ToolComposition, userId: string, spaceId: string, initialData?: Record<string, unknown>): Promise<ToolInstance>;
     /**
      * Execute a tool instance
      */
@@ -81,4 +99,5 @@ export declare class ToolRuntimeEngine {
     stopInstance(instanceId: string): void;
     getActiveInstances(): ToolInstance[];
 }
+export {};
 //# sourceMappingURL=tool-runtime.d.ts.map

@@ -191,7 +191,7 @@ export function RealTimeFeedManager({
 
     // High: Events today, trending posts, active rituals
     if (type === 'event' && data.startDate) {
-      const eventDate = data.startDate?.toDate ? startDate.toDate() : new Date(startDate);
+      const eventDate = data.startDate?.toDate ? data.startDate.toDate() : new Date(data.startDate);
       const isToday = new Date().toDateString() === eventDate.toDateString();
       if (isToday) return 'high';
     }

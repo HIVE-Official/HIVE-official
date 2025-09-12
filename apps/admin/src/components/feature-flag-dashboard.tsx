@@ -121,27 +121,6 @@ export function FeatureFlagDashboard() {
     }
   };
 
-  const getStatusColor = (status: string, killSwitch: boolean) => {
-    if (killSwitch) return 'bg-red-500';
-    
-    switch (status) {
-      case 'active': return 'bg-green-500';
-      case 'inactive': return 'bg-gray-500';
-      case 'scheduled': return 'bg-yellow-500';
-      case 'archived': return 'bg-purple-500';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'release': return <PlayCircle className="w-4 h-4" />;
-      case 'experiment': return <BarChart3 className="w-4 h-4" />;
-      case 'operational': return <Settings className="w-4 h-4" />;
-      case 'permission': return <Shield className="w-4 h-4" />;
-      default: return <Activity className="w-4 h-4" />;
-    }
-  };
 
   if (loading) {
     return (
@@ -559,7 +538,7 @@ function CreateFeatureFlagDialog({ open, onOpenChange, onCreated }: CreateFeatur
               <Label htmlFor="type">Type</Label>
               <Select 
                 value={formData.type} 
-                onValueChange={(value: any) => setFormData(prev => ({ ...prev, type: value }))}
+                onValueChange={(value: string) => setFormData(prev => ({ ...prev, type: value as const }))}
               >
                 <SelectTrigger className="bg-gray-800 border-gray-600">
                   <SelectValue />
@@ -591,7 +570,7 @@ function CreateFeatureFlagDialog({ open, onOpenChange, onCreated }: CreateFeatur
               <Label htmlFor="environment">Environment</Label>
               <Select 
                 value={formData.environment} 
-                onValueChange={(value: any) => setFormData(prev => ({ ...prev, environment: value }))}
+                onValueChange={(value: string) => setFormData(prev => ({ ...prev, environment: value as const }))}
               >
                 <SelectTrigger className="bg-gray-800 border-gray-600">
                   <SelectValue />
@@ -650,7 +629,7 @@ interface FeatureFlagDetailsDialogProps {
   onUpdated: () => void;
 }
 
-function FeatureFlagDetailsDialog({ flag, onClose, onUpdated }: FeatureFlagDetailsDialogProps & { _onUpdated?: () => void }) {
+function FeatureFlagDetailsDialog({ flag, onClose }: FeatureFlagDetailsDialogProps & { _onUpdated?: () => void }) {
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">

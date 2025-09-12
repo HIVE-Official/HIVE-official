@@ -56,7 +56,7 @@ export async function POST(
     const eventData = eventDoc.data()!;
 
     // Check if RSVP deadline has passed
-    if (eventData.rsvpDeadline && new Date() > eventData.rsvpDeadline?.toDate ? rsvpDeadline.toDate() : new Date(rsvpDeadline)) {
+    if (eventData.rsvpDeadline && new Date() > (eventData.rsvpDeadline?.toDate ? eventData.rsvpDeadline.toDate() : new Date(eventData.rsvpDeadline))) {
       return NextResponse.json(ApiResponseHelper.error("RSVP deadline has passed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 

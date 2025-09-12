@@ -5,6 +5,7 @@ import { Input } from '../../components/input';
 import { cn } from '../../../lib/utils';
 
 const meta = {
+  component: () => null,
   title: 'Interfaces/Onboarding Flow',
   parameters: {
     layout: 'fullscreen',

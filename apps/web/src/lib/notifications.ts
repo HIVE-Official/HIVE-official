@@ -97,7 +97,7 @@ export function onForegroundMessage(callback: (payload: any) => void) {
 /**
  * Show browser notification
  */
-export function showNotification(title: string, options?: NotificationInit) {
+export function showNotification(title: string, options?: any) {
   if ('Notification' in window && Notification.permission === 'granted') {
     const notification = new Notification(title, {
       icon: '/icon-192.png',

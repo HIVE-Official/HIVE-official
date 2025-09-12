@@ -194,7 +194,7 @@ function calculatePriority(type: string, data: any): number {
   let priority = 50;
 
   switch (type) {
-    case 'post':
+    case 'post': {
       // Coordination posts get higher priority
       if (data.tags?.includes('coordination')) priority += 20;
       // Recent posts
@@ -203,13 +203,15 @@ function calculatePriority(type: string, data: any): number {
       // Engagement
       priority += Math.min((data.reactions?.heart || 0) * 2, 10);
       break;
+    }
 
-    case 'event':
+    case 'event': {
       // Upcoming events get higher priority
       const timeUntilEvent = data.startDate.toMillis() - Date.now();
       if (timeUntilEvent < 24 * 60 * 60 * 1000) priority += 25;
       else if (timeUntilEvent < 3 * 24 * 60 * 60 * 1000) priority += 15;
       break;
+    }
 
     case 'ritual':
       // Active rituals with upcoming occurrences

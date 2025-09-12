@@ -67,7 +67,7 @@ export const GET = withAuth(async (request: NextRequest, { userId }) => {
         major: doc.data().major,
         academicYear: doc.data().academicYear,
         isOnline: doc.data().lastActiveAt && 
-          (new Date().getTime() - doc.data().lastActiveAt?.toDate ? lastActiveAt.toDate() : new Date(lastActiveAt).getTime()) < 5 * 60 * 1000 // 5 mins
+          (new Date().getTime() - (doc.data().lastActiveAt?.toDate ? doc.data().lastActiveAt.toDate() : new Date(doc.data().lastActiveAt)).getTime()) < 5 * 60 * 1000 // 5 mins
       }));
     }
 

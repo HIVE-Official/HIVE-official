@@ -5,6 +5,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@hive/ui';
 import { User, LogOut, Settings, Calendar, Users, Home } from 'lucide-react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 /**
  * Dashboard page - Main hub after authentication
@@ -14,33 +18,47 @@ export default function DashboardPage() {
   const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
-    // Check if user is authenticated
-    const authSession = localStorage.getItem('auth_session');
-    const userDataStr = localStorage.getItem('user_data');
-    
-    if (!authSession && !userDataStr) {
-      router.push('/signin');
-      return;
-    }
+    // Check if user is authenticated with Firebase
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        router.push('/auth/login');
+        return;
+      }
 
-    if (userDataStr) {
-      setUserData(JSON.parse(userDataStr));
-    } else if (authSession) {
-      const session = JSON.parse(authSession);
-      setUserData({
-        email: session.email,
-        displayName: session.email === 'jwrhineh@buffalo.edu' ? 'Jacob Rhineheart' : 'User',
-        handle: session.email.split('@')[0]
-      });
-    }
+      // Fetch user profile from Firestore
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          setUserData({
+            email: user.email,
+            displayName: data.displayName || data.name || user.displayName || 'User',
+            handle: data.handle || user.email?.split('@')[0]
+          });
+        } else {
+          // User exists but no profile - redirect to onboarding
+          router.push('/onboarding');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setUserData({
+          email: user.email,
+          displayName: user.displayName || 'User',
+          handle: user.email?.split('@')[0]
+        });
+      }
+    });
+
+    return () => unsubscribe();
   }, [router]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('auth_session');
-    localStorage.removeItem('user_data');
-    localStorage.removeItem('onboarding_complete');
-    document.cookie = 'session-token=; path=/; max-age=0';
-    router.push('/');
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   if (!userData) {

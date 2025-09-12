@@ -110,7 +110,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
     let accessToken = outlookCalendar.accessToken;
 
     // Check if token needs refresh
-    if (outlookCalendar.expiresAt && outlookCalendar.expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt) < new Date()) {
+    if (outlookCalendar.expiresAt && (outlookCalendar.expiresAt?.toDate ? outlookCalendar.expiresAt.toDate() : new Date(outlookCalendar.expiresAt)) < new Date()) {
       if (!outlookCalendar.refreshToken) {
         return NextResponse.json(
           { error: 'Outlook Calendar token expired. Please reconnect.' },

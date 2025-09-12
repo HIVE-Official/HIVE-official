@@ -280,10 +280,12 @@ export async function GET(request: NextRequest) {
           case 'users':
             results = await searchUsers(query, limit);
             break;
-          default:
+          default: {
             // For other categories, use global search with type filter
             const allResults = await globalSearch(query, limit);
             results = allResults.filter(r => r.type === category);
+            break;
+          }
         }
       }
     } catch (firebaseError) {

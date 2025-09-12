@@ -1,4 +1,5 @@
 "use client";
+type LeaderToolbarMigratedProps = any; // TODO: Define proper type
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

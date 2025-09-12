@@ -9,7 +9,8 @@ import {
   Pin,
   Crown,
   Image as ImageIcon,
-  X
+  X,
+  Lock
 } from 'lucide-react';
 import { Button, Badge, Avatar } from '@hive/ui';
 import { cn } from '@/lib/utils';
@@ -87,7 +88,7 @@ export function PostWithComments({
                 <span>•</span>
                 <span>
                   {post.timestamp 
-                    ? formatDistanceToNow(post.timestamp instanceof Date ? post.timestamp : post.timestamp?.toDate ? timestamp.toDate() : new Date(timestamp), { addSuffix: true })
+                    ? formatDistanceToNow(post.timestamp instanceof Date ? post.timestamp : post.timestamp?.toDate ? post.timestamp.toDate() : new Date(post.timestamp), { addSuffix: true })
                     : 'just now'}
                 </span>
               </div>

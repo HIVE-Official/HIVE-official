@@ -102,14 +102,16 @@ exports.useEventStore = (0, zustand_1.create)()((0, middleware_1.devtools)((0, m
         eventReminders: Array.from(state.eventReminders),
         recentSearches: state.recentSearches
     }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    merge: (persistedState, currentState) => ({
-        ...currentState,
-        ...persistedState,
-        rsvpEvents: new Set(persistedState.rsvpEvents || []),
-        interestedEvents: new Set(persistedState.interestedEvents || []),
-        eventReminders: new Map(persistedState.eventReminders || [])
-    })
+    merge: (persistedState, currentState) => {
+        const state = persistedState;
+        return {
+            ...currentState,
+            ...state,
+            rsvpEvents: new Set(state.rsvpEvents || []),
+            interestedEvents: new Set(state.interestedEvents || []),
+            eventReminders: new Map(state.eventReminders || [])
+        };
+    }
 })));
 // Selectors
 const useEventFilters = () => (0, exports.useEventStore)((state) => state.filters);

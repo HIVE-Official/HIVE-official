@@ -27,7 +27,7 @@ function initializeFirebase() {
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
     
-    return app;
+    return _app;
   } catch (error) {
     console.error('Failed to initialize Firebase:', error);
     throw error;
@@ -166,7 +166,7 @@ async function testRSSFeed(url) {
 
 // Run setup
 setupUBRSSFeed()
-  .then(async (feedId) => {
+  .then(async (_feedId) => {
     console.log('\n📡 Testing RSS feed connectivity...');
     
     // Test various possible RSS URLs

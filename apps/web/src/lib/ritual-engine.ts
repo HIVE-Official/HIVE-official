@@ -349,19 +349,21 @@ export class RitualEngine {
       case 'participant_count':
         return instance.participants.length >= condition.target;
       
-      case 'action_completions':
+      case 'action_completions': {
         const actionCompletions = instance.participants.reduce((count: number, p: any) => {
           return count + p.progress.completedActions.filter((a: any) => 
             condition.actionIds ? condition.actionIds.includes(a.actionId) : true
           ).length;
         }, 0);
         return actionCompletions >= condition.target;
+      }
       
-      case 'time_elapsed':
+      case 'time_elapsed': {
         const startTime = instance.startedAt?.toDate();
         if (!startTime) return false;
         const elapsed = (Date.now() - startTime.getTime()) / (1000 * 60); // minutes
         return elapsed >= condition.target;
+      }
       
       case 'collective_goal':
         // Custom logic for collective achievements

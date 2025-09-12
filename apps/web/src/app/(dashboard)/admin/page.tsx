@@ -14,6 +14,10 @@ import {
   BarChart3,
   Database
 } from 'lucide-react';
+import ModerationCenter from './components/moderation-center';
+import AnalyticsDashboard from './components/analytics-dashboard';
+import RealtimeMonitor from './components/realtime-monitor';
+import PrivacyControls from './components/privacy-controls';
 
 interface AdminDashboardData {
   platform: {
@@ -281,16 +285,19 @@ export default function AdminDashboard() {
       </div>
 
       {/* Detailed Sections */}
-      <Tabs defaultValue="users" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="users">Users</TabsTrigger>
-          <TabsTrigger value="spaces">Spaces</TabsTrigger>
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="moderation">Moderation</TabsTrigger>
+          <TabsTrigger value="privacy">Privacy</TabsTrigger>
+          <TabsTrigger value="realtime">Real-time</TabsTrigger>
           <TabsTrigger value="requests">Requests</TabsTrigger>
-          <TabsTrigger value="flags">Feature Flags</TabsTrigger>
+          <TabsTrigger value="flags">Flags</TabsTrigger>
           <TabsTrigger value="system">System</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="users" className="space-y-4">
+        <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
@@ -328,56 +335,22 @@ export default function AdminDashboard() {
           </div>
         </TabsContent>
 
-        <TabsContent value="spaces" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Space Statistics</CardTitle>
-                <CardDescription>Overview of all spaces</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span>Total Spaces</span>
-                    <span className="font-bold">{statistics.spaces.total}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Active Spaces</span>
-                    <span className="font-bold text-green-600">{statistics.spaces.active}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Dormant Spaces</span>
-                    <span className="font-bold text-yellow-600">{statistics.spaces.dormant}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Total Members</span>
-                    <span className="font-bold">{statistics.spaces.totalMembers}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Spaces by Type</CardTitle>
-                <CardDescription>Distribution across space categories</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {Object.entries(statistics.spaces.byType).map(([type, data]) => (
-                    <div key={type} className="flex justify-between items-center">
-                      <span className="text-sm capitalize">{type.replace(/_/g, ' ')}</span>
-                      <div className="flex space-x-2">
-                        <Badge variant="secondary">{data.total}</Badge>
-                        <Badge variant="outline">{data.members} members</Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="analytics" className="space-y-4">
+          <AnalyticsDashboard />
         </TabsContent>
+
+        <TabsContent value="moderation" className="space-y-4">
+          <ModerationCenter />
+        </TabsContent>
+
+        <TabsContent value="privacy" className="space-y-4">
+          <PrivacyControls />
+        </TabsContent>
+
+        <TabsContent value="realtime" className="space-y-4">
+          <RealtimeMonitor />
+        </TabsContent>
+
 
         <TabsContent value="requests" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">

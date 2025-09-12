@@ -1,3 +1,4 @@
+/// <reference path="../../types/global.d.ts" />
 import { getMessaging, getToken, onMessage, Messaging } from 'firebase/messaging';
 import { app } from '@/lib/firebase-client';
 
@@ -157,7 +158,7 @@ class FCMService {
       return;
     }
 
-    const options: NotificationOptions = {
+    const options: any = {
       body: notification.body,
       icon: notification.icon || '/hive-logo-192.png',
       badge: '/hive-badge-72.png',
@@ -287,7 +288,7 @@ class FCMService {
   }
 
   // Get permission status
-  getPermissionStatus(): NotificationPermission | null {
+  getPermissionStatus(): NotificationPermission | string | null {
     if (!('Notification' in window)) return null;
     return Notification.permission;
   }

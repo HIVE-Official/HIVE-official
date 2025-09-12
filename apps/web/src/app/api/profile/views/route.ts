@@ -232,7 +232,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
           const viewData = doc.data();
           return {
             viewerId: viewData.viewerId,
-            timestamp: viewData.timestamp?.toDate ? timestamp.toDate() : new Date(timestamp).toISOString(),
+            timestamp: viewData.timestamp?.toDate ? viewData.timestamp.toDate() : new Date(viewData.timestamp).toISOString(),
             context: viewData.context
           };
         });

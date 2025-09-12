@@ -168,56 +168,56 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(({
 Container.displayName = 'Container';
 
 // Convenient preset components
-export const PageContainer: React.FC<Omit<ContainerProps, 'maxWidth' | 'gutter'>> = (props: any) => (
+export const PageContainer: React.FC<Omit<ContainerProps, 'maxWidth' | 'gutter'>> = (props: Omit<ContainerProps, 'maxWidth' | 'gutter'>) => (
   <Container maxWidth="7xl" gutter {...props} />
 );
 
-export const ContentContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
+export const ContentContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: Omit<ContainerProps, 'maxWidth'>) => (
   <Container maxWidth="4xl" {...props} />
 );
 
-export const NarrowContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
+export const NarrowContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: Omit<ContainerProps, 'maxWidth'>) => (
   <Container maxWidth="2xl" {...props} />
 );
 
-export const WideContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
+export const WideContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: Omit<ContainerProps, 'maxWidth'>) => (
   <Container maxWidth="6xl" {...props} />
 );
 
-export const FluidContainer: React.FC<Omit<ContainerProps, 'fluid'>> = (props: any) => (
+export const FluidContainer: React.FC<Omit<ContainerProps, 'fluid'>> = (props: Omit<ContainerProps, 'fluid'>) => (
   <Container fluid {...props} />
 );
 
-export const CardContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: any) => (
+export const CardContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: Omit<ContainerProps, 'variant'>) => (
   <Container variant="card" {...props} />
 );
 
-export const PanelContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: any) => (
+export const PanelContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: Omit<ContainerProps, 'variant'>) => (
   <Container variant="panel" {...props} />
 );
 
-export const SectionContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: any) => (
+export const SectionContainer: React.FC<Omit<ContainerProps, 'variant'>> = (props: Omit<ContainerProps, 'variant'>) => (
   <Container variant="section" {...props} />
 );
 
-export const BreakoutContainer: React.FC<Omit<ContainerProps, 'breakout'>> = (props: any) => (
+export const BreakoutContainer: React.FC<Omit<ContainerProps, 'breakout'>> = (props: Omit<ContainerProps, 'breakout'>) => (
   <Container breakout {...props} />
 );
 
 // Size-specific containers
-export const SmallContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
+export const SmallContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: Omit<ContainerProps, 'maxWidth'>) => (
   <Container maxWidth="sm" {...props} />
 );
 
-export const MediumContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
+export const MediumContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: Omit<ContainerProps, 'maxWidth'>) => (
   <Container maxWidth="md" {...props} />
 );
 
-export const LargeContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
+export const LargeContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: Omit<ContainerProps, 'maxWidth'>) => (
   <Container maxWidth="lg" {...props} />
 );
 
-export const ExtraLargeContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: any) => (
+export const ExtraLargeContainer: React.FC<Omit<ContainerProps, 'maxWidth'>> = (props: Omit<ContainerProps, 'maxWidth'>) => (
   <Container maxWidth="xl" {...props} />
 );
 

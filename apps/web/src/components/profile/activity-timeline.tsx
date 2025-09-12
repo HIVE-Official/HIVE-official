@@ -28,6 +28,7 @@ import {
   ChevronUp,
   MoreHorizontal,
   Download,
+  Lock,
   Eye,
   EyeOff
 } from 'lucide-react';

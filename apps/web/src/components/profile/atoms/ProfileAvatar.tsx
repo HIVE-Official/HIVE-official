@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Camera, User } from 'lucide-react';
+import { Camera, User, X } from 'lucide-react';
 
 interface ProfileAvatarProps {
   user: {

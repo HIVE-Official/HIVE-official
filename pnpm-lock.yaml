@@ -240,6 +240,9 @@ importers:
       zod:
         specifier: ^3.25.64
         version: 3.25.64
+      zustand:
+        specifier: ^5.0.5
+        version: 5.0.5(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.4

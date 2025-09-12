@@ -118,7 +118,7 @@ export function RealtimeFeed() {
     // Filter by time range
     if (filters.timeRange !== 'all') {
       const now = new Date();
-      let startDate = new Date();
+      const startDate = new Date();
       
       switch (filters.timeRange) {
         case 'today':

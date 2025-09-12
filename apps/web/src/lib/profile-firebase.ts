@@ -1,4 +1,5 @@
 /**
+import { setDoc, doc } from "firebase/firestore";
  * Firebase Profile Operations
  * Real data operations for the Profile system - NO MOCK DATA
  */

@@ -275,7 +275,7 @@ export class RitualParticipationTracker {
 
         // Handle specific reward types
         switch (reward.type) {
-          case 'badge':
+          case 'badge': {
             // Add badge to user's collection
             const badgeRef = dbAdmin
               .collection('users')
@@ -291,6 +291,7 @@ export class RitualParticipationTracker {
               awardedAt: FieldValue.serverTimestamp()
             });
             break;
+          }
 
           case 'feature':
             // Unlock feature for user

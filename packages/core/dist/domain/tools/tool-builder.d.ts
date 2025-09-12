@@ -15,13 +15,13 @@ export declare class ToolBuilder {
     setVisibility(visibility: ToolVisibility): ToolBuilder;
     setAuthor(author: Tool['author']): ToolBuilder;
     setMetadata(metadata: Partial<Tool['metadata']>): ToolBuilder;
-    addElement(elementId: string, config?: Record<string, any>, position?: {
+    addElement(elementId: string, config?: Record<string, unknown>, position?: {
         x: number;
         y: number;
     }): string;
     removeElement(instanceId: string): ToolBuilder;
     connect(fromInstanceId: string, fromPort: string, toInstanceId: string, toPort: string): ToolBuilder;
-    addVariable(name: string, type: Variable['type'], defaultValue?: any): ToolBuilder;
+    addVariable(name: string, type: Variable['type'], defaultValue?: unknown): ToolBuilder;
     addTrigger(name: string, event: string, actions: Action[], condition?: string): ToolBuilder;
     setLayout(layout: LayoutConfig): ToolBuilder;
     setTheme(theme: ThemeConfig): ToolBuilder;

@@ -1,3 +1,4 @@
+/// <reference path="../types/global.d.ts" />
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';

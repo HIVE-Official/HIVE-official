@@ -625,7 +625,7 @@ function calculateRelevanceScore(
   let score = 0;
   
   // Base score from user's engagement with the space
-  score += membership.engagementScore * 0.4; // 40% weight
+  score += membership?.engagementScore * 0.4; // 40% weight
   
   // Recency score (newer posts get higher scores)
   const ageHours = (Date.now() - post.createdAt.getTime()) / (1000 * 60 * 60);
@@ -641,7 +641,7 @@ function calculateRelevanceScore(
   if (post.isPinned) score += 15; // Pinned content gets bonus
   
   // Role-based bonus
-  if (membership.role === 'builder' || membership.role === 'admin') {
+  if (membership?.role === 'builder' || membership?.role === 'admin') {
     score += 5; // Builders see more content
   }
   

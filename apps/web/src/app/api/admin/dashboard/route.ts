@@ -88,7 +88,7 @@ async function getUsersStatistics() {
     // Calculate user metrics
     const totalUsers = users.length;
     const activeUsers = users.filter(u => u.lastActiveAt && 
-      new Date(u.lastActiveAt?.toDate ? lastActiveAt.toDate() : new Date(lastActiveAt)).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
+      new Date(u.lastActiveAt?.toDate ? u.lastActiveAt.toDate() : new Date(u.lastActiveAt)).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
     ).length;
     
     const usersByMajor = users.reduce((acc, user) => {
@@ -207,7 +207,7 @@ async function getBuilderRequestsStatistics() {
       rejected: requests.filter(r => r.status === 'rejected').length,
       urgent: requests.filter(r => {
         if (r.status !== 'pending' || !r.submittedAt) return false;
-        const hoursWaiting = (Date.now() - r.submittedAt?.toDate ? submittedAt.toDate() : new Date(submittedAt).getTime()) / (1000 * 60 * 60);
+        const hoursWaiting = (Date.now() - (r.submittedAt?.toDate ? r.submittedAt.toDate().getTime() : new Date(r.submittedAt).getTime())) / (1000 * 60 * 60);
         return hoursWaiting >= 20;
       }).length,
       approvalRate: requests.length > 0 ? 
@@ -238,7 +238,7 @@ function calculateAverageResponseTime(requests: any[]) {
   if (reviewedRequests.length === 0) return 0;
 
   const totalResponseTime = reviewedRequests.reduce((sum, r) => {
-    const responseTime = r.reviewedAt?.toDate ? reviewedAt.toDate() : new Date(reviewedAt).getTime() - r.submittedAt?.toDate ? submittedAt.toDate() : new Date(submittedAt).getTime();
+    const responseTime = (r.reviewedAt?.toDate ? r.reviewedAt.toDate().getTime() : new Date(r.reviewedAt).getTime()) - (r.submittedAt?.toDate ? r.submittedAt.toDate().getTime() : new Date(r.submittedAt).getTime());
     return sum + responseTime;
   }, 0);
 

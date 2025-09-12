@@ -45,6 +45,7 @@ import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion
 import '../../../hive-tokens.css';
 
 const meta = {
+  component: () => null,
   title: '14-Dark Mode/Campus Night Experience',
   parameters: {
     layout: 'fullscreen',

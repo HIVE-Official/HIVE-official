@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { 
   HiveCard as Card, 
   CardContent, 
@@ -22,22 +22,10 @@ import {
   TabsTrigger
 } from "@hive/ui";
 import { 
-  Activity,
   AlertTriangle,
   CheckCircle,
-  Clock,
-  Database,
-  Server,
-  Users,
-  Zap,
   TrendingUp,
   TrendingDown,
-  Wifi,
-  HardDrive,
-  Cpu,
-  MemoryStick,
-  Globe,
-  Shield,
   RefreshCw,
   AlertCircle,
   XCircle,
@@ -45,12 +33,9 @@ import {
   BarChart3,
   LineChart,
   PieChart,
-  Eye,
   Bell,
-  Settings
+  Users
 } from "lucide-react";
-import { collection, onSnapshot, query, orderBy, limit, where } from 'firebase/firestore';
-import { db } from '../lib/firebase';
 
 interface HealthMetric {
   id: string;
@@ -330,7 +315,7 @@ export function PlatformHealthMonitor() {
         </div>
         
         <div className="flex items-center gap-4">
-          <Select value={timeRange} onValueChange={(value: any) => setTimeRange(value)}>
+          <Select value={timeRange} onValueChange={(value: string) => setTimeRange(value as '1h' | '24h' | '7d' | '30d')}>
             <SelectTrigger className="w-32 bg-gray-800 border-gray-600">
               <SelectValue />
             </SelectTrigger>

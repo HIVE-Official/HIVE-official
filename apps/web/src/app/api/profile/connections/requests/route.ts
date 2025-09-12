@@ -249,7 +249,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       const allRequests = [
         ...sentSnapshot.docs.map(doc => ({ ...doc.data(), direction: 'sent' })),
         ...receivedSnapshot.docs.map(doc => ({ ...doc.data(), direction: 'received' }))
-      ].sort((a, b) => b.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt).getTime() - a.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt).getTime())
+      ].sort((a, b) => (b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt)).getTime() - (a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt)).getTime())
         .slice(0, (await params).limit);
 
       return NextResponse.json({
@@ -296,7 +296,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
             major: otherUserData.major,
             academicYear: otherUserData.academicYear
           },
-          createdAt: requestData.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt).toISOString(),
+          createdAt: requestData.createdAt?.toDate ? requestData.createdAt.toDate() : new Date(requestData.createdAt).toISOString(),
           expiresAt: requestData.expiresAt?.toDate?.()?.toISOString()
         };
       })

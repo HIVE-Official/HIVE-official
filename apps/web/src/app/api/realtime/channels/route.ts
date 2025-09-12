@@ -519,7 +519,7 @@ async function getUnreadCount(userId: string, channelId: string): Promise<number
     }
 
     const membership = membershipDoc.data() as ChannelMembership;
-    const lastReadTimestamp = membership.lastReadTimestamp || membership.joinedAt;
+    const lastReadTimestamp = membership?.lastReadTimestamp || membership?.joinedAt;
 
     // Count messages after last read timestamp
     const unreadQuery = dbAdmin.collection('chatMessages')

@@ -8,6 +8,7 @@ import {
 } from '../../components/onboarding-flows/flow-alternatives';
 
 const meta = {
+  component: () => null,
   title: 'Onboarding Flows/🚀 Flow Alternatives',
   parameters: {
     layout: 'fullscreen',

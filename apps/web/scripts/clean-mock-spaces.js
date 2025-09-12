@@ -32,7 +32,7 @@ function initializeFirebase() {
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
     
-    return app;
+    return _app;
   } catch (error) {
     console.error('Failed to initialize Firebase:', error);
     throw error;

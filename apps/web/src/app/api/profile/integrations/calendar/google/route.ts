@@ -81,7 +81,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
     }
 
     // Check if token needs refresh
-    if (googleCalendar.expiresAt && googleCalendar.expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt) < new Date()) {
+    if (googleCalendar.expiresAt && (googleCalendar.expiresAt?.toDate ? googleCalendar.expiresAt.toDate() : new Date(googleCalendar.expiresAt)) < new Date()) {
       if (!googleCalendar.refreshToken) {
         return NextResponse.json(
           { error: 'Google Calendar token expired. Please reconnect.' },

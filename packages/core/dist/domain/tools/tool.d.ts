@@ -34,7 +34,7 @@ export interface Element {
     icon: string;
     version: string;
     configSchema: ElementConfigSchema;
-    defaultConfig: Record<string, any>;
+    defaultConfig: Record<string, unknown>;
     inputs?: ElementPort[];
     outputs?: ElementPort[];
     events?: ElementEvent[];
@@ -59,14 +59,14 @@ export interface ElementEvent {
 }
 export interface ElementValidation {
     type: 'required' | 'min' | 'max' | 'pattern' | 'custom';
-    value?: any;
+    value?: unknown;
     message?: string;
     condition?: string;
 }
 export interface ElementRendering {
     component?: string;
     template?: string;
-    styles?: Record<string, any>;
+    styles?: Record<string, unknown>;
     responsive?: ResponsiveConfig;
 }
 export interface ElementConfigSchema {
@@ -78,8 +78,8 @@ export interface ConfigProperty {
     type: DataType;
     label: string;
     description?: string;
-    default?: any;
-    enum?: any[];
+    default?: unknown;
+    enum?: unknown[];
     min?: number;
     max?: number;
     pattern?: string;
@@ -101,7 +101,7 @@ export interface ToolComposition {
 export interface ComposedElement {
     instanceId: string;
     elementId: string;
-    config: Record<string, any>;
+    config: Record<string, unknown>;
     position: Position;
     size: Size;
     visibility?: VisibilityRule;
@@ -136,15 +136,15 @@ export interface LayoutConfig {
     breakpoints?: ResponsiveConfig;
 }
 export interface ResponsiveConfig {
-    mobile?: any;
-    tablet?: any;
-    desktop?: any;
+    mobile?: unknown;
+    tablet?: unknown;
+    desktop?: unknown;
 }
 export interface Variable {
     id: string;
     name: string;
     type: DataType;
-    defaultValue?: any;
+    defaultValue?: unknown;
     scope: 'local' | 'global' | 'session';
 }
 export interface Trigger {
@@ -157,7 +157,7 @@ export interface Trigger {
 export interface Action {
     type: 'set-variable' | 'call-api' | 'navigate' | 'show-modal' | 'custom';
     target?: string;
-    payload?: any;
+    payload?: unknown;
 }
 export interface DataTransform {
     type: 'map' | 'filter' | 'reduce' | 'custom';
@@ -169,7 +169,7 @@ export interface VisibilityRule {
 }
 export interface ValidationRule {
     type: string;
-    value?: any;
+    value?: unknown;
     message: string;
 }
 export interface ThemeConfig {
@@ -197,7 +197,7 @@ export interface ToolMetadata {
     compatibleWith?: string[];
 }
 export interface ToolConfiguration {
-    defaultSettings: Record<string, any>;
+    defaultSettings: Record<string, unknown>;
     customizableFields: string[];
     webhooks?: WebhookConfig[];
     integrations?: IntegrationConfig[];
@@ -213,7 +213,7 @@ export interface WebhookConfig {
 export interface IntegrationConfig {
     id: string;
     type: 'firebase' | 'api' | 'database' | 'storage';
-    config: Record<string, any>;
+    config: Record<string, unknown>;
 }
 export interface DataSchema {
     inputs?: Record<string, DataType>;
@@ -281,15 +281,15 @@ export interface ToolInstance {
     spaceId: string;
     userId: string;
     state: InstanceState;
-    data: Record<string, any>;
-    config: Record<string, any>;
+    data: Record<string, unknown>;
+    config: Record<string, unknown>;
     startedAt: Date;
     lastActivity: Date;
 }
 export interface InstanceState {
     status: 'idle' | 'running' | 'paused' | 'completed' | 'error';
     currentStep?: string;
-    variables: Record<string, any>;
+    variables: Record<string, unknown>;
     errors?: Error[];
 }
 export interface ToolVersion {
@@ -334,8 +334,8 @@ export interface BuildChange {
     userId: string;
     type: 'add' | 'remove' | 'modify' | 'connect' | 'disconnect';
     target: string;
-    before?: any;
-    after?: any;
+    before?: unknown;
+    after?: unknown;
     timestamp: Date;
 }
 export interface ChatMessage {

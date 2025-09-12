@@ -4,6 +4,7 @@ import { Button } from '../../components/button';
 import { cn } from '../../../lib/utils';
 
 const meta = {
+  component: () => null,
   title: 'Interfaces/Profile Interface',
   parameters: {
     layout: 'fullscreen',

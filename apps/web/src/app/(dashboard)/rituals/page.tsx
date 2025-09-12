@@ -40,7 +40,9 @@ import toast from '@/hooks/use-toast-notifications';
 // Import our ritual components
 import { RitualCard, type RitualCardProps } from '@/components/rituals/ritual-card';
 
-interface RitualData extends RitualCardProps['ritual'] {
+type RitualBase = RitualCardProps['ritual'];
+
+interface RitualData extends RitualBase {
   // Additional fields for dashboard
   createdBy?: string;
   createdAt?: string;

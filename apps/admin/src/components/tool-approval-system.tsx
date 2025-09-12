@@ -24,41 +24,26 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Alert,
-  AlertDescription,
   Avatar,
-  AvatarFallback,
-  Separator
+  AvatarFallback
 } from "@hive/ui";
 import { 
-  Plus,
   Search,
-  Filter,
   Eye,
   Check,
   X,
   Clock,
   User,
   Code,
-  Globe,
   Shield,
   AlertTriangle,
-  MessageSquare,
   Download,
   ExternalLink,
-  Star,
-  Users,
   Calendar,
   FileText,
   CheckCircle,
   XCircle,
-  Pause,
-  PlayCircle,
-  Archive,
-  Flag,
-  ThumbsUp,
-  ThumbsDown,
-  Send
+  PlayCircle
 } from "lucide-react";
 import { useAdminAuth } from "../lib/auth";
 import { toast } from "sonner";
@@ -359,27 +344,6 @@ export function ToolApprovalSystem() {
     return matchesSearch && matchesStatus && matchesCategory;
   });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
-      case 'approved': return 'text-green-400 bg-green-400/10 border-green-400/20';
-      case 'rejected': return 'text-red-400 bg-red-400/10 border-red-400/20';
-      case 'needs_changes': return 'text-orange-400 bg-orange-400/10 border-orange-400/20';
-      case 'archived': return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
-      default: return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'pending': return <Clock className="w-4 h-4" />;
-      case 'approved': return <CheckCircle className="w-4 h-4" />;
-      case 'rejected': return <XCircle className="w-4 h-4" />;
-      case 'needs_changes': return <AlertTriangle className="w-4 h-4" />;
-      case 'archived': return <Archive className="w-4 h-4" />;
-      default: return <Clock className="w-4 h-4" />;
-    }
-  };
 
   if (loading) {
     return (
@@ -650,9 +614,9 @@ function ToolSubmissionCard({ tool, onSelect, onReview }: ToolSubmissionCardProp
               {tool.name}
             </h3>
             
-            <div className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(tool.status)}`}>
+            <div className="px-2 py-1 rounded-full text-xs font-medium border text-gray-400 bg-gray-400/10 border-gray-400/20">
               <div className="flex items-center gap-1">
-                {getStatusIcon(tool.status)}
+                <Clock className="w-4 h-4" />
                 {tool.status.replace('_', ' ').toUpperCase()}
               </div>
             </div>
@@ -780,9 +744,9 @@ function ToolDetailsDialog({ tool, reviewNotes, onClose, onReview }: ToolDetails
             <Badge variant="outline" className="ml-2">
               v{tool.version}
             </Badge>
-            <div className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(tool.status)}`}>
+            <div className="px-2 py-1 rounded-full text-xs font-medium border text-gray-400 bg-gray-400/10 border-gray-400/20">
               <div className="flex items-center gap-1">
-                {getStatusIcon(tool.status)}
+                <Clock className="w-4 h-4" />
                 {tool.status.replace('_', ' ').toUpperCase()}
               </div>
             </div>
@@ -1030,24 +994,3 @@ function ToolDetailsDialog({ tool, reviewNotes, onClose, onReview }: ToolDetails
   );
 }
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'pending': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
-    case 'approved': return 'text-green-400 bg-green-400/10 border-green-400/20';
-    case 'rejected': return 'text-red-400 bg-red-400/10 border-red-400/20';
-    case 'needs_changes': return 'text-orange-400 bg-orange-400/10 border-orange-400/20';
-    case 'archived': return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
-    default: return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
-  }
-};
-
-const getStatusIcon = (status: string) => {
-  switch (status) {
-    case 'pending': return <Clock className="w-4 h-4" />;
-    case 'approved': return <CheckCircle className="w-4 h-4" />;
-    case 'rejected': return <XCircle className="w-4 h-4" />;
-    case 'needs_changes': return <AlertTriangle className="w-4 h-4" />;
-    case 'archived': return <Archive className="w-4 h-4" />;
-    default: return <Clock className="w-4 h-4" />;
-  }
-};

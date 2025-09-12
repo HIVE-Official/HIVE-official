@@ -193,8 +193,8 @@ class ContentProcessor {
      */
     static processContent(text) {
         return {
-            mentions: this.extractMentions(text).map((m) => ({
-                ...m,
+            mentions: this.extractMentions(text).map((mention) => ({
+                ...mention,
                 userId: "", // Will be resolved by mention resolution service
                 displayName: "", // Will be resolved by mention resolution service
             })),

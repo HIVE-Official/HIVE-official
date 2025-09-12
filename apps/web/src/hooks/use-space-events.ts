@@ -164,7 +164,7 @@ export function useSpaceEvents(spaceId: string | undefined): UseSpaceEventsRetur
       }
 
       // Remove user from all RSVP lists
-      let updatedAttendees = event.attendees.filter(a => a.userId !== user.uid);
+      const updatedAttendees = event.attendees.filter(a => a.userId !== user.uid);
       
       // Add user to appropriate list if not "not_going"
       if (status !== 'not_going') {

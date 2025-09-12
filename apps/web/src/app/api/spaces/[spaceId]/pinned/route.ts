@@ -124,7 +124,7 @@ export async function GET(
           photoURL: pinner.photoURL,
         } : null,
         post: postData,
-        pinnedAt: itemData.pinnedAt?.toDate ? itemData.pinnedAt?.toDate ? pinnedAt.toDate() : new Date(pinnedAt) : itemData.pinnedAt
+        pinnedAt: itemData.pinnedAt?.toDate ? itemData.pinnedAt.toDate() : itemData.pinnedAt
       });
     }
 

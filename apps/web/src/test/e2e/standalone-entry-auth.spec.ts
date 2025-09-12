@@ -55,7 +55,7 @@ test('Login page validates Buffalo email', async ({ page }) => {
   await submitButton.click();
   
   // Should show error (check for various possible error messages)
-  const errorMessage = page.locator('text=/buffalo\.edu|@buffalo\.edu|UB email/i');
+  const errorMessage = page.locator('text=/buffalo.edu|@buffalo.edu|UB email/i');
   await expect(errorMessage).toBeVisible({ timeout: 5000 });
 });
 

@@ -13,7 +13,9 @@ import {
   Bug,
   Zap,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Upload,
+  Search
 } from 'lucide-react';
 import { useAnalytics, type AnalyticsInsights } from '@/hooks/use-analytics';
 import { logger } from '@/lib/logger';

@@ -274,7 +274,6 @@ export const Overview: Story = {
 };
 
 export const DesignSystemShowcase: Story = {
-  name: 'Design System Showcase',
   render: () => (
     <Container className="py-8">
       <Typography variant="h1" className="text-3xl font-bold mb-8 text-center">

@@ -1,3 +1,4 @@
+/// <reference path="../types/global.d.ts" />
 import { logger } from '@/lib/logger';
 import { useAuth } from '@/hooks/use-auth';
 

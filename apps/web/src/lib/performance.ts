@@ -1,3 +1,4 @@
+/// <reference path="../types/global.d.ts" />
 /**
  * Performance optimization utilities
  */
@@ -274,13 +275,13 @@ export async function dynamicImport<T>(
 // Memory leak detector
 export class MemoryLeakDetector {
   private intervals: Set<NodeJS.Timeout> = new Set();
-  private listeners: Array<{ element: EventTarget; type: string; listener: EventListenerOrEventListenerObject }> = [];
+  private listeners: Array<{ element: EventTarget; type: string; listener: EventListener }> = [];
 
   trackInterval(interval: NodeJS.Timeout) {
     this.intervals.add(interval);
   }
 
-  trackListener(element: EventTarget, type: string, listener: EventListenerOrEventListenerObject) {
+  trackListener(element: EventTarget, type: string, listener: EventListener) {
     this.listeners.push({ element, type, listener });
   }
 

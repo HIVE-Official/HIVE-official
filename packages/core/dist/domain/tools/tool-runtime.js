@@ -6,9 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ToolRuntimeEngine = exports.RuntimeContext = void 0;
 const element_registry_1 = require("./element-registry");
 const uuid_1 = require("uuid");
-/**
- * Runtime Context - Manages execution state
- */
 class RuntimeContext {
     constructor(instanceId, composition, initialVariables) {
         this.instanceId = instanceId;
@@ -20,20 +17,20 @@ class RuntimeContext {
         // Initialize variables
         composition.variables.forEach(variable => {
             const value = initialVariables?.[variable.name] ?? variable.defaultValue ?? null;
-            this.variables.set(variable.id, value);
+            this.variables.set(variable.id, { value });
         });
     }
     // Variable management
     getVariable(id) {
-        return this.variables.get(id);
+        return this.variables.get(id)?.value;
     }
     setVariable(id, value) {
-        this.variables.set(id, value);
+        this.variables.set(id, { value });
         this.emit('variable:changed', { id, value });
     }
     // Element state management
     getElementState(instanceId) {
-        return this.elementStates.get(instanceId) || {};
+        return this.elementStates.get(instanceId) || { data: null };
     }
     setElementState(instanceId, state) {
         this.elementStates.set(instanceId, state);
@@ -295,12 +292,12 @@ class ToolRuntimeEngine {
             case 'logic':
                 // Logic elements perform computations
                 if (elementDef.type === 'condition') {
-                    const result = this.evaluateOperator(inputData.value, inputData.compare, element.config.operator);
+                    const result = this.evaluateOperator(inputData.value, inputData.compare, String(element.config.operator || ''));
                     output.true = result ? inputData.value : null;
                     output.false = !result ? inputData.value : null;
                 }
                 else if (elementDef.type === 'calculation') {
-                    output.result = this.calculate(inputData.a, inputData.b, element.config.operation);
+                    output.result = this.calculate(Number(inputData.a || 0), Number(inputData.b || 0), String(element.config.operation || 'add'));
                 }
                 break;
             case 'data':
@@ -328,7 +325,7 @@ class ToolRuntimeEngine {
                     : value;
             case 'reduce':
                 return Array.isArray(value)
-                    ? value.reduce(eval(transform.function))
+                    ? value.reduce(eval(transform.function), transform.initialValue)
                     : value;
             case 'custom':
                 return eval(transform.function)(value);
@@ -352,13 +349,13 @@ class ToolRuntimeEngine {
             case 'required':
                 return data != null && data !== '';
             case 'min':
-                return data >= rule.value;
+                return Number(data) >= Number(rule.value || 0);
             case 'max':
-                return data <= rule.value;
+                return Number(data) <= Number(rule.value || Infinity);
             case 'pattern':
-                return new RegExp(rule.value).test(data);
+                return rule.pattern ? new RegExp(rule.pattern).test(String(data)) : true;
             case 'custom':
-                return await this.evaluateCondition(rule.value, context);
+                return await this.evaluateCondition(String(rule.value || ''), context);
             default:
                 return true;
         }
@@ -370,9 +367,9 @@ class ToolRuntimeEngine {
             case 'not-equals':
                 return a !== b;
             case 'greater':
-                return a > b;
+                return Number(a) > Number(b);
             case 'less':
-                return a < b;
+                return Number(a) < Number(b);
             case 'contains':
                 return String(a).includes(String(b));
             default:
@@ -441,7 +438,7 @@ class ToolRuntimeEngine {
             });
         }
     }
-    async getComposition(toolId) {
+    async getComposition(_toolId) {
         // In production, this would fetch from database
         return null;
     }

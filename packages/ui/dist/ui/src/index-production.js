@@ -11,7 +11,7 @@ export { EmailGate } from './components/auth/email-gate';
 export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
 export { SchoolPick } from './components/auth/school-pick';
 // === LOADING COMPONENTS (working) ===
-export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
 // === BASIC UI COMPONENTS (working) ===
 export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
 export { InputEnhanced as Input } from './atomic/atoms/input-enhanced';

@@ -1,4 +1,5 @@
 /**
+import { setDoc, doc } from "firebase/firestore";
  * Seed Firebase with realistic profile data for testing
  * Run with: npm run seed:profiles
  */

@@ -13,7 +13,7 @@ const query_client_1 = require("./query-client");
 const auth_store_1 = require("../stores/auth-store");
 const profile_store_1 = require("../stores/profile-store");
 // API client functions
-async function fetchUserProfile(userId) {
+async function fetchUserProfile(_userId) {
     const token = await auth_store_1.useAuthStore.getState().user?.getIdToken();
     const response = await fetch(`/api/profile/me`, {
         headers: {

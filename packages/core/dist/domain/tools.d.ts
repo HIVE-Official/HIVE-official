@@ -39,7 +39,7 @@ export interface ToolElement {
         width: number;
         height: number;
     };
-    properties: Record<string, any>;
+    properties: Record<string, unknown>;
     connections: ElementConnection[];
     validation?: ElementValidation;
 }
@@ -77,7 +77,7 @@ export interface ToolIntegration {
     type: 'space' | 'platform' | 'external';
     service: string;
     permissions: string[];
-    configuration: Record<string, any>;
+    configuration: Record<string, unknown>;
 }
 export interface WebhookConfig {
     url: string;
@@ -109,7 +109,7 @@ export interface ToolInstallation {
     updatedAt: Date;
     configuration?: Partial<ToolConfiguration>;
     permissions?: Partial<ToolPermissions>;
-    customSettings: Record<string, any>;
+    customSettings: Record<string, unknown>;
     isEnabled: boolean;
     isPinned: boolean;
     position?: number;
@@ -126,13 +126,13 @@ export interface ToolExecution {
     startedAt: Date;
     completedAt?: Date;
     duration?: number;
-    inputs: Record<string, any>;
-    outputs?: Record<string, any>;
+    inputs: Record<string, unknown>;
+    outputs?: Record<string, unknown>;
     status: 'running' | 'completed' | 'failed' | 'cancelled';
     error?: {
         message: string;
         code: string;
-        details?: any;
+        details?: unknown;
     };
     logs: ExecutionLog[];
     dataAccessed: string[];
@@ -142,7 +142,7 @@ export interface ExecutionLog {
     timestamp: Date;
     level: 'debug' | 'info' | 'warning' | 'error';
     message: string;
-    data?: any;
+    data?: unknown;
 }
 export interface PlatformUpdate {
     id: string;

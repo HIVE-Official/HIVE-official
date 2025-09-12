@@ -123,7 +123,7 @@ export async function hasSpacePermission(
     return false;
   }
   
-  return membership.permissions[permission];
+  return membership?.permissions?.[permission];
 }
 
 /**
@@ -136,7 +136,7 @@ export async function hasMinimumSpaceRole(spaceId: string, minimumRole: SpaceRol
     return false;
   }
   
-  return ROLE_HIERARCHY[membership.role] >= ROLE_HIERARCHY[minimumRole];
+  return ROLE_HIERARCHY[membership?.role] >= ROLE_HIERARCHY[minimumRole];
 }
 
 /**

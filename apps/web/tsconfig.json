@@ -47,6 +47,7 @@
     ".next/types/**/*.ts",
     "next-env.d.ts",
     "src/test/vitest-jest-dom.d.ts",
+    "src/types/global.d.ts",
     ".next-build/types/**/*.ts"
   ],
   "exclude": [

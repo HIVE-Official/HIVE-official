@@ -44,7 +44,7 @@ async function fetchUserSpaceMemberships(userId: string, includeActivity = true)
   return data.memberships || [];
 }
 
-async function fetchUserAnalytics(userId: string): Promise<ProfileAnalytics> {
+async function fetchUserAnalytics(_userId: string): Promise<ProfileAnalytics> {
   const token = await useAuthStore.getState().user?.getIdToken();
   const response = await fetch(`/api/profile/analytics`, {
     headers: {

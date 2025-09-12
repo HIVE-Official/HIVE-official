@@ -34,15 +34,18 @@ interface ToolTemplate {
 }
 export declare function useTools(spaceId?: string, options?: UseQueryOptions<Tool[]>): import("@tanstack/react-query").UseQueryResult<Tool[], Error>;
 export declare function useTool(toolId: string, options?: UseQueryOptions<Tool | null>): import("@tanstack/react-query").UseQueryResult<Tool | null, Error>;
-export declare function useCreateTool(): import("@tanstack/react-query").UseMutationResult<any, any, Omit<Tool, "id" | "createdAt" | "updatedAt">, unknown>;
-export declare function useUpdateTool(): import("@tanstack/react-query").UseMutationResult<any, Error, {
+export declare function useCreateTool(): import("@tanstack/react-query").UseMutationResult<Tool, Error, Omit<Tool, "id" | "createdAt" | "updatedAt">, unknown>;
+export declare function useUpdateTool(): import("@tanstack/react-query").UseMutationResult<{
+    toolId: string;
+    updates: Partial<Tool>;
+}, Error, {
     toolId: string;
     updates: Partial<Tool>;
 }, {
-    previousTool: Tool | undefined;
+    previousTool?: Tool;
 }>;
-export declare function useDeleteTool(): import("@tanstack/react-query").UseMutationResult<string, any, string, unknown>;
-export declare function useExecuteTool(): import("@tanstack/react-query").UseMutationResult<any, any, {
+export declare function useDeleteTool(): import("@tanstack/react-query").UseMutationResult<string, Error, string, unknown>;
+export declare function useExecuteTool(): import("@tanstack/react-query").UseMutationResult<ToolExecution, Error, {
     toolId: string;
     inputs: Record<string, unknown>;
     userId: string;
@@ -51,7 +54,7 @@ export declare function useToolTemplates(options?: UseQueryOptions<ToolTemplate[
 export declare function useRateTool(): import("@tanstack/react-query").UseMutationResult<{
     toolId: string;
     rating: number;
-}, any, {
+}, Error, {
     toolId: string;
     rating: number;
     userId: string;
@@ -59,14 +62,14 @@ export declare function useRateTool(): import("@tanstack/react-query").UseMutati
 export declare function useUpdateToolPermissions(): import("@tanstack/react-query").UseMutationResult<{
     toolId: string;
     permissions: string[];
-}, any, {
+}, Error, {
     toolId: string;
     permissions: string[];
 }, unknown>;
 export declare function useShareTool(): import("@tanstack/react-query").UseMutationResult<{
     toolId: string;
     spaceIds: string[];
-}, any, {
+}, Error, {
     toolId: string;
     spaceIds: string[];
 }, unknown>;

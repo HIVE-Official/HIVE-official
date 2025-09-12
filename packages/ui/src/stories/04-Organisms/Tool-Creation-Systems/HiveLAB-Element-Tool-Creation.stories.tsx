@@ -52,6 +52,7 @@ import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion
 import '../../../hive-tokens.css';
 
 const meta = {
+  component: () => null,
   title: '13-HiveLAB/Element-to-Tool Creation',
   parameters: {
     layout: 'fullscreen',

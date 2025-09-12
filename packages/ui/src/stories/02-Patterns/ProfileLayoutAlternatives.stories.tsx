@@ -7,6 +7,7 @@ import {
 
 const meta = {
   title: 'Page Layouts/👤 Profile Layout Alternatives',
+  component: BentoGridProfile,
   parameters: {
     layout: 'fullscreen',
     docs: {

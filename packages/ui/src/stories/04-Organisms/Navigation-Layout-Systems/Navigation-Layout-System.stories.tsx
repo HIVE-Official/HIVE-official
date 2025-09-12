@@ -84,6 +84,7 @@ import {
 import '../../../hive-tokens.css';
 
 const meta = {
+  component: () => null,
   title: '09-Live-Frontend/Navigation & Layout System',
   parameters: {
     layout: 'fullscreen',

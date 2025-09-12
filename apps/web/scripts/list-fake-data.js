@@ -27,7 +27,7 @@ function initializeFirebase() {
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
     
-    return app;
+    return _app;
   } catch (error) {
     console.error('Failed to initialize Firebase:', error);
     throw error;
@@ -92,7 +92,7 @@ async function listFakeData() {
     nameGroups[nameLower].push(space);
   });
   
-  Object.entries(nameGroups).forEach(([name, spaces]) => {
+  Object.entries(nameGroups).forEach(([_name, spaces]) => {
     if (spaces.length > 1) {
       // Determine which to keep (prefer RSS imports)
       const rssImports = spaces.filter(s => s.isRSSImport);

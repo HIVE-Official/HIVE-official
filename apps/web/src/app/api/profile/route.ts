@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     
     // If searching for profiles
     if (search) {
-      let query = db.collection('users')
+      const query = db.collection('users')
         .where('privacy.profileVisibility', 'in', ['public', 'connections'])
         .limit(Math.min(limit, 50));
       
