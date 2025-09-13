@@ -1,0 +1,10 @@
+{
+  "timestamp": "2025-09-13T17:33:25.043Z",
+  "dryRun": false,
+  "stats": {
+    "filesProcessed": 1070,
+    "filesModified": 259,
+    "statementsRemoved": 914,
+    "errors": []
+  }
+}
