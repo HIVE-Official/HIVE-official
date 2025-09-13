@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { HiveButton } from "../../../../packages/ui/src/components/hive-button";
+import { ButtonEnhanced as HiveButton } from "@hive/ui";
 
 export function FeedbackToast() {
   const [isOpen, setIsOpen] = useState(false);

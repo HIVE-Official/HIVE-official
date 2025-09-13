@@ -1,7 +1,0 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card } from '../../atomic/ui/card.js';
-import { ButtonEnhanced } from '../../atomic/atoms/button-enhanced.js';
-export const SchoolPick = ({ schools, onSchoolSelect, isLoading }) => {
-    return (_jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: schools.map((school) => (_jsx(Card, { className: "p-6 hover:border-[var(--hive-gold)] transition-all cursor-pointer", onClick: () => !isLoading && onSchoolSelect(school), children: _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("h3", { className: "text-lg font-semibold text-white", children: school.name }), _jsx("p", { className: "text-sm text-gray-400", children: school.domain }), school.studentCount && (_jsxs("p", { className: "text-xs text-gray-500 mt-1", children: [school.studentCount.toLocaleString(), " students"] }))] }), _jsx(ButtonEnhanced, { variant: "outline", size: "sm", disabled: isLoading, className: "border-[var(--hive-gold)] text-[var(--hive-gold)] hover:bg-[var(--hive-gold)] hover:text-black", children: "Select" })] }) }, school.id))) }));
-};
-//# sourceMappingURL=school-pick.js.map

@@ -204,18 +204,22 @@ try {
   }
 }
 
-// Primary exports
-export { dbAdmin, authAdmin, storageAdmin };
+// Primary exports - ensure variables are always defined
+const dbExport = dbAdmin as admin.firestore.Firestore;
+const authExport = authAdmin as admin.auth.Auth;
+const storageExport = storageAdmin as admin.storage.Storage;
+
+export { dbExport as dbAdmin, authExport as authAdmin, storageExport as storageAdmin };
 
 // Re-export for compatibility with existing code
-export const db = dbAdmin;
-export const auth = authAdmin;
-export const storage = storageAdmin;
+export const db = dbExport;
+export const auth = authExport;
+export const storage = storageExport;
 
 // Additional aliases for backward compatibility
-export const adminDb = dbAdmin;
-export const adminAuth = authAdmin;
-export const adminStorage = storageAdmin;
+export const adminDb = dbExport;
+export const adminAuth = authExport;
+export const adminStorage = storageExport;
 export const isFirebaseConfigured = firebaseInitialized;
 
 // Re-export environment utilities
@@ -234,4 +238,94 @@ export const environmentInfo = {
         ? "base64_key"
         : "application_default"
     : "none",
+};
+
+// Helper functions for common admin operations
+export const verifyIdToken = async (token: string) => {
+  if (!authAdmin) {
+    console.error('Firebase Admin Auth not initialized');
+    return null;
+  }
+  try {
+    return await authAdmin.verifyIdToken(token);
+  } catch (error) {
+    console.error('Failed to verify ID token:', error);
+    return null;
+  }
+};
+
+export const getUserByEmail = async (email: string) => {
+  if (!authAdmin) {
+    console.error('Firebase Admin Auth not initialized');
+    return null;
+  }
+  try {
+    return await authAdmin.getUserByEmail(email);
+  } catch (error) {
+    console.error('Failed to get user by email:', error);
+    return null;
+  }
+};
+
+export const createCustomToken = async (uid: string, claims?: object) => {
+  if (!authAdmin) {
+    console.error('Firebase Admin Auth not initialized');
+    return null;
+  }
+  try {
+    return await authAdmin.createCustomToken(uid, claims);
+  } catch (error) {
+    console.error('Failed to create custom token:', error);
+    return null;
+  }
+};
+
+export const setCustomUserClaims = async (uid: string, claims: object) => {
+  if (!authAdmin) {
+    console.error('Firebase Admin Auth not initialized');
+    return false;
+  }
+  try {
+    await authAdmin.setCustomUserClaims(uid, claims);
+    return true;
+  } catch (error) {
+    console.error('Failed to set custom claims:', error);
+    return false;
+  }
+};
+
+// Firestore helpers with proper typing
+export const serverTimestamp = () => {
+  if (!dbAdmin) {
+    throw new Error('Firebase Admin Firestore not initialized');
+  }
+  return admin.firestore.FieldValue.serverTimestamp();
+};
+
+export const deleteField = () => {
+  if (!dbAdmin) {
+    throw new Error('Firebase Admin Firestore not initialized');
+  }
+  return admin.firestore.FieldValue.delete();
+};
+
+export const arrayUnion = (...elements: any[]) => {
+  if (!dbAdmin) {
+    throw new Error('Firebase Admin Firestore not initialized');
+  }
+  return admin.firestore.FieldValue.arrayUnion(...elements);
+};
+
+export const arrayRemove = (...elements: any[]) => {
+  if (!dbAdmin) {
+    throw new Error('Firebase Admin Firestore not initialized');
+  }
+  return admin.firestore.FieldValue.arrayRemove(...elements);
+};
+
+export const increment = (n: number) => {
+  if (!dbAdmin) {
+    throw new Error('Firebase Admin Firestore not initialized');
+  }
+  return admin.firestore.FieldValue.increment(n);
 };

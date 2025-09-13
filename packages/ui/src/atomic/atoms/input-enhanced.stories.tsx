@@ -9,8 +9,8 @@ import {
   InputPresets,
   FloatingLabelInput
 } from './input-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import { Button } from './button-enhanced';
 import '../../hive-tokens.css';
 

@@ -12,7 +12,7 @@ import {
   GhostTag, 
   GradientTag 
 } from './tag';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Hash, User, Calendar, MapPin, Book, GraduationCap, Star, Bookmark, Clock } from 'lucide-react';
 import '../../hive-tokens.css';

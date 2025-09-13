@@ -30,15 +30,10 @@ import {
 // Hooks
 import { useUnifiedAuth } from "@hive/ui";
 
-// Types
-interface FeedDisplayProps {
-  spaceId?: string;
-  spaceName?: string;
-  feedType?: "all" | "space" | "following";
-  showPostCreator?: boolean;
-  maxPosts?: number;
-}
+// Types  
+import { type Post as CorePost } from '@hive/core';
 
+// Local Post interface for component compatibility
 interface Post {
   id: string;
   content: string;
@@ -58,6 +53,14 @@ interface Post {
   shares: number;
   isLiked?: boolean;
   isPinned?: boolean;
+}
+
+interface FeedDisplayProps {
+  spaceId?: string;
+  spaceName?: string;
+  feedType?: "all" | "space" | "following";
+  showPostCreator?: boolean;
+  maxPosts?: number;
 }
 
 export function FeedDisplay({

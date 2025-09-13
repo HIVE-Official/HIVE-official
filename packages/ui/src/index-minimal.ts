@@ -16,7 +16,7 @@ export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
 export { SchoolPick } from './components/auth/school-pick';
 
 // === LOADING COMPONENTS ===
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
 
 // === ONBOARDING COMPONENTS (temporarily commented - components need to be created) ===
 // export { CreateProfileStep } from './components/onboarding/create-profile-step';
@@ -71,7 +71,7 @@ export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingO
 // === BASIC UI COMPONENTS (from existing system) ===
 export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
 export { HiveInput as Input } from './components/hive-input';
-export { HiveCard as Card, HiveCard } from './components/hive-card';
+export { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from './atomic/ui/card';
 export { HiveBadge as Badge, HiveBadge } from './components/hive-badge';
 export { HiveModal } from './components/hive-modal';
 export { HiveLogo } from './components/hive-logo';
@@ -90,19 +90,6 @@ export const Checkbox: React.FC<any> = (props: any) => {
 // === LAYOUT COMPONENTS ===
 export const PageContainer: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => {
   return React.createElement('div', { className: `container mx-auto px-4 ${className || ''}` }, children);
-};
-
-// === CARD COMPONENTS (basic) ===
-export const CardContent: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => {
-  return React.createElement('div', { className: `p-6 ${className || ''}` }, children);
-};
-
-export const CardHeader: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => {
-  return React.createElement('div', { className: `p-6 pb-0 ${className || ''}` }, children);
-};
-
-export const CardTitle: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => {
-  return React.createElement('h3', { className: `text-lg font-semibold ${className || ''}` }, children);
 };
 
 // === BASIC EXPORTS FOR BACKWARD COMPATIBILITY ===

@@ -7,14 +7,14 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Input } from '../../components/ui/input';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Avatar, AvatarFallback } from '../../atomic/atoms/avatar';
 import { Checkbox } from '../../components/ui/checkbox';
 import { Label } from '../../components/ui/label';
-import { Switch } from '../../components/ui/switch';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
 import { 
   Atom,
   Zap,

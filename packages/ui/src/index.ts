@@ -67,7 +67,7 @@ export {
 
 // === AUTH COMPONENTS ===
 export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
 export { SchoolPick } from './components/auth/school-pick';
 
 // === MODALS ===
@@ -165,8 +165,8 @@ export { UB_ACADEMIC_YEARS } from './constants/academic-years';
 export { adminFirestore } from './lib/firebase-admin';
 
 // Additional UI Components
-export { Checkbox } from './atomic/atoms/checkbox';
-export { Switch } from './atomic/atoms/switch';
+export { Checkbox } from './atomic/atoms/checkbox-enhanced';
+export { Switch } from './atomic/atoms/switch-enhanced';
 export { Slider } from './atomic/atoms/slider';
 export { Progress } from './atomic/atoms/progress';
 export { Separator } from './atomic/atoms/separator';

@@ -1,6 +1,7 @@
 "use client";
 
 import { useUnifiedAuth } from '@hive/ui';
+import { type User } from '@hive/core';
 
 interface SessionData {
   userId: string;
@@ -19,7 +20,9 @@ interface SessionData {
   };
 }
 
-export interface User {
+// User interface is now imported from @hive/core to avoid duplication
+// Legacy session-specific User type for backward compatibility
+interface LegacySessionUser {
   id: string;
   email: string;
   fullName?: string;
@@ -40,7 +43,7 @@ export function useSession() {
   const hiveAuth = useUnifiedAuth();
 
   // Transform HiveAuth data to match useSession interface
-  const user: User | null = hiveAuth.user ? {
+  const user: LegacySessionUser | null = hiveAuth.user ? {
     id: hiveAuth.user.id,
     email: hiveAuth.user.email,
     fullName: hiveAuth.user.fullName,

@@ -7,10 +7,10 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Badge } from '../../../components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Avatar } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Avatar } from '../../../atomic/atoms/avatar';
 import { 
   GraduationCap,
   Users,

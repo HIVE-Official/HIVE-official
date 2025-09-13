@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Container } from '../../components/ui/container';
-import { Text as Typography } from '../../components/ui/typography';
+import { Text as Typography } from '../../atomic/atoms/typography';
 import { HiveLogo } from '../../components/hive-logo';
 
 /**

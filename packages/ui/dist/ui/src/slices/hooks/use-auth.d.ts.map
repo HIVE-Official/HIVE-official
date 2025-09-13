@@ -1,1 +1,0 @@
-{"version":3,"file":"use-auth.d.ts","sourceRoot":"","sources":["../../../../../src/slices/hooks/use-auth.ts"],"names":[],"mappings":"AAAA;;GAEG;AAIH,MAAM,WAAW,QAAQ;IACvB,GAAG,EAAE,MAAM,CAAC;IACZ,KAAK,EAAE,MAAM,CAAC;IACd,MAAM,CAAC,EAAE,MAAM,CAAC;IAChB,YAAY,CAAC,EAAE,MAAM,CAAC;CACvB;AAED,wBAAgB,eAAe;;;;;yBAMK,GAAG;;;;;;;EA8BtC;AAED,eAAO,MAAM,WAAW;;;;;yBAhCY,GAAG;;;;;;;SAgCkD,CAAC"}

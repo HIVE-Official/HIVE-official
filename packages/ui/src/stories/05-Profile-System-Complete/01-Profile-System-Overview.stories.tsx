@@ -6,11 +6,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
 import { Progress } from '../../components/ui/progress';
 
 // Import the main profile dashboard

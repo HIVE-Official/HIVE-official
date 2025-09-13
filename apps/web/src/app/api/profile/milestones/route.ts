@@ -292,7 +292,7 @@ async function trackMilestoneCompletion(userId: string, milestone: any) {
 }
 
 // Initialize default milestones for new users
-export async function initializeDefaultMilestones(userId: string) {
+async function initializeDefaultMilestones(userId: string) {
   const defaultMilestones = [
     {
       type: 'platform',

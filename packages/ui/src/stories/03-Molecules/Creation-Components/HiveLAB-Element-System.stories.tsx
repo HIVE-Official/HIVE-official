@@ -6,10 +6,10 @@ import {
   Layers, Code, Puzzle, Wrench, Lightbulb, ArrowRight,
   CheckCircle, Play, Pause, RotateCcw, Download
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 
 const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Creation-Components/HiveLAB Element System',

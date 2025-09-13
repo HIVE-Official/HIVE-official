@@ -21,9 +21,10 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useRealtimePosts, useOptimisticUpdates } from '../../hooks/use-live-updates';
+import { type Post as CorePost } from '@hive/core';
 
-// Types
-interface Post {
+// Extended Post interface for UI compatibility while we transition
+interface Post extends Partial<CorePost> {
   id: string;
   content: string;
   authorId: string;

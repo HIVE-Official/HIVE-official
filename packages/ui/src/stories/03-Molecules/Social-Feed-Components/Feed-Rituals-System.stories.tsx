@@ -8,10 +8,10 @@ import {
   ChevronRight, Plus, Filter, TrendingUp, Eye,
   CheckCircle, AlertCircle, Timer, Play, Pause
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Badge } from '../../../components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
 import { Progress } from '../../../components/ui/progress';
 
 const meta: Meta<typeof React.Fragment> = {

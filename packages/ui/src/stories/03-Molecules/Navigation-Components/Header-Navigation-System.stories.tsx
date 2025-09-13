@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Search, Bell, MessageSquare, Plus, Menu, Home, Users, Calendar, BookOpen, Settings, User, LogOut, ChevronDown, X } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { Input } from '../../atomic/atoms/input-enhanced';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
 
 const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Navigation-Components/Header Navigation System',

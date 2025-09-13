@@ -1,14 +1,3 @@
-// Clean Button Bridge - Re-exports ButtonEnhanced as standard UI Button
-export { 
-  Button, 
-  ButtonEnhanced,
-  ButtonGroup,
-  IconButton,
-  buttonVariants,
-  ButtonPresets,
-  type ButtonProps,
-  type IconButtonProps,
-  type ButtonGroupProps
-} from '../../atomic/atoms/button-enhanced';
-
-export { Button as default } from '../../atomic/atoms/button-enhanced';
+// Re-export ButtonEnhanced as the standard Button component
+export * from '../../atomic/atoms/button-enhanced';
+export { ButtonEnhanced as Button, ButtonEnhanced as default } from '../../atomic/atoms/button-enhanced';

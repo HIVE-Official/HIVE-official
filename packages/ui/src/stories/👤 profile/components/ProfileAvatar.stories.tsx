@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Avatar, AvatarImage, AvatarFallback } from '../../../components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '../../../atomic/atoms/avatar';
 
 // Create a ProfileAvatar wrapper component for the story
 const ProfileAvatar = ({ src, alt, size = 'md' }: { src?: string; alt: string; size?: string }) => (

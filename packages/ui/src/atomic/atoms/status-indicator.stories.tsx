@@ -13,7 +13,7 @@ import {
   GlowIndicator,
   StatusBadge
 } from './status-indicator';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Avatar } from './avatar';
 import { Button } from './button-enhanced';

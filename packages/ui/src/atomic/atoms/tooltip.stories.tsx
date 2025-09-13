@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tooltip, InfoTooltip, DarkTooltip, LightTooltip, ClickTooltip } from './tooltip';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Button } from './button-enhanced';
 import '../../hive-tokens.css';

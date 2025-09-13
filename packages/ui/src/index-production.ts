@@ -16,7 +16,7 @@ export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
 export { SchoolPick } from './components/auth/school-pick';
 
 // === LOADING COMPONENTS (working) ===
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
 
 // === BASIC UI COMPONENTS (working) ===
 export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';

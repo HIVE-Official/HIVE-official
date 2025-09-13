@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Users, MapPin, Clock, Star, Settings, ArrowRight, BookOpen, Home, Building, GraduationCap, Calendar, MessageSquare, Lock, Globe } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Avatar, AvatarFallback } from '../../../atomic/atoms/avatar';
 
 const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Card-Components/Space Card System',

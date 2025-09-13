@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { Badge } from '../../atomic/atoms/badge';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Container } from '../../components/ui/container';
 import { Text as Typography } from '../../atomic/atoms/text';

@@ -1,2 +1,0 @@
-export { FirebaseAuthProvider, FirebaseAuthProvider as UnifiedAuthProvider, useFirebaseAuth, useUnifiedAuth, useUnifiedAuth as useAuth, type HiveUser, type FirebaseAuthContextType } from './unified-auth-context';
-//# sourceMappingURL=index.d.ts.map

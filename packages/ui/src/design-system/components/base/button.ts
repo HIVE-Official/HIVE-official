@@ -1,9 +1,9 @@
 /**
  * HIVE Button Component
- * Re-export from existing implementation with design system interface
+ * Re-export from atomic button-enhanced implementation
  */
 
-export { HiveButton as Button, type HiveButtonProps as ButtonProps } from '../../../components/hive-button';
+export { ButtonEnhanced as Button, type ButtonProps } from '../../../atomic/atoms/button-enhanced';
 
 // Design system specific variants
-export { hiveButtonVariants as buttonVariants } from '../../../components/hive-button';
+export { buttonVariants } from '../../../atomic/atoms/button-enhanced';

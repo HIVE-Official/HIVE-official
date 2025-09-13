@@ -1,50 +1,9 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { type User, type Space, type Post } from '@hive/core';
 
-// User state
-interface User {
-  id: string;
-  email: string;
-  displayName: string;
-  photoURL?: string;
-  handle?: string;
-  role?: 'student' | 'faculty' | 'admin';
-  spaces?: string[];
-  createdAt: Date;
-  lastActiveAt: Date;
-}
-
-// Space state
-interface Space {
-  id: string;
-  name: string;
-  description: string;
-  type: 'academic' | 'social' | 'dorm' | 'organization' | 'interest';
-  memberCount: number;
-  isPublic: boolean;
-  createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-// Post state
-interface Post {
-  id: string;
-  content: string;
-  authorId: string;
-  authorName?: string;
-  spaceId: string;
-  spaceName?: string;
-  type?: 'discussion' | 'coordination' | 'event' | 'announcement' | 'tool_share';
-  images?: string[];
-  createdAt: Date;
-  updatedAt?: Date;
-  reactions?: Record<string, number>;
-  commentCount?: number;
-  isPinned?: boolean;
-  metadata?: any;
-}
+// User, Space, and Post types are now imported from @hive/core
 
 // Notification state
 interface Notification {

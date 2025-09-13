@@ -5,7 +5,7 @@ import { Input as Input } from '../atoms/input-enhanced';
 import { Select as Select } from '../atoms/select-enhanced';
 import { Textarea } from '../atoms/textarea-enhanced';
 import { Checkbox } from '../atoms/checkbox-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';

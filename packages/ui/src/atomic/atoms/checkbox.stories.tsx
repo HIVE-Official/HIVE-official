@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Checkbox } from './checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { CheckboxEnhanced as Checkbox } from './checkbox-enhanced';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { action } from '@storybook/addon-actions';

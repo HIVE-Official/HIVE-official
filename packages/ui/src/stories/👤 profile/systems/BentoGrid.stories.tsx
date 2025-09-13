@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { BentoGrid, BentoCardProps, CAMPUS_CARD_PRESETS, createBentoCard } from '../../../components/bento-grid';
-import { Avatar, AvatarImage, AvatarFallback } from '../../../components/ui/avatar';
-import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '../../../atomic/atoms/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
 import { Calendar, Users, Wrench, Activity, BarChart3, MessageSquare, Zap } from 'lucide-react';
 
 const meta: Meta<typeof BentoGrid> = {

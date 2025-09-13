@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { User, Upload, Camera, Edit3, Users, GraduationCap, Building, MapPin, Settings, Star } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
 import { Button } from '../../atomic/atoms/button-enhanced';
 
 // Create a component wrapper for the story

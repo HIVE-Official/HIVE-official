@@ -1,6 +1,26 @@
-// Stub types for @hive/core to resolve import errors
-// This is a temporary solution until proper dependency resolution is fixed
+// Partial consolidation with @hive/core types
+// Some types are imported from @hive/core to reduce duplication
+// Full consolidation blocked by TypeScript isolatedModules configuration
 
+// Core types that can be safely imported
+export type { 
+  User, 
+  Space,
+  Tool
+} from '@hive/core';
+
+// PostType enum causes re-export issues in isolatedModules mode
+// Define locally for now, TODO: fix in future refactor
+export enum PostType {
+  TEXT = "text",
+  IMAGE = "image", 
+  LINK = "link",
+  POLL = "poll",
+  EVENT = "event",
+}
+
+// Post interface - kept local due to compatibility issues
+// TODO: Consolidate with @hive/core once component interfaces align
 export interface Post {
   id: string;
   content: string;
@@ -13,15 +33,6 @@ export interface Post {
   isFlagged?: boolean;
   isPinned?: boolean;
   isEdited?: boolean;
-  pollMetadata?: {
-    question: string;
-    options: Array<{ text: string; votes: number }>;
-  };
-  eventMetadata?: {
-    title: string;
-    description?: string;
-    startTime: string;
-  };
   author?: {
     id: string;
     fullName: string;
@@ -31,31 +42,12 @@ export interface Post {
   };
 }
 
+// Legacy CreatePost for backwards compatibility  
 export interface CreatePost {
   content: string;
   type: PostType;
   spaceId?: string;
   postType?: PostType | "text";
-}
-
-export enum PostType {
-  TEXT = "text",
-  IMAGE = "image",
-  LINK = "link",
-  POLL = "poll",
-  EVENT = "event",
-}
-
-export interface Space {
-  id: string;
-  name: string;
-  description?: string;
-  isPrivate: boolean;
-  memberCount: number;
-  status?: string;
-  bannerUrl?: string;
-  type?: string;
-  tags?: Array<{ sub_type: string }>;
 }
 
 export interface Element {
@@ -75,12 +67,7 @@ export interface ElementInstance {
   config?: Record<string, unknown>;
 }
 
-export interface Tool {
-  id: string;
-  name: string;
-  description?: string;
-  elements: ElementInstance[];
-}
+// Tool interface is now imported from @hive/core
 
 export enum ElementCategory {
   DISPLAY = "Display & Layout",
@@ -94,12 +81,7 @@ export enum SpaceTag {
   PROFESSIONAL = "professional",
 }
 
-export interface User {
-  id: string;
-  email: string;
-  displayName?: string;
-  photoURL?: string;
-}
+// User interface is now imported from @hive/core
 
 export interface School {
   id: string;
@@ -115,7 +97,13 @@ export interface Timestamp {
 }
 
 // Additional types for feed components
-export interface FeedPost extends Post {
+// Using intersection type instead of extends to avoid issues with Post import
+export interface FeedPost {
+  id: string;
+  content: string;
+  type: PostType;
+  spaceId?: string;
+  createdAt: any;
   author: {
     id: string;
     fullName: string;

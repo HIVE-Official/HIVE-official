@@ -6,11 +6,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useCallback } from 'react';
 import { motion } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Switch } from '../../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Card, CardContent, CardHeader } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
 
 // Import the bento grid system
 import { BentoGridLayout, useBentoGrid, type GridItem } from '../../../components/profile/bento-grid/bento-grid-layout';

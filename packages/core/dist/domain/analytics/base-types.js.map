@@ -1,1 +1,0 @@
-{"version":3,"file":"base-types.js","sourceRoot":"","sources":["../../../src/domain/analytics/base-types.ts"],"names":[],"mappings":";;AAoGA,wDAGC;AAED,sDAKC;AAXD,mCAAmC;AACnC,SAAgB,sBAAsB,CAAC,KAAc;IACnD,+BAA+B;IAC/B,OAAO,KAA2B,CAAC;AACrC,CAAC;AAED,SAAgB,qBAAqB,CACnC,KAAc;IAEd,+BAA+B;IAC/B,OAAO,OAAO,KAAK,KAAK,QAAQ,IAAI,KAAK,KAAK,IAAI,CAAC;AACrD,CAAC"}

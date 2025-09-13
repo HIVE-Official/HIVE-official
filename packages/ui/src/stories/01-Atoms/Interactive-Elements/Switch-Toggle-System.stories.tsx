@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Bell, Eye, EyeOff, Shield, Users, Calendar, MapPin, Smartphone, Mail, MessageSquare, Globe, Lock } from 'lucide-react';
-import { Switch } from '../../../components/ui/switch';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { Label } from '../../../components/ui/label';
 
 // Create a component wrapper for the story

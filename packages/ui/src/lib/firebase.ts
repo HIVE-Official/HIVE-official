@@ -1,6 +1,11 @@
-// Mock Firebase configuration for Storybook
-// This prevents import errors when components try to import Firebase auth
+/**
+ * Mock Firebase configuration for Storybook and testing
+ * This prevents import errors when components try to import Firebase auth
+ * 
+ * In production, components should import from @hive/core/firebase directly
+ */
 
+// Mock Firebase for UI package (used in Storybook and tests)
 export const auth = {
   currentUser: null,
   onAuthStateChanged: () => () => {},
@@ -24,10 +29,12 @@ export const analytics = {
   logEvent: () => {},
 };
 
-// Mock initialization
 export const initializeApp = () => ({});
 export const getAuth = () => auth;
 export const getFirestore = () => db;
 export const getAnalytics = () => analytics;
 
-console.log('[Storybook] Using mock Firebase configuration'); 
+// Log only in browser environment
+if (typeof window !== 'undefined') {
+  console.log('[UI Package] Using mock Firebase configuration');
+}

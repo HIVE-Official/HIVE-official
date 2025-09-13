@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useContext, createContext, useReducer } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { HiveProgress as Progress } from '../../components/hive-progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
-import { Switch } from '../../../components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
+import { Alert, AlertDescription } from '../../../atomic/molecules/alert-toast-system';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { 
   Activity, 
   BarChart3, 
