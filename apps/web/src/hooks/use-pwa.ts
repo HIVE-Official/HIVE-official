@@ -30,7 +30,7 @@ export function usePWA(): UsePWAReturn {
             scope: '/',
           });
 
-          console.log('HIVE PWA: Service Worker registered for campus use', registration);
+          // console.log('HIVE PWA: Service Worker registered for campus use', registration);
 
           // Handle service worker updates for campus students
           registration.addEventListener('updatefound', () => {
@@ -39,7 +39,7 @@ export function usePWA(): UsePWAReturn {
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                   // New content available for campus students
-                  console.log('HIVE PWA: New content available for campus');
+                  // console.log('HIVE PWA: New content available for campus');
                   // Could show update notification to students
                 }
               });
@@ -58,7 +58,7 @@ export function usePWA(): UsePWAReturn {
       const promptEvent = e as PWAInstallPrompt;
       setInstallPromptEvent(promptEvent);
       setIsInstallable(true);
-      console.log('HIVE PWA: Install prompt available for campus student');
+      // console.log('HIVE PWA: Install prompt available for campus student');
     };
 
     window.addEventListener('beforeinstallprompt', handleInstallPrompt);
@@ -81,9 +81,9 @@ export function usePWA(): UsePWAReturn {
     const updateOnlineStatus = () => {
       setIsOffline(!navigator.onLine);
       if (navigator.onLine) {
-        console.log('HIVE PWA: Campus network connected');
+        // console.log('HIVE PWA: Campus network connected');
       } else {
-        console.log('HIVE PWA: Campus offline mode active');
+        // console.log('HIVE PWA: Campus offline mode active');
       }
     };
 
@@ -93,7 +93,7 @@ export function usePWA(): UsePWAReturn {
 
     // Handle successful PWA installation
     window.addEventListener('appinstalled', () => {
-      console.log('HIVE PWA: Successfully installed for campus student');
+      // console.log('HIVE PWA: Successfully installed for campus student');
       setIsInstalled(true);
       setIsInstallable(false);
       setInstallPromptEvent(null);
@@ -124,11 +124,11 @@ export function usePWA(): UsePWAReturn {
       const { outcome } = await installPromptEvent.userChoice;
       
       if (outcome === 'accepted') {
-        console.log('HIVE PWA: Campus student accepted install');
+        // console.log('HIVE PWA: Campus student accepted install');
         setIsInstallable(false);
         setInstallPromptEvent(null);
       } else {
-        console.log('HIVE PWA: Campus student dismissed install');
+        // console.log('HIVE PWA: Campus student dismissed install');
       }
     } catch (error) {
       console.error('HIVE PWA: Install failed for campus student', error);
@@ -170,7 +170,7 @@ export const PWAUtils = {
           text: shareData.text || 'Check out HIVE - where UB students connect and build together',
           url: shareData.url || window.location.href,
         });
-        console.log('HIVE PWA: Content shared successfully on campus');
+        // console.log('HIVE PWA: Content shared successfully on campus');
       } catch (error) {
         console.error('HIVE PWA: Campus sharing failed', error);
       }
@@ -178,7 +178,7 @@ export const PWAUtils = {
       // Fallback for campus browsers without native sharing
       const url = shareData.url || window.location.href;
       await navigator.clipboard.writeText(url);
-      console.log('HIVE PWA: URL copied for campus sharing');
+      // console.log('HIVE PWA: URL copied for campus sharing');
     }
   },
 
@@ -186,7 +186,7 @@ export const PWAUtils = {
   requestNotifications: async () => {
     if ('Notification' in window) {
       const permission = await Notification.requestPermission();
-      console.log('HIVE PWA: Campus notification permission:', permission);
+      // console.log('HIVE PWA: Campus notification permission:', permission);
       return permission === 'granted';
     }
     return false;

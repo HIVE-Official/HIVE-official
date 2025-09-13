@@ -1,98 +1,92 @@
-// @ts-check
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
-import tseslint from "typescript-eslint";
-import unicorn from "eslint-plugin-unicorn";
-import importPlugin from "eslint-plugin-import";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-/**
- * Custom ESLint configuration for HIVE monorepo
- * Uses ESLint 9 flat config system with compatibility utilities
- */
-export default [
-  // Base JavaScript config
-  js.configs.recommended,
-  
-  // TypeScript configs
-  ...tseslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  
-  // Patched configs for compatibility
-  ...fixupConfigRules([
-    ...compat.extends("turbo"),
-    ...compat.extends("prettier"),
-  ]),
-  
-  // Global configuration
-  {
-    plugins: {
-      unicorn: fixupPluginRules(unicorn),
-      import: fixupPluginRules(importPlugin),
-    },
-    
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: true,
-      },
-      globals: {
-        React: "readonly",
-        JSX: "readonly",
-      },
-    },
-    
-    settings: {
-      "import/resolver": {
-        typescript: {
-          project: "./tsconfig.json",
-        },
-      },
-    },
-    
-    linterOptions: {
-      reportUnusedDisableDirectives: "error",
-    },
-    
-    rules: {
-      "turbo/no-undeclared-env-vars": "off",
-      "unicorn/filename-case": [
-        "error",
-        {
-          "case": "kebabCase"
-        }
-      ],
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
-      "@typescript-eslint/no-floating-promises": "error",
-    },
-  },
-  
-  // Ignore patterns
-  {
-    ignores: [
-      "node_modules/",
-      "dist/",
-      ".turbo/",
-      "storybook-static/",
-      ".next/",
-      "**/eslint.config.mjs",
-      "**/eslint.config.js",
-      "**/*.d.ts",
-      "**/*.d.ts.map",
-      "**/src/**/*.js",
-      "**/src/**/*.js.map",
+// ESLint 8 configuration for HIVE monorepo
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'import'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'turbo'
+  ],
+  rules: {
+    // TypeScript strict rules
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        ignoreRestSiblings: true
+      }
     ],
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'warn',
+    '@typescript-eslint/ban-ts-comment': [
+      'error',
+      {
+        'ts-expect-error': 'allow-with-description',
+        'ts-ignore': false,
+        'ts-nocheck': false,
+        'ts-check': false
+      }
+    ],
+    
+    // General code quality rules
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-debugger': 'error',
+    'no-duplicate-imports': 'error',
+    'prefer-const': 'error',
+    'no-var': 'error',
+    'eqeqeq': ['error', 'always', { null: 'ignore' }],
+    'curly': ['error', 'multi-line'],
+    
+    // Import rules
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          ['parent', 'sibling'],
+          'index',
+          'object',
+          'type'
+        ],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true
+        }
+      }
+    ],
+    
+    // Turbo
+    'turbo/no-undeclared-env-vars': 'off',
+    
+    // Handled by TypeScript
+    'no-undef': 'off',
+    'no-unused-vars': 'off',
+    'no-redeclare': 'off'
   },
-]; 
+  env: {
+    es2022: true,
+    node: true
+  },
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module'
+  },
+  ignorePatterns: [
+    'node_modules',
+    'dist',
+    'build',
+    '.next',
+    '.turbo',
+    'coverage',
+    '*.config.js',
+    '*.config.cjs',
+    '*.config.mjs',
+    'storybook-static'
+  ]
+}; 

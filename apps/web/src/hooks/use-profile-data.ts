@@ -231,7 +231,7 @@ export function useCalendarEvents(startDate?: string, endDate?: string, type?: s
  */
 export function useConnections(limit = 20, includeDetails = true, sortBy = 'recent') {
   const [connections, setConnections] = useState<any[]>([]);
-  const [stats, setStats] = useState<any>({});
+  const [stats, setStats] = useState<unknown>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -267,7 +267,7 @@ export function useConnections(limit = 20, includeDetails = true, sortBy = 'rece
  * Hook for profile stats
  */
 export function useProfileStats(timeRange = 'month', includeComparisons = false) {
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -301,7 +301,7 @@ export function useProfileStats(timeRange = 'month', includeComparisons = false)
  * Hook for privacy settings
  */
 export function usePrivacySettings() {
-  const [settings, setSettings] = useState<any>(null);
+  const [settings, setSettings] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -1,14 +1,16 @@
 {
   "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended"
+    "@hive/eslint-config",
+    "next/core-web-vitals"
   ],
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-floating-promises": "error"
+    // Next.js specific overrides
+    "@next/next/no-html-link-for-pages": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 } 
