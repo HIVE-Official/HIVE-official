@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, 
@@ -126,7 +128,7 @@ export function RitualsStrip() {
       
       setActiveRituals(ritualStrips);
     } catch (err) {
-      console.error('Failed to fetch rituals:', err);
+      logger.error('Failed to fetch rituals:', err);
       setError(err instanceof Error ? err.message : 'Failed to load rituals');
       setActiveRituals([]);
     } finally {
@@ -178,7 +180,7 @@ export function RitualsStrip() {
       }, 1000);
       
     } catch (error) {
-      console.error('Failed to participate:', error);
+      logger.error('Failed to participate:', error);
       toast.error('Failed to participate', 'Please try again');
     } finally {
       setParticipatingIn(null);
@@ -202,7 +204,7 @@ export function RitualsStrip() {
       fetchActiveRituals();
       
     } catch (error) {
-      console.error('Failed to join ritual:', error);
+      logger.error('Failed to join ritual:', error);
       toast.error('Failed to join ritual', 'Please try again');
     }
   };
@@ -216,7 +218,7 @@ export function RitualsStrip() {
       // await authenticatedFetch(`/api/rituals/${ritualId}/dismiss`, { method: 'POST' });
       
     } catch (error) {
-      console.error('Failed to dismiss ritual:', error);
+      logger.error('Failed to dismiss ritual:', error);
       // Refresh to restore state if dismiss failed
       fetchActiveRituals();
     }

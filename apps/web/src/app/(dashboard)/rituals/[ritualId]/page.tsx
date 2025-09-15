@@ -2,6 +2,8 @@
 
 // import { useState, useEffect } from 'react'; // TODO: For future interactive features
 import { useQuery } from '@tanstack/react-query';
+import { logger } from '@hive/core/utils/logger';
+
 import { useParams } from 'next/navigation';
 import { useSession } from '../../../../hooks/use-session';
 import { ErrorBoundary } from '../../../../components/error-boundary';
@@ -215,7 +217,7 @@ export default function RitualDetailPage() {
       // Refresh data
       window.location.reload();
     } catch (error) {
-      console.error('Failed to complete action:', error);
+      logger.error('Failed to complete action:', error);
       alert('Failed to complete action. Please try again.');
     }
   };

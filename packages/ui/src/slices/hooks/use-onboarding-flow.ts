@@ -46,7 +46,6 @@ export function useOnboardingFlow() {
     setIsLoading(true);
     try {
       // Submit logic here
-      console.log('Onboarding submitted:', data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {

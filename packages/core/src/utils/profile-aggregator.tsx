@@ -2,6 +2,8 @@
 // This utility helps aggregate data from multiple profile endpoints for efficient loading
 
 import React from 'react';
+import { logger } from './logger';
+
 
 interface ProfileAggregatorOptions {
   includeSpaces?: boolean;
@@ -123,7 +125,7 @@ class ProfileAggregator {
 
       return aggregatedData;
     } catch (error) {
-      console.error('Error aggregating profile data:', error);
+      logger.error('Error aggregating profile data', { error });
       throw error;
     }
   }

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -200,7 +202,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
       await onManageMember(memberId, action);
       setSelectedMember(null);
     } catch (error) {
-      console.error('Failed to manage member:', error);
+      logger.error('Failed to manage member:', { error });
     }
   };
 

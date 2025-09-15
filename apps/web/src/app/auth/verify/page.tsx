@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState, Suspense } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-// import { useUnifiedAuth } from '@hive/ui'; // Disabled - context not provided
-import { signInWithCustomToken, onAuthStateChanged, signOut } from 'firebase/auth';
-// Use auth from firebase-client which has proper initialization
-import { auth } from '@/lib/firebase/client/firebase-client';
+import { useFirebaseAuth } from '@/providers/firebase-auth-provider';
 
 /**
  * HIVE Magic Link Verification Page - Clean Firebase Implementation
@@ -24,7 +23,7 @@ interface VerificationState {
 function VerifyPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // const hiveAuth = useUnifiedAuth(); // Disabled - context not provided
+  const { signInWithMagicLink, firebaseUser, requiresOnboarding, signOut } = useFirebaseAuth();
   
   const [state, setState] = useState<VerificationState>({
     status: 'loading',
@@ -38,8 +37,7 @@ function VerifyPageContent() {
   useEffect(() => {
     const verifyMagicLink = async () => {
       // First check if user is already signed in
-      const currentUser = auth.currentUser;
-      if (currentUser) {
+      if (firebaseUser) {
         // User is already signed in
         setState({
           status: 'already-signed-in',
@@ -53,7 +51,7 @@ function VerifyPageContent() {
             ...prev,
             message: 'Signing you out to use the new link...'
           }));
-          signOut(auth).then(() => {
+          signOut().then(() => {
             // After sign out, reload the page to retry verification
             window.location.reload();
           });
@@ -101,17 +99,14 @@ function VerifyPageContent() {
           message: 'Signing you in...'
         });
 
-        // Step 2: Sign in with Firebase custom token
+        // Step 2: Sign in with Firebase custom token using auth context
         try {
-          console.log('🔐 Attempting Firebase sign in with custom token...');
-          await signInWithCustomToken(auth, verifyData.token);
-          console.log('✅ Firebase sign in successful');
+          await signInWithMagicLink(verifyData.token);
         } catch (firebaseError: any) {
-          console.error('❌ Firebase sign in failed:', {
+          logger.error('❌ Firebase sign in failed:', {
             error: firebaseError,
             code: firebaseError?.code,
             message: firebaseError?.message,
-            auth: !!auth,
             hasToken: !!verifyData.token
           });
           
@@ -123,25 +118,21 @@ function VerifyPageContent() {
           throw firebaseError;
         }
 
-        // Firebase auth context will handle profile loading automatically
+        // Auth context will handle profile loading automatically
         setState({
           status: 'success',
-          message: verifyData.needsOnboarding 
-            ? 'Welcome to HIVE! Setting up your profile...'
-            : 'Welcome back to HIVE!'
+          message: 'Authentication successful!'
         });
 
-        // Redirect based on onboarding status
+        // Wait for auth context to update, then redirect
         setTimeout(() => {
-          if (verifyData.needsOnboarding) {
-            router.push('/onboarding');
-          } else {
-            router.push('/');
-          }
+          // The auth context's requiresOnboarding will determine the redirect
+          // AuthGuard will handle the actual redirection
+          router.push('/');
         }, 1500);
 
       } catch (error) {
-        console.error('Magic link verification failed:', error);
+        logger.error('Magic link verification failed:', error);
         
         setState({
           status: 'error',
@@ -152,7 +143,7 @@ function VerifyPageContent() {
     };
 
     verifyMagicLink();
-  }, [token, email, router]);
+  }, [token, email, router, firebaseUser, signOut, signInWithMagicLink]);
 
   const getIcon = () => {
     switch (state.status) {

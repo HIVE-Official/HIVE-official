@@ -6,6 +6,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
@@ -399,7 +401,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
       setGeographicData(data.geographicData || []);
       
     } catch (error) {
-      console.error('Failed to load analytics:', error);
+      logger.error('Failed to load analytics:', error);
     } finally {
       setLoading(false);
     }
@@ -421,7 +423,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
         setRealTimeMetrics(data.realTimeMetrics);
       }
     } catch (error) {
-      console.error('Failed to load real-time metrics:', error);
+      logger.error('Failed to load real-time metrics:', error);
     }
   }, [admin, realTimeEnabled]);
 

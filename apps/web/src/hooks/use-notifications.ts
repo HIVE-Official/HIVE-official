@@ -2,6 +2,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { fcmService, NotificationPayload, NotificationBuilder } from '@/lib/services/notifications/notifications/fcm-service';
 import { useAppStore } from '@/store/app-store';
 import { useToast } from './use-toast';
@@ -112,7 +114,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
         return false;
       }
     } catch (error) {
-      console.error('Error requesting notification permission:', error);
+      logger.error('Error requesting notification permission:', error);
       
       toast({
         title: 'Error',
@@ -134,7 +136,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     try {
       return await fcmService.sendNotification(userId, notification);
     } catch (error) {
-      console.error('Error sending notification:', error);
+      logger.error('Error sending notification:', error);
       return false;
     }
   }, []);
@@ -147,7 +149,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     try {
       return await fcmService.sendBulkNotifications(userIds, notification);
     } catch (error) {
-      console.error('Error sending bulk notifications:', error);
+      logger.error('Error sending bulk notifications:', error);
       return false;
     }
   }, []);

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   collection, 
   query, 
@@ -113,7 +115,7 @@ export function useFeedAggregation(): UseFeedAggregationReturn {
       
       return userSpaces;
     } catch (err) {
-      console.error('Error fetching user spaces:', err);
+      logger.error('Error fetching user spaces:', err);
       return [];
     }
   };
@@ -410,7 +412,7 @@ export function useFeedAggregation(): UseFeedAggregationReturn {
       setHasMore(allPosts.length === PAGE_SIZE);
       setLoading(false);
     } catch (err) {
-      console.error('Error fetching feed:', err);
+      logger.error('Error fetching feed:', err);
       setError(err as Error);
       setLoading(false);
     }

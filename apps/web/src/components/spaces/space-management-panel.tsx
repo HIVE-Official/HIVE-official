@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   Settings, 
   Users, 
@@ -172,7 +174,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
       })));
 
     } catch (error) {
-      console.error('Error loading space data:', error);
+      logger.error('Error loading space data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -201,7 +203,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
           : m
       ));
     } catch (error) {
-      console.error('Error updating member role:', error);
+      logger.error('Error updating member role:', error);
     }
   };
 
@@ -222,7 +224,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
 
       setMembers(prev => prev.filter(m => m.id !== memberId));
     } catch (error) {
-      console.error('Error removing member:', error);
+      logger.error('Error removing member:', error);
     }
   };
 
@@ -251,7 +253,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
         bannedAt: new Date()
       }]);
     } catch (error) {
-      console.error('Error banning user:', error);
+      logger.error('Error banning user:', error);
     }
   };
 
@@ -260,7 +262,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
       await deleteDoc(doc(db, 'spaces', spaceId, 'banned', userId));
       setBannedUsers(prev => prev.filter(u => u.userId !== userId));
     } catch (error) {
-      console.error('Error unbanning user:', error);
+      logger.error('Error unbanning user:', error);
     }
   };
 
@@ -300,7 +302,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
 
       setPendingRequests(prev => prev.filter(r => r.id !== requestId));
     } catch (error) {
-      console.error('Error handling join request:', error);
+      logger.error('Error handling join request:', error);
     }
   };
 
@@ -314,7 +316,7 @@ export function SpaceManagementPanel({ spaceId, spaceName, onClose }: SpaceManag
         updatedAt: serverTimestamp()
       });
     } catch (error) {
-      console.error('Error updating space settings:', error);
+      logger.error('Error updating space settings:', error);
     }
   };
 

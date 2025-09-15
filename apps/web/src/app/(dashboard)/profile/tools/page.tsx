@@ -125,30 +125,6 @@ export default function ProfileToolsPage() {
   const handleJoinWaitlist = () => {
     setJoinedWaitlist(true);
     setShowWaitlistModal(false);
-    // TODO: Implement actual waitlist API call
-    setTimeout(() => setJoinedWaitlist(false), 3000);
-  };
-
-  return (
-    <ErrorBoundary>
-      <PageContainer
-        title="Builder Tools"
-        subtitle="Create and share tools that solve UB campus problems"
-        breadcrumbs={[
-          { label: "Profile", href: "/profile" },
-          { label: "Builder Tools" }
-        ]}
-        actions={
-          <div className="flex items-center gap-3">
-            <Badge variant="outline" className="flex items-center gap-2">
-              <Lock className="h-3 w-3" />
-              v1 Release
-            </Badge>
-            <Button
-              onClick={() => setShowWaitlistModal(true)}
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-              disabled={joinedWaitlist}
-            >
               {joinedWaitlist ? (
                 <>
                   <Star className="h-4 w-4 mr-2" />

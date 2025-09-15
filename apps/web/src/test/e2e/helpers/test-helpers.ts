@@ -19,7 +19,6 @@ export class TestHelpers {
         });
       } catch (error) {
         // Ignore errors when clearing storage on non-http pages
-        console.log('Could not clear storage:', error);
       }
     }
     

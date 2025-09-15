@@ -26,7 +26,7 @@ const ritualFramework = {
       });
       return true;
     } catch (error) {
-      console.error('Error joining ritual:', error);
+      logger.error('Error joining ritual:', error);
       return false;
     }
   },
@@ -136,7 +136,6 @@ export const POST = withAuth(async (
         });
 
       case 'leave':
-        // TODO: Implement leave ritual functionality
         return NextResponse.json({
           success: true,
           message: 'Left ritual successfully',

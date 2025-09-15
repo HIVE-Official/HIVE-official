@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { AdminNotification, NotificationPriority, NotificationType } from "@/lib/admin-notifications";
@@ -65,7 +67,7 @@ export function AdminNotifications({ onNotificationClick, maxHeight = "400px" }:
         await fetchNotifications();
       }
     } catch (err) {
-      console.error('Failed to mark notification as read:', err);
+      logger.error('Failed to mark notification as read:', err);
     }
   };
 
@@ -88,7 +90,7 @@ export function AdminNotifications({ onNotificationClick, maxHeight = "400px" }:
         await fetchNotifications();
       }
     } catch (err) {
-      console.error('Failed to mark all notifications as read:', err);
+      logger.error('Failed to mark all notifications as read:', err);
     }
   };
 

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { ProfileHeader } from '../molecules/ProfileHeader';
 import { ProfileStatsGrid } from '../molecules/ProfileStatsGrid';
@@ -60,7 +62,7 @@ export function ProfileDashboardMain({
     try {
       await onAvatarChange(file);
     } catch (error) {
-      console.error('Avatar upload failed:', error);
+      logger.error('Avatar upload failed:', error);
       // Error handling could be improved with toast notifications
     } finally {
       setLocalLoading(false);

@@ -5,7 +5,7 @@
 
 import { useCallback } from 'react';
 import { useUnifiedAuth } from '../contexts/unified-auth-context';
-import { logger } from '../lib/logger';
+import { uiLogger } from '../lib/logger';
 
 export interface OnboardingData {
   fullName: string;
@@ -40,7 +40,7 @@ export function useOnboardingBridge() {
     onboardingData: OnboardingData
   ): Promise<OnboardingResult> => {
     try {
-      logger.info('Starting onboarding completion bridge', {
+      uiLogger.info('Starting onboarding completion bridge', {
         handle: onboardingData.handle,
         userType: onboardingData.userType,
         major: onboardingData.major,
@@ -68,7 +68,7 @@ export function useOnboardingBridge() {
       // Call the unified auth complete onboarding method
       const result = await unifiedAuth.completeOnboarding(onboardingData);
 
-      logger.info('Onboarding completion successful', {
+      uiLogger.info('Onboarding completion successful', {
         userId: unifiedAuth.user.id,
         handle: onboardingData.handle,
         builderRequestsCreated: result?.builderRequestsCreated || 0,
@@ -81,7 +81,7 @@ export function useOnboardingBridge() {
       };
 
     } catch (error) {
-      logger.error('Onboarding completion failed', {
+      uiLogger.error('Onboarding completion failed', {
         error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error),
         userId: unifiedAuth.user?.id,
         handle: onboardingData.handle,
@@ -154,7 +154,7 @@ export function useOnboardingBridge() {
       if (cohortResponse.ok) {
         const cohortResult = await cohortResponse.json();
         cohortSpaces = cohortResult.spaces || [];
-        logger.info('Cohort spaces created', { 
+        uiLogger.info('Cohort spaces created', { 
           count: cohortSpaces.length,
           userId: unifiedAuth.user?.id 
         });
@@ -175,7 +175,7 @@ export function useOnboardingBridge() {
       if (autoJoinResponse.ok) {
         const joinResult = await autoJoinResponse.json();
         joinedSpaces = joinResult.spaces || [];
-        logger.info('Auto-joined spaces', { 
+        uiLogger.info('Auto-joined spaces', { 
           count: joinedSpaces.length,
           userId: unifiedAuth.user?.id 
         });
@@ -188,7 +188,7 @@ export function useOnboardingBridge() {
       };
 
     } catch (error) {
-      logger.error('Post-onboarding space creation failed', {
+      uiLogger.error('Post-onboarding space creation failed', {
         error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error),
         userId: unifiedAuth.user?.id,
       });

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -145,7 +147,7 @@ export function RitualCalendar({
     try {
       await onJoinRitual(ritualId, instanceId);
     } catch (error) {
-      console.error('Failed to join ritual:', error);
+      logger.error('Failed to join ritual:', { error });
     } finally {
       setJoiningRitual(null);
     }

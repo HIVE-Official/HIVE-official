@@ -1,4 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { crossSliceSync, CrossSliceEvent, CrossSliceEventData, SliceUpdateHandler } from '@/lib/cross-slice-sync';
 import { useSession } from './use-session';
 
@@ -37,7 +39,7 @@ export function useCrossSliceSync(
             crossSliceSync.initialize(session.user.uid, []);
           }
         } catch (error) {
-          console.error('Failed to fetch user spaces for sync initialization:', error);
+          logger.error('Failed to fetch user spaces for sync initialization:', error);
           crossSliceSync.initialize(session.user.uid, []);
         }
         setIsInitialized(true);

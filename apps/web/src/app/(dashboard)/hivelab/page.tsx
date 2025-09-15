@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { HiveLabBuilder } from '@/components/hivelab/HiveLabBuilder';
 import { useUnifiedAuth } from '@hive/ui';
 import { authenticatedFetch } from '@/lib/api/api-client';
@@ -66,7 +68,7 @@ export default function HiveLabPage() {
         
         setCurrentTool(savedTool);
       } catch (error) {
-        console.error('Failed to save tool:', error);
+        logger.error('Failed to save tool:', error);
         toast({
           title: "Save Failed",
           description: "Unable to save tool. Please try again.",

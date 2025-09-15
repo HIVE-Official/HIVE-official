@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Activity, 
@@ -503,11 +505,6 @@ export default function FeedPageV2() {
   // Handle post creation
   const handleCreatePost = async (postData: any): Promise<string> => {
     try {
-      console.log('Creating post:', postData);
-      // TODO: Implement actual post creation via API
-      // const response = await fetch('/api/posts', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(postData)
       // });
       // const newPost = await response.json();
@@ -515,7 +512,7 @@ export default function FeedPageV2() {
       // Refresh feed or add post to the feed
       return `post-${Date.now()}`; // Return temporary post ID
     } catch (error) {
-      console.error('Error creating post:', error);
+      logger.error('Error creating post:', error);
       throw error;
     }
   };
@@ -554,19 +551,15 @@ export default function FeedPageV2() {
 
   // Mock functions for interactions (will be implemented later)
   const toggleLike = async (postId: string) => {
-    console.log('Like post:', postId);
   };
 
   const toggleBookmark = async (postId: string) => {
-    console.log('Bookmark post:', postId);
   };
 
   const addComment = async (postId: string, comment: string) => {
-    console.log('Add comment to post:', postId, comment);
   };
 
   const sharePost = async (postId: string) => {
-    console.log('Share post:', postId);
   };
 
   const hasLiked = (_postId: string) => false;
@@ -597,7 +590,7 @@ export default function FeedPageV2() {
       try {
         await addComment(postId, comment);
       } catch (error) {
-        console.error('Failed to add comment:', error);
+        logger.error('Failed to add comment:', error);
       }
     }
   }, [addComment]);
@@ -639,7 +632,6 @@ export default function FeedPageV2() {
                 <FeedNotifications 
                   userId={user.id}
                   onNotificationClick={(notification: any) => {
-                    console.log('Notification clicked:', notification);
                   }}
                 />
               )}
@@ -649,7 +641,6 @@ export default function FeedPageV2() {
                 <FeedPreferencesButton
                   userId={user.id}
                   onSettingsChange={(settings: any) => {
-                    console.log('Settings changed:', settings);
                     refresh();
                   }}
                 />
@@ -670,10 +661,8 @@ export default function FeedPageV2() {
                 userId={user.id}
                 userSpaces={userSpaces}
                 onNewItems={(count: any) => {
-                  console.log(`${count} new items available`);
                 }}
                 onItemClick={(item: any) => {
-                  console.log('Feed item clicked:', item);
                 }}
                 className="mb-4"
               />
@@ -777,7 +766,6 @@ export default function FeedPageV2() {
                 userId={user.id}
                 currentSpaceId={userSpaces[0]}
                 onItemClick={(item: any) => {
-                  console.log('Discovery item clicked:', item);
                 }}
                 className="mb-6"
               />

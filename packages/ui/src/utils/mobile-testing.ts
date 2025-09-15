@@ -6,6 +6,8 @@
  */
 
 import { useState } from 'react';
+import { logger } from './logger';
+
 import { getNetworkInfo, getBatteryInfo, getDeviceMemory } from './mobile-native-features';
 import { mobilePerformanceManager } from './mobile-performance';
 
@@ -168,7 +170,7 @@ export class MobileTester {
   async simulateDevice(profileName: keyof typeof DEVICE_PROFILES): Promise<boolean> {
     const profile = DEVICE_PROFILES[profileName];
     if (!profile) {
-      console.error('Device profile not found:', profileName);
+      logger.error('Device profile not found:', { profileName });
       return false;
     }
 
@@ -201,19 +203,15 @@ export class MobileTester {
         Object.defineProperty(window, 'TouchEvent', { value: class TouchEvent {} });
         Object.defineProperty(navigator, 'maxTouchPoints', { get: () => 5 });
       }
-
-      console.log(`Simulating ${profile.name}:`, profile);
       return true;
     } catch (error) {
-      console.error('Failed to simulate device:', error);
+      logger.error('Failed to simulate device:', { error });
       return false;
     }
   }
 
   // Run test scenario
   async runScenario(scenario: TestScenario): Promise<TestResult> {
-    console.log(`Running test scenario: ${scenario.name}`);
-    
     const startTime = performance.now();
     const result: TestResult = {
       scenarioName: scenario.name,
@@ -323,7 +321,6 @@ export class MobileTester {
   // Test step implementations
   private async navigateStep(url: string): Promise<void> {
     // Simulate navigation
-    console.log('Navigating to:', url);
     window.history.pushState({}, '', url);
     await new Promise(resolve => setTimeout(resolve, 100));
   }
@@ -661,7 +658,7 @@ export function useMobileTesting() {
 
       setResults(testResults);
     } catch (error) {
-      console.error('Mobile testing failed:', error);
+      logger.error('Mobile testing failed:', { error });
     } finally {
       setIsRunning(false);
     }

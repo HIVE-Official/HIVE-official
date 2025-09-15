@@ -1,4 +1,6 @@
 import {z  } from "zod";
+import { logger } from '@hive/core/utils/logger';
+
 
 /**
  * Environment Configuration Schema
@@ -151,7 +153,7 @@ function parseEnv(){const currentEnv = getCurrentEnvironment();
      }
     
     return result;
-  } catch (error: unknown) {console.error("❌ Environment validation failed: ", error);
+  } catch (error: unknown) {logger.error('❌ Environment validation failed: ', error);
     
     // Be more lenient during build time
     if (currentEnv === 'build') { console.warn("⚠️ Environment validation failed during build, using fallbacks");
@@ -209,7 +211,7 @@ function validateProductionConfig(config) {const requiredInProduction = [ 'FIREB
 // Parse environment on module load with fallbacks
 let env: ReturnType<typeof parseEnv>;
 try {env = parseEnv();
-  } catch (error: unknown) {console.error("❌ Environment parsing failed, using fallbacks: ", error);
+  } catch (error: unknown) {logger.error('❌ Environment parsing failed, using fallbacks: ', error);
   // Provide safe fallbacks for build time
   env = { NODE_ENV: (process.env.NODEENV as any) || "development",
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",

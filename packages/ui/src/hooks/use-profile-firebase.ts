@@ -4,6 +4,8 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '../utils/logger';
+
 import { 
   profileFirebaseService, 
   type UserProfileDocument,
@@ -302,7 +304,7 @@ export function useProfileAnalytics(uid: string) {
     try {
       await profileFirebaseService.updateProfileAnalytics(uid, event, data);
     } catch (err) {
-      console.error('Analytics tracking failed:', err);
+      logger.error('Analytics tracking failed:', { error: err });
       // Don't throw error for analytics - it shouldn't break the app
     }
   }, [uid]);
@@ -399,7 +401,7 @@ export function useProfileLayout(uid: string) {
       });
       actions.trackLayoutChange(layoutData);
     } catch (err) {
-      console.error('Failed to save layout:', err);
+      logger.error('Failed to save layout:', { error: err });
       throw err;
     }
   }, [profile?.preferences, actions]);
@@ -410,7 +412,7 @@ export function useProfileLayout(uid: string) {
         ? JSON.parse(profile.preferences.profileLayout)
         : null;
     } catch (err) {
-      console.error('Failed to parse layout:', err);
+      logger.error('Failed to parse layout:', { error: err });
       return null;
     }
   }, [profile?.preferences?.profileLayout]);

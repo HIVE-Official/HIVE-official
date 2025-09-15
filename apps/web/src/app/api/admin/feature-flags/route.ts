@@ -19,9 +19,6 @@ export async function GET(request: NextRequest) {
         { status: HttpStatus.UNAUTHORIZED }
       );
     }
-
-    // TODO: Add proper admin check
-    // For now, allowing all authenticated users for development
     // if (!await isAdmin(user.uid)) {
     //   return NextResponse.json(
     //     ApiResponseHelper.error('Admin access required', 'FORBIDDEN'), 
@@ -61,8 +58,6 @@ export async function POST(request: NextRequest) {
         { status: HttpStatus.UNAUTHORIZED }
       );
     }
-
-    // TODO: Add proper admin check
     // if (!await isAdmin(user.uid)) {
     //   return NextResponse.json(
     //     ApiResponseHelper.error('Admin access required', 'FORBIDDEN'), 

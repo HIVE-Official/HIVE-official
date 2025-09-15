@@ -20,12 +20,11 @@ export enum PostType {
 }
 
 // Post interface - kept local due to compatibility issues
-// TODO: Consolidate with @hive/core once component interfaces align
 export interface Post {
   id: string;
   content: string;
-  authorId: string;
   createdAt: Date;
+  updatedAt: Date;
   reactions?: Record<string, number>;
   reactedUsers?: Record<string, string[]>;
   type?: PostType;

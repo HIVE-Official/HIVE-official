@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import useSWR from 'swr';
 
 interface FeedPost {
@@ -109,7 +111,7 @@ export function useFeed(feedType: 'personal' | 'campus' | 'trending' = 'personal
         setHasMore(!!moreData.nextCursor);
       }
     } catch (error) {
-      console.error('Failed to load more posts:', error);
+      logger.error('Failed to load more posts:', error);
     } finally {
       setIsLoadingMore(false);
     }
@@ -159,7 +161,7 @@ export function useFeed(feedType: 'personal' | 'campus' | 'trending' = 'personal
         setPosts(prev => prev.filter(p => p.id !== optimisticPost.id));
       }
     } catch (error) {
-      console.error('Failed to create post:', error);
+      logger.error('Failed to create post:', error);
       setPosts(prev => prev.filter(p => p.id !== optimisticPost.id));
     }
   }, [refresh]);

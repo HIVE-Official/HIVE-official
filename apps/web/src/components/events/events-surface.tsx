@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   Calendar,
   Clock,
@@ -38,7 +40,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { format, isAfter, isBefore, startOfDay, endOfDay, addDays } from 'date-fns';
-import { EventCreationModal } from './event-creation-modal';
+import { EventCreationModal } from './event-modal';
 import { useRouter } from 'next/navigation';
 
 interface Event {
@@ -166,7 +168,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
         });
       }
     } catch (error) {
-      console.error('Error updating RSVP:', error);
+      logger.error('Error updating RSVP:', error);
     }
   };
 
@@ -190,7 +192,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
         });
       }
     } catch (error) {
-      console.error('Error updating interested:', error);
+      logger.error('Error updating interested:', error);
     }
   };
 

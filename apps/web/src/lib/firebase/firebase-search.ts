@@ -9,6 +9,8 @@ import {
   QueryConstraint,
   or
 } from 'firebase/firestore';
+import { logger } from '@hive/core/utils/logger';
+
 import { db } from './firebase';
 
 export interface SearchResult {
@@ -212,7 +214,7 @@ export async function performFirebaseSearch(options: SearchOptions): Promise<Sea
     return results.slice(0, limit);
     
   } catch (error) {
-    console.error('Search error:', error);
+    logger.error('Search error:', error);
     return [];
   }
 }

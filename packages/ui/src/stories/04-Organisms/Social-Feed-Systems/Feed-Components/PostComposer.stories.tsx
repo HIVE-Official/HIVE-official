@@ -6,7 +6,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Card, CardContent } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
+import { Button } from '../../../../atomic/atoms/button-enhanced';
 import { Textarea } from '../../../../components/ui/textarea';
 import { Badge } from '../../../../components/ui/badge';
 import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
@@ -430,7 +430,6 @@ export const Default: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating post:', post);
       return Promise.resolve();
     },
     placeholder: "What's happening on campus?",
@@ -444,7 +443,6 @@ export const WithSpaceContext: Story = {
     user: mockUser,
     spaceId: 'cs101_study',
     onPost: (post: any) => {
-      console.log('Creating post in space:', post);
       return Promise.resolve();
     },
     placeholder: "Share with your study group...",
@@ -457,7 +455,6 @@ export const PollComposer: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating poll:', post);
       return Promise.resolve();
     },
     placeholder: "Ask your community a question...",
@@ -477,7 +474,6 @@ export const EventComposer: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating event:', post);
       return Promise.resolve();
     },
     placeholder: "Create an event for your community...",
@@ -497,7 +493,6 @@ export const LimitedComposer: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating limited post:', post);
       return Promise.resolve();
     },
     placeholder: "Quick update...",
@@ -510,11 +505,9 @@ export const WithCancelButton: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating post:', post);
       return Promise.resolve();
     },
     onCancel: () => {
-      console.log('Cancelled post creation');
     },
     placeholder: "What's on your mind?",
     maxLength: 500,
@@ -526,7 +519,6 @@ export const AllPostTypes: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating post:', post);
       return Promise.resolve();
     },
     placeholder: "Create any type of content...",

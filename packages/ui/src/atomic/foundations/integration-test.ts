@@ -4,6 +4,8 @@
  */
 
 import { motionComposition } from './motion-composition';
+import { logger } from '../../utils/logger';
+
 import { typographyComposition } from './typography-composition';
 import { colorComposition } from './color-composition';
 import { layoutComposition } from './layout-composition';
@@ -32,7 +34,7 @@ export const integrationTest = {
       const systems = Object.values(this.systems);
       return systems.every(system => typeof system === 'object' && system !== null);
     } catch (error) {
-      console.error('Foundation system import validation failed:', error);
+      logger.error('Foundation system import validation failed', { error });
       return false;
     }
   },
@@ -54,7 +56,7 @@ export const integrationTest = {
       
       return tests.every(test => typeof test === 'string');
     } catch (error) {
-      console.error('Basic integration validation failed:', error);
+      logger.error('Basic integration validation failed', { error });
       return false;
     }
   },

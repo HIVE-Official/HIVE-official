@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from "framer-motion";
 import { Wrench, Users, Crown, Star, CheckCircle, Loader2, Search, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -62,9 +64,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       // if (user && typeof user.getIdToken === 'function') {
       //   authToken = await user.getIdToken();
       // }
-
-      console.log("Searching for:", searchQuery);
-
       const response = await fetch(`/api/spaces/browse?limit=30&search=${encodeURIComponent(searchQuery)}`, {
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -74,13 +73,11 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       
       if (!response.ok) {
         const errorData = await response.text();
-        console.error("API error response:", response.status, errorData);
+        logger.error('API error response:', response.status, errorData);
         throw new Error(`Failed to fetch spaces: ${response.status} ${response.statusText}`);
       }
 
       const result = await response.json();
-      console.log("Search results:", result.spaces?.length || 0);
-      
       // Filter spaces based on user type
       const filteredSpaces = (result.spaces || []).filter((space: Space) => {
         // Always exclude campus living spaces
@@ -91,9 +88,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         // Show all non-campus-living spaces for both faculty and students
         return true;
       });
-      
-      console.log("Spaces after filtering out campus living:", filteredSpaces.length);
-      
       // Cache the results to avoid redundant API calls
       setSearchCache(prev => ({
         ...prev,
@@ -102,7 +96,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       
       setSpaces(filteredSpaces);
     } catch (err) {
-      console.error("Error searching spaces:", err);
+      logger.error('Error searching spaces:', err);
       setError(err instanceof Error ? err.message : "Failed to search spaces");
     } finally {
       setIsLoading(false);
@@ -122,10 +116,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
   useEffect(() => {
     setIsLoading(false);
   }, []);
-
-  console.log("Search term:", searchTerm);
-  console.log("Total spaces found:", spaces.length);
-
   const toggleSpaceSelection = (spaceId: string) => {
     const newSelectedSpaces = selectedSpaces.includes(spaceId)
       ? selectedSpaces.filter(id => id !== spaceId)

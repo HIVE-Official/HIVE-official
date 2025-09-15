@@ -6,6 +6,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
@@ -319,7 +321,7 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
       
       await onAuditAllSpaces();
     } catch (error) {
-      console.error('Space audit failed:', error);
+      logger.error('Space audit failed:', error);
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,7 @@
 import { FullConfig } from '@playwright/test';
+import { logger } from '@hive/core/utils/logger';
 
 async function globalTeardown(_config: FullConfig) {
-  console.log('🧹 Starting HIVE E2E Test Cleanup...');
-
   try {
     // Clean up any test data
     await cleanupTestData();
@@ -12,24 +11,17 @@ async function globalTeardown(_config: FullConfig) {
     
     // Log test summary
     await logTestSummary();
-
-    console.log('✅ HIVE E2E Test Cleanup Complete');
-    
   } catch (error) {
-    console.error('❌ Global teardown failed:', error);
+    logger.error('❌ Global teardown failed:', error);
     // Don't throw - teardown failures shouldn't fail the test run
   }
 }
 
 async function cleanupTestData() {
-  console.log('🗄️ Cleaning up test data...');
-  
   // In a real implementation, you might:
   // - Clean up test users from Firebase
   // - Clear Redis test data
   // - Reset database to known state
-  
-  console.log('✅ Test data cleanup complete');
 }
 
 async function cleanupOldScreenshots() {
@@ -57,11 +49,9 @@ async function cleanupOldScreenshots() {
       }
       
       if (cleanedCount > 0) {
-        console.log(`🗑️ Cleaned up ${cleanedCount} old screenshots`);
       }
     }
   } catch (error) {
-    console.log('⚠️ Could not clean up screenshots:', error.message);
   }
 }
 
@@ -83,22 +73,11 @@ async function logTestSummary() {
         skipped: results.stats?.skipped || 0,
         duration: results.stats?.duration || 0
       };
-      
-      console.log('📊 Test Summary:');
-      console.log(`   Total: ${summary.totalTests}`);
-      console.log(`   Passed: ${summary.passed}`);
-      console.log(`   Failed: ${summary.failed}`);
-      console.log(`   Skipped: ${summary.skipped}`);
-      console.log(`   Duration: ${Math.round(summary.duration / 1000)}s`);
-      
       if (summary.failed > 0) {
-        console.log('❌ Some tests failed - check the HTML report for details');
       } else {
-        console.log('🎉 All tests passed!');
       }
     }
   } catch (error) {
-    console.log('⚠️ Could not read test results for summary');
   }
 }
 

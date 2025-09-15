@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '../../lib/utils';
 import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
-import { HiveButton } from '../hive-button';
+import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
 import { HiveBadge } from '../hive-badge';
 import { HiveInput } from '../hive-input';

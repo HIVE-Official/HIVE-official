@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useUnifiedAuth } from '@hive/ui';
+import { useFirebaseAuth } from '@/providers/firebase-auth-provider';
 import { useAuthErrorHandler } from './auth/auth-error-boundary';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@hive/ui';
@@ -31,21 +31,20 @@ export function AuthGuard({
   const [redirectAttempts, setRedirectAttempts] = useState(0);
   const [authError, setAuthError] = useState<string | null>(null);
   
-  // Get auth state - hooks must be called unconditionally
-  const authState = useUnifiedAuth();
+  // Get auth state from Firebase auth provider
+  const { 
+    isAuthenticated, 
+    isLoading, 
+    requiresOnboarding,
+    error: authProviderError 
+  } = useFirebaseAuth();
   
-  const { isAuthenticated, isLoading, requiresOnboarding } = authState || { 
-    isAuthenticated: false, 
-    isLoading: false, 
-    requiresOnboarding: () => false 
-  };
-  
-  // Handle auth context errors after hook is called
+  // Handle auth provider errors
   useEffect(() => {
-    if (!authState) {
-      setAuthError('Authentication system unavailable');
+    if (authProviderError) {
+      setAuthError(authProviderError);
     }
-  }, [authState]);
+  }, [authProviderError]);
 
   useEffect(() => {
     // Reset redirect attempts when pathname changes significantly

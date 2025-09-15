@@ -246,8 +246,6 @@ import { ${component.componentName} } from '../../${component.filePath.replace('
  * Designed for ${component.atomicLevel} level interactions that blend social engagement
  * with academic utility, making campus life more connected and productive.
  */
-
-// TODO: Replace with actual component implementation
 const Mock${component.componentName}: React.FC<any> = (props: any) => (
   <div className="p-4 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-default)]">
     <h3 className="font-semibold text-[var(--hive-text-primary)]">${component.componentName}</h3>

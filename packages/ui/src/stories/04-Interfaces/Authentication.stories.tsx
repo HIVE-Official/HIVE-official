@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Button } from '../../components/button'
+import { Button } from '../../atomic/atoms/button-enhanced'
 import { Input } from '../../components/input'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../components/card'
 import { Alert } from '../../components/alert'
@@ -301,12 +301,10 @@ export const AuthExpired: Story = {
 export const EmailVerificationFlow: Story = {
   render: () => {
     const handleResend = async () => {
-      console.log('Resending email...')
       await new Promise(resolve => setTimeout(resolve, 1000))
     }
 
     const handleBack = () => {
-      console.log('Going back to email entry...')
     }
 
     return (
@@ -332,11 +330,9 @@ export const EmailVerificationFlow: Story = {
 export const SchoolSearchFlow: Story = {
   render: () => {
     const handleSchoolSelect = (school: { id: string; name: string }) => {
-      console.log('Selected school:', school)
     }
 
     const handleRequestSchool = (schoolName: string) => {
-      console.log('Requesting school:', schoolName)
     }
 
     return (
@@ -387,7 +383,6 @@ export const CompleteAuthFlow: Story = {
     }
 
     const handleResend = async () => {
-      console.log('Resending email to:', emailAddress)
       await new Promise(resolve => setTimeout(resolve, 1000))
     }
 

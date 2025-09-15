@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase/client/firebase-client';
+import { useFirebaseAuth } from '@/providers/firebase-auth-provider';
+import { db } from '@/lib/firebase/client/firebase-client';
 import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { 
   Loader2, ChevronRight, ChevronLeft, User as UserIcon, Heart, Check, 
@@ -183,6 +183,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
 export default function OnboardingPage() {
   const router = useRouter();
   const motionConfig = getMotionConfig();
+  const { firebaseUser, user, completeOnboarding, isLoading: authLoading } = useFirebaseAuth();
   
   // Motion configurations using design system tokens
   const stepContentTransition = {
@@ -207,7 +208,6 @@ export default function OnboardingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const [draftSaved, setDraftSaved] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
@@ -292,46 +292,41 @@ export default function OnboardingPage() {
     return Math.min(100, Math.round(completed));
   };
 
-  // Check Firebase auth state
+  // Check auth state from context
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
-      if (user) {
-        setFirebaseUser(user);
-        
-        // Check if already onboarded
+    if (!authLoading) {
+      if (!firebaseUser) {
+        // Not authenticated, redirect to login
+        logger.info('No user found, redirecting to login');
+        router.push('/auth/login');
+        return;
+      }
+      
+      // Check if already onboarded
+      if (user?.onboardingCompleted) {
+        logger.info('User already onboarded, redirecting to dashboard');
+        router.push('/');
+        return;
+      }
+      
+      // Load draft if exists
+      if (firebaseUser) {
         try {
-          const userDoc = await getDoc(doc(db, 'users', user.id));
-          if (userDoc.exists() && userDoc.data()?.onboardingCompletedAt) {
-            logger.info('User already onboarded, redirecting to dashboard');
-            router.push('/dashboard');
-            return;
-          }
-          
-          // Load draft if exists
-          const draftDoc = await getDoc(doc(db, 'onboardingDrafts', user.id));
+          const draftDoc = await getDoc(doc(db, 'onboardingDrafts', firebaseUser.uid));
           if (draftDoc.exists()) {
             const draft = draftDoc.data();
             setProfile(prev => ({ ...prev, ...draft }));
             setCurrentStep(draft.currentStep || 0);
             logger.info('Loaded onboarding draft');
           }
-          
-          // No bypass - all users must complete onboarding normally
-          
         } catch (error) {
-          logger.error('Error checking onboarding status', { error });
+          logger.error('Error loading draft', { error });
         }
-        
-        setIsLoading(false);
-      } else {
-        // No authenticated user, redirect to login
-        logger.warn('No authenticated user, redirecting to login');
-        router.push('/auth/login?redirect=/onboarding');
       }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
+      
+      setIsLoading(false);
+    }
+  }, [authLoading, firebaseUser, user, router]);
 
   // Auto-save draft to Firestore
   useEffect(() => {
@@ -381,9 +376,6 @@ export default function OnboardingPage() {
     setError(null);
     
     try {
-      // Get Firebase ID token
-      const idToken = await firebaseUser.getIdToken();
-      
       // Prepare data for API
       const onboardingData = {
         fullName: `${profile.firstName} ${profile.lastName}`,
@@ -398,48 +390,36 @@ export default function OnboardingPage() {
         avatarUrl: profilePhoto || '',
         builderRequestSpaces: profile.builderRequestSpaces,
         interests: profile.interests,
+        goals: profile.goals,
         consentGiven: profile.consentGiven || true
       };
       
-      // Call complete-onboarding API
-      const response = await fetch('/api/auth/complete-onboarding', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`
-        },
-        body: JSON.stringify(onboardingData)
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to complete onboarding');
-      }
-      
-      const result = await response.json();
-      logger.info('Onboarding completed successfully', { userId: firebaseUser.uid });
+      // Use auth context to complete onboarding
+      const result = await completeOnboarding(onboardingData);
+      logger.info('Onboarding completed successfully', { userId: firebaseUser?.uid });
       
       // Save additional preferences to user document
-      await updateDoc(doc(db, 'users', firebaseUser.uid), {
-        pronouns: profile.pronouns,
-        bio: profile.bio,
-        minor: profile.minor,
-        livingSituation: profile.livingSituation,
-        roomNumber: profile.roomNumber,
-        goals: profile.goals,
-        notifications: profile.notifications,
-        visibility: profile.visibility,
-        onboardingCompletedAt: new Date().toISOString()
-      });
+      if (firebaseUser) {
+        await updateDoc(doc(db, 'users', firebaseUser.uid), {
+          minor: profile.minor,
+          livingSituation: profile.livingSituation,
+          roomNumber: profile.roomNumber,
+          notifications: profile.notifications,
+          visibility: profile.visibility,
+          onboardingCompletedAt: new Date().toISOString()
+        });
+      }
       
       // Delete draft
-      try {
-        await updateDoc(doc(db, 'onboardingDrafts', firebaseUser.uid), {
-          completed: true,
-          completedAt: new Date().toISOString()
-        });
-      } catch (e) {
-        // Draft might not exist, that's ok
+      if (firebaseUser) {
+        try {
+          await updateDoc(doc(db, 'onboardingDrafts', firebaseUser.uid), {
+            completed: true,
+            completedAt: new Date().toISOString()
+          });
+        } catch (e) {
+          // Draft might not exist, that's ok
+        }
       }
       
       // Navigate to dashboard
@@ -450,6 +430,7 @@ export default function OnboardingPage() {
     } catch (error) {
       logger.error('Failed to complete onboarding', { error });
       setError(error instanceof Error ? error.message : 'Failed to complete onboarding');
+    } finally {
       setIsSaving(false);
     }
   };
@@ -560,7 +541,7 @@ export default function OnboardingPage() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || authLoading) {
     return (
       <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
         <div className="text-center space-y-4">

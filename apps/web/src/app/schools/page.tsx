@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import Link from 'next/link';
 import { Search, Users, ArrowRight, MapPin, ArrowLeft } from 'lucide-react';
 
@@ -488,7 +490,7 @@ export default function SchoolsPage() {
           setSchools(fallbackSchools);
         }
       } catch (_error) {
-        console.error('Error fetching schools:', _error);
+        logger.error('Error fetching schools:', _error);
         setSchools(fallbackSchools);
       } finally {
         setLoading(false);
@@ -521,14 +523,6 @@ export default function SchoolsPage() {
         domain: school.domain,
       });
       const targetUrl = `/auth/login?${params.toString()}`;
-      
-      console.log('🏫 Active school selected:', {
-        school: school.name,
-        schoolId: school.id,
-        domain: school.domain,
-        targetUrl
-      });
-      
       // Add slight delay for visual feedback
       setTimeout(() => {
         window.location.href = targetUrl;
@@ -542,9 +536,6 @@ export default function SchoolsPage() {
   const handleWaitlistSignup = (school: School, event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    
-    console.log('📝 Waitlist signup for:', school.name);
-    
     // Navigate to waitlist signup page with school context
     const params = new URLSearchParams({
       schoolId: school.id,

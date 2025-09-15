@@ -5,6 +5,8 @@
 // Following the successful profile edit and settings page patterns
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { 
   PageContainer,
@@ -52,9 +54,9 @@ interface PrivacySettings {
   ghostMode: {
     enabled: boolean;
     level: 'minimal' | 'moderate' | 'maximum';
-    hideActivity: boolean;
-    hideOnlineStatus: boolean;
-    hideMemberships: boolean;
+    hideActivity?: boolean;
+    hideOnlineStatus?: boolean;
+    hideMemberships?: boolean;
   };
 }
 
@@ -188,7 +190,7 @@ export default function ProfilePrivacyStorybook() {
       }
       setShowGoPrivateModal(false);
     } catch (error) {
-      console.error('Failed to go private:', error);
+      logger.error('Failed to go private:', error);
     }
   };
 
@@ -238,7 +240,7 @@ export default function ProfilePrivacyStorybook() {
       }
       setShowGoPublicModal(false);
     } catch (error) {
-      console.error('Failed to go public:', error);
+      logger.error('Failed to go public:', error);
     }
   };
 
@@ -263,7 +265,7 @@ export default function ProfilePrivacyStorybook() {
         setTimeout(() => setSaveSuccess(false), 3000);
       }
     } catch (error) {
-      console.error('Failed to save privacy settings:', error);
+      logger.error('Failed to save privacy settings:', error);
     }
   };
 
@@ -273,7 +275,7 @@ export default function ProfilePrivacyStorybook() {
       setShowGhostModeModal(false);
       handleGhostModeChange('enabled', !privacySettings.ghostMode.enabled);
     } catch (error) {
-      console.error('Failed to toggle ghost mode:', error);
+      logger.error('Failed to toggle ghost mode:', error);
     }
   };
 

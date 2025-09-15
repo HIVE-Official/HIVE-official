@@ -37,8 +37,6 @@ export function useRealtimeChat(options: UseRealtimeChatOptions): UseRealtimeCha
 
   // Get user ID from auth (you'll need to integrate with your auth system)
   useEffect(() => {
-    // TODO: Get actual user ID from your auth context
-    // For now, using a placeholder
     userId.current = 'current-user-id';
   }, []);
 

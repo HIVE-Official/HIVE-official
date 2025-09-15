@@ -4,6 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { createHash, randomBytes } from 'crypto';
 import { logSecurityEvent } from './utils/structured-logger';
 import { currentEnvironment } from './env';
@@ -283,7 +285,7 @@ export class CSRFProtection {
       };
 
     } catch (error) {
-      console.error('CSRF validation error:', error);
+      logger.error('CSRF validation error:', error);
       
       await logSecurityEvent('csrf', {
         operation: 'validation_error',
@@ -539,7 +541,6 @@ export class CSRFProtection {
     }
 
     if (cleanedCount > 0) {
-      console.log(`Cleaned ${cleanedCount} expired CSRF tokens`);
     }
   }
 
@@ -570,7 +571,6 @@ export function validateCSRFToken(request: NextRequest): {
   error?: string;
 } {
   // Skip CSRF validation in development for now
-  // TODO: Enable full CSRF protection once frontend is updated
   if (process.env.NODE_ENV === 'development') {
     return { valid: true };
   }
@@ -673,7 +673,7 @@ export function withCSRFProtection(
 
       return handler(request, csrfResult.token);
     } catch (error) {
-      console.error('CSRF middleware error:', error);
+      logger.error('CSRF middleware error:', error);
       return NextResponse.json(
         { error: 'CSRF protection service unavailable' },
         { status: 503 }

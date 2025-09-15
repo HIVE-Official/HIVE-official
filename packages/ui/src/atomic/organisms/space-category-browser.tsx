@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -255,7 +257,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
     try {
       await onJoinSpace(spaceId);
     } catch (error) {
-      console.error('Failed to join space:', error);
+      logger.error('Failed to join space:', { error });
     }
   };
 
@@ -264,7 +266,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
     try {
       await onLeaveSpace(spaceId);
     } catch (error) {
-      console.error('Failed to leave space:', error);
+      logger.error('Failed to leave space:', { error });
     }
   };
 
@@ -273,7 +275,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
     try {
       await onBookmarkSpace(spaceId, bookmarked);
     } catch (error) {
-      console.error('Failed to bookmark space:', error);
+      logger.error('Failed to bookmark space:', { error });
     }
   };
 

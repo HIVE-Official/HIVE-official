@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell,
@@ -144,7 +146,7 @@ export function FeedNotifications({
         readAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      logger.error('Error marking notification as read:', error);
     }
   };
 
@@ -155,7 +157,7 @@ export function FeedNotifications({
         .map(n => markAsRead(n.id));
       await Promise.all(promises);
     } catch (error) {
-      console.error('Error marking all as read:', error);
+      logger.error('Error marking all as read:', error);
     }
   };
 

@@ -1,4 +1,5 @@
 import { getAuth as _getAuth } from 'firebase-admin/auth';
+import { logger } from '@hive/core/utils/logger';
 
 export type NotificationType = 
   | 'new_user_registration'
@@ -77,7 +78,6 @@ class AdminNotificationSystem {
     await this.sendToChannels(newNotification);
 
     // Log the notification
-    
 
     return newNotification;
   }
@@ -175,7 +175,7 @@ class AdminNotificationSystem {
       try {
         await this.sendToChannel(channel, notification);
       } catch (error) {
-        console.error(`Failed to send notification to channel ${channel.name}:`, error);
+        logger.error('Failed to send notification to channel ${channel.name}:', error);
       }
     }
   }
@@ -205,7 +205,6 @@ class AdminNotificationSystem {
    * Send security alert
    */
   private async sendSecurityAlert(notification: AdminNotification): Promise<void> {
-    // TODO: Implement security alert system (email, Slack, etc.)
     
   }
 
@@ -223,7 +222,7 @@ class AdminNotificationSystem {
         }),
       });
     } catch (error) {
-      console.error('Failed to send webhook:', error);
+      logger.error('Failed to send webhook:', error);
     }
   }
 

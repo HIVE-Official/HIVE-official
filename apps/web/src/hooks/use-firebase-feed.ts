@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useUnifiedAuth } from '@hive/ui';
 import { feedService, FeedPost, FeedQueryOptions } from '@/lib/firebase/feed-service';
 import { QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
@@ -66,7 +68,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
         lastUpdated: new Date()
       }));
     } catch (error) {
-      console.error('Error loading posts:', error);
+      logger.error('Error loading posts:', error);
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -129,7 +131,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
       await loadPosts(true);
       return postId;
     } catch (error) {
-      console.error('Error creating post:', error);
+      logger.error('Error creating post:', error);
       throw error;
     }
   }, [user, loadPosts]);
@@ -165,7 +167,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
         })
       }));
     } catch (error) {
-      console.error('Error toggling like:', error);
+      logger.error('Error toggling like:', error);
       // Reload on error to sync state
       await loadPosts(true);
       throw error;
@@ -200,7 +202,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
         })
       }));
     } catch (error) {
-      console.error('Error toggling bookmark:', error);
+      logger.error('Error toggling bookmark:', error);
       throw error;
     }
   }, [user?.id]);
@@ -228,7 +230,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
         })
       }));
     } catch (error) {
-      console.error('Error adding comment:', error);
+      logger.error('Error adding comment:', error);
       throw error;
     }
   }, [user?.id]);
@@ -260,7 +262,7 @@ export function useFirebaseFeed(options: UseFirebaseFeedOptions = {}) {
       const shareUrl = `${window.location.origin}/feed/post/${postId}`;
       await navigator.clipboard?.writeText(shareUrl);
     } catch (error) {
-      console.error('Error sharing post:', error);
+      logger.error('Error sharing post:', error);
       throw error;
     }
   }, [user?.id]);

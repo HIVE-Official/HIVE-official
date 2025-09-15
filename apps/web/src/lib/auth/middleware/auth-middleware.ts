@@ -4,6 +4,8 @@
  */
 
 import { NextRequest } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { getAuth } from 'firebase-admin/auth';
 import { validateAuthToken, blockDevPatternsInProduction } from './security-service';
 import { AuthenticationError, AuthorizationError } from './api-error-handler';
@@ -104,7 +106,7 @@ export async function authenticateRequest(
       isDevelopmentMode: false
     };
   } catch (firebaseError) {
-    console.error('Firebase token verification failed:', firebaseError);
+    logger.error('Firebase token verification failed:', firebaseError);
     throw new AuthenticationError('Invalid token');
   }
 }
@@ -178,19 +180,6 @@ export async function requireAdminAuth(
   if (authContext.isTestUser && authContext.isDevelopmentMode) {
     return authContext;
   }
-  
-  // TODO: Add real admin role verification from Firestore/custom claims
-  // For now, this is a placeholder that would check user roles
-  
-  throw new AuthorizationError('Admin access required');
-}
-
-/**
- * Audit log for authentication events using structured logging
- */
-export async function logAuthEvent(
-  event: 'login' | 'logout' | 'token_validation' | 'auth_failure',
-  request: NextRequest,
   authContext?: AuthContext,
   details?: any
 ) {

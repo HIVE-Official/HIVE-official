@@ -288,8 +288,8 @@ async function generateToolAnalytics(query: AnalyticsQuery): Promise<ToolAnalyti
     performance: {
       averageLoadTime: Math.round(averageLoadTime),
       errorRate: Math.round(errorRate * 100) / 100,
-      crashRate: 0, // TODO: Implement crash tracking
-      popularFeatures: [] // TODO: Implement feature tracking
+      crashRate: 0,
+      popularFeatures: []
     },
     audience: {
       userRetention,
@@ -297,11 +297,11 @@ async function generateToolAnalytics(query: AnalyticsQuery): Promise<ToolAnalyti
       engagementMetrics: {
         averageSessionsPerUser: Math.round(averageSessionsPerUser * 10) / 10,
         averageTimePerSession: Math.round(averageTimePerSession),
-        bounceRate: 0 // TODO: Calculate bounce rate
+        bounceRate: 0
       }
     },
     revenue: {
-      totalRevenue: 0, // TODO: Implement revenue tracking
+      totalRevenue: 0,
       monthlyRecurringRevenue: 0,
       averageRevenuePerUser: 0,
       lifetimeValue: 0,
@@ -461,6 +461,6 @@ async function calculateDemographics(events: any[]) {
   return {
     byUserType,
     byInstitution,
-    byGeoLocation: [] // TODO: Implement geo tracking
+    byGeoLocation: []
   };
 }

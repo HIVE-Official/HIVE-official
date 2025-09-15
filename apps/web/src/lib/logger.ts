@@ -236,10 +236,8 @@ class Logger {
       
       switch (entry.level) {
         case 'debug':
-          console.debug(formattedMessage, entry.error);
           break;
         case 'info':
-          console.info(formattedMessage);
           break;
         case 'warn':
           console.warn(formattedMessage, entry.error);

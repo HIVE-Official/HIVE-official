@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   collection, 
   query, 
@@ -130,10 +132,9 @@ export function useRealtimePosts({
           setSubscribed(true);
 
           // Log for debugging
-          console.log(`[Realtime] Received ${newPosts.length} posts for space ${spaceId}`);
         },
         (err: any) => {
-          console.error('[Realtime] Error subscribing to posts:', err);
+          logger.error('[Realtime] Error subscribing to posts:', err);
           setError(err as Error);
           setLoading(false);
           setSubscribed(false);
@@ -142,7 +143,7 @@ export function useRealtimePosts({
 
       setUnsubscribe(() => unsub);
     } catch (err) {
-      console.error('[Realtime] Error setting up subscription:', err);
+      logger.error('[Realtime] Error setting up subscription:', err);
       setError(err as Error);
       setLoading(false);
     }
@@ -154,46 +155,11 @@ export function useRealtimePosts({
       unsubscribe();
       setUnsubscribe(null);
       setSubscribed(false);
-      console.log('[Realtime] Unsubscribed from posts');
     }
   }, [unsubscribe]);
 
   // Load more posts
   const loadMore = useCallback(() => {
-    // TODO: Implement pagination with startAfter
-    console.log('[Realtime] Load more not yet implemented');
-  }, []);
-
-  // Refresh posts
-  const refresh = useCallback(() => {
-    cleanup();
-    subscribe();
-  }, [cleanup, subscribe]);
-
-  // Setup subscription on mount and cleanup on unmount
-  useEffect(() => {
-    subscribe();
-    return cleanup;
-  }, [subscribe, cleanup]);
-
-  return {
-    posts,
-    loading,
-    error,
-    hasMore,
-    loadMore,
-    refresh,
-    subscribed
-  };
-}
-
-// Hook for real-time comments on a post
-export function useRealtimeComments(postId: string, enabled = true) {
-  const [comments, setComments] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
     if (!enabled || !postId) return;
 
     const q = query(
@@ -217,7 +183,7 @@ export function useRealtimeComments(postId: string, enabled = true) {
         setLoading(false);
       },
       (err: any) => {
-        console.error('[Realtime] Error subscribing to comments:', err);
+        logger.error('[Realtime] Error subscribing to comments:', err);
         setError(err as Error);
         setLoading(false);
       }

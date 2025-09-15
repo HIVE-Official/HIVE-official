@@ -11,8 +11,6 @@ export function DevBypassAuthProvider({ children }: { children: React.ReactNode 
   // The bypass will be handled at the middleware and API level
   
   if (skipAuthInDev) {
-    console.log('[DEV BYPASS] Auth bypass enabled - middleware will skip auth checks');
-    console.log('[DEV BYPASS] Using mock user: jwhrineh@buffalo.edu');
   }
   
   return <FirebaseAuthProvider>{children}</FirebaseAuthProvider>;

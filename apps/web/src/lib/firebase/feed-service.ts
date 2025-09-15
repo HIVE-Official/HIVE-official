@@ -21,6 +21,8 @@ import {
   Timestamp,
   Unsubscribe
 } from 'firebase/firestore';
+import { logger } from '@hive/core/utils/logger';
+
 import { db } from '@/lib/firebase/client/firebase-client';
 
 // Feed post interface matching Firestore structure
@@ -123,7 +125,7 @@ export class FeedService {
 
       return docRef.id;
     } catch (error) {
-      console.error('Error creating post:', error);
+      logger.error('Error creating post:', error);
       throw error;
     }
   }
@@ -196,7 +198,7 @@ export class FeedService {
 
       return { posts, lastDoc };
     } catch (error) {
-      console.error('Error fetching feed posts:', error);
+      logger.error('Error fetching feed posts:', error);
       throw error;
     }
   }
@@ -229,7 +231,7 @@ export class FeedService {
         });
         onUpdate(posts);
       }, (error: any) => {
-        console.error('Feed subscription error:', error);
+        logger.error('Feed subscription error:', error);
       });
 
       this.listeners.set(listenerId, unsubscribe);
@@ -243,7 +245,7 @@ export class FeedService {
         }
       };
     } catch (error) {
-      console.error('Error setting up feed subscription:', error);
+      logger.error('Error setting up feed subscription:', error);
       return () => {};
     }
   }
@@ -277,7 +279,7 @@ export class FeedService {
         postId
       );
     } catch (error) {
-      console.error('Error toggling like:', error);
+      logger.error('Error toggling like:', error);
       throw error;
     }
   }
@@ -313,7 +315,7 @@ export class FeedService {
         });
       }
     } catch (error) {
-      console.error('Error toggling bookmark:', error);
+      logger.error('Error toggling bookmark:', error);
       throw error;
     }
   }
@@ -342,7 +344,7 @@ export class FeedService {
       // Track activity
       await this.trackUserActivity(userId, 'comment_added', postId);
     } catch (error) {
-      console.error('Error adding comment:', error);
+      logger.error('Error adding comment:', error);
       throw error;
     }
   }
@@ -359,7 +361,7 @@ export class FeedService {
       // Track share activity
       await this.trackUserActivity(userId, 'post_shared', postId);
     } catch (error) {
-      console.error('Error sharing post:', error);
+      logger.error('Error sharing post:', error);
       throw error;
     }
   }
@@ -375,7 +377,7 @@ export class FeedService {
       const snapshot = await getDocs(membershipsQuery);
       return snapshot.docs.map(doc => doc.data().spaceId);
     } catch (error) {
-      console.error('Error fetching user spaces:', error);
+      logger.error('Error fetching user spaces:', error);
       return [];
     }
   }
@@ -389,7 +391,7 @@ export class FeedService {
       const snapshot = await getDocs(followingQuery);
       return snapshot.docs.map(doc => doc.id);
     } catch (error) {
-      console.error('Error fetching following list:', error);
+      logger.error('Error fetching following list:', error);
       return [];
     }
   }
@@ -406,7 +408,7 @@ export class FeedService {
         [`stats.${activityType}`]: increment(1)
       });
     } catch (error) {
-      console.error('Error updating space activity:', error);
+      logger.error('Error updating space activity:', error);
     }
   }
 
@@ -425,7 +427,7 @@ export class FeedService {
         date: new Date().toISOString().split('T')[0]
       });
     } catch (error) {
-      console.error('Error tracking activity:', error);
+      logger.error('Error tracking activity:', error);
     }
   }
 
@@ -439,7 +441,7 @@ export class FeedService {
       );
       await Promise.all(batch);
     } catch (error) {
-      console.error('Error incrementing view counts:', error);
+      logger.error('Error incrementing view counts:', error);
     }
   }
 

@@ -1,4 +1,6 @@
 import { dbAdmin } from '../firebase/admin/firebase-admin';
+import { logger } from '@hive/core/utils/logger';
+
 import type { Transaction } from 'firebase-admin/firestore';
 
 /**
@@ -121,7 +123,7 @@ export async function checkHandleAvailabilityInTransaction(
       normalizedHandle 
     };
   } catch (error) {
-    console.error('Error checking handle availability:', error);
+    logger.error('Error checking handle availability:', error);
     return { 
       isAvailable: false, 
       error: 'Unable to verify handle availability. Please try again.' 
@@ -186,7 +188,7 @@ export async function checkHandleAvailability(handle: string): Promise<HandleVal
       normalizedHandle 
     };
   } catch (error) {
-    console.error('Error checking handle availability:', error);
+    logger.error('Error checking handle availability:', error);
     return { 
       isAvailable: false, 
       error: 'Unable to verify handle availability. Please try again.' 
@@ -201,7 +203,7 @@ export async function releaseHandleReservation(handle: string): Promise<void> {
   try {
     await dbAdmin.collection('handles').doc(handle).delete();
   } catch (error) {
-    console.error('Error releasing handle reservation:', error);
+    logger.error('Error releasing handle reservation:', error);
     // Don't throw - this is cleanup, should not break the main flow
   }
 }

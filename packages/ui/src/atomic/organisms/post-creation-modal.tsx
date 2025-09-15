@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -252,7 +254,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
       await onSubmit(data);
       handleClose();
     } catch (error) {
-      console.error('Failed to create post:', error);
+      logger.error('Failed to create post:', { error });
     }
   };
 

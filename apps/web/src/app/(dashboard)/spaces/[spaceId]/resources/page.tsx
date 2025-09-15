@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { PageContainer } from "@hive/ui";
 
 import { BookOpen, ArrowLeft } from "lucide-react";
@@ -44,7 +46,7 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
           userRole: 'admin' // In real implementation, this would come from the API
         });
       } catch (error) {
-        console.error('Failed to load space resources:', error);
+        logger.error('Failed to load space resources:', error);
       } finally {
         setIsLoading(false);
       }

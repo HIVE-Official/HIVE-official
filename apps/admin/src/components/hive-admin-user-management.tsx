@@ -6,6 +6,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import Image from 'next/image';
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
@@ -533,7 +535,7 @@ export const HiveAdminUserManagement: React.FC<HiveAdminUserManagementProps> = (
       const data = await response.json();
       setUsers(data.users || []);
     } catch (error) {
-      console.error('Failed to load users:', error);
+      logger.error('Failed to load users:', error);
     } finally {
       setLoading(false);
     }

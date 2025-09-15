@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from '@/lib/firebase';
 import { useAuth } from '@/hooks/use-auth';
@@ -131,7 +133,7 @@ export function useImageUpload(): UseImageUploadReturn {
       
       return downloadURL;
     } catch (err) {
-      console.error('Error uploading image:', err);
+      logger.error('Error uploading image:', err);
       setError(err as Error);
       throw err;
     } finally {
@@ -152,7 +154,7 @@ export function useImageUpload(): UseImageUploadReturn {
       const urls = await Promise.all(uploadPromises);
       return urls;
     } catch (err) {
-      console.error('Error uploading multiple images:', err);
+      logger.error('Error uploading multiple images:', err);
       setError(err as Error);
       throw err;
     } finally {
@@ -178,7 +180,7 @@ export function useImageUpload(): UseImageUploadReturn {
 
       await deleteObject(storageRef);
     } catch (err) {
-      console.error('Error deleting image:', err);
+      logger.error('Error deleting image:', err);
       throw err;
     }
   };

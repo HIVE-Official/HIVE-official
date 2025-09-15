@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '../logger';
+
 import type { User } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
@@ -55,7 +57,7 @@ export function useAuth(): UseAuthReturn {
           getIdToken: async () => 'dev_token_' + devUser.uid
         };
       } catch (error) {
-        console.error('Error parsing dev user data:', error);
+        logger.error('Error parsing dev user data', { error });
         return null;
       }
     }
@@ -68,7 +70,6 @@ export function useAuth(): UseAuthReturn {
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('dev_auth_mode');
       window.localStorage.removeItem('dev_user');
-      console.log('Development mode data cleared');
     }
   };
 
@@ -112,7 +113,7 @@ export function useAuth(): UseAuthReturn {
         };
       }
     } catch (fetchError) {
-      console.error("Error fetching user data:", fetchError);
+      logger.error('Error fetching user data', { error: fetchError });
       // Fallback to basic user object
       return {
         uid: firebaseUser.uid,
@@ -163,7 +164,6 @@ export function useAuth(): UseAuthReturn {
     // Check for development mode user first
     const devUser = checkDevUser();
     if (devUser) {
-      console.log('Development mode user detected:', devUser);
       setUser(devUser);
       setError(null);
       setIsLoading(false);
@@ -209,7 +209,7 @@ export function useAuth(): UseAuthReturn {
             setError(null);
           }
         } catch (authError) {
-          console.error("Auth state change error:", authError);
+          logger.error('Auth state change error', { error: authError });
           const error = handleAuthError(authError);
           setError(error);
           setUser(null);

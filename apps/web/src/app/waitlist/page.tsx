@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Loader2, ArrowLeft, Users, Sparkles } from 'lucide-react';
 import Link from 'next/link';
@@ -94,7 +96,7 @@ function WaitlistPageContent() {
         setError(errorData.error || 'Failed to join waitlist');
       }
     } catch (error) {
-      console.error('Waitlist signup error:', error);
+      logger.error('Waitlist signup error:', error);
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

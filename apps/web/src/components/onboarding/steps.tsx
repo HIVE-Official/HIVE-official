@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import {
   Button,
   Card,
@@ -95,11 +97,10 @@ export const DisplayNameStep: React.FC<StepProps> = ({
 
     setIsLoading(true);
     try {
-      console.info("Saving:", { fullName, handle });
       onNext(); // Proceed to the next step
       handleStepComplete("name");
     } catch (error) {
-      console.error("Failed to save display name", error);
+      logger.error('Failed to save display name', error);
       setIsLoading(false);
     }
   };
@@ -188,11 +189,10 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({
 
   const handleSubmit = async () => {
     try {
-      console.info("Saving leader question response");
       onNext();
       handleStepComplete("builder");
     } catch (error) {
-      console.error("Failed to save leader question", error);
+      logger.error('Failed to save leader question', error);
     }
   };
 
@@ -261,11 +261,10 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.info("Saving space claims");
       onNext();
       handleStepComplete("builder");
     } catch (error) {
-      console.error("Failed to save space claims", error);
+      logger.error('Failed to save space claims', error);
     }
   };
 
@@ -311,11 +310,10 @@ export const PendingNoticeStep: React.FC<StepProps> = ({
 
   const handleSubmit = async () => {
     try {
-      console.info("Proceeding from pending notice");
       onNext();
       handleStepComplete("builder");
     } catch (error) {
-      console.error("Failed to proceed from pending notice", error);
+      logger.error('Failed to proceed from pending notice', error);
     }
   };
 
@@ -348,7 +346,6 @@ export const AcademicCardStep: React.FC<StepProps> = ({
   }, [setCompletedSteps]);
 
   const handleSubmit = async (data: Record<string, unknown> | null) => {
-    console.info("Saving academic card:", data);
     onNext();
     handleStepComplete("academics");
   };
@@ -365,13 +362,11 @@ export const AvatarUploadStep: React.FC<StepProps> = ({
   }, [setCompletedSteps]);
 
   const handleSubmit = async (data: Record<string, unknown> | null) => {
-    console.info("Uploading avatar:", data);
     onNext();
     handleStepComplete("photo");
   };
 
   const handleSkip = () => {
-    console.info("Skipping avatar upload");
     onNext();
     handleStepComplete("photo");
   };
@@ -388,7 +383,6 @@ export const InterestsStep: React.FC<StepProps> = ({
   }, [setCompletedSteps]);
 
   const handleSubmit = async (data: Record<string, unknown> | null) => {
-    console.info("Saving interests:", data);
     onNext();
     handleStepComplete("academics");
   };
@@ -406,11 +400,10 @@ export const OnboardingCompleteStep: React.FC<StepProps> = ({
 
   const handleSubmit = async () => {
     try {
-      console.info("Completing onboarding");
       onNext();
       handleStepComplete("legal");
     } catch (error) {
-      console.error("Failed to complete onboarding", error);
+      logger.error('Failed to complete onboarding', error);
     }
   };
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -261,7 +263,7 @@ export default function UnifiedSpacesPage() {
         }, 500);
       }
     } catch (error) {
-      console.error('Failed to create space:', error);
+      logger.error('Failed to create space:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to create space';
       _setCreateError(errorMessage);
       toast.error('Failed to create space', errorMessage);
@@ -305,7 +307,7 @@ export default function UnifiedSpacesPage() {
       toast.spaceJoined(spaceName);
       
     } catch (error) {
-      console.error('Failed to join space:', error);
+      logger.error('Failed to join space:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to join space';
       _setJoinErrors(prev => ({
         ...prev,

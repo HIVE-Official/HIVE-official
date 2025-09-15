@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Tool, ToolVersion } from '@hive/core/domain/tools';
 import { Card, Button, Badge, Input } from '@hive/ui';
 import { 
@@ -67,7 +69,7 @@ export function VersionControl({
       const data = await response.json();
       setVersions(data.versions || []);
     } catch (error) {
-      console.error('Error fetching version history:', error);
+      logger.error('Error fetching version history:', error);
     } finally {
       setLoading(false);
     }
@@ -101,7 +103,7 @@ export function VersionControl({
       setVersionMessage('');
       setVersionTag('');
     } catch (error) {
-      console.error('Error saving version:', error);
+      logger.error('Error saving version:', error);
     } finally {
       setSavingVersion(false);
     }

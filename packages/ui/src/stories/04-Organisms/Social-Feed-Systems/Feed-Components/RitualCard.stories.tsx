@@ -6,7 +6,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
+import { Button } from '../../../../atomic/atoms/button-enhanced';
 import { Badge } from '../../../../components/ui/badge';
 import { Progress } from '../../../../components/ui/progress';
 import { 
@@ -236,7 +236,6 @@ export const ActiveRitual: Story = {
       campusRanking: 23
     },
     onComplete: (id: string) => {
-      console.log('Completing ritual:', id);
       return Promise.resolve();
     },
     onStart: (id: string) => console.log('Starting ritual:', id),

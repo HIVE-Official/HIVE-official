@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { getSecureAuthHeaders, handleAuthError } from '@/lib/secure-auth-utils';
 import { 
   HiveProfile, 
@@ -260,7 +262,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to load profile');
       }
     } catch (error) {
-      console.error('Failed to load profile:', error);
+      logger.error('Failed to load profile:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to load profile',
@@ -317,7 +319,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to update profile');
       }
     } catch (error) {
-      console.error('Failed to update profile:', error);
+      logger.error('Failed to update profile:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to update profile',
@@ -362,7 +364,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to upload avatar');
       }
     } catch (error) {
-      console.error('Failed to upload avatar:', error);
+      logger.error('Failed to upload avatar:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to upload avatar',
@@ -426,7 +428,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         setState(prev => ({ ...prev, dashboard }));
       }
     } catch (error) {
-      console.error('Failed to load dashboard:', error);
+      logger.error('Failed to load dashboard:', error);
       // Don't set error state for dashboard failure - it's secondary data
     }
   }, [isAuthenticated, user, getAuthHeaders, handleApiResponse]);
@@ -460,7 +462,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to create event');
       }
     } catch (error) {
-      console.error('Failed to create event:', error);
+      logger.error('Failed to create event:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to create event',
@@ -493,7 +495,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to update event');
       }
     } catch (error) {
-      console.error('Failed to update event:', error);
+      logger.error('Failed to update event:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to update event',
@@ -525,7 +527,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to delete event');
       }
     } catch (error) {
-      console.error('Failed to delete event:', error);
+      logger.error('Failed to delete event:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to delete event',
@@ -555,7 +557,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to fetch events');
       }
     } catch (error) {
-      console.error('Failed to fetch calendar events:', error);
+      logger.error('Failed to fetch calendar events:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to fetch calendar events'
@@ -586,7 +588,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to detect conflicts');
       }
     } catch (error) {
-      console.error('Failed to detect conflicts:', error);
+      logger.error('Failed to detect conflicts:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to detect conflicts'
@@ -623,7 +625,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         throw new Error(data.error || 'Failed to resolve conflict');
       }
     } catch (error) {
-      console.error('Failed to resolve conflict:', error);
+      logger.error('Failed to resolve conflict:', error);
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to resolve conflict',

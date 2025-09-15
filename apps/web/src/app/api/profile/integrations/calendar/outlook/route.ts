@@ -4,6 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { FieldValue } from 'firebase-admin/firestore';
@@ -62,7 +64,7 @@ export const GET = withAuth(async (request: NextRequest, { userId }) => {
       authUrl
     });
   } catch (error) {
-    console.error('Error generating Outlook auth URL:', error);
+    logger.error('Error generating Outlook auth URL:', error);
     return NextResponse.json(
       { error: 'Failed to initiate Outlook Calendar authentication' },
       { status: 500 }
@@ -203,7 +205,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
     });
 
   } catch (error) {
-    console.error('Error syncing Outlook Calendar:', error);
+    logger.error('Error syncing Outlook Calendar:', error);
     return NextResponse.json(
       { error: 'Failed to sync Outlook Calendar' },
       { status: 500 }
@@ -243,7 +245,7 @@ export const DELETE = withAuth(async (request: NextRequest, { userId }) => {
     });
 
   } catch (error) {
-    console.error('Error disconnecting Outlook Calendar:', error);
+    logger.error('Error disconnecting Outlook Calendar:', error);
     return NextResponse.json(
       { error: 'Failed to disconnect Outlook Calendar' },
       { status: 500 }

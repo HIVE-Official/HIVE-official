@@ -1,4 +1,5 @@
 import sgMail from '@sendgrid/mail';
+import { logger } from '@hive/core/utils/logger';
 
 // Initialize SendGrid with API key
 let isInitialized = false;
@@ -27,17 +28,9 @@ export async function sendMagicLinkEmail({
 }: MagicLinkEmailOptions): Promise<void> {
   // In development, log the magic link instead of sending email
   if (process.env.NODE_ENV === 'development') {
-    console.log('\n' + '='.repeat(80));
-    console.log('🔗 MAGIC LINK GENERATED (Development Mode)');
-    console.log('='.repeat(80));
-    console.log('\n📧 Email:', to);
-    console.log('🏫 School:', schoolName);
-    console.log('⏰ Expires: 1 hour from now');
-    console.log('\n🎯 Click this link to sign in:');
-    console.log('\x1b[36m%s\x1b[0m', magicLink); // Cyan color for visibility
-    console.log('\n' + '='.repeat(80));
-    console.log('💡 TIP: Use "node scripts/dev-auth-helper.cjs" to manage tokens');
-    console.log('='.repeat(80) + '\n');
+
+     // Cyan color for visibility
+
     return;
   }
 
@@ -63,7 +56,7 @@ export async function sendMagicLinkEmail({
     await sgMail.send(msg);
     
   } catch (error) {
-    console.error('Error sending magic link email:', error);
+    logger.error('Error sending magic link email:', error);
     throw new Error('Failed to send magic link email');
   }
 }

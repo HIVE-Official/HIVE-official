@@ -1,10 +1,11 @@
+import { logger as coreLogger } from '@hive/core/utils/logger';
+
 // Simple logger utility for development
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-export const logger = {
+export const uiLogger = {
   log: (...args: unknown[]) => {
     if (isDevelopment) {
-      console.log('[HIVE]', ...args);
     }
   },
   
@@ -20,13 +21,11 @@ export const logger = {
   
   info: (...args: unknown[]) => {
     if (isDevelopment) {
-      console.info('[HIVE INFO]', ...args);
     }
   },
   
   debug: (...args: unknown[]) => {
     if (isDevelopment) {
-      console.debug('[HIVE DEBUG]', ...args);
     }
   },
   

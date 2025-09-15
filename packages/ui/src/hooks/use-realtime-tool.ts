@@ -4,6 +4,8 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '../utils/logger';
+
 import type { ToolUpdateEvent} from '../lib/api-client';
 import { apiClient, ToolUpdatesResponse } from '../lib/api-client';
 import { Tool } from '@hive/core';
@@ -478,7 +480,7 @@ export function useRealtimeTool(options: UseRealtimeToolOptions): [RealtimeToolS
         broadcastToSpace: true,
       });
     } catch (error: unknown) {
-      console.error('Failed to send tool update:', error);
+      logger.error('Failed to send tool update:', { error });
       
       if (onError) {
         onError(`Failed to send update: ${error instanceof Error ? error.message : "Unknown error"}`);

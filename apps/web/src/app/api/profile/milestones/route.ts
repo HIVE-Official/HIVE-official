@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { dbAdmin as db, authAdmin as auth } from '@/lib/firebase/admin/firebase-admin';
 import * as admin from 'firebase-admin';
 import { z } from 'zod';
@@ -77,7 +79,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     });
     
   } catch (error) {
-    console.error('Error fetching milestones:', error);
+    logger.error('Error fetching milestones:', error);
     return NextResponse.json(
       { error: 'Failed to fetch milestones' },
       { status: 500 }
@@ -146,7 +148,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     });
     
   } catch (error) {
-    console.error('Error creating milestone:', error);
+    logger.error('Error creating milestone:', error);
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -234,7 +236,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     });
     
   } catch (error) {
-    console.error('Error updating milestone:', error);
+    logger.error('Error updating milestone:', error);
     return NextResponse.json(
       { error: 'Failed to update milestone' },
       { status: 500 }
@@ -284,10 +286,8 @@ async function trackMilestoneCompletion(userId: string, milestone: any) {
     });
     
     // Send notification (would integrate with notification system)
-    console.log(`Milestone completed: ${milestone.title} for user ${userId}`);
-    
   } catch (error) {
-    console.error('Error tracking milestone completion:', error);
+    logger.error('Error tracking milestone completion:', error);
   }
 }
 

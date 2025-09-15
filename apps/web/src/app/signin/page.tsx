@@ -26,8 +26,6 @@ export default function SignInPage() {
     try {
       // Authority-approved bypass for jwrhineh@buffalo.edu
       if (email === 'jwrhineh@buffalo.edu') {
-        console.log('🔑 Authorized bypass for jwrhineh@buffalo.edu');
-        
         // Create a session token
         const sessionToken = 'authorized_' + Date.now();
         

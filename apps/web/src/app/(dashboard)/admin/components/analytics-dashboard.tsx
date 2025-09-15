@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   Card, 
   CardContent, 
@@ -109,7 +111,7 @@ export default function AnalyticsDashboard() {
         setAnalytics(data);
       }
     } catch (error) {
-      console.error('Error loading analytics:', error);
+      logger.error('Error loading analytics:', error);
     } finally {
       setLoading(false);
     }
@@ -123,7 +125,7 @@ export default function AnalyticsDashboard() {
         setAnalytics(prev => prev ? { ...prev, realtime: data } : null);
       }
     } catch (error) {
-      console.error('Error loading realtime data:', error);
+      logger.error('Error loading realtime data:', error);
     }
   };
 
@@ -139,7 +141,7 @@ export default function AnalyticsDashboard() {
         a.click();
       }
     } catch (error) {
-      console.error('Error exporting data:', error);
+      logger.error('Error exporting data:', error);
     }
   };
 

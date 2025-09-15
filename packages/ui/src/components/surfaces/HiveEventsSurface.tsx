@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '../../lib/utils';
 import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
-import { HiveButton } from '../hive-button';
+import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
 import { HiveBadge } from '../hive-badge';
 import { 
@@ -576,7 +576,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
       {view === 'calendar' && variant === 'full' && (
         <CalendarView 
           events={filteredEvents}
-          onDateSelect={(date) => console.log('Selected date:', date)}
+          onDateSelect={(date) => {}}
         />
       )}
 
@@ -606,7 +606,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
                   onEdit={() => onEditEvent?.(event.id)}
                   onDelete={() => onDeleteEvent?.(event.id)}
                   onRSVP={(status) => onRSVP?.(event.id, status)}
-                  onShare={() => console.log('Share event:', event.id)}
+                  onShare={() => {}}
                 />
               ))
           )}

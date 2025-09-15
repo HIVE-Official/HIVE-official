@@ -1,6 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 
 // Temporary stubs until GlobalErrorBoundary is exported from @hive/ui
 interface GlobalErrorBoundaryProps {
@@ -14,7 +16,7 @@ function GlobalErrorBoundary({ children }: GlobalErrorBoundaryProps) {
 
 function useGlobalErrorBoundary() {
   return {
-    trackError: (error: Error, context?: Record<string, unknown>) => console.error('Error tracked:', error, context),
+    trackError: (error: Error, context?: Record<string, unknown>) => logger.error('Error tracked:', error, context),
     getAnalytics: () => ({}),
     reset: () => {}
   };
@@ -89,7 +91,7 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
   useEffect(() => {
     // Handle unhandled promise rejections
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error('Unhandled promise rejection:', event.reason);
+      logger.error('Unhandled promise rejection:', event.reason);
       trackError(new Error(event.reason), {
         type: 'unhandled-promise-rejection',
         user,
@@ -100,7 +102,7 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
 
     // Handle global JavaScript errors
     const handleGlobalError = (event: ErrorEvent) => {
-      console.error('Global JavaScript error:', event.error);
+      logger.error('Global JavaScript error:', event.error);
       trackError(event.error, {
         type: 'global-js-error',
         filename: event.filename,

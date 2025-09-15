@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { useProfileModern, useUpdateProfile, useUploadProfilePhoto } from '@hive/hooks';
 import {
@@ -206,7 +208,7 @@ export default function ProfileEditPage() {
       setIsDirty(false);
       router.push('/profile');
     } catch (error) {
-      console.error('Failed to save profile:', error);
+      logger.error('Failed to save profile:', error);
     }
   };
 

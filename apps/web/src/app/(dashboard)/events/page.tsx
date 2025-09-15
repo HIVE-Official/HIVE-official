@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import dynamic from "next/dynamic";
 import { Button, Card, Badge } from "@hive/ui";
 import { PageContainer } from "@hive/ui";
@@ -23,7 +25,7 @@ import { ErrorBoundary } from "../../../components/error-boundary";
 // Dynamic imports for heavy modal components
 const CreateEventModal = dynamic(
   async () => {
-    const mod = await import("../../../components/events/create-event-modal");
+    const mod = await import("../../../components/events/event-modal");
     return { default: mod.CreateEventModal };
   },
   { 
@@ -240,7 +242,7 @@ export default function EventsPage() {
               }) || [];
             }
           } catch (error) {
-            console.error(`Failed to fetch events for space ${String(spaceData.id)}:`, error);
+            logger.error('Failed to fetch events for space ${String(spaceData.id)}:', error);
           }
           return [];
         });
@@ -251,7 +253,7 @@ export default function EventsPage() {
         // If no real events, show empty state instead of mock data
         setEvents(allEvents);
       } catch (error) {
-        console.error('Error fetching events:', error);
+        logger.error('Error fetching events:', error);
         setEvents([]);
       } finally {
         setIsLoading(false);

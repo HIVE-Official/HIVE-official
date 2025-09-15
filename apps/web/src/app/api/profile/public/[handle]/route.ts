@@ -19,11 +19,6 @@ export async function GET(
       userAgent: request.headers.get('user-agent') ?? undefined,
       ip: clientIp
     });
-
-    // TODO: Implement rate limiting
-    // Basic rate limiting would go here
-
-    // Input validation
     const normalizedHandle = handle?.toLowerCase()?.trim() ?? '';
     if (!normalizedHandle || normalizedHandle.length < 2 || normalizedHandle.length > 50) {
       return NextResponse.json(

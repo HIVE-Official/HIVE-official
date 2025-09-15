@@ -1,4 +1,6 @@
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@hive/core/utils/logger';
+
 import { type Post } from '@hive/core';
 import { validateFeedContent, type FeedContentType } from '@/lib/utils/validation/content-validation';
 
@@ -226,7 +228,7 @@ export class FeedAggregationEngine {
       });
       
     } catch (error) {
-      console.error('Error aggregating tool interactions:', error);
+      logger.error('Error aggregating tool interactions:', error);
     }
     
     return items;
@@ -267,7 +269,7 @@ export class FeedAggregationEngine {
       });
       
     } catch (error) {
-      console.error('Error aggregating campus events:', error);
+      logger.error('Error aggregating campus events:', error);
     }
     
     return items;
@@ -322,7 +324,7 @@ export class FeedAggregationEngine {
       }
       
     } catch (error) {
-      console.error('Error aggregating builder announcements:', error);
+      logger.error('Error aggregating builder announcements:', error);
     }
     
     return items;
@@ -349,7 +351,7 @@ export class FeedAggregationEngine {
       })) as Post[];
       
     } catch (error) {
-      console.error(`Error fetching posts from space ${spaceId}:`, error);
+      logger.error('Error fetching posts from space ${spaceId}:', error);
       return [];
     }
   }

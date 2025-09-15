@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Flag,
@@ -91,7 +93,7 @@ export function MilestoneTracker({ userId, className = '' }: MilestoneTrackerPro
         calculateCategories(processedMilestones);
       }
     } catch (error) {
-      console.error('Error fetching milestones:', error);
+      logger.error('Error fetching milestones:', error);
     } finally {
       setLoading(false);
     }
@@ -231,7 +233,7 @@ export function MilestoneTracker({ userId, className = '' }: MilestoneTrackerPro
         return milestone;
       }));
     } catch (error) {
-      console.error('Error toggling task:', error);
+      logger.error('Error toggling task:', error);
     }
   };
 

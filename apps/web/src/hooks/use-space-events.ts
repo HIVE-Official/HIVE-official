@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   collection, 
   query, 
@@ -87,7 +89,7 @@ export function useSpaceEvents(spaceId: string | undefined): UseSpaceEventsRetur
         setError(null);
       },
       (err: any) => {
-        console.error('Error fetching events:', err);
+        logger.error('Error fetching events:', err);
         setError(err as Error);
         setLoading(false);
       }
@@ -114,7 +116,7 @@ export function useSpaceEvents(spaceId: string | undefined): UseSpaceEventsRetur
         status: 'upcoming'
       });
     } catch (err) {
-      console.error('Error creating event:', err);
+      logger.error('Error creating event:', err);
       throw err;
     }
   };
@@ -131,7 +133,7 @@ export function useSpaceEvents(spaceId: string | undefined): UseSpaceEventsRetur
         updatedAt: serverTimestamp()
       });
     } catch (err) {
-      console.error('Error updating event:', err);
+      logger.error('Error updating event:', err);
       throw err;
     }
   };
@@ -145,7 +147,7 @@ export function useSpaceEvents(spaceId: string | undefined): UseSpaceEventsRetur
       const eventRef = doc(db, 'spaces', spaceId, 'events', eventId);
       await deleteDoc(eventRef);
     } catch (err) {
-      console.error('Error deleting event:', err);
+      logger.error('Error deleting event:', err);
       throw err;
     }
   };
@@ -182,7 +184,7 @@ export function useSpaceEvents(spaceId: string | undefined): UseSpaceEventsRetur
         updatedAt: serverTimestamp()
       });
     } catch (err) {
-      console.error('Error updating RSVP:', err);
+      logger.error('Error updating RSVP:', err);
       throw err;
     }
   };

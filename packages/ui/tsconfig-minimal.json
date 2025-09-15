@@ -31,7 +31,7 @@
     "src/components/auth/email-gate.tsx",
     "src/components/auth/CheckEmailInfo.tsx", 
     "src/components/auth/school-pick.tsx",
-    "src/components/Loading/LoadingOrchestrator.tsx",
+    "src/components/loading/LoadingOrchestrator.tsx",
     "src/components/onboarding/create-profile-step.tsx",
     "src/components/onboarding/academic-step.tsx",
     "src/components/onboarding/interests-selection-step.tsx",

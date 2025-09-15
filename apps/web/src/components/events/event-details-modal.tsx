@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { Button, Badge, Card } from "@hive/ui";
 import { Alert, Modal } from "@hive/ui";
 import { 
@@ -158,7 +160,7 @@ export function EventDetailsModal({
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
     } catch (err) {
-      console.error('Failed to copy link:', err);
+      logger.error('Failed to copy link:', err);
     }
   };
 

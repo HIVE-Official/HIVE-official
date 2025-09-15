@@ -42,7 +42,7 @@ async function validateSchool(schoolId: string): Promise<{ valid: boolean; domai
       name: data.name
     };
   } catch (error) {
-    console.error('School validation failed', { error, schoolId });
+    logger.error('School validation failed', { error, schoolId });
     return { valid: false };
   }
 }
@@ -117,7 +117,6 @@ export async function POST(request: NextRequest) {
     
     // BYPASS: Special handling for jwrhineh@buffalo.edu
     if (email === 'jwrhineh@buffalo.edu') {
-      console.log('🎓 Special handling for jwrhineh@buffalo.edu - bypassing some validations');
       schoolId = schoolId || 'ub-buffalo';
     }
 
@@ -126,7 +125,6 @@ export async function POST(request: NextRequest) {
     if (schoolId) {
       school = await validateSchool(schoolId);
       if (!school.valid) {
-        console.log('❌ School validation failed', { schoolId });
         return NextResponse.json(
           { error: "School not found or inactive" },
           { status: 404 }
@@ -168,17 +166,11 @@ export async function POST(request: NextRequest) {
             name: schoolData.name
           };
           schoolId = schoolDoc.id;
-          console.log('🎓 Auto-detected school from email domain', { 
-            domain: emailDomain, 
-            schoolName: school.name,
-            schoolId 
-          });
         }
       } catch (error) {
-        console.error('Failed to auto-detect school', { error, emailDomain });
+        logger.error('Failed to auto-detect school', { error, emailDomain });
       }
     }
-
 
     // Check for existing unused tokens for this email
     try {
@@ -193,12 +185,10 @@ export async function POST(request: NextRequest) {
         const tokenData = doc.data();
         if (tokenData.expiresAt && (tokenData.expiresAt?.toDate ? tokenData.expiresAt.toDate() : new Date(tokenData.expiresAt)) < now) {
           await doc.ref.delete();
-          console.log('🧹 Cleaned up expired token', { tokenId: doc.id.substring(0, 8) + '...' });
+          
         } else {
           // There's still a valid unused token
-          console.log('⚠️ User has an existing unused magic link', { 
-            email: email.replace(/(.{2}).*@/, '$1***@')
-          });
+          
           // You could either invalidate the old one or prevent creating a new one
           // For now, we'll invalidate the old one
           await doc.ref.update({ 
@@ -209,7 +199,7 @@ export async function POST(request: NextRequest) {
         }
       }
     } catch (error) {
-      console.error('Failed to check existing tokens', { error });
+      logger.error('Failed to check existing tokens', { error });
       // Continue anyway - don't block the user from signing in
     }
 
@@ -229,12 +219,6 @@ export async function POST(request: NextRequest) {
 
     // Store token in Firestore
     await dbAdmin.collection('magicLinks').doc(magicLinkToken).set(tokenData);
-
-    console.log('🔐 Magic link token stored in Firestore', { 
-      email: email.replace(/(.{2}).*@/, '$1***@'),
-      tokenId: magicLinkToken.substring(0, 8) + '...',
-      expiresIn: process.env.NODE_ENV === 'development' ? '1 hour' : '15 minutes'
-    });
 
     // Create magic link URL (only include schoolId if it exists and is valid)
     const params = new URLSearchParams({
@@ -256,12 +240,6 @@ export async function POST(request: NextRequest) {
       schoolName: schoolName
     });
 
-    console.log('Magic link sent successfully', { 
-      email: email.replace(/(.{2}).*@/, '$1***@'), // Mask email for privacy
-      schoolId: schoolId || 'auto-detected',
-      schoolName
-    });
-
     // Audit log successful magic link sent
     await auditLogger.log(
       AuditEventType.AUTH_MAGIC_LINK_SENT,
@@ -280,7 +258,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Magic link sending failed', { error });
+    logger.error('Magic link sending failed', { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

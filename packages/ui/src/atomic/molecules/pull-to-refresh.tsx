@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { logger } from '../../utils/logger';
+
 import { cn } from '../../lib/utils';
 import { RefreshCw, ChevronDown } from 'lucide-react';
 
@@ -74,7 +76,7 @@ export function PullToRefresh({
       try {
         await onRefresh();
       } catch (error) {
-        console.error('Refresh failed:', error);
+        logger.error('Refresh failed:', { error });
       } finally {
         setIsRefreshing(false);
       }
@@ -173,7 +175,7 @@ export function RefreshButton({
     try {
       await onRefresh();
     } catch (error) {
-      console.error('Refresh failed:', error);
+      logger.error('Refresh failed:', { error });
     } finally {
       setIsLoading(false);
     }

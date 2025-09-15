@@ -34,7 +34,6 @@ export {
 } from './hive-liquid-metal';
 
 // Motion wrapper component
-// TODO: HiveMotionWrapper needs to be recreated or path fixed
 // export { HiveMotionWrapper } from '../components/hive-motion-wrapper';
 
 // Re-export framer motion for convenience - specific named exports only for NextJS client boundary compatibility

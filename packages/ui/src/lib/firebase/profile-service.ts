@@ -1,3 +1,5 @@
+import { uiLogger } from '../logger';
+
 /**
  * Firebase Profile Service
  * Handles all profile-related Firebase operations including real-time sync
@@ -176,7 +178,6 @@ export class ProfileFirebaseService {
 
   constructor() {
     // In production, initialize Firebase here
-    console.log('Firebase Profile Service initialized');
   }
 
   // Profile Management
@@ -184,8 +185,6 @@ export class ProfileFirebaseService {
     try {
       // Mock implementation - in production, use Firestore
       const docRef = `profiles/${uid}`;
-      console.log(`Fetching profile: ${docRef}`);
-      
       // Return mock data for development
       return {
         uid,
@@ -228,7 +227,7 @@ export class ProfileFirebaseService {
         }
       };
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      uiLogger.error('Error fetching user profile:', { error });
       return null;
     }
   }
@@ -236,15 +235,13 @@ export class ProfileFirebaseService {
   async updateUserProfile(uid: string, updates: Partial<UserProfileDocument>): Promise<void> {
     try {
       // Mock implementation
-      console.log(`Updating profile ${uid}:`, updates);
-      
       // In production:
       // await this.db.collection('profiles').doc(uid).update({
       //   ...updates,
       //   'metadata.updatedAt': new Date()
       // });
     } catch (error) {
-      console.error('Error updating profile:', error);
+      uiLogger.error('Error updating profile:', { error });
       throw error;
     }
   }
@@ -252,8 +249,6 @@ export class ProfileFirebaseService {
   async uploadProfilePhoto(uid: string, file: File): Promise<string> {
     try {
       // Mock implementation
-      console.log(`Uploading photo for ${uid}:`, file.name);
-      
       // In production:
       // const storageRef = this.storage.ref(`profiles/${uid}/avatar.jpg`);
       // const snapshot = await storageRef.put(file);
@@ -262,7 +257,7 @@ export class ProfileFirebaseService {
       
       return URL.createObjectURL(file);
     } catch (error) {
-      console.error('Error uploading photo:', error);
+      uiLogger.error('Error uploading photo:', { error });
       throw error;
     }
   }
@@ -272,8 +267,6 @@ export class ProfileFirebaseService {
     const listenerId = `profile-${uid}`;
     
     // Mock implementation
-    console.log(`Setting up profile listener for ${uid}`);
-    
     // Simulate real-time updates
     const mockListener = () => {
       // In production:
@@ -299,8 +292,6 @@ export class ProfileFirebaseService {
   // Space Memberships
   async getUserSpaces(uid: string): Promise<SpaceMembershipDocument[]> {
     try {
-      console.log(`Fetching spaces for user ${uid}`);
-      
       // In production:
       // const snapshot = await this.db.collection('spaceMemberships')
       //   .where('uid', '==', uid)
@@ -311,7 +302,7 @@ export class ProfileFirebaseService {
       
       return [];
     } catch (error) {
-      console.error('Error fetching user spaces:', error);
+      uiLogger.error('Error fetching user spaces:', { error });
       return [];
     }
   }
@@ -319,8 +310,6 @@ export class ProfileFirebaseService {
   // Notifications
   async getUserNotifications(uid: string, limit: number = 50): Promise<NotificationDocument[]> {
     try {
-      console.log(`Fetching notifications for user ${uid}`);
-      
       // In production:
       // const snapshot = await this.db.collection('notifications')
       //   .where('recipientId', '==', uid)
@@ -332,21 +321,19 @@ export class ProfileFirebaseService {
       
       return [];
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      uiLogger.error('Error fetching notifications:', { error });
       return [];
     }
   }
 
   async markNotificationRead(notificationId: string): Promise<void> {
     try {
-      console.log(`Marking notification ${notificationId} as read`);
-      
       // In production:
       // await this.db.collection('notifications').doc(notificationId).update({
       //   isRead: true
       // });
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      uiLogger.error('Error marking notification as read:', { error });
       throw error;
     }
   }
@@ -354,8 +341,6 @@ export class ProfileFirebaseService {
   // Ghost Mode
   async updateGhostMode(uid: string, settings: Partial<GhostModeDocument>): Promise<void> {
     try {
-      console.log(`Updating ghost mode for ${uid}:`, settings);
-      
       // In production:
       // await this.db.collection('ghostMode').doc(uid).set({
       //   uid,
@@ -363,7 +348,7 @@ export class ProfileFirebaseService {
       //   updatedAt: new Date()
       // }, { merge: true });
     } catch (error) {
-      console.error('Error updating ghost mode:', error);
+      uiLogger.error('Error updating ghost mode:', { error });
       throw error;
     }
   }
@@ -371,8 +356,6 @@ export class ProfileFirebaseService {
   // Tools
   async getUserTools(uid: string): Promise<ToolDocument[]> {
     try {
-      console.log(`Fetching tools for user ${uid}`);
-      
       // In production:
       // const snapshot = await this.db.collection('tools')
       //   .where('creatorId', '==', uid)
@@ -383,7 +366,7 @@ export class ProfileFirebaseService {
       
       return [];
     } catch (error) {
-      console.error('Error fetching user tools:', error);
+      uiLogger.error('Error fetching user tools:', { error });
       return [];
     }
   }
@@ -391,8 +374,6 @@ export class ProfileFirebaseService {
   // Analytics
   async updateProfileAnalytics(uid: string, event: string, data?: Record<string, unknown>): Promise<void> {
     try {
-      console.log(`Recording analytics event ${event} for ${uid}:`, data);
-      
       // In production:
       // await this.db.collection('analytics').add({
       //   uid,
@@ -402,13 +383,12 @@ export class ProfileFirebaseService {
       //   timestamp: new Date()
       // });
     } catch (error) {
-      console.error('Error recording analytics:', error);
+      uiLogger.error('Error recording analytics:', { error });
     }
   }
 
   // Cleanup
   cleanup(): void {
-    console.log('Cleaning up Firebase listeners');
     this.listeners.forEach((unsubscribe: any) => unsubscribe());
     this.listeners.clear();
   }
@@ -476,23 +456,19 @@ service cloud.firestore {
 export const CLOUD_FUNCTIONS = {
   // Profile completion calculation
   calculateProfileCompleteness: async (uid: string): Promise<number> => {
-    console.log(`Calculating profile completeness for ${uid}`);
     return 75; // Mock value
   },
   
   // Notification dispatch
   sendNotification: async (notification: Partial<NotificationDocument>): Promise<void> => {
-    console.log('Sending notification:', notification);
   },
   
   // Space membership automation
   autoJoinSpaces: async (uid: string, academicInfo: any): Promise<void> => {
-    console.log(`Auto-joining spaces for ${uid} based on:`, academicInfo);
   },
   
   // Builder status evaluation
   evaluateBuilderStatus: async (uid: string): Promise<boolean> => {
-    console.log(`Evaluating builder status for ${uid}`);
     return false;
   }
 };

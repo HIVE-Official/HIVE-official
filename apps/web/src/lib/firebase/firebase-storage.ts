@@ -8,6 +8,8 @@ import {
   UploadTaskSnapshot,
   StorageError
 } from 'firebase/storage';
+import { logger } from '@hive/core/utils/logger';
+
 import { storage } from './firebase';
 
 // Upload progress callback type
@@ -46,7 +48,7 @@ export async function uploadImage(
             onProgress(progress);
           },
           (error: StorageError) => {
-            console.error('Upload error:', error);
+            logger.error('Upload error:', error);
             reject(error);
           },
           async () => {
@@ -61,7 +63,7 @@ export async function uploadImage(
       return await getDownloadURL(snapshot.ref);
     }
   } catch (error) {
-    console.error('Error uploading image:', error);
+    logger.error('Error uploading image:', error);
     throw error;
   }
 }
@@ -163,7 +165,7 @@ export async function deleteImage(url: string): Promise<void> {
     const storageRef = ref(storage, path);
     await deleteObject(storageRef);
   } catch (error) {
-    console.error('Error deleting image:', error);
+    logger.error('Error deleting image:', error);
     throw error;
   }
 }
@@ -244,14 +246,6 @@ export function getThumbnailUrl(
 ): string {
   // For Firebase Storage, we'd typically use a Cloud Function
   // to generate thumbnails. For now, return original URL
-  // TODO: Implement thumbnail generation with Cloud Functions
-  return originalUrl;
-}
-
-/**
- * Check if a URL is from Firebase Storage
- */
-export function isFirebaseStorageUrl(url: string): boolean {
   return url.includes('firebasestorage.googleapis.com');
 }
 
@@ -278,7 +272,7 @@ export async function getFileMetadata(url: string): Promise<{
     
     return null; // Placeholder
   } catch (error) {
-    console.error('Error getting file metadata:', error);
+    logger.error('Error getting file metadata:', error);
     return null;
   }
 }

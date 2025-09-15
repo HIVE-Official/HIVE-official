@@ -357,8 +357,6 @@ function getSizePreferenceScore(userProfile: UserProfile, memberCount: number): 
     // New users prefer medium-sized spaces
     return memberCount >= 10 && memberCount <= 50 ? 5 : 2;
   }
-  
-  // TODO: Calculate average size of user's joined spaces and score accordingly
   return memberCount >= 5 ? Math.min(memberCount / 10, 5) : 1;
 }
 

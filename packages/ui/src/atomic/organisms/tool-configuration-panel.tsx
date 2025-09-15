@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -232,7 +234,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
       await onSave(tool.toolId, values);
       setIsDirty(false);
     } catch (error) {
-      console.error('Failed to save configuration:', error);
+      logger.error('Failed to save configuration:', { error });
     }
   };
 
@@ -259,7 +261,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
       setIsDirty(false);
       setErrors({});
     } catch (error) {
-      console.error('Failed to reset configuration:', error);
+      logger.error('Failed to reset configuration:', { error });
     }
   };
 

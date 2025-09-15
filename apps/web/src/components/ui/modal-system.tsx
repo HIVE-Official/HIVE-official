@@ -1,6 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { X, AlertTriangle, CheckCircle, Info, AlertCircle } from 'lucide-react';
 // Using native button element instead of UI package button due to import issues
 
@@ -101,7 +103,7 @@ function ModalRenderer({ modal, onClose }: { modal: ModalData & { id: string }; 
       await action();
       onClose();
     } catch (error) {
-      console.error('Modal action failed:', error);
+      logger.error('Modal action failed:', error);
     } finally {
       setIsLoading(false);
     }

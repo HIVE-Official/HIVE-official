@@ -8,6 +8,8 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Users, BookOpen, GraduationCap, Building2, Sparkles } from 'lucide-react';
 import type { AutoSpaceConfig } from '@/lib/auto-space-creation';
 
@@ -78,7 +80,7 @@ export function SpaceCreationPreview({
         setSpaces(data.spaces || []);
 
       } catch (err) {
-        console.error('Error fetching space preview:', err);
+        logger.error('Error fetching space preview:', err);
         setError(err instanceof Error ? err.message : 'Failed to load preview');
       } finally {
         setPreviewLoading(false);

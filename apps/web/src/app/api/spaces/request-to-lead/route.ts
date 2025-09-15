@@ -49,7 +49,6 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     // For development mode, use mock email
     let userEmail = 'test@example.com';
     if (userId !== 'test-user') {
-      // TODO: Get user email from database or token for production
       userEmail = 'user@example.com';
     }
 
@@ -156,8 +155,6 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     builderRequest.expiresAt = FieldValue.serverTimestamp();
 
     await requestRef.set(builderRequest);
-
-    // TODO: Send notification to admins (implement when notification system is ready)
     logger.info('📧 Admin notification needed for builder request', { requestRefId: requestRef.id, endpoint: '/api/spaces/request-to-lead'  });
 
     return NextResponse.json({

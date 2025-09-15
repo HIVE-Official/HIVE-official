@@ -7,8 +7,6 @@ export default function DevRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('🚀 DEV REDIRECT: Forcing redirect to profile');
-    
     // Clear any existing data
     if (typeof window !== 'undefined') {
       window.localStorage.clear();

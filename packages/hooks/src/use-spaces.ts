@@ -33,32 +33,8 @@ export function useSpaces(): UseSpacesReturn {
     try {
       setIsLoading(true);
       setError(null);
-
-      // TODO: Replace with actual API call
-      // For now, return mock data
-      const mockSpaces: Space[] = [
-        {
-          id: '1',
-          name: 'General Discussion',
-          description: 'A place for general conversations',
-          memberCount: 150,
-          isPublic: true,
-          createdAt: new Date('2024-01-01'),
-        },
-        {
-          id: '2',
-          name: 'Study Group',
-          description: 'Collaborative learning space',
-          memberCount: 45,
-          isPublic: false,
-          createdAt: new Date('2024-01-15'),
-        },
-      ];
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setSpaces(mockSpaces);
+      // TODO: Implement actual space fetching logic here
+      setSpaces([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch spaces');
     } finally {

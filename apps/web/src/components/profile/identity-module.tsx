@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Button, Badge } from '@hive/ui';
 import { 
   Edit,
@@ -131,7 +133,7 @@ export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps)
         fileInputRef.current.value = '';
       }
     } catch (error) {
-      console.error('Error uploading photo:', error);
+      logger.error('Error uploading photo:', error);
       alert('Failed to upload photo. Please try again.');
     } finally {
       setIsUploadingPhoto(false);
@@ -155,11 +157,6 @@ export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps)
     if (currentPhotoIndex >= newPhotos.length) {
       setCurrentPhotoIndex(newPhotos.length - 1);
     }
-
-    // TODO: Also remove from Firebase
-  };
-
-  const getVerificationBadge = () => {
     if (profile?.email?.endsWith('@buffalo.edu')) {
       return (
         <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">

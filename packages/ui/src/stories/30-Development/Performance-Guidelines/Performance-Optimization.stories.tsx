@@ -206,7 +206,6 @@ const HeavyComponent = memo(({
   
   // Expensive computation simulation
   const processedData = useMemo(() => {
-    console.log('Computing expensive data transformation');
     return data.map(item => ({
       ...item,
       processed: true,
@@ -794,7 +793,6 @@ const PerformanceOptimizationSystem = () => {
   );
 
   const handleAction = useCallback((id: string) => {
-    console.log('Action triggered for:', id);
   }, []);
 
   const addTestData = () => {

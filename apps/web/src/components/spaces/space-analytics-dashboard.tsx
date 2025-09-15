@@ -196,14 +196,6 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       setTimeSeriesData(mockTimeSeries);
       setLastUpdated(new Date());
     } catch (error) {
-      // TODO: Implement proper error tracking
-      setMetrics(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const healthScoreColor = useMemo(() => {
     if (!metrics) return 'text-zinc-400';
     const score = metrics.overview.healthScore;
     if (score >= 8) return 'text-green-400';

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { PageContainer } from "@hive/ui";
 
 import { Handshake, ArrowLeft } from "lucide-react";
@@ -43,7 +45,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
           userRole: 'admin'
         });
       } catch (error) {
-        console.error('Failed to load collaboration data:', error);
+        logger.error('Failed to load collaboration data:', error);
       } finally {
         setIsLoading(false);
       }

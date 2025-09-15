@@ -4,7 +4,7 @@ import { OnboardingLayout } from '../../components/onboarding/onboarding-layout'
 import { RoleStep } from '../../components/onboarding/role-step'
 import { InterestsStepNew } from '../../components/onboarding/interests-step-new'
 import { SpacesDiscoveryStep } from '../../components/onboarding/spaces-discovery-step'
-import { Button } from '../../components/button'
+import { Button } from '../../atomic/atoms/button-enhanced'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../components/card'
 
 // Create a component wrapper for the story
@@ -49,7 +49,6 @@ export const RoleSelection: Story = {
     }
 
     const handleContinue = () => {
-      console.log('Continuing with role:', selectedRole)
     }
 
     return (
@@ -80,7 +79,6 @@ export const InterestSelection: Story = {
     }
 
     const handleContinue = () => {
-      console.log('Continuing with interests:', selectedInterests)
     }
 
     return (
@@ -111,7 +109,6 @@ export const SpaceDiscovery: Story = {
     }
 
     const handleContinue = () => {
-      console.log('Continuing with spaces:', selectedSpaces)
     }
 
     return (

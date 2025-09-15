@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -164,7 +166,7 @@ export default function BrowseToolsPage() {
 
       setTools(transformedTools);
     } catch (error) {
-      console.error('Error fetching tools:', error);
+      logger.error('Error fetching tools:', error);
       // Set empty array on error - no fallback to mock data
       setTools([]);
     } finally {

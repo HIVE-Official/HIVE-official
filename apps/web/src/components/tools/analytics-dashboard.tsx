@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion } from 'framer-motion';
 import {
   BarChart3,
@@ -164,7 +166,7 @@ export function ToolAnalyticsDashboard({
       const data = await response.json();
       setAnalytics(data);
     } catch (error) {
-      console.error('Error fetching analytics:', error);
+      logger.error('Error fetching analytics:', error);
       // Set mock data for demo
       setAnalytics(getMockAnalytics());
     } finally {

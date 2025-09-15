@@ -41,8 +41,6 @@ export default function LandingPage() {
     if (isNavigating) return;
     
     setIsNavigating(true);
-    console.log('🚀 Navigating from landing to schools page');
-    
     setTimeout(() => {
       router.push('/schools');
     }, 150);

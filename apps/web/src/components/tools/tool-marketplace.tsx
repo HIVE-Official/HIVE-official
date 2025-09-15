@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Tool, ToolCategory } from '@hive/core/domain/tools';
 import { Card, Button, Badge, Input, Tabs, TabsList, TabsTrigger, TabsContent } from '@hive/ui';
 import { 
@@ -65,7 +67,7 @@ export function ToolMarketplace({
       const data = await response.json();
       setTools(data.tools || []);
     } catch (error) {
-      console.error('Error fetching tools:', error);
+      logger.error('Error fetching tools:', error);
     } finally {
       setLoading(false);
     }
@@ -112,7 +114,7 @@ export function ToolMarketplace({
       await onInstall(toolId);
       setInstalledTools(prev => new Set([...prev, toolId]));
     } catch (error) {
-      console.error('Error installing tool:', error);
+      logger.error('Error installing tool:', error);
     } finally {
       setInstallingTool(null);
     }
@@ -131,7 +133,7 @@ export function ToolMarketplace({
         return newSet;
       });
     } catch (error) {
-      console.error('Error uninstalling tool:', error);
+      logger.error('Error uninstalling tool:', error);
     } finally {
       setInstallingTool(null);
     }

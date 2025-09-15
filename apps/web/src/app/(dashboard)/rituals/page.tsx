@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
@@ -106,7 +108,7 @@ export default function RitualsPage() {
       setRituals(data.rituals || []);
 
     } catch (err) {
-      console.error('Failed to load rituals data:', err);
+      logger.error('Failed to load rituals data:', err);
       setError('Failed to load rituals data');
       
       // Set some mock data for development
@@ -194,7 +196,7 @@ export default function RitualsPage() {
       loadRitualsData();
       
     } catch (error) {
-      console.error('Failed to join ritual:', error);
+      logger.error('Failed to join ritual:', error);
       toast.error('Failed to join ritual', 'Please try again');
     }
   };
@@ -216,7 +218,7 @@ export default function RitualsPage() {
       loadRitualsData();
       
     } catch (error) {
-      console.error('Failed to complete ritual:', error);
+      logger.error('Failed to complete ritual:', error);
       toast.error('Failed to complete ritual', 'Please try again');
     }
   };
@@ -474,25 +476,32 @@ export default function RitualsPage() {
           {/* Calendar Tab */}
           {activeTab === 'calendar' && (
             <RitualCalendar
-              rituals={rituals.map(r => ({
+              ritualInstances={rituals.map(r => ({
                 id: r.id,
-                title: r.title,
-                description: r.description,
-                type: r.type,
+                instanceId: `${r.id}-instance`,
+                ritualId: r.id,
+                ritual: {
+                  id: r.id,
+                  title: r.title,
+                  description: r.description,
+                  type: r.type,
+                  category: r.category,
+                  participationType: r.participationType,
+                  maxParticipants: r.maxParticipants,
+                  currentParticipants: r.currentParticipants || 0
+                },
                 startTime: r.startTime,
                 endTime: r.endTime,
-                participationType: r.participationType,
-                currentParticipants: r.currentParticipants || 0,
-                maxParticipants: r.maxParticipants,
                 status: r.status,
-                tags: r.tags || [],
-                category: r.category
+                location: r.location,
+                isUserParticipating: false,
+                isUserEligible: true,
+                reminderSet: false,
+                tags: r.tags || []
               }))}
-              onRitualSelect={(ritual) => {
-                // Handle ritual selection
-                console.log('Selected ritual:', ritual);
+              onJoinRitual={async (ritualId, instanceId) => {
+                await handleJoinRitual(ritualId);
               }}
-              onJoinRitual={handleJoinRitual}
             />
           )}
 
@@ -501,10 +510,8 @@ export default function RitualsPage() {
             <RitualRewards
               rewards={rewards}
               achievements={achievements}
-              userParticipations={userParticipations}
-              onClaimReward={(rewardId) => {
-                console.log('Claiming reward:', rewardId);
-                toast.success('Reward claimed!', 'Congratulations on your achievement!');
+              onViewReward={(reward) => {
+                toast.success('Reward Details', `${reward.title}: ${reward.description}`);
               }}
             />
           )}
@@ -532,7 +539,7 @@ export default function RitualsPage() {
               // Refresh rituals data
               loadRitualsData();
             } catch (error) {
-              console.error('Failed to create ritual:', error);
+              logger.error('Failed to create ritual:', error);
               toast.error('Failed to create ritual', 'Please try again');
             }
           }}

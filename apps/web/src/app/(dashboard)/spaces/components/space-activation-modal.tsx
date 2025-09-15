@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -140,7 +142,7 @@ export function SpaceActivationModal({ isOpen, onClose, space, onSuccess }: Spac
       setIsSuccess(true);
       onSuccess?.(space);
     } catch (error) {
-      console.error('Failed to submit request:', error);
+      logger.error('Failed to submit request:', error);
     } finally {
       setIsSubmitting(false);
     }

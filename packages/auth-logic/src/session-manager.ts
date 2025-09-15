@@ -1,4 +1,6 @@
 import type { User } from "firebase/auth";
+import { logger } from './logger';
+
 
 export interface SessionInfo {
   lastActivity: number;
@@ -96,7 +98,7 @@ export class SessionManager {
       try {
         await this.refreshUserToken(user);
       } catch (error) {
-        console.error("Failed to refresh token:", error);
+        logger.error('Failed to refresh token', { error });
       }
     }, timeUntilRefresh);
   }
@@ -106,9 +108,8 @@ export class SessionManager {
       // Force refresh the token
       await user.getIdToken(true);
       this.updateSession(user);
-      console.log("Token refreshed successfully");
     } catch (error) {
-      console.error("Token refresh failed:", error);
+      logger.error('Token refresh failed', { error });
       // Let the auth state change handler deal with the failed refresh
     }
   }

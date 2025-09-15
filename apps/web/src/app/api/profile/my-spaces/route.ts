@@ -114,11 +114,6 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     const recent = [...spaces]
       .sort(sortByActivity)
       .slice(0, 5);
-
-    // TODO: Get favorited spaces from user preferences
-    const favorited: any[] = [];
-
-    const categorizedSpaces = {
       joined: joined.sort(sortByActivity),
       owned: owned.sort(sortByActivity),
       adminned: adminned.sort(sortByActivity),

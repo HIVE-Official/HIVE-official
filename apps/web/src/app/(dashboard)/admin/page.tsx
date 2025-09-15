@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Alert, AlertDescription } from '@hive/ui';
 import { 
   Users, 
@@ -130,7 +132,7 @@ export default function AdminDashboard() {
       const data = await response.json() as { flags?: FeatureFlag[] };
       setFeatureFlags(data.flags || []);
     } catch (err) {
-      console.error('Error loading feature flags:', err);
+      logger.error('Error loading feature flags:', err);
       setFeatureFlags([]);
     } finally {
       setFlagsLoading(false);
@@ -158,7 +160,7 @@ export default function AdminDashboard() {
         )
       );
     } catch (err) {
-      console.error('Error updating feature flag:', err);
+      logger.error('Error updating feature flag:', err);
     }
   };
 

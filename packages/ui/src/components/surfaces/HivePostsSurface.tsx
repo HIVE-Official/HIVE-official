@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '../../lib/utils';
 import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
-import { HiveButton } from '../hive-button';
+import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { HiveTextarea } from '../hive-textarea';
 import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
 import { HiveBadge } from '../hive-badge';
@@ -426,7 +426,6 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
       if (onPostCreate) {
         await onPostCreate(content);
       } else {
-        console.log('Creating post:', content);
       }
     });
   }, [onPostCreate, currentUserId, isLeader, addOptimisticItem]);
@@ -435,7 +434,6 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
     if (onPostLike) {
       await onPostLike(postId);
     } else {
-      console.log('Liking post:', postId);
     }
   }, [onPostLike]);
 
@@ -443,7 +441,6 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
     if (onPostComment) {
       await onPostComment(postId, comment);
     } else {
-      console.log('Commenting on post:', postId, comment);
     }
   }, [onPostComment]);
 
@@ -527,7 +524,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
               variant={variant}
               onLike={() => handlePostLike(post.id)}
               onComment={() => handlePostComment(post.id, '')}
-              onShare={() => console.log('Share:', post.id)}
+              onShare={() => {}}
             />
           ))
         )}

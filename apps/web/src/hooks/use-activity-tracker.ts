@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useUnifiedAuth } from '@hive/ui';
 import { authenticatedFetch } from '@/lib/api/api-client';
 
@@ -74,7 +76,7 @@ export function useActivityTracker(options: UseActivityTrackerOptions = {}) {
         await updateSpaceActivity(eventData.spaceId, 'post');
       }
     } catch (error) {
-      console.error('Failed to track event:', error);
+      logger.error('Failed to track event:', error);
     }
   }, [enabled, user?.id]);
   
@@ -150,7 +152,7 @@ export function useActivityTracker(options: UseActivityTrackerOptions = {}) {
         body: JSON.stringify({ action })
       });
     } catch (error) {
-      console.error('Failed to update space activity:', error);
+      logger.error('Failed to update space activity:', error);
     }
   };
   

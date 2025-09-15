@@ -37,12 +37,6 @@ export default function AuthPageClient() {
   }, [router]);
 
   const handleAuthSuccess = (user: { id: string; email: string; name: string; isNewUser: boolean }) => {
-    console.log("Auth completed successfully", { 
-      email: user.email, 
-      isNewUser: user.isNewUser,
-      schoolDomain 
-    });
-    
     if (user.isNewUser) {
       // New user needs onboarding
       router.push(ROUTES.ONBOARDING.STEP_1);

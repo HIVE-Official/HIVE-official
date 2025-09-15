@@ -158,7 +158,6 @@ class AuthManager {
     const oneHour = 60 * 60 * 1000;
     if (session.expiresAt - Date.now() < oneHour) {
       try {
-        // TODO: Implement token refresh logic
         // const newToken = await refreshToken(session.token);
         // this.setSession({ ...session, token: newToken });
         

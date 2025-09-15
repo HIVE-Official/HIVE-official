@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { logger } from './utils/logger';
+
 import type { ServiceAccount } from 'firebase-admin/app';
 
 /**
@@ -123,7 +125,7 @@ export function getFirebaseAdminConfig(): ServiceAccount | null {
     !env.FIREBASE_PRIVATE_KEY
   ) {
     if (isProduction && !isBuildTime && isServerSide) {
-      console.error("❌ Firebase Admin credentials are missing in production runtime");
+      logger.error('❌ Firebase Admin credentials are missing in production runtime');
       return null;
     }
     console.warn("⚠️ Firebase Admin credentials not found, server-side operations will be disabled");

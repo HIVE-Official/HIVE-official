@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardStatus } from '../../components/card';
-import { Button } from '../../components/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Badge } from '../../components/badge';
 import { Avatar } from '../../components/avatar';
 import { Users, Calendar, MessageCircle, Heart, Share, MoreHorizontal, Star, Zap, Coffee, BookOpen, AlertCircle, CheckCircle, Loader2, FolderOpen } from 'lucide-react';

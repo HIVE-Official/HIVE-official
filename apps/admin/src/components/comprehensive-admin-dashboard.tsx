@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { HiveCard as Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { AdminNavigation } from "./admin-navigation";
@@ -50,10 +52,10 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
       setPendingCounts({
         builderRequests: builderData.requests?.filter((r: { status: string }) => r.status === 'pending').length || 0,
         flaggedContent: contentData.flaggedContent?.filter((c: { status: string }) => c.status === 'pending').length || 0,
-        userReports: 0, // TODO: Implement user reports
+        userReports: 0,
       });
     } catch (error) {
-      console.error('Failed to fetch pending counts:', error);
+      logger.error('Failed to fetch pending counts:', error);
     }
   };
 

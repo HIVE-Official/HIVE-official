@@ -118,22 +118,6 @@ export default function ProfileAnalyticsStorybook() {
   
   const handleJoinWaitlist = async () => {
     setJoinedWaitlist(true);
-    // TODO: Implement actual waitlist API call
-    setTimeout(() => setJoinedWaitlist(false), 3000);
-  };
-
-  const getFeatureColorClasses = (color: string) => {
-    const colorMap: Record<string, string> = {
-      purple: 'bg-[var(--hive-gold)]/10 text-[var(--hive-gold)] border-[var(--hive-gold)]/20',
-      blue: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      green: 'bg-green-500/10 text-green-400 border-green-500/20',
-      yellow: 'bg-[var(--hive-gold)]/10 text-[var(--hive-gold)] border-[var(--hive-gold)]/20'
-    };
-    return colorMap[color as keyof typeof colorMap] || 'bg-hive-gold/10 text-hive-gold border-hive-gold/20';
-  };
-
-  // Current user context for components
-  const _currentUser = useMemo(() => {
     if (!profile) return null;
     return {
       id: profile.identity.id,

@@ -4,6 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { validateAuthToken } from '../../services/security-service';
 import { isProductionEnvironment } from '../../production-auth';
 import { logSecurityEvent } from '../../utils/structured-logger';
@@ -162,12 +164,7 @@ async function isAdminUser(userId: string): Promise<boolean> {
     if (!isProductionEnvironment() && userId === 'test-user') {
       return true;
     }
-
-    // TODO: Implement real admin check against database
-    // For now, return false to be safe
-    return false;
-  } catch (error) {
-    console.error('Admin check failed:', error);
+    logger.error('Admin check failed:', error);
     return false;
   }
 }
@@ -188,7 +185,7 @@ export function withAuth<T extends any[]>(
         return error;
       }
       
-      console.error('Auth middleware error:', error);
+      logger.error('Auth middleware error:', error);
       return new Response(
         JSON.stringify({ error: 'Authentication service error' }),
         { status: 500, headers: { 'content-type': 'application/json' } }

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/card';
-import { Button } from '../../components/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Badge } from '../../components/badge';
 import { Input } from '../../components/input';
 import { Avatar } from '../../components/avatar';

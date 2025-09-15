@@ -1,6 +1,8 @@
 'use client';
 
 import React, { Component } from 'react';
+import { logger } from '../../utils/logger';
+
 import type { ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -33,7 +35,7 @@ export class SpaceSurfaceErrorBoundary extends Component<Props, State> {
     });
 
     // Log error to monitoring service
-    console.error('Space surface error:', error, errorInfo);
+    logger.error('Space surface error:', { error, errorInfo });
     
     // In production, send to error tracking service
     if (process.env.NODE_ENV === 'production') {

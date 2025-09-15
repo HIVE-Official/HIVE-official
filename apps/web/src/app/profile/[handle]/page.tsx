@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useParams, useRouter, notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Button, Card, Badge } from "@hive/ui";
@@ -87,7 +89,7 @@ export default function PublicProfilePage() {
               ...data.user,
               isOwnProfile: false,
               canViewPrivateInfo: false,
-              connectionStatus: 'none' // TODO: Implement connection logic
+              connectionStatus: 'none'
             });
           } catch {
             // Fallback: Use development mode data
@@ -120,7 +122,7 @@ export default function PublicProfilePage() {
         
         setIsLoading(false);
       } catch (err) {
-        console.error('Failed to load public profile:', err);
+        logger.error('Failed to load public profile:', err);
         setError(err instanceof Error ? err.message : 'Failed to load profile');
         setIsLoading(false);
       }

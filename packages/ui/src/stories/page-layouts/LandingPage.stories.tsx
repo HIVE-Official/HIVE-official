@@ -21,7 +21,7 @@ type Story = StoryObj<typeof HiveLandingPage>
 export const CompleteLandingPage: Story = {
   render: () => {
     const handleEmailSignup = async (email: string) => {
-      console.log('Email signup:', email)
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500))
     }
@@ -162,7 +162,7 @@ export const HeroSection: Story = {
 export const WaitlistSection: Story = {
   render: () => {
     const handleEmailSignup = async (email: string) => {
-      console.log('Waitlist signup:', email)
+
       await new Promise(resolve => setTimeout(resolve, 1000))
     }
 

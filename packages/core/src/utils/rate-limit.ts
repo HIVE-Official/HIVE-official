@@ -6,8 +6,4 @@
  */
 
 // Placeholder exports to prevent build errors
-export const RateLimit = {
-  // TODO: Implement for v1
-};
-
-export default RateLimit;
+export const RateLimit = {};

@@ -44,7 +44,6 @@ export const AcademicSpace: Story = {
       ]
     },
     onSubmit: async (data: unknown) => {
-      console.log('Activation request submitted:', data);
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 2000));
     },
@@ -74,7 +73,6 @@ export const StudentOrganization: Story = {
       ]
     },
     onSubmit: async (data: unknown) => {
-      console.log('Activation request submitted:', data);
       await new Promise(resolve => setTimeout(resolve, 2000));
     },
     onCancel: () => console.log('Form cancelled'),
@@ -103,7 +101,6 @@ export const ResidentialSpace: Story = {
       ]
     },
     onSubmit: async (data: unknown) => {
-      console.log('Activation request submitted:', data);
       await new Promise(resolve => setTimeout(resolve, 2000));
     },
     onCancel: () => console.log('Form cancelled'),
@@ -132,7 +129,6 @@ export const GreekLife: Story = {
       ]
     },
     onSubmit: async (data: unknown) => {
-      console.log('Activation request submitted:', data);
       await new Promise(resolve => setTimeout(resolve, 2000));
     },
     onCancel: () => console.log('Form cancelled'),

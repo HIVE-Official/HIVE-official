@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   Tool, 
   Element, 
@@ -247,7 +249,7 @@ export function HiveLabBuilder({
     try {
       await onSave(tool);
     } catch (error) {
-      console.error('Error saving tool:', error);
+      logger.error('Error saving tool:', error);
     } finally {
       setSaving(false);
     }

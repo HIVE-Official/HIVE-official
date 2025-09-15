@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Card } from '@hive/ui';
 import { 
   Edit3, 
@@ -59,7 +61,7 @@ export function ProfileDashboardClient() {
         setLayout(data.layout);
       }
     } catch (error) {
-      console.error('Error fetching layout:', error);
+      logger.error('Error fetching layout:', error);
     } finally {
       setIsLoading(false);
     }

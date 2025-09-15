@@ -1,4 +1,6 @@
 import { db } from '@/lib/firebase/client/firebase-client';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   collection, 
   collectionGroup,
@@ -193,7 +195,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      console.error('Error searching users:', error);
+      logger.error('Error searching users:', error);
       return [];
     }
   }
@@ -244,7 +246,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      console.error('Error searching spaces:', error);
+      logger.error('Error searching spaces:', error);
       return [];
     }
   }
@@ -320,7 +322,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      console.error('Error searching posts:', error);
+      logger.error('Error searching posts:', error);
       return [];
     }
   }
@@ -375,7 +377,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      console.error('Error searching events:', error);
+      logger.error('Error searching events:', error);
       return [];
     }
   }
@@ -427,7 +429,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      console.error('Error searching tools:', error);
+      logger.error('Error searching tools:', error);
       return [];
     }
   }

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from '../../../../../components/error-boundary';
 import { PageContainer } from "@hive/ui";
@@ -75,13 +77,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     resolveParams();
   }, [params]);
   const [error, setError] = useState<string | null>(null);
-  // TODO: For leader-specific analytics features
-
-  const loadAnalytics = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
       const response = await fetch(`/api/spaces/${spaceId}/analytics?timeRange=30d`);
       const data = await response.json() as { success?: boolean; analytics?: SpaceAnalytics; message?: string };
 
@@ -99,7 +94,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
         setError('Analytics data not available');
       }
     } catch (err) {
-      console.error('Error loading space analytics:', err);
+      logger.error('Error loading space analytics:', err);
       setError(err instanceof Error ? err.message : 'Failed to load analytics');
     } finally {
       setIsLoading(false);
@@ -115,9 +110,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
   const handleRefresh = async () => {
     await loadAnalytics();
   };
-
-  // TODO: For future export functionality
-  // const handleExportData = () => {
   //   if (!analytics) return;
   //   
   //   // Create CSV export of analytics data
@@ -144,9 +136,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
   //   document.body.removeChild(a);
   //   window.URL.revokeObjectURL(url);
   // };
-
-  // TODO: For future settings integration
-  // const handleUpdateSettings = () => {
   //   router.push(`/spaces/${spaceId}/settings`);
   // };
 

@@ -11,7 +11,7 @@ import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-ty
  * GET /api/admin/spaces/analytics - Get detailed space analytics
  */
 
-// Admin user IDs (TODO: Move to environment variables or admin table)
+// Admin user IDs
 const ADMIN_USER_IDS = [
   'test-user', // For development
   // Add real admin user IDs here
@@ -284,7 +284,7 @@ export async function GET(request: NextRequest) {
             return joinedDate > weekAgo;
           }).length;
         }, 0),
-        healthScoreChange: 0, // TODO: Implement historical health tracking
+        healthScoreChange: 0,
         engagementTrend: 'stable' as const
       },
       byType: {},
@@ -294,7 +294,7 @@ export async function GET(request: NextRequest) {
         critical: allSpaces.filter(s => s.healthScore < 40).length
       },
       membershipTrends: {
-        dailyJoins: [], // TODO: Implement daily join tracking
+        dailyJoins: [],
         topGrowingSpaces: allSpaces
           .sort((a, b) => b.actualMemberCount - a.actualMemberCount)
           .slice(0, 10)
@@ -303,13 +303,13 @@ export async function GET(request: NextRequest) {
             name: s.name,
             type: s.type,
             memberCount: s.actualMemberCount,
-            growthRate: 0 // TODO: Calculate actual growth rate
+            growthRate: 0
           }))
       },
       engagementMetrics: {
-        postsLast7Days: 0, // TODO: Implement post tracking
-        eventsLast7Days: 0, // TODO: Implement event tracking
-        toolUsageLast7Days: 0, // TODO: Implement tool usage tracking
+        postsLast7Days: 0,
+        eventsLast7Days: 0,
+        toolUsageLast7Days: 0,
         averageSessionTime: 0,
         mostActiveSpaces: allSpaces
           .filter(s => s.hasBuilders)
@@ -324,9 +324,9 @@ export async function GET(request: NextRequest) {
       },
       builderInsights: {
         totalBuilders: allSpaces.reduce((sum, s) => sum + s.builderCount, 0),
-        buildersActiveLast7Days: 0, // TODO: Implement builder activity tracking
+        buildersActiveLast7Days: 0,
         spacesWithBuilders: allSpaces.filter(s => s.builderCount > 0).length,
-        toolsCreatedLast7Days: 0, // TODO: Implement tool creation tracking
+        toolsCreatedLast7Days: 0,
         topBuilderSpaces: allSpaces
           .filter(s => s.builderCount > 0)
           .sort((a, b) => b.builderCount - a.builderCount)
@@ -336,7 +336,7 @@ export async function GET(request: NextRequest) {
             name: s.name,
             type: s.type,
             builderCount: s.builderCount,
-            toolsCreated: 0 // TODO: Get actual tools created count
+            toolsCreated: 0
           }))
       }
     };

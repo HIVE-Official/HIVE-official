@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../../components/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { 
   Zap, 
   Heart, 

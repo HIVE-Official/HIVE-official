@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Calculator } from 'lucide-react';
 import { ElementRendererProps } from '../types';
 
@@ -37,7 +39,7 @@ export function CalculatorRenderer({
         // Very basic safe evaluation
         calculated = evaluateExpression(expression);
       } catch (error) {
-        console.error('Formula evaluation error:', error);
+        logger.error('Formula evaluation error:', error);
         calculated = 0;
       }
     } else {

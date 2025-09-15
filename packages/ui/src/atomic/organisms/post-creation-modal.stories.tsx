@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { logger } from '../../utils/logger';
+
 import { PostCreationModal, PostCreationData } from './post-creation-modal';
 import { action } from '@storybook/addon-actions';
 import { useState } from 'react';
@@ -187,11 +189,10 @@ export const InteractiveDemo: Story = {
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         action('submit')(data);
-        console.log('Post created:', data);
-        
+
         setIsOpen(false);
       } catch (error) {
-        console.error('Failed to create post:', error);
+        logger.error('Failed to create post:', error);
       } finally {
         setIsSubmitting(false);
       }

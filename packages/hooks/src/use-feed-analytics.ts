@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 import { useEffect, useRef, useCallback, useState } from 'react'
 import { useAnalytics } from './use-analytics'
 import type { 
@@ -154,7 +156,7 @@ export const useFeedAnalytics = ({
         }
       })
     } catch (error) {
-      console.error('Failed to flush analytics events:', error)
+      logger.error('Failed to flush analytics events', { error })
       // Re-add events to batch for retry
       eventBatchRef.current.unshift(...events)
     }

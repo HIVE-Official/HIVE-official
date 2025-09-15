@@ -1,4 +1,6 @@
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@hive/core/utils/logger';
+
 import { getLatestAggregatedContent, type AggregatedFeedItem } from '@/lib/services/feed/feed-aggregation';
 
 /**
@@ -224,7 +226,7 @@ export class RealTimeFeedManager {
         await this.checkForUpdates();
         this.scheduleNextRefresh(state); // Schedule next refresh
       } catch (error) {
-        console.error(`Failed to refresh feed for user ${this._userId}:`, error);
+        logger.error('Failed to refresh feed for user ${this._userId}:', error);
         // Retry with exponential backoff
         setTimeout(() => this.scheduleNextRefresh(state), Math.min(interval * 2, 300000));
       }
@@ -254,7 +256,7 @@ export class RealTimeFeedManager {
         }
       };
     } catch (error) {
-      console.error('Error getting user feed state:', error);
+      logger.error('Error getting user feed state:', error);
       return null;
     }
   }
@@ -274,7 +276,7 @@ export class RealTimeFeedManager {
         updatedAt: new Date()
       });
     } catch (error) {
-      console.error('Error saving user feed state:', error);
+      logger.error('Error saving user feed state:', error);
     }
   }
 
@@ -296,7 +298,7 @@ export class RealTimeFeedManager {
       
       return spaceIds;
     } catch (error) {
-      console.error('Error getting user space IDs:', error);
+      logger.error('Error getting user space IDs:', error);
       return [];
     }
   }
@@ -310,7 +312,7 @@ export class RealTimeFeedManager {
       const aggregator = createFeedAggregator(this._userId, [spaceId]);
       return await aggregator.aggregateContent(limit);
     } catch (error) {
-      console.error(`Error getting space content for ${spaceId}:`, error);
+      logger.error('Error getting space content for ${spaceId}:', error);
       return [];
     }
   }
@@ -334,7 +336,7 @@ export class RealTimeFeedManager {
       
       await batch.commit();
     } catch (error) {
-      console.error('Error tracking view analytics:', error);
+      logger.error('Error tracking view analytics:', error);
     }
   }
 
@@ -430,7 +432,7 @@ class FeedManagerRegistry {
             const manager = await this.getManager(doc.id);
             await manager.checkForUpdates();
           } catch (error) {
-            console.error(`Failed to warm cache for user ${doc.id}:`, error);
+            logger.error('Failed to warm cache for user ${doc.id}:', error);
           }
         });
         
@@ -442,7 +444,7 @@ class FeedManagerRegistry {
       
       
     } catch (error) {
-      console.error('❌ Feed cache warming failed:', error);
+      logger.error('❌ Feed cache warming failed:', error);
     }
   }
 }

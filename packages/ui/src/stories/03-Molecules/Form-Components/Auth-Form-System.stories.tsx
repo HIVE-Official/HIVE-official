@@ -134,7 +134,6 @@ export const LoginFormSystem: Story = {
         // Simulate API call
         setTimeout(() => {
           setIsLoading(false);
-          console.log('Login successful:', formData);
         }, 2000);
       }
     };
@@ -336,7 +335,6 @@ export const RegistrationFormSystem: Story = {
       // Simulate API call
       setTimeout(() => {
         setIsLoading(false);
-        console.log('Registration successful:', formData);
       }, 2000);
     };
 

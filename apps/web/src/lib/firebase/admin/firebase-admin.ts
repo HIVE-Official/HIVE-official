@@ -2,6 +2,8 @@
 // Server-side Firebase setup for administrative operations
 
 import * as admin from "firebase-admin";
+import { logger } from '@hive/core/utils/logger';
+
 import { env, isFirebaseAdminConfigured, currentEnvironment } from "../../env";
 
 let firebaseInitialized = false;
@@ -106,10 +108,7 @@ try {
     firebaseInitialized = true;
   }
 } catch (error) {
-  console.error(
-    `🚨 CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}:`,
-    error
-  );
+  logger.error('🚨 CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}:', error);
 
   // In production, Firebase Admin MUST be properly configured
   if (currentEnvironment === 'production') {
@@ -121,17 +120,14 @@ try {
   // Only use mocks in development environment
   if (currentEnvironment === 'development') {
     console.warn(`⚠️ Firebase Admin initialization failed for development:`, error);
-    console.log('🔄 Setting up mock Firebase Admin for development with emulators');
-    
     dbAdmin = {
       collection: (path: string) => ({
         doc: (id: string) => ({
           get: async () => ({ exists: false, data: () => null }),
-          set: async (data: any) => console.log(`🔄 Mock Firestore set: ${path}/${id}`, data),
-          update: async (data: any) => console.log(`🔄 Mock Firestore update: ${path}/${id}`, data),
+          set: async (data: any) => {},
+          update: async (data: any) => {},
         }),
         add: async (data: any) => {
-          console.log(`🔄 Mock Firestore add: ${path}`, data);
           return { id: `mock-${Date.now()}` };
         },
         where: () => ({ get: async () => ({ docs: [] }) }),
@@ -141,19 +137,18 @@ try {
     storageAdmin = {
       bucket: () => ({
         file: (path: string) => ({
-          save: async (buffer: Buffer) => console.log(`🔄 Mock Storage save: ${path}`),
-          delete: async () => console.log(`🔄 Mock Storage delete: ${path}`),
+          save: async (buffer: Buffer) => {},
+          delete: async () => {},
           getSignedUrl: async () => [`https://mock-storage.com/${path}`],
           exists: async () => [false],
         }),
-        upload: async (filepath: string) => console.log(`🔄 Mock Storage upload: ${filepath}`),
+        upload: async (filepath: string) => {},
       }),
     } as any;
 
     authAdmin = {
       verifyIdToken: async (token: string) => {
-        console.log('🔄 Mock Firebase call: verifyIdToken() - development mode');
-        
+
         // In development, accept Firebase emulator JWT tokens
         if (token.includes('.') && token.split('.').length === 3) {
           try {
@@ -184,7 +179,7 @@ try {
         throw new Error('Invalid token for development mode');
       },
       createCustomToken: async (uid: string) => {
-        console.log('🔄 Mock Firebase call: createCustomToken() - development mode');
+        
         // Generate a mock custom token
         const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
         const payload = btoa(JSON.stringify({
@@ -202,11 +197,11 @@ try {
 
     messagingAdmin = {
       send: async (message: any) => {
-        console.log('🔄 Mock Firebase call: send() - development mode', message);
+        
         return `mock-message-${Date.now()}`;
       },
       sendMulticast: async (message: any) => {
-        console.log('🔄 Mock Firebase call: sendMulticast() - development mode', message);
+        
         return {
           successCount: 1,
           failureCount: 0,
@@ -216,8 +211,8 @@ try {
     } as any;
   } else {
     // In production/staging, fail fast if Firebase Admin cannot initialize
-    console.error(`❌ CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}`);
-    console.error('Error details:', error);
+    logger.error('❌ CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}');
+    logger.error('Error details:', error);
     throw new Error(`Firebase Admin initialization failed. Check service account configuration.`);
   }
 }
@@ -262,53 +257,53 @@ export const environmentInfo = {
 // Helper functions for common admin operations
 export const verifyIdToken = async (token: string) => {
   if (!authAdmin) {
-    console.error('Firebase Admin Auth not initialized');
+    logger.error('Firebase Admin Auth not initialized');
     return null;
   }
   try {
     return await authAdmin.verifyIdToken(token);
   } catch (error) {
-    console.error('Failed to verify ID token:', error);
+    logger.error('Failed to verify ID token:', error);
     return null;
   }
 };
 
 export const getUserByEmail = async (email: string) => {
   if (!authAdmin) {
-    console.error('Firebase Admin Auth not initialized');
+    logger.error('Firebase Admin Auth not initialized');
     return null;
   }
   try {
     return await authAdmin.getUserByEmail(email);
   } catch (error) {
-    console.error('Failed to get user by email:', error);
+    logger.error('Failed to get user by email:', error);
     return null;
   }
 };
 
 export const createCustomToken = async (uid: string, claims?: object) => {
   if (!authAdmin) {
-    console.error('Firebase Admin Auth not initialized');
+    logger.error('Firebase Admin Auth not initialized');
     return null;
   }
   try {
     return await authAdmin.createCustomToken(uid, claims);
   } catch (error) {
-    console.error('Failed to create custom token:', error);
+    logger.error('Failed to create custom token:', error);
     return null;
   }
 };
 
 export const setCustomUserClaims = async (uid: string, claims: object) => {
   if (!authAdmin) {
-    console.error('Firebase Admin Auth not initialized');
+    logger.error('Firebase Admin Auth not initialized');
     return false;
   }
   try {
     await authAdmin.setCustomUserClaims(uid, claims);
     return true;
   } catch (error) {
-    console.error('Failed to set custom claims:', error);
+    logger.error('Failed to set custom claims:', error);
     return false;
   }
 };

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { requireAdmin, logAdminActivity } from './admin-auth';
 
 /**
@@ -69,7 +71,7 @@ export function adminResponse(data: unknown, status: number = 200) {
  * Admin API error response wrapper
  */
 export function adminErrorResponse(error: string, status: number = 500, details?: unknown) {
-  console.error(`Admin API Error: ${error}`, details);
+  logger.error('Admin API Error: ${error}', details);
   return NextResponse.json({
     success: false,
     error,

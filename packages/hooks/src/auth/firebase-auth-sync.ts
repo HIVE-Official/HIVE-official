@@ -1,4 +1,6 @@
 import { onAuthStateChanged, type User, type Auth } from 'firebase/auth';
+import { logger } from '../logger';
+
 import { doc, onSnapshot, getDoc, type Firestore, type DocumentSnapshot, type FirestoreError } from 'firebase/firestore';
 import { useAuthStore } from '../stores/auth-store';
 
@@ -55,7 +57,7 @@ export function initializeAuthSync(auth: Auth, db: Firestore) {
                 }
               },
               (error: FirestoreError) => {
-                console.error('Profile listener error:', error);
+                logger.error('Profile listener error', { error });
               }
             );
             
@@ -79,13 +81,13 @@ export function initializeAuthSync(auth: Auth, db: Firestore) {
         
         setLoading(false);
       } catch (error) {
-        console.error('Auth sync error:', error);
+        logger.error('Auth sync error', { error });
         setError(error instanceof Error ? error.message : 'Authentication error');
         setLoading(false);
       }
     },
     (error: Error) => {
-      console.error('Auth state change error:', error);
+      logger.error('Auth state change error', { error });
       setError(error.message);
       setLoading(false);
     }

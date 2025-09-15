@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -200,11 +202,11 @@ export function FeedMain() {
             upcomingEvents: 0
           }));
         } else {
-          console.error('Failed to fetch feed data');
+          logger.error('Failed to fetch feed data');
           setFeedPosts([]);
         }
       } catch (error) {
-        console.error('Error loading feed:', error);
+        logger.error('Error loading feed:', error);
         setFeedPosts([]);
       } finally {
         setIsLoading(false);

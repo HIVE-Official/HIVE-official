@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   collection, 
   query, 
@@ -162,7 +164,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         setLoading(false);
       },
       (err: any) => {
-        console.error('Error fetching posts:', err);
+        logger.error('Error fetching posts:', err);
         setError(err as Error);
         setLoading(false);
       }
@@ -214,7 +216,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
 
       return docRef.id;
     } catch (err) {
-      console.error('Error creating post:', err);
+      logger.error('Error creating post:', err);
       throw err;
     }
   };
@@ -232,7 +234,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         updatedAt: serverTimestamp()
       });
     } catch (err) {
-      console.error('Error updating post:', err);
+      logger.error('Error updating post:', err);
       throw err;
     }
   };
@@ -253,7 +255,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         postCount: arrayRemove(1)
       });
     } catch (err) {
-      console.error('Error deleting post:', err);
+      logger.error('Error deleting post:', err);
       throw err;
     }
   };
@@ -289,7 +291,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         reactions: updatedReactions
       });
     } catch (err) {
-      console.error('Error toggling reaction:', err);
+      logger.error('Error toggling reaction:', err);
       throw err;
     }
   };
@@ -348,7 +350,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         }
       }
     } catch (err) {
-      console.error('Error responding to coordination:', err);
+      logger.error('Error responding to coordination:', err);
       throw err;
     }
   };

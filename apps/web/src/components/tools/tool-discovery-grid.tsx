@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Zap, 
@@ -97,7 +99,7 @@ export function ToolDiscoveryGrid({ spaceId, onInstall, className }: ToolDiscove
         const data = await response.json();
         setTools(data.tools || []);
       } catch (error) {
-        console.error('Failed to fetch tools:', error);
+        logger.error('Failed to fetch tools:', error);
         toast.error('Failed to load tools marketplace');
       } finally {
         setIsLoading(false);
@@ -167,7 +169,7 @@ export function ToolDiscoveryGrid({ spaceId, onInstall, className }: ToolDiscove
 
       if (onInstall) onInstall(tool);
     } catch (error) {
-      console.error('Failed to install tool:', error);
+      logger.error('Failed to install tool:', error);
       toast.error('Failed to install tool', 'Please try again');
     } finally {
       setInstallingTools(prev => {

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -130,13 +132,7 @@ export function DashboardMain() {
           tools: [],
           notifications: []
         };
-
-        // TODO: Replace with actual API calls
-        // For now, use empty data structure
-        setDashboardData(emptyData);
-        setIsLoading(false);
-      } catch (err) {
-        console.error('Failed to load dashboard:', err);
+        logger.error('Failed to load dashboard:', err);
         setError(err instanceof Error ? err.message : 'Failed to load dashboard');
         setIsLoading(false);
       }

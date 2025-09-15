@@ -8,6 +8,8 @@ export interface SpaceActionResult {
 
 // Import centralized auth utilities
 import { getAuthHeaders } from './auth-utils';
+import { logger } from '@hive/core/utils/logger';
+
 
 /**
  * Join a space
@@ -37,7 +39,7 @@ export async function joinSpace(spaceId: string): Promise<SpaceActionResult> {
     };
 
   } catch (error) {
-    console.error('Join space error:', error);
+    logger.error('Join space error:', error);
     return {
       success: false,
       error: 'Network error. Please try again.'
@@ -73,7 +75,7 @@ export async function leaveSpace(spaceId: string): Promise<SpaceActionResult> {
     };
 
   } catch (error) {
-    console.error('Leave space error:', error);
+    logger.error('Leave space error:', error);
     return {
       success: false,
       error: 'Network error. Please try again.'
@@ -112,7 +114,7 @@ export async function toggleSpacePin(spaceId: string, currentlyPinned: boolean):
     };
 
   } catch (error) {
-    console.error('Toggle pin error:', error);
+    logger.error('Toggle pin error:', error);
     return {
       success: false,
       error: 'Network error. Please try again.'
@@ -151,7 +153,7 @@ export async function markSpaceVisited(spaceId: string): Promise<SpaceActionResu
     };
 
   } catch (error) {
-    console.error('Mark visited error:', error);
+    logger.error('Mark visited error:', error);
     return {
       success: false,
       error: 'Network error. Please try again.'

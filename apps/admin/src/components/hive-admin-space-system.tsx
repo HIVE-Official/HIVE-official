@@ -6,6 +6,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
@@ -463,7 +465,7 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
       const data = await response.json();
       setSpaces(data.spaces || []);
     } catch (error) {
-      console.error('Failed to load spaces:', error);
+      logger.error('Failed to load spaces:', error);
     } finally {
       setLoading(false);
     }

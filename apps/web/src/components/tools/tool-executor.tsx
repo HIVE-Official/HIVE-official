@@ -56,8 +56,6 @@ export function ToolExecutor({
   
   // Handle element actions
   const handleElementAction = useCallback((instanceId: string, action: string, payload?: any) => {
-    console.log(`Action triggered: ${instanceId} -> ${action}`, payload);
-    
     // Process action based on type
     switch (action) {
       case 'onSubmit':

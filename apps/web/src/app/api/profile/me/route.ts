@@ -1,3 +1,5 @@
+import { logger } from '@hive/core/utils/logger';
+
 import { NextRequest, NextResponse } from 'next/server'
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin'
 import { verifyAuthToken } from '@/lib/auth/auth'
@@ -26,13 +28,10 @@ export async function GET(request: NextRequest) {
       }
 
       const profile = userDoc.data()
-      
-      console.log('Profile retrieved for user:', user.uid)
-      
       return NextResponse.json({ profile })
 
     } catch (firestoreError) {
-      console.error('Failed to retrieve user profile:', firestoreError)
+      logger.error('Failed to retrieve user profile:', firestoreError)
       
       return NextResponse.json(
         { message: 'Failed to retrieve profile. Please try again.' },
@@ -41,7 +40,7 @@ export async function GET(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Error retrieving profile:', error)
+    logger.error('Error retrieving profile:', error)
     
     return NextResponse.json(
       { message: 'Failed to retrieve profile. Please try again.' },
@@ -94,10 +93,6 @@ export async function PATCH(request: NextRequest) {
     // Production mode: Update Firestore
     try {
       await dbAdmin.collection('users').doc(user.uid).update(updateData)
-      
-      console.log('Profile updated for user:', {
-        uid: user.uid,
-        fields: Object.keys(updateData)
       })
       
       return NextResponse.json({
@@ -107,7 +102,7 @@ export async function PATCH(request: NextRequest) {
       })
 
     } catch (firestoreError) {
-      console.error('Failed to update user profile:', firestoreError)
+      logger.error('Failed to update user profile:', firestoreError)
       
       return NextResponse.json(
         { message: 'Failed to update profile. Please try again.' },
@@ -116,7 +111,7 @@ export async function PATCH(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Error updating profile:', error)
+    logger.error('Error updating profile:', error)
     
     return NextResponse.json(
       { message: 'Failed to update profile. Please try again.' },

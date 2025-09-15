@@ -1,4 +1,6 @@
 import { getMessaging, getToken, onMessage, Messaging } from 'firebase/messaging';
+import { logger } from '@hive/core/utils/logger';
+
 import { app } from '../../firebase/firebase';
 import { doc, setDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
@@ -21,7 +23,6 @@ export async function requestNotificationPermission(userId: string): Promise<str
   try {
     // Check if notifications are supported
     if (!('Notification' in window)) {
-      console.log('This browser does not support notifications');
       return null;
     }
 
@@ -29,7 +30,6 @@ export async function requestNotificationPermission(userId: string): Promise<str
     const permission = await Notification.requestPermission();
     
     if (permission !== 'granted') {
-      console.log('Notification permission denied');
       return null;
     }
 
@@ -49,13 +49,12 @@ export async function requestNotificationPermission(userId: string): Promise<str
     if (token) {
       // Save token to user profile
       await saveTokenToDatabase(userId, token);
-      console.log('FCM token obtained:', token);
       return token;
     }
 
     return null;
   } catch (error) {
-    console.error('Error getting notification permission:', error);
+    logger.error('Error getting notification permission:', error);
     return null;
   }
 }
@@ -72,7 +71,7 @@ async function saveTokenToDatabase(userId: string, token: string): Promise<void>
       lastTokenUpdate: new Date()
     });
   } catch (error) {
-    console.error('Error saving FCM token:', error);
+    logger.error('Error saving FCM token:', error);
   }
 }
 
@@ -86,7 +85,6 @@ export function onForegroundMessage(callback: (payload: any) => void) {
 
   if (messaging) {
     return onMessage(messaging, (payload) => {
-      console.log('Foreground message received:', payload);
       callback(payload);
     });
   }
@@ -138,7 +136,7 @@ export async function createNotification(
       updatedAt: new Date()
     });
   } catch (error) {
-    console.error('Error creating notification:', error);
+    logger.error('Error creating notification:', error);
   }
 }
 
@@ -156,7 +154,7 @@ export async function markNotificationAsRead(
       readAt: new Date()
     });
   } catch (error) {
-    console.error('Error marking notification as read:', error);
+    logger.error('Error marking notification as read:', error);
   }
 }
 
@@ -166,7 +164,6 @@ export async function markNotificationAsRead(
 export async function markAllNotificationsAsRead(userId: string): Promise<void> {
   // This would need a batch update or Cloud Function
   // For now, individual updates would be needed
-  console.log('Marking all notifications as read for user:', userId);
 }
 
 /**

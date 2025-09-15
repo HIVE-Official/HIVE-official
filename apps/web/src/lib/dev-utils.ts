@@ -1,3 +1,5 @@
+import { logger } from '@hive/core/utils/logger';
+
 /**
  * Development Utilities with PRODUCTION SAFETY
  * 
@@ -78,7 +80,6 @@ export const DEV_FEATURES = {
  */
 export function devLog(...args: any[]) {
   if (isLocalDevelopment() && DEV_FEATURES.verboseLogging) {
-    console.log('[DEV]', ...args);
   }
 }
 
@@ -96,7 +97,7 @@ export function devWarn(...args: any[]) {
  */
 export function devError(...args: any[]) {
   if (isLocalDevelopment()) {
-    console.error('[DEV ERROR]', ...args);
+    logger.error('[DEV ERROR]', ...args);
   }
 }
 

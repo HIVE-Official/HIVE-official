@@ -4,6 +4,8 @@
  */
 
 import { useState, useEffect } from 'react';
+import { logger } from './logger';
+
 
 // Service Worker registration utility
 export class MobileServiceWorker {
@@ -32,14 +34,11 @@ export class MobileServiceWorker {
 
   async register(swPath = '/sw.js'): Promise<boolean> {
     if (!('serviceWorker' in navigator)) {
-      console.log('Service Worker not supported');
       return false;
     }
 
     try {
       this.registration = await navigator.serviceWorker.register(swPath);
-      console.log('Service Worker registered:', this.registration);
-      
       // Handle updates
       this.registration.addEventListener('updatefound', () => {
         const newWorker = this.registration?.installing;
@@ -55,7 +54,7 @@ export class MobileServiceWorker {
 
       return true;
     } catch (error) {
-      console.error('Service Worker registration failed:', error);
+      logger.error('Service Worker registration failed:', { error });
       return false;
     }
   }
@@ -68,7 +67,7 @@ export class MobileServiceWorker {
       this.registration = null;
       return true;
     } catch (error) {
-      console.error('Service Worker unregistration failed:', error);
+      logger.error('Service Worker unregistration failed:', { error });
       return false;
     }
   }
@@ -88,7 +87,7 @@ export class MobileServiceWorker {
       await cache.add(url);
       return true;
     } catch (error) {
-      console.error('Failed to cache resource:', error);
+      logger.error('Failed to cache resource:', { error });
       return false;
     }
   }
@@ -98,7 +97,7 @@ export class MobileServiceWorker {
       const cache = await caches.match(url);
       return cache;
     } catch (error) {
-      console.error('Failed to get cached resource:', error);
+      logger.error('Failed to get cached resource:', { error });
       return undefined;
     }
   }
@@ -113,7 +112,7 @@ export class MobileServiceWorker {
         return true;
       }
     } catch (error) {
-      console.error('Failed to clear cache:', error);
+      logger.error('Failed to clear cache:', { error });
       return false;
     }
   }
@@ -121,7 +120,6 @@ export class MobileServiceWorker {
   // Background sync
   async queueBackgroundSync(tag: string, data?: any): Promise<boolean> {
     if (!this.registration || !(this.registration as any).sync) {
-      console.log('Background Sync not supported');
       return false;
     }
 
@@ -135,7 +133,7 @@ export class MobileServiceWorker {
       await (this.registration as any).sync.register(tag);
       return true;
     } catch (error) {
-      console.error('Failed to queue background sync:', error);
+      logger.error('Failed to queue background sync:', { error });
       return false;
     }
   }
@@ -143,7 +141,6 @@ export class MobileServiceWorker {
   // Push notifications
   async subscribeToPush(): Promise<PushSubscription | null> {
     if (!this.registration?.pushManager) {
-      console.log('Push messaging not supported');
       return null;
     }
 
@@ -158,7 +155,7 @@ export class MobileServiceWorker {
       
       return subscription;
     } catch (error) {
-      console.error('Failed to subscribe to push:', error);
+      logger.error('Failed to subscribe to push:', { error });
       return null;
     }
   }
@@ -166,8 +163,6 @@ export class MobileServiceWorker {
   // Utility methods
   private async syncWhenOnline(): Promise<void> {
     // Implement sync logic when coming back online
-    console.log('Device back online, syncing...');
-    
     try {
       const syncStore = await this.openIndexedDB('hive-sync-store');
       const pendingItems = await this.getAllPendingSync(syncStore);
@@ -176,7 +171,7 @@ export class MobileServiceWorker {
         await this.processSyncItem(item);
       }
     } catch (error) {
-      console.error('Sync failed:', error);
+      logger.error('Sync failed:', { error });
     }
   }
 
@@ -246,8 +241,6 @@ export class MobileServiceWorker {
 
   private async processSyncItem(item: any): Promise<void> {
     // Process individual sync items based on their type
-    console.log('Processing sync item:', item);
-    
     try {
       switch (item.tag) {
         case 'hive-feed-post':
@@ -260,26 +253,22 @@ export class MobileServiceWorker {
           await this.syncToolSave(item.data);
           break;
         default:
-          console.log('Unknown sync item type:', item.tag);
       }
     } catch (error) {
-      console.error('Failed to process sync item:', error);
+      logger.error('Failed to process sync item:', { error });
     }
   }
 
   private async syncFeedPost(data: unknown): Promise<void> {
     // Implement feed post sync logic
-    console.log('Syncing feed post:', data);
   }
 
   private async syncSpaceAction(data: unknown): Promise<void> {
     // Implement space action sync logic
-    console.log('Syncing space action:', data);
   }
 
   private async syncToolSave(data: unknown): Promise<void> {
     // Implement tool save sync logic
-    console.log('Syncing tool save:', data);
   }
 }
 
@@ -373,7 +362,7 @@ export class OfflineStorage {
       await store.put({ id: key, data, timestamp: Date.now() });
       return true;
     } catch (error) {
-      console.error('Failed to store offline data:', error);
+      logger.error('Failed to store offline data:', { error });
       return false;
     }
   }
@@ -389,7 +378,7 @@ export class OfflineStorage {
         request.onsuccess = () => resolve(request.result?.data);
       });
     } catch (error) {
-      console.error('Failed to retrieve offline data:', error);
+      logger.error('Failed to retrieve offline data:', { error });
       return null;
     }
   }
@@ -402,7 +391,7 @@ export class OfflineStorage {
       await store.delete(key);
       return true;
     } catch (error) {
-      console.error('Failed to remove offline data:', error);
+      logger.error('Failed to remove offline data:', { error });
       return false;
     }
   }

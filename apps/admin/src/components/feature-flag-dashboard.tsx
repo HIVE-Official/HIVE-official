@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   HiveCard as Card, 
   CardContent, 
@@ -65,7 +67,7 @@ export function FeatureFlagDashboard() {
       const allFlags = await featureFlagService.getAllFeatureFlags();
       setFlags(allFlags);
     } catch (error) {
-      console.error('Error loading feature flags:', error);
+      logger.error('Error loading feature flags:', error);
       toast.error('Failed to load feature flags');
     } finally {
       setLoading(false);
@@ -97,7 +99,7 @@ export function FeatureFlagDashboard() {
       await loadFeatureFlags();
       toast.success(`Feature flag ${newStatus}`);
     } catch (error) {
-      console.error('Error toggling flag:', error);
+      logger.error('Error toggling flag:', error);
       toast.error('Failed to toggle feature flag');
     }
   };
@@ -116,7 +118,7 @@ export function FeatureFlagDashboard() {
       
       await loadFeatureFlags();
     } catch (error) {
-      console.error('Error with kill switch:', error);
+      logger.error('Error with kill switch:', error);
       toast.error('Failed to toggle kill switch');
     }
   };
@@ -506,7 +508,7 @@ function CreateFeatureFlagDialog({ open, onOpenChange, onCreated }: CreateFeatur
         status: 'inactive'
       });
     } catch (error) {
-      console.error('Error creating feature flag:', error);
+      logger.error('Error creating feature flag:', error);
       toast.error('Failed to create feature flag');
     } finally {
       setLoading(false);

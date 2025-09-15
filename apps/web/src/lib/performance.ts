@@ -198,7 +198,6 @@ export class PerformanceMonitor {
       this.measures.push({ name, duration });
       
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[Performance] ${name}: ${duration.toFixed(2)}ms`);
       }
     }
   }
@@ -224,7 +223,6 @@ export function trackWebVitals() {
   const observer = new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
       if (entry.name === 'first-contentful-paint') {
-        console.log('[WebVitals] FCP:', entry.startTime);
       }
     }
   });
@@ -235,7 +233,6 @@ export function trackWebVitals() {
   const lcpObserver = new PerformanceObserver((list) => {
     const entries = list.getEntries();
     const lastEntry = entries[entries.length - 1];
-    console.log('[WebVitals] LCP:', lastEntry.startTime);
   });
   
   lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
@@ -244,7 +241,6 @@ export function trackWebVitals() {
   const fidObserver = new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
       const delay = entry.processingStart - entry.startTime;
-      console.log('[WebVitals] FID:', delay);
     }
   });
   
@@ -256,7 +252,6 @@ export function trackWebVitals() {
     for (const entry of list.getEntries()) {
       if (!(entry as any).hadRecentInput) {
         clsValue += (entry as any).value;
-        console.log('[WebVitals] CLS:', clsValue);
       }
     }
   });

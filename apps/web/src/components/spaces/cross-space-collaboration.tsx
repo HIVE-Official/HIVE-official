@@ -246,31 +246,6 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
   };
 
   const handleInviteSpace = (spaceId: string) => {
-    // TODO: Implement space invitation logic
-    try {
-      // API call to invite space
-      // await inviteSpaceToCollaboration(currentSpaceId, spaceId);
-    } catch (error) {
-      // TODO: Handle error with proper user feedback
-    }
-  };
-
-  const handleCreateProject = (projectData: any) => {
-    // TODO: Implement project creation logic
-    try {
-      // API call to create collaboration project
-      // await createCollaborationProject(currentSpaceId, projectData);
-      setShowCreateProjectModal(false);
-    } catch (error) {
-      // TODO: Handle error with proper user feedback
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
           <p className="text-[var(--hive-text-inverse)]">Loading collaboration data...</p>
         </div>
       </div>

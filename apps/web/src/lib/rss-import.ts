@@ -1,4 +1,6 @@
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@hive/core/utils/logger';
+
 import { type CampusEvent } from '@/lib/services/feed/feed-aggregation';
 
 /**
@@ -118,7 +120,7 @@ export class RSSImportManager {
           result.itemsImported++;
 
         } catch (itemError) {
-          console.error(`Error processing RSS item: ${item.title}`, itemError);
+          logger.error('Error processing RSS item: ${item.title}', itemError);
           result.errors.push(`Item "${item.title}": ${itemError.message}`);
         }
       }
@@ -130,7 +132,7 @@ export class RSSImportManager {
       
 
     } catch (error: any) {
-      console.error(`❌ RSS import failed for ${feedConfig.name}:`, error);
+      logger.error('❌ RSS import failed for ${feedConfig.name}:', error);
       result.errors.push(error.message);
     }
 
@@ -158,7 +160,7 @@ export class RSSImportManager {
         if (result.status === 'fulfilled') {
           results.push(result.value);
         } else {
-          console.error(`Failed to import from ${batch[index].name}:`, result.reason);
+          logger.error('Failed to import from ${batch[index].name}:', result.reason);
           results.push({
             feedId: batch[index].id,
             success: false,
@@ -211,7 +213,7 @@ export class RSSImportManager {
       }
       
     } catch (error) {
-      console.error('Error parsing RSS XML:', error);
+      logger.error('Error parsing RSS XML:', error);
     }
     
     return items;
@@ -300,7 +302,7 @@ export class RSSImportManager {
       return !existingByTitle.empty;
 
     } catch (error) {
-      console.error('Error checking if item exists:', error);
+      logger.error('Error checking if item exists:', error);
       return false; // If we can't check, assume it doesn't exist
     }
   }
@@ -355,7 +357,7 @@ export class RSSImportManager {
       })) as RSSFeedConfig[];
 
     } catch (error) {
-      console.error('Error getting RSS feed configs:', error);
+      logger.error('Error getting RSS feed configs:', error);
       return [];
     }
   }
@@ -370,7 +372,7 @@ export class RSSImportManager {
         updatedAt: new Date()
       });
     } catch (error) {
-      console.error('Error updating feed last import time:', error);
+      logger.error('Error updating feed last import time:', error);
     }
   }
 
@@ -483,7 +485,7 @@ export async function runScheduledRSSImports(): Promise<ImportResult[]> {
     
     return results;
   } catch (error) {
-    console.error('❌ Scheduled RSS imports failed:', error);
+    logger.error('❌ Scheduled RSS imports failed:', error);
     throw error;
   }
 }

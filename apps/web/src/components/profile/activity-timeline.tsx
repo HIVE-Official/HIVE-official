@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Clock,
@@ -126,7 +128,7 @@ export function ActivityTimeline({ userId, className = '' }: ActivityTimelinePro
         setPage(1);
       }
     } catch (error) {
-      console.error('Error fetching activities:', error);
+      logger.error('Error fetching activities:', error);
     } finally {
       setLoading(false);
     }
@@ -156,7 +158,7 @@ export function ActivityTimeline({ userId, className = '' }: ActivityTimelinePro
         setPage(page + 1);
       }
     } catch (error) {
-      console.error('Error loading more activities:', error);
+      logger.error('Error loading more activities:', error);
     } finally {
       setLoadingMore(false);
     }
@@ -282,7 +284,7 @@ export function ActivityTimeline({ userId, className = '' }: ActivityTimelinePro
         a.click();
       }
     } catch (error) {
-      console.error('Error exporting activities:', error);
+      logger.error('Error exporting activities:', error);
     }
   };
 

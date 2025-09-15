@@ -131,17 +131,6 @@ export function FeedDisplay({
   };
 
   const handleComment = (postId: string) => {
-    // TODO: Implement comment functionality
-  };
-
-  const handleShare = (postId: string) => {
-    // TODO: Implement share functionality
-  };
-
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {/* Loading skeletons */}
         {Array.from({ length: 3 }, (_, i) => (
           <Card key={_i}>
             <CardContent className="p-4">

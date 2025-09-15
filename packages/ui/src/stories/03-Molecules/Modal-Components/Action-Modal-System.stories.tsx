@@ -134,7 +134,6 @@ export const CreateSpaceModal: Story = {
     };
 
     const handleSubmit = () => {
-      console.log('Creating space:', formData);
       setIsOpen(false);
       setCurrentStep(1);
       setFormData({
@@ -496,7 +495,6 @@ export const ConfirmationModal: Story = {
                     <Button 
                       variant={modal.confirmVariant}
                       onClick={() => {
-                        console.log(`Confirmed: ${modal.id}`);
                         setActiveModal(null);
                       }}
                       className="flex-1"
@@ -557,7 +555,6 @@ export const InteractiveModalDemo: Story = {
     ];
 
     const handleSubmit = () => {
-      console.log('Form submitted:', formData);
       setActiveModal(null);
       setFormData({
         eventTitle: '',

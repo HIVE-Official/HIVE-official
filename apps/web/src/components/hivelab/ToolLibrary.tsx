@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -168,13 +170,13 @@ export function ToolLibrary({
         rating: apiTool.analytics?.rating || 0,
         tags: apiTool.metadata?.tags || [],
         isPublic: apiTool.visibility === 'public',
-        isFavorite: false, // TODO: Load from user preferences
+        isFavorite: false,
         version: apiTool.metadata?.version || '1.0.0'
       }));
       
       setTools(transformedTools);
     } catch (err) {
-      console.error('Failed to load tools:', err);
+      logger.error('Failed to load tools:', err);
       setError(err instanceof Error ? err.message : 'Failed to load tools');
       
       // Fallback to sample data for demo purposes
@@ -306,7 +308,7 @@ export function ToolLibrary({
       // Notify parent component
       onDeleteTool(toolId);
     } catch (err) {
-      console.error('Failed to delete tool:', err);
+      logger.error('Failed to delete tool:', err);
       toast({
         title: 'Delete Failed',
         description: err instanceof Error ? err.message : 'Unable to delete tool. Please try again.',

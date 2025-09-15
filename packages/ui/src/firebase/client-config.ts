@@ -42,9 +42,7 @@ export const auth = getAuth(app);
 // Configure auth settings for production
 if (process.env.NODE_ENV === 'production') {
   // Add any production-specific auth settings here
-  console.log('🔥 Firebase Auth initialized for production');
 } else {
-  console.log('🔧 Firebase Auth initialized for development');
 }
 
 export default app;

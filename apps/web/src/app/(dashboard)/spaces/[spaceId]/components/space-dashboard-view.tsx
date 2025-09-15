@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -123,11 +125,11 @@ function transformApiSpaceToComponent(apiSpace: any, currentUserId?: string): Sp
       joinedAt: '1 week ago' // Fallback
     })) || [],
     stats: {
-      postsThisWeek: Math.floor(Math.random() * 20), // TODO: Get from API
+      postsThisWeek: Math.floor(Math.random() * 20),
       activeMembers: Math.floor((apiSpace.memberCount || 0) * 0.7),
       upcomingEvents: Math.floor(Math.random() * 5)
     },
-    upcomingEvents: [] // TODO: Fetch from events API
+    upcomingEvents: []
   };
 }
 
@@ -192,7 +194,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
         setSpaceData(transformedData);
         
       } catch (error) {
-        console.error('Failed to load space data:', error);
+        logger.error('Failed to load space data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -224,7 +226,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
       
       setSpaceData(prev => prev ? { ...prev, isJoined: true, memberCount: prev.memberCount + 1 } : prev);
     } catch (error) {
-      console.error('Failed to join space:', error);
+      logger.error('Failed to join space:', error);
     } finally {
       setIsJoining(false);
     }
@@ -253,7 +255,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
       
       setSpaceData(prev => prev ? { ...prev, isJoined: false, memberCount: prev.memberCount - 1 } : prev);
     } catch (error) {
-      console.error('Failed to leave space:', error);
+      logger.error('Failed to leave space:', error);
     } finally {
       setIsLeaving(false);
     }

@@ -1,4 +1,6 @@
 import { initializeApp, cert, getApps, getApp, ServiceAccount } from 'firebase-admin/app';
+import { logger } from '@hive/core/utils/logger';
+
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
@@ -41,7 +43,7 @@ try {
     adminApp = getApp();
   }
 } catch (error) {
-  console.error('Failed to initialize Firebase Admin:', error);
+  logger.error('Failed to initialize Firebase Admin:', error);
   // Create a fallback app for development
   adminApp = initializeApp({
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'hive-campus-dev'
@@ -58,7 +60,7 @@ export const verifyIdToken = async (token: string) => {
   try {
     return await adminAuth.verifyIdToken(token);
   } catch (error) {
-    console.error('Failed to verify ID token:', error);
+    logger.error('Failed to verify ID token:', error);
     return null;
   }
 };
@@ -67,7 +69,7 @@ export const getUserByEmail = async (email: string) => {
   try {
     return await adminAuth.getUserByEmail(email);
   } catch (error) {
-    console.error('Failed to get user by email:', error);
+    logger.error('Failed to get user by email:', error);
     return null;
   }
 };
@@ -76,7 +78,7 @@ export const createCustomToken = async (uid: string, claims?: object) => {
   try {
     return await adminAuth.createCustomToken(uid, claims);
   } catch (error) {
-    console.error('Failed to create custom token:', error);
+    logger.error('Failed to create custom token:', error);
     return null;
   }
 };
@@ -86,7 +88,7 @@ export const setCustomUserClaims = async (uid: string, claims: object) => {
     await adminAuth.setCustomUserClaims(uid, claims);
     return true;
   } catch (error) {
-    console.error('Failed to set custom claims:', error);
+    logger.error('Failed to set custom claims:', error);
     return false;
   }
 };

@@ -1,4 +1,6 @@
 import { getAuth } from 'firebase-admin/auth';
+import { logger } from '@hive/core/utils/logger';
+
 import { NextRequest } from 'next/server';
 
 export interface AdminUser {
@@ -54,7 +56,7 @@ export async function getAdminUser(userId: string): Promise<AdminUser | null> {
       lastLogin: new Date(),
     };
   } catch (error) {
-    console.error('Error getting admin user:', error);
+    logger.error('Error getting admin user:', error);
     return null;
   }
 }
@@ -82,14 +84,14 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
         const decodedToken = await auth.verifyIdToken(token);
         userId = decodedToken.uid;
       } catch (authError) {
-        console.error('Token verification failed:', authError);
+        logger.error('Token verification failed:', authError);
         return null;
       }
     }
 
     return await getAdminUser(userId);
   } catch (error) {
-    console.error('Admin token verification error:', error);
+    logger.error('Admin token verification error:', error);
     return null;
   }
 }
@@ -99,7 +101,6 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
  */
 export async function verifyAdminSession(): Promise<AdminUser | null> {
   try {
-    // TODO: Implement cookies() properly for Next.js 14+
     // const cookieStore = cookies();
     // const sessionToken = cookieStore.get('admin-session')?.value;
     const sessionToken = 'test-session'; // Mock for development
@@ -112,12 +113,7 @@ export async function verifyAdminSession(): Promise<AdminUser | null> {
     if (sessionToken === 'test-session' && process.env.NODE_ENV === 'development') {
       return await getAdminUser('test-user');
     }
-
-    // TODO: Implement proper session verification with JWT
-    // For now, assume the session token is the user ID
-    return await getAdminUser(sessionToken);
-  } catch (error) {
-    console.error('Admin session verification error:', error);
+    logger.error('Admin session verification error:', error);
     return null;
   }
 }
@@ -126,15 +122,6 @@ export async function verifyAdminSession(): Promise<AdminUser | null> {
  * Create admin session
  */
 export function createAdminSession(userId: string): string {
-  // TODO: Implement proper JWT session creation
-  // For now, return the user ID as the session token
-  return userId;
-}
-
-/**
- * Check if admin has permission
- */
-export function hasPermission(admin: AdminUser, permission: string): boolean {
   return admin.permissions.includes(permission) || admin.role === 'admin';
 }
 
@@ -173,10 +160,9 @@ export async function logAdminActivity(
   _ipAddress?: string
 ) {
   try {
-    // TODO: Implement admin activity logging to database
     // [ADMIN] ${adminId} performed ${action} - timestamp: ${new Date().toISOString()}
     // ipAddress: ${ipAddress}
   } catch (error) {
-    console.error('Failed to log admin activity:', error);
+    logger.error('Failed to log admin activity:', error);
   }
 }

@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 /**
  * Mobile Native Features Integration
  * Web API integrations for native mobile functionality
@@ -44,7 +46,7 @@ export async function shareContent(data: ShareData): Promise<boolean> {
     
     return false;
   } catch (error) {
-    console.error('Error sharing content:', error);
+    logger.error('Error sharing content:', { error });
     return false;
   }
 }
@@ -107,7 +109,7 @@ export async function capturePhoto(options: CameraOptions = {}): Promise<File[]>
       multiple: options.allowMultiple
     });
   } catch (error) {
-    console.error('Error capturing photo:', error);
+    logger.error('Error capturing photo:', { error });
     throw error;
   }
 }
@@ -216,7 +218,7 @@ export class WakeLock {
       }
       return false;
     } catch (error) {
-      console.error('Wake lock failed:', error);
+      logger.error('Wake lock failed:', { error });
       return false;
     }
   }
@@ -310,7 +312,7 @@ export async function getBatteryInfo(): Promise<BatteryInfo | null> {
     }
     return null;
   } catch (error) {
-    console.error('Battery API not available:', error);
+    logger.error('Battery API not available:', { error });
     return null;
   }
 }
@@ -339,7 +341,7 @@ export class InstallPrompt {
       this.deferredPrompt = null;
       return choiceResult.outcome === 'accepted';
     } catch (error) {
-      console.error('Install prompt failed:', error);
+      logger.error('Install prompt failed:', { error });
       return false;
     }
   }
@@ -367,7 +369,7 @@ export async function selectContacts(): Promise<ContactInfo[]> {
     }
     return [];
   } catch (error) {
-    console.error('Contact picker not available:', error);
+    logger.error('Contact picker not available:', { error });
     return [];
   }
 }

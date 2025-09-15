@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { PageContainer } from "@hive/ui";
 
 import { Settings, ArrowLeft } from "lucide-react";
@@ -46,7 +48,7 @@ export default function SpaceAdminPage({ params }: SpaceAdminPageProps) {
           userRole: 'admin' // This would come from the actual user's role in the space
         });
       } catch (error) {
-        console.error('Failed to load space data:', error);
+        logger.error('Failed to load space data:', error);
       } finally {
         setIsLoading(false);
       }

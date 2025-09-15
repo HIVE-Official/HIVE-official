@@ -13,6 +13,8 @@ import {
   onSnapshot,
   increment
 } from 'firebase/firestore';
+import { logger } from '@hive/core/utils/logger';
+
 import { db } from '@/lib/firebase/client/firebase-client';
 
 // Ritual interfaces
@@ -99,7 +101,7 @@ class RitualsService {
         ...doc.data()
       } as Ritual));
     } catch (error) {
-      console.error('Error fetching active rituals:', error);
+      logger.error('Error fetching active rituals:', error);
       return [];
     }
   }
@@ -119,7 +121,7 @@ class RitualsService {
         ...doc.data()
       } as RitualParticipation));
     } catch (error) {
-      console.error('Error fetching user rituals:', error);
+      logger.error('Error fetching user rituals:', error);
       return [];
     }
   }
@@ -153,7 +155,7 @@ class RitualsService {
       
       return participationId;
     } catch (error) {
-      console.error('Error joining ritual:', error);
+      logger.error('Error joining ritual:', error);
       throw error;
     }
   }
@@ -185,7 +187,7 @@ class RitualsService {
         updates
       );
     } catch (error) {
-      console.error('Error updating ritual progress:', error);
+      logger.error('Error updating ritual progress:', error);
       throw error;
     }
   }
@@ -206,7 +208,7 @@ class RitualsService {
         }
       },
       (error: any) => {
-        console.error('Error in ritual subscription:', error);
+        logger.error('Error in ritual subscription:', error);
       }
     );
     
@@ -229,7 +231,7 @@ class RitualsService {
         ...doc.data()
       } as Ritual));
     } catch (error) {
-      console.error('Error fetching trending rituals:', error);
+      logger.error('Error fetching trending rituals:', error);
       return [];
     }
   }
@@ -253,7 +255,7 @@ class RitualsService {
       const docRef = await addDoc(collection(db, 'rituals'), ritual);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating ritual:', error);
+      logger.error('Error creating ritual:', error);
       throw error;
     }
   }

@@ -6,6 +6,8 @@
  */
 
 import type React from 'react';
+import { logger } from '../utils/logger';
+
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 // Haptic feedback types
@@ -251,7 +253,7 @@ export function usePullToRefresh(config: PullToRefreshConfig) {
         await onRefresh();
       } catch (error) {
         triggerHaptic('error');
-        console.error('Pull to refresh failed:', error);
+        logger.error('Pull to refresh failed:', { error });
       } finally {
         setIsRefreshing(false);
       }

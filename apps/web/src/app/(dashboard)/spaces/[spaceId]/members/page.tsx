@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { Button, Card, Badge, Modal, Input } from "@hive/ui";
 import { PageContainer } from "@hive/ui";
 import { 
@@ -244,7 +246,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
       await navigator.clipboard.writeText(link);
       // Show success toast
     } catch (err) {
-      console.error('Failed to copy invite link:', err);
+      logger.error('Failed to copy invite link:', err);
     }
   };
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   HiveCard as Card, 
   CardContent, 
@@ -252,7 +254,7 @@ export function EmergencyResponseCenter() {
       setShowConfirmDialog(null);
       setConfirmReason("");
     } catch (error) {
-      console.error('Emergency action failed:', error);
+      logger.error('Emergency action failed:', error);
       toast.error('Emergency action failed');
     } finally {
       setLoading(false);
@@ -280,7 +282,7 @@ export function EmergencyResponseCenter() {
 
       toast.success(`${lockdown.name} ${lockdown.isActive ? 'deactivated' : 'activated'} successfully`);
     } catch (error) {
-      console.error('System lockdown failed:', error);
+      logger.error('System lockdown failed:', error);
       toast.error('System lockdown failed');
     } finally {
       setLoading(false);

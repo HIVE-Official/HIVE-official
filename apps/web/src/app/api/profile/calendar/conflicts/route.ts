@@ -287,7 +287,6 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     }
 
     // Production implementation would update events in Firestore
-    // TODO: Implement Firestore updates for conflict resolution
     return NextResponse.json({
       success: true,
       message: 'Conflict resolved successfully'

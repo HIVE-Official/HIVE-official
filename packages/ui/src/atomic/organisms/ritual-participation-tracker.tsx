@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -163,7 +165,7 @@ export function RitualParticipationTracker({
     try {
       await onActionComplete(actionId);
     } catch (error) {
-      console.error('Failed to complete action:', error);
+      logger.error('Failed to complete action:', { error });
     } finally {
       setCompletingAction(null);
     }

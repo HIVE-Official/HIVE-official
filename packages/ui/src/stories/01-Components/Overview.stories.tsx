@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '../../components/button'
+import { Button } from '../../atomic/atoms/button-enhanced'
 import { Input } from '../../components/input'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../components/card'
 import { Alert } from '../../components/alert'

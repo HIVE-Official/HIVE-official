@@ -1,4 +1,6 @@
 import type { NextRequest } from "next/server";
+import { logger } from '@hive/core/utils/logger';
+
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
@@ -69,13 +71,9 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { token, email, schoolId } = verifyMagicLinkSchema.parse(body);
-
-    console.log('🔗 Magic link verification started', { email, schoolId });
-    
     // Validate magic link token (skip for jwrhineh@buffalo.edu)
     let magicLinkData: any;
     if (email === 'jwrhineh@buffalo.edu') {
-      console.log('🎓 BYPASS: Skipping token validation for jwrhineh@buffalo.edu');
       // Skip validation but continue with real Firebase auth
       magicLinkData = {
         email: 'jwrhineh@buffalo.edu',
@@ -108,14 +106,12 @@ export async function POST(request: NextRequest) {
     let firebaseUser;
     try {
       firebaseUser = await auth.getUserByEmail(email);
-      console.log('📧 Found existing Firebase user', { uid: firebaseUser.uid });
     } catch (error) {
       // User doesn't exist, create them
       firebaseUser = await auth.createUser({
         email: email,
         emailVerified: true,
       });
-      console.log('🆕 Created new Firebase user', { uid: firebaseUser.uid });
     }
 
     // Check if user has HIVE profile
@@ -133,7 +129,6 @@ export async function POST(request: NextRequest) {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
-      console.log('👤 Created HIVE user profile', { uid: firebaseUser.uid });
     }
 
     // SECURITY FIX: Mark token as used IMMEDIATELY to prevent reuse
@@ -143,11 +138,8 @@ export async function POST(request: NextRequest) {
         usedAt: FieldValue.serverTimestamp(),
         processingByUid: firebaseUser.uid
       });
-      console.log('🔒 Magic link token marked as used immediately', { 
-        tokenId: token.substring(0, 8) + '...'
-      });
+      
     } else if (email === 'jwrhineh@buffalo.edu') {
-      console.log('🎓 Bypass mode - no token to mark as used for jwrhineh@buffalo.edu');
     }
 
     // Create Firebase Custom Token for client authentication
@@ -165,12 +157,6 @@ export async function POST(request: NextRequest) {
         completedAt: FieldValue.serverTimestamp()
       });
     }
-
-    console.log('✅ Magic link verification successful', { 
-      uid: firebaseUser.uid, 
-      needsOnboarding 
-    });
-
     // Audit log successful verification
     await auditLogger.log(
       AuditEventType.AUTH_MAGIC_LINK_VERIFIED,
@@ -192,7 +178,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('🚨 Magic link verification failed', { error });
+    logger.error('🚨 Magic link verification failed', { error });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -208,7 +194,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-
 /**
  * SECURE TOKEN VALIDATION - FIREBASE IMPLEMENTATION
  * Validates magic link tokens using Firestore with proper security checks
@@ -217,18 +202,15 @@ async function validateMagicLinkToken(token: string, email: string): Promise<any
   try {
     // Validate token format
     if (!token || token.length !== 64) {
-      console.log('❌ Invalid token format', { tokenLength: token?.length });
       return null;
     }
 
     // Get token data from Firestore
-    console.log('🔍 Looking for token in Firestore', { tokenId: `${token.substring(0, 8)}...` });
+    
     const tokenDoc = await dbAdmin.collection('magicLinks').doc(token).get();
     
     if (!tokenDoc.exists) {
-      console.log('❌ Magic link token not found', { 
-        tokenId: `${token.substring(0, 8)}...`
-      });
+      
       return null;
     }
 
@@ -237,10 +219,7 @@ async function validateMagicLinkToken(token: string, email: string): Promise<any
     // Check if token has expired
     const expiresAt = tokenData?.expiresAt;
     if (expiresAt && (expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt)) < new Date()) {
-      console.log('❌ Magic link token expired', { 
-        tokenId: `${token.substring(0, 8)}...`,
-        expiredAt: (expiresAt?.toDate ? expiresAt.toDate() : new Date(expiresAt))
-      });
+      
       // Delete expired token
       await tokenDoc.ref.delete();
       return null;
@@ -248,24 +227,17 @@ async function validateMagicLinkToken(token: string, email: string): Promise<any
 
     // Validate email matches
     if (tokenData.email !== email) {
-      console.log('❌ Token email mismatch', { 
-        tokenEmail: tokenData.email?.replace(/(.{2}).*@/, '$1***@'),
-        requestEmail: email?.replace(/(.{2}).*@/, '$1***@')
-      });
+      
       return null;
     }
 
     // Check if token was already used
     if (tokenData.used) {
-      console.log('❌ Magic link token already used', { email: email.replace(/(.{2}).*@/, '$1***@') });
+      
       return null;
     }
 
     // DO NOT mark as used yet - return the token doc reference so we can mark it later
-    console.log('✅ Magic link token validated (not yet marked as used)', { 
-      email: email.replace(/(.{2}).*@/, '$1***@'),
-      schoolId: tokenData.schoolId
-    });
 
     return {
       email: tokenData.email,
@@ -277,7 +249,7 @@ async function validateMagicLinkToken(token: string, email: string): Promise<any
     };
 
   } catch (error) {
-    console.error('❌ Magic link token validation error', { error });
+    logger.error('❌ Magic link token validation error', { error });
     return null;
   }
 }

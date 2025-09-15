@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Settings,
@@ -152,7 +154,7 @@ export function FeedPersonalization({
         setAiSuggestions(data.suggestions || []);
       }
     } catch (error) {
-      console.error('Error fetching AI suggestions:', error);
+      logger.error('Error fetching AI suggestions:', error);
     }
   };
 
@@ -226,7 +228,7 @@ export function FeedPersonalization({
         onClose?.();
       }
     } catch (error) {
-      console.error('Error saving preferences:', error);
+      logger.error('Error saving preferences:', error);
     } finally {
       setSaving(false);
     }

@@ -1,4 +1,6 @@
 import { signOut, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, type Auth } from 'firebase/auth';
+import { logger } from '../logger';
+
 import { doc, setDoc, updateDoc, type Firestore } from 'firebase/firestore';
 import { useAuthStore } from '../stores/auth-store';
 import { useUIStore } from '../stores/ui-store';
@@ -39,7 +41,7 @@ export function useAuthOperations(auth: Auth, db: Firestore): AuthOperations {
         type: 'success',
       });
     } catch (error: unknown) {
-      console.error('Login error:', error);
+      logger.error('Login error', { error });
       const errorMessage = error instanceof Error ? error.message : 'Login failed';
       setError(errorMessage);
       addToast({
@@ -79,7 +81,7 @@ export function useAuthOperations(auth: Auth, db: Firestore): AuthOperations {
 
       return true;
     } catch (error: unknown) {
-      console.error('Verification error:', error);
+      logger.error('Verification error', { error });
       const errorMessage = error instanceof Error ? error.message : 'Verification failed';
       setError(errorMessage);
       addToast({
@@ -105,7 +107,7 @@ export function useAuthOperations(auth: Auth, db: Firestore): AuthOperations {
         type: 'info',
       });
     } catch (error: unknown) {
-      console.error('Logout error:', error);
+      logger.error('Logout error', { error });
       const errorMessage = error instanceof Error ? error.message : 'Logout failed';
       setError(errorMessage);
       addToast({
@@ -138,7 +140,7 @@ export function useAuthOperations(auth: Auth, db: Firestore): AuthOperations {
         type: 'success',
       });
     } catch (error: unknown) {
-      console.error('Profile update error:', error);
+      logger.error('Profile update error', { error });
       const errorMessage = error instanceof Error ? error.message : 'Update failed';
       setError(errorMessage);
       addToast({
@@ -175,7 +177,7 @@ export function useAuthOperations(auth: Auth, db: Firestore): AuthOperations {
         type: 'success',
       });
     } catch (error: unknown) {
-      console.error('Onboarding error:', error);
+      logger.error('Onboarding error', { error });
       const errorMessage = error instanceof Error ? error.message : 'Onboarding failed';
       setError(errorMessage);
       addToast({

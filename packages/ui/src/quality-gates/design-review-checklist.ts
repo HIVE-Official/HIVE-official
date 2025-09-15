@@ -276,6 +276,8 @@ export function checkMobileOptimization(componentCode: string): string[] {
 // Usage example for component reviews
 export const exampleUsage = `
 import { checkAIPatterns, checkMobileOptimization, componentQualityGates } from './design-review-checklist';
+import { logger } from '../utils/logger';
+
 
 // Before merging any component
 const componentCode = readFileSync('./Button.tsx', 'utf8');
@@ -284,12 +286,10 @@ const mobileViolations = checkMobileOptimization(componentCode);
 const qualityGates = componentQualityGates.Button;
 
 if (aiViolations.length > 0) {
-  console.error('AI Pattern violations:', aiViolations);
+  logger.error('AI Pattern violations:', aiViolations);
 }
 
 if (mobileViolations.length > 0) {
-  console.error('Mobile optimization violations:', mobileViolations);  
+  logger.error('Mobile optimization violations:', mobileViolations);  
 }
-
-console.log('Quality gates to check:', qualityGates);
 `;

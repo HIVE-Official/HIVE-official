@@ -1,3 +1,5 @@
+import { logger } from '@hive/core/utils/logger';
+
 /**
  * Tool Navigation Helper
  * Provides consistent navigation patterns throughout the HIVE tool system
@@ -123,7 +125,7 @@ export class ToolNavigation {
       await navigator.clipboard.writeText(shareUrl);
       return true;
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
+      logger.error('Failed to copy to clipboard:', error);
       return false;
     }
   }

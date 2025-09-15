@@ -128,7 +128,6 @@ export async function POST(request: NextRequest) {
 
     // Check pricing and payment (if applicable)
     if (marketplaceTool.pricing?.type === 'paid') {
-      // TODO: Implement payment verification
       return NextResponse.json(ApiResponseHelper.error("Paid tools not yet supported", "UNKNOWN_ERROR"), { status: 501 });
     }
 

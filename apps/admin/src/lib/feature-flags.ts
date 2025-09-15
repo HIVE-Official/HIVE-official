@@ -166,7 +166,7 @@ export class FeatureFlagService {
       auditLog: [{
         timestamp: now as Timestamp,
         userId: flag.createdBy,
-        userName: 'Admin User', // TODO: Get from user context
+        userName: 'Admin User',
         action: 'created',
         changes: {},
         reason: 'Initial creation'

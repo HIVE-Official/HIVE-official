@@ -222,32 +222,21 @@ export interface DesignValidationReport {
 // Console reporting utilities
 export function reportValidationResults(report: DesignValidationReport): void {
   console.group('🎨 HIVE Design System Validation Report');
-  
-  console.log(`📊 Compliance Score: ${report.compliance.toFixed(1)}%`);
-  console.log(`🔍 Total Elements: ${report.totalElements}`);
-  console.log(`⚠️  Total Issues: ${report.totalIssues}`);
-  
   if (report.errors > 0) {
-    console.log(`❌ Errors: ${report.errors}`);
   }
   if (report.warnings > 0) {
-    console.log(`⚠️  Warnings: ${report.warnings}`);
   }
   if (report.infos > 0) {
-    console.log(`ℹ️  Info: ${report.infos}`);
   }
   
   // Report issues by rule
   Object.entries(report.results).forEach(([rule, results]) => {
     console.group(`${getSeverityIcon(results[0].severity)} ${rule} (${results.length} issues)`);
     results.slice(0, 5).forEach(result => {
-      console.log(`  ${result.element}: ${result.description}`);
       if (result.fix) {
-        console.log(`  💡 Fix: ${result.fix}`);
       }
     });
     if (results.length > 5) {
-      console.log(`  ... and ${results.length - 5} more`);
     }
     console.groupEnd();
   });
@@ -290,8 +279,6 @@ export function enableContinuousValidation(): void {
   
   // Initial validation
   runValidation();
-  
-  console.log('🎨 HIVE Design System continuous validation enabled');
 }
 
 // Export validation utilities

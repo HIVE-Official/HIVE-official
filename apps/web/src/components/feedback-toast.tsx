@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -52,19 +54,7 @@ export function FeedbackToast() {
       }, 2000);
       
     } catch (_error) {
-      console.error('Failed to submit feedback:', _error);
-      // TODO: Show error state to user
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleDismiss = () => {
-    setIsDismissed(true);
-    setIsOpen(false);
-    setIsExpanded(false);
-  };
-
+      logger.error('Failed to submit feedback:', _error);
   if (isDismissed || !isMounted) return null;
 
   return (

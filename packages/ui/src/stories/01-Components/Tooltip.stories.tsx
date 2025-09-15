@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../components/tooltip';
-import { Button } from '../../components/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar } from '../../components/avatar';
 import { Badge } from '../../components/badge';
 import { 

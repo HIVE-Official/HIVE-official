@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { cn } from '../../lib/utils';
 import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
-import { HiveButton } from '../hive-button';
+import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { HiveBadge } from '../hive-badge';
 import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
 import { 
@@ -694,7 +694,7 @@ export const HiveToolsSurface: React.FC<HiveToolsSurfaceProps> = ({
                 onUninstall={() => onUninstallTool?.(tool.id)}
                 onFavorite={() => onFavoriteTool?.(tool.id)}
                 onConfigure={() => onConfigureTool?.(tool.id)}
-                onView={() => console.log('View tool:', tool.id)}
+                onView={() => {}}
               />
             ))
         )}

@@ -1,33 +1,17 @@
 // Temporary stub for firebase client utilities
-// TODO: Use proper firebase client from @hive/core
-
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-import { getAnalytics, isSupported } from "firebase/analytics";
 import { getFirebaseConfig } from "../env";
 
 // Get the Firebase configuration for the current environment
 let firebaseConfig;
 try {
   firebaseConfig = getFirebaseConfig();
-  
-  console.log('🔍 Firebase config loaded:', {
-    hasApiKey: !!firebaseConfig.apiKey,
-    hasProjectId: !!firebaseConfig.projectId,
-    hasAuthDomain: !!firebaseConfig.authDomain,
-    projectId: firebaseConfig.projectId, // Safe to log project ID
-    authDomain: firebaseConfig.authDomain // Safe to log auth domain
-  });
-  
   // Validate Firebase config
   if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
     throw new Error(`Firebase configuration is incomplete: missing ${!firebaseConfig.apiKey ? 'apiKey' : 'projectId'}`);
   }
 } catch (error) {
-  console.error('❌ Firebase configuration error:', error);
-  console.error('❌ Available env vars:', {
+  logger.error('❌ Firebase configuration error:', error);
+  logger.error('❌ Available env vars:', {
     NEXT_PUBLIC_FIREBASE_API_KEY: !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_PROJECT_ID: !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: !!process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -51,7 +35,7 @@ try {
       // Direct environment variable access succeeded
     } else {
       if (process.env.NODE_ENV === 'development') {
-        console.error('Direct environment access failed, using demo config');
+        logger.error('Direct environment access failed, using demo config');
       }
       firebaseConfig = {
         apiKey: 'demo-api-key',
@@ -72,7 +56,7 @@ let app;
 try {
   // Check if config is valid before initializing
   if (!firebaseConfig || !firebaseConfig.apiKey || !firebaseConfig.projectId) {
-    console.error('❌ Invalid Firebase configuration:', {
+    logger.error('❌ Invalid Firebase configuration:', {
       hasConfig: !!firebaseConfig,
       hasApiKey: !!firebaseConfig?.apiKey,
       hasProjectId: !!firebaseConfig?.projectId,
@@ -82,9 +66,8 @@ try {
   }
   
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-  console.log('✅ Firebase app initialized successfully');
 } catch (error) {
-  console.error('❌ Failed to initialize Firebase:', error);
+  logger.error('❌ Failed to initialize Firebase:', error);
   throw new Error('Firebase initialization failed');
 }
 

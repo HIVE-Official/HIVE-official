@@ -52,18 +52,6 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
 
     // Get user profile for personalization
-    // TODO: Implement proper user profile fetching from Firestore user document
-    const userProfile = {
-      major: "Computer Science", // Legacy field for backward compatibility
-      majors: ["Computer Science"], // New array format - should fetch from user document
-      dorm: "North Campus",
-      graduationYear: 2025,
-      interests: [], // Should fetch user's selected interests
-      isBuilder: false,
-      isGreekMember: false,
-    };
-
-    // Parse query parameters
     const { searchParams } = new URL(request.url);
 
     const section = searchParams.get("section") as SpaceSection | null;

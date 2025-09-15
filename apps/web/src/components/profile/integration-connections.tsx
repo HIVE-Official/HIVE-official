@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Link2,
@@ -224,7 +226,7 @@ export function IntegrationConnections({ userId, className = '' }: IntegrationCo
         updateIntegrationStatus(data.integrations || []);
       }
     } catch (error) {
-      console.error('Error fetching integrations:', error);
+      logger.error('Error fetching integrations:', error);
     }
   };
 
@@ -278,7 +280,7 @@ export function IntegrationConnections({ userId, className = '' }: IntegrationCo
         }
       }
     } catch (error) {
-      console.error('Error connecting integration:', error);
+      logger.error('Error connecting integration:', error);
     } finally {
       setLoading(false);
     }
@@ -297,7 +299,7 @@ export function IntegrationConnections({ userId, className = '' }: IntegrationCo
         fetchUserIntegrations();
       }
     } catch (error) {
-      console.error('Error disconnecting integration:', error);
+      logger.error('Error disconnecting integration:', error);
     }
   };
 
@@ -321,7 +323,7 @@ export function IntegrationConnections({ userId, className = '' }: IntegrationCo
         })));
       }
     } catch (error) {
-      console.error('Error syncing integration:', error);
+      logger.error('Error syncing integration:', error);
     } finally {
       setSyncing(null);
     }

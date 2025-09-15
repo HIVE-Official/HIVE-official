@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   Card, 
   CardContent, 
@@ -87,7 +89,7 @@ export default function ModerationCenter() {
         setStats(statsData);
       }
     } catch (error) {
-      console.error('Error loading moderation data:', error);
+      logger.error('Error loading moderation data:', error);
     } finally {
       setLoading(false);
     }
@@ -107,7 +109,7 @@ export default function ModerationCenter() {
         setSelectedReport(null);
       }
     } catch (error) {
-      console.error('Error handling report:', error);
+      logger.error('Error handling report:', error);
     }
   };
 

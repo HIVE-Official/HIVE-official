@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Search, X, Loader2, User, Users, Calendar, FileText, Wrench } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -66,7 +68,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
         setResults(searchResults);
         setSelectedIndex(0);
       } catch (error) {
-        console.error('Search error:', error);
+        logger.error('Search error:', error);
         setResults([]);
       } finally {
         setIsLoading(false);

@@ -1,5 +1,7 @@
 /// <reference path="../types/global.d.ts" />
 import { LRUCache } from 'lru-cache';
+import { logger } from '@hive/core/utils/logger';
+
 import { unstable_cache } from 'next/cache';
 
 /**
@@ -172,7 +174,6 @@ export const cacheInvalidation = {
   // Invalidate by pattern
   invalidatePattern(pattern: string): void {
     // This would integrate with your cache infrastructure
-    console.log(`Invalidating cache pattern: ${pattern}`);
   },
   
   // Invalidate by tags
@@ -185,7 +186,7 @@ export const cacheInvalidation = {
           const { revalidateTag } = require('next/cache');
           revalidateTag(tag);
         } catch (error) {
-          console.error('Failed to revalidate tag:', tag, error);
+          logger.error('Failed to revalidate tag:', tag, error);
         }
       }
     });
@@ -450,7 +451,7 @@ export const browserCache = {
       };
       localStorage.setItem(key, JSON.stringify(item));
     } catch (error) {
-      console.error('Failed to save to localStorage:', error);
+      logger.error('Failed to save to localStorage:', error);
     }
   },
   

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Button } from '@hive/ui';
 import { Download, FileJson, FileText, Check, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -52,7 +54,7 @@ export function ExportProfileButton({ className }: { className?: string }) {
         setExportStatus('idle');
       }, 3000);
     } catch (error) {
-      console.error('Error exporting profile:', error);
+      logger.error('Error exporting profile:', error);
       setExportStatus('error');
       
       // Reset status after 3 seconds

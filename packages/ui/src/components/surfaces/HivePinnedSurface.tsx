@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { cn } from '../../lib/utils';
 import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
-import { HiveButton } from '../hive-button';
+import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { HiveBadge } from '../hive-badge';
 import { 
   Pin,
@@ -455,7 +455,7 @@ export const HivePinnedSurface: React.FC<HivePinnedSurfaceProps> = ({
                 variant={variant}
                 onEdit={() => onEditItem?.(item.id)}
                 onUnpin={() => onUnpinItem?.(item.id)}
-                onView={() => console.log('View item:', item.id)}
+                onView={() => {}}
               />
             ))
         )}

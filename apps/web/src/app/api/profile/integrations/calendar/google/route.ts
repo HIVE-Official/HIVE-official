@@ -4,6 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { FieldValue } from 'firebase-admin/firestore';
@@ -43,7 +45,7 @@ export const GET = withAuth(async (request: NextRequest, { userId }) => {
       authUrl
     });
   } catch (error) {
-    console.error('Error generating Google auth URL:', error);
+    logger.error('Error generating Google auth URL:', error);
     return NextResponse.json(
       { error: 'Failed to initiate Google Calendar authentication' },
       { status: 500 }
@@ -173,7 +175,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
     });
 
   } catch (error) {
-    console.error('Error syncing Google Calendar:', error);
+    logger.error('Error syncing Google Calendar:', error);
     return NextResponse.json(
       { error: 'Failed to sync Google Calendar' },
       { status: 500 }
@@ -213,7 +215,7 @@ export const DELETE = withAuth(async (request: NextRequest, { userId }) => {
     });
 
   } catch (error) {
-    console.error('Error disconnecting Google Calendar:', error);
+    logger.error('Error disconnecting Google Calendar:', error);
     return NextResponse.json(
       { error: 'Failed to disconnect Google Calendar' },
       { status: 500 }

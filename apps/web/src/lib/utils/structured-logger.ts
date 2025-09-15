@@ -1,3 +1,5 @@
+import { logger } from '@hive/core/utils/logger';
+
 /**
  * Structured Logger for HIVE Platform
  * 
@@ -121,10 +123,8 @@ class StructuredLogger {
     // Choose console method based on level
     switch (level) {
       case 'debug':
-        console.debug(formattedMessage, context || '');
         break;
       case 'info':
-        console.info(formattedMessage, context || '');
         break;
       case 'warn':
         console.warn(formattedMessage, context || '');
@@ -136,7 +136,7 @@ class StructuredLogger {
 
     // In development, also log structured data for better debugging
     if (this.isDevelopment && context) {
-      console.log('Context:', JSON.stringify(context, null, 2));
+      
     }
   }
 
@@ -188,7 +188,7 @@ class StructuredLogger {
       }
     } catch (e) {
       // Fail silently - don't throw errors from error handler
-      console.error('Failed to store error log:', e);
+      logger.error('Failed to store error log:', e);
     }
   }
 

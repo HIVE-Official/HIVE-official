@@ -6,8 +6,4 @@
  */
 
 // Placeholder exports to prevent build errors
-export const DatabaseHelpers = {
-  // TODO: Implement for v1
-};
-
-export default DatabaseHelpers;
+export const DatabaseHelpers = {};

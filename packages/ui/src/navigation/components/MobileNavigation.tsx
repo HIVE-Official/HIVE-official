@@ -279,12 +279,12 @@ export const mobileNavItemVariants = {
 export const useMobileNavigationAnalytics = () => {
   const trackNavigation = (from: string, to: string, section: string) => {
     // Analytics implementation
-    console.log('Mobile navigation:', { from, to, section, timestamp: Date.now() });
+    
   };
   
   const trackInteraction = (action: string, section: string) => {
     // Analytics implementation  
-    console.log('Mobile nav interaction:', { action, section, timestamp: Date.now() });
+    
   };
   
   return { trackNavigation, trackInteraction };

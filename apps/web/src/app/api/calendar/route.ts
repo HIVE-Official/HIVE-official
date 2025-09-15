@@ -112,7 +112,7 @@ async function fetchUserCalendarEvents(userId: string): Promise<CalendarEvent[]>
 
     return allEvents.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
   } catch (error) {
-    console.error('Failed to fetch calendar events:', error);
+    logger.error('Failed to fetch calendar events:', error);
     return [];
   }
 }
@@ -135,7 +135,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error) {
-    console.error('Error fetching calendar events:', error);
+    logger.error('Error fetching calendar events:', error);
     return NextResponse.json(
       ApiResponseHelper.error("Failed to fetch calendar events", "FETCH_ERROR"),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

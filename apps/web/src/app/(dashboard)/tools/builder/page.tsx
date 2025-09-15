@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -163,7 +165,7 @@ export default function ToolsBuilderPage() {
           setUserSpaces(data.spaces || []);
         }
       } catch (error) {
-        console.error('Error fetching user spaces:', error);
+        logger.error('Error fetching user spaces:', error);
       }
     };
 
@@ -263,7 +265,7 @@ export default function ToolsBuilderPage() {
         setErrors(['Failed to save tool. Please try again.']);
       }
     } catch (error) {
-      console.error('Error saving tool:', error);
+      logger.error('Error saving tool:', error);
       setErrors(['An error occurred while saving. Please try again.']);
     } finally {
       setIsSaving(false);

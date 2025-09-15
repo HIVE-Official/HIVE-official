@@ -36,11 +36,9 @@ export function CampusOfflineIndicator() {
       });
       
       if (response.ok) {
-        console.log('HIVE PWA: Campus connection restored');
         setShowOfflineMessage(false);
       }
     } catch (error) {
-      console.log('HIVE PWA: Still offline from campus network');
     }
   };
 
@@ -116,9 +114,7 @@ export function useCampusNetworkStatus() {
       });
 
       if (isOnline) {
-        console.log('HIVE: Campus network connected', { connectionType, effectiveType: connection?.effectiveType });
       } else {
-        console.log('HIVE: Campus network disconnected - offline mode active');
       }
     };
 

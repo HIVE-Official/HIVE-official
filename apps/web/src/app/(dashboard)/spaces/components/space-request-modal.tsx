@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -152,7 +154,7 @@ export function SpaceRequestModal({ isOpen, onClose }: SpaceRequestModalProps) {
 
       setIsSuccess(true);
     } catch (error) {
-      console.error('Failed to submit space request:', error);
+      logger.error('Failed to submit space request:', error);
     } finally {
       setIsSubmitting(false);
     }

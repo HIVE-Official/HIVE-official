@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   HiveCard as Card, 
   CardContent, 
@@ -329,7 +331,7 @@ export function ToolApprovalSystem() {
       setSelectedTool(null);
       setReviewComment("");
     } catch (error) {
-      console.error('Error reviewing tool:', error);
+      logger.error('Error reviewing tool:', error);
       toast.error('Failed to review tool');
     }
   };

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { Card } from '@hive/ui';
 import { 
   Clock,
@@ -34,7 +36,7 @@ export function RightNowCard({ className, onUpdate }: RightNowCardProps) {
           }
         }
       } catch (error) {
-        console.error('Error fetching status:', error);
+        logger.error('Error fetching status:', error);
       } finally {
         setIsLoading(false);
       }

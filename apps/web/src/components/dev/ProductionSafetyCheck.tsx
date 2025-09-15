@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { isLocalDevelopment, getEnvironmentName } from '@/lib/dev-utils';
 
 /**
@@ -14,8 +16,6 @@ export function ProductionSafetyCheck() {
     const environment = getEnvironmentName();
     
     // Log environment for transparency
-    console.log(`🔒 HIVE Platform - Environment: ${environment}`);
-    
     // CRITICAL SAFETY CHECK: Verify no dev features in production
     if (environment === 'Production' || !isLocalDevelopment()) {
       // Check for any accidentally exposed dev features
@@ -48,14 +48,14 @@ export function ProductionSafetyCheck() {
       
       // If any unsafe conditions found in production, log error (don't throw to not break app)
       if (unsafeConditions.length > 0 && environment === 'Production') {
-        console.error('⚠️ SECURITY WARNING: Development features detected in production:', unsafeConditions);
+        logger.error('⚠️ SECURITY WARNING: Development features detected in production:', unsafeConditions);
         // Could also send this to error tracking service
       }
     }
     
     // In development, log what features are enabled
     if (isLocalDevelopment()) {
-      console.log('🔧 Development features enabled (localhost only)');
+      
     }
   }, []);
   

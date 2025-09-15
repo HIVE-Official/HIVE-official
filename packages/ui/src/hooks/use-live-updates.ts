@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { logger } from '../utils/logger';
+
 import { onSnapshot, collection, query, where, orderBy, limit, doc } from 'firebase/firestore';
 
 // Generic real-time hook for any Firebase collection
@@ -97,12 +99,10 @@ export function useTypingIndicators(spaceId: string, userId: string) {
 
   const startTyping = () => {
     // In real implementation, would send typing indicator to Firebase
-    console.log('User started typing in space:', spaceId);
   };
 
   const stopTyping = () => {
     // In real implementation, would remove typing indicator from Firebase
-    console.log('User stopped typing in space:', spaceId);
   };
 
   const handleTyping = () => {
@@ -260,7 +260,7 @@ export function useAutoRefresh(
         await refreshFunction();
         setLastRefresh(new Date());
       } catch (error) {
-        console.error('Auto-refresh failed:', error);
+        logger.error('Auto-refresh failed:', { error });
       } finally {
         setIsRefreshing(false);
       }
@@ -287,7 +287,7 @@ export function useAutoRefresh(
       await refreshFunction();
       setLastRefresh(new Date());
     } catch (error) {
-      console.error('Manual refresh failed:', error);
+      logger.error('Manual refresh failed:', { error });
     } finally {
       setIsRefreshing(false);
     }

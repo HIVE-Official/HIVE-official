@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
 import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
@@ -154,7 +156,6 @@ export function EnhancedSpacesSystem({
 
   const handleActivationSubmit = async (data: ActivationRequestData) => {
     // Here we would submit the activation request to the API
-    console.log('Activation request submitted:', { templateId: selectedTemplate, ...data });
     setShowActivationModal(false);
     setSelectedTemplate('');
     // Show success toast or notification
@@ -177,10 +178,8 @@ export function EnhancedSpacesSystem({
       // Invalidate queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['spaces-browse'] });
       queryClient.invalidateQueries({ queryKey: ['my-spaces'] });
-      
-      console.log('Successfully joined space:', spaceId);
     } catch (error) {
-      console.error('Error joining space:', error);
+      logger.error('Error joining space:', error);
     }
   };
 
@@ -586,7 +585,7 @@ export function EnhancedSpacesSystem({
                 <UBSpacesDirectory
                   spaces={UB_SPACE_TEMPLATES}
                   onRequestActivation={handleTemplateActivation}
-                  onViewDetails={(spaceId) => console.log('View template details:', spaceId)}
+                  onViewDetails={(spaceId) => {}}
                 />
               </CardContent>
             </Card>

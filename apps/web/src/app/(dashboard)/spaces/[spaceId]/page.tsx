@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { useQuery } from "@tanstack/react-query";
 import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface, type Comment } from "@hive/ui";
@@ -25,7 +27,7 @@ import { SpaceErrorBoundaryWrapper } from "../components/space-error-boundary";
 import { SpaceLoadingSkeleton } from "../components/space-loading-skeleton";
 import { LeaveSpaceButton } from "../../../../components/spaces/leave-space-button";
 import { PostCreationModal } from "../../../../components/spaces/post-creation-modal";
-import { EventCreationModal } from "../../../../components/spaces/event-creation-modal";
+import { EventCreationModal } from "../../../../components/events/event-modal";
 import { LeaderToolbar, useLeaderMode /* , type LeaderMode */ } from "../../../../components/spaces/leader-toolbar";
 import { getUserSpaceMembership, type SpaceMembership } from "@/lib/spaces/space-permissions";
 
@@ -281,7 +283,6 @@ export default function SpaceDetailPage({
             type: 'success'
           });
         } else {
-          console.log('Auto-connections created:', connectionMessage);
         }
       }
 
@@ -348,7 +349,7 @@ export default function SpaceDetailPage({
       await uninstallTool(deploymentId);
       await refreshTools();
     } catch (error) {
-      console.error('Failed to remove tool:', error);
+      logger.error('Failed to remove tool:', error);
     }
   };
 
@@ -402,7 +403,7 @@ export default function SpaceDetailPage({
       // Refresh members list to show updated roles
       refreshMembers();
     } catch (error) {
-      console.error('Failed to change role:', error);
+      logger.error('Failed to change role:', error);
       // Show error toast if available
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast({
@@ -424,7 +425,7 @@ export default function SpaceDetailPage({
       // Refresh members list to show updated list
       refreshMembers();
     } catch (error) {
-      console.error('Failed to remove member:', error);
+      logger.error('Failed to remove member:', error);
       // Show error toast if available
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast({
@@ -444,7 +445,7 @@ export default function SpaceDetailPage({
       // Refresh members list to show updated status
       refreshMembers();
     } catch (error) {
-      console.error('Failed to suspend member:', error);
+      logger.error('Failed to suspend member:', error);
       // Show error toast if available
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast({
@@ -476,7 +477,7 @@ export default function SpaceDetailPage({
           setSpaceMembership(membership);
         }
       } catch (error) {
-        console.error('Failed to fetch space membership:', error);
+        logger.error('Failed to fetch space membership:', error);
         if (isMounted) {
           setSpaceMembership(null);
         }
@@ -829,7 +830,7 @@ export default function SpaceDetailPage({
                       // Refresh to show updated coordination data
                       window.location.reload();
                     } catch (error) {
-                      console.error('Coordination response error:', error);
+                      logger.error('Coordination response error:', error);
                       alert('Failed to submit response. Please try again.');
                     }
                   }}
@@ -844,7 +845,7 @@ export default function SpaceDetailPage({
                       // Refresh to show updated status
                       window.location.reload();
                     } catch (error) {
-                      console.error('Coordination status error:', error);
+                      logger.error('Coordination status error:', error);
                       alert('Failed to update status. Please try again.');
                     }
                   }}
@@ -852,14 +853,13 @@ export default function SpaceDetailPage({
                   onReaction={toggleReaction}
                   onShare={async (postId: any) => {
                     // Share functionality can be implemented later
-                    console.log('Share post:', postId);
                   }}
                   onDelete={async (postId: any) => {
                     if (confirm('Are you sure you want to delete this post?')) {
                       try {
                         await deletePost(postId);
                       } catch (error) {
-                        console.error('Delete post error:', error);
+                        logger.error('Delete post error:', error);
                       }
                     }
                   }}
@@ -1048,8 +1048,8 @@ export default function SpaceDetailPage({
                         leaderMode={currentMode === 'manage' ? 'manage' : 'insights'}
                         maxMembers={5}
                         canManageMembers={isLeader}
-                        onInviteMember={() => console.log('Invite member')}
-                        onMessageMember={(memberId) => console.log('Message member:', memberId)}
+                        onInviteMember={() => {}}
+                        onMessageMember={(memberId) => {}}
                       />
                     ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                       <HiveEventsSurface
@@ -1083,7 +1083,7 @@ export default function SpaceDetailPage({
                         onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
                         onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
                         onRemoveTool={widget.id === 'tools' ? handleRemoveTool : undefined}
-                        onAddPinned={widget.id === 'pinned' ? () => console.log('Add pinned item') : undefined}
+                        onAddPinned={widget.id === 'pinned' ? () => {} : undefined}
                         onViewItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'view') : undefined}
                         onDownloadItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'download') : undefined}
                         onUnpinItem={widget.id === 'pinned' ? unpinItem : undefined}
@@ -1253,7 +1253,7 @@ export default function SpaceDetailPage({
                               });
                             }
                           } catch (error) {
-                            console.error('Failed to update description:', error);
+                            logger.error('Failed to update description:', error);
                             // Show error toast if available
                             if (typeof window !== 'undefined' && (window as any).showToast) {
                               (window as any).showToast({
@@ -1303,7 +1303,6 @@ export default function SpaceDetailPage({
           </div>
         )}
 
-        
         {/* Modal System */}
         <AnimatePresence>
           {activeModal && (
@@ -1400,8 +1399,8 @@ export default function SpaceDetailPage({
                             leaderMode={currentMode === 'manage' ? 'manage' : 'insights'}
                             maxMembers={50}
                             canManageMembers={isLeader}
-                            onInviteMember={() => console.log('Invite member')}
-                            onMessageMember={(memberId) => console.log('Message member:', memberId)}
+                            onInviteMember={() => {}}
+                            onMessageMember={(memberId) => {}}
                             onChangeRole={handleChangeRole}
                             onRemoveMember={handleRemoveMember}
                             onBlockMember={handleBlockMember}
@@ -1443,9 +1442,9 @@ export default function SpaceDetailPage({
                             onChangeRole={widget.id === 'members' ? handleChangeRole : undefined}
                             onRemoveMember={widget.id === 'members' ? handleRemoveMember : undefined}
                             onBlockMember={widget.id === 'members' ? handleBlockMember : undefined}
-                            onInviteMember={widget.id === 'members' ? () => console.log('Invite member') : undefined}
-                            onMessageMember={widget.id === 'members' ? (memberId) => console.log('Message member:', memberId) : undefined}
-                            onAddPinned={widget.id === 'pinned' ? () => console.log('Add pinned item') : undefined}
+                            onInviteMember={widget.id === 'members' ? () => {} : undefined}
+                            onMessageMember={widget.id === 'members' ? (memberId) => {} : undefined}
+                            onAddPinned={widget.id === 'pinned' ? () => {} : undefined}
                             onViewItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'view') : undefined}
                             onDownloadItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'download') : undefined}
                             onUnpinItem={widget.id === 'pinned' ? unpinItem : undefined}

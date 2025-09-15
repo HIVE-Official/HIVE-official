@@ -106,7 +106,7 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
               color: 'var(--hive-gold)'
             }
           ],
-          conflicts: [], // TODO: Implement conflict detection
+          conflicts: [],
           lastUpdated: new Date()
         };
         

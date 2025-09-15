@@ -4,6 +4,8 @@
  */
 
 import type { Tool, CreateTool } from '@hive/core';
+import { uiLogger } from './logger';
+
 
 // API Response Types
 interface ApiResponse<T> {
@@ -248,7 +250,7 @@ class ApiClient {
       const data = await response.json();
       return data as T;
     } catch (error) {
-      console.error(`API request failed: ${endpoint}`, error);
+      uiLogger.error('API request failed: ${endpoint}', error);
       throw error;
     }
   }
@@ -518,7 +520,7 @@ export const apiUtils = {
 
   // Handle API errors gracefully
   handleApiError: (error: unknown) => {
-    console.error('API Error:', error);
+    uiLogger.error('API Error:', error);
     
     if ((error instanceof Error ? error.message : "Unknown error")?.includes('Unauthorized')) {
       return 'You need to be logged in to perform this action.';

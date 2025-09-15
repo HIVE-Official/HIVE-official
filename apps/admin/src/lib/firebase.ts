@@ -29,7 +29,6 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     }
   } catch (error) {
     // Emulator already connected or not available
-    console.debug('Auth emulator connection:', error);
   }
 
   try {
@@ -40,7 +39,6 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     }
   } catch (error) {
     // Emulator already connected or not available
-    console.debug('Firestore emulator connection:', error);
   }
 }
 

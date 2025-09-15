@@ -22,7 +22,6 @@ const ADMIN_USER_IDS = [
  * Check if user is an admin
  */
 async function _isAdmin(userId: string): Promise<boolean> {
-  // TODO: Implement proper admin checking with admin roles table
   return ADMIN_USER_IDS.includes(userId);
 }
 
@@ -113,7 +112,7 @@ async function getUsersStatistics() {
         .reduce((acc, [major, count]) => ({ ...acc, [major]: count }), {}),
       byYear: usersByYear,
       growth: {
-        lastWeek: 0, // TODO: Implement time-based growth tracking
+        lastWeek: 0,
         lastMonth: 0
       }
     };

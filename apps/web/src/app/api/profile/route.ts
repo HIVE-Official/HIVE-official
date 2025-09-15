@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { dbAdmin as db, authAdmin as auth } from '@/lib/firebase/admin/firebase-admin';
 import * as admin from 'firebase-admin';
 
@@ -94,7 +96,7 @@ export async function GET(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('Error fetching profile:', error);
+    logger.error('Error fetching profile:', error);
     return NextResponse.json(
       { error: 'Failed to fetch profile' },
       { status: 500 }
@@ -223,7 +225,7 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('Error creating profile:', error);
+    logger.error('Error creating profile:', error);
     return NextResponse.json(
       { error: 'Failed to create profile' },
       { status: 500 }
@@ -297,7 +299,7 @@ export async function PUT(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('Error updating profile:', error);
+    logger.error('Error updating profile:', error);
     return NextResponse.json(
       { error: 'Failed to update profile' },
       { status: 500 }

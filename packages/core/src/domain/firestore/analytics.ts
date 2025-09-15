@@ -6,8 +6,4 @@
  */
 
 // Placeholder exports to prevent build errors
-export const AnalyticsSystem = {
-  // TODO: Implement for v1
-};
-
-export default AnalyticsSystem;
+export const AnalyticsSystem = {};

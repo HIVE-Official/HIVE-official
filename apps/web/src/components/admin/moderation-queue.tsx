@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import {
   Card,
   CardContent,
@@ -139,7 +141,7 @@ export function ModerationQueue() {
         setStats(data.statistics);
       }
     } catch (error) {
-      console.error('Failed to fetch moderation queue:', error);
+      logger.error('Failed to fetch moderation queue:', error);
     } finally {
       setIsLoading(false);
     }
@@ -168,7 +170,7 @@ export function ModerationQueue() {
         throw new Error('Failed to process moderation action');
       }
     } catch (error) {
-      console.error('Error processing moderation action:', error);
+      logger.error('Error processing moderation action:', error);
     } finally {
       setIsProcessingAction(false);
     }

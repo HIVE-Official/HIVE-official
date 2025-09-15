@@ -30,7 +30,6 @@ const ADMIN_USER_IDS = [
  * Check if user is an admin
  */
 async function isAdmin(userId: string): Promise<boolean> {
-  // TODO: Implement proper admin checking with admin roles table
   return ADMIN_USER_IDS.includes(userId);
 }
 

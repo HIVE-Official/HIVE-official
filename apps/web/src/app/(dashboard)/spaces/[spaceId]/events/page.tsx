@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ErrorBoundary } from "../../../../../components/error-boundary";
-import { CreateEventModal } from "../../../../../components/events/create-event-modal";
+import { CreateEventModal } from "../../../../../components/events/event-modal";
 import { EventDetailsModal } from "../../../../../components/events/event-details-modal";
 import { SpaceEventCalendar } from "../../../../../components/spaces/space-event-calendar";
 

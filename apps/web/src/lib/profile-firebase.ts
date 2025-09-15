@@ -19,6 +19,8 @@ import {
   DocumentData,
   Timestamp
 } from 'firebase/firestore';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   ref, 
   uploadBytes, 
@@ -79,7 +81,7 @@ export async function uploadProfilePhoto(
     
     return downloadURL;
   } catch (error) {
-    console.error('Error uploading profile photo:', error);
+    logger.error('Error uploading profile photo:', error);
     throw new Error('Failed to upload profile photo');
   }
 }
@@ -117,7 +119,7 @@ export async function getUserProfile(userId: string): Promise<DocumentData | nul
     
     return null;
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    logger.error('Error fetching user profile:', error);
     return null;
   }
 }
@@ -141,7 +143,7 @@ export async function updateUserProfile(
       updatedAt: serverTimestamp()
     });
   } catch (error) {
-    console.error('Error updating user profile:', error);
+    logger.error('Error updating user profile:', error);
     throw new Error('Failed to update profile');
   }
 }
@@ -175,7 +177,7 @@ export async function deleteProfilePhoto(
     
     await Promise.all(deletePromises);
   } catch (error) {
-    console.error('Error deleting profile photo:', error);
+    logger.error('Error deleting profile photo:', error);
     throw new Error('Failed to delete photo');
   }
 }
@@ -196,7 +198,7 @@ export async function getUserPhotos(userId: string): Promise<Photo[]> {
       ...doc.data()
     } as Photo));
   } catch (error) {
-    console.error('Error fetching user photos:', error);
+    logger.error('Error fetching user photos:', error);
     return [];
   }
 }

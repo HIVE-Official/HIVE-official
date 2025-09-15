@@ -30,7 +30,7 @@ export {
 export { EnhancedAppShell } from "./src/components/shell/enhanced-app-shell";
 
 // === BASIC HIVE COMPONENTS ===
-export { HiveButton, HiveButton as Button } from "./src/components/hive-button";
+export { ButtonEnhanced as HiveButton, ButtonEnhanced as Button } from "./src/atomic/atoms/button-enhanced";
 export { HiveInput, HiveSearchInput } from "./src/components/hive-input";
 export { HiveSelect, hiveSelectVariants, type HiveSelectProps } from "./src/components/hive-select";
 export { HiveComingSoonModal } from "./src/components/hive-coming-soon-modal";

@@ -84,7 +84,6 @@ function SettingsPageContent() {
       breadcrumbs={[
         { label: "Settings", icon: <Settings /> }
       ]}
-      maxWidth="xl"
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Settings Navigation */}
@@ -180,26 +179,27 @@ function SettingsPageContent() {
             <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-6">Navigation Preferences</h3>
             <div className="space-y-6">
               <NavigationPreferences
-                value={navigationPreference}
-                onChange={setNavigationPreference}
+                value={navigationPreference === 'sidebar' ? 'sidebar' : navigationPreference === 'topbar' ? 'tabs' : 'auto'}
+                onChange={(value) => setNavigationPreference(value === 'sidebar' ? 'sidebar' : value === 'tabs' ? 'topbar' : 'command')}
               />
               
               {/* Current Status */}
               <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-lg border border-[rgba(255,255,255,0.08)]">
                 <h4 className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Current Layout</h4>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[var(--hive-text-muted)]">Mode: {navigationLayout.resolvedMode}</span>
+                  <span className="text-[var(--hive-text-muted)]">Mode: {navigationLayout}</span>
                   <span className="text-[var(--hive-brand-secondary)] font-medium">
-                    {navigationLayout.resolvedMode === 'bottom-tabs' && 'Bottom Tabs'}
-                    {navigationLayout.resolvedMode === 'topbar' && 'Top Navigation'}
-                    {navigationLayout.resolvedMode === 'sidebar' && 'Sidebar'}
-                    {navigationLayout.resolvedMode === 'drawer' && 'Drawer'}
+                    {navigationLayout === 'default' && 'Default Layout'}
+                    {navigationLayout === 'compact' && 'Compact Layout'}
+                    {navigationLayout === 'minimal' && 'Minimal Layout'}
                   </span>
                 </div>
                 <div className="mt-2 text-xs text-[var(--hive-text-muted)]">
-                  {navigationLayout.canUsePreference 
-                    ? 'User preference active' 
-                    : navigationLayout.reasons.join(', ')
+                  {navigationPreference === 'sidebar' 
+                    ? 'Sidebar navigation active' 
+                    : navigationPreference === 'topbar'
+                    ? 'Top bar navigation active'
+                    : 'Command palette navigation active'
                   }
                 </div>
               </div>

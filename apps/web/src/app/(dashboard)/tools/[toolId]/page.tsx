@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Badge } from "@hive/ui";
 import { PageContainer } from "@hive/ui";
@@ -89,7 +91,7 @@ export default function ToolPage() {
         setTool({ ...tool, isInstalled: true });
       }
     } catch (err) {
-      console.error('Failed to install tool:', err);
+      logger.error('Failed to install tool:', err);
     } finally {
       setIsInstalling(false);
     }

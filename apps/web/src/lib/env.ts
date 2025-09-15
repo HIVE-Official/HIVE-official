@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { logger } from '@hive/core/utils/logger';
+
 
 /**
  * Environment Configuration Schema
@@ -150,7 +152,7 @@ function parseEnv() {
     
     return result;
   } catch (error) {
-    console.error("❌ Environment validation failed:", error);
+    logger.error('❌ Environment validation failed:', error);
     
     if (currentEnv === 'production') {
       throw new Error(
@@ -242,7 +244,7 @@ let env: ReturnType<typeof parseEnv>;
 try {
   env = parseEnv();
 } catch (error) {
-  console.error("❌ Environment parsing failed, using fallbacks:", error);
+  logger.error('❌ Environment parsing failed, using fallbacks:', error);
   // Provide safe fallbacks for build time
   env = {
     NODE_ENV: (process.env.NODE_ENV as any) || "development",

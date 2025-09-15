@@ -1,5 +1,7 @@
 /// <reference path="../../types/global.d.ts" />
 import { getMessaging, getToken, onMessage, Messaging } from 'firebase/messaging';
+import { logger } from '@hive/core/utils/logger';
+
 import { app } from '@/lib/firebase/client/firebase-client';
 
 export interface NotificationPayload {
@@ -33,20 +35,18 @@ class FCMService {
       // Register service worker
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-        console.log('Service Worker registered:', registration);
       }
 
       // Set up foreground message handler
       if (this.messaging) {
         onMessage(this.messaging, (payload) => {
-          console.log('Foreground message received:', payload);
           this.handleForegroundMessage(payload);
         });
       }
 
       this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize FCM:', error);
+      logger.error('Failed to initialize FCM:', error);
     }
   }
 
@@ -64,14 +64,12 @@ class FCMService {
       
       if (permission === 'granted') {
         this.permissionGranted = true;
-        console.log('Notification permission granted');
         return await this.getToken();
       } else {
-        console.log('Notification permission denied');
         return null;
       }
     } catch (error) {
-      console.error('Error requesting notification permission:', error);
+      logger.error('Error requesting notification permission:', error);
       return null;
     }
   }
@@ -79,7 +77,7 @@ class FCMService {
   // Get FCM token
   async getToken(): Promise<string | null> {
     if (!this.messaging) {
-      console.error('Messaging not initialized');
+      logger.error('Messaging not initialized');
       return null;
     }
 
@@ -90,7 +88,6 @@ class FCMService {
       });
 
       if (token) {
-        console.log('FCM Token obtained:', token);
         this.currentToken = token;
         
         // Save token to backend
@@ -98,11 +95,10 @@ class FCMService {
         
         return token;
       } else {
-        console.log('No registration token available');
         return null;
       }
     } catch (error) {
-      console.error('Error getting FCM token:', error);
+      logger.error('Error getting FCM token:', error);
       return null;
     }
   }
@@ -126,10 +122,8 @@ class FCMService {
       if (!response.ok) {
         throw new Error('Failed to save FCM token');
       }
-
-      console.log('FCM token saved to backend');
     } catch (error) {
-      console.error('Error saving FCM token:', error);
+      logger.error('Error saving FCM token:', error);
     }
   }
 
@@ -224,7 +218,7 @@ class FCMService {
 
       return response.ok;
     } catch (error) {
-      console.error('Error sending notification:', error);
+      logger.error('Error sending notification:', error);
       return false;
     }
   }
@@ -249,7 +243,7 @@ class FCMService {
 
       return response.ok;
     } catch (error) {
-      console.error('Error sending bulk notifications:', error);
+      logger.error('Error sending bulk notifications:', error);
       return false;
     }
   }
@@ -274,9 +268,8 @@ class FCMService {
       }
 
       this.currentToken = null;
-      console.log('FCM token deleted');
     } catch (error) {
-      console.error('Error deleting FCM token:', error);
+      logger.error('Error deleting FCM token:', error);
     }
   }
 

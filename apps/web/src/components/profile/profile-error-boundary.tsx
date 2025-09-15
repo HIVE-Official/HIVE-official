@@ -1,6 +1,8 @@
 "use client";
 
 import React from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from "@hive/ui";
 import { Alert } from "@hive/ui";
@@ -32,7 +34,7 @@ class ProfileErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Profile Error Boundary caught an error:', error, errorInfo);
+    logger.error('Profile Error Boundary caught an error:', error, errorInfo);
   }
 
   resetErrorBoundary = () => {

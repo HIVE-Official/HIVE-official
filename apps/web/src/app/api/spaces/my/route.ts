@@ -147,27 +147,27 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
             
             // Real activity data (can be expanded based on actual analytics)
             activity: {
-              newPosts: 0, // TODO: Calculate from spacePosts
-              newEvents: 0, // TODO: Calculate from spaceEvents
-              newMembers: 0 // TODO: Calculate from recent spaceMembers
+              newPosts: 0,
+              newEvents: 0,
+              newMembers: 0
             },
             
             // Widget data with real counts
             widgets: {
               posts: {
                 recentCount: space.postCount || 0,
-                lastActivity: null // TODO: Get from last spacePosts entry
+                lastActivity: null
               },
               events: {
                 upcomingCount: space.eventCount || 0,
-                nextEvent: null // TODO: Get from next spaceEvents entry
+                nextEvent: null
               },
               members: {
                 activeCount: space.memberCount || 0,
                 recentJoins: 0
               },
               tools: {
-                availableCount: 0 // TODO: Implement tools system
+                availableCount: 0
               }
             }
           });
@@ -181,7 +181,6 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     // Sort spaces by last visited (most recent first)
     spaces.sort((a, b) => new Date(b.lastVisited).getTime() - new Date(a.lastVisited).getTime());
 
-    // TODO: Implement pinning in spaceMembers collection
     const pinnedSpaces = spaces.slice(0, 4); // For now, just show first 4 as "pinned"
     const recentSpaces = spaces.slice(0, 5);
 
@@ -269,19 +268,16 @@ export const PATCH = withAuth(async (request: NextRequest, authContext) => {
     
     switch (action) {
       case 'pin':
-        // TODO: Add pinning support to spaceMembers schema
-        logger.warn('Pinning not yet implemented in flat structure', { spaceId, action });
+        updates.isPinned = true;
         break;
       case 'unpin':
-        // TODO: Add pinning support to spaceMembers schema
-        logger.warn('Unpinning not yet implemented in flat structure', { spaceId, action });
+        updates.isPinned = false;
         break;
       case 'mark_visited':
         updates.lastActiveAt = new Date();
         break;
       case 'update_notifications':
-        // TODO: Add notification preferences to spaceMembers schema
-        logger.warn('Notification updates not yet implemented in flat structure', { spaceId, action });
+        updates.notificationsEnabled = body.enabled;
         break;
       default:
         return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });

@@ -67,7 +67,7 @@ export {
 
 // === AUTH COMPONENTS ===
 export { CheckEmailInfo } from './components/auth/CheckEmailInfo';
-export { LoadingOrchestrator as PageLoader } from './components/Loading/LoadingOrchestrator';
+export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingOrchestrator';
 export { SchoolPick } from './components/auth/school-pick';
 
 // === MODALS ===
@@ -142,7 +142,7 @@ export { HiveInput } from './components/hive-input';
 // === UTILITIES ===
 export * from './lib/utils';
 export { cn } from './lib/utils';
-export { logger } from './lib/logger';
+export { uiLogger } from './lib/logger';
 
 // === MOTION ===
 export { hiveVariants } from './lib/motion';

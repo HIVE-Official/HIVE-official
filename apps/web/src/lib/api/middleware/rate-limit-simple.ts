@@ -4,6 +4,8 @@
  */
 
 import { logSecurityEvent } from '../../utils/structured-logger';
+import { logger } from '@hive/core/utils/logger';
+
 import { currentEnvironment } from '../../env';
 
 interface RateLimitConfig {
@@ -117,7 +119,7 @@ export function rateLimit(config: RateLimitConfig = { maxRequests: 100, windowMs
         healthStatus.lastFailure = Date.now();
         rateLimiterHealth.set(identifier, healthStatus);
 
-        console.error(`Memory rate limiter failure for ${identifier}:`, error);
+        logger.error('Memory rate limiter failure for ${identifier}:', error);
 
         // Log security event
         logSecurityEvent('rate_limit', {
@@ -241,7 +243,7 @@ function secureCleanup() {
       // Cleanup completed successfully
     }
   } catch (error) {
-    console.error('Rate limiter cleanup failed:', error);
+    logger.error('Rate limiter cleanup failed:', error);
   }
 }
 

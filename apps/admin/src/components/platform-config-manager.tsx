@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   HiveCard as Card, 
   CardContent, 
@@ -325,7 +327,7 @@ export function PlatformConfigManager() {
 
       setConfigCategories(categories);
     } catch (error) {
-      console.error('Error loading platform configs:', error);
+      logger.error('Error loading platform configs:', error);
       toast.error('Failed to load platform configurations');
     } finally {
       setLoading(false);
@@ -356,7 +358,7 @@ export function PlatformConfigManager() {
       toast.success(`Configuration updated: ${config.key}`);
       setEditingConfig(null);
     } catch (error) {
-      console.error('Error updating config:', error);
+      logger.error('Error updating config:', error);
       toast.error('Failed to update configuration');
     }
   };
@@ -382,7 +384,7 @@ export function PlatformConfigManager() {
 
       toast.success(`Emergency mode ${newEmergencyState ? 'activated' : 'deactivated'} for ${config.key}`);
     } catch (error) {
-      console.error('Error toggling emergency mode:', error);
+      logger.error('Error toggling emergency mode:', error);
       toast.error('Failed to toggle emergency mode');
     }
   };

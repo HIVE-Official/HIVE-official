@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
@@ -177,7 +179,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
         
         setMembers(membersWithStats);
       } catch (error) {
-        console.error('Failed to fetch members:', error);
+        logger.error('Failed to fetch members:', error);
         setError(error instanceof Error ? error.message : 'Failed to fetch members');
       } finally {
         setIsLoading(false);
@@ -253,7 +255,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
       setShowRoleChangeModal(false);
       setSelectedMember(null);
     } catch (error) {
-      console.error('Failed to change role:', error);
+      logger.error('Failed to change role:', error);
       alert('Failed to change member role');
     }
   };
@@ -282,7 +284,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
       // Update local state
       setMembers(prev => prev.filter(member => member.id !== memberId));
     } catch (error) {
-      console.error('Failed to remove member:', error);
+      logger.error('Failed to remove member:', error);
       alert('Failed to remove member');
     }
   };
@@ -316,7 +318,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
           : member
       ));
     } catch (error) {
-      console.error('Failed to update suspension:', error);
+      logger.error('Failed to update suspension:', error);
       alert('Failed to update member status');
     }
   };

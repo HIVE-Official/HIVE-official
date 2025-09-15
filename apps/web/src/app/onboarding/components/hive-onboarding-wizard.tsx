@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from "next/navigation";
 import Image from 'next/image';
 import { cn } from "@/lib/utils";
@@ -369,12 +371,6 @@ export function HiveOnboardingWizard() {
       if (!result.success) {
         throw new Error(result.error || 'Onboarding completion failed');
       }
-
-      console.log('🎉 Onboarding completed successfully:', {
-        user: result.user,
-        builderRequestsCreated: result.builderRequestsCreated
-      });
-
       // Auto-create and join relevant spaces after onboarding
       try {
         const spaceCreationPromises = [];
@@ -421,15 +417,9 @@ export function HiveOnboardingWizard() {
         // Execute all space joins in parallel
         const spaceResponses = await Promise.allSettled(spaceCreationPromises);
         const successfulJoins = spaceResponses.filter(r => r.status === 'fulfilled').length;
-        
-        console.log('🏗️ Post-onboarding spaces joined:', {
-          attempted: spaceCreationPromises.length,
-          successful: successfulJoins,
-          failed: spaceCreationPromises.length - successfulJoins
-        });
       } catch (spaceError) {
         // Don't fail onboarding if space creation fails
-        console.error('Space auto-join failed (non-critical):', spaceError);
+        logger.error('Space auto-join failed (non-critical):', spaceError);
       }
 
       // Show success animation
@@ -437,11 +427,10 @@ export function HiveOnboardingWizard() {
 
       // Redirect after delay - give time for session to update
       setTimeout(() => {
-        console.log('🚀 Redirecting to dashboard after onboarding completion');
         router.push("/");
       }, 1000);
     } catch (error) {
-      console.error("Onboarding error:", error);
+      logger.error('Onboarding error:', error);
       
       // Enhanced error handling with user-friendly messages
       let userFriendlyError = "Something went wrong during setup.";

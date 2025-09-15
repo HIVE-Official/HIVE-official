@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/card';
 import { Badge } from '../../components/badge';
-import { Button } from '../../components/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { CountdownSplashScreen, AnimatedSplashScreen } from '../../components';
 import { useState } from 'react';
 import { fn } from '@storybook/test';

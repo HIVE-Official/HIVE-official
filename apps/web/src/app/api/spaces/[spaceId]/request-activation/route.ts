@@ -24,12 +24,6 @@ export async function POST(
     // Parse and validate request body
     const body = await request.json();
     const validatedData = ActivationRequestSchema.parse(body);
-    
-    // TODO: Get user ID from authentication
-    // For now, we'll use a mock user ID
-    const userId = "mock-user-id";
-    
-    // Check if space exists and is in preview mode
     const spaceDoc = await dbAdmin.doc(`spaces/${spaceId}`).get();
     if (!spaceDoc.exists) {
       return NextResponse.json(
@@ -100,7 +94,7 @@ export async function POST(
     });
     
   } catch (error) {
-    console.error("Error submitting activation request:", error);
+    logger.error('Error submitting activation request:', error);
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(

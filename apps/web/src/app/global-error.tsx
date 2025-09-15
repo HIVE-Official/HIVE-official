@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion } from 'framer-motion';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 
@@ -13,7 +15,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     // Log detailed error information
-    console.error('Global error caught:', {
+    logger.error('Global error caught:', {
       name: error.name,
       message: error.message,
       stack: error.stack,
@@ -48,7 +50,7 @@ export default function GlobalError({
       reset();
     } catch (error) {
       // If reset fails, log the error and reload the page
-      console.error('Failed to reset error boundary:', error);
+      logger.error('Failed to reset error boundary:', error);
       window.location.reload();
     }
   };

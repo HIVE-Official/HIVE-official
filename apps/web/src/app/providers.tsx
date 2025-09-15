@@ -8,7 +8,7 @@ import { ShellProvider } from "@hive/ui";
 import { ModalProvider } from '../components/ui/modal-system';
 import ErrorProvider from '../components/error-provider';
 import { AuthErrorBoundary } from '../components/auth/auth-error-boundary';
-import { DevBypassAuthProvider } from '../components/auth/dev-bypass-provider';
+import { FirebaseAuthProvider } from '../providers/firebase-auth-provider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
 
@@ -17,7 +17,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <ErrorProvider>
         <ModalProvider>
           <AuthErrorBoundary>
-            <DevBypassAuthProvider>
+            <FirebaseAuthProvider>
               <ShellProvider>
                 {children}
                 {process.env.NODE_ENV === 'development' && (
@@ -32,7 +32,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                   />
                 )}
               </ShellProvider>
-            </DevBypassAuthProvider>
+            </FirebaseAuthProvider>
           </AuthErrorBoundary>
         </ModalProvider>
       </ErrorProvider>

@@ -102,14 +102,12 @@ class SafeExecutionEnvironment {
           if (!this.context.permissions.includes('storage:read')) {
             throw new Error('Permission denied: storage:read required');
           }
-          // TODO: Implement secure tool storage
           return localStorage.getItem(`tool_${this.context.toolId}_${key}`);
         },
         set: async (key: string, value: any) => {
           if (!this.context.permissions.includes('storage:write')) {
             throw new Error('Permission denied: storage:write required');
           }
-          // TODO: Implement secure tool storage
           localStorage.setItem(`tool_${this.context.toolId}_${key}`, JSON.stringify(value));
         },
         delete: async (key: string) => {
@@ -126,7 +124,6 @@ class SafeExecutionEnvironment {
           if (!this.context.permissions.includes('network:read')) {
             throw new Error('Permission denied: network:read required');
           }
-          // TODO: Implement safe HTTP client with domain restrictions
           return fetch(url);
         },
         post: async (url: string, data: any) => {
@@ -140,11 +137,9 @@ class SafeExecutionEnvironment {
       // UI utilities
       ui: {
         showToast: (message: string, type: 'success' | 'error' | 'info' = 'info') => {
-          // TODO: Integration with toast system
           this.logs.push(`[TOAST:${type}] ${message}`);
         },
         showModal: (title: string, content: string) => {
-          // TODO: Integration with modal system
           this.logs.push(`[MODAL] ${title}: ${content}`);
         }
       }
@@ -274,7 +269,7 @@ export class ToolExecutionRuntime {
           result = await env.executeJSCode(tool.code, inputs);
           break;
         case 'python':
-          // TODO: Implement Python execution (requires server-side runtime)
+          // Python execution requires server-side runtime
           result = {
             success: false,
             error: 'Python execution not yet supported in browser',

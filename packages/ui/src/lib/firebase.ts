@@ -36,5 +36,4 @@ export const getAnalytics = () => analytics;
 
 // Log only in browser environment
 if (typeof window !== 'undefined') {
-  console.log('[UI Package] Using mock Firebase configuration');
 }

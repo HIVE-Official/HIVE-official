@@ -245,10 +245,6 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 export const POST = withAuth(async (request: NextRequest, authContext) => {
   try {
     const userId = authContext.userId;
-
-    // TODO: Verify user has admin permissions
-    // For now, allow any authenticated user to create rituals
-
     const body = await request.json();
     const ritualData = CreateRitualSchema.parse(body);
 

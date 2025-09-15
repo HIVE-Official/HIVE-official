@@ -1,3 +1,5 @@
+import { logger } from '@hive/core/utils/logger';
+
 /**
  * HIVE Platform Integration Layer
  * 
@@ -157,7 +159,7 @@ export class PlatformIntegration {
 
       return finalFeed;
     } catch (error) {
-      console.error('Error getting unified feed data:', error);
+      logger.error('Error getting unified feed data:', error);
       return [];
     }
   }
@@ -199,7 +201,7 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching feed slice data:', error);
+      logger.error('Error fetching feed slice data:', error);
       return [];
     }
   }
@@ -253,13 +255,13 @@ export class PlatformIntegration {
             }
           }
         } catch (error) {
-          console.error(`Error fetching posts for space ${space.id}:`, error);
+          logger.error('Error fetching posts for space ${space.id}:', error);
         }
       }
 
       return feedItems.slice(0, options.limit);
     } catch (error) {
-      console.error('Error fetching space slice data:', error);
+      logger.error('Error fetching space slice data:', error);
       return [];
     }
   }
@@ -296,7 +298,7 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching tool slice data:', error);
+      logger.error('Error fetching tool slice data:', error);
       return [];
     }
   }
@@ -332,7 +334,7 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching profile slice data:', error);
+      logger.error('Error fetching profile slice data:', error);
       return [];
     }
   }
@@ -368,7 +370,7 @@ export class PlatformIntegration {
           const message = JSON.parse(event.data);
           this.handleWebSocketMessage(message);
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          logger.error('Error parsing WebSocket message:', error);
         }
       };
 
@@ -378,10 +380,10 @@ export class PlatformIntegration {
       };
 
       this.websocket.onerror = (error: any) => {
-        console.error('🔌 WebSocket error:', error);
+        logger.error('🔌 WebSocket error:', error);
       };
     } catch (error) {
-      console.error('Failed to initialize WebSocket:', error);
+      logger.error('Failed to initialize WebSocket:', error);
     }
   }
 
@@ -499,7 +501,7 @@ export class PlatformIntegration {
         try {
           callback(data);
         } catch (error) {
-          console.error(`Error in subscriber callback for ${eventType}:`, error);
+          logger.error('Error in subscriber callback for ${eventType}:', error);
         }
       });
     }
@@ -595,7 +597,7 @@ export class PlatformIntegration {
           : session.token;
       }
     } catch (error) {
-      console.error('Error getting auth token:', error);
+      logger.error('Error getting auth token:', error);
     }
     
     return '';
@@ -624,7 +626,7 @@ export class PlatformIntegration {
         this.initializeWebSocket();
       }, delay);
     } else {
-      console.error('🔌 Max WebSocket reconnection attempts reached');
+      logger.error('🔌 Max WebSocket reconnection attempts reached');
     }
   }
 

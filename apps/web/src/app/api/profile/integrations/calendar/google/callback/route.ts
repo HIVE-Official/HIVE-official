@@ -4,6 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@hive/core/utils/logger';
+
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { google } from 'googleapis';
@@ -27,7 +29,7 @@ export async function GET(request: NextRequest) {
 
     // Handle errors from Google
     if (error) {
-      console.error('Google OAuth error:', error);
+      logger.error('Google OAuth error:', error);
       return NextResponse.redirect(
         new URL(`/profile?error=google_auth_failed&details=${error}`, request.url)
       );
@@ -44,7 +46,7 @@ export async function GET(request: NextRequest) {
     try {
       stateData = JSON.parse(Buffer.from(state, 'base64').toString());
     } catch (err) {
-      console.error('Invalid state parameter:', err);
+      logger.error('Invalid state parameter:', err);
       return NextResponse.redirect(
         new URL('/profile?error=invalid_state', request.url)
       );
@@ -110,7 +112,7 @@ export async function GET(request: NextRequest) {
     try {
       await syncInitialEvents(userId, oauth2Client);
     } catch (syncError) {
-      console.error('Initial sync failed:', syncError);
+      logger.error('Initial sync failed:', syncError);
       // Don't fail the connection if sync fails
     }
 
@@ -120,7 +122,7 @@ export async function GET(request: NextRequest) {
     );
 
   } catch (error) {
-    console.error('Error handling Google Calendar callback:', error);
+    logger.error('Error handling Google Calendar callback:', error);
     return NextResponse.redirect(
       new URL('/profile?error=google_calendar_connection_failed', request.url)
     );

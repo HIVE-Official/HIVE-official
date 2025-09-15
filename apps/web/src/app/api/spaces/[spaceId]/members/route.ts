@@ -345,9 +345,6 @@ export async function PATCH(
         throw new Error('Failed to update member role');
       }
     }
-
-    // TODO: Implement suspension/unsuspension in the flat structure
-    if (action === 'suspend' || action === 'unsuspend') {
       logger.warn('Suspension actions not yet implemented in flat structure', { spaceId, userId, action });
     }
 

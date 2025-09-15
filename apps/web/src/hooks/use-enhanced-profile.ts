@@ -446,7 +446,6 @@ export function useEnhancedProfile() {
   const toggleGhostModeMutation = useMutation({
     mutationFn: async ({ enabled, level }: { enabled: boolean; level?: string }) => {
       // Implementation would depend on privacy API
-      console.log('Toggle ghost mode:', enabled, level);
       return { success: true };
     },
     onSuccess: () => {

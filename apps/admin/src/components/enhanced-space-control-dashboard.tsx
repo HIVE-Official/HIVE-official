@@ -987,7 +987,7 @@ export function EnhancedSpaceControlDashboard() {
 
                   <Button
                     onClick={() => {
-                      // TODO: Implement edit functionality
+
                       // Edit space: selectedSpace.id
                     }}
                     variant="outline"

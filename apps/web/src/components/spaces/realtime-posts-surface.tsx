@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRealtimePosts, useRealtimeComments, RealtimePost } from '@/hooks/use-realtime-posts';
 import { useAuth } from '@/hooks/use-auth';
 import { Button, Card, Avatar, Badge, Input, Textarea } from '@hive/ui';
@@ -83,7 +85,6 @@ export function RealtimePostsSurface({
           user.id,
           spaceId,
           (progress: any) => {
-            console.log(`Upload progress: ${progress}%`);
           }
         );
       }
@@ -114,9 +115,8 @@ export function RealtimePostsSurface({
       setNewPostType('general');
       
       // Show success (in production, use toast)
-      console.log('Post created successfully');
     } catch (err) {
-      console.error('Error creating post:', err);
+      logger.error('Error creating post:', err);
       alert('Failed to create post');
     } finally {
       setIsPosting(false);
@@ -142,7 +142,7 @@ export function RealtimePostsSurface({
         });
       }
     } catch (err) {
-      console.error('Error updating like:', err);
+      logger.error('Error updating like:', err);
     }
   };
 
@@ -165,7 +165,7 @@ export function RealtimePostsSurface({
         comments: increment(1)
       });
     } catch (err) {
-      console.error('Error adding comment:', err);
+      logger.error('Error adding comment:', err);
     }
   };
 

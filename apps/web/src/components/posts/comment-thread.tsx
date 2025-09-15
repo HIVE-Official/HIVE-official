@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { formatDistanceToNow } from 'date-fns';
 import { 
   MessageCircle, 
@@ -135,7 +137,7 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
       setCommentText('');
       setReplyingTo(null);
     } catch (error) {
-      console.error('Error posting comment:', error);
+      logger.error('Error posting comment:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -157,7 +159,7 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
       setEditingComment(null);
       setEditText('');
     } catch (error) {
-      console.error('Error editing comment:', error);
+      logger.error('Error editing comment:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -176,7 +178,7 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
         updatedAt: serverTimestamp()
       });
     } catch (error) {
-      console.error('Error deleting comment:', error);
+      logger.error('Error deleting comment:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -193,7 +195,7 @@ export function CommentThread({ postId, spaceId, onClose }: CommentThreadProps) 
         likes: isLiked ? arrayRemove(user.id) : arrayUnion(user.id)
       });
     } catch (error) {
-      console.error('Error liking comment:', error);
+      logger.error('Error liking comment:', error);
     }
   };
 

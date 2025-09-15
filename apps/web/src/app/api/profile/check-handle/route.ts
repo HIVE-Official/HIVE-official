@@ -1,3 +1,5 @@
+import { logger } from '@hive/core/utils/logger';
+
 import { NextRequest, NextResponse } from 'next/server'
 import { logger, generateHandleVariants, generateBaseHandle } from '@hive/core'
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin'
@@ -103,7 +105,7 @@ export async function POST(request: NextRequest) {
         suggestions
       });
     } catch (error) {
-      console.error('Error checking handle availability:', error);
+      logger.error('Error checking handle availability:', error);
       return NextResponse.json(
         { error: 'Failed to check handle availability' },
         { status: 500 }

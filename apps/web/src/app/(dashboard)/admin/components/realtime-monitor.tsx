@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { 
   Card, 
   CardContent, 
@@ -105,7 +107,6 @@ export default function RealtimeMonitor() {
       
       wsRef.current.onopen = () => {
         setIsConnected(true);
-        console.log('WebSocket connected');
       };
 
       wsRef.current.onmessage = (event) => {
@@ -114,7 +115,7 @@ export default function RealtimeMonitor() {
       };
 
       wsRef.current.onerror = (error) => {
-        console.error('WebSocket error:', error);
+        logger.error('WebSocket error:', error);
         setIsConnected(false);
       };
 
@@ -126,7 +127,7 @@ export default function RealtimeMonitor() {
         }
       };
     } catch (error) {
-      console.error('Failed to connect WebSocket:', error);
+      logger.error('Failed to connect WebSocket:', error);
       setIsConnected(false);
     }
   };
@@ -154,7 +155,7 @@ export default function RealtimeMonitor() {
         setEvents(eventsData.events || []);
       }
     } catch (error) {
-      console.error('Error loading initial data:', error);
+      logger.error('Error loading initial data:', error);
     }
   };
 

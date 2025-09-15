@@ -4,6 +4,8 @@
  */
 
 import { doc, getDoc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { logger } from '@hive/core/utils/logger';
+
 import { db } from './firebase/firebase';
 
 export interface Achievement {
@@ -319,7 +321,7 @@ export async function checkAchievements(
     
     return newAchievements;
   } catch (error) {
-    console.error('Error checking achievements:', error);
+    logger.error('Error checking achievements:', error);
     return [];
   }
 }
@@ -357,7 +359,7 @@ export async function getUserAchievements(userId: string): Promise<Achievement[]
     
     return achievements;
   } catch (error) {
-    console.error('Error fetching user achievements:', error);
+    logger.error('Error fetching user achievements:', error);
     return [];
   }
 }
@@ -396,7 +398,7 @@ async function createAchievementNotification(
       createdAt: serverTimestamp()
     });
   } catch (error) {
-    console.error('Error creating achievement notification:', error);
+    logger.error('Error creating achievement notification:', error);
   }
 }
 

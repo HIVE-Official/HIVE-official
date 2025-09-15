@@ -1,4 +1,6 @@
 import { authenticatedFetch } from '../auth/utils/auth-utils';
+import { logger } from '@hive/core/utils/logger';
+
 
 export type SpaceRole = 'owner' | 'admin' | 'moderator' | 'member' | 'guest';
 
@@ -105,7 +107,7 @@ export async function getUserSpaceMembership(spaceId: string): Promise<SpaceMemb
       permissions: userMembership.permissions || DEFAULT_PERMISSIONS[userMembership.role]
     };
   } catch (error) {
-    console.error('Error fetching user space membership:', error);
+    logger.error('Error fetching user space membership:', error);
     return null;
   }
 }

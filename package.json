@@ -8,10 +8,14 @@
     "pnpm": ">=8.0.0"
   },
   "scripts": {
-    "build": "turbo run build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo run build",
+    "build:fast": "turbo run build --concurrency=1",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
+    "lint": "cross-env NODE_OPTIONS=--max-old-space-size=4096 turbo run lint",
+    "lint:fast": "eslint . --config .eslintrc.perf.json --ext .ts,.tsx",
+    "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=4096 turbo run typecheck",
+    "typecheck:fast": "tsc --noEmit --skipLibCheck --incremental",
+    "fix:build": "./scripts/fix-build.sh",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "clean": "turbo run clean",
@@ -40,6 +44,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.4",
+    "cross-env": "^10.0.0",
     "eslint-plugin-import": "^2.29.1",
     "glob": "^11.0.3",
     "turbo": "^2.5.4"

@@ -6,8 +6,4 @@
  */
 
 // Placeholder exports to prevent build errors
-export const CodeAnalyzer = {
-  // TODO: Implement for v1
-};
-
-export default CodeAnalyzer;
+export const CodeAnalyzer = {};

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from '@hive/core/utils/logger';
+
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 
 /**
@@ -41,11 +43,6 @@ export async function POST(request: NextRequest) {
     });
 
     const tokenData = tokenDoc.data();
-    
-    console.log('🔄 Token reset for testing:', {
-      token: token.substring(0, 8) + '...',
-      email: tokenData?.email
-    });
 
     return NextResponse.json({
       success: true,
@@ -53,7 +50,7 @@ export async function POST(request: NextRequest) {
       email: tokenData?.email
     });
   } catch (error) {
-    console.error('Error resetting token:', error);
+    logger.error('Error resetting token:', error);
     return NextResponse.json(
       { error: "Failed to reset token" },
       { status: 500 }

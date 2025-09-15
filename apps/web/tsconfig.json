@@ -8,7 +8,11 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -27,13 +31,22 @@
         "./src/*"
       ],
       "@hive/ui": [
-        "../../packages/ui/dist/ui/src/index.d.ts"
+        "../../packages/ui/src/index.ts"
+      ],
+      "@hive/ui/*": [
+        "../../packages/ui/src/*"
       ],
       "@hive/core": [
-        "../../packages/core/dist/index.d.ts"
+        "../../packages/core/src/index.ts"
+      ],
+      "@hive/core/*": [
+        "../../packages/core/src/*"
       ],
       "@hive/hooks": [
-        "../../packages/hooks/dist/index.d.ts"
+        "../../packages/hooks/src/index.ts"
+      ],
+      "@hive/hooks/*": [
+        "../../packages/hooks/src/*"
       ]
     },
     "types": [

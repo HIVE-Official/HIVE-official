@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useToast } from './use-toast';
 import { authenticatedFetch } from '@/lib/authenticated-fetch';
 
@@ -81,7 +83,7 @@ export function useEvents(filters?: EventFilters) {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch events';
       setError(message);
-      console.error('Error fetching events:', err);
+      logger.error('Error fetching events:', err);
     } finally {
       setIsLoading(false);
     }
@@ -207,7 +209,7 @@ export function useEvents(filters?: EventFilters) {
       return data;
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch attendees';
-      console.error('Error fetching attendees:', err);
+      logger.error('Error fetching attendees:', err);
       throw err;
     }
   }, []);
@@ -262,7 +264,7 @@ export function useEvent(eventId: string) {
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to fetch event details';
         setError(message);
-        console.error('Error fetching event details:', err);
+        logger.error('Error fetching event details:', err);
       } finally {
         setIsLoading(false);
       }

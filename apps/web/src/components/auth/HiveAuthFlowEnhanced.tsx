@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { motion } from 'framer-motion';
 import { Button, Card, Input } from '@hive/ui';
 import { Loader2, Mail, CheckCircle, AlertCircle } from 'lucide-react';
@@ -112,7 +114,7 @@ export function HiveAuthFlowEnhanced({
       setState(prev => ({ ...prev, step: 'sent', isLoading: false }));
 
     } catch (error) {
-      console.error('Magic link request failed:', error);
+      logger.error('Magic link request failed:', error);
       setState(prev => ({ 
         ...prev, 
         step: 'error',

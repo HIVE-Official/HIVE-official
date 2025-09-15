@@ -7,6 +7,8 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { logger } from '../utils/logger';
+
 import type { 
   User as FirebaseUser} from 'firebase/auth';
 import {
@@ -45,7 +47,7 @@ function initializeFirebaseApp() {
     // Initialize new Firebase app
     return initializeApp(firebaseConfig);
   } catch (error) {
-    console.error('Failed to initialize Firebase:', error);
+    logger.error('Failed to initialize Firebase:', { error });
     throw new Error('Firebase initialization failed. Check your configuration.');
   }
 }
@@ -57,18 +59,14 @@ try {
   app = initializeFirebaseApp();
   auth = getAuth(app);
 } catch (error) {
-  console.error('Critical Firebase initialization error:', error);
+  logger.error('Critical Firebase initialization error:', { error });
   // In production, you might want to redirect to an error page
   app = null;
   auth = null;
 }
 
-// Clean logger
-const logger = {
-  info: (msg: string, ctx?: any) => console.info(`[HIVE AUTH] ${msg}`, ctx),
-  error: (msg: string, ctx?: any) => console.error(`[HIVE AUTH] ${msg}`, ctx),
-  warn: (msg: string, ctx?: any) => console.warn(`[HIVE AUTH] ${msg}`, ctx),
-};
+// Use the imported logger from @hive/core
+// Logger is already imported at the top of the file
 
 // HIVE User Interface (Firebase-only)
 export interface HiveUser {

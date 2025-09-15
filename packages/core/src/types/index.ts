@@ -10,16 +10,24 @@
 
 // Import validation schemas as the source of truth
 // For now, define core types here to avoid cross-package issues
-// TODO: Move these to @hive/validation once build is fixed
 
-// Common shared types
+// Base types
 export interface BaseEntity {
   id: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Core domain types
+export type UserRole = 'student' | 'alumni' | 'faculty' | 'staff' | 'admin';
+export type SpaceCategory = 'academic' | 'social' | 'professional' | 'hobby' | 'other';
+
+export interface Profile {
+  bio?: string;
+  major?: string;
+  year?: string;
+  interests?: string[];
+}
+
 export interface User extends BaseEntity {
   email: string;
   displayName?: string;
@@ -163,23 +171,7 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
     [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>
   }[Keys];
 
-// Export common enums
-export enum UserRole {
-  STUDENT = 'student',
-  FACULTY = 'faculty',
-  STAFF = 'staff',
-  ALUMNI = 'alumni',
-  GUEST = 'guest'
-}
-
-export enum SpaceCategory {
-  ACADEMIC = 'academic',
-  SOCIAL = 'social',
-  PROFESSIONAL = 'professional',
-  HOBBY = 'hobby',
-  SUPPORT = 'support',
-  OFFICIAL = 'official'
-}
+// Enums removed - using type aliases defined above instead
 
 export enum PostType {
   TEXT = 'text',

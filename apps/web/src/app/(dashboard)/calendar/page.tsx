@@ -4,6 +4,8 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import dynamicImport from "next/dynamic";
 import { Card, Badge, Button } from "@hive/ui";
 import { PageContainer } from "@hive/ui";
@@ -45,7 +47,7 @@ const EventDetailsModal = dynamicImport(
 
 const CreateEventModal = dynamicImport(
   async () => {
-    const mod = await import("../../../components/events/create-event-modal");
+    const mod = await import("../../../components/events/event-modal");
     return { default: mod.CreateEventModal };
   },
   { 
@@ -120,7 +122,7 @@ export default function CalendarPage() {
                 const parsed = JSON.parse(session) as { userId?: string };
                 return parsed.userId || 'anonymous';
               } catch (error) {
-                console.error('Failed to parse session for calendar auth:', error);
+                logger.error('Failed to parse session for calendar auth:', error);
                 return 'anonymous';
               }
             })()}`,
@@ -182,7 +184,7 @@ export default function CalendarPage() {
         setEvents(transformedEvents);
         setIntegrations(defaultIntegrations);
       } catch (error) {
-        console.error('Error fetching calendar events:', error);
+        logger.error('Error fetching calendar events:', error);
         // Fallback to empty state on error
         setEvents([]);
         setIntegrations([]);

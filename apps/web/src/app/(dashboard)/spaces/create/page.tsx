@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -235,7 +237,7 @@ export default function CreateSpacePage() {
       // Redirect to the new space
       router.push(`/spaces/${space.id}`);
     } catch (err) {
-      console.error('Error creating space:', err);
+      logger.error('Error creating space:', err);
       setError(err instanceof Error ? err.message : 'Failed to create space');
       setIsCreating(false);
     }

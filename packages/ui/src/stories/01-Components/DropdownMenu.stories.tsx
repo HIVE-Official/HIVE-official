@@ -15,7 +15,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuGroup
 } from '../../components/dropdown-menu';
-import { Button } from '../../components/button';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Avatar } from '../../components/avatar';
 import { Badge } from '../../components/badge';
 import { 

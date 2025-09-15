@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
+import { logger } from '@hive/core/utils/logger';
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from 'next/image';
 import { Input, Button, Textarea } from "@hive/ui";
@@ -259,7 +261,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
         videoRef.current.srcObject = mediaStream;
       }
     } catch (error) {
-      console.error('Camera access denied:', error);
+      logger.error('Camera access denied:', error);
       setUploadError('Camera access denied. Please allow camera permissions.');
     }
   }, [isCameraSupported]);

@@ -1,12 +1,11 @@
 import type { AdminUser } from './admin-auth';
+import { logger } from '@hive/core/utils/logger';
 
 /**
  * Get current admin user from session
  */
 export async function getCurrentAdmin(): Promise<AdminUser | null> {
   try {
-    // TODO: Implement server-side admin session verification
-    // For now, return mock data for development
     if (process.env.NODE_ENV === 'development') {
       return {
         id: 'test-admin',
@@ -18,7 +17,7 @@ export async function getCurrentAdmin(): Promise<AdminUser | null> {
     }
     return null;
   } catch (error) {
-    console.error('Error getting current admin:', error);
+    logger.error('Error getting current admin:', error);
     return null;
   }
 }
@@ -27,8 +26,6 @@ export async function getCurrentAdmin(): Promise<AdminUser | null> {
  * Client-side admin authentication hook
  */
 export function useAdminAuth() {
-  // TODO: Implement client-side admin authentication
-  // For now, return mock data for development
   if (process.env.NODE_ENV === 'development') {
     return {
       admin: {

@@ -100,8 +100,8 @@ export function ProfileClient() {
               graduationYear: profile.graduationYear,
               isBuilder: (user.customClaims?.isBuilder as boolean) || false,
               builderAchievements: {
-                toolsCreated: 0, // TODO: Fetch from tools API
-                totalEngagement: 0 // TODO: Fetch from analytics API
+                toolsCreated: 0,
+                totalEngagement: 0
               }
             }}
           />

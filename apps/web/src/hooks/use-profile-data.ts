@@ -3,6 +3,8 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core/utils/logger';
+
 import { profileService, type ProfileData, type DashboardData, type SpaceMembership, type ProfileAnalytics } from '@/lib/api/profile-service';
 
 /**
@@ -21,7 +23,7 @@ export function useProfileData() {
       setProfile(profileData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch profile');
-      console.error('Profile fetch error:', err);
+      logger.error('Profile fetch error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +85,7 @@ export function useDashboardData(timeRange = 'week', includeRecommendations = tr
       setDashboard(dashboardData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch dashboard');
-      console.error('Dashboard fetch error:', err);
+      logger.error('Dashboard fetch error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +119,7 @@ export function useProfileSpaces(includeActivity = true, includeStats = true, ti
       setSpaces(spacesData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch spaces');
-      console.error('Spaces fetch error:', err);
+      logger.error('Spaces fetch error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -151,7 +153,7 @@ export function useProfileAnalytics(timeRange = 'month', includeInsights = true)
       setAnalytics(analyticsData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch analytics');
-      console.error('Analytics fetch error:', err);
+      logger.error('Analytics fetch error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -185,7 +187,7 @@ export function useCalendarEvents(startDate?: string, endDate?: string, type?: s
       setEvents(eventsData.events || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch calendar events');
-      console.error('Calendar events fetch error:', err);
+      logger.error('Calendar events fetch error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -244,7 +246,7 @@ export function useConnections(limit = 20, includeDetails = true, sortBy = 'rece
       setStats(connectionsData.stats || {});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch connections');
-      console.error('Connections fetch error:', err);
+      logger.error('Connections fetch error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -279,7 +281,7 @@ export function useProfileStats(timeRange = 'month', includeComparisons = false)
       setStats(statsData.stats);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch stats');
-      console.error('Stats fetch error:', err);
+      logger.error('Stats fetch error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -313,7 +315,7 @@ export function usePrivacySettings() {
       setSettings(settingsData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch privacy settings');
-      console.error('Privacy settings fetch error:', err);
+      logger.error('Privacy settings fetch error:', err);
     } finally {
       setIsLoading(false);
     }
