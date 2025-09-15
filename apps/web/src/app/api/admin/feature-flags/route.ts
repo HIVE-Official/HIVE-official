@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
 import { logger } from '@/lib/logger';
-import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api/response-types/api-response-types';
 import { featureFlagService, FeatureFlag as _FeatureFlag } from '@/lib/feature-flags';
 
 /**

@@ -35,9 +35,9 @@ import {
   Info
 } from 'lucide-react';
 import { Button, Badge, Switch } from '@hive/ui';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { authenticatedFetch } from '../../lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 
 interface Integration {
   id: string;

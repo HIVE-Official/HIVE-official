@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect, useMemo } from "react";
 import dynamicImport from "next/dynamic";
 import { Card, Badge, Button } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { Modal } from "@hive/ui";
 import { 
   Calendar, 
@@ -43,7 +43,7 @@ const EventDetailsModal = dynamicImport(
   }
 );
 
-const CreateEventModal = dynamic(
+const CreateEventModal = dynamicImport(
   async () => {
     const mod = await import("../../../components/events/create-event-modal");
     return { default: mod.CreateEventModal };
@@ -352,7 +352,7 @@ export default function CalendarPage() {
 
   if (isLoading) {
     return (
-      <PageContainer size="xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
@@ -365,7 +365,7 @@ export default function CalendarPage() {
 
   return (
     <ErrorBoundary>
-      <PageContainer size="xl">
+      <PageContainer>
         <div className="space-y-6">
           {/* Page Header */}
           <div className="flex items-center justify-between">
@@ -596,7 +596,8 @@ export default function CalendarPage() {
         <CreateEventModal
           isOpen={showAddEvent}
           onClose={() => setShowAddEvent(false)}
-          onCreateEvent={(eventData: any) => {
+          spaceId=""
+          onEventCreated={(eventData: any) => {
             // Convert CreateEventData to CalendarEvent format
             const newEvent: CalendarEvent = {
               id: `event-${Date.now()}`,

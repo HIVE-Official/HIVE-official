@@ -25,7 +25,7 @@ import {
   getDownloadURL,
   deleteObject 
 } from 'firebase/storage';
-import { db, storage } from './firebase-client';
+import { db, storage } from './firebase/client/firebase-client';
 
 /**
  * Upload a profile photo to Firebase Storage

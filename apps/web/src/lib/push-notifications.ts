@@ -1,7 +1,7 @@
 /// <reference path="../types/global.d.ts" />
 import { getMessaging, getToken, onMessage, deleteToken } from 'firebase/messaging';
-import { app } from '@/lib/firebase-client';
-import { logger } from '@/lib/structured-logger';
+import { app } from '@/lib/firebase/client/firebase-client';
+import { logger } from '@/lib/utils/structured-logger';
 
 export interface NotificationPermissionState {
   granted: boolean;

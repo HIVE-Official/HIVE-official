@@ -29,7 +29,14 @@
     "ai:suggest": "node scripts/ai-task-prioritizer.js",
     "ai:quality": "node scripts/ai-quality-validator.js",
     "ai:analyze": "pnpm ai:context && pnpm ai:prioritize",
-    "ai:full-check": "pnpm ai:context && pnpm ai:prioritize && pnpm ai:validate"
+    "ai:full-check": "pnpm ai:context && pnpm ai:prioritize && pnpm ai:validate",
+    "workflow:check": "./scripts/workflow/hive-check.sh",
+    "workflow:fix": "./scripts/workflow/hive-check.sh --fix",
+    "workflow:feature": "./scripts/workflow/start-feature.sh",
+    "workflow:ship": "./scripts/workflow/ship-production.sh",
+    "workflow:precommit": "./scripts/workflow/pre-commit.sh",
+    "ship": "pnpm workflow:ship",
+    "feature": "pnpm workflow:feature"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.4",

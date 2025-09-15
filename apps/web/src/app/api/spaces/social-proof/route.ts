@@ -1,10 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse as _ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse as _ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 const socialProofSchema = z.object({
   spaceIds: z.string().optional(), // Comma-separated space IDs

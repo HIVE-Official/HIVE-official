@@ -107,7 +107,13 @@ export default function ProfilePrivacyStorybook() {
         showConnections: profile.privacy.showConnections,
         showOnlineStatus: profile.privacy.showOnlineStatus,
         allowDirectMessages: profile.privacy.allowDirectMessages,
-        ghostMode: profile.privacy.ghostMode
+        ghostMode: {
+          enabled: profile.privacy.ghostMode?.enabled || false,
+          level: profile.privacy.ghostMode?.level || 'minimal',
+          hideActivity: profile.privacy.ghostMode?.hideActivity || false,
+          hideOnlineStatus: profile.privacy.ghostMode?.hideOnlineStatus || false,
+          hideMemberships: profile.privacy.ghostMode?.hideMemberships || false
+        }
       }));
     }
   }, [profile]);
@@ -600,7 +606,7 @@ export default function ProfilePrivacyStorybook() {
         
         {/* Go Private Confirmation */}
         <HiveConfirmModal
-          open={showGoPrivateModal}
+          isOpen={showGoPrivateModal}
           onClose={() => setShowGoPrivateModal(false)}
           title="Make Everything Private?"
           description="This will hide your profile from other students, disable direct messages, and enable maximum ghost mode. You can still access all your tools and spaces, but your campus presence will be minimized."
@@ -612,7 +618,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* Go Public Confirmation */}
         <HiveConfirmModal
-          open={showGoPublicModal}
+          isOpen={showGoPublicModal}
           onClose={() => setShowGoPublicModal(false)}
           title="Make Profile Public?"
           description="This will make your profile visible to other UB students, enable campus connections, and turn off ghost mode. You'll be discoverable for networking and collaboration."
@@ -624,7 +630,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* Ghost Mode Confirmation */}
         <HiveConfirmModal
-          open={showGhostModeModal}
+          isOpen={showGhostModeModal}
           onClose={() => setShowGhostModeModal(false)}
           title={privacySettings.ghostMode.enabled ? "Disable Ghost Mode?" : "Enable Ghost Mode?"}
           description={privacySettings.ghostMode.enabled 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse as _ApiResponse } from '@/lib/api-auth-middleware';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse as _ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 // Usage statistics interface matching the component expectations
 interface ToolUsageStats {

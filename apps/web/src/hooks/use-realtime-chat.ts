@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { realtimeService, ChatMessage } from '@/lib/firebase-realtime';
+import { realtimeService, ChatMessage } from '@/lib/firebase/client/firebase-realtime';
 import { logger } from '@/lib/logger';
 
 interface UseRealtimeChatOptions {

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { type HiveNotification } from "@/lib/notifications-service";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { type HiveNotification } from "@/lib/services/notifications/notifications-service";
 
 // Real notification fetching from Firebase
 async function getUserNotifications(

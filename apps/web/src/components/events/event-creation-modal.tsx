@@ -99,20 +99,20 @@ export function EventCreationModalMigrated({
   const handleSubmit = async () => {
     // Validation
     if (!formData.title || !formData.startDate || !formData.startTime) {
-      showToast({
-        title: 'Missing required fields',
-        description: 'Please fill in all required fields.',
-        variant: 'error'
-      })
+      // showToast({
+      //   title: 'Missing required fields',
+      //   description: 'Please fill in all required fields.',
+      //   variant: 'error'
+      // })
       return
     }
     
     if (!formData.spaceId) {
-      showToast({
-        title: 'Select a space',
-        description: 'Please select a space for this event.',
-        variant: 'error'
-      })
+      // showToast({
+      //   title: 'Select a space',
+      //   description: 'Please select a space for this event.',
+      //   variant: 'error'
+      // })
       return
     }
     
@@ -142,21 +142,21 @@ export function EventCreationModalMigrated({
       // Clear draft on success
       clearDraft(eventId || 'new')
       
-      showToast({
-        title: eventId ? 'Event updated' : 'Event created',
-        description: `Your event "${formData.title}" has been ${eventId ? 'updated' : 'created'} successfully.`,
-        variant: 'success'
-      })
+      // showToast({
+      //   title: eventId ? 'Event updated' : 'Event created',
+      //   description: `Your event "${formData.title}" has been ${eventId ? 'updated' : 'created'} successfully.`,
+      //   variant: 'success'
+      // })
       
       onSuccess?.(result.id)
       onClose?.()
     } catch (error) {
       logger.error('Failed to save event', { error })
-      showToast({
-        title: 'Failed to save event',
-        description: 'Please try again or contact support.',
-        variant: 'error'
-      })
+      // showToast({
+      //   title: 'Failed to save event',
+      //   description: 'Please try again or contact support.',
+      //   variant: 'error'
+      // })
     } finally {
       setIsSubmitting(false)
     }

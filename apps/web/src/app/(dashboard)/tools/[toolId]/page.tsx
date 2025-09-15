@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Badge } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { 
   Play, 
   Settings, 
@@ -16,7 +16,7 @@ import {
   Code,
   Zap
 } from 'lucide-react';
-import { authenticatedFetch } from "@/lib/auth-utils";
+import { authenticatedFetch } from "@/lib/auth/utils/auth-utils";
 import { useSession } from "@/hooks/use-session";
 import { ErrorBoundary } from "@/components/error-boundary";
 

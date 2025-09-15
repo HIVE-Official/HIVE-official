@@ -452,7 +452,7 @@ export function SpacesDashboardClient() {
       </motion.div>
 
       {/* Join Space Modal */}
-      <Dialog open={!!showJoinModal} onOpenChange={() => setShowJoinModal(null)}>
+      <Dialog isOpen={!!showJoinModal} onOpenChange={() => setShowJoinModal(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Join {showJoinModal?.name}</DialogTitle>

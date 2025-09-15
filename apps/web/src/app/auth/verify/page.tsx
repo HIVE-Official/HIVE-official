@@ -6,7 +6,7 @@ import { Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 // import { useUnifiedAuth } from '@hive/ui'; // Disabled - context not provided
 import { signInWithCustomToken, onAuthStateChanged, signOut } from 'firebase/auth';
 // Use auth from firebase-client which has proper initialization
-import { auth } from '@/lib/firebase-client';
+import { auth } from '@/lib/firebase/client/firebase-client';
 
 /**
  * HIVE Magic Link Verification Page - Clean Firebase Implementation

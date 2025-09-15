@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RitualParticipationTracker } from '@/lib/rituals/ritual-participation';
-import { logger } from '@/lib/structured-logger';
-import { withAuth } from '@/lib/api-auth-middleware';
+import { logger } from '@/lib/utils/structured-logger';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
 export const POST = withAuth(async (
   request: NextRequest,

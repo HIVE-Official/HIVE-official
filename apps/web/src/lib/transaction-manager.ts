@@ -3,9 +3,9 @@
  * Handles complex multi-step operations with proper rollback and error handling
  */
 
-import { dbAdmin } from './firebase-admin';
+import { dbAdmin } from './firebase/admin/firebase-admin';
 import { Transaction, WriteBatch } from 'firebase-admin/firestore';
-import { logger } from './structured-logger';
+import { logger } from './utils/structured-logger';
 
 /**
  * Transaction operation interface
@@ -419,7 +419,7 @@ export async function executeOnboardingTransaction(
       id: 'validate_handle_availability',
       description: 'Check if handle is available',
       execute: async (transaction: any) => {
-        const { checkHandleAvailabilityInTransaction } = await import('./handle-service');
+        const { checkHandleAvailabilityInTransaction } = await import('./services/handle-service');
         return checkHandleAvailabilityInTransaction(transaction, normalizedHandle);
       }
     },
@@ -459,7 +459,7 @@ export async function executeOnboardingTransaction(
       id: 'reserve_handle',
       description: 'Reserve the handle in handles collection',
       execute: async (transaction: any) => {
-        const { reserveHandleInTransaction } = await import('./handle-service');
+        const { reserveHandleInTransaction } = await import('./services/handle-service');
         return reserveHandleInTransaction(transaction, normalizedHandle, userId, userEmail);
       }
     }

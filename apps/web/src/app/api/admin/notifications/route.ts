@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withAdminAuth } from '@/lib/admin-middleware';
-import { adminNotifications } from '@/lib/admin-notifications';
+import { withAdminAuth } from '@/lib/auth/middleware/admin-middleware';
+import { adminNotifications } from '@/lib/auth/middleware/admin-notifications';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 /**
  * Admin Notifications API

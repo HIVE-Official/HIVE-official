@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from 'next/image';
 import { Input, Button, Textarea } from "@hive/ui";
 import { useSession } from '../../hooks/use-session';
-import { authenticatedFetch } from '@/lib/api-client';
+import { authenticatedFetch } from '@/lib/api/api-client';
 
 interface CampusProfile {
   fullName: string;

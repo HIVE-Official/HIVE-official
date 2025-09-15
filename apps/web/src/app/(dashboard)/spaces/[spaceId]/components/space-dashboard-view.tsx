@@ -40,7 +40,7 @@ import {
 } from '@hive/ui';
 
 // Components
-import { FeedDisplay } from '../../../../../components/social/feed-display';
+import { FeedDisplay } from '../../../../../components/feed/feed-display';
 
 // Hooks
 import { useUnifiedAuth } from '@hive/ui';

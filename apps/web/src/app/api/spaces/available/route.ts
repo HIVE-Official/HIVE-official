@@ -1,4 +1,4 @@
-import { db, auth as firebaseAdmin } from "@/lib/firebase-admin";
+import { db, auth as firebaseAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@hive/core";
 

@@ -1,4 +1,4 @@
-import { dbAdmin, authAdmin, environmentInfo } from '../src/lib/firebase-admin';
+import { dbAdmin, authAdmin, environmentInfo } from '../src/lib/firebase/admin/firebase-admin';
 
 async function testFirebaseAdmin() {
   console.log('🔍 Testing Firebase Admin Configuration...\n');

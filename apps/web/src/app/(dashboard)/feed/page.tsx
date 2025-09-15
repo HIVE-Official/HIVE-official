@@ -32,7 +32,7 @@ import { useFeed, useCoordinationFeed } from '@/hooks/use-feed';
 import { RitualsStrip } from '@/components/feed/rituals-strip';
 import { PostComposer } from '@/components/feed/post-composer';
 import { useActiveUsers } from '@/hooks/use-active-users';
-// import { RitualEngine, type RitualStrip } from '@/lib/rituals/ritual-engine';
+// import { RitualEngine, type RitualStrip } from '@/lib/spaces/rituals/rituals/ritual-engine';
 import { useUnifiedAuth } from '@hive/ui';
 import { useQuery } from '@tanstack/react-query';
 import { RealTimeFeedManager } from '@/components/feed/real-time-feed-manager';
@@ -501,7 +501,7 @@ export default function FeedPageV2() {
   const { user } = useUnifiedAuth();
 
   // Handle post creation
-  const createPost = async (postData: any) => {
+  const handleCreatePost = async (postData: any): Promise<string> => {
     try {
       console.log('Creating post:', postData);
       // TODO: Implement actual post creation via API
@@ -513,8 +513,10 @@ export default function FeedPageV2() {
       // const newPost = await response.json();
       setShowComposer(false);
       // Refresh feed or add post to the feed
+      return `post-${Date.now()}`; // Return temporary post ID
     } catch (error) {
       console.error('Error creating post:', error);
+      throw error;
     }
   };
 
@@ -524,11 +526,11 @@ export default function FeedPageV2() {
     isLoading,
     error,
     hasMore,
-    _isLoadingMore,
+    isLoadingMore,
     loadMore,
     refresh,
-    _createFeedPost,
-    _analytics,
+    createPost,
+    analytics,
     feedType
   } = useFeed(currentFeedType);
 
@@ -791,7 +793,7 @@ export default function FeedPageV2() {
       <PostComposer
         isOpen={showComposer}
         onClose={() => setShowComposer(false)}
-        onCreatePost={createPost}
+        onCreatePost={handleCreatePost}
       />
     </div>
   );

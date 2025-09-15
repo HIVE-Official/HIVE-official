@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase-client';
+import { auth, db } from '@/lib/firebase/client/firebase-client';
 import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { 
   Loader2, ChevronRight, ChevronLeft, User as UserIcon, Heart, Check, 

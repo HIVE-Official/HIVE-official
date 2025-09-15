@@ -30,7 +30,7 @@ import {
 import { Button, Badge, Progress } from '@hive/ui';
 import { cn } from '@hive/ui';
 import toast from '@/hooks/use-toast-notifications';
-import { authenticatedFetch } from '@/lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 
 export interface RitualCardProps {
   ritual: {

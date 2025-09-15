@@ -13,7 +13,7 @@ import {
   onSnapshot,
   increment
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase-client';
+import { db } from '@/lib/firebase/client/firebase-client';
 
 // Ritual interfaces
 export interface Ritual {

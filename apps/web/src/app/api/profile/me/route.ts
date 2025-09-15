@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { dbAdmin } from '@/lib/firebase-admin'
-import { verifyAuthToken } from '@/lib/auth'
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin'
+import { verifyAuthToken } from '@/lib/auth/auth'
 
 export async function GET(request: NextRequest) {
   try {

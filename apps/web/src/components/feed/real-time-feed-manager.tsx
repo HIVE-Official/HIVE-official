@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { collection, query, where, orderBy, limit, onSnapshot, Timestamp, Query, DocumentData } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
-import { useAuth } from '../../lib/auth-context';
+import { db } from '@/lib/firebase';
+import { useAuth } from '@/lib/auth-context';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Zap, RefreshCw, Settings, Filter, TrendingUp } from 'lucide-react';
 import { Badge, Button } from '@hive/ui';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 
 interface FeedItem {

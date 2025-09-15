@@ -15,7 +15,7 @@ import {
   startAfter,
   collectionGroup
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { db } from '@/lib/firebase';
 import { useUnifiedAuth } from '@hive/ui';
 
 export interface FeedPost {

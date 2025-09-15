@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { logger, generateHandleVariants, generateBaseHandle } from '@hive/core'
-import { dbAdmin } from '@/lib/firebase-admin'
-import { authRateLimiter, RATE_LIMITS } from '@/lib/auth-rate-limiter'
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin'
+import { authRateLimiter, RATE_LIMITS } from '@/lib/auth/middleware/auth-rate-limiter'
 
 async function generateSuggestions(baseHandle: string): Promise<string[]> {
   const variants = generateHandleVariants(baseHandle).slice(1, 6); // Get up to 5 suggestions

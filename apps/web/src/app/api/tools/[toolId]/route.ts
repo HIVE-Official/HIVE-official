@@ -1,8 +1,8 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { dbAdmin, authAdmin } from "@/lib/firebase-admin";
+import { dbAdmin, authAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { z } from "zod";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import {
   UpdateToolSchema,
   ToolSchema,

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react';
 import { useUnifiedAuth } from '@hive/ui';
-import { authenticatedFetch } from '@/lib/api-client';
+import { authenticatedFetch } from '@/lib/api/api-client';
 
 export type ActivityEventType = 
   | 'profile_view'

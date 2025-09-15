@@ -1,11 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { type Post } from '@hive/core';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 // Temporary fallback implementations for development
 type FeedContentType = 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import';
 

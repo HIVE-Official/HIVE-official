@@ -86,6 +86,7 @@ export interface HiveUser {
   onboardingCompleted: boolean;
   createdAt?: string;
   updatedAt?: string;
+  token?: string;      // Firebase ID token for API calls
 }
 
 // Auth State Interface

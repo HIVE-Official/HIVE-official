@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { getSecureAuthHeaders, handleAuthError } from '../lib/secure-auth-utils';
+import { getSecureAuthHeaders, handleAuthError } from '@/lib/secure-auth-utils';
 import { 
   HiveProfile, 
   HiveProfileUpdateData,

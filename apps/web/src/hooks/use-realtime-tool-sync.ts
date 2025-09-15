@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { realtimeService, RealtimeMessage } from '@/lib/firebase-realtime';
+import { realtimeService, RealtimeMessage } from '@/lib/firebase/client/firebase-realtime';
 import { logger } from '@/lib/logger';
 
 interface ToolState {

@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import { getAuthTokenFromRequest } from "@/lib/auth";
+import { getAuthTokenFromRequest } from "@/lib/auth/auth";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { getSpaceMember } from '@/lib/spaces-db';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
+import { getSpaceMember } from '@/lib/spaces/spaces-db';
 
 const CreatePinnedItemSchema = z.object({
   type: z.enum(['post', 'link', 'document', 'announcement', 'resource']),

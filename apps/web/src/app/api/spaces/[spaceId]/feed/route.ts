@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { type Post } from "@hive/core";
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { z } from 'zod';
 
 const GetActivityFeedSchema = z.object({

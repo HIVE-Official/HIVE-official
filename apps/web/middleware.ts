@@ -212,16 +212,16 @@ async function checkRateLimit(request: NextRequest): Promise<NextResponse | null
 
   try {
     // Dynamic import to avoid startup issues
-    const { createRateLimit } = await import('./src/lib/rate-limit-redis');
-    
+    const { rateLimit } = await import('./src/lib/api/middleware/rate-limit-simple');
+
     // Different rate limits for different routes
     let rateLimiter;
     const path = request.nextUrl.pathname;
-    
+
     if (path.startsWith('/api/auth/')) {
-      rateLimiter = createRateLimit('AUTH');
+      rateLimiter = rateLimit({ maxRequests: 5, windowMs: 60000, identifier: 'AUTH' });
     } else if (path.startsWith('/api/')) {
-      rateLimiter = createRateLimit('API');
+      rateLimiter = rateLimit({ maxRequests: 100, windowMs: 60000, identifier: 'API' });
     } else {
       // No rate limiting for static assets and pages
       return null;
@@ -233,7 +233,7 @@ async function checkRateLimit(request: NextRequest): Promise<NextResponse | null
                     request.headers.get('cf-connecting-ip') ||
                     'unknown';
 
-    const result = await rateLimiter.checkLimit(clientId);
+    const result = await rateLimiter.check(clientId);
 
     if (!result.success) {
       const response = NextResponse.json(

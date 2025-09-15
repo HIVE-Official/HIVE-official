@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { authenticatedFetch } from '@/lib/api-client';
+import { authenticatedFetch } from '@/lib/api/api-client';
 import { logger } from '@/lib/logger';
 import { errorMonitor, LogLevel } from '@/lib/error-monitoring';
 

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
-import { getSpaceMember } from '@/lib/spaces-db';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
+import { getSpaceMember } from '@/lib/spaces/spaces-db';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 
 const updateNotificationsSchema = z.object({

@@ -10,6 +10,7 @@ export interface HiveUser {
   schoolId?: string;
   emailVerified?: boolean;
   onboardingComplete?: boolean;
+  token?: string;
 }
 
 interface HiveAuthContextValue {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-client';
+import { db } from '@/lib/firebase/client/firebase-client';
 import { 
   collection, 
   query, 
@@ -11,9 +11,9 @@ import {
   Timestamp,
   serverTimestamp
 } from 'firebase/firestore';
-import { logger } from '@/lib/structured-logger';
+import { logger } from '@/lib/utils/structured-logger';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions } from '@/lib/auth/auth';
 
 // GET /api/events - Fetch events with filters
 export async function GET(request: NextRequest) {

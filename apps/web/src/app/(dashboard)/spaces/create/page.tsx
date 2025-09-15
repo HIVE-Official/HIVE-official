@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { Button, Input, Textarea, Badge, Alert, AlertDescription } from '@hive/ui';
 import { useUnifiedAuth } from '@hive/ui';
-import { authenticatedFetch } from '@/lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 

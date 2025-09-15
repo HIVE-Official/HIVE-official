@@ -633,7 +633,7 @@ export default function ProfileIntegrationsPage() {
 
         {/* 🚨 **SOPHISTICATED INTEGRATION MANAGEMENT MODAL** */}
         <Modal
-          open={showManageModal}
+          isOpen={showManageModal}
           onClose={() => {
             setShowManageModal(false);
             setSelectedIntegration(null);

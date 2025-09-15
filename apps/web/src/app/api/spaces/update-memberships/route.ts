@@ -5,7 +5,7 @@ import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { type User, UB_MAJORS } from "@hive/core";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Server-side space type that allows FieldValue for timestamps
 interface ServerSpace {

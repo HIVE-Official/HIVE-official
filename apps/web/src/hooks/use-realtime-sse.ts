@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { RealtimeMessage } from '@/lib/sse-realtime-service';
+import { RealtimeMessage } from '@/lib/services/sse-realtime-service';
 
 export interface SSEConnectionState {
   connected: boolean;

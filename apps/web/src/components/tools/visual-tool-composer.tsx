@@ -40,7 +40,7 @@ import {
   ToolComposition, 
   ElementDefinition, 
   initializeElementSystem 
-} from '../../lib/element-system';
+} from '@/lib/element-system';
 
 interface VisualToolComposerProps {
   onSave: (composition: ToolComposition) => Promise<void>;

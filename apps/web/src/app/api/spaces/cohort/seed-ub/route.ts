@@ -1,9 +1,9 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { UB_MAJORS, createMajorAbbreviation } from '@hive/core';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 /**
  * Seed UB-specific cohort spaces based on actual UB majors and graduation years

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { logger } from "@hive/core";
 
 export async function GET(

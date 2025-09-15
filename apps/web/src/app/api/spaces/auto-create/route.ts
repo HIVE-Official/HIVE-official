@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { generateAutoSpaces, type AutoSpaceConfig } from '../../../../lib/auto-space-creation';
+import { generateAutoSpaces, type AutoSpaceConfig } from '@/lib/auto-space-creation';
 
 export async function POST(request: NextRequest) {
   try {

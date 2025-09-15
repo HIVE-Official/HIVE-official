@@ -1,13 +1,13 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { RitualScheduler } from '@/lib/rituals/ritual-scheduler';
 import { RitualParticipationTracker } from '@/lib/rituals/ritual-participation';
-import { RitualEngine } from '@/lib/ritual-engine';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { RitualEngine } from '@/lib/spaces/rituals/ritual-engine';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 type RitualType = 'onboarding' | 'seasonal' | 'achievement' | 'community' | 'creative' | 'emergency' | 'legacy';
 type ParticipationType = 'individual' | 'collective' | 'progressive' | 'competitive' | 'collaborative' | 'creative' | 'social';

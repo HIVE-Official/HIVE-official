@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Card, Button } from "@hive/ui";
 import { Alert as _Alert } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { 
   ArrowLeft, 
   User, 
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useFeatureFlags } from '@hive/hooks';
 import { useUnifiedAuth } from '@hive/ui';
-import { ToolNavigation } from '@/lib/tool-navigation';
+import { ToolNavigation } from '@/lib/tools/tool-navigation';
 
 interface DeploymentTarget {
   id: string;

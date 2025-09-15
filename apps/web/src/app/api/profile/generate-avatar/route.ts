@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 // In-memory store for development mode profile data (shared with profile route)
 const devProfileStore: Record<string, any> = {};
@@ -47,7 +47,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     
     // Update user profile in Firebase with new avatar
     try {
-      const { dbAdmin } = await import('@/lib/firebase-admin');
+      const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
       await dbAdmin.collection('users').doc(userId).update({
         avatarUrl,
         profilePhoto: avatarUrl,

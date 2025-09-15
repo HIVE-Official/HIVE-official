@@ -26,14 +26,14 @@ function AuthErrorContent() {
             ? 'Use a different email'
             : 'Try again',
           href: recovery.path || '/welcome',
-          icon: RefreshCw
+          icon: <RefreshCw className="h-4 w-4" />
         }
       
       case 'RETRY':
         return {
           text: 'Try again',
           href: '/auth/choose',
-          icon: RefreshCw
+          icon: <RefreshCw className="h-4 w-4" />
         }
       
       case 'WAIT':
@@ -48,14 +48,14 @@ function AuthErrorContent() {
         return {
           text: 'Contact Support',
           href: '/help',
-          icon: RefreshCw
+          icon: <RefreshCw className="h-4 w-4" />
         }
       
       default:
         return {
           text: 'Start over',
           href: '/welcome',
-          icon: RefreshCw
+          icon: <RefreshCw className="h-4 w-4" />
         }
     }
   }

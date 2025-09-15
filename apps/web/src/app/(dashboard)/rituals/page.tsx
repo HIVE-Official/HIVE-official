@@ -34,7 +34,7 @@ import {
   type RitualCalendarProps,
   type RitualRewardsProps
 } from '@hive/ui';
-import { authenticatedFetch } from '@/lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import toast from '@/hooks/use-toast-notifications';
 
 // Import our ritual components

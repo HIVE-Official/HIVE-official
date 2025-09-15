@@ -14,7 +14,7 @@ import {
   serverTimestamp,
   Timestamp 
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { db } from '@/lib/firebase';
 import { useUnifiedAuth } from '@hive/ui';
 import type { SpaceEvent, EventType } from '@hive/ui';
 

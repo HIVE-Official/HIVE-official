@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import { dbAdmin } from '../../../../../lib/firebase-admin';
-import { logger } from '../../../../../lib/structured-logger';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@/lib/utils/structured-logger';
 
 export async function GET(
   request: NextRequest,

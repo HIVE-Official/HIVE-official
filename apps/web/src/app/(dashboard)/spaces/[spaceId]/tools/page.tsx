@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button, Card, Badge, Modal } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { 
   Zap, 
   Plus, 
@@ -379,7 +379,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
           { 
             label: "Spaces", 
             href: "/spaces",
-            icon: ArrowLeft
+            icon: <ArrowLeft className="h-4 w-4" />
           },
           { 
             label: spaceName, 
@@ -387,7 +387,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
           },
           { 
             label: "Tools", 
-            icon: Zap 
+            icon: <Zap />
           }
         ]}
         actions={

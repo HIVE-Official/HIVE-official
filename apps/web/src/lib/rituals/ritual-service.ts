@@ -3,7 +3,7 @@
  * Handles ritual CRUD operations and participation tracking
  */
 import { db } from "@/lib/firebase";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { 
   collection, 
   doc, 

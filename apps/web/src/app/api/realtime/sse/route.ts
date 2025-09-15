@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
-import { sseRealtimeService } from '@/lib/sse-realtime-service';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { sseRealtimeService } from '@/lib/services/sse-realtime-service';
 import { logger } from '@/lib/logger';
 
 /**

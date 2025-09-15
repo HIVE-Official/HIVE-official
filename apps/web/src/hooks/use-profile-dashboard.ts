@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { DashboardLayout, UserProfile, UserConnection } from '@/lib/firebase-collections';
+import { DashboardLayout, UserProfile, UserConnection } from '@/lib/firebase/collections/firebase-collections';
 import { useSession } from './use-session';
 
 interface ProfileDashboardData {

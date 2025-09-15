@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Badge, Card } from "@hive/ui";
-import { Alert, Modal } from "@/components/layout/page-container";
+import { Alert, Modal } from "@hive/ui";
 import { 
   Calendar, 
   MapPin, 

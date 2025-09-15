@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Button, Badge } from "@hive/ui";
-import { Alert } from "@/components/layout/page-container";
+import { Alert } from "@hive/ui";
 import { 
   X, 
   MessageSquare, 

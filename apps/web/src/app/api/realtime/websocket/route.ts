@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { sseRealtimeService } from '@/lib/sse-realtime-service';
-import { realtimeService } from '@/lib/firebase-realtime';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { sseRealtimeService } from '@/lib/services/sse-realtime-service';
+import { realtimeService } from '@/lib/firebase/client/firebase-realtime';
 import { serverTimestamp } from 'firebase/database';
 
 // WebSocket connection interfaces

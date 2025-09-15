@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Card, Button, Input, Label, Textarea, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Progress } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/layout/page-container";
+import { Alert, AlertDescription } from "@hive/ui";
 import {
   Play,
   Square,
@@ -24,7 +24,7 @@ import {
   ToolDefinition, 
   ExecutionResult, 
   ExecutionContext 
-} from '../../lib/tool-execution-runtime';
+} from '@/lib/tool-execution-runtime';
 
 interface ToolExecutionPanelProps {
   tool: ToolDefinition;

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button, Card } from "@hive/ui";
-import { getDefaultAvatarOptions } from "@/lib/avatar-generator";
+import { getDefaultAvatarOptions } from "@/lib/utils/generators/avatar-generator";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HivePhotoStepProps {

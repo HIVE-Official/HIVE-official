@@ -3,6 +3,7 @@
   "globalDependencies": ["**/.env.*local", "NODE_ENV"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "storybook-static/**"]
     },
     "dev": {
@@ -20,6 +21,7 @@
       "outputs": []
     },
     "typecheck": {
+      "dependsOn": ["^typecheck"],
       "outputs": []
     },
     "clean": {

@@ -6,7 +6,7 @@ import { Button, Card } from "@hive/ui";
 import { ArrowLeft, Play, Edit, Settings, Eye, Maximize2, Minimize2, RefreshCw, Code2 } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 import { useUnifiedAuth } from "@hive/ui";
-import { ToolNavigation } from "@/lib/tool-navigation";
+import { ToolNavigation } from "@/lib/tools/tool-navigation";
 import { ToolRuntime } from "@/components/tools/tool-runtime";
 import { ToolComposition } from "@/lib/element-system";
 

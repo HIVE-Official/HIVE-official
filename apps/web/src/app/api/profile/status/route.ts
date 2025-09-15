@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 import { FieldValue } from 'firebase-admin/firestore';
 
 // Status interface

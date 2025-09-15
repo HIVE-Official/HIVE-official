@@ -1,4 +1,4 @@
-import { dbAdmin } from './firebase-admin';
+import { dbAdmin } from './firebase/admin/firebase-admin';
 import { logger } from './logger';
 
 /**

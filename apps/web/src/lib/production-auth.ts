@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { adminAuth, verifyIdToken } from '@/lib/firebase-admin';
+import { adminAuth, verifyIdToken } from '@/lib/firebase/admin/firebase-admin';
 import { logger } from '@/lib/logger';
-import { HttpStatus } from '@/lib/http-status';
+import { HttpStatus } from '@/lib/utils/http-status';
 import { headers } from 'next/headers';
 
 export interface AuthContext {

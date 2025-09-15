@@ -50,7 +50,7 @@ const Heading = ({ children, className }: { children: React.ReactNode; className
 );
 
 // Components
-import { FeedDisplay } from '../../../components/social/feed-display';
+import { FeedDisplay } from '../../../components/feed/feed-display';
 
 // Dashboard Data Types
 interface DashboardData {
@@ -117,15 +117,16 @@ export function DashboardMain() {
         const emptyData: DashboardData = {
           user: {
             id: user?.id || '',
-            name: user?.displayName || '',
+            name: (user as any)?.displayName || user?.email?.split('@')[0] || '',
             handle: user?.email?.split('@')[0] || '',
-            avatar: user?.photoURL || undefined,
+            avatar: (user as any)?.photoURL || undefined,
             spaces: 0,
             tools: 0,
             reputation: 0
           },
           spaces: [],
           recentActivity: [],
+          upcomingEvents: [],
           tools: [],
           notifications: []
         };
@@ -154,8 +155,8 @@ export function DashboardMain() {
             <Activity className="h-6 w-6 text-accent-foreground animate-pulse" />
           </div>
           <div>
-            <Heading level={2}>Loading your campus dashboard...</Heading>
-            <Typography color="medium">Getting your spaces and activity ready</Typography>
+            <Heading>Loading your campus dashboard...</Heading>
+            <Typography>Getting your spaces and activity ready</Typography>
           </div>
         </div>
       </div>
@@ -170,7 +171,7 @@ export function DashboardMain() {
             <Activity className="h-6 w-6 text-destructive-foreground" />
           </div>
           <div>
-            <Heading level={2}>Dashboard unavailable</Heading>
+            <Heading>Dashboard unavailable</Heading>
             <Typography color="medium">{error || 'Unable to load dashboard'}</Typography>
             <Button onClick={() => window.location.reload()} className="mt-4">
               Try Again
@@ -194,7 +195,7 @@ export function DashboardMain() {
           className="flex flex-col md:flex-row md:items-center md:justify-between"
         >
           <div>
-            <Display size="medium">
+            <Display>
               Welcome back, {dashboardData.user.name.split(' ')[0]}! 👋
             </Display>
             <Typography size="large" color="medium" className="mt-1">

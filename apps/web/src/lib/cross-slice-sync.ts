@@ -1,5 +1,5 @@
 import { realtimeService, RealtimeMessage } from './firebase-realtime';
-import { logger } from './logger';
+import { logger } from '../logger';
 
 /**
  * Cross-Slice Synchronization Service for HIVE Platform

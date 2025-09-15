@@ -18,7 +18,7 @@ import {
   Tablet,
   Monitor
 } from 'lucide-react';
-import { CardLayout, DashboardLayout } from '@/lib/firebase-collections';
+import { CardLayout, DashboardLayout } from '@/lib/firebase/collections/firebase-collections';
 
 // Import all card components
 import { AvatarIdentityCard } from '../bento-cards/avatar-identity-card';

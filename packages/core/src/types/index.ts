@@ -6,7 +6,7 @@
  * Import these types from @hive/core in other packages.
  */
 
-import { z } from 'zod';
+// Removed unused import
 
 // Import validation schemas as the source of truth
 // For now, define core types here to avoid cross-package issues
@@ -58,7 +58,7 @@ export interface Tool extends BaseEntity {
   creatorId: string;
   category: string;
   icon?: string;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   isPublic: boolean;
   usageCount: number;
   rating?: number;
@@ -81,11 +81,35 @@ export interface Profile extends BaseEntity {
 }
 
 export interface PrivacySettings {
+  // Basic visibility
+  isPublic: boolean;
   profileVisibility: 'public' | 'school' | 'private';
   showEmail: boolean;
-  showLocation: boolean;
-  showSchedule: boolean;
+  showActivity: boolean;
+  showSpaces: boolean;
+  showConnections: boolean;
+  showOnlineStatus: boolean;
+  showLocation?: boolean;
+  showSchedule?: boolean;
+  
+  // Communication preferences
   allowMessages: 'everyone' | 'connections' | 'none';
+  allowDirectMessages: boolean;
+  allowSpaceInvites: boolean;
+  allowEventInvites: boolean;
+  
+  // Privacy controls
+  allowAnalytics: boolean;
+  allowPersonalization: boolean;
+  
+  // Ghost mode
+  ghostMode?: {
+    enabled: boolean;
+    level: 'minimal' | 'moderate' | 'maximum';
+    hideActivity: boolean;
+    hideOnlineStatus: boolean;
+    hideMemberships: boolean;
+  };
 }
 
 export interface Member extends BaseEntity {

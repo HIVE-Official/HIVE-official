@@ -121,8 +121,8 @@ export default function SpaceEventsPage({ params }: SpaceEventsPageProps) {
       <CreateEventModal
         isOpen={showCreateEvent}
         onClose={() => setShowCreateEvent(false)}
-        onCreateEvent={() => {/* Event creation handled by SpaceEventCalendar */}}
-        defaultSpaceId={spaceId}
+        spaceId={spaceId}
+        onEventCreated={() => {/* Event creation handled by SpaceEventCalendar */}}
       />
 
       {/* Event Details Modal */}

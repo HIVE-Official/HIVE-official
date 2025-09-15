@@ -1,12 +1,12 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { sendMagicLinkEmail } from "@/lib/email";
-import { authRateLimiter, RATE_LIMITS } from "@/lib/auth-rate-limiter";
+import { authRateLimiter, RATE_LIMITS } from "@/lib/auth/middleware/auth-rate-limiter";
 import { validateCSRFToken } from "@/lib/csrf-protection";
 import { FieldValue } from "firebase-admin/firestore";
-import { auditLogger, AuditEventType, AuditSeverity } from "@/lib/audit-logger";
+import { auditLogger, AuditEventType, AuditSeverity } from "@/lib/services/audit-logger";
 // import { logger } from "@/lib/logger";
 
 /**

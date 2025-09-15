@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { realtimeService, PresenceData } from '@/lib/firebase-realtime';
+import { realtimeService, PresenceData } from '@/lib/firebase/client/firebase-realtime';
 import { logger } from '@/lib/logger';
 
 interface UseRealtimePresenceOptions {

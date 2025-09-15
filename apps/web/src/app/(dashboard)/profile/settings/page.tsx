@@ -667,7 +667,7 @@ export default function ProfileSettingsStorybook() {
         
         {/* Ghost Mode Confirmation */}
         <HiveConfirmModal
-          open={showGhostModeModal}
+          isOpen={showGhostModeModal}
           onClose={() => setShowGhostModeModal(false)}
           title={privacySettings.ghostMode.enabled ? "Disable Ghost Mode?" : "Enable Ghost Mode?"}
           description={privacySettings.ghostMode.enabled 
@@ -682,7 +682,7 @@ export default function ProfileSettingsStorybook() {
 
         {/* Delete Account Confirmation */}
         <HiveConfirmModal
-          open={showDeleteModal}
+          isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           title="Delete Your Account?"
           description="This will permanently delete your HIVE account, all your data, tools, and connections. This action cannot be undone and you'll lose access to all campus spaces."

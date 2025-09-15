@@ -1,5 +1,5 @@
-import { dbAdmin } from '@/lib/firebase-admin';
-import { type CampusEvent } from '@/lib/feed-aggregation';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { type CampusEvent } from '@/lib/services/feed/feed-aggregation';
 
 /**
  * RSS Import System for Campus Events

@@ -2,11 +2,11 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { authRateLimiter, RATE_LIMITS } from "@/lib/auth-rate-limiter";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
+import { authRateLimiter, RATE_LIMITS } from "@/lib/auth/middleware/auth-rate-limiter";
 import { validateCSRFToken } from "@/lib/csrf-protection";
 import { FieldValue } from "firebase-admin/firestore";
-import { auditLogger, AuditEventType, AuditSeverity } from "@/lib/audit-logger";
+import { auditLogger, AuditEventType, AuditSeverity } from "@/lib/services/audit-logger";
 
 /**
  * HIVE Magic Link Verifier - FIXED IMPLEMENTATION

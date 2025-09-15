@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { HiveLabBuilder } from '@/components/hivelab/HiveLabBuilder';
 import { useUnifiedAuth } from '@hive/ui';
-import { authenticatedFetch } from '@/lib/api-client';
+import { authenticatedFetch } from '@/lib/api/api-client';
 import { useToast } from '@/hooks/use-toast';
 
 // Define a simple Tool type for the builder
@@ -14,7 +14,7 @@ interface Tool {
   elements?: any[];
   config?: any;
 }
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { Zap, Wrench, Code, Palette, Database, BarChart3, Users, Rocket, ArrowLeft } from 'lucide-react';
 
 export default function HiveLabPage() {

@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 
 // Mock ritual framework for development
 const ritualFramework = {
@@ -71,9 +71,9 @@ const ritualFramework = {
     }
   }
 };
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 // Participation action schema
 const ParticipationActionSchema = z.object({

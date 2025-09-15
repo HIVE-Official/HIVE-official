@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useToast } from './use-toast';
-import { authenticatedFetch } from '@/lib/api-client';
+import { authenticatedFetch } from '@/lib/api/api-client';
 
 interface ToolElement {
   id: string;

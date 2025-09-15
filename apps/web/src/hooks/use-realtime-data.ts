@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
-import { realtimeManager } from '@/lib/realtime-listeners';
+import { realtimeManager } from '@/lib/services/realtime/realtime-listeners';
 import { DocumentData } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
-import { logger } from '@/lib/structured-logger';
+import { logger } from '@/lib/utils/structured-logger';
 
 /**
  * Hook for real-time space posts

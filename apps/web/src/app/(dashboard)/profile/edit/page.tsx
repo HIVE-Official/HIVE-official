@@ -218,7 +218,7 @@ export default function ProfileEditPage() {
     }
   };
 
-  const isLoading = profileLoading || updateProfileMutation.isPending || uploadPhotoMutation.isPending;
+  const isLoading = Boolean(profileLoading) || updateProfileMutation.isPending || uploadPhotoMutation.isPending;
 
   if (!user) {
     router.push('/auth/login');
@@ -309,6 +309,7 @@ export default function ProfileEditPage() {
                   <ProfileAvatar
                     src={photoPreview || profile?.avatarUrl}
                     alt={formData.fullName}
+                    name={formData.fullName}
                     size="xl"
                   />
                   <label
@@ -352,21 +353,23 @@ export default function ProfileEditPage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <ComprehensiveFormField
+                  id="fullName"
                   label="Full Name"
                   value={formData.fullName}
-                  onChange={(e) => handleInputChange('fullName', e.target.value)}
+                  onChange={(value) => handleInputChange('fullName', value)}
                   placeholder="John Doe"
-                  icon={<User className="h-4 w-4" />}
+                  icon={User}
                   required
                 />
                 
                 <ComprehensiveFormField
+                  id="handle"
                   label="Handle"
                   value={formData.handle}
-                  onChange={(e) => handleInputChange('handle', e.target.value)}
+                  onChange={(value) => handleInputChange('handle', value)}
                   placeholder="johndoe"
-                  icon={<Hash className="h-4 w-4" />}
-                  helperText="Your unique username"
+                  icon={Hash}
+                  helpText="Your unique username"
                   disabled
                 />
               </div>
@@ -489,8 +492,8 @@ export default function ProfileEditPage() {
                     </SelectTrigger>
                     <SelectContent>
                       {UB_ACADEMIC_YEARS.map(year => (
-                        <SelectItem key={year.value} value={year.value}>
-                          {year.label}
+                        <SelectItem key={year} value={year}>
+                          {year}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -500,12 +503,13 @@ export default function ProfileEditPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <ComprehensiveFormField
+                  id="graduationYear"
                   label="Graduation Year"
                   type="number"
                   value={formData.graduationYear.toString()}
-                  onChange={(e) => handleInputChange('graduationYear', parseInt(e.target.value))}
+                  onChange={(value) => handleInputChange('graduationYear', parseInt(value))}
                   placeholder="2025"
-                  icon={<GraduationCap className="h-4 w-4" />}
+                  icon={GraduationCap}
                   min={new Date().getFullYear()}
                   max={new Date().getFullYear() + 10}
                 />
@@ -770,7 +774,7 @@ export default function ProfileEditPage() {
 
       {/* Exit Confirmation Modal */}
       <HiveModal
-        open={showExitModal}
+        isOpen={showExitModal}
         onOpenChange={setShowExitModal}
         title="Unsaved Changes"
         description="You have unsaved changes. Are you sure you want to leave?"

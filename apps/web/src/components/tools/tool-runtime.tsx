@@ -381,7 +381,7 @@ export function ToolRuntime({
 
       {/* Error Display */}
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="error">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}

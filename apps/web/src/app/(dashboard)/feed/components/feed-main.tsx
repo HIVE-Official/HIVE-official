@@ -151,7 +151,7 @@ export function FeedMain() {
         // Fetch real feed data from API
         const response = await fetch('/api/feed', {
           headers: {
-            'Authorization': `Bearer ${user?.token || 'test-token'}`,
+            'Authorization': `Bearer ${(user as any)?.token || 'test-token'}`,
             'Content-Type': 'application/json'
           }
         });

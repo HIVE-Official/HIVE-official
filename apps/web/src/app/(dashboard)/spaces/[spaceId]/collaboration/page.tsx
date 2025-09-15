@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 
 import { Handshake, ArrowLeft } from "lucide-react";
 import { ErrorBoundary } from "../../../../../components/error-boundary";
@@ -91,7 +91,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
           { 
             label: "Spaces", 
             href: "/spaces",
-            icon: ArrowLeft
+            icon: <ArrowLeft className="h-4 w-4" />
           },
           { 
             label: spaceData.name, 
@@ -99,7 +99,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
           },
           { 
             label: "Collaboration", 
-            icon: Handshake 
+            icon: <Handshake />
           }
         ]}
        

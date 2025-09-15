@@ -19,7 +19,7 @@ import {
   EyeOff
 } from 'lucide-react';
 import { Button, Badge } from "@hive/ui";
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 
 // State Management
 import { useUIStore, useAuthStore } from '@hive/hooks';

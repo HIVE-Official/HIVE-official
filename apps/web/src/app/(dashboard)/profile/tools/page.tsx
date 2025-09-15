@@ -344,7 +344,7 @@ export default function ProfileToolsPage() {
 
         {/* 🚨 **SOPHISTICATED WAITLIST MODAL** */}
         <Modal
-          open={showWaitlistModal}
+          isOpen={showWaitlistModal}
           onClose={() => setShowWaitlistModal(false)}
           title="Join the UB Builder Tools Waitlist"
           description="Be the first to create tools that solve real UB campus problems"

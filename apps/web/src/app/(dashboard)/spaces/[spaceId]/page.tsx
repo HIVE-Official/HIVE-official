@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { authenticatedFetch } from '../../../../lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface, type Comment } from "@hive/ui";
 import { useSpacePosts } from '../../../../hooks/use-space-posts';
 import { useSpaceEvents } from '../../../../hooks/use-space-events';
@@ -13,21 +13,21 @@ import { useSpaceAnalytics } from '../../../../hooks/use-space-analytics';
 import { useSpaceManagement } from '../../../../hooks/use-space-management';
 import { PostWithComments } from '../../../../components/posts/post-with-comments';
 import { SpaceManagementPanel } from '../../../../components/spaces/space-management-panel';
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { Users, AlertTriangle, Loader2, Hash, /* Heart as _Heart, */ MessageSquare, /* Camera as _Camera, */ Code, Calendar, /* ArrowRight as _ArrowRight, */ Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Space } from "@hive/core";
 import { useUnifiedAuth } from "@hive/ui";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { SpaceErrorBoundaryWrapper } from "../components/space-error-boundary";
 import { SpaceLoadingSkeleton } from "../components/space-loading-skeleton";
 import { LeaveSpaceButton } from "../../../../components/spaces/leave-space-button";
 import { PostCreationModal } from "../../../../components/spaces/post-creation-modal";
 import { EventCreationModal } from "../../../../components/spaces/event-creation-modal";
 import { LeaderToolbar, useLeaderMode /* , type LeaderMode */ } from "../../../../components/spaces/leader-toolbar";
-import { getUserSpaceMembership, type SpaceMembership } from "../../../../lib/space-permissions";
+import { getUserSpaceMembership, type SpaceMembership } from "@/lib/spaces/space-permissions";
 
 interface Comment { id: string; text: string; userId: string; createdAt: any; }
 
@@ -86,9 +86,9 @@ function ErrorState({ error }: { error: Error }) {
 
 function SpaceStatusBadge({ status }: { status: Space["status"] }) {
   const statusConfig = {
-    dormant: { label: "Preview Mode", variant: "major-tag" as const, color: "text-blue-400" },
-    frozen: { label: "View Only", variant: "course-tag" as const, color: "text-gray-400" },
-    activated: { label: "Active", variant: "active-tag" as const, color: "text-green-400" },
+    dormant: { label: "Preview Mode", variant: "info" as const, color: "text-blue-400" },
+    frozen: { label: "View Only", variant: "secondary" as const, color: "text-gray-400" },
+    activated: { label: "Active", variant: "success" as const, color: "text-green-400" },
   };
 
   const config = statusConfig[status] || statusConfig.activated;
@@ -551,7 +551,7 @@ export default function SpaceDetailPage({
       <PageContainer
         breadcrumbs={[
           { label: "Discover", href: "/spaces" },
-          { label: space.name, icon: Hash },
+          { label: space.name, icon: <Hash /> },
         ]}
         className="-mt-16 relative z-10"
         padding="lg"
@@ -572,7 +572,7 @@ export default function SpaceDetailPage({
                 <span>{(space.memberCount || 0).toLocaleString()} members</span>
               </div>
 
-              <Badge variant="major-tag" className="capitalize text-xs">
+              <Badge variant="skill-tag" className="capitalize text-xs">
                 {space.type}
               </Badge>
 
@@ -892,7 +892,7 @@ export default function SpaceDetailPage({
                         <Icon className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
                         <h4 className="text-sm font-semibold text-[var(--hive-text-inverse)]">{widget.title}</h4>
                         {widget.adminOnly && (
-                          <Badge variant="prof-favorite" className="text-xs border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
+                          <Badge variant="primary" className="text-xs border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
                             Admin
                           </Badge>
                         )}
@@ -1333,7 +1333,7 @@ export default function SpaceDetailPage({
                           <Icon className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
                           <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)]">{widget.title}</h2>
                           {widget.adminOnly && (
-                            <Badge variant="prof-favorite" className="border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
+                            <Badge variant="primary" className="border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
                               Admin Only
                             </Badge>
                           )}

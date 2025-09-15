@@ -27,9 +27,9 @@ import {
   Search
 } from 'lucide-react';
 import { Button, Badge, Progress } from '@hive/ui';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { authenticatedFetch } from '../../lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 
 interface Achievement {
   id: string;

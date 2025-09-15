@@ -22,7 +22,7 @@ import { Button, Badge, ScrollArea } from '@hive/ui';
 import { cn } from '@hive/ui';
 import { formatDistanceToNow } from 'date-fns';
 import toast from '@/hooks/use-toast-notifications';
-import { authenticatedFetch } from '@/lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 
 interface Notification {
   id: string;

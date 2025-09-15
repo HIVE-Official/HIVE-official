@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-client';
+import { db } from '@/lib/firebase/client/firebase-client';
 import { 
   collection,
   query,
@@ -8,7 +8,7 @@ import {
   limit,
   getDocs
 } from 'firebase/firestore';
-import { logger } from '@/lib/structured-logger';
+import { logger } from '@/lib/utils/structured-logger';
 
 interface RouteParams {
   params: Promise<{

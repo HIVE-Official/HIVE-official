@@ -9,7 +9,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Users, BookOpen, GraduationCap, Building2, Sparkles } from 'lucide-react';
-import type { AutoSpaceConfig } from '../../lib/auto-space-creation';
+import type { AutoSpaceConfig } from '@/lib/auto-space-creation';
 
 interface SpacePreview {
   id: string;

@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { SecureSessionManager, type SessionData } from './secure-session-manager';
-import { logSecurityEvent } from './structured-logger';
+import { logSecurityEvent } from './utils/structured-logger';
 import { currentEnvironment } from './env';
 
 /**

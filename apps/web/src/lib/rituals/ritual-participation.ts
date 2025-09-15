@@ -13,8 +13,8 @@
  * - Generate participation reports
  */
 
-import { db } from '../firebase-client';
-import { adminDb } from '../firebase-admin';
+import { db } from '../firebase/client/firebase-client';
+import { adminDb } from '../firebase/admin/firebase-admin';
 import { 
   collection, 
   doc, 
@@ -31,7 +31,7 @@ import {
   serverTimestamp,
   writeBatch
 } from 'firebase/firestore';
-import { logger } from '../structured-logger';
+import { logger } from '../utils/structured-logger';
 
 /**
  * Ritual participation status

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Button, Card, Badge } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { 
   User, 
   Users, 
@@ -22,7 +22,7 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { ErrorBoundary } from '../../../components/error-boundary';
-import { profileAPI, ProfileData } from '../../../lib/profile-api';
+import { profileAPI, ProfileData } from '@/lib/profile-api';
 import { useSession } from '../../../hooks/use-session';
 
 interface PublicProfileData extends ProfileData {
@@ -244,7 +244,7 @@ export default function PublicProfilePage() {
                   <GraduationCap className="h-3 w-3 mr-1" />
                   {profileData.academicYear}
                 </Badge>
-                <Badge variant="major-tag" className="text-xs">
+                <Badge variant="skill-tag" className="text-xs">
                   <BookOpen className="h-3 w-3 mr-1" />
                   {profileData.major}
                 </Badge>

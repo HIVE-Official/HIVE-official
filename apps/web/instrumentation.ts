@@ -18,16 +18,14 @@ export async function onRequestError(error: Error, request: Request) {
   
   await captureError(error, {
     userAgent: request.headers.get('user-agent') || undefined,
-    ip: request.headers.get('x-forwarded-for') || 
+    ip: request.headers.get('x-forwarded-for') ||
         request.headers.get('x-real-ip') || undefined,
-    tags: {
+    url: request.url,
+    method: request.method,
+    metadata: {
       runtime: 'edge',
       source: 'request_error',
       path: new URL(request.url).pathname,
-      method: request.method
-    },
-    extra: {
-      url: request.url,
       headers: Object.fromEntries(request.headers.entries())
     }
   });

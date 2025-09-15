@@ -21,7 +21,7 @@ import {
   Timestamp,
   Unsubscribe
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase-client';
+import { db } from '@/lib/firebase/client/firebase-client';
 
 // Feed post interface matching Firestore structure
 export interface FeedPost {

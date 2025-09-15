@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { withAuth } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { logger } from '@/lib/logger';
 import { FieldValue } from 'firebase-admin/firestore';
 

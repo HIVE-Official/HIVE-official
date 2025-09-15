@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, X } from 'lucide-react';
 import { Button } from '@hive/ui';
 import { FeedPersonalization } from './feed-personalization';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 
 interface FeedPreferencesModalProps {
   userId: string;

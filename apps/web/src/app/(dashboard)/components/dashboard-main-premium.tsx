@@ -91,9 +91,9 @@ export function DashboardMainPremium() {
         const emptyData: DashboardData = {
           user: {
             id: user?.id || '',
-            name: user?.displayName || 'User',
-            handle: user?.email?.split('@')[0] || 'user',
-            avatar: user?.photoURL || undefined,
+            name: user?.fullName || 'User',
+            handle: user?.handle || user?.email?.split('@')[0] || 'user',
+            avatar: user?.avatarUrl || undefined,
             spaces: 0,
             tools: 0,
             reputation: 0

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { logger } from '@/lib/logger';
 
 // GET /api/profile/export - Export user profile data

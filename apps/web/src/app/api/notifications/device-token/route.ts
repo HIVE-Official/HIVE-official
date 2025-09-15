@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from '@/lib/structured-logger';
-import { withAuth } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@/lib/utils/structured-logger';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { z } from 'zod';
 import * as admin from 'firebase-admin';
 

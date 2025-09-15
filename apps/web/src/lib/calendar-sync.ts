@@ -13,7 +13,7 @@
  * - iCal export/import
  */
 
-import { db } from './firebase-client';
+import { db } from './firebase/client/firebase-client';
 import { 
   collection, 
   doc, 
@@ -27,7 +27,7 @@ import {
   Timestamp,
   serverTimestamp 
 } from 'firebase/firestore';
-import { logger } from './structured-logger';
+import { logger } from './utils/structured-logger';
 
 /**
  * Calendar event type

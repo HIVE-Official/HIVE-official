@@ -4,8 +4,8 @@
  */
 
 // import { createRateLimit, RateLimitConfigs } from './rate-limit-redis';
-import { rateLimit as fallbackRateLimit } from './rate-limit-simple';
-import { logSecurityEvent } from './structured-logger';
+import { rateLimit as fallbackRateLimit } from './api/middleware/rate-limit-simple';
+import { logSecurityEvent } from './utils/structured-logger';
 import { currentEnvironment } from './env';
 
 /**

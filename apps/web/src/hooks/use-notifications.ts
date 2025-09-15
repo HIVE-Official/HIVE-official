@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { fcmService, NotificationPayload, NotificationBuilder } from '@/lib/notifications/fcm-service';
+import { fcmService, NotificationPayload, NotificationBuilder } from '@/lib/services/notifications/notifications/fcm-service';
 import { useAppStore } from '@/store/app-store';
 import { useToast } from './use-toast';
 

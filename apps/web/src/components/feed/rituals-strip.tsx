@@ -23,7 +23,7 @@ import {
   Star
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { authenticatedFetch } from '@/lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import toast from '@/hooks/use-toast-notifications';
 
 // Real-time ritual interface matching the backend

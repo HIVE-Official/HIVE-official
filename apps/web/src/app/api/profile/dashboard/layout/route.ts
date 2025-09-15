@@ -4,9 +4,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { withAuth } from '@/lib/api-auth-middleware';
-import { COLLECTIONS, DashboardLayout, CardLayout } from '@/lib/firebase-collections';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
+import { COLLECTIONS, DashboardLayout, CardLayout } from '@/lib/firebase/collections/firebase-collections';
 import { FieldValue } from 'firebase-admin/firestore';
 
 // Default layout configurations

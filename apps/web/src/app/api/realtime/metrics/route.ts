@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
-import { realtimeOptimizationManager } from '@/lib/realtime-optimization';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { realtimeOptimizationManager } from '@/lib/services/realtime/realtime-optimization';
 import { logger } from '@/lib/logger';
-import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api/response-types/api-response-types';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 
 /**
  * Real-time System Metrics and Performance Monitoring API

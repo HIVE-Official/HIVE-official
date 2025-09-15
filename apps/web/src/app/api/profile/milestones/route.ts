@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin as db, authAdmin as auth } from '@/lib/firebase-admin';
+import { dbAdmin as db, authAdmin as auth } from '@/lib/firebase/admin/firebase-admin';
 import * as admin from 'firebase-admin';
 import { z } from 'zod';
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
 // Milestone schema
 const milestoneSchema = z.object({

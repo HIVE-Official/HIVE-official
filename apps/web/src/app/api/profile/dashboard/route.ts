@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser as _getCurrentUser } from '../../../../lib/auth-server';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser as _getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 // Profile dashboard data interface
 interface ProfileDashboardData {

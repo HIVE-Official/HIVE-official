@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { 
   getSpace,
   getSpaceMember,
   removeSpaceMember,
   getSpaceMembers
-} from '@/lib/spaces-db';
-import { COLLECTIONS } from '@/lib/firebase-collections';
+} from '@/lib/spaces/spaces-db';
+import { COLLECTIONS } from '@/lib/firebase/collections/firebase-collections';
 import { Timestamp, FieldValue } from 'firebase-admin/firestore';
 
 const leaveSpaceSchema = z.object({
@@ -139,7 +139,7 @@ async function updateConnectionsOnLeave(
   userId: string,
   spaceId: string
 ): Promise<void> {
-  const { dbAdmin } = await import('@/lib/firebase-admin');
+  const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
   
   try {
     // Get all connections for this user
@@ -198,7 +198,7 @@ async function updateConnectionsOnLeave(
  * Log leave activity for analytics
  */
 async function logLeaveActivity(userId: string, spaceId: string, spaceName: string) {
-  const { dbAdmin } = await import('@/lib/firebase-admin');
+  const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
   const { Timestamp } = await import('firebase-admin/firestore');
   
   await dbAdmin.collection('activityEvents').add({

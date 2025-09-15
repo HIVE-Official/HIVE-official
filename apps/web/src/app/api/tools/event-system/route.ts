@@ -1,10 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { dbAdmin as adminDb } from "@/lib/firebase-admin";
-import { getCurrentUser } from "../../../../lib/auth-server";
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin as adminDb } from "@/lib/firebase/admin/firebase-admin";
+import { getCurrentUser } from "@/lib/auth/providers/auth-server";
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Event System Installation Schema
 const EventSystemInstallationSchema = z.object({

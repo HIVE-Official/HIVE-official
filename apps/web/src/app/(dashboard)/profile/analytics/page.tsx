@@ -11,7 +11,7 @@ import {
   Button,
   Badge,
 } from "@hive/ui";
-import { PageContainer, Modal } from "@/components/layout/page-container";
+import { PageContainer, Modal } from "@hive/ui";
 import { useHiveProfile } from '../../../../hooks/use-hive-profile';
 import { ErrorBoundary } from '../../../../components/error-boundary';
 import { 
@@ -389,7 +389,7 @@ export default function ProfileAnalyticsStorybook() {
 
         {/* 🚨 **PREVIEW MODAL** */}
         <Modal
-          open={showPreviewModal}
+          isOpen={showPreviewModal}
           onClose={() => {
             setShowPreviewModal(false);
             setSelectedFeature(null);

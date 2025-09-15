@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { authenticatedFetch } from '@/lib/auth-utils';
-import { logger } from '@/lib/structured-logger';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
+import { logger } from '@/lib/utils/structured-logger';
 
 export interface SpaceAnalytics {
   contentData?: {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin as adminDb } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 interface AnalyticsQuery {
   toolId: string;

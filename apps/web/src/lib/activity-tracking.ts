@@ -3,8 +3,8 @@
  * Handles real-time activity tracking, summaries, and analytics
  */
 
-import { dbAdmin, FieldValue } from '@/lib/firebase-admin';
-import { db } from '@/lib/firebase-client';
+import { dbAdmin, FieldValue } from '@/lib/firebase/admin/firebase-admin';
+import { db } from '@/lib/firebase/client/firebase-client';
 import { doc, setDoc, updateDoc, increment, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { logger } from '@/lib/logger';
 

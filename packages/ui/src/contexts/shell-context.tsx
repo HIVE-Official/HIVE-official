@@ -7,6 +7,9 @@ interface ShellContextValue {
   toggleSidebar: () => void;
   navigationMode: 'sidebar' | 'topbar' | 'command';
   setNavigationMode: (mode: 'sidebar' | 'topbar' | 'command') => void;
+  navigationPreference: 'sidebar' | 'topbar' | 'command';
+  setNavigationPreference: (mode: 'sidebar' | 'topbar' | 'command') => void;
+  navigationLayout: 'default' | 'compact' | 'minimal';
 }
 
 const ShellContext = createContext<ShellContextValue | undefined>(undefined);
@@ -14,6 +17,8 @@ const ShellContext = createContext<ShellContextValue | undefined>(undefined);
 export function ShellProvider({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [navigationMode, setNavigationMode] = useState<'sidebar' | 'topbar' | 'command'>('sidebar');
+  const [navigationPreference, setNavigationPreference] = useState<'sidebar' | 'topbar' | 'command'>('sidebar');
+  const [navigationLayout] = useState<'default' | 'compact' | 'minimal'>('default');
 
   const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
 
@@ -24,6 +29,9 @@ export function ShellProvider({ children }: { children: React.ReactNode }) {
         toggleSidebar,
         navigationMode,
         setNavigationMode,
+        navigationPreference,
+        setNavigationPreference,
+        navigationLayout,
       }}
     >
       {children}

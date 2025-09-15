@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin as db, authAdmin as auth } from '@/lib/firebase-admin';
+import { dbAdmin as db, authAdmin as auth } from '@/lib/firebase/admin/firebase-admin';
 import * as admin from 'firebase-admin';
 
 // GET /api/profile - Get current user's profile or search profiles

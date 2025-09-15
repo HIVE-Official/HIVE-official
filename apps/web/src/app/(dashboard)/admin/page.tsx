@@ -187,7 +187,7 @@ export default function AdminDashboard() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Alert variant="destructive">
+        <Alert variant="error">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
             Failed to load admin dashboard: {error}

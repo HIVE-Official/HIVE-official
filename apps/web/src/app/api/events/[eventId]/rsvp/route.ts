@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-client';
+import { db } from '@/lib/firebase/client/firebase-client';
 import { 
   doc,
   collection,
@@ -13,9 +13,9 @@ import {
   serverTimestamp,
   getDoc
 } from 'firebase/firestore';
-import { logger } from '@/lib/structured-logger';
+import { logger } from '@/lib/utils/structured-logger';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions } from '@/lib/auth/auth';
 
 interface RouteParams {
   params: Promise<{

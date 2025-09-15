@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
-import { logger } from "@/lib/structured-logger";
-import { withAuth } from "@/lib/api-auth-middleware";
-import { HttpStatus } from "@/lib/api-response-types";
+import { logger } from "@/lib/utils/structured-logger";
+import { withAuth } from "@/lib/api/middleware/api-auth-middleware";
+import { HttpStatus } from "@/lib/api/response-types/api-response-types";
 
 // Validation schema for activation request
 const ActivationRequestSchema = z.object({

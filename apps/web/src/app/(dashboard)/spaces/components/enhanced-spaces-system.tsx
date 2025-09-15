@@ -3,15 +3,22 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
-import { authenticatedFetch } from '../../../../lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from "@hive/ui";
-import { 
-  UBSpaceTemplateCard,
-  UBSpacesDirectory,
-  SpaceActivationModal,
-  UB_SPACE_TEMPLATES,
-  type ActivationRequestData
-} from "@hive/ui/src/components/spaces/ub-space-templates";
+// NOTE: UB Space Templates are not yet implemented
+// import { 
+//   UBSpaceTemplateCard,
+//   UBSpacesDirectory,
+//   SpaceActivationModal,
+//   UB_SPACE_TEMPLATES,
+//   type ActivationRequestData
+// } from "@hive/ui/src/components/spaces/ub-space-templates";
+
+// Temporary stubs until UB Space Templates are implemented
+const UB_SPACE_TEMPLATES: any[] = [];
+type ActivationRequestData = any;
+const SpaceActivationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => null;
+const UBSpacesDirectory = ({ spaces }: { spaces: any[] }) => null;
 import { type Space, type SpaceType } from "@hive/core";
 import { useDebounce } from "@hive/hooks";
 import { cn } from "@hive/ui";

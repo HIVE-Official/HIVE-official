@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
 // Profile connection interface
 interface ProfileConnection {

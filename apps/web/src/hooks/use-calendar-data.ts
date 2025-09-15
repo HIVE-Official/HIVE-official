@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { CalendarCardData, CalendarCardState } from '@hive/ui';
-import { fetchCalendarEvents, transformApiEvent } from '../lib/calendar-api';
+import { fetchCalendarEvents, transformApiEvent } from '@/lib/calendar-api';
 
 interface CalendarEvent {
   id: string;

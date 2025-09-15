@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 
 // POST /api/presence/offline - Mark user as offline

@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { 
   getSpace, 
   getSpaceMember, 
   addSpaceMember,
   getUserSpaces 
-} from '@/lib/spaces-db';
-import { COLLECTIONS, type UserConnection } from '@/lib/firebase-collections';
+} from '@/lib/spaces/spaces-db';
+import { COLLECTIONS, type UserConnection } from '@/lib/firebase/collections/firebase-collections';
 import { Timestamp, FieldValue } from 'firebase-admin/firestore';
 
 const joinSpaceSchema = z.object({
@@ -183,7 +183,7 @@ async function createAutoConnections(
   spaceId: string, 
   spaceName: string
 ): Promise<number> {
-  const { dbAdmin } = await import('@/lib/firebase-admin');
+  const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
   
   try {
     // Get all existing members of the space
@@ -276,7 +276,7 @@ async function updateExistingConnections(
   spaceId: string,
   memberUserIds: string[]
 ): Promise<void> {
-  const { dbAdmin } = await import('@/lib/firebase-admin');
+  const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
   
   try {
     const batch = dbAdmin.batch();
@@ -323,7 +323,7 @@ async function updateExistingConnections(
  * Log join activity for analytics
  */
 async function logJoinActivity(userId: string, spaceId: string, spaceName: string) {
-  const { dbAdmin } = await import('@/lib/firebase-admin');
+  const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
   const { Timestamp } = await import('firebase-admin/firestore');
   
   await dbAdmin.collection('activityEvents').add({

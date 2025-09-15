@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ResilientHiveApiClient, createResilientApiClient } from '@/lib/api-client-resilient';
+import { ResilientHiveApiClient, createResilientApiClient } from '@/lib/api/api-client-resilient';
 import { ErrorCategory, ErrorSeverity, HiveError } from '@/lib/error-resilience-system';
 
 // Enhanced state interface with error resilience

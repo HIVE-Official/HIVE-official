@@ -9,7 +9,7 @@
  * - Coordination relevance (study sessions, events, etc.)
  */
 
-import { logger } from '../structured-logger';
+import { logger } from '../utils/structured-logger';
 
 export interface TrendingPost {
   id: string;

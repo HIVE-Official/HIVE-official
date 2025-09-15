@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { authAdmin } from '@/lib/firebase-admin'
-import { adminApiRateLimit } from '@/lib/rate-limit'
+import { authAdmin } from '@/lib/firebase/admin/firebase-admin'
+import { adminApiRateLimit } from '@/lib/api/middleware/rate-limit'
 import { securityEvents, extractRequestInfo, detectSuspiciousActivity } from './monitoring'
 import { logger } from '@hive/core'
 

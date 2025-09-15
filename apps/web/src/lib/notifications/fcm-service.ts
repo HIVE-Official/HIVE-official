@@ -1,6 +1,6 @@
 /// <reference path="../../types/global.d.ts" />
 import { getMessaging, getToken, onMessage, Messaging } from 'firebase/messaging';
-import { app } from '@/lib/firebase-client';
+import { app } from '@/lib/firebase/client/firebase-client';
 
 export interface NotificationPayload {
   title: string;

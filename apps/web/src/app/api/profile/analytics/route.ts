@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 
 // Profile analytics interface

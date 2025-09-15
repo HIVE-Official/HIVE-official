@@ -1,5 +1,5 @@
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getLatestAggregatedContent, type AggregatedFeedItem } from '@/lib/feed-aggregation';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { getLatestAggregatedContent, type AggregatedFeedItem } from '@/lib/services/feed/feed-aggregation';
 
 /**
  * Real-time Feed Update System
@@ -150,7 +150,7 @@ export class RealTimeFeedManager {
     const userSpaceIds = await this.getUserSpaceIds();
     
     // Get fresh content from all sources
-    const { createFeedAggregator } = await import('@/lib/feed-aggregation');
+    const { createFeedAggregator } = await import('@/lib/services/feed/feed-aggregation');
     const aggregator = createFeedAggregator(this._userId, userSpaceIds);
     const allItems = await aggregator.aggregateContent(100);
 
@@ -306,7 +306,7 @@ export class RealTimeFeedManager {
    */
   private async getSpaceContent(spaceId: string, limit: number): Promise<AggregatedFeedItem[]> {
     try {
-      const { createFeedAggregator } = await import('@/lib/feed-aggregation');
+      const { createFeedAggregator } = await import('@/lib/services/feed/feed-aggregation');
       const aggregator = createFeedAggregator(this._userId, [spaceId]);
       return await aggregator.aggregateContent(limit);
     } catch (error) {

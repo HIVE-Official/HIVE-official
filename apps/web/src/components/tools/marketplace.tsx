@@ -28,8 +28,8 @@ import {
   X
 } from 'lucide-react';
 import { Button, Badge } from '@hive/ui';
-import { authenticatedFetch } from '../../lib/auth-utils';
-import { cn } from '../../lib/utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
+import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Tool {

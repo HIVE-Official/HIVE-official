@@ -4,7 +4,7 @@
  */
 
 import { doc, getDoc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
-import { db } from './firebase';
+import { db } from './firebase/firebase';
 
 export interface Achievement {
   id: string;

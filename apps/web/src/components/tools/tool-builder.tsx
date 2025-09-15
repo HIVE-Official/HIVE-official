@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Card, Button, Input, Label, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Badge, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/layout/page-container";
+import { Alert, AlertDescription } from "@hive/ui";
 import {
   Code,
   Save,
@@ -22,8 +22,8 @@ import {
   Loader2
 } from 'lucide-react';
 import { ToolExecutionPanel } from './tool-execution-panel';
-import { toolTemplates, ToolDefinition } from '../../lib/tool-execution-runtime';
-import { useFormValidation, toolValidation } from '../../lib/form-validation';
+import { toolTemplates, ToolDefinition } from '@/lib/tool-execution-runtime';
+import { useFormValidation, toolValidation } from '@/lib/form-validation';
 
 // State Management
 import { 

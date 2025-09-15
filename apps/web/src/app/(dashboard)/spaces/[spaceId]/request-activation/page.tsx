@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card } from "@hive/ui";
 import { ArrowLeft, Loader, Zap, Users, Lightbulb, AlertCircle } from "lucide-react";
-import { authenticatedFetch } from "@/lib/auth-utils";
+import { authenticatedFetch } from "@/lib/auth/utils/auth-utils";
 
 export default function RequestActivationPage() {
   const params = useParams();

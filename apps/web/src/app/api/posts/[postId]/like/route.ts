@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions } from '@/lib/auth/auth';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc, setDoc, deleteDoc, increment, serverTimestamp } from 'firebase/firestore';
 import { logger } from '@/lib/logger';

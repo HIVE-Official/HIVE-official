@@ -1,8 +1,8 @@
 // Temporary simple onboarding implementation to unblock core functionality
 // TODO: Re-enable full transaction-manager.ts after fixing syntax issues
 
-import { dbAdmin } from './firebase-admin';
-import { logger } from './logger';
+import { dbAdmin } from './firebase/admin/firebase-admin';
+import { logger } from '../logger';
 
 export interface TransactionResult<T = any> {
   success: boolean;

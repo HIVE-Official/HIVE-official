@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 // Personal tool interface matching the component expectations
 interface PersonalTool {
@@ -17,7 +17,7 @@ interface PersonalTool {
 // Fetch user's actual personal tools from database
 async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     
     // Get user's installed tools
     const userToolsSnapshot = await dbAdmin
@@ -93,7 +93,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
     // Implement actual tool installation/uninstallation in database
     try {
-      const { dbAdmin } = await import('@/lib/firebase-admin');
+      const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
       
       if (action === 'install') {
         // Get tool details from marketplace or create basic entry

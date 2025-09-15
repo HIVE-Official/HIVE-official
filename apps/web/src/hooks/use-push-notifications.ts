@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './use-auth';
-import { initializeMessaging, onForegroundMessage, requestNotificationPermission } from '@/lib/notifications';
+import { initializeMessaging, onForegroundMessage, requestNotificationPermission } from '@/lib/services/notifications/notifications';
 import { logger } from '@/lib/logger';
 
 interface PushNotificationState {

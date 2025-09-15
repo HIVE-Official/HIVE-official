@@ -3,7 +3,7 @@
  * Replaces console.log statements with proper structured logging
  */
 
-import { config } from './config';
+import { config } from './utils/config';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 

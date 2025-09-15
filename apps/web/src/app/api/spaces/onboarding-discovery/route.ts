@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { logger } from "@hive/core";
-import { generalApiRateLimit } from "@/lib/rate-limit";
+import { generalApiRateLimit } from "@/lib/api/middleware/rate-limit";
 
 interface SpaceTag {
   type: string;

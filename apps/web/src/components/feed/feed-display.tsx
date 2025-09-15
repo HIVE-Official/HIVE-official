@@ -200,15 +200,15 @@ export function FeedDisplay({
             onValueChange={(value: unknown) => setFilterType(value)}
           >
             <TabsList className="h-9">
-<TabsTrigger value="recent" className="text-xs" />
+              <TabsTrigger value="recent" className="text-xs">
                 <Clock className="h-3 w-3 mr-1" />
                 Recent
               </TabsTrigger>
-              <TabsTrigger value="popular" className="text-xs" />
+              <TabsTrigger value="popular" className="text-xs">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 Popular
               </TabsTrigger>
-              <TabsTrigger value="following" className="text-xs" />
+              <TabsTrigger value="following" className="text-xs">
                 <Users className="h-3 w-3 mr-1" />
                 Following
               </TabsTrigger>

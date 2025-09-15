@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Modal, Button, Card, Badge, Input } from "@hive/ui";
-import { Alert } from "@/components/layout/page-container";
-import { authenticatedFetch } from "@/lib/auth-utils";
+import { Alert } from "@hive/ui";
+import { authenticatedFetch } from "@/lib/auth/utils/auth-utils";
 import { 
   ArrowRight, 
   ArrowLeft,

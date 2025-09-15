@@ -30,7 +30,7 @@ import {
   ArrowRight,
   History
 } from 'lucide-react';
-import { SearchEngine, SearchQuery, SearchResult, SearchItem } from '../../lib/search-engine';
+import { SearchEngine, SearchQuery, SearchResult, SearchItem } from '@/lib/search-engine';
 
 interface SearchInterfaceProps {
   onResultSelect?: (_item: SearchItem) => void;

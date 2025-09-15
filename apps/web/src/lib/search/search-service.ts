@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase-client';
+import { db } from '@/lib/firebase/client/firebase-client';
 import { 
   collection, 
   collectionGroup,

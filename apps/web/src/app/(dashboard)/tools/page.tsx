@@ -67,8 +67,8 @@ async function fetchPersonalTools(): Promise<any[]> {
 }
 
 // Import campus-specific templates and deployment system
-import { CAMPUS_TOOL_TEMPLATES, getViralTemplates } from '../../../lib/campus-tools-templates';
-import { TemplateDeploymentService, DEPLOYMENT_PRESETS } from '../../../lib/template-deployment';
+import { CAMPUS_TOOL_TEMPLATES, getViralTemplates } from '@/lib/tools/templates/campus-tools-templates';
+import { TemplateDeploymentService, DEPLOYMENT_PRESETS } from '@/lib/tools/templates/template-deployment';
 
 // Convert campus templates to marketplace format
 const CAMPUS_MARKETPLACE_TOOLS = CAMPUS_TOOL_TEMPLATES.map(template => ({

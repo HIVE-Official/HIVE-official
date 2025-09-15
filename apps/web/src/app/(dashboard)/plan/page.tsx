@@ -501,7 +501,7 @@ export default function PlanPage() {
                 transition={{ duration: 0.4, delay: index * 0.1 }}
               >
                 <Card 
-                  variant={phase.status === 'active' ? 'gold-accent' : 'elevated'} 
+                  variant={phase.status === 'active' ? 'elevated' : 'default'} 
                   className="p-6"
                 >
                   <div 
@@ -649,7 +649,7 @@ export default function PlanPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <Card variant="announcement" className="p-6">
+          <Card variant="default" className="p-6">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center">
                 <Zap className="w-5 h-5 text-[var(--hive-brand-primary)]" />

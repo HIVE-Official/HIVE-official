@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button, Card, Badge, Modal, Input } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { 
   Users, 
   UserPlus, 
@@ -287,7 +287,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           { 
             label: "Spaces", 
             href: "/spaces",
-            icon: ArrowLeft
+            icon: <ArrowLeft className="h-4 w-4" />
           },
           { 
             label: spaceName, 
@@ -295,7 +295,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           },
           { 
             label: "Members", 
-            icon: Users 
+            icon: <Users />
           }
         ]}
         actions={

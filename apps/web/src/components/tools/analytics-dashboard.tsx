@@ -25,8 +25,8 @@ import {
   Share2
 } from 'lucide-react';
 import { Button, Badge, Card } from '@hive/ui';
-import { authenticatedFetch } from '../../lib/auth-utils';
-import { cn } from '../../lib/utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
+import { cn } from '@/lib/utils';
 import {
   LineChart,
   Line,

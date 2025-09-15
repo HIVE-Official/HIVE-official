@@ -27,9 +27,9 @@ import {
   Unlock
 } from 'lucide-react';
 import { Button, Badge, Progress } from '@hive/ui';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow, addDays, isBefore, isAfter } from 'date-fns';
-import { authenticatedFetch } from '../../lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 
 interface Milestone {
   id: string;

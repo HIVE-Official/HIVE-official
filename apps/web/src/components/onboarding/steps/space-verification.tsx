@@ -8,7 +8,7 @@ import { XIcon, PlusIcon } from 'lucide-react';
 
 // Simple Alert component since it's not available in @hive/ui
 const Alert = ({ variant, children }: { variant?: string; children: React.ReactNode }) => (
-  <div className={`p-3 rounded-md border ${variant === 'destructive' ? 'border-border bg-surface/50 text-muted-foreground' : 'border-border bg-surface/50 text-muted-foreground'}`}>
+  <div className={`p-3 rounded-md border ${variant === 'destructive' || variant === 'error' ? 'border-red-500 bg-red-50 text-red-900' : 'border-border bg-surface/50 text-muted-foreground'}`}>
     {children}
   </div>
 );

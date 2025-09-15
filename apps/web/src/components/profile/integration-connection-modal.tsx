@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Button, Card, Switch, Badge, Progress } from "@hive/ui";
-import { Modal, ModalContent, ModalHeader, ModalTitle, ModalFooter } from "@/components/layout/page-container";
-import { Alert, AlertDescription } from "@/components/layout/page-container";
+import { Modal, ModalContent, ModalHeader, ModalTitle, ModalFooter } from "@hive/ui";
+import { Alert, AlertDescription } from "@hive/ui";
 import { 
   Link, 
   Shield, 

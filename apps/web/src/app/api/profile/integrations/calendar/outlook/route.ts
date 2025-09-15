@@ -4,8 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { withAuth } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { FieldValue } from 'firebase-admin/firestore';
 import { Client } from '@microsoft/microsoft-graph-client';
 import { ConfidentialClientApplication } from '@azure/msal-node';

@@ -33,9 +33,9 @@ import {
   EyeOff
 } from 'lucide-react';
 import { Button, Badge } from '@hive/ui';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow, startOfDay, endOfDay, isToday, isYesterday, isThisWeek, subDays } from 'date-fns';
-import { authenticatedFetch } from '../../lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import { useInView } from 'react-intersection-observer';
 
 interface ActivityItem {

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from '../../../../../components/error-boundary';
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 
 import { BarChart3, ArrowLeft } from 'lucide-react';
 
@@ -157,7 +157,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
         maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
-          { label: "Analytics", icon: BarChart3 }
+          { label: "Analytics", icon: <BarChart3 /> }
         ]}
       >
         <div className="flex items-center justify-center h-64">
@@ -177,7 +177,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
         maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
-          { label: "Analytics", icon: BarChart3 }
+          { label: "Analytics", icon: <BarChart3 /> }
         ]}
       >
         <div className="flex items-center justify-center h-64">
@@ -215,7 +215,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
         maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
-          { label: "Analytics", icon: BarChart3 }
+          { label: "Analytics", icon: <BarChart3 /> }
         ]}
       >
         <div className="flex items-center justify-center h-64">
@@ -240,7 +240,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
           { label: analytics.spaceName, href: `/spaces/${spaceId}` },
-          { label: "Analytics", icon: BarChart3 }
+          { label: "Analytics", icon: <BarChart3 /> }
         ]}
         actions={
           <button

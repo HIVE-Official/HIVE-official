@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getCurrentUser as _getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 // Profile statistics interface
 interface ProfileStats {
@@ -277,7 +277,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 
     // Generate real profile statistics from Firebase data
     try {
-      const { dbAdmin } = await import('@/lib/firebase-admin');
+      const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
       
       // Get user's activity data
       const activitiesSnapshot = await dbAdmin
@@ -731,7 +731,7 @@ async function generateComparisons(userId: string, summaries: any[], memberships
   // This would implement actual comparisons with other users
   // Generate real profile statistics from Firebase data
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     
     // Get user's activity data
     const activitiesSnapshot = await dbAdmin

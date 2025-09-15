@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Card } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { BookOpen, ExternalLink, Video, FileText, Code, Users, Star, Download } from 'lucide-react';
 
 export default function ResourcesPage() {
@@ -10,7 +10,7 @@ export default function ResourcesPage() {
       title="Resources"
       subtitle="Guides, tutorials, and documentation to help you build better"
       breadcrumbs={[
-        { label: "Resources", icon: BookOpen }
+        { label: "Resources", icon: <BookOpen className="h-4 w-4" /> }
       ]}
       maxWidth="xl"
     >

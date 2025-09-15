@@ -20,10 +20,10 @@ import {
   Settings
 } from 'lucide-react';
 import { Button, Badge } from '@hive/ui';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { authenticatedFetch } from '../../lib/auth-utils';
-import { db } from '../../lib/firebase';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
+import { db } from '@/lib/firebase';
 import { collection, query, where, orderBy, limit, onSnapshot, updateDoc, doc, Timestamp } from 'firebase/firestore';
 
 interface Notification {

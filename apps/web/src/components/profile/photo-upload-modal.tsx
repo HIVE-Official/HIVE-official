@@ -3,8 +3,8 @@
 import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { Button, Progress } from "@hive/ui";
-import { Modal, ModalContent, ModalHeader, ModalTitle, ModalFooter } from "@/components/layout/page-container";
-import { Alert } from "@/components/layout/page-container";
+import { Modal, ModalContent, ModalHeader, ModalTitle, ModalFooter } from "@hive/ui";
+import { Alert } from "@hive/ui";
 import { 
   Upload, 
   Camera, 

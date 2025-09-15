@@ -31,7 +31,7 @@ import {
 import { Button, Badge, Input, Card } from '@hive/ui';
 import { cn } from '@hive/ui';
 import toast from '@/hooks/use-toast-notifications';
-import { authenticatedFetch } from '@/lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import { LoadingSkeleton, GridSkeleton } from '../ui/loading-skeleton';
 import { CustomEmpty } from '../ui/empty-state';
 

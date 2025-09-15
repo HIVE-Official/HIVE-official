@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button, Card, NavigationPreferences, useShell } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { ErrorBoundary } from '../../../components/error-boundary';
 import { Settings, User, Bell, Shield, Palette, Globe, Smartphone, LogOut, Download, Trash2, Navigation } from 'lucide-react';
 import { useSession } from '../../../hooks/use-session';
@@ -82,7 +82,7 @@ function SettingsPageContent() {
       title="Settings"
       subtitle="Manage your account preferences and privacy settings"
       breadcrumbs={[
-        { label: "Settings", icon: Settings }
+        { label: "Settings", icon: <Settings /> }
       ]}
       maxWidth="xl"
     >

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { dbAdmin } from '@/lib/firebase-admin';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions } from '@/lib/auth/auth';
 
 // Helper function to detect feedback type
 function detectFeedbackType(feedback: string): string {

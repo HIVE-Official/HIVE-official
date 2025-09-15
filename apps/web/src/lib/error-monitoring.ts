@@ -6,7 +6,7 @@
  * In production, this would integrate with services like Sentry or Rollbar.
  */
 
-import { logger } from './structured-logger';
+import { logger } from './utils/structured-logger';
 
 /**
  * Error severity levels

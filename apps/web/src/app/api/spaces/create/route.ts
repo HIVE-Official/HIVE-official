@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import { getAuthTokenFromRequest } from "@/lib/auth";
+import { getAuthTokenFromRequest } from "@/lib/auth/auth";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
-import { COLLECTIONS, type SpaceDocument, type SpaceMember } from "@/lib/firebase-collections";
+import { COLLECTIONS, type SpaceDocument, type SpaceMember } from "@/lib/firebase/collections/firebase-collections";
 
 // Validation schema for space creation
 const CreateSpaceSchema = z.object({

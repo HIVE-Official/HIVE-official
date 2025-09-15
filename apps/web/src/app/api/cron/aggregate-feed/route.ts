@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from '@/lib/structured-logger';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@/lib/utils/structured-logger';
 import * as admin from 'firebase-admin';
 
 // This cron job runs every 5 minutes to aggregate feed data

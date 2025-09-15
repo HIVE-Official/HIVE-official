@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { Button, Card, Badge } from "@hive/ui";
-import { PageContainer } from "@/components/layout/page-container";
+import { PageContainer } from "@hive/ui";
 import { 
   Calendar, 
   Plus, 
@@ -191,7 +191,7 @@ export default function EventsPage() {
                 
                 // Map raw event data to EventData format
                 return {
-                  id: String((eventData as RawEventData).id || `event-${Date.now()}-${(eventData as RawEventData).title?.slice(0,5) || 'untitled'}`),
+                  id: String((eventData as RawEventData).id || `event-${Date.now()}-${String((eventData as RawEventData).title || '').slice(0,5) || 'untitled'}`),
                   title: String((eventData as RawEventData).title || 'Untitled Event'),
                   description: String((eventData as RawEventData).description || ''),
                   type: ((eventData as RawEventData).type as EventData['type']) || 'social',
@@ -422,7 +422,7 @@ export default function EventsPage() {
         title="Campus Events"
         subtitle="Discover, coordinate, and participate in campus activities"
         breadcrumbs={[
-          { label: "Events", icon: Calendar }
+          { label: "Events", icon: <Calendar className="h-4 w-4" /> }
         ]}
         actions={
           <div className="flex items-center space-x-3">
@@ -676,7 +676,8 @@ export default function EventsPage() {
         <CreateEventModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
-          onCreateEvent={(eventData: any) => {
+          spaceId=""
+          onEventCreated={(eventData: any) => {
             // Generate new event with mock data
             const newEvent: EventData = {
               id: `event-${Date.now()}`,

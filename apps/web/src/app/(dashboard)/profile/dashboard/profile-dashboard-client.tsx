@@ -13,7 +13,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { CustomizableGrid } from '@/components/profile/dashboard/customizable-grid';
-import { DashboardLayout } from '@/lib/firebase-collections';
+import { DashboardLayout } from '@/lib/firebase/collections/firebase-collections';
 import { useSession } from '@/hooks/use-session';
 
 type DeviceType = 'mobile' | 'tablet' | 'desktop';

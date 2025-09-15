@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createHash, randomBytes } from 'crypto';
-import { logSecurityEvent } from './structured-logger';
+import { logSecurityEvent } from './utils/structured-logger';
 import { currentEnvironment } from './env';
 import { getSecureClientId } from './secure-rate-limiter';
 

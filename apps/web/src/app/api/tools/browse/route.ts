@@ -1,9 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { dbAdmin as adminDb } from "@/lib/firebase-admin";
-import { getCurrentUser } from "@/lib/auth-server";
+import { dbAdmin as adminDb } from "@/lib/firebase/admin/firebase-admin";
+import { getCurrentUser } from "@/lib/auth/providers/auth-server";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 
 // GET /api/tools/browse - Browse and discover tools

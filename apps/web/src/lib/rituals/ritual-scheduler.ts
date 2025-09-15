@@ -13,7 +13,7 @@ import {
   writeBatch
 } from 'firebase/firestore';
 import { logger } from '@/lib/logger';
-import { Ritual, RitualInstance, RecurrencePattern } from '@/lib/rituals-framework';
+import { Ritual, RitualInstance, RecurrencePattern } from '@/lib/spaces/rituals/rituals-framework';
 import { CalendarSyncService } from '@/lib/calendar-sync';
 
 export interface ScheduledRitual {

@@ -12,7 +12,7 @@
  * - Proper error handling without information leakage
  */
 
-import { auth } from './firebase-client';
+import { auth } from './firebase/client/firebase-client';
 import { signOut } from 'firebase/auth';
 
 // Token storage keys

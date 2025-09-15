@@ -157,7 +157,7 @@ export function BuilderRequestsManager({ isAdmin }: BuilderRequestsManagerProps)
 
   if (!isAdmin) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="error">
         <AlertTriangle className="h-4 w-4" />
         <AlertDescription>
           You don't have permission to manage builder requests.
@@ -210,7 +210,7 @@ export function BuilderRequestsManager({ isAdmin }: BuilderRequestsManagerProps)
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="error">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>

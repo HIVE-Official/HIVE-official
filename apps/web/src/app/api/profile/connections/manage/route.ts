@@ -4,9 +4,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { withAuth } from '@/lib/api-auth-middleware';
-import { COLLECTIONS, UserConnection } from '@/lib/firebase-collections';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
+import { COLLECTIONS, UserConnection } from '@/lib/firebase/collections/firebase-collections';
 import { FieldValue } from 'firebase-admin/firestore';
 import { logger } from '@hive/core';
 

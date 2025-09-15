@@ -9,7 +9,7 @@ import {
   type Space,
   logger,
 } from "@hive/core";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth/auth";
 import { db } from "@/lib/firebase";
 import {
   collection,
@@ -19,8 +19,8 @@ import {
   orderBy,
   limit as firestoreLimit,
 } from "firebase/firestore";
-import { dbAdmin } from '@/lib/firebase-admin';
-import { generalApiRateLimit } from '@/lib/rate-limit';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { generalApiRateLimit } from '@/lib/api/middleware/rate-limit';
 
 interface SpaceDiscoveryResponse {
   campus_living: Space[];
