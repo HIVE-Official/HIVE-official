@@ -1,4 +1,4 @@
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 /**
  * Structured Logger for HIVE Platform
@@ -188,7 +188,7 @@ class StructuredLogger {
       }
     } catch (e) {
       // Fail silently - don't throw errors from error handler
-      logger.error('Failed to store error log:', e);
+      logger.error('Failed to store error log:', { error: String(e) });
     }
   }
 
@@ -279,7 +279,7 @@ export const logApiCall = (method: string, url: string, context?: LogContext) =>
 };
 
 export const logApiError = (method: string, url: string, error: Error, context?: LogContext) => {
-  logger.error(`API Error: ${method} ${url}`, error, context);
+  logger.error(`API Error: ${method} ${url}`, { error: String(error, context) });
 };
 
 export const logUserAction = (action: string, context?: LogContext) => {
@@ -320,7 +320,7 @@ export const createRequestLogger = (request: Request) => {
       logger.warn(message, { ...requestContext, ...context }),
     
     error: (message: string, error?: Error | unknown, context?: LogContext) => 
-      logger.error(message, error, { ...requestContext, ...context }),
+      logger.error(message, { error: String(error, { ...requestContext, ...context }) }),
     
     debug: (message: string, context?: LogContext) => 
       logger.debug(message, { ...requestContext, ...context }),

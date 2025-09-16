@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { PageContainer } from "@hive/ui";
 
@@ -48,7 +48,7 @@ export default function SpaceAdminPage({ params }: SpaceAdminPageProps) {
           userRole: 'admin' // This would come from the actual user's role in the space
         });
       } catch (error) {
-        logger.error('Failed to load space data:', error);
+        logger.error('Failed to load space data:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }

@@ -4,7 +4,7 @@ import { GraduationCap, BookOpen, Check } from "lucide-react";
 import { Card } from "@hive/ui";
 import { AnimatedDropdown, type DropdownOption } from "@/components/ui/animated-dropdown";
 import { UB_MAJORS } from "@/constants/majors";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveAcademicsStepProps {
   data: HiveOnboardingData;

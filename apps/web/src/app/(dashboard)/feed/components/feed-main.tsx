@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -206,7 +206,7 @@ export function FeedMain() {
           setFeedPosts([]);
         }
       } catch (error) {
-        logger.error('Error loading feed:', error);
+        logger.error('Error loading feed:', { error: String(error) });
         setFeedPosts([]);
       } finally {
         setIsLoading(false);

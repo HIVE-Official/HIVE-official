@@ -4,7 +4,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { getAuth } from 'firebase-admin/auth';
 import { validateAuthToken, blockDevPatternsInProduction } from './security-service';
@@ -106,7 +106,7 @@ export async function authenticateRequest(
       isDevelopmentMode: false
     };
   } catch (firebaseError) {
-    logger.error('Firebase token verification failed:', firebaseError);
+    logger.error('Firebase token verification failed:', { error: String(firebaseError) });
     throw new AuthenticationError('Invalid token');
   }
 }
@@ -180,6 +180,18 @@ export async function requireAdminAuth(
   if (authContext.isTestUser && authContext.isDevelopmentMode) {
     return authContext;
   }
+  
+  // Check admin status
+  if (!authContext.isAdmin) {
+    throw new AuthError('Forbidden', 'Admin access required');
+  }
+  
+  return authContext;
+}
+
+export async function logAuthEvent(
+  event: string,
+  request: Request,
   authContext?: AuthContext,
   details?: any
 ) {

@@ -3,8 +3,7 @@ import { NextResponse } from "next/server";
 import { dbAdmin, authAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { z } from "zod";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
-import {
-  UpdateToolSchema,
+import { UpdateToolSchema,
   ToolSchema,
   canUserEditTool,
   canUserViewTool,
@@ -12,7 +11,7 @@ import {
   determineChangeType,
   validateToolStructure,
   validateElementConfig,
-} from "@hive/core";
+ } from '@/types/core';
 
 const db = dbAdmin;
 

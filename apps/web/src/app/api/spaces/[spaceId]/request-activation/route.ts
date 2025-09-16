@@ -94,7 +94,7 @@ export async function POST(
     });
     
   } catch (error) {
-    logger.error('Error submitting activation request:', error);
+    logger.error('Error submitting activation request:', { error: String(error) });
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(

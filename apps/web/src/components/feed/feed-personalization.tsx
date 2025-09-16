@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -154,7 +154,7 @@ export function FeedPersonalization({
         setAiSuggestions(data.suggestions || []);
       }
     } catch (error) {
-      logger.error('Error fetching AI suggestions:', error);
+      logger.error('Error fetching AI suggestions:', { error: String(error) });
     }
   };
 
@@ -228,7 +228,7 @@ export function FeedPersonalization({
         onClose?.();
       }
     } catch (error) {
-      logger.error('Error saving preferences:', error);
+      logger.error('Error saving preferences:', { error: String(error) });
     } finally {
       setSaving(false);
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { Card, CardContent, Button, Alert, AlertDescription } from '@hive/ui';
 import { Play, Square, RefreshCw, Settings, ExternalLink } from 'lucide-react';
@@ -104,7 +104,7 @@ export function ToolRuntime({
         setGlobalState(result.result.state);
       }
     } catch (err) {
-      logger.error('Failed to initialize live state:', err);
+      logger.error('Failed to initialize live state:', { error: String(err) });
     }
   };
 
@@ -125,7 +125,7 @@ export function ToolRuntime({
       try {
         await syncWithBackend(instanceId, data);
       } catch (err) {
-        logger.error('Failed to sync with backend:', err);
+        logger.error('Failed to sync with backend:', { error: String(err) });
       }
     }
   }, [composition.connections, deploymentId, mode]);
@@ -199,7 +199,7 @@ export function ToolRuntime({
         }
       }
     } catch (err) {
-      logger.error('Backend sync failed:', err);
+      logger.error('Backend sync failed:', { error: String(err) });
     }
   };
 
@@ -232,7 +232,7 @@ export function ToolRuntime({
           }].slice(-50));
         }
       } catch (err) {
-        logger.error('Action execution failed:', err);
+        logger.error('Action execution failed:', { error: String(err) });
         onError?.(`Failed to execute action: ${action}`);
       }
     } else {

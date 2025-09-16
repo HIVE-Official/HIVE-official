@@ -82,7 +82,7 @@ try {
 
   // Create mock instances for development
   dbAdmin = {
-    collection: (path: string) => ({
+    collection: (_path: string) => ({
       get: async () => {
         
         throw new Error(
@@ -95,7 +95,7 @@ try {
           `Firebase Admin not configured for ${currentEnvironment}.`
         );
       },
-      doc: (id: string) => ({
+      doc: (_id: string) => ({
         get: async () => {
           
           throw new Error(
@@ -118,7 +118,7 @@ try {
         `Firebase Auth not configured for ${currentEnvironment}.`
       );
     },
-    createCustomToken: async (uid: string) => {
+    createCustomToken: async (_uid: string) => {
       
       throw new Error(
         `Firebase Auth not configured for ${currentEnvironment}.`

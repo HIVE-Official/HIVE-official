@@ -5,7 +5,7 @@
 // Following the successful profile edit page pattern
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { 
@@ -236,7 +236,7 @@ export default function ProfileSettingsStorybook() {
         setTimeout(() => setSaveSuccess(false), 3000);
       }
     } catch (error) {
-      logger.error('Failed to save settings:', error);
+      logger.error('Failed to save settings:', { error: String(error) });
     }
   };
 
@@ -249,7 +249,7 @@ export default function ProfileSettingsStorybook() {
         level: 'moderate'
       });
     } catch (error) {
-      logger.error('Failed to toggle ghost mode:', error);
+      logger.error('Failed to toggle ghost mode:', { error: String(error) });
     }
   };
 

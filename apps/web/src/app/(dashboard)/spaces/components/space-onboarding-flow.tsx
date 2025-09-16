@@ -17,7 +17,7 @@ import {
   X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 
 interface OnboardingStep {
   id: string;

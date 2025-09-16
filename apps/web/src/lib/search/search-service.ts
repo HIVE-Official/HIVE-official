@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase/client/firebase-client';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   collection, 
@@ -195,7 +195,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      logger.error('Error searching users:', error);
+      logger.error('Error searching users:', { error: String(error) });
       return [];
     }
   }
@@ -246,7 +246,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      logger.error('Error searching spaces:', error);
+      logger.error('Error searching spaces:', { error: String(error) });
       return [];
     }
   }
@@ -322,7 +322,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      logger.error('Error searching posts:', error);
+      logger.error('Error searching posts:', { error: String(error) });
       return [];
     }
   }
@@ -377,7 +377,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      logger.error('Error searching events:', error);
+      logger.error('Error searching events:', { error: String(error) });
       return [];
     }
   }
@@ -429,7 +429,7 @@ class SearchService {
 
       return results;
     } catch (error) {
-      logger.error('Error searching tools:', error);
+      logger.error('Error searching tools:', { error: String(error) });
       return [];
     }
   }

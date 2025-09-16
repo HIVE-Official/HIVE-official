@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { RealtimeMessage } from '@/lib/services/sse-realtime-service';
 
@@ -97,12 +97,12 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
             onMessage?.(message);
           }
         } catch (error) {
-          logger.error('Error parsing SSE message:', error);
+          logger.error('Error parsing SSE message:', { error: String(error) });
         }
       };
 
       eventSource.onerror = (error: any) => {
-        logger.error('SSE connection error:', error);
+        logger.error('SSE connection error:', { error: String(error) });
         
         updateState({
           connected: false,
@@ -127,7 +127,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
       eventSourceRef.current = eventSource;
 
     } catch (error) {
-      logger.error('Error creating SSE connection:', error);
+      logger.error('Error creating SSE connection:', { error: String(error) });
       updateState({
         connected: false,
         connecting: false,
@@ -187,7 +187,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
       const result = await response.json();
       return result.messageId;
     } catch (error) {
-      logger.error('Error sending message:', error);
+      logger.error('Error sending message:', { error: String(error) });
       throw error;
     }
   }, []);
@@ -220,7 +220,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
         })
       });
     } catch (error) {
-      logger.error('Error updating presence:', error);
+      logger.error('Error updating presence:', { error: String(error) });
     }
   }, []);
 

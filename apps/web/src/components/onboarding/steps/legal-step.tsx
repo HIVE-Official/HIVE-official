@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, CheckboxEnhanced } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { FileCheck, Loader2, ExternalLink } from 'lucide-react';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 
 export function OnboardingLegalStep() {
   const router = useRouter();

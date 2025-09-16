@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
-import { UB_MAJORS, createMajorAbbreviation } from '@hive/core';
+import { UB_MAJORS, createMajorAbbreviation  } from '@/types/core';
 import { logger } from "@/lib/utils/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 

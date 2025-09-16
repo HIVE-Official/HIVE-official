@@ -54,7 +54,7 @@ class FirebaseRealtimeService {
         callback(data);
       },
       (error) => {
-        logger.error('Realtime subscription error', error, { path });
+        logger.error('Realtime subscription error', { error: String(error, { path }) });
         onError?.(error);
       }
     );
@@ -80,7 +80,7 @@ class FirebaseRealtimeService {
       await set(dbRef, data);
       logger.debug('Realtime data written', { path });
     } catch (error) {
-      logger.error('Failed to write realtime data', error as Error, { path });
+      logger.error('Failed to write realtime data', { error: String(error as Error, { path }) });
       throw error;
     }
   }
@@ -96,7 +96,7 @@ class FirebaseRealtimeService {
       logger.debug('Realtime data pushed', { path, key: newRef.key });
       return newRef.key!;
     } catch (error) {
-      logger.error('Failed to push realtime data', error as Error, { path });
+      logger.error('Failed to push realtime data', { error: String(error as Error, { path }) });
       throw error;
     }
   }

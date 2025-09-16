@@ -117,7 +117,7 @@ class AdminActivityLogger {
 
       return docRef.id;
     } catch (error) {
-      logger.error('Failed to log admin activity', error as Error, { activity });
+      logger.error('Failed to log admin activity', { error: String(error as Error, { activity }) });
       throw new Error('Failed to log admin activity');
     }
   }
@@ -177,7 +177,7 @@ class AdminActivityLogger {
         ...doc.data()
       } as AdminActivityLog));
     } catch (error) {
-      logger.error('Failed to query admin logs', error as Error, { filter });
+      logger.error('Failed to query admin logs', { error: String(error as Error, { filter }) });
       throw new Error('Failed to query activity logs');
     }
   }
@@ -209,7 +209,7 @@ class AdminActivityLogger {
 
       return logs;
     } catch (error) {
-      logger.error('Failed to export admin logs', error as Error);
+      logger.error('Failed to export admin logs', { error: String(error as Error) });
       throw new Error('Failed to export logs');
     }
   }

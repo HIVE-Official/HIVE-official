@@ -177,7 +177,7 @@ class ContentModerationService {
         };
       }
     } catch (error) {
-      logger.error('Failed to load moderation config', error as Error);
+      logger.error('Failed to load moderation config', { error: String(error as Error) });
     }
   }
 
@@ -223,7 +223,7 @@ class ContentModerationService {
 
       return docRef.id;
     } catch (error) {
-      logger.error('Failed to submit report', error as Error);
+      logger.error('Failed to submit report', { error: String(error as Error) });
       throw new Error('Failed to submit content report');
     }
   }
@@ -268,7 +268,7 @@ class ContentModerationService {
         ...doc.data()
       } as ContentReport));
     } catch (error) {
-      logger.error('Failed to get moderation queue', error as Error);
+      logger.error('Failed to get moderation queue', { error: String(error as Error) });
       throw new Error('Failed to retrieve moderation queue');
     }
   }
@@ -318,7 +318,7 @@ class ContentModerationService {
         contentId: report.contentId
       });
     } catch (error) {
-      logger.error('Failed to process moderation action', error as Error);
+      logger.error('Failed to process moderation action', { error: String(error as Error) });
       throw new Error('Failed to process moderation action');
     }
   }
@@ -469,7 +469,7 @@ class ContentModerationService {
         }
       }
     } catch (error) {
-      logger.error('Auto-moderation failed', error as Error, { reportId });
+      logger.error('Auto-moderation failed', { error: String(error as Error, { reportId }) });
     }
   }
 

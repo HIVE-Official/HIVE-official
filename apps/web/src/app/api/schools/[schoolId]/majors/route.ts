@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
-import { logger } from "@hive/core";
+import { logger  } from '@/types/core';
 
 export async function GET(
   request: Request,
@@ -36,9 +36,8 @@ export async function GET(
     return NextResponse.json(majors);
   } catch (error) {
     logger.error(
-      `Failed to fetch majors for school: ${schoolId}`,
-      error
-    );
+      `Failed to fetch majors for school: ${schoolId}`, { error: String(error
+    ) });
     return NextResponse.json(
       { error: "Failed to fetch majors" },
       { status: 500 }

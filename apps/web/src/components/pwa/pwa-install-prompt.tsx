@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { Button } from '@hive/ui';
 import { Card } from '@hive/ui';
@@ -39,7 +39,7 @@ export function PWAInstallPrompt({
       await installApp();
       setIsVisible(false);
     } catch (error) {
-      logger.error('HIVE PWA: Campus install failed', error);
+      logger.error('HIVE PWA: Campus install failed', { error: String(error) });
     }
   };
 

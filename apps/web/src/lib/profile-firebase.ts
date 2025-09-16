@@ -19,7 +19,7 @@ import {
   DocumentData,
   Timestamp
 } from 'firebase/firestore';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   ref, 
@@ -81,7 +81,7 @@ export async function uploadProfilePhoto(
     
     return downloadURL;
   } catch (error) {
-    logger.error('Error uploading profile photo:', error);
+    logger.error('Error uploading profile photo:', { error: String(error) });
     throw new Error('Failed to upload profile photo');
   }
 }
@@ -119,7 +119,7 @@ export async function getUserProfile(userId: string): Promise<DocumentData | nul
     
     return null;
   } catch (error) {
-    logger.error('Error fetching user profile:', error);
+    logger.error('Error fetching user profile:', { error: String(error) });
     return null;
   }
 }
@@ -143,7 +143,7 @@ export async function updateUserProfile(
       updatedAt: serverTimestamp()
     });
   } catch (error) {
-    logger.error('Error updating user profile:', error);
+    logger.error('Error updating user profile:', { error: String(error) });
     throw new Error('Failed to update profile');
   }
 }
@@ -177,7 +177,7 @@ export async function deleteProfilePhoto(
     
     await Promise.all(deletePromises);
   } catch (error) {
-    logger.error('Error deleting profile photo:', error);
+    logger.error('Error deleting profile photo:', { error: String(error) });
     throw new Error('Failed to delete photo');
   }
 }
@@ -198,7 +198,7 @@ export async function getUserPhotos(userId: string): Promise<Photo[]> {
       ...doc.data()
     } as Photo));
   } catch (error) {
-    logger.error('Error fetching user photos:', error);
+    logger.error('Error fetching user photos:', { error: String(error) });
     return [];
   }
 }

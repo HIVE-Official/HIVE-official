@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import {
   Button,
@@ -22,7 +22,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { debounce } from "lodash";
 import { User } from "@/hooks/use-session";
-import { type OnboardingStepName } from "@hive/core";
+import type { OnboardingStepName  } from '@/types/core';
 
 // A utility to generate a handle from a name
 const generateHandle = (name: string) => {
@@ -100,7 +100,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
       onNext(); // Proceed to the next step
       handleStepComplete("name");
     } catch (error) {
-      logger.error('Failed to save display name', error);
+      logger.error('Failed to save display name', { error: String(error) });
       setIsLoading(false);
     }
   };
@@ -192,7 +192,7 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({
       onNext();
       handleStepComplete("builder");
     } catch (error) {
-      logger.error('Failed to save leader question', error);
+      logger.error('Failed to save leader question', { error: String(error) });
     }
   };
 
@@ -264,7 +264,7 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
       onNext();
       handleStepComplete("builder");
     } catch (error) {
-      logger.error('Failed to save space claims', error);
+      logger.error('Failed to save space claims', { error: String(error) });
     }
   };
 
@@ -313,7 +313,7 @@ export const PendingNoticeStep: React.FC<StepProps> = ({
       onNext();
       handleStepComplete("builder");
     } catch (error) {
-      logger.error('Failed to proceed from pending notice', error);
+      logger.error('Failed to proceed from pending notice', { error: String(error) });
     }
   };
 
@@ -403,7 +403,7 @@ export const OnboardingCompleteStep: React.FC<StepProps> = ({
       onNext();
       handleStepComplete("legal");
     } catch (error) {
-      logger.error('Failed to complete onboarding', error);
+      logger.error('Failed to complete onboarding', { error: String(error) });
     }
   };
 

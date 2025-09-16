@@ -26,7 +26,7 @@ const ritualFramework = {
       });
       return true;
     } catch (error) {
-      logger.error('Error joining ritual:', error);
+      logger.error('Error joining ritual:', { error: String(error) });
       return false;
     }
   },

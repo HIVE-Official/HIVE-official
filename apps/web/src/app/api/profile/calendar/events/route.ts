@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser as _getCurrentUser } from '@/lib/auth/providers/auth-server';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ success: true });
   } catch (error) {
-    logger.error('Error updating presence:', error);
+    logger.error('Error updating presence:', { error: String(error) });
     return NextResponse.json(
       { error: 'Failed to update presence' },
       { status: 500 }

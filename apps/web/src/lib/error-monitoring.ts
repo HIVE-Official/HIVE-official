@@ -418,7 +418,7 @@ class ErrorMonitoringService {
       }
     } catch (e) {
       // Fail silently
-      logger.error('Failed to store error for monitoring:', e);
+      logger.error('Failed to store error for monitoring:', { error: String(e) });
     }
   }
 

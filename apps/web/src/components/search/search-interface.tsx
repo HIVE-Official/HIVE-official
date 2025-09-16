@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import {
   Card,
@@ -85,7 +85,7 @@ export function SearchInterface({
       try {
         setRecentSearches(JSON.parse(saved));
       } catch (error) {
-        logger.error('Failed to load recent searches:', error);
+        logger.error('Failed to load recent searches:', { error: String(error) });
       }
     }
   }, []);
@@ -147,7 +147,7 @@ export function SearchInterface({
       localStorage.setItem('hive_recent_searches', JSON.stringify(updatedRecent));
 
     } catch (error) {
-      logger.error('Search failed:', error);
+      logger.error('Search failed:', { error: String(error) });
     } finally {
       setIsSearching(false);
     }

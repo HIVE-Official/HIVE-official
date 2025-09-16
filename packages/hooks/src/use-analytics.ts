@@ -10,18 +10,21 @@ export function useAnalytics() {
     // In a real implementation, this would send events to your analytics service
     // For now, we'll just log to console in development
     if (process.env.NODE_ENV === 'development') {
+      console.log('Analytics track:', event.name, event.properties);
     }
     // Example: analytics.track(event.name, event.properties);
   }, []);
 
   const identify = useCallback((userId: string, traits?: Record<string, unknown>) => {
     if (process.env.NODE_ENV === 'development') {
+      console.log('Analytics identify:', userId, traits);
     }
     // Example: analytics.identify(userId, traits);
   }, []);
 
   const page = useCallback((name: string, properties?: Record<string, unknown>) => {
     if (process.env.NODE_ENV === 'development') {
+      console.log('Analytics page:', name, properties);
     }
     // Example: analytics.page(name, properties);
   }, []);

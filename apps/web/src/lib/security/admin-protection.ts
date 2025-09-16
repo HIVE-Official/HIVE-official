@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { authAdmin } from '@/lib/firebase/admin/firebase-admin'
 import { adminApiRateLimit } from '@/lib/api/middleware/rate-limit'
 import { securityEvents, extractRequestInfo, detectSuspiciousActivity } from './monitoring'
-import { logger } from '@hive/core'
+import { logger  } from '@/types/core';
 
 // 🔒 ADMIN ROUTE PROTECTION MIDDLEWARE
 
@@ -148,7 +148,7 @@ export async function withAdminProtection<T>(
       return await handler(request, adminUser)
       
     } catch (authError) {
-      logger.error('Admin authentication error:', authError)
+      logger.error('Admin authentication error:', { error: String(authError) })
       securityEvents.authFailure(ip, undefined, 'token_verification_failed')
       return NextResponse.json(
         { error: 'Unauthorized - Invalid token' },
@@ -157,7 +157,7 @@ export async function withAdminProtection<T>(
     }
     
   } catch (error) {
-    logger.error('Admin protection middleware error:', error)
+    logger.error('Admin protection middleware error:', { error: String(error) })
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

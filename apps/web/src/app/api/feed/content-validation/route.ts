@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Content validation interfaces

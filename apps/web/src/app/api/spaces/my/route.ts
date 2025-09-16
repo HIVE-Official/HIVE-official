@@ -1,8 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
-import { type Space } from '@hive/core';
-import { logger } from "@/lib/logger";
+import type { Space  } from '@/types/core';
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 import { getUserSpaces, getSpace } from '@/lib/spaces/spaces-db';

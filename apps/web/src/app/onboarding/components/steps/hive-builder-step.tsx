@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Wrench, Users, Crown, Star, CheckCircle, Loader2, Search, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, Button, Input } from "@hive/ui";
 import { useSession } from "@/hooks/use-session";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveBuilderStepProps {
   data: HiveOnboardingData;
@@ -73,7 +73,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       
       if (!response.ok) {
         const errorData = await response.text();
-        logger.error('API error response:', response.status, errorData);
+        logger.error('API error response:', { error: String(response.status, errorData) });
         throw new Error(`Failed to fetch spaces: ${response.status} ${response.statusText}`);
       }
 
@@ -96,7 +96,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       
       setSpaces(filteredSpaces);
     } catch (err) {
-      logger.error('Error searching spaces:', err);
+      logger.error('Error searching spaces:', { error: String(err) });
       setError(err instanceof Error ? err.message : "Failed to search spaces");
     } finally {
       setIsLoading(false);

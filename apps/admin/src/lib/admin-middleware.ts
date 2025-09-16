@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 import { requireAdmin, logAdminActivity } from './admin-auth';
 

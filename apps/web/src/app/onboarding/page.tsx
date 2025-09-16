@@ -33,7 +33,7 @@ import {
   UB_CAMPUS_GOALS,
   getGraduationYears 
 } from '@/data/ub-academic-data';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 
 /**
  * HIVE Onboarding - Enhanced with Smooth Animations
@@ -294,38 +294,42 @@ export default function OnboardingPage() {
 
   // Check auth state from context
   useEffect(() => {
-    if (!authLoading) {
-      if (!firebaseUser) {
-        // Not authenticated, redirect to login
-        logger.info('No user found, redirecting to login');
-        router.push('/auth/login');
-        return;
-      }
-      
-      // Check if already onboarded
-      if (user?.onboardingCompleted) {
-        logger.info('User already onboarded, redirecting to dashboard');
-        router.push('/');
-        return;
-      }
-      
-      // Load draft if exists
-      if (firebaseUser) {
-        try {
-          const draftDoc = await getDoc(doc(db, 'onboardingDrafts', firebaseUser.uid));
-          if (draftDoc.exists()) {
-            const draft = draftDoc.data();
-            setProfile(prev => ({ ...prev, ...draft }));
-            setCurrentStep(draft.currentStep || 0);
-            logger.info('Loaded onboarding draft');
-          }
-        } catch (error) {
-          logger.error('Error loading draft', { error });
+    const loadUserData = async () => {
+      if (!authLoading) {
+        if (!firebaseUser) {
+          // Not authenticated, redirect to login
+          logger.info('No user found, redirecting to login');
+          router.push('/auth/login');
+          return;
         }
+        
+        // Check if already onboarded
+        if (user?.onboardingCompleted) {
+          logger.info('User already onboarded, redirecting to dashboard');
+          router.push('/');
+          return;
+        }
+        
+        // Load draft if exists
+        if (firebaseUser) {
+          try {
+            const draftDoc = await getDoc(doc(db, 'onboardingDrafts', firebaseUser.uid));
+            if (draftDoc.exists()) {
+              const draft = draftDoc.data();
+              setProfile(prev => ({ ...prev, ...draft }));
+              setCurrentStep(draft.currentStep || 0);
+              logger.info('Loaded onboarding draft');
+            }
+          } catch (error) {
+            logger.error('Error loading draft', { error });
+          }
+        }
+        
+        setIsLoading(false);
       }
-      
-      setIsLoading(false);
-    }
+    };
+
+    loadUserData();
   }, [authLoading, firebaseUser, user, router]);
 
   // Auto-save draft to Firestore

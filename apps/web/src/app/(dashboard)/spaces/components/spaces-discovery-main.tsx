@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -154,7 +154,7 @@ export function SpacesDiscoveryMain() {
           setCategoryStats(stats);
         }
       } catch (error) {
-        logger.error('Failed to load spaces:', error);
+        logger.error('Failed to load spaces:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }

@@ -8,7 +8,7 @@ import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { COLLECTIONS, UserIntegrations } from '@/lib/firebase/collections/firebase-collections';
 import { FieldValue } from 'firebase-admin/firestore';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 
 // OAuth configuration
 const OAUTH_CONFIGS = {

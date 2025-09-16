@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion } from "framer-motion";
 import { AtSign, Check, X, Loader2, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@hive/ui";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveHandleStepProps {
   data: HiveOnboardingData;
@@ -98,7 +98,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
         setSuggestions(generateSuggestions(data.fullName, handle));
       }
     } catch (error) {
-      logger.error('Handle validation error:', error);
+      logger.error('Handle validation error:', { error: String(error) });
       setValidationState("invalid");
     }
   }, [data.fullName]);

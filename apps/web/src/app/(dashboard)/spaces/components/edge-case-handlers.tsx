@@ -21,7 +21,7 @@ import {
   Calendar
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 
 // Empty Search Results Handler
 interface EmptySearchResultsProps {

@@ -1,4 +1,4 @@
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { NextRequest, NextResponse } from 'next/server'
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin'
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ profile })
 
     } catch (firestoreError) {
-      logger.error('Failed to retrieve user profile:', firestoreError)
+      logger.error('Failed to retrieve user profile:', { error: String(firestoreError) })
       
       return NextResponse.json(
         { message: 'Failed to retrieve profile. Please try again.' },
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Error retrieving profile:', error)
+    logger.error('Error retrieving profile:', { error: String(error) })
     
     return NextResponse.json(
       { message: 'Failed to retrieve profile. Please try again.' },
@@ -92,8 +92,7 @@ export async function PATCH(request: NextRequest) {
 
     // Production mode: Update Firestore
     try {
-      await dbAdmin.collection('users').doc(user.uid).update(updateData)
-      })
+      await dbAdmin.collection('users').doc(user.uid).update(updateData);
       
       return NextResponse.json({
         success: true,
@@ -102,7 +101,7 @@ export async function PATCH(request: NextRequest) {
       })
 
     } catch (firestoreError) {
-      logger.error('Failed to update user profile:', firestoreError)
+      logger.error('Failed to update user profile:', { error: String(firestoreError) })
       
       return NextResponse.json(
         { message: 'Failed to update profile. Please try again.' },
@@ -111,7 +110,7 @@ export async function PATCH(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Error updating profile:', error)
+    logger.error('Error updating profile:', { error: String(error) })
     
     return NextResponse.json(
       { message: 'Failed to update profile. Please try again.' },

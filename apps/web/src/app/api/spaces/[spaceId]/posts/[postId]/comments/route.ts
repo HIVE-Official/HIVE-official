@@ -4,7 +4,7 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth/auth";
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 
@@ -121,7 +121,7 @@ export async function GET(
     }));
 
   } catch (error: any) {
-    logger.error("Error fetching _comments:", error);
+    logger.error("Error fetching _comments:", { error: String(error) });
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch _comments", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -249,7 +249,7 @@ export async function POST(
       return NextResponse.json(ApiResponseHelper.error("Invalid _comment data", "VALIDATION_ERROR", error.errors), { status: HttpStatus.BAD_REQUEST });
     }
 
-    logger.error("Error creating comment:", error);
+    logger.error("Error creating comment:", { error: String(error) });
     return NextResponse.json(ApiResponseHelper.error("Failed to create _comment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

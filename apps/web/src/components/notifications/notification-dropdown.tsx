@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -76,7 +76,7 @@ export function NotificationDropdown({ userId, className }: NotificationDropdown
       setNotifications(data.notifications || []);
       setUnreadCount(data.unreadCount || 0);
     } catch (error) {
-      logger.error('Failed to fetch notifications:', error);
+      logger.error('Failed to fetch notifications:', { error: String(error) });
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +94,7 @@ export function NotificationDropdown({ userId, className }: NotificationDropdown
       );
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (error) {
-      logger.error('Failed to mark notification as read:', error);
+      logger.error('Failed to mark notification as read:', { error: String(error) });
     }
   };
 
@@ -109,7 +109,7 @@ export function NotificationDropdown({ userId, className }: NotificationDropdown
       setUnreadCount(0);
       toast.success('All notifications marked as read');
     } catch (error) {
-      logger.error('Failed to mark all as read:', error);
+      logger.error('Failed to mark all as read:', { error: String(error) });
       toast.error('Failed to update notifications');
     }
   };
@@ -125,7 +125,7 @@ export function NotificationDropdown({ userId, className }: NotificationDropdown
       setUnreadCount(0);
       toast.success('Notifications cleared');
     } catch (error) {
-      logger.error('Failed to clear notifications:', error);
+      logger.error('Failed to clear notifications:', { error: String(error) });
       toast.error('Failed to clear notifications');
     }
   };

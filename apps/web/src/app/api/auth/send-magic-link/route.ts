@@ -7,7 +7,7 @@ import { authRateLimiter, RATE_LIMITS } from "@/lib/auth/middleware/auth-rate-li
 import { validateCSRFToken } from "@/lib/csrf-protection";
 import { FieldValue } from "firebase-admin/firestore";
 import { auditLogger, AuditEventType, AuditSeverity } from "@/lib/services/audit-logger";
-// import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 
 /**
  * HIVE Magic Link Sender - Clean Firebase Implementation

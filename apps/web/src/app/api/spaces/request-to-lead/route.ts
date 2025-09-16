@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 

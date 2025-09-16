@@ -1,7 +1,7 @@
 // Auth utilities and NextAuth configuration
 
 import { authAdmin } from "../firebase/admin/firebase-admin";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
             emailVerified: decodedToken.email_verified || false,
           };
         } catch (error) {
-          logger.error('Failed to verify Firebase token:', error);
+          logger.error('Failed to verify Firebase token:', { error: String(error) });
           return null;
         }
       },
@@ -97,7 +97,7 @@ export async function verifyAuthToken(
       customClaims: decodedToken.custom_claims,
     };
   } catch (error) {
-    logger.error('Auth token verification failed:', error);
+    logger.error('Auth token verification failed:', { error: String(error) });
     return null;
   }
 }

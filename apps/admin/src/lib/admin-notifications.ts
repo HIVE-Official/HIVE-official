@@ -1,4 +1,4 @@
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 // Admin notifications system for monitoring platform activity
 

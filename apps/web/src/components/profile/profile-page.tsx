@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion } from 'framer-motion';
 import { Settings, Users, TrendingUp, Eye } from 'lucide-react';
@@ -123,7 +123,7 @@ function ProfileViewsCard() {
           setAnalytics(data.analytics);
         }
       } catch (error) {
-        logger.error('Error fetching analytics:', error);
+        logger.error('Error fetching analytics:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }
@@ -180,7 +180,7 @@ function FriendActivityCard() {
         ];
         setActivities(mockActivities);
       } catch (error) {
-        logger.error('Error fetching activities:', error);
+        logger.error('Error fetching activities:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }
@@ -283,7 +283,7 @@ function ProfileViewerModal({ onClose }: { onClose: () => void }) {
           setProfiles(data.profiles || []);
         }
       } catch (error) {
-        logger.error('Error fetching profile suggestions:', error);
+        logger.error('Error fetching profile suggestions:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }
@@ -346,7 +346,7 @@ function ProfileViewerModal({ onClose }: { onClose: () => void }) {
         handleSkip();
       }
     } catch (error) {
-      logger.error('Error sending connection request:', error);
+      logger.error('Error sending connection request:', { error: String(error) });
     }
   };
 

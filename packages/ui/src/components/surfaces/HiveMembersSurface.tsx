@@ -2,11 +2,11 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '../../lib/utils';
-import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
+import { Card as HiveCard, CardHeader as HiveCardHeader, CardTitle as HiveCardTitle, CardContent as HiveCardContent } from '../../atomic/ui/card';
 import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
 import { HiveBadge } from '../hive-badge';
-import { HiveInput } from '../hive-input';
+import { InputEnhanced as HiveInput } from '../../atomic/atoms/input-enhanced';
 import { 
   Users, 
   Search, 
@@ -406,7 +406,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
         <div className="animate-pulse">
           <div className="bg-gray-200 rounded-lg h-20 mb-4" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((i: any) => (
+            {[1, 2, 3, 4].map((i: number) => (
               <div key={i} className="bg-gray-100 rounded-lg h-32" />
             ))}
           </div>
@@ -521,7 +521,7 @@ export const HiveMembersSurface: React.FC<HiveMembersSurfaceProps> = ({
         ) : (
           filteredMembers
             .slice(0, variant === 'widget' ? 5 : undefined)
-            .map((member: any) => (
+            .map((member: SpaceMember) => (
               <MemberCard
                 key={member.id}
                 member={member}

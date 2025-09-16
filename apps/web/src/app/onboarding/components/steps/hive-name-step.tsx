@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@hive/ui";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveNameStepProps {
   data: HiveOnboardingData;

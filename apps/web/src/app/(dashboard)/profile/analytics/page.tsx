@@ -14,6 +14,22 @@ import {
 import { PageContainer, Modal } from "@hive/ui";
 import { useHiveProfile } from '../../../../hooks/use-hive-profile';
 import { ErrorBoundary } from '../../../../components/error-boundary';
+
+// Helper function for feature color classes
+function getFeatureColorClasses(color: string): string {
+  const colorMap: Record<string, string> = {
+    blue: 'bg-blue-500/10 text-blue-400',
+    purple: 'bg-purple-500/10 text-purple-400',
+    green: 'bg-green-500/10 text-green-400',
+    yellow: 'bg-yellow-500/10 text-yellow-400',
+    red: 'bg-red-500/10 text-red-400',
+    pink: 'bg-pink-500/10 text-pink-400',
+    indigo: 'bg-indigo-500/10 text-indigo-400',
+    orange: 'bg-orange-500/10 text-orange-400'
+  };
+  return colorMap[color] || 'bg-gray-500/10 text-gray-400';
+}
+
 import { 
   ArrowLeft,
   BarChart3,
@@ -118,17 +134,10 @@ export default function ProfileAnalyticsStorybook() {
   
   const handleJoinWaitlist = async () => {
     setJoinedWaitlist(true);
-    if (!profile) return null;
-    return {
-      id: profile.identity.id,
-      name: profile.identity.fullName || '',
-      handle: profile.identity.handle || '',
-      role: profile.builder?.isBuilder ? 'builder' : 'member',
-      campus: 'ub-buffalo',
-      year: profile.academic.academicYear,
-      major: profile.academic.major
-    };
-  }, [profile]);
+    if (!profile) return;
+    // TODO: Implement waitlist API call
+    console.log('Joining waitlist for user:', profile.identity.id);
+  };
 
   if (isLoading || !profile) {
     return (
@@ -251,7 +260,7 @@ export default function ProfileAnalyticsStorybook() {
 
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Key Metrics:</p>
-                    {feature.metrics.slice(0, 3).map((metric, index) => (
+                    {feature.metrics.slice(0, 3).map((metric: string, index: number) => (
                       <div key={index} className="flex items-center gap-2 text-xs text-gray-400">
                         <div className="w-1 h-1 bg-gray-500 rounded-full" />
                         <span>{metric}</span>

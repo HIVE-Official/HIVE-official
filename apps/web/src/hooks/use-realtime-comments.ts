@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   collection, 
@@ -81,7 +81,7 @@ export function useRealtimeComments(
           setLoading(false);
         },
         (err: any) => {
-          logger.error('Error fetching comments:', err);
+          logger.error('Error fetching comments:', { error: String(err) });
           setError(err as Error);
           setLoading(false);
         }
@@ -90,7 +90,7 @@ export function useRealtimeComments(
       // Cleanup subscription
       return () => unsubscribe();
     } catch (err) {
-      logger.error('Error setting up comments listener:', err);
+      logger.error('Error setting up comments listener:', { error: String(err) });
       setError(err as Error);
       setLoading(false);
     }

@@ -4,7 +4,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { currentEnvironment, isDevelopment } from '../env';
 import { captureError, LogLevel } from '../error-monitoring';
@@ -152,7 +152,7 @@ function extractUserIdFromDebugToken(token: string): string | null {
     
     return userId || 'debug-user';
   } catch (error) {
-    logger.error('Failed to extract user ID from debug token:', error);
+    logger.error('Failed to extract user ID from debug token:', { error: String(error) });
     return 'debug-user';
   }
 }
@@ -210,7 +210,7 @@ export async function validateDevBypass(
       timestamp: new Date().toISOString()
     };
 
-    logger.error('🚨 SECURITY ALERT: Development bypass attempt in production', securityContext);
+    logger.error('🚨 SECURITY ALERT: Development bypass attempt in production', { error: String(securityContext) });
 
     // Structured security logging
     await logSecurityEvent('bypass_attempt', {
@@ -239,7 +239,7 @@ export async function validateDevBypass(
         extra: securityContext
       });
     } catch (error) {
-      logger.error('Failed to log security incident:', error);
+      logger.error('Failed to log security incident:', { error: String(error) });
     }
 
     return {
@@ -308,7 +308,7 @@ export async function validateMagicLinkBypass(
           }
         });
       } catch (error) {
-        logger.error('Failed to log magic link security incident:', error);
+        logger.error('Failed to log magic link security incident:', { error: String(error) });
       }
 
       return {

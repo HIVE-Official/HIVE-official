@@ -186,16 +186,16 @@ const SurfaceCard: React.FC<{
             {/* Settings Summary */}
             <div className="flex flex-wrap gap-1">
               {surface.settings.allowComments && (
-                <Badge size="xs" className="bg-blue-500/10 text-blue-400">Comments</Badge>
+                <Badge size="sm" className="bg-blue-500/10 text-blue-400">Comments</Badge>
               )}
               {surface.settings.requireApproval && (
-                <Badge size="xs" className="bg-yellow-500/10 text-yellow-400">Approval</Badge>
+                <Badge size="sm" className="bg-yellow-500/10 text-yellow-400">Approval</Badge>
               )}
               {surface.settings.enableNotifications && (
-                <Badge size="xs" className="bg-green-500/10 text-green-400">Notifications</Badge>
+                <Badge size="sm" className="bg-green-500/10 text-green-400">Notifications</Badge>
               )}
               {surface.settings.publiclyVisible && (
-                <Badge size="xs" className="bg-purple-500/10 text-purple-400">Public</Badge>
+                <Badge size="sm" className="bg-purple-500/10 text-purple-400">Public</Badge>
               )}
             </div>
 
@@ -264,7 +264,7 @@ const ToolSlotCard: React.FC<{
                 <h3 className="font-semibold text-white">{slot.tool.name}</h3>
                 <p className="text-sm text-gray-400">{slot.tool.description}</p>
                 <div className="flex items-center space-x-2 mt-1">
-                  <Badge size="xs" className={getCategoryColor(slot.category)}>
+                  <Badge size="sm" className={getCategoryColor(slot.category)}>
                     {slot.category.replace('_', ' ')}
                   </Badge>
                   <span className="text-xs text-gray-500">by {slot.tool.creator}</span>
@@ -313,7 +313,7 @@ const ToolSlotCard: React.FC<{
               <p className="text-xs text-gray-500 mb-2">Recommended for {spaceSubType.replace('_', ' ')}:</p>
               <div className="flex flex-wrap gap-1">
                 {recommendedTools.slice(0, 3).map((tool) => (
-                  <Badge key={tool} size="xs" variant="outline" className="text-xs">
+                  <Badge key={tool} size="sm" variant="outline" className="text-xs">
                     {tool}
                   </Badge>
                 ))}
@@ -431,7 +431,7 @@ export const HiveSpaceSurfaceManager: React.FC<HiveSpaceSurfaceManagerProps> = (
         >
           <Layers className="w-4 h-4" />
           <span>Six Surfaces</span>
-          <Badge size="xs" className={activeTab === 'surfaces' ? 'bg-white/20' : 'bg-gray-700'}>
+          <Badge size="sm" className={activeTab === 'surfaces' ? 'bg-white/20' : 'bg-gray-700'}>
             {space.surfaces.filter(s => s.isEnabled).length}/6
           </Badge>
         </button>
@@ -445,7 +445,7 @@ export const HiveSpaceSurfaceManager: React.FC<HiveSpaceSurfaceManagerProps> = (
         >
           <Zap className="w-4 h-4" />
           <span>Tool Slots</span>
-          <Badge size="xs" className={activeTab === 'tools' ? 'bg-white/20' : 'bg-gray-700'}>
+          <Badge size="sm" className={activeTab === 'tools' ? 'bg-white/20' : 'bg-gray-700'}>
             {space.toolSlots.filter(s => s.isOccupied).length}/{space.maxToolSlots}
           </Badge>
         </button>

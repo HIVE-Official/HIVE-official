@@ -1,8 +1,8 @@
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 // Simple console logger for profile API
 const logger = {
-  error: (msg: string, meta?: any) => logger.error('[ProfileAPI] ${msg}', meta)
+  error: (msg: string, meta?: any) => logger.error('[ProfileAPI] ${msg}', { error: String(meta) })
 };
 
 // Profile data interfaces

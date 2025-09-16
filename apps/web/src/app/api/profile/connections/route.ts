@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 

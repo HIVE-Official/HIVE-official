@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -93,7 +93,7 @@ export function AchievementsSystem({ userId, className = '' }: AchievementsSyste
         calculateLevel(data.totalPoints || 0);
       }
     } catch (error) {
-      logger.error('Error fetching achievements:', error);
+      logger.error('Error fetching achievements:', { error: String(error) });
     } finally {
       setLoading(false);
     }
@@ -228,7 +228,7 @@ export function AchievementsSystem({ userId, className = '' }: AchievementsSyste
         url: window.location.href
       });
     } catch (error) {
-      logger.error('Error sharing achievement:', error);
+      logger.error('Error sharing achievement:', { error: String(error) });
     }
   };
 

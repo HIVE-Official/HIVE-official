@@ -1,5 +1,5 @@
 import { initializeApp, cert, getApps, getApp, ServiceAccount } from 'firebase-admin/app';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
@@ -25,14 +25,16 @@ try {
         privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
       };
     } else {
-      // Fallback for development
-      console.warn('Firebase Admin: No service account found. Some features may not work.');
-      // Create a minimal service account for development
-      serviceAccount = {
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'hive-campus-dev',
-        clientEmail: 'dev@hive-campus.iam.gserviceaccount.com',
-        privateKey: '-----BEGIN PRIVATE KEY-----\nDEVELOPMENT_KEY\n-----END PRIVATE KEY-----\n'
-      };
+      // Missing required Firebase Admin credentials
+      const missingVars = [];
+      if (!process.env.FIREBASE_SERVICE_ACCOUNT && !process.env.FIREBASE_PROJECT_ID) missingVars.push('FIREBASE_PROJECT_ID');
+      if (!process.env.FIREBASE_SERVICE_ACCOUNT && !process.env.FIREBASE_CLIENT_EMAIL) missingVars.push('FIREBASE_CLIENT_EMAIL');
+      if (!process.env.FIREBASE_SERVICE_ACCOUNT && !process.env.FIREBASE_PRIVATE_KEY) missingVars.push('FIREBASE_PRIVATE_KEY');
+      
+      throw new Error(
+        `Firebase Admin initialization failed. Missing required environment variables: ${missingVars.join(', ')}. ` +
+        `Please set FIREBASE_SERVICE_ACCOUNT or the individual variables (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY).`
+      );
     }
 
     adminApp = initializeApp({
@@ -43,11 +45,11 @@ try {
     adminApp = getApp();
   }
 } catch (error) {
-  logger.error('Failed to initialize Firebase Admin:', error);
-  // Create a fallback app for development
-  adminApp = initializeApp({
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'hive-campus-dev'
-  });
+  logger.error('Failed to initialize Firebase Admin:', { error: String(error) });
+  throw new Error(
+    `Firebase Admin initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}. ` +
+    `Please check your Firebase configuration and ensure all required environment variables are set.`
+  );
 }
 
 // Export admin services
@@ -60,7 +62,7 @@ export const verifyIdToken = async (token: string) => {
   try {
     return await adminAuth.verifyIdToken(token);
   } catch (error) {
-    logger.error('Failed to verify ID token:', error);
+    logger.error('Failed to verify ID token:', { error: String(error) });
     return null;
   }
 };
@@ -69,7 +71,7 @@ export const getUserByEmail = async (email: string) => {
   try {
     return await adminAuth.getUserByEmail(email);
   } catch (error) {
-    logger.error('Failed to get user by email:', error);
+    logger.error('Failed to get user by email:', { error: String(error) });
     return null;
   }
 };
@@ -78,7 +80,7 @@ export const createCustomToken = async (uid: string, claims?: object) => {
   try {
     return await adminAuth.createCustomToken(uid, claims);
   } catch (error) {
-    logger.error('Failed to create custom token:', error);
+    logger.error('Failed to create custom token:', { error: String(error) });
     return null;
   }
 };
@@ -88,7 +90,7 @@ export const setCustomUserClaims = async (uid: string, claims: object) => {
     await adminAuth.setCustomUserClaims(uid, claims);
     return true;
   } catch (error) {
-    logger.error('Failed to set custom claims:', error);
+    logger.error('Failed to set custom claims:', { error: String(error) });
     return false;
   }
 };

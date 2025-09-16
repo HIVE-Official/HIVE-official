@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 
 interface UploadResult {
@@ -163,7 +163,7 @@ export function useFileUpload() {
       const result = await response.json();
       return result.success;
     } catch (error) {
-      logger.error('Failed to delete file:', error);
+      logger.error('Failed to delete file:', { error: String(error) });
       return false;
     }
   }, []);

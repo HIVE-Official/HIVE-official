@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   doc, 
@@ -50,7 +50,7 @@ export function useActiveUsers(spaceId?: string) {
           isOnline: true
         }, { merge: true });
       } catch (error) {
-        logger.error('Failed to update presence:', error);
+        logger.error('Failed to update presence:', { error: String(error) });
       }
     };
 
@@ -128,7 +128,7 @@ export function useActiveUsers(spaceId?: string) {
       setActiveCount(users.length);
       setIsLoading(false);
     }, (error: any) => {
-      logger.error('Failed to fetch active users:', error);
+      logger.error('Failed to fetch active users:', { error: String(error) });
       setIsLoading(false);
       // Fallback to at least counting current user
       setActiveCount(user ? 1 : 0);
@@ -188,7 +188,7 @@ export function useSpacesActiveUsers(spaceIds: string[]) {
       setSpaceCounts(counts);
       setIsLoading(false);
     }, (error: any) => {
-      logger.error('Failed to fetch space active users:', error);
+      logger.error('Failed to fetch space active users:', { error: String(error) });
       setIsLoading(false);
     });
 

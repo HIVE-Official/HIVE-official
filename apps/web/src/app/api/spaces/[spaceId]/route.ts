@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { findSpaceOptimized } from "@/lib/spaces/space-query-optimizer";
 import { logger } from "@/lib/utils/structured-logger";

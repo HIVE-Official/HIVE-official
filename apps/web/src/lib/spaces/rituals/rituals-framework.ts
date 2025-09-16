@@ -293,7 +293,7 @@ class RitualsFramework {
 
       return docRef.id;
     } catch (error) {
-      logger.error('Failed to create ritual', error as Error);
+      logger.error('Failed to create ritual', { error: String(error as Error) });
       throw new Error('Failed to create ritual');
     }
   }
@@ -320,7 +320,7 @@ class RitualsFramework {
         await this.regenerateInstances(ritualId);
       }
     } catch (error) {
-      logger.error('Failed to update ritual', error as Error);
+      logger.error('Failed to update ritual', { error: String(error as Error) });
       throw new Error('Failed to update ritual');
     }
   }
@@ -342,7 +342,7 @@ class RitualsFramework {
       // Notify participants
       await this.notifyParticipants(instanceId, 'started');
     } catch (error) {
-      logger.error('Failed to start instance', error as Error);
+      logger.error('Failed to start instance', { error: String(error as Error) });
       throw new Error('Failed to start ritual instance');
     }
   }
@@ -368,7 +368,7 @@ class RitualsFramework {
 
       logger.info('Ritual instance completed', { instanceId });
     } catch (error) {
-      logger.error('Failed to complete instance', error as Error);
+      logger.error('Failed to complete instance', { error: String(error as Error) });
       throw new Error('Failed to complete ritual instance');
     }
   }
@@ -399,7 +399,7 @@ class RitualsFramework {
 
       logger.info('User joined ritual', { ritualId, userId });
     } catch (error) {
-      logger.error('Failed to join ritual', error as Error);
+      logger.error('Failed to join ritual', { error: String(error as Error) });
       throw new Error('Failed to join ritual');
     }
   }
@@ -441,7 +441,7 @@ class RitualsFramework {
         ...doc.data()
       } as Ritual));
     } catch (error) {
-      logger.error('Failed to discover rituals', error as Error);
+      logger.error('Failed to discover rituals', { error: String(error as Error) });
       return [];
     }
   }
@@ -476,7 +476,7 @@ class RitualsFramework {
         .sort((a, b) => b.score - a.score)
         .slice(0, count);
     } catch (error) {
-      logger.error('Failed to get recommendations', error as Error);
+      logger.error('Failed to get recommendations', { error: String(error as Error) });
       return [];
     }
   }
@@ -507,7 +507,7 @@ class RitualsFramework {
         ...doc.data()
       } as RitualInstance));
     } catch (error) {
-      logger.error('Failed to get upcoming instances', error as Error);
+      logger.error('Failed to get upcoming instances', { error: String(error as Error) });
       return [];
     }
   }
@@ -558,7 +558,7 @@ class RitualsFramework {
         }
       };
     } catch (error) {
-      logger.error('Failed to get impact report', error as Error);
+      logger.error('Failed to get impact report', { error: String(error as Error) });
       throw new Error('Failed to generate impact report');
     }
   }
@@ -697,7 +697,7 @@ class RitualsFramework {
       
       await calendarSync.createEvent(calendarEvent);
     } catch (error) {
-      logger.error('Failed to sync with calendar', error as Error);
+      logger.error('Failed to sync with calendar', { error: String(error as Error) });
     }
   }
 
@@ -711,7 +711,7 @@ class RitualsFramework {
         ? { id: ritualDoc.id, ...ritualDoc.data() } as Ritual 
         : null;
     } catch (error) {
-      logger.error('Failed to get ritual', error as Error);
+      logger.error('Failed to get ritual', { error: String(error as Error) });
       return null;
     }
   }

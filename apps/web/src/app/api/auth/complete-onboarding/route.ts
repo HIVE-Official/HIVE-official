@@ -10,7 +10,7 @@ import {
   TransactionError
 } from "@/lib/transaction-manager";
 import { createRequestLogger } from "@/lib/utils/structured-logger";
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 import { authRateLimiter, RATE_LIMITS } from "@/lib/auth/middleware/auth-rate-limiter";
 import { validateCSRFToken } from "@/lib/csrf-protection";

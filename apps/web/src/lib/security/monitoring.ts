@@ -1,4 +1,4 @@
-import { logger } from '@hive/core'
+import { logger  } from '@/types/core';
 
 // 🔒 SECURITY MONITORING AND ALERTING
 
@@ -44,11 +44,11 @@ class SecurityMonitor {
     // Log based on severity
     switch (event.severity) {
       case 'critical':
-        logger.error(`🚨 CRITICAL SECURITY EVENT: ${event.type}`, logData)
+        logger.error(`🚨 CRITICAL SECURITY EVENT: ${event.type}`, { error: String(logData) })
         void this.sendAlert(event)
         break
       case 'high':
-        logger.error(`🔴 HIGH SECURITY EVENT: ${event.type}`, logData)
+        logger.error(`🔴 HIGH SECURITY EVENT: ${event.type}`, { error: String(logData) })
         void this.sendAlert(event)
         break
       case 'medium':

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -95,7 +95,7 @@ export function RitualsDashboard({ className = '' }: RitualsDashboardProps) {
       setUpcomingRituals(upcomingData.rituals || []);
       setCompletedRituals(completedData.rituals || []);
     } catch (error) {
-      logger.error('Error fetching rituals:', error);
+      logger.error('Error fetching rituals:', { error: String(error) });
       // Set empty arrays on error
       setActiveRituals([]);
       setUpcomingRituals([]);
@@ -116,7 +116,7 @@ export function RitualsDashboard({ className = '' }: RitualsDashboardProps) {
         fetchRituals();
       }
     } catch (error) {
-      logger.error('Error joining ritual:', error);
+      logger.error('Error joining ritual:', { error: String(error) });
     }
   };
 

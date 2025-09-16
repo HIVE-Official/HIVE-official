@@ -6,7 +6,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 import Image from 'next/image';
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
@@ -429,7 +429,7 @@ const UserCard: React.FC<{
                       <div className="flex items-center space-x-2">
                         {getSpaceCategoryIcon(space.spaceCategory)}
                         <span className="text-white truncate max-w-[120px]">{space.spaceName}</span>
-                        <Badge size="xs" className="bg-purple-500/10 text-purple-400">
+                        <Badge size="sm" className="bg-purple-500/10 text-purple-400">
                           {space.role}
                         </Badge>
                       </div>

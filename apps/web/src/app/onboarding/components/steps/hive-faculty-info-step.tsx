@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { BookOpen, User, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, Input } from "@hive/ui";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveFacultyInfoStepProps {
   data: HiveOnboardingData;

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion } from "framer-motion";
 import { GraduationCap, Users, BookOpen, ArrowRight, Mail, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, Button, Input } from "@hive/ui";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveUserTypeStepProps {
   data: HiveOnboardingData;
@@ -79,7 +79,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
       }));
       
     } catch (error) {
-      logger.error('Failed to submit waitlist:', error);
+      logger.error('Failed to submit waitlist:', { error: String(error) });
     } finally {
       setIsSubmittingWaitlist(false);
     }

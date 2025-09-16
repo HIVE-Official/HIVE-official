@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
@@ -112,7 +112,7 @@ async function fetchUserCalendarEvents(userId: string): Promise<CalendarEvent[]>
 
     return allEvents.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
   } catch (error) {
-    logger.error('Failed to fetch calendar events:', error);
+    logger.error('Failed to fetch calendar events:', { error: String(error) });
     return [];
   }
 }
@@ -135,7 +135,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching calendar events:', error);
+    logger.error('Error fetching calendar events:', { error: String(error) });
     return NextResponse.json(
       ApiResponseHelper.error("Failed to fetch calendar events", "FETCH_ERROR"),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -176,7 +176,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       updatedAt: new Date().toISOString()
     };
 
-    const docRef = await dbAdmin.collection('personalEvents').add(personalEvent);
+    const docRef = await dbAdmin.collection('calendar_events').add({
+      ...personalEvent,
+      type: 'personal'
+    });
     const createdEvent = {
       id: docRef.id,
       ...personalEvent,

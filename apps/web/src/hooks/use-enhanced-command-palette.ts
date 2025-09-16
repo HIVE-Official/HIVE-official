@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { SearchableItem } from "@hive/ui";
 
@@ -302,7 +302,7 @@ export function useEnhancedCommandPalette() {
       });
       
     } catch (error) {
-      logger.error('Search error:', error);
+      logger.error('Search error:', { error: String(error) });
       return [];
     }
   }, [searchAPI]);

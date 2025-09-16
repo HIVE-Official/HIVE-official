@@ -10,7 +10,7 @@ try {
     throw new Error(`Firebase configuration is incomplete: missing ${!firebaseConfig.apiKey ? 'apiKey' : 'projectId'}`);
   }
 } catch (error) {
-  logger.error('❌ Firebase configuration error:', error);
+  logger.error('❌ Firebase configuration error:', { error: String(error) });
   logger.error('❌ Available env vars:', {
     NEXT_PUBLIC_FIREBASE_API_KEY: !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_PROJECT_ID: !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -67,7 +67,7 @@ try {
   
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 } catch (error) {
-  logger.error('❌ Failed to initialize Firebase:', error);
+  logger.error('❌ Failed to initialize Firebase:', { error: String(error) });
   throw new Error('Firebase initialization failed');
 }
 

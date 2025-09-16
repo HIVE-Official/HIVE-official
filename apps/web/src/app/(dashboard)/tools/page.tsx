@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useQuery } from "@tanstack/react-query";
 import { CompleteHIVEToolsSystem } from "@hive/ui";
@@ -306,7 +306,7 @@ export default function ToolsPage() {
       }
       
     } catch (error) {
-      logger.error('Failed to install tool:', error);
+      logger.error('Failed to install tool:', { error: String(error) });
       const errorMessage = error instanceof Error ? error.message : 'Failed to install tool';
       alert(`Installation failed: ${errorMessage}`);
     }

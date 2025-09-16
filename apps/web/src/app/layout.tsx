@@ -6,6 +6,7 @@ import "./globals.css";
 import { WelcomeMatProvider } from "../components/welcome-mat-provider";
 import { FeedbackToast } from "../components/feedback-toast";
 import { ErrorBoundary } from "../components/error-boundary";
+import { GlobalErrorBoundary } from "../components/global-error-boundary";
 import { ProductionSafetyCheck } from "../components/dev/ProductionSafetyCheck";
 import { Toaster } from "sonner";
 
@@ -59,9 +60,10 @@ export default function RootLayout({
         style={{ backgroundColor: '#0A0A0B' }}
         suppressHydrationWarning={true}
       >
-        <ErrorBoundary>
-          <ProductionSafetyCheck />
-          <Providers>
+        <GlobalErrorBoundary>
+          <ErrorBoundary>
+            <ProductionSafetyCheck />
+            <Providers>
             <WelcomeMatProvider>{children}</WelcomeMatProvider>
             <FeedbackToast />
             <Toaster 
@@ -78,7 +80,8 @@ export default function RootLayout({
               richColors
             />
           </Providers>
-        </ErrorBoundary>
+          </ErrorBoundary>
+        </GlobalErrorBoundary>
       </body>
     </html>
   );

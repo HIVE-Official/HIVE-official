@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useQuery } from "@tanstack/react-query";
 import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
@@ -19,7 +19,7 @@ import { PageContainer } from "@hive/ui";
 import { Users, AlertTriangle, Loader2, Hash, /* Heart as _Heart, */ MessageSquare, /* Camera as _Camera, */ Code, Calendar, /* ArrowRight as _ArrowRight, */ Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 import { useUnifiedAuth } from "@hive/ui";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -198,7 +198,7 @@ export default function SpaceDetailPage({
     toggleReaction,
     deletePost,
     respondToCoordination 
-  } = useSpacePosts(spaceId);
+  } = useSpacePosts(spaceId || undefined);
   
   // Use real-time events hook
   const {
@@ -208,7 +208,7 @@ export default function SpaceDetailPage({
     updateEvent,
     deleteEvent,
     rsvpToEvent
-  } = useSpaceEvents(spaceId);
+  } = useSpaceEvents(spaceId || undefined);
   
   // Use real-time members hook
   const {
@@ -216,7 +216,7 @@ export default function SpaceDetailPage({
     loading: membersLoading,
     summary: membersSummary,
     refresh: refreshMembers
-  } = useSpaceMembers(spaceId);
+  } = useSpaceMembers(spaceId || undefined);
   
   // Use real-time pinned items hook
   const {
@@ -349,7 +349,7 @@ export default function SpaceDetailPage({
       await uninstallTool(deploymentId);
       await refreshTools();
     } catch (error) {
-      logger.error('Failed to remove tool:', error);
+      logger.error('Failed to remove tool:', { error: String(error) });
     }
   };
 
@@ -403,7 +403,7 @@ export default function SpaceDetailPage({
       // Refresh members list to show updated roles
       refreshMembers();
     } catch (error) {
-      logger.error('Failed to change role:', error);
+      logger.error('Failed to change role:', { error: String(error) });
       // Show error toast if available
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast({
@@ -425,7 +425,7 @@ export default function SpaceDetailPage({
       // Refresh members list to show updated list
       refreshMembers();
     } catch (error) {
-      logger.error('Failed to remove member:', error);
+      logger.error('Failed to remove member:', { error: String(error) });
       // Show error toast if available
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast({
@@ -445,7 +445,7 @@ export default function SpaceDetailPage({
       // Refresh members list to show updated status
       refreshMembers();
     } catch (error) {
-      logger.error('Failed to suspend member:', error);
+      logger.error('Failed to suspend member:', { error: String(error) });
       // Show error toast if available
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast({
@@ -477,7 +477,7 @@ export default function SpaceDetailPage({
           setSpaceMembership(membership);
         }
       } catch (error) {
-        logger.error('Failed to fetch space membership:', error);
+        logger.error('Failed to fetch space membership:', { error: String(error) });
         if (isMounted) {
           setSpaceMembership(null);
         }
@@ -830,7 +830,7 @@ export default function SpaceDetailPage({
                       // Refresh to show updated coordination data
                       window.location.reload();
                     } catch (error) {
-                      logger.error('Coordination response error:', error);
+                      logger.error('Coordination response error:', { error: String(error) });
                       alert('Failed to submit response. Please try again.');
                     }
                   }}
@@ -845,7 +845,7 @@ export default function SpaceDetailPage({
                       // Refresh to show updated status
                       window.location.reload();
                     } catch (error) {
-                      logger.error('Coordination status error:', error);
+                      logger.error('Coordination status error:', { error: String(error) });
                       alert('Failed to update status. Please try again.');
                     }
                   }}
@@ -859,7 +859,7 @@ export default function SpaceDetailPage({
                       try {
                         await deletePost(postId);
                       } catch (error) {
-                        logger.error('Delete post error:', error);
+                        logger.error('Delete post error:', { error: String(error) });
                       }
                     }
                   }}
@@ -1253,7 +1253,7 @@ export default function SpaceDetailPage({
                               });
                             }
                           } catch (error) {
-                            logger.error('Failed to update description:', error);
+                            logger.error('Failed to update description:', { error: String(error) });
                             // Show error toast if available
                             if (typeof window !== 'undefined' && (window as any).showToast) {
                               (window as any).showToast({

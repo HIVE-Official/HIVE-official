@@ -1,5 +1,5 @@
 import { dbAdmin } from '@hive/core/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 
 export type AdminAction = 

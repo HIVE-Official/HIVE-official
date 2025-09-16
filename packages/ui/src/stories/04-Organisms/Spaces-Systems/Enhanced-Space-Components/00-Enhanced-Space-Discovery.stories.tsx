@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../../components
 import { Button } from '../../../../atomic/atoms/button-enhanced';
 import { Badge } from '../../../../components/ui/badge';
 import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
-import { Input } from '../../../../components/ui/input';
+import { InputEnhanced as Input } from '../../../../atomic/atoms/input-enhanced';
 import { Separator } from '../../../../components/ui/separator';
 import { 
   Users, 

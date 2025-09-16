@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from "next/navigation";
 import Image from 'next/image';
@@ -42,6 +42,7 @@ import { HivePhotoStep } from "./steps/hive-photo-step";
 import { HiveInterestsStep } from "./steps/hive-interests-step";
 import { HiveBuilderStep } from "./steps/hive-builder-step";
 import { HiveLegalStep } from "./steps/hive-legal-step";
+import type { HiveOnboardingData } from "../types/onboarding-types";
 
 // HIVE Progress Component using design system
 function OnboardingProgress({ value, isComplete, className }: { 
@@ -127,23 +128,6 @@ function StepIndicator({
 }
 
 // Types
-export interface HiveOnboardingData {
-  fullName: string;
-  userType?: 'student' | 'alumni' | 'faculty';
-  firstName?: string;
-  lastName?: string;
-  facultyEmail?: string;
-  majors: string[]; // Changed from major: string to majors: string[]
-  academicLevel?: string;
-  graduationYear: number;
-  handle: string;
-  profilePhoto?: string;
-  builderRequestSpaces?: string[];
-  hasConsented: boolean;
-  acceptedTerms: boolean;
-  acceptedPrivacy: boolean;
-  interests?: string[]; // Added interests array
-}
 
 const TOTAL_STEPS = 9; // Updated for interests step
 
@@ -419,7 +403,7 @@ export function HiveOnboardingWizard() {
         const successfulJoins = spaceResponses.filter(r => r.status === 'fulfilled').length;
       } catch (spaceError) {
         // Don't fail onboarding if space creation fails
-        logger.error('Space auto-join failed (non-critical):', spaceError);
+        logger.error('Space auto-join failed (non-critical):', { error: String(spaceError) });
       }
 
       // Show success animation
@@ -430,7 +414,7 @@ export function HiveOnboardingWizard() {
         router.push("/");
       }, 1000);
     } catch (error) {
-      logger.error('Onboarding error:', error);
+      logger.error('Onboarding error:', { error: String(error) });
       
       // Enhanced error handling with user-friendly messages
       let userFriendlyError = "Something went wrong during setup.";

@@ -19,20 +19,23 @@ export { WelcomeMat, useWelcomeMat } from "./src/components/welcome/welcome-mat"
 
 // === CARD COMPONENTS ===
 export { 
-  HiveCard as Card, 
-  HiveCard,
-  HiveCardContent as CardContent,
-  HiveCardHeader as CardHeader,
-  HiveCardTitle as CardTitle
-} from "./src/components/hive-card";
+  Card as HiveCard, 
+  Card,
+  CardContent as HiveCardContent,
+  CardContent,
+  CardHeader as HiveCardHeader,
+  CardHeader,
+  CardTitle as HiveCardTitle,
+  CardTitle
+} from "./src/atomic/ui/card";
 
 // === SHELL COMPONENTS ===
 export { EnhancedAppShell } from "./src/components/shell/enhanced-app-shell";
 
 // === BASIC HIVE COMPONENTS ===
 export { ButtonEnhanced as HiveButton, ButtonEnhanced as Button } from "./src/atomic/atoms/button-enhanced";
-export { HiveInput, HiveSearchInput } from "./src/components/hive-input";
-export { HiveSelect, hiveSelectVariants, type HiveSelectProps } from "./src/components/hive-select";
+export { InputEnhanced as HiveInput, InputEnhanced as HiveSearchInput } from "./src/atomic/atoms/input-enhanced";
+export { SelectEnhanced as HiveSelect, selectVariants as hiveSelectVariants, type SelectEnhancedProps as HiveSelectProps } from "./src/atomic/atoms/select-enhanced";
 export { HiveComingSoonModal } from "./src/components/hive-coming-soon-modal";
 export { HiveModal } from "./src/components/hive-modal";
 export { HiveLogo } from "./src/components/hive-logo";

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -512,7 +512,7 @@ export default function FeedPageV2() {
       // Refresh feed or add post to the feed
       return `post-${Date.now()}`; // Return temporary post ID
     } catch (error) {
-      logger.error('Error creating post:', error);
+      logger.error('Error creating post:', { error: String(error) });
       throw error;
     }
   };
@@ -590,7 +590,7 @@ export default function FeedPageV2() {
       try {
         await addComment(postId, comment);
       } catch (error) {
-        logger.error('Failed to add comment:', error);
+        logger.error('Failed to add comment:', { error: String(error) });
       }
     }
   }, [addComment]);

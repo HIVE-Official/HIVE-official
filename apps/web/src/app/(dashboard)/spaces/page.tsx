@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import { Button, Card } from "@hive/ui";
 import { PageContainer } from "@hive/ui";
 import toast from '@/hooks/use-toast-notifications';
 import { Heart, Users, Settings as _Settings, Star, Clock, Activity, Plus, Crown, Search, Grid, List, TrendingUp, ArrowUpDown, Compass, AlertCircle } from "lucide-react";
-import { type Space, type SpaceType } from "@hive/core";
+import type { Space, type SpaceType  } from '@/types/core';
 import { useDebounce } from "@hive/hooks";
 import { cn } from "@hive/ui";
 import { UnifiedSpaceCard } from "./components/unified-space-card";
@@ -263,7 +263,7 @@ export default function UnifiedSpacesPage() {
         }, 500);
       }
     } catch (error) {
-      logger.error('Failed to create space:', error);
+      logger.error('Failed to create space:', { error: String(error) });
       const errorMessage = error instanceof Error ? error.message : 'Failed to create space';
       _setCreateError(errorMessage);
       toast.error('Failed to create space', errorMessage);
@@ -307,7 +307,7 @@ export default function UnifiedSpacesPage() {
       toast.spaceJoined(spaceName);
       
     } catch (error) {
-      logger.error('Failed to join space:', error);
+      logger.error('Failed to join space:', { error: String(error) });
       const errorMessage = error instanceof Error ? error.message : 'Failed to join space';
       _setJoinErrors(prev => ({
         ...prev,

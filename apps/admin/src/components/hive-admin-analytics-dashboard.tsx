@@ -6,7 +6,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
@@ -333,7 +333,7 @@ const ViolationAlert: React.FC<{
                 {violations.topViolationTypes.slice(0, 3).map((violation) => (
                   <Badge 
                     key={violation.type} 
-                    size="xs" 
+                    size="sm" 
                     className={`${
                       violation.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
                       violation.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
@@ -529,7 +529,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
             <CardTitle className="text-green-400 flex items-center space-x-2">
               <Activity className="w-5 h-5" />
               <span>Real-Time Metrics</span>
-              <Badge size="xs" className="bg-green-500/20 text-green-400 animate-pulse">
+              <Badge size="sm" className="bg-green-500/20 text-green-400 animate-pulse">
                 LIVE
               </Badge>
             </CardTitle>

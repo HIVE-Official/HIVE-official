@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import Link from 'next/link';
 import { Search, Users, ArrowRight, MapPin, ArrowLeft } from 'lucide-react';
@@ -490,7 +490,7 @@ export default function SchoolsPage() {
           setSchools(fallbackSchools);
         }
       } catch (_error) {
-        logger.error('Error fetching schools:', _error);
+        logger.error('Error fetching schools:', { error: String(_error) });
         setSchools(fallbackSchools);
       } finally {
         setLoading(false);

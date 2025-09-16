@@ -2,8 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
-import { type Post } from '@hive/core';
-import { logger } from "@/lib/logger";
+import type { Post  } from '@/types/core';
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 // Temporary fallback implementations for development

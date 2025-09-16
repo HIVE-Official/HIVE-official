@@ -2,7 +2,7 @@
 
 import { Button, Card, useUnifiedAuth } from "@hive/ui";
 import { Users, Star, MapPin, ArrowRight, Heart, Activity, Crown, Shield } from "lucide-react";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '../../lib/utils';
-import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
+import { Card as HiveCard, CardHeader as HiveCardHeader, CardTitle as HiveCardTitle, CardContent as HiveCardContent } from '../../atomic/ui/card';
 import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { HiveTextarea } from '../hive-textarea';
 import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
@@ -121,7 +121,7 @@ const PostCard: React.FC<{
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {post.tags.map((tag: any) => (
+          {post.tags.map((tag: string) => (
             <span key={tag} className="text-sm text-blue-600 hover:underline cursor-pointer">
               #{tag}
             </span>
@@ -450,7 +450,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
         <div className="animate-pulse">
           <div className="bg-gray-200 rounded-lg h-32 mb-4" />
           <div className="space-y-3">
-            {[1, 2, 3].map((i: any) => (
+            {[1, 2, 3].map((i: number) => (
               <div key={i} className="bg-gray-100 rounded-lg h-40" />
             ))}
           </div>
@@ -517,7 +517,7 @@ export const HivePostsSurface: React.FC<HivePostsSurfaceProps> = ({
             </div>
           </HiveCard>
         ) : (
-          posts.map((post: any) => (
+          posts.map((post: Post) => (
             <PostCard
               key={post.id}
               post={post}

@@ -1,5 +1,5 @@
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 
 interface HiveNotification {
   id: string;

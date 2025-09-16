@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
-import { logger } from "@hive/core";
+import { logger  } from '@/types/core';
 
 /**
  * Get spaces that are available for claiming (no current leader/moderator)

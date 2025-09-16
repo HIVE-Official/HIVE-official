@@ -137,7 +137,6 @@ export { UnifiedProfileDashboard } from './atomic/organisms/unified-profile-dash
 
 // === BRAND COMPONENTS ===
 export { HiveLogo } from './components/hive-logo';
-export { HiveInput } from './components/hive-input';
 
 // === UTILITIES ===
 export * from './lib/utils';
@@ -154,7 +153,7 @@ export { hiveVariants } from './lib/motion';
 // === HIVE ALIASES ===
 export { ButtonEnhanced as HiveButton } from './atomic/atoms/button-enhanced';
 export { HiveBadge } from './components/hive-badge';
-export { HiveCard } from './components/hive-card';
+export { Card as HiveCard } from './atomic/ui/card';
 
 // === ADDITIONAL EXPORTS ===
 // Academic constants

@@ -13,7 +13,7 @@ import {
   onSnapshot,
   increment
 } from 'firebase/firestore';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { db } from '@/lib/firebase/client/firebase-client';
 
@@ -101,7 +101,7 @@ class RitualsService {
         ...doc.data()
       } as Ritual));
     } catch (error) {
-      logger.error('Error fetching active rituals:', error);
+      logger.error('Error fetching active rituals:', { error: String(error) });
       return [];
     }
   }
@@ -121,7 +121,7 @@ class RitualsService {
         ...doc.data()
       } as RitualParticipation));
     } catch (error) {
-      logger.error('Error fetching user rituals:', error);
+      logger.error('Error fetching user rituals:', { error: String(error) });
       return [];
     }
   }
@@ -155,7 +155,7 @@ class RitualsService {
       
       return participationId;
     } catch (error) {
-      logger.error('Error joining ritual:', error);
+      logger.error('Error joining ritual:', { error: String(error) });
       throw error;
     }
   }
@@ -187,7 +187,7 @@ class RitualsService {
         updates
       );
     } catch (error) {
-      logger.error('Error updating ritual progress:', error);
+      logger.error('Error updating ritual progress:', { error: String(error) });
       throw error;
     }
   }
@@ -208,7 +208,7 @@ class RitualsService {
         }
       },
       (error: any) => {
-        logger.error('Error in ritual subscription:', error);
+        logger.error('Error in ritual subscription:', { error: String(error) });
       }
     );
     
@@ -231,7 +231,7 @@ class RitualsService {
         ...doc.data()
       } as Ritual));
     } catch (error) {
-      logger.error('Error fetching trending rituals:', error);
+      logger.error('Error fetching trending rituals:', { error: String(error) });
       return [];
     }
   }
@@ -255,7 +255,7 @@ class RitualsService {
       const docRef = await addDoc(collection(db, 'rituals'), ritual);
       return docRef.id;
     } catch (error) {
-      logger.error('Error creating ritual:', error);
+      logger.error('Error creating ritual:', { error: String(error) });
       throw error;
     }
   }

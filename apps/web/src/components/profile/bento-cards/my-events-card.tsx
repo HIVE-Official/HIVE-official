@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { Card, Badge } from '@hive/ui';
 import { 
@@ -59,7 +59,7 @@ export function MyEventsCard({ className }: MyEventsCardProps) {
         setFriendsAvailable(data.friendsAvailable || 0);
       }
     } catch (error) {
-      logger.error('Error fetching events:', error);
+      logger.error('Error fetching events:', { error: String(error) });
       setEvents([]);
     }
   };

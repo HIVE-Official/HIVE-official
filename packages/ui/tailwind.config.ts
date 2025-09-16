@@ -10,18 +10,18 @@ const config = {
   ],
   prefix: "",
   safelist: [
-    // HIVE motion system durations - these are intentional and not ambiguous
-    'duration-[50ms]',
-    'duration-[90ms]',
-    'duration-[120ms]',
-    'duration-[150ms]',
-    'duration-[180ms]',
-    'duration-[200ms]',
-    'duration-[240ms]',
-    'duration-[280ms]',
-    'duration-[400ms]',
-    // HIVE motion easing
-    'ease-[cubic-bezier(0.33,0.65,0,1)]',
+    // HIVE motion system durations - using named durations from theme
+    'duration-50',        // 50ms
+    'duration-90',        // 90ms (also 'fast')
+    'duration-120',       // 120ms
+    'duration-150',       // 150ms
+    'duration-180',       // 180ms
+    'duration-200',       // 200ms (also 'base')
+    'duration-240',       // 240ms
+    'duration-280',       // 280ms
+    'duration-400',       // 400ms
+    // HIVE motion easing - using custom defined timing function
+    'ease-custom-bezier',
   ],
   theme: {
     spacing: {
@@ -136,9 +136,19 @@ const config = {
         'custom-bezier': 'cubic-bezier(0.33, 0.65, 0, 1)',
       },
       transitionDuration: {
+        '50': '50ms',
+        '90': '90ms',
         'fast': '90ms',
+        '120': '120ms',
+        '150': '150ms',
+        '180': '180ms',
+        '200': '200ms',
         'base': '200ms',
+        '240': '240ms',
+        '280': '280ms',
+        '350': '350ms',
         'slow': '350ms',
+        '400': '400ms',
       }
     },
   },

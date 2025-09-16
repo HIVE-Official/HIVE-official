@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { Button, Badge } from '@hive/ui';
 import { 
@@ -46,7 +46,7 @@ export function CalendarIntegration() {
       // For now, we'll just set it as not connected
       setOutlookStatus({ connected: false });
     } catch (error) {
-      logger.error('Error checking integration status:', error);
+      logger.error('Error checking integration status:', { error: String(error) });
     }
   };
 
@@ -66,7 +66,7 @@ export function CalendarIntegration() {
         alert('Outlook integration coming soon!');
       }
     } catch (error) {
-      logger.error('Error connecting ${provider}:', error);
+      logger.error('Error connecting ${provider}:', { error: String(error) });
       alert(`Failed to connect ${provider}. Please try again.`);
     } finally {
       setIsConnecting(null);
@@ -91,7 +91,7 @@ export function CalendarIntegration() {
         }
       }
     } catch (error) {
-      logger.error('Error disconnecting ${provider}:', error);
+      logger.error('Error disconnecting ${provider}:', { error: String(error) });
       alert(`Failed to disconnect ${provider}. Please try again.`);
     }
   };
@@ -110,7 +110,7 @@ export function CalendarIntegration() {
         alert('Calendar sync completed!');
       }
     } catch (error) {
-      logger.error('Error syncing calendars:', error);
+      logger.error('Error syncing calendars:', { error: String(error) });
       alert('Failed to sync calendars. Please try again.');
     } finally {
       setIsSyncing(false);

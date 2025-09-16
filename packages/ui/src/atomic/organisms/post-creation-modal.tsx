@@ -129,7 +129,13 @@ const POST_TYPES: Array<{
   },
 ];
 
-const PRIORITY_OPTIONS = [
+interface PriorityOption {
+  value: 'low' | 'medium' | 'high' | 'urgent';
+  label: string;
+  color: string;
+}
+
+const PRIORITY_OPTIONS: PriorityOption[] = [
   { value: 'low', label: 'Low Priority', color: 'text-gray-400' },
   { value: 'medium', label: 'Medium Priority', color: 'text-blue-400' },
   { value: 'high', label: 'High Priority', color: 'text-orange-400' },
@@ -669,10 +675,10 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     Priority Level
                   </label>
                   <div className="grid grid-cols-2 gap-2">
-                    {PRIORITY_OPTIONS.map((priority: any) => (
+                    {PRIORITY_OPTIONS.map((priority: PriorityOption) => (
                       <button
                         key={priority.value}
-                        onClick={() => setAnnouncementPriority(priority.value as any)}
+                        onClick={() => setAnnouncementPriority(priority.value)}
                         className={cn(
                           'p-3 rounded-xl border transition-all duration-200 text-left',
                           announcementPriority === priority.value

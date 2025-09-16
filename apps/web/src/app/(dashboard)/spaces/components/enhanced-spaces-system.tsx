@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ const UB_SPACE_TEMPLATES: any[] = [];
 type ActivationRequestData = any;
 const SpaceActivationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => null;
 const UBSpacesDirectory = ({ spaces }: { spaces: any[] }) => null;
-import { type Space, type SpaceType } from "@hive/core";
+import type { Space, type SpaceType  } from '@/types/core';
 import { useDebounce } from "@hive/hooks";
 import { cn } from "@hive/ui";
 import { 
@@ -179,7 +179,7 @@ export function EnhancedSpacesSystem({
       queryClient.invalidateQueries({ queryKey: ['spaces-browse'] });
       queryClient.invalidateQueries({ queryKey: ['my-spaces'] });
     } catch (error) {
-      logger.error('Error joining space:', error);
+      logger.error('Error joining space:', { error: String(error) });
     }
   };
 

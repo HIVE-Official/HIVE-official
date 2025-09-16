@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 
 // Core recommendation data types
 interface UserProfile {

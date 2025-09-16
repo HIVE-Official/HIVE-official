@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRealtimePosts, useRealtimeComments, RealtimePost } from '@/hooks/use-realtime-posts';
 import { useAuth } from '@/hooks/use-auth';
@@ -116,7 +116,7 @@ export function RealtimePostsSurface({
       
       // Show success (in production, use toast)
     } catch (err) {
-      logger.error('Error creating post:', err);
+      logger.error('Error creating post:', { error: String(err) });
       alert('Failed to create post');
     } finally {
       setIsPosting(false);
@@ -142,7 +142,7 @@ export function RealtimePostsSurface({
         });
       }
     } catch (err) {
-      logger.error('Error updating like:', err);
+      logger.error('Error updating like:', { error: String(err) });
     }
   };
 
@@ -165,7 +165,7 @@ export function RealtimePostsSurface({
         comments: increment(1)
       });
     } catch (err) {
-      logger.error('Error adding comment:', err);
+      logger.error('Error adding comment:', { error: String(err) });
     }
   };
 

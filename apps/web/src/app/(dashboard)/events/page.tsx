@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import dynamic from "next/dynamic";
 import { Button, Card, Badge } from "@hive/ui";
@@ -242,7 +242,7 @@ export default function EventsPage() {
               }) || [];
             }
           } catch (error) {
-            logger.error('Failed to fetch events for space ${String(spaceData.id)}:', error);
+            logger.error('Failed to fetch events for space ${String(spaceData.id)}:', { error: String(error) });
           }
           return [];
         });
@@ -253,7 +253,7 @@ export default function EventsPage() {
         // If no real events, show empty state instead of mock data
         setEvents(allEvents);
       } catch (error) {
-        logger.error('Error fetching events:', error);
+        logger.error('Error fetching events:', { error: String(error) });
         setEvents([]);
       } finally {
         setIsLoading(false);
@@ -679,47 +679,12 @@ export default function EventsPage() {
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           spaceId=""
-          onEventCreated={(eventData: any) => {
-            // Generate new event with mock data
-            const newEvent: EventData = {
-              id: `event-${Date.now()}`,
-              title: eventData.title,
-              description: eventData.description,
-              type: eventData.type,
-              organizer: {
-                id: user?.id || 'current-user',
-                name: user?.fullName || 'You',
-                handle: user?.handle || 'you',
-                verified: false
-              },
-              datetime: {
-                start: eventData.datetime.start,
-                end: eventData.datetime.end,
-                timezone: eventData.datetime.timezone
-              },
-              location: eventData.location,
-              capacity: {
-                max: eventData.capacity,
-                current: 0,
-                waitlist: 0
-              },
-              tools: eventData.tools,
-              tags: eventData.tags,
-              visibility: eventData.visibility,
-              rsvpStatus: null,
-              isBookmarked: false,
-              engagement: {
-                going: 0,
-                interested: 0,
-                comments: 0,
-                shares: 0
-              },
-              requirements: eventData.requirements,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            };
-            
-            setEvents(prev => [newEvent, ...prev]);
+          onSuccess={(eventId: string) => {
+            // Refresh events list after creation
+            console.log('Event created with ID:', eventId);
+            setShowCreateModal(false);
+            // In a real app, would fetch the new event from the API
+            // For now, just close the modal
           }}
         />
 

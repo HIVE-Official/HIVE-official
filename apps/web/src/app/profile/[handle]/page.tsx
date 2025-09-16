@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useParams, useRouter, notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -122,7 +122,7 @@ export default function PublicProfilePage() {
         
         setIsLoading(false);
       } catch (err) {
-        logger.error('Failed to load public profile:', err);
+        logger.error('Failed to load public profile:', { error: String(err) });
         setError(err instanceof Error ? err.message : 'Failed to load profile');
         setIsLoading(false);
       }

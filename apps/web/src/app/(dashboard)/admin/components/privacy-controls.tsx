@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   Card, 
@@ -114,7 +114,7 @@ export default function PrivacyControls() {
         setDataRequests(requestsData.requests || []);
       }
     } catch (error) {
-      logger.error('Error loading privacy data:', error);
+      logger.error('Error loading privacy data:', { error: String(error) });
     } finally {
       setLoading(false);
     }
@@ -134,7 +134,7 @@ export default function PrivacyControls() {
         );
       }
     } catch (error) {
-      logger.error('Error updating privacy setting:', error);
+      logger.error('Error updating privacy setting:', { error: String(error) });
     }
   };
 
@@ -150,7 +150,7 @@ export default function PrivacyControls() {
         await loadPrivacyData();
       }
     } catch (error) {
-      logger.error('Error handling data request:', error);
+      logger.error('Error handling data request:', { error: String(error) });
     }
   };
 
@@ -164,7 +164,7 @@ export default function PrivacyControls() {
         setGhostModeUsers(prev => prev.filter(u => u.id !== userId));
       }
     } catch (error) {
-      logger.error('Error disabling ghost mode:', error);
+      logger.error('Error disabling ghost mode:', { error: String(error) });
     }
   };
 

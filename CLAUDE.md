@@ -252,6 +252,34 @@ pnpm storybook
 pnpm test:e2e
 ```
 
+## 🤖 AI Development with Claude Code
+
+### Quick Reference Files
+- **HIVE_MAP.md** - Complete codebase navigation and file locations
+- **AI_PATTERNS.md** - Copy-paste patterns for common tasks
+- **CLAUDE.md** - This file - project context and rules
+
+### Efficient Claude Commands
+```bash
+# Find components
+Glob: "**/atomic/atoms/*.tsx"
+
+# Search for patterns
+Grep: "export.*Surface" packages/ui/src/
+
+# Check specific implementation
+Read: packages/ui/src/components/surfaces/HivePostsSurface.tsx:1-50
+
+# Find all API routes
+Glob: "apps/web/src/app/api/**/route.ts"
+```
+
+### Context Optimization Tips
+1. Reference files with line numbers: `file.tsx:45-60`
+2. Use Glob/Grep before Read to find exact locations
+3. Check HIVE_MAP.md first to know where things are
+4. Copy patterns from AI_PATTERNS.md instead of creating from scratch
+
 ## ⚠️ Important Notes
 
 - **DO NOT claim the platform is production ready** - it has build failures

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Input, Label } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { User, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 import { useHandleAvailability } from '@hive/hooks';
 
 export function OnboardingNameStep() {

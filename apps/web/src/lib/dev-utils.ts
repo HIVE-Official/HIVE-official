@@ -1,4 +1,4 @@
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 /**
  * Development Utilities with PRODUCTION SAFETY
@@ -97,7 +97,7 @@ export function devWarn(...args: any[]) {
  */
 export function devError(...args: any[]) {
   if (isLocalDevelopment()) {
-    logger.error('[DEV ERROR]', ...args);
+    logger.error('[DEV ERROR]', { error: String(...args) });
   }
 }
 

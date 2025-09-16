@@ -1,6 +1,6 @@
 import { db, auth as firebaseAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@hive/core";
+import { logger  } from '@/types/core';
 
 export async function GET(request: NextRequest) {
   try {
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ spaces });
   } catch (error) {
-    logger.error("Error fetching available spaces:", error);
+    logger.error("Error fetching available spaces:", { error: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

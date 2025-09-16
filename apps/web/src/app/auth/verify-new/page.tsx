@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
@@ -100,7 +100,7 @@ function VerifyPageContent() {
         }, 2000);
 
       } catch (error) {
-        logger.error('Magic link verification failed:', error);
+        logger.error('Magic link verification failed:', { error: String(error) });
         
         setState({
           status: 'error',

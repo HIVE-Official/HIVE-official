@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -286,7 +286,7 @@ export function HiveLabBuilder({
         variant: 'default'
       });
     } catch (error) {
-      logger.error('Failed to save tool:', error);
+      logger.error('Failed to save tool:', { error: String(error) });
       toast({
         title: 'Save Failed',
         description: error instanceof Error ? error.message : 'Unable to save tool. Please try again.',
@@ -324,7 +324,7 @@ export function HiveLabBuilder({
         variant: 'default'
       });
     } catch (error) {
-      logger.error('Failed to load tool:', error);
+      logger.error('Failed to load tool:', { error: String(error) });
       toast({
         title: 'Load Failed',
         description: 'Unable to load tool. The file may be corrupted.',
@@ -354,7 +354,7 @@ export function HiveLabBuilder({
         variant: 'default'
       });
     } catch (error) {
-      logger.error('Failed to delete tool:', error);
+      logger.error('Failed to delete tool:', { error: String(error) });
       toast({
         title: 'Delete Failed',
         description: error instanceof Error ? error.message : 'Unable to delete tool. Please try again.',
@@ -412,7 +412,7 @@ export function HiveLabBuilder({
       // Load the duplicated tool
       handleLoadTool(result.tool);
     } catch (error) {
-      logger.error('Failed to duplicate tool:', error);
+      logger.error('Failed to duplicate tool:', { error: String(error) });
       toast({
         title: 'Duplicate Failed',
         description: error instanceof Error ? error.message : 'Unable to duplicate tool. Please try again.',

@@ -1,28 +1,95 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local", "NODE_ENV"],
+  "globalEnv": [
+    "NODE_ENV",
+    "NEXT_PUBLIC_FIREBASE_API_KEY",
+    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
+    "NEXT_PUBLIC_FIREBASE_PROJECT_ID"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "storybook-static/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "storybook-static/**",
+        "lib/**",
+        "build/**"
+      ],
+      "cache": true,
+      "env": [
+        "NODE_ENV",
+        "NEXT_PUBLIC_*"
+      ],
+      "inputs": [
+        "src/**",
+        "app/**",
+        "pages/**",
+        "components/**",
+        "lib/**",
+        "!**/*.test.*",
+        "!**/*.spec.*",
+        "!**/*.stories.*",
+        "package.json",
+        "tsconfig.json",
+        "next.config.*",
+        "tailwind.config.*",
+        "postcss.config.*"
+      ]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build"]
     },
     "lint": {
-      "outputs": []
+      "outputs": [],
+      "cache": true,
+      "inputs": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx",
+        "**/*.mjs",
+        ".eslintrc.*",
+        "eslint.config.*"
+      ]
     },
     "test": {
-      "outputs": ["coverage/**"]
+      "outputs": ["coverage/**"],
+      "cache": true,
+      "inputs": [
+        "src/**",
+        "test/**",
+        "**/*.test.*",
+        "**/*.spec.*",
+        "vitest.config.*",
+        "jest.config.*"
+      ]
     },
     "test:e2e": {
       "dependsOn": ["build"],
-      "outputs": []
+      "outputs": [],
+      "cache": false
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],
-      "outputs": []
+      "outputs": [
+        "*.tsbuildinfo",
+        "tsconfig.tsbuildinfo"
+      ],
+      "cache": true,
+      "inputs": [
+        "**/*.ts",
+        "**/*.tsx",
+        "!**/*.test.*",
+        "!**/*.spec.*",
+        "!**/*.stories.*",
+        "tsconfig.json",
+        "tsconfig.*.json"
+      ]
     },
     "clean": {
       "cache": false,
@@ -33,7 +100,11 @@
       "persistent": true
     },
     "build-storybook": {
-      "outputs": ["storybook-static/**"]
+      "outputs": ["storybook-static/**"],
+      "cache": true
     }
+  },
+  "remoteCache": {
+    "signature": true
   }
-} 
+}

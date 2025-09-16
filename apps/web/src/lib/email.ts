@@ -1,5 +1,5 @@
 import sgMail from '@sendgrid/mail';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 // Initialize SendGrid with API key
 let isInitialized = false;
@@ -56,7 +56,7 @@ export async function sendMagicLinkEmail({
     await sgMail.send(msg);
     
   } catch (error) {
-    logger.error('Error sending magic link email:', error);
+    logger.error('Error sending magic link email:', { error: String(error) });
     throw new Error('Failed to send magic link email');
   }
 }

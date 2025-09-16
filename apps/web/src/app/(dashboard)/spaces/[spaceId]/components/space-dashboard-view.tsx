@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -194,7 +194,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
         setSpaceData(transformedData);
         
       } catch (error) {
-        logger.error('Failed to load space data:', error);
+        logger.error('Failed to load space data:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }
@@ -226,7 +226,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
       
       setSpaceData(prev => prev ? { ...prev, isJoined: true, memberCount: prev.memberCount + 1 } : prev);
     } catch (error) {
-      logger.error('Failed to join space:', error);
+      logger.error('Failed to join space:', { error: String(error) });
     } finally {
       setIsJoining(false);
     }
@@ -255,7 +255,7 @@ export function SpaceDashboardView({ spaceId }: SpaceDashboardViewProps) {
       
       setSpaceData(prev => prev ? { ...prev, isJoined: false, memberCount: prev.memberCount - 1 } : prev);
     } catch (error) {
-      logger.error('Failed to leave space:', error);
+      logger.error('Failed to leave space:', { error: String(error) });
     } finally {
       setIsLeaving(false);
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -286,7 +286,7 @@ function StatusUpdateModal({ onClose }: { onClose: () => void }) {
                   logger.error('Failed to update status');
                 }
               } catch (error) {
-                logger.error('Error updating status:', error);
+                logger.error('Error updating status:', { error: String(error) });
               } finally {
                 setIsUpdating(false);
               }

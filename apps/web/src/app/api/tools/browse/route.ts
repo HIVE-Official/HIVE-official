@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { dbAdmin as adminDb } from "@/lib/firebase/admin/firebase-admin";
 import { getCurrentUser } from "@/lib/auth/providers/auth-server";
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 

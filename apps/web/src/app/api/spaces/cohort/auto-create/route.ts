@@ -2,9 +2,10 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/providers/auth-server';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
-import { generateCohortSpaces, type CohortSpaceConfig } from '@hive/core';
+import type { CohortSpaceConfig } from '@/types/core';
+import { generateCohortSpaces } from '@/types/core';
 import { z } from 'zod';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const createCohortSpacesSchema = z.object({

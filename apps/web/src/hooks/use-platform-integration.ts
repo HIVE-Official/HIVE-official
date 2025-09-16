@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useCallback, useMemo as _useMemo } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useUnifiedStore, useFeedState, useSpacesState, useToolsState, useNotificationsState, useRealtimeState } from '@/lib/unified-state-management';
 import { getPlatformIntegration, type FeedItem } from '@/lib/platform-integration';
@@ -48,7 +48,7 @@ export function usePlatformIntegration() {
         setIsInitialized(true);
         setIntegrationError(null);
       } catch (error) {
-        logger.error('Failed to initialize platform integration:', error);
+        logger.error('Failed to initialize platform integration:', { error: String(error) });
         setIntegrationError(error instanceof Error ? error.message : 'Initialization failed');
       }
     }
@@ -106,7 +106,7 @@ export function useUnifiedFeed(options: {
         ...customOptions
       });
     } catch (error) {
-      logger.error('Error getting feed data:', error);
+      logger.error('Error getting feed data:', { error: String(error) });
       return [];
     }
   }, [user, limit, sources]);
@@ -177,7 +177,7 @@ export function useSpaceIntegration(spaceId: string | null) {
         setSpaceMembers(membersData.members || []);
       }
     } catch (error) {
-      logger.error('Error loading space data:', error);
+      logger.error('Error loading space data:', { error: String(error) });
     }
   }, [spaces]);
 
@@ -200,7 +200,7 @@ export function useSpaceIntegration(spaceId: string | null) {
         return newPost.post;
       }
     } catch (error) {
-      logger.error('Error creating post:', error);
+      logger.error('Error creating post:', { error: String(error) });
     }
     return null;
   }, [spaceId, user]);
@@ -221,7 +221,7 @@ export function useSpaceIntegration(spaceId: string | null) {
         return true;
       }
     } catch (error) {
-      logger.error('Error joining space:', error);
+      logger.error('Error joining space:', { error: String(error) });
     }
     return false;
   }, [user, refresh]);
@@ -274,7 +274,7 @@ export function useToolIntegration(toolId: string | null) {
         setToolDeployments(deploymentsData.deployments || []);
       }
     } catch (error) {
-      logger.error('Error loading tool data:', error);
+      logger.error('Error loading tool data:', { error: String(error) });
     }
   }, [tools]);
 
@@ -297,7 +297,7 @@ export function useToolIntegration(toolId: string | null) {
         return deployment.deployment;
       }
     } catch (error) {
-      logger.error('Error deploying tool:', error);
+      logger.error('Error deploying tool:', { error: String(error) });
     }
     return null;
   }, [toolId, user]);
@@ -317,7 +317,7 @@ export function useToolIntegration(toolId: string | null) {
 
       return response.ok;
     } catch (error) {
-      logger.error('Error sharing tool:', error);
+      logger.error('Error sharing tool:', { error: String(error) });
       return false;
     }
   }, [toolId, user]);
@@ -356,7 +356,7 @@ export function useSearchIntegration() {
       setSearchResults(results);
       return results;
     } catch (error) {
-      logger.error('Search error:', error);
+      logger.error('Search error:', { error: String(error) });
       setSearchError(error instanceof Error ? error.message : 'Search failed');
       return [];
     } finally {
@@ -376,7 +376,7 @@ export function useSearchIntegration() {
       setSuggestions(results);
       return results;
     } catch (error) {
-      logger.error('Suggestions error:', error);
+      logger.error('Suggestions error:', { error: String(error) });
       return [];
     }
   }, []);
@@ -411,7 +411,7 @@ export function useNotificationIntegration() {
       const manager = getNotificationManager();
       await manager.createNotification(type, targetUserId, data);
     } catch (error) {
-      logger.error('Error sending notification:', error);
+      logger.error('Error sending notification:', { error: String(error) });
     }
   }, [user]);
 
@@ -422,7 +422,7 @@ export function useNotificationIntegration() {
       const manager = getNotificationManager();
       await manager.updateUserPreferences(user.uid, preferences);
     } catch (error) {
-      logger.error('Error updating notification preferences:', error);
+      logger.error('Error updating notification preferences:', { error: String(error) });
     }
   }, [user]);
 
@@ -486,7 +486,7 @@ async function getAuthToken(): Promise<string> {
         : session.token;
     }
   } catch (error) {
-    logger.error('Error getting auth token:', error);
+    logger.error('Error getting auth token:', { error: String(error) });
   }
   
   return '';
@@ -547,7 +547,7 @@ export function useSurfaceIntegration(surfaceType: 'posts' | 'members' | 'events
 
       setSurfaceData(data);
     } catch (err) {
-      logger.error('Error loading ${surfaceType} data:', err);
+      logger.error('Error loading ${surfaceType} data:', { error: String(err) });
       setError(err instanceof Error ? err.message : `Failed to load ${surfaceType}`);
     } finally {
       setLoading(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";

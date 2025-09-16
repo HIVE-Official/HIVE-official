@@ -4,7 +4,7 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { getCurrentUser } from "@/lib/server-auth";
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 
 const coordinationResponseSchema = z.object({

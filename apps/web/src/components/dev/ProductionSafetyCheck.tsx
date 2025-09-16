@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { isLocalDevelopment, getEnvironmentName } from '@/lib/dev-utils';
 
@@ -48,7 +48,7 @@ export function ProductionSafetyCheck() {
       
       // If any unsafe conditions found in production, log error (don't throw to not break app)
       if (unsafeConditions.length > 0 && environment === 'Production') {
-        logger.error('⚠️ SECURITY WARNING: Development features detected in production:', unsafeConditions);
+        logger.error('⚠️ SECURITY WARNING: Development features detected in production:', { error: String(unsafeConditions) });
         // Could also send this to error tracking service
       }
     }

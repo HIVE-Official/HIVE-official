@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Mail, Loader2, ArrowLeft, CheckCircle } from 'lucide-react'
 import Image from 'next/image'
-import { logger } from '@hive/core'
+import { logger  } from '@/types/core';
 import { ROUTES } from '@/lib/routes'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase'

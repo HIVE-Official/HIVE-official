@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 import { 
   HiveCard as Card, 
@@ -540,7 +540,7 @@ function CreateFeatureFlagDialog({ open, onOpenChange, onCreated }: CreateFeatur
               <Label htmlFor="type">Type</Label>
               <Select 
                 value={formData.type} 
-                onValueChange={(value: string) => setFormData(prev => ({ ...prev, type: value as const }))}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, type: value as 'release' | 'experiment' | 'operational' | 'permission' }))}
               >
                 <SelectTrigger className="bg-gray-800 border-gray-600">
                   <SelectValue />
@@ -572,7 +572,7 @@ function CreateFeatureFlagDialog({ open, onOpenChange, onCreated }: CreateFeatur
               <Label htmlFor="environment">Environment</Label>
               <Select 
                 value={formData.environment} 
-                onValueChange={(value: string) => setFormData(prev => ({ ...prev, environment: value as const }))}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, environment: value as 'development' | 'staging' | 'production' }))}
               >
                 <SelectTrigger className="bg-gray-800 border-gray-600">
                   <SelectValue />

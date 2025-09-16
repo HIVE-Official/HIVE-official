@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@hive/ui';
 import Link from 'next/link';
-import { type Tool } from '@hive/core';
+import type { Tool  } from '@/types/core';
 
 interface ToolCardProps {
   tool: Tool;

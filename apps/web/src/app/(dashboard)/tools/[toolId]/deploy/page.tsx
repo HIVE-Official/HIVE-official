@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter, useParams } from 'next/navigation';
 import { Card, Button } from "@hive/ui";
@@ -182,7 +182,7 @@ export default function ToolDeployPage() {
 
       setStep('success');
     } catch (err) {
-      logger.error('Deployment error:', err);
+      logger.error('Deployment error:', { error: String(err) });
       setError(err instanceof Error ? err.message : 'Failed to deploy tool');
     } finally {
       setIsLoading(false);

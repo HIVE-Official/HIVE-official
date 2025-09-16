@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 import { 
   HiveCard as Card, 

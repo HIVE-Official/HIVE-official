@@ -1,8 +1,7 @@
 "use client";
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { queryClient } from '@hive/hooks';
 import { ShellProvider } from "@hive/ui";
 import { ModalProvider } from '../components/ui/modal-system';
@@ -10,8 +9,12 @@ import ErrorProvider from '../components/error-provider';
 import { AuthErrorBoundary } from '../components/auth/auth-error-boundary';
 import { FirebaseAuthProvider } from '../providers/firebase-auth-provider';
 
-export function Providers({ children }: { children: React.ReactNode }) {
+// Lazy load dev tools only in development
+const ReactQueryDevtools = process.env.NODE_ENV === 'development' 
+  ? lazy(() => import('@tanstack/react-query-devtools').then(mod => ({ default: mod.ReactQueryDevtools })))
+  : () => null;
 
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorProvider>
@@ -21,15 +24,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
               <ShellProvider>
                 {children}
                 {process.env.NODE_ENV === 'development' && (
-                  <ReactQueryDevtools 
-                    initialIsOpen={false} 
-                    position="bottom-left"
-                    panelProps={{
-                      style: {
-                        zIndex: 999999,
-                      }
-                    }}
-                  />
+                  <Suspense fallback={null}>
+                    <ReactQueryDevtools 
+                      initialIsOpen={false} 
+                      position="bottom-left"
+                      panelProps={{
+                        style: {
+                          zIndex: 999999,
+                        }
+                      }}
+                    />
+                  </Suspense>
                 )}
               </ShellProvider>
             </FirebaseAuthProvider>

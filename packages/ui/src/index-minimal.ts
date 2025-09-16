@@ -70,7 +70,7 @@ export { LoadingOrchestrator as PageLoader } from './components/loading/LoadingO
 
 // === BASIC UI COMPONENTS (from existing system) ===
 export { ButtonEnhanced as Button } from './atomic/atoms/button-enhanced';
-export { HiveInput as Input } from './components/hive-input';
+export { InputEnhanced as Input } from './atomic/atoms/input-enhanced';
 export { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from './atomic/ui/card';
 export { HiveBadge as Badge, HiveBadge } from './components/hive-badge';
 export { HiveModal } from './components/hive-modal';

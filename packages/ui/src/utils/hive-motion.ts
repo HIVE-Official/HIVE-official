@@ -66,13 +66,13 @@ export const hiveTransition = {
   colors: `background-color ${HIVE_DURATIONS.standard}ms ${HIVE_MOTION_CURVE_CSS}, border-color ${HIVE_DURATIONS.standard}ms ${HIVE_MOTION_CURVE_CSS}, color ${HIVE_DURATIONS.standard}ms ${HIVE_MOTION_CURVE_CSS}`,
 } as const;
 
-// Tailwind CSS class utilities - using static values to avoid Tailwind warnings
+// Tailwind CSS class utilities - using named duration classes to avoid warnings
 export const hiveTailwindTransition = {
   /** Standard transition classes for Tailwind */
-  standard: 'transition-all duration-[180ms] ease-[cubic-bezier(0.33,0.65,0,1)]',
-  micro: 'transition-all duration-[90ms] ease-[cubic-bezier(0.33,0.65,0,1)]',
-  complex: 'transition-all duration-[240ms] ease-[cubic-bezier(0.33,0.65,0,1)]',
-  cinematic: 'transition-all duration-[400ms] ease-[cubic-bezier(0.33,0.65,0,1)]',
+  standard: 'transition-all duration-180 ease-custom-bezier',
+  micro: 'transition-all duration-90 ease-custom-bezier',
+  complex: 'transition-all duration-240 ease-custom-bezier',
+  cinematic: 'transition-all duration-400 ease-custom-bezier',
 } as const;
 
 // Animation presets for common patterns

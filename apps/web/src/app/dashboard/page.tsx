@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -42,7 +42,7 @@ export default function DashboardPage() {
           router.push('/onboarding');
         }
       } catch (error) {
-        logger.error('Error fetching user data:', error);
+        logger.error('Error fetching user data:', { error: String(error) });
         setUserData({
           email: user.email,
           displayName: user.displayName || 'User',
@@ -59,7 +59,7 @@ export default function DashboardPage() {
       await signOut(auth);
       router.push('/');
     } catch (error) {
-      logger.error('Error signing out:', error);
+      logger.error('Error signing out:', { error: String(error) });
     }
   };
 

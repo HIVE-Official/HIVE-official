@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from '../../../../../components/error-boundary';
@@ -68,6 +68,8 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
   const [analytics, setAnalytics] = useState<SpaceAnalytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     // Resolve params Promise
     const resolveParams = async () => {
@@ -76,7 +78,11 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     };
     resolveParams();
   }, [params]);
-  const [error, setError] = useState<string | null>(null);
+
+  const loadAnalytics = useCallback(async () => {
+    if (!spaceId) return;
+    
+    try {
       const response = await fetch(`/api/spaces/${spaceId}/analytics?timeRange=30d`);
       const data = await response.json() as { success?: boolean; analytics?: SpaceAnalytics; message?: string };
 
@@ -94,7 +100,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
         setError('Analytics data not available');
       }
     } catch (err) {
-      logger.error('Error loading space analytics:', err);
+      logger.error('Error loading space analytics:', { error: String(err) });
       setError(err instanceof Error ? err.message : 'Failed to load analytics');
     } finally {
       setIsLoading(false);
@@ -143,7 +149,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     return (
       <PageContainer 
         title="Loading Analytics..." 
-        maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
           { label: "Analytics", icon: <BarChart3 /> }
@@ -163,7 +168,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     return (
       <PageContainer 
         title="Analytics Error" 
-        maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
           { label: "Analytics", icon: <BarChart3 /> }
@@ -201,7 +205,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     return (
       <PageContainer 
         title="No Analytics Data" 
-        maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
           { label: "Analytics", icon: <BarChart3 /> }
@@ -225,7 +228,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
       <PageContainer
         title="Space Analytics"
         subtitle={`Insights and metrics for ${analytics.spaceName}`}
-        maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
           { label: analytics.spaceName, href: `/spaces/${spaceId}` },

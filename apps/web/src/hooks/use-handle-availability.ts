@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 
 interface HandleAvailabilityResult {
   available: boolean | null;

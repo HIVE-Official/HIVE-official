@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
@@ -7,7 +7,7 @@ import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-re
 import { cn } from "@/lib/utils";
 import { Button, Card } from "@hive/ui";
 import { getDefaultAvatarOptions } from "@/lib/utils/generators/avatar-generator";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HivePhotoStepProps {
   data: HiveOnboardingData;
@@ -49,7 +49,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
       setOriginalImage(previewUrl);
       setShowCropper(true);
     } catch (error) {
-      logger.error('Upload failed:', error);
+      logger.error('Upload failed:', { error: String(error) });
       setError("Failed to upload image");
     } finally {
       setIsUploading(false);

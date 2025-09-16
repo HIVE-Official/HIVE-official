@@ -1,4 +1,4 @@
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 /**
  * Tool Navigation Helper
@@ -125,7 +125,7 @@ export class ToolNavigation {
       await navigator.clipboard.writeText(shareUrl);
       return true;
     } catch (error) {
-      logger.error('Failed to copy to clipboard:', error);
+      logger.error('Failed to copy to clipboard:', { error: String(error) });
       return false;
     }
   }

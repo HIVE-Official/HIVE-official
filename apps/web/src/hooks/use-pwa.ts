@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 interface PWAInstallPrompt extends Event {
   prompt(): Promise<void>;
@@ -48,7 +48,7 @@ export function usePWA(): UsePWAReturn {
           });
 
         } catch (error) {
-          logger.error('HIVE PWA: Service Worker registration failed', error);
+          logger.error('HIVE PWA: Service Worker registration failed', { error: String(error) });
         }
       });
     }
@@ -132,7 +132,7 @@ export function usePWA(): UsePWAReturn {
         // 
       }
     } catch (error) {
-      logger.error('HIVE PWA: Install failed for campus student', error);
+      logger.error('HIVE PWA: Install failed for campus student', { error: String(error) });
     }
   };
 
@@ -173,7 +173,7 @@ export const PWAUtils = {
         });
         // 
       } catch (error) {
-        logger.error('HIVE PWA: Campus sharing failed', error);
+        logger.error('HIVE PWA: Campus sharing failed', { error: String(error) });
       }
     } else {
       // Fallback for campus browsers without native sharing

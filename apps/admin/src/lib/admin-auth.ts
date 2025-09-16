@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase-admin/auth';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@hive/core';
 
 import { NextRequest } from 'next/server';
 
@@ -113,6 +113,9 @@ export async function verifyAdminSession(): Promise<AdminUser | null> {
     if (sessionToken === 'test-session' && process.env.NODE_ENV === 'development') {
       return await getAdminUser('test-user');
     }
+    
+    return null;
+  } catch (error) {
     logger.error('Admin session verification error:', error);
     return null;
   }
@@ -122,7 +125,8 @@ export async function verifyAdminSession(): Promise<AdminUser | null> {
  * Create admin session
  */
 export function createAdminSession(userId: string): string {
-  return admin.permissions.includes(permission) || admin.role === 'admin';
+  // Generate a session token (in production, use a proper token generator)
+  return `session_${userId}_${Date.now()}`;
 }
 
 /**

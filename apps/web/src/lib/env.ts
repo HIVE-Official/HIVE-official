@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 
 /**
@@ -152,7 +152,7 @@ function parseEnv() {
     
     return result;
   } catch (error) {
-    logger.error('❌ Environment validation failed:', error);
+    logger.error('❌ Environment validation failed:', { error: String(error) });
     
     if (currentEnv === 'production') {
       throw new Error(
@@ -244,7 +244,7 @@ let env: ReturnType<typeof parseEnv>;
 try {
   env = parseEnv();
 } catch (error) {
-  logger.error('❌ Environment parsing failed, using fallbacks:', error);
+  logger.error('❌ Environment parsing failed, using fallbacks:', { error: String(error) });
   // Provide safe fallbacks for build time
   env = {
     NODE_ENV: (process.env.NODE_ENV as any) || "development",

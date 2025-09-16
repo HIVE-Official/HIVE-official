@@ -13,7 +13,7 @@
  */
 
 import { auth } from './firebase/client/firebase-client';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { signOut } from 'firebase/auth';
 
@@ -100,7 +100,7 @@ export async function getSecureAuthHeadersAsync(): Promise<HeadersInit> {
 
     return headers;
   } catch (error) {
-    logger.error('Failed to get ID token:', error);
+    logger.error('Failed to get ID token:', { error: String(error) });
     throw new AuthenticationError('Failed to retrieve authentication token');
   }
 }
@@ -129,7 +129,7 @@ export function handleAuthError(
 
   // Log error for debugging (in development only)
   if (process.env.NODE_ENV === 'development') {
-    logger.error('Authentication error:', error);
+    logger.error('Authentication error:', { error: String(error) });
   }
 
   // Determine error type and handle accordingly
@@ -176,7 +176,7 @@ function storeToken(token: string): void {
     const expiry = Date.now() + (60 * 60 * 1000); // 1 hour from now
     sessionStorage.setItem(TOKEN_EXPIRY_KEY, expiry.toString());
   } catch (error) {
-    logger.error('Failed to store token:', error);
+    logger.error('Failed to store token:', { error: String(error) });
   }
 }
 
@@ -198,7 +198,7 @@ function getStoredToken(): string | null {
     
     return null;
   } catch (error) {
-    logger.error('Failed to retrieve token:', error);
+    logger.error('Failed to retrieve token:', { error: String(error) });
     return null;
   }
 }
@@ -240,7 +240,7 @@ async function handleTokenExpired(redirect: boolean): Promise<void> {
       return;
     }
   } catch (error) {
-    logger.error('Failed to refresh token:', error);
+    logger.error('Failed to refresh token:', { error: String(error) });
   }
   
   // If refresh fails, clear storage and redirect
@@ -263,7 +263,7 @@ export function clearAuthStorage(): void {
     localStorage.removeItem('hive_user_id');
     localStorage.removeItem('hive_user_email');
   } catch (error) {
-    logger.error('Failed to clear auth storage:', error);
+    logger.error('Failed to clear auth storage:', { error: String(error) });
   }
 }
 
@@ -297,7 +297,7 @@ function showErrorNotification(message: string): void {
     
     // Fallback to console in development
     if (process.env.NODE_ENV === 'development') {
-      logger.error('Notification:', message);
+      logger.error('Notification:', { error: String(message) });
     }
   }
 }
@@ -318,7 +318,7 @@ export async function secureSignOut(): Promise<void> {
       window.location.href = '/';
     }
   } catch (error) {
-    logger.error('Error during sign out:', error);
+    logger.error('Error during sign out:', { error: String(error) });
     // Even if Firebase sign out fails, clear local storage
     clearAuthStorage();
     

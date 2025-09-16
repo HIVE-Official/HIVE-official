@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -108,7 +108,7 @@ export default function RitualsPage() {
       setRituals(data.rituals || []);
 
     } catch (err) {
-      logger.error('Failed to load rituals data:', err);
+      logger.error('Failed to load rituals data:', { error: String(err) });
       setError('Failed to load rituals data');
       
       // Set some mock data for development
@@ -196,7 +196,7 @@ export default function RitualsPage() {
       loadRitualsData();
       
     } catch (error) {
-      logger.error('Failed to join ritual:', error);
+      logger.error('Failed to join ritual:', { error: String(error) });
       toast.error('Failed to join ritual', 'Please try again');
     }
   };
@@ -218,7 +218,7 @@ export default function RitualsPage() {
       loadRitualsData();
       
     } catch (error) {
-      logger.error('Failed to complete ritual:', error);
+      logger.error('Failed to complete ritual:', { error: String(error) });
       toast.error('Failed to complete ritual', 'Please try again');
     }
   };
@@ -482,6 +482,7 @@ export default function RitualsPage() {
                 ritualId: r.id,
                 ritual: {
                   id: r.id,
+                  name: r.title, // Map title to name for type compatibility
                   title: r.title,
                   description: r.description,
                   type: r.type,
@@ -511,7 +512,7 @@ export default function RitualsPage() {
               rewards={rewards}
               achievements={achievements}
               onViewReward={(reward) => {
-                toast.success('Reward Details', `${reward.title}: ${reward.description}`);
+                toast.success('Reward Details', `${reward.name}: ${reward.description}`);
               }}
             />
           )}
@@ -539,7 +540,7 @@ export default function RitualsPage() {
               // Refresh rituals data
               loadRitualsData();
             } catch (error) {
-              logger.error('Failed to create ritual:', error);
+              logger.error('Failed to create ritual:', { error: String(error) });
               toast.error('Failed to create ritual', 'Please try again');
             }
           }}

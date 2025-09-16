@@ -4,7 +4,8 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Badge } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
-import { ALL_MAJORS, logger, type AcademicLevel, type MajorType } from '@hive/core';
+import type { AcademicLevel, MajorType } from '@/types/core';
+import { ALL_MAJORS, logger } from '@/types/core';
 import { GraduationCap, X, Loader2, Search } from 'lucide-react';
 
 // Generate graduation years (current year + 8 years)

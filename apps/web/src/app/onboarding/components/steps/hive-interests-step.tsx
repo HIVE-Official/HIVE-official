@@ -4,7 +4,7 @@ import { Heart, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input, Badge, Card } from "@hive/ui";
 import { INTEREST_CATEGORIES, type InterestCategory } from "@/constants/interests";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveInterestsStepProps {
   data: HiveOnboardingData;

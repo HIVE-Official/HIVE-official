@@ -333,4 +333,7 @@ export {
   selectVariants 
 };
 
-export type { SelectOption as SelectOptionEnhanced };
+export type { 
+  SelectOption as SelectOptionEnhanced,
+  SelectProps as SelectEnhancedProps 
+};

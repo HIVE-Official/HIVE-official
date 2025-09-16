@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { Button, Badge } from '@hive/ui';
 import { 
@@ -133,7 +133,7 @@ export function IdentityModule({ editable = true, onEdit }: IdentityModuleProps)
         fileInputRef.current.value = '';
       }
     } catch (error) {
-      logger.error('Error uploading photo:', error);
+      logger.error('Error uploading photo:', { error: String(error) });
       alert('Failed to upload photo. Please try again.');
     } finally {
       setIsUploadingPhoto(false);

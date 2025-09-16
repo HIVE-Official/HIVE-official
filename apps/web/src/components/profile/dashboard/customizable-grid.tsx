@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable';
@@ -162,7 +162,7 @@ export function CustomizableGrid({
         setHasUnsavedChanges(false);
       }
     } catch (error) {
-      logger.error('Error resetting layout:', error);
+      logger.error('Error resetting layout:', { error: String(error) });
     }
   }, [device]);
 
@@ -191,7 +191,7 @@ export function CustomizableGrid({
         setHasUnsavedChanges(false);
       }
     } catch (error) {
-      logger.error('Error saving layout:', error);
+      logger.error('Error saving layout:', { error: String(error) });
     }
   }, [layout, currentLayout, device, hasUnsavedChanges, onLayoutChange]);
 

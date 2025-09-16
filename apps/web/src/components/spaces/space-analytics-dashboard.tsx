@@ -196,6 +196,11 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       setTimeSeriesData(mockTimeSeries);
       setLastUpdated(new Date());
     } catch (error) {
+      console.error('Failed to fetch analytics:', error);
+    }
+  };
+  
+  const healthScoreColor = useMemo(() => {
     if (!metrics) return 'text-zinc-400';
     const score = metrics.overview.healthScore;
     if (score >= 8) return 'text-green-400';

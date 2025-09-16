@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin, authAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuthTokenFromRequest } from "@/lib/auth/auth";
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 import { FieldValue } from 'firebase-admin/firestore';
 

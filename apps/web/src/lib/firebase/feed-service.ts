@@ -21,7 +21,7 @@ import {
   Timestamp,
   Unsubscribe
 } from 'firebase/firestore';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { db } from '@/lib/firebase/client/firebase-client';
 
@@ -125,7 +125,7 @@ export class FeedService {
 
       return docRef.id;
     } catch (error) {
-      logger.error('Error creating post:', error);
+      logger.error('Error creating post:', { error: String(error) });
       throw error;
     }
   }
@@ -198,7 +198,7 @@ export class FeedService {
 
       return { posts, lastDoc };
     } catch (error) {
-      logger.error('Error fetching feed posts:', error);
+      logger.error('Error fetching feed posts:', { error: String(error) });
       throw error;
     }
   }
@@ -231,7 +231,7 @@ export class FeedService {
         });
         onUpdate(posts);
       }, (error: any) => {
-        logger.error('Feed subscription error:', error);
+        logger.error('Feed subscription error:', { error: String(error) });
       });
 
       this.listeners.set(listenerId, unsubscribe);
@@ -245,7 +245,7 @@ export class FeedService {
         }
       };
     } catch (error) {
-      logger.error('Error setting up feed subscription:', error);
+      logger.error('Error setting up feed subscription:', { error: String(error) });
       return () => {};
     }
   }
@@ -279,7 +279,7 @@ export class FeedService {
         postId
       );
     } catch (error) {
-      logger.error('Error toggling like:', error);
+      logger.error('Error toggling like:', { error: String(error) });
       throw error;
     }
   }
@@ -315,7 +315,7 @@ export class FeedService {
         });
       }
     } catch (error) {
-      logger.error('Error toggling bookmark:', error);
+      logger.error('Error toggling bookmark:', { error: String(error) });
       throw error;
     }
   }
@@ -344,7 +344,7 @@ export class FeedService {
       // Track activity
       await this.trackUserActivity(userId, 'comment_added', postId);
     } catch (error) {
-      logger.error('Error adding comment:', error);
+      logger.error('Error adding comment:', { error: String(error) });
       throw error;
     }
   }
@@ -361,7 +361,7 @@ export class FeedService {
       // Track share activity
       await this.trackUserActivity(userId, 'post_shared', postId);
     } catch (error) {
-      logger.error('Error sharing post:', error);
+      logger.error('Error sharing post:', { error: String(error) });
       throw error;
     }
   }
@@ -377,7 +377,7 @@ export class FeedService {
       const snapshot = await getDocs(membershipsQuery);
       return snapshot.docs.map(doc => doc.data().spaceId);
     } catch (error) {
-      logger.error('Error fetching user spaces:', error);
+      logger.error('Error fetching user spaces:', { error: String(error) });
       return [];
     }
   }
@@ -391,7 +391,7 @@ export class FeedService {
       const snapshot = await getDocs(followingQuery);
       return snapshot.docs.map(doc => doc.id);
     } catch (error) {
-      logger.error('Error fetching following list:', error);
+      logger.error('Error fetching following list:', { error: String(error) });
       return [];
     }
   }
@@ -408,7 +408,7 @@ export class FeedService {
         [`stats.${activityType}`]: increment(1)
       });
     } catch (error) {
-      logger.error('Error updating space activity:', error);
+      logger.error('Error updating space activity:', { error: String(error) });
     }
   }
 
@@ -427,7 +427,7 @@ export class FeedService {
         date: new Date().toISOString().split('T')[0]
       });
     } catch (error) {
-      logger.error('Error tracking activity:', error);
+      logger.error('Error tracking activity:', { error: String(error) });
     }
   }
 
@@ -441,7 +441,7 @@ export class FeedService {
       );
       await Promise.all(batch);
     } catch (error) {
-      logger.error('Error incrementing view counts:', error);
+      logger.error('Error incrementing view counts:', { error: String(error) });
     }
   }
 

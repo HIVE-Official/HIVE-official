@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   collection, 
@@ -134,7 +134,7 @@ export function useRealtimePosts({
           // Log for debugging
         },
         (err: any) => {
-          logger.error('[Realtime] Error subscribing to posts:', err);
+          logger.error('[Realtime] Error subscribing to posts:', { error: String(err) });
           setError(err as Error);
           setLoading(false);
           setSubscribed(false);
@@ -143,7 +143,7 @@ export function useRealtimePosts({
 
       setUnsubscribe(() => unsub);
     } catch (err) {
-      logger.error('[Realtime] Error setting up subscription:', err);
+      logger.error('[Realtime] Error setting up subscription:', { error: String(err) });
       setError(err as Error);
       setLoading(false);
     }
@@ -183,7 +183,7 @@ export function useRealtimePosts({
         setLoading(false);
       },
       (err: any) => {
-        logger.error('[Realtime] Error subscribing to comments:', err);
+        logger.error('[Realtime] Error subscribing to comments:', { error: String(err) });
         setError(err as Error);
         setLoading(false);
       }

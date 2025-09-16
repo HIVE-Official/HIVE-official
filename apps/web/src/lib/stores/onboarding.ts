@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { logger } from "@hive/core";
+import { logger  } from '@/types/core';
 
 // Unified onboarding data interface that matches the main wizard
 export interface HiveOnboardingData {

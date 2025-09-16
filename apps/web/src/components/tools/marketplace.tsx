@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -145,7 +145,7 @@ export function ToolsMarketplace({
       
       setTools(data.tools || []);
     } catch (error) {
-      logger.error('Error fetching tools:', error);
+      logger.error('Error fetching tools:', { error: String(error) });
       // Set mock data for demo
       setTools(getMockTools());
     } finally {
@@ -292,7 +292,7 @@ export function ToolsMarketplace({
 
       onDeployTool?.(tool);
     } catch (error) {
-      logger.error('Error installing tool:', error);
+      logger.error('Error installing tool:', { error: String(error) });
     }
   };
 

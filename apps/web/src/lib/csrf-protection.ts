@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { createHash, randomBytes } from 'crypto';
 import { logSecurityEvent } from './utils/structured-logger';
@@ -285,7 +285,7 @@ export class CSRFProtection {
       };
 
     } catch (error) {
-      logger.error('CSRF validation error:', error);
+      logger.error('CSRF validation error:', { error: String(error) });
       
       await logSecurityEvent('csrf', {
         operation: 'validation_error',
@@ -673,7 +673,7 @@ export function withCSRFProtection(
 
       return handler(request, csrfResult.token);
     } catch (error) {
-      logger.error('CSRF middleware error:', error);
+      logger.error('CSRF middleware error:', { error: String(error) });
       return NextResponse.json(
         { error: 'CSRF protection service unavailable' },
         { status: 503 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { CheckboxEnhanced as Checkbox } from './checkbox-enhanced';
+import { Checkbox } from './checkbox-enhanced';
 import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';

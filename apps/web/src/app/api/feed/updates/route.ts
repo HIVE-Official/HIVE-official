@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
 import { getFeedUpdates, markFeedAsViewed, refreshFeedCache } from '@/lib/real-time-feed';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Real-time feed update schema

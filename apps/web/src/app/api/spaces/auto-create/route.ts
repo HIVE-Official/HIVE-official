@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { generateAutoSpaces, type AutoSpaceConfig } from '@/lib/auto-space-creation';
 
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
         }
 
       } catch (error) {
-        logger.error('Error processing space ${template.name}:', error);
+        logger.error('Error processing space ${template.name}:', { error: String(error) });
         results.errors.push(`Error processing ${template.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Auto-space creation API error:', error);
+    logger.error('Auto-space creation API error:', { error: String(error) });
     return NextResponse.json(
       { 
         error: 'Internal server error',
@@ -220,7 +220,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Auto-space preview API error:', error);
+    logger.error('Auto-space preview API error:', { error: String(error) });
     return NextResponse.json(
       { 
         error: 'Internal server error',

@@ -4,7 +4,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import dynamicImport from "next/dynamic";
 import { Card, Badge, Button } from "@hive/ui";
@@ -122,7 +122,7 @@ export default function CalendarPage() {
                 const parsed = JSON.parse(session) as { userId?: string };
                 return parsed.userId || 'anonymous';
               } catch (error) {
-                logger.error('Failed to parse session for calendar auth:', error);
+                logger.error('Failed to parse session for calendar auth:', { error: String(error) });
                 return 'anonymous';
               }
             })()}`,
@@ -184,7 +184,7 @@ export default function CalendarPage() {
         setEvents(transformedEvents);
         setIntegrations(defaultIntegrations);
       } catch (error) {
-        logger.error('Error fetching calendar events:', error);
+        logger.error('Error fetching calendar events:', { error: String(error) });
         // Fallback to empty state on error
         setEvents([]);
         setIntegrations([]);
@@ -599,31 +599,11 @@ export default function CalendarPage() {
           isOpen={showAddEvent}
           onClose={() => setShowAddEvent(false)}
           spaceId=""
-          onEventCreated={(eventData: any) => {
-            // Convert CreateEventData to CalendarEvent format
-            const newEvent: CalendarEvent = {
-              id: `event-${Date.now()}`,
-              title: eventData.title,
-              description: eventData.description,
-              startTime: eventData.datetime.start,
-              endTime: eventData.datetime.end,
-              location: eventData.location.name,
-              type: eventData.type === 'academic' ? 'class' :
-                     eventData.type === 'social' ? 'event' :
-                     eventData.type === 'professional' ? 'meeting' :
-                     eventData.type === 'recreational' ? 'event' : 'personal',
-              color: eventData.type === 'academic' ? '#3B82F6' : 
-                     eventData.type === 'social' ? '#EC4899' :
-                     eventData.type === 'professional' ? '#10B981' :
-                     eventData.type === 'recreational' ? '#F59E0B' : '#8B5CF6',
-              source: 'hive',
-              attendees: [],
-              rsvpStatus: 'going',
-              tools: eventData.tools,
-              space: undefined
-            };
-            
-            setEvents(prev => [newEvent, ...prev]);
+          onSuccess={(eventId: string) => {
+            // Event created successfully
+            console.log('Event created with ID:', eventId);
+            setShowAddEvent(false);
+            // Would refresh calendar here in real app
           }}
         />
 

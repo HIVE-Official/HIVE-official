@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion } from 'framer-motion';
 import {
@@ -166,7 +166,7 @@ export function ToolAnalyticsDashboard({
       const data = await response.json();
       setAnalytics(data);
     } catch (error) {
-      logger.error('Error fetching analytics:', error);
+      logger.error('Error fetching analytics:', { error: String(error) });
       // Set mock data for demo
       setAnalytics(getMockAnalytics());
     } finally {

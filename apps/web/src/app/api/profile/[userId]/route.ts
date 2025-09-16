@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { dbAdmin as db, authAdmin as auth } from '@/lib/firebase/admin/firebase-admin';
 import * as admin from 'firebase-admin';
@@ -141,7 +141,7 @@ export async function GET(
     return NextResponse.json(profileData);
     
   } catch (error) {
-    logger.error('Error fetching profile:', error);
+    logger.error('Error fetching profile:', { error: String(error) });
     return NextResponse.json(
       { error: 'Failed to fetch profile' },
       { status: 500 }
@@ -225,7 +225,7 @@ export async function PUT(
     });
     
   } catch (error) {
-    logger.error('Error updating profile:', error);
+    logger.error('Error updating profile:', { error: String(error) });
     return NextResponse.json(
       { error: 'Failed to update profile' },
       { status: 500 }
@@ -297,7 +297,7 @@ export async function DELETE(
     });
     
   } catch (error) {
-    logger.error('Error deleting profile:', error);
+    logger.error('Error deleting profile:', { error: String(error) });
     return NextResponse.json(
       { error: 'Failed to delete profile' },
       { status: 500 }

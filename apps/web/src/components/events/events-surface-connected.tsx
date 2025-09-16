@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -59,7 +59,7 @@ export function EventsSurfaceConnected({
     try {
       await rsvpToEvent(eventId, status);
     } catch (error) {
-      logger.error('Failed to RSVP:', error);
+      logger.error('Failed to RSVP:', { error: String(error) });
     }
   };
 
@@ -67,7 +67,7 @@ export function EventsSurfaceConnected({
     try {
       await cancelRsvp(eventId);
     } catch (error) {
-      logger.error('Failed to cancel RSVP:', error);
+      logger.error('Failed to cancel RSVP:', { error: String(error) });
     }
   };
 
@@ -402,7 +402,7 @@ function CreateEventModal({
       });
       onClose();
     } catch (error) {
-      logger.error('Failed to create event:', error);
+      logger.error('Failed to create event:', { error: String(error) });
     }
   };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { Button, Card, Badge, Modal, Input } from "@hive/ui";
 import { PageContainer } from "@hive/ui";
@@ -246,7 +246,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
       await navigator.clipboard.writeText(link);
       // Show success toast
     } catch (err) {
-      logger.error('Failed to copy invite link:', err);
+      logger.error('Failed to copy invite link:', { error: String(err) });
     }
   };
 
@@ -415,7 +415,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                     <div className="relative">
                       <div className="w-12 h-12 bg-zinc-600 rounded-full flex items-center justify-center">
                         <span className="text-[var(--hive-text-inverse)] font-semibold">
-                          {member.name.split(' ').map(n => n[0]).join('')}
+                          {member.name.split(' ').map((n: string) => n[0]).join('')}
                         </span>
                       </div>
                       <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${getRoleColor(member.role)} rounded-full flex items-center justify-center`}>

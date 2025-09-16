@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { Card, Button, Input, Label } from '@hive/ui';
@@ -71,7 +71,7 @@ export default function SignupPage() {
       router.push('/profile');
       
     } catch (err: any) {
-      logger.error('Signup error:', err);
+      logger.error('Signup error:', { error: String(err) });
       setError(err.message || 'Failed to create account');
       
       // If profile creation failed but auth user was created, we should clean up

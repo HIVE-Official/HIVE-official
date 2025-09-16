@@ -1,6 +1,6 @@
 /// <reference path="../../types/global.d.ts" />
 import { getMessaging, getToken, onMessage, Messaging } from 'firebase/messaging';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { app } from '@/lib/firebase/client/firebase-client';
 
@@ -46,7 +46,7 @@ class FCMService {
 
       this.isInitialized = true;
     } catch (error) {
-      logger.error('Failed to initialize FCM:', error);
+      logger.error('Failed to initialize FCM:', { error: String(error) });
     }
   }
 
@@ -69,7 +69,7 @@ class FCMService {
         return null;
       }
     } catch (error) {
-      logger.error('Error requesting notification permission:', error);
+      logger.error('Error requesting notification permission:', { error: String(error) });
       return null;
     }
   }
@@ -98,7 +98,7 @@ class FCMService {
         return null;
       }
     } catch (error) {
-      logger.error('Error getting FCM token:', error);
+      logger.error('Error getting FCM token:', { error: String(error) });
       return null;
     }
   }
@@ -123,7 +123,7 @@ class FCMService {
         throw new Error('Failed to save FCM token');
       }
     } catch (error) {
-      logger.error('Error saving FCM token:', error);
+      logger.error('Error saving FCM token:', { error: String(error) });
     }
   }
 
@@ -218,7 +218,7 @@ class FCMService {
 
       return response.ok;
     } catch (error) {
-      logger.error('Error sending notification:', error);
+      logger.error('Error sending notification:', { error: String(error) });
       return false;
     }
   }
@@ -243,7 +243,7 @@ class FCMService {
 
       return response.ok;
     } catch (error) {
-      logger.error('Error sending bulk notifications:', error);
+      logger.error('Error sending bulk notifications:', { error: String(error) });
       return false;
     }
   }
@@ -269,7 +269,7 @@ class FCMService {
 
       this.currentToken = null;
     } catch (error) {
-      logger.error('Error deleting FCM token:', error);
+      logger.error('Error deleting FCM token:', { error: String(error) });
     }
   }
 

@@ -669,7 +669,7 @@ export default function ProfileIntegrationsPage() {
                     {selectedIntegration.permissions.map((permission: any) => (
                       <FormField 
                         key={permission}
-                        label={permission.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        label={permission.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
                         description="Required for integration functionality"
                       >
                         <Switch

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   Card, 
@@ -93,7 +93,7 @@ export function RealtimePerformanceDashboard() {
         setSystemMetrics(data.metrics.current);
       }
     } catch (error) {
-      logger.error('Failed to fetch system metrics:', error);
+      logger.error('Failed to fetch system metrics:', { error: String(error) });
     } finally {
       setIsLoading(false);
     }
@@ -120,7 +120,7 @@ export function RealtimePerformanceDashboard() {
         }));
       }
     } catch (error) {
-      logger.error('Failed to update configuration:', error);
+      logger.error('Failed to update configuration:', { error: String(error) });
     }
   };
 
@@ -133,7 +133,7 @@ export function RealtimePerformanceDashboard() {
       });
       await fetchSystemMetrics();
     } catch (error) {
-      logger.error('Failed to trigger health check:', error);
+      logger.error('Failed to trigger health check:', { error: String(error) });
     }
   };
 

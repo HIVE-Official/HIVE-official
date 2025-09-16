@@ -188,7 +188,7 @@ export function useUserAnalytics(userId = 'me') {
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
   const { updateProfile } = useProfileStore();
-  const _user = useAuthStore((state) => state.user);
+  // User context available via useAuthStore if needed
   
   return useMutation({
     mutationFn: (updates: Partial<ProfileData>) => updateUserProfile('me', updates),
@@ -266,8 +266,8 @@ export function useProfileData(userId = 'me') {
 
 // Real-time subscription hook (for Firebase integration)
 export function useProfileSubscription(_userId = 'me') {
-  const _queryClient = useQueryClient();
-  const { setProfile: _setProfile, setSpaceMemberships: _setSpaceMemberships } = useProfileStore();
+  // Real-time subscription placeholder
+  // QueryClient and profile store setters would be used in full implementation
   
   // This would integrate with Firebase real-time listeners
   // For now, it's a placeholder that could be extended

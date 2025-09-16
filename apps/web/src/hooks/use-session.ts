@@ -1,7 +1,7 @@
 "use client";
 
 import { useUnifiedAuth } from '@hive/ui';
-import { type User } from '@hive/core';
+import type { User  } from '@/types/core';
 
 interface SessionData {
   userId: string;

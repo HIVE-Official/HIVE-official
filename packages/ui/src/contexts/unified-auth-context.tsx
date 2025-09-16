@@ -10,15 +10,17 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { logger } from '../utils/logger';
 
 import type { 
-  User as FirebaseUser} from 'firebase/auth';
+  User as FirebaseUser,
+  Auth} from 'firebase/auth';
+import type { FirebaseApp } from 'firebase/app';
 import {
   onAuthStateChanged,
   signInWithCustomToken,
   signOut as firebaseSignOut,
-  getIdToken
+  getIdToken,
+  getAuth
 } from 'firebase/auth';
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
 
 // Initialize Firebase app with proper error handling
 function initializeFirebaseApp() {
@@ -52,8 +54,8 @@ function initializeFirebaseApp() {
   }
 }
 
-let app: any;
-let auth: any;
+let app: FirebaseApp | null;
+let auth: Auth | null;
 
 try {
   app = initializeFirebaseApp();

@@ -8,7 +8,7 @@ import {
   UploadTaskSnapshot,
   StorageError
 } from 'firebase/storage';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { storage } from './firebase';
 
@@ -48,7 +48,7 @@ export async function uploadImage(
             onProgress(progress);
           },
           (error: StorageError) => {
-            logger.error('Upload error:', error);
+            logger.error('Upload error:', { error: String(error) });
             reject(error);
           },
           async () => {
@@ -63,7 +63,7 @@ export async function uploadImage(
       return await getDownloadURL(snapshot.ref);
     }
   } catch (error) {
-    logger.error('Error uploading image:', error);
+    logger.error('Error uploading image:', { error: String(error) });
     throw error;
   }
 }
@@ -165,7 +165,7 @@ export async function deleteImage(url: string): Promise<void> {
     const storageRef = ref(storage, path);
     await deleteObject(storageRef);
   } catch (error) {
-    logger.error('Error deleting image:', error);
+    logger.error('Error deleting image:', { error: String(error) });
     throw error;
   }
 }
@@ -272,7 +272,7 @@ export async function getFileMetadata(url: string): Promise<{
     
     return null; // Placeholder
   } catch (error) {
-    logger.error('Error getting file metadata:', error);
+    logger.error('Error getting file metadata:', { error: String(error) });
     return null;
   }
 }

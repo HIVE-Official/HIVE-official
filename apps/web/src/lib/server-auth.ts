@@ -6,7 +6,7 @@
  */
 
 import { getAuth } from 'firebase-admin/auth';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { NextRequest } from 'next/server';
 
@@ -73,7 +73,7 @@ export async function getCurrentUser(request?: NextRequest): Promise<AuthUser | 
     };
 
   } catch (error) {
-    logger.error('Error getting current user:', error);
+    logger.error('Error getting current user:', { error: String(error) });
     return null;
   }
 }

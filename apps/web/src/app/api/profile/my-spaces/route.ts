@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
@@ -114,6 +114,8 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     const recent = [...spaces]
       .sort(sortByActivity)
       .slice(0, 5);
+
+    const responseData = {
       joined: joined.sort(sortByActivity),
       owned: owned.sort(sortByActivity),
       adminned: adminned.sort(sortByActivity),
@@ -132,7 +134,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     return NextResponse.json({
       success: true,
       spaces,
-      categorized: categorizedSpaces,
+      categorized: responseData,
       totalCount: spaces.length,
       counts: {
         total: spaces.length,

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { cn } from '../../lib/utils';
-import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
+import { Card as HiveCard, CardHeader as HiveCardHeader, CardTitle as HiveCardTitle, CardContent as HiveCardContent } from '../../atomic/ui/card';
 import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { HiveBadge } from '../hive-badge';
 import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';

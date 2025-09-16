@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   collection, 
@@ -164,7 +164,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         setLoading(false);
       },
       (err: any) => {
-        logger.error('Error fetching posts:', err);
+        logger.error('Error fetching posts:', { error: String(err) });
         setError(err as Error);
         setLoading(false);
       }
@@ -216,7 +216,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
 
       return docRef.id;
     } catch (err) {
-      logger.error('Error creating post:', err);
+      logger.error('Error creating post:', { error: String(err) });
       throw err;
     }
   };
@@ -234,7 +234,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         updatedAt: serverTimestamp()
       });
     } catch (err) {
-      logger.error('Error updating post:', err);
+      logger.error('Error updating post:', { error: String(err) });
       throw err;
     }
   };
@@ -255,7 +255,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         postCount: arrayRemove(1)
       });
     } catch (err) {
-      logger.error('Error deleting post:', err);
+      logger.error('Error deleting post:', { error: String(err) });
       throw err;
     }
   };
@@ -291,7 +291,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         reactions: updatedReactions
       });
     } catch (err) {
-      logger.error('Error toggling reaction:', err);
+      logger.error('Error toggling reaction:', { error: String(err) });
       throw err;
     }
   };
@@ -350,7 +350,7 @@ export function useSpacePosts(spaceId: string | undefined): UseSpacePostsReturn 
         }
       }
     } catch (err) {
-      logger.error('Error responding to coordination:', err);
+      logger.error('Error responding to coordination:', { error: String(err) });
       throw err;
     }
   };

@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase/client/firebase-client';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 import type { UserProfile } from '@/lib/firebase/collections/firebase-collections';
 
 interface HiveUser extends Partial<UserProfile> {

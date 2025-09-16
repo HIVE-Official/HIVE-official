@@ -5,7 +5,7 @@
 // Following the successful profile edit and settings page patterns
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { 
@@ -190,7 +190,7 @@ export default function ProfilePrivacyStorybook() {
       }
       setShowGoPrivateModal(false);
     } catch (error) {
-      logger.error('Failed to go private:', error);
+      logger.error('Failed to go private:', { error: String(error) });
     }
   };
 
@@ -240,7 +240,7 @@ export default function ProfilePrivacyStorybook() {
       }
       setShowGoPublicModal(false);
     } catch (error) {
-      logger.error('Failed to go public:', error);
+      logger.error('Failed to go public:', { error: String(error) });
     }
   };
 
@@ -265,7 +265,7 @@ export default function ProfilePrivacyStorybook() {
         setTimeout(() => setSaveSuccess(false), 3000);
       }
     } catch (error) {
-      logger.error('Failed to save privacy settings:', error);
+      logger.error('Failed to save privacy settings:', { error: String(error) });
     }
   };
 
@@ -275,7 +275,7 @@ export default function ProfilePrivacyStorybook() {
       setShowGhostModeModal(false);
       handleGhostModeChange('enabled', !privacySettings.ghostMode.enabled);
     } catch (error) {
-      logger.error('Failed to toggle ghost mode:', error);
+      logger.error('Failed to toggle ghost mode:', { error: String(error) });
     }
   };
 

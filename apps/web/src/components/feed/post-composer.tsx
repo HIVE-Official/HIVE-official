@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -214,7 +214,7 @@ export function PostComposer({
       
       onClose();
     } catch (error) {
-      logger.error('Error creating post:', error);
+      logger.error('Error creating post:', { error: String(error) });
     } finally {
       setIsSubmitting(false);
     }

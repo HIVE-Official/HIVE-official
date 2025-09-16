@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -100,7 +100,7 @@ export function CrossSpaceDiscovery({
       
       setDiscoverableContent(data.content || getMockDiscoverableContent());
     } catch (error) {
-      logger.error('Error fetching discoverable content:', error);
+      logger.error('Error fetching discoverable content:', { error: String(error) });
       setDiscoverableContent(getMockDiscoverableContent());
     } finally {
       setLoading(false);

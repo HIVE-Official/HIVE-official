@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useSession } from './use-session';
 
@@ -525,7 +525,7 @@ export function useDashboardData(): DashboardState & {
         error: null
       }));
     } catch (error) {
-      logger.error('Error fetching dashboard data:', error);
+      logger.error('Error fetching dashboard data:', { error: String(error) });
       setState(prev => ({
         ...prev,
         isLoading: false,

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Shield, FileText, Eye, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card } from "@hive/ui";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveLegalStepProps {
   data: HiveOnboardingData;

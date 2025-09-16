@@ -1,4 +1,4 @@
-import { db, dbAdmin } from '@/lib/firebase';
+import { dbClient, dbAdmin } from '@/lib/firebase';
 import { 
   collection, 
   doc, 
@@ -102,7 +102,7 @@ export class RitualEngine {
       this.validateRitual(fullRitual);
 
       // Store in database
-      await setDoc(doc(db, 'rituals', ritualId), {
+      await setDoc(doc(dbClient, 'rituals', ritualId), {
         ...fullRitual,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
@@ -162,7 +162,7 @@ export class RitualEngine {
       }
 
       // Get instance details
-      const instanceDoc = await getDoc(doc(db, 'ritualInstances', instanceId));
+      const instanceDoc = await getDoc(doc(dbClient, 'ritualInstances', instanceId));
       if (!instanceDoc.exists()) {
         throw new Error('Instance not found');
       }
@@ -170,7 +170,7 @@ export class RitualEngine {
       const instance = instanceDoc.data() as RitualInstance;
       
       // Get ritual details
-      const ritualDoc = await getDoc(doc(db, 'rituals', instance.ritualId));
+      const ritualDoc = await getDoc(doc(dbClient, 'rituals', instance.ritualId));
       if (!ritualDoc.exists()) {
         throw new Error('Ritual not found');
       }
@@ -191,7 +191,7 @@ export class RitualEngine {
       this.activeExecutions.set(instanceId, execution);
 
       // Update instance status
-      await updateDoc(doc(db, 'ritualInstances', instanceId), {
+      await updateDoc(doc(dbClient, 'ritualInstances', instanceId), {
         status: 'in_progress',
         startedAt: serverTimestamp(),
         execution: {
@@ -252,7 +252,7 @@ export class RitualEngine {
         : 0;
 
       // Update instance in database
-      await updateDoc(doc(db, 'ritualInstances', instanceId), {
+      await updateDoc(doc(dbClient, 'ritualInstances', instanceId), {
         status: 'completed',
         completedAt: serverTimestamp(),
         participantCount: execution.participantCount,
@@ -343,12 +343,12 @@ export class RitualEngine {
    */
   private async updateRitualMetrics(instanceId: string, stats: any): Promise<void> {
     try {
-      const instanceDoc = await getDoc(doc(db, 'ritualInstances', instanceId));
+      const instanceDoc = await getDoc(doc(dbClient, 'ritualInstances', instanceId));
       if (!instanceDoc.exists()) return;
 
       const instance = instanceDoc.data() as RitualInstance;
       
-      await updateDoc(doc(db, 'rituals', instance.ritualId), {
+      await updateDoc(doc(dbClient, 'rituals', instance.ritualId), {
         'metrics.totalInstances': increment(1),
         'metrics.totalParticipants': increment(stats.totalParticipants),
         'metrics.averageCompletion': increment(stats.completions),
@@ -365,12 +365,12 @@ export class RitualEngine {
    */
   private async distributeRewards(instanceId: string): Promise<void> {
     try {
-      const instanceDoc = await getDoc(doc(db, 'ritualInstances', instanceId));
+      const instanceDoc = await getDoc(doc(dbClient, 'ritualInstances', instanceId));
       if (!instanceDoc.exists()) return;
 
       const instance = instanceDoc.data() as RitualInstance;
       
-      const ritualDoc = await getDoc(doc(db, 'rituals', instance.ritualId));
+      const ritualDoc = await getDoc(doc(dbClient, 'rituals', instance.ritualId));
       if (!ritualDoc.exists()) return;
 
       const ritual = ritualDoc.data() as Ritual;
@@ -380,11 +380,11 @@ export class RitualEngine {
       // Get completed participants
       const participants = await this.participationTracker.getCompletedParticipants(instanceId);
       
-      const batch = writeBatch(db);
+      const batch = writeBatch(dbClient);
       for (const participantId of participants) {
         // Add points
         if (ritual.rewards.points) {
-          const userRef = doc(db, 'users', participantId);
+          const userRef = doc(dbClient, 'users', participantId);
           batch.update(userRef, {
             'points.ritual': increment(ritual.rewards.points),
             'points.total': increment(ritual.rewards.points)
@@ -394,7 +394,7 @@ export class RitualEngine {
         // Add achievements
         if (ritual.rewards.achievements) {
           for (const achievement of ritual.rewards.achievements) {
-            const achievementRef = doc(db, 'userAchievements', `${participantId}_${achievement}`);
+            const achievementRef = doc(dbClient, 'userAchievements', `${participantId}_${achievement}`);
             batch.set(achievementRef, {
               userId: participantId,
               achievementId: achievement,
@@ -407,7 +407,7 @@ export class RitualEngine {
 
         // Add badge
         if (ritual.rewards.badge) {
-          const badgeRef = doc(db, 'userBadges', `${participantId}_${ritual.rewards.badge}`);
+          const badgeRef = doc(dbClient, 'userBadges', `${participantId}_${ritual.rewards.badge}`);
           batch.set(badgeRef, {
             userId: participantId,
             badgeId: ritual.rewards.badge,
@@ -452,8 +452,8 @@ export class RitualEngine {
    */
   async getAnalytics(spaceId?: string, timeRange?: { start: Date; end: Date }): Promise<RitualAnalytics> {
     try {
-      let ritualsQuery = collection(db, 'rituals');
-      let instancesQuery = collection(db, 'ritualInstances');
+      let ritualsQuery = collection(dbClient, 'rituals');
+      let instancesQuery = collection(dbClient, 'ritualInstances');
       
       if (spaceId) {
         ritualsQuery = query(ritualsQuery, where('spaceId', '==', spaceId)) as any;

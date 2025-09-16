@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
@@ -44,7 +44,7 @@ async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
     
     return tools;
   } catch (error) {
-    logger.error('Failed to fetch personal tools:', error);
+    logger.error('Failed to fetch personal tools:', { error: String(error) });
     return [];
   }
 }
@@ -125,7 +125,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
         await batch.commit();
       }
     } catch (error) {
-      logger.error('Failed to process tool installation:', error);
+      logger.error('Failed to process tool installation:', { error: String(error) });
       return NextResponse.json(
         { 
           error: 'Database operation failed',

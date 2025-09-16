@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { type User, type Space, type Post } from '@hive/core';
+import type { User, type Space, type Post  } from '@/types/core';
 
 // User, Space, and Post types are now imported from @hive/core
 

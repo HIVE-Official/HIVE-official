@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { Camera, Upload, X, Loader2 } from 'lucide-react';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 import Image from 'next/image';
 
 export function OnboardingAvatarStep() {

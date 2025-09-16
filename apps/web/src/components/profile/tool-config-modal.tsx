@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import {
   Modal,
@@ -135,7 +135,7 @@ export function ToolConfigModal({
       await onSave(config);
       onClose();
     } catch (error) {
-      logger.error('Failed to save tool configuration:', error);
+      logger.error('Failed to save tool configuration:', { error: String(error) });
     } finally {
       setIsSaving(false);
     }

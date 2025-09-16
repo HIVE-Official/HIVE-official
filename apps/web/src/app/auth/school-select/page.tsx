@@ -2,7 +2,7 @@
 
 import { SchoolPick } from "@hive/ui";
 import { SCHOOLS } from "@hive/core/constants/school-domains";
-import { type School } from "@hive/core";
+import type { School  } from '@/types/core';
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

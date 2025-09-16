@@ -198,7 +198,7 @@ export class RitualParticipationTracker {
 
       return docRef.id;
     } catch (error) {
-      logger.error('Failed to register participant', error as Error);
+      logger.error('Failed to register participant', { error: String(error as Error) });
       throw new Error('Failed to register for ritual');
     }
   }
@@ -249,7 +249,7 @@ export class RitualParticipationTracker {
       // Check for streaks
       await this.updateStreaks(userId, ritualId);
     } catch (error) {
-      logger.error('Check-in failed', error as Error);
+      logger.error('Check-in failed', { error: String(error as Error) });
       throw new Error('Failed to check in');
     }
   }
@@ -301,7 +301,7 @@ export class RitualParticipationTracker {
         points
       });
     } catch (error) {
-      logger.error('Failed to complete participation', error as Error);
+      logger.error('Failed to complete participation', { error: String(error as Error) });
       throw new Error('Failed to complete participation');
     }
   }
@@ -349,7 +349,7 @@ export class RitualParticipationTracker {
 
       return stats;
     } catch (error) {
-      logger.error('Failed to get user stats', error as Error);
+      logger.error('Failed to get user stats', { error: String(error as Error) });
       throw new Error('Failed to retrieve participation statistics');
     }
   }
@@ -403,7 +403,7 @@ export class RitualParticipationTracker {
 
       return engagement;
     } catch (error) {
-      logger.error('Failed to get ritual engagement', error as Error);
+      logger.error('Failed to get ritual engagement', { error: String(error as Error) });
       throw new Error('Failed to retrieve engagement metrics');
     }
   }
@@ -432,7 +432,7 @@ export class RitualParticipationTracker {
         event
       });
     } catch (error) {
-      logger.error('Failed to track participation', error as Error);
+      logger.error('Failed to track participation', { error: String(error as Error) });
     }
   }
 
@@ -468,7 +468,7 @@ export class RitualParticipationTracker {
       const ritualDoc = await getDoc(doc(db, 'rituals', ritualId));
       return ritualDoc.exists() ? ritualDoc.data() : null;
     } catch (error) {
-      logger.error('Failed to get ritual details', error as Error);
+      logger.error('Failed to get ritual details', { error: String(error as Error) });
       return null;
     }
   }
@@ -560,7 +560,7 @@ export class RitualParticipationTracker {
         timestamp: serverTimestamp()
       });
     } catch (error) {
-      logger.error('Failed to award points', error as Error);
+      logger.error('Failed to award points', { error: String(error as Error) });
     }
   }
 
@@ -575,7 +575,7 @@ export class RitualParticipationTracker {
         updatedAt: serverTimestamp()
       });
     } catch (error) {
-      logger.error('Failed to update ritual count', error as Error);
+      logger.error('Failed to update ritual count', { error: String(error as Error) });
     }
   }
 

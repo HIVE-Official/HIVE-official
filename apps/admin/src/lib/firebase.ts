@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     if (!auth.config.emulator) {
       connectAuthEmulator(auth, 'http://localhost:9099');
     }
-  } catch (error) {
+  } catch (_error) {
     // Emulator already connected or not available
   }
 
@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     if (!firestoreSettings?.host?.includes('localhost')) {
       connectFirestoreEmulator(db, 'localhost', 8080);
     }
-  } catch (error) {
+  } catch (_error) {
     // Emulator already connected or not available
   }
 }

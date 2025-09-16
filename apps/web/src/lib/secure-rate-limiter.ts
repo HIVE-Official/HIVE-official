@@ -5,7 +5,7 @@
 
 // import { createRateLimit, RateLimitConfigs } from './rate-limit-redis';
 import { rateLimit as fallbackRateLimit } from './api/middleware/rate-limit-simple';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { logSecurityEvent } from './utils/structured-logger';
 import { currentEnvironment } from './env';
@@ -102,7 +102,7 @@ export class SecureRateLimiter {
       // );
       
     } catch (error) {
-      logger.error('Failed to initialize Redis rate limiter:', error);
+      logger.error('Failed to initialize Redis rate limiter:', { error: String(error) });
       this.handleFailure('redis_init_failed');
     }
 
@@ -113,7 +113,7 @@ export class SecureRateLimiter {
         windowMs: this.config.windowMs
       });
     } catch (error) {
-      logger.error('Failed to initialize memory rate limiter:', error);
+      logger.error('Failed to initialize memory rate limiter:', { error: String(error) });
       this.handleFailure('memory_init_failed');
     }
   }
@@ -217,7 +217,7 @@ export class SecureRateLimiter {
         }
       }
     } catch (redisError) {
-      logger.error('Redis rate limiter failed:', redisError);
+      logger.error('Redis rate limiter failed:', { error: String(redisError) });
       this.handleFailure('redis_check_failed');
     }
 
@@ -237,7 +237,7 @@ export class SecureRateLimiter {
         };
       }
     } catch (memoryError) {
-      logger.error('Memory rate limiter failed:', memoryError);
+      logger.error('Memory rate limiter failed:', { error: String(memoryError) });
       this.handleFailure('memory_check_failed');
     }
 

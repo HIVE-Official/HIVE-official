@@ -1,5 +1,5 @@
 import { FullConfig } from '@playwright/test';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 async function globalTeardown(_config: FullConfig) {
   try {
@@ -12,7 +12,7 @@ async function globalTeardown(_config: FullConfig) {
     // Log test summary
     await logTestSummary();
   } catch (error) {
-    logger.error('❌ Global teardown failed:', error);
+    logger.error('❌ Global teardown failed:', { error: String(error) });
     // Don't throw - teardown failures shouldn't fail the test run
   }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import useSWR from 'swr';
 
@@ -121,7 +121,7 @@ export function useRitualParticipation(ritualId: string) {
       }
       return false;
     } catch (error) {
-      logger.error('Failed to join ritual:', error);
+      logger.error('Failed to join ritual:', { error: String(error) });
       return false;
     } finally {
       setIsJoining(false);
@@ -149,7 +149,7 @@ export function useRitualParticipation(ritualId: string) {
       }
       return false;
     } catch (error) {
-      logger.error('Failed to track action:', error);
+      logger.error('Failed to track action:', { error: String(error) });
       return false;
     } finally {
       setIsTracking(false);

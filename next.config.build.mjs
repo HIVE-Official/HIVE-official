@@ -1,4 +1,9 @@
-/** @type {import('next').NextConfig} */
+/**
+ * Special Next.js config for CI/CD builds where speed is prioritized over checks
+ * This config disables TypeScript and ESLint checking during builds (run separately)
+ * DO NOT use for development - use apps/web/next.config.mjs instead
+ * @type {import('next').NextConfig}
+ */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,

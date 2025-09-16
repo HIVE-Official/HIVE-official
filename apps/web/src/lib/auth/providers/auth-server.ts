@@ -109,7 +109,7 @@ export async function getCurrentUser(
 
     return user;
   } catch (error) {
-    logger.error('Failed to get current user', error as Error);
+    logger.error('Failed to get current user', { error: String(error as Error) });
     return null;
   }
 }
@@ -135,7 +135,7 @@ export async function verifyIdToken(
     
     return decodedToken;
   } catch (error) {
-    logger.error('Failed to verify ID token', error as Error);
+    logger.error('Failed to verify ID token', { error: String(error as Error) });
     return null;
   }
 }
@@ -159,7 +159,7 @@ export async function createSessionCookie(
 
     return sessionCookie;
   } catch (error) {
-    logger.error('Failed to create session cookie', error as Error);
+    logger.error('Failed to create session cookie', { error: String(error as Error) });
     return null;
   }
 }
@@ -181,7 +181,7 @@ export async function verifySessionCookie(
     
     return decodedClaims;
   } catch (error) {
-    logger.error('Failed to verify session cookie', error as Error);
+    logger.error('Failed to verify session cookie', { error: String(error as Error) });
     return null;
   }
 }
@@ -264,7 +264,7 @@ export async function setCustomUserClaims(
     
     logger.info('Set custom claims for user', { uid, claims });
   } catch (error) {
-    logger.error('Failed to set custom claims', error as Error, { uid });
+    logger.error('Failed to set custom claims', { error: String(error as Error, { uid }) });
     throw error;
   }
 }
@@ -288,7 +288,7 @@ export async function revokeUserTokens(uid: string): Promise<void> {
     
     logger.info('Revoked tokens for user', { uid });
   } catch (error) {
-    logger.error('Failed to revoke tokens', error as Error, { uid });
+    logger.error('Failed to revoke tokens', { error: String(error as Error, { uid }) });
     throw error;
   }
 }
@@ -311,7 +311,7 @@ export async function deleteUser(uid: string): Promise<void> {
     
     logger.info('Deleted user account', { uid });
   } catch (error) {
-    logger.error('Failed to delete user', error as Error, { uid });
+    logger.error('Failed to delete user', { error: String(error as Error, { uid }) });
     throw error;
   }
 }
@@ -344,7 +344,7 @@ export async function getUserByEmail(email: string): Promise<AuthenticatedUser |
       customClaims: userRecord.customClaims
     };
   } catch (error) {
-    logger.error('Failed to get user by email', error as Error, { email });
+    logger.error('Failed to get user by email', { error: String(error as Error, { email }) });
     return null;
   }
 }
@@ -381,7 +381,7 @@ export async function listUsers(
       nextPageToken: listResult.pageToken
     };
   } catch (error) {
-    logger.error('Failed to list users', error as Error);
+    logger.error('Failed to list users', { error: String(error as Error) });
     throw error;
   }
 }

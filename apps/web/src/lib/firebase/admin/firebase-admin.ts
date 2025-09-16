@@ -2,7 +2,7 @@
 // Server-side Firebase setup for administrative operations
 
 import * as admin from "firebase-admin";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { env, isFirebaseAdminConfigured, currentEnvironment } from "../../env";
 
@@ -108,7 +108,7 @@ try {
     firebaseInitialized = true;
   }
 } catch (error) {
-  logger.error('🚨 CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}:', error);
+  logger.error('🚨 CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}:', { error: String(error) });
 
   // In production, Firebase Admin MUST be properly configured
   if (currentEnvironment === 'production') {
@@ -212,7 +212,7 @@ try {
   } else {
     // In production/staging, fail fast if Firebase Admin cannot initialize
     logger.error('❌ CRITICAL: Firebase Admin initialization failed for ${currentEnvironment}');
-    logger.error('Error details:', error);
+    logger.error('Error details:', { error: String(error) });
     throw new Error(`Firebase Admin initialization failed. Check service account configuration.`);
   }
 }
@@ -263,7 +263,7 @@ export const verifyIdToken = async (token: string) => {
   try {
     return await authAdmin.verifyIdToken(token);
   } catch (error) {
-    logger.error('Failed to verify ID token:', error);
+    logger.error('Failed to verify ID token:', { error: String(error) });
     return null;
   }
 };
@@ -276,7 +276,7 @@ export const getUserByEmail = async (email: string) => {
   try {
     return await authAdmin.getUserByEmail(email);
   } catch (error) {
-    logger.error('Failed to get user by email:', error);
+    logger.error('Failed to get user by email:', { error: String(error) });
     return null;
   }
 };
@@ -287,9 +287,9 @@ export const createCustomToken = async (uid: string, claims?: object) => {
     return null;
   }
   try {
-    return await authAdmin.createCustomToken(uid, claims);
+    return await authAdmin.createCustomToken(uid, { error: String(claims) });
   } catch (error) {
-    logger.error('Failed to create custom token:', error);
+    logger.error('Failed to create custom token:', { error: String(error) });
     return null;
   }
 };
@@ -300,10 +300,10 @@ export const setCustomUserClaims = async (uid: string, claims: object) => {
     return false;
   }
   try {
-    await authAdmin.setCustomUserClaims(uid, claims);
+    await authAdmin.setCustomUserClaims(uid, { error: String(claims) });
     return true;
   } catch (error) {
-    logger.error('Failed to set custom claims:', error);
+    logger.error('Failed to set custom claims:', { error: String(error) });
     return false;
   }
 };

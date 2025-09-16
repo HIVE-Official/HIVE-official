@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { validateAuthToken } from '../../services/security-service';
 import { isProductionEnvironment } from '../../production-auth';
@@ -164,7 +164,12 @@ async function isAdminUser(userId: string): Promise<boolean> {
     if (!isProductionEnvironment() && userId === 'test-user') {
       return true;
     }
-    logger.error('Admin check failed:', error);
+    
+    // Check admin role in Firestore
+    // For now, return false for production until admin system is implemented
+    return false;
+  } catch (error) {
+    logger.error('Admin check failed:', { error: String(error) });
     return false;
   }
 }
@@ -185,7 +190,7 @@ export function withAuth<T extends any[]>(
         return error;
       }
       
-      logger.error('Auth middleware error:', error);
+      logger.error('Auth middleware error:', { error: String(error) });
       return new Response(
         JSON.stringify({ error: 'Authentication service error' }),
         { status: 500, headers: { 'content-type': 'application/json' } }

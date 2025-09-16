@@ -1,14 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  SpaceDiscoveryEngine,
-  SpaceSection,
-  SpaceStatus,
-  type SpaceDiscoveryData,
-  type UserDiscoveryContext,
-  type DiscoveryFilters,
-  type Space,
-  logger,
-} from "@hive/core";
+import type { SpaceDiscoveryData, UserDiscoveryContext, DiscoveryFilters, Space } from '@/types/core';
+import { SpaceDiscoveryEngine, SpaceSection, SpaceStatus, logger } from '@/types/core';
 import { requireAuth } from "@/lib/auth/auth";
 import { db } from "@/lib/firebase";
 import {
@@ -52,6 +44,9 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
 
     // Get user profile for personalization
+    const userProfileDoc = await dbAdmin.collection('users').doc(user.uid).get();
+    const userProfile = userProfileDoc.data() || {};
+    
     const { searchParams } = new URL(request.url);
 
     const section = searchParams.get("section") as SpaceSection | null;
@@ -233,7 +228,7 @@ export async function GET(request: NextRequest) {
       totalCount: allSpaces.length
     });
   } catch (error) {
-    logger.error("Space discovery error:", error);
+    logger.error("Space discovery error:", { error: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

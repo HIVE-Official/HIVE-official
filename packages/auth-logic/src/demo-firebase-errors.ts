@@ -9,7 +9,6 @@ import {
   FirebaseErrorHandler,
   useFirebaseErrorHandler,
 } from "./firebase-error-handler";
-import { logger } from './logger';
 
 // Example 1: Basic error handling in a function
 export async function exampleAuthOperation() {
@@ -26,7 +25,7 @@ export async function exampleAuthOperation() {
 export function ExampleAuthComponent() {
   const { getErrorDisplay } = useFirebaseErrorHandler();
 
-  const handleSignIn = async (email: string) => {
+  const handleSignIn = async (_email: string) => {
     try {
       // Your Firebase Auth sign-in logic here
       // await signInWithEmailAndPassword(auth, email, password);
@@ -113,7 +112,7 @@ export function getErrorBoundaryExample() {
 export const commonErrorScenarios = {
   // Auth errors
   "auth/user-not-found": () => {
-    const error = FirebaseErrorHandler.handleAuthError(
+    const _error = FirebaseErrorHandler.handleAuthError(
       new Error("auth/user-not-found")
     );
      // "No account found with this email address..."
@@ -121,7 +120,7 @@ export const commonErrorScenarios = {
   },
 
   "auth/too-many-requests": () => {
-    const error = FirebaseErrorHandler.handleAuthError(
+    const _error = FirebaseErrorHandler.handleAuthError(
       new Error("auth/too-many-requests")
     );
      // "Too many failed attempts..."
@@ -130,7 +129,7 @@ export const commonErrorScenarios = {
 
   // Functions errors
   "functions/permission-denied": () => {
-    const error = FirebaseErrorHandler.handleFunctionsError(
+    const _error = FirebaseErrorHandler.handleFunctionsError(
       new Error("functions/permission-denied")
     );
      // "You don't have permission..."
@@ -139,7 +138,7 @@ export const commonErrorScenarios = {
 
   // Generic errors
   "generic-error": () => {
-    const error = FirebaseErrorHandler.handleError(
+    const _error = FirebaseErrorHandler.handleError(
       new Error("Something went wrong")
     );
      // Uses the original error message

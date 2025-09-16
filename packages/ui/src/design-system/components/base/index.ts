@@ -3,7 +3,7 @@
  * Foundational components for the design system
  */
 
-export { Input } from './input';
+export { InputEnhanced as Input } from '../../../atomic/atoms/input-enhanced';
 export { Textarea } from './textarea';
 export { Select } from './select';
 export { Card } from './card';
@@ -16,7 +16,7 @@ export { Table } from './table';
 export { Menu } from './menu';
 
 // Export types
-export type { InputProps } from './input';
+export type { InputProps } from '../../../atomic/atoms/input-enhanced';
 export type { TextareaProps } from './textarea';
 export type { SelectProps } from './select';
 export type { CardProps } from './card';

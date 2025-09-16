@@ -246,11 +246,9 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
   };
 
   const handleInviteSpace = (spaceId: string) => {
-          <p className="text-[var(--hive-text-inverse)]">Loading collaboration data...</p>
-        </div>
-      </div>
-    );
-  }
+    // TODO: Implement space invitation logic
+    console.log('Inviting space:', spaceId);
+  };
 
   return (
     <div className="space-y-6">

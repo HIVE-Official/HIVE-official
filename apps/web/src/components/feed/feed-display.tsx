@@ -31,7 +31,7 @@ import {
 import { useUnifiedAuth } from "@hive/ui";
 
 // Types  
-import { type Post as CorePost } from '@hive/core';
+import type { Post as CorePost  } from '@/types/core';
 
 // Local Post interface for component compatibility
 interface Post {
@@ -131,10 +131,23 @@ export function FeedDisplay({
   };
 
   const handleComment = (postId: string) => {
+    console.log('Opening comment for post:', postId);
+    // TODO: Implement comment modal or navigation
+  };
+
+  const handleShare = (postId: string) => {
+    console.log('Sharing post:', postId);
+    // TODO: Implement share functionality
+  };
+
+  // Loading state component
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
         {Array.from({ length: 3 }, (_, i) => (
-          <Card key={_i}>
+          <Card key={i}>
             <CardContent className="p-4">
-<div className="space-y-3">
+              <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <div className="h-10 w-10 bg-accent rounded-full animate-pulse" />
                   <div className="space-y-2">
@@ -186,7 +199,7 @@ export function FeedDisplay({
           {/* Filter Tabs */}
           <Tabs
             value={filterType}
-            onValueChange={(value: unknown) => setFilterType(value)}
+            onValueChange={(value) => setFilterType(value as "recent" | "popular" | "following")}
           >
             <TabsList className="h-9">
               <TabsTrigger value="recent" className="text-xs">
@@ -221,7 +234,7 @@ export function FeedDisplay({
       {/* Posts Feed */}
       <div className="space-y-4">
         <AnimatePresence>
-          {posts.map((post, _index) => (
+          {posts.map((post, index) => (
             <motion.div
               key={post.id}
               initial={{ opacity: 0, y: 20 }}

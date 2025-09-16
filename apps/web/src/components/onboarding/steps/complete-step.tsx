@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button, Onbo
 import { useUnifiedAuth } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { AlertCircle, Loader2 } from 'lucide-react';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 
 export function OnboardingCompleteStep() {
   const router = useRouter();

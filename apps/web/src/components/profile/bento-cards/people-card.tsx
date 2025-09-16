@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { Card } from '@hive/ui';
 import { 
@@ -42,7 +42,7 @@ export function PeopleCard({ className }: PeopleCardProps) {
         setActiveNow(data.activeCount || 0);
       }
     } catch (error) {
-      logger.error('Error fetching people data:', error);
+      logger.error('Error fetching people data:', { error: String(error) });
       // Default values if API fails
       setFriendCount(0);
       setPotentialFriends(0);

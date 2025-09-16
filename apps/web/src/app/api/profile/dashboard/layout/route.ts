@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
@@ -91,7 +91,7 @@ export const GET = withAuth(async (request: NextRequest, { userId }) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching dashboard layout:', error);
+    logger.error('Error fetching dashboard layout:', { error: String(error) });
     return NextResponse.json(
       { success: false, error: 'Failed to fetch dashboard layout' },
       { status: 500 }
@@ -154,7 +154,7 @@ export const PUT = withAuth(async (request: NextRequest, { userId }) => {
     });
 
   } catch (error) {
-    logger.error('Error updating dashboard layout:', error);
+    logger.error('Error updating dashboard layout:', { error: String(error) });
     return NextResponse.json(
       { success: false, error: 'Failed to update dashboard layout' },
       { status: 500 }
@@ -206,7 +206,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
     });
 
   } catch (error) {
-    logger.error('Error resetting dashboard layout:', error);
+    logger.error('Error resetting dashboard layout:', { error: String(error) });
     return NextResponse.json(
       { success: false, error: 'Failed to reset dashboard layout' },
       { status: 500 }

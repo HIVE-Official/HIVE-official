@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -150,7 +150,7 @@ export function SpacesDashboardClient() {
         
         setSpacesData(processedData);
       } catch (error) {
-        logger.error('Failed to load spaces data:', error);
+        logger.error('Failed to load spaces data:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }
@@ -192,7 +192,7 @@ export function SpacesDashboardClient() {
       
       setShowJoinModal(null);
     } catch (error) {
-      logger.error('Failed to join space:', error);
+      logger.error('Failed to join space:', { error: String(error) });
     } finally {
       setJoiningSpaceId(null);
     }

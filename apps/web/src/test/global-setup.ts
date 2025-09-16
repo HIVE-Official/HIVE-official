@@ -1,5 +1,5 @@
 import { chromium, FullConfig } from '@playwright/test';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 async function globalSetup(config: FullConfig) {
   // Create a browser instance for setup
@@ -50,7 +50,7 @@ async function globalSetup(config: FullConfig) {
       fs.mkdirSync(screenshotDir, { recursive: true });
     }
   } catch (error) {
-    logger.error('❌ Global setup failed:', error);
+    logger.error('❌ Global setup failed:', { error: String(error) });
     throw error;
   } finally {
     await browser.close();

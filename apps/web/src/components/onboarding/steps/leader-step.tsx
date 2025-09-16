@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { Users, Award } from 'lucide-react';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 
 export function OnboardingLeaderStep() {
   const router = useRouter();

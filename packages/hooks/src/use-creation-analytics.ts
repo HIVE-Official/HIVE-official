@@ -129,6 +129,7 @@ export const useCreationAnalytics = (
           });
 
           if (enableDebugLogging) {
+            console.log('Flushed analytics batch:', batch.length, 'events');
           }
         }
       } catch (error) {
@@ -202,6 +203,7 @@ export const useCreationAnalytics = (
       eventQueue.current.push(event);
 
       if (enableDebugLogging) {
+        console.log('Tracked event:', eventType, event);
       }
 
       // Flush if queue is full

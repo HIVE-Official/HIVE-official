@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { z } from 'zod';
 import { validateWithSecurity, SecurityScanner } from './secure-input-validation';
@@ -295,7 +295,7 @@ export async function validateRequest(
     };
 
   } catch (error) {
-    logger.error('Validation middleware error:', error);
+    logger.error('Validation middleware error:', { error: String(error) });
     
     await logSecurityEvent('invalid_token', {
       operation: `${operation}_validation_error`,

@@ -2,7 +2,7 @@
 
 // import { useState, useEffect } from 'react'; // TODO: For future interactive features
 import { useQuery } from '@tanstack/react-query';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useParams } from 'next/navigation';
 import { useSession } from '../../../../hooks/use-session';
@@ -174,7 +174,9 @@ const RITUAL_TYPES = {
   }
 };
 
-const ACTION_TYPES = {
+type ActionType = 'post' | 'join_space' | 'create_tool' | 'interact' | 'vote' | 'share' | 'comment' | 'attend';
+
+const ACTION_TYPES: Record<ActionType, { icon: any; label: string }> = {
   post: { icon: Star, label: 'Share Post' },
   join_space: { icon: Users, label: 'Join Space' },
   create_tool: { icon: Zap, label: 'Create Tool' },
@@ -217,7 +219,7 @@ export default function RitualDetailPage() {
       // Refresh data
       window.location.reload();
     } catch (error) {
-      logger.error('Failed to complete action:', error);
+      logger.error('Failed to complete action:', { error: String(error) });
       alert('Failed to complete action. Please try again.');
     }
   };
@@ -393,8 +395,17 @@ export default function RitualDetailPage() {
               <div className="bg-hive-surface border border-hive-border rounded-xl p-6">
                 <h2 className="text-xl font-semibold text-hive-text-primary mb-4">Actions to Complete</h2>
                 <div className="space-y-4">
-                  {ritual.actions.map((action: any) => {
-                    const ActionIcon = ACTION_TYPES[action.type].icon;
+                  {ritual.actions.map((action: { 
+                    id: string; 
+                    type: ActionType; 
+                    description: string;
+                    name?: string;
+                    isRequired?: boolean;
+                    weight?: number;
+                    maxOccurrences?: number;
+                    timeLimit?: number;
+                  }) => {
+                    const ActionIcon = ACTION_TYPES[action.type as ActionType].icon;
                     const isCompleted = ritual.userParticipation?.actionsCompleted.includes(action.id);
                     
                     return (

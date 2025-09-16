@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -132,7 +132,11 @@ export function DashboardMain() {
           tools: [],
           notifications: []
         };
-        logger.error('Failed to load dashboard:', err);
+        
+        setDashboardData(emptyData);
+        setIsLoading(false);
+      } catch (err) {
+        logger.error('Failed to load dashboard:', { error: String(err) });
         setError(err instanceof Error ? err.message : 'Failed to load dashboard');
         setIsLoading(false);
       }

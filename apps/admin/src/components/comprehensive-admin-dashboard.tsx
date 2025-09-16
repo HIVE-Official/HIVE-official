@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { useState, useEffect, Suspense } from "react";
+import { logger } from '@hive/core';
+import { AdminErrorBoundary } from "./admin-error-boundary";
+import { AdminLoadingSkeleton } from "./admin-loading-skeleton";
 
 import { HiveCard as Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
@@ -24,8 +26,8 @@ interface AdminDashboardProps {
   initialTab?: string;
 }
 
-export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDashboardProps) {
-  const { admin } = useAdminAuth();
+function AdminDashboardContent({ initialTab = 'overview' }: AdminDashboardProps) {
+  const { admin, loading, error, isAuthenticated } = useAdminAuth();
   const [activeTab, setActiveTab] = useState(initialTab);
   const [pendingCounts, setPendingCounts] = useState({
     builderRequests: 0,
@@ -37,25 +39,34 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
     if (!admin) return;
 
     try {
+      const token = process.env.NODE_ENV === 'development' ? 'test-token' : admin.id;
       const [builderResponse, contentResponse] = await Promise.all([
         fetch('/api/admin/builder-requests', {
-          headers: { 'Authorization': `Bearer ${admin.id}` },
+          headers: { 'Authorization': `Bearer ${token}` },
         }),
-        fetch('/api/admin/content-moderation', {
-          headers: { 'Authorization': `Bearer ${admin.id}` },
+        fetch('/api/admin/moderation', {
+          headers: { 'Authorization': `Bearer ${token}` },
         }),
       ]);
 
-      const builderData = await builderResponse.json();
-      const contentData = await contentResponse.json();
+      if (builderResponse.ok) {
+        const builderData = await builderResponse.json();
+        setPendingCounts(prev => ({
+          ...prev,
+          builderRequests: builderData.requests?.filter((r: { status: string }) => r.status === 'pending').length || 0,
+        }));
+      }
 
-      setPendingCounts({
-        builderRequests: builderData.requests?.filter((r: { status: string }) => r.status === 'pending').length || 0,
-        flaggedContent: contentData.flaggedContent?.filter((c: { status: string }) => c.status === 'pending').length || 0,
-        userReports: 0,
-      });
+      if (contentResponse.ok) {
+        const contentData = await contentResponse.json();
+        setPendingCounts(prev => ({
+          ...prev,
+          flaggedContent: contentData.flaggedContent?.filter((c: { status: string }) => c.status === 'pending').length || 0,
+        }));
+      }
     } catch (error) {
       logger.error('Failed to fetch pending counts:', error);
+      // Don't throw - allow dashboard to work with stale counts
     }
   };
 
@@ -195,10 +206,33 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
     }
   };
 
+  // Handle loading state
+  if (loading) {
+    return <AdminLoadingSkeleton />;
+  }
+
+  // Handle authentication errors
+  if (error || !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-white mb-2">Access Denied</h2>
+          <p className="text-gray-400 mb-4">
+            {error || 'You must be an admin to access this dashboard'}
+          </p>
+          <a href="/auth/login" className="text-orange-500 hover:text-orange-400 underline">
+            Sign in with admin account
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle missing admin data
   if (!admin) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-white">Loading admin dashboard...</div>
+        <div className="text-white">Unable to load admin data</div>
       </div>
     );
   }
@@ -257,5 +291,16 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
         </div>
       </div>
     </div>
+  );
+}
+
+// Export wrapped component with error boundary and suspense
+export function ComprehensiveAdminDashboard(props: AdminDashboardProps) {
+  return (
+    <AdminErrorBoundary>
+      <Suspense fallback={<AdminLoadingSkeleton />}>
+        <AdminDashboardContent {...props} />
+      </Suspense>
+    </AdminErrorBoundary>
   );
 }

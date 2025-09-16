@@ -9,7 +9,7 @@ import {
   QueryConstraint,
   or
 } from 'firebase/firestore';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { db } from './firebase';
 
@@ -214,7 +214,7 @@ export async function performFirebaseSearch(options: SearchOptions): Promise<Sea
     return results.slice(0, limit);
     
   } catch (error) {
-    logger.error('Search error:', error);
+    logger.error('Search error:', { error: String(error) });
     return [];
   }
 }

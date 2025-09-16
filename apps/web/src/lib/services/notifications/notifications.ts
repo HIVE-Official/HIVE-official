@@ -1,5 +1,5 @@
 import { getMessaging, getToken, onMessage, Messaging } from 'firebase/messaging';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { app } from '../../firebase/firebase';
 import { doc, setDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
@@ -54,7 +54,7 @@ export async function requestNotificationPermission(userId: string): Promise<str
 
     return null;
   } catch (error) {
-    logger.error('Error getting notification permission:', error);
+    logger.error('Error getting notification permission:', { error: String(error) });
     return null;
   }
 }
@@ -71,7 +71,7 @@ async function saveTokenToDatabase(userId: string, token: string): Promise<void>
       lastTokenUpdate: new Date()
     });
   } catch (error) {
-    logger.error('Error saving FCM token:', error);
+    logger.error('Error saving FCM token:', { error: String(error) });
   }
 }
 
@@ -136,7 +136,7 @@ export async function createNotification(
       updatedAt: new Date()
     });
   } catch (error) {
-    logger.error('Error creating notification:', error);
+    logger.error('Error creating notification:', { error: String(error) });
   }
 }
 
@@ -154,7 +154,7 @@ export async function markNotificationAsRead(
       readAt: new Date()
     });
   } catch (error) {
-    logger.error('Error marking notification as read:', error);
+    logger.error('Error marking notification as read:', { error: String(error) });
   }
 }
 

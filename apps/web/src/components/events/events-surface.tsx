@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { 
   Calendar,
@@ -168,7 +168,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
         });
       }
     } catch (error) {
-      logger.error('Error updating RSVP:', error);
+      logger.error('Error updating RSVP:', { error: String(error) });
     }
   };
 
@@ -192,7 +192,7 @@ export function EventsSurface({ spaceId, spaceName, canCreateEvents = false }: E
         });
       }
     } catch (error) {
-      logger.error('Error updating interested:', error);
+      logger.error('Error updating interested:', { error: String(error) });
     }
   };
 

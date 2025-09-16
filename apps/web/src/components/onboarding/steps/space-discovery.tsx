@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, Button, Badge, Input } from '@hive/ui';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { Search, Users, GraduationCap, Building, Home, Heart, ChevronRight, CheckCircle, Loader2 } from 'lucide-react';
-import { logger } from '@hive/core';
+import { logger  } from '@/types/core';
 
 interface SpaceData {
   id: string;

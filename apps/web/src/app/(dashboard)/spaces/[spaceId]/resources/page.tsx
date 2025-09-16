@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { PageContainer } from "@hive/ui";
 
@@ -46,7 +46,7 @@ export default function SpaceResourcesPage({ params }: SpaceResourcesPageProps) 
           userRole: 'admin' // In real implementation, this would come from the API
         });
       } catch (error) {
-        logger.error('Failed to load space resources:', error);
+        logger.error('Failed to load space resources:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }

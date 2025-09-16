@@ -210,10 +210,10 @@ class AutomatedModerationWorkflows {
             executed = true;
           } catch (error) {
             errors.push(`Failed to execute action ${action}: ${error}`);
-            logger.error(`Workflow action failed`, error as Error, {
+            logger.error(`Workflow action failed`, { error: String(error as Error, {
               workflowId: workflow.id,
               action
-            });
+            }) });
           }
         }
       }
@@ -237,9 +237,9 @@ class AutomatedModerationWorkflows {
 
       return result;
     } catch (error) {
-      logger.error('Workflow execution failed', error as Error, {
+      logger.error('Workflow execution failed', { error: String(error as Error, {
         workflowId: workflow.id
-      });
+      }) });
       
       return {
         workflowId: workflow.id,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
-import { logger } from "@hive/core";
+import { logger  } from '@/types/core';
 
 interface SpaceClaimData {
   spaceId: string;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
@@ -68,7 +68,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
   } catch (error) {
     logger.error('Avatar generation error');
-    return NextResponse.json(ApiResponseHelper.error("Failed to generate avatar", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return NextResponse.json(ApiResponseHelper.error("Failed to generate avatar", { error: String("INTERNAL_ERROR") }), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, { 
   allowDevelopmentBypass: true, // Avatar generation is safe for development

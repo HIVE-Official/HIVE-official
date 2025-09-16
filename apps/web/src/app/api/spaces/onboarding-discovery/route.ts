@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
-import { logger } from "@hive/core";
+import { logger  } from '@/types/core';
 import { generalApiRateLimit } from "@/lib/api/middleware/rate-limit";
 
 interface SpaceTag {
@@ -162,7 +162,7 @@ export async function GET(
       autoJoinSpaces,
     });
   } catch (error) {
-    logger.error("Error in space discovery:", error);
+    logger.error("Error in space discovery:", { error: String(error) });
     return NextResponse.json(
       {
         success: false,

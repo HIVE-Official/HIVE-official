@@ -1,7 +1,5 @@
-import { logger } from '@hive/core/utils/logger';
-
 import { NextRequest, NextResponse } from 'next/server'
-import { logger, generateHandleVariants, generateBaseHandle } from '@hive/core'
+import { logger, generateHandleVariants, generateBaseHandle  } from '@/types/core';
 import { dbAdmin } from '@/lib/firebase/admin/firebase-admin'
 import { authRateLimiter, RATE_LIMITS } from '@/lib/auth/middleware/auth-rate-limiter'
 
@@ -22,7 +20,7 @@ async function generateSuggestions(baseHandle: string): Promise<string[]> {
         if (suggestions.length >= 3) break; // Limit to 3 suggestions
       }
     } catch (error) {
-      logger.error('Error checking variant availability:', error);
+      logger.error('Error checking variant availability:', { error: String(error) });
     }
   }
   
@@ -105,7 +103,7 @@ export async function POST(request: NextRequest) {
         suggestions
       });
     } catch (error) {
-      logger.error('Error checking handle availability:', error);
+      logger.error('Error checking handle availability:', { error: String(error) });
       return NextResponse.json(
         { error: 'Failed to check handle availability' },
         { status: 500 }
@@ -113,7 +111,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Error checking handle availability:', error)
+    logger.error('Error checking handle availability:', { error: String(error) })
     
     return NextResponse.json(
       { 

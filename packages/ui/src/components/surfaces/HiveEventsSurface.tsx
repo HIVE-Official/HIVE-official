@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { cn } from '../../lib/utils';
-import { HiveCard, HiveCardHeader, HiveCardTitle, HiveCardContent } from '../hive-card';
+import { Card as HiveCard, CardHeader as HiveCardHeader, CardTitle as HiveCardTitle, CardContent as HiveCardContent } from '../../atomic/ui/card';
 import { Button as HiveButton } from '../../atomic/atoms/button-enhanced';
 import { Avatar as HiveAvatar } from '../../atomic/atoms/avatar';
 import { HiveBadge } from '../hive-badge';
@@ -279,7 +279,7 @@ const EventCard: React.FC<{
           {/* Tags */}
           {event.tags && event.tags.length > 0 && variant === 'full' && (
             <div className="flex flex-wrap gap-1">
-              {event.tags.map((tag: any) => (
+              {event.tags.map((tag: string) => (
                 <span key={tag} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
                   {tag}
                 </span>
@@ -316,7 +316,7 @@ const CalendarView: React.FC<{
   return (
     <div className="bg-[var(--hive-white)] rounded-lg border border-gray-200 p-4">
       <div className="grid grid-cols-7 gap-2">
-        {weekDays.map((day: any) => {
+        {weekDays.map((day: Date) => {
           const dayEvents = getEventsForDay(day);
           const isToday = format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
           
@@ -489,7 +489,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
         <div className="animate-pulse">
           <div className="bg-gray-200 rounded-lg h-20 mb-4" />
           <div className="space-y-3">
-            {[1, 2, 3].map((i: any) => (
+            {[1, 2, 3].map((i: number) => (
               <div key={i} className="bg-gray-100 rounded-lg h-32" />
             ))}
           </div>
@@ -596,7 +596,7 @@ export const HiveEventsSurface: React.FC<HiveEventsSurfaceProps> = ({
           ) : (
             filteredEvents
               .slice(0, variant === 'widget' ? 3 : undefined)
-              .map((event: any) => (
+              .map((event: SpaceEvent) => (
                 <EventCard
                   key={event.id}
                   event={event}

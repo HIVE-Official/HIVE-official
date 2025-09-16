@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { logger } from '@hive/core/utils/logger';
+import { logger } from '@/lib/logger';
 
 import { motion } from 'framer-motion';
 import { 
@@ -155,7 +155,7 @@ export function RitualCard({
       
       toast.success(`Joined ${ritual.title}!`, 'Your journey begins now');
     } catch (error) {
-      logger.error('Failed to join ritual:', error);
+      logger.error('Failed to join ritual:', { error: String(error) });
       toast.error('Failed to join ritual', 'Please try again');
     } finally {
       setIsJoining(false);
@@ -175,7 +175,7 @@ export function RitualCard({
       
       toast.success('Ritual completed!', `Great job finishing ${ritual.title}!`);
     } catch (error) {
-      logger.error('Failed to complete ritual:', error);
+      logger.error('Failed to complete ritual:', { error: String(error) });
       toast.error('Failed to complete ritual', 'Please try again');
     } finally {
       setIsCompleting(false);

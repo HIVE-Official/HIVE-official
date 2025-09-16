@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
-import { type Post } from "@hive/core";
+import type { Post  } from '@/types/core';
 import { logger } from "@/lib/utils/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import { withAuth } from '@/lib/api/middleware/api-auth-middleware';

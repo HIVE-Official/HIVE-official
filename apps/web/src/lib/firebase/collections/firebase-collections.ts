@@ -4,7 +4,7 @@
  */
 
 import { Timestamp } from 'firebase-admin/firestore';
-import { type User, type Profile, type Space, type Post, type Tool } from '@hive/core';
+import type { User, type Profile, type Space, type Post, type Tool  } from '@/types/core';
 
 // ==== PROFILE CORE COLLECTIONS ====
 

@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const EditPostSchema = z.object({

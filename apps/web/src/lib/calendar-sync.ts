@@ -157,7 +157,7 @@ class CalendarSyncService {
 
       return docRef.id;
     } catch (error) {
-      logger.error('Failed to create calendar event', error as Error);
+      logger.error('Failed to create calendar event', { error: String(error as Error) });
       throw new Error('Failed to create calendar event');
     }
   }
@@ -184,7 +184,7 @@ class CalendarSyncService {
         await this.updateRecurringInstances(eventId, updates);
       }
     } catch (error) {
-      logger.error('Failed to update calendar event', error as Error);
+      logger.error('Failed to update calendar event', { error: String(error as Error) });
       throw new Error('Failed to update calendar event');
     }
   }
@@ -213,7 +213,7 @@ class CalendarSyncService {
         ...doc.data()
       } as CalendarEvent));
     } catch (error) {
-      logger.error('Failed to get calendar events', error as Error);
+      logger.error('Failed to get calendar events', { error: String(error as Error) });
       return [];
     }
   }
@@ -267,7 +267,7 @@ class CalendarSyncService {
         }
       });
     } catch (error) {
-      logger.error('Failed to detect conflicts', error as Error);
+      logger.error('Failed to detect conflicts', { error: String(error as Error) });
     }
 
     return conflicts;
@@ -309,7 +309,7 @@ class CalendarSyncService {
         status: 'synced'
       };
     } catch (error) {
-      logger.error('Calendar sync failed', error as Error);
+      logger.error('Calendar sync failed', { error: String(error as Error) });
       
       // Update sync status with error
       const statusRef = doc(db, this.syncStatusCollection, `${userId}_${provider}`);

@@ -1,12 +1,13 @@
 import React from 'react';
 import { motion, AnimatePresence } from './framer-motion-proxy';
+import type { Target, TargetAndTransition, Transition } from './framer-motion-proxy';
 
 export interface HiveMotionWrapperProps {
   children: React.ReactNode;
   animate?: boolean;
-  initial?: any;
-  exit?: any;
-  transition?: any;
+  initial?: Target;
+  exit?: TargetAndTransition;
+  transition?: Transition;
 }
 
 export const HiveMotionWrapper: React.FC<HiveMotionWrapperProps> = ({

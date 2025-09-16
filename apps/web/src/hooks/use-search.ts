@@ -359,7 +359,7 @@ export function useSearchSuggestions(query: string, limit = 5) {
         
         setSuggestions(Array.from(terms).slice(0, limit));
       } catch (error) {
-        logger.error('Error fetching suggestions:', error);
+        logger.error('Error fetching suggestions:', { error: String(error) });
       }
     };
 

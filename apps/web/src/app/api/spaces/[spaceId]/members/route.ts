@@ -4,7 +4,7 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth/auth";
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 import { getSpaceMembers, getSpaceMember, addSpaceMember, removeSpaceMember, updateMemberRole } from '@/lib/spaces/spaces-db';
@@ -345,6 +345,9 @@ export async function PATCH(
         throw new Error('Failed to update member role');
       }
     }
+    
+    // Handle other actions (suspend, etc.)
+    if (action && action !== 'role_change') {
       logger.warn('Suspension actions not yet implemented in flat structure', { spaceId, userId, action });
     }
 
@@ -361,7 +364,7 @@ export async function PATCH(
             oldRole: targetRole,
             newRole: role || targetRole,
             action: action || 'role_change',
-            reason
+            reason: reason || 'No reason provided'
           },
           timestamp: new Date()
         });
@@ -381,7 +384,7 @@ export async function PATCH(
     }));
 
   } catch (error: any) {
-    logger.error("Error updating member:", error);
+    logger.error("Error updating member:", { error: String(error) });
     return NextResponse.json(ApiResponseHelper.error("Failed to update member", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -481,7 +484,7 @@ export async function DELETE(
     }));
 
   } catch (error: any) {
-    logger.error("Error removing member:", error);
+    logger.error("Error removing member:", { error: String(error) });
     return NextResponse.json(ApiResponseHelper.error("Failed to remove member", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
