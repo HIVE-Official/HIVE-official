@@ -1,2 +1,6 @@
-// Re-export cn utility from @hive/ui to maintain single source of truth
-export { cn } from '@hive/ui'; 
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+} 
