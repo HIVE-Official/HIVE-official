@@ -90,6 +90,7 @@ export function BuilderQueueEnhanced() {
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchRequests, 30000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [admin]);
 
   const getTimeAgo = (dateString: string) => {

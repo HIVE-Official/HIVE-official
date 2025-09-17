@@ -43,7 +43,7 @@ const meta: Meta<typeof ProfileDashboard> = {
     },
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div style={{ minHeight: '100vh' }}>
         <Story />
       </div>

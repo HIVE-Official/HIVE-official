@@ -1,30 +1,49 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { logger } from '@/lib/logger';
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
-import { authenticatedFetch } from '../../../lib/auth-utils';
+import dynamic from "next/dynamic";
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import { Button, Card } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@hive/ui";
+import toast from '@/hooks/use-toast-notifications';
 import { Heart, Users, Settings as _Settings, Star, Clock, Activity, Plus, Crown, Search, Grid, List, TrendingUp, ArrowUpDown, Compass, AlertCircle } from "lucide-react";
-import { type Space, type SpaceType } from "@hive/core";
+import type { Space, type SpaceType  } from '@/types/core';
 import { useDebounce } from "@hive/hooks";
 import { cn } from "@hive/ui";
 import { UnifiedSpaceCard } from "./components/unified-space-card";
-import { CreateSpaceModal as _CreateSpaceModal } from "../../../components/spaces/create-space-modal";
 import { SpaceLoadingSkeleton } from "./components/space-loading-skeleton";
 import { SmartSpaceDiscovery } from "../../../components/spaces/smart-space-discovery";
 import { ErrorBoundary } from '../../../components/error-boundary';
 import { useSession } from '../../../hooks/use-session';
 
+// Dynamic imports for heavy components - reduces initial bundle size
+const CreateSpaceModal = dynamic(
+  async () => {
+    const mod = await import("../../../components/spaces/create-space-modal");
+    return { default: mod.CreateSpaceModal };
+  },
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 bg-[var(--hive-black)]/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-hive-gold"></div>
+      </div>
+    )
+  }
+);
+
 // Space category filters - aligned with new HIVE system
 const spaceTypeFilters = [
-  { id: "all", label: "All Spaces", color: "bg-gray-500", emoji: "🌐", subtitle: "Every community" },
-  { id: "student_organizations", label: "Student Spaces", color: "bg-blue-500", emoji: "🎯", subtitle: "Student-led communities" },
-  { id: "university_organizations", label: "University Spaces", color: "bg-emerald-500", emoji: "🎓", subtitle: "Academic programs" },
-  { id: "greek_life", label: "Greek Life", color: "bg-purple-500", emoji: "🏛️", subtitle: "Fraternities & sororities" },
-  { id: "campus_living", label: "Residential Life", color: "bg-orange-500", emoji: "🏠", subtitle: "Dorms & living communities" },
-  { id: "hive_exclusive", label: "HIVE Exclusive", color: "bg-indigo-500", emoji: "💎", subtitle: "Platform specials" },
+  { id: "all", label: "All Spaces", color: "bg-neutral-500", icon: Compass, subtitle: "Every community" },
+  { id: "student_organizations", label: "Student Spaces", color: "bg-blue-500", icon: Users, subtitle: "Student-led communities" },
+  { id: "university_organizations", label: "University Spaces", color: "bg-emerald-500", icon: Crown, subtitle: "Academic programs" },
+  { id: "greek_life", label: "Greek Life", color: "bg-amber-500", icon: Heart, subtitle: "Fraternities & sororities" },
+  { id: "campus_living", label: "Residential Life", color: "bg-amber-500", icon: Grid, subtitle: "Dorms & living communities" },
+  { id: "hive_exclusive", label: "HIVE Exclusive", color: "bg-indigo-500", icon: Star, subtitle: "Platform specials" },
 ];
 
 async function fetchMySpaces(): Promise<{
@@ -120,7 +139,7 @@ export default function UnifiedSpacesPage() {
       }
       return failureCount < 3;
     },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex: any) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   // Fetch browse spaces with retry and better error handling
@@ -135,7 +154,7 @@ export default function UnifiedSpacesPage() {
       }
       return failureCount < 3;
     },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex: any) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   // Filter and sort browse spaces
@@ -150,8 +169,21 @@ export default function UnifiedSpacesPage() {
         break;
       case "trending":
         sortedSpaces.sort((a, b) => {
-          const aTrending = (a.memberCount || 0) * Math.random() * 2;
-          const bTrending = (b.memberCount || 0) * Math.random() * 2;
+          // Calculate trending score based on recent growth and engagement
+          const now = Date.now();
+          const dayMs = 24 * 60 * 60 * 1000;
+          
+          const aCreated = a.createdAt?.toDate?.() || new Date(0);
+          const bCreated = b.createdAt?.toDate?.() || new Date(0);
+          
+          // Recent spaces get boost, older spaces penalized
+          const aAge = Math.max(1, (now - aCreated.getTime()) / dayMs);
+          const bAge = Math.max(1, (now - bCreated.getTime()) / dayMs);
+          
+          // Trending = members / age (recent spaces with members trend higher)
+          const aTrending = (a.memberCount || 0) / Math.sqrt(aAge);
+          const bTrending = (b.memberCount || 0) / Math.sqrt(bAge);
+          
           return bTrending - aTrending;
         });
         break;
@@ -216,11 +248,14 @@ export default function UnifiedSpacesPage() {
       // Close modal first
       setShowCreateModal(false);
       
+      // Show success toast
+      toast.success(`${spaceData.name} created!`, 'Your new space is ready');
+      
       // Invalidate caches
       queryClient.invalidateQueries({ queryKey: ["spaces"] });
       queryClient.invalidateQueries({ queryKey: ["my-spaces"] });
       
-      // Show success feedback
+      // Navigate to new space
       if (newSpace?.id) {
         // Small delay to let user see success state
         setTimeout(() => {
@@ -228,8 +263,10 @@ export default function UnifiedSpacesPage() {
         }, 500);
       }
     } catch (error) {
-      console.error('Failed to create space:', error);
-      _setCreateError(error instanceof Error ? error.message : 'Failed to create space. Please try again.');
+      logger.error('Failed to create space:', { error: String(error) });
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create space';
+      _setCreateError(errorMessage);
+      toast.error('Failed to create space', errorMessage);
     } finally {
       _setIsCreatingSpace(false);
     }
@@ -265,15 +302,18 @@ export default function UnifiedSpacesPage() {
       queryClient.invalidateQueries({ queryKey: ["spaces"] });
       queryClient.invalidateQueries({ queryKey: ["my-spaces"] });
       
-      // Show success feedback - could add toast here
-      console.log('Successfully joined space:', spaceId);
+      // Show success toast
+      const spaceName = browseSpaces?.find(s => s.id === spaceId)?.name || 'the space';
+      toast.spaceJoined(spaceName);
       
     } catch (error) {
-      console.error('Failed to join space:', error);
+      logger.error('Failed to join space:', { error: String(error) });
+      const errorMessage = error instanceof Error ? error.message : 'Failed to join space';
       _setJoinErrors(prev => ({
         ...prev,
-        [spaceId]: error instanceof Error ? error.message : 'Failed to join space'
+        [spaceId]: errorMessage
       }));
+      toast.error('Failed to join space', errorMessage);
     } finally {
       setJoiningSpaces(prev => {
         const updated = new Set(prev);
@@ -313,34 +353,34 @@ export default function UnifiedSpacesPage() {
               <Button 
                 variant="outline"
                 onClick={() => setShowSmartDiscovery(!showSmartDiscovery)}
-                className="border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
+                className="border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)]/10"
               >
                 <Compass className="h-4 w-4 mr-2" />
                 {showSmartDiscovery ? 'Classic Browse' : 'Smart Discovery'}
               </Button>
             )}
             <Button 
-              className="bg-[#FFD700]/30 text-[#FFD700] border border-[#FFD700]/50 hover:bg-[#FFD700]/40 transition-colors"
+              className="bg-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/50 hover:bg-[var(--hive-brand-secondary)]/40 transition-colors"
               onClick={() => setShowCreateModal(true)}
               title="Space Creation coming in v1"
             >
               <Plus className="h-4 w-4 mr-2" />
               Create Space
-              <span className="ml-2 text-xs bg-[#FFD700]/20 text-[#FFD700] px-2 py-1 rounded-full">v1</span>
+              <span className="ml-2 text-xs bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] px-2 py-1 rounded-full">v1</span>
             </Button>
           </div>
         }
         maxWidth="xl"
       >
         {/* Unified Navigation Tabs */}
-        <div className="flex border-b border-white/10 mb-8">
+        <div className="flex border-b border-[var(--hive-white)]/10 mb-8">
           <button
             onClick={() => setActiveView("my")}
             className={cn(
               "flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors",
               activeView === "my"
                 ? "border-hive-gold text-hive-gold"
-                : "border-transparent text-neutral-400 hover:text-white"
+                : "border-transparent text-neutral-400 hover:text-[var(--hive-text-inverse)]"
             )}
           >
             <Users className="h-4 w-4" />
@@ -350,7 +390,7 @@ export default function UnifiedSpacesPage() {
                 "px-2 py-0.5 text-xs rounded-full",
                 activeView === "my"
                   ? "bg-hive-gold text-hive-obsidian"
-                  : "bg-white/10 text-neutral-400"
+                  : "bg-[var(--hive-white)]/10 text-neutral-400"
               )}>
                 {mySpacesData.joined.length}
               </span>
@@ -362,7 +402,7 @@ export default function UnifiedSpacesPage() {
               "flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors",
               activeView === "browse"
                 ? "border-hive-gold text-hive-gold"
-                : "border-transparent text-neutral-400 hover:text-white"
+                : "border-transparent text-neutral-400 hover:text-[var(--hive-text-inverse)]"
             )}
           >
             <Compass className="h-4 w-4" />
@@ -377,25 +417,25 @@ export default function UnifiedSpacesPage() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <Card className="p-4 text-center bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20">
                 <Users className="h-8 w-8 mx-auto mb-2 text-blue-400" />
-                <div className="text-2xl font-bold text-white">{mySpacesData?.joined.length || 0}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{mySpacesData?.joined.length || 0}</div>
                 <div className="text-sm text-neutral-400">Joined</div>
               </Card>
 
               <Card className="p-4 text-center bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20">
                 <Heart className="h-8 w-8 mx-auto mb-2 text-red-400" />
-                <div className="text-2xl font-bold text-white">{mySpacesData?.favorited.length || 0}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{mySpacesData?.favorited.length || 0}</div>
                 <div className="text-sm text-neutral-400">Favorited</div>
               </Card>
 
               <Card className="p-4 text-center bg-gradient-to-br from-hive-gold/10 to-hive-gold/10 border-hive-gold/20">
                 <Crown className="h-8 w-8 mx-auto mb-2 text-hive-gold" />
-                <div className="text-2xl font-bold text-white">{mySpacesData?.owned.length || 0}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{mySpacesData?.owned.length || 0}</div>
                 <div className="text-sm text-neutral-400">Owned</div>
               </Card>
 
               <Card className="p-4 text-center bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20">
                 <Activity className="h-8 w-8 mx-auto mb-2 text-green-400" />
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">
                   {(mySpacesData?.joined.length || 0) + (mySpacesData?.owned.length || 0)}
                 </div>
                 <div className="text-sm text-neutral-400">Total Active</div>
@@ -403,8 +443,8 @@ export default function UnifiedSpacesPage() {
             </div>
 
             {/* My Spaces Tab Navigation */}
-            <div className="flex border-b border-white/10 mb-8">
-              {mySpaceTabs.map((tab) => {
+            <div className="flex border-b border-[var(--hive-white)]/10 mb-8">
+              {mySpaceTabs.map((tab: any) => {
                 const Icon = tab.icon;
                 return (
                   <button
@@ -414,7 +454,7 @@ export default function UnifiedSpacesPage() {
                       "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors",
                       mySpacesTab === tab.id
                         ? "border-hive-gold text-hive-gold"
-                        : "border-transparent text-neutral-400 hover:text-white"
+                        : "border-transparent text-neutral-400 hover:text-[var(--hive-text-inverse)]"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -424,7 +464,7 @@ export default function UnifiedSpacesPage() {
                         "px-2 py-0.5 text-xs rounded-full",
                         mySpacesTab === tab.id
                           ? "bg-hive-gold text-hive-obsidian"
-                          : "bg-white/10 text-neutral-400"
+                          : "bg-[var(--hive-white)]/10 text-neutral-400"
                       )}>
                         {tab.count}
                       </span>
@@ -447,17 +487,17 @@ export default function UnifiedSpacesPage() {
                   type="text"
                   placeholder="Search spaces, descriptions, or keywords..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none"
+                  onChange={(e: any) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg text-[var(--hive-text-inverse)] placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none"
                 />
               </div>
 
-              <div className="flex items-center bg-white/[0.02] border border-white/[0.06] rounded-lg p-1">
+              <div className="flex items-center bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg p-1">
                 <ArrowUpDown className="h-4 w-4 text-neutral-400 mx-2" />
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="bg-transparent text-white text-sm focus:outline-none border-none"
+                  onChange={(e: any) => setSortBy(e.target.value as any)}
+                  className="bg-transparent text-[var(--hive-text-inverse)] text-sm focus:outline-none border-none"
                 >
                   <option value="popular" className="bg-neutral-950">Popular</option>
                   <option value="trending" className="bg-neutral-950">Trending</option>
@@ -466,12 +506,12 @@ export default function UnifiedSpacesPage() {
                 </select>
               </div>
 
-              <div className="flex items-center bg-white/[0.02] border border-white/[0.06] rounded-lg p-1">
+              <div className="flex items-center bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] rounded-lg p-1">
                 <Button
                   variant={viewMode === "grid" ? "primary" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("grid")}
-                  className={viewMode === "grid" ? "bg-hive-gold text-hive-obsidian" : "text-white"}
+                  className={viewMode === "grid" ? "bg-hive-gold text-hive-obsidian" : "text-[var(--hive-text-inverse)]"}
                 >
                   <Grid className="h-4 w-4" />
                 </Button>
@@ -479,7 +519,7 @@ export default function UnifiedSpacesPage() {
                   variant={viewMode === "list" ? "primary" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("list")}
-                  className={viewMode === "list" ? "bg-hive-gold text-hive-obsidian" : "text-white"}
+                  className={viewMode === "list" ? "bg-hive-gold text-hive-obsidian" : "text-[var(--hive-text-inverse)]"}
                 >
                   <List className="h-4 w-4" />
                 </Button>
@@ -488,7 +528,7 @@ export default function UnifiedSpacesPage() {
 
             {/* Category Filter Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mb-8">
-              {spaceTypeFilters.map((filterOption) => (
+              {spaceTypeFilters.map((filterOption: any) => (
                 <Button
                   key={filterOption.id}
                   variant="ghost"
@@ -497,7 +537,7 @@ export default function UnifiedSpacesPage() {
                     "h-auto p-4 flex flex-col items-center text-center transition-all",
                     filter === filterOption.id
                       ? "bg-hive-gold/10 border border-hive-gold/30 text-hive-gold"
-                      : "border border-white/10 text-white hover:bg-white/[0.05]"
+                      : "border border-[var(--hive-white)]/10 text-[var(--hive-text-inverse)] hover:bg-[var(--hive-white)]/[0.05]"
                   )}
                 >
                   <span className="text-2xl mb-2">{filterOption.emoji}</span>
@@ -530,7 +570,7 @@ export default function UnifiedSpacesPage() {
         {error && (
           <Card className="p-8 text-center border-red-500/20 bg-red-500/5">
             <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-white mb-2">Unable to load spaces</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Unable to load spaces</h3>
             <p className="text-neutral-400 mb-4">
               {error?.message?.includes('401') || error?.message?.includes('unauthorized') 
                 ? 'Please sign in again to view your spaces.'
@@ -547,7 +587,7 @@ export default function UnifiedSpacesPage() {
                   }
                 }} 
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/5"
+                className="border-[var(--hive-white)]/20 text-[var(--hive-text-inverse)] hover:bg-[var(--hive-white)]/5"
               >
                 Try Again
               </Button>
@@ -574,7 +614,7 @@ export default function UnifiedSpacesPage() {
                     <Star className="h-4 w-4 text-hive-gold" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">Enhanced Space Experience</p>
+                    <p className="text-sm font-medium text-[var(--hive-text-inverse)]">Enhanced Space Experience</p>
                     <p className="text-xs text-neutral-400">Each space features interactive widgets: post boards, events, members, and tools</p>
                   </div>
                 </div>
@@ -649,37 +689,15 @@ export default function UnifiedSpacesPage() {
           </>
         )}
 
-        {/* Create Space Modal - Coming in v1 */}
+        {/* Create Space Modal - Dynamic Loading */}
         {showCreateModal && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-[#0A0A0A] border border-white/[0.1] rounded-2xl w-full max-w-md p-8 text-center">
-              <div className="w-16 h-16 bg-[#FFD700]/20 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
-                🚀
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Space Creation Coming Soon!</h3>
-              <p className="text-neutral-400 mb-6 leading-relaxed">
-                We&apos;re building an amazing space creation experience for v1. For now, join existing communities and help us shape what spaces should become!
-              </p>
-              <div className="flex gap-3 justify-center">
-                <Button 
-                  onClick={() => {
-                    setShowCreateModal(false);
-                    setActiveView("browse");
-                  }}
-                  className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-                >
-                  Browse Spaces
-                </Button>
-                <Button 
-                  onClick={() => setShowCreateModal(false)}
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/5"
-                >
-                  Got it
-                </Button>
-              </div>
-            </div>
-          </div>
+          <CreateSpaceModal
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            onCreateSpace={_handleSpaceCreated}
+            isLoading={_isCreatingSpace}
+            error={_createError}
+          />
         )}
       </PageContainer>
     </ErrorBoundary>
@@ -733,7 +751,7 @@ function MySpacesEmptyState({ activeTab, onSwitchToBrowse }: { activeTab: string
   return (
     <Card className="p-12 text-center">
       <Icon className="h-16 w-16 text-neutral-400 mx-auto mb-4" />
-      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+      <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">{title}</h3>
       <p className="text-neutral-400 mb-6">{description}</p>
       <Button 
         onClick={onSwitchToBrowse}
@@ -758,7 +776,7 @@ function BrowseEmptyState({
   return (
     <Card className="p-12 text-center">
       <Compass className="h-16 w-16 text-neutral-400 mx-auto mb-4" />
-      <h3 className="text-xl font-semibold text-white mb-2">No spaces found</h3>
+      <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">No spaces found</h3>
       <p className="text-neutral-400 mb-6">
         {searchTerm 
           ? `No spaces match "${searchTerm}". Try different keywords or browse all spaces.`
@@ -769,7 +787,7 @@ function BrowseEmptyState({
         <Button 
           onClick={() => setSearchTerm("")}
           variant="outline"
-          className="border-white/20 text-white"
+          className="border-[var(--hive-white)]/20 text-[var(--hive-text-inverse)]"
         >
           Clear Search
         </Button>

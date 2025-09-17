@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useMemo, useCallback, memo, lazy, Suspense, useRef } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 import { Progress } from '../../../components/ui/progress';
 import { Separator } from '../../../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
-import { Switch } from '../../../components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '../../../atomic/molecules/alert-toast-system';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { Slider } from '../../../components/ui/slider';
 import { 
   Zap,
@@ -96,8 +96,9 @@ import {
  * - **Real-time Metrics**: Core Web Vitals, user experience monitoring
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '23-Advanced Systems/Performance Optimization',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -197,7 +198,7 @@ const HeavyComponent = memo(({
   onAction, 
   theme = 'dark' 
 }: { 
-  data: any[]; 
+  data: unknown[]; 
   onAction: (id: string) => void;
   theme?: string;
 }) => {
@@ -205,7 +206,6 @@ const HeavyComponent = memo(({
   
   // Expensive computation simulation
   const processedData = useMemo(() => {
-    console.log('Computing expensive data transformation');
     return data.map(item => ({
       ...item,
       processed: true,
@@ -713,7 +713,7 @@ const PerformanceControls = ({
         
         <Button
           onClick={onReset}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="border-gray-600 text-gray-300"
         >
@@ -793,7 +793,6 @@ const PerformanceOptimizationSystem = () => {
   );
 
   const handleAction = useCallback((id: string) => {
-    console.log('Action triggered for:', id);
   }, []);
 
   const addTestData = () => {

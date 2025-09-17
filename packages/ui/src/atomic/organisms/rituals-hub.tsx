@@ -148,7 +148,7 @@ export function RitualsHub({
                     : 'bg-hive-surface-elevated'
                 }`}>
                   {status === 'completed' ? (
-                    <CheckCircle className="h-6 w-6 text-white" />
+                    <CheckCircle className="h-6 w-6 text-[var(--hive-text-inverse)]" />
                   ) : (
                     <IconComponent className={`h-6 w-6 ${
                       status === 'active' ? 'text-hive-obsidian' : 'text-hive-text-secondary'
@@ -274,7 +274,7 @@ export function RitualsHub({
             <div>
               <h3 className="font-semibold text-hive-text-primary mb-3">Milestones</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {activeRitual.milestones.map((milestone) => (
+                {activeRitual.milestones.map((milestone: any) => (
                   <div 
                     key={milestone.id}
                     className={`p-3 rounded-lg border transition-colors ${
@@ -316,7 +316,7 @@ export function RitualsHub({
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {completedRituals.map((ritual) => (
+            {completedRituals.map((ritual: any) => (
               <Card key={ritual.id} className="p-4 bg-green-500/10 border-green-500/30">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">

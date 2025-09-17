@@ -253,7 +253,7 @@ export const Default: Story = {
     user: mockUser,
     initialOpen: false
   },
-  render: (args) => <InteractiveTabletDemo {...args} />
+  render: (args: any) => <InteractiveTabletDemo {...args} />
 };
 
 export const OpenByDefault: Story = {
@@ -262,7 +262,7 @@ export const OpenByDefault: Story = {
     user: mockUser,
     initialOpen: true
   },
-  render: (args) => <InteractiveTabletDemo {...args} />,
+  render: (args: any) => <InteractiveTabletDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -278,7 +278,7 @@ export const WithBadges: Story = {
     user: mockUser,
     initialOpen: true
   },
-  render: (args) => <InteractiveTabletDemo {...args} />,
+  render: (args: any) => <InteractiveTabletDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -294,7 +294,7 @@ export const BuilderUser: Story = {
     user: builderUser,
     initialOpen: true
   },
-  render: (args) => <InteractiveTabletDemo {...args} />,
+  render: (args: any) => <InteractiveTabletDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -310,7 +310,7 @@ export const ProfileActive: Story = {
     user: mockUser,
     initialOpen: true
   },
-  render: (args) => <InteractiveTabletDemo {...args} />,
+  render: (args: any) => <InteractiveTabletDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -377,7 +377,7 @@ export const SwipeGestureDemo: Story = {
     user: mockUser,
     initialOpen: true
   },
-  render: (args) => (
+  render: (args: any) => (
     <div style={{ 
       minHeight: '100vh', 
       backgroundColor: 'var(--hive-background-primary)',
@@ -425,7 +425,7 @@ export const AnimationShowcase: Story = {
     user: mockUser,
     initialOpen: false
   },
-  render: (args) => {
+  render: (args: any) => {
     const [isOpen, setIsOpen] = useState(false);
     
     return (

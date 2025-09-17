@@ -85,7 +85,7 @@ describe('CampusBuilderTools', () => {
     });
 
     it('calls onBecomeBuilder when become builder button is clicked', () => {
-      const onBecomeBuilder = jest.fn();
+      const onBecomeBuilder = (() => {});
       render(
         <CampusBuilderTools
           availableTools={mockAvailableTools}
@@ -157,7 +157,7 @@ describe('CampusBuilderTools', () => {
     });
 
     it('calls onCreateTool when create button is clicked', () => {
-      const onCreateTool = jest.fn();
+      const onCreateTool = (() => {});
       render(
         <CampusBuilderTools
           availableTools={mockAvailableTools}
@@ -226,7 +226,7 @@ describe('CampusBuilderTools', () => {
     });
 
     it('calls onViewTool when created tool is clicked', () => {
-      const onViewTool = jest.fn();
+      const onViewTool = (() => {});
       render(
         <CampusBuilderTools
           availableTools={mockAvailableTools}
@@ -289,7 +289,7 @@ describe('CampusBuilderTools', () => {
   });
 
   it('calls onToolClick when available tool is clicked', () => {
-    const onToolClick = jest.fn();
+    const onToolClick = (() => {});
     render(
       <CampusBuilderTools
         availableTools={mockAvailableTools}

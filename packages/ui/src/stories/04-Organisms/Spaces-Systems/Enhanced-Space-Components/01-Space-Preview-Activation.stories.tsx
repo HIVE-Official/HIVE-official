@@ -5,7 +5,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
+import { Button } from '../../../../atomic/atoms/button-enhanced';
 import { Badge } from '../../../../components/ui/badge';
 import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
 import { HiveProgress } from '../../../../components/hive-progress';
@@ -233,14 +233,14 @@ function SpacePreviewActivationFlow() {
                      mockActiveSpace;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Demo Control Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Space Lifecycle Demonstration</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Space Lifecycle Demonstration</h1>
               <p className="text-gray-400">Preview different space states and activation flows</p>
             </div>
             <Badge className="text-xs" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -257,11 +257,11 @@ function SpacePreviewActivationFlow() {
             ].map(({ id, label, icon: Icon, description }) => (
               <button
                 key={id}
-                onClick={() => setActiveDemo(id as any)}
+                onClick={() => setActiveDemo(id as unknown)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeDemo === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                 }`}
                 style={activeDemo === id ? {
                   backgroundColor: 'var(--hive-brand-primary)',
@@ -302,7 +302,7 @@ function SpacePreviewActivationFlow() {
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl sm:text-4xl font-bold text-white truncate">
+                  <h1 className="text-3xl sm:text-4xl font-bold text-[var(--hive-text-primary)] truncate">
                     {currentSpace.name}
                   </h1>
                   <SpaceStatusBadge status={currentSpace.status} />
@@ -330,7 +330,7 @@ function SpacePreviewActivationFlow() {
               <div className="flex items-center gap-3 flex-shrink-0">
                 {activeDemo === 'preview' ? (
                   <Button 
-                    className="bg-blue-600 text-white hover:bg-blue-700"
+                    className="bg-blue-600 text-[var(--hive-text-primary)] hover:bg-blue-700"
                     onClick={() => setShowActivationFlow(true)}
                   >
                     <PlayCircle className="w-4 h-4 mr-2" />
@@ -338,7 +338,7 @@ function SpacePreviewActivationFlow() {
                   </Button>
                 ) : activeDemo === 'frozen' ? (
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     className="border-gray-500/50 text-gray-400"
                     disabled
                   >
@@ -347,7 +347,7 @@ function SpacePreviewActivationFlow() {
                   </Button>
                 ) : (
                   <Button 
-                    className="bg-green-600 text-white hover:bg-green-700"
+                    className="bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700"
                   >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Enter Space
@@ -378,7 +378,7 @@ function SpacePreviewActivationFlow() {
                     <div>
                       <div className="flex justify-between text-sm mb-2">
                         <span className="text-gray-400">Interest Level</span>
-                        <span className="text-white">{mockPreviewSpace.activationRequirements.currentInterest}/{mockPreviewSpace.activationRequirements.minMembers} minimum</span>
+                        <span className="text-[var(--hive-text-primary)]">{mockPreviewSpace.activationRequirements.currentInterest}/{mockPreviewSpace.activationRequirements.minMembers} minimum</span>
                       </div>
                       <HiveProgress 
                         value={mockPreviewSpace.activationRequirements.progressPercentage} 
@@ -399,7 +399,7 @@ function SpacePreviewActivationFlow() {
                         <div className="text-xs text-gray-400">Progress</div>
                       </div>
                       <div>
-                        <div className="text-lg font-bold text-purple-400">{mockPreviewSpace.estimatedMembers}</div>
+                        <div className="text-lg font-bold text-[var(--hive-gold)]">{mockPreviewSpace.estimatedMembers}</div>
                         <div className="text-xs text-gray-400">Expected Members</div>
                       </div>
                     </div>
@@ -410,7 +410,7 @@ function SpacePreviewActivationFlow() {
               {/* Preview Features */}
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-white">What's Coming</CardTitle>
+                  <CardTitle className="text-[var(--hive-text-primary)]">What's Coming</CardTitle>
                   <p className="text-gray-400 text-sm">Features available once this space activates</p>
                 </CardHeader>
                 <CardContent>
@@ -427,7 +427,7 @@ function SpacePreviewActivationFlow() {
                   
                   <div className="text-center">
                     <Button 
-                      className="bg-blue-600 text-white hover:bg-blue-700"
+                      className="bg-blue-600 text-[var(--hive-text-primary)] hover:bg-blue-700"
                       onClick={() => setShowActivationFlow(true)}
                     >
                       <Heart className="w-4 h-4 mr-2" />
@@ -489,15 +489,15 @@ function SpacePreviewActivationFlow() {
               {/* Archive Highlights */}
               <Card className="bg-gray-800/30 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-white">Archive Highlights</CardTitle>
+                  <CardTitle className="text-[var(--hive-text-primary)]">Archive Highlights</CardTitle>
                   <p className="text-gray-400 text-sm">Most popular content from this space</p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="p-3 bg-gray-800/50 rounded-lg">
                       <div className="flex items-center mb-2">
-                        <Star className="w-4 h-4 text-yellow-400 mr-2" />
-                        <span className="text-white font-medium">Top Event</span>
+                        <Star className="w-4 h-4 text-[var(--hive-gold)] mr-2" />
+                        <span className="text-[var(--hive-text-primary)] font-medium">Top Event</span>
                       </div>
                       <p className="text-gray-300">{mockFrozenSpace.archiveInfo.topEvent}</p>
                       <p className="text-gray-400 text-sm">450 attendees • April 2023</p>
@@ -546,11 +546,11 @@ function SpacePreviewActivationFlow() {
                     <div className="text-xs text-gray-400">Events This Month</div>
                   </div>
                   <div>
-                    <div className="text-lg font-bold text-purple-400">{mockActiveSpace.memberCount}</div>
+                    <div className="text-lg font-bold text-[var(--hive-gold)]">{mockActiveSpace.memberCount}</div>
                     <div className="text-xs text-gray-400">Active Members</div>
                   </div>
                   <div>
-                    <div className="text-lg font-bold text-orange-400">{mockActiveSpace.stats.engagementRate}%</div>
+                    <div className="text-lg font-bold text-[var(--hive-gold)]">{mockActiveSpace.stats.engagementRate}%</div>
                     <div className="text-xs text-gray-400">Engagement</div>
                   </div>
                 </div>
@@ -559,7 +559,7 @@ function SpacePreviewActivationFlow() {
 
             {/* Universal Surfaces Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {WIDGET_CONFIGS.map((widget) => (
+              {WIDGET_CONFIGS.map((widget: any) => (
                 <UniversalSurfaceCard key={widget.id} widget={widget} space={mockActiveSpace} />
               ))}
             </div>
@@ -606,7 +606,7 @@ function PreviewSidebarInfo({ space }: { space: any }) {
     <>
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">About</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">About</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-gray-300 text-sm mb-4">{space.description}</p>
@@ -618,7 +618,7 @@ function PreviewSidebarInfo({ space }: { space: any }) {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Expected Members</span>
-              <span className="text-white">{space.estimatedMembers}</span>
+              <span className="text-[var(--hive-text-primary)]">{space.estimatedMembers}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Interest Level</span>
@@ -630,17 +630,17 @@ function PreviewSidebarInfo({ space }: { space: any }) {
 
       <Card className="bg-gray-800/50 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Course Leader</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Course Leader</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center">
             <Avatar className="w-10 h-10 mr-3">
-              <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+              <AvatarFallback className="bg-gradient-to-r from-blue-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)]">
                 {space.leader.avatar}
               </AvatarFallback>
             </Avatar>
             <div>
-              <div className="text-white font-medium">{space.leader.name}</div>
+              <div className="text-[var(--hive-text-primary)] font-medium">{space.leader.name}</div>
               <div className="text-gray-400 text-sm">{space.leader.handle}</div>
             </div>
             {space.leader.isVerified && (
@@ -658,7 +658,7 @@ function FrozenSidebarInfo({ space }: { space: any }) {
     <>
       <Card className="bg-gray-800/30 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Archive Info</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Archive Info</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-gray-300 text-sm mb-4">{space.description}</p>
@@ -670,11 +670,11 @@ function FrozenSidebarInfo({ space }: { space: any }) {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Archived Date</span>
-              <span className="text-white">{new Date(space.archiveInfo.archivedDate).toLocaleDateString()}</span>
+              <span className="text-[var(--hive-text-primary)]">{new Date(space.archiveInfo.archivedDate).toLocaleDateString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Final Members</span>
-              <span className="text-white">{space.memberCount}</span>
+              <span className="text-[var(--hive-text-primary)]">{space.memberCount}</span>
             </div>
           </div>
         </CardContent>
@@ -682,7 +682,7 @@ function FrozenSidebarInfo({ space }: { space: any }) {
 
       <Card className="bg-gray-800/30 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Archive Access</CardTitle>
+          <CardTitle className="text-[var(--hive-text-primary)]">Archive Access</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-gray-400 text-sm mb-4">
@@ -690,7 +690,7 @@ function FrozenSidebarInfo({ space }: { space: any }) {
           </p>
           
           <Button 
-            variant="outline" 
+            variant="secondary" 
             className="w-full border-gray-600 text-gray-400"
             disabled
           >
@@ -708,11 +708,11 @@ function UniversalSurfaceCard({ widget, space }: { widget: any; space: any }) {
   
   return (
     <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: any) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
             e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: any) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
             e.currentTarget.style.boxShadow = 'none';
           }}>
@@ -721,9 +721,9 @@ function UniversalSurfaceCard({ widget, space }: { widget: any; space: any }) {
           <div className="flex items-center gap-3">
             <Icon className="w-6 h-6" style={{ color: 'var(--hive-brand-primary)' }} />
             <div>
-              <CardTitle className="text-white">{widget.title}</CardTitle>
+              <CardTitle className="text-[var(--hive-text-primary)]">{widget.title}</CardTitle>
               {widget.adminOnly && (
-                <Badge variant="outline" className="text-xs mt-1 border-amber-500/30 text-amber-400">
+                <Badge variant="secondary" className="text-xs mt-1 border-[var(--hive-gold)]/30 text-[var(--hive-gold)]">
                   Admin Only
                 </Badge>
               )}
@@ -737,7 +737,7 @@ function UniversalSurfaceCard({ widget, space }: { widget: any; space: any }) {
         <p className="text-gray-400 text-sm mb-4">{widget.description}</p>
         
         <div className="space-y-2">
-          <h4 className="text-white text-sm font-medium">Active Features:</h4>
+          <h4 className="text-[var(--hive-text-primary)] text-sm font-medium">Active Features:</h4>
           {widget.activeFeatures.map((feature: string, index: number) => (
             <div key={index} className="flex items-center text-sm">
               <CheckCircle className="w-3 h-3 text-green-400 mr-2 flex-shrink-0" />
@@ -788,12 +788,12 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#0A0A0A] border border-white/[0.1] rounded-2xl w-full max-w-md">
+    <div className="fixed inset-0 bg-[var(--hive-black)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-[var(--hive-background-primary)] border border-[var(--hive-white)]/[0.1] rounded-2xl w-full max-w-md">
         
         {/* Header */}
-        <div className="p-6 border-b border-white/[0.06]">
-          <h2 className="text-xl font-semibold text-white mb-2">Activate Space</h2>
+        <div className="p-6 border-b border-[var(--hive-white)]/[0.06]">
+          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">Activate Space</h2>
           <p className="text-gray-400 text-sm">{space.name}</p>
         </div>
         
@@ -815,9 +815,9 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
                       isActive ? 'bg-blue-500' : 'bg-gray-700'
                     }`}>
                       {isCompleted ? (
-                        <CheckCircle className="w-4 h-4 text-white" />
+                        <CheckCircle className="w-4 h-4 text-[var(--hive-text-primary)]" />
                       ) : (
-                        <Icon className="w-4 h-4 text-white" />
+                        <Icon className="w-4 h-4 text-[var(--hive-text-primary)]" />
                       )}
                     </div>
                     {index < steps.length - 1 && (
@@ -832,7 +832,7 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
             
             {/* Current Step */}
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-white mb-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
                 {steps[currentStep].title}
               </h3>
               <p className="text-gray-400 text-sm">
@@ -857,7 +857,7 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
                 <input
                   type="email"
                   placeholder="Enter email to invite"
-                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white placeholder-gray-400"
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-[var(--hive-text-primary)] placeholder-gray-400"
                 />
                 <p className="text-xs text-gray-400">
                   Invite classmates and friends to help activate this space
@@ -876,8 +876,8 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
           {/* Actions */}
           <div className="flex gap-3 mt-6">
             <Button 
-              variant="outline" 
-              className="flex-1 border-white/20 text-white"
+              variant="secondary" 
+              className="flex-1 border-[var(--hive-white)]/20 text-[var(--hive-text-primary)]"
               onClick={onClose}
             >
               Cancel

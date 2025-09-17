@@ -21,7 +21,6 @@ export function useAuthProvider() {
     setIsLoading(true);
     try {
       // Login logic here
-      console.log('Login:', credentials);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {

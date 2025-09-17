@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
 const mySpacesQuerySchema = z.object({
   includeInactive: z.coerce.boolean().default(false),
@@ -87,14 +87,14 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
           tags: spaceData.tags || [],
           // Include membership info
           membership: {
-            role: membership.role,
-            joinedAt: membership.joinedAt,
-            permissions: membership.permissions,
-            isOwner: membership.role === 'owner',
-            isAdmin: membership.role === 'owner' || membership.role === 'admin',
-            canModerate: membership.permissions.includes('moderate'),
-            canPost: membership.permissions.includes('post'),
-            canInvite: membership.permissions.includes('invite')
+            role: membership?.role,
+            joinedAt: membership?.joinedAt,
+            permissions: membership?.permissions,
+            isOwner: membership?.role === 'owner',
+            isAdmin: membership?.role === 'owner' || membership?.role === 'admin',
+            canModerate: membership?.permissions?.includes('moderate'),
+            canPost: membership?.permissions?.includes('post'),
+            canInvite: membership?.permissions?.includes('invite')
           }
         };
       });
@@ -115,10 +115,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       .sort(sortByActivity)
       .slice(0, 5);
 
-    // TODO: Get favorited spaces from user preferences
-    const favorited: any[] = [];
-
-    const categorizedSpaces = {
+    const responseData = {
       joined: joined.sort(sortByActivity),
       owned: owned.sort(sortByActivity),
       adminned: adminned.sort(sortByActivity),
@@ -137,7 +134,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     return NextResponse.json({
       success: true,
       spaces,
-      categorized: categorizedSpaces,
+      categorized: responseData,
       totalCount: spaces.length,
       counts: {
         total: spaces.length,

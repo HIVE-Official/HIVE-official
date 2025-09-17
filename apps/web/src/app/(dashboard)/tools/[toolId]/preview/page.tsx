@@ -6,7 +6,7 @@ import { Button, Card } from "@hive/ui";
 import { ArrowLeft, Play, Edit, Settings, Eye, Maximize2, Minimize2, RefreshCw, Code2 } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 import { useUnifiedAuth } from "@hive/ui";
-import { ToolNavigation } from "@/lib/tool-navigation";
+import { ToolNavigation } from "@/lib/tools/tool-navigation";
 import { ToolRuntime } from "@/components/tools/tool-runtime";
 import { ToolComposition } from "@/lib/element-system";
 
@@ -105,7 +105,7 @@ const ToolRuntimeWrapper = ({ composition, mode }: { composition: ToolCompositio
     <div className="space-y-4">
       <ToolRuntime
         composition={composition}
-        userId={user?.uid || 'anonymous'}
+        userId={user?.id || 'anonymous'}
         mode={mode}
         onExecutionResult={handleExecutionResult}
         onError={handleError}
@@ -114,15 +114,15 @@ const ToolRuntimeWrapper = ({ composition, mode }: { composition: ToolCompositio
       {/* Execution Results Display */}
       {executionResults.length > 0 && (
         <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-          <h4 className="text-sm font-medium text-white mb-2">Recent Executions</h4>
+          <h4 className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Recent Executions</h4>
           <div className="space-y-1 max-h-32 overflow-y-auto">
             {executionResults.map((entry, index) => (
               <div key={index} className="text-xs p-2 bg-[rgba(255,255,255,0.05)] rounded">
-                <div className="flex justify-between text-[#A1A1AA]">
+                <div className="flex justify-between text-[var(--hive-text-muted)]">
                   <span>Result {index + 1}</span>
                   <span>{new Date(entry.timestamp).toLocaleTimeString()}</span>
                 </div>
-                <div className="text-white mt-1">
+                <div className="text-[var(--hive-text-inverse)] mt-1">
                   {JSON.stringify(entry.result, null, 2).slice(0, 100)}...
                 </div>
               </div>
@@ -175,14 +175,14 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
   elements: ${JSON.stringify(composition.elements, null, 2)},
   connections: ${JSON.stringify(composition.connections, null, 2)},
   layout: '${composition.layout}',
-  render: (props) => {
+  render: (props: any) => {
     // Tool rendering logic using element system
     return <ToolRuntime composition={this} {...props} />;
   }
 };`;
 
   return (
-    <div className={`bg-gradient-to-br from-[#0A0A0A] via-[#0F0F0F] to-[#1A1A1A] ${isFullscreen ? 'fixed inset-0 z-50' : 'min-h-screen'}`}>
+    <div className={`bg-gradient-to-br from-[var(--hive-background-primary)] via-[#0F0F0F] to-[#1A1A1A] ${isFullscreen ? 'fixed inset-0 z-50' : 'min-h-screen'}`}>
       {/* Header */}
       <div className="border-b border-[rgba(255,255,255,0.1)] bg-[rgba(0,0,0,0.8)] backdrop-blur-lg sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -192,16 +192,16 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                 size="sm"
                 variant="ghost"
                 onClick={() => ToolNavigation.goBack('marketplace')}
-                className="text-[#A1A1AA] hover:text-white"
+                className="text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
               <div>
-                <h1 className="text-xl font-semibold text-white">
+                <h1 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   Preview: {composition.name}
                 </h1>
-                <p className="text-sm text-[#A1A1AA]">
+                <p className="text-sm text-[var(--hive-text-muted)]">
                   {composition.description}
                 </p>
               </div>
@@ -213,7 +213,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                   size="sm"
                   variant={previewMode === 'preview' ? 'default' : 'ghost'}
                   onClick={() => setPreviewMode('preview')}
-                  className={previewMode === 'preview' ? 'bg-[#FFD700] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
+                  className={previewMode === 'preview' ? 'bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)]' : 'text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]'}
                 >
                   <Eye className="h-4 w-4 mr-2" />
                   Preview
@@ -222,7 +222,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                   size="sm"
                   variant={previewMode === 'live' ? 'default' : 'ghost'}
                   onClick={() => setPreviewMode('live')}
-                  className={previewMode === 'live' ? 'bg-[#FFD700] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
+                  className={previewMode === 'live' ? 'bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)]' : 'text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]'}
                 >
                   <Play className="h-4 w-4 mr-2" />
                   Live
@@ -233,7 +233,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                 size="sm"
                 variant="outline"
                 onClick={() => setIsFullscreen(!isFullscreen)}
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
               </Button>
@@ -242,7 +242,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                 size="sm"
                 variant="outline"
                 onClick={handleEdit}
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <Edit className="h-4 w-4 mr-2" />
                 Edit
@@ -251,7 +251,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               <Button
                 size="sm"
                 onClick={handleRun}
-                className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+                className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255]"
               >
                 <Play className="h-4 w-4 mr-2" />
                 Run Tool
@@ -266,13 +266,13 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
           {/* Tool Preview - Main Panel */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Tool Preview</h2>
+              <h2 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Tool Preview</h2>
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => window.location.reload()}
-                  className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                  className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
                 >
                   <RefreshCw className="h-4 w-4" />
                 </Button>
@@ -280,7 +280,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                   size="sm"
                   variant="outline"
                   onClick={() => setShowCode(!showCode)}
-                  className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                  className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
                 >
                   <Code2 className="h-4 w-4" />
                 </Button>
@@ -290,9 +290,9 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] flex-1">
               {showCode ? (
                 <div className="h-full">
-                  <h3 className="text-sm font-medium text-white mb-4">Generated Code</h3>
+                  <h3 className="text-sm font-medium text-[var(--hive-text-inverse)] mb-4">Generated Code</h3>
                   <div className="h-[calc(100%-2rem)] bg-[rgba(0,0,0,0.5)] border border-[rgba(255,255,255,0.1)] rounded-lg p-4 overflow-auto">
-                    <pre className="text-sm text-[#A1A1AA] whitespace-pre-wrap font-mono">
+                    <pre className="text-sm text-[var(--hive-text-muted)] whitespace-pre-wrap font-mono">
                       {generatedCode}
                     </pre>
                   </div>
@@ -300,7 +300,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               ) : (
                 <div className="h-full flex flex-col">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="text-sm text-[#A1A1AA]">
+                    <div className="text-sm text-[var(--hive-text-muted)]">
                       {previewMode === 'live' ? 'Live Execution' : 'Preview Mode'}
                     </div>
                     {previewMode === 'live' && (
@@ -319,38 +319,38 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
           <div className="space-y-6">
             {/* Tool Information */}
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-              <h3 className="text-lg font-semibold text-white mb-4">Tool Information</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Tool Information</h3>
               <div className="space-y-3 text-sm">
                 <div>
-                  <span className="text-[#A1A1AA]">Name:</span>
-                  <span className="text-white ml-2">{composition.name}</span>
+                  <span className="text-[var(--hive-text-muted)]">Name:</span>
+                  <span className="text-[var(--hive-text-inverse)] ml-2">{composition.name}</span>
                 </div>
                 <div>
-                  <span className="text-[#A1A1AA]">ID:</span>
-                  <span className="text-white ml-2 font-mono">{composition.id}</span>
+                  <span className="text-[var(--hive-text-muted)]">ID:</span>
+                  <span className="text-[var(--hive-text-inverse)] ml-2 font-mono">{composition.id}</span>
                 </div>
                 <div>
-                  <span className="text-[#A1A1AA]">Elements:</span>
-                  <span className="text-white ml-2">{composition.elements.length}</span>
+                  <span className="text-[var(--hive-text-muted)]">Elements:</span>
+                  <span className="text-[var(--hive-text-inverse)] ml-2">{composition.elements.length}</span>
                 </div>
                 <div>
-                  <span className="text-[#A1A1AA]">Connections:</span>
-                  <span className="text-white ml-2">{composition.connections.length}</span>
+                  <span className="text-[var(--hive-text-muted)]">Connections:</span>
+                  <span className="text-[var(--hive-text-inverse)] ml-2">{composition.connections.length}</span>
                 </div>
                 <div>
-                  <span className="text-[#A1A1AA]">Layout:</span>
-                  <span className="text-white ml-2 capitalize">{composition.layout}</span>
+                  <span className="text-[var(--hive-text-muted)]">Layout:</span>
+                  <span className="text-[var(--hive-text-inverse)] ml-2 capitalize">{composition.layout}</span>
                 </div>
                 <div>
-                  <span className="text-[#A1A1AA]">Description:</span>
-                  <p className="text-white mt-1">{composition.description}</p>
+                  <span className="text-[var(--hive-text-muted)]">Description:</span>
+                  <p className="text-[var(--hive-text-inverse)] mt-1">{composition.description}</p>
                 </div>
               </div>
             </Card>
 
             {/* Element List */}
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] flex-1 min-h-0">
-              <h3 className="text-lg font-semibold text-white mb-4">Elements</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Elements</h3>
               <div className="space-y-2 overflow-auto">
                 {composition.elements.map((element, _index) => (
                   <div
@@ -358,12 +358,12 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                     className="p-3 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-lg"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium text-sm">{element.instanceId}</span>
-                      <span className="text-xs text-[#A1A1AA] bg-[rgba(255,255,255,0.05)] px-2 py-1 rounded">
+                      <span className="text-[var(--hive-text-inverse)] font-medium text-sm">{element.instanceId}</span>
+                      <span className="text-xs text-[var(--hive-text-muted)] bg-[rgba(255,255,255,0.05)] px-2 py-1 rounded">
                         {element.elementId}
                       </span>
                     </div>
-                    <div className="text-xs text-[#A1A1AA]">
+                    <div className="text-xs text-[var(--hive-text-muted)]">
                       Position: ({element.position.x}, {element.position.y}) • 
                       Size: {element.size.width}×{element.size.height}
                     </div>
@@ -374,25 +374,25 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
 
             {/* Quick Actions */}
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Quick Actions</h3>
               <div className="space-y-3">
                 <Button
                   onClick={handleRun}
-                  className="w-full bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255] justify-start"
+                  className="w-full bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255] justify-start"
                 >
                   <Play className="h-4 w-4 mr-3" />
                   Run Tool
                 </Button>
                 <Button
                   onClick={handleEdit}
-                  className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+                  className="w-full bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
                 >
                   <Edit className="h-4 w-4 mr-3" />
                   Edit Tool
                 </Button>
                 <Button
                   onClick={() => ToolNavigation.toSettings(composition.id)}
-                  className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+                  className="w-full bg-[rgba(255,255,255,0.05)] text-[var(--hive-text-inverse)] hover:bg-[rgba(255,255,255,0.1)] justify-start"
                 >
                   <Settings className="h-4 w-4 mr-3" />
                   Tool Settings

@@ -8,14 +8,15 @@ import {
   ChevronRight, Plus, Filter, TrendingUp, Eye,
   CheckCircle, AlertCircle, Timer, Play, Pause
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Badge } from '../../../components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
 import { Progress } from '../../../components/ui/progress';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Social-Feed-Components/Feed & Rituals System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {
@@ -271,7 +272,7 @@ export const CampusFeedInterface: Story = {
                 <CardTitle className="text-lg">Activity Feed</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {filterOptions.map((option) => (
+                {filterOptions.map((option: any) => (
                   <button
                     key={option.id}
                     onClick={() => setFilter(option.id)}
@@ -297,7 +298,7 @@ export const CampusFeedInterface: Story = {
                 <CardDescription>Regular campus activities</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {ritualCategories.map((category) => {
+                {ritualCategories.map((category: any) => {
                   const IconComponent = category.icon;
                   return (
                     <div key={category.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
@@ -313,7 +314,7 @@ export const CampusFeedInterface: Story = {
                         <p className="font-medium text-gray-900">{category.name}</p>
                         <p className="text-sm text-gray-600">{category.active}</p>
                       </div>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {category.count}
                       </Badge>
                     </div>
@@ -340,15 +341,15 @@ export const CampusFeedInterface: Story = {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 mt-4 ml-14">
-                  <Button size="sm" variant="outline" className="gap-2">
+                  <Button size="sm" variant="secondary" className="gap-2">
                     <Calendar className="h-4 w-4" />
                     Schedule Activity
                   </Button>
-                  <Button size="sm" variant="outline" className="gap-2">
+                  <Button size="sm" variant="secondary" className="gap-2">
                     <Users className="h-4 w-4" />
                     Start Ritual
                   </Button>
-                  <Button size="sm" variant="outline" className="gap-2">
+                  <Button size="sm" variant="secondary" className="gap-2">
                     <Zap className="h-4 w-4" />
                     Use Tool
                   </Button>
@@ -358,7 +359,7 @@ export const CampusFeedInterface: Story = {
 
             {/* Feed Posts */}
             <div className="space-y-6">
-              {filteredFeed.map((post) => (
+              {filteredFeed.map((post: any) => (
                 <Card key={post.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -374,13 +375,13 @@ export const CampusFeedInterface: Story = {
                             <p className="font-semibold text-gray-900">{post.creator.name}</p>
                             <p className="text-gray-600">{post.creator.handle}</p>
                             {post.type === 'tool-generated' && (
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="secondary" className="text-xs">
                                 <Zap className="h-3 w-3 mr-1" />
                                 Tool
                               </Badge>
                             )}
                             {post.type === 'ritual' && (
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="secondary" className="text-xs">
                                 <Target className="h-3 w-3 mr-1" />
                                 Ritual
                               </Badge>
@@ -560,7 +561,7 @@ export const RitualCreationInterface: Story = {
                 <CardDescription>What type of activity?</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {ritualCategories.map((category) => {
+                {ritualCategories.map((category: any) => {
                   const IconComponent = category.icon;
                   return (
                     <button
@@ -613,7 +614,7 @@ export const RitualCreationInterface: Story = {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4">
-                  {templates.map((template) => (
+                  {templates.map((template: any) => (
                     <div
                       key={template.id}
                       onClick={() => setRitualType(template.id)}
@@ -651,7 +652,7 @@ export const RitualCreationInterface: Story = {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
-                    {frequencyOptions.map((option) => (
+                    {frequencyOptions.map((option: any) => (
                       <div
                         key={option.id}
                         onClick={() => setFrequency(option.id)}
@@ -862,7 +863,7 @@ export const RitualParticipationDashboard: Story = {
             {[
               { id: 'my-rituals', label: 'My Rituals', count: myRituals.length },
               { id: 'discover', label: 'Discover', count: discoveredRituals.length }
-            ].map((tab) => (
+            ].map((tab: any) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -905,7 +906,7 @@ export const RitualParticipationDashboard: Story = {
 
             {/* Ritual Cards */}
             <div className="grid lg:grid-cols-2 gap-6">
-              {myRituals.map((ritual) => (
+              {myRituals.map((ritual: any) => (
                 <Card key={ritual.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -920,7 +921,7 @@ export const RitualParticipationDashboard: Story = {
                           <Badge variant={ritual.role === 'organizer' ? 'default' : 'secondary'} className="text-xs">
                             {ritual.role}
                           </Badge>
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="secondary" className="text-xs">
                             {ritual.frequency}
                           </Badge>
                         </div>
@@ -968,7 +969,7 @@ export const RitualParticipationDashboard: Story = {
                         Confirm Next Session
                       </Button>
                       {ritual.role === 'organizer' && (
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           <Settings className="h-4 w-4" />
                         </Button>
                       )}
@@ -989,7 +990,7 @@ export const RitualParticipationDashboard: Story = {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-6">
-              {discoveredRituals.map((ritual) => (
+              {discoveredRituals.map((ritual: any) => (
                 <Card key={ritual.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -1000,7 +1001,7 @@ export const RitualParticipationDashboard: Story = {
                         </CardTitle>
                         <p className="text-sm text-gray-600 mt-1">by {ritual.organizer}</p>
                       </div>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {ritual.frequency}
                       </Badge>
                     </div>
@@ -1035,7 +1036,7 @@ export const RitualParticipationDashboard: Story = {
                         <Plus className="h-4 w-4 mr-2" />
                         Join Ritual
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="secondary">
                         <MessageCircle className="h-4 w-4 mr-2" />
                         Ask Questions
                       </Button>

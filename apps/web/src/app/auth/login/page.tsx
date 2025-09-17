@@ -1,435 +1,354 @@
-'use client';
+'use client'
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Mail, Loader2, ArrowLeft, CheckCircle } from 'lucide-react'
+import Image from 'next/image'
+import { logger  } from '@/types/core';
+import { ROUTES } from '@/lib/routes'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
 
-// Force dynamic rendering to avoid SSG issues with auth
-export const dynamic = 'force-dynamic';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { Loader2, Mail, ArrowLeft } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import { HiveButton, HiveInput, HiveCard, HiveLogo } from "@hive/ui";
-import { HiveModal } from "@/components/temp-stubs";
+// State Management
+import { useAuthStore, useUIStore } from '@hive/hooks'
 
-interface LoginFormData {
-  email: string;
-}
+// Auth mutations - use local client-side hooks
+import { useSendMagicLink, useVerifyMagicLink } from '@/hooks/use-auth-mutations'
 
 function LoginPageContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || ROUTES.APP.FEED
+  const schoolId = searchParams.get('school')
   
-  // Safely get search params with null checks
-  const schoolId = searchParams?.get('schoolId') || null;
-  const schoolName = searchParams?.get('schoolName') || null;
-  const schoolDomain = searchParams?.get('domain') || null;
-
-  const [formData, setFormData] = useState<LoginFormData>({ email: '' });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [devMagicLink, setDevMagicLink] = useState<string | null>(null);
-   
-  const [_isRedirecting, _setIsRedirecting] = useState(false);
-
-  // Redirect if missing required school context
+  // Global state
+  const { user, setUser } = useAuthStore()
+  const { addToast } = useUIStore()
+  
+  // Local state
+  const [email, setEmail] = useState('')
+  const [emailSent, setEmailSent] = useState(false)
+  const [countdown, setCountdown] = useState(0)
+  const [checkingAuth, setCheckingAuth] = useState(true)
+  
+  // Mutations
+  const sendMagicLink = useSendMagicLink()
+  const verifyMagicLink = useVerifyMagicLink()
+  
+  // Check if user is already authenticated
   useEffect(() => {
-    if (!schoolId || !schoolName || !schoolDomain) {
-      router.push('/schools');
-    }
-  }, [schoolId, schoolName, schoolDomain, router]);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: any) => {
+      if (firebaseUser) {
+        // User is already signed in
+        logger.info('User already authenticated, redirecting...', { uid: firebaseUser.uid })
+        addToast({
+          title: 'Already signed in',
+          description: 'Redirecting to your dashboard...',
+          type: 'info'
+        })
+        router.push(redirect)
+      } else {
+        setCheckingAuth(false)
+      }
+    })
 
-  // Show loading if redirecting due to missing school context
-  if (!schoolId || !schoolName || !schoolDomain) {
+    return () => unsubscribe()
+  }, [redirect, router, addToast])
+  
+  // Handle countdown timer
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [countdown])
+  
+  // Check for magic link token in URL
+  useEffect(() => {
+    const token = searchParams.get('token')
+    if (token) {
+      handleMagicLinkVerification(token)
+    }
+  }, [searchParams])
+  
+  const handleMagicLinkVerification = async (token: string) => {
+    try {
+      const result = await verifyMagicLink.mutateAsync({ token })
+      
+      if (result.user) {
+        setUser(result.user)
+        addToast({
+          title: 'Welcome back!',
+          description: 'You have been successfully signed in.',
+          type: 'success'
+        })
+        
+        // Redirect based on user state
+        if (!result.user.onboardingCompleted) {
+          router.push(ROUTES.ONBOARDING.STEP_1)
+        } else {
+          router.push(redirect)
+        }
+      }
+    } catch (error) {
+      logger.error('Failed to verify magic link', { error })
+      addToast({
+        title: 'Invalid or expired link',
+        description: 'Please request a new sign-in link.',
+        type: 'error'
+      })
+      router.push(ROUTES.AUTH.LOGIN)
+    }
+  }
+  
+  const handleSendMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!email || !email.includes('@')) {
+      addToast({
+        title: 'Invalid email',
+        description: 'Please enter a valid email address.',
+        type: 'error'
+      })
+      return
+    }
+    
+    // Validate email domain
+    if (schoolId && schoolId === 'ub-buffalo' && !email.endsWith('@buffalo.edu')) {
+      addToast({
+        title: 'School email required',
+        description: 'Please use your @buffalo.edu email address.',
+        type: 'error'
+      })
+      return
+    } else if (!schoolId && !email.endsWith('.edu')) {
+      addToast({
+        title: 'Educational email required',
+        description: 'Please use a valid .edu email address.',
+        type: 'error'
+      })
+      return
+    }
+    
+    try {
+      await sendMagicLink.mutateAsync({ 
+        email, 
+        schoolId,
+        redirectUrl: `${window.location.origin}${ROUTES.AUTH.LOGIN}?redirect=${redirect}`
+      })
+      
+      setEmailSent(true)
+      setCountdown(60) // 60 second cooldown
+      
+      addToast({
+        title: 'Check your email',
+        description: `We've sent a sign-in link to ${email}`,
+        type: 'success'
+      })
+    } catch (error) {
+      // Error is already logged in the mutation's onError handler
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
+      addToast({
+        title: 'Failed to send email',
+        description: errorMessage,
+        type: 'error'
+      })
+    }
+  }
+  
+  const handleResendEmail = () => {
+    setEmailSent(false)
+    setEmail('')
+  }
+  
+  // Show loading state while checking auth
+  if (checkingAuth) {
     return (
-      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
+      <div className="min-h-screen bg-hive-background-primary flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Loader2 className="h-8 w-8 text-[var(--hive-brand-primary)] animate-spin mx-auto" />
-          <p className="text-[var(--hive-text-secondary)]">Redirecting to school selection...</p>
+          <Loader2 className="h-12 w-12 text-hive-brand-primary animate-spin mx-auto" />
+          <p className="text-white/80">Checking authentication...</p>
         </div>
       </div>
-    );
+    )
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    // Validate email before submitting
-    const emailValidationError = validateEmail(formData.email.trim());
-    if (emailValidationError) {
-      setError(emailValidationError);
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      // Save email for magic link verification
-      window.localStorage.setItem('emailForSignIn', formData.email);
-      
-      const response = await fetch('/api/auth/send-magic-link', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          schoolId,
-        }),
-      });
-
-      const data = await response.json();
-
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to send magic link');
-      }
-
-      // SECURITY: Development auth bypass removed for production safety
-      // All authentication must go through proper magic link verification
-
-      // Store dev magic link if available
-      if (data.devMode && data.magicLink) {
-        setDevMagicLink(data.magicLink);
-      }
-
-      setSuccess(true);
-    } catch (err) {
-      console.error('Authentication error:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
-      
-      // Provide more specific error messages with actionable advice
-      let userFriendlyError = errorMessage;
-      
-      if (errorMessage.includes('fetch') || errorMessage.includes('network')) {
-        userFriendlyError = 'Network error. Please check your internet connection and try again.';
-      } else if (errorMessage.includes('Invalid email')) {
-        userFriendlyError = 'Please enter a valid email address.';
-      } else if (errorMessage.includes('unauthorized') || errorMessage.includes('not authorized')) {
-        userFriendlyError = `This email is not authorized for ${schoolName}. Please use your @${schoolDomain} email address.`;
-      } else if (errorMessage.includes('rate limit')) {
-        userFriendlyError = 'Too many attempts. Please wait a few minutes before trying again.';
-      } else if (errorMessage.includes('server') || errorMessage.includes('500')) {
-        userFriendlyError = 'Server error. Please try again in a few moments.';
-      } else if (errorMessage.includes('timeout')) {
-        userFriendlyError = 'Request timed out. Please check your connection and try again.';
-      } else if (errorMessage.includes('domain')) {
-        userFriendlyError = `Please use your @${schoolDomain} email address for ${schoolName}.`;
-      }
-      
-      setError(userFriendlyError);
-      
-      // Auto-clear error after 5 seconds for better UX
-      setTimeout(() => {
-        setError(null);
-      }, 5000);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const validateEmail = (email: string): string | null => {
-    if (!email) return null;
-    
-    // Basic email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return 'Please enter a valid email address';
-    }
-    
-    // Domain validation (bypass for test.edu domain)
-    const isTestDomain = schoolDomain === 'test.edu';
-    if (!isTestDomain && schoolDomain && !email.toLowerCase().endsWith(`@${schoolDomain.toLowerCase()}`)) {
-      return `Please use your @${schoolDomain} email address`;
-    }
-    
-    return null;
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const email = e.target.value;
-    setFormData({ email });
-    
-    // Clear previous errors
-    setError(null);
-    
-    // Validate email if not empty
-    if (email.trim()) {
-      const validationError = validateEmail(email.trim());
-      if (validationError) {
-        setError(validationError);
-      }
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] flex flex-col">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-background-primary)] via-[var(--hive-background-secondary)] to-[var(--hive-background-primary)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.02)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,215,0,0.03)_0%,transparent_50%)]" />
+    <div className="min-h-screen bg-hive-background-primary flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Background gradient effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-hive-primary/5 via-transparent to-hive-secondary/5" />
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-hive-primary/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-hive-secondary/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       
-      {/* Header */}
-      <motion.div 
-        className="relative z-10 border-b border-[var(--hive-border-primary)]/20 backdrop-blur-sm"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="max-w-6xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <Link 
-              href="/schools" 
-              className="flex items-center gap-2 text-[var(--hive-text-muted)] hover:text-[var(--hive-text-primary)] transition-colors duration-200 group"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
-              <span className="text-sm font-medium">Back to schools</span>
-            </Link>
-            
-            <div className="absolute left-1/2 transform -translate-x-1/2">
-              <Link href="/landing" className="hover:opacity-80 transition-opacity duration-200">
-                <HiveLogo size="md" variant="gold" showWordmark={true} />
-              </Link>
+      <div className="w-full max-w-md relative z-10">
+        {/* Back button */}
+        <button
+          onClick={() => router.push('/schools')}
+          className="flex items-center gap-2 text-sm text-hive-text-secondary hover:text-hive-text-primary transition-colors mb-8 group"
+        >
+          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+          Back to school selection
+        </button>
+        
+        <div className="bg-hive-surface-primary/80 backdrop-blur-xl rounded-2xl border border-hive-border-primary shadow-2xl p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-hive-primary/20 to-hive-secondary/20 rounded-2xl mb-6 p-4">
+              <Image
+                src="/assets/hive-logo-white.svg"
+                alt="HIVE Logo"
+                width={48}
+                height={48}
+                className="w-12 h-12"
+              />
             </div>
-            
-            <div className="w-32" />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Main Content */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md">
-          
-          {/* Development Mode Badge */}
-          {schoolDomain === 'test.edu' && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="mb-8"
-            >
-              <HiveCard className="text-center p-4 bg-[var(--hive-overlay-gold-subtle)] border-[var(--hive-border-gold)]">
-                <p className="text-sm text-[var(--hive-brand-primary)] font-medium">
-                  🛠️ Development Mode Active
-                </p>
-              </HiveCard>
-            </motion.div>
-          )}
-
-          {/* Title Section */}
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h1 className="text-4xl lg:text-5xl font-bold text-[var(--hive-text-primary)] tracking-tight leading-tight mb-4">
-              Sign in to HIVE
+            <h1 className="text-3xl font-bold text-hive-text-primary mb-2">
+              Welcome to HIVE
             </h1>
-            <p className="text-lg text-[var(--hive-text-secondary)] leading-relaxed">
-              Join <span className="text-[var(--hive-brand-primary)] font-semibold">{schoolName}</span> on HIVE
+            <p className="text-hive-text-secondary">
+              {schoolId ? `Sign in with your UB email` : `Enter your email to continue`}
             </p>
-          </motion.div>
-
-          {/* Login Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-6"
-          >
-            <HiveCard className="p-8 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)] shadow-[var(--hive-shadow-level2)]">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-[var(--hive-text-primary)] mb-3">
-                      School email address
-                    </label>
-                  <HiveInput
+          </div>
+          
+          {!emailSent ? (
+            <form onSubmit={handleSendMagicLink} className="space-y-6">
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium text-hive-text-primary">
+                  Email address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-hive-text-tertiary" />
+                  <input
                     id="email"
                     type="email"
-                    value={formData.email}
-                    onChange={handleEmailChange}
-                    placeholder={schoolDomain === 'test.edu' ? 'Enter any email address (dev mode)' : `Enter your @${schoolDomain} address`}
-                    required
-                    disabled={isLoading}
-                    autoComplete="email"
+                    placeholder={schoolId ? "your.name@buffalo.edu" : "your@email.com"}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-hive-background-secondary border border-hive-border-secondary rounded-xl text-hive-text-primary placeholder:text-hive-text-tertiary focus:outline-none focus:ring-2 focus:ring-hive-primary focus:border-transparent transition-all"
+                    disabled={sendMagicLink.isPending}
                     autoFocus
-                    variant={error ? 'error' : 'default'}
-                    size="lg"
-                    className="w-full"
-                    data-testid="email-input"
-                    aria-label={`Email address for ${schoolName}`}
-                    aria-required="true"
-                    aria-invalid={!!error}
-                    aria-describedby={error ? "email-error" : undefined}
+                    required
                   />
-                  </div>
-                  
-                  {!error && schoolDomain === 'test.edu' && (
-                    <p className="text-xs text-[var(--hive-text-tertiary)]">
-                      Dev mode: Any email will work for testing
-                    </p>
-                  )}
                 </div>
-
-                <AnimatePresence>
-                  {error && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <div id="email-error" className="p-4 rounded-xl bg-[var(--hive-status-error)]/10 border border-[var(--hive-status-error)]/20">
-                        <p className="text-sm text-[var(--hive-status-error)]" role="alert" aria-live="polite">{error}</p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <HiveButton
-                  type="submit"
-                  disabled={isLoading || !formData.email || !!error}
-                  variant="premium"
-                  size="xl"
-                  className="w-full"
-                  data-testid="send-magic-link-button"
-                  aria-label="Send magic link to email"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center gap-3">
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Sending magic link...</span>
-                    </div>
-                  ) : (
-                    'Send magic link'
-                  )}
-                </HiveButton>
-              </form>
-            </HiveCard>
-          </motion.div>
-
-
-        </div>
-      </div>
-
-      {/* Redirect Success Modal */}
-      <HiveModal
-        isOpen={_isRedirecting}
-        onClose={() => {}}
-        title="Authentication successful"
-        size="sm"
-        showCloseButton={false}
-      >
-        <motion.div 
-          className="text-center space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[var(--hive-status-success)]/20 border border-[var(--hive-status-success)]/30">
-            <Loader2 className="w-8 h-8 text-[var(--hive-status-success)] animate-spin" />
-          </div>
-          
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
-              Welcome to HIVE!
-            </h3>
-            <p className="text-[var(--hive-text-secondary)]">
-              Redirecting you to the platform...
-            </p>
-          </div>
-        </motion.div>
-      </HiveModal>
-
-      {/* Success Modal */}
-      <HiveModal
-        isOpen={success}
-        onClose={() => setSuccess(false)}
-        title="Check your inbox"
-        size="sm"
-      >
-        <motion.div 
-          className="text-center space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[var(--hive-status-success)]/20 border border-[var(--hive-status-success)]/30">
-            <Mail className="w-8 h-8 text-[var(--hive-status-success)]" />
-          </div>
-          
-          <div className="space-y-3">
-            <p className="text-[var(--hive-text-secondary)]">
-              Magic link sent to
-            </p>
-            <p className="text-[var(--hive-brand-primary)] font-semibold break-all">
-              {formData.email}
-            </p>
-            
-            {/* Development mode - show the magic link */}
-            {devMagicLink && schoolDomain === 'test.edu' && (
-              <HiveCard className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
-                <p className="text-xs text-[var(--hive-brand-primary)] font-medium mb-2">
-                  🛠️ Development Mode - Magic Link:
-                </p>
-                <a 
-                  href={devMagicLink}
-                  className="text-xs text-[var(--hive-brand-primary)] hover:underline break-all"
-                >
-                  {devMagicLink}
-                </a>
-              </HiveCard>
-            )}
-          </div>
-
-          <div className="space-y-4 pt-4">
-            {devMagicLink && schoolDomain === 'test.edu' && (
-              <HiveButton
-                variant="premium"
-                size="xl"
-                className="w-full"
-                onClick={() => window.location.href = devMagicLink}
+                {schoolId && (
+                  <p className="text-xs text-hive-text-tertiary">
+                    Must be a @buffalo.edu email address
+                  </p>
+                )}
+              </div>
+              
+              <button
+                type="submit"
+                disabled={sendMagicLink.isPending || !email}
+                className="w-full py-3 px-4 bg-gradient-to-r from-hive-primary to-hive-secondary text-white font-medium rounded-xl hover:shadow-lg hover:shadow-hive-primary/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
               >
-                Use Dev Magic Link
-              </HiveButton>
-            )}
-            <HiveButton
-              variant="secondary"
-              size="xl"
-              className="w-full"
-              onClick={() => {
-                setSuccess(false);
-                setDevMagicLink(null);
-              }}
-            >
-              Send another link
-            </HiveButton>
+                {sendMagicLink.isPending ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Sending link...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-5 w-5" />
+                    Send sign-in link
+                  </>
+                )}
+              </button>
+              
+              {/* Help text for school emails */}
+              <div className="bg-hive-background-secondary/50 rounded-xl p-4 space-y-2">
+                <p className="text-sm text-hive-text-secondary text-center">
+                  🎓 Use your school email address to join your campus community
+                </p>
+                {schoolId && (
+                  <p className="text-xs text-hive-text-tertiary text-center">
+                    Only @buffalo.edu emails can access UB's HIVE
+                  </p>
+                )}
+              </div>
+            </form>
+          ) : (
+            <div className="space-y-6 text-center py-4">
+              <div className="flex justify-center">
+                <div className="h-20 w-20 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-full flex items-center justify-center">
+                  <CheckCircle className="h-10 w-10 text-green-500" />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <h3 className="font-semibold text-xl text-hive-text-primary">Check your email!</h3>
+                <p className="text-sm text-hive-text-secondary">
+                  We've sent a sign-in link to:
+                </p>
+                <p className="font-medium text-hive-text-primary">{email}</p>
+              </div>
+              
+              <div className="bg-hive-background-secondary rounded-xl p-4 text-sm space-y-2">
+                <p className="font-medium text-hive-text-primary">Didn't receive the email?</p>
+                <ul className="text-left space-y-1 text-hive-text-secondary">
+                  <li>• Check your spam folder</li>
+                  <li>• Make sure you entered the correct email</li>
+                  <li>• Wait a few moments and try again</li>
+                </ul>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={handleResendEmail}
+                  disabled={countdown > 0}
+                  className="w-full py-3 px-4 bg-hive-background-secondary border border-hive-border-secondary rounded-xl text-hive-text-primary font-medium hover:bg-hive-background-tertiary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                >
+                  {countdown > 0 ? (
+                    `Resend in ${countdown}s`
+                  ) : (
+                    'Try different email'
+                  )}
+                </button>
+                
+                <button
+                  onClick={() => router.push('/schools')}
+                  className="text-sm text-hive-text-secondary hover:text-hive-text-primary transition-colors"
+                >
+                  Back to school selection
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        <p className="text-center text-xs text-hive-text-tertiary mt-6">
+          By signing in, you agree to our{' '}
+          <a href="/terms" className="underline hover:text-hive-text-secondary transition-colors">
+            Terms of Service
+          </a>{' '}
+          and{' '}
+          <a href="/privacy" className="underline hover:text-hive-text-secondary transition-colors">
+            Privacy Policy
+          </a>
+        </p>
+      </div>
+      
+      {/* Loading overlay for magic link verification */}
+      {verifyMagicLink.isPending && (
+        <div className="fixed inset-0 bg-hive-background-primary/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-hive-surface-primary p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-hive-primary" />
+            <p className="text-sm font-medium text-hive-text-primary">Signing you in...</p>
           </div>
-        </motion.div>
-      </HiveModal>
+        </div>
+      )}
     </div>
-  );
+  )
 }
 
-function LoginPageWrapper() {
+export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
-        <div className="flex items-center gap-3">
-          <Loader2 className="h-6 w-6 text-[var(--hive-brand-primary)] animate-spin" />
-          <span className="text-[var(--hive-text-secondary)]">Loading...</span>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-hive-primary" />
       </div>
     }>
       <LoginPageContent />
     </Suspense>
-  );
-}
-
-export default function LoginPage() {
-  return <LoginPageWrapper />;
+  )
 }

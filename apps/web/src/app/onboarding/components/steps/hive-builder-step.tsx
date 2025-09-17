@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
+import { logger } from '@/lib/logger';
+
 import { motion, AnimatePresence } from "framer-motion";
 import { Wrench, Users, Crown, Star, CheckCircle, Loader2, Search, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
+import { Card, Button, Input } from "@hive/ui";
 import { useSession } from "@/hooks/use-session";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveBuilderStepProps {
   data: HiveOnboardingData;
@@ -62,9 +64,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       // if (user && typeof user.getIdToken === 'function') {
       //   authToken = await user.getIdToken();
       // }
-
-      console.log("Searching for:", searchQuery);
-
       const response = await fetch(`/api/spaces/browse?limit=30&search=${encodeURIComponent(searchQuery)}`, {
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -74,13 +73,11 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       
       if (!response.ok) {
         const errorData = await response.text();
-        console.error("API error response:", response.status, errorData);
+        logger.error('API error response:', { error: String(response.status, errorData) });
         throw new Error(`Failed to fetch spaces: ${response.status} ${response.statusText}`);
       }
 
       const result = await response.json();
-      console.log("Search results:", result.spaces?.length || 0);
-      
       // Filter spaces based on user type
       const filteredSpaces = (result.spaces || []).filter((space: Space) => {
         // Always exclude campus living spaces
@@ -91,9 +88,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         // Show all non-campus-living spaces for both faculty and students
         return true;
       });
-      
-      console.log("Spaces after filtering out campus living:", filteredSpaces.length);
-      
       // Cache the results to avoid redundant API calls
       setSearchCache(prev => ({
         ...prev,
@@ -102,7 +96,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       
       setSpaces(filteredSpaces);
     } catch (err) {
-      console.error("Error searching spaces:", err);
+      logger.error('Error searching spaces:', { error: String(err) });
       setError(err instanceof Error ? err.message : "Failed to search spaces");
     } finally {
       setIsLoading(false);
@@ -122,10 +116,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
   useEffect(() => {
     setIsLoading(false);
   }, []);
-
-  console.log("Search term:", searchTerm);
-  console.log("Total spaces found:", spaces.length);
-
   const toggleSpaceSelection = (spaceId: string) => {
     const newSelectedSpaces = selectedSpaces.includes(spaceId)
       ? selectedSpaces.filter(id => id !== spaceId)
@@ -176,13 +166,13 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        <HiveInput
+        <Input
           placeholder={data.userType === 'faculty' 
             ? "Search for institutional spaces (departments, courses, etc.)..." 
             : "Search for communities you want to help build..."
           }
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: any) => setSearchTerm(e.target.value)}
           leftIcon={<Search className="w-4 h-4" />}
           variant="premium"
           size="lg"
@@ -208,9 +198,9 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <HiveCard variant="default" className="p-[var(--hive-spacing-4)] text-center border-red-500/30 bg-red-900/10">
+          <Card variant="default" className="p-[var(--hive-spacing-4)] text-center border-red-500/30 bg-red-900/10">
             <p className="text-[var(--hive-status-error)]">{error}</p>
-          </HiveCard>
+          </Card>
         </motion.div>
       )}
 
@@ -220,7 +210,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <HiveCard variant="default" className="p-[var(--hive-spacing-6)] text-center">
+          <Card variant="default" className="p-[var(--hive-spacing-6)] text-center">
             <p className="text-[var(--hive-text-secondary)]">
               {searchTerm && searchTerm.length >= 2 
                 ? (data.userType === 'faculty' 
@@ -233,7 +223,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
                   )
               }
             </p>
-          </HiveCard>
+          </Card>
         </motion.div>
       )}
 
@@ -252,7 +242,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * index }}
             >
-              <HiveCard
+              <Card
                 variant={selectedSpaces.includes(space.id) ? "selected" : "elevated"}
                 className={cn(
                   "p-[var(--hive-spacing-4)] cursor-pointer transition-all duration-300 hover:scale-105",
@@ -278,12 +268,12 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
                       : "border-[var(--hive-border-primary)]"
                   )}>
                     {selectedSpaces.includes(space.id) && (
-                      <CheckCircle className="w-4 h-4 text-white" />
+                      <CheckCircle className="w-4 h-4 text-[var(--hive-text-inverse)]" />
                     )}
                   </div>
                 </div>
                 
-              </HiveCard>
+              </Card>
             </motion.div>
           ))}
         </motion.div>
@@ -296,14 +286,14 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <HiveCard variant="online" className="p-[var(--hive-spacing-4)] inline-block">
+          <Card variant="online" className="p-[var(--hive-spacing-4)] inline-block">
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-[var(--hive-status-success)]" />
               <span className="text-sm font-medium text-[var(--hive-text-primary)]">
                 {selectedSpaces.length} space{selectedSpaces.length !== 1 ? 's' : ''} selected {data.userType === 'faculty' ? 'for management requests' : 'for builder requests'}
               </span>
             </div>
-          </HiveCard>
+          </Card>
         </motion.div>
       )}
 
@@ -313,7 +303,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <HiveCard variant="default" className="p-[var(--hive-spacing-4)] text-center">
+        <Card variant="default" className="p-[var(--hive-spacing-4)] text-center">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center justify-center">
             <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
             {data.userType === 'faculty' ? 'Faculty Management Requests' : 'HIVE Builder Program'}
@@ -352,7 +342,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
               </>
             )}
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
     </motion.div>
   );

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
-import { contentModerationService } from '@/lib/content-moderation-service';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { contentModerationService } from '@/lib/services/content-moderation-service';
 import { logger } from '@/lib/logger';
-import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api/response-types/api-response-types';
 import { z } from 'zod';
 
 /**
@@ -150,7 +150,7 @@ export async function GET(request: NextRequest) {
 // Helper function to check recent reports for rate limiting
 async function checkRecentReports(userId: string): Promise<number> {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
     
     const snapshot = await dbAdmin
@@ -169,7 +169,7 @@ async function checkRecentReports(userId: string): Promise<number> {
 // Helper function to get user's reports
 async function getUserReports(userId: string, status: string, limit: number) {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     let query = dbAdmin
       .collection('contentReports')
       .where('reporterId', '==', userId)

@@ -1,13 +1,12 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ProfileDashboard } from './profile-dashboard';
 
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('../../components/framer-motion-proxy', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 const mockUser = {
@@ -170,13 +169,13 @@ describe('ProfileDashboard', () => {
 
   it('calls appropriate callbacks when interactive elements are clicked', () => {
     const mockCallbacks = {
-      onAvatarClick: jest.fn(),
-      onEditProfile: jest.fn(),
-      onSpaceClick: jest.fn(),
-      onActivityClick: jest.fn(),
-      onToolClick: jest.fn(),
-      onCreateTool: jest.fn(),
-      onBecomeBuilder: jest.fn(),
+      onAvatarClick: (() => {}),
+      onEditProfile: (() => {}),
+      onSpaceClick: (() => {}),
+      onActivityClick: (() => {}),
+      onToolClick: (() => {}),
+      onCreateTool: (() => {}),
+      onBecomeBuilder: (() => {}),
     };
 
     render(<ProfileDashboard {...defaultProps} {...mockCallbacks} />);

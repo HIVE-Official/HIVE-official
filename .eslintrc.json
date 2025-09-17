@@ -1,10 +1,78 @@
 {
   "root": true,
-  "ignorePatterns": ["*"],
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2022": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": "error",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", {
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_",
+      "ignoreRestSiblings": true
+    }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "prefer-const": "warn",
+    "no-var": "error",
+    "eqeqeq": ["warn", "always", { "null": "ignore" }],
+    "no-throw-literal": "warn",
+    "no-empty": ["warn", { "allowEmptyCatch": true }]
+  },
   "overrides": [
     {
-      "files": ["**/*"],
-      "extends": ["eslint:recommended"]
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off"
+      }
+    },
+    {
+      "files": ["*.test.ts", "*.test.tsx", "*.spec.ts", "*.spec.tsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "no-console": "off"
+      }
     }
+  ],
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    ".next/",
+    "out/",
+    "coverage/",
+    "*.config.js",
+    "*.config.ts",
+    "scripts/",
+    ".turbo/",
+    "*.min.js"
   ]
 }

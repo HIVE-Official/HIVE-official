@@ -1,7 +1,11 @@
+"use client";
+
 /**
  * Hook for fetching deployed tools for a space
  */
 import { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
+
 
 export interface DeployedTool {
   id: string;
@@ -30,7 +34,7 @@ export interface DeployedTool {
   };
   position: number;
   toolData: {
-    elements: any[];
+    elements: unknown[];
     currentVersion: string;
     status: string;
   };
@@ -84,7 +88,7 @@ export function useDeployedTools(spaceId: string | null) {
           }
         }
       } catch (err) {
-        console.error('Error fetching deployed tools:', err);
+        logger.error('Error fetching deployed tools:', { error: err });
         if (isMounted) {
           setError(err instanceof Error ? err.message : 'Failed to fetch deployed tools');
           setTools([]);

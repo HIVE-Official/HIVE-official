@@ -1,17 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Plus, Users, Calendar, BookOpen, X, AlertTriangle, CheckCircle, Info, Trash2, Edit, Share2, Settings, UserPlus, MessageSquare, Upload, Download } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { Input } from '../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 import { Textarea } from '../../atomic/atoms/textarea-enhanced';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Modal-Components/Action Modal System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {
@@ -133,7 +134,6 @@ export const CreateSpaceModal: Story = {
     };
 
     const handleSubmit = () => {
-      console.log('Creating space:', formData);
       setIsOpen(false);
       setCurrentStep(1);
       setFormData({
@@ -214,7 +214,7 @@ export const CreateSpaceModal: Story = {
                         id="space-name"
                         placeholder="e.g., CSE 115 Study Group"
                         value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('name', e.target.value)}
                         className={errors.name ? 'border-red-500' : ''}
                       />
                       {errors.name && (
@@ -228,7 +228,7 @@ export const CreateSpaceModal: Story = {
                         id="space-description"
                         placeholder="Describe your space's purpose and what members can expect..."
                         value={formData.description}
-                        onChange={(e) => handleInputChange('description', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('description', e.target.value)}
                         className={`min-h-[100px] ${errors.description ? 'border-red-500' : ''}`}
                       />
                       {errors.description && (
@@ -238,12 +238,12 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-type">Space Type</Label>
-                      <Select onValueChange={(value) => handleInputChange('type', value)}>
+                      <Select onValueChange={(value: unknown) => handleInputChange('type', value)}>
                         <SelectTrigger className={errors.type ? 'border-red-500' : ''}>
                           <SelectValue placeholder="What type of space is this?" />
                         </SelectTrigger>
                         <SelectContent>
-                          {campusModalData.spaceTypes.map((type) => (
+                          {campusModalData.spaceTypes.map((type: any) => (
                             <SelectItem key={type.value} value={type.value}>
                               <div>
                                 <div className="font-medium">{type.label}</div>
@@ -270,12 +270,12 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-privacy">Privacy Level</Label>
-                      <Select onValueChange={(value) => handleInputChange('privacy', value)}>
+                      <Select onValueChange={(value: unknown) => handleInputChange('privacy', value)}>
                         <SelectTrigger className={errors.privacy ? 'border-red-500' : ''}>
                           <SelectValue placeholder="Who can see and join this space?" />
                         </SelectTrigger>
                         <SelectContent>
-                          {campusModalData.privacyLevels.map((level) => (
+                          {campusModalData.privacyLevels.map((level: any) => (
                             <SelectItem key={level.value} value={level.value}>
                               <div>
                                 <div className="font-medium">{level.label}</div>
@@ -292,12 +292,12 @@ export const CreateSpaceModal: Story = {
 
                     <div className="space-y-2">
                       <Label htmlFor="space-location">Primary Meeting Location</Label>
-                      <Select onValueChange={(value) => handleInputChange('location', value)}>
+                      <Select onValueChange={(value: unknown) => handleInputChange('location', value)}>
                         <SelectTrigger className={errors.location ? 'border-red-500' : ''}>
                           <SelectValue placeholder="Where does your space typically meet?" />
                         </SelectTrigger>
                         <SelectContent>
-                          {campusModalData.campusLocations.map((location) => (
+                          {campusModalData.campusLocations.map((location: any) => (
                             <SelectItem key={location} value={location}>
                               {location}
                             </SelectItem>
@@ -316,7 +316,7 @@ export const CreateSpaceModal: Story = {
                         type="number"
                         placeholder="Leave empty for unlimited"
                         value={formData.maxMembers}
-                        onChange={(e) => handleInputChange('maxMembers', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('maxMembers', e.target.value)}
                         min="2"
                         max="500"
                       />
@@ -380,7 +380,7 @@ export const CreateSpaceModal: Story = {
                 {/* Navigation Buttons */}
                 <div className="flex justify-between mt-8 pt-4 border-t border-gray-200">
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     onClick={() => currentStep > 1 ? setCurrentStep(currentStep - 1) : setIsOpen(false)}
                   >
                     {currentStep > 1 ? 'Back' : 'Cancel'}
@@ -445,10 +445,10 @@ export const ConfirmationModal: Story = {
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          {confirmationModals.map((modal) => (
+          {confirmationModals.map((modal: any) => (
             <Button 
               key={modal.id}
-              variant="outline" 
+              variant="secondary" 
               onClick={() => setActiveModal(modal.id)}
               className="h-auto p-4"
             >
@@ -462,7 +462,7 @@ export const ConfirmationModal: Story = {
         </div>
 
         {/* Modal Overlays */}
-        {confirmationModals.map((modal) => {
+        {confirmationModals.map((modal: any) => {
           const IconComponent = modal.icon;
           return activeModal === modal.id ? (
             <div key={modal.id} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -486,7 +486,7 @@ export const ConfirmationModal: Story = {
 
                   <div className="flex gap-3">
                     <Button 
-                      variant="outline" 
+                      variant="secondary" 
                       onClick={() => setActiveModal(null)}
                       className="flex-1"
                     >
@@ -495,7 +495,6 @@ export const ConfirmationModal: Story = {
                     <Button 
                       variant={modal.confirmVariant}
                       onClick={() => {
-                        console.log(`Confirmed: ${modal.id}`);
                         setActiveModal(null);
                       }}
                       className="flex-1"
@@ -556,7 +555,6 @@ export const InteractiveModalDemo: Story = {
     ];
 
     const handleSubmit = () => {
-      console.log('Form submitted:', formData);
       setActiveModal(null);
       setFormData({
         eventTitle: '',
@@ -574,7 +572,7 @@ export const InteractiveModalDemo: Story = {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {modalActions.map((action) => {
+          {modalActions.map((action: any) => {
             const IconComponent = action.icon;
             return (
               <button
@@ -616,7 +614,7 @@ export const InteractiveModalDemo: Story = {
                     id="event-title"
                     placeholder="Study session, social event, meeting..."
                     value={formData.eventTitle}
-                    onChange={(e) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
                   />
                 </div>
 
@@ -627,7 +625,7 @@ export const InteractiveModalDemo: Story = {
                       id="event-date"
                       type="date"
                       value={formData.eventDate}
-                      onChange={(e) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
                     />
                   </div>
                   <div className="space-y-2">
@@ -636,19 +634,19 @@ export const InteractiveModalDemo: Story = {
                       id="event-time"
                       type="time"
                       value={formData.eventTime}
-                      onChange={(e) => setFormData(prev => ({ ...prev, eventTime: e.target.value }))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, eventTime: e.target.value }))}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="event-location">Location</Label>
-                  <Select onValueChange={(value) => setFormData(prev => ({ ...prev, eventLocation: value }))}>
+                  <Select onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, eventLocation: value }))}>
                     <SelectTrigger>
                       <SelectValue placeholder="Choose a campus location" />
                     </SelectTrigger>
                     <SelectContent>
-                      {campusModalData.campusLocations.map((location) => (
+                      {campusModalData.campusLocations.map((location: any) => (
                         <SelectItem key={location} value={location}>
                           {location}
                         </SelectItem>
@@ -658,7 +656,7 @@ export const InteractiveModalDemo: Story = {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button variant="outline" onClick={() => setActiveModal(null)} className="flex-1">
+                  <Button variant="secondary" onClick={() => setActiveModal(null)} className="flex-1">
                     Cancel
                   </Button>
                   <Button onClick={handleSubmit} className="flex-1">
@@ -718,7 +716,7 @@ export const InteractiveModalDemo: Story = {
                           <div className="font-medium text-sm">{friend.name}</div>
                           <div className="text-xs text-gray-600">{friend.major}</div>
                         </div>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           <UserPlus className="h-4 w-4" />
                         </Button>
                       </div>
@@ -727,7 +725,7 @@ export const InteractiveModalDemo: Story = {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button variant="outline" onClick={() => setActiveModal(null)} className="flex-1">
+                  <Button variant="secondary" onClick={() => setActiveModal(null)} className="flex-1">
                     Cancel
                   </Button>
                   <Button onClick={() => setActiveModal(null)} className="flex-1">
@@ -762,19 +760,19 @@ export const InteractiveModalDemo: Story = {
                 <div className="space-y-2">
                   <Label>Resource Type</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    <Button variant="outline" className="h-auto p-3">
+                    <Button variant="secondary" className="h-auto p-3">
                       <div className="text-center">
                         <Upload className="h-6 w-6 mx-auto mb-1" />
                         <div className="text-xs">Upload File</div>
                       </div>
                     </Button>
-                    <Button variant="outline" className="h-auto p-3">
+                    <Button variant="secondary" className="h-auto p-3">
                       <div className="text-center">
                         <Share2 className="h-6 w-6 mx-auto mb-1" />
                         <div className="text-xs">Share Link</div>
                       </div>
                     </Button>
-                    <Button variant="outline" className="h-auto p-3">
+                    <Button variant="secondary" className="h-auto p-3">
                       <div className="text-center">
                         <MessageSquare className="h-6 w-6 mx-auto mb-1" />
                         <div className="text-xs">Text Note</div>
@@ -815,7 +813,7 @@ export const InteractiveModalDemo: Story = {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button variant="outline" onClick={() => setActiveModal(null)} className="flex-1">
+                  <Button variant="secondary" onClick={() => setActiveModal(null)} className="flex-1">
                     Cancel
                   </Button>
                   <Button onClick={() => setActiveModal(null)} className="flex-1">
@@ -858,7 +856,7 @@ export const InteractiveModalDemo: Story = {
                     ].map((setting, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="text-sm font-medium text-gray-900">{setting}</div>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           Configure
                         </Button>
                       </div>
@@ -884,7 +882,7 @@ export const InteractiveModalDemo: Story = {
                 </div>
 
                 <div className="flex gap-3 pt-4 border-t border-gray-200">
-                  <Button variant="outline" onClick={() => setActiveModal(null)} className="flex-1">
+                  <Button variant="secondary" onClick={() => setActiveModal(null)} className="flex-1">
                     Cancel
                   </Button>
                   <Button onClick={() => setActiveModal(null)} className="flex-1">

@@ -1,11 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { CreateToolSchema, ToolSchema, createToolDefaults } from "@hive/core";
-import { dbAdmin as adminDb } from "@/lib/firebase-admin";
-import { getCurrentUser } from "../../../lib/auth-server";
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CreateToolSchema, ToolSchema, createToolDefaults  } from '@/types/core';
+import { dbAdmin as adminDb } from "@/lib/firebase/admin/firebase-admin";
+import { getCurrentUser } from "@/lib/auth/providers/auth-server";
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Rate limiting: 10 tool creations per hour per user
 // // const createToolLimiter = rateLimit({

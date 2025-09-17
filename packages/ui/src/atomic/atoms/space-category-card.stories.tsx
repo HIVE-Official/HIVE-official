@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SpaceCategoryCard, SPACE_CATEGORIES, SpaceCategoryType } from './space-category-card';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { action } from '@storybook/addon-actions';
@@ -79,7 +79,7 @@ export const Default: Story = {
     variant: 'default',
     onClick: action('university-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -107,7 +107,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🏛️ CATEGORY TYPES</Badge>
+            <Badge variant="emerald">🏛️ CATEGORY TYPES</Badge>
             Space Category Options
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -203,12 +203,12 @@ export const CompleteShowcase: Story = {
                   <div className="grid md:grid-cols-2 gap-4 max-w-2xl">
                     <SpaceCategoryCard
                       category={createCategoryWithCount('university', 247)}
-                      variant="default"
+                      variant="primary"
                       onClick={action('default-university')}
                     />
                     <SpaceCategoryCard
                       category={createCategoryWithCount('residential', 89)}
-                      variant="default"
+                      variant="primary"
                       onClick={action('default-residential')}
                     />
                   </div>
@@ -535,7 +535,7 @@ export const Playground: Story = {
     variant: 'default',
     onClick: action('playground-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

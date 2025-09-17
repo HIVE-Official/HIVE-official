@@ -1,0 +1,218 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { Alert, AlertTitle, AlertDescription, AlertIcons, CampusAlerts } from './alert';
+
+const meta: Meta<typeof Alert> = {
+  title: 'Atoms/Alert',
+  component: Alert,
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component: 'HIVE Alert system - Mobile-first feedback components designed for campus life with semantic tokens and accessibility compliance.'
+      }
+    }
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: { type: 'select' },
+      options: ['default', 'success', 'warning', 'error', 'info', 'hive'],
+      description: 'Visual variant of the alert'
+    },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'default', 'lg'],
+      description: 'Size variant'
+    },
+    dismissible: {
+      control: { type: 'boolean' },
+      description: 'Whether the alert can be dismissed'
+    }
+  }
+};
+
+export default meta;
+type Story = StoryObj<typeof Alert>;
+
+// Basic Alert Examples
+export const Default: Story = {
+  args: {
+    children: "This is a default alert message."
+  }
+};
+
+export const WithIcon: Story = {
+  args: {
+    variant: "info",
+    icon: <AlertIcons.Info />,
+    children: "This alert includes an icon for better visual communication."
+  }
+};
+
+export const WithTitleAndDescription: Story = {
+  args: {
+    variant: "success",
+    icon: <AlertIcons.Success />,
+    children: (
+      <>
+        <AlertTitle>Success!</AlertTitle>
+        <AlertDescription>
+          Your profile has been updated successfully. Changes are now visible to other students.
+        </AlertDescription>
+      </>
+    )
+  }
+};
+
+export const Dismissible: Story = {
+  args: {
+    variant: "warning",
+    icon: <AlertIcons.Warning />,
+    dismissible: true,
+    onDismiss: () => alert('Alert dismissed!'),
+    children: (
+      <>
+        <AlertTitle>Important Notice</AlertTitle>
+        <AlertDescription>
+          Class registration opens tomorrow at 8 AM. Make sure to prepare your course selections.
+        </AlertDescription>
+      </>
+    )
+  }
+};
+
+// Variant Examples
+export const AllVariants: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Alert variant="default">
+        <AlertTitle>Default Alert</AlertTitle>
+        <AlertDescription>General information or neutral messages.</AlertDescription>
+      </Alert>
+      
+      <Alert variant="success" icon={<AlertIcons.Success />}>
+        <AlertTitle>Success Alert</AlertTitle>
+        <AlertDescription>Achievements, completions, and positive feedback.</AlertDescription>
+      </Alert>
+      
+      <Alert variant="warning" icon={<AlertIcons.Warning />}>
+        <AlertTitle>Warning Alert</AlertTitle>
+        <AlertDescription>Important notices and cautionary messages.</AlertDescription>
+      </Alert>
+      
+      <Alert variant="error" icon={<AlertIcons.Error />}>
+        <AlertTitle>Error Alert</AlertTitle>
+        <AlertDescription>Failures, conflicts, and critical issues.</AlertDescription>
+      </Alert>
+      
+      <Alert variant="info" icon={<AlertIcons.Info />}>
+        <AlertTitle>Info Alert</AlertTitle>
+        <AlertDescription>Neutral information and system updates.</AlertDescription>
+      </Alert>
+      
+      <Alert variant="hive" icon={<AlertIcons.HIVE />}>
+        <AlertTitle>HIVE Feature Alert</AlertTitle>
+        <AlertDescription>Special HIVE features and branded notifications.</AlertDescription>
+      </Alert>
+    </div>
+  )
+};
+
+// Size Examples
+export const AllSizes: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Alert size="sm" variant="info" icon={<AlertIcons.Info />}>
+        <AlertTitle>Small Alert</AlertTitle>
+        <AlertDescription>Compact alert for tight spaces</AlertDescription>
+      </Alert>
+      
+      <Alert size="default" variant="info" icon={<AlertIcons.Info />}>
+        <AlertTitle>Default Alert</AlertTitle>
+        <AlertDescription>Standard alert size for most use cases</AlertDescription>
+      </Alert>
+      
+      <Alert size="lg" variant="info" icon={<AlertIcons.Info />}>
+        <AlertTitle>Large Alert</AlertTitle>
+        <AlertDescription>Larger alert for important messages that need emphasis</AlertDescription>
+      </Alert>
+    </div>
+  )
+};
+
+// Campus-Specific Examples
+export const CampusUseCases: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <CampusAlerts.AchievementAlert>
+        <AlertTitle>Achievement Unlocked!</AlertTitle>
+        <AlertDescription>
+          You've completed your first week of classes. Keep up the great work!
+        </AlertDescription>
+      </CampusAlerts.AchievementAlert>
+      
+      <CampusAlerts.DeadlineAlert dismissible onDismiss={() => {}}>
+        <AlertTitle>Assignment Due Soon</AlertTitle>
+        <AlertDescription>
+          Your Computer Science 101 assignment is due in 2 hours. Don't forget to submit!
+        </AlertDescription>
+      </CampusAlerts.DeadlineAlert>
+      
+      <CampusAlerts.SystemAlert dismissible onDismiss={() => {}}>
+        <AlertTitle>System Maintenance</AlertTitle>
+        <AlertDescription>
+          HIVE will be undergoing scheduled maintenance tonight from 2-4 AM EST.
+        </AlertDescription>
+      </CampusAlerts.SystemAlert>
+      
+      <CampusAlerts.InfoAlert>
+        <AlertTitle>New Feature Available</AlertTitle>
+        <AlertDescription>
+          Study groups are now available! Connect with classmates and form study sessions.
+        </AlertDescription>
+      </CampusAlerts.InfoAlert>
+      
+      <CampusAlerts.HIVEAlert>
+        <AlertTitle>Welcome to HIVE Lab!</AlertTitle>
+        <AlertDescription>
+          Start building your first campus tool. The community is excited to see what you create.
+        </AlertDescription>
+      </CampusAlerts.HIVEAlert>
+    </div>
+  )
+};
+
+// Mobile Responsive Example
+export const MobileResponsive: Story = {
+  render: () => (
+    <div className="max-w-sm mx-auto space-y-4">
+      <Alert variant="hive" icon={<AlertIcons.HIVE />} dismissible onDismiss={() => {}}>
+        <AlertTitle>Mobile Optimized</AlertTitle>
+        <AlertDescription>
+          This alert is designed to work perfectly on mobile devices with proper touch targets and readable text.
+        </AlertDescription>
+      </Alert>
+    </div>
+  )
+};
+
+// Accessibility Example
+export const AccessibilityDemo: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Alert variant="error" icon={<AlertIcons.Error />} role="alert" aria-live="assertive">
+        <AlertTitle>Form Validation Error</AlertTitle>
+        <AlertDescription>
+          Please fix the following errors: Email address is required, Password must be at least 8 characters.
+        </AlertDescription>
+      </Alert>
+      
+      <Alert variant="success" icon={<AlertIcons.Success />} role="status" aria-live="polite">
+        <AlertTitle>Success Message</AlertTitle>
+        <AlertDescription>
+          Your changes have been saved successfully.
+        </AlertDescription>
+      </Alert>
+    </div>
+  )
+};

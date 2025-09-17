@@ -1,0 +1,145 @@
+/* Mobile Viewport Optimizations */
+
+/* Prevent iOS bounce scrolling */
+html {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+}
+
+/* Safe area insets for iPhone notch/island */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Bottom navigation adjustments for mobile browsers */
+.bottom-nav {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+}
+
+/* Touch targets - minimum 44px for iOS */
+button,
+a,
+.touchable {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Prevent text selection on UI elements */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Smooth scrolling for mobile */
+.scroll-smooth {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar on mobile */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Pull to refresh indicator space */
+.pull-to-refresh {
+  padding-top: 20px;
+  margin-top: -20px;
+}
+
+/* Mobile-specific animations */
+@media (max-width: 768px) {
+  /* Disable hover effects on touch devices */
+  @media (hover: none) {
+    .hover\:bg-white\/5:hover {
+      background-color: transparent;
+    }
+    
+    .hover\:text-white:hover {
+      color: inherit;
+    }
+  }
+  
+  /* Faster animations on mobile */
+  * {
+    animation-duration: 0.2s !important;
+    transition-duration: 0.2s !important;
+  }
+  
+  /* Optimize image rendering */
+  img {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix for iOS form zoom */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Fix for iOS rubber band scrolling */
+  .modal-content {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+  }
+}
+
+/* Android specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  /* Fix for Android keyboard pushing content */
+  .keyboard-open {
+    height: calc(100vh - 280px);
+  }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+  .mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  
+  .mobile-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+  }
+}

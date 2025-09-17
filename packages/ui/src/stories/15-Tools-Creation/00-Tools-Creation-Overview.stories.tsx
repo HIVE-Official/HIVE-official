@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { Badge } from '../../atomic/atoms/badge';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Container } from '../../components/ui/container';
 import { Text as Typography } from '../../atomic/atoms/text';
@@ -107,9 +107,9 @@ const ToolsCreationOverview = () => {
           solving real problems together at University at Buffalo.
         </Typography>
         <div className="flex justify-center gap-2">
-          <Badge variant="default">Visual Builder</Badge>
+          <Badge variant="primary">Visual Builder</Badge>
           <Badge variant="secondary">Community Driven</Badge>
-          <Badge variant="outline">Problem Solving</Badge>
+          <Badge variant="secondary">Problem Solving</Badge>
         </div>
       </div>
 
@@ -232,7 +232,7 @@ const ToolsCreationOverview = () => {
                 </Typography>
               </div>
               <div className="flex gap-2">
-                <Badge variant="default">Academic</Badge>
+                <Badge variant="primary">Academic</Badge>
                 <Badge variant="secondary">Popular</Badge>
               </div>
             </div>
@@ -286,7 +286,7 @@ const ToolsCreationOverview = () => {
               <CardContent>
                 <div className="flex flex-wrap gap-1">
                   {component.features.map((feature, i) => (
-                    <Badge key={i} variant="outline" className="text-xs">{feature}</Badge>
+                    <Badge key={i} variant="secondary" className="text-xs">{feature}</Badge>
                   ))}
                 </div>
               </CardContent>

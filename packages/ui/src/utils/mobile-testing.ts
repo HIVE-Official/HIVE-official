@@ -6,6 +6,8 @@
  */
 
 import { useState } from 'react';
+import { logger } from './logger';
+
 import { getNetworkInfo, getBatteryInfo, getDeviceMemory } from './mobile-native-features';
 import { mobilePerformanceManager } from './mobile-performance';
 
@@ -168,7 +170,7 @@ export class MobileTester {
   async simulateDevice(profileName: keyof typeof DEVICE_PROFILES): Promise<boolean> {
     const profile = DEVICE_PROFILES[profileName];
     if (!profile) {
-      console.error('Device profile not found:', profileName);
+      logger.error('Device profile not found:', { profileName });
       return false;
     }
 
@@ -201,19 +203,15 @@ export class MobileTester {
         Object.defineProperty(window, 'TouchEvent', { value: class TouchEvent {} });
         Object.defineProperty(navigator, 'maxTouchPoints', { get: () => 5 });
       }
-
-      console.log(`Simulating ${profile.name}:`, profile);
       return true;
     } catch (error) {
-      console.error('Failed to simulate device:', error);
+      logger.error('Failed to simulate device:', { error });
       return false;
     }
   }
 
   // Run test scenario
   async runScenario(scenario: TestScenario): Promise<TestResult> {
-    console.log(`Running test scenario: ${scenario.name}`);
-    
     const startTime = performance.now();
     const result: TestResult = {
       scenarioName: scenario.name,
@@ -260,7 +258,8 @@ export class MobileTester {
       result.passed = result.errors.length === 0;
       
     } catch (error) {
-      result.errors.push(`Scenario execution failed: ${error.message}`);
+      const errorMessage = error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error);
+      result.errors.push(`Scenario execution failed: ${errorMessage}`);
       result.passed = false;
     }
 
@@ -310,7 +309,7 @@ export class MobileTester {
       stepResult.passed = true;
     } catch (error) {
       stepResult.passed = false;
-      stepResult.error = error.message;
+      stepResult.error = error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error);
     }
 
     stepResult.endTime = performance.now();
@@ -322,7 +321,6 @@ export class MobileTester {
   // Test step implementations
   private async navigateStep(url: string): Promise<void> {
     // Simulate navigation
-    console.log('Navigating to:', url);
     window.history.pushState({}, '', url);
     await new Promise(resolve => setTimeout(resolve, 100));
   }
@@ -382,8 +380,8 @@ export class MobileTester {
 
     // Simulate swipe gesture
     const rect = element.getBoundingClientRect();
-    let startX = rect.left + rect.width / 2;
-    let startY = rect.top + rect.height / 2;
+    const startX = rect.left + rect.width / 2;
+    const startY = rect.top + rect.height / 2;
     let endX = startX;
     let endY = startY;
 
@@ -482,12 +480,13 @@ export class MobileTester {
     const { type, target } = assertion;
     
     switch (type) {
-      case 'visible':
+      case 'visible': {
         const element = document.querySelector(target);
         if (!element || !this.isElementVisible(element)) {
           throw new Error(`Element not visible: ${target}`);
         }
         break;
+      }
       case 'focused':
         if (document.activeElement !== document.querySelector(target)) {
           throw new Error(`Element not focused: ${target}`);
@@ -659,7 +658,7 @@ export function useMobileTesting() {
 
       setResults(testResults);
     } catch (error) {
-      console.error('Mobile testing failed:', error);
+      logger.error('Mobile testing failed:', { error });
     } finally {
       setIsRunning(false);
     }

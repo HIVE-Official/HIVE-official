@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
@@ -77,9 +77,9 @@ const getToolCategoryConfig = (category: string) => {
       label: 'Productivity'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: MessageSquare,
       label: 'Social'
     },
@@ -110,8 +110,8 @@ const getToolStatusConfig = (status: string) => {
       label: 'Active'
     },
     draft: {
-      color: 'text-yellow-500',
-      bgColor: 'bg-yellow-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       label: 'Draft'
     },
     published: {
@@ -169,7 +169,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
               Personal Tools
             </Text>
             {activeTools > 0 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <Zap className="h-3 w-3 mr-1" />
                 {activeTools} Active
               </Badge>
@@ -258,7 +258,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                         {featuredTool.name}
                       </Text>
                       {featuredTool.isPublic && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           Public
                         </Badge>
                       )}
@@ -294,7 +294,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         onEditTool(featuredTool.id);
                       }}
@@ -306,7 +306,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       onViewTool?.(featuredTool.id);
                     }}
@@ -332,7 +332,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
               )}
             </div>
             <div className="space-y-1">
-              {recentTools.map((tool) => {
+              {recentTools.map((tool: any) => {
                 const categoryConfig = getToolCategoryConfig(tool.category);
                 const statusConfig = getToolStatusConfig(tool.status);
                 return (
@@ -346,7 +346,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                       {tool.name}
                     </Text>
                     <Badge 
-                      variant="outline" 
+                      variant="secondary" 
                       className={cn('text-xs', statusConfig.color)}
                     >
                       {statusConfig.label}
@@ -391,7 +391,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onCreateTool && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onCreateTool}
               className="flex-1"
@@ -403,7 +403,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
           
           {onViewAllTools && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllTools}
               className="flex-1"
@@ -437,7 +437,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
             </Text>
             {isEditable && onCreateTool && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onCreateTool}
               >
@@ -452,7 +452,7 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
 
       {/* Hover Glow Effect */}
       {isHovered && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-purple-500/5 rounded-lg blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
   );

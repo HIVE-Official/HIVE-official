@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox, CheckboxPresets, CheckboxGroup, CheckboxCard } from './checkbox-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import '../../hive-tokens.css';
 
@@ -102,7 +102,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ VARIANTS</Badge>
+            <Badge variant="emerald">✅ VARIANTS</Badge>
             Checkbox Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -115,13 +115,13 @@ export const CompleteShowcase: Story = {
               <Checkbox
                 label="Default (Gold Fill)"
                 description="Gold fill indicates selected campus features"
-                variant="default"
+                variant="primary"
                 checked={true}
               />
               <Checkbox
                 label="Success Selection"
                 description="Indicates completed or validated choices"
-                variant="success"
+                variant="emerald"
                 checked={true}
               />
               <Checkbox
@@ -135,7 +135,7 @@ export const CompleteShowcase: Story = {
               <Checkbox
                 label="Warning Selection"
                 description="Options that require attention or caution"
-                variant="warning"
+                variant="gold"
                 checked={true}
               />
               <Checkbox
@@ -168,7 +168,7 @@ export const CompleteShowcase: Story = {
                   label="Small"
                   description="Compact forms"
                   size="sm"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">SM: 16px × 16px</p>
@@ -178,7 +178,7 @@ export const CompleteShowcase: Story = {
                   label="Default"
                   description="Standard use"
                   size="default"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">Default: 20px × 20px</p>
@@ -188,7 +188,7 @@ export const CompleteShowcase: Story = {
                   label="Large"
                   description="Prominent forms"
                   size="lg"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">LG: 24px × 24px</p>
@@ -198,7 +198,7 @@ export const CompleteShowcase: Story = {
                   label="Extra Large"
                   description="Hero forms"
                   size="xl"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">XL: 28px × 28px</p>
@@ -230,7 +230,7 @@ export const CompleteShowcase: Story = {
                   label="Select All Study Materials"
                   description="Master checkbox for all study materials"
                   indeterminate={true}
-                  variant="default"
+                  variant="primary"
                 />
                 <div className="ml-6 space-y-2">
                   <Checkbox label="Lecture Notes" checked={true} size="sm" />
@@ -252,14 +252,14 @@ export const CompleteShowcase: Story = {
                   label="Terms and Conditions"
                   description="You must agree to the terms to continue"
                   required
-                  variant="default"
+                  variant="primary"
                   checked={false}
                 />
                 <Checkbox
                   label="Academic Honor Code"
                   description="Required for all UB course registrations"
                   required
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
               </div>
@@ -304,15 +304,15 @@ export const CompleteShowcase: Story = {
                   description="Receive important campus updates, emergency alerts, and academic announcements via email"
                   icon={<span className="text-lg">📧</span>}
                   badge={<Badge variant="error" size="sm">Required</Badge>}
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <CheckboxCard
                   label="Study Group Coordination"
                   description="Get notified when study groups form in your courses and receive collaboration invites"
                   icon={<span className="text-lg">👥</span>}
-                  badge={<Badge variant="success" size="sm">Academic</Badge>}
-                  variant="default"
+                  badge={<Badge variant="emerald" size="sm">Academic</Badge>}
+                  variant="primary"
                   checked={true}
                 />
                 <CheckboxCard
@@ -320,7 +320,7 @@ export const CompleteShowcase: Story = {
                   description="Receive invitations to campus social events, club activities, and recreational programs"
                   icon={<span className="text-lg">🎉</span>}
                   badge={<Badge variant="info" size="sm">Social</Badge>}
-                  variant="default"
+                  variant="primary"
                   checked={false}
                 />
               </div>
@@ -358,14 +358,14 @@ export const CompleteShowcase: Story = {
                 <Checkbox
                   label="UB Student Verification"
                   description="Verify your UB student status for access"
-                  variant="default"
+                  variant="primary"
                   required
                   checked={true}
                 />
                 <Checkbox
                   label="Academic Integrity Pledge"
                   description="I agree to uphold UB's academic integrity standards"
-                  variant="success"
+                  variant="emerald"
                   required
                   checked={true}
                 />
@@ -458,7 +458,7 @@ export const CompleteShowcase: Story = {
                   label="Hadley Village"
                   description="Apartment-style living, upper-class students, full kitchens and living areas"
                   icon={<span className="text-lg">🏠</span>}
-                  badge={<Badge variant="success" size="sm">Apartment</Badge>}
+                  badge={<Badge variant="emerald" size="sm">Apartment</Badge>}
                   checked={true}
                 />
                 <CheckboxCard
@@ -624,7 +624,7 @@ export const Playground: Story = {
     indeterminate: false,
     required: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

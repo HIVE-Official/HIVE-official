@@ -258,7 +258,7 @@ const PostPollCard: React.FC<{
       </div>
 
       <div className="space-y-2 mb-4">
-        {poll.options.map((option) => {
+        {poll.options.map((option: { id: string; text: string; votes: number; userVoted?: boolean }) => {
           const percentage = poll.totalVotes > 0 ? (option.votes / poll.totalVotes) * 100 : 0;
           
           return (
@@ -363,8 +363,8 @@ const PostCard: React.FC<{
   const getPriorityColor = (priority?: string) => {
     switch (priority) {
       case 'urgent': return 'border-red-500/40 bg-red-500/10';
-      case 'high': return 'border-orange-500/40 bg-orange-500/10';
-      case 'medium': return 'border-yellow-500/40 bg-yellow-500/10';
+      case 'high': return 'border-[var(--hive-gold)]/40 bg-[var(--hive-gold)]/10';
+      case 'medium': return 'border-[var(--hive-gold)]/40 bg-[var(--hive-gold)]/10';
       default: return 'border-[var(--hive-border-primary)]/20 bg-[var(--hive-background-secondary)]/60';
     }
   };
@@ -380,6 +380,8 @@ const PostCard: React.FC<{
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
+    
+    return () => {}; // No cleanup needed when menu is not shown
   }, [showMenu]);
 
   return (
@@ -632,7 +634,7 @@ export const PostBoard: React.FC<PostBoardProps> = ({
   return (
     <div className={cn('space-y-6', className)}>
       <AnimatePresence>
-        {sortedPosts.map((post) => (
+        {sortedPosts.map((post: SpacePost) => (
           <PostCard
             key={post.id}
             post={post}

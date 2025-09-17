@@ -1,0 +1,182 @@
+import { ModerationUtils, type ContentReport } from '../domain/firestore/moderation';
+
+/**
+ * Photo moderation utilities for HIVE platform
+ */
+export class PhotoModerationUtils {
+  /**
+   * Create a moderation report for a user avatar upload
+   */
+  static createAvatarModerationReport(
+    userId: string,
+    avatarUrl: string,
+    userEmail: string
+  ): Omit<ContentReport, 'id' | 'createdAt' | 'updatedAt'> {
+    return ModerationUtils.createReport(
+      'user_profile',
+      userId,
+      'inappropriate_content',
+      `Profile photo uploaded for review - User: ${userEmail}`,
+      'system', // System-generated report
+      userId,
+      {
+        contentUrl: avatarUrl,
+        contentSnapshot: `Avatar upload for user ${userId}`,
+        severity: 'medium',
+        priority: 3,
+        status: 'pending',
+        category: ['profile_photo', 'user_content'],
+        reporterAnonymous: false
+      }
+    );
+  }
+
+  /**
+   * Check if an avatar needs moderation based on user history
+   */
+  static shouldAutoApprove(userId: string, userHistory?: {
+    previousReports: number;
+    approvedPhotos: number;
+    rejectedPhotos: number;
+  }): boolean {
+    // Auto-approve for trusted users with good history
+    if (!userHistory) return false;
+    
+    const { previousReports, approvedPhotos, rejectedPhotos } = userHistory;
+    
+    // If user has good track record, auto-approve
+    if (approvedPhotos >= 3 && rejectedPhotos === 0 && previousReports === 0) {
+      return true;
+    }
+    
+    // Conservative approach for new users
+    return false;
+  }
+
+  /**
+   * Generate moderation queue priority based on content analysis
+   */
+  static calculateModerationPriority(
+    contentUrl: string,
+    userContext: {
+      isNewUser: boolean;
+      previousViolations: number;
+      userRole: string;
+    }
+  ): number {
+    let priority = 50; // Base priority
+
+    // New users get higher priority for first photo
+    if (userContext.isNewUser) {
+      priority += 20;
+    }
+
+    // Users with previous violations get higher priority
+    if (userContext.previousViolations > 0) {
+      priority += userContext.previousViolations * 15;
+    }
+
+    // Faculty photos get higher priority for verification
+    if (userContext.userRole === 'faculty') {
+      priority += 25;
+    }
+
+    return Math.min(100, Math.max(0, priority));
+  }
+
+  /**
+   * Get estimated review time for a photo moderation request
+   */
+  static getEstimatedReviewTime(priority: number): number {
+    // Return time in minutes
+    if (priority >= 80) return 30; // High priority: 30 minutes
+    if (priority >= 60) return 60; // Medium priority: 1 hour  
+    if (priority >= 40) return 120; // Normal priority: 2 hours
+    return 240; // Low priority: 4 hours
+  }
+
+  /**
+   * Format moderation status for display to users
+   */
+  static formatModerationStatus(
+    status: 'pending' | 'approved' | 'rejected' | 'under_review'
+  ): {
+    label: string;
+    description: string;
+    variant: 'default' | 'warning' | 'success' | 'destructive';
+  } {
+    switch (status) {
+      case 'pending':
+        return {
+          label: 'Under Review',
+          description: 'Your photo is being reviewed by our moderation team',
+          variant: 'warning'
+        };
+      case 'under_review':
+        return {
+          label: 'In Review',
+          description: 'Your photo is currently being reviewed',
+          variant: 'warning'
+        };
+      case 'approved':
+        return {
+          label: 'Approved',
+          description: 'Your photo has been approved and is visible to others',
+          variant: 'success'
+        };
+      case 'rejected':
+        return {
+          label: 'Needs Update',
+          description: 'Please upload a different photo that meets our community guidelines',
+          variant: 'destructive'
+        };
+      default:
+        return {
+          label: 'Unknown',
+          description: 'Photo status unknown',
+          variant: 'default'
+        };
+    }
+  }
+
+  /**
+   * Check if a user should be shown their photo or a placeholder
+   */
+  static shouldShowPhoto(
+    avatarUrl: string | undefined,
+    moderationStatus: 'pending' | 'approved' | 'rejected' | 'under_review' | undefined,
+    isOwner: boolean
+  ): boolean {
+    // No photo uploaded
+    if (!avatarUrl) return false;
+
+    // No moderation status means old photo (approved by default)
+    if (!moderationStatus) return true;
+
+    // Show approved photos to everyone
+    if (moderationStatus === 'approved') return true;
+
+    // Show pending/under review photos only to the owner
+    if (isOwner && (moderationStatus === 'pending' || moderationStatus === 'under_review')) {
+      return true;
+    }
+
+    // Don't show rejected photos to anyone
+    return false;
+  }
+
+  /**
+   * Generate moderation guidelines for users
+   */
+  static getModerationGuidelines(): string[] {
+    return [
+      'Photos must show your face clearly',
+      'Use good lighting and avoid shadows',
+      'No inappropriate, offensive, or explicit content',
+      'No copyrighted images or brand logos',
+      'Photos should be recent and represent you authentically',
+      'Group photos are discouraged - focus on individual portraits',
+      'Avoid heavily filtered or altered images'
+    ];
+  }
+}

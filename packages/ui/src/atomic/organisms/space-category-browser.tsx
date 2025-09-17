@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -190,7 +192,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
   const [activeCategory, setActiveCategory] = useState<SpaceCategory | undefined>(selectedCategory);
 
   const filteredSpaces = useMemo(() => {
-    let filtered = spaces.filter(space => {
+    const filtered = spaces.filter(space => {
       // Category filter
       if (activeCategory && space.category !== activeCategory) return false;
       
@@ -224,10 +226,11 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
       switch (sortBy) {
         case 'members':
           return b.memberCount - a.memberCount;
-        case 'activity':
+        case 'activity': {
           const aActivity = a.lastActivity ? new Date(a.lastActivity).getTime() : 0;
           const bActivity = b.lastActivity ? new Date(b.lastActivity).getTime() : 0;
           return bActivity - aActivity;
+        }
         case 'created':
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         case 'trending':
@@ -254,7 +257,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
     try {
       await onJoinSpace(spaceId);
     } catch (error) {
-      console.error('Failed to join space:', error);
+      logger.error('Failed to join space:', { error });
     }
   };
 
@@ -263,7 +266,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
     try {
       await onLeaveSpace(spaceId);
     } catch (error) {
-      console.error('Failed to leave space:', error);
+      logger.error('Failed to leave space:', { error });
     }
   };
 
@@ -272,7 +275,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
     try {
       await onBookmarkSpace(spaceId, bookmarked);
     } catch (error) {
-      console.error('Failed to bookmark space:', error);
+      logger.error('Failed to bookmark space:', { error });
     }
   };
 
@@ -334,7 +337,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             viewMode === 'list' ? 'flex-shrink-0' : ''
           )}>
             <div className={cn(
-              'rounded-2xl flex items-center justify-center font-bold text-white relative overflow-hidden',
+              'rounded-2xl flex items-center justify-center font-bold text-[var(--hive-text-inverse)] relative overflow-hidden',
               viewMode === 'list' ? 'w-16 h-16 text-xl' : 'w-20 h-20 text-2xl',
               `bg-gradient-to-br ${categoryConfig.gradient}`
             )}>
@@ -347,7 +350,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             
             {space.isJoined && (
               <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-2 border-[var(--hive-background-secondary)] flex items-center justify-center">
-                <UserCheck className="w-3 h-3 text-white" />
+                <UserCheck className="w-3 h-3 text-[var(--hive-text-inverse)]" />
               </div>
             )}
           </div>
@@ -401,7 +404,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
               {viewMode === 'list' && showJoinActions && (
                 <div className="flex items-center gap-2 ml-4">
                   <button
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleBookmarkSpace(space.id, !space.isBookmarked);
                     }}
@@ -416,7 +419,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
 
                   {space.isJoined ? (
                     <button
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleLeaveSpace(space.id);
                       }}
@@ -426,7 +429,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                     </button>
                   ) : (
                     <button
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleJoinSpace(space.id);
                       }}
@@ -460,7 +463,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             {/* Tags */}
             {space.tags.length > 0 && viewMode === 'grid' && (
               <div className="flex items-center gap-1 flex-wrap">
-                {space.tags.slice(0, 3).map((tag) => (
+                {space.tags.slice(0, 3).map((tag: any) => (
                   <span
                     key={tag}
                     className="px-2 py-1 rounded-lg bg-[var(--hive-background-tertiary)]/40 text-[var(--hive-text-muted)] text-xs"
@@ -481,7 +484,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
           {viewMode === 'grid' && showJoinActions && (
             <div className="flex items-center justify-between">
               <button
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   handleBookmarkSpace(space.id, !space.isBookmarked);
                 }}
@@ -500,7 +503,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                     {space.userRole && space.userRole !== 'member' ? space.userRole.replace('_', ' ') : 'Member'}
                   </span>
                   <button
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleLeaveSpace(space.id);
                     }}
@@ -511,7 +514,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 </div>
               ) : (
                 <button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleJoinSpace(space.id);
                   }}
@@ -626,7 +629,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               placeholder="Search spaces by name, description, or tags..."
               className="w-full pl-10 pr-4 py-3 rounded-2xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
             />
@@ -654,7 +657,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
               className="space-y-3"
             >
               <div className="flex items-center gap-2 flex-wrap">
-                {FILTER_OPTIONS.map((option) => (
+                {FILTER_OPTIONS.map((option: any) => (
                   <button
                     key={option.value}
                     onClick={() => setSelectedFilter(option.value)}
@@ -675,10 +678,10 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 <span className="text-sm text-[var(--hive-text-secondary)]">Sort by:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as SortOption)}
                   className="px-3 py-1.5 rounded-lg border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] text-sm focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                 >
-                  {SORT_OPTIONS.map((option) => (
+                  {SORT_OPTIONS.map((option: any) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
@@ -699,7 +702,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
                 : 'space-y-4'
             )}>
-              {filteredSpaces.map((space) => (
+              {filteredSpaces.map((space: any) => (
                 <SpaceCard key={space.id} space={space} />
               ))}
             </div>

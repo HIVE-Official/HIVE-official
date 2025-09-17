@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -117,7 +117,7 @@ const InteractiveCalendarWidget: React.FC<{
   onUpdateEvent?: (id: string, updates: Partial<CalendarEvent>) => void;
   onDeleteEvent?: (id: string) => void;
   onResolveConflict?: (conflictId: string, resolution: string, eventId?: string) => void;
-}> = ({
+}> = React.memo(({
   events,
   conflicts,
   isLoading = false,
@@ -141,15 +141,15 @@ const InteractiveCalendarWidget: React.FC<{
     location: ''
   });
 
-  const formatTime = (dateString: string) => {
+  const formatTime = useCallback((dateString: string) => {
     return new Date(dateString).toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
       hour12: true
     });
-  };
+  }, []);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
     const today = new Date();
     const tomorrow = new Date(today);
@@ -162,17 +162,17 @@ const InteractiveCalendarWidget: React.FC<{
     } else {
       return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
-  };
+  }, []);
 
-  const getEventTypeColor = (type: string) => {
+  const getEventTypeColor = useCallback((type: string) => {
     switch (type) {
       case 'class': return 'bg-blue-500';
       case 'study': return 'bg-green-500';
-      case 'meeting': return 'bg-purple-500';
-      case 'personal': return 'bg-orange-500';
+      case 'meeting': return 'bg-[var(--hive-gold)]';
+      case 'personal': return 'bg-[var(--hive-gold)]';
       default: return 'bg-gray-500';
     }
-  };
+  }, []);
 
   const handleCreateEvent = () => {
     if (!createForm.title || !createForm.startDate || !createForm.endDate) return;
@@ -195,10 +195,13 @@ const InteractiveCalendarWidget: React.FC<{
     setShowCreateForm(false);
   };
 
-  const upcomingEvents = events
-    .filter(event => new Date(event.startDate) > new Date())
-    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
-    .slice(0, 5);
+  const upcomingEvents = useMemo(() => 
+    events
+      .filter(event => new Date(event.startDate) > new Date())
+      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+      .slice(0, 5),
+    [events]
+  );
 
   return (
     <div className="bg-hive-surface-elevated rounded-xl border border-hive-border-subtle p-6">
@@ -218,9 +221,9 @@ const InteractiveCalendarWidget: React.FC<{
 
       {/* Conflicts Alert */}
       {conflicts.length > 0 && (
-        <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+        <div className="mb-4 p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg">
           <div className="flex items-center space-x-2">
-            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+            <AlertTriangle className="h-4 w-4 text-[var(--hive-gold)]" />
             <span className="text-sm text-yellow-600">
               {conflicts.length} scheduling conflict{conflicts.length > 1 ? 's' : ''} detected
             </span>
@@ -231,13 +234,13 @@ const InteractiveCalendarWidget: React.FC<{
               <div className="flex space-x-2 mt-1">
                 <button
                   onClick={() => onResolveConflict?.(conflict.id, 'reschedule', conflict.eventIds[0])}
-                  className="px-2 py-1 bg-yellow-500/20 rounded text-yellow-700 hover:bg-yellow-500/30"
+                  className="px-2 py-1 bg-[var(--hive-gold)]/20 rounded text-yellow-700 hover:bg-[var(--hive-gold)]/30"
                 >
                   Reschedule
                 </button>
                 <button
                   onClick={() => onResolveConflict?.(conflict.id, 'ignore')}
-                  className="px-2 py-1 bg-gray-500/20 rounded text-gray-600 hover:bg-gray-500/30"
+                  className="px-2 py-1 bg-gray-500/20 rounded text-[var(--hive-text-muted)] hover:bg-gray-500/30"
                 >
                   Ignore
                 </button>
@@ -254,27 +257,27 @@ const InteractiveCalendarWidget: React.FC<{
             type="text"
             placeholder="Event title"
             value={createForm.title}
-            onChange={(e) => setCreateForm(prev => ({ ...prev, title: e.target.value }))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateForm(prev => ({ ...prev, title: e.target.value }))}
             className="w-full px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
           />
           <div className="grid grid-cols-2 gap-2">
             <input
               type="datetime-local"
               value={createForm.startDate}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, startDate: e.target.value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateForm(prev => ({ ...prev, startDate: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
             <input
               type="datetime-local"
               value={createForm.endDate}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, endDate: e.target.value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateForm(prev => ({ ...prev, endDate: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
             <select
               value={createForm.type}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, type: e.target.value as CalendarEvent['type'] }))}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCreateForm(prev => ({ ...prev, type: e.target.value as CalendarEvent['type'] }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             >
               <option value="personal">Personal</option>
@@ -286,7 +289,7 @@ const InteractiveCalendarWidget: React.FC<{
               type="text"
               placeholder="Location"
               value={createForm.location}
-              onChange={(e) => setCreateForm(prev => ({ ...prev, location: e.target.value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateForm(prev => ({ ...prev, location: e.target.value }))}
               className="px-3 py-2 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary text-sm"
             />
           </div>
@@ -370,7 +373,7 @@ const InteractiveCalendarWidget: React.FC<{
       )}
     </div>
   );
-};
+});
 
 export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   user,
@@ -771,11 +774,11 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
 };
 
 // Compound components for specific use cases
-export const CompactProfileDashboard: React.FC<Omit<ProfileDashboardProps, 'variant'>> = (props) => (
+export const CompactProfileDashboard: React.FC<Omit<ProfileDashboardProps, 'variant'>> = (props: any) => (
   <ProfileDashboard {...props} variant="compact" />
 );
 
-export const FocusedProfileDashboard: React.FC<Omit<ProfileDashboardProps, 'variant' | 'showBuilder'>> = (props) => (
+export const FocusedProfileDashboard: React.FC<Omit<ProfileDashboardProps, 'variant' | 'showBuilder'>> = (props: any) => (
   <ProfileDashboard {...props} variant="focused" showBuilder={false} />
 );
 

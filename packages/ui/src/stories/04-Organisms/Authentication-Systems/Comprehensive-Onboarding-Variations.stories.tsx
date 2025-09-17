@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useContext, createContext, useReducer } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
 import { HiveProgress as Progress } from '../../../components/hive-progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
-import { Switch } from '../../../components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
+import { Alert, AlertDescription } from '../../../atomic/molecules/alert-toast-system';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { Checkbox } from '../../../components/ui/checkbox';
 import { HiveTextarea as Textarea } from '../../../components/hive-textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
@@ -53,7 +53,16 @@ import {
   UserPlus
 } from 'lucide-react';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const ComprehensiveOnboardingVariations = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Comprehensive Onboarding Variations</h2>
+    <p className="text-muted-foreground">Complete onboarding system variations and flows</p>
+  </div>
+);
+
+const meta: Meta<typeof ComprehensiveOnboardingVariations> = {
+  component: ComprehensiveOnboardingVariations,
   title: '29-Comprehensive-Onboarding-Variations/Onboarding-System',
   parameters: {
     layout: 'fullscreen',
@@ -316,7 +325,7 @@ function UserTypeSelection({ state, dispatch }: {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {userTypes.map((userType) => (
+        {userTypes.map((userType: any) => (
           <Card 
             key={userType.type}
             className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${
@@ -330,7 +339,7 @@ function UserTypeSelection({ state, dispatch }: {
               <div className="flex items-center gap-3 mb-3">
                 <div className={`p-2 rounded-lg ${
                   state.userType === userType.type 
-                    ? 'bg-blue-500 text-white' 
+                    ? 'bg-blue-500 text-[var(--hive-text-primary)]' 
                     : 'bg-gray-100 text-gray-600'
                 }`}>
                   {userType.icon}
@@ -390,7 +399,7 @@ function PersonalInformation({ state, dispatch }: {
               <Input
                 id="firstName"
                 value={state.personalInfo.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('firstName', e.target.value)}
                 placeholder="Enter your first name"
               />
             </div>
@@ -400,7 +409,7 @@ function PersonalInformation({ state, dispatch }: {
               <Input
                 id="lastName"
                 value={state.personalInfo.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('lastName', e.target.value)}
                 placeholder="Enter your last name"
               />
             </div>
@@ -411,7 +420,7 @@ function PersonalInformation({ state, dispatch }: {
             <Input
               id="preferredName"
               value={state.personalInfo.preferredName}
-              onChange={(e) => handleInputChange('preferredName', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('preferredName', e.target.value)}
               placeholder="What would you like to be called?"
             />
           </div>
@@ -422,7 +431,7 @@ function PersonalInformation({ state, dispatch }: {
               id="email"
               type="email"
               value={state.personalInfo.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('email', e.target.value)}
               placeholder="yourname@buffalo.edu"
             />
             <p className="text-sm text-gray-500 mt-1">
@@ -436,7 +445,7 @@ function PersonalInformation({ state, dispatch }: {
               id="phoneNumber"
               type="tel"
               value={state.personalInfo.phoneNumber}
-              onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('phoneNumber', e.target.value)}
               placeholder="(716) 123-4567"
             />
           </div>
@@ -454,7 +463,7 @@ function PersonalInformation({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -508,13 +517,13 @@ function AcademicInformation({ state, dispatch }: {
             <Label htmlFor="major">Major/Program *</Label>
             <Select 
               value={state.academicInfo.major} 
-              onValueChange={(value) => handleInputChange('major', value)}
+              onValueChange={(value: unknown) => handleInputChange('major', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select your major" />
               </SelectTrigger>
               <SelectContent>
-                {ubSpecificData.majors.map((major) => (
+                {ubSpecificData.majors.map((major: any) => (
                   <SelectItem key={major} value={major}>
                     {major}
                   </SelectItem>
@@ -528,7 +537,7 @@ function AcademicInformation({ state, dispatch }: {
               <Label htmlFor="year">Academic Year *</Label>
               <Select 
                 value={state.academicInfo.year} 
-                onValueChange={(value) => handleInputChange('year', value)}
+                onValueChange={(value: unknown) => handleInputChange('year', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select your year" />
@@ -549,7 +558,7 @@ function AcademicInformation({ state, dispatch }: {
               <Input
                 id="previousInstitution"
                 value={state.academicInfo.previousInstitution || ''}
-                onChange={(e) => handleInputChange('previousInstitution', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('previousInstitution', e.target.value)}
                 placeholder="Name of your previous college/university"
               />
             </div>
@@ -559,7 +568,7 @@ function AcademicInformation({ state, dispatch }: {
             <Label htmlFor="expectedGraduation">Expected Graduation</Label>
             <Select 
               value={state.academicInfo.expectedGraduation} 
-              onValueChange={(value) => handleInputChange('expectedGraduation', value)}
+              onValueChange={(value: unknown) => handleInputChange('expectedGraduation', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Expected graduation" />
@@ -605,7 +614,7 @@ function AcademicInformation({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -663,13 +672,13 @@ function CampusLifePreferences({ state, dispatch }: {
               <Label htmlFor="housing">Housing Preference</Label>
               <Select 
                 value={state.campusPreferences.housing} 
-                onValueChange={(value) => handlePreferenceChange('housing', value)}
+                onValueChange={(value: unknown) => handlePreferenceChange('housing', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select housing option" />
                 </SelectTrigger>
                 <SelectContent>
-                  {ubSpecificData.housingOptions.map((option) => (
+                  {ubSpecificData.housingOptions.map((option: any) => (
                     <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>
@@ -684,13 +693,13 @@ function CampusLifePreferences({ state, dispatch }: {
               <Label htmlFor="diningPlan">Dining Plan</Label>
               <Select 
                 value={state.campusPreferences.diningPlan} 
-                onValueChange={(value) => handlePreferenceChange('diningPlan', value)}
+                onValueChange={(value: unknown) => handlePreferenceChange('diningPlan', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select dining plan" />
                 </SelectTrigger>
                 <SelectContent>
-                  {ubSpecificData.diningPlans.map((plan) => (
+                  {ubSpecificData.diningPlans.map((plan: any) => (
                     <SelectItem key={plan} value={plan}>
                       {plan}
                     </SelectItem>
@@ -743,7 +752,7 @@ function CampusLifePreferences({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -817,7 +826,7 @@ function SocialPreferencesStep({ state, dispatch }: {
                 onClick={() => handleSocialChange('extroverted', false)}
               >
                 <CardContent className="p-4 text-center">
-                  <User className="h-8 w-8 mx-auto mb-2 text-purple-500" />
+                  <User className="h-8 w-8 mx-auto mb-2 text-[var(--hive-gold)]" />
                   <h3 className="font-medium">More Introverted</h3>
                   <p className="text-sm text-gray-500">Prefer smaller groups and deeper connections</p>
                 </CardContent>
@@ -829,7 +838,7 @@ function SocialPreferencesStep({ state, dispatch }: {
             <Label htmlFor="studyGroupPreference">Study Group Preference</Label>
             <Select 
               value={state.socialPreferences.studyGroupPreference} 
-              onValueChange={(value) => handleSocialChange('studyGroupPreference', value)}
+              onValueChange={(value: unknown) => handleSocialChange('studyGroupPreference', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="How do you prefer to study?" />
@@ -848,7 +857,7 @@ function SocialPreferencesStep({ state, dispatch }: {
             <Label htmlFor="communicationStyle">Communication Style</Label>
             <Select 
               value={state.socialPreferences.communicationStyle} 
-              onValueChange={(value) => handleSocialChange('communicationStyle', value)}
+              onValueChange={(value: unknown) => handleSocialChange('communicationStyle', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="How do you prefer to communicate?" />
@@ -890,7 +899,7 @@ function SocialPreferencesStep({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -957,7 +966,7 @@ function AccessibilityNeeds({ state, dispatch }: {
             <Switch
               id="needsAccommodations"
               checked={state.accessibility.needsAccommodations}
-              onCheckedChange={(checked) => handleAccessibilityChange('needsAccommodations', checked)}
+              onCheckedChange={(checked: any) => handleAccessibilityChange('needsAccommodations', checked)}
             />
             <Label htmlFor="needsAccommodations" className="text-base">
               I need accessibility accommodations or support
@@ -1022,7 +1031,7 @@ function AccessibilityNeeds({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -1063,7 +1072,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Label htmlFor="visaStatus">Visa Status</Label>
             <Select 
               value={state.internationalNeeds?.visaStatus || ''} 
-              onValueChange={(value) => handleInternationalChange('visaStatus', value)}
+              onValueChange={(value: unknown) => handleInternationalChange('visaStatus', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select your visa status" />
@@ -1083,7 +1092,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Label htmlFor="englishProficiency">English Proficiency Level</Label>
             <Select 
               value={state.internationalNeeds?.englishProficiency || ''} 
-              onValueChange={(value) => handleInternationalChange('englishProficiency', value)}
+              onValueChange={(value: unknown) => handleInternationalChange('englishProficiency', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Rate your English proficiency" />
@@ -1102,7 +1111,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Switch
               id="culturalSupport"
               checked={state.internationalNeeds?.culturalSupport || false}
-              onCheckedChange={(checked) => handleInternationalChange('culturalSupport', checked)}
+              onCheckedChange={(checked: any) => handleInternationalChange('culturalSupport', checked)}
             />
             <Label htmlFor="culturalSupport" className="text-base">
               I'm interested in cultural support and community connections
@@ -1113,7 +1122,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Switch
               id="previousUSExperience"
               checked={state.internationalNeeds?.previousUSExperience || false}
-              onCheckedChange={(checked) => handleInternationalChange('previousUSExperience', checked)}
+              onCheckedChange={(checked: any) => handleInternationalChange('previousUSExperience', checked)}
             />
             <Label htmlFor="previousUSExperience" className="text-base">
               I have previous experience living/studying in the US
@@ -1151,7 +1160,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -1311,7 +1320,7 @@ function OnboardingCompletion({ state, dispatch }: {
       )}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="secondary" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -1368,11 +1377,11 @@ function OnboardingFlow() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Progress Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
+      <div className="bg-[var(--hive-white)] border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-lg font-semibold text-gray-900">HIVE Onboarding</h1>
-            <Badge variant="outline">
+            <Badge variant="secondary">
               Step {currentStepIndex + 1} of {steps.length}
             </Badge>
           </div>
@@ -1400,7 +1409,7 @@ function OnboardingFlow() {
       </div>
 
       {/* Footer */}
-      <div className="bg-white border-t border-gray-200 px-6 py-4 mt-8">
+      <div className="bg-[var(--hive-white)] border-t border-gray-200 px-6 py-4 mt-8">
         <div className="max-w-4xl mx-auto flex justify-between items-center text-sm text-gray-500">
           <span>© 2025 HIVE - University at Buffalo</span>
           <div className="flex items-center gap-4">

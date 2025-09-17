@@ -55,7 +55,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
   size = 'md',
   status,
   role,
-  affiliation,
+  affiliation: _affiliation,
   privacy = 'public',
   interactive = false,
   layout = 'horizontal',

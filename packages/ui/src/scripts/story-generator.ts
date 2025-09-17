@@ -246,9 +246,7 @@ import { ${component.componentName} } from '../../${component.filePath.replace('
  * Designed for ${component.atomicLevel} level interactions that blend social engagement
  * with academic utility, making campus life more connected and productive.
  */
-
-// TODO: Replace with actual component implementation
-const Mock${component.componentName}: React.FC<any> = (props) => (
+const Mock${component.componentName}: React.FC<any> = (props: any) => (
   <div className="p-4 bg-[var(--hive-background-secondary)] rounded-lg border border-[var(--hive-border-default)]">
     <h3 className="font-semibold text-[var(--hive-text-primary)]">${component.componentName}</h3>
     <p className="text-sm text-[var(--hive-text-secondary)]">
@@ -273,7 +271,7 @@ ${this.generateDetailedDescription(component, context)}
     layout: '${component.atomicLevel === 'atom' ? 'centered' : 'padded'}'
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-6 bg-[var(--hive-background-primary)] min-h-[200px] ${component.atomicLevel === 'atom' ? 'flex items-center justify-center' : ''}">
         <Story />
       </div>

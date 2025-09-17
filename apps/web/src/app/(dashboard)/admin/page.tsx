@@ -1,12 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
-import { Button } from '@hive/ui';
-import { Badge } from '@hive/ui';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
-import { Alert, AlertDescription } from '@hive/ui';
-import { Switch } from '@hive/ui';
+import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, Badge, Tabs, TabsContent, TabsList, TabsTrigger, Alert, AlertDescription } from '@hive/ui';
 import { 
   Users, 
   Home, 
@@ -19,6 +16,10 @@ import {
   BarChart3,
   Database
 } from 'lucide-react';
+import ModerationCenter from './components/moderation-center';
+import AnalyticsDashboard from './components/analytics-dashboard';
+import RealtimeMonitor from './components/realtime-monitor';
+import PrivacyControls from './components/privacy-controls';
 
 interface AdminDashboardData {
   platform: {
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
       const data = await response.json() as { flags?: FeatureFlag[] };
       setFeatureFlags(data.flags || []);
     } catch (err) {
-      console.error('Error loading feature flags:', err);
+      logger.error('Error loading feature flags:', { error: String(err) });
       setFeatureFlags([]);
     } finally {
       setFlagsLoading(false);
@@ -159,7 +160,7 @@ export default function AdminDashboard() {
         )
       );
     } catch (err) {
-      console.error('Error updating feature flag:', err);
+      logger.error('Error updating feature flag:', { error: String(err) });
     }
   };
 
@@ -188,15 +189,18 @@ export default function AdminDashboard() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Alert variant="destructive">
+        <Alert variant="error">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
             Failed to load admin dashboard: {error}
           </AlertDescription>
         </Alert>
-        <Button onClick={loadDashboardData} className="mt-4">
+        <button 
+          onClick={loadDashboardData} 
+          className="mt-4 px-4 py-2 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors"
+        >
           Retry
-        </Button>
+        </button>
       </div>
     );
   }
@@ -283,16 +287,19 @@ export default function AdminDashboard() {
       </div>
 
       {/* Detailed Sections */}
-      <Tabs defaultValue="users" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="users">Users</TabsTrigger>
-          <TabsTrigger value="spaces">Spaces</TabsTrigger>
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="moderation">Moderation</TabsTrigger>
+          <TabsTrigger value="privacy">Privacy</TabsTrigger>
+          <TabsTrigger value="realtime">Real-time</TabsTrigger>
           <TabsTrigger value="requests">Requests</TabsTrigger>
-          <TabsTrigger value="flags">Feature Flags</TabsTrigger>
+          <TabsTrigger value="flags">Flags</TabsTrigger>
           <TabsTrigger value="system">System</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="users" className="space-y-4">
+        <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
@@ -330,56 +337,22 @@ export default function AdminDashboard() {
           </div>
         </TabsContent>
 
-        <TabsContent value="spaces" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Space Statistics</CardTitle>
-                <CardDescription>Overview of all spaces</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span>Total Spaces</span>
-                    <span className="font-bold">{statistics.spaces.total}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Active Spaces</span>
-                    <span className="font-bold text-green-600">{statistics.spaces.active}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Dormant Spaces</span>
-                    <span className="font-bold text-yellow-600">{statistics.spaces.dormant}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Total Members</span>
-                    <span className="font-bold">{statistics.spaces.totalMembers}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Spaces by Type</CardTitle>
-                <CardDescription>Distribution across space categories</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {Object.entries(statistics.spaces.byType).map(([type, data]) => (
-                    <div key={type} className="flex justify-between items-center">
-                      <span className="text-sm capitalize">{type.replace(/_/g, ' ')}</span>
-                      <div className="flex space-x-2">
-                        <Badge variant="secondary">{data.total}</Badge>
-                        <Badge variant="outline">{data.members} members</Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="analytics" className="space-y-4">
+          <AnalyticsDashboard />
         </TabsContent>
+
+        <TabsContent value="moderation" className="space-y-4">
+          <ModerationCenter />
+        </TabsContent>
+
+        <TabsContent value="privacy" className="space-y-4">
+          <PrivacyControls />
+        </TabsContent>
+
+        <TabsContent value="realtime" className="space-y-4">
+          <RealtimeMonitor />
+        </TabsContent>
+
 
         <TabsContent value="requests" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">
@@ -439,18 +412,18 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="flex space-x-4">
-                <Button>
+                <button className="px-4 py-2 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors flex items-center">
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Review Pending
-                </Button>
-                <Button variant="outline">
+                </button>
+                <button className="px-4 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors flex items-center">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   View Analytics
-                </Button>
-                <Button variant="outline">
+                </button>
+                <button className="px-4 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors flex items-center">
                   <Activity className="h-4 w-4 mr-2" />
                   Export Data
-                </Button>
+                </button>
               </div>
             </CardContent>
           </Card>
@@ -464,18 +437,22 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="flex space-x-4 mb-6">
-                <Button onClick={loadFeatureFlags} disabled={flagsLoading}>
+                <button 
+                  onClick={loadFeatureFlags} 
+                  disabled={flagsLoading}
+                  className="px-4 py-2 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors flex items-center disabled:opacity-50"
+                >
                   <Flag className="h-4 w-4 mr-2" />
                   {flagsLoading ? 'Loading...' : 'Refresh Flags'}
-                </Button>
-                <Button variant="outline">
+                </button>
+                <button className="px-4 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors flex items-center">
                   <TrendingUp className="h-4 w-4 mr-2" />
                   View Analytics
-                </Button>
-                <Button variant="outline">
+                </button>
+                <button className="px-4 py-2 border border-border bg-background text-foreground rounded-md hover:bg-muted transition-colors flex items-center">
                   <Settings className="h-4 w-4 mr-2" />
                   Create Flag
-                </Button>
+                </button>
               </div>
 
               {flagsLoading ? (
@@ -490,7 +467,7 @@ export default function AdminDashboard() {
                     </div>
                   ) : (
                     <div className="grid gap-4">
-                      {featureFlags.map((flag) => (
+                      {featureFlags.map((flag: any) => (
                         <Card key={flag.id} className="border-l-4 border-l-blue-500">
                           <CardContent className="pt-6">
                             <div className="flex items-center justify-between">
@@ -517,9 +494,11 @@ export default function AdminDashboard() {
                                 </div>
                               </div>
                               <div className="flex items-center space-x-4">
-                                <Switch
+                                <input
+                                  type="checkbox"
                                   checked={flag.enabled}
-                                  onCheckedChange={(enabled) => toggleFeatureFlag(flag.id, enabled)}
+                                  onChange={(e: any) => toggleFeatureFlag(flag.id, e.target.checked)}
+                                  className="w-4 h-4 text-accent bg-background border-2 rounded border-border focus:ring-accent focus:ring-2"
                                 />
                               </div>
                             </div>

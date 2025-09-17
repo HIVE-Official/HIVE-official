@@ -3,6 +3,9 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
+import type {
+  LucideIcon 
+} from 'lucide-react';
 import { 
   Crown, 
   Shield, 
@@ -11,10 +14,7 @@ import {
   Zap, 
   Users, 
   BookOpen,
-  Eye,
-  EyeOff,
-  Verified,
-  LucideIcon 
+  EyeOff
 } from 'lucide-react';
 
 const profileBadgeVariants = cva(

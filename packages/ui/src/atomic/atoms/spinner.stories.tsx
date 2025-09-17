@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Spinner } from './spinner';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import '../../hive-tokens.css';
@@ -75,7 +75,7 @@ export const Default: Story = {
     color: 'gold',
     variant: 'spin',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="p-6">
@@ -105,7 +105,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📏 SIZES</Badge>
+            <Badge variant="emerald">📏 SIZES</Badge>
             Spinner Sizes - Loading Context Flexibility
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -562,7 +562,7 @@ export const Playground: Story = {
     color: 'gold',
     variant: 'spin',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

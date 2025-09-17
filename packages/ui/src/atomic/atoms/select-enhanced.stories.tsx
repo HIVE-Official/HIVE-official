@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Select, SelectPresets, MultiSelect, SelectGroup } from './select-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import '../../hive-tokens.css';
 
@@ -103,7 +103,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ VARIANTS</Badge>
+            <Badge variant="emerald">✅ VARIANTS</Badge>
             Select Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -119,7 +119,7 @@ export const CompleteShowcase: Story = {
               ]}
               placeholder="Default variant"
               label="Default"
-              variant="default"
+              variant="primary"
             />
             <Select
               options={[
@@ -137,7 +137,7 @@ export const CompleteShowcase: Story = {
               ]}
               placeholder="Success variant"
               label="Success"
-              variant="success"
+              variant="emerald"
               success="Selection validated successfully"
             />
             <Select
@@ -147,7 +147,7 @@ export const CompleteShowcase: Story = {
               ]}
               placeholder="Warning variant"
               label="Warning"
-              variant="warning"
+              variant="gold"
               helperText="Please review your selection"
             />
             <Select
@@ -433,7 +433,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Select professor"
                   label="Preferred Professor"
-                  variant="default"
+                  variant="primary"
                 />
                 <Select
                   options={[
@@ -443,7 +443,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Schedule preference"
                   label="Schedule"
-                  variant="default"
+                  variant="primary"
                 />
                 <SelectPresets.Priority 
                   label="Registration Priority"
@@ -481,7 +481,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Floor preference"
                   label="Floor/Wing"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
               <div className="grid md:grid-cols-3 gap-4">
@@ -494,7 +494,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Select meal plan"
                   label="Meal Plan"
-                  variant="default"
+                  variant="primary"
                 />
                 <MultiSelect
                   options={[
@@ -541,7 +541,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Study location"
                   label="Preferred Location"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
               <div className="grid md:grid-cols-3 gap-4">
@@ -554,7 +554,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Group size"
                   label="Group Size"
-                  variant="default"
+                  variant="primary"
                 />
                 <MultiSelect
                   options={[
@@ -576,7 +576,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Skill level"
                   label="Your Level"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
             </div>
@@ -609,7 +609,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Time commitment"
                   label="Availability"
-                  variant="default"
+                  variant="primary"
                 />
               </div>
               <div className="grid md:grid-cols-3 gap-4">
@@ -621,7 +621,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Participation timeline"
                   label="Timeline"
-                  variant="default"
+                  variant="primary"
                 />
                 <Select
                   options={[
@@ -631,7 +631,7 @@ export const CompleteShowcase: Story = {
                   ]}
                   placeholder="Involvement level"
                   label="Role Interest"
-                  variant="default"
+                  variant="primary"
                 />
                 <SelectPresets.Priority 
                   label="Registration Priority"
@@ -664,7 +664,7 @@ export const Playground: Story = {
     size: 'default',
     allowClear: true,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

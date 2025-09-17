@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { logger } from '@/lib/logger';
+
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Badge } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@hive/ui";
 import { 
   Play, 
   Settings, 
@@ -16,7 +18,7 @@ import {
   Code,
   Zap
 } from 'lucide-react';
-import { authenticatedFetch } from "@/lib/auth-utils";
+import { authenticatedFetch } from "@/lib/auth/utils/auth-utils";
 import { useSession } from "@/hooks/use-session";
 import { ErrorBoundary } from "@/components/error-boundary";
 
@@ -89,7 +91,7 @@ export default function ToolPage() {
         setTool({ ...tool, isInstalled: true });
       }
     } catch (err) {
-      console.error('Failed to install tool:', err);
+      logger.error('Failed to install tool:', { error: String(err) });
     } finally {
       setIsInstalling(false);
     }
@@ -103,7 +105,7 @@ export default function ToolPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Loading Tool...">
+      <PageContainer>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
         </div>
@@ -113,9 +115,9 @@ export default function ToolPage() {
 
   if (error || !tool) {
     return (
-      <PageContainer title="Tool Not Found">
+      <PageContainer>
         <Card className="p-8 text-center">
-          <h2 className="text-xl font-semibold text-white mb-2">Tool Not Found</h2>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Tool Not Found</h2>
           <p className="text-neutral-400 mb-4">{error || 'The requested tool could not be found.'}</p>
           <Button onClick={() => router.push('/tools')}>
             Back to Tools
@@ -135,7 +137,7 @@ export default function ToolPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <Code className="h-8 w-8 text-blue-400" />
-                  <h1 className="text-2xl font-bold text-white">{tool.name}</h1>
+                  <h1 className="text-2xl font-bold text-[var(--hive-text-inverse)]">{tool.name}</h1>
                   <Badge variant="secondary">{tool.category}</Badge>
                 </div>
                 <p className="text-neutral-300 mb-4">{tool.description}</p>
@@ -146,7 +148,7 @@ export default function ToolPage() {
                     <span>{tool.downloads.toLocaleString()} downloads</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <Star className="h-4 w-4 fill-[var(--hive-gold)] text-[var(--hive-gold)]" />
                     <span>{tool.rating.toFixed(1)} ({tool.ratingCount} reviews)</span>
                   </div>
                   <div className="flex items-center gap-1">
@@ -173,7 +175,7 @@ export default function ToolPage() {
                   >
                     {isInstalling ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--hive-white)] mr-2"></div>
                         Installing...
                       </>
                     ) : (
@@ -221,7 +223,7 @@ export default function ToolPage() {
                   <Zap className="h-5 w-5 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Run Tool</h3>
+                  <h3 className="font-semibold text-[var(--hive-text-inverse)]">Run Tool</h3>
                   <p className="text-sm text-neutral-400">Execute this tool</p>
                 </div>
               </div>
@@ -234,7 +236,7 @@ export default function ToolPage() {
                   <BarChart3 className="h-5 w-5 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">View Analytics</h3>
+                  <h3 className="font-semibold text-[var(--hive-text-inverse)]">View Analytics</h3>
                   <p className="text-sm text-neutral-400">Usage insights</p>
                 </div>
               </div>
@@ -242,11 +244,11 @@ export default function ToolPage() {
 
             <Card className="p-4 hover:bg-neutral-800 transition-colors cursor-pointer">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-500/20 rounded-lg">
-                  <Share2 className="h-5 w-5 text-purple-400" />
+                <div className="p-2 bg-[var(--hive-gold)]/20 rounded-lg">
+                  <Share2 className="h-5 w-5 text-[var(--hive-gold)]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Share Tool</h3>
+                  <h3 className="font-semibold text-[var(--hive-text-inverse)]">Share Tool</h3>
                   <p className="text-sm text-neutral-400">Share with others</p>
                 </div>
               </div>
@@ -255,18 +257,18 @@ export default function ToolPage() {
 
           {/* Tool Information */}
           <Card className="p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">About {tool.name}</h2>
+            <h2 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">About {tool.name}</h2>
             <div className="space-y-4 text-neutral-300">
               <div>
-                <h3 className="font-medium text-white mb-2">Creator</h3>
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-2">Creator</h3>
                 <p>{tool.creator}</p>
               </div>
               <div>
-                <h3 className="font-medium text-white mb-2">Version</h3>
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-2">Version</h3>
                 <p>{tool.version}</p>
               </div>
               <div>
-                <h3 className="font-medium text-white mb-2">Category</h3>
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-2">Category</h3>
                 <p>{tool.category}</p>
               </div>
             </div>

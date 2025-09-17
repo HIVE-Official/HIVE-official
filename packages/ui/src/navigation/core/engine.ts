@@ -9,12 +9,15 @@
  * - Performance optimization
  */
 
-import { 
+import type { 
   NavigationMode, 
   NavigationPreference, 
   NavigationState, 
   NavigationLayout,
-  ScreenSize,
+  ScreenSize} from './types';
+import { logger } from '../../utils/logger';
+
+import {
   BREAKPOINTS 
 } from './types';
 
@@ -277,7 +280,7 @@ export const safeCalculateNavigationState = (
     validateNavigationInputs(screenWidth, userPreference, sidebarCollapsed);
     return calculateNavigationState(screenWidth, userPreference, sidebarCollapsed);
   } catch (error) {
-    console.error('Navigation state calculation failed:', error);
+    logger.error('Navigation state calculation failed:', { error });
     
     // Return safe fallback state
     return {
@@ -326,16 +329,7 @@ export const createNavigationStateChangeEvent = (
 export const debugNavigationState = (state: NavigationState): void => {
   if (process.env.NODE_ENV === 'development') {
     console.group('🧭 HIVE Navigation State');
-    console.log('Mode:', state.mode);
-    console.log('Screen:', `${state.screenSize} (${state.screenWidth}px)`);
-    console.log('Preference:', state.userPreference);
-    console.log('Sidebar Collapsed:', state.sidebarCollapsed);
-    console.log('Layout Flags:', {
-      showMobileNav: state.showMobileNav,
-      showTabletDrawer: state.showTabletDrawer,
-      showDesktopTabs: state.showDesktopTabs,
-      showDesktopSidebar: state.showDesktopSidebar
-    });
+    
     console.groupEnd();
   }
 };

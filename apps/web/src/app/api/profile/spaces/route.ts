@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Internal membership data structure
 interface MembershipData {
@@ -72,16 +72,6 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
-      // Development fallback
-      if (process.env.NODE_ENV === 'development' || request.url.includes('localhost')) {
-        return NextResponse.json({
-          memberships: getMockSpaceMemberships(),
-          activitySummary: getMockActivitySummary(),
-          totalCount: 4,
-          activeCount: 3,
-          timeRange: 'week'
-        });
-      }
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
@@ -109,9 +99,9 @@ export async function GET(request: NextRequest) {
 
     // Fetch space details for each membership
     const spaceMemberships: (ProfileSpaceMembership | null)[] = await Promise.all(
-      memberships.map(async (membership) => {
+      memberships.map(async (membership: any) => {
         try {
-          const spaceDoc = await dbAdmin.collection('spaces').doc(membership.id).get();
+          const spaceDoc = await dbAdmin.collection('spaces').doc(membership.spaceId).get();
           if (!spaceDoc.exists) {
             return null;
           }
@@ -123,36 +113,36 @@ export async function GET(request: NextRequest) {
           
           // Calculate activity level and recent activity
           const recentActivity = includeActivity ? 
-            await getSpaceActivityForUser(user.uid, membership.id, timeRange) : 
+            await getSpaceActivityForUser(user.uid, membership.spaceId, timeRange) : 
             { posts: 0, interactions: 0, toolUsage: 0, timeSpent: 0 };
 
           const activityLevel = calculateActivityLevel(recentActivity);
 
           // Get notifications count
-          const notifications = await getSpaceNotifications(user.uid, membership.id);
+          const notifications = await getSpaceNotifications(user.uid, membership.spaceId);
 
           // Get quick stats
           const quickStats = includeStats ? 
-            await getSpaceQuickStats(user.uid, membership.id) : 
+            await getSpaceQuickStats(user.uid, membership.spaceId) : 
             { myPosts: 0, myTools: 0, myInteractions: 0 };
 
           return {
-            spaceId: membership.id,
+            spaceId: membership.spaceId,
             spaceName: spaceData.name || 'Unknown Space',
             spaceDescription: spaceData.description || '',
             spaceType: spaceData.type || 'general',
             memberCount: spaceData.memberCount || 0,
-            role: (membership.role || 'member') as 'member' | 'moderator' | 'admin' | 'builder',
-            status: (membership.status || 'active') as 'active' | 'inactive' | 'pending',
-            joinedAt: membership.joinedAt || new Date().toISOString(),
-            lastActivity: membership.lastActivity || new Date().toISOString(),
+            role: (membership?.role || 'member') as 'member' | 'moderator' | 'admin' | 'builder',
+            status: (membership?.status || 'active') as 'active' | 'inactive' | 'pending',
+            joinedAt: membership?.joinedAt || new Date().toISOString(),
+            lastActivity: membership?.lastActivity || new Date().toISOString(),
             activityLevel,
             recentActivity,
             notifications,
             quickStats
           };
         } catch (error) {
-          logger.error('Error fetching space data for', { spaceId: membership.id, error: error, endpoint: '/api/profile/spaces' });
+          logger.error('Error fetching space data for', { spaceId: membership?.spaceId, error: error, endpoint: '/api/profile/spaces' });
           return null;
         }
       })
@@ -241,14 +231,31 @@ function calculateActivityLevel(activity: any): 'high' | 'medium' | 'low' {
 // Helper function to get space notifications
 async function getSpaceNotifications(userId: string, spaceId: string) {
   try {
-    // This would be implemented when notification system is built
-    // For now, return mock data
+    // Get real unread notifications for this user in this space
+    const notificationsSnapshot = await dbAdmin
+      .collection('users')
+      .doc(userId)
+      .collection('notifications')
+      .where('spaceId', '==', spaceId)
+      .where('read', '==', false)
+      .get();
+    
+    const importantSnapshot = await dbAdmin
+      .collection('users')
+      .doc(userId)
+      .collection('notifications')
+      .where('spaceId', '==', spaceId)
+      .where('priority', '==', 'high')
+      .where('read', '==', false)
+      .get();
+    
     return {
-      unreadCount: Math.floor(Math.random() * 5),
-      hasImportantUpdates: Math.random() > 0.7
+      unreadCount: notificationsSnapshot.size,
+      hasImportantUpdates: importantSnapshot.size > 0
     };
   } catch (error) {
     logger.error('Error getting space notifications', { error: error, endpoint: '/api/profile/spaces' });
+    // Return zeros if collection doesn't exist yet
     return { unreadCount: 0, hasImportantUpdates: false };
   }
 }

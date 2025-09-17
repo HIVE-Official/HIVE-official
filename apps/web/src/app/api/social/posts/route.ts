@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
 // Post creation schema
 const CreatePostSchema = z.object({

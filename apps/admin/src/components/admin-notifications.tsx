@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { logger } from '@hive/core';
+
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { AdminNotification, NotificationPriority, NotificationType } from "@/lib/admin-notifications";
@@ -17,7 +19,7 @@ export function AdminNotifications({ onNotificationClick, maxHeight = "400px" }:
   const [error, setError] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     if (!admin) return;
 
     setLoading(true);
@@ -43,7 +45,7 @@ export function AdminNotifications({ onNotificationClick, maxHeight = "400px" }:
     } finally {
       setLoading(false);
     }
-  };
+  }, [admin]);
 
   const markAsRead = async (notificationId: string) => {
     if (!admin) return;
@@ -65,7 +67,7 @@ export function AdminNotifications({ onNotificationClick, maxHeight = "400px" }:
         await fetchNotifications();
       }
     } catch (err) {
-      console.error('Failed to mark notification as read:', err);
+      logger.error('Failed to mark notification as read:', err);
     }
   };
 
@@ -88,7 +90,7 @@ export function AdminNotifications({ onNotificationClick, maxHeight = "400px" }:
         await fetchNotifications();
       }
     } catch (err) {
-      console.error('Failed to mark all notifications as read:', err);
+      logger.error('Failed to mark all notifications as read:', err);
     }
   };
 
@@ -110,7 +112,7 @@ export function AdminNotifications({ onNotificationClick, maxHeight = "400px" }:
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchNotifications, 30000);
     return () => clearInterval(interval);
-  }, [admin]);
+  }, [fetchNotifications]);
 
   const getPriorityColor = (priority: NotificationPriority) => {
     switch (priority) {

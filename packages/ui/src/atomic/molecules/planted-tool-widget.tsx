@@ -71,15 +71,15 @@ export interface PlantedToolWidgetProps {
 
 const CATEGORY_CONFIG = {
   productivity: {
-    color: 'text-yellow-400',
-    bgColor: 'bg-yellow-500/10',
-    borderColor: 'border-yellow-500/20',
+    color: 'text-[var(--hive-gold)]',
+    bgColor: 'bg-[var(--hive-gold)]/10',
+    borderColor: 'border-[var(--hive-gold)]/20',
     icon: <Zap className="w-4 h-4" />,
   },
   social: {
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/10',
-    borderColor: 'border-purple-500/20',
+    color: 'text-[var(--hive-gold)]',
+    bgColor: 'bg-[var(--hive-gold)]/10',
+    borderColor: 'border-[var(--hive-gold)]/20',
     icon: <Users className="w-4 h-4" />,
   },
   academic: {
@@ -468,7 +468,7 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
             primaryAction.action();
           }}

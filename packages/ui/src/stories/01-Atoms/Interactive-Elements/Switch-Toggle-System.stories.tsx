@@ -1,10 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Bell, Eye, EyeOff, Shield, Users, Calendar, MapPin, Smartphone, Mail, MessageSquare, Globe, Lock } from 'lucide-react';
-import { Switch } from '../../../components/ui/switch';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { Label } from '../../../components/ui/label';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const SwitchToggleSystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Switch & Toggle System</h2>
+    <p className="text-muted-foreground">Campus preference and privacy control system</p>
+  </div>
+);
+
+const meta: Meta<typeof SwitchToggleSystem> = {
+  component: SwitchToggleSystem,
   title: '02-Atoms/Interactive-Elements/Switch & Toggle System',
   parameters: {
     docs: {
@@ -198,7 +207,7 @@ export const PrivacyControls: Story = {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {campusToggleSettings.privacy.map((setting) => {
+          {campusToggleSettings.privacy.map((setting: any) => {
             const IconComponent = setting.icon;
             const isEnabled = privacySettings[setting.id as keyof typeof privacySettings];
             
@@ -304,7 +313,7 @@ export const NotificationSettings: Story = {
               </h3>
               
               <div className="space-y-4">
-                {settings.map((setting) => {
+                {settings.map((setting: any) => {
                   const IconComponent = setting.icon;
                   const isEnabled = notificationSettings[setting.id as keyof typeof notificationSettings];
                   
@@ -388,7 +397,7 @@ export const FeatureToggles: Story = {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {campusToggleSettings.features.map((setting) => {
+          {campusToggleSettings.features.map((setting: any) => {
             const IconComponent = setting.icon;
             const isEnabled = featureSettings[setting.id as keyof typeof featureSettings];
             
@@ -536,7 +545,7 @@ export const SwitchStatesShowcase: Story = {
                   <Switch
                     id="demo-enabled"
                     checked={interactiveStates.enabled}
-                    onCheckedChange={(checked) => setInteractiveStates(prev => ({ ...prev, enabled: checked }))}
+                    onCheckedChange={(checked: any) => setInteractiveStates(prev => ({ ...prev, enabled: checked }))}
                   />
                 </div>
                 <p className="text-sm text-gray-600">

@@ -7,10 +7,10 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Input } from '../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Input } from '../../atomic/atoms/input-enhanced';
 import { 
   BookOpen,
   Layers,
@@ -42,7 +42,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof HIVESystemIndex> = {
+  component: HIVESystemIndex,
   title: '🏠 HIVE SYSTEM INDEX',
   parameters: {
     layout: 'fullscreen',
@@ -115,7 +116,7 @@ Explore the system that will transform university community building.
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof HIVESystemIndex>;
 
 // =============================================================================
 // SYSTEM ARCHITECTURE DATA
@@ -330,10 +331,10 @@ const HIVESystemIndex = () => {
   const getColorClasses = (color: string) => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-400',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
-      yellow: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/20 text-yellow-400',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
+      yellow: 'from-[var(--hive-gold)]/20 to-yellow-600/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -380,7 +381,7 @@ const HIVESystemIndex = () => {
               type="text"
               placeholder="Search components, systems, or patterns..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
               className="pl-10 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)] text-[var(--hive-text-primary)]"
             />
           </div>
@@ -407,7 +408,7 @@ const HIVESystemIndex = () => {
             </Card>
             <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-400">UB</div>
+                <div className="text-2xl font-bold text-[var(--hive-gold)]">UB</div>
                 <div className="text-sm text-[var(--hive-text-secondary)]">Campus Ready</div>
               </CardContent>
             </Card>
@@ -455,7 +456,7 @@ const HIVESystemIndex = () => {
           
           {/* Category Navigation */}
           <div className="flex flex-wrap gap-2 mb-8">
-            {systemCategories.map((category) => (
+            {systemCategories.map((category: any) => (
               <Button
                 key={category.id}
                 variant={activeCategory === category.id ? 'primary' : 'secondary'}
@@ -470,7 +471,7 @@ const HIVESystemIndex = () => {
 
           {/* Category Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {filteredCategories.map((category) => (
+            {filteredCategories.map((category: any) => (
               <Card 
                 key={category.id} 
                 className={`border-2 bg-gradient-to-br ${getColorClasses(category.color)} ${activeCategory === category.id ? 'ring-2 ring-[var(--hive-brand-primary)]' : ''}`}
@@ -504,11 +505,11 @@ const HIVESystemIndex = () => {
                             <div className="text-xs text-[var(--hive-text-tertiary)] font-mono">
                               {section.path}
                             </div>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="secondary" className="text-xs">
                               {section.components} components
                             </Badge>
                             <Badge 
-                              className={`text-xs ${section.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}
+                              className={`text-xs ${section.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'}`}
                             >
                               {section.status}
                             </Badge>

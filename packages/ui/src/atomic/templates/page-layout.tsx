@@ -3,7 +3,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { Text } from '../atoms/text';
-import { Button } from '../atoms/button';
+import { Button } from '../atoms/button-enhanced';
 
 export interface PageLayoutProps {
   // Header Content

@@ -6,14 +6,14 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Input } from '../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Avatar, AvatarFallback } from '../../atomic/atoms/avatar';
+import { Input } from '../../atomic/atoms/input-enhanced';
 import { HiveProgress } from '../../components/hive-progress';
 import { Separator } from '../../components/ui/separator';
-import { Switch } from '../../components/ui/switch';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
 import { 
   Activity,
   Zap,
@@ -412,11 +412,11 @@ const RealTimeIntelligenceDemo = () => {
                     Live Activity Stream
                   </CardTitle>
                   <div className="flex items-center space-x-2">
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                       <Filter className="w-4 h-4 mr-2" />
                       Filter
                     </Button>
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                       <RefreshCw className="w-4 h-4" />
                     </Button>
                   </div>
@@ -460,7 +460,7 @@ const RealTimeIntelligenceDemo = () => {
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 ml-4">
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <Button size="sm" variant="secondary" className="border-gray-600 text-white">
                           <Heart className="w-3 h-3" />
                         </Button>
                         <Button size="sm" className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>

@@ -38,7 +38,7 @@ const meta: Meta<typeof CampusActivityFeed> = {
     },
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-2xl mx-auto">
           <Story />
@@ -291,7 +291,7 @@ export const BentoGridLayout: Story = {
     maxItems: 5,
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div className="p-8 min-h-screen bg-obsidian">
         <div className="max-w-6xl mx-auto">
           {/* BentoGrid Layout Context */}
@@ -327,7 +327,7 @@ export const BentoGridLayout: Story = {
                 <h3 className="text-platinum font-semibold mb-4">Upcoming Events</h3>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-purple-500" />
+                    <div className="w-2 h-2 rounded-full bg-[var(--hive-gold)]" />
                     <div>
                       <p className="text-mercury text-sm">Robotics Meeting</p>
                       <p className="text-steel text-xs">Thursday 7:00 PM</p>

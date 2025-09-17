@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
@@ -99,9 +99,9 @@ const getToolCategoryConfig = (category: string) => {
       label: 'Productivity'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Users,
       label: 'Social'
     },
@@ -133,8 +133,8 @@ const getBuildStatusConfig = (status: string) => {
       progress: 10
     },
     prototype: {
-      color: 'text-yellow-500',
-      bgColor: 'bg-yellow-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       label: 'Prototype',
       progress: 35
     },
@@ -176,8 +176,8 @@ const getBuilderLevelConfig = (level: string) => {
       label: 'Apprentice Builder'
     },
     expert: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       icon: Rocket,
       label: 'Expert Builder'
     },
@@ -259,7 +259,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
             <Text variant="body-sm" color="gold" weight="medium">
               HiveLab Builder
             </Text>
-            <Badge variant="outline" className={cn('text-xs', builderLevelConfig.color)}>
+            <Badge variant="secondary" className={cn('text-xs', builderLevelConfig.color)}>
               <builderLevelConfig.icon className="h-3 w-3 mr-1" />
               {builderLevelConfig.label}
             </Badge>
@@ -307,7 +307,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
 
           <div className="text-center">
             <div className="flex items-center justify-center gap-1">
-              <Users className="h-3 w-3 text-purple-500" />
+              <Users className="h-3 w-3 text-[var(--hive-gold)]" />
               <Text variant="body-sm" weight="medium" color="primary">
                 {totalCollaborations}
               </Text>
@@ -329,7 +329,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
             </div>
             <div className="w-full bg-[var(--hive-background-secondary)] rounded-full h-2">
               <div 
-                className="bg-gradient-to-r from-purple-500 to-[var(--hive-gold)] rounded-full h-2 transition-all duration-500"
+                className="bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] rounded-full h-2 transition-all duration-500"
                 style={{ width: `${builderScore}%` }}
               />
             </div>
@@ -371,7 +371,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                         {featuredBuild.name}
                       </Text>
                       <Badge 
-                        variant="outline" 
+                        variant="secondary" 
                         className={cn('text-xs', getBuildStatusConfig(featuredBuild.buildStatus).color)}
                       >
                         {getBuildStatusConfig(featuredBuild.buildStatus).label}
@@ -389,7 +389,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                       </div>
                       {featuredBuild.collaborators > 1 && (
                         <div className="flex items-center gap-1">
-                          <Users className="h-3 w-3 text-purple-500" />
+                          <Users className="h-3 w-3 text-[var(--hive-gold)]" />
                           <Text variant="body-xs" color="secondary">
                             {featuredBuild.collaborators} collaborators
                           </Text>
@@ -411,7 +411,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         onEditTool(featuredBuild.id);
                       }}
@@ -424,7 +424,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         onDeployTool(featuredBuild.id);
                       }}
@@ -451,7 +451,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
               )}
             </div>
             <div className="space-y-1">
-              {recentBuilds.map((tool) => {
+              {recentBuilds.map((tool: any) => {
                 const categoryConfig = getToolCategoryConfig(tool.category);
                 const statusConfig = getBuildStatusConfig(tool.buildStatus);
                 return (
@@ -465,7 +465,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                       {tool.name}
                     </Text>
                     <Badge 
-                      variant="outline" 
+                      variant="secondary" 
                       className={cn('text-xs', statusConfig.color)}
                     >
                       {statusConfig.label}
@@ -486,7 +486,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
           <div className="space-y-2 pt-2 border-t border-[var(--hive-border-primary)]">
             <Text variant="body-sm" color="primary" weight="medium">Active Projects:</Text>
             <div className="space-y-1">
-              {activeProjects.slice(0, 2).map((project) => (
+              {activeProjects.slice(0, 2).map((project: any) => (
                 <div 
                   key={project.id}
                   className="flex items-center gap-2 p-2 rounded hover:bg-[var(--hive-background-secondary)] transition-colors"
@@ -526,7 +526,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
               <div className="flex items-center gap-2">
                 <div className="w-16 h-2 bg-[var(--hive-background-secondary)] rounded-full">
                   <div 
-                    className="h-2 bg-gradient-to-r from-purple-500 to-[var(--hive-gold)] rounded-full transition-all duration-500"
+                    className="h-2 bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] rounded-full transition-all duration-500"
                     style={{ width: `${Math.min((weeklyBuildTime / 20) * 100, 100)}%` }}
                   />
                 </div>
@@ -542,7 +542,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onCreateTool && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onCreateTool}
               className="flex-1"
@@ -554,7 +554,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
           
           {onViewAllBuilds && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllBuilds}
               className="flex-1"
@@ -588,7 +588,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
             </Text>
             {isEditable && onCreateTool && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onCreateTool}
               >
@@ -603,7 +603,7 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
 
       {/* Hover Glow Effect */}
       {isHovered && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-500/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
   );

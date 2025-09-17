@@ -5,14 +5,21 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 
 // Import the complete system
 import { ProfileDashboard, defaultProfileDashboardProps } from '../../components/profile/profile-dashboard';
 import { FirebaseProvider } from '../../contexts/firebase-context';
+
+const ProfileSystemIndexDemo = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">HIVE Profile System Index</h2>
+    <p className="text-muted-foreground">Complete profile system components and features</p>
+  </div>
+);
 
 import { 
   Users, 
@@ -57,7 +64,8 @@ import {
   Sparkles
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof ProfileSystemIndexDemo> = {
+  component: ProfileSystemIndexDemo,
   title: '00-Profile System/🏠 Profile System Index',
   parameters: {
     layout: 'fullscreen',
@@ -195,7 +203,7 @@ const sections = [
     title: 'Bento Grid System',
     description: 'Responsive layout engine',
     icon: Grid,
-    color: 'bg-purple-500',
+    color: 'bg-[var(--hive-gold)]',
     stories: [
       { title: 'Basic Grid Demo', path: '97-bento-grid--basic-grid-demo' },
       { title: 'Responsive Behavior', path: '97-bento-grid--responsive-behavior-demo' },
@@ -207,7 +215,7 @@ const sections = [
     title: 'Interactive Features',
     description: 'Original interactive stories',
     icon: PlayCircle,
-    color: 'bg-orange-500',
+    color: 'bg-[var(--hive-gold)]',
     stories: [
       { title: 'Interactive Profile System', path: '05-live-frontend-profile-system-interactive' },
       { title: 'Profile Information Architecture', path: '05-profile-information-architecture' },
@@ -300,18 +308,18 @@ function QuickStartGuide() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {steps.map((step) => {
+          {steps.map((step: any) => {
             const Icon = step.icon;
             return (
               <div key={step.title} className="flex items-center gap-4 p-3 border rounded-lg">
                 <div className="w-8 h-8 bg-[var(--hive-brand-primary)] rounded-full flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4 h-4 text-white" />
+                  <Icon className="w-4 h-4 text-[var(--hive-text-primary)]" />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium text-[var(--hive-text-primary)]">{step.title}</h4>
                   <p className="text-sm text-[var(--hive-text-muted)]">{step.description}</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   {step.action}
                 </Button>
               </div>
@@ -332,7 +340,7 @@ function SystemStatus() {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {componentStatus.map((component) => {
+          {componentStatus.map((component: any) => {
             const Icon = component.icon;
             return (
               <div key={component.name} className="flex items-center justify-between p-2 border rounded">
@@ -361,19 +369,19 @@ export const ProfileSystemIndex: StoryObj = {
     return (
       <div className="min-h-screen bg-[var(--hive-background-primary)]">
         {/* Hero Section */}
-        <div className="bg-gradient-to-br from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] text-white p-8">
+        <div className="bg-gradient-to-br from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] text-[var(--hive-text-primary)] p-8">
           <div className="max-w-6xl mx-auto text-center space-y-4">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-[var(--hive-white)] bg-opacity-20 rounded-full flex items-center justify-center">
                 <Users className="w-6 h-6" />
               </div>
               <h1 className="text-4xl font-bold">HIVE Profile System</h1>
-              <Badge className="bg-white text-[var(--hive-brand-primary)] font-semibold">
+              <Badge className="bg-[var(--hive-white)] text-[var(--hive-brand-primary)] font-semibold">
                 Complete Implementation
               </Badge>
             </div>
             
-            <p className="text-xl text-white text-opacity-90 max-w-3xl mx-auto">
+            <p className="text-xl text-[var(--hive-text-primary)] text-opacity-90 max-w-3xl mx-auto">
               Complete profile system for University at Buffalo students with responsive bento grid layout, 
               6 interactive cards, Firebase integration, and comprehensive customization.
             </p>
@@ -402,7 +410,7 @@ export const ProfileSystemIndex: StoryObj = {
         <div className="max-w-6xl mx-auto p-6 space-y-8">
           {/* Feature Highlights */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {features.map((feature) => {
+            {features.map((feature: any) => {
               const Icon = feature.icon;
               return (
                 <Card key={feature.title} className="p-4 text-center">
@@ -413,7 +421,7 @@ export const ProfileSystemIndex: StoryObj = {
                   <p className="text-xs text-[var(--hive-text-muted)] mb-2">
                     {feature.description}
                   </p>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {feature.stats}
                   </Badge>
                 </Card>
@@ -433,7 +441,7 @@ export const ProfileSystemIndex: StoryObj = {
             <div className="lg:col-span-2 space-y-6">
               <Tabs value={activeSection} onValueChange={setActiveSection}>
                 <TabsList className="grid w-full grid-cols-4">
-                  {sections.map((section) => {
+                  {sections.map((section: any) => {
                     const Icon = section.icon;
                     return (
                       <TabsTrigger key={section.id} value={section.id} className="text-xs">
@@ -444,7 +452,7 @@ export const ProfileSystemIndex: StoryObj = {
                   })}
                 </TabsList>
 
-                {sections.map((section) => {
+                {sections.map((section: any) => {
                   const Icon = section.icon;
                   return (
                     <TabsContent key={section.id} value={section.id} className="space-y-4">
@@ -452,7 +460,7 @@ export const ProfileSystemIndex: StoryObj = {
                         <CardHeader>
                           <div className="flex items-center gap-3">
                             <div className={`w-8 h-8 ${section.color} rounded-lg flex items-center justify-center`}>
-                              <Icon className="w-4 h-4 text-white" />
+                              <Icon className="w-4 h-4 text-[var(--hive-text-primary)]" />
                             </div>
                             <div>
                               <h3 className="font-semibold text-[var(--hive-text-primary)]">
@@ -469,7 +477,7 @@ export const ProfileSystemIndex: StoryObj = {
                             {section.stories.map((story, index) => (
                               <div key={story.title} className="flex items-center justify-between p-3 border rounded-lg hover:bg-[var(--hive-background-secondary)] transition-colors">
                                 <div className="flex items-center gap-3">
-                                  <div className="w-6 h-6 bg-[var(--hive-brand-primary)] rounded text-white text-xs flex items-center justify-center font-semibold">
+                                  <div className="w-6 h-6 bg-[var(--hive-brand-primary)] rounded text-[var(--hive-text-primary)] text-xs flex items-center justify-center font-semibold">
                                     {index + 1}
                                   </div>
                                   <span className="font-medium text-[var(--hive-text-primary)]">
@@ -496,7 +504,7 @@ export const ProfileSystemIndex: StoryObj = {
                     <h3 className="font-semibold text-[var(--hive-text-primary)]">
                       Live Preview
                     </h3>
-                    <Badge variant="outline">Interactive</Badge>
+                    <Badge variant="secondary">Interactive</Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -535,7 +543,7 @@ export const ProfileSystemIndex: StoryObj = {
                   UB Integrated
                 </span>
                 <span className="flex items-center gap-1">
-                  <Zap className="w-4 h-4 text-yellow-500" />
+                  <Zap className="w-4 h-4 text-[var(--hive-gold)]" />
                   Performance Optimized
                 </span>
               </div>

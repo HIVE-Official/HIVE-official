@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 import { Progress } from '../../../components/ui/progress';
 import { Slider } from '../../../components/ui/slider';
-import { Switch } from '../../../components/ui/switch';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { 
   Heart,
   MessageCircle,
@@ -84,8 +84,9 @@ import {
  * - **Accessibility Aware**: Respects reduced motion preferences
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '20-Advanced Systems/Animations & Interactions',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -742,7 +743,7 @@ const AnimationControls = () => {
           <Label className="text-white">Animation Speed: {animationSpeed}x</Label>
           <Slider
             value={[animationSpeed]}
-            onValueChange={(value) => setAnimationSpeed(value[0])}
+            onValueChange={(value: unknown) => setAnimationSpeed(value[0])}
             min={0.5}
             max={2}
             step={0.1}
@@ -880,7 +881,7 @@ const AnimationsSystem = () => {
                   <AnimatedButton 
                     animationType="scale"
                     icon={Share2}
-                    variant="outline"
+                    variant="secondary"
                   >
                     Share
                   </AnimatedButton>

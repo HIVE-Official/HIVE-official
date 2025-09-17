@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { type Space } from "@hive/core";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { findSpaceOptimized } from "@/lib/space-query-optimizer";
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import type { Space  } from '@/types/core';
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
+import { findSpaceOptimized } from "@/lib/spaces/space-query-optimizer";
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
 const UpdateSpaceSchema = z.object({
   name: z.string().min(1).max(100).optional(),

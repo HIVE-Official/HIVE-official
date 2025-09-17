@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { type Post } from "@hive/core";
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
+import type { Post  } from '@/types/core';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 import { z } from 'zod';
 
 const GetActivityFeedSchema = z.object({
@@ -99,7 +99,7 @@ export const GET = withAuth(async (
               };
             }
           } catch (e) {
-            logger.warn('Failed to fetch post author', { postId: postDoc.id, authorId: postData.authorId });
+            logger.warn('Failed to fetch post author', { _postId: postDoc.id, authorId: postData.authorId });
           }
 
           activities.push({

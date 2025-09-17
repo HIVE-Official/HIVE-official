@@ -5,14 +5,15 @@
 
 import { useCallback } from 'react';
 import { useUnifiedAuth } from '../contexts/unified-auth-context';
-import { logger } from '../lib/logger';
+import { uiLogger } from '../lib/logger';
 
 export interface OnboardingData {
   fullName: string;
   userType: 'student' | 'alumni' | 'faculty';
   firstName?: string;
   lastName?: string;
-  major: string;
+  major?: string;      // Legacy field for backward compatibility
+  majors: string[];    // New field for multiple majors
   academicLevel?: string;
   graduationYear: number;
   handle: string;
@@ -39,7 +40,7 @@ export function useOnboardingBridge() {
     onboardingData: OnboardingData
   ): Promise<OnboardingResult> => {
     try {
-      logger.info('Starting onboarding completion bridge', {
+      uiLogger.info('Starting onboarding completion bridge', {
         handle: onboardingData.handle,
         userType: onboardingData.userType,
         major: onboardingData.major,
@@ -67,7 +68,7 @@ export function useOnboardingBridge() {
       // Call the unified auth complete onboarding method
       const result = await unifiedAuth.completeOnboarding(onboardingData);
 
-      logger.info('Onboarding completion successful', {
+      uiLogger.info('Onboarding completion successful', {
         userId: unifiedAuth.user.id,
         handle: onboardingData.handle,
         builderRequestsCreated: result?.builderRequestsCreated || 0,
@@ -80,15 +81,15 @@ export function useOnboardingBridge() {
       };
 
     } catch (error) {
-      logger.error('Onboarding completion failed', {
-        error: error instanceof Error ? error.message : String(error),
+      uiLogger.error('Onboarding completion failed', {
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error),
         userId: unifiedAuth.user?.id,
         handle: onboardingData.handle,
       });
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Onboarding completion failed',
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Onboarding completion failed',
       };
     }
   }, [unifiedAuth]);
@@ -127,7 +128,7 @@ export function useOnboardingBridge() {
     onboardingData: OnboardingData
   ) => {
     try {
-      if (!unifiedAuth.hasValidSession()) {
+      if (!unifiedAuth.isAuthenticated || !unifiedAuth.user) {
         throw new Error('Valid session required for space creation');
       }
 
@@ -153,7 +154,7 @@ export function useOnboardingBridge() {
       if (cohortResponse.ok) {
         const cohortResult = await cohortResponse.json();
         cohortSpaces = cohortResult.spaces || [];
-        logger.info('Cohort spaces created', { 
+        uiLogger.info('Cohort spaces created', { 
           count: cohortSpaces.length,
           userId: unifiedAuth.user?.id 
         });
@@ -174,7 +175,7 @@ export function useOnboardingBridge() {
       if (autoJoinResponse.ok) {
         const joinResult = await autoJoinResponse.json();
         joinedSpaces = joinResult.spaces || [];
-        logger.info('Auto-joined spaces', { 
+        uiLogger.info('Auto-joined spaces', { 
           count: joinedSpaces.length,
           userId: unifiedAuth.user?.id 
         });
@@ -187,8 +188,8 @@ export function useOnboardingBridge() {
       };
 
     } catch (error) {
-      logger.error('Post-onboarding space creation failed', {
-        error: error instanceof Error ? error.message : String(error),
+      uiLogger.error('Post-onboarding space creation failed', {
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error),
         userId: unifiedAuth.user?.id,
       });
       
@@ -197,7 +198,7 @@ export function useOnboardingBridge() {
         cohortSpaces: [],
         joinedSpaces: [],
         totalSpaces: 0,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : String(error),
       };
     }
   }, [unifiedAuth]);
@@ -216,7 +217,7 @@ export function useOnboardingBridge() {
     error: unifiedAuth.error,
     
     // Utility functions
-    canAccessFeature: unifiedAuth.canAccessFeature,
-    hasValidSession: unifiedAuth.hasValidSession,
+    canAccessFeature: (_feature: string) => unifiedAuth.isAuthenticated && !!unifiedAuth.user,
+    hasValidSession: () => unifiedAuth.isAuthenticated && !!unifiedAuth.user,
   };
 }

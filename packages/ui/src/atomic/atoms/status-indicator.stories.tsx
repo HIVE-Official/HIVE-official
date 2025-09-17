@@ -13,7 +13,7 @@ import {
   GlowIndicator,
   StatusBadge
 } from './status-indicator';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Avatar } from './avatar';
 import { Button } from './button-enhanced';
@@ -114,7 +114,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ STATUS TYPES</Badge>
+            <Badge variant="emerald">✅ STATUS TYPES</Badge>
             Status Types - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -339,7 +339,7 @@ export const CompleteShowcase: Story = {
               <div className="grid md:grid-cols-4 gap-6">
                 <div className="text-center space-y-3">
                   <StatusBadge status="error" count={3}>
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       Messages
                     </Button>
                   </StatusBadge>
@@ -347,7 +347,7 @@ export const CompleteShowcase: Story = {
                 </div>
                 <div className="text-center space-y-3">
                   <StatusBadge status="warning" count={12}>
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       Assignments
                     </Button>
                   </StatusBadge>
@@ -355,7 +355,7 @@ export const CompleteShowcase: Story = {
                 </div>
                 <div className="text-center space-y-3">
                   <StatusBadge status="success" count={150} max={99}>
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       Achievements
                     </Button>
                   </StatusBadge>
@@ -363,7 +363,7 @@ export const CompleteShowcase: Story = {
                 </div>
                 <div className="text-center space-y-3">
                   <StatusBadge status="pending">
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       Sync Status
                     </Button>
                   </StatusBadge>
@@ -431,7 +431,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🎯 PRESETS</Badge>
+            <Badge variant="gold">🎯 PRESETS</Badge>
             Status Indicator Presets - Common Campus Patterns
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -805,7 +805,7 @@ export const Playground: Story = {
     animate: true,
     label: 'Campus Activity Status',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

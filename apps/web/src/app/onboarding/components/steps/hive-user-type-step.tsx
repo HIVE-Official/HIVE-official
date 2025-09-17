@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { logger } from '@/lib/logger';
+
 import { motion } from "framer-motion";
 import { GraduationCap, Users, BookOpen, ArrowRight, Mail, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import { Card, Button, Input } from "@hive/ui";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveUserTypeStepProps {
   data: HiveOnboardingData;
@@ -77,7 +79,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
       }));
       
     } catch (error) {
-      console.error('Failed to submit waitlist:', error);
+      logger.error('Failed to submit waitlist:', { error: String(error) });
     } finally {
       setIsSubmittingWaitlist(false);
     }
@@ -105,14 +107,14 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-3xl font-bold text-[#FFD700] mb-4">
+          <h2 className="text-3xl font-bold text-[var(--hive-brand-secondary)] mb-4">
             ⚡ Jacob, get on it! ⚡
           </h2>
           <p className="text-[var(--hive-text-secondary)] text-lg mb-8">
             We're building something special for alumni. Stay tuned for updates!
           </p>
           
-          <HiveCard variant="default" className="p-[var(--hive-spacing-6)] mb-8">
+          <Card variant="default" className="p-[var(--hive-spacing-6)] mb-8">
             <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-4">
               What's Coming for Alumni
             </h3>
@@ -130,7 +132,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                 <span>Stay connected with campus life</span>
               </div>
             </div>
-          </HiveCard>
+          </Card>
 
           {/* Waitlist Form */}
           {!waitlistSubmitted ? (
@@ -139,7 +141,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <HiveCard variant="gold-premium" className="p-[var(--hive-spacing-6)] mb-8">
+              <Card variant="gold-premium" className="p-[var(--hive-spacing-6)] mb-8">
                 <div className="text-center mb-4">
                   <Mail className="w-8 h-8 text-[var(--hive-brand-primary)] mx-auto mb-3" />
                   <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
@@ -151,18 +153,18 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                 </div>
                 
                 <div className="space-y-4">
-                  <HiveInput
+                  <Input
                     type="email"
                     placeholder="Enter your email address"
                     value={waitlistEmail}
-                    onChange={(e) => setWaitlistEmail(e.target.value)}
+                    onChange={(e: any) => setWaitlistEmail(e.target.value)}
                     variant="premium"
                     size="lg"
                     floatingLabel={false}
                     leftIcon={<Mail className="w-4 h-4" />}
                   />
                   
-                  <HiveButton
+                  <Button
                     onClick={submitWaitlist}
                     disabled={!waitlistEmail.trim() || !waitlistEmail.includes('@') || isSubmittingWaitlist}
                     variant="premium"
@@ -171,9 +173,9 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                     leftIcon={isSubmittingWaitlist ? <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}><Mail className="w-4 h-4" /></motion.div> : <Mail className="w-4 h-4" />}
                   >
                     {isSubmittingWaitlist ? "Adding to waitlist..." : "Join Waitlist"}
-                  </HiveButton>
+                  </Button>
                 </div>
-              </HiveCard>
+              </Card>
             </motion.div>
           ) : (
             /* Waitlist Success */
@@ -182,7 +184,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: "spring", stiffness: 200 }}
             >
-              <HiveCard variant="online" className="p-[var(--hive-spacing-6)] mb-8 text-center">
+              <Card variant="online" className="p-[var(--hive-spacing-6)] mb-8 text-center">
                 <CheckCircle className="w-12 h-12 text-[var(--hive-status-success)] mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
                   You're on the list!
@@ -193,18 +195,18 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                 <div className="text-xs text-[var(--hive-text-muted)]">
                   Thank you for your interest in HIVE Alumni!
                 </div>
-              </HiveCard>
+              </Card>
             </motion.div>
           )}
           
-          <HiveButton
+          <Button
             variant="secondary"
             size="lg"
             onClick={() => setSelectedType(null)}
             leftIcon={<ArrowRight className="w-4 h-4 rotate-180" />}
           >
             Go Back
-          </HiveButton>
+          </Button>
         </motion.div>
       </motion.div>
     );
@@ -315,7 +317,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <HiveCard variant="default" className="p-[var(--hive-spacing-4)]">
+        <Card variant="default" className="p-[var(--hive-spacing-4)]">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
             <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
             HIVE Community
@@ -335,7 +337,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
               <span>Faculty can create and manage institutional spaces</span>
             </div>
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
     </motion.div>
   );

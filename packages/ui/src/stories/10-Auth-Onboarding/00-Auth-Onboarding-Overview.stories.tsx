@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { Badge } from '../../atomic/atoms/badge';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Container } from '../../components/ui/container';
 import { Text as Typography } from '../../atomic/atoms/text';
@@ -61,7 +61,7 @@ const AuthOnboardingOverview = () => {
         <div className="flex justify-center gap-2">
           <Badge variant="destructive">@buffalo.edu Only</Badge>
           <Badge variant="secondary">Mobile Optimized</Badge>
-          <Badge variant="outline">Production Ready</Badge>
+          <Badge variant="secondary">Production Ready</Badge>
         </div>
       </div>
 
@@ -98,7 +98,7 @@ const AuthOnboardingOverview = () => {
                 <Typography variant="body2" className="font-medium">Components:</Typography>
                 <div className="flex flex-wrap gap-1">
                   {feature.components.map((comp, i) => (
-                    <Badge key={i} variant="outline" className="text-xs">{comp}</Badge>
+                    <Badge key={i} variant="secondary" className="text-xs">{comp}</Badge>
                   ))}
                 </div>
               </div>

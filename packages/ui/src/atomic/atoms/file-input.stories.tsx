@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FileInput, ImageInput, DocumentInput, DropzoneInput, ButtonFileInput } from './file-input';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { Upload, Image as ImageIcon, FileText, File } from 'lucide-react';
@@ -99,7 +99,7 @@ export const Default: Story = {
     label: 'Upload Assignment',
     helperText: 'Select your assignment file (PDF, DOC, DOCX, TXT)',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -125,7 +125,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📂 VARIANTS</Badge>
+            <Badge variant="emerald">📂 VARIANTS</Badge>
             File Input Variants - Upload Interfaces
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -142,7 +142,7 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Standard File Upload:</Text>
                   <FileInput
-                    variant="default"
+                    variant="primary"
                     label="Course Assignment"
                     accept=".pdf,.doc,.docx"
                     helperText="Upload your assignment in PDF or DOC format"
@@ -152,7 +152,7 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">With Multiple Files:</Text>
                   <FileInput
-                    variant="default"
+                    variant="primary"
                     label="Research Materials"
                     accept=".pdf,.txt,.docx"
                     multiple
@@ -259,7 +259,7 @@ export const CompleteShowcase: Story = {
                     />
                     <FileInput
                       size="sm"
-                      variant="default"
+                      variant="primary"
                       label="Notes"
                       accept=".txt,.md"
                     />
@@ -276,7 +276,7 @@ export const CompleteShowcase: Story = {
                   <div className="grid md:grid-cols-2 gap-4">
                     <FileInput
                       size="md"
-                      variant="default"
+                      variant="primary"
                       label="Assignment Submission"
                       accept=".pdf,.docx"
                       helperText="Standard assignment upload"
@@ -548,9 +548,9 @@ export const CompleteShowcase: Story = {
                 </div>
                 
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">Due: March 15, 2024</Badge>
-                  <Badge variant="outline">Max Files: 10</Badge>
-                  <Badge variant="outline">Accepted: PDF, Python, Java, C++</Badge>
+                  <Badge variant="secondary">Due: March 15, 2024</Badge>
+                  <Badge variant="secondary">Max Files: 10</Badge>
+                  <Badge variant="secondary">Accepted: PDF, Python, Java, C++</Badge>
                 </div>
 
               </div>
@@ -802,7 +802,7 @@ export const Playground: Story = {
     label: 'Upload Files',
     helperText: 'Select files to upload',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SearchBar } from './search-bar';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -104,7 +104,7 @@ export const Default: Story = {
     onChange: action('search-changed'),
     onClear: action('search-cleared'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -130,7 +130,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🔍 SEARCH VARIANTS</Badge>
+            <Badge variant="emerald">🔍 SEARCH VARIANTS</Badge>
             Visual Variant Options
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -148,7 +148,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Default (Standard):</Text>
                   <SearchBar
                     placeholder="Search CSE 331 study groups..."
-                    variant="default"
+                    variant="primary"
                     onSearch={action('default-search')}
                     onChange={action('default-change')}
                   />
@@ -351,7 +351,7 @@ export const CompleteShowcase: Story = {
                       <SearchBar
                         placeholder="Find CSE 331 study partners..."
                         size="md"
-                        variant="default"
+                        variant="primary"
                         onSearch={action('study-partner-search')}
                         onChange={action('study-partner-change')}
                       />
@@ -457,7 +457,7 @@ export const CompleteShowcase: Story = {
                     <SearchBar
                       placeholder="GPA calculator, study scheduler..."
                       size="md"
-                      variant="default"
+                      variant="primary"
                       onSearch={action('academic-tools-search')}
                       onChange={action('academic-tools-change')}
                     />
@@ -473,7 +473,7 @@ export const CompleteShowcase: Story = {
                     <SearchBar
                       placeholder="Event planner, group chat..."
                       size="md"
-                      variant="default"
+                      variant="primary"
                       onSearch={action('social-tools-search')}
                       onChange={action('social-tools-change')}
                     />
@@ -608,7 +608,7 @@ export const Playground: Story = {
     onChange: action('playground-change'),
     onClear: action('playground-clear'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

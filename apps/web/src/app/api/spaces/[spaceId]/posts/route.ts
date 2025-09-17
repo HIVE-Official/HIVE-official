@@ -1,26 +1,30 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import { getAuthTokenFromRequest } from "@/lib/auth";
-import { postCreationRateLimit } from "@/lib/rate-limit";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { getAuthTokenFromRequest } from "@/lib/auth/auth";
+import { postCreationRateLimit } from "@/lib/api/middleware/rate-limit";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const CreatePostSchema = z.object({
   content: z.string().min(1).max(2000),
-  type: z.enum(["text", "image", "link", "tool"]).default("text"),
-  imageUrl: z.string().url().optional(),
+  type: z.enum(["text", "image", "link", "tool", "discussion", "question", "poll", "announcement"]).default("text"),
+  title: z.string().optional(),
+  images: z.array(z.string().url()).optional(),
+  imageUrl: z.string().url().optional(), // legacy support
   linkUrl: z.string().url().optional(),
-  toolId: z.string().optional() });
+  toolId: z.string().optional(),
+  pollOptions: z.array(z.string()).optional()
+});
 
 const db = dbAdmin;
 
 // Simple profanity check - in production, use a proper service
 const checkProfanity = (text: string): boolean => {
   const profanityWords = ["spam", "scam"]; // Minimal list for demo
-  return profanityWords.some((word) => text.toLowerCase().includes(word));
+  return profanityWords.some((word: any) => text.toLowerCase().includes(word));
 };
 
 // GET /api/spaces/[spaceId]/posts - Get posts for a space

@@ -1,0 +1,329 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { 
+  LinearInspiredHomepage,
+  VercelInspiredHomepage,
+  FigmaInspiredHomepage,
+  ModernBentoHomepage
+} from '../../components/page-layouts/advanced-homepage-options';
+
+const meta = {
+  component: React.Fragment,
+  title: 'Page Layouts/✨ Advanced Homepage Options',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+# Advanced HIVE Homepage Layouts (2025)
+
+Four cutting-edge homepage layouts inspired by industry-leading design systems and 2025 UI trends. Each layout features professional-grade gold contrast ratios (WCAG AAA compliant), Geist Sans typography, and advanced design patterns.
+
+## 🎯 **Design Inspirations**
+
+### 1. **Linear-Inspired** - Minimalist Performance Focus
+- **Typography**: Geist Sans with precise tracking (-0.01em to -0.04em)
+- **Gold Usage**: var(--hive-gold) with proper contrast ratios (7:1 for AAA compliance)
+- **Layout**: Ultra-clean spacing with 8px grid system
+- **Performance**: Optimized for speed and clarity like Linear's interface
+
+### 2. **Vercel-Inspired** - Developer-Focused Precision
+- **Typography**: Technical precision with monospace elements
+- **Gold Usage**: Strategic accent color for deployment actions
+- **Layout**: Terminal-inspired components with clean borders
+- **Experience**: Developer-first approach with functional aesthetics
+
+### 3. **Figma-Inspired** - Creative and Collaborative
+- **Typography**: Creative expression with gradient text effects
+- **Gold Usage**: Artistic gradients and creative applications
+- **Layout**: Inspiring design with visual storytelling
+- **Experience**: Collaboration-focused with community emphasis
+
+### 4. **Modern Bento Grid** - 2025 Cutting Edge
+- **Typography**: Contemporary spacing and hierarchy
+- **Gold Usage**: Sophisticated gradients and accent applications
+- **Layout**: Advanced bento grid system with responsive design
+- **Experience**: Next-generation interface patterns
+
+## 🎨 **Design Quality Features**
+
+### **Professional Typography (Geist Sans)**
+- **Variable font weights**: 400-700 with precise tracking
+- **Accessibility**: Proper line heights (1.5-1.6) for readability
+- **Hierarchy**: Clear type scale from 12px to 72px
+- **Performance**: Optimized font loading and rendering
+
+### **WCAG AAA Gold Contrast**
+- **Primary Gold**: var(--hive-gold) (contrast ratio 7:1+ on black)
+- **Accent Applications**: Strategic use for focus and highlights
+- **Accessibility**: Meets enhanced WCAG AAA standards
+- **Usage**: Gold for accents only, never for body text
+
+### **Advanced Spacing System**
+- **Grid**: Consistent 8px base grid throughout
+- **Vertical Rhythm**: Proper spacing between sections (16px-24px)
+- **Component Padding**: Graduated padding system (4px-32px)
+- **Responsive**: Mobile-first breakpoints with fluid scaling
+
+### **2025 Design Trends**
+- **Micro-interactions**: Subtle hover states and transitions
+- **Backdrop Blur**: Modern glass morphism effects
+- **Gradient Overlays**: Sophisticated color treatments
+- **Rounded Corners**: Contemporary border radius (6px-16px)
+
+## 🧪 **A/B Testing Applications**
+
+Each layout targets different user psychology:
+- **Linear**: Performance and efficiency focused users
+- **Vercel**: Technical and developer-oriented users  
+- **Figma**: Creative and collaboration-minded users
+- **Bento**: Modern and visual-first users
+
+## 🔗 **Implementation Notes**
+
+- All layouts use CSS custom properties for theming
+- Components are fully responsive with mobile-first approach
+- Animations use hardware acceleration for smooth performance
+- Focus states meet accessibility requirements
+- Loading states and micro-interactions included
+        `,
+      },
+    },
+  },
+  tags: ['autodocs'],
+} satisfies Meta;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const LinearInspired: Story = {
+  render: () => <LinearInspiredHomepage />,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Linear-Inspired Layout
+Ultra-minimalist design focused on performance and clarity. Features precise typography with Geist Sans, 
+strategic gold accents (var(--hive-gold)), and clean component hierarchy inspired by Linear's interface excellence.
+
+**Key Features:**
+- Precise tracking and spacing (-0.01em to -0.04em)
+- WCAG AAA compliant gold contrast (7:1 ratio)
+- Ultra-clean 8px grid system
+- Performance-optimized interactions
+        `,
+      },
+    },
+  },
+};
+
+export const VercelInspired: Story = {
+  render: () => <VercelInspiredHomepage />,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Vercel-Inspired Layout
+Developer-focused precision with terminal aesthetics and technical excellence. Features monospace elements,
+deployment-focused interactions, and Vercel's signature clean developer experience.
+
+**Key Features:**
+- Terminal-inspired component design
+- Developer-first interaction patterns
+- Technical precision in spacing and typography
+- Strategic gold usage for action states
+        `,
+      },
+    },
+  },
+};
+
+export const FigmaInspired: Story = {
+  render: () => <FigmaInspiredHomepage />,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Figma-Inspired Layout
+Creative and collaborative design emphasizing visual storytelling and community building. Features
+gradient text effects, artistic gold applications, and inspiration-focused user experience.
+
+**Key Features:**
+- Creative gradient text treatments
+- Collaborative community emphasis
+- Artistic gold gradient applications
+- Visual storytelling layout patterns
+        `,
+      },
+    },
+  },
+};
+
+export const ModernBento: Story = {
+  render: () => <ModernBentoHomepage />,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Modern Bento Grid Layout
+Cutting-edge 2025 design with advanced bento grid system. Features sophisticated gold gradients,
+contemporary spacing, and next-generation interface patterns for modern users.
+
+**Key Features:**
+- Advanced responsive bento grid system
+- Sophisticated gold gradient treatments
+- Contemporary component spacing
+- Next-generation interface patterns
+        `,
+      },
+    },
+  },
+};
+
+export const AllAdvancedOptions: Story = {
+  render: () => (
+    <div className="bg-[var(--hive-black)] text-[var(--hive-text-primary)] font-['Geist_Sans']">
+      <div className="p-8 text-center border-b border-[var(--hive-white)]/10">
+        <h1 className="text-3xl font-bold mb-4 tracking-tight">Advanced HIVE Homepage Options</h1>
+        <p className="text-[var(--hive-text-primary)]/70 max-w-3xl mx-auto leading-relaxed">
+          Four cutting-edge layouts inspired by industry leaders: Linear, Vercel, Figma, and modern bento grids. 
+          Each features professional gold contrast, Geist Sans typography, and 2025 design trends.
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+        {/* Linear Preview */}
+        <div className="space-y-4">
+          <div className="aspect-video bg-[var(--hive-background-primary)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-gold)]/5 to-transparent"></div>
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-center space-y-3">
+                <div className="w-8 h-8 bg-[var(--hive-gold)] rounded-md mx-auto"></div>
+                <div className="text-sm font-semibold">Linear-Inspired</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Minimalist Performance</div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold">Linear-Inspired</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
+              Ultra-minimalist design with precise typography and performance focus
+            </p>
+          </div>
+        </div>
+
+        {/* Vercel Preview */}
+        <div className="space-y-4">
+          <div className="aspect-video bg-[var(--hive-black)] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute top-2 left-2 right-2 h-6 bg-[var(--hive-white)]/5 rounded flex items-center px-2">
+              <div className="w-1 h-1 bg-[var(--hive-gold)] rounded-full"></div>
+              <div className="text-[10px] text-[var(--hive-text-primary)]/60 ml-2">Terminal</div>
+            </div>
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-center space-y-3">
+                <div className="w-8 h-8 bg-[var(--hive-gold)] rounded mx-auto"></div>
+                <div className="text-sm font-semibold font-mono">Vercel-Inspired</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Developer Precision</div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold">Vercel-Inspired</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
+              Developer-focused with terminal aesthetics and technical precision
+            </p>
+          </div>
+        </div>
+
+        {/* Figma Preview */}
+        <div className="space-y-4">
+          <div className="aspect-video bg-[#0F0F0F] border border-[var(--hive-white)]/10 rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-gold)]/10 via-transparent to-[var(--hive-gold)]/5"></div>
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-center space-y-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold)]/80 rounded-lg mx-auto"></div>
+                <div className="text-sm font-semibold">Figma-Inspired</div>
+                <div className="text-xs text-[var(--hive-text-primary)]/60">Creative Collaboration</div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold">Figma-Inspired</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
+              Creative design with collaborative emphasis and visual storytelling
+            </p>
+          </div>
+        </div>
+
+        {/* Bento Preview */}
+        <div className="space-y-4">
+          <div className="aspect-video bg-[var(--hive-background-primary)] border border-[var(--hive-white)]/8 rounded-lg overflow-hidden relative p-4">
+            <div className="grid grid-cols-3 grid-rows-2 gap-2 h-full">
+              <div className="col-span-2 bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/10 rounded"></div>
+              <div className="bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/10 rounded"></div>
+              <div className="bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/10 rounded"></div>
+              <div className="col-span-2 bg-gradient-to-r from-[var(--hive-gold)]/10 to-[var(--hive-gold)]/5 border border-[var(--hive-gold)]/20 rounded"></div>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center space-y-2">
+                <div className="text-xs font-semibold">Modern Bento</div>
+                <div className="text-[10px] text-[var(--hive-text-primary)]/60">Cutting Edge</div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold">Modern Bento Grid</h3>
+            <p className="text-sm text-[var(--hive-text-primary)]/70 leading-relaxed">
+              2025 cutting-edge design with advanced grid system and sophistication
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Comparison */}
+      <div className="border-t border-[var(--hive-white)]/5 p-8">
+        <h2 className="text-xl font-semibold mb-6 text-center">Design Quality Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="text-center space-y-2">
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center mx-auto">
+              <span className="text-[var(--hive-gold)] text-lg">✓</span>
+            </div>
+            <h3 className="font-medium text-sm">WCAG AAA Gold</h3>
+            <p className="text-xs text-[var(--hive-text-primary)]/60">7:1 contrast ratio compliance</p>
+          </div>
+          <div className="text-center space-y-2">
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center mx-auto">
+              <span className="text-[var(--hive-gold)] text-lg">✓</span>
+            </div>
+            <h3 className="font-medium text-sm">Geist Sans</h3>
+            <p className="text-xs text-[var(--hive-text-primary)]/60">Professional typography system</p>
+          </div>
+          <div className="text-center space-y-2">
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center mx-auto">
+              <span className="text-[var(--hive-gold)] text-lg">✓</span>
+            </div>
+            <h3 className="font-medium text-sm">2025 Trends</h3>
+            <p className="text-xs text-[var(--hive-text-primary)]/60">Cutting-edge design patterns</p>
+          </div>
+          <div className="text-center space-y-2">
+            <div className="w-10 h-10 bg-[var(--hive-gold)]/10 rounded-lg flex items-center justify-center mx-auto">
+              <span className="text-[var(--hive-gold)] text-lg">✓</span>
+            </div>
+            <h3 className="font-medium text-sm">8px Grid</h3>
+            <p className="text-xs text-[var(--hive-text-primary)]/60">Professional spacing system</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+### Advanced Options Comparison
+Side-by-side comparison of all four advanced homepage layouts, showcasing the different approaches to modern UI design with professional quality standards.
+        `,
+      },
+    },
+  },
+};

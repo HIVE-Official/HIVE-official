@@ -51,15 +51,15 @@ export interface ToolLibraryModalProps {
 const CATEGORY_INFO = {
   productivity: {
     icon: <Zap className="w-5 h-5" />,
-    color: 'text-yellow-400',
-    bgColor: 'bg-yellow-500/20',
-    borderColor: 'border-yellow-500/30',
+    color: 'text-[var(--hive-gold)]',
+    bgColor: 'bg-[var(--hive-gold)]/20',
+    borderColor: 'border-[var(--hive-gold)]/30',
   },
   social: {
     icon: <Users className="w-5 h-5" />,
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/20',
-    borderColor: 'border-purple-500/30',
+    color: 'text-[var(--hive-gold)]',
+    bgColor: 'bg-[var(--hive-gold)]/20',
+    borderColor: 'border-[var(--hive-gold)]/30',
   },
   academic: {
     icon: <BarChart3 className="w-5 h-5" />,
@@ -181,7 +181,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                   placeholder="Search tools..."
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-primary)]/50 transition-colors duration-200"
                 />
@@ -195,7 +195,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                 </h3>
                 
                 <div className="space-y-2">
-                  {categories.map((category) => {
+                  {categories.map((category: any) => {
                     const isSelected = selectedCategory === category;
                     const categoryInfo = category !== 'all' ? CATEGORY_INFO[category as keyof typeof CATEGORY_INFO] : null;
                     
@@ -266,7 +266,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                           
                           <div className="flex items-center gap-4 text-sm text-[var(--hive-text-muted)]">
                             <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-yellow-400" />
+                              <Star className="w-4 h-4 text-[var(--hive-gold)]" />
                               <span>{selectedTool.rating.toFixed(1)}</span>
                             </div>
                             <div className="flex items-center gap-1">
@@ -390,7 +390,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                           <div className="flex items-center justify-between text-xs text-[var(--hive-text-muted)]">
                             <div className="flex items-center gap-3">
                               <div className="flex items-center gap-1">
-                                <Star className="w-3 h-3 text-yellow-400" />
+                                <Star className="w-3 h-3 text-[var(--hive-gold)]" />
                                 <span>{tool.rating.toFixed(1)}</span>
                               </div>
                               <div className="flex items-center gap-1">
@@ -400,7 +400,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                             </div>
                             
                             <button
-                              onClick={(e) => {
+                              onClick={(e: React.MouseEvent) => {
                                 e.stopPropagation();
                                 handlePlantTool(tool);
                               }}

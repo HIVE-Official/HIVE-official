@@ -4,15 +4,15 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Input } from '../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Avatar, AvatarFallback } from '../../atomic/atoms/avatar';
+import { Input } from '../../atomic/atoms/input-enhanced';
 import { HiveProgress } from '../../components/hive-progress';
 import { Separator } from '../../components/ui/separator';
-import { Switch } from '../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 import { 
   Sparkles,
   Users,
@@ -331,26 +331,26 @@ function TemporalRitualsSystem() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center">
-                  <Sparkles className="h-5 w-5 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-br from-[var(--hive-gold)] to-pink-500 rounded-xl flex items-center justify-center">
+                  <Sparkles className="h-5 w-5 text-[var(--hive-text-primary)]" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-white">Campus Rituals</h1>
+                  <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Campus Rituals</h1>
                   <p className="text-gray-400">Community formation & preparation system</p>
                 </div>
               </div>
               
               {/* Phase Indicator */}
               <div className="flex items-center space-x-2">
-                <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                <Badge className="bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30">
                   vBETA Phase • Week 3 Active
                 </Badge>
                 <div className="text-sm text-gray-400">
@@ -360,11 +360,11 @@ function TemporalRitualsSystem() {
             </div>
             
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white relative">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] relative">
                 <Bell className="w-4 h-4" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--hive-gold)] rounded-full" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -381,7 +381,7 @@ function TemporalRitualsSystem() {
                   key={key}
                   className={`cursor-pointer transition-all duration-200 border-2 ${
                     isActive 
-                      ? 'border-purple-500 bg-purple-500/10 shadow-lg' 
+                      ? 'border-[var(--hive-gold)] bg-[var(--hive-gold)]/10 shadow-lg' 
                       : isCompleted 
                         ? 'border-green-500/30 bg-green-500/5 hover:bg-green-500/10' 
                         : 'border-gray-600 bg-gray-800/30 hover:bg-gray-800/50'
@@ -391,16 +391,16 @@ function TemporalRitualsSystem() {
                   <CardContent className="p-4 text-center">
                     <div className="flex items-center justify-center mb-2">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                        isCompleted ? 'bg-green-500' : isActive ? 'bg-purple-500' : 'bg-gray-700'
+                        isCompleted ? 'bg-green-500' : isActive ? 'bg-[var(--hive-gold)]' : 'bg-gray-700'
                       }`}>
                         {isCompleted ? (
-                          <CheckCircle className="w-5 h-5 text-white" />
+                          <CheckCircle className="w-5 h-5 text-[var(--hive-text-primary)]" />
                         ) : (
                           getPhaseIcon(ritual.phase)
                         )}
                       </div>
                     </div>
-                    <div className="text-sm font-medium text-white mb-1">
+                    <div className="text-sm font-medium text-[var(--hive-text-primary)] mb-1">
                       Week {ritual.weekNumber}: {ritual.name}
                     </div>
                     <Badge className={`text-xs ${getWeekStatusColor(ritual.status)}`}>
@@ -415,19 +415,19 @@ function TemporalRitualsSystem() {
           {/* View Mode Tabs */}
           <Tabs value={viewMode} onValueChange={setViewMode} className="w-full">
             <TabsList className="grid w-full grid-cols-4 bg-gray-800">
-              <TabsTrigger value="overview" className="data-[state=active]:bg-purple-500 data-[state=active]:text-white">
+              <TabsTrigger value="overview" className="data-[state=active]:bg-[var(--hive-gold)] data-[state=active]:text-[var(--hive-text-primary)]">
                 <Activity className="w-4 h-4 mr-2" />
                 Overview
               </TabsTrigger>
-              <TabsTrigger value="community" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white">
+              <TabsTrigger value="community" className="data-[state=active]:bg-blue-500 data-[state=active]:text-[var(--hive-text-primary)]">
                 <Users className="w-4 h-4 mr-2" />
                 Community
               </TabsTrigger>
-              <TabsTrigger value="network" className="data-[state=active]:bg-green-500 data-[state=active]:text-white">
+              <TabsTrigger value="network" className="data-[state=active]:bg-green-500 data-[state=active]:text-[var(--hive-text-primary)]">
                 <Network className="w-4 h-4 mr-2" />
                 Network
               </TabsTrigger>
-              <TabsTrigger value="progress" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+              <TabsTrigger value="progress" className="data-[state=active]:bg-[var(--hive-gold)] data-[state=active]:text-[var(--hive-text-primary)]">
                 <TrendingUp className="w-4 h-4 mr-2" />
                 Progress
               </TabsTrigger>
@@ -449,11 +449,11 @@ function TemporalRitualsSystem() {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+                      <div className="w-12 h-12 bg-[var(--hive-gold)] rounded-xl flex items-center justify-center">
                         {getPhaseIcon(currentRitual.phase)}
                       </div>
                       <div>
-                        <CardTitle className="text-xl text-white">
+                        <CardTitle className="text-xl text-[var(--hive-text-primary)]">
                           {currentRitual.title}
                         </CardTitle>
                         <p className="text-gray-400">{currentRitual.description}</p>
@@ -468,7 +468,7 @@ function TemporalRitualsSystem() {
                   
                   {/* Objectives */}
                   <div>
-                    <h4 className="font-semibold text-white mb-3">Week Objectives</h4>
+                    <h4 className="font-semibold text-[var(--hive-text-primary)] mb-3">Week Objectives</h4>
                     <div className="space-y-2">
                       {currentRitual.objectives.map((objective, index) => (
                         <div key={index} className="flex items-center space-x-3">
@@ -478,14 +478,14 @@ function TemporalRitualsSystem() {
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                               index < 2 ? 'bg-blue-500 border-blue-500' : 'border-gray-500'
                             }`}>
-                              {index < 2 && <CheckCircle className="w-3 h-3 text-white" />}
+                              {index < 2 && <CheckCircle className="w-3 h-3 text-[var(--hive-text-primary)]" />}
                             </div>
                           ) : (
                             <div className="w-5 h-5 rounded-full border-2 border-gray-500 flex-shrink-0" />
                           )}
                           <span className={`${
                             currentRitual.status === 'completed' || (currentRitual.status === 'in_progress' && index < 2) 
-                              ? 'text-white' 
+                              ? 'text-[var(--hive-text-primary)]' 
                               : 'text-gray-400'
                           }`}>
                             {objective}
@@ -498,9 +498,9 @@ function TemporalRitualsSystem() {
                   {/* Daily Missions (Week 2 specific) */}
                   {currentRitual.dailyMissions && (
                     <div>
-                      <h4 className="font-semibold text-white mb-3">Daily Missions</h4>
+                      <h4 className="font-semibold text-[var(--hive-text-primary)] mb-3">Daily Missions</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {currentRitual.dailyMissions.map((mission) => (
+                        {currentRitual.dailyMissions.map((mission: any) => (
                           <div key={mission.day} className={`p-3 rounded-lg border ${
                             mission.completed 
                               ? 'bg-green-500/10 border-green-500/30' 
@@ -510,8 +510,8 @@ function TemporalRitualsSystem() {
                               <span className="text-xs text-gray-400">Day {mission.day}</span>
                               {mission.completed && <CheckCircle className="w-4 h-4 text-green-400" />}
                             </div>
-                            <div className="text-sm font-medium text-white">{mission.title}</div>
-                            <Badge variant="outline" className="text-xs mt-2">
+                            <div className="text-sm font-medium text-[var(--hive-text-primary)]">{mission.title}</div>
+                            <Badge variant="secondary" className="text-xs mt-2">
                               {mission.type}
                             </Badge>
                           </div>
@@ -523,24 +523,24 @@ function TemporalRitualsSystem() {
                   {/* Current Activities (Week 3 specific) */}
                   {currentRitual.currentActivities && (
                     <div>
-                      <h4 className="font-semibold text-white mb-3">Active Networking</h4>
+                      <h4 className="font-semibold text-[var(--hive-text-primary)] mb-3">Active Networking</h4>
                       <div className="space-y-3">
                         {currentRitual.currentActivities.map((activity, index) => (
                           <div key={index} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
                             <div className="flex items-center space-x-3">
                               <div className={`w-2 h-2 rounded-full ${
                                 activity.status === 'active' ? 'bg-blue-400' :
-                                activity.status === 'leading' ? 'bg-purple-400' :
+                                activity.status === 'leading' ? 'bg-[var(--hive-gold)]' :
                                 'bg-gray-400'
                               }`} />
                               <div>
-                                <div className="text-sm font-medium text-white">{activity.target}</div>
+                                <div className="text-sm font-medium text-[var(--hive-text-primary)]">{activity.target}</div>
                                 <div className="text-xs text-gray-400">{activity.type.replace('_', ' ')}</div>
                               </div>
                             </div>
                             <Badge className={`text-xs ${
                               activity.status === 'active' ? 'bg-blue-500/20 text-blue-400' :
-                              activity.status === 'leading' ? 'bg-purple-500/20 text-purple-400' :
+                              activity.status === 'leading' ? 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]' :
                               'bg-gray-500/20 text-gray-400'
                             }`}>
                               {activity.status}
@@ -554,12 +554,12 @@ function TemporalRitualsSystem() {
                   {/* Action Buttons */}
                   <div className="flex space-x-3 pt-4 border-t border-gray-700">
                     {currentRitual.status === 'completed' ? (
-                      <Button disabled className="flex-1 bg-green-600 text-white">
+                      <Button disabled className="flex-1 bg-green-600 text-[var(--hive-text-primary)]">
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Completed
                       </Button>
                     ) : currentRitual.status === 'in_progress' ? (
-                      <Button className="flex-1 bg-purple-500 text-white hover:bg-purple-600">
+                      <Button className="flex-1 bg-[var(--hive-gold)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-gold-dark)]">
                         <Play className="w-4 h-4 mr-2" />
                         Continue Ritual
                       </Button>
@@ -569,7 +569,7 @@ function TemporalRitualsSystem() {
                         Starts {currentRitual.scheduledStart?.toLocaleDateString()}
                       </Button>
                     )}
-                    <Button variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                    <Button variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                       <Info className="w-4 h-4" />
                     </Button>
                   </div>
@@ -583,7 +583,7 @@ function TemporalRitualsSystem() {
               {/* Personal Progress */}
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-lg text-white">Your Progress</CardTitle>
+                  <CardTitle className="text-lg text-[var(--hive-text-primary)]">Your Progress</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {currentRitual.personalProgress && Object.entries(currentRitual.personalProgress).map(([key, value]) => (
@@ -592,7 +592,7 @@ function TemporalRitualsSystem() {
                         <span className="text-gray-400">
                           {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                         </span>
-                        <span className="text-white font-medium">
+                        <span className="text-[var(--hive-text-primary)] font-medium">
                           {typeof value === 'number' ? 
                             (key.includes('Percentage') || key.includes('Rate') ? `${value}%` : value) 
                             : value
@@ -610,26 +610,26 @@ function TemporalRitualsSystem() {
               {/* Rewards */}
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-lg text-white">Rewards & Recognition</CardTitle>
+                  <CardTitle className="text-lg text-[var(--hive-text-primary)]">Rewards & Recognition</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {(currentRitual.rewards || currentRitual.anticipatedRewards || []).map((reward, index) => (
                     <div key={index} className={`flex items-center space-x-3 p-3 rounded-lg ${
-                      reward.earned ? 'bg-yellow-500/10 border border-yellow-500/20' : 'bg-gray-700'
+                      reward.earned ? 'bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20' : 'bg-gray-700'
                     }`}>
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                        reward.earned ? 'bg-yellow-500' : 'bg-gray-600'
+                        reward.earned ? 'bg-[var(--hive-gold)]' : 'bg-gray-600'
                       }`}>
                         {reward.type === 'badge' ? (
-                          <Award className="w-4 h-4 text-white" />
+                          <Award className="w-4 h-4 text-[var(--hive-text-primary)]" />
                         ) : reward.type === 'title' ? (
-                          <Crown className="w-4 h-4 text-white" />
+                          <Crown className="w-4 h-4 text-[var(--hive-text-primary)]" />
                         ) : (
-                          <Star className="w-4 h-4 text-white" />
+                          <Star className="w-4 h-4 text-[var(--hive-text-primary)]" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <div className={`text-sm font-medium ${reward.earned ? 'text-yellow-400' : 'text-gray-300'}`}>
+                        <div className={`text-sm font-medium ${reward.earned ? 'text-[var(--hive-gold)]' : 'text-gray-300'}`}>
                           {reward.name}
                         </div>
                         {reward.description && (
@@ -656,14 +656,14 @@ function TemporalRitualsSystem() {
             {/* Community Stats */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-lg text-white">Community Formation Progress</CardTitle>
+                <CardTitle className="text-lg text-[var(--hive-text-primary)]">Community Formation Progress</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 
                 {/* Overall Stats */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-gray-700 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-400">
+                    <div className="text-2xl font-bold text-[var(--hive-gold)]">
                       {currentRitual.communityProgress?.totalParticipants}
                     </div>
                     <div className="text-sm text-gray-400">Total Students</div>
@@ -681,7 +681,7 @@ function TemporalRitualsSystem() {
                     <div className="text-sm text-gray-400">Completion Rate</div>
                   </div>
                   <div className="text-center p-4 bg-gray-700 rounded-lg">
-                    <div className="text-2xl font-bold text-orange-400">
+                    <div className="text-2xl font-bold text-[var(--hive-gold)]">
                       {currentRitual.communityProgress?.networkConnections?.toLocaleString()}
                     </div>
                     <div className="text-sm text-gray-400">Peer Connections</div>
@@ -690,18 +690,18 @@ function TemporalRitualsSystem() {
 
                 {/* Community Health Indicators */}
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-white">Community Health</h4>
+                  <h4 className="font-semibold text-[var(--hive-text-primary)]">Community Health</h4>
                   <div className="space-y-3">
                     {[
                       { label: 'Network Density', value: 84, color: 'blue' },
                       { label: 'Cross-Community Bridges', value: 67, color: 'green' },
                       { label: 'Leadership Emergence', value: 72, color: 'purple' },
                       { label: 'Platform Investment', value: 89, color: 'orange' }
-                    ].map((metric) => (
+                    ].map((metric: any) => (
                       <div key={metric.label}>
                         <div className="flex justify-between text-sm mb-2">
                           <span className="text-gray-400">{metric.label}</span>
-                          <span className="text-white font-medium">{metric.value}%</span>
+                          <span className="text-[var(--hive-text-primary)] font-medium">{metric.value}%</span>
                         </div>
                         <HiveProgress value={metric.value} className="bg-gray-700" />
                       </div>
@@ -714,7 +714,7 @@ function TemporalRitualsSystem() {
             {/* Community Activities */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-lg text-white">Live Community Activity</CardTitle>
+                <CardTitle className="text-lg text-[var(--hive-text-primary)]">Live Community Activity</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 
@@ -732,14 +732,14 @@ function TemporalRitualsSystem() {
                   ].map((activity, index) => (
                     <div key={index} className="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg">
                       <div className={`w-2 h-2 rounded-full ${
-                        activity.type === 'achievement' ? 'bg-yellow-400' :
+                        activity.type === 'achievement' ? 'bg-[var(--hive-gold)]' :
                         activity.type === 'networking' ? 'bg-blue-400' :
                         activity.type === 'community' ? 'bg-green-400' :
-                        activity.type === 'leadership' ? 'bg-purple-400' :
+                        activity.type === 'leadership' ? 'bg-[var(--hive-gold)]' :
                         'bg-gray-400'
                       }`} />
                       <div className="flex-1">
-                        <div className="text-sm text-white">
+                        <div className="text-sm text-[var(--hive-text-primary)]">
                           <span className="font-medium">{activity.user}</span> {activity.action}
                         </div>
                         <div className="text-xs text-gray-400">{activity.time}</div>
@@ -763,23 +763,23 @@ function TemporalRitualsSystem() {
                 { label: 'Bridge Connections', value: currentRitual.personalProgress?.bridgeConnections || 4, icon: Link2, color: 'green' },
                 { label: 'Leadership Score', value: currentRitual.personalProgress?.leadershipScore || 67, icon: Crown, color: 'purple' },
                 { label: 'Invitations Left', value: currentRitual.networkingTools?.invitationsRemaining || 3, icon: UserPlus, color: 'orange' }
-              ].map((stat) => (
+              ].map((stat: any) => (
                 <Card key={stat.label} className="bg-gray-800/50 border-gray-700">
                   <CardContent className="pt-4 text-center">
                     <div className={`w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center ${
                       stat.color === 'blue' ? 'bg-blue-500/20' :
                       stat.color === 'green' ? 'bg-green-500/20' :
-                      stat.color === 'purple' ? 'bg-purple-500/20' :
-                      'bg-orange-500/20'
+                      stat.color === 'purple' ? 'bg-[var(--hive-gold)]/20' :
+                      'bg-[var(--hive-gold)]/20'
                     }`}>
                       <stat.icon className={`w-6 h-6 ${
                         stat.color === 'blue' ? 'text-blue-400' :
                         stat.color === 'green' ? 'text-green-400' :
-                        stat.color === 'purple' ? 'text-purple-400' :
-                        'text-orange-400'
+                        stat.color === 'purple' ? 'text-[var(--hive-gold)]' :
+                        'text-[var(--hive-gold)]'
                       }`} />
                     </div>
-                    <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                    <div className="text-2xl font-bold text-[var(--hive-text-primary)] mb-1">{stat.value}</div>
                     <div className="text-sm text-gray-400">{stat.label}</div>
                   </CardContent>
                 </Card>
@@ -790,10 +790,10 @@ function TemporalRitualsSystem() {
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg text-white">Recommended Connections</CardTitle>
+                  <CardTitle className="text-lg text-[var(--hive-text-primary)]">Recommended Connections</CardTitle>
                   <Button 
-                    variant="outline" 
-                    className="border-gray-600 text-white hover:bg-gray-800"
+                    variant="secondary" 
+                    className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
                     onClick={() => setShowPeerDiscovery(!showPeerDiscovery)}
                   >
                     <RefreshCw className="w-4 h-4 mr-2" />
@@ -803,17 +803,17 @@ function TemporalRitualsSystem() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {mockPeerNetwork.map((peer) => (
+                  {mockPeerNetwork.map((peer: any) => (
                     <Card key={peer.id} className="bg-gray-700 border-gray-600">
                       <CardContent className="p-4">
                         <div className="flex items-center space-x-3 mb-3">
                           <Avatar className="w-10 h-10">
-                            <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                            <AvatarFallback className="bg-gradient-to-r from-blue-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)]">
                               {peer.avatar}
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
-                            <div className="font-medium text-white">{peer.name}</div>
+                            <div className="font-medium text-[var(--hive-text-primary)]">{peer.name}</div>
                             <div className="text-sm text-gray-400">{peer.handle}</div>
                           </div>
                           <div className="text-right">
@@ -826,8 +826,8 @@ function TemporalRitualsSystem() {
                           <div>
                             <div className="text-xs text-gray-400 mb-1">Shared Communities:</div>
                             <div className="flex flex-wrap gap-1">
-                              {peer.sharedCommunities.slice(0, 2).map((community) => (
-                                <Badge key={community} variant="outline" className="text-xs bg-blue-500/10 text-blue-400">
+                              {peer.sharedCommunities.slice(0, 2).map((community: any) => (
+                                <Badge key={community} variant="secondary" className="text-xs bg-blue-500/10 text-blue-400">
                                   {community.split(' ')[0]}
                                 </Badge>
                               ))}
@@ -838,7 +838,7 @@ function TemporalRitualsSystem() {
                             <Badge className={`text-xs ${
                               peer.connectionType === 'study_partner' ? 'bg-blue-500/20 text-blue-400' :
                               peer.connectionType === 'roommate_potential' ? 'bg-green-500/20 text-green-400' :
-                              'bg-purple-500/20 text-purple-400'
+                              'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
                             }`}>
                               {peer.connectionType.replace('_', ' ')}
                             </Badge>
@@ -847,17 +847,17 @@ function TemporalRitualsSystem() {
 
                         <div className="space-y-2">
                           {peer.status === 'connected' ? (
-                            <Button disabled className="w-full bg-green-600 text-white text-sm">
+                            <Button disabled className="w-full bg-green-600 text-[var(--hive-text-primary)] text-sm">
                               <CheckCircle className="w-4 h-4 mr-2" />
                               Connected
                             </Button>
                           ) : peer.status === 'invited' ? (
-                            <Button disabled className="w-full bg-orange-600 text-white text-sm">
+                            <Button disabled className="w-full bg-[var(--hive-gold-dark)] text-[var(--hive-text-primary)] text-sm">
                               <Clock className="w-4 h-4 mr-2" />
                               Invitation Sent
                             </Button>
                           ) : (
-                            <Button className="w-full bg-blue-500 text-white hover:bg-blue-600 text-sm">
+                            <Button className="w-full bg-blue-500 text-[var(--hive-text-primary)] hover:bg-blue-600 text-sm">
                               <UserPlus className="w-4 h-4 mr-2" />
                               Send Invitation
                             </Button>
@@ -882,7 +882,7 @@ function TemporalRitualsSystem() {
             {/* Platform Mastery */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-lg text-white">Platform Mastery</CardTitle>
+                <CardTitle className="text-lg text-[var(--hive-text-primary)]">Platform Mastery</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {Object.entries(mockCommunityInvestment.platformMastery).map(([key, value]) => (
@@ -891,7 +891,7 @@ function TemporalRitualsSystem() {
                       <span className="text-gray-400">
                         {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                       </span>
-                      <span className="text-white font-medium">{value}%</span>
+                      <span className="text-[var(--hive-text-primary)] font-medium">{value}%</span>
                     </div>
                     <HiveProgress value={value} className="bg-gray-700" />
                   </div>
@@ -902,7 +902,7 @@ function TemporalRitualsSystem() {
             {/* Community Engagement */}
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-lg text-white">Community Engagement</CardTitle>
+                <CardTitle className="text-lg text-[var(--hive-text-primary)]">Community Engagement</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {Object.entries(mockCommunityInvestment.communityEngagement).map(([key, value]) => (
@@ -910,7 +910,7 @@ function TemporalRitualsSystem() {
                     <span className="text-gray-400 text-sm">
                       {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:
                     </span>
-                    <span className="text-white font-medium">{value}</span>
+                    <span className="text-[var(--hive-text-primary)] font-medium">{value}</span>
                   </div>
                 ))}
               </CardContent>
@@ -919,7 +919,7 @@ function TemporalRitualsSystem() {
             {/* Preparation Progress */}
             <Card className="bg-gray-800/50 border-gray-700 lg:col-span-2">
               <CardHeader>
-                <CardTitle className="text-lg text-white">Campus Preparation & Confidence Building</CardTitle>
+                <CardTitle className="text-lg text-[var(--hive-text-primary)]">Campus Preparation & Confidence Building</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -928,7 +928,7 @@ function TemporalRitualsSystem() {
                       <div className={`w-20 h-20 mx-auto mb-3 rounded-full flex items-center justify-center text-2xl font-bold ${
                         value >= 80 ? 'bg-green-500/20 text-green-400' :
                         value >= 60 ? 'bg-blue-500/20 text-blue-400' :
-                        'bg-orange-500/20 text-orange-400'
+                        'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
                       }`}>
                         {value}%
                       </div>

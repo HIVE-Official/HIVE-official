@@ -2,9 +2,9 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const membershipQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(50),
@@ -118,7 +118,7 @@ export async function GET(
     const totalCount = totalMembersSnapshot.size;
 
     // Fetch user details for each member
-    const memberPromises = membersSnapshot.docs.map(async (memberDoc) => {
+    const memberPromises = membersSnapshot.docs.map(async (memberDoc: any) => {
       const memberData = memberDoc.data();
       const userId = memberDoc.id;
 

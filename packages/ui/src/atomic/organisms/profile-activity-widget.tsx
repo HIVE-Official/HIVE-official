@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
@@ -83,9 +83,9 @@ const getActivityTypeConfig = (type: string) => {
       label: 'Commented'
     },
     join: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Users,
       label: 'Joined'
     },
@@ -196,7 +196,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
               Recent Activity
             </Text>
             {weeklyStreak > 0 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <Flame className="h-3 w-3 mr-1" />
                 {weeklyStreak} day streak
               </Badge>
@@ -289,7 +289,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
               )}
             </div>
             <div className="space-y-1">
-              {displayActivities.map((activity) => {
+              {displayActivities.map((activity: any) => {
                 const config = getActivityTypeConfig(activity.type);
                 const SpaceIcon = activity.contextSpace ? getSpaceTypeIcon(activity.contextSpace.type) : null;
                 return (
@@ -374,7 +374,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onCreatePost && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onCreatePost}
               className="flex-1"
@@ -386,7 +386,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
           
           {onViewAllActivities && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllActivities}
               className="flex-1"
@@ -420,7 +420,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
             </Text>
             {isEditable && onCreatePost && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onCreatePost}
               >
@@ -435,7 +435,7 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
 
       {/* Hover Glow Effect */}
       {isHovered && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-lg blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
   );

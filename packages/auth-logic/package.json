@@ -2,9 +2,11 @@
   "name": "@hive/auth-logic",
   "version": "0.1.0",
   "private": true,
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "npx tsc",
+    "typecheck": "npx tsc --noEmit",
     "lint": "npx eslint . --max-warnings 10",
     "test": "cd ../.. && npx vitest run --config packages/auth-logic/vitest.config.ts packages/auth-logic/src"
   },
@@ -13,7 +15,7 @@
     "@hive/typescript-config": "workspace:*",
     "@types/node": "^24.0.1",
     "@types/react": "^18.3.12",
-    "eslint": "^9.28.0",
+    "eslint": "^8.57.0",
     "typescript": "^5.8.3",
     "vitest": "^2.0.4"
   },

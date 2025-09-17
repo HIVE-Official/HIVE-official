@@ -6,6 +6,8 @@
  */
 
 import { getAuth } from 'firebase-admin/auth';
+import { logger } from '@/lib/logger';
+
 import { NextRequest } from 'next/server';
 
 export interface AuthUser {
@@ -44,23 +46,8 @@ export interface SessionUser {
  */
 export async function getCurrentUser(request?: NextRequest): Promise<AuthUser | null> {
   try {
-    // In development, allow bypass for testing
-    if (process.env.NODE_ENV === 'development') {
-      const devBypass = process.env.DEV_AUTH_BYPASS;
-      if (devBypass === 'true') {
-        return {
-          uid: 'dev-user-id',
-          email: 'dev@example.com',
-          emailVerified: true,
-          displayName: 'Dev User',
-          handle: 'dev_user',
-          schoolId: 'ub',
-          userType: 'student',
-          isOnboarded: true,
-          isBuilder: true
-        };
-      }
-    }
+    // SECURITY FIX: Removed DEV_AUTH_BYPASS - development bypasses are security vulnerabilities
+    // Use secure development detection instead of environment variable overrides
 
     // Get token from Authorization header
     const token = request?.headers.get('authorization')?.replace('Bearer ', '');
@@ -86,7 +73,7 @@ export async function getCurrentUser(request?: NextRequest): Promise<AuthUser | 
     };
 
   } catch (error) {
-    console.error('Error getting current user:', error);
+    logger.error('Error getting current user:', { error: String(error) });
     return null;
   }
 }

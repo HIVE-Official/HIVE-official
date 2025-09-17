@@ -6,9 +6,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence, useAnimation } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { Progress } from '../../../components/ui/progress';
 import { 
   Play, 
@@ -33,6 +33,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '08-Animation-Guidelines/Motion System',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -260,7 +261,7 @@ const AnimationShowcase = () => {
           
           {/* Timeline markers */}
           <div className="absolute bottom-1 left-0 right-0 flex justify-between px-2">
-            {[0, 25, 50, 75, 100].map((percent) => (
+            {[0, 25, 50, 75, 100].map((percent: any) => (
               <div key={percent} className="w-0.5 h-2" 
                    style={{ backgroundColor: 'var(--hive-border-subtle)' }} />
             ))}
@@ -291,7 +292,7 @@ const AnimationShowcase = () => {
           </div>
           <div className="flex flex-wrap gap-2">
             {easingData.examples.map((example: string, idx: number) => (
-              <Badge key={idx} variant="outline" className="text-xs"
+              <Badge key={idx} variant="secondary" className="text-xs"
                      style={{ borderColor: easingData.color, color: easingData.color }}>
                 {example}
               </Badge>
@@ -418,7 +419,7 @@ const AnimationShowcase = () => {
                 className="mt-4 pt-4 border-t space-y-3"
                 style={{ borderColor: 'var(--hive-border-subtle)' }}
               >
-                {[1, 2].map((i) => (
+                {[1, 2].map((i: any) => (
                   <motion.div 
                     key={i}
                     className="flex space-x-2"
@@ -598,7 +599,7 @@ const AnimationShowcase = () => {
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {data.examples.map((example, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs"
+                              <Badge key={idx} variant="secondary" className="text-xs"
                                      style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                                 {example}
                               </Badge>
@@ -658,7 +659,7 @@ const AnimationShowcase = () => {
                             </span>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {pattern.components.map((component, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs"
+                                <Badge key={idx} variant="secondary" className="text-xs"
                                        style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                                   {component}
                                 </Badge>

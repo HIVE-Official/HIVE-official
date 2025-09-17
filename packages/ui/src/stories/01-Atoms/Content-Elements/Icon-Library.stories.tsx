@@ -7,10 +7,10 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { 
   // Navigation & Actions
   Home,
@@ -139,7 +139,16 @@ import {
 } from 'lucide-react';
 import '../../../hive-tokens.css';
 
-const meta: Meta = {
+// Create a simple component wrapper for the story
+const IconLibrary = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Icon Library System</h2>
+    <p className="text-muted-foreground">Complete iconography system for campus visual communication</p>
+  </div>
+);
+
+const meta: Meta<typeof IconLibrary> = {
+  component: IconLibrary,
   title: '02-Atoms/Content Elements/Icon Library',
   parameters: {
     layout: 'fullscreen',
@@ -460,8 +469,8 @@ const IconCategoriesShowcase = () => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20',
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20',
       red: 'from-red-500/20 to-red-600/10 border-red-500/20',
       indigo: 'from-indigo-500/20 to-indigo-600/10 border-indigo-500/20'
     };
@@ -488,7 +497,7 @@ const IconCategoriesShowcase = () => {
           <Input
             placeholder="Search icons..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchTerm(e.target.value)}
             className="w-64"
           />
         </div>
@@ -496,7 +505,7 @@ const IconCategoriesShowcase = () => {
 
       {/* Category Navigation */}
       <div className="flex flex-wrap gap-2">
-        {iconCategories.map((category) => (
+        {iconCategories.map((category: any) => (
           <Button
             key={category.category}
             variant={activeCategory === category.category ? 'primary' : 'secondary'}
@@ -564,7 +573,7 @@ const IconSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-8">
-            {iconSizes.map((size) => (
+            {iconSizes.map((size: any) => (
               <div key={size.size} className="flex items-center gap-8">
                 <div className="w-24 shrink-0">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -761,7 +770,7 @@ const AccessibilityShowcase = () => {
                     <div className="flex items-center gap-3 mb-2">
                       <example.icon 
                         className={`${example.size || 'w-6 h-6'} ${
-                          contrastMode ? 'text-white' : 'text-[var(--hive-brand-primary)]'
+                          contrastMode ? 'text-[var(--hive-text-primary)]' : 'text-[var(--hive-brand-primary)]'
                         }`} 
                         aria-label={example.ariaLabel || example.label}
                       />
@@ -825,7 +834,7 @@ const IconLibraryShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

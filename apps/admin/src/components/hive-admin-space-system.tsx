@@ -6,6 +6,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core';
+
+import { motion, AnimatePresence } from 'framer-motion';
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
@@ -283,7 +286,7 @@ const SpaceCard: React.FC<{
               <h3 className="font-semibold text-white truncate">{space.name}</h3>
               <div className={`w-2 h-2 rounded-full ${getStatusColor(space.status)}`} />
               {space.isSystemGenerated && (
-                <Shield className="w-4 h-4 text-blue-400" title="System Generated" />
+                <Shield className="w-4 h-4 text-blue-400" />
               )}
             </div>
             <div className="flex items-center space-x-2 text-sm text-gray-400">
@@ -443,16 +446,6 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   // const [showCreateModal, setShowCreateModal] = useState(false);
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Database className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Space system management is not available</p>
-      </div>
-    );
-  }
-
   const loadSpaces = useCallback(async () => {
     if (!admin) return;
 
@@ -472,7 +465,7 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
       const data = await response.json();
       setSpaces(data.spaces || []);
     } catch (error) {
-      console.error('Failed to load spaces:', error);
+      logger.error('Failed to load spaces:', error);
     } finally {
       setLoading(false);
     }
@@ -507,6 +500,16 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
   };
 
   const stats = getSpaceStats();
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Database className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Space system management is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -617,12 +620,12 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
                 
                 <div className="mt-2 flex flex-wrap gap-1">
                   {rule.allowedSubtypes.slice(0, 2).map((subtype) => (
-                    <Badge key={subtype.value} size="xs" variant="outline" className="text-xs">
+                    <Badge key={subtype.value} size="sm" variant="outline" className="text-xs">
                       {subtype.label}
                     </Badge>
                   ))}
                   {rule.allowedSubtypes.length > 2 && (
-                    <Badge size="xs" variant="outline" className="text-xs">
+                    <Badge size="sm" variant="outline" className="text-xs">
                       +{rule.allowedSubtypes.length - 2}
                     </Badge>
                   )}
@@ -689,8 +692,8 @@ export const HiveAdminSpaceSystem: React.FC<HiveAdminSpaceSystemProps> = ({
                 <SpaceCard
                   key={space.id}
                   space={space}
-                  onViewDetails={() => console.log('View details:', space.id)}
-                  onEdit={() => console.log('Edit space:', space.id)}
+                  onViewDetails={() => {/* View details: space.id */}}
+                  onEdit={() => {/* Edit space: space.id */}}
                   onAudit={() => onAuditSpace?.(space.id)}
                 />
               ))}

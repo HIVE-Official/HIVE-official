@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { authenticatedFetch } from '../../lib/auth-utils';
 import { Button, Badge } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Alert } from "@hive/ui";
 import { 
   X, 
   MessageSquare, 
@@ -16,11 +14,20 @@ import {
   Loader2,
   AlertCircle,
   Plus,
-  Minus
+  Minus,
+  Upload
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface PostCreationModalProps {
+// State Management
+import { 
+  useCreatePost,
+  useUIStore,
+  useAuthStore
+} from '@hive/hooks';
+import { useImageUpload } from '@/hooks/use-image-upload';
+
+interface PostCreationModalMigratedProps {
   isOpen: boolean;
   onClose: () => void;
   spaceId: string;
@@ -67,6 +74,7 @@ const postTypes = {
   }
 } as const;
 
+// Export both names for compatibility
 export function PostCreationModal({
   isOpen,
   onClose,
@@ -74,49 +82,27 @@ export function PostCreationModal({
   spaceName,
   initialPostType = 'discussion',
   canCreateAnnouncements = false
-}: PostCreationModalProps) {
+}: PostCreationModalMigratedProps) {
+  // Global state
+  const { addToast } = useUIStore();
+  const { user } = useAuthStore();
+
+  // Local state
   const [selectedType, setSelectedType] = useState<keyof typeof postTypes>(initialPostType);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '']);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadMultipleImages, isUploading, progress } = useImageUpload();
 
-  // Create post mutation
-  const createPostMutation = useMutation({
-    mutationFn: async (postData: {
-      type: string;
-      content: string;
-      title?: string;
-      linkUrl?: string;
-      pollOptions?: string[];
-    }) => {
-      const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postData)
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create post');
-      }
-      
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['space-posts', spaceId] });
-      handleClose();
-    },
-    onError: (error: Error) => {
-      setError(error.message);
-      setIsSubmitting(false);
-    }
-  });
+  // React Query mutation
+  const createPost = useCreatePost();
 
   const handleClose = () => {
     setContent('');
@@ -124,25 +110,39 @@ export function PostCreationModal({
     setLinkUrl('');
     setPollOptions(['', '']);
     setError(null);
-    setIsSubmitting(false);
+    setSelectedImages([]);
+    setImageUrls([]);
     onClose();
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    
+    if (imageFiles.length + selectedImages.length > 4) {
+      setError('Maximum 4 images allowed');
+      return;
+    }
+    
+    setSelectedImages(prev => [...prev, ...imageFiles]);
+  };
+
+  const removeImage = (index: number) => {
+    setSelectedImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsSubmitting(true);
 
     // Validation
     if (!content.trim()) {
       setError('Content is required');
-      setIsSubmitting(false);
       return;
     }
 
     if (selectedType === 'link' && !linkUrl.trim()) {
       setError('Link URL is required for link posts');
-      setIsSubmitting(false);
       return;
     }
 
@@ -150,15 +150,30 @@ export function PostCreationModal({
       const validOptions = pollOptions.filter(option => option.trim());
       if (validOptions.length < 2) {
         setError('Polls need at least 2 options');
-        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // Upload images if any
+    let uploadedImageUrls: string[] = [];
+    if (selectedImages.length > 0) {
+      try {
+        uploadedImageUrls = await uploadMultipleImages(
+          selectedImages, 
+          `spaces/${spaceId}/posts`
+        );
+      } catch (err) {
+        setError('Failed to upload images');
         return;
       }
     }
 
     const postData: any = {
+      spaceId,
       type: selectedType,
       content: content.trim(),
-      title: title.trim() || undefined
+      title: title.trim() || undefined,
+      images: uploadedImageUrls
     };
 
     if (selectedType === 'link') {
@@ -169,7 +184,24 @@ export function PostCreationModal({
       postData.pollOptions = pollOptions.filter(option => option.trim());
     }
 
-    createPostMutation.mutate(postData);
+    createPost.mutate(postData, {
+      onSuccess: () => {
+        addToast({
+          title: 'Post Created!',
+          description: `Your ${selectedType} has been shared with ${spaceName}`,
+          type: 'success',
+        });
+        handleClose();
+      },
+      onError: (error) => {
+        setError(error.message || 'Failed to create post');
+        addToast({
+          title: 'Failed to create post',
+          description: error.message || 'Something went wrong',
+          type: 'error',
+        });
+      },
+    });
   };
 
   const addPollOption = () => {
@@ -219,23 +251,28 @@ export function PostCreationModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={handleClose}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-post-title"
+        aria-describedby="create-post-description"
       >
         <motion.div
-          className="bg-[#0A0A0A] border border-white/[0.1] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
+          className="bg-[var(--hive-background-primary)] border border-white/[0.1] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
+          role="document"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
             <div className="flex items-center gap-3">
-              <Icon className={`h-6 w-6 ${currentTypeConfig.color}`} />
+              <Icon className={`h-6 w-6 ${currentTypeConfig.color}`} aria-hidden="true" />
               <div>
-                <h2 className="text-xl font-semibold text-white">
+                <h2 id="create-post-title" className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   Create {currentTypeConfig.label}
                 </h2>
-                <p className="text-sm text-neutral-400">
+                <p id="create-post-description" className="text-sm text-neutral-400">
                   in {spaceName}
                 </p>
               </div>
@@ -245,9 +282,11 @@ export function PostCreationModal({
               variant="outline"
               size="sm"
               onClick={handleClose}
-              className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+              className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
+              disabled={createPost.isPending}
+              aria-label="Close create post dialog"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
 
@@ -255,8 +294,8 @@ export function PostCreationModal({
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Post Type Selector */}
-              <div>
-                <label className="block text-sm font-medium text-white mb-3">
+              <div role="group" aria-labelledby="post-type-label">
+                <label id="post-type-label" className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-3">
                   Post Type
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -270,12 +309,15 @@ export function PostCreationModal({
                         type="button"
                         className={`p-3 rounded-lg border transition-all ${
                           isSelected
-                            ? 'bg-[#FFD700]/10 border-[#FFD700]/30 text-[#FFD700]'
-                            : 'bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:border-white/[0.1] hover:text-white'
+                            ? 'bg-[var(--hive-brand-secondary)]/10 border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]'
+                            : 'bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:border-white/[0.1] hover:text-[var(--hive-text-inverse)]'
                         }`}
                         onClick={() => setSelectedType(type as keyof typeof postTypes)}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        disabled={createPost.isPending}
+                        aria-pressed={isSelected}
+                        aria-label={`Select ${config.label} post type`}
                       >
                         <TypeIcon className="h-5 w-5 mx-auto mb-2" />
                         <div className="text-xs font-medium">{config.label}</div>
@@ -287,35 +329,42 @@ export function PostCreationModal({
 
               {/* Title (optional) */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label htmlFor="post-title" className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Title (optional)
                 </label>
                 <input
+                  id="post-title"
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Give your post a title..."
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                   maxLength={200}
+                  disabled={createPost.isPending}
+                  aria-describedby="title-hint"
                 />
               </div>
 
               {/* Content */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label htmlFor="post-content" className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                   Content
                 </label>
                 <textarea
+                  id="post-content"
                   ref={textareaRef}
                   value={content}
                   onChange={handleContentChange}
                   placeholder={currentTypeConfig.placeholder}
-                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[#FFD700]/30 min-h-[120px]"
+                  className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-secondary)]/30 min-h-[120px]"
                   maxLength={2000}
                   required
+                  disabled={createPost.isPending}
+                  aria-required="true"
+                  aria-describedby="content-hint"
                 />
                 <div className="flex justify-between items-center mt-2">
-                  <p className="text-xs text-neutral-400">
+                  <p id="content-hint" className="text-xs text-neutral-400" aria-live="polite">
                     {content.length}/2000 characters
                   </p>
                   <p className="text-xs text-neutral-400">
@@ -327,36 +376,41 @@ export function PostCreationModal({
               {/* Link URL (for link posts) */}
               {selectedType === 'link' && (
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label htmlFor="post-link" className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     Link URL
                   </label>
                   <input
+                    id="post-link"
                     type="url"
                     value={linkUrl}
                     onChange={(e) => setLinkUrl(e.target.value)}
                     placeholder="https://example.com"
-                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                     required={selectedType === 'link'}
+                    disabled={createPost.isPending}
+                    aria-required={selectedType === 'link' ? 'true' : 'false'}
                   />
                 </div>
               )}
 
               {/* Poll Options (for polls) */}
               {selectedType === 'poll' && (
-                <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                <div role="group" aria-labelledby="poll-options-label">
+                  <label id="poll-options-label" className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">
                     Poll Options
                   </label>
-                  <div className="space-y-3">
+                  <div className="space-y-3" role="list">
                     {pollOptions.map((option, index) => (
-                      <div key={index} className="flex items-center gap-2">
+                      <div key={index} className="flex items-center gap-2" role="listitem">
                         <input
                           type="text"
                           value={option}
                           onChange={(e) => updatePollOption(index, e.target.value)}
                           placeholder={`Option ${index + 1}`}
-                          className="flex-1 px-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
+                          className="flex-1 px-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-[var(--hive-text-inverse)] placeholder-neutral-400 focus:outline-none focus:border-[var(--hive-brand-secondary)]/30"
                           maxLength={100}
+                          disabled={createPost.isPending}
+                          aria-label={`Poll option ${index + 1}`}
                         />
                         {pollOptions.length > 2 && (
                           <Button
@@ -365,8 +419,10 @@ export function PostCreationModal({
                             size="sm"
                             onClick={() => removePollOption(index)}
                             className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                            disabled={createPost.isPending}
+                            aria-label={`Remove poll option ${index + 1}`}
                           >
-                            <Minus className="h-4 w-4" />
+                            <Minus className="h-4 w-4" aria-hidden="true" />
                           </Button>
                         )}
                       </div>
@@ -378,7 +434,8 @@ export function PostCreationModal({
                         variant="outline"
                         size="sm"
                         onClick={addPollOption}
-                        className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                        className="border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
+                        disabled={createPost.isPending}
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         Add Option
@@ -394,9 +451,11 @@ export function PostCreationModal({
                   className="p-4 rounded-lg bg-red-500/10 border border-red-500/20"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  role="alert"
+                  aria-live="assertive"
                 >
                   <div className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-red-400" />
+                    <AlertCircle className="h-4 w-4 text-red-400" aria-hidden="true" />
                     <span className="text-sm text-red-300">{error}</span>
                   </div>
                 </motion.div>
@@ -408,7 +467,7 @@ export function PostCreationModal({
                   type="button"
                   variant="outline"
                   onClick={handleClose}
-                  disabled={isSubmitting}
+                  disabled={createPost.isPending}
                   className="flex-1"
                 >
                   Cancel
@@ -417,10 +476,10 @@ export function PostCreationModal({
                 <Button
                   type="submit"
                   variant="primary"
-                  disabled={isSubmitting || !content.trim()}
-                  className="flex-1 bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+                  disabled={createPost.isPending || !content.trim()}
+                  className="flex-1 bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255]"
                 >
-                  {isSubmitting ? (
+                  {createPost.isPending ? (
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       <span>Creating...</span>

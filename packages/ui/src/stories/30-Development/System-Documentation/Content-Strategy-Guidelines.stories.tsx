@@ -6,10 +6,10 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Textarea } from '../../../components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Textarea } from '../../../atomic/atoms/textarea-enhanced';
 import { 
   MessageSquare, 
   Users, 
@@ -36,6 +36,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '12-Content-Strategy/Guidelines',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -656,7 +657,7 @@ const ContentStrategyShowcase = () => {
                       <Textarea
                         placeholder="Try: 'CS 220 study group forming! We meet Tuesdays 7pm in library room 204 to work through programming assignments. Looking for 2 more committed people. Message me!'"
                         value={contentAnalysis}
-                        onChange={(e) => setContentAnalysis(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setContentAnalysis(e.target.value)}
                         className="min-h-24"
                         style={{
                           backgroundColor: 'var(--hive-background-secondary)',

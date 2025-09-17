@@ -7,10 +7,10 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Input } from '../../../components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
+import { Input } from '../../../atomic/atoms/input-enhanced';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
 import { Label } from '../../../components/ui/label';
 import { 
   User,
@@ -351,7 +351,7 @@ const InputVariantsShowcase = () => {
                         type={input.type}
                         placeholder={input.placeholder}
                         value={inputValues[inputId] || ''}
-                        onChange={(e) => handleInputChange(inputId, e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange(inputId, e.target.value)}
                         onFocus={() => setFocusedInput(inputId)}
                         onBlur={() => setFocusedInput(null)}
                         className={`transition-all ${
@@ -393,7 +393,7 @@ const InputSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-6">
-            {inputSizes.map((size) => (
+            {inputSizes.map((size: any) => (
               <div key={size.name} className="flex items-center gap-6">
                 <div className="w-32">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -411,20 +411,20 @@ const InputSizesShowcase = () => {
                   
                   <div className="flex items-center gap-3">
                     <Input
-                      size={size.name as any}
+                      size={size.name as unknown}
                       placeholder={`${size.label} input example`}
                       className="max-w-xs"
                     />
                     
                     <Input
-                      size={size.name as any}
+                      size={size.name as unknown}
                       type="search"
                       placeholder="Search..."
                       className="max-w-xs"
                     />
                     
                     <Input
-                      size={size.name as any}
+                      size={size.name as unknown}
                       type="email"
                       placeholder="student@buffalo.edu"
                       className="max-w-xs"
@@ -475,7 +475,7 @@ const ValidationShowcase = () => {
                     <Input
                       id={`test-${index}`}
                       value={testInputs[validation.type] || ''}
-                      onChange={(e) => setTestInputs(prev => ({ ...prev, [validation.type]: e.target.value }))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTestInputs(prev => ({ ...prev, [validation.type]: e.target.value }))}
                       placeholder={`Enter ${validation.type.toLowerCase()}...`}
                       className="flex-1"
                     />
@@ -709,7 +709,7 @@ const InputEnhancedShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

@@ -225,11 +225,11 @@ Textarea.displayName = "Textarea";
 // Code Textarea Component
 export interface CodeTextareaProps extends Omit<TextareaProps, 'className'> {
   language?: string;
-  showLineNumbers?: boolean;
+  _showLineNumbers?: boolean;
 }
 
 const CodeTextarea = React.forwardRef<HTMLTextAreaElement, CodeTextareaProps>(
-  ({ language, showLineNumbers, ...props }, ref) => {
+  ({ language, _showLineNumbers, ...props }, ref) => {
     return (
       <Textarea
         ref={ref}
@@ -336,6 +336,7 @@ export const TextareaPresets = {
 
 export { 
   Textarea, 
+  Textarea as TextareaEnhanced,
   CodeTextarea,
   TextareaGroup, 
   textareaVariants 

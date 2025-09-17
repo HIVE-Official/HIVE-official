@@ -2,6 +2,8 @@
 // This utility helps aggregate data from multiple profile endpoints for efficient loading
 
 import React from 'react';
+import { logger } from './logger';
+
 
 interface ProfileAggregatorOptions {
   includeSpaces?: boolean;
@@ -123,7 +125,7 @@ class ProfileAggregator {
 
       return aggregatedData;
     } catch (error) {
-      console.error('Error aggregating profile data:', error);
+      logger.error('Error aggregating profile data', { error });
       throw error;
     }
   }
@@ -415,7 +417,7 @@ export const profileUtils = {
   getTopSpaces: (profileData: AggregatedProfileData, limit: number = 3): Array<Record<string, unknown>> => {
     const spaces = (profileData.spaces as { memberships?: Array<Record<string, unknown>> })?.memberships || [];
     return spaces
-      .filter((space) => (space.status as string) === 'active')
+      .filter((space: Record<string, unknown>) => (space.status as string) === 'active')
       .sort((a, b) => {
         const aTime = ((a.recentActivity as Record<string, unknown>)?.timeSpent as number) || 0;
         const bTime = ((b.recentActivity as Record<string, unknown>)?.timeSpent as number) || 0;

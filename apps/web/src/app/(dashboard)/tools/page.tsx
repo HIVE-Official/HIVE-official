@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { logger } from '@/lib/logger';
+
 import { useQuery } from "@tanstack/react-query";
 import { CompleteHIVEToolsSystem } from "@hive/ui";
 import { useSession } from "../../../hooks/use-session";
@@ -67,8 +69,8 @@ async function fetchPersonalTools(): Promise<any[]> {
 }
 
 // Import campus-specific templates and deployment system
-import { CAMPUS_TOOL_TEMPLATES, getViralTemplates } from '../../../lib/campus-tools-templates';
-import { TemplateDeploymentService, DEPLOYMENT_PRESETS } from '../../../lib/template-deployment';
+import { CAMPUS_TOOL_TEMPLATES, getViralTemplates } from '@/lib/tools/templates/campus-tools-templates';
+import { TemplateDeploymentService, DEPLOYMENT_PRESETS } from '@/lib/tools/templates/template-deployment';
 
 // Convert campus templates to marketplace format
 const CAMPUS_MARKETPLACE_TOOLS = CAMPUS_TOOL_TEMPLATES.map(template => ({
@@ -87,11 +89,13 @@ const CAMPUS_MARKETPLACE_TOOLS = CAMPUS_TOOL_TEMPLATES.map(template => ({
          template.category === 'events' ? '#F59E0B' :
          template.category === 'services' ? '#8B5CF6' :
          '#6B7280',
-  downloads: template.viralPotential === 'very-high' ? Math.floor(Math.random() * 500) + 200 :
-             template.viralPotential === 'high' ? Math.floor(Math.random() * 300) + 100 :
-             Math.floor(Math.random() * 150) + 50,
-  rating: 4.5 + Math.random() * 0.5,
-  ratingCount: Math.floor(Math.random() * 50) + 20,
+  downloads: template.viralPotential === 'very-high' ? 450 :
+             template.viralPotential === 'high' ? 250 :
+             100,
+  rating: template.viralPotential === 'very-high' ? 4.8 : 
+          template.viralPotential === 'high' ? 4.6 : 4.4,
+  ratingCount: template.viralPotential === 'very-high' ? 65 :
+               template.viralPotential === 'high' ? 45 : 35,
   creator: 'UB Students',
   creatorType: 'community' as const,
   tags: [template.category, 'campus', 'ub'],
@@ -139,7 +143,7 @@ const MARKETPLACE_TOOLS = [
     category: 'productivity' as const,
     type: 'individual' as const,
     icon: Timer,
-    color: '#FFD700',
+    color: 'var(--hive-brand-secondary)',
     downloads: 892,
     rating: 4.6,
     ratingCount: 67,
@@ -213,7 +217,7 @@ export default function ToolsPage() {
   // Temporarily using default flags while fixing React context issue
   const flags = useMemo(() => ({
     trackEvent: (_feature: string, _action: string, _metadata?: any) => {
-      console.log('Track event:', _feature, _action, _metadata);
+      
     }
   }), []);
 
@@ -259,7 +263,7 @@ export default function ToolsPage() {
         // Deploy campus template as working tool
         const deploymentRequest = {
           templateId: toolId,
-          userId: _user?.uid || 'anonymous',
+          userId: _user?.id || 'anonymous',
           socialSettings: DEPLOYMENT_PRESETS.space_shared // Default to viral sharing
         };
 
@@ -302,7 +306,7 @@ export default function ToolsPage() {
       }
       
     } catch (error) {
-      console.error('Failed to install tool:', error);
+      logger.error('Failed to install tool:', { error: String(error) });
       const errorMessage = error instanceof Error ? error.message : 'Failed to install tool';
       alert(`Installation failed: ${errorMessage}`);
     }
@@ -333,7 +337,7 @@ export default function ToolsPage() {
         break;
       }
       default:
-        console.log('Unknown action:', action);
+        
     }
   };
 
@@ -346,18 +350,21 @@ export default function ToolsPage() {
   return (
     <ErrorBoundary>
       <CompleteHIVEToolsSystem
-        activeTab={activeTab}
-        userRole={'student'}
-        onTabChange={handleTabChange}
+        userId={_user?.id || 'anonymous'}
+        userProfile={{
+          name: _user?.displayName || 'Student',
+          handle: _user?.email?.split('@')[0] || 'student',
+          avatar: _user?.photoURL,
+          builderLevel: 'novice'
+        }}
+        initialTab={activeTab}
         onToolInstall={handleToolInstall}
-        onToolAction={handleToolAction}
-        onToolPreview={handleToolPreview}
-        onCreateTool={handleCreateTool}
-        marketplaceTools={marketplaceTools || [...CAMPUS_MARKETPLACE_TOOLS, ...MARKETPLACE_TOOLS]}
-        personalTools={personalTools || [...CAMPUS_MARKETPLACE_TOOLS, ...MARKETPLACE_TOOLS].filter(t => t.isInstalled)}
-        loading={isLoading}
-        error={error?.message || null}
-        showDebugLabels={process.env.NODE_ENV === 'development'}
+        onToolCreate={(tool: any) => {
+          flags.trackEvent('tools', 'created', { toolId: tool.id });
+        }}
+        onToolDeploy={(toolId, spaceId) => {
+          flags.trackEvent('tools', 'deployed', { toolId, spaceId });
+        }}
       />
     </ErrorBoundary>
   );

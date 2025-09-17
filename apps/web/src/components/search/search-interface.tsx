@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { logger } from '@/lib/logger';
+
 import {
   Card,
   Button,
@@ -30,7 +32,7 @@ import {
   ArrowRight,
   History
 } from 'lucide-react';
-import { SearchEngine, SearchQuery, SearchResult, SearchItem } from '../../lib/search-engine';
+import { SearchEngine, SearchQuery, SearchResult, SearchItem } from '@/lib/search-engine';
 
 interface SearchInterfaceProps {
   onResultSelect?: (_item: SearchItem) => void;
@@ -83,7 +85,7 @@ export function SearchInterface({
       try {
         setRecentSearches(JSON.parse(saved));
       } catch (error) {
-        console.error('Failed to load recent searches:', error);
+        logger.error('Failed to load recent searches:', { error: String(error) });
       }
     }
   }, []);
@@ -145,7 +147,7 @@ export function SearchInterface({
       localStorage.setItem('hive_recent_searches', JSON.stringify(updatedRecent));
 
     } catch (error) {
-      console.error('Search failed:', error);
+      logger.error('Search failed:', { error: String(error) });
     } finally {
       setIsSearching(false);
     }
@@ -272,7 +274,7 @@ export function SearchInterface({
                   >
                     <div className="flex items-center space-x-2">
                       <Search className="h-4 w-4 text-hive-text-mutedLight" />
-                      <span className="text-white">{suggestion}</span>
+                      <span className="text-[var(--hive-text-inverse)]">{suggestion}</span>
                       <ArrowRight className="h-3 w-3 text-hive-text-mutedLight ml-auto" />
                     </div>
                   </button>
@@ -294,7 +296,7 @@ export function SearchInterface({
                   >
                     <div className="flex items-center space-x-2">
                       <Clock className="h-4 w-4 text-hive-text-mutedLight" />
-                      <span className="text-white">{recentQuery}</span>
+                      <span className="text-[var(--hive-text-inverse)]">{recentQuery}</span>
                     </div>
                   </button>
                 ))}
@@ -392,7 +394,7 @@ export function SearchInterface({
           {/* Results Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-white">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">
                 {results.total.toLocaleString()} results
               </h3>
               <p className="text-sm text-hive-text-mutedLight">
@@ -449,7 +451,7 @@ export function SearchInterface({
                   </div>
 
                   {/* Result Title */}
-                  <h4 className="font-medium text-white hover:text-hive-gold transition-colors">
+                  <h4 className="font-medium text-[var(--hive-text-inverse)] hover:text-hive-gold transition-colors">
                     {item.title}
                   </h4>
 
@@ -505,7 +507,7 @@ export function SearchInterface({
                   {item.highlights.length > 0 && (
                     <div className="mt-2 p-2 bg-hive-background-tertiary rounded text-xs">
                       <span className="text-hive-text-mutedLight">Match: </span>
-                      <span className="text-white">...{item.highlights[0].text}...</span>
+                      <span className="text-[var(--hive-text-inverse)]">...{item.highlights[0].text}...</span>
                     </div>
                   )}
                 </div>
@@ -537,7 +539,7 @@ export function SearchInterface({
           {results.items.length === 0 && (
             <Card className="p-8 bg-hive-background-overlay border-hive-border-default text-center">
               <Search className="h-12 w-12 mx-auto mb-4 text-hive-text-mutedLight opacity-50" />
-              <h3 className="text-lg font-medium text-white mb-2">No results found</h3>
+              <h3 className="text-lg font-medium text-[var(--hive-text-inverse)] mb-2">No results found</h3>
               <p className="text-hive-text-mutedLight mb-4">
                 Try adjusting your search terms or filters
               </p>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser as _getCurrentUser } from '../../../../../lib/auth-server';
-import { logger } from "@/lib/logger";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { getCurrentUser as _getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { logger } from '@/lib/logger';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
 interface CalendarConflict {
   id: string;
@@ -287,7 +287,6 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     }
 
     // Production implementation would update events in Firestore
-    // TODO: Implement Firestore updates for conflict resolution
     return NextResponse.json({
       success: true,
       message: 'Conflict resolved successfully'

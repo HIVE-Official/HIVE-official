@@ -1,15 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Mail, Lock, Eye, EyeOff, User, School, Calendar, AlertCircle, CheckCircle, Loader2, ArrowRight } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { Input } from '../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 import { Checkbox } from '../../../components/ui/checkbox';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Form-Components/Auth Form System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {
@@ -133,7 +134,6 @@ export const LoginFormSystem: Story = {
         // Simulate API call
         setTimeout(() => {
           setIsLoading(false);
-          console.log('Login successful:', formData);
         }, 2000);
       }
     };
@@ -211,7 +211,7 @@ export const LoginFormSystem: Story = {
                 <Checkbox
                   id="remember"
                   checked={formData.rememberMe}
-                  onCheckedChange={(checked) => handleInputChange('rememberMe', checked as boolean)}
+                  onCheckedChange={(checked: any) => handleInputChange('rememberMe', checked as boolean)}
                   disabled={isLoading}
                 />
                 <Label htmlFor="remember" className="text-sm text-gray-600">
@@ -335,7 +335,6 @@ export const RegistrationFormSystem: Story = {
       // Simulate API call
       setTimeout(() => {
         setIsLoading(false);
-        console.log('Registration successful:', formData);
       }, 2000);
     };
 
@@ -355,7 +354,7 @@ export const RegistrationFormSystem: Story = {
             
             {/* Progress Indicator */}
             <div className="flex items-center justify-center mt-4">
-              {[1, 2, 3].map((step) => (
+              {[1, 2, 3].map((step: any) => (
                 <React.Fragment key={step}>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     step <= currentStep ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
@@ -494,12 +493,12 @@ export const RegistrationFormSystem: Story = {
                   <Label htmlFor="major">Major</Label>
                   <div className="relative">
                     <School className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
-                    <Select onValueChange={(value) => handleInputChange('major', value)}>
+                    <Select onValueChange={(value: unknown) => handleInputChange('major', value)}>
                       <SelectTrigger className={`pl-10 ${errors.major ? 'border-red-500' : ''}`}>
                         <SelectValue placeholder="Choose your major" />
                       </SelectTrigger>
                       <SelectContent>
-                        {campusFormData.majors.map((major) => (
+                        {campusFormData.majors.map((major: any) => (
                           <SelectItem key={major} value={major}>
                             {major}
                           </SelectItem>
@@ -519,12 +518,12 @@ export const RegistrationFormSystem: Story = {
                   <Label htmlFor="academicYear">Academic Year</Label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
-                    <Select onValueChange={(value) => handleInputChange('academicYear', value)}>
+                    <Select onValueChange={(value: unknown) => handleInputChange('academicYear', value)}>
                       <SelectTrigger className={`pl-10 ${errors.academicYear ? 'border-red-500' : ''}`}>
                         <SelectValue placeholder="Select your year" />
                       </SelectTrigger>
                       <SelectContent>
-                        {campusFormData.academicYears.map((year) => (
+                        {campusFormData.academicYears.map((year: any) => (
                           <SelectItem key={year.value} value={year.value}>
                             {year.label}
                           </SelectItem>
@@ -552,12 +551,12 @@ export const RegistrationFormSystem: Story = {
 
                 <div className="space-y-2">
                   <Label htmlFor="dorm">Housing Situation</Label>
-                  <Select onValueChange={(value) => handleInputChange('dorm', value)}>
+                  <Select onValueChange={(value: unknown) => handleInputChange('dorm', value)}>
                     <SelectTrigger className={errors.dorm ? 'border-red-500' : ''}>
                       <SelectValue placeholder="Where do you live?" />
                     </SelectTrigger>
                     <SelectContent>
-                      {campusFormData.dorms.map((dorm) => (
+                      {campusFormData.dorms.map((dorm: any) => (
                         <SelectItem key={dorm} value={dorm}>
                           {dorm}
                         </SelectItem>
@@ -577,7 +576,7 @@ export const RegistrationFormSystem: Story = {
                     <Checkbox
                       id="terms"
                       checked={formData.agreeToTerms}
-                      onCheckedChange={(checked) => handleInputChange('agreeToTerms', checked as boolean)}
+                      onCheckedChange={(checked: any) => handleInputChange('agreeToTerms', checked as boolean)}
                     />
                     <Label htmlFor="terms" className="text-sm text-gray-600 leading-relaxed">
                       I agree to the HIVE Terms of Service and Privacy Policy. I understand this platform is for University at Buffalo students only.
@@ -598,7 +597,7 @@ export const RegistrationFormSystem: Story = {
               {currentStep > 1 && (
                 <Button 
                   type="button" 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={() => setCurrentStep(currentStep - 1)}
                   disabled={isLoading}
                 >
@@ -683,7 +682,7 @@ export const PasswordRecoveryForm: Story = {
                 If you don't see the email, check your spam folder or contact UB IT Support.
               </p>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 onClick={() => {
                   setIsSubmitted(false);
                   setEmail('');

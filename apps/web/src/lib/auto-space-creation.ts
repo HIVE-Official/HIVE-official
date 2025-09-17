@@ -6,6 +6,8 @@
  */
 
 import type { OnboardingData } from '@hive/ui/slices/onboarding';
+import { logger } from '@/lib/logger';
+
 
 export interface AutoSpaceConfig {
   schoolId: string;
@@ -185,7 +187,7 @@ export async function createAndJoinSpaces(
     return data.results;
 
   } catch (error) {
-    console.error('Error in createAndJoinSpaces:', error);
+    logger.error('Error in createAndJoinSpaces:', { error: String(error) });
     return {
       created: [],
       joined: [],

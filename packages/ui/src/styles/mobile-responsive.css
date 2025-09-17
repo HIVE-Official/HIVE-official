@@ -1,0 +1,329 @@
+/* HIVE Mobile-First Responsive Design Utilities */
+/* Built for student-first mobile experience with semantic tokens */
+
+@layer utilities {
+  /* Container Utilities - Mobile-First */
+  .container-mobile {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .container-tablet {
+    max-width: 768px;
+  }
+  
+  .container-desktop {
+    max-width: 1024px;
+  }
+  
+  .container-wide {
+    max-width: 1280px;
+  }
+  
+  /* Safe Area Utilities for Mobile Devices */
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 1rem);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 1rem);
+  }
+  
+  .safe-left {
+    padding-left: env(safe-area-inset-left, 1rem);
+  }
+  
+  .safe-right {
+    padding-right: env(safe-area-inset-right, 1rem);
+  }
+  
+  .safe-area {
+    padding-top: env(safe-area-inset-top, 1rem);
+    padding-bottom: env(safe-area-inset-bottom, 1rem);
+    padding-left: env(safe-area-inset-left, 1rem);
+    padding-right: env(safe-area-inset-right, 1rem);
+  }
+
+  /* Touch-Friendly Sizing */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .touch-large {
+    min-height: 56px;
+    min-width: 56px;
+  }
+
+  /* Mobile Navigation Heights */
+  .mobile-nav-height {
+    height: 60px;
+  }
+  
+  .mobile-content {
+    padding-bottom: 80px; /* Account for bottom navigation */
+  }
+
+  /* Mobile Typography Scale */
+  .text-mobile-xs { font-size: 0.75rem; line-height: 1.4; }
+  .text-mobile-sm { font-size: 0.875rem; line-height: 1.4; }
+  .text-mobile-base { font-size: 1rem; line-height: 1.5; }
+  .text-mobile-lg { font-size: 1.125rem; line-height: 1.4; }
+  .text-mobile-xl { font-size: 1.25rem; line-height: 1.3; }
+  .text-mobile-2xl { font-size: 1.5rem; line-height: 1.3; }
+  .text-mobile-3xl { font-size: 1.875rem; line-height: 1.2; }
+
+  /* Responsive Grid Utilities */
+  .grid-mobile-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .grid-mobile-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  
+  @media (min-width: 640px) {
+    .grid-tablet-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-tablet-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  
+  @media (min-width: 1024px) {
+    .grid-desktop-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-desktop-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  /* Mobile Spacing Utilities */
+  .space-mobile-tight > * + * { margin-top: 0.5rem; }
+  .space-mobile-normal > * + * { margin-top: 1rem; }
+  .space-mobile-loose > * + * { margin-top: 1.5rem; }
+  
+  /* Mobile Card Layouts */
+  .card-mobile {
+    border-radius: var(--hive-radius-lg);
+    border: 1px solid var(--hive-border-primary);
+    background: var(--hive-background-secondary);
+    padding: 1rem;
+  }
+  
+  .card-mobile-compact {
+    border-radius: var(--hive-radius-md);
+    border: 1px solid var(--hive-border-primary);
+    background: var(--hive-background-secondary);
+    padding: 0.75rem;
+  }
+
+  /* Thumb-Zone Layouts - Critical for Mobile UX */
+  .thumb-zone-bottom {
+    position: fixed;
+    bottom: env(safe-area-inset-bottom, 0);
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: var(--hive-background-primary);
+    border-top: 1px solid var(--hive-border-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--hive-z-50);
+  }
+  
+  .thumb-zone-content {
+    padding: 0 1rem;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  /* Mobile Scroll Improvements */
+  .scroll-mobile {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  .scroll-mobile-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Hide scrollbars on mobile */
+  @media (max-width: 640px) {
+    .no-scrollbar-mobile::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar-mobile {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  }
+
+  /* Mobile-Specific Animations - Reduced for Performance */
+  .animate-mobile-slide-in {
+    animation: mobile-slide-in 0.3s ease-out;
+  }
+  
+  .animate-mobile-fade-in {
+    animation: mobile-fade-in 0.2s ease-out;
+  }
+  
+  .animate-mobile-bounce {
+    animation: mobile-bounce 0.4s ease-out;
+  }
+
+  @keyframes mobile-slide-in {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes mobile-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes mobile-bounce {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
+  /* Campus-Specific Mobile Layouts */
+  .profile-card-mobile {
+    border-radius: var(--hive-radius-xl);
+    background: var(--hive-background-secondary);
+    border: 1px solid var(--hive-border-primary);
+    padding: 1.5rem 1rem;
+    margin: 0.5rem;
+  }
+  
+  .course-card-mobile {
+    border-radius: var(--hive-radius-lg);
+    background: var(--hive-background-secondary);
+    border: 1px solid var(--hive-border-primary);
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .study-group-mobile {
+    border-radius: var(--hive-radius-lg);
+    background: var(--hive-overlay-orange-subtle);
+    border: 1px solid var(--hive-border-orange);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Mobile Form Improvements */
+  .form-mobile {
+    padding: 1rem;
+  }
+  
+  .form-mobile .form-field {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-mobile input,
+  .form-mobile textarea,
+  .form-mobile select {
+    font-size: 1rem; /* Prevents zoom on iOS */
+    min-height: 44px;
+  }
+  
+  .form-mobile label {
+    font-weight: 600;
+    color: var(--hive-text-primary);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  /* Mobile-First Responsive Breakpoints */
+  @media (max-width: 374px) {
+    .container-mobile { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .card-mobile { padding: 0.75rem; margin: 0.25rem; }
+    .text-mobile-base { font-size: 0.9rem; }
+  }
+
+  @media (min-width: 375px) and (max-width: 639px) {
+    .show-mobile-only { display: block; }
+    .hide-mobile { display: none; }
+  }
+
+  @media (min-width: 640px) and (max-width: 767px) {
+    .show-tablet-only { display: block; }
+    .hide-tablet { display: none; }
+    .container-mobile { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .show-tablet-lg-only { display: block; }
+    .container-mobile { padding-left: 2rem; padding-right: 2rem; }
+  }
+
+  @media (min-width: 1024px) {
+    .show-desktop { display: block; }
+    .hide-desktop { display: none; }
+    .container-mobile { padding-left: 2rem; padding-right: 2rem; }
+    
+    /* Desktop overrides for mobile-first components */
+    .thumb-zone-bottom { position: relative; height: auto; }
+    .mobile-content { padding-bottom: 0; }
+  }
+
+  /* High DPI / Retina Displays */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    .retina-border {
+      border-width: 0.5px;
+    }
+  }
+
+  /* Dark Mode Responsive Adjustments */
+  @media (prefers-color-scheme: dark) {
+    .card-mobile,
+    .card-mobile-compact {
+      background: var(--hive-background-secondary);
+      border-color: var(--hive-border-primary);
+    }
+  }
+
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-mobile-slide-in,
+    .animate-mobile-fade-in,
+    .animate-mobile-bounce {
+      animation: none;
+    }
+    
+    .scroll-mobile {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Campus Life - Context-Specific Utilities */
+  .dorm-card-mobile {
+    background: linear-gradient(135deg, var(--hive-overlay-orange-subtle), var(--hive-background-secondary));
+    border: 1px solid var(--hive-border-orange);
+    border-radius: var(--hive-radius-xl);
+    padding: 1.25rem;
+  }
+  
+  .class-schedule-mobile {
+    background: var(--hive-background-secondary);
+    border: 1px solid var(--hive-border-primary);
+    border-radius: var(--hive-radius-lg);
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .hive-lab-card-mobile {
+    background: linear-gradient(135deg, var(--hive-overlay-orange-subtle), var(--hive-background-tertiary));
+    border: 2px solid var(--hive-brand-primary);
+    border-radius: var(--hive-radius-xl);
+    padding: 1.5rem 1rem;
+    box-shadow: var(--hive-shadow-orange-glow);
+  }
+}

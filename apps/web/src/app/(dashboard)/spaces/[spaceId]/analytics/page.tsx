@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/logger';
+
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from '../../../../../components/error-boundary';
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@hive/ui";
 
 import { BarChart3, ArrowLeft } from 'lucide-react';
 
@@ -66,6 +68,8 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
   const [analytics, setAnalytics] = useState<SpaceAnalytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     // Resolve params Promise
     const resolveParams = async () => {
@@ -74,14 +78,11 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     };
     resolveParams();
   }, [params]);
-  const [error, setError] = useState<string | null>(null);
-  // TODO: For leader-specific analytics features
 
   const loadAnalytics = useCallback(async () => {
+    if (!spaceId) return;
+    
     try {
-      setIsLoading(true);
-      setError(null);
-
       const response = await fetch(`/api/spaces/${spaceId}/analytics?timeRange=30d`);
       const data = await response.json() as { success?: boolean; analytics?: SpaceAnalytics; message?: string };
 
@@ -99,7 +100,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
         setError('Analytics data not available');
       }
     } catch (err) {
-      console.error('Error loading space analytics:', err);
+      logger.error('Error loading space analytics:', { error: String(err) });
       setError(err instanceof Error ? err.message : 'Failed to load analytics');
     } finally {
       setIsLoading(false);
@@ -115,9 +116,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
   const handleRefresh = async () => {
     await loadAnalytics();
   };
-
-  // TODO: For future export functionality
-  // const handleExportData = () => {
   //   if (!analytics) return;
   //   
   //   // Create CSV export of analytics data
@@ -144,9 +142,6 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
   //   document.body.removeChild(a);
   //   window.URL.revokeObjectURL(url);
   // };
-
-  // TODO: For future settings integration
-  // const handleUpdateSettings = () => {
   //   router.push(`/spaces/${spaceId}/settings`);
   // };
 
@@ -154,16 +149,15 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     return (
       <PageContainer 
         title="Loading Analytics..." 
-        maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
-          { label: "Analytics", icon: BarChart3 }
+          { label: "Analytics", icon: <BarChart3 /> }
         ]}
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading space analytics...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading space analytics...</p>
           </div>
         </div>
       </PageContainer>
@@ -174,30 +168,29 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     return (
       <PageContainer 
         title="Analytics Error" 
-        maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
-          { label: "Analytics", icon: BarChart3 }
+          { label: "Analytics", icon: <BarChart3 /> }
         ]}
       >
         <div className="flex items-center justify-center h-64">
           <div className="text-center max-w-md">
             <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <BarChart3 className="h-6 w-6 text-white" />
+              <BarChart3 className="h-6 w-6 text-[var(--hive-text-inverse)]" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Analytics Unavailable</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Analytics Unavailable</h3>
             <p className="text-gray-400 mb-4">{error}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => router.back()}
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-700 text-[var(--hive-text-inverse)] rounded-lg hover:bg-gray-600 transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Go Back
               </button>
               <button
                 onClick={handleRefresh}
-                className="px-4 py-2 bg-hive-gold text-black rounded-lg hover:bg-hive-champagne transition-colors"
+                className="px-4 py-2 bg-hive-gold text-[var(--hive-text-primary)] rounded-lg hover:bg-hive-champagne transition-colors"
               >
                 Try Again
               </button>
@@ -212,10 +205,9 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
     return (
       <PageContainer 
         title="No Analytics Data" 
-        maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
-          { label: "Analytics", icon: BarChart3 }
+          { label: "Analytics", icon: <BarChart3 /> }
         ]}
       >
         <div className="flex items-center justify-center h-64">
@@ -223,7 +215,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
             <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
               <BarChart3 className="h-6 w-6 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">No Analytics Available</h3>
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">No Analytics Available</h3>
             <p className="text-gray-400">Analytics data is not available for this space.</p>
           </div>
         </div>
@@ -236,16 +228,15 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
       <PageContainer
         title="Space Analytics"
         subtitle={`Insights and metrics for ${analytics.spaceName}`}
-        maxWidth="7xl"
         breadcrumbs={[
           { label: "Spaces", href: "/spaces" },
           { label: analytics.spaceName, href: `/spaces/${spaceId}` },
-          { label: "Analytics", icon: BarChart3 }
+          { label: "Analytics", icon: <BarChart3 /> }
         ]}
         actions={
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-[var(--hive-text-inverse)] rounded-lg hover:bg-gray-600 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Space
@@ -256,7 +247,7 @@ export default function SpaceAnalyticsPage({ params }: SpaceAnalyticsPageProps) 
           <div className="w-12 h-12 bg-hive-gold rounded-lg flex items-center justify-center mx-auto mb-4">
             <BarChart3 className="h-6 w-6 text-hive-obsidian" />
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">Analytics Dashboard</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Analytics Dashboard</h3>
           <p className="text-gray-400 mb-4">Advanced analytics dashboard is coming soon.</p>
           <div className="space-y-2 text-sm text-gray-300">
             <p>Space: {analytics.spaceName}</p>

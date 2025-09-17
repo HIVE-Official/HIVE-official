@@ -1,8 +1,8 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button, ButtonGroup, IconButton, ButtonPresets } from './button-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import '../../hive-tokens.css';
 
 const meta: Meta<typeof Button> = {
@@ -82,7 +82,7 @@ export const AllVariants: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="default">✅ COMPLETE</Badge>
+            <Badge variant="primary">✅ COMPLETE</Badge>
             Button Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -94,12 +94,12 @@ export const AllVariants: Story = {
             <Button variant="primary">Join Space</Button>
             <Button variant="secondary">View Details</Button>
             <Button variant="ghost">Quick Action</Button>
-            <Button variant="success">Save Changes</Button>
+            <Button variant="emerald">Save Changes</Button>
             <Button variant="destructive">Leave Space</Button>
-            <Button variant="warning">Review Required</Button>
+            <Button variant="gold">Review Required</Button>
             <Button variant="info">Learn More</Button>
             <Button variant="link">View Profile</Button>
-            <Button variant="accent">Featured Action</Button>
+            <Button variant="secondary">Featured Action</Button>
           </div>
         </CardContent>
       </Card>
@@ -139,7 +139,7 @@ export const AllVariants: Story = {
         <CardContent>
           <div className="flex flex-wrap items-center gap-4">
             <Button loading variant="primary">Joining Space...</Button>
-            <Button loading variant="success" size="sm">Saving...</Button>
+            <Button loading variant="emerald" size="sm">Saving...</Button>
             <Button loading variant="secondary" size="lg">Processing...</Button>
             <IconButton 
               loading
@@ -225,7 +225,7 @@ export const AllVariants: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">📋 SPECS</Badge>
+            <Badge variant="secondary">📋 SPECS</Badge>
             Complete Technical Definition
           </CardTitle>
         </CardHeader>
@@ -275,7 +275,7 @@ export const AllVariants: Story = {
               <div className="flex flex-wrap gap-3">
                 <Button variant="primary">Join "CSE 331 Study Group"</Button>
                 <Button variant="secondary">Browse Engineering Spaces</Button>
-                <Button variant="success">RSVP to Study Session</Button>
+                <Button variant="emerald">RSVP to Study Session</Button>
                 <Button variant="destructive">Leave "Dorm Floor Chat"</Button>
               </div>
             </div>
@@ -284,10 +284,10 @@ export const AllVariants: Story = {
             <div className="space-y-3">
               <h4 className="font-medium text-[var(--hive-text-primary)]">Tool Building:</h4>
               <div className="flex flex-wrap gap-3">
-                <Button variant="accent">Publish "Room Finder" Tool</Button>
+                <Button variant="secondary">Publish "Room Finder" Tool</Button>
                 <Button variant="ghost">Preview Tool</Button>
                 <Button variant="secondary">Share with Friends</Button>
-                <Button variant="warning">Review Required</Button>
+                <Button variant="gold">Review Required</Button>
               </div>
             </div>
 
@@ -298,7 +298,7 @@ export const AllVariants: Story = {
                 <Button variant="primary">Update UB Major</Button>
                 <Button variant="link">View Public Profile</Button>
                 <Button variant="ghost">Edit Dorm Info</Button>
-                <Button variant="success">Save Changes</Button>
+                <Button variant="emerald">Save Changes</Button>
               </div>
             </div>
 
@@ -319,7 +319,7 @@ export const Playground: Story = {
     loading: false,
     disabled: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -40,7 +40,7 @@ import {
   ToolComposition, 
   ElementDefinition, 
   initializeElementSystem 
-} from '../../lib/element-system';
+} from '@/lib/element-system';
 
 interface VisualToolComposerProps {
   onSave: (composition: ToolComposition) => Promise<void>;
@@ -239,8 +239,8 @@ export function VisualToolComposer({
   const elementCategories = [
     { id: 'input', name: 'Input', icon: 'Type', color: 'text-blue-400' },
     { id: 'display', name: 'Display', icon: 'Eye', color: 'text-green-400' },
-    { id: 'filter', name: 'Filter', icon: 'Filter', color: 'text-purple-400' },
-    { id: 'action', name: 'Action', icon: 'Zap', color: 'text-orange-400' },
+    { id: 'filter', name: 'Filter', icon: 'Filter', color: 'text-[var(--hive-gold)]' },
+    { id: 'action', name: 'Action', icon: 'Zap', color: 'text-[var(--hive-gold)]' },
     { id: 'layout', name: 'Layout', icon: 'Grid', color: 'text-pink-400' }
   ];
 
@@ -251,7 +251,7 @@ export function VisualToolComposer({
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <Box className="h-6 w-6 text-hive-gold" />
-            <h1 className="text-xl font-bold text-white">Tool Composer</h1>
+            <h1 className="text-xl font-bold text-[var(--hive-text-inverse)]">Tool Composer</h1>
           </div>
           <div className="flex items-center space-x-2">
             <Input
@@ -283,7 +283,7 @@ export function VisualToolComposer({
             >
               -
             </Button>
-            <span className="text-sm text-white px-2">{Math.round(zoom * 100)}%</span>
+            <span className="text-sm text-[var(--hive-text-inverse)] px-2">{Math.round(zoom * 100)}%</span>
             <Button
               variant="ghost"
               size="sm"
@@ -353,7 +353,7 @@ export function VisualToolComposer({
                               <span className="text-xs">📦</span>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-medium text-white truncate">
+                              <h4 className="text-sm font-medium text-[var(--hive-text-inverse)] truncate">
                                 {element.name}
                               </h4>
                               <p className="text-xs text-hive-text-mutedLight truncate">
@@ -373,7 +373,7 @@ export function VisualToolComposer({
               {selectedCanvasElement && selectedElementDef ? (
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-medium text-white mb-2">
+                    <h3 className="text-lg font-medium text-[var(--hive-text-inverse)] mb-2">
                       {selectedElementDef.name}
                     </h3>
                     <p className="text-sm text-hive-text-mutedLight mb-4">
@@ -383,7 +383,7 @@ export function VisualToolComposer({
 
                   <div className="space-y-3">
                     <div>
-                      <Label className="text-white">Position</Label>
+                      <Label className="text-[var(--hive-text-inverse)]">Position</Label>
                       <div className="flex space-x-2 mt-1">
                         <Input
                           type="number"
@@ -407,7 +407,7 @@ export function VisualToolComposer({
                     </div>
 
                     <div>
-                      <Label className="text-white">Size</Label>
+                      <Label className="text-[var(--hive-text-inverse)]">Size</Label>
                       <div className="flex space-x-2 mt-1">
                         <Input
                           type="number"
@@ -432,7 +432,7 @@ export function VisualToolComposer({
 
                     {Object.entries(selectedElementDef.configSchema).map(([key, schema]) => (
                       <div key={key}>
-                        <Label className="text-white capitalize">{key}</Label>
+                        <Label className="text-[var(--hive-text-inverse)] capitalize">{key}</Label>
                         {(schema as any).type === 'string' && (
                           <Input
                             value={selectedCanvasElement.config[key] || ''}
@@ -536,7 +536,7 @@ export function VisualToolComposer({
                     <div className="w-4 h-4 bg-hive-gold rounded flex items-center justify-center">
                       <span className="text-xs">📦</span>
                     </div>
-                    <span className="text-sm font-medium text-white truncate">
+                    <span className="text-sm font-medium text-[var(--hive-text-inverse)] truncate">
                       {elementDef.name}
                     </span>
                   </div>
@@ -551,7 +551,7 @@ export function VisualToolComposer({
                          e.stopPropagation();
                          handleConnectionStart(element.instanceId, 'output', element.position.x + element.size.width, element.position.y + element.size.height / 2);
                        }}>
-                    <ArrowRight className="h-3 w-3 text-white m-0.5" />
+                    <ArrowRight className="h-3 w-3 text-[var(--hive-text-inverse)] m-0.5" />
                   </div>
                   
                   <div className="absolute -left-2 top-1/2 w-4 h-4 bg-green-500 rounded-full cursor-pointer transform -translate-y-1/2"
@@ -559,7 +559,7 @@ export function VisualToolComposer({
                          e.stopPropagation();
                          handleConnectionEnd(element.instanceId, 'input', element.position.x, element.position.y + element.size.height / 2);
                        }}>
-                    <ArrowRight className="h-3 w-3 text-white m-0.5 rotate-180" />
+                    <ArrowRight className="h-3 w-3 text-[var(--hive-text-inverse)] m-0.5 rotate-180" />
                   </div>
                 </div>
               );
@@ -574,7 +574,7 @@ export function VisualToolComposer({
                   y1={connection.from.y}
                   x2={connection.to.x}
                   y2={connection.to.y}
-                  stroke="#D4AF37"
+                  stroke="var(--hive-gold)"
                   strokeWidth="2"
                   markerEnd="url(#arrowhead)"
                 />
@@ -590,7 +590,7 @@ export function VisualToolComposer({
                 >
                   <polygon
                     points="0 0, 10 3.5, 0 7"
-                    fill="#D4AF37"
+                    fill="var(--hive-gold)"
                   />
                 </marker>
               </defs>
@@ -601,7 +601,7 @@ export function VisualToolComposer({
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
                   <Box className="h-16 w-16 mx-auto mb-4 text-hive-text-mutedLight opacity-50" />
-                  <h3 className="text-lg font-medium text-white mb-2">
+                  <h3 className="text-lg font-medium text-[var(--hive-text-inverse)] mb-2">
                     Start Building Your Tool
                   </h3>
                   <p className="text-hive-text-mutedLight mb-4">

@@ -18,14 +18,14 @@ import {
 import { CampusBar } from '../../../components/navigation';
 
 // Import UI components
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { HiveProgress } from '../../../components/hive-progress';
 import { Separator } from '../../../components/ui/separator';
-import { Switch } from '../../../components/ui/switch';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 
 // Import icons
 import { 
@@ -84,6 +84,7 @@ import {
 import '../../../hive-tokens.css';
 
 const meta = {
+  component: () => null,
   title: '09-Live-Frontend/Navigation & Layout System',
   parameters: {
     layout: 'fullscreen',
@@ -251,7 +252,7 @@ const FeedContent = ({ mobile = false }: { mobile?: boolean }) => (
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {ubCampusData.spaces.feed.map((space) => (
+        {ubCampusData.spaces.feed.map((space: any) => (
           <div key={space.id} className="flex items-center space-x-3 p-3 rounded-lg bg-[var(--hive-bg-tertiary)]/30">
             <div className="text-2xl">{space.icon}</div>
             <div className="flex-1">
@@ -278,7 +279,7 @@ const SpacesContent = ({ mobile = false }: { mobile?: boolean }) => (
   <div className="space-y-6">
     {/* Spaces Categories */}
     <div className={`grid gap-4 ${mobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
-      {ubCampusData.spaces.spaces.map((space) => (
+      {ubCampusData.spaces.spaces.map((space: any) => (
         <Card key={space.id} className="bg-[var(--hive-bg-secondary)]/50 border-[var(--hive-border-default)] hover:border-[var(--hive-brand-secondary)]/30 transition-colors cursor-pointer">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
@@ -326,7 +327,7 @@ const HiveLabContent = ({ mobile = false }: { mobile?: boolean }) => (
   <div className="space-y-6">
     {/* Popular Tools */}
     <div className={`grid gap-4 ${mobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
-      {ubCampusData.spaces.hivelab.map((tool) => (
+      {ubCampusData.spaces.hivelab.map((tool: any) => (
         <Card key={tool.id} className="bg-[var(--hive-bg-secondary)]/50 border-[var(--hive-border-default)] hover:border-[var(--hive-brand-secondary)]/30 transition-colors cursor-pointer">
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
@@ -420,15 +421,15 @@ const ProfileContent = ({ mobile = false }: { mobile?: boolean }) => (
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Button size="sm" variant="outline" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
+          <Button size="sm" variant="secondary" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
             <User className="w-4 h-4 mr-2" />
             Edit Profile
           </Button>
-          <Button size="sm" variant="outline" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
+          <Button size="sm" variant="secondary" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
             <Shield className="w-4 h-4 mr-2" />
             Privacy
           </Button>
-          <Button size="sm" variant="outline" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
+          <Button size="sm" variant="secondary" className="w-full justify-start border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
             <Bell className="w-4 h-4 mr-2" />
             Notifications
           </Button>
@@ -531,13 +532,13 @@ const NavigationLayoutSystem = () => {
                   </Badge>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button size="icon" variant="outline" className="border-[var(--hive-border-default)] text-[var(--hive-text-secondary)] relative">
+                  <Button size="icon" variant="secondary" className="border-[var(--hive-border-default)] text-[var(--hive-text-secondary)] relative">
                     <Bell className="w-4 h-4" />
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--hive-error)] rounded-full flex items-center justify-center">
                       <span className="text-white text-xs">{ubCampusData.notifications.unread}</span>
                     </div>
                   </Button>
-                  <Button size="icon" variant="outline" className="border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
+                  <Button size="icon" variant="secondary" className="border-[var(--hive-border-default)] text-[var(--hive-text-secondary)]">
                     <Search className="w-4 h-4" />
                   </Button>
                   <Button 
@@ -684,7 +685,7 @@ const ResponsiveShowcase = () => {
         
         <div className="flex items-center space-x-2">
           <span className="text-[var(--hive-text-secondary)] text-sm mr-2">Section:</span>
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section}
               size="sm"

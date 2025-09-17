@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Text } from './text';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import '../../hive-tokens.css';
 
@@ -104,7 +104,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ TYPOGRAPHY SCALE</Badge>
+            <Badge variant="emerald">✅ TYPOGRAPHY SCALE</Badge>
             Complete Typography Scale - Display to Body
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -610,7 +610,7 @@ export const Playground: Story = {
     truncate: false,
     children: 'University at Buffalo HIVE platform text component showcase.',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

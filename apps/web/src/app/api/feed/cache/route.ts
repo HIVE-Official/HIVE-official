@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Feed caching interfaces
 interface FeedCache {
@@ -299,7 +299,7 @@ async function cacheFeedContent(params: {
   parameters: any;
 }): Promise<void> {
   try {
-    const { userId, cacheKey, feedType, content, metadata, parameters } = params;
+    const { userId, cacheKey, feedType, content, metadata, parameters } = await params;
     
     const now = new Date();
     const expiresAt = new Date(now.getTime() + (15 * 60 * 1000)); // 15 minutes TTL

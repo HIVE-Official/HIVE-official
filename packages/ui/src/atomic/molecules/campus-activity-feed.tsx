@@ -52,14 +52,14 @@ const activityTypeConfig = {
   },
   event: {
     icon: '📅',
-    color: 'from-purple-500/20 to-purple-600/10',
-    border: 'border-purple-500/30',
+    color: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10',
+    border: 'border-[var(--hive-gold)]/30',
     label: 'Event'
   },
   announcement: {
     icon: '📢',
     color: 'from-gold/20 to-champagne/10',
-    border: 'border-gold/30',
+    border: 'border-[var(--hive-brand-secondary)]/30',
     label: 'Announcement'
   },
   assignment: {
@@ -77,7 +77,7 @@ const activityTypeConfig = {
   achievement: {
     icon: '🏆',
     color: 'from-gold/20 to-champagne/10',
-    border: 'border-gold/30',
+    border: 'border-[var(--hive-brand-secondary)]/30',
     label: 'Achievement'
   },
   space_join: {
@@ -89,7 +89,7 @@ const activityTypeConfig = {
   tool_created: {
     icon: '🔧',
     color: 'from-gold/20 to-champagne/10',
-    border: 'border-gold/30',
+    border: 'border-[var(--hive-brand-secondary)]/30',
     label: 'Tool Created'
   }
 };
@@ -97,15 +97,14 @@ const activityTypeConfig = {
 export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
   activities,
   isLoading = false,
-  variant = 'default',
-  showFilters = false,
+  variant: _variant = 'default',
+  showFilters: _showFilters = false,
   maxItems = 8,
   onActivityClick,
   onViewAll,
-  onFilterChange,
+  onFilterChange: _onFilterChange,
   className
 }) => {
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [hoveredActivity, setHoveredActivity] = useState<string | null>(null);
 
   const formatTimestamp = (timestamp: string): string => {
@@ -120,26 +119,10 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
     return `${Math.floor(diffInMinutes / 10080)}w ago`;
   };
 
-  const getInitials = (name: string): string => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   const displayedActivities = activities?.slice(0, maxItems) ?? [];
   const hasMoreActivities = (activities?.length ?? 0) > maxItems;
 
-  const handleFilterToggle = (filter: string) => {
-    const newFilters = activeFilters.includes(filter)
-      ? activeFilters.filter(f => f !== filter)
-      : [...activeFilters, filter];
-    
-    setActiveFilters(newFilters);
-    onFilterChange?.(newFilters);
-  };
 
   if (isLoading) {
     return (
@@ -207,8 +190,8 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
       <div className="relative z-10 mb-6">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold/20 to-champagne/10 border border-gold/20 flex items-center justify-center">
-              <span className="text-gold text-lg">⚡</span>
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold/20 to-champagne/10 border border-[var(--hive-brand-secondary)]/20 flex items-center justify-center">
+              <span className="text-[var(--hive-brand-secondary)] text-lg">⚡</span>
             </div>
             <h3 className="text-platinum font-bold text-xl tracking-tight">Campus Activity</h3>
           </div>
@@ -218,7 +201,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onViewAll}
-              className="text-gold hover:text-champagne transition-colors duration-200 text-sm font-medium"
+              className="text-[var(--hive-brand-secondary)] hover:text-champagne transition-colors duration-200 text-sm font-medium"
             >
               View All
             </motion.button>
@@ -281,13 +264,13 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
                         <div className="flex items-center gap-2 mb-1">
                           <h4 className={cn(
                             'font-semibold truncate text-sm',
-                            activity.priority === 'high' ? 'text-gold' : 'text-platinum'
+                            activity.priority === 'high' ? 'text-[var(--hive-brand-secondary)]' : 'text-platinum'
                           )}>
                             {activity.title}
                           </h4>
                           
                           {activity.isUnread && (
-                            <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_4px_color-mix(in_srgb,var(--hive-brand-secondary)_50%,transparent)]" />
+                            <div className="w-2 h-2 rounded-full bg-[var(--hive-brand-secondary)] shadow-[0_0_4px_color-mix(in_srgb,var(--hive-brand-secondary)_50%,transparent)]" />
                           )}
                         </div>
 
@@ -347,7 +330,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
                     {(activity.metadata?.dueDate || activity.metadata?.eventDate) && (
                       <div className="mt-2 pt-2 border-t border-steel/10">
                         <div className="flex items-center gap-2 text-xs">
-                          <span className="text-gold">
+                          <span className="text-[var(--hive-brand-secondary)]">
                             {activity.metadata.dueDate ? '⏰' : '📅'}
                           </span>
                           <span className="text-mercury">

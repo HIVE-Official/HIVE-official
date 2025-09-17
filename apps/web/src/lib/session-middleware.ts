@@ -4,8 +4,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
+
 import { SecureSessionManager, type SessionData } from './secure-session-manager';
-import { logSecurityEvent } from './structured-logger';
+import { logSecurityEvent } from './utils/structured-logger';
 import { currentEnvironment } from './env';
 
 /**
@@ -207,7 +209,7 @@ export async function sessionMiddleware(
     };
 
   } catch (error) {
-    console.error('Session middleware error:', error);
+    logger.error('Session middleware error:', { error: String(error) });
     
     await logSecurityEvent('session', {
       operation: 'session_middleware_error',
@@ -263,7 +265,7 @@ export function withSession(
 
       return response;
     } catch (error) {
-      console.error('Handler error:', error);
+      logger.error('Handler error:', { error: String(error) });
       
       // Log handler errors with session context
       if (middlewareResult.context.isAuthenticated) {

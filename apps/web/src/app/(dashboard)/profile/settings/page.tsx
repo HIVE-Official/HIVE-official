@@ -5,6 +5,8 @@
 // Following the successful profile edit page pattern
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { logger } from '@/lib/logger';
+
 import { useRouter } from 'next/navigation';
 import { 
   PageContainer,
@@ -12,7 +14,6 @@ import {
   Button,
   Switch,
   FormField,
-  HiveModal,
   HiveConfirmModal,
   Badge,
   Tabs,
@@ -28,10 +29,8 @@ import {
   Eye,
   Shield,
   Smartphone,
-  Globe,
   Lock,
   Save,
-  X,
   AlertTriangle,
   Settings as SettingsIcon,
   Mail,
@@ -237,7 +236,7 @@ export default function ProfileSettingsStorybook() {
         setTimeout(() => setSaveSuccess(false), 3000);
       }
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      logger.error('Failed to save settings:', { error: String(error) });
     }
   };
 
@@ -250,7 +249,7 @@ export default function ProfileSettingsStorybook() {
         level: 'moderate'
       });
     } catch (error) {
-      console.error('Failed to toggle ghost mode:', error);
+      logger.error('Failed to toggle ghost mode:', { error: String(error) });
     }
   };
 
@@ -270,11 +269,11 @@ export default function ProfileSettingsStorybook() {
 
   if (isLoading || !profile) {
     return (
-      <PageContainer title="Loading..." maxWidth="4xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your settings...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading your settings...</p>
           </div>
         </div>
       </PageContainer>
@@ -312,7 +311,7 @@ export default function ProfileSettingsStorybook() {
             )}
           </div>
         }
-        maxWidth="4xl"
+       
       >
         {/* ✅ **SUCCESS MESSAGE** */}
         {saveSuccess && (
@@ -349,7 +348,7 @@ export default function ProfileSettingsStorybook() {
           <TabsContent value="notifications" className="space-y-6">
             {/* Email Notifications */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Mail className="h-5 w-5 text-hive-gold" />
                 Email Notifications
               </h3>
@@ -361,7 +360,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.spaceInvites}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'spaceInvites', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'spaceInvites', checked)}
                   />
                 </FormField>
                 
@@ -371,7 +370,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.eventReminders}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'eventReminders', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'eventReminders', checked)}
                   />
                 </FormField>
                 
@@ -381,7 +380,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.toolUpdates}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'toolUpdates', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'toolUpdates', checked)}
                   />
                 </FormField>
                 
@@ -391,7 +390,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.weeklyDigest}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'weeklyDigest', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'weeklyDigest', checked)}
                   />
                 </FormField>
                 
@@ -401,7 +400,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.email.securityAlerts}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'securityAlerts', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('email', 'securityAlerts', checked)}
                   />
                 </FormField>
               </div>
@@ -409,7 +408,7 @@ export default function ProfileSettingsStorybook() {
 
             {/* Push Notifications */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Smartphone className="h-5 w-5 text-hive-gold" />
                 Push Notifications
               </h3>
@@ -421,7 +420,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.push.spaceActivity}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'spaceActivity', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('push', 'spaceActivity', checked)}
                   />
                 </FormField>
                 
@@ -431,7 +430,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.push.toolLaunches}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'toolLaunches', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('push', 'toolLaunches', checked)}
                   />
                 </FormField>
                 
@@ -441,7 +440,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={notificationSettings.push.directMessages}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'directMessages', checked)}
+                    onCheckedChange={(checked: any) => handleNotificationChange('push', 'directMessages', checked)}
                   />
                 </FormField>
               </div>
@@ -452,7 +451,7 @@ export default function ProfileSettingsStorybook() {
           <TabsContent value="privacy" className="space-y-6">
             {/* Profile Visibility */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Eye className="h-5 w-5 text-hive-gold" />
                 Profile Visibility
               </h3>
@@ -464,7 +463,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.showActivity}
-                    onCheckedChange={(checked) => handlePrivacyChange('showActivity', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('showActivity', checked)}
                   />
                 </FormField>
                 
@@ -474,7 +473,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.showSpaces}
-                    onCheckedChange={(checked) => handlePrivacyChange('showSpaces', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('showSpaces', checked)}
                   />
                 </FormField>
                 
@@ -484,7 +483,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.showConnections}
-                    onCheckedChange={(checked) => handlePrivacyChange('showConnections', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('showConnections', checked)}
                   />
                 </FormField>
                 
@@ -494,7 +493,7 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.showOnlineStatus}
-                    onCheckedChange={(checked) => handlePrivacyChange('showOnlineStatus', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('showOnlineStatus', checked)}
                   />
                 </FormField>
                 
@@ -504,16 +503,16 @@ export default function ProfileSettingsStorybook() {
                 >
                   <Switch
                     checked={privacySettings.allowDirectMessages}
-                    onCheckedChange={(checked) => handlePrivacyChange('allowDirectMessages', checked)}
+                    onCheckedChange={(checked: any) => handlePrivacyChange('allowDirectMessages', checked)}
                   />
                 </FormField>
               </div>
             </Card>
 
             {/* 👻 **UB GHOST MODE** */}
-            <Card className="p-6 border-purple-500/20 bg-purple-500/5">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Moon className="h-5 w-5 text-purple-400" />
+            <Card className="p-6 border-[var(--hive-gold)]/20 bg-[var(--hive-gold)]/5">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
+                <Moon className="h-5 w-5 text-[var(--hive-gold)]" />
                 Ghost Mode
                 <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
               </h3>
@@ -536,7 +535,7 @@ export default function ProfileSettingsStorybook() {
                       onCheckedChange={() => setShowGhostModeModal(true)}
                     />
                     {privacySettings.ghostMode.enabled && (
-                      <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">
+                      <Badge variant="secondary" className="text-xs bg-[var(--hive-gold)]/20 text-purple-300">
                         Active - {privacySettings.ghostMode.level}
                       </Badge>
                     )}
@@ -549,7 +548,7 @@ export default function ProfileSettingsStorybook() {
           {/* ⚙️ **ACCOUNT SETTINGS** */}
           <TabsContent value="account" className="space-y-6">
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <SettingsIcon className="h-5 w-5 text-hive-gold" />
                 Account Preferences
               </h3>
@@ -572,7 +571,7 @@ export default function ProfileSettingsStorybook() {
                   description="How often you receive email updates"
                 >
                   <div className="flex items-center gap-2">
-                    {['immediate', 'daily', 'weekly', 'never'].map((freq) => (
+                    {['immediate', 'daily', 'weekly', 'never'].map((freq: any) => (
                       <Badge 
                         key={freq}
                         variant={accountSettings.emailFrequency === freq ? 'primary' : 'secondary'}
@@ -589,7 +588,7 @@ export default function ProfileSettingsStorybook() {
 
             {/* 🏫 **UB STUDENT ACCOUNT INFO** */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Users className="h-5 w-5 text-hive-gold" />
                 UB Student Account
               </h3>
@@ -598,7 +597,7 @@ export default function ProfileSettingsStorybook() {
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Email</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-white">{currentUser?.email}</span>
+                    <span className="text-sm text-[var(--hive-text-inverse)]">{currentUser?.email}</span>
                     {currentUser?.isVerified && (
                       <Badge variant="success" className="text-xs">Verified</Badge>
                     )}
@@ -607,7 +606,7 @@ export default function ProfileSettingsStorybook() {
                 
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Campus</span>
-                  <span className="text-sm text-white">University at Buffalo</span>
+                  <span className="text-sm text-[var(--hive-text-inverse)]">University at Buffalo</span>
                 </div>
                 
                 <div className="flex items-center justify-between py-2">
@@ -621,7 +620,7 @@ export default function ProfileSettingsStorybook() {
           {/* 🔒 **SECURITY SETTINGS** */}
           <TabsContent value="security" className="space-y-6">
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <Shield className="h-5 w-5 text-hive-gold" />
                 Account Security
               </h3>
@@ -641,7 +640,7 @@ export default function ProfileSettingsStorybook() {
 
             {/* ⚠️ **DANGER ZONE** */}
             <Card className="p-6 border-red-500/20 bg-red-500/5">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-red-400" />
                 Danger Zone
               </h3>
@@ -670,7 +669,7 @@ export default function ProfileSettingsStorybook() {
         
         {/* Ghost Mode Confirmation */}
         <HiveConfirmModal
-          open={showGhostModeModal}
+          isOpen={showGhostModeModal}
           onClose={() => setShowGhostModeModal(false)}
           title={privacySettings.ghostMode.enabled ? "Disable Ghost Mode?" : "Enable Ghost Mode?"}
           description={privacySettings.ghostMode.enabled 
@@ -685,14 +684,14 @@ export default function ProfileSettingsStorybook() {
 
         {/* Delete Account Confirmation */}
         <HiveConfirmModal
-          open={showDeleteModal}
+          isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           title="Delete Your Account?"
           description="This will permanently delete your HIVE account, all your data, tools, and connections. This action cannot be undone and you'll lose access to all campus spaces."
           confirmText="Delete Forever"
           cancelText="Keep Account"
           onConfirm={() => {
-            console.log('Account deletion requested');
+            
             setShowDeleteModal(false);
           }}
           variant="destructive"
@@ -721,7 +720,7 @@ export default function ProfileSettingsStorybook() {
  * - Sophisticated PageContainer with breadcrumbs and actions
  * - FormField components with consistent labeling and descriptions
  * - Enhanced Switch components with better UX
- * - HiveModal and HiveConfirmModal with sophisticated animations
+ * - Modal and HiveConfirmModal with sophisticated animations
  * - UB Ghost Mode feature with campus context
  * 
  * 🎓 **ENHANCED UB STUDENT CONTEXT**:

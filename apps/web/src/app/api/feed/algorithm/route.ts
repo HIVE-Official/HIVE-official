@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Enhanced feed algorithm interfaces
 interface RelevanceFactors {
@@ -301,11 +301,11 @@ async function getEnhancedFeedContent(params: {
   diversityMode: string;
   timeRange: string;
 }): Promise<EnhancedFeedItem[]> {
-  const { userId, memberships, config, limit, feedType, timeRange } = params;
+  const { userId, memberships, config, limit, feedType, timeRange, offset: _offset, includeTrending: _includeTrending, diversityMode: _diversityMode } = await params;
   
   try {
     const feedItems: EnhancedFeedItem[] = [];
-    const spaceIds = memberships.map(m => m.spaceId);
+    const _spaceIds = memberships.map(m => m.spaceId);
     
     // Calculate time range
     const timeRangeHours = timeRange === '6h' ? 6 : timeRange === '24h' ? 24 : timeRange === '7d' ? 168 : 720;
@@ -391,14 +391,14 @@ async function calculateRelevanceFactors(
   post: any, 
   membership: any, 
   config: FeedAlgorithmConfig, 
-  userId: string
+  _userId: string
 ): Promise<RelevanceFactors> {
   const now = new Date();
   const postTime = new Date(post.createdAt);
   const ageHours = (now.getTime() - postTime.getTime()) / (1000 * 60 * 60);
 
   // Space engagement factor
-  const spaceEngagement = membership.engagementScore || 20;
+  const spaceEngagement = membership?.engagementScore || 20;
 
   // Content recency factor
   const contentRecency = Math.max(0, 100 - (ageHours / config.maxContentAge) * 100);
@@ -416,7 +416,7 @@ async function calculateRelevanceFactors(
   const socialSignals = Math.min(100, totalEngagement * 5);
 
   // Creator influence
-  const creatorInfluence = await getCreatorInfluence(post.authorId, membership.spaceId);
+  const creatorInfluence = await getCreatorInfluence(post.authorId, membership?.spaceId);
 
   // Diversity factor (bonus for content type variety)
   const diversityFactor = 50; // Base value, calculated contextually in final ranking

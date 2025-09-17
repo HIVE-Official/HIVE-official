@@ -151,7 +151,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                         absolute -top-1 -right-1 px-1 py-0.5 rounded-full text-xs font-medium
                         ${destination.badge === 'new' 
                           ? 'bg-hive-brand-secondary text-hive-text-primary' 
-                          : 'bg-hive-status-error text-white'
+                          : 'bg-hive-status-error text-[var(--hive-text-inverse)]'
                         }
                         ${destination.badge.length === 1 ? 'w-4 h-4 flex items-center justify-center p-0' : ''}
                       `}>
@@ -256,7 +256,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                           absolute -top-1 -right-1 px-1 py-0.5 rounded-full text-xs font-medium
                           ${destination.badge === 'new' 
                             ? 'bg-hive-brand-secondary text-hive-text-primary' 
-                            : 'bg-hive-status-error text-white'
+                            : 'bg-hive-status-error text-[var(--hive-text-inverse)]'
                           }
                           ${destination.badge.length === 1 ? 'w-4 h-4 flex items-center justify-center p-0' : ''}
                         `}>
@@ -293,7 +293,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                 </div>
               )}
               <div className="space-y-1">
-                {quickActions.map((action) => {
+                {quickActions.map((action: any) => {
                   const Icon = action.icon;
                   
                   return (
@@ -305,7 +305,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
                       <div className="relative flex-shrink-0">
                         <Icon size={18} />
                         {action.badge && (
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-hive-status-error text-white rounded-full flex items-center justify-center text-xs font-medium">
+                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-hive-status-error text-[var(--hive-text-inverse)] rounded-full flex items-center justify-center text-xs font-medium">
                             {action.badge}
                           </div>
                         )}

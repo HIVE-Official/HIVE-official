@@ -1,0 +1,48 @@
+'use client'
+
+import React, { createContext, useContext, useState } from 'react';
+
+interface ShellContextValue {
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
+  navigationMode: 'sidebar' | 'topbar' | 'command';
+  setNavigationMode: (mode: 'sidebar' | 'topbar' | 'command') => void;
+  navigationPreference: 'sidebar' | 'topbar' | 'command';
+  setNavigationPreference: (mode: 'sidebar' | 'topbar' | 'command') => void;
+  navigationLayout: 'default' | 'compact' | 'minimal';
+}
+
+const ShellContext = createContext<ShellContextValue | undefined>(undefined);
+
+export function ShellProvider({ children }: { children: React.ReactNode }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [navigationMode, setNavigationMode] = useState<'sidebar' | 'topbar' | 'command'>('sidebar');
+  const [navigationPreference, setNavigationPreference] = useState<'sidebar' | 'topbar' | 'command'>('sidebar');
+  const [navigationLayout] = useState<'default' | 'compact' | 'minimal'>('default');
+
+  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
+
+  return (
+    <ShellContext.Provider
+      value={{
+        isSidebarOpen,
+        toggleSidebar,
+        navigationMode,
+        setNavigationMode,
+        navigationPreference,
+        setNavigationPreference,
+        navigationLayout,
+      }}
+    >
+      {children}
+    </ShellContext.Provider>
+  );
+}
+
+export function useShell() {
+  const context = useContext(ShellContext);
+  if (context === undefined) {
+    throw new Error('useShell must be used within a ShellProvider');
+  }
+  return context;
+}

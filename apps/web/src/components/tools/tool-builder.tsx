@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Card, Button, Input, Label, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Badge, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
+import { Alert, AlertDescription } from "@hive/ui";
 import {
   Code,
   Save,
@@ -18,13 +18,23 @@ import {
   Download,
   Upload,
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  Loader2
 } from 'lucide-react';
 import { ToolExecutionPanel } from './tool-execution-panel';
-import { toolTemplates, ToolDefinition } from '../../lib/tool-execution-runtime';
-import { useFormValidation, toolValidation } from '../../lib/form-validation';
+import { toolTemplates, ToolDefinition } from '@/lib/tool-execution-runtime';
+import { useFormValidation, toolValidation } from '@/lib/form-validation';
 
-interface ToolBuilderProps {
+// State Management
+import { 
+  useCreateTool,
+  useUpdateTool,
+  useUIStore,
+  useAuthStore,
+  useToolStore
+} from '@hive/hooks';
+
+interface ToolBuilderMigratedProps {
   tool?: ToolDefinition;
   onSave: (tool: ToolDefinition) => Promise<void>;
   onCancel: () => void;
@@ -33,17 +43,32 @@ interface ToolBuilderProps {
   isEditing?: boolean;
 }
 
-export function ToolBuilder({ 
+export function ToolBuilderMigrated({ 
   tool, 
   onSave, 
   onCancel, 
   userId, 
   spaceId,
   isEditing = false 
-}: ToolBuilderProps) {
-  const [activeTab, setActiveTab] = useState('editor');
-  const [isSaving, setIsSaving] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+}: ToolBuilderMigratedProps) {
+  // Global state
+  const { addToast } = useUIStore();
+  const { profile } = useAuthStore();
+  const { 
+    activeTab, 
+    setActiveTab, 
+    showPreview, 
+    setShowPreview,
+    saveDraft,
+    getDraft,
+    clearDraft
+  } = useToolStore();
+
+  // React Query mutations
+  const createTool = useCreateTool();
+  const updateTool = useUpdateTool();
+
+  // Local state
   const [inputFields, setInputFields] = useState<Array<{
     key: string;
     type: string;
@@ -109,45 +134,108 @@ export function ToolBuilder({
         setOutputFields(outputs);
       }
       
-      setPermissions(tool.permissions || []);
+      if (tool.permissions) {
+        setPermissions(tool.permissions);
+      }
+    } else {
+      // Check for draft
+      const draft = getDraft(spaceId || 'personal');
+      if (draft) {
+        Object.entries(draft.formData || {}).forEach(([key, value]) => {
+          setValue(key as any, value);
+        });
+        setInputFields(draft.inputFields || []);
+        setOutputFields(draft.outputFields || []);
+        setPermissions(draft.permissions || []);
+      }
     }
-  }, [tool, setValue]);
+  }, [tool, getDraft, setValue, spaceId]);
 
-  const handleInputChange = (field: string, value: any) => {
-    setValue(field, value);
-  };
+  // Auto-save draft
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (!isEditing && formData.name) {
+        saveDraft(spaceId || 'personal', {
+          formData,
+          inputFields,
+          outputFields,
+          permissions
+        });
+      }
+    }, 2000);
 
-  const handleFieldBlur = (field: string) => {
-    setFieldTouched(field);
-  };
+    return () => clearTimeout(timeoutId);
+  }, [formData, inputFields, outputFields, permissions, saveDraft, spaceId, isEditing]);
 
-  const loadTemplate = (templateName: string) => {
-    const template = toolTemplates[templateName as keyof typeof toolTemplates];
-    if (template) {
-      setValue('name', template.name);
-      setValue('code', template.code);
-      
-      // Load schema
-      const inputs = Object.entries(template.schema.inputs).map(([key, def]) => ({
-        key,
-        type: (def as any).type || 'string',
-        required: (def as any).required || false,
-        description: (def as any).description || ''
-      }));
-      setInputFields(inputs);
-      
-      const outputs = Object.entries(template.schema.outputs).map(([key, def]) => ({
-        key,
-        type: (def as any).type || 'string',
-        description: (def as any).description || ''
-      }));
-      setOutputFields(outputs);
+  const handleSave = async () => {
+    if (!validateAll()) {
+      addToast({
+        title: 'Validation Error',
+        description: 'Please fix all errors before saving',
+        type: 'error',
+      });
+      return;
     }
+
+    const toolData: ToolDefinition = {
+      id: tool?.id || `tool_${Date.now()}`,
+      name: formData.name,
+      description: formData.description,
+      code: formData.code,
+      language: formData.language,
+      category: formData.category,
+      version: formData.version,
+      isPublic: formData.isPublic,
+      createdBy: userId,
+      spaceId: spaceId,
+      schema: {
+        inputs: inputFields.reduce((acc, field) => ({
+          ...acc,
+          [field.key]: {
+            type: field.type,
+            required: field.required,
+            description: field.description
+          }
+        }), {}),
+        outputs: outputFields.reduce((acc, field) => ({
+          ...acc,
+          [field.key]: {
+            type: field.type,
+            description: field.description
+          }
+        }), {})
+      },
+      permissions: permissions,
+      createdAt: tool?.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: tool?.metadata || {}
+    };
+
+    const mutation = isEditing ? updateTool : createTool;
+    
+    mutation.mutate(toolData, {
+      onSuccess: () => {
+        addToast({
+          title: isEditing ? 'Tool Updated' : 'Tool Created',
+          description: `${toolData.name} has been ${isEditing ? 'updated' : 'created'} successfully`,
+          type: 'success',
+        });
+        clearDraft(spaceId || 'personal');
+        onSave(toolData);
+      },
+      onError: (error: any) => {
+        addToast({
+          title: `Failed to ${isEditing ? 'update' : 'create'} tool`,
+          description: error.message || 'Something went wrong',
+          type: 'error',
+        });
+      },
+    });
   };
 
   const addInputField = () => {
-    setInputFields(prev => [...prev, {
-      key: `input${prev.length + 1}`,
+    setInputFields([...inputFields, {
+      key: `input_${inputFields.length + 1}`,
       type: 'string',
       required: false,
       description: ''
@@ -155,507 +243,106 @@ export function ToolBuilder({
   };
 
   const removeInputField = (index: number) => {
-    setInputFields(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const updateInputField = (index: number, field: string, value: any) => {
-    setInputFields(prev => prev.map((item, i) => 
-      i === index ? { ...item, [field]: value } : item
-    ));
+    setInputFields(inputFields.filter((_, i) => i !== index));
   };
 
   const addOutputField = () => {
-    setOutputFields(prev => [...prev, {
-      key: `output${prev.length + 1}`,
+    setOutputFields([...outputFields, {
+      key: `output_${outputFields.length + 1}`,
       type: 'string',
       description: ''
     }]);
   };
 
   const removeOutputField = (index: number) => {
-    setOutputFields(prev => prev.filter((_, i) => i !== index));
+    setOutputFields(outputFields.filter((_, i) => i !== index));
   };
 
-  const updateOutputField = (index: number, field: string, value: any) => {
-    setOutputFields(prev => prev.map((item, i) => 
-      i === index ? { ...item, [field]: value } : item
-    ));
-  };
-
-  const togglePermission = (permission: string) => {
-    setPermissions(prev => 
-      prev.includes(permission) 
-        ? prev.filter(p => p !== permission)
-        : [...prev, permission]
-    );
-  };
-
-  const exportTool = () => {
-    const toolData = buildToolDefinition();
-    const dataStr = JSON.stringify(toolData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${formData.name.replace(/\s+/g, '_')}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const importTool = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const toolData = JSON.parse(e.target?.result as string);
-          // Load imported tool data
-          setValue('name', toolData.name);
-          setValue('description', toolData.description);
-          setValue('code', toolData.code);
-          setValue('language', toolData.language || 'javascript');
-          setValue('category', toolData.category || 'utility');
-          setValue('version', toolData.version || '1.0.0');
-          setValue('isPublic', toolData.isPublic || false);
-          
-          // Load schema and permissions
-          if (toolData.schema?.inputs) {
-            const inputs = Object.entries(toolData.schema.inputs).map(([key, def]) => ({
-              key,
-              type: (def as any).type || 'string',
-              required: (def as any).required || false,
-              description: (def as any).description || ''
-            }));
-            setInputFields(inputs);
-          }
-          
-          if (toolData.schema?.outputs) {
-            const outputs = Object.entries(toolData.schema.outputs).map(([key, def]) => ({
-              key,
-              type: (def as any).type || 'string',
-              description: (def as any).description || ''
-            }));
-            setOutputFields(outputs);
-          }
-          
-          setPermissions(toolData.permissions || []);
-        } catch (error) {
-          console.error('Failed to import tool:', error);
-        }
-      };
-      reader.readAsText(file);
-    }
-  };
-
-  const buildToolDefinition = (): ToolDefinition => {
-    const inputs: Record<string, any> = {};
-    inputFields.forEach(field => {
-      inputs[field.key] = {
-        type: field.type,
-        required: field.required,
-        description: field.description
-      };
-    });
-
-    const outputs: Record<string, any> = {};
-    outputFields.forEach(field => {
-      outputs[field.key] = {
-        type: field.type,
-        description: field.description
-      };
-    });
-
-    return {
-      id: tool?.id || `tool_${Date.now()}`,
-      name: formData.name,
-      code: formData.code,
-      language: formData.language as 'javascript' | 'typescript' | 'python',
-      version: formData.version,
-      dependencies: [], // TODO: Parse from code
-      permissions,
-      schema: { inputs, outputs },
-      category: formData.category,
-      isPublic: formData.isPublic,
-      createdBy: tool?.createdBy || userId,
-      createdAt: tool?.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      description: formData.description
-    };
-  };
-
-  const handleSave = async () => {
-    const validation = validateAll();
-    if (!validation.isValid) {
-      Object.keys(formData).forEach(field => {
-        setFieldTouched(field);
-      });
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      const toolDef = buildToolDefinition();
-      await onSave(toolDef);
-    } catch (error) {
-      console.error('Failed to save tool:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const availablePermissions = [
-    { id: 'user:read', name: 'Read User Data', description: 'Access user profile information' },
-    { id: 'user:write', name: 'Write User Data', description: 'Modify user profile information' },
-    { id: 'space:read', name: 'Read Space Data', description: 'Access space information and members' },
-    { id: 'space:write', name: 'Write Space Data', description: 'Modify space information' },
-    { id: 'storage:read', name: 'Read Storage', description: 'Access tool storage data' },
-    { id: 'storage:write', name: 'Write Storage', description: 'Store data persistently' },
-    { id: 'network:read', name: 'Network Read', description: 'Make HTTP GET requests' },
-    { id: 'network:write', name: 'Network Write', description: 'Make HTTP POST/PUT requests' }
-  ];
-
-  const fieldTypes = [
-    'string', 'number', 'boolean', 'array', 'object', 'date', 'file', 'url', 'email'
-  ];
+  const isProcessing = createTool.isPending || updateTool.isPending;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-white">
-            {isEditing ? 'Edit Tool' : 'Create New Tool'}
-          </h2>
-          <p className="text-hive-text-mutedLight">
-            Build custom tools for your HIVE community
-          </p>
-        </div>
-        <div className="flex items-center space-x-3">
-          <Button
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Import
-          </Button>
-          <Button
-            variant="outline"
-            onClick={exportTool}
-            disabled={!formData.name}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setShowPreview(!showPreview)}
-          >
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="editor">
+            <Code className="h-4 w-4 mr-2" />
+            Editor
+          </TabsTrigger>
+          <TabsTrigger value="schema">
+            <Settings className="h-4 w-4 mr-2" />
+            Schema
+          </TabsTrigger>
+          <TabsTrigger value="preview">
             <Eye className="h-4 w-4 mr-2" />
-            {showPreview ? 'Hide' : 'Show'} Preview
-          </Button>
-        </div>
-      </div>
+            Preview
+          </TabsTrigger>
+          <TabsTrigger value="permissions">
+            <Shield className="h-4 w-4 mr-2" />
+            Permissions
+          </TabsTrigger>
+        </TabsList>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".json"
-        onChange={importTool}
-        className="hidden"
-      />
+        <TabsContent value="editor" className="space-y-4">
+          <Card className="p-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Tool Name</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e: any) => setValue('name', e.target.value)}
+                  onBlur={() => setFieldTouched('name')}
+                  placeholder="My Awesome Tool"
+                  disabled={isProcessing}
+                />
+                {touched.name && validationErrors.name && (
+                  <p className="text-sm text-destructive mt-1">{validationErrors.name}</p>
+                )}
+              </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Builder */}
-        <div className="space-y-6">
-          {/* Templates */}
-          <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-            <h3 className="font-medium text-white mb-3">Quick Start Templates</h3>
-            <div className="flex flex-wrap gap-2">
-              {Object.keys(toolTemplates).map(template => (
-                <Button
-                  key={template}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => loadTemplate(template)}
-                >
-                  {toolTemplates[template as keyof typeof toolTemplates].name}
-                </Button>
-              ))}
-            </div>
-          </Card>
+              <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e: any) => setValue('description', e.target.value)}
+                  onBlur={() => setFieldTouched('description')}
+                  placeholder="Describe what your tool does..."
+                  rows={3}
+                  disabled={isProcessing}
+                />
+                {touched.description && validationErrors.description && (
+                  <p className="text-sm text-destructive mt-1">{validationErrors.description}</p>
+                )}
+              </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="editor">
-                <Code className="h-4 w-4 mr-2" />
-                Editor
-              </TabsTrigger>
-              <TabsTrigger value="schema">
-                <FileText className="h-4 w-4 mr-2" />
-                Schema
-              </TabsTrigger>
-              <TabsTrigger value="permissions">
-                <Shield className="h-4 w-4 mr-2" />
-                Permissions
-              </TabsTrigger>
-              <TabsTrigger value="settings">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Editor Tab */}
-            <TabsContent value="editor" className="space-y-4 mt-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-white">Tool Name</Label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    onBlur={() => handleFieldBlur('name')}
-                    placeholder="Enter tool name"
-                    className={`mt-1 ${touched.name && validationErrors.name?.length ? 'border-red-500' : ''}`}
-                  />
-                  {touched.name && validationErrors.name?.length > 0 && (
-                    <p className="text-red-400 text-sm mt-1">{validationErrors.name[0]}</p>
-                  )}
-                </div>
-                
-                <div>
-                  <Label className="text-white">Language</Label>
-                  <Select
-                    value={formData.language}
-                    onValueChange={(value) => handleInputChange('language', value)}
+                  <Label htmlFor="language">Language</Label>
+                  <Select 
+                    value={formData.language} 
+                    onValueChange={(value: any) => setValue('language', value)}
+                    disabled={isProcessing}
                   >
-                    <SelectTrigger className="mt-1">
+                    <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="javascript">JavaScript</SelectItem>
-                      <SelectItem value="typescript">TypeScript</SelectItem>
                       <SelectItem value="python">Python</SelectItem>
+                      <SelectItem value="html">HTML</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
 
-              <div>
-                <Label className="text-white">Description</Label>
-                <Textarea
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  onBlur={() => handleFieldBlur('description')}
-                  placeholder="Describe what your tool does..."
-                  rows={3}
-                  className={`mt-1 ${touched.description && validationErrors.description?.length ? 'border-red-500' : ''}`}
-                />
-                {touched.description && validationErrors.description?.length > 0 && (
-                  <p className="text-red-400 text-sm mt-1">{validationErrors.description[0]}</p>
-                )}
-              </div>
-
-              <div>
-                <Label className="text-white">Code</Label>
-                <Textarea
-                  value={formData.code}
-                  onChange={(e) => handleInputChange('code', e.target.value)}
-                  onBlur={() => handleFieldBlur('code')}
-                  placeholder="// Write your tool code here..."
-                  rows={12}
-                  className={`mt-1 font-mono text-sm ${touched.code && validationErrors.code?.length ? 'border-red-500' : ''}`}
-                />
-                {touched.code && validationErrors.code?.length > 0 && (
-                  <p className="text-red-400 text-sm mt-1">{validationErrors.code[0]}</p>
-                )}
-              </div>
-            </TabsContent>
-
-            {/* Schema Tab */}
-            <TabsContent value="schema" className="space-y-6 mt-4">
-              {/* Input Fields */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <Label className="text-white">Input Fields</Label>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={addInputField}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Input
-                  </Button>
-                </div>
-                
-                <div className="space-y-3">
-                  {inputFields.map((field, index) => (
-                    <Card key={index} className="p-3 bg-hive-background-tertiary">
-                      <div className="grid grid-cols-12 gap-2 items-center">
-                        <div className="col-span-3">
-                          <Input
-                            value={field.key}
-                            onChange={(e) => updateInputField(index, 'key', e.target.value)}
-                            placeholder="Field name"
-                            className="text-sm"
-                          />
-                        </div>
-                        <div className="col-span-2">
-                          <Select
-                            value={field.type}
-                            onValueChange={(value) => updateInputField(index, 'type', value)}
-                          >
-                            <SelectTrigger className="text-sm">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {fieldTypes.map(type => (
-                                <SelectItem key={type} value={type}>{type}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="col-span-5">
-                          <Input
-                            value={field.description}
-                            onChange={(e) => updateInputField(index, 'description', e.target.value)}
-                            placeholder="Description"
-                            className="text-sm"
-                          />
-                        </div>
-                        <div className="col-span-1">
-                          <Switch
-                            checked={field.required}
-                            onCheckedChange={(checked) => updateInputField(index, 'required', checked)}
-                          />
-                        </div>
-                        <div className="col-span-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => removeInputField(index)}
-                            className="text-red-400 border-red-400"
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                  {inputFields.length === 0 && (
-                    <p className="text-hive-text-mutedLight text-center py-4">
-                      No input fields defined
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Output Fields */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <Label className="text-white">Output Fields</Label>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={addOutputField}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Output
-                  </Button>
-                </div>
-                
-                <div className="space-y-3">
-                  {outputFields.map((field, index) => (
-                    <Card key={index} className="p-3 bg-hive-background-tertiary">
-                      <div className="grid grid-cols-12 gap-2 items-center">
-                        <div className="col-span-3">
-                          <Input
-                            value={field.key}
-                            onChange={(e) => updateOutputField(index, 'key', e.target.value)}
-                            placeholder="Field name"
-                            className="text-sm"
-                          />
-                        </div>
-                        <div className="col-span-2">
-                          <Select
-                            value={field.type}
-                            onValueChange={(value) => updateOutputField(index, 'type', value)}
-                          >
-                            <SelectTrigger className="text-sm">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {fieldTypes.map(type => (
-                                <SelectItem key={type} value={type}>{type}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="col-span-6">
-                          <Input
-                            value={field.description}
-                            onChange={(e) => updateOutputField(index, 'description', e.target.value)}
-                            placeholder="Description"
-                            className="text-sm"
-                          />
-                        </div>
-                        <div className="col-span-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => removeOutputField(index)}
-                            className="text-red-400 border-red-400"
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                  {outputFields.length === 0 && (
-                    <p className="text-hive-text-mutedLight text-center py-4">
-                      No output fields defined
-                    </p>
-                  )}
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Permissions Tab */}
-            <TabsContent value="permissions" className="space-y-4 mt-4">
-              <Alert>
-                <Shield className="h-4 w-4" />
-                <AlertDescription>
-                  Select the permissions your tool needs. Users will see these when they install your tool.
-                </AlertDescription>
-              </Alert>
-              
-              <div className="space-y-3">
-                {availablePermissions.map(perm => (
-                  <Card key={perm.id} className="p-4 bg-hive-background-tertiary">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium text-white">{perm.name}</h4>
-                        <p className="text-sm text-hive-text-mutedLight">{perm.description}</p>
-                      </div>
-                      <Switch
-                        checked={permissions.includes(perm.id)}
-                        onCheckedChange={() => togglePermission(perm.id)}
-                      />
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* Settings Tab */}
-            <TabsContent value="settings" className="space-y-4 mt-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-white">Category</Label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={(value) => handleInputChange('category', value)}
+                  <Label htmlFor="category">Category</Label>
+                  <Select 
+                    value={formData.category} 
+                    onValueChange={(value: any) => setValue('category', value)}
+                    disabled={isProcessing}
                   >
-                    <SelectTrigger className="mt-1">
+                    <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -663,80 +350,275 @@ export function ToolBuilder({
                       <SelectItem value="academic">Academic</SelectItem>
                       <SelectItem value="social">Social</SelectItem>
                       <SelectItem value="productivity">Productivity</SelectItem>
-                      <SelectItem value="entertainment">Entertainment</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                
-                <div>
-                  <Label className="text-white">Version</Label>
-                  <Input
-                    value={formData.version}
-                    onChange={(e) => handleInputChange('version', e.target.value)}
-                    placeholder="1.0.0"
-                    className="mt-1"
-                  />
+              </div>
+
+              <div>
+                <Label htmlFor="code">Code</Label>
+                <Textarea
+                  id="code"
+                  value={formData.code}
+                  onChange={(e: any) => setValue('code', e.target.value)}
+                  onBlur={() => setFieldTouched('code')}
+                  placeholder="// Your tool code here..."
+                  rows={15}
+                  className="font-mono text-sm"
+                  disabled={isProcessing}
+                />
+                {touched.code && validationErrors.code && (
+                  <p className="text-sm text-destructive mt-1">{validationErrors.code}</p>
+                )}
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="schema" className="space-y-4">
+          <Card className="p-6">
+            <div className="space-y-6">
+              {/* Input Fields */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <Label>Input Fields</Label>
+                  <Button 
+                    onClick={addInputField} 
+                    size="sm" 
+                    variant="outline"
+                    disabled={isProcessing}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Input
+                  </Button>
+                </div>
+                <div className="space-y-3">
+                  {inputFields.map((field, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <Input
+                        placeholder="Field name"
+                        value={field.key}
+                        onChange={(e: any) => {
+                          const updated = [...inputFields];
+                          updated[index].key = e.target.value;
+                          setInputFields(updated);
+                        }}
+                        disabled={isProcessing}
+                      />
+                      <Select
+                        value={field.type}
+                        onValueChange={(value: any) => {
+                          const updated = [...inputFields];
+                          updated[index].type = value;
+                          setInputFields(updated);
+                        }}
+                        disabled={isProcessing}
+                      >
+                        <SelectTrigger className="w-32">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="string">String</SelectItem>
+                          <SelectItem value="number">Number</SelectItem>
+                          <SelectItem value="boolean">Boolean</SelectItem>
+                          <SelectItem value="array">Array</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={field.required}
+                          onCheckedChange={(checked: any) => {
+                            const updated = [...inputFields];
+                            updated[index].required = checked;
+                            setInputFields(updated);
+                          }}
+                          disabled={isProcessing}
+                        />
+                        <Label className="text-sm">Required</Label>
+                      </div>
+                      <Button
+                        onClick={() => removeInputField(index)}
+                        size="sm"
+                        variant="outline"
+                        disabled={isProcessing}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               </div>
 
+              {/* Output Fields */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <Label>Output Fields</Label>
+                  <Button 
+                    onClick={addOutputField} 
+                    size="sm" 
+                    variant="outline"
+                    disabled={isProcessing}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Output
+                  </Button>
+                </div>
+                <div className="space-y-3">
+                  {outputFields.map((field, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <Input
+                        placeholder="Field name"
+                        value={field.key}
+                        onChange={(e: any) => {
+                          const updated = [...outputFields];
+                          updated[index].key = e.target.value;
+                          setOutputFields(updated);
+                        }}
+                        disabled={isProcessing}
+                      />
+                      <Select
+                        value={field.type}
+                        onValueChange={(value: any) => {
+                          const updated = [...outputFields];
+                          updated[index].type = value;
+                          setOutputFields(updated);
+                        }}
+                        disabled={isProcessing}
+                      >
+                        <SelectTrigger className="w-32">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="string">String</SelectItem>
+                          <SelectItem value="number">Number</SelectItem>
+                          <SelectItem value="boolean">Boolean</SelectItem>
+                          <SelectItem value="array">Array</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        onClick={() => removeOutputField(index)}
+                        size="sm"
+                        variant="outline"
+                        disabled={isProcessing}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="preview">
+          {formData.code && (
+            <ToolExecutionPanel
+              tool={{
+                id: tool?.id || 'preview',
+                name: formData.name,
+                description: formData.description,
+                code: formData.code,
+                language: formData.language,
+                category: formData.category,
+                version: formData.version,
+                isPublic: formData.isPublic,
+                createdBy: userId,
+                spaceId: spaceId,
+                schema: {
+                  inputs: inputFields.reduce((acc, field) => ({
+                    ...acc,
+                    [field.key]: {
+                      type: field.type,
+                      required: field.required,
+                      description: field.description
+                    }
+                  }), {}),
+                  outputs: outputFields.reduce((acc, field) => ({
+                    ...acc,
+                    [field.key]: {
+                      type: field.type,
+                      description: field.description
+                    }
+                  }), {})
+                },
+                permissions: permissions,
+                createdAt: tool?.createdAt || new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                metadata: {}
+              }}
+              userId={userId}
+              mode="preview"
+            />
+          )}
+        </TabsContent>
+
+        <TabsContent value="permissions" className="space-y-4">
+          <Card className="p-6">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label className="text-white">Public Tool</Label>
-                  <p className="text-sm text-hive-text-mutedLight">
-                    Make this tool discoverable by other HIVE users
+                  <Label htmlFor="public">Public Tool</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Make this tool available to everyone
                   </p>
                 </div>
                 <Switch
+                  id="public"
                   checked={formData.isPublic}
-                  onCheckedChange={(checked) => handleInputChange('isPublic', checked)}
+                  onCheckedChange={(checked: any) => setValue('isPublic', checked)}
+                  disabled={isProcessing}
                 />
               </div>
-            </TabsContent>
-          </Tabs>
 
-          {/* Actions */}
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={onCancel}
-              disabled={isSaving}
-            >
-              Cancel
-            </Button>
-            <div className="flex items-center space-x-3">
-              <Button
-                onClick={handleSave}
-                disabled={!formIsValid || isSaving}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {isSaving ? 'Saving...' : 'Save Tool'}
-              </Button>
+              {spaceId && (
+                <Alert>
+                  <Shield className="h-4 w-4" />
+                  <AlertDescription>
+                    This tool will be available to all members of the space
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
-          </div>
-        </div>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
-        {/* Preview */}
-        {showPreview && (
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Live Preview</h3>
-            {formData.name && formData.code ? (
-              <ToolExecutionPanel
-                tool={buildToolDefinition()}
-                userId={userId}
-                spaceId={spaceId}
-              />
+      {/* Action Buttons */}
+      <div className="flex justify-between">
+        <Button 
+          onClick={onCancel} 
+          variant="outline"
+          disabled={isProcessing}
+        >
+          Cancel
+        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setShowPreview(!showPreview)}
+            variant="outline"
+            disabled={isProcessing}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            {showPreview ? 'Hide' : 'Show'} Preview
+          </Button>
+          <Button 
+            onClick={handleSave}
+            disabled={!formIsValid || isProcessing}
+          >
+            {isProcessing ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                {isEditing ? 'Updating...' : 'Creating...'}
+              </>
             ) : (
-              <Card className="p-8 bg-hive-background-overlay border-hive-border-default">
-                <div className="text-center text-hive-text-mutedLight">
-                  <Code className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>Complete the tool details to see preview</p>
-                </div>
-              </Card>
+              <>
+                <Save className="h-4 w-4 mr-2" />
+                {isEditing ? 'Update Tool' : 'Create Tool'}
+              </>
             )}
-          </div>
-        )}
+          </Button>
+        </div>
       </div>
     </div>
   );

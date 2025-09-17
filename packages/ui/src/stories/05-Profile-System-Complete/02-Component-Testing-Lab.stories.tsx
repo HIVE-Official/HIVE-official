@@ -6,11 +6,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Switch } from '../../components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
 // import { Slider } from '../../components/ui/slider';
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 
@@ -51,8 +51,9 @@ import {
   Info
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '05-Profile System/Component Testing Lab',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -205,7 +206,7 @@ function TestControlPanel({
               Test Component
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {cardConfigs.map((config) => {
+              {cardConfigs.map((config: any) => {
                 const Icon = config.icon;
                 const isSelected = selectedCard === config.id;
                 return (
@@ -261,7 +262,7 @@ function TestControlPanel({
                   key={key}
                   size="sm"
                   variant={deviceMode === key ? "default" : "outline"}
-                  onClick={() => onDeviceChange(key as any)}
+                  onClick={() => onDeviceChange(key as unknown)}
                   className="flex-1"
                 >
                   <Icon className="w-4 h-4" />
@@ -286,11 +287,11 @@ function TestControlPanel({
           </div>
 
           <div className="flex gap-2">
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="secondary">
               <RotateCcw className="w-4 h-4 mr-2" />
               Reset
             </Button>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="secondary">
               <Code className="w-4 h-4 mr-2" />
               View Code
             </Button>
@@ -310,10 +311,10 @@ function TestControlPanel({
                   {selectedConfig.description}
                 </p>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     Size: {selectedConfig.size}
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {selectedConfig.testScenarios.length} Test Scenarios
                   </Badge>
                 </div>
@@ -614,7 +615,7 @@ export const ComponentTestingLab: StoryObj = {
                   {selectedConfig?.icon && <selectedConfig.icon className="w-5 h-5" />}
                   {selectedConfig?.name} - {testScenario}
                 </div>
-                <Badge variant="outline">{deviceMode}</Badge>
+                <Badge variant="secondary">{deviceMode}</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -640,7 +641,7 @@ export const ComponentTestingLab: StoryObj = {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {cardConfigs.map((config) => {
+                {cardConfigs.map((config: any) => {
                   const Icon = config.icon;
                   const isSelected = selectedCard === config.id;
                   

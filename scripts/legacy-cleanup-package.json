@@ -1,0 +1,27 @@
+{
+  "name": "hive-legacy-cleanup-tools",
+  "version": "1.0.0",
+  "description": "Automated tools for HIVE design system legacy cleanup and migration",
+  "main": "hive-legacy-cleanup.js",
+  "scripts": {
+    "migrate": "node migrate-legacy-components.js",
+    "audit": "node audit-design-tokens.js", 
+    "analyze": "node analyze-component-dependencies.js",
+    "cleanup": "node hive-legacy-cleanup.js cleanup",
+    "cleanup:dry": "node hive-legacy-cleanup.js cleanup --dry-run",
+    "backup": "node hive-legacy-cleanup.js backup"
+  },
+  "dependencies": {
+    "glob": "^10.3.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "hive",
+    "design-system", 
+    "migration",
+    "legacy-cleanup",
+    "component-migration"
+  ],
+  "author": "HIVE Development Team",
+  "license": "MIT"
+}

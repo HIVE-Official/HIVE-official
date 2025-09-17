@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 /**
  * Mobile Native Features Integration
  * Web API integrations for native mobile functionality
@@ -31,9 +33,9 @@ export async function shareContent(data: ShareData): Promise<boolean> {
     
     // Final fallback - construct share URLs
     if (data.url || data.text) {
-      const shareText = encodeURIComponent(data.text || '');
+      const _shareText = encodeURIComponent(data.text || '');
       const shareUrl = encodeURIComponent(data.url || '');
-      const shareTitle = encodeURIComponent(data.title || 'Check this out!');
+      const _shareTitle = encodeURIComponent(data.title || 'Check this out!');
       
       // Try to open share dialog on mobile
       if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -44,7 +46,7 @@ export async function shareContent(data: ShareData): Promise<boolean> {
     
     return false;
   } catch (error) {
-    console.error('Error sharing content:', error);
+    logger.error('Error sharing content:', { error });
     return false;
   }
 }
@@ -86,8 +88,8 @@ export async function capturePhoto(options: CameraOptions = {}): Promise<File[]>
       stream.getTracks().forEach(track => track.stop());
       
       // Convert canvas to file
-      return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
+      return new Promise((resolve: any) => {
+        canvas.toBlob((blob: any) => {
           if (blob) {
             const file = new File([blob], `photo-${Date.now()}.jpg`, {
               type: 'image/jpeg'
@@ -107,7 +109,7 @@ export async function capturePhoto(options: CameraOptions = {}): Promise<File[]>
       multiple: options.allowMultiple
     });
   } catch (error) {
-    console.error('Error capturing photo:', error);
+    logger.error('Error capturing photo:', { error });
     throw error;
   }
 }
@@ -167,7 +169,7 @@ export async function getCurrentLocation(options: LocationOptions = {}): Promise
     }
     
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      (position: any) => {
         resolve({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -178,8 +180,8 @@ export async function getCurrentLocation(options: LocationOptions = {}): Promise
           speed: position.coords.speed || undefined
         });
       },
-      (error) => {
-        reject(new Error(`Geolocation error: ${error.message}`));
+      (error: unknown) => {
+        reject(new Error(`Geolocation error: ${(error instanceof Error ? error.message : "Unknown error")}`));
       },
       {
         enableHighAccuracy: options.enableHighAccuracy || true,
@@ -200,18 +202,23 @@ export function vibrate(pattern: number | number[]): boolean {
 }
 
 // Screen wake lock (keep screen on)
+interface WakeLockSentinel {
+  release(): Promise<void>;
+  released: boolean;
+}
+
 export class WakeLock {
-  private wakeLock: any = null;
+  private wakeLock: WakeLockSentinel | null = null;
 
   async acquire(): Promise<boolean> {
     try {
       if ('wakeLock' in navigator) {
-        this.wakeLock = await (navigator as any).wakeLock.request('screen');
+        this.wakeLock = await (navigator as Navigator & { wakeLock: { request: (type: string) => Promise<WakeLockSentinel> } }).wakeLock.request('screen');
         return true;
       }
       return false;
     } catch (error) {
-      console.error('Wake lock failed:', error);
+      logger.error('Wake lock failed:', { error });
       return false;
     }
   }
@@ -224,7 +231,7 @@ export class WakeLock {
   }
 
   get isActive(): boolean {
-    return this.wakeLock && !this.wakeLock.released;
+    return Boolean(this.wakeLock && !this.wakeLock.released);
   }
 }
 
@@ -305,7 +312,7 @@ export async function getBatteryInfo(): Promise<BatteryInfo | null> {
     }
     return null;
   } catch (error) {
-    console.error('Battery API not available:', error);
+    logger.error('Battery API not available:', { error });
     return null;
   }
 }
@@ -315,7 +322,7 @@ export class InstallPrompt {
   private deferredPrompt: any = null;
 
   constructor() {
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener('beforeinstallprompt', (e: any) => {
       e.preventDefault();
       this.deferredPrompt = e;
     });
@@ -334,7 +341,7 @@ export class InstallPrompt {
       this.deferredPrompt = null;
       return choiceResult.outcome === 'accepted';
     } catch (error) {
-      console.error('Install prompt failed:', error);
+      logger.error('Install prompt failed:', { error });
       return false;
     }
   }
@@ -362,7 +369,7 @@ export async function selectContacts(): Promise<ContactInfo[]> {
     }
     return [];
   } catch (error) {
-    console.error('Contact picker not available:', error);
+    logger.error('Contact picker not available:', { error });
     return [];
   }
 }

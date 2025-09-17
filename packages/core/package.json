@@ -14,6 +14,11 @@
       "types": "./dist/server.d.ts",
       "require": "./dist/server.js",
       "import": "./dist/server.js"
+    },
+    "./utils/logger": {
+      "types": "./dist/utils/logger.d.ts",
+      "require": "./dist/utils/logger.js",
+      "import": "./dist/utils/logger.js"
     }
   },
   "files": [
@@ -30,11 +35,12 @@
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
     "@types/node": "^20.0.0",
-    "eslint": "^9.28.0",
+    "eslint": "^8.57.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@hive/validation": "workspace:*",
     "firebase": "^11.0.0",
     "firebase-admin": "^13.2.0",
     "zod": "^3.25.64",

@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // UI Components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
+import { Alert, AlertDescription } from "@hive/ui";
 import { Input } from "@hive/ui";
 import { Label } from "@hive/ui";
 import { Button } from "@hive/ui";
@@ -91,7 +91,7 @@ export function WaitlistForm({
           <div className="mx-auto w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mb-4">
             <CheckCircle className="w-6 h-6 text-green-500" />
           </div>
-          <CardTitle className="text-white">You&apos;re on the list!</CardTitle>
+          <CardTitle className="text-[var(--hive-text-inverse)]">You&apos;re on the list!</CardTitle>
           <CardDescription className="text-zinc-400">
             We&apos;ll notify you when HIVE launches at {schoolName}
           </CardDescription>
@@ -121,13 +121,13 @@ export function WaitlistForm({
             <Button
               variant="ghost"
               size="sm"
-              className="p-2 text-zinc-400 hover:text-white"
+              className="p-2 text-zinc-400 hover:text-[var(--hive-text-inverse)]"
             >
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
         </div>
-        <CardTitle className="text-white">Join the waitlist</CardTitle>
+        <CardTitle className="text-[var(--hive-text-inverse)]">Join the waitlist</CardTitle>
         <CardDescription className="text-zinc-400">
           Be the first to know when HIVE launches at {schoolName}
         </CardDescription>
@@ -145,7 +145,7 @@ export function WaitlistForm({
               id="fullName"
               {...register("fullName")}
               placeholder="Enter your full name"
-              className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+              className="bg-zinc-800 border-zinc-700 text-[var(--hive-text-inverse)] placeholder:text-zinc-500"
               disabled={isSubmitting}
             />
             {errors.fullName && (
@@ -165,7 +165,7 @@ export function WaitlistForm({
               type="email"
               {...register("email")}
               placeholder={`Enter your @${schoolDomain} address`}
-              className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+              className="bg-zinc-800 border-zinc-700 text-[var(--hive-text-inverse)] placeholder:text-zinc-500"
               disabled={isSubmitting}
             />
             {errors.email && (
@@ -186,7 +186,7 @@ export function WaitlistForm({
               {...register("graduationYear", { valueAsNumber: true })}
               min={2024}
               max={2030}
-              className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+              className="bg-zinc-800 border-zinc-700 text-[var(--hive-text-inverse)] placeholder:text-zinc-500"
               disabled={isSubmitting}
             />
             {errors.graduationYear && (
@@ -206,7 +206,7 @@ export function WaitlistForm({
 
           <Button
             type="submit"
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium"
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-[var(--hive-text-primary)] font-medium"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

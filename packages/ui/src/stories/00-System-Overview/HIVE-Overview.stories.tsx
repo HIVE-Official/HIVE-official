@@ -6,13 +6,14 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
+import { Button } from '../../atomic/atoms/button-enhanced';
 import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion';
 import '../../hive-tokens.css';
 
 const meta = {
+  component: HiveOverview,
   title: '00-HIVE-Overview/Platform Overview',
   parameters: {
     layout: 'fullscreen',
@@ -152,11 +153,11 @@ const HiveOverview = () => {
                   style={{ 
                     transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
                   }}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -166,7 +167,7 @@ const HiveOverview = () => {
                     <CardTitle style={{ color: 'var(--hive-brand-primary)' }} className="text-lg">
                       {section.title}
                     </CardTitle>
-                    <Badge variant="outline" 
+                    <Badge variant="secondary" 
                            className="text-xs mt-2"
                            style={{ 
                              borderColor: 'var(--hive-border-subtle)',
@@ -233,10 +234,10 @@ const HiveOverview = () => {
                 transformOrigin: 'center',
                 willChange: 'transform, border-color'
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={(e: any) => {
                 e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={(e: any) => {
                 e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
               }}>
               <div className="text-3xl font-bold mb-2" style={{ color: 'var(--hive-brand-primary)' }}>
@@ -266,25 +267,25 @@ const HiveOverview = () => {
                       backgroundColor: 'var(--hive-brand-primary)',
                       color: 'var(--hive-text-inverse)'
                     }}
-                    onMouseEnter={(e) => {
+                    onMouseEnter={(e: any) => {
                       e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow-strong)';
                     }}
-                    onMouseLeave={(e) => {
+                    onMouseLeave={(e: any) => {
                       e.currentTarget.style.boxShadow = 'none';
                     }}>
               Start Exploring
             </Button>
-            <Button variant="outline" 
+            <Button variant="secondary" 
                     size="lg" 
                     className="hive-interactive"
                     style={{ 
                       borderColor: 'var(--hive-border-gold)',
                       color: 'var(--hive-brand-primary)'
                     }}
-                    onMouseEnter={(e) => {
+                    onMouseEnter={(e: any) => {
                       e.currentTarget.style.backgroundColor = 'var(--hive-overlay-gold-subtle)';
                     }}
-                    onMouseLeave={(e) => {
+                    onMouseLeave={(e: any) => {
                       e.currentTarget.style.backgroundColor = 'transparent';
                     }}>
               View Live Platform

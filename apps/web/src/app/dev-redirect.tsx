@@ -7,8 +7,6 @@ export default function DevRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('🚀 DEV REDIRECT: Forcing redirect to profile');
-    
     // Clear any existing data
     if (typeof window !== 'undefined') {
       window.localStorage.clear();
@@ -39,7 +37,7 @@ export default function DevRedirect() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-void-900 text-white flex items-center justify-center">
+    <div className="min-h-screen bg-void-900 text-[var(--hive-text-inverse)] flex items-center justify-center">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">🚀 DEV MODE</h2>
         <p>Redirecting to profile...</p>

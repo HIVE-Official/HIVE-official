@@ -3,7 +3,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
-import { Camera, Crown, Shield, Eye, EyeOff, Upload } from 'lucide-react';
+import { Camera, Crown, Shield, EyeOff, Upload } from 'lucide-react';
 import Image from 'next/image';
 
 const profileAvatarVariants = cva(
@@ -75,7 +75,7 @@ const statusDotVariants = cva(
 );
 
 const badgeVariants = cva(
-  "absolute flex items-center justify-center text-white",
+  "absolute flex items-center justify-center text-[var(--hive-text-inverse)]",
   {
     variants: {
       size: {
@@ -175,8 +175,8 @@ export function ProfileAvatar({
       lg: "h-4 w-4",
       xl: "h-4 w-4",
       xxl: "h-5 w-5"
-    };
-    return sizes[size];
+    } as const;
+    return sizes[size || "md"];
   }, [size]);
 
   const textSize = React.useMemo(() => {
@@ -187,8 +187,8 @@ export function ProfileAvatar({
       lg: "text-lg", 
       xl: "text-xl",
       xxl: "text-2xl"
-    };
-    return sizes[size];
+    } as const;
+    return sizes[size || "md"];
   }, [size]);
 
   // Handle file upload
@@ -225,8 +225,8 @@ export function ProfileAvatar({
       lg: 80,
       xl: 96,
       xxl: 128
-    };
-    return sizeMap[size];
+    } as const;
+    return sizeMap[size || "md"];
   };
 
   return (
@@ -308,8 +308,8 @@ export function ProfileAvatar({
       {editable && (
         <>
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <div className="flex flex-col items-center space-y-1 text-white">
-              <Camera className={cn("text-white", iconSize)} />
+            <div className="flex flex-col items-center space-y-1 text-[var(--hive-text-inverse)]">
+              <Camera className={cn("text-[var(--hive-text-inverse)]", iconSize)} />
               <span className="text-xs font-medium hidden sm:block">
                 {onUpload ? 'Upload' : 'Edit'}
               </span>

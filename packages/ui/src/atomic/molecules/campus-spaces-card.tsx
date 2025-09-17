@@ -8,7 +8,6 @@ import {
   BellOff, 
   MessageSquare, 
   UserMinus, 
-  MoreHorizontal, 
   Pin, 
   PinOff,
   Send,
@@ -65,7 +64,7 @@ const spaceTypeIcons: Record<CampusSpace['type'], string> = {
 const spaceTypeColors: Record<CampusSpace['type'], string> = {
   course: 'from-blue-500/20 to-blue-600/10',
   housing: 'from-emerald-500/20 to-emerald-600/10',
-  club: 'from-purple-500/20 to-purple-600/10',
+  club: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10',
   academic: 'from-gold/20 to-champagne/10',
   community: 'from-rose-500/20 to-rose-600/10',
   school: 'from-indigo-500/20 to-indigo-600/10',
@@ -76,7 +75,6 @@ const spaceTypeColors: Record<CampusSpace['type'], string> = {
 export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
   spaces,
   isLoading = false,
-  variant = 'default',
   showQuickActions = true,
   onSpaceClick,
   onJoinSpace,
@@ -189,8 +187,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
       <div className="relative z-10 mb-6">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold/20 to-champagne/10 border border-gold/20 flex items-center justify-center">
-              <span className="text-gold text-lg">🏛️</span>
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold/20 to-champagne/10 border border-[var(--hive-brand-secondary)]/20 flex items-center justify-center">
+              <span className="text-[var(--hive-brand-secondary)] text-lg">🏛️</span>
             </div>
             <h3 className="text-platinum font-bold text-xl tracking-tight">Your Campus Spaces</h3>
           </div>
@@ -200,7 +198,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onViewAll}
-              className="text-gold hover:text-champagne transition-colors duration-200 text-sm font-medium"
+              className="text-[var(--hive-brand-secondary)] hover:text-champagne transition-colors duration-200 text-sm font-medium"
             >
               View All
             </motion.button>
@@ -250,7 +248,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                   <div className={cn(
                     'w-12 h-12 rounded-xl flex items-center justify-center border',
                     'bg-gradient-to-br from-charcoal/60 to-graphite/60 border-steel/20',
-                    'group-hover:border-gold/30 transition-all duration-300',
+                    'group-hover:border-[var(--hive-brand-secondary)]/30 transition-all duration-300',
                     hoveredSpace === space.id && 'scale-105 shadow-lg'
                   )}>
                     <span className="text-xl">
@@ -268,14 +266,14 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       {/* Status Indicators */}
                       <div className="flex items-center gap-2 ml-2">
                         {space.isPinned && (
-                          <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_4px_color-mix(in_srgb,var(--hive-brand-secondary)_50%,transparent)]" />
+                          <div className="w-2 h-2 rounded-full bg-[var(--hive-brand-secondary)] shadow-[0_0_4px_color-mix(in_srgb,var(--hive-brand-secondary)_50%,transparent)]" />
                         )}
                         {space.isMuted && (
                           <BellOff className="w-3 h-3 text-steel/60" />
                         )}
                         {space.unreadCount && space.unreadCount > 0 && !space.isMuted && (
-                          <div className="px-2 py-0.5 bg-gold/20 border border-gold/30 rounded-full">
-                            <span className="text-gold text-xs font-medium">
+                          <div className="px-2 py-0.5 bg-[var(--hive-brand-secondary)]/20 border border-[var(--hive-brand-secondary)]/30 rounded-full">
+                            <span className="text-[var(--hive-brand-secondary)] text-xs font-medium">
                               {space.unreadCount > 99 ? '99+' : space.unreadCount}
                             </span>
                           </div>
@@ -308,49 +306,49 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       className="flex items-center gap-1"
                     >
                       <button
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           toggleQuickPost(space.id);
                         }}
-                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
+                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-[var(--hive-brand-secondary)]/30 hover:bg-[var(--hive-brand-secondary)]/10 transition-all duration-200 group/btn"
                         title="Quick Post"
                       >
-                        <MessageSquare className="w-3 h-3 text-mercury group-hover/btn:text-gold" />
+                        <MessageSquare className="w-3 h-3 text-mercury group-hover/btn:text-[var(--hive-brand-secondary)]" />
                       </button>
                       
                       <button
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           onPinSpace?.(space.id, !space.isPinned);
                         }}
-                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
+                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-[var(--hive-brand-secondary)]/30 hover:bg-[var(--hive-brand-secondary)]/10 transition-all duration-200 group/btn"
                         title={space.isPinned ? "Unpin Space" : "Pin Space"}
                       >
                         {space.isPinned ? (
-                          <PinOff className="w-3 h-3 text-gold group-hover/btn:text-champagne" />
+                          <PinOff className="w-3 h-3 text-[var(--hive-brand-secondary)] group-hover/btn:text-champagne" />
                         ) : (
-                          <Pin className="w-3 h-3 text-mercury group-hover/btn:text-gold" />
+                          <Pin className="w-3 h-3 text-mercury group-hover/btn:text-[var(--hive-brand-secondary)]" />
                         )}
                       </button>
 
                       <button
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           onMuteSpace?.(space.id, !space.isMuted);
                         }}
-                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
+                        className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-[var(--hive-brand-secondary)]/30 hover:bg-[var(--hive-brand-secondary)]/10 transition-all duration-200 group/btn"
                         title={space.isMuted ? "Unmute Space" : "Mute Space"}
                       >
                         {space.isMuted ? (
                           <BellOff className="w-3 h-3 text-steel/60 group-hover/btn:text-mercury" />
                         ) : (
-                          <Bell className="w-3 h-3 text-mercury group-hover/btn:text-gold" />
+                          <Bell className="w-3 h-3 text-mercury group-hover/btn:text-[var(--hive-brand-secondary)]" />
                         )}
                       </button>
 
                       {space.userRole === 'member' && (
                         <button
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             onLeaveSpace?.(space.id);
                           }}
@@ -390,8 +388,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       <input
                         type="text"
                         value={quickPostMessage}
-                        onChange={(e) => setQuickPostMessage(e.target.value)}
-                        onKeyDown={(e) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuickPostMessage(e.target.value)}
+                        onKeyDown={(e: React.KeyboardEvent) => {
                           if (e.key === 'Enter') {
                             handleQuickPost(space.id);
                           } else if (e.key === 'Escape') {
@@ -400,13 +398,13 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                           }
                         }}
                         placeholder={`Post to ${space.name}...`}
-                        className="flex-1 px-3 py-1.5 bg-charcoal/40 border border-steel/20 rounded-lg text-platinum text-sm placeholder-mercury/60 focus:border-gold/30 focus:outline-none transition-colors"
+                        className="flex-1 px-3 py-1.5 bg-charcoal/40 border border-steel/20 rounded-lg text-platinum text-sm placeholder-mercury/60 focus:border-[var(--hive-brand-secondary)]/30 focus:outline-none transition-colors"
                         autoFocus
                       />
                       <button
                         onClick={() => handleQuickPost(space.id)}
                         disabled={!quickPostMessage.trim()}
-                        className="p-1.5 rounded-lg bg-gold/20 border border-gold/30 text-gold hover:bg-gold/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-[var(--hive-brand-secondary)]/20 border border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                       >
                         <Send className="w-3 h-3" />
                       </button>
@@ -465,8 +463,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
             onClick={onJoinSpace}
             className={cn(
               'w-full mt-4 p-3 rounded-xl border-2 border-dashed border-steel/30',
-              'hover:border-gold/50 hover:bg-gold/5',
-              'text-mercury hover:text-gold transition-all duration-300',
+              'hover:border-[var(--hive-brand-secondary)]/50 hover:bg-[var(--hive-brand-secondary)]/5',
+              'text-mercury hover:text-[var(--hive-brand-secondary)] transition-all duration-300',
               'flex items-center justify-center gap-2 text-sm font-medium',
               'group'
             )}
@@ -500,7 +498,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onJoinSpace}
-              className="px-4 py-2 bg-gradient-to-r from-gold/20 to-champagne/20 border border-gold/30 rounded-xl text-gold text-sm font-medium hover:from-gold/30 hover:to-champagne/30 transition-all duration-300"
+              className="px-4 py-2 bg-gradient-to-r from-gold/20 to-champagne/20 border border-[var(--hive-brand-secondary)]/30 rounded-xl text-[var(--hive-brand-secondary)] text-sm font-medium hover:from-gold/30 hover:to-champagne/30 transition-all duration-300"
             >
               Explore Spaces
             </motion.button>

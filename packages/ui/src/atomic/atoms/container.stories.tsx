@@ -18,7 +18,7 @@ import {
   CenteredContent,
   FullWidthSection
 } from './container';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import '../../hive-tokens.css';
@@ -111,7 +111,7 @@ export const Default: Story = {
     variant: 'default',
     gutter: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="min-h-32 bg-[var(--hive-background-primary)]">
       <Container {...args}>
         <div className="bg-[var(--hive-brand-secondary)] bg-opacity-10 border border-[var(--hive-brand-secondary)] border-dashed rounded-lg p-6 text-center">
@@ -136,7 +136,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ MAX WIDTHS</Badge>
+            <Badge variant="emerald">✅ MAX WIDTHS</Badge>
             Container Max Widths - Responsive Breakpoints
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -211,7 +211,7 @@ export const CompleteShowcase: Story = {
             
             <div className="space-y-4">
               <h4 className="font-medium text-[var(--hive-text-primary)]">Default Container:</h4>
-              <Container variant="default" maxWidth="lg" padding="md">
+              <Container variant="primary" maxWidth="lg" padding="md">
                 <Text variant="body-sm" color="primary">
                   Clean, unstyled container for flexible content layout. Perfect for main content areas and custom styling.
                 </Text>
@@ -383,7 +383,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🎯 PRESETS</Badge>
+            <Badge variant="gold">🎯 PRESETS</Badge>
             Container Presets - Common Campus Patterns
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -801,7 +801,7 @@ export const Playground: Story = {
     variant: 'default',
     gutter: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="min-h-64 p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

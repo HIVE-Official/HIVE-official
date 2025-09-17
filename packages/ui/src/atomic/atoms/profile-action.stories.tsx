@@ -12,7 +12,7 @@ import {
   ACTION_TYPES,
   type ActionType 
 } from './profile-action';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { 
@@ -123,7 +123,7 @@ export const Default: Story = {
     loading: false,
     disabled: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -149,7 +149,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎯 ACTION TYPES</Badge>
+            <Badge variant="emerald">🎯 ACTION TYPES</Badge>
             Predefined Profile Actions
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -239,9 +239,9 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Outline (Subtle):</Text>
                   <div className="flex flex-wrap gap-3">
-                    <ProfileAction actionType="edit" variant="outline" />
-                    <ProfileAction actionType="connect" variant="outline" />
-                    <ProfileAction actionType="follow" variant="outline" />
+                    <ProfileAction actionType="edit" variant="secondary" />
+                    <ProfileAction actionType="connect" variant="secondary" />
+                    <ProfileAction actionType="follow" variant="secondary" />
                   </div>
                 </div>
 
@@ -264,8 +264,8 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Success Actions:</Text>
                   <div className="flex flex-wrap gap-3">
-                    <ProfileAction actionType="download" variant="success" label="Download Complete" />
-                    <ProfileAction actionType="bookmark" variant="success" label="Saved" />
+                    <ProfileAction actionType="download" variant="emerald" label="Download Complete" />
+                    <ProfileAction actionType="bookmark" variant="emerald" label="Saved" />
                   </div>
                 </div>
 
@@ -406,7 +406,7 @@ export const CompleteShowcase: Story = {
                   <div className="flex gap-3">
                     <ProfileAction actionType="edit" loading />
                     <ProfileAction actionType="upload" loading variant="primary" />
-                    <ProfileAction actionType="download" loading variant="outline" />
+                    <ProfileAction actionType="download" loading variant="secondary" />
                   </div>
                 </div>
 
@@ -424,7 +424,7 @@ export const CompleteShowcase: Story = {
                   <div className="flex gap-3">
                     <ProfileAction actionType="edit" disabled />
                     <ProfileAction actionType="message" disabled variant="primary" />
-                    <ProfileAction actionType="connect" disabled variant="outline" />
+                    <ProfileAction actionType="connect" disabled variant="secondary" />
                   </div>
                 </div>
 
@@ -520,7 +520,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Faculty Interaction:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="flex gap-2">
-                      <ProfileAction actionType="follow" size="sm" variant="outline" />
+                      <ProfileAction actionType="follow" size="sm" variant="secondary" />
                       <MessageAction size="sm" label="Office Hours" />
                       <ProfileAction actionType="bookmark" size="sm" />
                     </div>
@@ -722,7 +722,7 @@ export const Playground: Story = {
     loading: false,
     disabled: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ProfileStatsWidget } from './profile-stats-widget';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -292,7 +292,7 @@ export const Default: Story = {
     onExportData: action('export-data'),
     onViewInsights: action('view-insights'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -318,7 +318,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎯 STATS WIDGET SYSTEM</Badge>
+            <Badge variant="emerald">🎯 STATS WIDGET SYSTEM</Badge>
             Personal Analytics & Goals
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -420,7 +420,7 @@ export const CompleteShowcase: Story = {
                         <Text variant="body-sm" color="primary" weight="medium">Academic Performance</Text>
                         <Text variant="body-xs" color="secondary">Study time, course progress, academic milestone tracking</Text>
                       </div>
-                      <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                      <div className="p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg">
                         <Text variant="body-sm" color="primary" weight="medium">Social Analytics</Text>
                         <Text variant="body-xs" color="secondary">Community building, peer collaboration, network growth</Text>
                       </div>
@@ -1117,7 +1117,7 @@ export const Playground: Story = {
     onExportData: action('playground-export'),
     onViewInsights: action('playground-insights'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

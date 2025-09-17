@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Privacy settings interface
 interface PrivacySettings {
@@ -198,7 +198,7 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
       .get();
     
     // Update visibility in each space membership
-    const updates = membershipsSnapshot.docs.map(async (memberDoc) => {
+    const updates = membershipsSnapshot.docs.map(async (memberDoc: any) => {
       const memberData = memberDoc.data();
       
       const updatedMemberData = {

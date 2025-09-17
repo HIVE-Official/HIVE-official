@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { action } from '@storybook/addon-actions';
@@ -98,7 +98,7 @@ export const Default: Story = {
     disabled: false,
     onClick: action('button-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -124,7 +124,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🔘 BUTTON VARIANTS</Badge>
+            <Badge variant="emerald">🔘 BUTTON VARIANTS</Badge>
             Semantic Button Types
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -195,13 +195,13 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Outline Actions:</Text>
                   <div className="flex flex-wrap gap-3">
-                    <Button variant="outline">
+                    <Button variant="secondary">
                       Learn More
                     </Button>
-                    <Button variant="outline">
+                    <Button variant="secondary">
                       Browse All
                     </Button>
-                    <Button variant="outline">
+                    <Button variant="secondary">
                       Contact Admin
                     </Button>
                   </div>
@@ -213,13 +213,13 @@ export const CompleteShowcase: Story = {
                 <div className="space-y-3">
                   <Text variant="body-sm" color="gold" weight="medium">Accent (Special) Actions:</Text>
                   <div className="flex flex-wrap gap-3">
-                    <Button variant="accent" icon={<Zap className="h-4 w-4" />}>
+                    <Button variant="secondary" icon={<Zap className="h-4 w-4" />}>
                       Activate Space
                     </Button>
-                    <Button variant="accent">
+                    <Button variant="secondary">
                       Premium Feature
                     </Button>
-                    <Button variant="accent">
+                    <Button variant="secondary">
                       Special Access
                     </Button>
                   </div>
@@ -277,7 +277,7 @@ export const CompleteShowcase: Story = {
                     <Button size="sm" variant="primary">Join</Button>
                     <Button size="sm" variant="secondary">View</Button>
                     <Button size="sm" variant="ghost">Like</Button>
-                    <Button size="sm" variant="outline">More</Button>
+                    <Button size="sm" variant="secondary">More</Button>
                   </div>
                   <Text variant="body-xs" color="secondary">
                     32px height - Compact buttons for dense interfaces, action bars, and mobile layouts
@@ -290,7 +290,7 @@ export const CompleteShowcase: Story = {
                     <Button size="md" variant="primary">Join Space</Button>
                     <Button size="md" variant="secondary">View Details</Button>
                     <Button size="md" variant="ghost">Add Comment</Button>
-                    <Button size="md" variant="outline">Learn More</Button>
+                    <Button size="md" variant="secondary">Learn More</Button>
                   </div>
                   <Text variant="body-xs" color="secondary">
                     40px height - Standard buttons for most platform interactions and form submissions
@@ -302,7 +302,7 @@ export const CompleteShowcase: Story = {
                   <div className="flex flex-wrap gap-3 items-center">
                     <Button size="lg" variant="primary">Get Started</Button>
                     <Button size="lg" variant="secondary">Browse Spaces</Button>
-                    <Button size="lg" variant="accent">Activate Account</Button>
+                    <Button size="lg" variant="secondary">Activate Account</Button>
                   </div>
                   <Text variant="body-xs" color="secondary">
                     48px height - Large buttons for hero sections, call-to-action, and primary navigation
@@ -321,7 +321,7 @@ export const CompleteShowcase: Story = {
                     <Button size="icon" variant="ghost">
                       <Share className="h-4 w-4" />
                     </Button>
-                    <Button size="icon" variant="outline">
+                    <Button size="icon" variant="secondary">
                       <MessageCircle className="h-4 w-4" />
                     </Button>
                   </div>
@@ -364,7 +364,7 @@ export const CompleteShowcase: Story = {
                     <Button variant="secondary" loading>
                       Submitting...
                     </Button>
-                    <Button variant="accent" loading>
+                    <Button variant="secondary" loading>
                       Activating...
                     </Button>
                   </div>
@@ -400,7 +400,7 @@ export const CompleteShowcase: Story = {
                     <Button variant="secondary" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
                       Continue
                     </Button>
-                    <Button variant="outline" icon={<Download className="h-4 w-4" />} iconPosition="left">
+                    <Button variant="secondary" icon={<Download className="h-4 w-4" />} iconPosition="left">
                       Export Data
                     </Button>
                   </div>
@@ -466,7 +466,7 @@ export const CompleteShowcase: Story = {
                         <Button variant="secondary" fullWidth icon={<BookOpen className="h-4 w-4" />}>
                           Access Course Materials
                         </Button>
-                        <Button variant="outline" fullWidth icon={<Users className="h-4 w-4" />}>
+                        <Button variant="secondary" fullWidth icon={<Users className="h-4 w-4" />}>
                           Find Study Group
                         </Button>
                       </div>
@@ -480,7 +480,7 @@ export const CompleteShowcase: Story = {
                     <Text variant="body-sm" color="gold" weight="medium">Assignment Workflow:</Text>
                     <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                       <div className="space-y-2">
-                        <Button variant="accent" fullWidth icon={<Zap className="h-4 w-4" />}>
+                        <Button variant="secondary" fullWidth icon={<Zap className="h-4 w-4" />}>
                           Submit Algorithm Project
                         </Button>
                         <Button variant="secondary" fullWidth icon={<Download className="h-4 w-4" />}>
@@ -554,10 +554,10 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Tool Building:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="space-y-2">
-                      <Button variant="accent" size="sm" icon={<Zap className="h-4 w-4" />}>
+                      <Button variant="secondary" size="sm" icon={<Zap className="h-4 w-4" />}>
                         Deploy Tool
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="secondary" size="sm">
                         Preview Tool
                       </Button>
                       <Button variant="secondary" size="sm">
@@ -592,7 +592,7 @@ export const CompleteShowcase: Story = {
                       <Button variant="secondary" fullWidth icon={<Calendar className="h-4 w-4" />}>
                         RSVP Floor Event
                       </Button>
-                      <Button variant="outline" fullWidth>
+                      <Button variant="secondary" fullWidth>
                         Browse Dorm Activities
                       </Button>
                     </div>
@@ -606,7 +606,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Campus Events:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="space-y-2">
-                      <Button variant="accent" fullWidth icon={<Plus className="h-4 w-4" />}>
+                      <Button variant="secondary" fullWidth icon={<Plus className="h-4 w-4" />}>
                         Create Study Session
                       </Button>
                       <Button variant="primary" fullWidth icon={<Calendar className="h-4 w-4" />}>
@@ -670,14 +670,14 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Library Study Time:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="space-y-2">
-                      <Button variant="accent" fullWidth icon={<Users className="h-4 w-4" />}>
+                      <Button variant="secondary" fullWidth icon={<Users className="h-4 w-4" />}>
                         Find Study Group in Lockwood
                       </Button>
                       <Button variant="primary" fullWidth icon={<Plus className="h-4 w-4" />}>
                         Create Study Session
                       </Button>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1">
+                        <Button variant="secondary" size="sm" className="flex-1">
                           Resources
                         </Button>
                         <Button variant="secondary" size="sm" className="flex-1">
@@ -715,7 +715,7 @@ export const Playground: Story = {
     iconPosition: 'left',
     onClick: action('playground-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

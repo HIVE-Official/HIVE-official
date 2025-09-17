@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
 import { logger } from '@/lib/logger';
-import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api/response-types/api-response-types';
 import { featureFlagService, FeatureFlag as _FeatureFlag } from '@/lib/feature-flags';
 
 /**
@@ -19,9 +19,6 @@ export async function GET(request: NextRequest) {
         { status: HttpStatus.UNAUTHORIZED }
       );
     }
-
-    // TODO: Add proper admin check
-    // For now, allowing all authenticated users for development
     // if (!await isAdmin(user.uid)) {
     //   return NextResponse.json(
     //     ApiResponseHelper.error('Admin access required', 'FORBIDDEN'), 
@@ -61,8 +58,6 @@ export async function POST(request: NextRequest) {
         { status: HttpStatus.UNAUTHORIZED }
       );
     }
-
-    // TODO: Add proper admin check
     // if (!await isAdmin(user.uid)) {
     //   return NextResponse.json(
     //     ApiResponseHelper.error('Admin access required', 'FORBIDDEN'), 

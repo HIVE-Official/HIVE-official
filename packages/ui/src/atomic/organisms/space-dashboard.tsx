@@ -17,9 +17,9 @@ import {
   MessageSquare,
   Activity
 } from 'lucide-react';
-import { AnySpace } from './hive-space-card';
-import { SpacePost } from '../molecules/post-board';
-import { PlantedTool } from '../molecules/planted-tool-widget';
+import type { AnySpace } from './hive-space-card';
+import type { SpacePost } from '../molecules/post-board';
+import type { PlantedTool } from '../molecules/planted-tool-widget';
 
 export interface SpaceDashboardProps {
   space: AnySpace;
@@ -191,7 +191,7 @@ export const SpaceDashboard: React.FC<SpaceDashboardProps> = ({
                   
                   {/* Tabs */}
                   <div className="flex items-center bg-[var(--hive-background-secondary)]/60 border border-[var(--hive-border-primary)]/20 rounded-xl p-1">
-                    {(['posts', 'events', 'members'] as const).map((tab) => (
+                    {(['posts', 'events', 'members'] as const).map((tab: any) => (
                       <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}

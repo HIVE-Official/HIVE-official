@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ErrorBoundary } from "../../../../../components/error-boundary";
-import { CreateEventModal } from "../../../../../components/events/create-event-modal";
+import { CreateEventModal } from "../../../../../components/events/event-modal";
 import { EventDetailsModal } from "../../../../../components/events/event-details-modal";
 import { SpaceEventCalendar } from "../../../../../components/spaces/space-event-calendar";
 
@@ -101,7 +101,7 @@ export default function SpaceEventsPage({ params }: SpaceEventsPageProps) {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-          <p className="text-white">Loading events...</p>
+          <p className="text-[var(--hive-text-inverse)]">Loading events...</p>
         </div>
       </div>
     );
@@ -121,8 +121,8 @@ export default function SpaceEventsPage({ params }: SpaceEventsPageProps) {
       <CreateEventModal
         isOpen={showCreateEvent}
         onClose={() => setShowCreateEvent(false)}
-        onCreateEvent={() => {/* Event creation handled by SpaceEventCalendar */}}
-        defaultSpaceId={spaceId}
+        spaceId={spaceId}
+        onEventCreated={() => {/* Event creation handled by SpaceEventCalendar */}}
       />
 
       {/* Event Details Modal */}

@@ -64,7 +64,7 @@ export function SearchInputElement({ config, onChange }: ElementProps) {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e: any) => setQuery(e.target.value)}
           placeholder={config.placeholder || 'Search...'}
           className="pl-10"
         />
@@ -279,7 +279,7 @@ export function DatePickerElement({ config, onChange }: ElementProps) {
         <Input
           type="date"
           value={selectedDate}
-          onChange={(e) => handleDateChange(e.target.value)}
+          onChange={(e: any) => handleDateChange(e.target.value)}
           min={config.minDate}
           max={config.maxDate}
         />
@@ -288,7 +288,7 @@ export function DatePickerElement({ config, onChange }: ElementProps) {
           <Input
             type="time"
             value={selectedTime}
-            onChange={(e) => handleTimeChange(e.target.value)}
+            onChange={(e: any) => handleTimeChange(e.target.value)}
           />
         )}
         
@@ -358,7 +358,7 @@ export function UserSelectorElement({ config, onChange }: ElementProps) {
       <Input
         placeholder="Search users..."
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={(e: any) => setSearchQuery(e.target.value)}
       />
       
       <div className="max-h-40 overflow-y-auto space-y-1">
@@ -511,7 +511,7 @@ export function FormBuilderElement({ config, onChange }: ElementProps) {
                 className="w-full p-2 border border-border rounded-lg resize-none"
                 rows={3}
                 value={formData[field.name] || ''}
-                onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                onChange={(e: any) => handleFieldChange(field.name, e.target.value)}
                 placeholder={field.placeholder}
               />
             ) : field.type === 'select' ? (
@@ -534,7 +534,7 @@ export function FormBuilderElement({ config, onChange }: ElementProps) {
               <Input
                 type={field.type || 'text'}
                 value={formData[field.name] || ''}
-                onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                onChange={(e: any) => handleFieldChange(field.name, e.target.value)}
                 placeholder={field.placeholder}
               />
             )}

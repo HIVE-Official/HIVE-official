@@ -9,8 +9,11 @@
  */
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+// Simple logger for UI package
+const logger = { error: (msg: string, data?: any) => console.error(msg, data) };
+
 import { useRouter, usePathname } from 'next/navigation';
-import { 
+import type { 
   NavigationState, 
   NavigationLayout, 
   NavigationPreference, 
@@ -141,12 +144,11 @@ export const useNavigationState = ({
     // Analytics event
     if (enableAnalytics) {
       // TODO: Send analytics event
-      console.log('Navigation preference changed:', preference);
     }
   }, [enableAnalytics]);
   
   const toggleSidebar = useCallback(() => {
-    setSidebarCollapsed(prev => {
+    setSidebarCollapsed((prev: boolean) => {
       const newValue = !prev;
       
       // Persist to localStorage
@@ -185,27 +187,15 @@ export const useNavigationState = ({
     
     // Analytics event
     if (enableAnalytics) {
-      // TODO: Send navigation analytics event
-      console.log('Navigation:', { from: pathname, to: href });
+      // TODO: Track navigation event
     }
-  }, [router, mobileNavOpen, enableAnalytics]);
+  }, [mobileNavOpen, router, enableAnalytics]);
   
-  // ============================================================================
-  // RESPONSIVE BEHAVIOR
-  // ============================================================================
-  
+  // Handle window resize for responsive navigation
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const handleResize = createResizeHandler((width) => {
-      setScreenWidth(width);
-      
-      // Auto-close mobile nav on screen size change
-      if (mobileNavOpen) {
-        setMobileNavOpen(false);
-        document.body.style.overflow = '';
-      }
-    });
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
     
     // Set initial width
     setScreenWidth(window.innerWidth);
@@ -340,7 +330,7 @@ export const useNavigationPreferences = (user: NavigationUser) => {
   const updatePreference = useCallback((newPreference: NavigationPreference) => {
     // Validate preference
     if (!['tabs', 'sidebar', 'auto'].includes(newPreference)) {
-      console.error('Invalid navigation preference:', newPreference);
+      logger.error('Invalid navigation preference:', newPreference);
       return;
     }
     
@@ -350,10 +340,10 @@ export const useNavigationPreferences = (user: NavigationUser) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('hive-navigation-preference', newPreference);
     }
-    
-    // TODO: Sync with user preferences API
-    console.log('Updated navigation preference:', newPreference);
   }, []);
-  
-  return [preference, updatePreference] as const;
-};
+
+  return {
+    preference,
+    updatePreference
+  };
+};

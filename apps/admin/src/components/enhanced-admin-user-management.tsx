@@ -279,7 +279,10 @@ const UserCard: React.FC<UserCardProps> = ({
             <div className="relative">
               <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center overflow-hidden">
                 {user.avatar ? (
-                  <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={user.avatar} alt={user.displayName} className="w-full h-full object-cover" />
+                  </>
                 ) : (
                   <span className="text-white font-medium text-lg">
                     {user.displayName.charAt(0).toUpperCase()}
@@ -551,16 +554,6 @@ export const EnhancedAdminUserManagement: React.FC<EnhancedAdminUserManagementPr
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Enhanced user management is not available</p>
-      </div>
-    );
-  }
-
   const searchUsers = useCallback(async () => {
     if (!admin) return;
 
@@ -694,6 +687,16 @@ export const EnhancedAdminUserManagement: React.FC<EnhancedAdminUserManagementPr
   };
 
   const stats = getStatsOverview();
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Enhanced user management is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

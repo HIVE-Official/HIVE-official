@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Switch } from '../../../components/ui/switch';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
+import { Alert, AlertDescription } from '../../../atomic/molecules/alert-toast-system';
 import { Separator } from '../../../components/ui/separator';
 import { 
   Smartphone, 
@@ -68,8 +68,9 @@ import {
  * - **Mobile Performance**: Optimized for campus WiFi and cellular networks
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '15-Live Frontend/Mobile-Specific Components System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -376,7 +377,7 @@ const MobileCameraCapture = () => {
                     <MessageCircle className="mr-2 h-4 w-4" />
                     Post About It
                   </Button>
-                  <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                  <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                     <Users className="mr-2 h-4 w-4" />
                     Find Study Partners
                   </Button>
@@ -396,7 +397,7 @@ const MobileCameraCapture = () => {
                 <Upload className="mr-2 h-4 w-4" />
                 Share to Feed
               </Button>
-              <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+              <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -500,7 +501,7 @@ const MobilePushNotifications = () => {
           <div className="space-y-2">
             <h4 className="text-white font-medium">Recent Notifications</h4>
             <div className="space-y-1" ref={swipeRef}>
-              {notifications.map((notification) => (
+              {notifications.map((notification: any) => (
                 <div 
                   key={notification.id}
                   className={`p-3 rounded-lg border transition-all ${
@@ -611,7 +612,7 @@ const MobileOfflineSupport = () => {
             <span className="text-white">Offline Mode</span>
             <Switch 
               checked={!isOnline} 
-              onCheckedChange={(checked) => setIsOnline(!checked)}
+              onCheckedChange={(checked: any) => setIsOnline(!checked)}
               className="data-[state=checked]:bg-yellow-500"
             />
           </div>
@@ -690,7 +691,7 @@ const MobileLocationServices = () => {
   const requestLocation = async () => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        (position: any) => {
           setLocationPermission('granted');
           // Simulate campus building detection
           setCurrentLocation({ building: 'Lockwood Library', area: '3rd Floor Study Area' });
@@ -763,7 +764,7 @@ const MobileLocationServices = () => {
                   <Compass className="mr-2 h-4 w-4" />
                   Campus Map
                 </Button>
-                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                   <Search className="mr-2 h-4 w-4" />
                   Find Study Room
                 </Button>
@@ -823,7 +824,7 @@ const MobileSystemDemo = () => {
               key={id}
               size="sm"
               variant={activeDemo === id ? 'default' : 'ghost'}
-              onClick={() => setActiveDemo(id as any)}
+              onClick={() => setActiveDemo(id as unknown)}
               className={`flex-1 text-xs ${
                 activeDemo === id 
                   ? 'bg-yellow-500 text-black' 

@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 import { HiveProgress as Progress } from '../../components/hive-progress';
-import { Switch } from '../../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '../../../atomic/molecules/alert-toast-system';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 import { 
   Globe,
@@ -130,8 +130,9 @@ import {
  * - **Cultural Sensitivity**: Appropriate imagery, colors, and interaction patterns
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '27-Advanced Systems/Internationalization & Localization',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -708,7 +709,7 @@ const TRANSLATIONS: Translations = {
 interface LocalizationContextType {
   currentLanguage: Language;
   currentLocale: string;
-  t: (key: string, params?: Record<string, any>) => string;
+  t: (key: string, params?: Record<string, unknown>) => string;
   formatDate: (date: Date) => string;
   formatTime: (date: Date) => string;
   formatNumber: (num: number) => string;
@@ -736,7 +737,7 @@ const LocalizationProvider = ({ children }: { children: React.ReactNode }) => {
     SUPPORTED_LANGUAGES.find(lang => lang.code === currentLocale) || SUPPORTED_LANGUAGES[0]
   , [currentLocale]);
 
-  const t = useCallback((key: string, params?: Record<string, any>) => {
+  const t = useCallback((key: string, params?: Record<string, unknown>) => {
     const keys = key.split('.');
     let translation: any = TRANSLATIONS[currentLocale];
     
@@ -1152,11 +1153,11 @@ const RTLLayoutDemo = () => {
             <Heart className="h-4 w-4 mr-2" />
             {currentLanguage.direction === 'rtl' ? 'إعجاب' : t('common.like')}
           </Button>
-          <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+          <Button size="sm" variant="secondary" className="border-gray-600 text-gray-300">
             <MessageCircle className="h-4 w-4 mr-2" />
             {currentLanguage.direction === 'rtl' ? 'تعليق' : t('common.comment')}
           </Button>
-          <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+          <Button size="sm" variant="secondary" className="border-gray-600 text-gray-300">
             <Share2 className="h-4 w-4 mr-2" />
             {currentLanguage.direction === 'rtl' ? 'مشاركة' : t('common.share')}
           </Button>

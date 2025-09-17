@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Grid } from "@hive/ui";
 import { ArrowLeft, TrendingUp, Users, /* Eye as _Eye, */ Download, /* Calendar as _Calendar, BarChart3 as _BarChart3, PieChart as _PieChart, */ Activity, Star, Share, MessageSquare } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
+import { useQuery } from "@tanstack/react-query";
 
 interface AnalyticsData {
   overview: {
@@ -24,52 +25,40 @@ interface AnalyticsData {
   };
 }
 
-// Mock analytics data
-const MOCK_ANALYTICS: AnalyticsData = {
-  overview: {
-    totalUsage: 1247,
-    activeUsers: 342,
-    avgRating: 4.8,
-    downloads: 892
-  },
-  usage: {
-    daily: [
-      { date: '2024-01-15', usage: 45, users: 23 },
-      { date: '2024-01-16', usage: 52, users: 28 },
-      { date: '2024-01-17', usage: 38, users: 19 },
-      { date: '2024-01-18', usage: 61, users: 34 },
-      { date: '2024-01-19', usage: 73, users: 41 },
-      { date: '2024-01-20', usage: 58, users: 29 },
-      { date: '2024-01-21', usage: 42, users: 25 }
-    ],
-    spaces: [
-      { name: 'CS Majors', usage: 156, members: 234 },
-      { name: 'Student Government', usage: 89, members: 67 },
-      { name: 'Engineering Club', usage: 72, members: 145 },
-      { name: 'Study Groups', usage: 45, members: 89 },
-      { name: 'Greek Life', usage: 38, members: 123 }
-    ],
-    features: [
-      { feature: 'Poll Creation', usage: 456, percentage: 65 },
-      { feature: 'Vote Casting', usage: 378, percentage: 54 },
-      { feature: 'Results Viewing', usage: 289, percentage: 41 },
-      { feature: 'Share Poll', usage: 124, percentage: 18 }
-    ]
-  },
-  feedback: {
-    ratings: [
-      { rating: 5, count: 234 },
-      { rating: 4, count: 156 },
-      { rating: 3, count: 45 },
-      { rating: 2, count: 12 },
-      { rating: 1, count: 5 }
-    ],
-    comments: [
-      { user: 'Sarah M.', comment: 'Perfect for class polls! Easy to use and great results visualization.', rating: 5, date: '2024-01-20' },
-      { user: 'Alex K.', comment: 'Works well for our study group decisions. Would love more customization options.', rating: 4, date: '2024-01-19' },
-      { user: 'Jamie L.', comment: 'Simple and effective. Helps our organization make better decisions together.', rating: 5, date: '2024-01-18' }
-    ]
+// Fetch analytics data from Firebase via API
+const fetchToolAnalytics = async (toolId: string, timeRange: string): Promise<AnalyticsData> => {
+  const response = await fetch(`/api/tools/${toolId}/analytics?timeRange=${timeRange}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include'
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch analytics');
   }
+
+  const data = await response.json();
+  
+  // Transform API response to match AnalyticsData interface
+  return {
+    overview: {
+      totalUsage: data.overview?.totalUsage || 0,
+      activeUsers: data.overview?.activeUsers || 0,
+      avgRating: data.overview?.avgRating || 0,
+      downloads: data.overview?.downloads || 0
+    },
+    usage: {
+      daily: data.usage?.daily || [],
+      spaces: data.usage?.spaces || [],
+      features: data.usage?.features || []
+    },
+    feedback: {
+      ratings: data.feedback?.ratings || [],
+      comments: data.feedback?.comments || []
+    }
+  };
 };
 
 const MetricCard = ({ title, value, change, icon: Icon, format = 'number' }: {
@@ -94,7 +83,7 @@ const MetricCard = ({ title, value, change, icon: Icon, format = 'number' }: {
     <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-all">
       <div className="flex items-center justify-between mb-4">
         <div className="w-12 h-12 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl flex items-center justify-center">
-          <Icon className="h-6 w-6 text-[#FFD700]" />
+          <Icon className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
         </div>
         {change !== undefined && (
           <div className={`text-sm font-medium ${change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -103,10 +92,10 @@ const MetricCard = ({ title, value, change, icon: Icon, format = 'number' }: {
         )}
       </div>
       
-      <div className="text-2xl font-bold text-white mb-1">
+      <div className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-1">
         {formatValue(value)}
       </div>
-      <div className="text-sm text-[#A1A1AA]">
+      <div className="text-sm text-[var(--hive-text-muted)]">
         {title}
       </div>
     </Card>
@@ -122,17 +111,17 @@ const SimpleChart = ({ data, title, type: _type = 'bar' }: { // TODO: type param
   
   return (
     <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
-      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">{title}</h3>
       <div className="space-y-4">
         {data.map((item, index) => (
           <div key={index} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[#A1A1AA]">{item.label}</span>
-              <span className="text-white font-medium">{item.value}</span>
+              <span className="text-[var(--hive-text-muted)]">{item.label}</span>
+              <span className="text-[var(--hive-text-inverse)] font-medium">{item.value}</span>
             </div>
             <div className="w-full bg-[rgba(255,255,255,0.05)] rounded-full h-2">
               <div 
-                className="bg-gradient-to-r from-[#FFD700] to-[#FFE255] h-2 rounded-full transition-all duration-1000"
+                className="bg-gradient-to-r from-[var(--hive-brand-secondary)] to-[#FFE255] h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${(item.value / maxValue) * 100}%` }}
               />
             </div>
@@ -143,22 +132,22 @@ const SimpleChart = ({ data, title, type: _type = 'bar' }: { // TODO: type param
   );
 };
 
-const FeedbackCard = ({ comment }: { comment: typeof MOCK_ANALYTICS.feedback.comments[0] }) => (
+const FeedbackCard = ({ _comment }: { _comment: { user: string; comment: string; rating: number; date: string } }) => (
   <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-gradient-to-br from-[#FFD700] to-[#FFE255] rounded-lg flex items-center justify-center text-[#0A0A0A] font-semibold text-xs">
-          {comment.user.charAt(0)}
+        <div className="w-8 h-8 bg-gradient-to-br from-[var(--hive-brand-secondary)] to-[#FFE255] rounded-lg flex items-center justify-center text-[var(--hive-background-primary)] font-semibold text-xs">
+          {_comment.user.charAt(0)}
         </div>
-        <span className="text-white font-medium text-sm">{comment.user}</span>
+        <span className="text-[var(--hive-text-inverse)] font-medium text-sm">{_comment.user}</span>
       </div>
       <div className="flex items-center gap-1">
-        <Star className="h-3 w-3 fill-[#FFD700] text-[#FFD700]" />
-        <span className="text-xs text-[#A1A1AA]">{comment.rating}</span>
+        <Star className="h-3 w-3 fill-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)]" />
+        <span className="text-xs text-[var(--hive-text-muted)]">{_comment.rating}</span>
       </div>
     </div>
-    <p className="text-sm text-[#A1A1AA] mb-2">"{comment.comment}"</p>
-    <div className="text-xs text-[#666] opacity-60">{comment.date}</div>
+    <p className="text-sm text-[var(--hive-text-muted)] mb-2">"{_comment.comment}"</p>
+    <div className="text-xs text-[#666] opacity-60">{_comment.date}</div>
   </Card>
 );
 
@@ -166,12 +155,49 @@ export default function ToolAnalyticsPage() {
   const params = useParams();
   const router = useRouter();
   const [timeRange, setTimeRange] = useState('7d');
-  const [analytics] = useState<AnalyticsData>(MOCK_ANALYTICS);
   const flags = useFeatureFlags();
+  const toolId = params.toolId as string;
+
+  // Fetch real analytics data from Firebase
+  const { data: analytics, isLoading, error } = useQuery<AnalyticsData>({
+    queryKey: ['tool-analytics', toolId, timeRange],
+    queryFn: () => fetchToolAnalytics(toolId, timeRange),
+    enabled: !!toolId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 60 * 1000 // Refresh every minute
+  });
 
   useEffect(() => {
     flags.trackEvent('tools', 'view', { page: 'tool-analytics', toolId: params.toolId });
   }, [flags, params.toolId]);
+
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[var(--hive-background-primary)] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--hive-brand-secondary)] mx-auto mb-4"></div>
+          <p className="text-[var(--hive-text-muted)]">Loading analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error || !analytics) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[var(--hive-background-primary)] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">⚠️</div>
+          <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Failed to load analytics</h2>
+          <p className="text-[var(--hive-text-muted)] mb-4">Unable to fetch analytics data. Please try again later.</p>
+          <Button onClick={() => router.back()} variant="outline">
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const dailyUsageData = analytics.usage.daily.map(d => ({
     label: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
@@ -189,7 +215,7 @@ export default function ToolAnalyticsPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] via-[#0F0F0F] to-[#1A1A1A]">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--hive-background-primary)] via-[#0F0F0F] to-[#1A1A1A]">
       {/* Header */}
       <div className="border-b border-[rgba(255,255,255,0.1)] bg-[rgba(0,0,0,0.8)] backdrop-blur-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -199,16 +225,16 @@ export default function ToolAnalyticsPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => router.back()}
-                className="text-[#A1A1AA] hover:text-white"
+                className="text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
               <div>
-                <h1 className="text-xl font-semibold text-white">
+                <h1 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
                   Poll Maker Analytics
                 </h1>
-                <p className="text-sm text-[#A1A1AA]">
+                <p className="text-sm text-[var(--hive-text-muted)]">
                   Usage insights and performance metrics
                 </p>
               </div>
@@ -217,8 +243,8 @@ export default function ToolAnalyticsPage() {
             <div className="flex items-center gap-3">
               <select
                 value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value)}
-                className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[#FFD700]/50 focus:outline-none"
+                onChange={(e: any) => setTimeRange(e.target.value)}
+                className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-[var(--hive-text-inverse)] text-sm focus:border-[var(--hive-brand-secondary)]/50 focus:outline-none"
               >
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>
@@ -227,7 +253,7 @@ export default function ToolAnalyticsPage() {
               <Button
                 size="sm"
                 variant="outline"
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <Share className="h-4 w-4 mr-2" />
                 Export
@@ -240,7 +266,7 @@ export default function ToolAnalyticsPage() {
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         {/* Overview Metrics */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-6">Overview</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-6">Overview</h2>
           <Grid cols={4} gap="lg">
             <MetricCard
               title="Total Usage"
@@ -272,7 +298,7 @@ export default function ToolAnalyticsPage() {
 
         {/* Usage Charts */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-6">Usage Analytics</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-6">Usage Analytics</h2>
           <Grid cols={2} gap="lg">
             <SimpleChart
               data={dailyUsageData}
@@ -290,7 +316,7 @@ export default function ToolAnalyticsPage() {
         <Grid cols={2} gap="xl">
           {/* Feature Usage */}
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Feature Usage</h2>
+            <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-6">Feature Usage</h2>
             <SimpleChart
               data={featureUsageData}
               title="Most Used Features"
@@ -299,25 +325,25 @@ export default function ToolAnalyticsPage() {
 
           {/* User Feedback */}
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">User Feedback</h2>
+            <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-6">User Feedback</h2>
             
             {/* Rating Distribution */}
             <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] mb-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Rating Distribution</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Rating Distribution</h3>
               <div className="space-y-3">
                 {analytics.feedback.ratings.map((rating, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <div className="flex items-center gap-1 w-16">
-                      <span className="text-sm text-[#A1A1AA]">{rating.rating}</span>
-                      <Star className="h-3 w-3 fill-[#FFD700] text-[#FFD700]" />
+                      <span className="text-sm text-[var(--hive-text-muted)]">{rating.rating}</span>
+                      <Star className="h-3 w-3 fill-[var(--hive-brand-secondary)] text-[var(--hive-brand-secondary)]" />
                     </div>
                     <div className="flex-1 bg-[rgba(255,255,255,0.05)] rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-[#FFD700] to-[#FFE255] h-2 rounded-full"
+                        className="bg-gradient-to-r from-[var(--hive-brand-secondary)] to-[#FFE255] h-2 rounded-full"
                         style={{ width: `${(rating.count / 234) * 100}%` }}
                       />
                     </div>
-                    <span className="text-sm text-[#A1A1AA] w-8">{rating.count}</span>
+                    <span className="text-sm text-[var(--hive-text-muted)] w-8">{rating.count}</span>
                   </div>
                 ))}
               </div>
@@ -325,7 +351,7 @@ export default function ToolAnalyticsPage() {
 
             {/* Recent Comments */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">Recent Comments</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Recent Comments</h3>
               <div className="space-y-4">
                 {analytics.feedback.comments.map((comment, index) => (
                   <FeedbackCard key={index} comment={comment} />
@@ -333,7 +359,7 @@ export default function ToolAnalyticsPage() {
               </div>
               <Button
                 variant="outline"
-                className="w-full mt-4 border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                className="w-full mt-4 border-[rgba(255,255,255,0.2)] text-[var(--hive-text-muted)] hover:text-[var(--hive-text-inverse)]"
               >
                 <MessageSquare className="h-4 w-4 mr-2" />
                 View All Feedback
@@ -345,26 +371,26 @@ export default function ToolAnalyticsPage() {
         {/* Performance Insights */}
         <Card className="p-8 bg-gradient-to-r from-[rgba(255,215,0,0.05)] to-[rgba(255,215,0,0.02)] border-[rgba(255,215,0,0.1)]">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-[#FFD700]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="h-6 w-6 text-[#FFD700]" />
+            <div className="w-12 h-12 bg-[var(--hive-brand-secondary)]/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-white mb-2">Performance Insights</h3>
-              <div className="text-[#A1A1AA] mb-4">
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Performance Insights</h3>
+              <div className="text-[var(--hive-text-muted)] mb-4">
                 Your tool is performing well with strong user engagement and positive feedback.
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div className="bg-[rgba(255,255,255,0.05)] p-4 rounded-lg">
                   <div className="text-green-400 font-medium">📈 Growing</div>
-                  <div className="text-[#A1A1AA]">+12% usage increase this week</div>
+                  <div className="text-[var(--hive-text-muted)]">+12% usage increase this week</div>
                 </div>
                 <div className="bg-[rgba(255,255,255,0.05)] p-4 rounded-lg">
-                  <div className="text-[#FFD700] font-medium">⭐ High Rated</div>
-                  <div className="text-[#A1A1AA]">4.8/5 average rating</div>
+                  <div className="text-[var(--hive-brand-secondary)] font-medium">⭐ High Rated</div>
+                  <div className="text-[var(--hive-text-muted)]">4.8/5 average rating</div>
                 </div>
                 <div className="bg-[rgba(255,255,255,0.05)] p-4 rounded-lg">
                   <div className="text-blue-400 font-medium">🔥 Popular</div>
-                  <div className="text-[#A1A1AA]">Top 10% in communication category</div>
+                  <div className="text-[var(--hive-text-muted)]">Top 10% in communication category</div>
                 </div>
               </div>
             </div>

@@ -5,7 +5,7 @@
  * Runs comprehensive mobile experience tests
  */
 
-const { exec } = require('child_process');
+const { exec: _exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 

@@ -9,6 +9,9 @@ export * from "./domain/firestore/post";
 export * from "./domain/firestore/space";
 export * from "./domain/firestore/user";
 
+// Export Space type explicitly for api-client
+export type { Space } from "./domain/firestore/space";
+
 // Domain types - Profile
 export type {
   HiveProfile,
@@ -62,6 +65,16 @@ export * from "./domain/cohort/cohort-spaces";
 
 // Constants
 export * from "./constants/majors";
+export * from "./constants/interests";
+
+// Handle generation utilities
+export { generateHandleVariants, generateBaseHandle } from "./utils/handle-generator";
+
+// Space discovery
+export { SpaceDiscoveryEngine } from "./domain/space/discovery";
+
+// Environment utilities
+export * from "./env";
 
 // Stores
 export * from "./stores/useAppStore";
@@ -74,3 +87,10 @@ export * from "./feature-flags";
 
 // Privacy utilities
 export * from "./utils/privacy-utils";
+
+// Logger utilities
+export * from "./utils/logger";
+
+// Feed-related exports for API clients
+export type { Post as FeedPost, CreatePostRequest, PostType, PostContent } from "./domain/feed/posting";
+export { CreatePostSchema } from "./domain/feed/posting";

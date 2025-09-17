@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
 import { Avatar } from '../atoms/avatar';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
@@ -75,7 +75,7 @@ export const ProfileAvatarWidget: React.FC<ProfileAvatarWidgetProps> = ({
               Profile Identity
             </Text>
             {user.isGhostMode && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <EyeOff className="h-3 w-3 mr-1" />
                 Ghost Mode
               </Badge>
@@ -103,7 +103,7 @@ export const ProfileAvatarWidget: React.FC<ProfileAvatarWidgetProps> = ({
               <Avatar
                 src={user.avatar}
                 alt={user.name}
-                fallback={user.name.split(' ').map(n => n[0]).join('')}
+                initials={user.name.split(' ').map(n => n[0]).join('')}
                 size="lg"
                 className="ring-2 ring-[var(--hive-border-primary)] ring-offset-2 ring-offset-[var(--hive-background-primary)]"
               />
@@ -122,7 +122,7 @@ export const ProfileAvatarWidget: React.FC<ProfileAvatarWidgetProps> = ({
                   )}
                   onClick={onUploadPhoto}
                 >
-                  <Camera className="h-5 w-5 text-white" />
+                  <Camera className="h-5 w-5 text-[var(--hive-text-inverse)]" />
                 </div>
               )}
             </div>
@@ -250,7 +250,7 @@ export const ProfileAvatarWidget: React.FC<ProfileAvatarWidgetProps> = ({
         <div className="flex gap-2 pt-2">
           {onViewProfile && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onViewProfile}
               className="flex-1"
@@ -262,7 +262,7 @@ export const ProfileAvatarWidget: React.FC<ProfileAvatarWidgetProps> = ({
           
           {isEditable && onEditProfile && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onEditProfile}
               className="flex-1"

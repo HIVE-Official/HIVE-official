@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal, HiveInput } from "@hive/ui";
+import { Button, Card, Badge, Modal, Input } from "@hive/ui";
 import { 
   Users, 
   Plus, 
@@ -239,50 +239,23 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
     switch (status) {
       case 'active': return 'bg-green-500';
       case 'planning': return 'bg-blue-500';
-      case 'completed': return 'bg-purple-500';
-      case 'paused': return 'bg-orange-500';
+      case 'completed': return 'bg-[var(--hive-gold)]';
+      case 'paused': return 'bg-[var(--hive-gold)]';
       default: return 'bg-zinc-500';
     }
   };
 
   const handleInviteSpace = (spaceId: string) => {
     // TODO: Implement space invitation logic
-    try {
-      // API call to invite space
-      // await inviteSpaceToCollaboration(currentSpaceId, spaceId);
-    } catch (error) {
-      // TODO: Handle error with proper user feedback
-    }
+    console.log('Inviting space:', spaceId);
   };
-
-  const handleCreateProject = (projectData: any) => {
-    // TODO: Implement project creation logic
-    try {
-      // API call to create collaboration project
-      // await createCollaborationProject(currentSpaceId, projectData);
-      setShowCreateProjectModal(false);
-    } catch (error) {
-      // TODO: Handle error with proper user feedback
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-          <p className="text-white">Loading collaboration data...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">Cross-Space Collaboration</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-2">Cross-Space Collaboration</h2>
           <p className="text-zinc-400">Connect and collaborate with other spaces on campus</p>
         </div>
         
@@ -313,7 +286,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
           { id: 'projects', label: 'Joint Projects', icon: Target },
           { id: 'events', label: 'Shared Events', icon: Calendar },
           { id: 'workspace', label: 'Planning Workspace', icon: Lightbulb }
-        ].map((tab) => {
+        ].map((tab: any) => {
           const Icon = tab.icon;
           return (
             <button
@@ -322,7 +295,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
               className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
                 activeTab === tab.id
                   ? 'bg-hive-gold text-hive-obsidian font-medium'
-                  : 'text-zinc-400 hover:text-white'
+                  : 'text-zinc-400 hover:text-[var(--hive-text-inverse)]'
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -339,16 +312,16 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             placeholder="Search collaborations..."
-            className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
+            className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
           />
         </div>
         
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as any)}
-          className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
+          onChange={(e: any) => setStatusFilter(e.target.value as any)}
+          className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Status</option>
           <option value="active">Active</option>
@@ -359,17 +332,17 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
       {/* Tab Content */}
       {activeTab === 'spaces' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredSpaces.map((space) => (
+          {filteredSpaces.map((space: any) => (
             <Card key={space.id} className="p-6 bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-colors">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-12 h-12 bg-zinc-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white font-semibold">
+                    <span className="text-[var(--hive-text-inverse)] font-semibold">
                       {space.name.split(' ').map(word => word[0]).join('')}
                     </span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white mb-1">{space.name}</h3>
+                    <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-1">{space.name}</h3>
                     <p className="text-sm text-zinc-400">{space.type}</p>
                     <div className="flex items-center space-x-1 mt-1">
                       <Users className="h-3 w-3 text-zinc-500" />
@@ -388,15 +361,15 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
               
               <div className="grid grid-cols-3 gap-3 mb-4 text-center">
                 <div>
-                  <div className="text-lg font-bold text-white">{space.sharedProjects}</div>
+                  <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{space.sharedProjects}</div>
                   <div className="text-xs text-zinc-400">Projects</div>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-white">{space.sharedEvents}</div>
+                  <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{space.sharedEvents}</div>
                   <div className="text-xs text-zinc-400">Events</div>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-white">{space.sharedTools}</div>
+                  <div className="text-lg font-bold text-[var(--hive-text-inverse)]">{space.sharedTools}</div>
                   <div className="text-xs text-zinc-400">Tools</div>
                 </div>
               </div>
@@ -405,7 +378,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 <span className="text-xs text-zinc-500">
                   Active {formatTimeAgo(space.lastActivity)}
                 </span>
-                <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white">
+                <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)]">
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -416,12 +389,12 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
 
       {activeTab === 'projects' && (
         <div className="space-y-4">
-          {collaborationProjects.map((project) => (
+          {collaborationProjects.map((project: any) => (
             <Card key={project.id} className="p-6 bg-zinc-800/50 border-zinc-700">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold text-white">{project.title}</h3>
+                    <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{project.title}</h3>
                     <Badge 
                       className={`text-xs ${getProjectStatusColor(project.status)}`}
                       variant="skill-tag"
@@ -448,10 +421,10 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  {project.participatingSpaces.map((space) => (
+                  {project.participatingSpaces.map((space: any) => (
                     <div key={space.id} className="flex items-center space-x-1">
                       <div className="w-6 h-6 bg-zinc-600 rounded-full flex items-center justify-center">
-                        <span className="text-xs text-white font-medium">
+                        <span className="text-xs text-[var(--hive-text-inverse)] font-medium">
                           {space.name.split(' ').map(n => n[0]).join('')}
                         </span>
                       </div>
@@ -465,10 +438,10 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-zinc-400">Next:</span>
-                    <span className="text-sm text-white">{project.nextMilestone}</span>
+                    <span className="text-sm text-[var(--hive-text-inverse)]">{project.nextMilestone}</span>
                   </div>
                   <div className="flex flex-wrap gap-1">
-                    {project.tags.slice(0, 3).map((tag) => (
+                    {project.tags.slice(0, 3).map((tag: any) => (
                       <Badge key={tag} variant="skill-tag" className="text-xs">
                         #{tag}
                       </Badge>
@@ -481,7 +454,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                     <MessageSquare className="h-4 w-4 mr-1" />
                     Chat
                   </Button>
-                  <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white">
+                  <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)]">
                     <Settings className="h-4 w-4" />
                   </Button>
                 </div>
@@ -507,12 +480,12 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
 
       {activeTab === 'events' && (
         <div className="space-y-4">
-          {jointEvents.map((event) => (
+          {jointEvents.map((event: any) => (
             <Card key={event.id} className="p-6 bg-zinc-800/50 border-zinc-700">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold text-white">{event.title}</h3>
+                    <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{event.title}</h3>
                     <Badge variant="building-tools" className="text-xs">
                       Joint Event
                     </Badge>
@@ -528,7 +501,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 <div className="flex items-center space-x-2">
                   <Calendar className="h-4 w-4 text-zinc-400" />
                   <div>
-                    <div className="text-white text-sm">
+                    <div className="text-[var(--hive-text-inverse)] text-sm">
                       {new Date(event.datetime.start).toLocaleDateString()}
                     </div>
                     <div className="text-zinc-400 text-xs">
@@ -540,7 +513,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 text-zinc-400" />
                   <div>
-                    <div className="text-white text-sm">{event.location.type}</div>
+                    <div className="text-[var(--hive-text-inverse)] text-sm">{event.location.type}</div>
                     <div className="text-zinc-400 text-xs">{event.location.name}</div>
                   </div>
                 </div>
@@ -548,7 +521,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4 text-zinc-400" />
                   <div>
-                    <div className="text-white text-sm">{event.registered}/{event.capacity}</div>
+                    <div className="text-[var(--hive-text-inverse)] text-sm">{event.registered}/{event.capacity}</div>
                     <div className="text-zinc-400 text-xs">registered</div>
                   </div>
                 </div>
@@ -558,7 +531,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 <div className="flex items-center space-x-3">
                   <span className="text-sm text-zinc-400">Organized by:</span>
                   {event.organizingSpaces.map((space, index) => (
-                    <span key={space.id} className="text-sm text-white">
+                    <span key={space.id} className="text-sm text-[var(--hive-text-inverse)]">
                       {space.name}{index < event.organizingSpaces.length - 1 && ', '}
                     </span>
                   ))}
@@ -576,7 +549,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
       {activeTab === 'workspace' && (
         <Card className="p-8 bg-zinc-800/50 border-zinc-700 text-center">
           <Lightbulb className="h-16 w-16 text-hive-gold mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">Joint Planning Workspace</h3>
+          <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Joint Planning Workspace</h3>
           <p className="text-zinc-400 mb-6 max-w-2xl mx-auto">
             Collaborative workspace for planning cross-space initiatives, sharing resources, and coordinating joint activities. This feature is coming soon.
           </p>
@@ -588,7 +561,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
       )}
 
       {/* Invite Space Modal */}
-      <HiveModal
+      <Modal
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
         title="Invite Space to Collaborate"
@@ -604,20 +577,20 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
             <input
               type="text"
               placeholder="Search spaces by name or type..."
-              className="pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
+              className="pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
             />
           </div>
           
           <div className="space-y-2 max-h-48 overflow-y-auto">
-            {['AI Research Group', 'Design Studio', 'Business Club'].map((spaceName) => (
+            {['AI Research Group', 'Design Studio', 'Business Club'].map((spaceName: any) => (
               <div key={spaceName} className="flex items-center justify-between p-3 bg-zinc-800/30 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-zinc-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white text-xs font-semibold">
+                    <span className="text-[var(--hive-text-inverse)] text-xs font-semibold">
                       {spaceName.split(' ').map(word => word[0]).join('')}
                     </span>
                   </div>
-                  <span className="text-white text-sm">{spaceName}</span>
+                  <span className="text-[var(--hive-text-inverse)] text-sm">{spaceName}</span>
                 </div>
                 <Button size="sm" variant="outline">
                   Invite
@@ -635,7 +608,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
             </Button>
           </div>
         </div>
-      </HiveModal>
+      </Modal>
     </div>
   );
 }

@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "hive_ui"
+location: "asia-northeast1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "hive_ui-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
@@ -79,9 +79,9 @@ const getSpaceTypeConfig = (type: string) => {
       label: 'Residential'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Heart,
       label: 'Social'
     },
@@ -119,8 +119,8 @@ const getRoleConfig = (role: string) => {
       label: 'Moderator'
     },
     admin: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       icon: Crown,
       label: 'Admin'
     },
@@ -143,8 +143,8 @@ const getActivityLevelConfig = (level: string) => {
       label: 'Very Active'
     },
     medium: {
-      color: 'text-yellow-500',
-      bgColor: 'bg-yellow-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       label: 'Active'
     },
     low: {
@@ -204,7 +204,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
               My Spaces
             </Text>
             {totalUnread > 0 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <MessageSquare className="h-3 w-3 mr-1" />
                 {totalUnread} unread
               </Badge>
@@ -299,7 +299,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
                         {featuredSpace.name}
                       </Text>
                       <Badge 
-                        variant="outline" 
+                        variant="secondary" 
                         className={cn('text-xs', getRoleConfig(featuredSpace.role).color)}
                       >
                         {getRoleConfig(featuredSpace.role).label}
@@ -377,7 +377,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
                       {space.name}
                     </Text>
                     {space.unreadMessages && space.unreadMessages > 0 && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {space.unreadMessages}
                       </Badge>
                     )}
@@ -415,7 +415,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onJoinSpace && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onJoinSpace}
               className="flex-1"
@@ -427,7 +427,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
           
           {onViewAllSpaces && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllSpaces}
               className="flex-1"
@@ -461,7 +461,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
             </Text>
             {isEditable && onJoinSpace && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onJoinSpace}
               >
@@ -476,7 +476,7 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
 
       {/* Hover Glow Effect */}
       {isHovered && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-500/5 to-green-500/5 rounded-lg blur-xl" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-green-500/5 rounded-lg blur-xl" />
       )}
     </Card>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ProfileHiveLabWidget } from './profile-hivelab-widget';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -281,7 +281,7 @@ export const Default: Story = {
     onViewAllBuilds: action('view-all-builds'),
     onViewBuildLab: action('view-build-lab'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -307,7 +307,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎯 HIVELAB WIDGET SYSTEM</Badge>
+            <Badge variant="emerald">🎯 HIVELAB WIDGET SYSTEM</Badge>
             Builder Tools & Innovation
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -535,7 +535,7 @@ export const CompleteShowcase: Story = {
                         <Text variant="body-sm" color="primary" weight="medium">Productivity Tools</Text>
                         <Text variant="body-xs" color="secondary">Time management, task organization, workflow optimization</Text>
                       </div>
-                      <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                      <div className="p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg">
                         <Text variant="body-sm" color="primary" weight="medium">Social Tools</Text>
                         <Text variant="body-xs" color="secondary">Community building, event coordination, peer collaboration</Text>
                       </div>
@@ -1025,7 +1025,7 @@ export const Playground: Story = {
     onViewAllBuilds: action('playground-view-all'),
     onViewBuildLab: action('playground-view-lab'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

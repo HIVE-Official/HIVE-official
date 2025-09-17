@@ -64,11 +64,11 @@ export function useAuth() {
     user: convertToLegacyUser(unifiedAuth.user),
     loading: unifiedAuth.isLoading,
     error: unifiedAuth.error,
-    signIn: unifiedAuth.login,
+    signIn: unifiedAuth.signInWithMagicLink,
     signOut: unifiedAuth.logout,
-    signUp: async (email: string, password: string, displayName?: string) => {
-      // For now, just do a regular login
-      await unifiedAuth.login(email, password);
+    signUp: async (email: string, _password: string, _displayName?: string) => {
+      // For now, signUp isn't implemented - would need magic link flow
+      throw new Error('SignUp not implemented - use magic link authentication');
     },
     getAuthToken: unifiedAuth.getAuthToken,
   };

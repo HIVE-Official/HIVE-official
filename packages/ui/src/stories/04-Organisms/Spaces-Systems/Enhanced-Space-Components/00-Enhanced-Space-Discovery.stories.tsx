@@ -5,10 +5,10 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
+import { Button } from '../../../../atomic/atoms/button-enhanced';
 import { Badge } from '../../../../components/ui/badge';
 import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
-import { Input } from '../../../../components/ui/input';
+import { InputEnhanced as Input } from '../../../../atomic/atoms/input-enhanced';
 import { Separator } from '../../../../components/ui/separator';
 import { 
   Users, 
@@ -345,7 +345,7 @@ const spaceTypeFilters = [
   { 
     id: "greek_life", 
     label: "Greek Life", 
-    color: "bg-purple-500", 
+    color: "bg-[var(--hive-gold)]", 
     emoji: "🏛️", 
     subtitle: "Fraternities & sororities",
     count: 18,
@@ -354,7 +354,7 @@ const spaceTypeFilters = [
   { 
     id: "campus_living", 
     label: "Campus Living", 
-    color: "bg-orange-500", 
+    color: "bg-[var(--hive-gold)]", 
     emoji: "🏠", 
     subtitle: "Residential communities",
     count: 31,
@@ -406,21 +406,21 @@ function EnhancedSpaceDiscovery() {
   const selectedFilter = spaceTypeFilters.find(f => f.id === selectedCategory) || spaceTypeFilters[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Enhanced Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Campus Spaces</h1>
+              <h1 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-2">Campus Spaces</h1>
               <p className="text-gray-400">Discover and join your University at Buffalo communities</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -439,11 +439,11 @@ function EnhancedSpaceDiscovery() {
             ].map(({ id, label, icon: Icon, count }) => (
               <button
                 key={id}
-                onClick={() => setActiveView(id as any)}
+                onClick={() => setActiveView(id as unknown)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeView === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                 }`}
                 style={activeView === id ? {
                   backgroundColor: 'var(--hive-brand-primary)',
@@ -453,7 +453,7 @@ function EnhancedSpaceDiscovery() {
                 <Icon className="w-4 h-4 mr-2" />
                 {label}
                 {count !== null && (
-                  <Badge className="ml-2 bg-gray-700 text-white text-xs">{count}</Badge>
+                  <Badge className="ml-2 bg-gray-700 text-[var(--hive-text-primary)] text-xs">{count}</Badge>
                 )}
               </button>
             ))}
@@ -467,16 +467,16 @@ function EnhancedSpaceDiscovery() {
                 type="text"
                 placeholder="Search spaces by name, topic, or tags..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-gray-900 border-gray-700 text-white placeholder-gray-400 pl-10"
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
+                className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 pl-10"
               />
             </div>
             
             <div className="flex items-center space-x-2">
               <Button 
                 size="icon" 
-                variant="outline" 
-                className="border-gray-600 text-white"
+                variant="secondary" 
+                className="border-gray-600 text-[var(--hive-text-primary)]"
                 onClick={() => setShowFilters(!showFilters)}
               >
                 <Filter className="w-4 h-4" />
@@ -484,8 +484,8 @@ function EnhancedSpaceDiscovery() {
               
               <select 
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm"
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as string)}
+                className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
               >
                 <option value="popular">Most Popular</option>
                 <option value="trending">Trending</option>
@@ -543,21 +543,21 @@ function EnhancedSpaceDiscovery() {
           
           <Card className="bg-gray-800/50 border-gray-700 text-center">
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-orange-400">
+              <div className="text-2xl font-bold text-[var(--hive-gold)]">
                 {mockSpaces.filter(s => s.isTrending).length}
               </div>
               <div className="text-sm text-gray-400">Trending Now</div>
-              <div className="text-xs text-orange-400 mt-1">Hot topics</div>
+              <div className="text-xs text-[var(--hive-gold)] mt-1">Hot topics</div>
             </CardContent>
           </Card>
           
           <Card className="bg-gray-800/50 border-gray-700 text-center">
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-purple-400">
+              <div className="text-2xl font-bold text-[var(--hive-gold)]">
                 {mockSpaces.reduce((sum, space) => sum + space.memberCount, 0).toLocaleString()}
               </div>
               <div className="text-sm text-gray-400">Total Members</div>
-              <div className="text-xs text-purple-400 mt-1">Campus wide</div>
+              <div className="text-xs text-[var(--hive-gold)] mt-1">Campus wide</div>
             </CardContent>
           </Card>
         </div>
@@ -565,12 +565,12 @@ function EnhancedSpaceDiscovery() {
         {/* Smart Discovery Mode */}
         {activeView === 'smart' && (
           <div className="mb-8">
-            <Card className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-500/20">
+            <Card className="bg-gradient-to-r from-[var(--hive-gold)]/10 to-blue-500/10 border-[var(--hive-gold)]/20">
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <Sparkles className="h-6 w-6" style={{ color: 'var(--hive-brand-primary)' }} />
                   <div>
-                    <CardTitle className="text-white">Smart Discovery</CardTitle>
+                    <CardTitle className="text-[var(--hive-text-primary)]">Smart Discovery</CardTitle>
                     <p className="text-gray-400 text-sm mt-1">
                       Personalized recommendations based on your major, interests, and campus activity
                     </p>
@@ -579,8 +579,8 @@ function EnhancedSpaceDiscovery() {
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div className="bg-white/5 rounded-lg p-4">
-                    <h4 className="text-white font-medium mb-2">📚 Based on Your Major</h4>
+                  <div className="bg-[var(--hive-white)]/5 rounded-lg p-4">
+                    <h4 className="text-[var(--hive-text-primary)] font-medium mb-2">📚 Based on Your Major</h4>
                     <p className="text-gray-400 text-sm mb-3">Computer Science student recommendations</p>
                     <div className="space-y-2">
                       <div className="text-sm text-blue-400">• CS 220: Algorithms & Data Structures</div>
@@ -589,8 +589,8 @@ function EnhancedSpaceDiscovery() {
                     </div>
                   </div>
                   
-                  <div className="bg-white/5 rounded-lg p-4">
-                    <h4 className="text-white font-medium mb-2">🎯 Interest Match</h4>
+                  <div className="bg-[var(--hive-white)]/5 rounded-lg p-4">
+                    <h4 className="text-[var(--hive-text-primary)] font-medium mb-2">🎯 Interest Match</h4>
                     <p className="text-gray-400 text-sm mb-3">Based on your profile interests</p>
                     <div className="space-y-2">
                       <div className="text-sm text-green-400">• UB Hackathon Team</div>
@@ -599,13 +599,13 @@ function EnhancedSpaceDiscovery() {
                     </div>
                   </div>
                   
-                  <div className="bg-white/5 rounded-lg p-4">
-                    <h4 className="text-white font-medium mb-2">🏠 Location Based</h4>
+                  <div className="bg-[var(--hive-white)]/5 rounded-lg p-4">
+                    <h4 className="text-[var(--hive-text-primary)] font-medium mb-2">🏠 Location Based</h4>
                     <p className="text-gray-400 text-sm mb-3">Your residence hall community</p>
                     <div className="space-y-2">
-                      <div className="text-sm text-orange-400">• Ellicott Complex Community</div>
-                      <div className="text-sm text-orange-400">• South Campus Activities</div>
-                      <div className="text-sm text-orange-400">• Hadley Village Events</div>
+                      <div className="text-sm text-[var(--hive-gold)]">• Ellicott Complex Community</div>
+                      <div className="text-sm text-[var(--hive-gold)]">• South Campus Activities</div>
+                      <div className="text-sm text-[var(--hive-gold)]">• Hadley Village Events</div>
                     </div>
                   </div>
                 </div>
@@ -618,7 +618,7 @@ function EnhancedSpaceDiscovery() {
         {activeView !== 'smart' && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Browse by Category</h3>
+              <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">Browse by Category</h3>
               <div className="text-sm text-gray-400">
                 {filteredSpaces.length} space{filteredSpaces.length !== 1 ? 's' : ''} 
                 {selectedCategory !== 'all' && ` in ${selectedFilter.label}`}
@@ -626,7 +626,7 @@ function EnhancedSpaceDiscovery() {
             </div>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-              {spaceTypeFilters.map((filterOption) => (
+              {spaceTypeFilters.map((filterOption: any) => (
                 <Button
                   key={filterOption.id}
                   variant="ghost"
@@ -634,7 +634,7 @@ function EnhancedSpaceDiscovery() {
                   className={`h-auto p-4 flex flex-col items-center text-center transition-all ${
                     selectedCategory === filterOption.id
                       ? 'border-hive-gold bg-hive-gold/10 text-hive-gold'
-                      : 'border border-white/10 text-white hover:bg-white/5'
+                      : 'border border-[var(--hive-white)]/10 text-[var(--hive-text-primary)] hover:bg-[var(--hive-white)]/5'
                   }`}
                   style={selectedCategory === filterOption.id ? {
                     borderColor: 'var(--hive-border-gold)',
@@ -656,7 +656,7 @@ function EnhancedSpaceDiscovery() {
         {/* Enhanced Results Section */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-xl font-semibold text-white mb-1">
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-1">
               {activeView === 'trending' ? 'Trending Spaces' : 
                activeView === 'smart' ? 'Recommended for You' : 
                selectedCategory === 'all' ? 'All Spaces' : selectedFilter.label}
@@ -668,7 +668,7 @@ function EnhancedSpaceDiscovery() {
           </div>
           
           {activeView === 'trending' && (
-            <div className="flex items-center gap-2 text-orange-400">
+            <div className="flex items-center gap-2 text-[var(--hive-gold)]">
               <TrendingUp className="w-4 h-4" />
               <span className="text-sm font-medium">Live trending data</span>
             </div>
@@ -678,13 +678,13 @@ function EnhancedSpaceDiscovery() {
         {/* Enhanced Spaces Display */}
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredSpaces.map((space) => (
+            {filteredSpaces.map((space: any) => (
               <SpacePreviewCard key={space.id} space={space} />
             ))}
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredSpaces.map((space) => (
+            {filteredSpaces.map((space: any) => (
               <SpaceListCard key={space.id} space={space} />
             ))}
           </div>
@@ -694,8 +694,8 @@ function EnhancedSpaceDiscovery() {
         {filteredSpaces.length > 0 && (
           <div className="text-center mt-12">
             <Button 
-              variant="outline" 
-              className="border-gray-600 text-white hover:bg-gray-800"
+              variant="secondary" 
+              className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
             >
               Load More Spaces
               <ChevronRight className="w-4 h-4 ml-2" />
@@ -707,7 +707,7 @@ function EnhancedSpaceDiscovery() {
         {filteredSpaces.length === 0 && (
           <div className="text-center py-12">
             <Compass className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">No spaces found</h3>
+            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">No spaces found</h3>
             <p className="text-gray-400 mb-6">
               {searchQuery 
                 ? `No spaces match "${searchQuery}". Try different keywords or browse all spaces.`
@@ -717,8 +717,8 @@ function EnhancedSpaceDiscovery() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button 
                 onClick={() => setSearchQuery("")}
-                variant="outline"
-                className="border-white/20 text-white"
+                variant="secondary"
+                className="border-[var(--hive-white)]/20 text-[var(--hive-text-primary)]"
               >
                 Clear Search
               </Button>
@@ -759,20 +759,20 @@ function SpacePreviewCard({ space }: { space: any }) {
         <div className="flex items-start justify-between">
           <div className="flex items-center">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center mr-3 ${
-              space.category === 'student_organizations' ? 'bg-gradient-to-r from-blue-500 to-purple-500' :
+              space.category === 'student_organizations' ? 'bg-gradient-to-r from-blue-500 to-[var(--hive-gold)]' :
               space.category === 'campus_living' ? 'bg-gradient-to-r from-green-500 to-teal-500' :
-              space.category === 'greek_life' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+              space.category === 'greek_life' ? 'bg-gradient-to-r from-[var(--hive-gold)] to-pink-500' :
               space.category === 'university_organizations' ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
-              'bg-gradient-to-r from-yellow-400 to-amber-500'
+              'bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)]'
             }`}>
-              {space.category === 'student_organizations' ? <BookOpen className="w-6 h-6 text-white" /> :
-               space.category === 'campus_living' ? <Home className="w-6 h-6 text-white" /> :
-               space.category === 'greek_life' ? <Users className="w-6 h-6 text-white" /> :
-               space.category === 'university_organizations' ? <Award className="w-6 h-6 text-white" /> :
-               <Lightbulb className="w-6 h-6 text-black" />}
+              {space.category === 'student_organizations' ? <BookOpen className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+               space.category === 'campus_living' ? <Home className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+               space.category === 'greek_life' ? <Users className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+               space.category === 'university_organizations' ? <Award className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+               <Lightbulb className="w-6 h-6 text-[var(--hive-black)]" />}
             </div>
             <div className="min-w-0">
-              <CardTitle className="text-white text-base truncate">{space.name}</CardTitle>
+              <CardTitle className="text-[var(--hive-text-primary)] text-base truncate">{space.name}</CardTitle>
               <p className="text-gray-400 text-sm truncate">{space.subcategory}</p>
             </div>
           </div>
@@ -783,7 +783,7 @@ function SpacePreviewCard({ space }: { space: any }) {
               </Badge>
             )}
             {space.isTrending && (
-              <Badge className="text-xs bg-orange-500/20 text-orange-400 border-orange-500/30">
+              <Badge className="text-xs bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30">
                 Trending
               </Badge>
             )}
@@ -805,7 +805,7 @@ function SpacePreviewCard({ space }: { space: any }) {
             <span className="flex items-center">
               <Activity className={`w-4 h-4 mr-1 ${
                 space.activityLevel === 'very-high' ? 'text-green-400' :
-                space.activityLevel === 'high' ? 'text-yellow-400' :
+                space.activityLevel === 'high' ? 'text-[var(--hive-gold)]' :
                 space.activityLevel === 'medium' ? 'text-blue-400' : 'text-gray-400'
               }`} />
               {space.lastActivity}
@@ -822,7 +822,7 @@ function SpacePreviewCard({ space }: { space: any }) {
             </Badge>
             
             {space.status !== 'activated' && (
-              <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/30">
+              <Badge variant="secondary" className="text-xs text-blue-400 border-blue-400/30">
                 {space.status === 'dormant' ? 'Preview' : 'View Only'}
               </Badge>
             )}
@@ -832,7 +832,7 @@ function SpacePreviewCard({ space }: { space: any }) {
         {/* Leader Info */}
         <div className="flex items-center">
           <Avatar className="w-6 h-6 mr-2">
-            <AvatarFallback className="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs">
+            <AvatarFallback className="bg-gradient-to-r from-pink-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)] text-xs">
               {space.leader.avatar}
             </AvatarFallback>
           </Avatar>
@@ -848,7 +848,7 @@ function SpacePreviewCard({ space }: { space: any }) {
         <div className="bg-gray-900/50 rounded-lg p-3">
           <div className="grid grid-cols-3 gap-3 text-center">
             <div>
-              <div className="text-lg font-bold text-white">{space.preview.recentPosts}</div>
+              <div className="text-lg font-bold text-[var(--hive-text-primary)]">{space.preview.recentPosts}</div>
               <div className="text-xs text-gray-400">Recent Posts</div>
             </div>
             <div>
@@ -865,12 +865,12 @@ function SpacePreviewCard({ space }: { space: any }) {
         {/* Tags */}
         <div className="flex flex-wrap gap-1">
           {space.tags.slice(0, 3).map((tag: string) => (
-            <Badge key={tag} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+            <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
               {tag}
             </Badge>
           ))}
           {space.tags.length > 3 && (
-            <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+            <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
               +{space.tags.length - 3}
             </Badge>
           )}
@@ -881,7 +881,7 @@ function SpacePreviewCard({ space }: { space: any }) {
           <div className="bg-gray-800 rounded-lg p-3">
             <div className="flex items-center mb-2">
               <Calendar className="w-4 h-4 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
-              <span className="text-white text-sm font-medium">Next Event</span>
+              <span className="text-[var(--hive-text-primary)] text-sm font-medium">Next Event</span>
             </div>
             <div className="text-gray-300 text-sm">{space.upcomingEvents[0].title}</div>
             <div className="flex items-center text-gray-400 text-xs mt-1">
@@ -897,31 +897,31 @@ function SpacePreviewCard({ space }: { space: any }) {
         <div className="flex space-x-2 pt-2">
           {space.isJoined ? (
             <>
-              <Button size="sm" className="flex-1 bg-green-600 text-white hover:bg-green-700">
+              <Button size="sm" className="flex-1 bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700">
                 <MessageSquare className="w-4 h-4 mr-2" />
                 Open Space
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                 <Settings className="w-4 h-4" />
               </Button>
             </>
           ) : space.status === 'dormant' ? (
             <>
-              <Button size="sm" className="flex-1 bg-blue-600 text-white hover:bg-blue-700">
+              <Button size="sm" className="flex-1 bg-blue-600 text-[var(--hive-text-primary)] hover:bg-blue-700">
                 <Eye className="w-4 h-4 mr-2" />
                 Preview Space
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                 <Heart className="w-4 h-4" />
               </Button>
             </>
           ) : space.status === 'frozen' ? (
             <>
-              <Button size="sm" className="flex-1 bg-gray-600 text-white hover:bg-gray-700" disabled>
+              <Button size="sm" className="flex-1 bg-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-700" disabled>
                 <Eye className="w-4 h-4 mr-2" />
                 View Only
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                 <Heart className="w-4 h-4" />
               </Button>
             </>
@@ -931,12 +931,12 @@ function SpacePreviewCard({ space }: { space: any }) {
                 <UserPlus className="w-4 h-4 mr-2" />
                 Join Space
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                 <Heart className="w-4 h-4" />
               </Button>
             </>
           )}
-          <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+          <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
             <Share className="w-4 h-4" />
           </Button>
         </div>
@@ -949,11 +949,11 @@ function SpacePreviewCard({ space }: { space: any }) {
 function SpaceListCard({ space }: { space: any }) {
   return (
     <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer transition-all duration-200"
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: any) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
             e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: any) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
             e.currentTarget.style.boxShadow = 'none';
           }}>
@@ -961,29 +961,29 @@ function SpaceListCard({ space }: { space: any }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4 flex-1 min-w-0">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
-              space.category === 'student_organizations' ? 'bg-gradient-to-r from-blue-500 to-purple-500' :
+              space.category === 'student_organizations' ? 'bg-gradient-to-r from-blue-500 to-[var(--hive-gold)]' :
               space.category === 'campus_living' ? 'bg-gradient-to-r from-green-500 to-teal-500' :
-              space.category === 'greek_life' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+              space.category === 'greek_life' ? 'bg-gradient-to-r from-[var(--hive-gold)] to-pink-500' :
               space.category === 'university_organizations' ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
-              'bg-gradient-to-r from-yellow-400 to-amber-500'
+              'bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)]'
             }`}>
-              {space.category === 'student_organizations' ? <BookOpen className="w-6 h-6 text-white" /> :
-               space.category === 'campus_living' ? <Home className="w-6 h-6 text-white" /> :
-               space.category === 'greek_life' ? <Users className="w-6 h-6 text-white" /> :
-               space.category === 'university_organizations' ? <Award className="w-6 h-6 text-white" /> :
-               <Lightbulb className="w-6 h-6 text-black" />}
+              {space.category === 'student_organizations' ? <BookOpen className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+               space.category === 'campus_living' ? <Home className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+               space.category === 'greek_life' ? <Users className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+               space.category === 'university_organizations' ? <Award className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+               <Lightbulb className="w-6 h-6 text-[var(--hive-black)]" />}
             </div>
             
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-white font-semibold truncate">{space.name}</h3>
+                <h3 className="text-[var(--hive-text-primary)] font-semibold truncate">{space.name}</h3>
                 {space.isPopular && (
                   <Badge className="text-xs" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
                     Hot
                   </Badge>
                 )}
                 {space.isTrending && (
-                  <Badge className="text-xs bg-orange-500/20 text-orange-400 border-orange-500/30">
+                  <Badge className="text-xs bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] border-[var(--hive-gold)]/30">
                     Trending
                   </Badge>
                 )}
@@ -998,7 +998,7 @@ function SpaceListCard({ space }: { space: any }) {
                 <span className="flex items-center">
                   <Activity className={`w-3 h-3 mr-1 ${
                     space.activityLevel === 'very-high' ? 'text-green-400' :
-                    space.activityLevel === 'high' ? 'text-yellow-400' :
+                    space.activityLevel === 'high' ? 'text-[var(--hive-gold)]' :
                     space.activityLevel === 'medium' ? 'text-blue-400' : 'text-gray-400'
                   }`} />
                   {space.lastActivity}
@@ -1010,17 +1010,17 @@ function SpaceListCard({ space }: { space: any }) {
           
           <div className="flex items-center space-x-2 flex-shrink-0">
             {space.isJoined ? (
-              <Button size="sm" className="bg-green-600 text-white hover:bg-green-700">
+              <Button size="sm" className="bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700">
                 <MessageSquare className="w-4 h-4 mr-2" />
                 Open
               </Button>
             ) : space.status === 'dormant' ? (
-              <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700">
+              <Button size="sm" className="bg-blue-600 text-[var(--hive-text-primary)] hover:bg-blue-700">
                 <Eye className="w-4 h-4 mr-2" />
                 Preview
               </Button>
             ) : space.status === 'frozen' ? (
-              <Button size="sm" className="bg-gray-600 text-white" disabled>
+              <Button size="sm" className="bg-gray-600 text-[var(--hive-text-primary)]" disabled>
                 <Eye className="w-4 h-4 mr-2" />
                 View Only
               </Button>
@@ -1031,7 +1031,7 @@ function SpaceListCard({ space }: { space: any }) {
               </Button>
             )}
             
-            <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+            <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
               <Heart className="w-4 h-4" />
             </Button>
             

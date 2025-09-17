@@ -3,8 +3,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { Search, Bell, Settings, Command } from 'lucide-react';
-import { Button } from './button';
-import { Avatar } from './avatar';
+import { Button } from './button-enhanced';
 
 export interface NavBarProps {
   user?: {
@@ -139,7 +138,7 @@ export const NavBar: React.FC<NavBarProps> = ({
           </div>
         ) : (
           <Button
-            variant="accent"
+            variant="secondary"
             size="sm"
             className="font-medium"
           >

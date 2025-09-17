@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { logger } from './logger';
+
 import { useAuth } from "./use-auth";
 import type { CreationAnalyticsEvent, CreationEventType } from "@hive/core";
 import {
@@ -81,7 +83,7 @@ export const useCreationAnalytics = (
           setUserPreferences(parsedPrefs);
         }
       } catch (error) {
-        console.error("Failed to load analytics preferences:", error);
+        logger.error('Failed to load analytics preferences', { error });
       }
     };
 
@@ -127,11 +129,11 @@ export const useCreationAnalytics = (
           });
 
           if (enableDebugLogging) {
-            console.log(`Flushed ${batch.length} creation analytics events`);
+            console.log('Flushed analytics batch:', batch.length, 'events');
           }
         }
       } catch (error) {
-        console.error("Failed to flush analytics events:", error);
+        logger.error('Failed to flush analytics events', { error });
         // Re-queue events on failure
         eventQueue.current.unshift(...eventsToFlush);
       }
@@ -201,7 +203,7 @@ export const useCreationAnalytics = (
       eventQueue.current.push(event);
 
       if (enableDebugLogging) {
-        console.log("Tracked creation event:", eventType, metadata);
+        console.log('Tracked event:', eventType, event);
       }
 
       // Flush if queue is full

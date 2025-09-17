@@ -3,10 +3,10 @@ import type { NextRequest } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 import type { Space, SpaceType } from "@hive/core";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 import * as admin from 'firebase-admin';
 
 const createSpaceSchema = z.object({
@@ -62,7 +62,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       return NextResponse.json(ApiResponseHelper.success([]), { status: HttpStatus.OK });
     }
 
-    const spaces = snapshot.docs.map((doc) => ({
+    const spaces = snapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data(),
     })) as Space[];

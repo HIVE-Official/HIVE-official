@@ -4,8 +4,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
+
 import { createHash, randomBytes } from 'crypto';
-import { logSecurityEvent } from './structured-logger';
+import { logSecurityEvent } from './utils/structured-logger';
 import { currentEnvironment } from './env';
 import { getSecureClientId } from './secure-rate-limiter';
 
@@ -283,7 +285,7 @@ export class CSRFProtection {
       };
 
     } catch (error) {
-      console.error('CSRF validation error:', error);
+      logger.error('CSRF validation error:', { error: String(error) });
       
       await logSecurityEvent('csrf', {
         operation: 'validation_error',
@@ -539,7 +541,6 @@ export class CSRFProtection {
     }
 
     if (cleanedCount > 0) {
-      console.log(`CSRF cleanup: removed ${cleanedCount} expired tokens`);
     }
   }
 
@@ -559,6 +560,34 @@ export class CSRFProtection {
       strictMode: CSRF_CONFIG.STRICT_MODE
     };
   }
+}
+
+/**
+ * Simple CSRF token validation for immediate use
+ * This is a temporary implementation that skips validation in development
+ */
+export function validateCSRFToken(request: NextRequest): {
+  valid: boolean;
+  error?: string;
+} {
+  // Skip CSRF validation in development for now
+  if (process.env.NODE_ENV === 'development') {
+    return { valid: true };
+  }
+
+  // In production, implement basic CSRF checks
+  const origin = request.headers.get('origin');
+  const referer = request.headers.get('referer');
+  
+  // Basic origin validation
+  if (!origin && !referer) {
+    return {
+      valid: false,
+      error: 'Missing origin and referer headers'
+    };
+  }
+
+  return { valid: true };
 }
 
 /**
@@ -644,7 +673,7 @@ export function withCSRFProtection(
 
       return handler(request, csrfResult.token);
     } catch (error) {
-      console.error('CSRF middleware error:', error);
+      logger.error('CSRF middleware error:', { error: String(error) });
       return NextResponse.json(
         { error: 'CSRF protection service unavailable' },
         { status: 503 }

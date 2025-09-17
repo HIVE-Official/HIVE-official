@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/logger';
+
 import { useSession } from './use-session';
 
 // Comprehensive dashboard data interfaces
@@ -523,7 +525,7 @@ export function useDashboardData(): DashboardState & {
         error: null
       }));
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      logger.error('Error fetching dashboard data:', { error: String(error) });
       setState(prev => ({
         ...prev,
         isLoading: false,

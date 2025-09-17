@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { profileAPI, PrivacySettings } from '../lib/profile-api';
+import { profileAPI, PrivacySettings } from '@/lib/profile-api';
 
 interface UsePrivacySettingsReturn {
   isLoading: boolean;

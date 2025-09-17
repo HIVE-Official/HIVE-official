@@ -6,11 +6,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Textarea } from '../../../components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
+import { Textarea } from '../../../atomic/atoms/textarea-enhanced';
 import { Progress } from '../../../components/ui/progress';
 import { 
   Wrench, 
@@ -52,6 +52,7 @@ import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion
 import '../../../hive-tokens.css';
 
 const meta = {
+  component: () => null,
   title: '13-HiveLAB/Element-to-Tool Creation',
   parameters: {
     layout: 'fullscreen',
@@ -434,13 +435,13 @@ const HiveLABShowcase = () => {
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {tool.elements.slice(0, 3).map((element, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs"
+                      <Badge key={idx} variant="secondary" className="text-xs"
                              style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                         {element}
                       </Badge>
                     ))}
                     {tool.elements.length > 3 && (
-                      <Badge variant="outline" className="text-xs"
+                      <Badge variant="secondary" className="text-xs"
                              style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                         +{tool.elements.length - 3} more
                       </Badge>
@@ -534,7 +535,7 @@ const HiveLABShowcase = () => {
                   </h6>
                   <div className="flex flex-wrap gap-2">
                     {selectedTool.elements.map((element, idx) => (
-                      <Badge key={idx} variant="outline"
+                      <Badge key={idx} variant="secondary"
                              style={{ borderColor: 'var(--hive-border-gold)', color: 'var(--hive-brand-primary)' }}>
                         {element}
                       </Badge>
@@ -603,7 +604,7 @@ const HiveLABShowcase = () => {
                 </h5>
                 <div className="flex flex-wrap gap-1">
                   {element.config.map((option: string, idx: number) => (
-                    <Badge key={idx} variant="outline" className="text-xs"
+                    <Badge key={idx} variant="secondary" className="text-xs"
                            style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                       {option}
                     </Badge>
@@ -748,11 +749,11 @@ const HiveLABShowcase = () => {
                               borderColor: selectedElement?.name === element.name ? category.color : 'var(--hive-border-primary)'
                             }}
                             onClick={() => setSelectedElement(element)}
-                            onMouseEnter={(e) => {
+                            onMouseEnter={(e: any) => {
                               e.currentTarget.style.borderColor = category.color;
                               e.currentTarget.style.backgroundColor = 'var(--hive-background-interactive)';
                             }}
-                            onMouseLeave={(e) => {
+                            onMouseLeave={(e: any) => {
                               if (selectedElement?.name !== element.name) {
                                 e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                               }
@@ -774,7 +775,7 @@ const HiveLABShowcase = () => {
                                   {element.description}
                                 </p>
                                 <div className="flex items-center justify-between">
-                                  <Badge variant="outline" className="text-xs"
+                                  <Badge variant="secondary" className="text-xs"
                                          style={{ borderColor: category.color, color: category.color }}>
                                     {element.dataType}
                                   </Badge>

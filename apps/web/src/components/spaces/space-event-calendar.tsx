@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal } from "@hive/ui";
+import { Button, Card, Badge, Modal } from "@hive/ui";
 import { 
   Calendar, 
   Clock, 
@@ -328,8 +328,8 @@ export function SpaceEventCalendar({
       case 'academic': return 'bg-blue-500';
       case 'social': return 'bg-pink-500';
       case 'professional': return 'bg-green-500';
-      case 'recreational': return 'bg-orange-500';
-      case 'official': return 'bg-purple-500';
+      case 'recreational': return 'bg-[var(--hive-gold)]';
+      case 'official': return 'bg-[var(--hive-gold)]';
       default: return 'bg-gray-500';
     }
   };
@@ -355,7 +355,7 @@ export function SpaceEventCalendar({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-          <p className="text-white">Loading space calendar...</p>
+          <p className="text-[var(--hive-text-inverse)]">Loading space calendar...</p>
         </div>
       </div>
     );
@@ -366,20 +366,20 @@ export function SpaceEventCalendar({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">Space Calendar</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-2">Space Calendar</h2>
           <p className="text-zinc-400">Events and activities for {spaceName}</p>
         </div>
         
         <div className="flex items-center space-x-3">
           <div className="flex items-center bg-zinc-800 rounded-lg p-1">
-            {['month', 'week', 'day', 'list'].map((mode) => (
+            {['month', 'week', 'day', 'list'].map((mode: any) => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode as any)}
                 className={`px-3 py-1 text-sm rounded-md transition-colors capitalize ${
                   viewMode === mode
                     ? 'bg-hive-gold text-hive-obsidian font-medium'
-                    : 'text-zinc-400 hover:text-white'
+                    : 'text-zinc-400 hover:text-[var(--hive-text-inverse)]'
                 }`}
               >
                 {mode}
@@ -406,16 +406,16 @@ export function SpaceEventCalendar({
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             placeholder="Search events..."
-            className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
+            className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
           />
         </div>
         
         <select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-          className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
+          onChange={(e: any) => setTypeFilter(e.target.value)}
+          className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Types</option>
           <option value="academic">Academic</option>
@@ -427,8 +427,8 @@ export function SpaceEventCalendar({
         
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
+          onChange={(e: any) => setStatusFilter(e.target.value)}
+          className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Status</option>
           <option value="upcoming">Upcoming</option>
@@ -447,7 +447,7 @@ export function SpaceEventCalendar({
         <Card className="p-6 bg-zinc-800/50 border-zinc-700">
           {/* Month Navigation */}
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold text-white">
+            <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)]">
               {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
             </h3>
             <div className="flex items-center space-x-2">
@@ -478,7 +478,7 @@ export function SpaceEventCalendar({
           {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-1">
             {/* Day Headers */}
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day: any) => (
               <div key={day} className="p-2 text-center text-sm font-medium text-zinc-400">
                 {day}
               </div>
@@ -501,7 +501,7 @@ export function SpaceEventCalendar({
                   }`}
                 >
                   <div className={`text-sm font-medium mb-1 ${
-                    isToday ? 'text-hive-gold' : 'text-white'
+                    isToday ? 'text-hive-gold' : 'text-[var(--hive-text-inverse)]'
                   }`}>
                     {date.getDate()}
                   </div>
@@ -511,7 +511,7 @@ export function SpaceEventCalendar({
                       <div
                         key={event.id}
                         onClick={() => handleEventClick(event)}
-                        className={`text-xs p-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getEventTypeColor(event.type)} text-white`}
+                        className={`text-xs p-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getEventTypeColor(event.type)} text-[var(--hive-text-inverse)]`}
                       >
                         <div className="truncate font-medium">{event.title}</div>
                         <div className="truncate opacity-75">
@@ -543,12 +543,12 @@ export function SpaceEventCalendar({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start space-x-4 flex-1">
                   <div className={`w-12 h-12 ${getEventTypeColor(event.type)} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                    <Calendar className="h-6 w-6 text-white" />
+                    <Calendar className="h-6 w-6 text-[var(--hive-text-inverse)]" />
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2 mb-1">
-                      <h3 className="text-lg font-semibold text-white">{event.title}</h3>
+                      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{event.title}</h3>
                       {event.isRecurring && (
                         <Badge variant="skill-tag" className="text-xs">
                           Recurring
@@ -568,7 +568,7 @@ export function SpaceEventCalendar({
                       <div className="flex items-center space-x-2">
                         <Clock className="h-4 w-4 text-zinc-400" />
                         <div>
-                          <div className="text-white font-medium">
+                          <div className="text-[var(--hive-text-inverse)] font-medium">
                             {new Date(event.datetime.start).toLocaleDateString()}
                           </div>
                           <div className="text-zinc-400">
@@ -580,7 +580,7 @@ export function SpaceEventCalendar({
                       <div className="flex items-center space-x-2">
                         <MapPin className="h-4 w-4 text-zinc-400" />
                         <div>
-                          <div className="text-white font-medium capitalize">
+                          <div className="text-[var(--hive-text-inverse)] font-medium capitalize">
                             {event.location.type}
                           </div>
                           <div className="text-zinc-400 truncate">{event.location.name}</div>
@@ -590,7 +590,7 @@ export function SpaceEventCalendar({
                       <div className="flex items-center space-x-2">
                         <Users className="h-4 w-4 text-zinc-400" />
                         <div>
-                          <div className="text-white font-medium">
+                          <div className="text-[var(--hive-text-inverse)] font-medium">
                             {event.engagement.going}/{event.capacity.max}
                           </div>
                           <div className="text-zinc-400">attending</div>
@@ -606,7 +606,7 @@ export function SpaceEventCalendar({
                       {event.spaceIntegration.spaceTools.length} tools
                     </Badge>
                   )}
-                  <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white">
+                  <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-[var(--hive-text-inverse)]">
                     <ExternalLink className="h-4 w-4" />
                   </Button>
                 </div>
@@ -643,7 +643,7 @@ export function SpaceEventCalendar({
       )}
 
       {/* Event Details Modal */}
-      <HiveModal
+      <Modal
         isOpen={showEventDetails}
         onClose={() => setShowEventDetails(false)}
         title={selectedEvent?.title || ''}
@@ -680,7 +680,7 @@ export function SpaceEventCalendar({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-white mb-2">Date & Time</h4>
+                  <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Date & Time</h4>
                   <div className="flex items-center space-x-2 text-sm text-zinc-300">
                     <Clock className="h-4 w-4 text-zinc-400" />
                     <div>
@@ -693,7 +693,7 @@ export function SpaceEventCalendar({
                 </div>
                 
                 <div>
-                  <h4 className="font-medium text-white mb-2">Location</h4>
+                  <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Location</h4>
                   <div className="flex items-center space-x-2 text-sm text-zinc-300">
                     <MapPin className="h-4 w-4 text-zinc-400" />
                     <div>
@@ -704,7 +704,7 @@ export function SpaceEventCalendar({
                 </div>
                 
                 <div>
-                  <h4 className="font-medium text-white mb-2">Capacity</h4>
+                  <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Capacity</h4>
                   <div className="flex items-center space-x-2 text-sm text-zinc-300">
                     <Users className="h-4 w-4 text-zinc-400" />
                     <div>
@@ -719,13 +719,13 @@ export function SpaceEventCalendar({
               
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-white mb-2">Space Integration</h4>
+                  <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Space Integration</h4>
                   <div className="space-y-2">
                     {selectedEvent.spaceIntegration.spaceTools.length > 0 && (
                       <div>
                         <span className="text-sm text-zinc-400">Available Tools:</span>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {selectedEvent.spaceIntegration.spaceTools.map((tool) => (
+                          {selectedEvent.spaceIntegration.spaceTools.map((tool: any) => (
                             <Badge key={tool} variant="skill-tag" className="text-xs">
                               {tool}
                             </Badge>
@@ -745,7 +745,7 @@ export function SpaceEventCalendar({
                       <div>
                         <span className="text-sm text-zinc-400">Partner Spaces:</span>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {selectedEvent.spaceIntegration.partnerSpaces.map((space) => (
+                          {selectedEvent.spaceIntegration.partnerSpaces.map((space: any) => (
                             <Badge key={space} variant="building-tools" className="text-xs">
                               {space}
                             </Badge>
@@ -757,15 +757,15 @@ export function SpaceEventCalendar({
                 </div>
                 
                 <div>
-                  <h4 className="font-medium text-white mb-2">Organizer</h4>
+                  <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Organizer</h4>
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-zinc-600 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-medium">
+                      <span className="text-[var(--hive-text-inverse)] text-xs font-medium">
                         {selectedEvent.organizer.name.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
                     <div>
-                      <div className="text-white text-sm">{selectedEvent.organizer.name}</div>
+                      <div className="text-[var(--hive-text-inverse)] text-sm">{selectedEvent.organizer.name}</div>
                       <div className="text-zinc-400 text-xs">@{selectedEvent.organizer.handle}</div>
                     </div>
                     {selectedEvent.organizer.verified && (
@@ -810,7 +810,7 @@ export function SpaceEventCalendar({
             </div>
           </div>
         )}
-      </HiveModal>
+      </Modal>
     </div>
   );
 }

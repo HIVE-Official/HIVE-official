@@ -1,6 +1,4 @@
 import type { Config } from "tailwindcss";
-import { prdTailwindColors } from "../../tokens/src/colors-prd-aligned";
-import { prdTailwindRadius } from "../../tokens/src/radius-prd-aligned";
 
 const config = {
   darkMode: ["class"],
@@ -11,6 +9,20 @@ const config = {
     './src/**/*.{ts,tsx}',
   ],
   prefix: "",
+  safelist: [
+    // HIVE motion system durations - using named durations from theme
+    'duration-50',        // 50ms
+    'duration-90',        // 90ms (also 'fast')
+    'duration-120',       // 120ms
+    'duration-150',       // 150ms
+    'duration-180',       // 180ms
+    'duration-200',       // 200ms (also 'base')
+    'duration-240',       // 240ms
+    'duration-280',       // 280ms
+    'duration-400',       // 400ms
+    // HIVE motion easing - using custom defined timing function
+    'ease-custom-bezier',
+  ],
   theme: {
     spacing: {
       '0': '0',
@@ -42,10 +54,7 @@ const config = {
         '4': '0px 25px 50px -12px rgba(0, 0, 0, 0.25)',
       },
       colors: {
-        // === PRD-ALIGNED TOKENS (Primary) ===
-        ...prdTailwindColors,
-        
-        // === LEGACY TOKENS (Backward Compatibility) ===
+        // === HIVE TOKENS (Primary) ===
         'bg-canvas': '#0A0A0A',
         'bg-card': 'rgba(255,255,255,0.02)',
         'accent-gold': '#FFD700',
@@ -89,10 +98,7 @@ const config = {
         },
       },
       borderRadius: {
-        // === PRD-ALIGNED RADIUS (Primary) ===
-        ...prdTailwindRadius,
-        
-        // === LEGACY RADIUS (Backward Compatibility) ===
+        // === HIVE RADIUS (Primary) ===
         sm: '4px',
         DEFAULT: '12px',
         lg: '12px',
@@ -100,8 +106,8 @@ const config = {
         full: '9999px',
       },
       fontFamily: {
-        // === PRD-ALIGNED FONTS ===
-        sans: ['Geist', 'Inter', 'sans-serif'],      // Primary font
+        // === HIVE FONTS ===
+        sans: ['Inter', 'sans-serif'],               // Primary font
         display: ['Space Grotesk', 'sans-serif'],    // Display font  
         mono: ['Geist Mono', 'monospace'],           // Code font
       },
@@ -130,9 +136,19 @@ const config = {
         'custom-bezier': 'cubic-bezier(0.33, 0.65, 0, 1)',
       },
       transitionDuration: {
+        '50': '50ms',
+        '90': '90ms',
         'fast': '90ms',
+        '120': '120ms',
+        '150': '150ms',
+        '180': '180ms',
+        '200': '200ms',
         'base': '200ms',
+        '240': '240ms',
+        '280': '280ms',
+        '350': '350ms',
         'slow': '350ms',
+        '400': '400ms',
       }
     },
   },

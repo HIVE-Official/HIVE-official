@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { NavBar } from './nav-bar';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { Search, Bell, Settings, User } from 'lucide-react';
@@ -88,7 +88,7 @@ export const Default: Story = {
     showNotifications: true,
     unreadCount: 3,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="bg-[var(--hive-background-primary)]">
       <NavBar {...args} />
       <div className="p-6">
@@ -116,7 +116,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">👤 USER STATES</Badge>
+            <Badge variant="emerald">👤 USER STATES</Badge>
             Navigation Bar User States
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -686,7 +686,7 @@ export const Playground: Story = {
     showNotifications: true,
     unreadCount: 3,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="bg-[var(--hive-background-primary)]">
       <NavBar {...args} />
       <div className="p-6">

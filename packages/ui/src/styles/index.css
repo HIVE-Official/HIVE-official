@@ -1,0 +1,147 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";  
+@import "tailwindcss/utilities";
+
+@layer base {
+  :root {
+    /* Monochrome + Gold System */
+    --background: #FFFFFF;
+    --foreground: #000000;
+    --card: #FFFFFF;
+    --card-foreground: #000000;
+    --popover: #FFFFFF;
+    --popover-foreground: #000000;
+    --primary: #FFD700; /* Pure Gold */
+    --primary-foreground: #000000;
+    --secondary: #F5F5F5;
+    --secondary-foreground: #000000;
+    --muted: #737373;
+    --muted-foreground: #000000;
+    --accent: #FFD700; /* Pure Gold */
+    --accent-foreground: #000000;
+    --destructive: #000000;
+    --destructive-foreground: #FFFFFF;
+    --border: #E5E5E5;
+    --input: #E5E5E5;
+    --ring: #FFD700;
+    --radius: 0.75rem;
+
+    /* Premium Spacing System */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.75rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
+
+    /* Animation variables */
+    --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
+    --motion-fast: 150ms;
+    --motion-content: 250ms;
+    --motion-slow: 350ms;
+  }
+  
+  /* Dark mode */
+  .dark {
+    --background: #0A0A0A;
+    --foreground: #FAFAFA;
+    --card: #171717;
+    --card-foreground: #FAFAFA;
+    --popover: #171717;
+    --popover-foreground: #FAFAFA;
+    --primary: #3B82F6;
+    --primary-foreground: #FFFFFF;
+    --secondary: #262626;
+    --secondary-foreground: #FAFAFA;
+    --muted: #737373;
+    --muted-foreground: #FAFAFA;
+    --accent: #FBBF24;
+    --accent-foreground: #171717;
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+    --border: #404040;
+    --input: #404040;
+    --ring: #3B82F6;
+  }
+
+  /* Base styles */
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "cv11", "ss01";
+  }
+}
+
+/* Component styles */
+@layer components {
+  .hive-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: colors var(--motion-fast) ease;
+    border: none;
+    outline: none;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .hive-input {
+    display: flex;
+    height: 2.5rem;
+    width: 100%;
+    border-radius: calc(var(--radius) - 2px);
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--background));
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: hsl(var(--foreground));
+  }
+
+  .hive-card {
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn var(--motion-content) var(--motion-easing) forwards;
+  }
+
+  .animate-slide-in {
+    animation: slideIn var(--motion-content) var(--motion-easing) forwards;
+  }
+} 

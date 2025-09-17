@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { logger } from '@hive/core';
+import { AdminErrorBoundary } from "./admin-error-boundary";
+import { AdminLoadingSkeleton } from "./admin-loading-skeleton";
+
 import { HiveCard as Card, CardContent, CardHeader, CardTitle } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { AdminNavigation } from "./admin-navigation";
@@ -12,13 +16,18 @@ import { AnalyticsDashboard } from "./analytics-dashboard";
 import { MetricCards } from "./metric-cards";
 import { AdminNotifications } from "./admin-notifications";
 import { AdminActivityLogDashboard } from "./admin-activity-log";
+import { FeatureFlagDashboard } from "./feature-flag-dashboard";
+import { PlatformHealthMonitor } from "./platform-health-monitor";
+import { EmergencyResponseCenter } from "./emergency-response-center";
+import { PlatformConfigManager } from "./platform-config-manager";
+import { ToolApprovalSystem } from "./tool-approval-system";
 
 interface AdminDashboardProps {
   initialTab?: string;
 }
 
-export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDashboardProps) {
-  const { admin } = useAdminAuth();
+function AdminDashboardContent({ initialTab = 'overview' }: AdminDashboardProps) {
+  const { admin, loading, error, isAuthenticated } = useAdminAuth();
   const [activeTab, setActiveTab] = useState(initialTab);
   const [pendingCounts, setPendingCounts] = useState({
     builderRequests: 0,
@@ -30,25 +39,34 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
     if (!admin) return;
 
     try {
+      const token = process.env.NODE_ENV === 'development' ? 'test-token' : admin.id;
       const [builderResponse, contentResponse] = await Promise.all([
         fetch('/api/admin/builder-requests', {
-          headers: { 'Authorization': `Bearer ${admin.id}` },
+          headers: { 'Authorization': `Bearer ${token}` },
         }),
-        fetch('/api/admin/content-moderation', {
-          headers: { 'Authorization': `Bearer ${admin.id}` },
+        fetch('/api/admin/moderation', {
+          headers: { 'Authorization': `Bearer ${token}` },
         }),
       ]);
 
-      const builderData = await builderResponse.json();
-      const contentData = await contentResponse.json();
+      if (builderResponse.ok) {
+        const builderData = await builderResponse.json();
+        setPendingCounts(prev => ({
+          ...prev,
+          builderRequests: builderData.requests?.filter((r: { status: string }) => r.status === 'pending').length || 0,
+        }));
+      }
 
-      setPendingCounts({
-        builderRequests: builderData.requests?.filter((r: { status: string }) => r.status === 'pending').length || 0,
-        flaggedContent: contentData.flaggedContent?.filter((c: { status: string }) => c.status === 'pending').length || 0,
-        userReports: 0, // TODO: Implement user reports
-      });
+      if (contentResponse.ok) {
+        const contentData = await contentResponse.json();
+        setPendingCounts(prev => ({
+          ...prev,
+          flaggedContent: contentData.flaggedContent?.filter((c: { status: string }) => c.status === 'pending').length || 0,
+        }));
+      }
     } catch (error) {
-      console.error('Failed to fetch pending counts:', error);
+      logger.error('Failed to fetch pending counts:', error);
+      // Don't throw - allow dashboard to work with stale counts
     }
   };
 
@@ -57,6 +75,7 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
     // Refresh counts every 30 seconds
     const interval = setInterval(fetchPendingCounts, 30000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [admin]);
 
   const renderTabContent = () => {
@@ -113,18 +132,17 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
       case 'content':
         return <ContentModerationDashboard />;
       case 'builders':
-        return (
-          <Card className="border-gray-700 bg-gray-900/50">
-            <CardHeader>
-              <CardTitle className="text-white">Builder Approval Queue</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BuilderQueueEnhanced />
-            </CardContent>
-          </Card>
-        );
+        return <ToolApprovalSystem />;
       case 'analytics':
         return <AnalyticsDashboard />;
+      case 'feature-flags':
+        return <FeatureFlagDashboard />;
+      case 'health-monitor':
+        return <PlatformHealthMonitor />;
+      case 'emergency':
+        return <EmergencyResponseCenter />;
+      case 'config':
+        return <PlatformConfigManager />;
       case 'system':
         return (
           <div className="space-y-6">
@@ -188,10 +206,33 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
     }
   };
 
+  // Handle loading state
+  if (loading) {
+    return <AdminLoadingSkeleton />;
+  }
+
+  // Handle authentication errors
+  if (error || !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-white mb-2">Access Denied</h2>
+          <p className="text-gray-400 mb-4">
+            {error || 'You must be an admin to access this dashboard'}
+          </p>
+          <a href="/auth/login" className="text-orange-500 hover:text-orange-400 underline">
+            Sign in with admin account
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle missing admin data
   if (!admin) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-white">Loading admin dashboard...</div>
+        <div className="text-white">Unable to load admin data</div>
       </div>
     );
   }
@@ -250,5 +291,16 @@ export function ComprehensiveAdminDashboard({ initialTab = 'overview' }: AdminDa
         </div>
       </div>
     </div>
+  );
+}
+
+// Export wrapped component with error boundary and suspense
+export function ComprehensiveAdminDashboard(props: AdminDashboardProps) {
+  return (
+    <AdminErrorBoundary>
+      <Suspense fallback={<AdminLoadingSkeleton />}>
+        <AdminDashboardContent {...props} />
+      </Suspense>
+    </AdminErrorBoundary>
   );
 }

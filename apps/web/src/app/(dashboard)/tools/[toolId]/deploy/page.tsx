@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
+
 import { useRouter, useParams } from 'next/navigation';
 import { Card, Button } from "@hive/ui";
-import { Alert as _Alert } from "@/components/temp-stubs";
+import { Alert as _Alert } from "@hive/ui";
+import { PageContainer } from "@hive/ui";
 import { 
   ArrowLeft, 
   User, 
@@ -19,7 +22,7 @@ import {
 } from 'lucide-react';
 import { useFeatureFlags } from '@hive/hooks';
 import { useUnifiedAuth } from '@hive/ui';
-import { ToolNavigation } from '@/lib/tool-navigation';
+import { ToolNavigation } from '@/lib/tools/tool-navigation';
 
 interface DeploymentTarget {
   id: string;
@@ -62,7 +65,7 @@ export default function ToolDeployPage() {
   
   const [deploymentConfig, setDeploymentConfig] = useState<DeploymentConfig>({
     targetType: 'profile',
-    targetId: user?.uid || 'test-user-id',
+    targetId: user?.id || 'test-user-id',
     permissions: {
       canInteract: true,
       canView: true,
@@ -79,7 +82,7 @@ export default function ToolDeployPage() {
   // Mock data for available targets
   const availableTargets: DeploymentTarget[] = [
     {
-      id: user?.uid || 'test-user-id',
+      id: user?.id || 'test-user-id',
       name: 'My Profile',
       type: 'profile',
       icon: <User className="h-5 w-5" />,
@@ -179,7 +182,7 @@ export default function ToolDeployPage() {
 
       setStep('success');
     } catch (err) {
-      console.error('Deployment error:', err);
+      logger.error('Deployment error:', { error: String(err) });
       setError(err instanceof Error ? err.message : 'Failed to deploy tool');
     } finally {
       setIsLoading(false);
@@ -259,7 +262,7 @@ export default function ToolDeployPage() {
                   value={surface.id}
                   checked={deploymentConfig.surface === surface.id}
                   onChange={(e) => handleConfigUpdate({ surface: e.target.value })}
-                  className="text-[#FFD700]"
+                  className="text-[var(--hive-brand-secondary)]"
                 />
                 <div>
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -289,7 +292,7 @@ export default function ToolDeployPage() {
               onChange={(e) => handleConfigUpdate({
                 permissions: { ...deploymentConfig.permissions, canView: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-secondary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Can View</div>
@@ -306,7 +309,7 @@ export default function ToolDeployPage() {
               onChange={(e) => handleConfigUpdate({
                 permissions: { ...deploymentConfig.permissions, canInteract: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-secondary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Can Interact</div>
@@ -332,7 +335,7 @@ export default function ToolDeployPage() {
               onChange={(e) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, showInDirectory: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-secondary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Show in Directory</div>
@@ -349,7 +352,7 @@ export default function ToolDeployPage() {
               onChange={(e) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, allowSharing: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-secondary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Allow Sharing</div>
@@ -366,7 +369,7 @@ export default function ToolDeployPage() {
               onChange={(e) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, collectAnalytics: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-secondary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Collect Analytics</div>
@@ -388,7 +391,7 @@ export default function ToolDeployPage() {
         </Button>
         <Button
           onClick={() => setStep('confirm')}
-          className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+          className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255]"
         >
           Review Deployment
         </Button>
@@ -463,11 +466,11 @@ export default function ToolDeployPage() {
           <Button
             onClick={handleDeploy}
             disabled={isLoading}
-            className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255] flex items-center gap-2"
+            className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255] flex items-center gap-2"
           >
             {isLoading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0A0A0A]" />
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--hive-background-primary)]" />
                 Deploying...
               </>
             ) : (
@@ -507,7 +510,7 @@ export default function ToolDeployPage() {
         </Button>
         <Button
           onClick={() => ToolNavigation.toAnalytics(toolId)}
-          className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+          className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255]"
         >
           View Analytics
         </Button>
@@ -519,7 +522,7 @@ export default function ToolDeployPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFD700] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-secondary)] mx-auto mb-4"></div>
           <p className="text-[var(--hive-text-secondary)]">Loading tool...</p>
         </div>
       </div>

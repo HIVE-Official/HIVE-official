@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -127,7 +129,13 @@ const POST_TYPES: Array<{
   },
 ];
 
-const PRIORITY_OPTIONS = [
+interface PriorityOption {
+  value: 'low' | 'medium' | 'high' | 'urgent';
+  label: string;
+  color: string;
+}
+
+const PRIORITY_OPTIONS: PriorityOption[] = [
   { value: 'low', label: 'Low Priority', color: 'text-gray-400' },
   { value: 'medium', label: 'Medium Priority', color: 'text-blue-400' },
   { value: 'high', label: 'High Priority', color: 'text-orange-400' },
@@ -252,7 +260,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
       await onSubmit(data);
       handleClose();
     } catch (error) {
-      console.error('Failed to create post:', error);
+      logger.error('Failed to create post:', { error });
     }
   };
 
@@ -403,7 +411,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
               <textarea
                 ref={textareaRef}
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
                 placeholder={
                   selectedType === 'event'
                     ? 'Describe your event and what people can expect...'
@@ -443,7 +451,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                   <input
                     type="text"
                     value={eventTitle}
-                    onChange={(e) => setEventTitle(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEventTitle(e.target.value)}
                     placeholder="Enter event title"
                     className={cn(
                       'w-full px-4 py-3 rounded-xl border transition-all duration-200',
@@ -467,7 +475,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="date"
                       value={eventDate}
-                      onChange={(e) => setEventDate(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEventDate(e.target.value)}
                       className={cn(
                         'w-full px-4 py-3 rounded-xl border transition-all duration-200',
                         'bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)]',
@@ -489,7 +497,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="time"
                       value={eventTime}
-                      onChange={(e) => setEventTime(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEventTime(e.target.value)}
                       className={cn(
                         'w-full px-4 py-3 rounded-xl border transition-all duration-200',
                         'bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)]',
@@ -512,7 +520,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                   <input
                     type="text"
                     value={eventLocation}
-                    onChange={(e) => setEventLocation(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEventLocation(e.target.value)}
                     placeholder="Where will this event take place?"
                     className="w-full px-4 py-3 rounded-xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                   />
@@ -523,7 +531,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="checkbox"
                       checked={requireRsvp}
-                      onChange={(e) => setRequireRsvp(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRequireRsvp(e.target.checked)}
                       className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
                     />
                     <span className="text-sm text-[var(--hive-text-primary)]">Require RSVP</span>
@@ -535,7 +543,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                       <input
                         type="number"
                         value={eventCapacity}
-                        onChange={(e) => setEventCapacity(Number(e.target.value) || undefined)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEventCapacity(Number(e.target.value) || undefined)}
                         min="1"
                         className="w-20 px-2 py-1 rounded border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] text-sm focus:outline-none focus:border-[var(--hive-brand-primary)]/50"
                       />
@@ -558,7 +566,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                   <input
                     type="text"
                     value={pollQuestion}
-                    onChange={(e) => setPollQuestion(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPollQuestion(e.target.value)}
                     placeholder="What would you like to ask?"
                     className={cn(
                       'w-full px-4 py-3 rounded-xl border transition-all duration-200',
@@ -584,7 +592,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                         <input
                           type="text"
                           value={option}
-                          onChange={(e) => updatePollOption(index, e.target.value)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePollOption(index, e.target.value)}
                           placeholder={`Option ${index + 1}`}
                           className="flex-1 px-4 py-2 rounded-xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                         />
@@ -619,7 +627,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="checkbox"
                       checked={allowMultiple}
-                      onChange={(e) => setAllowMultiple(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAllowMultiple(e.target.checked)}
                       className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
                     />
                     <span className="text-sm text-[var(--hive-text-primary)]">Allow multiple choices</span>
@@ -629,7 +637,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="checkbox"
                       checked={anonymousPoll}
-                      onChange={(e) => setAnonymousPoll(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAnonymousPoll(e.target.checked)}
                       className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
                     />
                     <span className="text-sm text-[var(--hive-text-primary)]">Anonymous voting</span>
@@ -642,7 +650,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                   </label>
                   <select
                     value={pollExpiresIn || ''}
-                    onChange={(e) => setPollExpiresIn(Number(e.target.value) || undefined)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPollExpiresIn(Number(e.target.value) || undefined)}
                     className="px-4 py-2 rounded-xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                   >
                     <option value="">No expiration</option>
@@ -667,10 +675,10 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     Priority Level
                   </label>
                   <div className="grid grid-cols-2 gap-2">
-                    {PRIORITY_OPTIONS.map((priority) => (
+                    {PRIORITY_OPTIONS.map((priority: PriorityOption) => (
                       <button
                         key={priority.value}
-                        onClick={() => setAnnouncementPriority(priority.value as any)}
+                        onClick={() => setAnnouncementPriority(priority.value)}
                         className={cn(
                           'p-3 rounded-xl border transition-all duration-200 text-left',
                           announcementPriority === priority.value
@@ -691,7 +699,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                     <input
                       type="checkbox"
                       checked={pinnedAnnouncement}
-                      onChange={(e) => setPinnedAnnouncement(e.target.checked)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPinnedAnnouncement(e.target.checked)}
                       className="w-4 h-4 rounded border-[var(--hive-border-primary)]/30 text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/20"
                     />
                     <span className="text-sm text-[var(--hive-text-primary)]">Pin to top</span>

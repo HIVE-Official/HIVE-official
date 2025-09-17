@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const EditPostSchema = z.object({
   content: z.string().min(1).max(2000) });
@@ -128,7 +128,7 @@ export async function PATCH(
     }
 
     // Check if post is within edit window (15 minutes)
-    const createdAt = postData.createdAt.toDate();
+    const createdAt = postData.createdAt?.toDate ? createdAt.toDate() : new Date(createdAt);
     const now = new Date();
     const editWindowMs = 15 * 60 * 1000; // 15 minutes
 

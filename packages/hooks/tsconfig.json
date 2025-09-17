@@ -9,7 +9,13 @@
     "skipLibCheck": true,
     "module": "CommonJS",
     "target": "ES2020",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@hive/core": ["../core/dist"],
+      "@hive/auth-logic": ["../auth-logic/dist"],
+      "@hive/api-client": ["../api-client/dist"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]

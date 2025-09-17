@@ -55,11 +55,14 @@ export const autoJoinOnCreate = functions.auth.user().onCreate(async (user) => {
       const space = doc.data() as Space;
       functions.logger.info(`Adding user ${uid} to space ${doc.id} (${space.name})`);
 
-      // Add user to the members sub-collection
-      const memberRef = db.collection("spaces").doc(doc.id).collection("members").doc(uid);
+      // Add user to the flat spaceMembers collection with composite key
+      const compositeKey = `${doc.id}_${uid}`;
+      const memberRef = db.collection("spaceMembers").doc(compositeKey);
       const newMember: SpaceMember = {
         userId: uid,
         spaceId: doc.id,
+        spaceName: space.name,
+        spaceCategory: space.category || space.type,
         role: "member",
         joinedAt: new Date(),
       };
@@ -122,7 +125,8 @@ export const autoJoinOnUpdate = functions.firestore
             .limit(1).get();
         if (!oldMajorSpaceQuery.empty) {
           const spaceId = oldMajorSpaceQuery.docs[0].id;
-          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
+          const compositeKey = `${spaceId}_${userId}`;
+          const memberRef = db.collection('spaceMembers').doc(compositeKey);
           batch.delete(memberRef);
           batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(-1)});
         }
@@ -136,9 +140,19 @@ export const autoJoinOnUpdate = functions.firestore
             .where('tags', 'array-contains', tagToFind)
             .limit(1).get();
         if (!newMajorSpaceQuery.empty) {
-          const spaceId = newMajorSpaceQuery.docs[0].id;
-          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
-          batch.set(memberRef, {userId, spaceId, role: "member", joinedAt: new Date()});
+          const spaceDoc = newMajorSpaceQuery.docs[0];
+          const spaceId = spaceDoc.id;
+          const spaceData = spaceDoc.data();
+          const compositeKey = `${spaceId}_${userId}`;
+          const memberRef = db.collection('spaceMembers').doc(compositeKey);
+          batch.set(memberRef, {
+            userId, 
+            spaceId, 
+            spaceName: spaceData.name,
+            spaceCategory: spaceData.category || spaceData.type,
+            role: "member", 
+            joinedAt: new Date()
+          });
           batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(1)});
         }
       }
@@ -152,7 +166,8 @@ export const autoJoinOnUpdate = functions.firestore
             .limit(1).get();
         if (!oldResidencySpaceQuery.empty) {
           const spaceId = oldResidencySpaceQuery.docs[0].id;
-          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
+          const compositeKey = `${spaceId}_${userId}`;
+          const memberRef = db.collection('spaceMembers').doc(compositeKey);
           batch.delete(memberRef);
           batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(-1)});
         }
@@ -166,9 +181,19 @@ export const autoJoinOnUpdate = functions.firestore
             .where('tags', 'array-contains', tagToFind)
             .limit(1).get();
         if (!newResidencySpaceQuery.empty) {
-          const spaceId = newResidencySpaceQuery.docs[0].id;
-          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
-          batch.set(memberRef, {userId, spaceId, role: "member", joinedAt: new Date()});
+          const spaceDoc = newResidencySpaceQuery.docs[0];
+          const spaceId = spaceDoc.id;
+          const spaceData = spaceDoc.data();
+          const compositeKey = `${spaceId}_${userId}`;
+          const memberRef = db.collection('spaceMembers').doc(compositeKey);
+          batch.set(memberRef, {
+            userId, 
+            spaceId, 
+            spaceName: spaceData.name,
+            spaceCategory: spaceData.category || spaceData.type,
+            role: "member", 
+            joinedAt: new Date()
+          });
           batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(1)});
         }
       }

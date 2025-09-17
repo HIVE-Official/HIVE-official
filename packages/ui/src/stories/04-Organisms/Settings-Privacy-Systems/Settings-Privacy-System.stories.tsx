@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Switch } from '../../../components/ui/switch';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { Separator } from '../../../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
-import { Textarea } from '../../../components/ui/textarea';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
+import { Textarea } from '../../../atomic/atoms/textarea-enhanced';
+import { Alert, AlertDescription } from '../../../atomic/molecules/alert-toast-system';
 import { 
   Settings, 
   User, 
@@ -54,8 +54,9 @@ import {
  * - **Accessibility**: Theme, font size, motion preferences
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '11-Live Frontend/Settings & Privacy System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -256,7 +257,7 @@ const ProfileSettingsTab = ({
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Photo
               </Button>
-              <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+              <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Remove
               </Button>
@@ -281,7 +282,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">First Name</Label>
             <Input
               value={settings.profile.firstName}
-              onChange={(e) => updateSetting('profile.firstName', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSetting('profile.firstName', e.target.value)}
               className="bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -289,7 +290,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Last Name</Label>
             <Input
               value={settings.profile.lastName}
-              onChange={(e) => updateSetting('profile.lastName', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSetting('profile.lastName', e.target.value)}
               className="bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -301,7 +302,7 @@ const ProfileSettingsTab = ({
             <span className="absolute left-3 top-3 text-gray-500">@</span>
             <Input
               value={settings.profile.handle}
-              onChange={(e) => updateSetting('profile.handle', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSetting('profile.handle', e.target.value)}
               className="pl-8 bg-gray-800 border-gray-700 text-white"
             />
           </div>
@@ -312,7 +313,7 @@ const ProfileSettingsTab = ({
           <Label className="text-white">Bio</Label>
           <Textarea
             value={settings.profile.bio}
-            onChange={(e) => updateSetting('profile.bio', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSetting('profile.bio', e.target.value)}
             className="bg-gray-800 border-gray-700 text-white resize-none"
             rows={3}
             maxLength={150}
@@ -341,7 +342,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Graduation Year</Label>
             <Select
               value={settings.profile.graduationYear}
-              onValueChange={(value) => updateSetting('profile.graduationYear', value)}
+              onValueChange={(value: unknown) => updateSetting('profile.graduationYear', value)}
             >
               <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                 <SelectValue />
@@ -359,7 +360,7 @@ const ProfileSettingsTab = ({
             <Label className="text-white">Major</Label>
             <Select
               value={settings.profile.major}
-              onValueChange={(value) => updateSetting('profile.major', value)}
+              onValueChange={(value: unknown) => updateSetting('profile.major', value)}
             >
               <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                 <SelectValue />
@@ -380,7 +381,7 @@ const ProfileSettingsTab = ({
           <Label className="text-white">Housing</Label>
           <Select
             value={settings.profile.dorm}
-            onValueChange={(value) => updateSetting('profile.dorm', value)}
+            onValueChange={(value: unknown) => updateSetting('profile.dorm', value)}
           >
             <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
               <SelectValue />
@@ -470,7 +471,7 @@ const PrivacySettingsTab = ({
           <Label className="text-white">Who can see your profile?</Label>
           <Select
             value={settings.privacy.profileVisibility}
-            onValueChange={(value) => updateSetting('privacy.profileVisibility', value)}
+            onValueChange={(value: unknown) => updateSetting('privacy.profileVisibility', value)}
           >
             <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
               <SelectValue />
@@ -496,7 +497,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showMajor}
-                onCheckedChange={(checked) => updateSetting('privacy.showMajor', checked)}
+                onCheckedChange={(checked: any) => updateSetting('privacy.showMajor', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -508,7 +509,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showGraduationYear}
-                onCheckedChange={(checked) => updateSetting('privacy.showGraduationYear', checked)}
+                onCheckedChange={(checked: any) => updateSetting('privacy.showGraduationYear', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -520,7 +521,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showDorm}
-                onCheckedChange={(checked) => updateSetting('privacy.showDorm', checked)}
+                onCheckedChange={(checked: any) => updateSetting('privacy.showDorm', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -532,7 +533,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showActivity}
-                onCheckedChange={(checked) => updateSetting('privacy.showActivity', checked)}
+                onCheckedChange={(checked: any) => updateSetting('privacy.showActivity', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -560,7 +561,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.allowMessages}
-            onCheckedChange={(checked) => updateSetting('privacy.allowMessages', checked)}
+            onCheckedChange={(checked: any) => updateSetting('privacy.allowMessages', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -574,7 +575,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.allowSpaceInvites}
-            onCheckedChange={(checked) => updateSetting('privacy.allowSpaceInvites', checked)}
+            onCheckedChange={(checked: any) => updateSetting('privacy.allowSpaceInvites', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -588,7 +589,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.searchable}
-            onCheckedChange={(checked) => updateSetting('privacy.searchable', checked)}
+            onCheckedChange={(checked: any) => updateSetting('privacy.searchable', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -698,7 +699,7 @@ const SettingsSystem = () => {
                     </div>
                     <Switch
                       checked={settingsState.settings.preferences.theme === 'dark'}
-                      onCheckedChange={(checked) => settingsState.updateSetting('preferences.theme', checked ? 'dark' : 'light')}
+                      onCheckedChange={(checked: any) => settingsState.updateSetting('preferences.theme', checked ? 'dark' : 'light')}
                       className="data-[state=checked]:bg-yellow-500"
                     />
                   </div>
@@ -710,7 +711,7 @@ const SettingsSystem = () => {
                     </div>
                     <Switch
                       checked={settingsState.settings.preferences.reduceMotion}
-                      onCheckedChange={(checked) => settingsState.updateSetting('preferences.reduceMotion', checked)}
+                      onCheckedChange={(checked: any) => settingsState.updateSetting('preferences.reduceMotion', checked)}
                       className="data-[state=checked]:bg-yellow-500"
                     />
                   </div>

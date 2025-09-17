@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Alert } from "@hive/ui";
 import { AlertTriangle, Trash2, Shield } from 'lucide-react';
 
 interface ConfirmationModalProps {
@@ -44,13 +44,13 @@ export function ConfirmationModal({
         return {
           headerBg: 'bg-gradient-to-r from-red-500/10 to-red-600/10',
           border: 'border-red-500/20',
-          buttonClass: 'bg-red-500 hover:bg-red-600 text-white'
+          buttonClass: 'bg-red-500 hover:bg-red-600 text-[var(--hive-text-inverse)]'
         };
       case 'warning':
         return {
           headerBg: 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10',
           border: 'border-yellow-500/20',
-          buttonClass: 'bg-yellow-500 hover:bg-yellow-600 text-black'
+          buttonClass: 'bg-yellow-500 hover:bg-yellow-600 text-[var(--hive-text-primary)]'
         };
       default:
         return {
@@ -69,7 +69,7 @@ export function ConfirmationModal({
         <AlertDialogHeader className={`p-4 rounded-t-lg ${styles.headerBg}`}>
           <AlertDialogTitle className="flex items-center space-x-3">
             {getVariantIcon()}
-            <span className="text-white">{title}</span>
+            <span className="text-[var(--hive-text-inverse)]">{title}</span>
           </AlertDialogTitle>
         </AlertDialogHeader>
         

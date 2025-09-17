@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { logger } from '../../utils/logger';
+
 
 // Element categories for organization
 export const ElementCategory = z.enum([
@@ -364,7 +366,7 @@ export const getLatestElementVersion = (
   baseName: string
 ): Element | null => {
   const matching = elements.filter(
-    (el) => parseElementId(el.id).name === baseName
+    (el: Element) => parseElementId(el.id).name === baseName
   );
   if (matching.length === 0) return null;
 
@@ -387,7 +389,7 @@ export const validateElementConfig = (
     ElementConfigSchema.parse(configWithType);
     return true;
   } catch (error) {
-    console.error("Element config validation failed:", error);
+    logger.error('Element config validation failed', { error });
     return false;
   }
 };

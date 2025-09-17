@@ -7,9 +7,9 @@
 
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 import { 
   Home,
   Users,
@@ -32,7 +32,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
+  component: React.Fragment,
   title: '00-Platform Overview/System Navigation',
   parameters: {
     layout: 'fullscreen',
@@ -292,8 +293,8 @@ const SystemNavigation = () => {
   const getColorClasses = (color: string) => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20',
-      yellow: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/20',
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20',
+      yellow: 'from-[var(--hive-gold)]/20 to-yellow-600/10 border-[var(--hive-gold)]/20',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20',
       red: 'from-red-500/20 to-red-600/10 border-red-500/20',
       gray: 'from-gray-500/20 to-gray-600/10 border-gray-500/20',
@@ -305,8 +306,8 @@ const SystemNavigation = () => {
   const getIconColor = (color: string) => {
     const colors = {
       blue: 'text-blue-400',
-      purple: 'text-purple-400',
-      yellow: 'text-yellow-400',
+      purple: 'text-[var(--hive-gold)]',
+      yellow: 'text-[var(--hive-gold)]',
       green: 'text-green-400',
       red: 'text-red-400',
       gray: 'text-gray-400',
@@ -350,7 +351,7 @@ const SystemNavigation = () => {
             </Card>
             <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-400">100%</div>
+                <div className="text-2xl font-bold text-[var(--hive-gold)]">100%</div>
                 <div className="text-sm text-[var(--hive-text-secondary)]">Mobile Optimized</div>
               </CardContent>
             </Card>
@@ -359,7 +360,7 @@ const SystemNavigation = () => {
 
         {/* System Categories Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {systemCategories.map((category) => (
+          {systemCategories.map((category: any) => (
             <Card 
               key={category.id} 
               className={`border-2 bg-gradient-to-br ${getColorClasses(category.color)} hover:scale-[1.02] transition-all duration-300`}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 
 // Core recommendation data types
 interface UserProfile {
@@ -286,9 +286,11 @@ class HIVERecommendationEngine {
     return score + qualityBoost + popularityBoost;
   }
 
-  private getFriendsInSpace(_spaceId: string): number {
-    // Mock implementation - would query actual friendship data
-    return Math.floor(Math.random() * 3); // 0-2 friends typically
+  private getFriendsInSpace(spaceId: string): number {
+    // TODO: Replace with real friendship data from Firebase
+    // For now, use spaceId hash to generate consistent "friends" count
+    const hash = spaceId.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+    return hash % 3; // 0-2 friends consistently based on space ID
   }
 
   private applyDiversityFilter(recommendations: RecommendationResult[], limit: number): RecommendationResult[] {

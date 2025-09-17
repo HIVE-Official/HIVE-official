@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
-import { getAuthTokenFromRequest } from '@/lib/auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { getAuthTokenFromRequest } from '@/lib/auth/auth';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 
 const SearchSpacesSchema = z.object({
@@ -34,20 +34,54 @@ export async function POST(request: NextRequest) {
     const searchParams = SearchSpacesSchema.parse(body);
     const { query, limit, offset, type, verified, minMembers, maxMembers, sortBy } = searchParams;
 
-    // Start with base query
-    let spacesQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('spaces');
-
-    // Apply filters
-    if (type) {
-      spacesQuery = spacesQuery.where('type', '==', type);
+    // Try to use flat collection first (easier for searching)
+    let spacesSnapshot;
+    try {
+      // Check if flat collection exists
+      let spacesQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('spaces_flat');
+      
+      // Apply filters
+      if (type) {
+        spacesQuery = spacesQuery.where('category', '==', type);
+      }
+      
+      if (verified !== undefined) {
+        spacesQuery = spacesQuery.where('isVerified', '==', verified);
+      }
+      
+      spacesSnapshot = await spacesQuery.get();
+      
+      // If flat collection is empty, fall back to nested structure
+      if (spacesSnapshot.empty) {
+        logger.info('Flat collection empty, trying nested structure', { endpoint: '/api/spaces/search' });
+        
+        // For nested structure, we need to query each space type (using actual RSS feed data)
+        const spaceTypes = ['student_organizations', 'fraternity_and_sorority', 'campus_living', 'university_organizations'];
+        const allDocs: admin.firestore.QueryDocumentSnapshot[] = [];
+        
+        for (const spaceType of spaceTypes) {
+          try {
+            const nestedSnapshot = await dbAdmin
+              .collection('spaces')
+              .doc(spaceType)
+              .collection('spaces')
+              .get();
+            
+            if (!nestedSnapshot.empty) {
+              logger.info(`Found ${nestedSnapshot.size} spaces in ${spaceType}`, { endpoint: '/api/spaces/search' });
+              allDocs.push(...nestedSnapshot.docs);
+            }
+          } catch (err) {
+            logger.warn(`Could not query ${spaceType}`, { error: err, endpoint: '/api/spaces/search' });
+          }
+        }
+        
+        spacesSnapshot = { docs: allDocs, empty: allDocs.length === 0 };
+      }
+    } catch (error) {
+      logger.warn('Error querying spaces, using fallback', { error, endpoint: '/api/spaces/search' });
+      spacesSnapshot = { docs: [], empty: true };
     }
-    
-    if (verified !== undefined) {
-      spacesQuery = spacesQuery.where('isVerified', '==', verified);
-    }
-
-    // Get all spaces matching basic filters
-    const spacesSnapshot = await spacesQuery.get();
     
     const spaces = [];
     const queryLower = query.toLowerCase();

@@ -1,8 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 /**
  * Initialize cohort space collection structure in Firebase
@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
       structure: 'Nested collection: spaces/cohort/spaces/{spaceId}',
       cohortTypes: [
         'major', // e.g., "Computer Science"
-        'graduation_year', // e.g., "Class of '25"
-        'major_year' // e.g., "CS '25"
+        'graduation_year', // e.g., "Class of 2026"
+        'major_year' // e.g., "CS 2026"
       ],
       autoCreated: true,
       version: '1.0'

@@ -1,11 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { getCurrentUser } from "@/lib/server-auth";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 
 const coordinationResponseSchema = z.object({
   postId: z.string().min(1),
@@ -41,7 +41,7 @@ export async function POST(
     const { postId, action, message, availability, preferences } = coordinationResponseSchema.parse(body);
 
     // Get space and verify user is a member
-    const spaceRef = dbAdmin.collection("spaces").doc("cohort").collection("spaces").doc(spaceId);
+    const spaceRef = dbAdmin.collection("spaces").doc(spaceId);
     const spaceDoc = await spaceRef.get();
     
     if (!spaceDoc.exists) {
@@ -51,11 +51,17 @@ export async function POST(
       );
     }
 
-    // Check if user is a member
-    const memberRef = spaceRef.collection("members").doc(user.uid);
-    const memberDoc = await memberRef.get();
+    // Check if user is a member using flat spaceMembers collection
+    const memberSnapshot = await dbAdmin
+      .collection("spaceMembers")
+      .where("spaceId", "==", spaceId)
+      .where("userId", "==", user.uid)
+      .limit(1)
+      .get();
     
-    if (!memberDoc.exists) {
+    const memberDoc = memberSnapshot.empty ? null : memberSnapshot.docs[0];
+    
+    if (!memberDoc) {
       return NextResponse.json(
         ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"),
         { status: HttpStatus.FORBIDDEN }
@@ -84,11 +90,13 @@ export async function POST(
     }
 
     // Create or update coordination response
-    const responseRef = postRef.collection("coordination_responses").doc(user.uid);
+    const responseRef = postRef.collection("coordinationResponses").doc(user.uid);
     const responseData = {
       userId: user.uid,
       userName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
+      userPhoto: user.photoURL || null,
       action,
+      response: action === 'join' ? 'yes' : action === 'interested' ? 'maybe' : action === 'cant_make_it' ? 'no' : 'maybe',
       message: message || null,
       availability: availability || null,
       preferences: preferences || null,
@@ -193,11 +201,19 @@ export async function GET(
     }
 
     // Get space and verify user is a member
-    const spaceRef = dbAdmin.collection("spaces").doc("cohort").collection("spaces").doc(spaceId);
-    const memberRef = spaceRef.collection("members").doc(user.uid);
-    const memberDoc = await memberRef.get();
+    const spaceRef = dbAdmin.collection("spaces").doc(spaceId);
     
-    if (!memberDoc.exists) {
+    // Check if user is a member using flat spaceMembers collection
+    const memberSnapshot = await dbAdmin
+      .collection("spaceMembers")
+      .where("spaceId", "==", spaceId)
+      .where("userId", "==", user.uid)
+      .limit(1)
+      .get();
+    
+    const memberDoc = memberSnapshot.empty ? null : memberSnapshot.docs[0];
+    
+    if (!memberDoc) {
       return NextResponse.json(
         ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"),
         { status: HttpStatus.FORBIDDEN }
@@ -206,7 +222,7 @@ export async function GET(
 
     // Get coordination responses
     const postRef = spaceRef.collection("posts").doc(postId);
-    const responsesSnapshot = await postRef.collection("coordination_responses")
+    const responsesSnapshot = await postRef.collection("coordinationResponses")
       .orderBy("timestamp", "desc")
       .limit(50)
       .get();

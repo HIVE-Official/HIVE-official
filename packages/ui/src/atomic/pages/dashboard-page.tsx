@@ -3,7 +3,7 @@
 import React from 'react';
 import { PageLayout } from '../templates/page-layout';
 import { Card, CardContent, CardHeader } from '../molecules/card';
-import { Button } from '../atoms/button';
+import { Button } from '../atoms/button-enhanced';
 import { Text } from '../atoms/text';
 import { Plus, Users, TrendingUp, Zap } from 'lucide-react';
 
@@ -30,7 +30,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       actions={
         <Button 
           variant="primary" 
-          icon={<Plus className="h-4 w-4" />}
+          leftIcon={<Plus className="h-4 w-4" />}
         >
           Create
         </Button>

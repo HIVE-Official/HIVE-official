@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { CalendarCardData, CalendarCardState } from '@hive/ui';
-import { fetchCalendarEvents, transformApiEvent } from '../lib/calendar-api';
+import { fetchCalendarEvents, transformApiEvent } from '@/lib/calendar-api';
 
 interface CalendarEvent {
   id: string;
@@ -103,10 +103,10 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
               name: 'University',
               type: 'university',
               status: 'disconnected', // Default to disconnected until user connects
-              color: '#ffd700'
+              color: 'var(--hive-gold)'
             }
           ],
-          conflicts: [], // TODO: Implement conflict detection
+          conflicts: [],
           lastUpdated: new Date()
         };
         

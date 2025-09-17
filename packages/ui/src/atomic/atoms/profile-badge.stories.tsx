@@ -11,7 +11,7 @@ import {
   BADGE_TYPES,
   type BadgeType 
 } from './profile-badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { Avatar } from './avatar';
@@ -125,7 +125,7 @@ export const Default: Story = {
     interactive: false,
     pulsing: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -151,7 +151,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🏆 BADGE TYPES</Badge>
+            <Badge variant="emerald">🏆 BADGE TYPES</Badge>
             Predefined Recognition Badges
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -810,7 +810,7 @@ export const Playground: Story = {
     interactive: false,
     pulsing: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

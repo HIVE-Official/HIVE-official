@@ -8,9 +8,9 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from '../../../components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
 import { Label } from '../../../components/ui/label';
 import { 
   Check,
@@ -344,7 +344,7 @@ const CheckboxPatternsShowcase = () => {
     setSelections(prev => ({ ...prev, [id]: checked }));
   };
 
-  const getGroupProgress = (options: any[]) => {
+  const getGroupProgress = (options: unknown[]) => {
     const selected = options.filter(option => selections[option.id]).length;
     return `${selected}/${options.length} selected`;
   };
@@ -375,7 +375,7 @@ const CheckboxPatternsShowcase = () => {
                         <group.icon className="w-4 h-4 text-[var(--hive-brand-primary)]" />
                         <span className="font-medium text-[var(--hive-text-primary)]">{group.title}</span>
                       </div>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {getGroupProgress(group.options)}
                       </Badge>
                     </div>
@@ -426,7 +426,7 @@ const CheckboxSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-6">
-            {checkboxSizes.map((size) => (
+            {checkboxSizes.map((size: any) => (
               <div key={size.name} className="flex items-center gap-6">
                 <div className="w-32">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -446,7 +446,7 @@ const CheckboxSizesShowcase = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id={`${size.name}-unchecked`}
-                        size={size.name as any}
+                        size={size.name as unknown}
                         checked={false}
                       />
                       <Label htmlFor={`${size.name}-unchecked`} className="text-sm text-[var(--hive-text-secondary)]">
@@ -457,7 +457,7 @@ const CheckboxSizesShowcase = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id={`${size.name}-checked`}
-                        size={size.name as any}
+                        size={size.name as unknown}
                         checked={true}
                       />
                       <Label htmlFor={`${size.name}-checked`} className="text-sm text-[var(--hive-text-secondary)]">
@@ -468,7 +468,7 @@ const CheckboxSizesShowcase = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id={`${size.name}-disabled`}
-                        size={size.name as any}
+                        size={size.name as unknown}
                         checked={false}
                         disabled={true}
                       />
@@ -667,7 +667,7 @@ const AccessibilityShowcase = () => {
                   { id: 'focus-high-contrast', label: 'High Contrast', description: 'Enhanced visual contrast' },
                   { id: 'focus-screen-reader', label: 'Screen Reader Mode', description: 'Optimized for assistive technology' },
                   { id: 'focus-keyboard-nav', label: 'Keyboard Navigation', description: 'Keyboard-only operation' }
-                ].map((option) => (
+                ].map((option: any) => (
                   <div key={option.id} className="flex items-start gap-3">
                     <Checkbox
                       id={option.id}
@@ -792,7 +792,7 @@ const CheckboxEnhancedShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

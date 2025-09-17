@@ -91,8 +91,8 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-          <UserPlus className="h-10 w-10 text-white" />
+        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[var(--hive-gold)] to-pink-500 rounded-full flex items-center justify-center">
+          <UserPlus className="h-10 w-10 text-[var(--hive-text-inverse)]" />
         </div>
         <h3 className="text-2xl font-bold text-hive-text-primary mb-2">
           Invite Your Friends
@@ -103,14 +103,14 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
       </div>
 
       {/* Invitation Stats */}
-      <Card className="p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/20">
+      <Card className="p-4 bg-gradient-to-r from-[var(--hive-gold)]/10 to-pink-500/10 border-[var(--hive-gold)]/20">
         <div className="flex items-center justify-between">
           <div>
             <h4 className="font-semibold text-hive-text-primary">Invitations Remaining</h4>
             <p className="text-sm text-hive-text-secondary">Limited time exclusive access</p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold text-purple-400">
+            <div className="text-3xl font-bold text-[var(--hive-gold)]">
               {maxInvites - invitesSent}
             </div>
             <div className="text-xs text-hive-text-secondary">out of {maxInvites}</div>
@@ -167,11 +167,11 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
           return (
             <Card
               key={method.id}
-              className="p-4 cursor-pointer hover:border-purple-400/50 transition-colors"
+              className="p-4 cursor-pointer hover:border-[var(--hive-gold)]/50 transition-colors"
             >
               <div className="flex items-start space-x-3">
-                <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <IconComponent className="h-5 w-5 text-purple-400" />
+                <div className="w-10 h-10 bg-[var(--hive-gold)]/20 rounded-lg flex items-center justify-center">
+                  <IconComponent className="h-5 w-5 text-[var(--hive-gold)]" />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-semibold text-hive-text-primary mb-1">
@@ -184,7 +184,7 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
                     size="sm"
                     onClick={() => handleSendInvite(method.id)}
                     disabled={invitesSent >= maxInvites}
-                    className="bg-purple-500 text-white hover:bg-purple-600"
+                    className="bg-[var(--hive-gold)] text-[var(--hive-text-inverse)] hover:bg-[var(--hive-gold-dark)]"
                   >
                     {method.action}
                     <ChevronRight className="h-3 w-3 ml-1" />
@@ -249,7 +249,7 @@ export function RitualConnectWorkflow({
   const [isComplete, setIsComplete] = useState(false);
   const [connectData, setConnectData] = useState<any>({});
 
-  const handleStepComplete = (data: any) => {
+  const handleStepComplete = (data: unknown) => {
     setConnectData(data);
     onStepComplete?.('friend_invitations', data);
     setIsComplete(true);
@@ -259,9 +259,9 @@ export function RitualConnectWorkflow({
   if (isComplete) {
     return (
       <div className={`space-y-8 ${className}`}>
-        <Card className="p-8 text-center bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/30">
-          <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-            <CheckCircle className="h-12 w-12 text-white" />
+        <Card className="p-8 text-center bg-gradient-to-br from-[var(--hive-gold)]/10 to-pink-500/10 border-[var(--hive-gold)]/30">
+          <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-[var(--hive-gold)] to-pink-500 rounded-full flex items-center justify-center">
+            <CheckCircle className="h-12 w-12 text-[var(--hive-text-inverse)]" />
           </div>
           
           <h2 className="text-3xl font-bold text-hive-text-primary mb-4">
@@ -276,7 +276,7 @@ export function RitualConnectWorkflow({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="p-4 bg-hive-surface-elevated rounded-lg">
-              <UserPlus className="h-8 w-8 mx-auto mb-2 text-purple-400" />
+              <UserPlus className="h-8 w-8 mx-auto mb-2 text-[var(--hive-gold)]" />
               <h3 className="font-semibold text-hive-text-primary">Invites Sent</h3>
               <p className="text-sm text-hive-text-secondary">{connectData.invitesSent} friends invited</p>
             </div>
@@ -302,7 +302,7 @@ export function RitualConnectWorkflow({
             </p>
           </div>
 
-          <div className="flex items-center justify-center space-x-2 text-purple-400">
+          <div className="flex items-center justify-center space-x-2 text-[var(--hive-gold)]">
             <Target className="h-5 w-5" />
             <span className="font-medium">Ready for Week 4: Launch Preparation</span>
           </div>
@@ -331,9 +331,9 @@ export function RitualConnectWorkflow({
           </div>
         </div>
 
-        <div className="bg-purple-500/10 p-4 rounded-lg border border-purple-500/20">
+        <div className="bg-[var(--hive-gold)]/10 p-4 rounded-lg border border-[var(--hive-gold)]/20">
           <div className="flex items-start space-x-3">
-            <Users className="h-5 w-5 text-purple-400 mt-0.5" />
+            <Users className="h-5 w-5 text-[var(--hive-gold)] mt-0.5" />
             <div>
               <h4 className="font-semibold text-hive-text-primary mb-1">
                 Limited Invitation Access

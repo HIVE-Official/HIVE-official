@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { logger } from '../../utils/logger';
+
 import { ToolConfigurationPanel, ToolConfigurationData } from './tool-configuration-panel';
 import { action } from '@storybook/addon-actions';
 import { useState } from 'react';
@@ -441,7 +443,7 @@ export const InteractiveDemo: Story = {
     const [isSaving, setIsSaving] = useState(false);
     const [tool, setTool] = useState<ToolConfigurationData>(mockAdvancedTool);
 
-    const handleSave = async (toolId: string, values: Record<string, any>) => {
+    const handleSave = async (toolId: string, values: Record<string, unknown>) => {
       setIsSaving(true);
       
       try {
@@ -458,13 +460,13 @@ export const InteractiveDemo: Story = {
         
         action('save')(toolId, values);
       } catch (error) {
-        console.error('Failed to save:', error);
+        logger.error('Failed to save:', error);
       } finally {
         setIsSaving(false);
       }
     };
 
-    const handleTestConfiguration = async (toolId: string, values: Record<string, any>) => {
+    const handleTestConfiguration = async (toolId: string, values: Record<string, unknown>) => {
       // Simulate test based on API key
       await new Promise(resolve => setTimeout(resolve, 2000));
       

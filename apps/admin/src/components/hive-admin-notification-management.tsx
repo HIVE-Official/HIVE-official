@@ -6,6 +6,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core';
+
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
@@ -347,18 +349,18 @@ const NotificationCard: React.FC<{
         {/* Channels */}
         <div className="flex flex-wrap gap-1 mb-3">
           {notification.channels.map((channel) => (
-            <Badge key={channel} size="xs" className="bg-blue-500/10 text-blue-400">
+            <Badge key={channel} size="sm" className="bg-blue-500/10 text-blue-400">
               {channel.replace('_', ' ')}
             </Badge>
           ))}
           {notification.relatedSpaceId && (
-            <Badge size="xs" className="bg-purple-500/10 text-purple-400">
+            <Badge size="sm" className="bg-purple-500/10 text-purple-400">
               Space-Related
             </Badge>
           )}
           {notification.complianceLevel && (
             <Badge 
-              size="xs" 
+              size="sm" 
               className={`${
                 notification.complianceLevel === 'violation' ? 'bg-red-500/10 text-red-400' :
                 notification.complianceLevel === 'warning' ? 'bg-yellow-500/10 text-yellow-400' :
@@ -496,16 +498,6 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
   const [statusFilter, setStatusFilter] = useState<NotificationStatus | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Bell className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Notification management system is not available</p>
-      </div>
-    );
-  }
-
   const loadNotifications = useCallback(async () => {
     if (!admin) return;
 
@@ -528,7 +520,7 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
       setTemplates(data.templates || []);
       setAnalytics(data.analytics);
     } catch (error) {
-      console.error('Failed to load notifications:', error);
+      logger.error('Failed to load notifications:', error);
     } finally {
       setLoading(false);
     }
@@ -564,6 +556,16 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
   };
 
   const stats = getNotificationStats();
+
+  // Feature flag check - moved after hooks
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Bell className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Notification management system is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -658,7 +660,7 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
         >
           <Bell className="w-4 h-4" />
           <span>Notifications</span>
-          <Badge size="xs" className={selectedTab === 'notifications' ? 'bg-white/20' : 'bg-gray-700'}>
+          <Badge size="sm" className={selectedTab === 'notifications' ? 'bg-white/20' : 'bg-gray-700'}>
             {stats.total}
           </Badge>
         </button>
@@ -673,7 +675,7 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
         >
           <Megaphone className="w-4 h-4" />
           <span>Campaigns</span>
-          <Badge size="xs" className={selectedTab === 'campaigns' ? 'bg-white/20' : 'bg-gray-700'}>
+          <Badge size="sm" className={selectedTab === 'campaigns' ? 'bg-white/20' : 'bg-gray-700'}>
             {campaigns.length}
           </Badge>
         </button>
@@ -688,7 +690,7 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
         >
           <FileText className="w-4 h-4" />
           <span>Templates</span>
-          <Badge size="xs" className={selectedTab === 'templates' ? 'bg-white/20' : 'bg-gray-700'}>
+          <Badge size="sm" className={selectedTab === 'templates' ? 'bg-white/20' : 'bg-gray-700'}>
             {templates.length}
           </Badge>
         </button>
@@ -778,10 +780,10 @@ export const HiveAdminNotificationManagement: React.FC<HiveAdminNotificationMana
                   <NotificationCard
                     key={notification.id}
                     notification={notification}
-                    onViewDetails={() => console.log('View details:', notification.id)}
-                    onEdit={() => console.log('Edit notification:', notification.id)}
-                    onCancel={() => console.log('Cancel notification:', notification.id)}
-                    onResend={() => console.log('Resend notification:', notification.id)}
+                    onViewDetails={() => {/* View details: notification.id */}}
+                    onEdit={() => {/* Edit notification: notification.id */}}
+                    onCancel={() => {/* Cancel notification: notification.id */}}
+                    onResend={() => {/* Resend notification: notification.id */}}
                   />
                 ))}
               </div>

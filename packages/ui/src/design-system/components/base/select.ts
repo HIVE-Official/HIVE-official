@@ -3,7 +3,7 @@
  * Re-export from existing implementation with design system interface
  */
 
-export { HiveSelect as Select, type HiveSelectProps as SelectProps } from '../../../components/hive-select';
+export { SelectEnhanced as Select, type SelectEnhancedProps as SelectProps } from '../../../atomic/atoms/select-enhanced';
 
 // Design system specific variants
-export { hiveSelectVariants as selectVariants } from '../../../components/hive-select';
+export { selectVariants } from '../../../atomic/atoms/select-enhanced';

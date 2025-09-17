@@ -1,23 +1,37 @@
 "use client";
 
 import React, { useState } from "react";
+import { logger } from '@/lib/logger';
+
 import { useQuery } from "@tanstack/react-query";
-import { authenticatedFetch } from '../../../../lib/auth-utils';
+import { authenticatedFetch } from '@/lib/auth/utils/auth-utils';
 import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface, type Comment } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { useSpacePosts } from '../../../../hooks/use-space-posts';
+import { useSpaceEvents } from '../../../../hooks/use-space-events';
+import { useSpaceMembers } from '../../../../hooks/use-space-members';
+import { useSpacePinned } from '../../../../hooks/use-space-pinned';
+import { useSpaceTools } from '../../../../hooks/use-space-tools';
+import { useSpaceAnalytics } from '../../../../hooks/use-space-analytics';
+import { useSpaceManagement } from '../../../../hooks/use-space-management';
+import { PostWithComments } from '../../../../components/posts/post-with-comments';
+import { SpaceManagementPanel } from '../../../../components/spaces/space-management-panel';
+import { PageContainer } from "@hive/ui";
 import { Users, AlertTriangle, Loader2, Hash, /* Heart as _Heart, */ MessageSquare, /* Camera as _Camera, */ Code, Calendar, /* ArrowRight as _ArrowRight, */ Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 import { useUnifiedAuth } from "@hive/ui";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { SpaceErrorBoundaryWrapper } from "../components/space-error-boundary";
 import { SpaceLoadingSkeleton } from "../components/space-loading-skeleton";
 import { LeaveSpaceButton } from "../../../../components/spaces/leave-space-button";
 import { PostCreationModal } from "../../../../components/spaces/post-creation-modal";
+import { EventCreationModal } from "../../../../components/events/event-modal";
 import { LeaderToolbar, useLeaderMode /* , type LeaderMode */ } from "../../../../components/spaces/leader-toolbar";
-import { getUserSpaceMembership, type SpaceMembership } from "../../../../lib/space-permissions";
+import { getUserSpaceMembership, type SpaceMembership } from "@/lib/spaces/space-permissions";
+
+interface Comment { id: string; text: string; userId: string; createdAt: any; }
 
 async function fetchSpaceById(spaceId: string): Promise<Space> {
   const response = await authenticatedFetch(`/api/spaces/${spaceId}`);
@@ -45,7 +59,7 @@ function ErrorState({ error }: { error: Error }) {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center max-w-md px-4">
         <AlertTriangle className="h-16 w-16 text-red-400 mx-auto mb-6" />
-        <h1 className="text-2xl font-bold text-white mb-4">
+        <h1 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-4">
           {isNotFound ? "Space Not Found" : "Something Went Wrong"}
         </h1>
         <p className="text-neutral-400 mb-8">
@@ -74,9 +88,9 @@ function ErrorState({ error }: { error: Error }) {
 
 function SpaceStatusBadge({ status }: { status: Space["status"] }) {
   const statusConfig = {
-    dormant: { label: "Preview Mode", variant: "major-tag" as const, color: "text-blue-400" },
-    frozen: { label: "View Only", variant: "course-tag" as const, color: "text-gray-400" },
-    activated: { label: "Active", variant: "active-tag" as const, color: "text-green-400" },
+    dormant: { label: "Preview Mode", variant: "info" as const, color: "text-blue-400" },
+    frozen: { label: "View Only", variant: "secondary" as const, color: "text-gray-400" },
+    activated: { label: "Active", variant: "success" as const, color: "text-green-400" },
   };
 
   const config = statusConfig[status] || statusConfig.activated;
@@ -159,6 +173,7 @@ export default function SpaceDetailPage({
   });
   const [showPostCreation, setShowPostCreation] = useState(false);
   const [postCreationType, setPostCreationType] = useState<'discussion' | 'question' | 'poll' | 'announcement' | 'link'>('discussion');
+  const [showEventCreation, setShowEventCreation] = useState(false);
   
   // Leader mode management
   const { currentMode, toggleMode, /* exitMode, */ isInMode, /* isInAnyMode */ } = useLeaderMode(); // TODO: exitMode and isInAnyMode for future leader features
@@ -167,44 +182,78 @@ export default function SpaceDetailPage({
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [editedDescription, setEditedDescription] = useState('');
   
-  // Insights mode state
-  const [analyticsData, setAnalyticsData] = useState<{
-    contentData?: {
-      postsThisWeek?: number;
-      averageEngagement?: number;
-      totalPosts?: number;
-      contentGrowthRate?: number;
-    };
-    membershipData?: {
-      activeMembers?: number;
-      newMembers?: number;
-      averageEngagement?: number;
-    };
-    eventsData?: {
-      upcomingEvents?: number;
-      averageAttendance?: number;
-      totalEvents?: number;
-    };
-    toolsData?: {
-      activeTools?: number;
-      toolUsage?: number;
-      topTools?: string[];
-    };
-    resourcesData?: {
-      items?: number;
-      totalViews?: number;
-      mostViewed?: string;
-    };
-    overallHealth?: number;
-    activity?: any;
-  } | null>(null);
-  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  // Insights mode - Real analytics data
   
   // Space membership and permissions state
   const [spaceMembership, setSpaceMembership] = useState<SpaceMembership | null>(null);
   const [/* membershipLoading */, setMembershipLoading] = useState(true); // TODO: For membership loading state
   
   const { user } = useUnifiedAuth();
+  
+  // Use real-time posts hook
+  const { 
+    posts, 
+    loading: postsLoading, 
+    createPost: createSpacePost,
+    toggleReaction,
+    deletePost,
+    respondToCoordination 
+  } = useSpacePosts(spaceId || undefined);
+  
+  // Use real-time events hook
+  const {
+    events,
+    loading: eventsLoading,
+    createEvent,
+    updateEvent,
+    deleteEvent,
+    rsvpToEvent
+  } = useSpaceEvents(spaceId || undefined);
+  
+  // Use real-time members hook
+  const {
+    members,
+    loading: membersLoading,
+    summary: membersSummary,
+    refresh: refreshMembers
+  } = useSpaceMembers(spaceId || undefined);
+  
+  // Use real-time pinned items hook
+  const {
+    items: pinnedItems,
+    loading: pinnedLoading,
+    pinItem,
+    unpinItem,
+    trackAction: trackPinnedAction,
+    refresh: refreshPinned
+  } = useSpacePinned(spaceId);
+  
+  // Use real tools hook
+  const {
+    tools,
+    loading: toolsLoading,
+    installTool,
+    uninstallTool,
+    updateToolConfig,
+    refresh: refreshTools
+  } = useSpaceTools(spaceId);
+  
+  // Use real analytics hook (only enabled for leaders in insights mode)
+  const {
+    analytics: analyticsData,
+    loading: analyticsLoading,
+    refresh: refreshAnalytics
+  } = useSpaceAnalytics(spaceId, isLeader && currentMode === 'insights');
+  
+  // Use space management hook for leader tools
+  const {
+    updateSettings,
+    changeUserRole,
+    removeMember: removeMemberFromSpace,
+    blockMember: blockSpaceMember,
+    inviteMember,
+    updating: managementUpdating
+  } = useSpaceManagement(spaceId);
 
   const handleJoinSpace = async () => {
     try {
@@ -219,6 +268,22 @@ export default function SpaceDetailPage({
       if (!response.ok) {
         const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Failed to join space');
+      }
+
+      const result = await response.json();
+      
+      // Show connection notification if auto-connections were created
+      if (result.data?.connections?.created > 0) {
+        const connectionMessage = result.data.connections.message;
+        // Use a toast notification if available, otherwise alert
+        if (typeof window !== 'undefined' && window.showToast) {
+          window.showToast({
+            title: 'Welcome to ' + space?.name,
+            description: connectionMessage,
+            type: 'success'
+          });
+        } else {
+        }
       }
 
       setIsJoined(true);
@@ -278,6 +343,15 @@ export default function SpaceDetailPage({
     // Navigate to tool analytics
     window.location.href = `/tools/${toolId}/analytics`;
   };
+  
+  const handleRemoveTool = async (deploymentId: string) => {
+    try {
+      await uninstallTool(deploymentId);
+      await refreshTools();
+    } catch (error) {
+      logger.error('Failed to remove tool:', { error: String(error) });
+    }
+  };
 
   const handleCreatePost = (type: 'activity' | 'discussion' | 'question' | 'poll' | 'announcement' | 'link' | 'study_session' | 'food_run' | 'ride_share' | 'meetup') => {
     // Map all types to supported modal types
@@ -290,8 +364,8 @@ export default function SpaceDetailPage({
     setShowPostCreation(true);
   };
 
-  const handleCreateComment = async (postId: string, content: string, parentCommentId?: string): Promise<Comment> => {
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/comments`, {
+  const handleCreateComment = async (_postId: string, content: string, parentCommentId?: string): Promise<Comment> => {
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${_postId}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -308,35 +382,37 @@ export default function SpaceDetailPage({
     return result.data;
   };
 
-  const handleLoadComments = async (postId: string): Promise<Comment[]> => {
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/comments`);
+  const handleLoadComments = async (_postId: string): Promise<Comment[]> => {
+    const response = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${_postId}/comments`);
     
     if (!response.ok) {
       const errorData = await response.json() as { error?: string };
       throw new Error(errorData.error || 'Failed to load comments');
     }
 
-    const result = await response.json() as { data: { comments: Comment[] } };
+    const result = await response.json() as { data: { _comments: Comment[] } };
     return result.data.comments;
   };
 
+  // Posts are now fetched via useSpacePosts hook with real-time updates
+
   // Member Management Handlers
   const handleChangeRole = async (memberId: string, role: string) => {
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: memberId, role })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json() as { error?: string };
-      throw new Error(errorData.error || 'Failed to change member role');
+    try {
+      await changeUserRole(memberId, role as 'admin' | 'moderator' | 'member');
+      // Refresh members list to show updated roles
+      refreshMembers();
+    } catch (error) {
+      logger.error('Failed to change role:', { error: String(error) });
+      // Show error toast if available
+      if (typeof window !== 'undefined' && (window as any).showToast) {
+        (window as any).showToast({
+          title: 'Error',
+          description: 'Failed to change member role',
+          type: 'error'
+        });
+      }
     }
-
-    // Refresh the page to show updated member roles
-    window.location.reload();
   };
 
   const handleRemoveMember = async (memberId: string) => {
@@ -344,37 +420,41 @@ export default function SpaceDetailPage({
       return;
     }
 
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members?userId=${memberId}`, {
-      method: 'DELETE'
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json() as { error?: string };
-      throw new Error(errorData.error || 'Failed to remove member');
+    try {
+      await removeMemberFromSpace(memberId);
+      // Refresh members list to show updated list
+      refreshMembers();
+    } catch (error) {
+      logger.error('Failed to remove member:', { error: String(error) });
+      // Show error toast if available
+      if (typeof window !== 'undefined' && (window as any).showToast) {
+        (window as any).showToast({
+          title: 'Error',
+          description: 'Failed to remove member',
+          type: 'error'
+        });
+      }
     }
-
-    // Refresh the page to show updated member list
-    window.location.reload();
   };
 
   const handleBlockMember = async (memberId: string) => {
     const reason = prompt('Reason for suspension (optional):');
     
-    const response = await authenticatedFetch(`/api/spaces/${spaceId}/members`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: memberId, action: 'suspend', reason })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json() as { error?: string };
-      throw new Error(errorData.error || 'Failed to suspend member');
+    try {
+      await blockSpaceMember(memberId, 'suspend');
+      // Refresh members list to show updated status
+      refreshMembers();
+    } catch (error) {
+      logger.error('Failed to suspend member:', { error: String(error) });
+      // Show error toast if available
+      if (typeof window !== 'undefined' && (window as any).showToast) {
+        (window as any).showToast({
+          title: 'Error',
+          description: 'Failed to suspend member',
+          type: 'error'
+        });
+      }
     }
-
-    // Refresh the page to show updated member status
-    window.location.reload();
   };
 
   React.useEffect(() => {
@@ -397,7 +477,7 @@ export default function SpaceDetailPage({
           setSpaceMembership(membership);
         }
       } catch (error) {
-        console.error('Failed to fetch space membership:', error);
+        logger.error('Failed to fetch space membership:', { error: String(error) });
         if (isMounted) {
           setSpaceMembership(null);
         }
@@ -414,28 +494,16 @@ export default function SpaceDetailPage({
       isMounted = false;
     };
   }, [spaceId, user]);
+
+  // Posts are now fetched automatically via useSpacePosts hook
   
   // Fetch analytics data when Insights Mode is activated
   React.useEffect(() => {
     if (currentMode === 'insights' && spaceId && isLeader && !analyticsData) {
-      const fetchAnalytics = async () => {
-        try {
-          setAnalyticsLoading(true);
-          const response = await authenticatedFetch(`/api/spaces/${spaceId}/analytics`);
-          if (response.ok) {
-            const data = await response.json() as { analytics: Record<string, unknown> };
-            setAnalyticsData(data.analytics);
-          }
-        } catch (error) {
-          console.error('Failed to fetch analytics:', error);
-        } finally {
-          setAnalyticsLoading(false);
-        }
-      };
-
-      fetchAnalytics();
+      // Analytics are now handled by useSpaceAnalytics hook
+      refreshAnalytics();
     }
-  }, [currentMode, spaceId, isLeader, analyticsData]);
+  }, [currentMode, spaceId, isLeader, analyticsData, refreshAnalytics]);
 
   const {
     data: space,
@@ -484,7 +552,7 @@ export default function SpaceDetailPage({
       <PageContainer
         breadcrumbs={[
           { label: "Discover", href: "/spaces" },
-          { label: space.name, icon: Hash },
+          { label: space.name, icon: <Hash /> },
         ]}
         className="-mt-16 relative z-10"
         padding="lg"
@@ -493,7 +561,7 @@ export default function SpaceDetailPage({
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-3">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white truncate font-['Space_Grotesk']">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--hive-text-inverse)] truncate font-['Space_Grotesk']">
                 {space.name}
               </h1>
               <SpaceStatusBadge status={space.status} />
@@ -505,7 +573,7 @@ export default function SpaceDetailPage({
                 <span>{(space.memberCount || 0).toLocaleString()} members</span>
               </div>
 
-              <Badge variant="major-tag" className="capitalize text-xs">
+              <Badge variant="skill-tag" className="capitalize text-xs">
                 {space.type}
               </Badge>
 
@@ -547,7 +615,7 @@ export default function SpaceDetailPage({
             ) : (
               <Button 
                 variant="primary"
-                className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+                className="bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255]"
                 onClick={handleJoinSpace}
               >
                 Join Space
@@ -559,7 +627,7 @@ export default function SpaceDetailPage({
         {/* Widget System Controls */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <Monitor className="h-5 w-5 text-[#FFD700]" />
+            <Monitor className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
             <span className="text-sm text-neutral-400">
               {viewMode === 'mobile' ? 'Tab View' : 'Widget View'}
             </span>
@@ -569,7 +637,7 @@ export default function SpaceDetailPage({
             <Button
               variant="outline"
               size="sm"
-              className="border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
+              className="border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)] hover:bg-[var(--hive-brand-secondary)]/10"
             >
               <Settings className="h-4 w-4 mr-2" />
               Customize Layout
@@ -582,7 +650,7 @@ export default function SpaceDetailPage({
           <div className="space-y-4">
             {/* Tab Navigation */}
             <div className="flex overflow-x-auto pb-2 gap-2">
-              {availableWidgets.map((widget) => {
+              {availableWidgets.map((widget: any) => {
                 const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                 const isActive = currentTab === widget.id;
                 
@@ -591,8 +659,8 @@ export default function SpaceDetailPage({
                     key={widget.id}
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
                       isActive
-                        ? 'bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/30'
-                        : 'bg-white/[0.02] text-neutral-400 border border-white/[0.06] hover:text-white'
+                        ? 'bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30'
+                        : 'bg-[var(--hive-white)]/[0.02] text-neutral-400 border border-[var(--hive-white)]/[0.06] hover:text-[var(--hive-text-inverse)]'
                     }`}
                     onClick={() => setCurrentTab(widget.id)}
                     whileHover={{ scale: 1.02 }}
@@ -606,7 +674,7 @@ export default function SpaceDetailPage({
             </div>
             
             {/* Active Tab Content */}
-            <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
+            <div className="rounded-xl bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] p-6">
               {(() => {
                 const activeWidget = availableWidgets.find(w => w.id === currentTab);
                 if (!activeWidget) return null;
@@ -615,11 +683,11 @@ export default function SpaceDetailPage({
                 return (
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-white">{activeWidget.title}</h3>
+                      <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">{activeWidget.title}</h3>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                        className="border-[var(--hive-white)]/[0.2] text-[var(--hive-text-inverse)] hover:bg-[var(--hive-white)]/[0.1]"
                         onClick={() => openModal(activeWidget.id)}
                       >
                         <Maximize2 className="h-4 w-4 mr-2" />
@@ -628,6 +696,9 @@ export default function SpaceDetailPage({
                     </div>
                     <Component
                       space={space}
+                      posts={activeWidget.id === 'posts' ? posts : undefined}
+                      tools={activeWidget.id === 'tools' ? tools : undefined}
+                      isLoading={activeWidget.id === 'posts' ? postsLoading : activeWidget.id === 'tools' ? toolsLoading : undefined}
                       mode="view"
                       maxItems={5}
                       showCompact={true}
@@ -638,16 +709,16 @@ export default function SpaceDetailPage({
             </div>
           </div>
         ) : (
-          /* Desktop Widget Grid */
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Primary Widget - Post Board */}
-            <div className="lg:col-span-2 space-y-6">
+          /* Desktop Widget Grid - 60/40 Layout per PRD */
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            {/* Primary Widget - Post Board (60%) */}
+            <div className="lg:col-span-3 space-y-6">
               <motion.div
                 className={cn(
                   "rounded-xl p-6 cursor-pointer group transition-all",
                   currentMode === 'insights' 
-                    ? "bg-purple-500/5 border border-purple-500/30" 
-                    : "bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1]"
+                    ? "bg-[var(--hive-gold)]/5 border border-[var(--hive-gold)]/30" 
+                    : "bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] hover:border-[var(--hive-white)]/[0.1]"
                 )}
                 onClick={() => openModal('posts')}
                 whileHover={{ scale: 1.01 }}
@@ -655,11 +726,11 @@ export default function SpaceDetailPage({
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <MessageSquare className="h-5 w-5 text-[#FFD700]" />
-                    <h3 className="text-lg font-semibold text-white">Post Board</h3>
+                    <MessageSquare className="h-5 w-5 text-[var(--hive-brand-secondary)]" />
+                    <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Post Board</h3>
                     {currentMode === 'insights' && (
                       <motion.div
-                        className="px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded text-xs text-purple-400"
+                        className="px-2 py-1 bg-[var(--hive-gold)]/20 border border-[var(--hive-gold)]/30 rounded text-xs text-[var(--hive-gold)]"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                       >
@@ -669,11 +740,11 @@ export default function SpaceDetailPage({
                   </div>
                   <div className="flex items-center gap-2">
                     {currentMode === 'insights' ? (
-                      <Activity className="h-4 w-4 text-purple-400" />
+                      <Activity className="h-4 w-4 text-[var(--hive-gold)]" />
                     ) : (
                       <>
                         <span className="text-xs text-neutral-400">Click to expand</span>
-                        <Maximize2 className="h-4 w-4 text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                        <Maximize2 className="h-4 w-4 text-neutral-400 group-hover:text-[var(--hive-brand-secondary)] transition-colors" />
                       </>
                     )}
                   </div>
@@ -682,20 +753,20 @@ export default function SpaceDetailPage({
                 {/* Insights Mode Overlay for Posts */}
                 {currentMode === 'insights' && (
                   <motion.div
-                    className="mb-4 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                    className="mb-4 p-4 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
                     {analyticsLoading ? (
                       <div className="flex items-center justify-center py-4">
-                        <Loader2 className="h-5 w-5 animate-spin text-purple-400" />
+                        <Loader2 className="h-5 w-5 animate-spin text-[var(--hive-gold)]" />
                         <span className="ml-2 text-sm text-neutral-400">Loading analytics...</span>
                       </div>
                     ) : analyticsData ? (
                       <>
                         <div className="grid grid-cols-3 gap-4 mb-3">
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-purple-400">{analyticsData.contentData?.postsThisWeek || 0}</div>
+                            <div className="text-2xl font-bold text-[var(--hive-gold)]">{analyticsData.contentData?.postsThisWeek || 0}</div>
                             <div className="text-xs text-neutral-400">Posts This Week</div>
                           </div>
                           <div className="text-center">
@@ -723,8 +794,18 @@ export default function SpaceDetailPage({
                     )}
                   </motion.div>
                 )}
+                {/* Show management panel in manage mode, posts otherwise */}
+                {isLeader && currentMode === 'manage' ? (
+                  <SpaceManagementPanel
+                    spaceId={spaceId}
+                    isOwner={spaceMembership?.role === 'owner'}
+                    currentUserId={user?.id || ''}
+                  />
+                ) : (
                 <HivePostsSurface
                   space={space}
+                  posts={posts}
+                  isLoading={postsLoading}
                   mode="view"
                   maxPosts={3}
                   showFilters={false}
@@ -737,7 +818,7 @@ export default function SpaceDetailPage({
                   // NEW: Enhanced coordination features
                   showLiveActivity={true}
                   liveActivityCount={analyticsData?.membershipData?.activeMembers || 0}
-                  currentUserId={user?.uid}
+                  currentUserId={user?.id}
                   onCoordinationResponse={async (postId, response) => {
                     try {
                       const apiResponse = await authenticatedFetch(`/api/spaces/${spaceId}/posts/${postId}/coordination`, {
@@ -749,7 +830,7 @@ export default function SpaceDetailPage({
                       // Refresh to show updated coordination data
                       window.location.reload();
                     } catch (error) {
-                      console.error('Coordination response error:', error);
+                      logger.error('Coordination response error:', { error: String(error) });
                       alert('Failed to submit response. Please try again.');
                     }
                   }}
@@ -764,17 +845,32 @@ export default function SpaceDetailPage({
                       // Refresh to show updated status
                       window.location.reload();
                     } catch (error) {
-                      console.error('Coordination status error:', error);
+                      logger.error('Coordination status error:', { error: String(error) });
                       alert('Failed to update status. Please try again.');
                     }
                   }}
+                  PostRenderer={PostWithComments}
+                  onReaction={toggleReaction}
+                  onShare={async (postId: any) => {
+                    // Share functionality can be implemented later
+                  }}
+                  onDelete={async (postId: any) => {
+                    if (confirm('Are you sure you want to delete this post?')) {
+                      try {
+                        await deletePost(postId);
+                      } catch (error) {
+                        logger.error('Delete post error:', { error: String(error) });
+                      }
+                    }
+                  }}
                 />
+                )}
               </motion.div>
             </div>
             
-            {/* Secondary Widgets */}
-            <div className="space-y-6">
-              {availableWidgets.filter(w => w.id !== 'posts').map((widget) => {
+            {/* Secondary Widgets (40%) */}
+            <div className="lg:col-span-2 space-y-6">
+              {availableWidgets.filter(w => w.id !== 'posts').map((widget: any) => {
                 const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                 const Component = widget.component;
                 
@@ -784,8 +880,8 @@ export default function SpaceDetailPage({
                     className={cn(
                       "rounded-xl p-4 cursor-pointer group transition-all",
                       currentMode === 'insights' 
-                        ? "bg-purple-500/5 border border-purple-500/30" 
-                        : "bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1]"
+                        ? "bg-[var(--hive-gold)]/5 border border-[var(--hive-gold)]/30" 
+                        : "bg-[var(--hive-white)]/[0.02] border border-[var(--hive-white)]/[0.06] hover:border-[var(--hive-white)]/[0.1]"
                     )}
                     onClick={() => openModal(widget.id)}
                     whileHover={{ scale: 1.02 }}
@@ -793,38 +889,38 @@ export default function SpaceDetailPage({
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <Icon className="h-4 w-4 text-[#FFD700]" />
-                        <h4 className="text-sm font-semibold text-white">{widget.title}</h4>
+                        <Icon className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
+                        <h4 className="text-sm font-semibold text-[var(--hive-text-inverse)]">{widget.title}</h4>
                         {widget.adminOnly && (
-                          <Badge variant="prof-favorite" className="text-xs border-[#FFD700]/30 text-[#FFD700]">
+                          <Badge variant="primary" className="text-xs border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
                             Admin
                           </Badge>
                         )}
                         {currentMode === 'insights' && (
                           <motion.div
-                            className="w-2 h-2 bg-purple-400 rounded-full"
+                            className="w-2 h-2 bg-[var(--hive-gold)] rounded-full"
                             animate={{ scale: [1, 1.2, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
                           />
                         )}
                       </div>
                       {currentMode === 'insights' ? (
-                        <Activity className="h-3 w-3 text-purple-400" />
+                        <Activity className="h-3 w-3 text-[var(--hive-gold)]" />
                       ) : (
-                        <Maximize2 className="h-3 w-3 text-neutral-400 group-hover:text-[#FFD700] transition-colors" />
+                        <Maximize2 className="h-3 w-3 text-neutral-400 group-hover:text-[var(--hive-brand-secondary)] transition-colors" />
                       )}
                     </div>
                     
                     {/* Widget-Specific Insights Overlays */}
                     {currentMode === 'insights' && widget.id === 'members' && (
                       <motion.div
-                        className="mb-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                        className="mb-3 p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg"
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                       >
                         {analyticsLoading ? (
                           <div className="flex items-center justify-center py-2">
-                            <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                            <Loader2 className="h-4 w-4 animate-spin text-[var(--hive-gold)]" />
                           </div>
                         ) : analyticsData ? (
                           <>
@@ -850,19 +946,19 @@ export default function SpaceDetailPage({
                     
                     {currentMode === 'insights' && widget.id === 'events' && (
                       <motion.div
-                        className="mb-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                        className="mb-3 p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg"
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                       >
                         {analyticsLoading ? (
                           <div className="flex items-center justify-center py-2">
-                            <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                            <Loader2 className="h-4 w-4 animate-spin text-[var(--hive-gold)]" />
                           </div>
                         ) : analyticsData ? (
                           <>
                             <div className="grid grid-cols-2 gap-3 mb-2">
                               <div className="text-center">
-                                <div className="text-lg font-bold text-orange-400">{analyticsData.eventsData?.upcomingEvents || 0}</div>
+                                <div className="text-lg font-bold text-[var(--hive-gold)]">{analyticsData.eventsData?.upcomingEvents || 0}</div>
                                 <div className="text-xs text-neutral-400">Upcoming</div>
                               </div>
                               <div className="text-center">
@@ -871,7 +967,7 @@ export default function SpaceDetailPage({
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Total events: <span className="text-white">{analyticsData.eventsData?.totalEvents || 0}</span>
+                              Total events: <span className="text-[var(--hive-text-inverse)]">{analyticsData.eventsData?.totalEvents || 0}</span>
                             </div>
                           </>
                         ) : (
@@ -882,13 +978,13 @@ export default function SpaceDetailPage({
                     
                     {currentMode === 'insights' && widget.id === 'tools' && (
                       <motion.div
-                        className="mb-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                        className="mb-3 p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg"
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                       >
                         {analyticsLoading ? (
                           <div className="flex items-center justify-center py-2">
-                            <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                            <Loader2 className="h-4 w-4 animate-spin text-[var(--hive-gold)]" />
                           </div>
                         ) : analyticsData ? (
                           <>
@@ -898,12 +994,12 @@ export default function SpaceDetailPage({
                                 <div className="text-xs text-neutral-400">Active Tools</div>
                               </div>
                               <div className="text-center">
-                                <div className="text-lg font-bold text-yellow-400">{analyticsData.toolsData?.toolUsage || 0}</div>
+                                <div className="text-lg font-bold text-[var(--hive-gold)]">{analyticsData.toolsData?.toolUsage || 0}</div>
                                 <div className="text-xs text-neutral-400">Weekly Uses</div>
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Top: <span className="text-white">{analyticsData.toolsData?.topTools?.[0] || 'N/A'}</span>
+                              Top: <span className="text-[var(--hive-text-inverse)]">{analyticsData.toolsData?.topTools?.[0] || 'N/A'}</span>
                             </div>
                           </>
                         ) : (
@@ -914,13 +1010,13 @@ export default function SpaceDetailPage({
                     
                     {currentMode === 'insights' && widget.id === 'pinned' && (
                       <motion.div
-                        className="mb-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                        className="mb-3 p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg"
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                       >
                         {analyticsLoading ? (
                           <div className="flex items-center justify-center py-2">
-                            <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                            <Loader2 className="h-4 w-4 animate-spin text-[var(--hive-gold)]" />
                           </div>
                         ) : analyticsData ? (
                           <>
@@ -935,7 +1031,7 @@ export default function SpaceDetailPage({
                               </div>
                             </div>
                             <div className="text-xs text-neutral-400 text-center">
-                              Most viewed: <span className="text-white">{analyticsData.resourcesData?.mostViewed || 'N/A'}</span>
+                              Most viewed: <span className="text-[var(--hive-text-inverse)]">{analyticsData.resourcesData?.mostViewed || 'N/A'}</span>
                             </div>
                           </>
                         ) : (
@@ -947,29 +1043,50 @@ export default function SpaceDetailPage({
                     {widget.id === 'members' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                       <HiveMembersSurface
                         space={space}
+                        members={members}
                         isBuilder={isLeader}
                         leaderMode={currentMode === 'manage' ? 'manage' : 'insights'}
                         maxMembers={5}
+                        canManageMembers={isLeader}
+                        onInviteMember={() => {}}
+                        onMessageMember={(memberId) => {}}
                       />
                     ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                       <HiveEventsSurface
                         space={space}
+                        events={events}
                         canCreateEvents={isLeader}
                         canModerate={isLeader}
+                        leaderMode={currentMode === 'manage' ? 'moderate' : 'insights'}
+                        onCreateEvent={() => setShowEventCreation(true)}
+                        onEditEvent={(eventId: any) => updateEvent(eventId, {})}
+                        onCancelEvent={(eventId: any) => deleteEvent(eventId)}
+                        onRSVPEvent={(eventId, status) => rsvpToEvent(eventId, status as any)}
                       />
                     ) : (
                       <Component
                         space={space}
+                        posts={widget.id === 'posts' ? posts : undefined}
+                        members={widget.id === 'members' ? members : undefined}
+                        items={widget.id === 'pinned' ? pinnedItems : undefined}
+                        tools={widget.id === 'tools' ? tools : undefined}
+                        isLoading={widget.id === 'posts' ? postsLoading : widget.id === 'members' ? membersLoading : widget.id === 'pinned' ? pinnedLoading : widget.id === 'tools' ? toolsLoading : undefined}
                         mode="view"
                         showCompact={true}
                         maxItems={3}
                         isBuilder={isAdmin}
+                        canPin={widget.id === 'pinned' ? isLeader : undefined}
                         canModerate={isLeader}
                         leaderMode={currentMode}
                         canManageTools={isAdmin}
                         onAddTool={widget.id === 'tools' ? handleAddTool : undefined}
                         onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
                         onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
+                        onRemoveTool={widget.id === 'tools' ? handleRemoveTool : undefined}
+                        onAddPinned={widget.id === 'pinned' ? () => {} : undefined}
+                        onViewItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'view') : undefined}
+                        onDownloadItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'download') : undefined}
+                        onUnpinItem={widget.id === 'pinned' ? unpinItem : undefined}
                       />
                     )}
                   </motion.div>
@@ -982,15 +1099,15 @@ export default function SpaceDetailPage({
                 currentMode === 'configure' 
                   ? "border border-green-500/30 bg-green-500/5" 
                   : currentMode === 'insights'
-                  ? "border border-purple-500/30 bg-purple-500/5"
-                  : "border border-white/[0.06] bg-white/[0.02]"
+                  ? "border border-[var(--hive-gold)]/30 bg-[var(--hive-gold)]/5"
+                  : "border border-[var(--hive-white)]/[0.06] bg-[var(--hive-white)]/[0.02]"
               )}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-semibold text-white">About</h4>
+                    <h4 className="text-sm font-semibold text-[var(--hive-text-inverse)]">About</h4>
                     {currentMode === 'insights' && (
                       <motion.div
-                        className="w-2 h-2 bg-purple-400 rounded-full"
+                        className="w-2 h-2 bg-[var(--hive-gold)] rounded-full"
                         animate={{ scale: [1, 1.2, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       />
@@ -1011,40 +1128,40 @@ export default function SpaceDetailPage({
                     </motion.button>
                   )}
                   {currentMode === 'insights' && (
-                    <Activity className="h-3 w-3 text-purple-400" />
+                    <Activity className="h-3 w-3 text-[var(--hive-gold)]" />
                   )}
                 </div>
                 
                 {/* Insights Mode Overview */}
                 {currentMode === 'insights' && (
                   <motion.div
-                    className="mb-4 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg"
+                    className="mb-4 p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg"
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
                     {analyticsLoading ? (
                       <div className="flex items-center justify-center py-4">
-                        <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                        <Loader2 className="h-4 w-4 animate-spin text-[var(--hive-gold)]" />
                         <span className="ml-2 text-xs text-neutral-400">Loading health score...</span>
                       </div>
                     ) : analyticsData ? (
                       <>
-                        <div className="text-xs font-medium text-purple-400 mb-2">Space Health Score</div>
+                        <div className="text-xs font-medium text-[var(--hive-gold)] mb-2">Space Health Score</div>
                         <div className="flex items-center gap-2 mb-3">
-                          <div className="flex-1 bg-white/10 rounded-full h-2">
+                          <div className="flex-1 bg-[var(--hive-white)]/10 rounded-full h-2">
                             <div 
                               className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${((analyticsData as any).membershipData?.healthScore || (analyticsData.membershipData?.activeMembers ? Math.min(analyticsData.membershipData.activeMembers / 10, 10) : 0)) * 10}%` }}
                             ></div>
                           </div>
-                          <span className="text-sm font-bold text-white">{(analyticsData as any).membershipData?.healthScore || Math.floor((analyticsData.membershipData?.activeMembers || 0) / 10)}/10</span>
+                          <span className="text-sm font-bold text-[var(--hive-text-inverse)]">{(analyticsData as any).membershipData?.healthScore || Math.floor((analyticsData.membershipData?.activeMembers || 0) / 10)}/10</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
                           <div className="flex justify-between">
                             <span className="text-neutral-400">Activity</span>
                             <span className={cn(
                               (analyticsData as any).membershipData?.activity === 'High' ? "text-green-400" :
-                              (analyticsData as any).membershipData?.activity === 'Medium' ? "text-yellow-400" : "text-red-400"
+                              (analyticsData as any).membershipData?.activity === 'Medium' ? "text-[var(--hive-gold)]" : "text-red-400"
                             )}>
                               {(analyticsData as any).membershipData?.activity || 'N/A'}
                             </span>
@@ -1053,7 +1170,7 @@ export default function SpaceDetailPage({
                             <span className="text-neutral-400">Engagement</span>
                             <span className={cn(
                               (analyticsData as any).membershipData?.engagement === 'High' ? "text-green-400" :
-                              (analyticsData as any).membershipData?.engagement === 'Medium' ? "text-yellow-400" : "text-red-400"
+                              (analyticsData as any).membershipData?.engagement === 'Medium' ? "text-[var(--hive-gold)]" : "text-red-400"
                             )}>
                               {(analyticsData as any).membershipData?.engagement || 'N/A'}
                             </span>
@@ -1062,7 +1179,7 @@ export default function SpaceDetailPage({
                             <span className="text-neutral-400">Growth</span>
                             <span className={cn(
                               (analyticsData as any).membershipData?.growth === 'Growing' ? "text-green-400" :
-                              (analyticsData as any).membershipData?.growth === 'Steady' ? "text-blue-400" : "text-yellow-400"
+                              (analyticsData as any).membershipData?.growth === 'Steady' ? "text-blue-400" : "text-[var(--hive-gold)]"
                             )}>
                               {(analyticsData as any).membershipData?.growth || 'N/A'}
                             </span>
@@ -1071,15 +1188,15 @@ export default function SpaceDetailPage({
                             <span className="text-neutral-400">Retention</span>
                             <span className={cn(
                               (analyticsData as any).membershipData?.retention === 'Excellent' ? "text-green-400" :
-                              (analyticsData as any).membershipData?.retention === 'Good' ? "text-blue-400" : "text-yellow-400"
+                              (analyticsData as any).membershipData?.retention === 'Good' ? "text-blue-400" : "text-[var(--hive-gold)]"
                             )}>
                               {(analyticsData as any).membershipData?.retention || 'N/A'}
                             </span>
                           </div>
                         </div>
                         {(analyticsData as any).membershipData?.alerts && (analyticsData as any).membershipData.alerts.length > 0 && (
-                          <div className="mt-3 pt-2 border-t border-purple-500/20">
-                            <div className="text-xs font-medium text-purple-400 mb-1">Latest Alert</div>
+                          <div className="mt-3 pt-2 border-t border-[var(--hive-gold)]/20">
+                            <div className="text-xs font-medium text-[var(--hive-gold)] mb-1">Latest Alert</div>
                             <div className="text-xs text-neutral-300">
                               {(analyticsData as any).membershipData.alerts[0].message}
                             </div>
@@ -1098,15 +1215,15 @@ export default function SpaceDetailPage({
                 {isEditingDescription && currentMode === 'configure' ? (
                   <div className="space-y-3">
                     <textarea
-                      className="w-full bg-white/5 border border-green-500/30 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-400 resize-none focus:outline-none focus:border-green-400/50 transition-colors"
+                      className="w-full bg-[var(--hive-white)]/5 border border-green-500/30 rounded-lg px-3 py-2 text-xs text-[var(--hive-text-inverse)] placeholder-gray-400 resize-none focus:outline-none focus:border-green-400/50 transition-colors"
                       placeholder="Describe your space..."
                       rows={4}
                       value={editedDescription}
-                      onChange={(e) => setEditedDescription(e.target.value)}
+                      onChange={(e: any) => setEditedDescription(e.target.value)}
                     />
                     <div className="flex justify-end gap-2">
                       <motion.button
-                        className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors"
+                        className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-[var(--hive-text-inverse)] text-xs rounded-md transition-colors"
                         onClick={() => {
                           setIsEditingDescription(false);
                           setEditedDescription('');
@@ -1117,31 +1234,40 @@ export default function SpaceDetailPage({
                         Cancel
                       </motion.button>
                       <motion.button
-                        className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded-md transition-colors"
+                        className="px-3 py-1 bg-green-500 hover:bg-green-600 text-[var(--hive-text-inverse)] text-xs rounded-md transition-colors disabled:opacity-50"
+                        disabled={managementUpdating}
                         onClick={async () => {
                           try {
-                            const response = await authenticatedFetch(`/api/spaces/${spaceId}`, {
-                              method: 'PATCH',
-                              headers: {
-                                'Content-Type': 'application/json'
-                              },
-                              body: JSON.stringify({ description: editedDescription })
-                            });
-                            
-                            if (response.ok) {
-                              setIsEditingDescription(false);
-                              window.location.reload(); // Refresh to show updated description
-                            } else {
-                              alert('Failed to update description');
+                            await updateSettings({ description: editedDescription });
+                            setIsEditingDescription(false);
+                            // Update local space object to reflect changes
+                            if (space) {
+                              space.description = editedDescription;
                             }
-                          } catch {
-                            alert('Failed to update description');
+                            // Show success toast if available
+                            if (typeof window !== 'undefined' && (window as any).showToast) {
+                              (window as any).showToast({
+                                title: 'Success',
+                                description: 'Space description updated',
+                                type: 'success'
+                              });
+                            }
+                          } catch (error) {
+                            logger.error('Failed to update description:', { error: String(error) });
+                            // Show error toast if available
+                            if (typeof window !== 'undefined' && (window as any).showToast) {
+                              (window as any).showToast({
+                                title: 'Error',
+                                description: 'Failed to update description',
+                                type: 'error'
+                              });
+                            }
                           }
                         }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        Save
+                        {managementUpdating ? 'Saving...' : 'Save'}
                       </motion.button>
                     </div>
                   </div>
@@ -1162,14 +1288,14 @@ export default function SpaceDetailPage({
                   </motion.div>
                 )}
                 
-                <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-2 text-xs">
+                <div className="mt-3 pt-3 border-t border-[var(--hive-white)]/[0.06] space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Type</span>
-                    <span className="text-white capitalize">{space.type}</span>
+                    <span className="text-[var(--hive-text-inverse)] capitalize">{space.type}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-neutral-400">Members</span>
-                    <span className="text-white">{(space.memberCount || 0).toLocaleString()}</span>
+                    <span className="text-[var(--hive-text-inverse)]">{(space.memberCount || 0).toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -1177,26 +1303,25 @@ export default function SpaceDetailPage({
           </div>
         )}
 
-        
         {/* Modal System */}
         <AnimatePresence>
           {activeModal && (
             <motion.div
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 bg-[var(--hive-black)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closeModal}
             >
               <motion.div
-                className="bg-[#0A0A0A] border border-white/[0.1] rounded-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden"
+                className="bg-[var(--hive-background-primary)] border border-[var(--hive-white)]/[0.1] rounded-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: any) => e.stopPropagation()}
               >
                 {/* Modal Header */}
-                <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
+                <div className="flex items-center justify-between p-6 border-b border-[var(--hive-white)]/[0.06]">
                   <div className="flex items-center gap-3">
                     {(() => {
                       const widget = availableWidgets.find(w => w.id === activeModal);
@@ -1204,10 +1329,10 @@ export default function SpaceDetailPage({
                       const Icon = widget.icon as React.ComponentType<{ className?: string }>;
                       return (
                         <>
-                          <Icon className="h-6 w-6 text-[#FFD700]" />
-                          <h2 className="text-xl font-semibold text-white">{widget.title}</h2>
+                          <Icon className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
+                          <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)]">{widget.title}</h2>
                           {widget.adminOnly && (
-                            <Badge variant="prof-favorite" className="border-[#FFD700]/30 text-[#FFD700]">
+                            <Badge variant="primary" className="border-[var(--hive-brand-secondary)]/30 text-[var(--hive-brand-secondary)]">
                               Admin Only
                             </Badge>
                           )}
@@ -1224,14 +1349,14 @@ export default function SpaceDetailPage({
                       
                       return (
                         <div className="flex items-center gap-1 mr-4">
-                          {widget.allowedViews.map((view) => (
+                          {widget.allowedViews.map((view: any) => (
                             <Button
                               key={view}
                               size="sm"
                               variant={widgetViews[activeModal] === view ? 'primary' : 'outline'}
                               className={widgetViews[activeModal] === view 
-                                ? 'bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30'
-                                : 'border-white/[0.2] text-neutral-400 hover:text-white'
+                                ? 'bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]/30'
+                                : 'border-[var(--hive-white)]/[0.2] text-neutral-400 hover:text-[var(--hive-text-inverse)]'
                               }
                               onClick={() => changeWidgetView(activeModal, view)}
                             >
@@ -1248,7 +1373,7 @@ export default function SpaceDetailPage({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                      className="border-[var(--hive-white)]/[0.2] text-[var(--hive-text-inverse)] hover:bg-[var(--hive-white)]/[0.1]"
                       onClick={closeModal}
                     >
                       <X className="h-4 w-4" />
@@ -1269,22 +1394,41 @@ export default function SpaceDetailPage({
                         {widget.id === 'members' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                           <HiveMembersSurface
                             space={space}
+                            members={members}
                             isBuilder={isLeader}
                             leaderMode={currentMode === 'manage' ? 'manage' : 'insights'}
                             maxMembers={50}
+                            canManageMembers={isLeader}
+                            onInviteMember={() => {}}
+                            onMessageMember={(memberId) => {}}
+                            onChangeRole={handleChangeRole}
+                            onRemoveMember={handleRemoveMember}
+                            onBlockMember={handleBlockMember}
                           />
                         ) : widget.id === 'events' && isLeader && (currentMode === 'manage' || currentMode === 'insights') ? (
                           <HiveEventsSurface
                             space={space}
+                            events={events}
+                            isLoading={eventsLoading}
                             canCreateEvents={isLeader}
                             canModerate={isLeader}
+                            onCreateEvent={() => setShowEventCreation(true)}
+                            onEditEvent={(eventId: any) => updateEvent(eventId, {})}
+                            onCancelEvent={(eventId: any) => deleteEvent(eventId)}
+                            onRSVPEvent={(eventId, status) => rsvpToEvent(eventId, status as any)}
                           />
                         ) : (
                           <Component
                             space={space}
+                            posts={widget.id === 'posts' ? posts : undefined}
+                            members={widget.id === 'members' ? members : undefined}
+                            items={widget.id === 'pinned' ? pinnedItems : undefined}
+                            tools={widget.id === 'tools' ? tools : undefined}
+                            isLoading={widget.id === 'posts' ? postsLoading : widget.id === 'members' ? membersLoading : widget.id === 'pinned' ? pinnedLoading : widget.id === 'tools' ? toolsLoading : undefined}
                             mode="view"
                             viewMode={widgetViews[activeModal] || widget.allowedViews?.[0] || 'default'}
                             canPost={isJoined && space.status === 'activated'}
+                            canPin={widget.id === 'pinned' ? isLeader : undefined}
                             canModerate={isAdmin}
                             leaderMode={currentMode}
                             isBuilder={isAdmin}
@@ -1292,11 +1436,18 @@ export default function SpaceDetailPage({
                             onAddTool={widget.id === 'tools' ? handleAddTool : undefined}
                             onConfigureTool={widget.id === 'tools' ? handleConfigureTool : undefined}
                             onViewToolAnalytics={widget.id === 'tools' ? handleViewToolAnalytics : undefined}
+                            onRemoveTool={widget.id === 'tools' ? handleRemoveTool : undefined}
                             onCreateComment={widget.id === 'posts' ? handleCreateComment : undefined}
                             onLoadComments={widget.id === 'posts' ? handleLoadComments : undefined}
                             onChangeRole={widget.id === 'members' ? handleChangeRole : undefined}
                             onRemoveMember={widget.id === 'members' ? handleRemoveMember : undefined}
                             onBlockMember={widget.id === 'members' ? handleBlockMember : undefined}
+                            onInviteMember={widget.id === 'members' ? () => {} : undefined}
+                            onMessageMember={widget.id === 'members' ? (memberId) => {} : undefined}
+                            onAddPinned={widget.id === 'pinned' ? () => {} : undefined}
+                            onViewItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'view') : undefined}
+                            onDownloadItem={widget.id === 'pinned' ? (itemId: any) => trackPinnedAction(itemId, 'download') : undefined}
+                            onUnpinItem={widget.id === 'pinned' ? unpinItem : undefined}
                           />
                         )}
                       </>
@@ -1317,6 +1468,20 @@ export default function SpaceDetailPage({
             spaceName={space?.name || 'Space'}
             initialPostType={postCreationType}
             canCreateAnnouncements={isAdmin}
+          />
+        )}
+
+        {/* Event Creation Modal */}
+        {showEventCreation && spaceId && (
+          <EventCreationModal
+            isOpen={showEventCreation}
+            onClose={() => setShowEventCreation(false)}
+            spaceId={spaceId}
+            spaceName={space?.name || 'Space'}
+            onEventCreated={() => {
+              // Trigger a refresh of events
+              window.location.reload();
+            }}
           />
         )}
 

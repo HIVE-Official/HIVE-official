@@ -9,8 +9,8 @@ import {
   InputPresets,
   FloatingLabelInput
 } from './input-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import { Button } from './button-enhanced';
 import '../../hive-tokens.css';
 
@@ -99,7 +99,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="default">✅ MODULAR EXPANSION</Badge>
+            <Badge variant="primary">✅ MODULAR EXPANSION</Badge>
             Container Expansion - Labels, Helper Text, Error States
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -162,7 +162,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">🎨 VARIANTS</Badge>
+            <Badge variant="secondary">🎨 VARIANTS</Badge>
             Input Variants - Semantic Token Perfection
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -171,10 +171,10 @@ export const CompleteShowcase: Story = {
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
-            <Input variant="default" placeholder="Default variant" />
+            <Input variant="primary" placeholder="Default variant" />
             <Input variant="error" placeholder="Error variant" />
-            <Input variant="success" placeholder="Success variant" />
-            <Input variant="warning" placeholder="Warning variant" />
+            <Input variant="emerald" placeholder="Success variant" />
+            <Input variant="gold" placeholder="Warning variant" />
             <Input variant="brand" placeholder="Brand variant (gold focus)" />
             <Input variant="ghost" placeholder="Ghost variant" />
             <Input variant="filled" placeholder="Filled variant" />
@@ -426,7 +426,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">🏫 CAMPUS CONTEXT</Badge>
+            <Badge variant="secondary">🏫 CAMPUS CONTEXT</Badge>
             Real UB Student Coordination Scenarios
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -568,7 +568,7 @@ export const ModernFloatingLabels: Story = {
                 <FloatingLabelInput 
                   label="Success Example"
                   success="Looks good!"
-                  variant="success"
+                  variant="emerald"
                   defaultValue="Valid input"
                 />
               </div>
@@ -613,7 +613,7 @@ export const Playground: Story = {
     label: 'Label Text',
     helperText: 'Helper text example',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

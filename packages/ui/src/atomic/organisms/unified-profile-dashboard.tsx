@@ -243,7 +243,7 @@ const ProfileHeaderWidget: React.FC<{
             />
           ) : (
             <div className="w-24 h-24 bg-hive-brand-secondary rounded-full flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">
+              <span className="text-[var(--hive-text-inverse)] text-2xl font-bold">
                 {user.name?.charAt(0).toUpperCase() || 'U'}
               </span>
             </div>
@@ -263,7 +263,7 @@ const ProfileHeaderWidget: React.FC<{
               const input = document.createElement('input');
               input.type = 'file';
               input.accept = 'image/*';
-              input.onchange = (e) => {
+              input.onchange = (e: any) => {
                 const file = (e.target as HTMLInputElement).files?.[0];
                 if (file && onAvatarChange) onAvatarChange(file);
               };
@@ -271,7 +271,7 @@ const ProfileHeaderWidget: React.FC<{
             }}
             className="absolute inset-0 bg-black/0 group-hover:bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
           >
-            <Camera className="text-white" size={20} />
+            <Camera className="text-[var(--hive-text-inverse)]" size={20} />
           </button>
         </div>
         
@@ -379,7 +379,7 @@ const ActivitiesWidget: React.FC<{
       
       {activities.length > 0 ? (
         <div className="space-y-3">
-          {activities.slice(0, 4).map((activity) => (
+          {activities.slice(0, 4).map((activity: any) => (
             <button
               key={activity.id}
               onClick={() => onActivityClick?.(activity.id)}
@@ -462,14 +462,14 @@ const ToolsWidget: React.FC<{
       
       {allTools.length > 0 ? (
         <div className="grid grid-cols-2 gap-3">
-          {allTools.slice(0, 4).map((tool) => (
+          {allTools.slice(0, 4).map((tool: any) => (
             <button
               key={tool.id}
               onClick={() => onToolClick?.(tool.id)}
               className="p-3 bg-hive-background-primary rounded-lg hover:bg-hive-interactive-hover transition-colors text-left group"
             >
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded bg-hive-brand-secondary flex items-center justify-center text-white text-xs">
+                <div className="w-6 h-6 rounded bg-hive-brand-secondary flex items-center justify-center text-[var(--hive-text-inverse)] text-xs">
                   {tool.name.charAt(0).toUpperCase()}
                 </div>
                 <span className="text-sm font-medium text-hive-text-primary truncate">{tool.name}</span>
@@ -493,7 +493,7 @@ const ToolsWidget: React.FC<{
           <p className="text-xs text-hive-text-tertiary">Start building your first tool</p>
           <button 
             onClick={onJoinToolsWaitlist}
-            className="mt-3 px-3 py-1 text-xs bg-hive-brand-secondary text-white rounded-lg hover:bg-hive-brand-hover transition-colors"
+            className="mt-3 px-3 py-1 text-xs bg-hive-brand-secondary text-[var(--hive-text-inverse)] rounded-lg hover:bg-hive-brand-hover transition-colors"
           >
             Join Waitlist
           </button>
@@ -554,20 +554,20 @@ const SpacesWidget: React.FC<{
       
       {spaces.length > 0 ? (
         <div className="space-y-3 mb-4">
-          {spaces.slice(0, 4).map((space) => (
+          {spaces.slice(0, 4).map((space: any) => (
             <button
               key={space.id}
               onClick={() => onSpaceClick?.(space.id)}
               className="flex items-center gap-3 p-3 bg-hive-background-primary rounded-lg hover:bg-hive-interactive-hover transition-colors w-full text-left group"
             >
-              <div className="w-8 h-8 rounded-lg bg-hive-brand-secondary flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-hive-brand-secondary flex items-center justify-center text-[var(--hive-text-inverse)] text-xs font-bold flex-shrink-0">
                 {space.name.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <p className="text-sm font-medium text-hive-text-primary truncate">{space.name}</p>
-                  {space.unreadCount > 0 && (
-                    <span className="px-1.5 py-0.5 bg-hive-brand-secondary text-white rounded-full text-xs">
+                  {space.unreadCount && space.unreadCount > 0 && (
+                    <span className="px-1.5 py-0.5 bg-hive-brand-secondary text-[var(--hive-text-inverse)] rounded-full text-xs">
                       {space.unreadCount}
                     </span>
                   )}

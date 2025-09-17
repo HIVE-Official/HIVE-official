@@ -6,12 +6,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Switch } from '../../../components/ui/switch';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { 
   Eye, 
   EyeOff, 
@@ -38,6 +38,7 @@ import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion
 import '../../../hive-tokens.css';
 
 const meta = {
+  component: () => null,
   title: '09-Accessibility/Campus Standards',
   parameters: {
     layout: 'fullscreen',
@@ -284,7 +285,7 @@ const AccessibilityShowcase = () => {
           focusMode && keyboardFocus === index ? 'ring-4' : ''
         }`}
         style={{
-          backgroundColor: highContrast ? '#000000' : 'var(--hive-background-secondary)',
+          backgroundColor: highContrast ? 'var(--hive-black)' : 'var(--hive-background-secondary)',
           borderColor: focusMode && keyboardFocus === index ? 'var(--hive-brand-primary)' : 'var(--hive-border-primary)',
           color: highContrast ? '#FFFFFF' : 'var(--hive-text-primary)',
           fontSize: largeText ? '1.125rem' : '1rem',
@@ -305,7 +306,7 @@ const AccessibilityShowcase = () => {
               className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 text-sm font-bold"
               style={{ 
                 backgroundColor: highContrast ? '#FFFFFF' : 'var(--hive-brand-primary)',
-                color: highContrast ? '#000000' : 'var(--hive-text-inverse)'
+                color: highContrast ? 'var(--hive-black)' : 'var(--hive-text-inverse)'
               }}
             >
               {title.split(' ').map(w => w[0]).join('')}
@@ -323,7 +324,7 @@ const AccessibilityShowcase = () => {
             size="sm"
             style={{ 
               backgroundColor: highContrast ? '#FFFFFF' : 'var(--hive-brand-primary)',
-              color: highContrast ? '#000000' : 'var(--hive-text-inverse)',
+              color: highContrast ? 'var(--hive-black)' : 'var(--hive-text-inverse)',
               minWidth: '44px',
               minHeight: '44px'
             }}
@@ -339,7 +340,7 @@ const AccessibilityShowcase = () => {
       <div className="space-y-6">
         {/* Accessibility Controls */}
         <Card className="p-4" style={{ 
-          backgroundColor: highContrast ? '#000000' : 'var(--hive-background-secondary)',
+          backgroundColor: highContrast ? 'var(--hive-black)' : 'var(--hive-background-secondary)',
           borderColor: 'var(--hive-border-primary)',
           color: highContrast ? '#FFFFFF' : 'var(--hive-text-primary)'
         }}>
@@ -489,10 +490,10 @@ const AccessibilityShowcase = () => {
             Campus inclusive design ensuring HIVE is accessible to all students regardless of abilities, devices, or campus situations.
           </p>
           <div className="flex flex-wrap gap-2">
-            <Badge className="bg-gray-800/50 text-white border-gray-700">WCAG 2.1 AA</Badge>
-            <Badge className="bg-gray-800/50 text-white border-gray-700">Campus Optimized</Badge>
-            <Badge className="bg-gray-800/50 text-white border-gray-700">Screen Reader Ready</Badge>
-            <Badge className="bg-gray-800/50 text-white border-gray-700">Keyboard Navigation</Badge>
+            <Badge className="bg-gray-800/50 text-[var(--hive-text-primary)] border-gray-700">WCAG 2.1 AA</Badge>
+            <Badge className="bg-gray-800/50 text-[var(--hive-text-primary)] border-gray-700">Campus Optimized</Badge>
+            <Badge className="bg-gray-800/50 text-[var(--hive-text-primary)] border-gray-700">Screen Reader Ready</Badge>
+            <Badge className="bg-gray-800/50 text-[var(--hive-text-primary)] border-gray-700">Keyboard Navigation</Badge>
           </div>
         </motion.div>
 
@@ -621,7 +622,7 @@ const AccessibilityShowcase = () => {
                             </span>
                             {guideline.title === 'Color Contrast' && guideline.examples ? (
                               <div className="space-y-3">
-                                {(guideline.examples as any[]).map((example: any, idx: number) => (
+                                {(guideline.examples as unknown[]).map((example: any, idx: number) => (
                                   <ContrastChecker
                                     key={idx}
                                     foreground={example.colors?.[0] || 'var(--hive-text-primary)'}
@@ -632,7 +633,7 @@ const AccessibilityShowcase = () => {
                               </div>
                             ) : guideline.title === 'Touch Targets' && guideline.examples ? (
                               <div className="space-y-3">
-                                {(guideline.examples as any[]).map((example: any, idx: number) => (
+                                {(guideline.examples as unknown[]).map((example: any, idx: number) => (
                                   <div key={idx} className="flex items-center space-x-3">
                                     <div 
                                       className="rounded flex items-center justify-center text-sm font-medium"

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ProfileGhostModeWidget } from './profile-ghost-mode-widget';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -235,7 +235,7 @@ export const Default: Story = {
     onConfigureGhostMode: action('configure-ghost-mode'),
     onViewDataExport: action('view-data-export'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -261,7 +261,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎯 GHOST MODE WIDGET SYSTEM</Badge>
+            <Badge variant="emerald">🎯 GHOST MODE WIDGET SYSTEM</Badge>
             Privacy & Visibility Control
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -369,7 +369,7 @@ export const CompleteShowcase: Story = {
                   <div className="space-y-3">
                     <Text variant="body-sm" color="gold" weight="medium">Advanced Privacy Features:</Text>
                     <div className="space-y-2">
-                      <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                      <div className="p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg">
                         <Text variant="body-sm" color="primary" weight="medium">Location Privacy</Text>
                         <Text variant="body-xs" color="secondary">Campus location sharing, residence hall privacy, study space discretion</Text>
                       </div>
@@ -870,7 +870,7 @@ export const Playground: Story = {
     onConfigureGhostMode: action('playground-ghost-config'),
     onViewDataExport: action('playground-data-export'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -110,11 +110,11 @@
   /* Liquid Metal Effects */
   .liquid-metal {
     background: linear-gradient(135deg, 
-      var(--hive-overlay-gold-subtle) 0%,
-      var(--hive-overlay-gold-subtle) 25%,
+      var(--hive-overlay-orange-subtle) 0%,
+      var(--hive-overlay-orange-subtle) 25%,
       var(--hive-background-secondary) 50%,
       var(--hive-background-tertiary) 75%,
-      var(--hive-overlay-gold-subtle) 100%
+      var(--hive-overlay-orange-subtle) 100%
     );
     background-size: 200% 200%;
     animation: liquidFlow 8s ease-in-out infinite;
@@ -135,7 +135,7 @@
     transform: translateY(-1px) scale(1.02);
     box-shadow: 
       var(--hive-shadow-hover),
-      var(--hive-shadow-gold-glow);
+      var(--hive-shadow-orange-glow);
   }
   
   .hive-interactive:active {

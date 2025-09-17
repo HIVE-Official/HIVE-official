@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { profileAPI, ProfileUpdateData } from '../lib/profile-api';
+import { profileAPI, ProfileUpdateData } from '@/lib/profile-api';
 
 interface UseProfileReturn {
   isLoading: boolean;

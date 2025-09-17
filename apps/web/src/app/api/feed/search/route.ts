@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
-import { getAuthTokenFromRequest } from '@/lib/auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { getAuthTokenFromRequest } from '@/lib/auth/auth';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 
 const SearchFeedSchema = z.object({
@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
           if (descriptionMatch) relevanceScore += 60;
           
           // Boost upcoming events
-          const isUpcoming = eventData.startDate && eventData.startDate.toDate() > new Date();
+          const isUpcoming = eventData.startDate && eventData.startDate?.toDate ? eventData.startDate.toDate() : new Date(eventData.startDate) > new Date();
           if (isUpcoming) relevanceScore += 40;
           
           // Boost based on RSVP count (approximated)

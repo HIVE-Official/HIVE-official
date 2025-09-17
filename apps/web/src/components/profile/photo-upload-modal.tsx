@@ -3,8 +3,8 @@
 import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { Button, Progress } from "@hive/ui";
-import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
-import { Alert } from "@/components/temp-stubs";
+import { Modal, ModalContent, ModalHeader, ModalTitle, ModalFooter } from "@hive/ui";
+import { Alert } from "@hive/ui";
 import { 
   Upload, 
   Camera, 
@@ -114,14 +114,14 @@ export function PhotoUploadModal({
   };
 
   return (
-    <HiveModal open={isOpen} onOpenChange={handleClose} size="lg">
-      <HiveModalContent className="max-w-2xl">
-        <HiveModalHeader>
-          <HiveModalTitle className="flex items-center space-x-2">
+    <Modal open={isOpen} onOpenChange={handleClose} size="lg">
+      <ModalContent className="max-w-2xl">
+        <ModalHeader>
+          <ModalTitle className="flex items-center space-x-2">
             <Camera className="h-5 w-5" />
             <span>Upload Profile Photo</span>
-          </HiveModalTitle>
-        </HiveModalHeader>
+          </ModalTitle>
+        </ModalHeader>
 
         <div className="space-y-6 p-6">
           {/* Current Photo Display */}
@@ -192,7 +192,7 @@ export function PhotoUploadModal({
                   <Upload className="h-8 w-8 text-hive-text-mutedLight" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">Drop your photo here, or click to browse</p>
+                  <p className="text-[var(--hive-text-inverse)] font-medium">Drop your photo here, or click to browse</p>
                   <p className="text-sm text-hive-text-mutedLight mt-1">
                     PNG, JPG, GIF up to 5MB
                   </p>
@@ -205,7 +205,7 @@ export function PhotoUploadModal({
           {isUploading && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-white">Uploading...</span>
+                <span className="text-[var(--hive-text-inverse)]">Uploading...</span>
                 <span className="text-hive-text-mutedLight">{uploadProgress}%</span>
               </div>
               <Progress value={uploadProgress} className="h-2" />
@@ -228,7 +228,7 @@ export function PhotoUploadModal({
           </div>
         </div>
 
-        <HiveModalFooter>
+        <ModalFooter>
           <Button
             variant="outline"
             onClick={handleClose}
@@ -253,8 +253,8 @@ export function PhotoUploadModal({
               </>
             )}
           </Button>
-        </HiveModalFooter>
-      </HiveModalContent>
-    </HiveModal>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

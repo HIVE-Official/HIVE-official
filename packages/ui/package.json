@@ -4,17 +4,32 @@
   "private": true,
   "type": "module",
   "main": "./dist/ui/index.js",
-  "types": "./dist/ui/index.d.ts",
+  "types": "./dist/ui/src/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/ui/index.d.ts",
+      "types": "./dist/ui/src/index.d.ts",
       "import": "./dist/ui/index.js",
       "require": "./dist/ui/index.js"
     },
+    "./production": {
+      "types": "./dist/ui/src/index-production.d.ts",
+      "import": "./dist/ui/src/index-production.js",
+      "require": "./dist/ui/src/index-production.js"
+    },
     "./lib/utils": {
-      "types": "./dist/ui/index.d.ts",
-      "import": "./dist/ui/index.js",
-      "require": "./dist/ui/index.js"
+      "types": "./dist/ui/src/lib/utils.d.ts",
+      "import": "./dist/ui/src/lib/utils.js",
+      "require": "./dist/ui/src/lib/utils.js"
+    },
+    "./lib/accessibility": {
+      "types": "./dist/ui/src/lib/accessibility-foundation.d.ts",
+      "import": "./dist/ui/src/lib/accessibility-foundation.js",
+      "require": "./dist/ui/src/lib/accessibility-foundation.js"
+    },
+    "./hooks/mobile": {
+      "types": "./dist/ui/src/hooks/use-mobile-interactions.d.ts",
+      "import": "./dist/ui/src/hooks/use-mobile-interactions.js",
+      "require": "./dist/ui/src/hooks/use-mobile-interactions.js"
     },
     "./src/components/framer-motion-proxy": {
       "types": "./dist/ui/src/components/framer-motion-proxy.d.ts",
@@ -39,7 +54,8 @@
     "story:validate": "tsx src/scripts/story-validator.ts",
     "story:comprehensive": "npm run story:generate && npm run storybook",
     "visual:test": "npm run build-storybook && npx chromatic --project-token=<your-project-token>",
-    "quality:check": "npm run audit:components && npm run story:validate && npm run lint"
+    "quality:check": "npm run audit:components && npm run story:validate && npm run lint",
+    "typecheck": "npx tsc --noEmit"
   },
   "peerDependencies": {
     "react": "^18.0.0",
@@ -48,13 +64,14 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.4",
     "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.28.0",
+    "@eslint/js": "^8.57.0",
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
     "@storybook/addon-actions": "8.4.7",
     "@storybook/addon-essentials": "8.4.7",
     "@storybook/addon-interactions": "8.4.7",
     "@storybook/addon-links": "8.4.7",
+    "@storybook/addon-themes": "^8.4.7",
     "@storybook/blocks": "8.4.7",
     "@storybook/react": "8.4.7",
     "@storybook/react-vite": "8.4.7",
@@ -66,7 +83,7 @@
     "@types/react-dom": "^18.3.7",
     "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
-    "eslint": "^9.28.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-storybook": "^0.11.1",
     "postcss": "^8.5.5",
     "react": "^18.3.1",

@@ -10,18 +10,28 @@ import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
   // Base styles using semantic tokens only
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-border-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        // Primary brand button - GOLD OUTLINE ONLY (never fill)
+        // Default button (alias for secondary)
+        default: [
+          "border border-[var(--hive-border-default)]",
+          "bg-[var(--hive-background-secondary)]",
+          "text-[var(--hive-text-primary)]",
+          "hover:bg-[var(--hive-interactive-hover)]",
+          "hover:border-[var(--hive-border-hover)]",
+          "active:bg-[var(--hive-interactive-active)]",
+        ],
+        
+        // Primary button - neutral white/gray, not gold
         primary: [
-          "border-2 border-[var(--hive-brand-secondary)]",
-          "bg-transparent",
-          "text-[var(--hive-brand-secondary)]", 
-          "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]",
-          "hover:border-[var(--hive-brand-secondary)]",
-          "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]",
+          "border border-[var(--hive-border-default)]",
+          "bg-[var(--hive-text-primary)]",
+          "text-[var(--hive-background-primary)]", 
+          "hover:bg-[var(--hive-text-secondary)]",
+          "hover:border-[var(--hive-border-hover)]",
+          "active:bg-[var(--hive-text-tertiary)]",
           "shadow-sm hover:shadow-md",
         ],
         
@@ -96,6 +106,26 @@ const buttonVariants = cva(
           "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
           "shadow-sm hover:shadow-md",
         ],
+        
+        // Outline button (alias for secondary)
+        outline: [
+          "border border-[var(--hive-border-default)]",
+          "bg-[var(--hive-background-secondary)]",
+          "text-[var(--hive-text-primary)]",
+          "hover:bg-[var(--hive-interactive-hover)]",
+          "hover:border-[var(--hive-border-hover)]",
+          "active:bg-[var(--hive-interactive-active)]",
+        ],
+        
+        // Premium button - Gold filled for premium features
+        premium: [
+          "bg-[var(--hive-brand-secondary)]",
+          "text-[var(--hive-background-primary)]",
+          "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_90%,transparent)]",
+          "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_80%,transparent)]",
+          "shadow-lg hover:shadow-xl",
+          "font-semibold",
+        ],
       },
       
       size: {
@@ -139,7 +169,7 @@ export interface ButtonProps
   rightIcon?: React.ReactNode;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.memo(React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ 
     className, 
     variant, 
@@ -155,29 +185,44 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }, ref) => {
     const Comp = asChild ? Slot : "button";
     
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, radius, loading }), className)}
-        ref={ref}
-        disabled={disabled || loading}
-        {...props}
-      >
-        {loading ? (
+    // Memoize the className calculation to prevent unnecessary re-renders
+    const buttonClassName = React.useMemo(
+      () => cn(buttonVariants({ variant, size, radius, loading }), className),
+      [variant, size, radius, loading, className]
+    );
+    
+    // Memoize content to prevent unnecessary re-computation
+    const content = React.useMemo(() => {
+      if (loading) {
+        return (
           <>
             <LoadingSpinner size={size} />
             {children && <span className="opacity-70">{children}</span>}
           </>
-        ) : (
-          <>
-            {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
-            {children}
-            {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
-          </>
-        )}
+        );
+      }
+      
+      return (
+        <>
+          {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
+          {children}
+          {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+        </>
+      );
+    }, [loading, size, children, leftIcon, rightIcon]);
+    
+    return (
+      <Comp
+        className={buttonClassName}
+        ref={ref}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {content}
       </Comp>
     );
   }
-);
+));
 Button.displayName = "Button";
 
 // Loading Spinner Component
@@ -185,15 +230,16 @@ interface LoadingSpinnerProps {
   size?: VariantProps<typeof buttonVariants>["size"];
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = "default" }) => {
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = React.memo(({ size = "default" }) => {
   const spinnerSize = {
     xs: "h-3 w-3",
     sm: "h-3 w-3", 
     default: "h-4 w-4",
+    md: "h-4 w-4",
     lg: "h-5 w-5",
     xl: "h-5 w-5",
     icon: "h-4 w-4",
-  };
+  } as const;
 
   return (
     <svg
@@ -217,7 +263,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = "default" }) => 
       />
     </svg>
   );
-};
+});
 
 // Button Group Component
 export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {

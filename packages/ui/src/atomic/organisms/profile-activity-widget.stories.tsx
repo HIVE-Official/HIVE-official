@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ProfileActivityWidget } from './profile-activity-widget';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -359,7 +359,7 @@ export const Default: Story = {
     onCreatePost: action('create-post'),
     onEngageMore: action('engage-more'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -385,7 +385,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎯 ACTIVITY WIDGET SYSTEM</Badge>
+            <Badge variant="emerald">🎯 ACTIVITY WIDGET SYSTEM</Badge>
             Campus Engagement Tracking
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -499,7 +499,7 @@ export const CompleteShowcase: Story = {
                         <Text variant="body-sm" color="primary" weight="medium">Like Activity</Text>
                         <Text variant="body-xs" color="secondary">Show appreciation and support community content</Text>
                       </div>
-                      <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                      <div className="p-3 bg-[var(--hive-gold)]/10 border border-[var(--hive-gold)]/20 rounded-lg">
                         <Text variant="body-sm" color="primary" weight="medium">Join Activity</Text>
                         <Text variant="body-xs" color="secondary">Become member of spaces and communities</Text>
                       </div>
@@ -840,7 +840,7 @@ export const Playground: Story = {
     onCreatePost: action('playground-post'),
     onEngageMore: action('playground-engage'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

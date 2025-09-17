@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { logger } from '@/lib/logger';
+
+import dynamic from "next/dynamic";
 import { Button, Card, Badge } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from "@hive/ui";
 import { 
   Calendar, 
   Plus, 
@@ -18,8 +21,37 @@ import {
 } from "lucide-react";
 import { useSession } from "../../../hooks/use-session";
 import { ErrorBoundary } from "../../../components/error-boundary";
-import { CreateEventModal } from "../../../components/events/create-event-modal";
-import { EventDetailsModal } from "../../../components/events/event-details-modal";
+
+// Dynamic imports for heavy modal components
+const CreateEventModal = dynamic(
+  async () => {
+    const mod = await import("../../../components/events/event-modal");
+    return { default: mod.CreateEventModal };
+  },
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+      </div>
+    )
+  }
+);
+
+const EventDetailsModal = dynamic(
+  async () => {
+    const mod = await import("../../../components/events/event-details-modal");
+    return { default: mod.EventDetailsModal };
+  },
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+      </div>
+    )
+  }
+);
 
 // Event interfaces
 interface RawEventData {
@@ -161,7 +193,7 @@ export default function EventsPage() {
                 
                 // Map raw event data to EventData format
                 return {
-                  id: String((eventData as RawEventData).id || `event-${Date.now()}-${Math.random()}`),
+                  id: String((eventData as RawEventData).id || `event-${Date.now()}-${String((eventData as RawEventData).title || '').slice(0,5) || 'untitled'}`),
                   title: String((eventData as RawEventData).title || 'Untitled Event'),
                   description: String((eventData as RawEventData).description || ''),
                   type: ((eventData as RawEventData).type as EventData['type']) || 'social',
@@ -210,7 +242,7 @@ export default function EventsPage() {
               }) || [];
             }
           } catch (error) {
-            console.error(`Failed to fetch events for space ${String(spaceData.id)}:`, error);
+            logger.error('Failed to fetch events for space ${String(spaceData.id)}:', { error: String(error) });
           }
           return [];
         });
@@ -221,7 +253,7 @@ export default function EventsPage() {
         // If no real events, show empty state instead of mock data
         setEvents(allEvents);
       } catch (error) {
-        console.error('Error fetching events:', error);
+        logger.error('Error fetching events:', { error: String(error) });
         setEvents([]);
       } finally {
         setIsLoading(false);
@@ -321,8 +353,8 @@ export default function EventsPage() {
       case 'academic': return 'bg-blue-500';
       case 'social': return 'bg-pink-500';
       case 'professional': return 'bg-green-500';
-      case 'recreational': return 'bg-orange-500';
-      case 'official': return 'bg-purple-500';
+      case 'recreational': return 'bg-[var(--hive-gold)]';
+      case 'official': return 'bg-[var(--hive-gold)]';
       default: return 'bg-gray-500';
     }
   };
@@ -375,11 +407,11 @@ export default function EventsPage() {
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading Events..." maxWidth="4xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading campus events...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading campus events...</p>
           </div>
         </div>
       </PageContainer>
@@ -392,7 +424,7 @@ export default function EventsPage() {
         title="Campus Events"
         subtitle="Discover, coordinate, and participate in campus activities"
         breadcrumbs={[
-          { label: "Events", icon: Calendar }
+          { label: "Events", icon: <Calendar className="h-4 w-4" /> }
         ]}
         actions={
           <div className="flex items-center space-x-3">
@@ -404,7 +436,7 @@ export default function EventsPage() {
                 placeholder="Search events..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-64"
+                className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-64"
               />
             </div>
             
@@ -454,7 +486,7 @@ export default function EventsPage() {
             </Button>
           </div>
         }
-        maxWidth="4xl"
+       
       >
         {/* Event Type Filter */}
         <div className="flex flex-wrap gap-2 mb-6">
@@ -493,7 +525,7 @@ export default function EventsPage() {
                     {getEventTypeIcon(event.type)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-white text-lg leading-tight mb-1">
+                    <h3 className="font-semibold text-[var(--hive-text-inverse)] text-lg leading-tight mb-1">
                       {event.title}
                     </h3>
                     <div className="flex items-center space-x-2 text-sm text-zinc-400">
@@ -514,7 +546,7 @@ export default function EventsPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleBookmark(event.id);
                   }}
@@ -558,7 +590,7 @@ export default function EventsPage() {
               {/* Tags */}
               {event.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {event.tags.slice(0, 3).map((tag) => (
+                  {event.tags.slice(0, 3).map((tag: any) => (
                     <Badge key={tag} variant="skill-tag" className="text-xs">
                       #{tag}
                     </Badge>
@@ -577,7 +609,7 @@ export default function EventsPage() {
                   <Button
                     variant={event.rsvpStatus === 'going' ? 'primary' : 'ghost'}
                     size="sm"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleRSVP(event.id, event.rsvpStatus === 'going' ? 'not_going' : 'going');
                     }}
@@ -589,7 +621,7 @@ export default function EventsPage() {
                   <Button
                     variant={event.rsvpStatus === 'interested' ? 'primary' : 'ghost'}
                     size="sm"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleRSVP(event.id, event.rsvpStatus === 'interested' ? 'not_going' : 'interested');
                     }}
@@ -609,7 +641,7 @@ export default function EventsPage() {
                     variant="ghost" 
                     size="sm" 
                     className="text-xs text-zinc-400"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       navigator.clipboard.writeText(`${window.location.origin}/events/${event.id}`);
                     }}
@@ -625,7 +657,7 @@ export default function EventsPage() {
         {filteredEvents.length === 0 && (
           <div className="text-center py-12">
             <Calendar className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">No events found</h3>
+            <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">No events found</h3>
             <p className="text-zinc-400 mb-6">
               {searchQuery || eventType !== 'all' || filter !== 'all' 
                 ? 'Try adjusting your filters or search terms'
@@ -646,47 +678,13 @@ export default function EventsPage() {
         <CreateEventModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
-          onCreateEvent={(eventData) => {
-            // Generate new event with mock data
-            const newEvent: EventData = {
-              id: `event-${Date.now()}`,
-              title: eventData.title,
-              description: eventData.description,
-              type: eventData.type,
-              organizer: {
-                id: user?.id || 'current-user',
-                name: user?.fullName || 'You',
-                handle: user?.handle || 'you',
-                verified: false
-              },
-              datetime: {
-                start: eventData.datetime.start,
-                end: eventData.datetime.end,
-                timezone: eventData.datetime.timezone
-              },
-              location: eventData.location,
-              capacity: {
-                max: eventData.capacity,
-                current: 0,
-                waitlist: 0
-              },
-              tools: eventData.tools,
-              tags: eventData.tags,
-              visibility: eventData.visibility,
-              rsvpStatus: null,
-              isBookmarked: false,
-              engagement: {
-                going: 0,
-                interested: 0,
-                comments: 0,
-                shares: 0
-              },
-              requirements: eventData.requirements,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            };
-            
-            setEvents(prev => [newEvent, ...prev]);
+          spaceId=""
+          onSuccess={(eventId: string) => {
+            // Refresh events list after creation
+            console.log('Event created with ID:', eventId);
+            setShowCreateModal(false);
+            // In a real app, would fetch the new event from the API
+            // For now, just close the modal
           }}
         />
 

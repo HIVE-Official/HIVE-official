@@ -6,9 +6,9 @@
 import React, { useState, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { 
   Smartphone, 
   Tablet, 
@@ -32,6 +32,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '07-Responsive/Breakpoints & Device Strategy',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -274,7 +275,7 @@ const ResponsiveShowcase = () => {
               device === 'tablet' ? 'grid-cols-2' : 
               'grid-cols-3'
             }`}>
-              {[1, 2, device === 'desktop' ? 3 : null].filter(Boolean).map((i) => (
+              {[1, 2, device === 'desktop' ? 3 : null].filter(Boolean).map((i: any) => (
                 <div key={i} className="p-3 rounded-lg border" style={{ 
                   backgroundColor: 'var(--hive-background-secondary)',
                   borderColor: 'var(--hive-border-primary)'
@@ -297,7 +298,7 @@ const ResponsiveShowcase = () => {
             {/* Touch Target Visualization */}
             <div className="flex items-center justify-between pt-2">
               <div className="flex space-x-2">
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3].map((i: any) => (
                   <div 
                     key={i} 
                     className="rounded flex items-center justify-center text-xs font-medium"
@@ -375,7 +376,7 @@ const ResponsiveShowcase = () => {
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <div className="flex flex-wrap gap-3 mb-6">
-            {(['mobile', 'tablet', 'desktop'] as const).map((device) => {
+            {(['mobile', 'tablet', 'desktop'] as const).map((device: any) => {
               const isActive = activeDevice === device;
               const IconComponent = device === 'mobile' ? Smartphone : device === 'tablet' ? Tablet : Monitor;
               
@@ -436,7 +437,7 @@ const ResponsiveShowcase = () => {
                                   </span>
                                   <div className="flex flex-wrap gap-1 mt-1">
                                     {scenario.needs.map((need, i) => (
-                                      <Badge key={i} variant="outline" className="text-xs"
+                                      <Badge key={i} variant="secondary" className="text-xs"
                                              style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                                         {need}
                                       </Badge>
@@ -577,7 +578,7 @@ const ResponsiveShowcase = () => {
                           Common Devices:
                         </span>
                         {breakpoint.examples.map((device, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs"
+                          <Badge key={idx} variant="secondary" className="text-xs"
                                  style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                             {device}
                           </Badge>

@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+
 /**
  * HIVE Platform Integration Layer
  * 
@@ -157,7 +159,7 @@ export class PlatformIntegration {
 
       return finalFeed;
     } catch (error) {
-      console.error('Error getting unified feed data:', error);
+      logger.error('Error getting unified feed data:', { error: String(error) });
       return [];
     }
   }
@@ -199,7 +201,7 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching feed slice data:', error);
+      logger.error('Error fetching feed slice data:', { error: String(error) });
       return [];
     }
   }
@@ -253,13 +255,13 @@ export class PlatformIntegration {
             }
           }
         } catch (error) {
-          console.error(`Error fetching posts for space ${space.id}:`, error);
+          logger.error('Error fetching posts for space ${space.id}:', { error: String(error) });
         }
       }
 
       return feedItems.slice(0, options.limit);
     } catch (error) {
-      console.error('Error fetching space slice data:', error);
+      logger.error('Error fetching space slice data:', { error: String(error) });
       return [];
     }
   }
@@ -296,7 +298,7 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching tool slice data:', error);
+      logger.error('Error fetching tool slice data:', { error: String(error) });
       return [];
     }
   }
@@ -332,7 +334,7 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching profile slice data:', error);
+      logger.error('Error fetching profile slice data:', { error: String(error) });
       return [];
     }
   }
@@ -353,7 +355,7 @@ export class PlatformIntegration {
       this.websocket = new WebSocket(wsUrl);
 
       this.websocket.onopen = () => {
-        console.log('🔌 WebSocket connected for platform integration');
+        
         this.reconnectAttempts = 0;
         
         // Subscribe to user-specific updates
@@ -363,25 +365,25 @@ export class PlatformIntegration {
         });
       };
 
-      this.websocket.onmessage = (event) => {
+      this.websocket.onmessage = (event: any) => {
         try {
           const message = JSON.parse(event.data);
           this.handleWebSocketMessage(message);
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          logger.error('Error parsing WebSocket message:', { error: String(error) });
         }
       };
 
       this.websocket.onclose = () => {
-        console.log('🔌 WebSocket disconnected');
+        
         this.handleWebSocketReconnect();
       };
 
-      this.websocket.onerror = (error) => {
-        console.error('🔌 WebSocket error:', error);
+      this.websocket.onerror = (error: any) => {
+        logger.error('🔌 WebSocket error:', { error: String(error) });
       };
     } catch (error) {
-      console.error('Failed to initialize WebSocket:', error);
+      logger.error('Failed to initialize WebSocket:', { error: String(error) });
     }
   }
 
@@ -406,7 +408,7 @@ export class PlatformIntegration {
         this.handleToolInteraction(message.data);
         break;
       default:
-        console.log('Unknown WebSocket message type:', message.type);
+        
     }
   }
 
@@ -499,7 +501,7 @@ export class PlatformIntegration {
         try {
           callback(data);
         } catch (error) {
-          console.error(`Error in subscriber callback for ${eventType}:`, error);
+          logger.error('Error in subscriber callback for ${eventType}:', { error: String(error) });
         }
       });
     }
@@ -595,7 +597,7 @@ export class PlatformIntegration {
           : session.token;
       }
     } catch (error) {
-      console.error('Error getting auth token:', error);
+      logger.error('Error getting auth token:', { error: String(error) });
     }
     
     return '';
@@ -618,13 +620,13 @@ export class PlatformIntegration {
       this.reconnectAttempts++;
       const delay = Math.pow(2, this.reconnectAttempts) * 1000; // Exponential backoff
       
-      console.log(`🔌 Attempting WebSocket reconnection in ${delay}ms (attempt ${this.reconnectAttempts})`);
+      
       
       setTimeout(() => {
         this.initializeWebSocket();
       }, delay);
     } else {
-      console.error('🔌 Max WebSocket reconnection attempts reached');
+      logger.error('🔌 Max WebSocket reconnection attempts reached');
     }
   }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ProfileAvatarWidget } from './profile-avatar-widget';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -141,7 +141,7 @@ export const Default: Story = {
     onToggleVisibility: action('visibility-toggled'),
     onViewProfile: action('view-profile-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)] max-w-md">
       <Text variant="body-md" color="primary" className="mb-4">
         HIVE profile avatar widget for University at Buffalo student dashboard:
@@ -160,7 +160,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">👤 PROFILE VARIATIONS</Badge>
+            <Badge variant="emerald">👤 PROFILE VARIATIONS</Badge>
             Identity Widget States
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -673,7 +673,7 @@ export const Playground: Story = {
     onToggleVisibility: action('playground-toggle-visibility'),
     onViewProfile: action('playground-view-profile'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

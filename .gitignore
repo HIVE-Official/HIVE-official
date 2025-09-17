@@ -107,9 +107,14 @@ jspm_packages/
 
 # Build outputs
 .next/
+.next-build/
 /dist
+**/dist/
+dist/
 /out
 /build
+*.js.map
+*.d.ts.map
 
 # Turbo
 .turbo/

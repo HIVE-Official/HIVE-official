@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { logger } from '@/lib/logger';
+
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 // Personal tool interface matching the component expectations
 interface PersonalTool {
@@ -17,7 +19,7 @@ interface PersonalTool {
 // Fetch user's actual personal tools from database
 async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     
     // Get user's installed tools
     const userToolsSnapshot = await dbAdmin
@@ -42,7 +44,7 @@ async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
     
     return tools;
   } catch (error) {
-    console.error('Failed to fetch personal tools:', error);
+    logger.error('Failed to fetch personal tools:', { error: String(error) });
     return [];
   }
 }
@@ -93,7 +95,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
     // Implement actual tool installation/uninstallation in database
     try {
-      const { dbAdmin } = await import('@/lib/firebase-admin');
+      const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
       
       if (action === 'install') {
         // Get tool details from marketplace or create basic entry
@@ -123,7 +125,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
         await batch.commit();
       }
     } catch (error) {
-      console.error('Failed to process tool installation:', error);
+      logger.error('Failed to process tool installation:', { error: String(error) });
       return NextResponse.json(
         { 
           error: 'Database operation failed',

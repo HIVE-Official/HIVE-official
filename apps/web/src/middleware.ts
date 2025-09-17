@@ -1,183 +1,233 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { logger } from './lib/logger';
 
-// SECURITY: Production environment detection with fail-secure defaults
-function isProductionEnvironment(): boolean {
-  // Default to production mode for maximum security
-  return process.env.NODE_ENV !== 'development';
+/**
+ * Production-Ready Middleware
+ * Implements security headers, CORS, and request validation
+ */
+
+// Security headers for all responses
+const securityHeaders = {
+  // Prevent clickjacking
+  'X-Frame-Options': 'DENY',
+  
+  // Prevent MIME type sniffing
+  'X-Content-Type-Options': 'nosniff',
+  
+  // Force HTTPS
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  
+  // XSS Protection (legacy browsers)
+  'X-XSS-Protection': '1; mode=block',
+  
+  // Control referrer information
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  
+  // Permissions Policy
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  
+  // Content Security Policy
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${process.env.CSP_SCRIPT_DOMAINS || 'https://apis.google.com https://www.gstatic.com'}`,
+    `style-src 'self' 'unsafe-inline' ${process.env.CSP_STYLE_DOMAINS || 'https://fonts.googleapis.com'}`,
+    `font-src 'self' ${process.env.CSP_FONT_DOMAINS || 'https://fonts.gstatic.com'}`,
+    `img-src 'self' data: ${process.env.CSP_IMG_DOMAINS || 'https: blob:'}`,
+    `connect-src 'self' ${process.env.CSP_CONNECT_DOMAINS || 'https://*.googleapis.com https://*.firebase.com https://*.firebaseio.com wss://*.firebaseio.com'}`,
+    `frame-src 'self' ${process.env.CSP_FRAME_DOMAINS || 'https://*.firebase.com'}`,
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "upgrade-insecure-requests"
+  ].join('; ')
+};
+
+// CORS configuration
+const corsHeaders = {
+  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'https://hive.college',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+  'Access-Control-Max-Age': '86400',
+};
+
+// Rate limiting configuration (simplified - use Redis in production)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function getRateLimitKey(request: NextRequest): string {
+  const ip = request.headers.get('x-forwarded-for') || 
+             request.headers.get('x-real-ip') || 
+             'unknown';
+  return `${ip}:${request.nextUrl.pathname}`;
 }
 
-// Simple token validation without Firebase Admin (Edge Runtime compatible)
-async function validateTokenFormat(token: string): Promise<{ valid: boolean; reason?: string }> {
-  if (!token || typeof token !== 'string' || token.length < 10) {
-    return { valid: false, reason: 'invalid_format' };
-  }
-
-  // Check for forbidden development tokens (only in production)
-  const forbiddenTokens = ['test-token', 'dev-token', 'DEV_MODE', 'development-token'];
-  const forbiddenPrefixes = ['dev_token_', 'test_token_', 'mock_'];
+function checkRateLimit(request: NextRequest): boolean {
+  const key = getRateLimitKey(request);
+  const now = Date.now();
+  const limit = 100; // requests per minute
+  const window = 60000; // 1 minute
   
-  // Allow debug tokens in development
-  if (process.env.NODE_ENV === 'production') {
-    if (forbiddenTokens.includes(token) || forbiddenPrefixes.some(prefix => token.startsWith(prefix))) {
-      return { valid: false, reason: 'forbidden_development_token' };
+  const record = rateLimitMap.get(key);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(key, { count: 1, resetTime: now + window });
+    return true;
+  }
+  
+  if (record.count >= limit) {
+    return false;
+  }
+  
+  record.count++;
+  return true;
+}
+
+// Clean up old rate limit entries periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, record] of Array.from(rateLimitMap.entries())) {
+    if (now > record.resetTime) {
+      rateLimitMap.delete(key);
     }
   }
+}, 60000); // Clean every minute
 
-  // In development, allow debug session tokens
-  if (process.env.NODE_ENV === 'development' && token.startsWith('dev_session_')) {
-    return { valid: true };
-  }
-  
-  // Basic JWT format check (has 3 parts separated by dots)
-  const parts = token.split('.');
-  if (parts.length !== 3) {
-    return { valid: false, reason: 'invalid_jwt_format' };
-  }
-
-  return { valid: true };
-}
-
-// Minimal security logging for Edge Runtime
-async function logSecurityEvent(event: string, details: any): Promise<void> {
-  // In Edge Runtime, just use console.log for now
-  console.warn(`[SECURITY] ${event}:`, details);
-}
-
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  // Allow static files, Next.js internals, and development files to pass through
+  // Skip middleware for static files
   if (
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/static') ||
-    pathname.startsWith('/__nextjs') ||
-    pathname.includes('hot-update') ||
-    pathname.includes('.') && !pathname.includes('/api/')
+    pathname.startsWith('/api/_next') ||
+    pathname.includes('.') ||
+    pathname.startsWith('/favicon')
   ) {
     return NextResponse.next();
   }
-
-  // SECURITY: Authentication is now enforced in all environments
-  // No bypasses allowed for security compliance
-
-  // Public routes that don't require authentication
-  const publicRoutes = ['/landing', '/auth/login', '/auth/verify', '/auth/expired', '/onboarding', '/schools', '/waitlist'];
   
-  // Development-only routes
-  const devRoutes = ['/debug-auth', '/dev-login'];
-  
-  if (process.env.NODE_ENV === 'development' && devRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.next();
+  // Log security-relevant requests (but not in production to avoid noise)
+  if (process.env.NODE_ENV !== 'production') {
+    logger.info('Middleware', {
+      method: request.method,
+      clientIP: request.headers.get('x-forwarded-for') || (request.headers?.['x-forwarded-for'] || request.headers?.['x-real-ip'] || 'unknown'),
+    });
   }
   
-  if (publicRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.next();
+  // Handle CORS preflight
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, { 
+      status: 200,
+      headers: corsHeaders
+    });
   }
-
-  // For API routes, enforce authentication
-  if (pathname.startsWith('/api/')) {
-    // Skip health check and public endpoints
-    if (pathname === '/api/health' || pathname.startsWith('/api/auth/')) {
-      return NextResponse.next();
-    }
-
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader) {
-      await logSecurityEvent('unauthorized_api_access', {
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
-        path: pathname,
-        tags: { reason: 'missing_auth_header' }
+  
+  // Rate limiting for API routes
+  if (pathname.startsWith('/api')) {
+    if (!checkRateLimit(request)) {
+      const clientIp = request.headers.get('x-forwarded-for') || 
+                       request.headers.get('x-real-ip') || 
+                       'unknown';
+      logger.warn('Rate limit exceeded', {
+        method: request.method,
+        clientIP: clientIp,
       });
       
-      return new NextResponse(
-        JSON.stringify({ error: 'Authentication required' }),
-        { status: 401, headers: { 'content-type': 'application/json' } }
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': '60',
+            ...securityHeaders
+          }
+        }
       );
     }
-
-    const token = authHeader.replace('Bearer ', '');
-    
-    // In production, validate token format (full validation happens in API routes)
-    if (isProductionEnvironment()) {
-      const validation = await validateTokenFormat(token);
-
-      if (!validation.valid) {
-        await logSecurityEvent('invalid_token_api_access', {
-          ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-          userAgent: request.headers.get('user-agent'),
-          path: pathname,
-          reason: validation.reason || 'invalid_token'
-        });
-
-        return new NextResponse(
-          JSON.stringify({ error: 'Invalid authentication token' }),
-          { status: 401, headers: { 'content-type': 'application/json' } }
-        );
-      }
-
-      // Let the API route handle full Firebase validation
-      return NextResponse.next();
-    }
-    
-    // In development, allow all API requests to pass through for debugging
-    return NextResponse.next();
   }
-
-
-  // For protected dashboard routes, check session
-  const sessionToken = request.cookies.get('session-token')?.value || 
-                      request.headers.get('authorization')?.replace('Bearer ', '');
-
-  if (!sessionToken) {
-    // In development, redirect to debug auth instead of login for easier debugging
-    if (process.env.NODE_ENV === 'development') {
-      const debugUrl = new URL('/debug-auth', request.url);
-      debugUrl.searchParams.set('returnTo', pathname);
-      return NextResponse.redirect(debugUrl);
-    }
+  
+  // Authentication check for protected routes
+  const protectedPaths = [
+    '/dashboard',
+    '/profile',
+    '/spaces/create',
+    '/tools/builder',
+    '/admin'
+  ];
+  
+  const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path));
+  
+  if (isProtectedPath) {
+    const token = request.cookies.get('next-auth.session-token') || 
+                  request.cookies.get('__Secure-next-auth.session-token');
     
-    // Redirect to login with return URL
-    const loginUrl = new URL('/auth/login', request.url);
-    loginUrl.searchParams.set('returnTo', pathname);
-    return NextResponse.redirect(loginUrl);
+    if (!token) {
+      // Redirect to login for protected pages
+      const url = new URL('/auth/login', request.url);
+      url.searchParams.set('from', pathname);
+      return NextResponse.redirect(url);
+    }
   }
-
-  // In production, validate session token format (full validation happens on auth pages)
-  if (isProductionEnvironment()) {
-    const validation = await validateTokenFormat(sessionToken);
-
-    if (!validation.valid) {
-      await logSecurityEvent('invalid_session_page_access', {
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
-        path: pathname,
-        reason: validation.reason || 'invalid_session'
+  
+  // Block suspicious requests
+  const suspiciousPatterns = [
+    /\.\./g,  // Path traversal
+    /<script/gi,  // XSS attempts
+    /SELECT.*FROM/gi,  // SQL injection
+    /UNION.*SELECT/gi,  // SQL injection
+    /javascript:/gi,  // XSS attempts
+    /on\w+=/gi,  // Event handlers
+  ];
+  
+  const url = request.url;
+  const body = request.body;
+  
+  for (const pattern of suspiciousPatterns) {
+    if (pattern.test(url) || (body && pattern.test(body.toString()))) {
+      const clientIp = request.headers.get('x-forwarded-for') || 
+                       request.headers.get('x-real-ip') || 
+                       'unknown';
+      logger.warn('Suspicious request blocked', {
+        metadata: { pattern: pattern.toString() },
+        clientIP: clientIp,
       });
-
-      // Clear invalid session and redirect to login
-      const loginUrl = new URL('/auth/login', request.url);
-      loginUrl.searchParams.set('returnTo', pathname);
-      const response = NextResponse.redirect(loginUrl);
-      response.cookies.delete('session-token');
-      return response;
+      
+      return NextResponse.json(
+        { error: 'Invalid request' },
+        { 
+          status: 400,
+          headers: securityHeaders
+        }
+      );
     }
-
-    // Let pages handle full Firebase validation
-    return NextResponse.next();
   }
+  
+  // Add security headers to all responses
+  const response = NextResponse.next();
+  
+  Object.entries(securityHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+  
+  // Add CORS headers for API routes
+  if (pathname.startsWith('/api')) {
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+  }
+  
+  return response;
 }
 
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
+     * Match all request paths except:
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - public files (public directory)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

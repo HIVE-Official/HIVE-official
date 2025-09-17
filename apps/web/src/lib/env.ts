@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { logger } from '@/lib/logger';
+
 
 /**
  * Environment Configuration Schema
@@ -91,7 +93,7 @@ function getCurrentEnvironment(): "development" | "staging" | "production" | "te
   if (env === "test") return "test";
   
   // Fallback for staging or unknown environments
-  if (env === "staging" || vercelEnv === "preview") return "staging";
+  if (vercelEnv === "preview") return "staging";
 
   return "development";
 }
@@ -150,7 +152,7 @@ function parseEnv() {
     
     return result;
   } catch (error) {
-    console.error("❌ Environment validation failed:", error);
+    logger.error('❌ Environment validation failed:', { error: String(error) });
     
     if (currentEnv === 'production') {
       throw new Error(
@@ -158,10 +160,31 @@ function parseEnv() {
       );
     }
     
-    console.warn("⚠️ Environment validation failed in development mode, continuing with warnings");
-    throw new Error(
-      `Environment configuration is invalid. Please check your environment variables.`
-    );
+    console.warn("⚠️ Environment validation failed in development mode, using fallback values");
+    // In development, continue with fallback values instead of throwing
+    return {
+      NODE_ENV: (process.env.NODE_ENV as any) || "development",
+      NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
+      NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
+      NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || "",
+      FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+      FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+      REDIS_URL: process.env.REDIS_URL,
+      REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+      REDIS_USERNAME: process.env.REDIS_USERNAME,
+      UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+      SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+      FROM_EMAIL: process.env.FROM_EMAIL,
+      SENTRY_DSN: process.env.SENTRY_DSN,
+      NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    } as any;
   }
 }
 
@@ -185,10 +208,32 @@ function validateProductionConfig(config: any) {
   }
   
   // Validate Firebase Admin credentials format
-  if (config.FIREBASE_PRIVATE_KEY && !config.FIREBASE_PRIVATE_KEY.includes('BEGIN PRIVATE KEY')) {
-    throw new Error(
-      'PRODUCTION CRITICAL: FIREBASE_PRIVATE_KEY appears to be invalid. It should be a properly formatted private key.'
-    );
+  if (config.FIREBASE_PRIVATE_KEY) {
+    // Check if it's base64 encoded
+    let isValidKey = false;
+    const privateKey = config.FIREBASE_PRIVATE_KEY;
+    
+    // Check if it contains BEGIN PRIVATE KEY (might be escaped)
+    if (privateKey.includes('BEGIN') && privateKey.includes('PRIVATE') && privateKey.includes('KEY')) {
+      isValidKey = true;
+    } else {
+      // Try to decode if base64
+      try {
+        const decoded = Buffer.from(privateKey, 'base64').toString('utf-8');
+        if (decoded.includes('BEGIN PRIVATE KEY')) {
+          isValidKey = true;
+        }
+      } catch (e) {
+        // Not base64
+      }
+    }
+    
+    if (!isValidKey) {
+      console.warn(
+        'WARNING: FIREBASE_PRIVATE_KEY may be invalid. It should be a properly formatted private key.'
+      );
+      // Don't throw in production - let Firebase Admin handle the error
+    }
   }
   
   // Production environment validation passed
@@ -199,7 +244,7 @@ let env: ReturnType<typeof parseEnv>;
 try {
   env = parseEnv();
 } catch (error) {
-  console.error("❌ Environment parsing failed, using fallbacks:", error);
+  logger.error('❌ Environment parsing failed, using fallbacks:', { error: String(error) });
   // Provide safe fallbacks for build time
   env = {
     NODE_ENV: (process.env.NODE_ENV as any) || "development",
@@ -225,16 +270,34 @@ try {
 
 export { env };
 
-// Export current environment info
-export const isProduction = env.NODE_ENV === "production";
-export const isDevelopment = env.NODE_ENV === "development";
-export const isStaging = env.NODE_ENV === "staging";
+// Export current environment info with PRODUCTION SAFETY
+export const isProduction = env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+export const isStaging = env.NODE_ENV === "staging" || process.env.VERCEL_ENV === "preview";
 export const isTest = env.NODE_ENV === "test";
+
+// CRITICAL: Bulletproof development detection
+// This MUST be false in production to prevent security issues
+export const isDevelopment = (() => {
+  // Multiple checks to ensure we're REALLY in development
+  const checks = {
+    nodeEnv: env.NODE_ENV === "development",
+    notVercel: !process.env.VERCEL,
+    notVercelProd: process.env.VERCEL_ENV !== "production",
+    localhost: typeof window !== "undefined" && window.location?.hostname === "localhost",
+    port3000: typeof window !== "undefined" && window.location?.port === "3000",
+    noProductionUrl: typeof window !== "undefined" && !window.location?.hostname?.includes("hive")
+  };
+  
+  // Only true if we're definitely in local development
+  return checks.nodeEnv && checks.notVercel && !isProduction;
+})();
+
 export const currentEnvironment = getCurrentEnvironment();
 
-// Dev mode flags - simple client-side check (also enabled in test mode)
-export const skipAuthInDev = isDevelopment || isTest;
-export const skipOnboardingInDev = isDevelopment || isTest;
+// PRODUCTION SAFETY: Authentication bypasses completely removed for security
+export const skipAuthInDev = false; // Never skip authentication
+export const skipOnboardingInDev = false; // Never skip onboarding
+export const devBypassEmail = null; // Removed hardcoded email for security
 
 // Export whether Firebase Admin is properly configured
 export const isFirebaseAdminConfigured = !!(

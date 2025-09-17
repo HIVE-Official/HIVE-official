@@ -1,4 +1,6 @@
 import { dbAdmin } from '@hive/core/server';
+import { logger } from '@hive/core';
+
 
 export type AdminAction = 
   | 'login'
@@ -274,7 +276,7 @@ class AdminActivityLogger {
     try {
       await dbAdmin.collection('adminActivityLogs').doc(log.id).set(log);
     } catch (error) {
-      console.error('Failed to persist activity log:', error);
+      logger.error('Failed to persist activity log:', error);
     }
   }
 
@@ -294,9 +296,9 @@ class AdminActivityLogger {
       });
 
       await batch.commit();
-      console.log(`Cleaned up ${oldLogs.docs.length} old activity logs`);
+      // Cleaned up ${oldLogs.docs.length} old activity logs
     } catch (error) {
-      console.error('Failed to cleanup old logs from database:', error);
+      logger.error('Failed to cleanup old logs from database:', error);
     }
   }
 }

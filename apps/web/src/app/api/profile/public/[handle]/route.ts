@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import { dbAdmin } from '../../../../../lib/firebase-admin';
-import { logger } from '../../../../../lib/structured-logger';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@/lib/utils/structured-logger';
 
 export async function GET(
   request: NextRequest,
@@ -19,11 +19,6 @@ export async function GET(
       userAgent: request.headers.get('user-agent') ?? undefined,
       ip: clientIp
     });
-
-    // TODO: Implement rate limiting
-    // Basic rate limiting would go here
-
-    // Input validation
     const normalizedHandle = handle?.toLowerCase()?.trim() ?? '';
     if (!normalizedHandle || normalizedHandle.length < 2 || normalizedHandle.length > 50) {
       return NextResponse.json(

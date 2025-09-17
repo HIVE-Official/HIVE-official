@@ -21,59 +21,59 @@ const spacingSizes = {
   '2xl': '3rem',   // 48px
   '3xl': '4rem',   // 64px
   '4xl': '6rem'    // 96px
-};
+} as const;
 
 // Responsive spacing utilities
 const responsiveSpacing = {
   xs: {
-    base: 'xs',
-    sm: 'sm',
-    md: 'md',
-    lg: 'lg'
+    base: 'xs' as keyof typeof spacingSizes,
+    sm: 'sm' as keyof typeof spacingSizes,
+    md: 'md' as keyof typeof spacingSizes,
+    lg: 'lg' as keyof typeof spacingSizes
   },
   sm: {
-    base: 'sm',
-    sm: 'md',
-    md: 'lg',
-    lg: 'xl'
+    base: 'sm' as keyof typeof spacingSizes,
+    sm: 'md' as keyof typeof spacingSizes,
+    md: 'lg' as keyof typeof spacingSizes,
+    lg: 'xl' as keyof typeof spacingSizes
   },
   md: {
-    base: 'md',
-    sm: 'lg',
-    md: 'xl',
-    lg: '2xl'
+    base: 'md' as keyof typeof spacingSizes,
+    sm: 'lg' as keyof typeof spacingSizes,
+    md: 'xl' as keyof typeof spacingSizes,
+    lg: '2xl' as keyof typeof spacingSizes
   },
   lg: {
-    base: 'lg',
-    sm: 'xl',
-    md: '2xl',
-    lg: '3xl'
+    base: 'lg' as keyof typeof spacingSizes,
+    sm: 'xl' as keyof typeof spacingSizes,
+    md: '2xl' as keyof typeof spacingSizes,
+    lg: '3xl' as keyof typeof spacingSizes
   },
   xl: {
-    base: 'xl',
-    sm: '2xl',
-    md: '3xl',
-    lg: '4xl'
+    base: 'xl' as keyof typeof spacingSizes,
+    sm: '2xl' as keyof typeof spacingSizes,
+    md: '3xl' as keyof typeof spacingSizes,
+    lg: '4xl' as keyof typeof spacingSizes
   },
   '2xl': {
-    base: '2xl',
-    sm: '3xl',
-    md: '4xl',
-    lg: '4xl'
+    base: '2xl' as keyof typeof spacingSizes,
+    sm: '3xl' as keyof typeof spacingSizes,
+    md: '4xl' as keyof typeof spacingSizes,
+    lg: '4xl' as keyof typeof spacingSizes
   },
   '3xl': {
-    base: '3xl',
-    sm: '4xl',
-    md: '4xl',
-    lg: '4xl'
+    base: '3xl' as keyof typeof spacingSizes,
+    sm: '4xl' as keyof typeof spacingSizes,
+    md: '4xl' as keyof typeof spacingSizes,
+    lg: '4xl' as keyof typeof spacingSizes
   },
   '4xl': {
-    base: '4xl',
-    sm: '4xl',
-    md: '4xl',
-    lg: '4xl'
+    base: '4xl' as keyof typeof spacingSizes,
+    sm: '4xl' as keyof typeof spacingSizes,
+    md: '4xl' as keyof typeof spacingSizes,
+    lg: '4xl' as keyof typeof spacingSizes
   }
-};
+} as const;
 
 export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
   size = 'md',
@@ -193,44 +193,44 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
 Spacer.displayName = 'Spacer';
 
 // Convenient preset components
-export const VerticalSpacer: React.FC<Omit<SpacerProps, 'direction'>> = (props) => (
+export const VerticalSpacer: React.FC<Omit<SpacerProps, 'direction'>> = (props: Omit<SpacerProps, 'direction'>) => (
   <Spacer direction="vertical" {...props} />
 );
 
-export const HorizontalSpacer: React.FC<Omit<SpacerProps, 'direction'>> = (props) => (
+export const HorizontalSpacer: React.FC<Omit<SpacerProps, 'direction'>> = (props: Omit<SpacerProps, 'direction'>) => (
   <Spacer direction="horizontal" {...props} />
 );
 
-export const FlexibleSpacer: React.FC<Omit<SpacerProps, 'flexible'>> = (props) => (
+export const FlexibleSpacer: React.FC<Omit<SpacerProps, 'flexible'>> = (props: Omit<SpacerProps, 'flexible'>) => (
   <Spacer flexible {...props} />
 );
 
-export const ResponsiveSpacer: React.FC<Omit<SpacerProps, 'responsive'>> = (props) => (
+export const ResponsiveSpacer: React.FC<Omit<SpacerProps, 'responsive'>> = (props: Omit<SpacerProps, 'responsive'>) => (
   <Spacer responsive {...props} />
 );
 
 // Size-specific presets
-export const TinySpacer: React.FC<Omit<SpacerProps, 'size'>> = (props) => (
+export const TinySpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="xs" {...props} />
 );
 
-export const SmallSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props) => (
+export const SmallSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="sm" {...props} />
 );
 
-export const MediumSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props) => (
+export const MediumSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="md" {...props} />
 );
 
-export const LargeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props) => (
+export const LargeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="lg" {...props} />
 );
 
-export const ExtraLargeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props) => (
+export const ExtraLargeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="xl" {...props} />
 );
 
-export const HugeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props) => (
+export const HugeSpacer: React.FC<Omit<SpacerProps, 'size'>> = (props: Omit<SpacerProps, 'size'>) => (
   <Spacer size="2xl" {...props} />
 );
 

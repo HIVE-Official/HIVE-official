@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
-import { getAuthTokenFromRequest } from '@/lib/auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { getAuthTokenFromRequest } from '@/lib/auth/auth';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 
 // Helper function to safely convert Firestore timestamp to Date
 function toDateSafe(timestamp: any): Date | null {
   if (!timestamp) return null;
   if (typeof timestamp === 'string') return new Date(timestamp);
-  if (timestamp && typeof timestamp.toDate === 'function') return timestamp.toDate();
+  if (timestamp && typeof timestamp.toDate === 'function') return (timestamp?.toDate ? timestamp.toDate() : new Date(timestamp));
   if (timestamp instanceof Date) return timestamp;
   return null;
 }

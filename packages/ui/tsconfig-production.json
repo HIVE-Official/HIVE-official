@@ -1,0 +1,56 @@
+{
+  "extends": "../config/typescript/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmitOnError": false,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
+    "types": ["node"],
+    "baseUrl": ".",
+    "noEmit": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@hive/core": ["../core/src"],
+      "@hive/core/*": ["../core/src/*"]
+    },
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/index-production.ts",
+    "src/lib/utils.ts",
+    "src/lib/motion.ts",
+    "src/contexts/hive-auth-context.tsx",
+    "src/components/auth/email-gate.tsx",
+    "src/components/auth/CheckEmailInfo.tsx", 
+    "src/components/auth/school-pick.tsx",
+    "src/components/loading/LoadingOrchestrator.tsx",
+    "src/components/hive-button.tsx",
+    "src/components/hive-input.tsx",
+    "src/components/hive-card.tsx",
+    "src/components/hive-badge.tsx",
+    "src/components/hive-modal.tsx",
+    "src/components/hive-logo.tsx",
+    "src/firebase/client-config.ts"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts", 
+    "**/*.spec.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.tsx",
+    "node_modules",
+    "dist"
+  ]
+}

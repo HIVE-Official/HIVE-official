@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
+import { dbAdmin as adminDb } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
 import { z } from 'zod';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const InstallRequestSchema = z.object({
   toolId: z.string(),
@@ -128,7 +128,6 @@ export async function POST(request: NextRequest) {
 
     // Check pricing and payment (if applicable)
     if (marketplaceTool.pricing?.type === 'paid') {
-      // TODO: Implement payment verification
       return NextResponse.json(ApiResponseHelper.error("Paid tools not yet supported", "UNKNOWN_ERROR"), { status: 501 });
     }
 

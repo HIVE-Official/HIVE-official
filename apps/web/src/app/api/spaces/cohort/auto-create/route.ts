@@ -1,11 +1,12 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { generateCohortSpaces, type CohortSpaceConfig } from '@hive/core';
+import { requireAuth } from '@/lib/auth/providers/auth-server';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import type { CohortSpaceConfig } from '@/types/core';
+import { generateCohortSpaces } from '@/types/core';
 import { z } from 'zod';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const createCohortSpacesSchema = z.object({
   major: z.string().min(1),
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { major, graduationYear, majorShortName } = createCohortSpacesSchema.parse(body);
     
-    console.log(`🎓 Creating cohort spaces for user ${user.uid}: ${major} '${graduationYear.toString().slice(-2)}`);
+    
     
     // Generate cohort space configurations
     const cohortConfig: CohortSpaceConfig = {

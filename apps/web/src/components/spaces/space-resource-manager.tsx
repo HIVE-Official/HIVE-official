@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button, Badge, HiveModal } from "@hive/ui";
+import { Card, Button, Badge, Modal } from "@hive/ui";
 import { 
   Calendar, 
   Clock, 
@@ -237,7 +237,7 @@ export function SpaceResourceManager({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">Resource Management</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-2">Resource Management</h2>
           <p className="text-zinc-400">Manage shared resources, equipment, and tools for {spaceName}</p>
         </div>
         {(userRole === 'admin' || userRole === 'moderator') && (
@@ -259,16 +259,16 @@ export function SpaceResourceManager({
             type="text"
             placeholder="Search resources, tags, or descriptions..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-zinc-800/50 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
+            onChange={(e: any) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-zinc-800/50 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
           />
         </div>
         <div className="flex items-center space-x-2">
           <Filter className="h-4 w-4 text-zinc-400" />
           <select
             value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value as any)}
-            className="bg-zinc-800/50 border border-zinc-700 rounded-lg px-3 py-2 text-white focus:border-hive-gold focus:outline-none"
+            onChange={(e: any) => setSelectedType(e.target.value as any)}
+            className="bg-zinc-800/50 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none"
           >
             <option value="all">All Types</option>
             <option value="room">Rooms</option>
@@ -292,7 +292,7 @@ export function SpaceResourceManager({
                     <Icon className="h-5 w-5 text-hive-gold" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white">{resource.name}</h3>
+                    <h3 className="font-semibold text-[var(--hive-text-inverse)]">{resource.name}</h3>
                     <p className="text-sm text-zinc-400 capitalize">{resource.type}</p>
                   </div>
                 </div>
@@ -329,7 +329,7 @@ export function SpaceResourceManager({
               {/* Tags */}
               {resource.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-4">
-                  {resource.tags.slice(0, 3).map((tag) => (
+                  {resource.tags.slice(0, 3).map((tag: any) => (
                     <Badge key={tag} variant="skill-tag" className="text-xs">
                       {tag}
                     </Badge>
@@ -348,7 +348,7 @@ export function SpaceResourceManager({
                   variant="outline"
                   size="sm"
                   onClick={() => setSelectedResource(resource)}
-                  className="border-zinc-600 text-zinc-400 hover:text-white"
+                  className="border-zinc-600 text-zinc-400 hover:text-[var(--hive-text-inverse)]"
                 >
                   <Eye className="h-4 w-4 mr-2" />
                   View Details
@@ -372,7 +372,7 @@ export function SpaceResourceManager({
       {filteredResources.length === 0 && (
         <Card className="p-12 text-center bg-zinc-800/50 border-zinc-700">
           <BookOpen className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">No Resources Found</h3>
+          <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">No Resources Found</h3>
           <p className="text-zinc-400 mb-6">
             {searchTerm ? 
               `No resources match "${searchTerm}". Try different keywords.` :
@@ -392,7 +392,7 @@ export function SpaceResourceManager({
       )}
 
       {/* Resource Details Modal */}
-      <HiveModal
+      <Modal
         isOpen={!!selectedResource}
         onClose={() => setSelectedResource(null)}
         title={selectedResource?.name || ''}
@@ -409,7 +409,7 @@ export function SpaceResourceManager({
                   })()}
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">{selectedResource.name}</h3>
+                  <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)]">{selectedResource.name}</h3>
                   <p className="text-zinc-400 capitalize">{selectedResource.type}</p>
                 </div>
               </div>
@@ -422,15 +422,15 @@ export function SpaceResourceManager({
             </div>
 
             <div>
-              <h4 className="font-medium text-white mb-2">Description</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Description</h4>
               <p className="text-zinc-300">{selectedResource.description}</p>
             </div>
 
             {selectedResource.features && selectedResource.features.length > 0 && (
               <div>
-                <h4 className="font-medium text-white mb-2">Features</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Features</h4>
                 <div className="grid grid-cols-2 gap-2">
-                  {selectedResource.features.map((feature) => (
+                  {selectedResource.features.map((feature: any) => (
                     <div key={feature} className="flex items-center text-sm text-zinc-300">
                       <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
                       {feature}
@@ -442,13 +442,13 @@ export function SpaceResourceManager({
 
             {selectedResource.bookings.length > 0 && (
               <div>
-                <h4 className="font-medium text-white mb-2">Current Bookings</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)] mb-2">Current Bookings</h4>
                 <div className="space-y-2">
-                  {selectedResource.bookings.map((booking) => (
+                  {selectedResource.bookings.map((booking: any) => (
                     <div key={booking.id} className="p-3 bg-zinc-800/30 rounded-lg">
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="font-medium text-white">{booking.userName}</div>
+                          <div className="font-medium text-[var(--hive-text-inverse)]">{booking.userName}</div>
                           <div className="text-sm text-zinc-400">{booking.purpose}</div>
                         </div>
                         <div className="text-right text-sm text-zinc-400">
@@ -479,10 +479,10 @@ export function SpaceResourceManager({
             </div>
           </div>
         )}
-      </HiveModal>
+      </Modal>
 
       {/* Create Resource Modal */}
-      <HiveModal
+      <Modal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         title="Add New Resource"
@@ -493,16 +493,16 @@ export function SpaceResourceManager({
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Resource Name</label>
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Resource Name</label>
               <input
                 type="text"
                 placeholder="Study Room A, MacBook Pro, etc."
-                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
+                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Type</label>
-              <select className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none">
+              <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Type</label>
+              <select className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] focus:border-hive-gold focus:outline-none">
                 <option value="room">Room</option>
                 <option value="equipment">Equipment</option>
                 <option value="document">Document</option>
@@ -513,10 +513,10 @@ export function SpaceResourceManager({
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-white mb-2">Description</label>
+            <label className="block text-sm font-medium text-[var(--hive-text-inverse)] mb-2">Description</label>
             <textarea
               placeholder="Describe what this resource is and how it can be used..."
-              className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
+              className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
               rows={3}
             />
           </div>
@@ -530,7 +530,7 @@ export function SpaceResourceManager({
             </Button>
           </div>
         </div>
-      </HiveModal>
+      </Modal>
     </div>
   );
 }

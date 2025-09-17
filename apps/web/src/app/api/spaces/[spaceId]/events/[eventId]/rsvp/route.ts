@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const RSVPSchema = z.object({
   status: z.enum(['going', 'maybe', 'not_going']) });
@@ -56,7 +56,7 @@ export async function POST(
     const eventData = eventDoc.data()!;
 
     // Check if RSVP deadline has passed
-    if (eventData.rsvpDeadline && new Date() > eventData.rsvpDeadline.toDate()) {
+    if (eventData.rsvpDeadline && new Date() > (eventData.rsvpDeadline?.toDate ? eventData.rsvpDeadline.toDate() : new Date(eventData.rsvpDeadline))) {
       return NextResponse.json(ApiResponseHelper.error("RSVP deadline has passed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 

@@ -1,11 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
-import { getCohortSpaceId, generateCohortSpaces } from "@hive/core";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { getCohortSpaceId, generateCohortSpaces  } from '@/types/core';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 const autoJoinSchema = z.object({
   userId: z.string().min(1, "User ID is required") });

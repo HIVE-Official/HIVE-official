@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Search, Bell, MessageSquare, Plus, Menu, Home, Users, Calendar, BookOpen, Settings, User, LogOut, ChevronDown, X } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { Input } from '../../atomic/atoms/input-enhanced';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Navigation-Components/Header Navigation System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {
@@ -164,7 +165,7 @@ export const DesktopHeaderNavigation: Story = {
                   type="search"
                   placeholder="Search students, spaces, events..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                   onFocus={() => setShowSearch(true)}
                   className="pl-10 pr-4 bg-gray-50 border-gray-200 focus:bg-white"
                 />
@@ -249,7 +250,7 @@ export const DesktopHeaderNavigation: Story = {
                       </div>
                     </div>
                     <div className="max-h-80 overflow-y-auto">
-                      {campusNavigationData.notifications.map((notification) => (
+                      {campusNavigationData.notifications.map((notification: any) => (
                         <div 
                           key={notification.id}
                           className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${
@@ -435,13 +436,13 @@ export const MobileHeaderNavigation: Story = {
                   type="search"
                   placeholder="Search campus..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-4"
                   autoFocus
                 />
               </div>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
                 onClick={() => setShowSearch(false)}
               >
@@ -619,7 +620,7 @@ export const InteractiveHeaderDemo: Story = {
 
               {/* Navigation Tabs */}
               <nav className="flex items-center gap-1">
-                {navigationTabs.map((tab) => {
+                {navigationTabs.map((tab: any) => {
                   const IconComponent = tab.icon;
                   return (
                     <button
@@ -640,13 +641,13 @@ export const InteractiveHeaderDemo: Story = {
 
               {/* Actions */}
               <div className="flex items-center gap-3">
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   <Plus className="h-4 w-4 mr-2" />
                   Create
                 </Button>
                 
                 <div className="relative">
-                  <Button size="sm" variant="outline" className="relative">
+                  <Button size="sm" variant="secondary" className="relative">
                     <Bell className="h-4 w-4" />
                     {unreadCount > 0 && (
                       <div className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 text-white text-xs rounded-full flex items-center justify-center">
@@ -679,7 +680,7 @@ export const InteractiveHeaderDemo: Story = {
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Notifications</h3>
               <div className="space-y-3">
-                {notifications.slice(0, 3).map((notification) => (
+                {notifications.slice(0, 3).map((notification: any) => (
                   <div 
                     key={notification.id}
                     className={`flex items-start gap-3 p-3 rounded-lg border ${
@@ -706,7 +707,7 @@ export const InteractiveHeaderDemo: Story = {
                     {!notification.isRead && (
                       <Button 
                         size="sm" 
-                        variant="outline"
+                        variant="secondary"
                         onClick={() => markAsRead(notification.id)}
                       >
                         Mark Read

@@ -6,7 +6,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
+import { Button } from '../../../../atomic/atoms/button-enhanced';
 import { Badge } from '../../../../components/ui/badge';
 import { Progress } from '../../../../components/ui/progress';
 import { 
@@ -163,9 +163,9 @@ const RitualsDashboard = () => {
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
-      case 1: return <Crown className="w-5 h-5 text-yellow-400" />;
+      case 1: return <Crown className="w-5 h-5 text-[var(--hive-gold)]" />;
       case 2: return <Medal className="w-5 h-5 text-gray-400" />;
-      case 3: return <Trophy className="w-5 h-5 text-orange-400" />;
+      case 3: return <Trophy className="w-5 h-5 text-[var(--hive-gold)]" />;
       default: return <span className="text-gray-400 font-bold">#{rank}</span>;
     }
   };
@@ -175,21 +175,21 @@ const RitualsDashboard = () => {
                         myRituals;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Campus Rituals</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Campus Rituals</h1>
               <p className="text-gray-400">Build healthy habits with your campus community</p>
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -211,8 +211,8 @@ const RitualsDashboard = () => {
                 onClick={() => setViewMode(id)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   viewMode === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                   }`}
                   style={viewMode === id ? {
                     backgroundColor: 'var(--hive-brand-primary)',
@@ -236,7 +236,7 @@ const RitualsDashboard = () => {
                   onClick={() => setActiveCategory(id)}
                   className={activeCategory === id 
                     ? "hive-interactive"
-                    : "border-gray-600 text-white hover:bg-gray-800"
+                    : "border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
                   }
                   style={activeCategory === id ? {
                     backgroundColor: 'var(--hive-brand-primary)',
@@ -279,7 +279,7 @@ const RitualsDashboard = () => {
               </Card>
               <Card className="bg-gray-800/50 border-gray-700 text-center">
                 <CardContent className="pt-4">
-                  <div className="text-2xl font-bold text-purple-400">#{myStats.campusRanking}</div>
+                  <div className="text-2xl font-bold text-[var(--hive-gold)]">#{myStats.campusRanking}</div>
                   <div className="text-sm text-gray-400">Campus Ranking</div>
                 </CardContent>
               </Card>
@@ -288,11 +288,11 @@ const RitualsDashboard = () => {
             {/* Weekly Progress */}
             <Card className="bg-gray-800/50 border-gray-700 mb-6">
               <CardHeader>
-                <CardTitle className="text-white">Weekly Progress</CardTitle>
+                <CardTitle className="text-[var(--hive-text-primary)]">Weekly Progress</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-white">Goal: {myStats.weeklyGoal} ritual completions</span>
+                  <span className="text-[var(--hive-text-primary)]">Goal: {myStats.weeklyGoal} ritual completions</span>
                   <span className="text-gray-400">{myStats.weeklyProgress}/{myStats.weeklyGoal}</span>
                 </div>
                 <Progress 
@@ -314,7 +314,7 @@ const RitualsDashboard = () => {
                       <div className="flex items-center">
                         <div className="text-3xl mr-3">{ritual.icon}</div>
                         <div>
-                          <CardTitle className="text-white text-base">{ritual.name}</CardTitle>
+                          <CardTitle className="text-[var(--hive-text-primary)] text-base">{ritual.name}</CardTitle>
                           <p className="text-gray-400 text-sm">{ritual.description}</p>
                         </div>
                       </div>
@@ -333,26 +333,26 @@ const RitualsDashboard = () => {
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <span className="text-gray-400">Duration</span>
-                        <div className="text-white font-medium">{ritual.duration}</div>
+                        <div className="text-[var(--hive-text-primary)] font-medium">{ritual.duration}</div>
                       </div>
                       <div>
                         <span className="text-gray-400">Difficulty</span>
-                        <div className="text-white font-medium">{ritual.difficulty}</div>
+                        <div className="text-[var(--hive-text-primary)] font-medium">{ritual.difficulty}</div>
                       </div>
                       <div>
                         <span className="text-gray-400">Best Time</span>
-                        <div className="text-white font-medium">{ritual.bestTime}</div>
+                        <div className="text-[var(--hive-text-primary)] font-medium">{ritual.bestTime}</div>
                       </div>
                       <div>
                         <span className="text-gray-400">Participants</span>
-                        <div className="text-white font-medium">{ritual.participants}</div>
+                        <div className="text-[var(--hive-text-primary)] font-medium">{ritual.participants}</div>
                       </div>
                     </div>
 
                     {/* Streak Info */}
                     <div className="bg-gray-800 rounded-lg p-3">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-white font-medium">Current Streak</span>
+                        <span className="text-[var(--hive-text-primary)] font-medium">Current Streak</span>
                         <div className="flex items-center">
                           <Flame className="w-4 h-4 mr-1" style={{ color: 'var(--hive-brand-primary)' }} />
                           <span className="font-bold" style={{ color: 'var(--hive-brand-primary)' }}>{ritual.myStreak} days</span>
@@ -369,7 +369,7 @@ const RitualsDashboard = () => {
                     {/* Weekly Progress */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-white font-medium">This Week</span>
+                        <span className="text-[var(--hive-text-primary)] font-medium">This Week</span>
                         <span className="text-gray-400 text-sm">
                           {ritual.weeklyProgress}/{ritual.weeklyTarget}
                         </span>
@@ -383,7 +383,7 @@ const RitualsDashboard = () => {
                     {/* Rewards */}
                     {ritual.rewards && ritual.rewards.length > 0 && (
                       <div>
-                        <span className="text-white font-medium mb-2 block">Rewards</span>
+                        <span className="text-[var(--hive-text-primary)] font-medium mb-2 block">Rewards</span>
                         <div className="flex flex-wrap gap-1">
                           {ritual.rewards.map((reward: any, index: number) => (
                             <Badge 
@@ -414,7 +414,7 @@ const RitualsDashboard = () => {
                       {ritual.isActive ? (
                         <>
                           {ritual.todayCompleted ? (
-                            <Button size="sm" className="flex-1 bg-green-600 text-white" disabled>
+                            <Button size="sm" className="flex-1 bg-green-600 text-[var(--hive-text-primary)]" disabled>
                               <CheckCircle className="w-4 h-4 mr-2" />
                               Completed Today
                             </Button>
@@ -424,17 +424,17 @@ const RitualsDashboard = () => {
                               Complete Now
                             </Button>
                           )}
-                          <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                          <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                             <Settings className="w-4 h-4" />
                           </Button>
                         </>
                       ) : (
                         <>
-                          <Button size="sm" className="flex-1 bg-blue-500 text-white hover:bg-blue-600">
+                          <Button size="sm" className="flex-1 bg-blue-500 text-[var(--hive-text-primary)] hover:bg-blue-600">
                             <Plus className="w-4 h-4 mr-2" />
                             Start Ritual
                           </Button>
-                          <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                          <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                             <Heart className="w-4 h-4" />
                           </Button>
                         </>
@@ -459,7 +459,7 @@ const RitualsDashboard = () => {
               </Card>
               <Card className="bg-gray-800/50 border-gray-700 text-center">
                 <CardContent className="pt-4">
-                  <div className="text-2xl font-bold text-purple-400">#{myStats.campusRanking}</div>
+                  <div className="text-2xl font-bold text-[var(--hive-gold)]">#{myStats.campusRanking}</div>
                   <div className="text-sm text-gray-400">Your Rank</div>
                 </CardContent>
               </Card>
@@ -473,7 +473,7 @@ const RitualsDashboard = () => {
 
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
-                <CardTitle className="text-white flex items-center">
+                <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
                   <Trophy className="w-5 h-5 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
                   Campus Leaderboard
                 </CardTitle>
@@ -486,11 +486,11 @@ const RitualsDashboard = () => {
                         <div className="flex items-center justify-center w-8">
                           {getRankIcon(user.rank)}
                         </div>
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-pink-500 flex items-center justify-center text-[var(--hive-text-primary)] font-semibold">
                           {user.avatar}
                         </div>
                         <div>
-                          <div className="text-white font-medium">{user.name}</div>
+                          <div className="text-[var(--hive-text-primary)] font-medium">{user.name}</div>
                           <div className="text-gray-400 text-sm">
                             <Flame className="w-3 h-3 inline mr-1" />
                             {user.streak} day streak
@@ -498,7 +498,7 @@ const RitualsDashboard = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-white font-bold">{user.points}</div>
+                        <div className="text-[var(--hive-text-primary)] font-bold">{user.points}</div>
                         <div className="text-gray-400 text-xs">points</div>
                       </div>
                     </div>
@@ -513,8 +513,8 @@ const RitualsDashboard = () => {
         {viewMode === 'my-rituals' && (
           <div className="text-center mt-8">
             <Button 
-              variant="outline" 
-              className="border-gray-600 text-white hover:bg-gray-800"
+              variant="secondary" 
+              className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
               onClick={() => setViewMode('discover')}
             >
               Discover More Rituals

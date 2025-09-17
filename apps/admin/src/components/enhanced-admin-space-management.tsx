@@ -565,23 +565,12 @@ export const EnhancedAdminSpaceManagement: React.FC<EnhancedAdminSpaceManagement
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Enhanced space management is not available</p>
-      </div>
-    );
-  }
-
   const spaceTypes = [
     { value: 'university_spaces', label: 'University Spaces', icon: GraduationCap, description: 'Academic majors, class years, university organizations' },
     { value: 'residential_spaces', label: 'Residential Spaces', icon: Home, description: 'Dorm buildings and off-campus areas' },
     { value: 'greek_life_spaces', label: 'Greek Life Spaces', icon: Users, description: 'Individual chapters and Greek councils' },
     { value: 'student_spaces', label: 'Student Spaces', icon: Heart, description: 'Clubs, organizations, and interest communities' },
   ];
-
 
   const searchSpaces = useCallback(async () => {
     if (!admin) return;
@@ -704,6 +693,16 @@ export const EnhancedAdminSpaceManagement: React.FC<EnhancedAdminSpaceManagement
   };
 
   const stats = getStatsOverview();
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Enhanced space management is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

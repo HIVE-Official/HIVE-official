@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ProfileSpacesWidget, JoinedSpace } from './profile-spaces-widget';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -267,7 +267,7 @@ export const Default: Story = {
     onViewAllSpaces: action('view-all-spaces-clicked'),
     onExploreSpaces: action('explore-spaces-clicked'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)] max-w-md">
       <Text variant="body-md" color="primary" className="mb-4">
         HIVE profile spaces widget for University at Buffalo student communities:
@@ -286,7 +286,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🏠 COMMUNITY PROFILES</Badge>
+            <Badge variant="emerald">🏠 COMMUNITY PROFILES</Badge>
             Student Engagement Levels
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -1236,7 +1236,7 @@ export const Playground: Story = {
     onViewAllSpaces: action('playground-view-all-spaces'),
     onExploreSpaces: action('playground-explore-spaces'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

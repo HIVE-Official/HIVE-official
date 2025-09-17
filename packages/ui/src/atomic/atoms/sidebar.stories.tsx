@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Sidebar } from './sidebar';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { action } from '@storybook/addon-actions';
@@ -95,7 +95,7 @@ export const Default: Story = {
     onItemClick: action('navigation-clicked'),
     onToggle: action('sidebar-toggled'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="flex h-screen bg-[var(--hive-background-primary)]">
       <Sidebar {...args} />
       <div className="flex-1 p-6">
@@ -123,7 +123,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🔗 NAVIGATION STRUCTURE</Badge>
+            <Badge variant="emerald">🔗 NAVIGATION STRUCTURE</Badge>
             Sidebar Navigation System
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -555,7 +555,7 @@ export const Playground: Story = {
     onItemClick: action('playground-navigation'),
     onToggle: action('playground-toggle'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="flex h-screen bg-[var(--hive-background-primary)]">
       <Sidebar {...args} />
       <div className="flex-1 p-6">

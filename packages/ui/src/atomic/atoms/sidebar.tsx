@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Home, Compass, Zap, Calendar, BookOpen, User, Settings, ChevronRight, ChevronDown } from 'lucide-react';
-import { Button } from './button';
-import { Avatar } from './avatar';
+import { Button } from './button-enhanced';
+import { Home, User, Compass, Zap, Calendar, Settings, ChevronRight, ChevronDown } from 'lucide-react';
 
 export interface SidebarProps {
   user?: {
@@ -94,9 +93,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentPath = '/',
   collapsed = false,
   onItemClick,
-  onToggle,
+  onToggle: _onToggle,
   breadcrumbs = [],
-  currentSection,
+  currentSection: _currentSection,
   className,
 }) => {
   const initials = user?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '';
@@ -250,7 +249,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {/* Child Items */}
                 {!collapsed && hasChildren && isItemExpanded && (
                   <div className="ml-6 mt-1 space-y-1 border-l border-[var(--hive-border-default)] pl-4">
-                    {item.children!.map((child) => {
+                    {item.children!.map((child: NavigationItem) => {
                       const ChildIcon = child.icon;
                       const isChildActive = isItemActive(child);
 

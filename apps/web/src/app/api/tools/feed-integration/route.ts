@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Feed content generation interface
 interface FeedContentTemplate {
@@ -175,7 +175,7 @@ async function generateFeedContentFromAction(params: {
   data: any;
   elementId?: string;
 }): Promise<any> {
-  const { deployment, tool, user, action, data, elementId } = params;
+  const { deployment, tool, user, action, data, elementId } = await params;
 
   try {
     // Get feed content templates for this tool

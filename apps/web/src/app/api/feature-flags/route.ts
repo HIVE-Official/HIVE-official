@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
 import { logger } from '@/lib/logger';
-import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api/response-types/api-response-types';
 import { featureFlagService, UserFeatureContext, HIVE_FEATURE_FLAGS } from '@/lib/feature-flags';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 
 /**
  * User Feature Flags API

@@ -6,11 +6,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useCallback } from 'react';
 import { motion } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Switch } from '../../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Card, CardContent, CardHeader } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
 
 // Import the bento grid system
 import { BentoGridLayout, useBentoGrid, type GridItem } from '../../../components/profile/bento-grid/bento-grid-layout';
@@ -146,7 +146,7 @@ function MockCard({ item }: { item: GridItem }) {
       <CardContent className="p-4 h-full flex flex-col items-center justify-center text-center">
         <Icon className="w-8 h-8 mb-3" />
         <h3 className="font-semibold text-lg mb-2">{config.label}</h3>
-        <Badge variant="outline" className="mb-2">
+        <Badge variant="secondary" className="mb-2">
           {item.size.width}x{item.size.height}
         </Badge>
         <p className="text-sm opacity-80">
@@ -259,7 +259,7 @@ function GridAnalytics({ items }: { items: GridItem[] }) {
           {Object.entries(cardSizes).map(([size, count]) => (
             <div key={size} className="flex items-center justify-between text-sm">
               <span className="text-[var(--hive-text-secondary)]">{size} cards</span>
-              <Badge variant="outline">{count}</Badge>
+              <Badge variant="secondary">{count}</Badge>
             </div>
           ))}
         </div>
@@ -388,7 +388,7 @@ export const ResponsiveBehaviorDemo: StoryObj = {
                       max="1400"
                       step="10"
                       value={containerWidth}
-                      onChange={(e) => setContainerWidth(Number(e.target.value))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setContainerWidth(Number(e.target.value))}
                       className="w-full"
                     />
                     <div className="flex justify-between text-xs text-[var(--hive-text-muted)]">
@@ -401,7 +401,7 @@ export const ResponsiveBehaviorDemo: StoryObj = {
 
                 {!autoDevice && (
                   <div className="flex gap-2">
-                    {(['desktop', 'tablet', 'mobile'] as const).map((deviceType) => (
+                    {(['desktop', 'tablet', 'mobile'] as const).map((deviceType: any) => (
                       <Button
                         key={deviceType}
                         size="sm"
@@ -448,7 +448,7 @@ export const ResponsiveBehaviorDemo: StoryObj = {
               { name: 'Mobile', range: '< 768px', active: device === 'mobile' },
               { name: 'Tablet', range: '768px - 1199px', active: device === 'tablet' },
               { name: 'Desktop', range: '≥ 1200px', active: device === 'desktop' }
-            ].map((breakpoint) => (
+            ].map((breakpoint: any) => (
               <Card key={breakpoint.name} className={`p-4 text-center ${
                 breakpoint.active ? 'ring-2 ring-[var(--hive-brand-primary)]' : ''
               }`}>
@@ -520,7 +520,7 @@ export const EditModeFeaturesDemo: StoryObj = {
                   <div>
                     <h4 className="font-semibold text-blue-900 mb-2">How to Use Edit Mode</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {features.map((feature) => {
+                      {features.map((feature: any) => {
                         const Icon = feature.icon;
                         return (
                           <div key={feature.label} className="flex items-center gap-2">
@@ -567,7 +567,7 @@ export const EditModeFeaturesDemo: StoryObj = {
               </Button>
               
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={handleResetLayout}
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
@@ -633,7 +633,7 @@ export const EditModeFeaturesDemo: StoryObj = {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className={`w-3 h-3 rounded-full ${
-                    isEditMode ? 'bg-orange-500' : 'bg-green-500'
+                    isEditMode ? 'bg-[var(--hive-gold)]' : 'bg-green-500'
                   }`} />
                   <span className="text-sm font-medium">
                     {isEditMode ? 'Edit Mode Active' : 'View Mode'}

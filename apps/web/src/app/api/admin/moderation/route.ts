@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
-import { contentModerationService } from '@/lib/content-moderation-service';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { contentModerationService } from '@/lib/services/content-moderation-service';
 import { logger } from '@/lib/logger';
-import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api/response-types/api-response-types';
 import { z } from 'zod';
 
 /**
@@ -267,7 +267,7 @@ export async function PUT(request: NextRequest) {
 // Helper function to check moderator permissions
 async function checkModeratorPermissions(userId: string): Promise<boolean> {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     const userDoc = await dbAdmin.collection('users').doc(userId).get();
     if (!userDoc.exists) return false;
     
@@ -284,7 +284,7 @@ async function checkModeratorPermissions(userId: string): Promise<boolean> {
 // Helper function to check admin permissions
 async function checkAdminPermissions(userId: string): Promise<boolean> {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     const userDoc = await dbAdmin.collection('users').doc(userId).get();
     if (!userDoc.exists) return false;
     
@@ -299,7 +299,7 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
 // Helper function to get queue statistics
 async function getQueueStatistics() {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -335,7 +335,7 @@ async function getQueueStatistics() {
 
 // Helper function to update moderation rule
 async function updateModerationRule(ruleId: string, ruleData: any, adminUserId: string) {
-  const { dbAdmin } = await import('@/lib/firebase-admin');
+  const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
   
   await dbAdmin.collection('moderationRules').doc(ruleId).update({
     ...ruleData,
@@ -349,7 +349,7 @@ async function updateModerationRule(ruleId: string, ruleData: any, adminUserId: 
 
 // Helper function to create moderation rule
 async function createModerationRule(ruleData: any, adminUserId: string): Promise<string> {
-  const { dbAdmin } = await import('@/lib/firebase-admin');
+  const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
   
   const newRule = {
     ...ruleData,

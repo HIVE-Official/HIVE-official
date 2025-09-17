@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 // Content aggregation interfaces
 interface ContentSource {
@@ -295,7 +295,7 @@ async function aggregateFromAllSources(params: {
   config: AggregationConfig;
   forceRefresh: boolean;
 }): Promise<AggregatedContentItem[]> {
-  const { userId, sources, config, forceRefresh } = params;
+  const { sources, config, forceRefresh } = await params;
   const aggregatedItems: AggregatedContentItem[] = [];
 
   const timeWindow = new Date();
@@ -332,9 +332,9 @@ async function aggregateFromSource(
   source: ContentSource,
   config: AggregationConfig,
   timeWindow: Date,
-  forceRefresh: boolean
+  _forceRefresh: boolean
 ): Promise<AggregatedContentItem[]> {
-  const items: AggregatedContentItem[] = [];
+  const _items: AggregatedContentItem[] = [];
 
   try {
     switch (source.type) {
@@ -572,9 +572,9 @@ async function aggregateBuilderAnnouncements(
 
 // Helper function to aggregate system notifications
 async function aggregateSystemNotifications(
-  source: ContentSource,
-  config: AggregationConfig,
-  timeWindow: Date
+  _source: ContentSource,
+  _config: AggregationConfig,
+  _timeWindow: Date
 ): Promise<AggregatedContentItem[]> {
   // System notifications would be implemented based on platform events
   // For now, return empty array

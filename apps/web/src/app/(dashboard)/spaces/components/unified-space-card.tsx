@@ -2,7 +2,7 @@
 
 import { Button, Card, useUnifiedAuth } from "@hive/ui";
 import { Users, Star, MapPin, ArrowRight, Heart, Activity, Crown, Shield } from "lucide-react";
-import { type Space } from "@hive/core";
+import type { Space  } from '@/types/core';
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -33,7 +33,12 @@ function SpaceDetailsWidget({ space, membershipRole, onJoin, onLeave, onMessage,
 }
 
 interface UnifiedSpaceCardProps {
-  space: Space;
+  space: Space & {
+    status?: string;
+    potentialMembers?: number;
+    awaitingLeader?: boolean;
+    hasRequestedActivation?: boolean;
+  };
   variant?: "grid" | "list" | "compact";
   showMembership?: boolean;
   membershipRole?: "member" | "admin" | "owner";
@@ -104,6 +109,14 @@ export function UnifiedSpaceCard({
   };
 
   const getActionButton = () => {
+    // Preview mode spaces waiting for leaders
+    if (space.status === 'preview' && space.awaitingLeader) {
+      if (space.hasRequestedActivation) {
+        return { text: 'Request Pending', action: 'pending', disabled: true };
+      }
+      return { text: 'Request to Lead', action: 'request-lead', disabled: false };
+    }
+    
     if (space.status === 'dormant') {
       return { text: 'Preview', action: 'preview', disabled: false };
     }
@@ -155,7 +168,7 @@ export function UnifiedSpaceCard({
     if (!isGreekLife()) return null;
     
     return (
-      <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">
+      <div className="flex items-center gap-1 px-2 py-1 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] rounded-full text-xs">
         <Shield className="h-3 w-3" />
         1 Organization Limit
       </div>
@@ -211,27 +224,50 @@ export function UnifiedSpaceCard({
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold text-white">{space.name}</h3>
+                <h3 className="font-semibold text-[var(--hive-text-inverse)]">{space.name}</h3>
                 {getRoleBadge()}
                 {getGreekLifeBadge()}
               </div>
-              <p className="text-sm text-[#A1A1AA] line-clamp-1 mb-2">{space.description}</p>
+              <p className="text-sm text-[var(--hive-text-muted)] line-clamp-1 mb-2">{space.description}</p>
               <div className="flex items-center gap-4 text-xs text-[#71717A]">
                 <span className="flex items-center">
                   <Users className="h-3 w-3 mr-1" />
-                  {space.memberCount || 0} members
+                  {space.status === 'preview' && space.potentialMembers ? (
+                    <>{space.potentialMembers} potential members</>
+                  ) : (
+                    <>{space.memberCount || 0} members</>
+                  )}
                 </span>
                 <span className="flex items-center">
                   <MapPin className="h-3 w-3 mr-1" />
                   {space.type?.replace('_', ' ')}
                 </span>
+                {space.status === 'preview' && (
+                  <span className="px-2 py-0.5 bg-[var(--hive-gold)]/20 text-[var(--hive-gold)] rounded-full text-xs">
+                    Preview Mode
+                  </span>
+                )}
               </div>
             </div>
           </div>
           <Button 
             size="sm"
-            className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255] disabled:opacity-50"
-            onClick={getActionButton().action === 'join' ? handleJoinClick : (e) => e.stopPropagation()}
+            className={
+              getActionButton().action === 'request-lead' 
+                ? "bg-[var(--hive-gold)] text-[var(--hive-text-primary)] hover:bg-amber-600" 
+                : "bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255] disabled:opacity-50"
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+              const action = getActionButton().action;
+              if (action === 'join') {
+                handleJoinClick(e);
+              } else if (action === 'request-lead') {
+                router.push(`/spaces/${space.id}/request-activation`);
+              } else if (action === 'open') {
+                router.push(`/spaces/${space.id}`);
+              }
+            }}
             disabled={getActionButton().disabled}
             aria-label={`${getActionButton().text} ${space.name} space`}
           >

@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useContext, createContext, useReducer } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { HiveProgress as Progress } from '../../components/hive-progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
-import { Switch } from '../../../components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
+import { Alert, AlertDescription } from '../../../atomic/molecules/alert-toast-system';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { 
   Activity, 
   BarChart3, 
@@ -35,8 +35,9 @@ import {
   Timer
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '28-Advanced-Analytics-Tracking/Analytics-Tracking-System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -102,7 +103,7 @@ interface AnalyticsState {
     element: string;
     timestamp: number;
     userId?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
   }>;
   userJourneys: Array<{
     userId: string;
@@ -248,7 +249,7 @@ function RealTimeMetrics() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+      <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-[var(--hive-text-primary)]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -261,7 +262,7 @@ function RealTimeMetrics() {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
+      <Card className="bg-gradient-to-br from-green-500 to-green-600 text-[var(--hive-text-primary)]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -274,7 +275,7 @@ function RealTimeMetrics() {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+      <Card className="bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -287,7 +288,7 @@ function RealTimeMetrics() {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
+      <Card className="bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -364,7 +365,7 @@ function UserBehaviorHeatmap() {
       <CardContent>
         <div className="relative h-80 bg-gray-50 rounded-lg overflow-hidden">
           {/* Simulated mobile/desktop interface */}
-          <div className="absolute inset-4 bg-white rounded-lg shadow-sm border">
+          <div className="absolute inset-4 bg-[var(--hive-white)] rounded-lg shadow-sm border">
             {heatmapData[selectedView].map((point, index) => (
               <div
                 key={index}
@@ -377,7 +378,7 @@ function UserBehaviorHeatmap() {
                 <div 
                   className={`w-8 h-8 rounded-full blur-sm ${
                     point.intensity > 85 ? 'bg-red-500' :
-                    point.intensity > 70 ? 'bg-yellow-500' :
+                    point.intensity > 70 ? 'bg-[var(--hive-gold)]' :
                     'bg-blue-500'
                   }`}
                   style={{
@@ -399,7 +400,7 @@ function UserBehaviorHeatmap() {
               <span>Low (40-69%)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+              <div className="w-3 h-3 bg-[var(--hive-gold)] rounded-full" />
               <span>Medium (70-84%)</span>
             </div>
             <div className="flex items-center gap-2">
@@ -456,7 +457,7 @@ function CampusEngagementAnalytics() {
                 <div className="flex justify-between items-center">
                   <span className="font-medium">{period.period}</span>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline">
+                    <Badge variant="secondary">
                       {period.engagement}% engagement
                     </Badge>
                     <Badge variant={period.stress > 7 ? 'destructive' : period.stress > 5 ? 'secondary' : 'default'}>
@@ -644,7 +645,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.functional}
-              onCheckedChange={(checked) => 
+              onCheckedChange={(checked: any) => 
                 setPrivacySettings(prev => ({...prev, functional: checked}))
               }
             />
@@ -657,7 +658,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.analytics}
-              onCheckedChange={(checked) => 
+              onCheckedChange={(checked: any) => 
                 setPrivacySettings(prev => ({...prev, analytics: checked}))
               }
             />
@@ -670,7 +671,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.marketing}
-              onCheckedChange={(checked) => 
+              onCheckedChange={(checked: any) => 
                 setPrivacySettings(prev => ({...prev, marketing: checked}))
               }
             />
@@ -705,7 +706,7 @@ function PrivacyComplianceCenter() {
                   {key === 'anonymizedInsights' && 'Aggregated campus trends'}
                 </p>
               </div>
-              <Badge variant="outline">{value}</Badge>
+              <Badge variant="secondary">{value}</Badge>
             </div>
           ))}
 
@@ -767,7 +768,7 @@ function AdvancedAnalyticsSystem() {
     <AnalyticsProvider>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="bg-[var(--hive-white)] border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">HIVE Analytics Dashboard</h1>
@@ -776,10 +777,10 @@ function AdvancedAnalyticsSystem() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
                 FERPA Compliant
               </Badge>
-              <Badge variant="outline">Live Data</Badge>
+              <Badge variant="secondary">Live Data</Badge>
             </div>
           </div>
         </div>
@@ -836,7 +837,7 @@ function AdvancedAnalyticsSystem() {
                     
                     <div className="text-center">
                       <div className="flex items-center justify-center mb-2">
-                        <Share2 className="h-8 w-8 text-purple-500" />
+                        <Share2 className="h-8 w-8 text-[var(--hive-gold)]" />
                       </div>
                       <p className="text-2xl font-bold">892</p>
                       <p className="text-sm text-gray-500">Shares This Week</p>
@@ -925,7 +926,7 @@ function AdvancedAnalyticsSystem() {
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <span>Campus WiFi</span>
-                        <Badge variant="default">Avg: 1.2s load</Badge>
+                        <Badge variant="primary">Avg: 1.2s load</Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Mobile Data</span>
@@ -933,7 +934,7 @@ function AdvancedAnalyticsSystem() {
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Off-Campus</span>
-                        <Badge variant="outline">Avg: 1.8s load</Badge>
+                        <Badge variant="secondary">Avg: 1.8s load</Badge>
                       </div>
                     </div>
                   </CardContent>

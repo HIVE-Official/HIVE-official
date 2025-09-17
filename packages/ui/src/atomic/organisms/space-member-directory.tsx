@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { logger } from '../../utils/logger';
+
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
 import { cn } from '../../lib/utils';
 import { 
@@ -29,16 +31,16 @@ import {
   Share2
 } from 'lucide-react';
 
-export type MemberRole = 'leader' | 'co_leader' | 'member' | 'pending';
-export type MemberStatus = 'active' | 'inactive' | 'banned' | 'pending';
+export type DirectoryMemberRole = 'leader' | 'co_leader' | 'member' | 'pending';
+export type DirectoryMemberStatus = 'active' | 'inactive' | 'banned' | 'pending';
 
-export interface SpaceMember {
+export interface DirectorySpaceMember {
   id: string;
   handle: string;
   displayName: string;
   avatar?: string;
-  role: MemberRole;
-  status: MemberStatus;
+  role: DirectoryMemberRole;
+  status: DirectoryMemberStatus;
   joinedAt: string;
   lastActive?: string;
   bio?: string;
@@ -65,8 +67,8 @@ export type MemberFilterType = 'all' | 'leaders' | 'members' | 'pending' | 'onli
 export type MemberSortType = 'name' | 'role' | 'joined' | 'activity';
 
 export interface SpaceMemberDirectoryProps {
-  members: SpaceMember[];
-  currentUserRole: MemberRole;
+  members: DirectorySpaceMember[];
+  currentUserRole: DirectoryMemberRole;
   spaceType: 'university' | 'residential' | 'greek' | 'student';
   onInviteMembers?: () => void;
   onManageMember?: (memberId: string, action: 'promote' | 'demote' | 'remove' | 'ban' | 'unban') => Promise<void>;
@@ -77,7 +79,13 @@ export interface SpaceMemberDirectoryProps {
   className?: string;
 }
 
-const ROLE_CONFIG = {
+const ROLE_CONFIG: Record<DirectoryMemberRole, {
+  label: string;
+  icon: React.ReactElement;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+}> = {
   leader: {
     label: 'Leader',
     icon: <Crown className="w-4 h-4" />,
@@ -137,7 +145,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
   const canManageMembers = currentUserRole === 'leader' || currentUserRole === 'co_leader';
 
   const filteredMembers = useMemo(() => {
-    let filtered = members.filter(member => {
+    const filtered = members.filter(member => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -165,15 +173,17 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
     // Sort
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'role':
+        case 'role': {
           const roleOrder = { leader: 0, co_leader: 1, member: 2, pending: 3 };
           return roleOrder[a.role] - roleOrder[b.role];
+        }
         case 'joined':
           return new Date(b.joinedAt).getTime() - new Date(a.joinedAt).getTime();
-        case 'activity':
+        case 'activity': {
           const aActivity = a.lastActive ? new Date(a.lastActive).getTime() : 0;
           const bActivity = b.lastActive ? new Date(b.lastActive).getTime() : 0;
           return bActivity - aActivity;
+        }
         default:
           return a.displayName.localeCompare(b.displayName);
       }
@@ -192,11 +202,11 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
       await onManageMember(memberId, action);
       setSelectedMember(null);
     } catch (error) {
-      console.error('Failed to manage member:', error);
+      logger.error('Failed to manage member:', { error });
     }
   };
 
-  const MemberCard: React.FC<{ member: SpaceMember }> = ({ member }) => {
+  const MemberCard: React.FC<{ member: DirectorySpaceMember }> = ({ member }) => {
     const roleConfig = ROLE_CONFIG[member.role];
     const isSelected = selectedMember === member.id;
 
@@ -416,7 +426,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               placeholder="Search members by name, handle, or major..."
               className="w-full pl-10 pr-4 py-3 rounded-2xl border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-muted)] focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
             />
@@ -444,7 +454,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
               className="space-y-3"
             >
               <div className="flex items-center gap-2 flex-wrap">
-                {FILTER_OPTIONS.map((option) => (
+                {FILTER_OPTIONS.map((option: any) => (
                   <button
                     key={option.value}
                     onClick={() => setSelectedFilter(option.value)}
@@ -465,7 +475,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
                 <span className="text-sm text-[var(--hive-text-secondary)]">Sort by:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as MemberSortType)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as MemberSortType)}
                   className="px-3 py-1.5 rounded-lg border border-[var(--hive-border-primary)]/30 bg-[var(--hive-background-primary)]/50 text-[var(--hive-text-primary)] text-sm focus:outline-none focus:ring-0 focus:border-[var(--hive-brand-primary)]/50 transition-all duration-200"
                 >
                   <option value="name">Name</option>
@@ -484,7 +494,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
         <AnimatePresence mode="popLayout">
           {filteredMembers.length > 0 ? (
             <div className="space-y-3">
-              {filteredMembers.map((member) => (
+              {filteredMembers.map((member: any) => (
                 <MemberCard key={member.id} member={member} />
               ))}
             </div>

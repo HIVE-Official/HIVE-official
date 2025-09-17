@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Switch, SwitchPresets, SwitchGroup, SwitchCard } from './switch-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import '../../hive-tokens.css';
 
@@ -98,7 +98,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ VARIANTS</Badge>
+            <Badge variant="emerald">✅ VARIANTS</Badge>
             Switch Variants - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -111,13 +111,13 @@ export const CompleteShowcase: Story = {
               <Switch
                 label="Default (Gold Brand)"
                 description="Gold fill indicates active campus features"
-                variant="default"
+                variant="primary"
                 checked={true}
               />
               <Switch
                 label="Success Toggle"
                 description="Indicates successful or completed states"
-                variant="success"
+                variant="emerald"
                 checked={true}
               />
               <Switch
@@ -131,7 +131,7 @@ export const CompleteShowcase: Story = {
               <Switch
                 label="Warning Toggle"
                 description="Settings that require attention or caution"
-                variant="warning"
+                variant="gold"
                 checked={true}
               />
               <Switch
@@ -164,7 +164,7 @@ export const CompleteShowcase: Story = {
                   label="Small"
                   description="Compact forms"
                   size="sm"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">SM: 20px × 36px</p>
@@ -174,7 +174,7 @@ export const CompleteShowcase: Story = {
                   label="Default"
                   description="Standard use"
                   size="default"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">Default: 24px × 44px</p>
@@ -184,7 +184,7 @@ export const CompleteShowcase: Story = {
                   label="Large"
                   description="Prominent settings"
                   size="lg"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">LG: 28px × 52px</p>
@@ -194,7 +194,7 @@ export const CompleteShowcase: Story = {
                   label="Extra Large"
                   description="Hero toggles"
                   size="xl"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <p className="text-xs text-[var(--hive-text-muted)]">XL: 32px × 60px</p>
@@ -227,14 +227,14 @@ export const CompleteShowcase: Story = {
                     label="Dark Mode"
                     description="Toggle between light and dark themes"
                     showIcons
-                    variant="default"
+                    variant="primary"
                     checked={false}
                   />
                   <Switch
                     label="Auto-save"
                     description="Automatically save your work"
                     showIcons
-                    variant="success"
+                    variant="emerald"
                     checked={true}
                     size="sm"
                   />
@@ -251,7 +251,7 @@ export const CompleteShowcase: Story = {
                     label="Location Sharing"
                     description="Share your location with friends"
                     showIcons
-                    variant="warning"
+                    variant="gold"
                     checked={false}
                   />
                 </div>
@@ -266,14 +266,14 @@ export const CompleteShowcase: Story = {
                   label="Label on Right (default)"
                   description="Standard label positioning"
                   labelPosition="right"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <Switch
                   label="Label on Left"
                   description="Alternative label positioning for form layouts"
                   labelPosition="left"
-                  variant="default"
+                  variant="primary"
                   checked={false}
                 />
               </div>
@@ -317,8 +317,8 @@ export const CompleteShowcase: Story = {
                   label="Campus Notifications"
                   description="Receive updates about campus events, announcements, and important information"
                   icon={<span className="text-lg">🔔</span>}
-                  badge={<Badge variant="success" size="sm">Essential</Badge>}
-                  variant="default"
+                  badge={<Badge variant="emerald" size="sm">Essential</Badge>}
+                  variant="primary"
                   checked={true}
                 />
                 <SwitchCard
@@ -326,15 +326,15 @@ export const CompleteShowcase: Story = {
                   description="Get notified when study groups in your courses are forming or meeting"
                   icon={<span className="text-lg">📚</span>}
                   badge={<Badge variant="info" size="sm">Academic</Badge>}
-                  variant="default"
+                  variant="primary"
                   checked={true}
                 />
                 <SwitchCard
                   label="Location Sharing"
                   description="Share your campus location with friends for easy meetups and coordination"
                   icon={<span className="text-lg">📍</span>}
-                  badge={<Badge variant="warning" size="sm">Privacy</Badge>}
-                  variant="default"
+                  badge={<Badge variant="gold" size="sm">Privacy</Badge>}
+                  variant="primary"
                   checked={false}
                 />
               </div>
@@ -372,7 +372,7 @@ export const CompleteShowcase: Story = {
                 <Switch
                   label="Ghost Mode"
                   description="Appear offline while remaining active"
-                  variant="default"
+                  variant="primary"
                   checked={false}
                 />
                 <Switch
@@ -384,7 +384,7 @@ export const CompleteShowcase: Story = {
                 <Switch
                   label="Floor Notifications"
                   description="Receive updates from your residence hall floor"
-                  variant="success"
+                  variant="emerald"
                   checked={true}
                 />
               </div>
@@ -417,28 +417,28 @@ export const CompleteShowcase: Story = {
                 <Switch
                   label="Public Profile"
                   description="Allow other UB students to find and view your profile"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                   size="sm"
                 />
                 <Switch
                   label="Show Academic Information"
                   description="Display your major, year, and academic interests"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                   size="sm"
                 />
                 <Switch
                   label="Ghost Mode"
                   description="Appear offline while remaining active in your spaces"
-                  variant="default"
+                  variant="primary"
                   checked={false}
                   size="sm"
                 />
                 <Switch
                   label="Anonymous Coordination"
                   description="Participate in study groups without revealing identity"
-                  variant="default"
+                  variant="primary"
                   checked={false}
                   size="sm"
                 />
@@ -462,8 +462,8 @@ export const CompleteShowcase: Story = {
                 label="Study Group Formation"
                 description="Notify when study groups form for CSE 331, MTH 241, and other enrolled courses"
                 icon={<span className="text-lg">👥</span>}
-                badge={<Badge variant="success" size="sm">Academic</Badge>}
-                variant="success"
+                badge={<Badge variant="emerald" size="sm">Academic</Badge>}
+                variant="emerald"
                 checked={true}
               />
               <SwitchCard
@@ -478,8 +478,8 @@ export const CompleteShowcase: Story = {
                 label="Grade Updates"
                 description="Immediate notifications when grades are posted on UBLearns"
                 icon={<span className="text-lg">📊</span>}
-                badge={<Badge variant="warning" size="sm">Academic</Badge>}
-                variant="warning"
+                badge={<Badge variant="gold" size="sm">Academic</Badge>}
+                variant="gold"
                 checked={true}
               />
             </div>
@@ -498,7 +498,7 @@ export const CompleteShowcase: Story = {
                 <Switch
                   label="Floor Events"
                   description="Get invited to movie nights, study sessions, and social events"
-                  variant="default"
+                  variant="primary"
                   checked={true}
                   size="sm"
                 />
@@ -519,7 +519,7 @@ export const CompleteShowcase: Story = {
                 <Switch
                   label="Shared Resource Coordination"
                   description="Coordinate laundry times, kitchen usage, and common area booking"
-                  variant="success"
+                  variant="emerald"
                   checked={true}
                   size="sm"
                 />
@@ -540,21 +540,21 @@ export const CompleteShowcase: Story = {
                   <Switch
                     label="Study Group Invites"
                     description="Receive invites to algorithm study sessions"
-                    variant="default"
+                    variant="primary"
                     checked={true}
                     size="sm"
                   />
                   <Switch
                     label="Homework Collaboration"
                     description="Get paired for homework discussion (within academic honesty)"
-                    variant="success"
+                    variant="emerald"
                     checked={true}
                     size="sm"
                   />
                   <Switch
                     label="Exam Prep Sessions"
                     description="Join group exam preparation and review sessions"
-                    variant="warning"
+                    variant="gold"
                     checked={true}
                     size="sm"
                   />
@@ -582,7 +582,7 @@ export const CompleteShowcase: Story = {
                   <Switch
                     label="Schedule Changes"
                     description="Updates about lecture cancellations or room changes"
-                    variant="warning"
+                    variant="gold"
                     checked={true}
                     size="sm"
                   />
@@ -600,7 +600,7 @@ export const CompleteShowcase: Story = {
                 description="Get notified about campus events matching your interests: CS clubs, hackathons, career fairs"
                 icon={<span className="text-lg">🎯</span>}
                 badge={<Badge variant="primary" size="sm">Recommended</Badge>}
-                variant="default"
+                variant="primary"
                 checked={true}
               />
               <SwitchCard
@@ -615,8 +615,8 @@ export const CompleteShowcase: Story = {
                 label="Intramural Sports"
                 description="Get updates about intramural league registration and team formation"
                 icon={<span className="text-lg">⚽</span>}
-                badge={<Badge variant="success" size="sm">Fitness</Badge>}
-                variant="success"
+                badge={<Badge variant="emerald" size="sm">Fitness</Badge>}
+                variant="emerald"
                 checked={false}
               />
             </div>
@@ -640,7 +640,7 @@ export const Playground: Story = {
     showIcons: false,
     labelPosition: 'right',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

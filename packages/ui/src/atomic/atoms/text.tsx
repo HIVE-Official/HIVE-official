@@ -9,14 +9,17 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
     | 'display-2xl' | 'display-xl' | 'display-lg' | 'display-md' | 'display-sm'
     | 'heading-xl' | 'heading-lg' | 'heading-md' | 'heading-sm'
     | 'body-lg' | 'body-md' | 'body-sm' | 'body-xs' | 'body-2xs';
-  color?: 'primary' | 'secondary' | 'muted' | 'mutedLight' | 'mutedDark' | 'subtle' | 'gold' | 'ruby' | 'emerald';
+  color?: 'primary' | 'secondary' | 'muted' | 'mutedLight' | 'mutedDark' | 'subtle' | 'gold' | 'ruby' | 'emerald' | string;
   weight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
   align?: 'left' | 'center' | 'right';
   truncate?: boolean;
   children: React.ReactNode;
+  // Legacy props for compatibility
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | string;
 }
 
-const textVariants = {
+export const textVariants = {
   variant: {
     // Display Scale
     'display-2xl': 'text-display-2xl font-display font-bold leading-tight tracking-tight',
@@ -63,6 +66,26 @@ const textVariants = {
   }
 };
 
+// Map level prop to variant
+const levelToVariant = {
+  1: 'heading-xl',
+  2: 'heading-lg',
+  3: 'heading-md',
+  4: 'heading-sm',
+  5: 'body-lg',
+  6: 'body-md'
+};
+
+// Map size prop to variant
+const sizeToVariant = {
+  'xs': 'body-xs',
+  'sm': 'body-sm',
+  'md': 'body-md',
+  'lg': 'body-lg',
+  'xl': 'heading-sm',
+  '2xl': 'heading-md'
+};
+
 export const Text: React.FC<TextProps> = ({
   as = 'p',
   variant = 'body-md',
@@ -72,14 +95,24 @@ export const Text: React.FC<TextProps> = ({
   truncate = false,
   className,
   children,
+  level,
+  size,
   ...props
 }) => {
-  const Component = as;
+  // Handle legacy props
+  const computedAs = level ? (`h${level}` as React.ElementType) : as;
+  const computedVariant = level 
+    ? levelToVariant[level as keyof typeof levelToVariant] 
+    : size 
+    ? (sizeToVariant[size as keyof typeof sizeToVariant] || variant)
+    : variant;
+  
+  const Component = computedAs;
   
   const baseClasses = [
     // Base typography
-    textVariants.variant[variant],
-    textVariants.color[color],
+    textVariants.variant[computedVariant as keyof typeof textVariants.variant],
+    textVariants.color[color as keyof typeof textVariants.color] || color,
     textVariants.align[align],
     
     // Weight override if specified

@@ -6,7 +6,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { generateAutoSpaces, type AutoSpaceConfig } from '../../../../lib/auto-space-creation';
+import { logger } from '@/lib/logger';
+
+import { generateAutoSpaces, type AutoSpaceConfig } from '@/lib/auto-space-creation';
 
 export async function POST(request: NextRequest) {
   try {
@@ -143,22 +145,12 @@ export async function POST(request: NextRequest) {
         }
 
       } catch (error) {
-        console.error(`Error processing space ${template.name}:`, error);
+        logger.error('Error processing space ${template.name}:', { error: String(error) });
         results.errors.push(`Error processing ${template.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
 
     // Log results for monitoring
-    console.log('🏗️ Auto-space creation completed:', {
-      user: { schoolId, major, year, userType },
-      results: {
-        spacesCreated: results.created.length,
-        spacesJoined: results.joined.length,
-        errors: results.errors.length,
-        recommended: results.recommended.length
-      }
-    });
-
     return NextResponse.json({
       success: true,
       results,
@@ -172,7 +164,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Auto-space creation API error:', error);
+    logger.error('Auto-space creation API error:', { error: String(error) });
     return NextResponse.json(
       { 
         error: 'Internal server error',
@@ -228,7 +220,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Auto-space preview API error:', error);
+    logger.error('Auto-space preview API error:', { error: String(error) });
     return NextResponse.json(
       { 
         error: 'Internal server error',

@@ -1,104 +1,41 @@
 'use client';
 
-import React from 'react';
-import { cn } from '../../lib/utils';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { Spinner } from './ui/spinner';
-import { Search, X } from 'lucide-react';
+import * as React from 'react';
+import { Search } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { InputEnhanced } from '../atomic/atoms/input-enhanced';
 
-export interface SearchBarProps {
-  placeholder?: string;
-  value?: string;
-  loading?: boolean;
-  clearable?: boolean;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'ghost' | 'filled';
-  className?: string;
+export interface SearchBarProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   onSearch?: (query: string) => void;
-  onChange?: (value: string) => void;
-  onClear?: () => void;
+  placeholder?: string;
+  showIcon?: boolean;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
-  placeholder = 'Search...',
-  value = '',
-  loading = false,
-  clearable = true,
-  size = 'md',
-  variant = 'default',
-  className,
   onSearch,
+  placeholder = "Search...",
+  showIcon = true,
+  className,
   onChange,
-  onClear,
   ...props
 }) => {
-  const [internalValue, setInternalValue] = React.useState(value);
-  
-  React.useEffect(() => {
-    setInternalValue(value);
-  }, [value]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInternalValue(newValue);
-    onChange?.(newValue);
+    onChange?.(e);
+    onSearch?.(e.target.value);
   };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSearch?.(internalValue);
-  };
-
-  const handleClear = () => {
-    setInternalValue('');
-    onChange?.('');
-    onClear?.();
-  };
-
-  const showClearButton = clearable && internalValue.length > 0 && !loading;
 
   return (
-    <form onSubmit={handleSubmit} className={cn('relative', className)}>
-      <Input
+    <div className={cn("relative", className)}>
+      {showIcon && (
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--hive-text-tertiary)]" />
+      )}
+      <InputEnhanced
         type="search"
         placeholder={placeholder}
-        value={internalValue}
         onChange={handleChange}
-        variant={variant}
-        size={size}
-        leftIcon={
-          loading ? (
-            <Spinner size="sm" color="secondary" />
-          ) : (
-            <Search className="h-4 w-4 text-[var(--hive-text-secondary)]" />
-          )
-        }
-        rightIcon={
-          showClearButton ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={handleClear}
-              className="h-6 w-6 p-0 hover:bg-transparent"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          ) : undefined
-        }
-        className={cn(
-          // Add padding for icons
-          'pr-10',
-          showClearButton && 'pr-16'
-        )}
+        className={cn(showIcon && "pl-10")}
         {...props}
       />
-      
-      {/* Hidden submit button for enter key support */}
-      <button type="submit" className="sr-only">
-        Search
-      </button>
-    </form>
+    </div>
   );
 };

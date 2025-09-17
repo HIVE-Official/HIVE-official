@@ -1,5 +1,7 @@
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getLatestAggregatedContent, type AggregatedFeedItem } from '@/lib/feed-aggregation';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@/lib/logger';
+
+import { getLatestAggregatedContent, type AggregatedFeedItem } from '@/lib/services/feed/feed-aggregation';
 
 /**
  * Real-time Feed Update System
@@ -150,7 +152,7 @@ export class RealTimeFeedManager {
     const userSpaceIds = await this.getUserSpaceIds();
     
     // Get fresh content from all sources
-    const { createFeedAggregator } = await import('@/lib/feed-aggregation');
+    const { createFeedAggregator } = await import('@/lib/services/feed/feed-aggregation');
     const aggregator = createFeedAggregator(this._userId, userSpaceIds);
     const allItems = await aggregator.aggregateContent(100);
 
@@ -224,7 +226,7 @@ export class RealTimeFeedManager {
         await this.checkForUpdates();
         this.scheduleNextRefresh(state); // Schedule next refresh
       } catch (error) {
-        console.error(`Failed to refresh feed for user ${this._userId}:`, error);
+        logger.error('Failed to refresh feed for user ${this._userId}:', { error: String(error) });
         // Retry with exponential backoff
         setTimeout(() => this.scheduleNextRefresh(state), Math.min(interval * 2, 300000));
       }
@@ -254,7 +256,7 @@ export class RealTimeFeedManager {
         }
       };
     } catch (error) {
-      console.error('Error getting user feed state:', error);
+      logger.error('Error getting user feed state:', { error: String(error) });
       return null;
     }
   }
@@ -274,7 +276,7 @@ export class RealTimeFeedManager {
         updatedAt: new Date()
       });
     } catch (error) {
-      console.error('Error saving user feed state:', error);
+      logger.error('Error saving user feed state:', { error: String(error) });
     }
   }
 
@@ -296,7 +298,7 @@ export class RealTimeFeedManager {
       
       return spaceIds;
     } catch (error) {
-      console.error('Error getting user space IDs:', error);
+      logger.error('Error getting user space IDs:', { error: String(error) });
       return [];
     }
   }
@@ -306,11 +308,11 @@ export class RealTimeFeedManager {
    */
   private async getSpaceContent(spaceId: string, limit: number): Promise<AggregatedFeedItem[]> {
     try {
-      const { createFeedAggregator } = await import('@/lib/feed-aggregation');
+      const { createFeedAggregator } = await import('@/lib/services/feed/feed-aggregation');
       const aggregator = createFeedAggregator(this._userId, [spaceId]);
       return await aggregator.aggregateContent(limit);
     } catch (error) {
-      console.error(`Error getting space content for ${spaceId}:`, error);
+      logger.error('Error getting space content for ${spaceId}:', { error: String(error) });
       return [];
     }
   }
@@ -334,7 +336,7 @@ export class RealTimeFeedManager {
       
       await batch.commit();
     } catch (error) {
-      console.error('Error tracking view analytics:', error);
+      logger.error('Error tracking view analytics:', { error: String(error) });
     }
   }
 
@@ -405,7 +407,7 @@ class FeedManagerRegistry {
    * Background job to warm feed caches
    */
   async warmAllCaches(): Promise<void> {
-    console.log('🔄 Starting feed cache warming...');
+    
     
     try {
       // Get active users from last 24 hours
@@ -416,7 +418,7 @@ class FeedManagerRegistry {
         .limit(1000) // Process in batches
         .get();
       
-      console.log(`📊 Warming caches for ${activeUsersSnapshot.size} active users`);
+      
       
       // Process users in batches to avoid overwhelming the system
       const batchSize = 10;
@@ -425,12 +427,12 @@ class FeedManagerRegistry {
       for (let i = 0; i < userDocs.length; i += batchSize) {
         const batch = userDocs.slice(i, i + batchSize);
         
-        const promises = batch.map(async (doc) => {
+        const promises = batch.map(async (doc: any) => {
           try {
             const manager = await this.getManager(doc.id);
             await manager.checkForUpdates();
           } catch (error) {
-            console.error(`Failed to warm cache for user ${doc.id}:`, error);
+            logger.error('Failed to warm cache for user ${doc.id}:', { error: String(error) });
           }
         });
         
@@ -440,9 +442,9 @@ class FeedManagerRegistry {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
       
-      console.log('✅ Feed cache warming completed');
+      
     } catch (error) {
-      console.error('❌ Feed cache warming failed:', error);
+      logger.error('❌ Feed cache warming failed:', { error: String(error) });
     }
   }
 }

@@ -5,12 +5,12 @@
  */
 
 // Basic exports for immediate use
-export { Button } from '../atomic/atoms/button';
+export { ButtonEnhanced as Button } from '../atomic/atoms/button-enhanced';
 export { Avatar } from '../atomic/atoms/avatar';
 export { Badge } from '../atomic/atoms/badge';
 export { Card } from '../atomic/molecules/card';
-export { HiveOnboardingWizard } from '../components/onboarding/hive-onboarding-wizard';
-export { HiveAuthFlow } from '../components/auth/hive-auth-flow';
+// export { HiveOnboardingWizard } from '../components/onboarding/hive-onboarding-wizard';
+// export { HiveAuthFlow } from '../components/auth/hive-auth-flow';
 
 // Slice types
 export type { 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin as adminDb } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 
 interface RecommendationContext {

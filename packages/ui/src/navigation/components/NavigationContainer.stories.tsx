@@ -106,7 +106,7 @@ The master navigation orchestrator that provides adaptive navigation across all 
     }
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <div style={{ 
         minHeight: '100vh', 
         backgroundColor: 'var(--hive-background-primary)',
@@ -215,7 +215,7 @@ const InteractiveNavigationDemo = ({ user, ...props }: any) => {
         >
           <div 
             className="bg-[var(--hive-bg-secondary)] rounded-xl p-6 border border-[var(--hive-border-default)] max-w-lg w-full mx-4"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             <h3 className="text-lg font-semibold mb-4">Command Palette</h3>
             <p className="text-[var(--hive-text-secondary)] text-sm">
@@ -233,7 +233,7 @@ const InteractiveNavigationDemo = ({ user, ...props }: any) => {
         >
           <div 
             className="bg-[var(--hive-bg-secondary)] rounded-xl p-6 border border-[var(--hive-border-default)] max-w-sm w-full"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             <h3 className="text-lg font-semibold mb-4">Notifications</h3>
             <p className="text-[var(--hive-text-secondary)] text-sm">
@@ -255,7 +255,7 @@ export const Default: Story = {
     user: mockUser,
     unreadNotificationCount: 3
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />
+  render: (args: any) => <InteractiveNavigationDemo {...args} />
 };
 
 export const StudentUser: Story = {
@@ -263,7 +263,7 @@ export const StudentUser: Story = {
     user: mockUser,
     unreadNotificationCount: 0
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />,
+  render: (args: any) => <InteractiveNavigationDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -284,7 +284,7 @@ export const BuilderUser: Story = {
     user: builderUser,
     unreadNotificationCount: 5
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />,
+  render: (args: any) => <InteractiveNavigationDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -301,7 +301,7 @@ export const FacultyUser: Story = {
     user: facultyUser,
     unreadNotificationCount: 12
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />,
+  render: (args: any) => <InteractiveNavigationDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -318,7 +318,7 @@ export const HighNotificationCount: Story = {
     user: mockUser,
     unreadNotificationCount: 99
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />,
+  render: (args: any) => <InteractiveNavigationDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -335,7 +335,7 @@ export const NoNotifications: Story = {
     user: mockUser,
     unreadNotificationCount: 0
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />,
+  render: (args: any) => <InteractiveNavigationDemo {...args} />,
   parameters: {
     docs: {
       description: {
@@ -356,7 +356,7 @@ export const MobilePreview: Story = {
     user: mockUser,
     unreadNotificationCount: 3
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />,
+  render: (args: any) => <InteractiveNavigationDemo {...args} />,
   parameters: {
     viewport: {
       defaultViewport: 'mobile1'
@@ -376,7 +376,7 @@ export const TabletPreview: Story = {
     user: mockUser,
     unreadNotificationCount: 3
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />,
+  render: (args: any) => <InteractiveNavigationDemo {...args} />,
   parameters: {
     viewport: {
       defaultViewport: 'tablet'
@@ -396,7 +396,7 @@ export const DesktopPreview: Story = {
     user: mockUser,
     unreadNotificationCount: 3
   },
-  render: (args) => <InteractiveNavigationDemo {...args} />,
+  render: (args: any) => <InteractiveNavigationDemo {...args} />,
   parameters: {
     viewport: {
       defaultViewport: 'desktop'

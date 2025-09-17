@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
@@ -71,9 +71,9 @@ const getEventTypeConfig = (type: string) => {
       label: 'Study'
     },
     meeting: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Users,
       label: 'Meeting'
     },
@@ -181,7 +181,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
             <Text variant="body-sm" color="gold" weight="medium">
               Calendar & Schedule
             </Text>
-            <Badge variant="outline" className={cn('text-xs', availabilityConfig.color)}>
+            <Badge variant="secondary" className={cn('text-xs', availabilityConfig.color)}>
               <availabilityConfig.icon className="h-3 w-3 mr-1" />
               {availabilityConfig.label}
             </Badge>
@@ -318,7 +318,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
               </Text>
             </div>
             <div className="space-y-1">
-              {todayEvents.slice(0, 3).map((event) => {
+              {todayEvents.slice(0, 3).map((event: any) => {
                 const config = getEventTypeConfig(event.type);
                 return (
                   <div 
@@ -354,7 +354,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onAddEvent && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onAddEvent}
               className="flex-1"
@@ -366,7 +366,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
           
           {onViewCalendar && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewCalendar}
               className="flex-1"

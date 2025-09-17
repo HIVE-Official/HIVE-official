@@ -122,17 +122,17 @@ export interface StandardFormProps extends StandardComponentProps {
  * Standard Component Factory
  * Creates consistent components following HiveButton pattern
  */
-export function createStandardComponent<T extends Record<string, any>>(
+export function createStandardComponent<T extends Record<string, unknown>>(
   displayName: string,
   baseClassName: string,
   variants: any,
-  defaultVariants?: Record<string, any>
+  defaultVariants?: Record<string, unknown>
 ) {
   const Component = React.forwardRef<HTMLElement, T & VariantProps<typeof variants>>(
     ({ className, ...props }, ref) => {
       return React.createElement('div', {
         ref,
-        className: cn(baseClassName, variants(props), className),
+        className: cn(baseClassName, variants(props), className as any),
         ...props,
       });
     }

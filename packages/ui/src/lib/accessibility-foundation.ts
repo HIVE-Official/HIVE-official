@@ -127,7 +127,7 @@ export const reducedMotion = {
 export const colorContrast = {
   // Text contrast ratios (WCAG AA minimum 4.5:1)
   textOnLight: 'text-gray-900', // ~15:1 ratio
-  textOnDark: 'text-white', // ~21:1 ratio
+  textOnDark: 'text-[var(--hive-text-inverse)]', // ~21:1 ratio
   
   // Interactive contrast (WCAG AA minimum 3:1)
   interactive: 'text-[var(--hive-brand-primary)]', // Verified contrast
@@ -194,7 +194,7 @@ export function getFormA11yProps(
   error?: string,
   required?: boolean
 ) {
-  const props: Record<string, any> = {
+  const props: Record<string, unknown> = {
     id,
     'aria-label': label,
     className: focusStyles({ type: 'default' }),

@@ -298,12 +298,12 @@ describe("Auth API Integration", () => {
         "verylonghandlenamethatexceedslimit",
       ];
 
-      validHandles.forEach((handle) => {
+      validHandles.forEach((handle: string) => {
         expect(handle.length >= 3 && handle.length <= 20).toBe(true);
         expect(/^[a-zA-Z0-9_]+$/.test(handle)).toBe(true);
       });
 
-      invalidHandles.forEach((handle) => {
+      invalidHandles.forEach((handle: string) => {
         const isValidLength = handle.length >= 3 && handle.length <= 20;
         const isValidFormat = /^[a-zA-Z0-9_]+$/.test(handle);
         expect(isValidLength && isValidFormat).toBe(false);

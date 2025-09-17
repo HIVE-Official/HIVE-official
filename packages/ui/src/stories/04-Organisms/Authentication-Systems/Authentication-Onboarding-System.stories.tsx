@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 import { Progress } from '../../../components/ui/progress';
 import { Separator } from '../../../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 import { Checkbox } from '../../../components/ui/checkbox';
-import { Textarea } from '../../../components/ui/textarea';
+import { Textarea } from '../../../atomic/atoms/textarea-enhanced';
 import { 
   Mail, 
   Lock, 
@@ -46,8 +46,9 @@ import {
  * - **Social Onboarding**: Immediate space suggestions and connection opportunities
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '10-Live Frontend/Authentication & Onboarding System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -212,7 +213,7 @@ const LoginScreen = ({ auth }: { auth: ReturnType<typeof useAuth> }) => (
                 type="email"
                 placeholder="your.name@buffalo.edu"
                 value={auth.email}
-                onChange={(e) => auth.setEmail(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => auth.setEmail(e.target.value)}
                 className="pl-10 bg-gray-800 border-gray-700 text-white"
               />
             </div>
@@ -300,7 +301,7 @@ const VerificationScreen = ({ auth }: { auth: ReturnType<typeof useAuth> }) => (
             </div>
 
             <Button 
-              variant="outline" 
+              variant="secondary" 
               className="w-full border-gray-700 text-gray-300 hover:text-white"
               onClick={() => auth.setAuthState('onboarding')}
             >
@@ -350,7 +351,7 @@ const Step1UserType = ({ onboarding }: { onboarding: ReturnType<typeof useOnboar
       </div>
 
       <div className="space-y-3">
-        {userTypes.map((type) => (
+        {userTypes.map((type: any) => (
           <Card 
             key={type.type}
             className={`cursor-pointer transition-all border-2 ${
@@ -399,7 +400,7 @@ const Step2BasicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOnboa
           <Label className="text-white">First Name</Label>
           <Input
             value={onboarding.userData.firstName}
-            onChange={(e) => onboarding.updateUserData('firstName', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onboarding.updateUserData('firstName', e.target.value)}
             className="bg-gray-800 border-gray-700 text-white"
             placeholder="Sarah"
           />
@@ -408,7 +409,7 @@ const Step2BasicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOnboa
           <Label className="text-white">Last Name</Label>
           <Input
             value={onboarding.userData.lastName}
-            onChange={(e) => onboarding.updateUserData('lastName', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onboarding.updateUserData('lastName', e.target.value)}
             className="bg-gray-800 border-gray-700 text-white"
             placeholder="Johnson"
           />
@@ -421,7 +422,7 @@ const Step2BasicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOnboa
           <span className="absolute left-3 top-3 text-gray-500">@</span>
           <Input
             value={onboarding.userData.handle}
-            onChange={(e) => onboarding.updateUserData('handle', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onboarding.updateUserData('handle', e.target.value)}
             className="pl-8 bg-gray-800 border-gray-700 text-white"
             placeholder="sarah.johnson"
           />
@@ -433,7 +434,7 @@ const Step2BasicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOnboa
         <Label className="text-white">Bio (Optional)</Label>
         <Textarea
           value={onboarding.userData.bio}
-          onChange={(e) => onboarding.updateUserData('bio', e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onboarding.updateUserData('bio', e.target.value)}
           className="bg-gray-800 border-gray-700 text-white resize-none"
           rows={3}
           placeholder="Computer Science major, love hiking and trying new restaurants around Buffalo..."
@@ -480,7 +481,7 @@ const Step3ProfilePhoto = ({ onboarding }: { onboarding: ReturnType<typeof useOn
 
       <div className="text-center space-y-2">
         <Button 
-          variant="outline" 
+          variant="secondary" 
           className="border-gray-700 text-gray-300 hover:text-white"
           onClick={() => onboarding.updateUserData('profilePhoto', '/api/placeholder/150/150')}
         >
@@ -519,7 +520,7 @@ const Step4AcademicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOn
         <Label className="text-white">Expected Graduation Year</Label>
         <Select
           value={onboarding.userData.graduationYear}
-          onValueChange={(value) => onboarding.updateUserData('graduationYear', value)}
+          onValueChange={(value: unknown) => onboarding.updateUserData('graduationYear', value)}
         >
           <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
             <SelectValue placeholder="Select year" />
@@ -538,13 +539,13 @@ const Step4AcademicInfo = ({ onboarding }: { onboarding: ReturnType<typeof useOn
         <Label className="text-white">Major/Field of Study</Label>
         <Select
           value={onboarding.userData.major}
-          onValueChange={(value) => onboarding.updateUserData('major', value)}
+          onValueChange={(value: unknown) => onboarding.updateUserData('major', value)}
         >
           <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
             <SelectValue placeholder="Select your major" />
           </SelectTrigger>
           <SelectContent className="bg-gray-800 border-gray-700">
-            {UB_DATA.majors.map((major) => (
+            {UB_DATA.majors.map((major: any) => (
               <SelectItem key={major.value} value={major.value}>
                 {major.label}
               </SelectItem>
@@ -581,13 +582,13 @@ const Step5CampusLife = ({ onboarding }: { onboarding: ReturnType<typeof useOnbo
         <Label className="text-white">Housing</Label>
         <Select
           value={onboarding.userData.dorm}
-          onValueChange={(value) => onboarding.updateUserData('dorm', value)}
+          onValueChange={(value: unknown) => onboarding.updateUserData('dorm', value)}
         >
           <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
             <SelectValue placeholder="Where do you live?" />
           </SelectTrigger>
           <SelectContent className="bg-gray-800 border-gray-700">
-            {UB_DATA.dorms.map((dorm) => (
+            {UB_DATA.dorms.map((dorm: any) => (
               <SelectItem key={dorm.value} value={dorm.value}>
                 {dorm.label}
               </SelectItem>
@@ -599,12 +600,12 @@ const Step5CampusLife = ({ onboarding }: { onboarding: ReturnType<typeof useOnbo
       <div className="space-y-2">
         <Label className="text-white">Interests (Select up to 5)</Label>
         <div className="grid grid-cols-2 gap-2">
-          {UB_DATA.interests.map((interest) => (
+          {UB_DATA.interests.map((interest: any) => (
             <div key={interest} className="flex items-center space-x-2">
               <Checkbox
                 id={interest}
                 checked={onboarding.userData.interests.includes(interest)}
-                onCheckedChange={(checked) => {
+                onCheckedChange={(checked: any) => {
                   if (checked && onboarding.userData.interests.length < 5) {
                     onboarding.updateUserData('interests', [...onboarding.userData.interests, interest]);
                   } else if (!checked) {
@@ -650,7 +651,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
           </div>
           <Checkbox
             checked={onboarding.userData.privacy.profileVisible}
-            onCheckedChange={(checked) => 
+            onCheckedChange={(checked: any) => 
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 profileVisible: checked
@@ -669,7 +670,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
           </div>
           <Checkbox
             checked={onboarding.userData.privacy.allowMessages}
-            onCheckedChange={(checked) => 
+            onCheckedChange={(checked: any) => 
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 allowMessages: checked
@@ -688,7 +689,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
           </div>
           <Checkbox
             checked={onboarding.userData.privacy.showActivity}
-            onCheckedChange={(checked) => 
+            onCheckedChange={(checked: any) => 
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 showActivity: checked
@@ -747,7 +748,7 @@ const Step7Complete = ({ onboarding }: { onboarding: ReturnType<typeof useOnboar
               <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-500">
                 {UB_DATA.majors.find(m => m.value === onboarding.userData.major)?.label}
               </Badge>
-              <Badge variant="outline" className="border-gray-600 text-gray-300">
+              <Badge variant="secondary" className="border-gray-600 text-gray-300">
                 Class of {onboarding.userData.graduationYear}
               </Badge>
             </div>
@@ -837,7 +838,7 @@ const OnboardingWizard = ({ onboarding }: { onboarding: ReturnType<typeof useOnb
         {/* Navigation */}
         <div className="flex justify-between">
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={onboarding.prevStep}
             disabled={onboarding.currentStep === 1}
             className="border-gray-700 text-gray-300 hover:text-white"

@@ -71,7 +71,7 @@ const InteractiveEmailInput = ({ value: initialValue = '', ...props }: any) => {
 
 // Basic Examples
 export const Default: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'University Email',
     placeholder: 'username',
@@ -80,7 +80,7 @@ export const Default: Story = {
 };
 
 export const WithValue: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Student Email',
     placeholder: 'username',
@@ -90,7 +90,7 @@ export const WithValue: Story = {
 };
 
 export const WithError: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'University Email',
     placeholder: 'username',
@@ -102,7 +102,7 @@ export const WithError: Story = {
 
 // Size Variants
 export const SmallSize: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Email Address',
     placeholder: 'username',
@@ -112,7 +112,7 @@ export const SmallSize: Story = {
 };
 
 export const MediumSize: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Email Address',
     placeholder: 'username',
@@ -122,7 +122,7 @@ export const MediumSize: Story = {
 };
 
 export const LargeSize: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Email Address',
     placeholder: 'username',
@@ -133,7 +133,7 @@ export const LargeSize: Story = {
 
 // University Domains
 export const StanfordEmail: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Stanford Email',
     placeholder: 'first.last',
@@ -143,7 +143,7 @@ export const StanfordEmail: Story = {
 };
 
 export const MITEmail: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'MIT Email',
     placeholder: 'username',
@@ -153,7 +153,7 @@ export const MITEmail: Story = {
 };
 
 export const UCBerkeleyEmail: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'UC Berkeley Email',
     placeholder: 'firstname_lastname',
@@ -163,7 +163,7 @@ export const UCBerkeleyEmail: Story = {
 };
 
 export const HarvardEmail: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Harvard Email',
     placeholder: 'username',
@@ -174,7 +174,7 @@ export const HarvardEmail: Story = {
 
 // Campus Scenarios
 export const StudentRegistration: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Student Email Address',
     placeholder: 'firstname.lastname',
@@ -190,7 +190,7 @@ export const StudentRegistration: Story = {
 };
 
 export const FacultyEmail: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Faculty Email',
     placeholder: 'professor.name',
@@ -207,7 +207,7 @@ export const FacultyEmail: Story = {
 };
 
 export const AlumniEmail: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'Alumni Email',
     placeholder: 'firstname.lastname',
@@ -225,7 +225,7 @@ export const AlumniEmail: Story = {
 
 // Error States
 export const RequiredFieldError: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'University Email',
     placeholder: 'username',
@@ -235,7 +235,7 @@ export const RequiredFieldError: Story = {
 };
 
 export const InvalidUsernameError: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'University Email',
     placeholder: 'username',
@@ -246,7 +246,7 @@ export const InvalidUsernameError: Story = {
 };
 
 export const TooShortError: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'University Email',
     placeholder: 'username',
@@ -257,7 +257,7 @@ export const TooShortError: Story = {
 };
 
 export const AlreadyTakenError: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     label: 'University Email',
     placeholder: 'username',
@@ -269,7 +269,7 @@ export const AlreadyTakenError: Story = {
 
 // Without Labels
 export const NoLabel: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     placeholder: 'your-username',
     domain: 'university.edu',
@@ -277,7 +277,7 @@ export const NoLabel: Story = {
 };
 
 export const CustomPlaceholder: Story = {
-  render: (args) => <InteractiveEmailInput {...args} />,
+  render: (args: any) => <InteractiveEmailInput {...args} />,
   args: {
     placeholder: 'enter your student ID',
     domain: 'student.university.edu',

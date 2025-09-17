@@ -8,7 +8,7 @@
 
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NavigationItem } from '../core/types';
+import type { NavigationItem } from '../core/types';
 import { NAVIGATION_THEME, NAVIGATION_SIZING, NAVIGATION_MOTION, NAVIGATION_A11Y } from '../core/data';
 import { cn } from '../../lib/utils';
 import { useHapticFeedback, useTouchRipple } from '../../hooks/use-mobile-interactions';
@@ -149,7 +149,7 @@ const MobileNavItem = memo<MobileNavItemProps>(({ item, onNavigate, isActive }) 
       </span>
 
       {/* Touch ripple effects */}
-      {ripples.map((ripple) => (
+      {ripples.map((ripple: any) => (
         <div
           key={ripple.id}
           className="absolute inset-0 pointer-events-none"
@@ -279,12 +279,12 @@ export const mobileNavItemVariants = {
 export const useMobileNavigationAnalytics = () => {
   const trackNavigation = (from: string, to: string, section: string) => {
     // Analytics implementation
-    console.log('Mobile navigation:', { from, to, section, timestamp: Date.now() });
+    
   };
   
   const trackInteraction = (action: string, section: string) => {
     // Analytics implementation  
-    console.log('Mobile nav interaction:', { action, section, timestamp: Date.now() });
+    
   };
   
   return { trackNavigation, trackInteraction };

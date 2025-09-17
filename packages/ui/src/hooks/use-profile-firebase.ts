@@ -4,6 +4,8 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '../utils/logger';
+
 import { 
   profileFirebaseService, 
   type UserProfileDocument,
@@ -33,7 +35,7 @@ export function useUserProfile(uid: string) {
     // Set up real-time listener
     unsubscribeRef.current = profileFirebaseService.subscribeToProfile(
       uid,
-      (profileData) => {
+      (profileData: any) => {
         setProfile(profileData);
         setLoading(false);
       }
@@ -41,7 +43,7 @@ export function useUserProfile(uid: string) {
 
     // Initial fetch
     profileFirebaseService.getUserProfile(uid)
-      .then((profileData) => {
+      .then((profileData: any) => {
         setProfile(profileData);
         setLoading(false);
       })
@@ -109,7 +111,7 @@ export function useNotifications(uid: string) {
 
     setLoading(true);
     profileFirebaseService.getUserNotifications(uid)
-      .then((notificationData) => {
+      .then((notificationData: any) => {
         setNotifications(notificationData);
         setLoading(false);
       })
@@ -178,7 +180,7 @@ export function useUserSpaces(uid: string) {
 
     setLoading(true);
     profileFirebaseService.getUserSpaces(uid)
-      .then((spaceData) => {
+      .then((spaceData: any) => {
         setSpaces(spaceData);
         setLoading(false);
       })
@@ -276,7 +278,7 @@ export function useUserTools(uid: string) {
 
     setLoading(true);
     profileFirebaseService.getUserTools(uid)
-      .then((toolData) => {
+      .then((toolData: any) => {
         setTools(toolData);
         setLoading(false);
       })
@@ -296,13 +298,13 @@ export function useUserTools(uid: string) {
 
 // Custom hook for analytics tracking
 export function useProfileAnalytics(uid: string) {
-  const trackEvent = useCallback(async (event: string, data?: Record<string, any>) => {
+  const trackEvent = useCallback(async (event: string, data?: Record<string, unknown>) => {
     if (!uid) return;
 
     try {
       await profileFirebaseService.updateProfileAnalytics(uid, event, data);
     } catch (err) {
-      console.error('Analytics tracking failed:', err);
+      logger.error('Analytics tracking failed:', { error: err });
       // Don't throw error for analytics - it shouldn't break the app
     }
   }, [uid]);
@@ -387,13 +389,19 @@ export function useProfileLayout(uid: string) {
     try {
       await actions.updateProfile({
         preferences: {
+          theme: "auto" as const,
+          notifications: {
+            email: true,
+            push: true,
+            inApp: true
+          },
           ...profile?.preferences,
           profileLayout: JSON.stringify(layoutData)
         }
       });
       actions.trackLayoutChange(layoutData);
     } catch (err) {
-      console.error('Failed to save layout:', err);
+      logger.error('Failed to save layout:', { error: err });
       throw err;
     }
   }, [profile?.preferences, actions]);
@@ -404,7 +412,7 @@ export function useProfileLayout(uid: string) {
         ? JSON.parse(profile.preferences.profileLayout)
         : null;
     } catch (err) {
-      console.error('Failed to parse layout:', err);
+      logger.error('Failed to parse layout:', { error: err });
       return null;
     }
   }, [profile?.preferences?.profileLayout]);

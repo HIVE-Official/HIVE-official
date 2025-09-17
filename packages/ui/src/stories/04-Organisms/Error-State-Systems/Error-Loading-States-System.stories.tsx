@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 import { Progress } from '../../../components/ui/progress';
 import { Skeleton } from '../../../components/ui/skeleton';
-import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '../../../atomic/molecules/alert-toast-system';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
 import { 
   AlertTriangle, 
   RefreshCw, 
@@ -62,8 +62,9 @@ import {
  * - **Mobile Optimization**: Touch-friendly error recovery and loading indicators
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '12-Live Frontend/Error & Loading States System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -269,7 +270,7 @@ const ServerError = ({ onRetry }: { onRetry: () => void }) => (
     </div>
 
     <div className="space-y-3">
-      <Button onClick={onRetry} variant="outline" className="border-gray-700 text-gray-300">
+      <Button onClick={onRetry} variant="secondary" className="border-gray-700 text-gray-300">
         <RefreshCw className="mr-2 h-4 w-4" />
         Refresh
       </Button>
@@ -300,7 +301,7 @@ const NotFoundError = () => (
         Go Home
       </Button>
       
-      <Button variant="outline" className="border-gray-700 text-gray-300">
+      <Button variant="secondary" className="border-gray-700 text-gray-300">
         <ChevronRight className="mr-2 h-4 w-4" />
         Browse Spaces
       </Button>
@@ -342,7 +343,7 @@ const EmptyFeed = () => (
         Explore Spaces
       </Button>
       
-      <Button variant="outline" className="border-gray-700 text-gray-300">
+      <Button variant="secondary" className="border-gray-700 text-gray-300">
         <Plus className="mr-2 h-4 w-4" />
         Create Post
       </Button>
@@ -387,7 +388,7 @@ const EmptySpaces = () => (
         Find Spaces
       </Button>
       
-      <Button variant="outline" className="border-gray-700 text-gray-300">
+      <Button variant="secondary" className="border-gray-700 text-gray-300">
         <Plus className="mr-2 h-4 w-4" />
         Create Space
       </Button>
@@ -396,9 +397,9 @@ const EmptySpaces = () => (
     <div className="text-gray-500 text-sm space-y-1">
       <p>Popular UB spaces to join:</p>
       <div className="flex flex-wrap justify-center gap-2 mt-2">
-        <Badge variant="outline" className="border-gray-700 text-gray-300">CS Study Group</Badge>
-        <Badge variant="outline" className="border-gray-700 text-gray-300">Ellicott Complex</Badge>
-        <Badge variant="outline" className="border-gray-700 text-gray-300">UB Gaming</Badge>
+        <Badge variant="secondary" className="border-gray-700 text-gray-300">CS Study Group</Badge>
+        <Badge variant="secondary" className="border-gray-700 text-gray-300">Ellicott Complex</Badge>
+        <Badge variant="secondary" className="border-gray-700 text-gray-300">UB Gaming</Badge>
       </div>
     </div>
   </div>
@@ -418,7 +419,7 @@ const EmptySearch = ({ query }: { query: string }) => (
     </div>
 
     <div className="space-y-3">
-      <Button variant="outline" className="border-gray-700 text-gray-300">
+      <Button variant="secondary" className="border-gray-700 text-gray-300">
         <RefreshCw className="mr-2 h-4 w-4" />
         Clear Search
       </Button>
@@ -472,7 +473,7 @@ const OfflineState = () => (
         <p className="text-white font-medium text-sm">You're offline</p>
         <p className="text-gray-400 text-sm">Some features may not work until you reconnect</p>
       </div>
-      <Badge variant="outline" className="border-orange-700 text-orange-400">
+      <Badge variant="secondary" className="border-orange-700 text-orange-400">
         Offline
       </Badge>
     </div>
@@ -503,7 +504,7 @@ const ErrorLoadingDemo = () => {
             <div className="flex space-x-2">
               <Button 
                 size="sm" 
-                variant="outline"
+                variant="secondary"
                 className="border-gray-700 text-gray-300"
                 onClick={() => setCurrentState('online')}
               >
@@ -511,7 +512,7 @@ const ErrorLoadingDemo = () => {
               </Button>
               <Button 
                 size="sm" 
-                variant="outline"
+                variant="secondary"
                 className="border-gray-700 text-gray-300"
                 onClick={() => setCurrentState('offline')}
               >
@@ -773,7 +774,7 @@ const ErrorLoadingDemo = () => {
                           <p className="text-gray-400 text-xs">124 members</p>
                         </div>
                       </div>
-                      <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                      <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                         Join
                       </Button>
                     </div>
@@ -787,7 +788,7 @@ const ErrorLoadingDemo = () => {
                           <p className="text-gray-400 text-xs">89 members</p>
                         </div>
                       </div>
-                      <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                      <Button size="sm" variant="secondary" className="border-gray-700 text-gray-300">
                         Join
                       </Button>
                     </div>

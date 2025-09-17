@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Image, ProfileImage, ThumbnailImage, HeroImage } from './image';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import '../../hive-tokens.css';
@@ -117,7 +117,7 @@ export const Default: Story = {
     blur: false,
     priority: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -142,7 +142,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📐 ASPECT RATIOS</Badge>
+            <Badge variant="emerald">📐 ASPECT RATIOS</Badge>
             Image Aspect Ratios - Content Presentation
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -458,7 +458,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">⏳ LOADING</Badge>
+            <Badge variant="gold">⏳ LOADING</Badge>
             Loading States - Progressive Enhancement
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -798,7 +798,7 @@ export const CompleteShowcase: Story = {
                     specialties: "Software Engineering, HCI",
                     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face"
                   }
-                ].map((faculty) => (
+                ].map((faculty: any) => (
                   <div key={faculty.name} className="flex items-center gap-4 p-4 bg-[var(--hive-background-primary)] rounded-lg">
                     <ProfileImage
                       src={faculty.image}
@@ -840,7 +840,7 @@ export const Playground: Story = {
     blur: false,
     priority: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

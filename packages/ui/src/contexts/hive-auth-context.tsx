@@ -1,0 +1,114 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+export interface HiveUser {
+  id: string;
+  email: string;
+  name?: string;
+  handle?: string;
+  avatarUrl?: string;
+  role?: string;
+  schoolId?: string;
+  emailVerified?: boolean;
+  onboardingComplete?: boolean;
+  token?: string;
+}
+
+interface HiveAuthContextValue {
+  user: HiveUser | null;
+  loading: boolean;
+  error: Error | null;
+  signIn: (email: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  updateUser: (updates: Partial<HiveUser>) => Promise<void>;
+}
+
+const HiveAuthContext = createContext<HiveAuthContextValue | undefined>(undefined);
+
+export function HiveAuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<HiveUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    // Mock auth state check
+    const checkAuth = async () => {
+      try {
+        // In production, this would check Firebase Auth
+        const storedUser = localStorage.getItem('hive_user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (err) {
+        setError(err as Error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    checkAuth();
+  }, []);
+
+  const signIn = async (email: string) => {
+    setLoading(true);
+    try {
+      // Mock sign in - in production this would use Firebase Auth
+      const mockUser: HiveUser = {
+        id: Math.random().toString(36),
+        email,
+        emailVerified: false,
+        onboardingComplete: false,
+      };
+      setUser(mockUser);
+      localStorage.setItem('hive_user', JSON.stringify(mockUser));
+    } catch (err) {
+      setError(err as Error);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signOut = async () => {
+    setLoading(true);
+    try {
+      setUser(null);
+      localStorage.removeItem('hive_user');
+    } catch (err) {
+      setError(err as Error);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateUser = async (updates: Partial<HiveUser>) => {
+    if (!user) return;
+    
+    const updatedUser = { ...user, ...updates };
+    setUser(updatedUser);
+    localStorage.setItem('hive_user', JSON.stringify(updatedUser));
+  };
+
+  return (
+    <HiveAuthContext.Provider
+      value={{
+        user,
+        loading,
+        error,
+        signIn,
+        signOut,
+        updateUser,
+      }}
+    >
+      {children}
+    </HiveAuthContext.Provider>
+  );
+}
+
+export function useHiveAuth() {
+  const context = useContext(HiveAuthContext);
+  if (context === undefined) {
+    throw new Error('useHiveAuth must be used within a HiveAuthProvider');
+  }
+  return context;
+}

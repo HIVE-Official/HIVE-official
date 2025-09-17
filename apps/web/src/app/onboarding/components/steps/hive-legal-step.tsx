@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Shield, FileText, Eye, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard } from "@hive/ui";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import { Card } from "@hive/ui";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveLegalStepProps {
   data: HiveOnboardingData;
@@ -108,7 +108,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 + index * 0.1 }}
           >
-            <HiveCard
+            <Card
               variant={agreement.checked ? "selected" : "elevated"}
               className={cn(
                 "p-[var(--hive-spacing-4)] transition-all duration-300 cursor-pointer",
@@ -121,7 +121,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
             <div className="flex items-start space-x-4">
               {/* Checkbox */}
               <motion.button
-                onClick={(e) => { e.stopPropagation(); agreement.toggle(); }}
+                onClick={(e: any) => { e.stopPropagation(); agreement.toggle(); }}
                 className={cn(
                   "flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95",
                   agreement.checked
@@ -158,7 +158,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
                 
                 {/* View Link */}
                 <button
-                  onClick={(e) => { e.stopPropagation(); window.open(agreement.link, '_blank'); }}
+                  onClick={(e: any) => { e.stopPropagation(); window.open(agreement.link, '_blank'); }}
                   className="inline-flex items-center space-x-1 text-xs text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-secondary)] transition-colors"
                 >
                   <span>Read full document</span>
@@ -166,7 +166,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
                 </button>
               </div>
             </div>
-            </HiveCard>
+            </Card>
           </motion.div>
         ))}
       </motion.div>
@@ -177,7 +177,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
       >
-        <HiveCard variant="default" className="p-[var(--hive-spacing-4)]">
+        <Card variant="default" className="p-[var(--hive-spacing-4)]">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
             <Shield className="w-4 h-4 mr-2 text-[var(--hive-brand-primary)]" />
             Your Privacy Matters
@@ -197,7 +197,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
               </motion.div>
             ))}
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
 
       {/* Completion Status */}
@@ -206,7 +206,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.9 }}
       >
-        <HiveCard 
+        <Card 
           variant={data.acceptedTerms && data.acceptedPrivacy ? "online" : "elevated"}
           className="p-[var(--hive-spacing-4)]"
         >
@@ -250,7 +250,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
               transition={{ duration: 0.5, ease: "easeOut" }}
             />
           </motion.div>
-        </HiveCard>
+        </Card>
       </motion.div>
     </motion.div>
   );

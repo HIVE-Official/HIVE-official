@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser as _getCurrentUser } from '../../../../../lib/auth-server';
-import { logger } from "@/lib/logger";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { getCurrentUser as _getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { logger } from '@/lib/logger';
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 interface CalendarEvent {
   id: string;
@@ -9,7 +11,7 @@ interface CalendarEvent {
   description?: string;
   startDate: string;
   endDate: string;
-  type: 'personal' | 'space' | 'class' | 'study' | 'meeting';
+  type: 'personal' | 'space' | 'class' | 'study' | 'meeting' | 'social';
   location?: string;
   spaceId?: string;
   spaceName?: string;
@@ -17,12 +19,16 @@ interface CalendarEvent {
   isRecurring?: boolean;
   recurringPattern?: string;
   status: 'confirmed' | 'tentative' | 'cancelled';
-  createdBy: string;
+  createdBy?: string;
+  source?: 'manual' | 'google' | 'outlook' | 'space';
+  externalId?: string;
+  isVirtual?: boolean;
+  onlineMeetingUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
 
-// GET - Fetch user's calendar events
+// GET - Fetch user's calendar events from all sources
 export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
     const userId = authContext.userId;
@@ -30,86 +36,179 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
     const type = searchParams.get('type');
+    const source = searchParams.get('source'); // filter by source
 
-    // For development, return mock data
-    if (process.env.NODE_ENV !== 'production') {
-      const mockEvents: CalendarEvent[] = [
-        {
-          id: 'event-1',
-          title: 'CS 350 Lecture',
-          description: 'Data Structures and Algorithms',
-          startDate: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 3.5 * 60 * 60 * 1000).toISOString(),
-          type: 'class',
-          location: 'Engineering Hall 101',
-          status: 'confirmed',
-          createdBy: userId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: 'event-2',
-          title: 'Study Group',
-          description: 'CS 350 study session',
-          startDate: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
-          type: 'study',
-          location: 'Library Room 204',
-          status: 'confirmed',
-          createdBy: userId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: 'event-3',
-          title: 'HIVE Builder Meetup',
-          description: 'Weekly builder community meeting',
-          startDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 25.5 * 60 * 60 * 1000).toISOString(),
-          type: 'space',
-          location: 'Student Union 301',
-          spaceId: 'hive-builders',
-          spaceName: 'HIVE Builders',
-          status: 'confirmed',
-          createdBy: userId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ];
+    // Build date range
+    const start = startDate ? new Date(startDate) : new Date();
+    const end = endDate ? new Date(endDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days ahead
 
-      // Filter by date range if provided
-      let filteredEvents = mockEvents;
-      if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        filteredEvents = mockEvents.filter(event => {
-          const eventStart = new Date(event.startDate);
-          return eventStart >= start && eventStart <= end;
-        });
-      }
+    // Query manual events from userCalendarEvents collection
+    let manualEventsQuery = dbAdmin
+      .collection('userCalendarEvents')
+      .where('userId', '==', userId);
 
-      // Filter by type if provided
-      if (type) {
-        filteredEvents = filteredEvents.filter(event => event.type === type);
-      }
+    // Query synced events from calendarEvents collection
+    let syncedEventsQuery = dbAdmin
+      .collection('calendarEvents')
+      .where('userId', '==', userId);
 
-      return NextResponse.json({
-        success: true,
-        events: filteredEvents,
-        metadata: {
-          count: filteredEvents.length,
-          timeRange: { startDate, endDate },
-          type
-        }
+    // Add date filters if they're valid dates
+    if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+      // For manual events
+      manualEventsQuery = manualEventsQuery
+        .where('startDate', '>=', start.toISOString())
+        .where('startDate', '<=', end.toISOString());
+      
+      // For synced events
+      syncedEventsQuery = syncedEventsQuery
+        .where('startDate', '>=', start.toISOString())
+        .where('startDate', '<=', end.toISOString());
+    }
+
+    // Execute queries in parallel
+    const [manualSnapshot, syncedSnapshot] = await Promise.all([
+      manualEventsQuery.get(),
+      syncedEventsQuery.get()
+    ]);
+
+    // Process manual events
+    const manualEvents: CalendarEvent[] = manualSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        title: data.title || 'Untitled Event',
+        description: data.description || '',
+        startDate: data.startDate,
+        endDate: data.endDate,
+        type: data.type || 'personal',
+        location: data.location || '',
+        spaceId: data.spaceId,
+        spaceName: data.spaceName,
+        attendees: data.attendees || [],
+        isRecurring: data.isRecurring || false,
+        recurringPattern: data.recurringPattern,
+        status: data.status || 'confirmed',
+        source: 'manual',
+        createdBy: data.createdBy || userId,
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString()
+      };
+    });
+
+    // Process synced events (from Google/Outlook)
+    const syncedEvents: CalendarEvent[] = syncedSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        title: data.title || 'Untitled Event',
+        description: data.description || '',
+        startDate: data.startDate,
+        endDate: data.endDate,
+        type: data.type || 'personal',
+        location: data.location || '',
+        attendees: data.attendees || [],
+        status: data.status || 'confirmed',
+        source: data.source || 'google',
+        externalId: data.externalId,
+        isVirtual: data.isVirtual || false,
+        onlineMeetingUrl: data.onlineMeetingUrl,
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString()
+      };
+    });
+
+    // Query space events if user is a member
+    const memberSpacesSnapshot = await dbAdmin
+      .collection('spaceMembers')
+      .where('userId', '==', userId)
+      .get();
+
+    const spaceIds = memberSpacesSnapshot.docs.map(doc => doc.data().spaceId);
+    
+    let spaceEvents: CalendarEvent[] = [];
+    if (spaceIds.length > 0) {
+      // Query events from user's spaces
+      const spaceEventsQuery = dbAdmin
+        .collection('spaceEvents')
+        .where('spaceId', 'in', spaceIds)
+        .where('startDate', '>=', start.toISOString())
+        .where('startDate', '<=', end.toISOString());
+      
+      const spaceEventsSnapshot = await spaceEventsQuery.get();
+      
+      spaceEvents = spaceEventsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          title: data.title || 'Untitled Event',
+          description: data.description || '',
+          startDate: data.startDate,
+          endDate: data.endDate,
+          type: 'space' as const,
+          location: data.location || '',
+          spaceId: data.spaceId,
+          spaceName: data.spaceName,
+          attendees: data.attendees || [],
+          status: data.status || 'confirmed',
+          source: 'space' as const,
+          isVirtual: data.isVirtual || false,
+          onlineMeetingUrl: data.onlineMeetingUrl,
+          createdBy: data.createdBy,
+          createdAt: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString()
+        };
       });
     }
 
-    // Production implementation would query Firestore
-    // TODO: Implement Firestore queries for calendar events
+    // Combine all events
+    let allEvents = [...manualEvents, ...syncedEvents, ...spaceEvents];
+
+    // Filter by source if specified
+    if (source) {
+      allEvents = allEvents.filter(event => event.source === source);
+    }
+
+    // Filter by type if specified
+    if (type) {
+      allEvents = allEvents.filter(event => event.type === type);
+    }
+
+    // Sort by start date
+    allEvents.sort((a, b) => 
+      new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+    );
+
+    // Check integration status
+    const integrationsDoc = await dbAdmin
+      .collection('userIntegrations')
+      .doc(userId)
+      .get();
+    
+    const integrations = integrationsDoc.data();
+    const syncStatus = {
+      google: {
+        connected: !!(integrations?.calendar?.google?.accessToken),
+        lastSync: integrations?.external?.lastSync?.google?.toDate?.()?.toISOString()
+      },
+      outlook: {
+        connected: !!(integrations?.calendar?.outlook?.accessToken),
+        lastSync: integrations?.external?.lastSync?.outlook?.toDate?.()?.toISOString()
+      }
+    };
+
     return NextResponse.json({
       success: true,
-      events: [],
-      metadata: { count: 0 }
+      events: allEvents,
+      metadata: {
+        count: allEvents.length,
+        timeRange: { 
+          startDate: start.toISOString(), 
+          endDate: end.toISOString() 
+        },
+        type,
+        source,
+        syncStatus
+      }
     });
 
   } catch (error) {
@@ -156,37 +255,55 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       );
     }
 
-    // Create event object
-    const newEvent: CalendarEvent = {
-      id: `event-${Date.now()}`, // In production, use proper UUID
+    // Create event document for Firestore
+    const eventData = {
+      userId,
       title,
       description: body.description || '',
       startDate: start.toISOString(),
       endDate: end.toISOString(),
       type: body.type,
       location: body.location || '',
-      spaceId: body.spaceId,
-      spaceName: body.spaceName,
+      spaceId: body.spaceId || null,
+      spaceName: body.spaceName || null,
       attendees: body.attendees || [],
       isRecurring: body.isRecurring || false,
-      recurringPattern: body.recurringPattern,
+      recurringPattern: body.recurringPattern || null,
+      isVirtual: body.isVirtual || false,
+      onlineMeetingUrl: body.onlineMeetingUrl || null,
       status: 'confirmed',
+      source: 'manual',
       createdBy: userId,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp()
+    };
+
+    // Save to Firestore
+    const eventRef = await dbAdmin
+      .collection('userCalendarEvents')
+      .add(eventData);
+
+    // Return the created event
+    const newEvent: CalendarEvent = {
+      id: eventRef.id,
+      ...eventData,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
 
-    // For development, simulate creation
-    if (process.env.NODE_ENV !== 'production') {
-      return NextResponse.json({
-        success: true,
-        event: newEvent,
-        message: 'Event created successfully'
-      }, { status: 201 });
-    }
+    // Log activity
+    await dbAdmin.collection('activityEvents').add({
+      userId,
+      type: 'content_creation',
+      contentType: 'calendar_event',
+      contentId: eventRef.id,
+      metadata: {
+        eventTitle: title,
+        eventType: type
+      },
+      timestamp: FieldValue.serverTimestamp()
+    });
 
-    // Production implementation would save to Firestore
-    // TODO: Implement Firestore save for calendar events
     return NextResponse.json({
       success: true,
       event: newEvent,
@@ -246,26 +363,53 @@ export const PUT = withAuth(async (request: NextRequest, authContext) => {
       }
     }
 
-    // For development, simulate update
-    if (process.env.NODE_ENV !== 'production') {
-      const updatedEvent = {
-        id,
-        ...updates,
-        updatedAt: new Date().toISOString(),
-        updatedBy: userId
-      };
+    // Get the event to verify ownership
+    const eventRef = dbAdmin.collection('userCalendarEvents').doc(id);
+    const eventDoc = await eventRef.get();
 
-      return NextResponse.json({
-        success: true,
-        event: updatedEvent,
-        message: 'Event updated successfully'
-      });
+    if (!eventDoc.exists) {
+      return NextResponse.json(
+        { success: false, error: 'Event not found' },
+        { status: 404 }
+      );
     }
 
-    // Production implementation would update in Firestore
-    // TODO: Implement Firestore update for calendar events
+    const eventData = eventDoc.data();
+    if (eventData?.userId !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Not authorized to update this event' },
+        { status: 403 }
+      );
+    }
+
+    // Prepare update data
+    const updateData = {
+      ...updates,
+      updatedAt: FieldValue.serverTimestamp(),
+      updatedBy: userId
+    };
+
+    // Remove undefined/null values
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] === undefined || updateData[key] === null) {
+        delete updateData[key];
+      }
+    });
+
+    // Update in Firestore
+    await eventRef.update(updateData);
+
+    // Get updated document
+    const updatedDoc = await eventRef.get();
+    const updatedEvent = {
+      id: updatedDoc.id,
+      ...updatedDoc.data(),
+      updatedAt: new Date().toISOString()
+    };
+
     return NextResponse.json({
       success: true,
+      event: updatedEvent,
       message: 'Event updated successfully'
     });
 
@@ -295,20 +439,44 @@ export const DELETE = withAuth(async (request: NextRequest, authContext) => {
       );
     }
 
-    // For development, simulate deletion
-    if (process.env.NODE_ENV !== 'production') {
-      return NextResponse.json({
-        success: true,
-        message: 'Event deleted successfully',
-        eventId
-      });
+    // Get the event to verify ownership
+    const eventRef = dbAdmin.collection('userCalendarEvents').doc(eventId);
+    const eventDoc = await eventRef.get();
+
+    if (!eventDoc.exists) {
+      return NextResponse.json(
+        { success: false, error: 'Event not found' },
+        { status: 404 }
+      );
     }
 
-    // Production implementation would delete from Firestore
-    // TODO: Implement Firestore deletion for calendar events
+    const eventData = eventDoc.data();
+    if (eventData?.userId !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Not authorized to delete this event' },
+        { status: 403 }
+      );
+    }
+
+    // Delete from Firestore
+    await eventRef.delete();
+
+    // Log activity
+    await dbAdmin.collection('activityEvents').add({
+      userId,
+      type: 'content_deletion',
+      contentType: 'calendar_event',
+      contentId: eventId,
+      metadata: {
+        eventTitle: eventData.title
+      },
+      timestamp: FieldValue.serverTimestamp()
+    });
+
     return NextResponse.json({
       success: true,
-      message: 'Event deleted successfully'
+      message: 'Event deleted successfully',
+      eventId
     });
 
   } catch (error) {

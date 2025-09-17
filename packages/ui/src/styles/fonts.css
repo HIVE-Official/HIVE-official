@@ -1,0 +1,66 @@
+/* HIVE Design System - Font Configuration */
+/* Space Grotesk Variable for headlines, hero, and call-to-action */
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  src: url('/fonts/space-grotesk/space-grotesk-latin-300-normal.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  src: url('/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  src: url('/fonts/space-grotesk/space-grotesk-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  src: url('/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  src: url('/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Geist Sans Variable Font for body text, menus, and micro-copy */
+@font-face {
+  font-family: 'Geist Sans';
+  src: url('/fonts/geist/GeistSans-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Geist Mono Variable Font for code snippets, empty-state slugs, and countdown numerals */
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geist/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* CSS Custom Properties for font families */
+:root {
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+  --font-sans: 'Geist Sans', 'Geist', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+} 

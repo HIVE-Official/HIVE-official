@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Progress, CircularProgress, LoadingProgress, SuccessProgress, ErrorProgress, CircularSpinner } from './progress';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import '../../hive-tokens.css';
 
@@ -104,7 +104,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ COLORS</Badge>
+            <Badge variant="emerald">✅ COLORS</Badge>
             Progress Colors - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -163,7 +163,7 @@ export const CompleteShowcase: Story = {
             <Progress 
               value={70} 
               label="Default - Clean Progress Bar" 
-              variant="default" 
+              variant="primary" 
               color="primary" 
               showValue 
             />
@@ -704,7 +704,7 @@ export const Playground: Story = {
     animated: false,
     indeterminate: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

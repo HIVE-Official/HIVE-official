@@ -7,8 +7,8 @@ export async function register() {
   // Only initialize in Node.js environment (server-side)
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     // Initialize error monitoring
-    const { initializeErrorMonitoring } = await import('./src/lib/error-monitoring');
-    await initializeErrorMonitoring();
+    const { errorMonitoring } = await import('./src/lib/error-monitoring');
+    errorMonitoring.initialize();
   }
 }
 
@@ -17,18 +17,15 @@ export async function onRequestError(error: Error, request: Request) {
   const { captureError } = await import('./src/lib/error-monitoring');
   
   await captureError(error, {
-    level: 'error' as any,
-    path: new URL(request.url).pathname,
-    method: request.method,
     userAgent: request.headers.get('user-agent') || undefined,
-    ip: request.headers.get('x-forwarded-for') || 
+    ip: request.headers.get('x-forwarded-for') ||
         request.headers.get('x-real-ip') || undefined,
-    tags: {
+    url: request.url,
+    method: request.method,
+    metadata: {
       runtime: 'edge',
-      source: 'request_error'
-    },
-    extra: {
-      url: request.url,
+      source: 'request_error',
+      path: new URL(request.url).pathname,
       headers: Object.fromEntries(request.headers.entries())
     }
   });

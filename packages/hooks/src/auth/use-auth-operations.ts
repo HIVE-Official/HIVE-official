@@ -1,0 +1,201 @@
+import { signOut, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, type Auth } from 'firebase/auth';
+import { logger } from '../logger';
+
+import { doc, setDoc, updateDoc, type Firestore } from 'firebase/firestore';
+import { useAuthStore } from '../stores/auth-store';
+import { useUIStore } from '../stores/ui-store';
+
+interface AuthOperations {
+  login: (email: string) => Promise<void>;
+  verifyMagicLink: (email: string, link?: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  updateProfile: (updates: Record<string, unknown>) => Promise<void>;
+  completeOnboarding: (profileData: Record<string, unknown>) => Promise<void>;
+}
+
+/**
+ * Hook that provides auth operations connected to the store
+ */
+export function useAuthOperations(auth: Auth, db: Firestore): AuthOperations {
+  const { setLoading, setError } = useAuthStore();
+  const { addToast } = useUIStore();
+
+  const login = async (email: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const actionCodeSettings = {
+        url: `${window.location.origin}/auth/verify?email=${encodeURIComponent(email)}`,
+        handleCodeInApp: true,
+      };
+
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      
+      // Store email for later verification
+      window.localStorage.setItem('emailForSignIn', email);
+      
+      addToast({
+        title: 'Check your email!',
+        description: `We've sent a magic link to ${email}`,
+        type: 'success',
+      });
+    } catch (error: unknown) {
+      logger.error('Login error', { error });
+      const errorMessage = error instanceof Error ? error.message : 'Login failed';
+      setError(errorMessage);
+      addToast({
+        title: 'Login failed',
+        description: errorMessage,
+        type: 'error',
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyMagicLink = async (email: string, link?: string): Promise<boolean> => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const emailLink = link || window.location.href;
+      
+      if (!isSignInWithEmailLink(auth, emailLink)) {
+        throw new Error('Invalid magic link');
+      }
+
+      await signInWithEmailLink(auth, email, emailLink);
+      
+      // Clear stored email
+      window.localStorage.removeItem('emailForSignIn');
+      
+      // User is now signed in via Firebase Auth state listener
+      
+      addToast({
+        title: 'Welcome back!',
+        description: 'You have been successfully signed in.',
+        type: 'success',
+      });
+
+      return true;
+    } catch (error: unknown) {
+      logger.error('Verification error', { error });
+      const errorMessage = error instanceof Error ? error.message : 'Verification failed';
+      setError(errorMessage);
+      addToast({
+        title: 'Verification failed',
+        description: errorMessage,
+        type: 'error',
+      });
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      setLoading(true);
+      await signOut(auth);
+      
+      // Store will be updated by auth state listener
+      addToast({
+        title: 'Signed out',
+        description: 'You have been successfully signed out.',
+        type: 'info',
+      });
+    } catch (error: unknown) {
+      logger.error('Logout error', { error });
+      const errorMessage = error instanceof Error ? error.message : 'Logout failed';
+      setError(errorMessage);
+      addToast({
+        title: 'Logout failed',
+        description: errorMessage,
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateProfile = async (updates: Record<string, unknown>) => {
+    try {
+      const user = useAuthStore.getState().user;
+      if (!user) throw new Error('No user logged in');
+
+      setLoading(true);
+      
+      // Update Firestore
+      await updateDoc(doc(db, 'users', user.uid), {
+        ...updates,
+        updatedAt: new Date(),
+      });
+      
+      // Local store will be updated by real-time listener
+      addToast({
+        title: 'Profile updated',
+        description: 'Your changes have been saved.',
+        type: 'success',
+      });
+    } catch (error: unknown) {
+      logger.error('Profile update error', { error });
+      const errorMessage = error instanceof Error ? error.message : 'Update failed';
+      setError(errorMessage);
+      addToast({
+        title: 'Update failed',
+        description: errorMessage,
+        type: 'error',
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const completeOnboarding = async (profileData: Record<string, unknown>) => {
+    try {
+      const user = useAuthStore.getState().user;
+      if (!user) throw new Error('No user logged in');
+
+      setLoading(true);
+      
+      // Create or update user profile
+      await setDoc(doc(db, 'users', user.uid), {
+        ...profileData,
+        id: user.uid,
+        email: user.email,
+        onboardingCompleted: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }, { merge: true });
+      
+      addToast({
+        title: 'Welcome to HIVE!',
+        description: 'Your profile has been created.',
+        type: 'success',
+      });
+    } catch (error: unknown) {
+      logger.error('Onboarding error', { error });
+      const errorMessage = error instanceof Error ? error.message : 'Onboarding failed';
+      setError(errorMessage);
+      addToast({
+        title: 'Onboarding failed',
+        description: errorMessage,
+        type: 'error',
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    login,
+    verifyMagicLink,
+    logout,
+    updateProfile,
+    completeOnboarding,
+  };
+}

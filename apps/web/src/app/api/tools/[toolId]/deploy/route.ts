@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { validateAuth } from "../../../../../lib/auth-server";
-import { ApiResponseHelper, HttpStatus /* , ErrorCodes */ } from "@/lib/api-response-types";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
+import { validateAuth } from "@/lib/auth/providers/auth-server";
+import { ApiResponseHelper, HttpStatus /* , ErrorCodes */ } from "@/lib/api/response-types/api-response-types";
 
 export async function POST(
   request: NextRequest,

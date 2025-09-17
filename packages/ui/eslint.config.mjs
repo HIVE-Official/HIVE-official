@@ -52,7 +52,10 @@ export default [
       "import/no-anonymous-default-export": "warn",
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        { argsIgnorePattern: "^_" },
+        { 
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_"
+        },
       ],
       "@typescript-eslint/consistent-type-imports": [
         "error",
@@ -102,6 +105,28 @@ export default [
       "@typescript-eslint/consistent-type-imports": "off",
       "import/no-anonymous-default-export": "off",
       "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
+
+  // Node.js CJS files and scripts - allow require() and Node globals
+  {
+    files: ["**/*.cjs", "scripts/**/*.js"],
+    languageOptions: {
+      globals: {
+        require: "readonly",
+        module: "readonly",
+        exports: "readonly",
+        process: "readonly",
+        console: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        Buffer: "readonly",
+        global: "readonly",
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "no-undef": "off",
     },
   },
 

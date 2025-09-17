@@ -1,0 +1,451 @@
+/**
+ * HIVE Border/Radius Composition System - PRODUCTION READY
+ * Edge treatment patterns for campus social platform consistency
+ * 
+ * Built for dark mode with subtle borders and systematic radius patterns
+ * Creates visual hierarchy and component definition through edge treatment
+ * 
+ * Status: ✅ PRODUCTION READY
+ * Version: v1.0.0
+ * Date: August 26, 2025
+ */
+
+// === BORDER PHILOSOPHY ===
+export const borderPrinciples = {
+  philosophy: "Edges define boundaries and create visual hierarchy without visual noise",
+  rules: [
+    "Dark mode optimized: Subtle borders that work on dark backgrounds",
+    "Campus clarity: Clear component boundaries for social interface",
+    "Systematic radii: Mathematical progression for consistent feel",
+    "Touch friendly: Radii that work well for mobile touch interfaces"
+  ]
+} as const;
+
+// === BORDER WIDTH SCALE ===
+export const borderWidths = {
+  // Systematic border width progression
+  none: {
+    width: 0,
+    className: 'border-0',
+    use: 'No border, clean edges',
+    examples: 'Ghost buttons, seamless cards'
+  },
+  
+  hairline: {
+    width: 0.5,
+    className: 'border-[0.5px]',
+    use: 'Ultra-subtle divisions, delicate separations',
+    examples: 'List dividers, subtle card edges'
+  },
+  
+  thin: {
+    width: 1,
+    className: 'border',
+    use: 'Standard component borders, form inputs',
+    examples: 'Cards, buttons, input fields'
+  },
+  
+  medium: {
+    width: 2,
+    className: 'border-2',
+    use: 'Emphasized borders, focus states',
+    examples: 'Focus rings, important selections'
+  },
+  
+  thick: {
+    width: 3,
+    className: 'border-3',
+    use: 'Strong emphasis, error states',
+    examples: 'Error indicators, strong selections'
+  },
+  
+  heavy: {
+    width: 4,
+    className: 'border-4',
+    use: 'Maximum emphasis, very important states',
+    examples: 'Critical alerts, primary selections'
+  }
+} as const;
+
+// === BORDER RADIUS SCALE ===
+export const borderRadius = {
+  // Systematic radius progression (aligned with design tokens)
+  none: {
+    radius: 0,
+    className: 'rounded-none',
+    use: 'Sharp edges, technical interfaces',
+    examples: 'Code blocks, data tables'
+  },
+  
+  sm: {
+    radius: 6,
+    className: 'rounded-sm',
+    use: 'Small elements, badges, pills',
+    examples: 'Status badges, small buttons, tags'
+  },
+  
+  base: {
+    radius: 8,
+    className: 'rounded',
+    use: 'Standard interface elements',
+    examples: 'Buttons, cards, input fields'
+  },
+  
+  md: {
+    radius: 10,
+    className: 'rounded-md',
+    use: 'Medium components, enhanced feel',
+    examples: 'Medium cards, enhanced buttons'
+  },
+  
+  lg: {
+    radius: 12,
+    className: 'rounded-lg',
+    use: 'Large components, modals',
+    examples: 'Modal dialogs, large cards, panels'
+  },
+  
+  xl: {
+    radius: 16,
+    className: 'rounded-xl',
+    use: 'Hero components, special surfaces',
+    examples: 'Hero sections, feature cards, overlays'
+  },
+  
+  full: {
+    radius: 9999,
+    className: 'rounded-full',
+    use: 'Circular elements, avatars',
+    examples: 'Avatars, icon buttons, floating action buttons'
+  }
+} as const;
+
+// === BORDER COLOR PATTERNS ===
+export const borderColors = {
+  // Semantic border colors (using existing design tokens)
+  semantic: {
+    primary: 'border-[var(--hive-border-primary)]',     // Main borders
+    secondary: 'border-[var(--hive-border-secondary)]', // Secondary borders
+    subtle: 'border-[var(--hive-border-subtle)]',       // Very subtle borders
+    glass: 'border-[var(--hive-border-glass)]',         // Glass effect borders
+    strong: 'border-[var(--hive-border-glass-strong)]'  // Stronger glass borders
+  },
+  
+  // Brand and accent colors
+  brand: {
+    gold: 'border-[var(--hive-gold-border)]',           // Gold accent borders
+    goldStrong: 'border-[var(--hive-gold-border-strong)]' // Strong gold borders
+  },
+  
+  // Status colors
+  status: {
+    success: 'border-[var(--hive-success-border)]',     // Success state
+    warning: 'border-[var(--hive-warning-border)]',     // Warning state
+    error: 'border-[var(--hive-error-border)]',         // Error state
+    info: 'border-[var(--hive-info-border)]'            // Info state
+  },
+  
+  // Interactive states
+  interactive: {
+    default: 'border-[var(--hive-border-primary)]',
+    hover: 'hover:border-[var(--hive-border-glass)]',
+    focus: 'focus:border-[var(--hive-gold-border)]',
+    active: 'border-[var(--hive-gold-border-strong)]',
+    disabled: 'border-[var(--hive-border-subtle)] opacity-50'
+  }
+} as const;
+
+// === CAMPUS BORDER PATTERNS ===
+export const campusBorderPatterns = {
+  // Social content borders
+  social: {
+    post: {
+      border: `${borderWidths.thin.className} ${borderColors.semantic.primary}`,
+      radius: borderRadius.base.className,
+      interactive: borderColors.interactive.hover,
+      use: 'Social posts, user content'
+    },
+    
+    comment: {
+      border: `${borderWidths.hairline.className} ${borderColors.semantic.subtle}`,
+      radius: borderRadius.sm.className,
+      interactive: borderColors.interactive.hover,
+      use: 'Comments, replies, nested content'
+    },
+    
+    profile: {
+      border: `${borderWidths.medium.className} ${borderColors.brand.gold}`,
+      radius: borderRadius.full.className,
+      interactive: 'hover:border-[var(--hive-gold-primary)]',
+      use: 'Profile avatars, user indicators'
+    }
+  },
+  
+  // Academic content borders
+  academic: {
+    studyCard: {
+      border: `${borderWidths.thin.className} ${borderColors.semantic.primary}`,
+      radius: borderRadius.lg.className,
+      interactive: `${borderColors.interactive.hover} transition-colors duration-200`,
+      use: 'Study groups, academic content'
+    },
+    
+    schedule: {
+      border: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+      radius: borderRadius.base.className,
+      interactive: borderColors.interactive.focus,
+      use: 'Calendar items, schedule blocks'
+    },
+    
+    resource: {
+      border: `${borderWidths.medium.className} ${borderColors.status.info}`,
+      radius: borderRadius.md.className,
+      interactive: 'hover:border-[var(--hive-info-primary)]',
+      use: 'Academic resources, important content'
+    }
+  },
+  
+  // Community/Space borders
+  community: {
+    spaceCard: {
+      border: `${borderWidths.thin.className} ${borderColors.semantic.primary}`,
+      radius: borderRadius.lg.className,
+      interactive: `${borderColors.interactive.hover} transition-colors duration-200`,
+      use: 'Space cards, community previews'
+    },
+    
+    member: {
+      border: `${borderWidths.hairline.className} ${borderColors.semantic.subtle}`,
+      radius: borderRadius.base.className,
+      interactive: borderColors.interactive.hover,
+      use: 'Member cards, user lists'
+    },
+    
+    featured: {
+      border: `${borderWidths.medium.className} ${borderColors.brand.gold}`,
+      radius: borderRadius.xl.className,
+      interactive: 'hover:border-[var(--hive-gold-primary)]',
+      use: 'Featured spaces, highlighted communities'
+    }
+  },
+  
+  // Tool/Builder borders
+  tools: {
+    toolCard: {
+      border: `${borderWidths.thin.className} ${borderColors.semantic.primary}`,
+      radius: borderRadius.md.className,
+      interactive: `${borderColors.interactive.hover} transition-colors duration-200`,
+      use: 'Tool cards, marketplace items'
+    },
+    
+    builder: {
+      border: `${borderWidths.medium.className} ${borderColors.status.success}`,
+      radius: borderRadius.lg.className,
+      interactive: 'hover:border-[var(--hive-success-primary)]',
+      use: 'Tool builder panels, creation interfaces'
+    },
+    
+    preview: {
+      border: `${borderWidths.thick.className} ${borderColors.brand.goldStrong}`,
+      radius: borderRadius.xl.className,
+      interactive: 'hover:border-[var(--hive-gold-primary)]',
+      use: 'Tool previews, showcase items'
+    }
+  }
+} as const;
+
+// === COMPONENT BORDER PATTERNS ===
+export const componentBorderPatterns = {
+  // Button borders
+  buttons: {
+    primary: {
+      default: `${borderWidths.thin.className} ${borderColors.brand.gold}`,
+      radius: borderRadius.base.className,
+      hover: 'hover:border-[var(--hive-gold-primary)]',
+      focus: 'focus:border-[var(--hive-gold-primary)] focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20',
+      active: 'active:border-[var(--hive-gold-border-strong)]'
+    },
+    
+    secondary: {
+      default: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+      radius: borderRadius.base.className,
+      hover: 'hover:border-[var(--hive-border-glass-strong)]',
+      focus: 'focus:border-[var(--hive-gold-border)] focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20',
+      active: 'active:border-[var(--hive-border-primary)]'
+    },
+    
+    ghost: {
+      default: borderWidths.none.className,
+      radius: borderRadius.base.className,
+      hover: `hover:${borderWidths.thin.className} hover:${borderColors.semantic.subtle}`,
+      focus: `focus:${borderWidths.thin.className} focus:${borderColors.brand.gold}`,
+      active: `${borderWidths.thin.className} ${borderColors.semantic.glass}`
+    }
+  },
+  
+  // Input borders
+  inputs: {
+    text: {
+      default: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+      radius: borderRadius.base.className,
+      focus: 'focus:border-[var(--hive-gold-border)] focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20',
+      error: `${borderWidths.medium.className} ${borderColors.status.error}`,
+      success: `${borderWidths.medium.className} ${borderColors.status.success}`
+    },
+    
+    select: {
+      default: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+      radius: borderRadius.base.className,
+      open: 'border-[var(--hive-gold-border)] ring-2 ring-[var(--hive-gold-primary)]/20',
+      disabled: borderColors.interactive.disabled
+    },
+    
+    checkbox: {
+      default: `${borderWidths.medium.className} ${borderColors.semantic.glass}`,
+      radius: borderRadius.sm.className,
+      checked: `${borderWidths.medium.className} ${borderColors.brand.gold}`,
+      focus: 'focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20'
+    }
+  },
+  
+  // Card borders
+  cards: {
+    standard: {
+      border: `${borderWidths.thin.className} ${borderColors.semantic.primary}`,
+      radius: borderRadius.base.className,
+      interactive: 'hover:border-[var(--hive-border-glass)] transition-colors duration-200'
+    },
+    
+    elevated: {
+      border: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+      radius: borderRadius.lg.className,
+      interactive: 'hover:border-[var(--hive-border-glass-strong)] transition-colors duration-200'
+    },
+    
+    featured: {
+      border: `${borderWidths.medium.className} ${borderColors.brand.gold}`,
+      radius: borderRadius.xl.className,
+      interactive: 'hover:border-[var(--hive-gold-primary)] transition-colors duration-200'
+    }
+  },
+  
+  // Navigation borders
+  navigation: {
+    tab: {
+      default: `border-b-2 border-transparent`,
+      radius: 'rounded-t-md',
+      active: 'border-b-[var(--hive-gold-primary)]',
+      hover: 'hover:border-b-[var(--hive-border-glass)]'
+    },
+    
+    link: {
+      default: borderWidths.none.className,
+      radius: borderRadius.sm.className,
+      focus: `${borderWidths.thin.className} ${borderColors.brand.gold} focus:ring-2 focus:ring-[var(--hive-gold-primary)]/20`
+    }
+  }
+} as const;
+
+// === OVERLAY AND MODAL BORDERS ===
+export const overlayBorderPatterns = {
+  // Modal borders
+  modal: {
+    backdrop: borderWidths.none.className,
+    content: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+    radius: borderRadius.xl.className
+  },
+  
+  // Dropdown borders  
+  dropdown: {
+    menu: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+    radius: borderRadius.md.className,
+    item: borderWidths.none.className,
+    itemRadius: borderRadius.sm.className
+  },
+  
+  // Tooltip borders
+  tooltip: {
+    content: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+    radius: borderRadius.base.className
+  },
+  
+  // Popover borders
+  popover: {
+    content: `${borderWidths.thin.className} ${borderColors.semantic.glass}`,
+    radius: borderRadius.lg.className
+  }
+} as const;
+
+// === BORDER UTILITY FUNCTIONS ===
+export const createBorderClass = (
+  width: keyof typeof borderWidths,
+  color: string,
+  radius: keyof typeof borderRadius
+) => {
+  return `${borderWidths[width].className} ${color} ${borderRadius[radius].className}`;
+};
+
+export const createCampusBorderClass = (
+  category: keyof typeof campusBorderPatterns,
+  variant: string
+) => {
+  const categoryBorders = campusBorderPatterns[category] as Record<string, { border: string; radius: string; interactive: string; use: string }>;
+  const variantBorder = categoryBorders[variant];
+  if (!variantBorder) return '';
+  
+  return `${variantBorder.border} ${variantBorder.radius} ${variantBorder.interactive}`;
+};
+
+export const createComponentBorderClass = (
+  component: keyof typeof componentBorderPatterns,
+  variant: string,
+  state: string = 'default'
+) => {
+  const componentBorders = componentBorderPatterns[component] as Record<string, Record<string, string>>;
+  const variantBorders = componentBorders[variant];
+  if (!variantBorders) return '';
+  
+  const stateBorder = variantBorders[state] || variantBorders.default;
+  return `${variantBorders.default} ${variantBorders.radius} ${stateBorder}`;
+};
+
+// === PERFORMANCE BORDER PATTERNS ===
+export const performanceBorderPatterns = {
+  // Optimized border patterns
+  optimization: {
+    // Use outline instead of border for focus states to avoid layout shift
+    focusOutline: 'Use outline instead of border for focus states',
+    
+    // Batch border transitions with other properties
+    transitions: 'Group border changes with color/shadow transitions',
+    
+    // Avoid complex border animations on scroll
+    scrollOptimization: 'Simplify borders during scroll events'
+  },
+  
+  // Mobile border considerations
+  mobile: {
+    touchTargets: 'Ensure borders don\'t reduce touch target size',
+    performance: 'Use simpler borders on mobile for performance',
+    visibility: 'Ensure borders are visible on various screen qualities'
+  }
+} as const;
+
+// === COMPREHENSIVE EXPORT ===
+export const borderComposition = {
+  principles: borderPrinciples,
+  widths: borderWidths,
+  radius: borderRadius,
+  colors: borderColors,
+  campus: campusBorderPatterns,
+  components: componentBorderPatterns,
+  overlays: overlayBorderPatterns,
+  performance: performanceBorderPatterns
+} as const;
+
+// === TYPE EXPORTS ===
+export type BorderComposition = typeof borderComposition;
+export type BorderWidths = typeof borderWidths;
+export type BorderRadius = typeof borderRadius;
+export type BorderColors = typeof borderColors;
+export type CampusBorderPatterns = typeof campusBorderPatterns;

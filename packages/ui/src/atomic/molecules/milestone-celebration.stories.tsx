@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { MilestoneCelebration } from './milestone-celebration';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -93,7 +93,7 @@ export const Default: Story = {
     onClose: action('celebration-closed'),
     onShare: action('achievement-shared'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="relative h-screen bg-[var(--hive-background-primary)]">
       <Text variant="body-md" color="primary" className="p-6">
         HIVE milestone celebration for University at Buffalo student achievement recognition:
@@ -112,7 +112,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🏆 ACHIEVEMENT RARITIES</Badge>
+            <Badge variant="emerald">🏆 ACHIEVEMENT RARITIES</Badge>
             Progressive Milestone Recognition
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -186,7 +186,7 @@ export const CompleteShowcase: Story = {
                     <Text variant="body-sm" color="gold" weight="medium">Epic Achievements:</Text>
                     <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-purple-400 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-[var(--hive-gold)] flex items-center justify-center">
                           <Text variant="body-xs" color="white">E</Text>
                         </div>
                         <div>
@@ -204,7 +204,7 @@ export const CompleteShowcase: Story = {
 
                 <div className="space-y-4">
                   <Text variant="body-sm" color="gold" weight="medium">Legendary Achievements:</Text>
-                  <div className="p-4 bg-gradient-to-r from-[var(--hive-gold)]/10 to-yellow-500/10 rounded-lg border border-[var(--hive-gold)]/20 space-y-3">
+                  <div className="p-4 bg-gradient-to-r from-[var(--hive-gold)]/10 to-[var(--hive-gold)]/10 rounded-lg border border-[var(--hive-gold)]/20 space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-[var(--hive-gold)] flex items-center justify-center">
                         <Text variant="body-xs" color="black">L</Text>
@@ -255,9 +255,9 @@ export const CompleteShowcase: Story = {
                         Individual academic milestones: GPA achievements, course completion, skill mastery, research participation
                       </Text>
                       <div className="flex flex-wrap gap-1">
-                        <Badge variant="outline" className="text-xs">First Dean's List</Badge>
-                        <Badge variant="outline" className="text-xs">Research Assistant</Badge>
-                        <Badge variant="outline" className="text-xs">Coding Streak</Badge>
+                        <Badge variant="secondary" className="text-xs">First Dean's List</Badge>
+                        <Badge variant="secondary" className="text-xs">Research Assistant</Badge>
+                        <Badge variant="secondary" className="text-xs">Coding Streak</Badge>
                       </div>
                     </div>
                   </div>
@@ -270,9 +270,9 @@ export const CompleteShowcase: Story = {
                         Community building milestones: space creation, member coordination, peer mentoring, collaboration
                       </Text>
                       <div className="flex flex-wrap gap-1">
-                        <Badge variant="outline" className="text-xs">Space Leader</Badge>
-                        <Badge variant="outline" className="text-xs">Mentor</Badge>
-                        <Badge variant="outline" className="text-xs">Connector</Badge>
+                        <Badge variant="secondary" className="text-xs">Space Leader</Badge>
+                        <Badge variant="secondary" className="text-xs">Mentor</Badge>
+                        <Badge variant="secondary" className="text-xs">Connector</Badge>
                       </div>
                     </div>
                   </div>
@@ -285,9 +285,9 @@ export const CompleteShowcase: Story = {
                         Habit formation milestones: study streaks, event attendance, platform engagement, goal completion
                       </Text>
                       <div className="flex flex-wrap gap-1">
-                        <Badge variant="outline" className="text-xs">30-Day Streak</Badge>
-                        <Badge variant="outline" className="text-xs">Event Regular</Badge>
-                        <Badge variant="outline" className="text-xs">Goal Crusher</Badge>
+                        <Badge variant="secondary" className="text-xs">30-Day Streak</Badge>
+                        <Badge variant="secondary" className="text-xs">Event Regular</Badge>
+                        <Badge variant="secondary" className="text-xs">Goal Crusher</Badge>
                       </div>
                     </div>
                   </div>
@@ -330,7 +330,7 @@ export const CompleteShowcase: Story = {
                     <Text variant="body-sm" color="gold" weight="medium">Semester Excellence:</Text>
                     <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-purple-500 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
                           <Text variant="body-xs" color="white">🏆</Text>
                         </div>
                         <div>
@@ -407,7 +407,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Peer Mentoring:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-yellow-500 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
                         <Text variant="body-xs" color="black">⭐</Text>
                       </div>
                       <div>
@@ -425,7 +425,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Tool Innovation:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-purple-500 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)] flex items-center justify-center">
                         <Text variant="body-xs" color="white">🛠️</Text>
                       </div>
                       <div>
@@ -455,7 +455,7 @@ export const CompleteShowcase: Story = {
                   <Text variant="body-sm" color="gold" weight="medium">Study Streak Achievements:</Text>
                   <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-red-500 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[var(--hive-gold)] to-red-500 flex items-center justify-center">
                         <Text variant="body-xs" color="white">🔥</Text>
                       </div>
                       <div>
@@ -518,9 +518,9 @@ export const CompleteShowcase: Story = {
                       Celebrations trigger immediately upon milestone completion while students are active on campus
                     </Text>
                     <div className="flex flex-wrap gap-1">
-                      <Badge variant="outline" className="text-xs">Animated Celebration</Badge>
-                      <Badge variant="outline" className="text-xs">Social Sharing</Badge>
-                      <Badge variant="outline" className="text-xs">Feature Unlocks</Badge>
+                      <Badge variant="secondary" className="text-xs">Animated Celebration</Badge>
+                      <Badge variant="secondary" className="text-xs">Social Sharing</Badge>
+                      <Badge variant="secondary" className="text-xs">Feature Unlocks</Badge>
                     </div>
                   </div>
                 </div>
@@ -533,9 +533,9 @@ export const CompleteShowcase: Story = {
                       Share achievements with study groups, spaces, and broader UB HIVE community for recognition
                     </Text>
                     <div className="flex flex-wrap gap-1">
-                      <Badge variant="outline" className="text-xs">Space Announcements</Badge>
-                      <Badge variant="outline" className="text-xs">Peer Recognition</Badge>
-                      <Badge variant="outline" className="text-xs">Inspiration</Badge>
+                      <Badge variant="secondary" className="text-xs">Space Announcements</Badge>
+                      <Badge variant="secondary" className="text-xs">Peer Recognition</Badge>
+                      <Badge variant="secondary" className="text-xs">Inspiration</Badge>
                     </div>
                   </div>
                 </div>
@@ -572,7 +572,7 @@ export const Playground: Story = {
     onClose: action('playground-close'),
     onShare: action('playground-share'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="relative h-screen bg-[var(--hive-background-primary)]">
       <Card className="m-6">
         <CardHeader>

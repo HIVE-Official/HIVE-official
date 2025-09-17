@@ -1,4 +1,5 @@
 import sgMail from '@sendgrid/mail';
+import { logger } from '@/lib/logger';
 
 // Initialize SendGrid with API key
 let isInitialized = false;
@@ -27,10 +28,9 @@ export async function sendMagicLinkEmail({
 }: MagicLinkEmailOptions): Promise<void> {
   // In development, log the magic link instead of sending email
   if (process.env.NODE_ENV === 'development') {
-    console.log('\n=== MAGIC LINK (Development) ===');
-    console.log(`To: ${to.replace(/(.{3}).*@/, '$1***@')}`);
-    console.log(`Link: ${magicLink}`);
-    console.log('================================\n');
+
+     // Cyan color for visibility
+
     return;
   }
 
@@ -54,14 +54,15 @@ export async function sendMagicLinkEmail({
 
   try {
     await sgMail.send(msg);
-    console.log(`Magic link email sent to ${to.replace(/(.{3}).*@/, '$1***@')}`);
+    
   } catch (error) {
-    console.error('Error sending magic link email:', error);
+    logger.error('Error sending magic link email:', { error: String(error) });
     throw new Error('Failed to send magic link email');
   }
 }
 
 function generateMagicLinkHTML({ magicLink, schoolName }: { magicLink: string; schoolName: string }): string {
+  const isGeneric = schoolName === 'Your University';
   return `
     <!DOCTYPE html>
     <html>
@@ -85,7 +86,7 @@ function generateMagicLinkHTML({ magicLink, schoolName }: { magicLink: string; s
         .logo {
           font-size: 32px;
           font-weight: bold;
-          color: #D4AF37;
+          color: var(--hive-gold);
           margin-bottom: 8px;
         }
         .tagline {
@@ -100,7 +101,7 @@ function generateMagicLinkHTML({ magicLink, schoolName }: { magicLink: string; s
         }
         .button {
           display: inline-block;
-          background: linear-gradient(135deg, #D4AF37 0%, #F4E99B 100%);
+          background: linear-gradient(135deg, var(--hive-gold) 0%, #F4E99B 100%);
           color: #000;
           text-decoration: none;
           padding: 16px 32px;
@@ -130,8 +131,8 @@ function generateMagicLinkHTML({ magicLink, schoolName }: { magicLink: string; s
       </div>
       
       <div class="content">
-        <h2>Sign in to HIVE for ${schoolName}</h2>
-        <p>Click the button below to sign in to your HIVE account. This link will expire in 1 hour for security.</p>
+        <h2>Sign in to HIVE${isGeneric ? '' : ` for ${schoolName}`}</h2>
+        <p>Click the button below to sign in to your HIVE account${isGeneric ? ' and complete your university setup' : ''}. This link will expire in ${process.env.NODE_ENV === 'development' ? '1 hour' : '15 minutes'} for security.</p>
         
         <div style="text-align: center;">
           <a href="${magicLink}" class="button">Sign In to HIVE</a>
@@ -153,10 +154,11 @@ function generateMagicLinkHTML({ magicLink, schoolName }: { magicLink: string; s
 }
 
 function generateMagicLinkText({ magicLink, schoolName }: { magicLink: string; schoolName: string }): string {
+  const isGeneric = schoolName === 'Your University';
   return `
-Sign in to HIVE for ${schoolName}
+Sign in to HIVE${isGeneric ? '' : ` for ${schoolName}`}
 
-Click the link below to sign in to your HIVE account. This link will expire in 1 hour for security.
+Click the link below to sign in to your HIVE account${isGeneric ? ' and complete your university setup' : ''}. This link will expire in ${process.env.NODE_ENV === 'development' ? '1 hour' : '15 minutes'} for security.
 
 ${magicLink}
 

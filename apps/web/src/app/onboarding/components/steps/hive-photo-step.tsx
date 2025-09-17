@@ -1,11 +1,13 @@
 import { useState, useRef, useCallback } from "react";
+import { logger } from '@/lib/logger';
+
 import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
 import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveButton, HiveCard } from "@hive/ui";
-import { getDefaultAvatarOptions } from "@/lib/avatar-generator";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import { Button, Card } from "@hive/ui";
+import { getDefaultAvatarOptions } from "@/lib/utils/generators/avatar-generator";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HivePhotoStepProps {
   data: HiveOnboardingData;
@@ -47,7 +49,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
       setOriginalImage(previewUrl);
       setShowCropper(true);
     } catch (error) {
-      console.error("Upload failed:", error);
+      logger.error('Upload failed:', { error: String(error) });
       setError("Failed to upload image");
     } finally {
       setIsUploading(false);
@@ -105,7 +107,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
     );
 
     // Convert to blob and update state
-    canvas.toBlob((blob) => {
+    canvas.toBlob((blob: any) => {
       if (blob) {
         const croppedUrl = URL.createObjectURL(blob);
         updateData({ profilePhoto: croppedUrl });
@@ -342,23 +344,23 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
               </div>
               
               <div className="flex gap-3">
-                <HiveButton
+                <Button
                   variant="secondary"
                   size="sm"
                   onClick={cancelCrop}
                   leftIcon={<X className="w-4 h-4" />}
                 >
                   Cancel
-                </HiveButton>
+                </Button>
                 
-                <HiveButton
+                <Button
                   variant="premium"
                   size="sm"
                   onClick={cropImage}
                   leftIcon={<CheckCircle className="w-4 h-4" />}
                 >
                   Apply Crop
-                </HiveButton>
+                </Button>
               </div>
             </div>
           </div>
@@ -414,7 +416,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
           >
             {/* Selected Photo Card - Larger for Main Display */}
             <div className="relative group">
-              <HiveCard
+              <Card
                 variant="elevated"
                 className="w-40 h-48 p-0 overflow-hidden border-2 border-[var(--hive-brand-primary)]/30 shadow-xl"
               >
@@ -425,7 +427,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                   height={192}
                   className="w-full h-full object-cover"
                 />
-              </HiveCard>
+              </Card>
               
               {/* Success Badge */}
               <motion.div
@@ -433,32 +435,32 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 animate={{ scale: 1 }}
                 className="absolute -bottom-2 -right-2 w-8 h-8 bg-[var(--hive-status-success)] rounded-full flex items-center justify-center border-3 border-[var(--hive-background-primary)] shadow-lg"
               >
-                <CheckCircle className="w-4 h-4 text-white" />
+                <CheckCircle className="w-4 h-4 text-[var(--hive-text-inverse)]" />
               </motion.div>
 
               {/* Remove Button */}
               <motion.button
                 onClick={removePhoto}
-                className="absolute -top-2 -left-2 w-8 h-8 bg-[var(--hive-status-error)]/90 backdrop-blur-sm border border-[var(--hive-status-error)] rounded-full flex items-center justify-center text-white hover:bg-[var(--hive-status-error)] transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-90"
+                className="absolute -top-2 -left-2 w-8 h-8 bg-[var(--hive-status-error)]/90 backdrop-blur-sm border border-[var(--hive-status-error)] rounded-full flex items-center justify-center text-[var(--hive-text-inverse)] hover:bg-[var(--hive-status-error)] transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-90"
               >
                 <X className="w-4 h-4" />
               </motion.button>
             </div>
 
             {/* Change Photo Button */}
-            <HiveButton
+            <Button
               onClick={openFileDialog}
               variant="outline"
               size="sm"
               leftIcon={<Upload className="w-4 h-4" />}
             >
               Change Photo
-            </HiveButton>
+            </Button>
           </motion.div>
         ) : (
           <div className="space-y-[var(--hive-spacing-6)]">
             {/* Upload Area */}
-            <HiveCard
+            <Card
               variant="elevated"
               className="p-[var(--hive-spacing-8)] border-2 border-dashed border-[var(--hive-border-primary)]/30 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-300 cursor-pointer group"
               onClick={openFileDialog}
@@ -491,7 +493,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                   </p>
                 </div>
               </div>
-            </HiveCard>
+            </Card>
 
             {/* Error Message */}
             <AnimatePresence>
@@ -533,7 +535,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                     transition={{ delay: 0.4 + index * 0.1 }}
                     // Removed whileHover and whileTap - using CSS hover/active states
                   >
-                    <HiveCard
+                    <Card
                       variant="elevated"
                       className="relative h-32 overflow-hidden border-2 border-[var(--hive-border-primary)]/20 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-200 group cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                       onClick={() => selectAvatar(avatar)}
@@ -548,9 +550,9 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                       
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-[var(--hive-brand-primary)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                        <User className="w-6 h-6 text-white" />
+                        <User className="w-6 h-6 text-[var(--hive-text-inverse)]" />
                       </div>
-                    </HiveCard>
+                    </Card>
                   </motion.div>
                 ))}
               </div>
@@ -579,7 +581,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <HiveCard
+          <Card
             variant="default"
             className="p-[var(--hive-spacing-4)]"
           >
@@ -601,7 +603,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 <span>Maximum 5MB file size</span>
               </div>
             </div>
-          </HiveCard>
+          </Card>
         </motion.div>
       </motion.div>
 

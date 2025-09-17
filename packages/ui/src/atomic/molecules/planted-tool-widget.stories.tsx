@@ -284,7 +284,7 @@ export const AllCategories: Story = {
             Tool Categories
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {tools.map((tool) => (
+            {tools.map((tool: any) => (
               <PlantedToolWidget
                 key={tool.id}
                 tool={tool}
@@ -368,7 +368,7 @@ export const ToolGrid: Story = {
           </div>
           
           <div className="space-y-4">
-            {tools.map((tool) => (
+            {tools.map((tool: any) => (
               <PlantedToolWidget
                 key={tool.id}
                 tool={tool}
@@ -458,7 +458,7 @@ export const InteractiveDemo: Story = {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {tools.map((tool) => (
+            {tools.map((tool: any) => (
               <PlantedToolWidget
                 key={tool.id}
                 tool={tool}

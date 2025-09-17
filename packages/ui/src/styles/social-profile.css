@@ -1,0 +1,1096 @@
+/**
+ * HIVE Social Profile Design System
+ * Tinder-Style Social + Student Utility
+ * Typography: Geist Sans Hierarchy
+ * Theme: Social Dark + Campus Gold
+ */
+
+/* Typography: Geist Sans Hierarchy */
+.profile-display {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.profile-heading {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.profile-body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.profile-caption {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.profile-fine {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+/* Color System: Social Dark + Campus Gold */
+:root {
+  /* Foundation Colors */
+  --social-deep-black: #000000;
+  --social-card-surface: #1C1C1E;
+  --social-overlay: rgba(28, 28, 30, 0.95);
+  
+  /* Social Accents */
+  --hive-gold: #FFD700;
+  --social-green: #34D399;
+  --campus-blue: #3B82F6;
+  --alert-orange: #FB923C;
+  
+  /* Text Layers */
+  --text-primary: rgba(255, 255, 255, 1);
+  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-tertiary: rgba(255, 255, 255, 0.65);
+  --text-inactive: rgba(255, 255, 255, 0.45);
+  
+  /* Interactive States */
+  --hive-gold-hover: #F4C430;
+  --hive-gold-active: #DAA520;
+  --surface-hover: rgba(28, 28, 30, 0.8);
+  --surface-active: rgba(28, 28, 30, 0.9);
+}
+
+/* Profile Container - Social Dark Theme */
+.social-profile-container {
+  background: var(--social-deep-black);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* Card Foundation - Elevated Surface with Tech Sleek Motion */
+.social-profile-card {
+  background: var(--social-card-surface);
+  border-radius: 20px;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.social-profile-card:hover {
+  background: var(--surface-hover);
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px) scale(1.005);
+}
+
+/* Portrait Card - Tinder Style Avatar with Tech Sleek Motion */
+.portrait-avatar-card {
+  background: var(--social-card-surface);
+  border-radius: 24px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 3/4;
+  max-width: 320px;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.portrait-photo-container {
+  width: 100%;
+  height: 60%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 20px 20px 0 0;
+  flex-shrink: 0;
+}
+
+.portrait-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.portrait-photo:hover {
+  transform: scale(1.02);
+}
+
+.portrait-content {
+  height: 40%;
+  padding: 24px 28px 28px 28px;
+  background: var(--social-card-surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.portrait-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portrait-details {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portrait-bio {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+  margin-bottom: 12px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  flex-grow: 1;
+}
+
+/* Builder Badge - Gold Accent */
+.builder-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, var(--hive-gold), var(--hive-gold-hover));
+  color: var(--social-deep-black);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+/* Photo Carousel Indicators */
+.photo-indicators {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+
+.photo-indicator {
+  width: 32px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.photo-indicator.active {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Social Action Buttons with Tech Sleek Interactions */
+.social-action-button {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.social-action-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px) scale(1.005);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.social-action-button:active {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(0px) scale(0.998);
+  transition: all 0.15s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.social-action-button.secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.social-action-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Bento Grid Layout - Mobile First */
+.profile-bento-grid {
+  display: grid;
+  gap: 16px;
+  max-width: 100%;
+}
+
+/* Mobile: Single Column Stack */
+@media (max-width: 767px) {
+  .profile-bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "avatar"
+      "calendar"
+      "tools"
+      "spaces"
+      "activity"
+      "ghost";
+  }
+  
+  .portrait-avatar-card {
+    grid-area: avatar;
+    max-width: 100%;
+    aspect-ratio: 1/1.2;
+  }
+}
+
+/* Tablet: 2-Column Adaptive */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .profile-bento-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "avatar avatar"
+      "calendar tools"
+      "spaces activity"
+      "ghost ghost";
+  }
+}
+
+/* Desktop: 4-Column Bento */
+@media (min-width: 1200px) {
+  .profile-bento-grid {
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-areas:
+      "avatar calendar spaces"
+      "avatar tools ghost"
+      "activity tools activity";
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Status Indicators */
+.online-status {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--social-green);
+  border: 2px solid var(--social-card-surface);
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.online-status.offline {
+  background: var(--text-inactive);
+}
+
+.online-status.away {
+  background: var(--alert-orange);
+}
+
+/* Privacy Mode Indicator */
+.ghost-mode-indicator {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Gesture Hints */
+.swipe-hint {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  opacity: 0;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* ===== BUTTERY MOTION SYSTEM ===== */
+/* Advanced easing curves for premium feel */
+
+/* Core Motion Variables */
+:root {
+  /* Timing Functions - Buttery Smooth */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out-back: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-butter: cubic-bezier(0.23, 1, 0.32, 1);
+  
+  /* Timing Durations */
+  --duration-instant: 0.1s;
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.35s;
+  --duration-slower: 0.5s;
+}
+
+/* Primary Motion Classes */
+.motion-butter {
+  transition: all var(--duration-normal) var(--ease-butter);
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.motion-spring {
+  transition: all var(--duration-slow) var(--ease-spring);
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.motion-expo {
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.motion-back {
+  transition: all var(--duration-slow) var(--ease-out-back);
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* Hover States with Buttery Motion */
+.motion-hover-lift {
+  transition: all var(--duration-normal) var(--ease-out-expo);
+}
+
+.motion-hover-lift:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.motion-hover-lift:active {
+  transition: all var(--duration-fast) var(--ease-out-quart);
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* Card Entrance Animations */
+@keyframes cardEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-enter {
+  animation: cardEnter var(--duration-slow) var(--ease-out-expo);
+}
+
+/* Stagger Animation Delays */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+
+/* Photo Hover with Buttery Scaling */
+.photo-butter-hover {
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  overflow: hidden;
+}
+
+.photo-butter-hover img {
+  transition: all var(--duration-slower) var(--ease-out-expo);
+  transform: scale(1);
+}
+
+.photo-butter-hover:hover img {
+  transform: scale(1.05);
+}
+
+/* Button Micro-interactions */
+.button-butter {
+  transition: all var(--duration-fast) var(--ease-out-expo);
+  transform: translateZ(0);
+}
+
+.button-butter:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+}
+
+.button-butter:active {
+  transition: all var(--duration-instant) var(--ease-out-quart);
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* Modal Entrance Animation */
+@keyframes modalEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+.modal-butter-enter {
+  animation: modalEnter var(--duration-slow) var(--ease-out-expo);
+}
+
+/* List Item Interactions */
+.list-item-butter {
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  position: relative;
+}
+
+.list-item-butter::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out-expo);
+}
+
+.list-item-butter:hover::before {
+  opacity: 1;
+}
+
+.list-item-butter:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Avatar Scale Animation */
+.avatar-butter {
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  overflow: hidden;
+}
+
+.avatar-butter:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(255, 215, 0, 0.3);
+}
+
+/* Status Indicator Pulse */
+@keyframes statusPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.status-butter {
+  animation: statusPulse 2s var(--ease-butter) infinite;
+}
+
+/* Loading Shimmer Enhanced */
+@keyframes shimmerButter {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer-butter {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-butter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shimmerButter 1.5s var(--ease-butter) infinite;
+}
+
+/* Badge Entrance */
+@keyframes badgeEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotateZ(-5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg);
+  }
+}
+
+.badge-butter-enter {
+  animation: badgeEnter var(--duration-normal) var(--ease-out-back);
+}
+
+/* Text Reveal Animation */
+@keyframes textReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.text-reveal {
+  animation: textReveal var(--duration-normal) var(--ease-out-expo);
+}
+
+/* Focus Ring with Motion */
+.focus-butter {
+  outline: none;
+  position: relative;
+}
+
+.focus-butter::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border: 2px solid var(--hive-gold);
+  border-radius: inherit;
+  opacity: 0;
+  transition: all var(--duration-fast) var(--ease-out-expo);
+  pointer-events: none;
+}
+
+.focus-butter:focus::after {
+  opacity: 1;
+  inset: -2px;
+}
+
+/* Reduced Motion Respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .motion-butter,
+  .motion-spring,
+  .motion-expo,
+  .motion-back,
+  .motion-hover-lift,
+  .button-butter,
+  .list-item-butter,
+  .avatar-butter {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Social Proof Elements */
+.social-proof {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--social-green);
+}
+
+.social-count {
+  font-weight: 600;
+  color: var(--hive-gold);
+}
+
+/* Loading States with Social Aesthetics */
+.profile-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--social-card-surface) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    var(--social-card-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Mobile Gesture Areas */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card Hover Lift Effect */
+.social-card-lift {
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-card-lift:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+  .hive-transition,
+  .hive-spring,
+  .social-card-lift,
+  .portrait-photo {
+    transition: none;
+  }
+  
+  .social-card-lift:hover {
+    transform: none;
+  }
+}
+
+/* Focus States for Accessibility */
+.social-action-button:focus,
+.social-profile-card:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+/* Tech Sleek Spacing System */
+:root {
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 28px;
+  --spacing-4xl: 32px;
+  --spacing-5xl: 40px;
+  --spacing-6xl: 48px;
+  
+  /* Component Spacing */
+  --card-padding: var(--spacing-3xl);
+  --card-gap: var(--spacing-xl);
+  --section-gap: var(--spacing-2xl);
+  --element-gap: var(--spacing-md);
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 20px;
+  --border-radius-2xl: 24px;
+}
+
+/* Modal Split-View Layouts */
+.social-profile-modal {
+  background: var(--social-card-surface);
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  height: 100%;
+  min-height: 600px;
+}
+
+.social-profile-modal-split {
+  display: flex;
+  height: 100%;
+  gap: 0;
+}
+
+.social-profile-modal-left {
+  flex: 1;
+  background: var(--social-card-surface);
+  padding: 32px;
+  overflow-y: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-profile-modal-right {
+  flex: 1;
+  background: rgba(28, 28, 30, 0.6);
+  padding: 32px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Modal Avatar Section */
+.modal-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.modal-avatar-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  object-fit: cover;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.modal-profile-info {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.modal-profile-name {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.modal-profile-details {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.modal-profile-bio {
+  font-size: 16px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Modal Stats Grid */
+.modal-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.modal-stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.modal-stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--hive-gold);
+  margin-bottom: 4px;
+}
+
+.modal-stat-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Modal Action Buttons */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.modal-action-primary {
+  background: var(--hive-gold);
+  color: var(--social-deep-black);
+  border: none;
+  border-radius: 16px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-action-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-action-primary:hover {
+  background: var(--hive-gold-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+}
+
+.modal-action-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Modal Right Panel Sections */
+.modal-section {
+  margin-bottom: 32px;
+}
+
+.modal-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal-section-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--hive-gold);
+}
+
+/* Modal Lists */
+.modal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-list-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.modal-list-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.modal-list-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.modal-list-item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.modal-list-item-badge {
+  background: var(--hive-gold);
+  color: var(--social-deep-black);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.modal-list-item-description {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* Mobile Modal Adjustments */
+@media (max-width: 768px) {
+  .social-profile-modal-split {
+    flex-direction: column;
+  }
+  
+  .social-profile-modal-left,
+  .social-profile-modal-right {
+    padding: 24px;
+    border-right: none;
+  }
+  
+  .social-profile-modal-left {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .modal-avatar-photo {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .modal-profile-name {
+    font-size: 28px;
+  }
+  
+  .modal-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Card Expansion States */
+.social-card-expandable {
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-card-expandable:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.social-card-expandable:active {
+  transform: translateY(-1px) scale(1.01);
+}
+
+/* Fix text overflow in all cards */
+.social-profile-card h3,
+.social-profile-card h4,
+.social-profile-card .card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.social-profile-card p,
+.social-profile-card .card-description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+
+/* Ensure proper spacing in card layouts */
+.social-profile-card {
+  padding: 28px;
+  box-sizing: border-box;
+}
+
+.social-profile-card > * + * {
+  margin-top: 20px;
+}
+
+.social-profile-card .card-header {
+  margin-bottom: 20px;
+}
+
+.social-profile-card .card-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.social-profile-card .card-footer {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}

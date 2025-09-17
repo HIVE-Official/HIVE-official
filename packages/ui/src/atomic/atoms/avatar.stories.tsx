@@ -1,8 +1,8 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Avatar, AvatarImage, AvatarFallback } from './avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import '../../hive-tokens.css';
 
 const meta: Meta<typeof Avatar> = {
@@ -87,7 +87,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="default">✅ SIZES</Badge>
+            <Badge variant="primary">✅ SIZES</Badge>
             Avatar Sizes - Mobile-First Touch Optimization
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -128,7 +128,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">🟢 STATUS</Badge>
+            <Badge variant="secondary">🟢 STATUS</Badge>
             Status Indicators - Campus Availability
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -260,7 +260,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">🔄 FALLBACKS</Badge>
+            <Badge variant="secondary">🔄 FALLBACKS</Badge>
             Fallback System - Graceful Degradation
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -321,7 +321,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="outline">👆 INTERACTIVE</Badge>
+            <Badge variant="secondary">👆 INTERACTIVE</Badge>
             Interactive States - Gold Outline Hover
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -583,7 +583,7 @@ export const Playground: Story = {
     privacy: 'public',
     interactive: true,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

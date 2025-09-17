@@ -11,7 +11,7 @@ import {
   ListItem, 
   TypographyPresets 
 } from './typography';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import '../../hive-tokens.css';
 
@@ -100,7 +100,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ HEADINGS</Badge>
+            <Badge variant="emerald">✅ HEADINGS</Badge>
             Heading Hierarchy - Semantic Levels & Visual Scale
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -598,7 +598,7 @@ function fibonacci(n) {
               </TypographyPresets.PageTitle>
               
               <div className="flex items-center gap-4 text-sm">
-                <Badge variant="success">Registration Open</Badge>
+                <Badge variant="emerald">Registration Open</Badge>
                 <TypographyPresets.Small>March 22, 2025 • Student Union Ballrooms</TypographyPresets.Small>
               </div>
               
@@ -782,7 +782,7 @@ export const Playground: Story = {
     weight: 'semibold',
     children: 'University at Buffalo Campus Experience',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

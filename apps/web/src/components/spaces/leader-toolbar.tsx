@@ -1,6 +1,7 @@
 "use client";
+type LeaderToolbarMigratedProps = any; // TODO: Define proper type
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Shield, 
@@ -18,7 +19,10 @@ import {
   EyeOff
 } from 'lucide-react';
 import { Button, Badge } from "@hive/ui";
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
+
+// State Management
+import { useUIStore, useAuthStore } from '@hive/hooks';
 
 export type LeaderMode = 'moderate' | 'manage' | 'configure' | 'insights' | null;
 
@@ -59,20 +63,32 @@ const LEADER_MODES = {
     icon: BarChart3,
     label: 'Insights',
     description: 'Analytics and engagement data',
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/20',
-    borderColor: 'border-purple-500/30'
+    color: 'text-[var(--hive-gold)]',
+    bgColor: 'bg-[var(--hive-gold)]/20',
+    borderColor: 'border-[var(--hive-gold)]/30'
   }
 } as const;
 
+// Export both names for compatibility
 export function LeaderToolbar({ 
   isVisible, 
   currentMode, 
   onModeChange, 
   spaceRole,
   className 
-}: LeaderToolbarProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+}: LeaderToolbarMigratedProps) {
+  // Global state
+  const { profile } = useAuthStore();
+  const isExpanded = useUIStore((state: any) => state.modals['leader-toolbar']?.isOpen || false);
+  const { openModal, closeModal } = useUIStore();
+
+  const handleToggleExpanded = () => {
+    if (isExpanded) {
+      closeModal('leader-toolbar');
+    } else {
+      openModal('leader-toolbar');
+    }
+  };
 
   const availableModes = Object.entries(LEADER_MODES).filter(([mode]) => {
     // All roles can moderate and manage
@@ -115,14 +131,14 @@ export function LeaderToolbar({
                   <motion.button
                     key={mode}
                     className={cn(
-                      "w-full flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] border transition-all text-left",
+                      "w-full flex items-center gap-3 p-3 rounded-xl bg-[var(--hive-background-primary)] border transition-all text-left",
                       isActive 
                         ? `${modeConfig.borderColor} ${modeConfig.bgColor}` 
-                        : "border-white/10 hover:border-white/20 hover:bg-white/5"
+                        : "border-[var(--hive-white)]/10 hover:border-[var(--hive-white)]/20 hover:bg-[var(--hive-white)]/5"
                     )}
                     onClick={() => {
                       onModeChange(isActive ? null : mode);
-                      setIsExpanded(false);
+                      closeModal('leader-toolbar');
                     }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -134,7 +150,7 @@ export function LeaderToolbar({
                     <div className="flex-1 min-w-0">
                       <div className={cn(
                         "font-medium text-sm",
-                        isActive ? "text-white" : "text-neutral-300"
+                        isActive ? "text-[var(--hive-text-inverse)]" : "text-neutral-300"
                       )}>
                         {modeConfig.label}
                       </div>
@@ -162,13 +178,13 @@ export function LeaderToolbar({
             "flex items-center gap-3 p-4 rounded-xl backdrop-blur-sm border transition-all shadow-lg",
             currentMode 
               ? `${LEADER_MODES[currentMode].borderColor} ${LEADER_MODES[currentMode].bgColor}` 
-              : "bg-[#0A0A0A]/90 border-white/10 hover:border-white/20"
+              : "bg-[var(--hive-background-primary)]/90 border-[var(--hive-white)]/10 hover:border-[var(--hive-white)]/20"
           )}
           onClick={() => {
             if (currentMode) {
               onModeChange(null);
             } else {
-              setIsExpanded(!isExpanded);
+              handleToggleExpanded();
             }
           }}
           whileHover={{ scale: 1.05 }}
@@ -181,15 +197,15 @@ export function LeaderToolbar({
                 className: cn("w-5 h-5", LEADER_MODES[currentMode].color)
               })}
               <div className="flex items-center gap-2">
-                <span className="text-white font-medium text-sm">
+                <span className="text-[var(--hive-text-inverse)] font-medium text-sm">
                   {LEADER_MODES[currentMode].label} Mode
                 </span>
-                <Badge variant="leadership" className="text-xs px-2 py-0.5 bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30">
+                <Badge variant="leadership" className="text-xs px-2 py-0.5 bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border-[var(--hive-brand-secondary)]/30">
                   Active
                 </Badge>
               </div>
               <motion.div
-                className="w-2 h-2 rounded-full bg-[#FFD700]"
+                className="w-2 h-2 rounded-full bg-[var(--hive-brand-secondary)]"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
@@ -197,8 +213,8 @@ export function LeaderToolbar({
           ) : (
             // Default Leadership Button
             <>
-              <Crown className="w-5 h-5 text-[#FFD700]" />
-              <span className="text-white font-medium text-sm">Leadership</span>
+              <Crown className="w-5 h-5 text-[var(--hive-brand-secondary)]" />
+              <span className="text-[var(--hive-text-inverse)] font-medium text-sm">Leadership</span>
               <motion.div
                 animate={{ rotate: isExpanded ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
@@ -212,7 +228,7 @@ export function LeaderToolbar({
         {/* Mode Indicator Help */}
         {currentMode && (
           <motion.div
-            className="absolute -top-12 right-0 bg-[#0A0A0A] border border-white/10 rounded-lg px-3 py-2 text-xs text-neutral-300 whitespace-nowrap"
+            className="absolute -top-12 right-0 bg-[var(--hive-background-primary)] border border-[var(--hive-white)]/10 rounded-lg px-3 py-2 text-xs text-neutral-300 whitespace-nowrap"
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
@@ -258,7 +274,7 @@ export function LeaderToolbar({
           )}
           
           {currentMode === 'insights' && (
-            <Button size="sm" variant="outline" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10">
+            <Button size="sm" variant="outline" className="border-[var(--hive-gold)]/30 text-[var(--hive-gold)] hover:bg-[var(--hive-gold)]/10">
               <Eye className="w-3 h-3 mr-1" />
               Analytics
             </Button>
@@ -269,16 +285,22 @@ export function LeaderToolbar({
   );
 }
 
-// Helper hook for leader mode context
+// Updated hook for leader mode context with store integration
 export function useLeaderMode() {
-  const [currentMode, setCurrentMode] = useState<LeaderMode>(null);
+  const { openModal, closeModal } = useUIStore();
+  const currentMode = useUIStore((state: any) => state.modals['leader-mode']?.data as LeaderMode) || null;
   
   const toggleMode = (mode: LeaderMode) => {
-    setCurrentMode(currentMode === mode ? null : mode);
+    const newMode = currentMode === mode ? null : mode;
+    if (newMode) {
+      openModal('leader-mode', newMode);
+    } else {
+      closeModal('leader-mode');
+    }
   };
   
   const exitMode = () => {
-    setCurrentMode(null);
+    closeModal('leader-mode');
   };
   
   return {

@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 import { HiveProgress as Progress } from '../../../components/hive-progress';
 import { Separator } from '../../../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '../../../atomic/molecules/alert-toast-system';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 import { 
   AlertTriangle,
@@ -107,8 +107,9 @@ import {
  * - **Error Boundaries**: Component isolation, graceful degradation, error reporting
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '22-Advanced Systems/Error Handling & Edge Cases',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -399,7 +400,7 @@ const ErrorDisplay = ({
           
           <div className="flex-1 space-y-2">
             <AlertTitle className="text-white flex items-center space-x-2">
-              <span>{error.message}</span>
+              <span>{(error instanceof Error ? error.message : "Unknown error")}</span>
               {error.code && (
                 <Badge variant="secondary" className="text-xs">
                   {error.code}
@@ -535,7 +536,7 @@ const ErrorBoundaryDemo = ({ children }: { children: React.ReactNode }) => {
             </Button>
             
             <Button
-              variant="outline"
+              variant="secondary"
               className="border-gray-600 text-gray-300"
             >
               <ExternalLink className="h-4 w-4 mr-2" />
@@ -660,7 +661,7 @@ const ErrorSimulationControls = ({
       <div className="grid grid-cols-2 gap-3">
         <Button
           onClick={() => onSimulateError('network')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-orange-600 text-orange-300 hover:bg-orange-900/20"
         >
@@ -670,7 +671,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('api')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-red-600 text-red-300 hover:bg-red-900/20"
         >
@@ -680,7 +681,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('validation')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-yellow-600 text-yellow-300 hover:bg-yellow-900/20"
         >
@@ -690,7 +691,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('campus')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-green-600 text-green-300 hover:bg-green-900/20"
         >
@@ -700,7 +701,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('data')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-blue-600 text-blue-300 hover:bg-blue-900/20"
         >
@@ -710,7 +711,7 @@ const ErrorSimulationControls = ({
         
         <Button
           onClick={() => onSimulateError('permission')}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="justify-start border-purple-600 text-purple-300 hover:bg-purple-900/20"
         >
@@ -906,7 +907,7 @@ const ErrorHandlingSystem = () => {
                     type="checkbox"
                     id="technical"
                     checked={showTechnical}
-                    onChange={(e) => setShowTechnical(e.target.checked)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShowTechnical(e.target.checked)}
                     className="rounded border-gray-600"
                   />
                   <Label htmlFor="technical" className="text-white text-sm">

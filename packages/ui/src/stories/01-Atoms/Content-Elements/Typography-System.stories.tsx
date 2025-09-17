@@ -7,9 +7,9 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
 import { 
   Type,
   AlignLeft,
@@ -35,7 +35,16 @@ import {
 } from 'lucide-react';
 import '../../../hive-tokens.css';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const TypographySystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Typography System</h2>
+    <p className="text-muted-foreground">Campus content hierarchy and text system</p>
+  </div>
+);
+
+const meta: Meta<typeof TypographySystem> = {
+  component: TypographySystem,
   title: '02-Atoms/Content Elements/Typography System',
   parameters: {
     layout: 'fullscreen',
@@ -376,7 +385,7 @@ const HeadingHierarchyShowcase = () => {
             {headingHierarchy.map((heading, index) => (
               <div key={index} className="flex items-start gap-6">
                 <div className="w-20 shrink-0">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {heading.level}
                   </Badge>
                 </div>
@@ -413,7 +422,7 @@ const TextSizeShowcase = () => {
             {textSizeScale.map((textSize, index) => (
               <div key={index} className="flex items-start gap-6">
                 <div className="w-24 shrink-0">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {textSize.size}
                   </Badge>
                 </div>
@@ -450,7 +459,7 @@ const FontWeightShowcase = () => {
             {fontWeights.map((weight, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {weight.weight}
                   </Badge>
                   <span className="text-sm text-[var(--hive-text-secondary)]">
@@ -556,7 +565,7 @@ const AccessibilityShowcase = () => {
               Text Scaling Support
             </h4>
             <div className="flex flex-wrap gap-2 mb-4">
-              {textSizeOptions.map((option) => (
+              {textSizeOptions.map((option: any) => (
                 <Button
                   key={option.value}
                   variant={textSize === option.value ? 'primary' : 'secondary'}
@@ -664,7 +673,7 @@ const TypographySystemShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

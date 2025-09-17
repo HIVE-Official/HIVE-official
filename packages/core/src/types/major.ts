@@ -1,0 +1,4 @@
+export interface MajorType {
+  name: string;
+  level: 'undergraduate';
+} 

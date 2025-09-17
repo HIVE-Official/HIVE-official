@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
-import { automatedModerationWorkflows } from '@/lib/automated-moderation-workflows';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { automatedModerationWorkflows } from '@/lib/services/moderation/automated-moderation-workflows';
 import { logger } from '@/lib/logger';
-import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api/response-types/api-response-types';
 import { z } from 'zod';
 
 /**
@@ -289,7 +289,7 @@ export async function DELETE(request: NextRequest) {
 // Helper function to check admin permissions
 async function checkAdminPermissions(userId: string): Promise<boolean> {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     const userDoc = await dbAdmin.collection('users').doc(userId).get();
     if (!userDoc.exists) return false;
     
@@ -304,7 +304,7 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
 // Helper function to get workflows
 async function getWorkflows(activeOnly: boolean = false) {
   try {
-    const { dbAdmin } = await import('@/lib/firebase-admin');
+    const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
     let query = dbAdmin.collection('automatedWorkflows')
       .orderBy('priority', 'desc')
       .orderBy('createdAt', 'desc');

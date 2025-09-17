@@ -7,11 +7,11 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Input } from '../../components/ui/input';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Avatar, AvatarFallback } from '../../atomic/atoms/avatar';
 import { Label } from '../../components/ui/label';
 import { 
   Building2,
@@ -54,7 +54,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof OrganismSystemsLibrary> = {
+  component: OrganismSystemsLibrary,
   title: '🦠 04-Organisms/Complex Systems',
   parameters: {
     layout: 'fullscreen',
@@ -355,7 +356,7 @@ const NavigationSystemShowcase = () => {
       
       {/* Navigation Type Selector */}
       <div className="flex flex-wrap gap-2">
-        {['desktop', 'mobile', 'header'].map((type) => (
+        {['desktop', 'mobile', 'header'].map((type: any) => (
           <Button
             key={type}
             variant={activeTab === type ? 'primary' : 'secondary'}
@@ -583,8 +584,8 @@ const OrganismSystemsLibrary = () => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-400',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -592,7 +593,7 @@ const OrganismSystemsLibrary = () => {
   const getComplexityColor = (complexity: string) => {
     const colors = {
       Low: 'bg-green-500/20 text-green-400',
-      Medium: 'bg-yellow-500/20 text-yellow-400',
+      Medium: 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
       High: 'bg-red-500/20 text-red-400'
     };
     return colors[complexity as keyof typeof colors] || colors.Medium;
@@ -639,7 +640,7 @@ const OrganismSystemsLibrary = () => {
               type="text"
               placeholder="Search organism systems..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
               className="pl-10 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)]"
             />
           </div>
@@ -652,7 +653,7 @@ const OrganismSystemsLibrary = () => {
 
         {/* Category Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {organismCategories.map((category) => (
+          {organismCategories.map((category: any) => (
             <Button
               key={category.id}
               variant={activeCategory === category.id ? 'primary' : 'secondary'}
@@ -667,7 +668,7 @@ const OrganismSystemsLibrary = () => {
 
         {/* Component Categories */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {filteredCategories.map((category) => (
+          {filteredCategories.map((category: any) => (
             <Card 
               key={category.id} 
               className={`border-2 bg-gradient-to-br ${getColorClasses(category.color)} ${activeCategory === category.id ? 'ring-2 ring-[var(--hive-brand-primary)]' : ''}`}
@@ -707,7 +708,7 @@ const OrganismSystemsLibrary = () => {
                             {component.complexity} Complexity
                           </Badge>
                           <Badge 
-                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}
+                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'}`}
                           >
                             {component.status}
                           </Badge>
@@ -750,7 +751,7 @@ const OrganismSystemsLibrary = () => {
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-purple-400" />
+                    <div className="w-2 h-2 rounded-full bg-[var(--hive-gold)]" />
                     <span className="text-sm text-[var(--hive-text-secondary)]">
                       Finals week and academic deadline integration
                     </span>
@@ -761,7 +762,7 @@ const OrganismSystemsLibrary = () => {
                 <h4 className="font-medium text-[var(--hive-text-primary)] mb-4">Campus Community</h4>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-yellow-400" />
+                    <div className="w-2 h-2 rounded-full bg-[var(--hive-gold)]" />
                     <span className="text-sm text-[var(--hive-text-secondary)]">
                       Residential life integration with dorm floor communities
                     </span>

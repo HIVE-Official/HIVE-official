@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
+import { Input as Input } from '../atoms/input-enhanced';
 import { Text } from '../atoms/text';
 
 export interface FormFieldProps {

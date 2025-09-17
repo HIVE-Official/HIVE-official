@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { logger } from '@/lib/logger';
+
 import { Card, CardContent, Button, Alert, AlertDescription } from '@hive/ui';
 import { Play, Square, RefreshCw, Settings, ExternalLink } from 'lucide-react';
 import { ToolComposition, ElementRegistry, ElementEngine } from '@/lib/element-system';
@@ -102,7 +104,7 @@ export function ToolRuntime({
         setGlobalState(result.result.state);
       }
     } catch (err) {
-      console.error('Failed to initialize live state:', err);
+      logger.error('Failed to initialize live state:', { error: String(err) });
     }
   };
 
@@ -123,7 +125,7 @@ export function ToolRuntime({
       try {
         await syncWithBackend(instanceId, data);
       } catch (err) {
-        console.error('Failed to sync with backend:', err);
+        logger.error('Failed to sync with backend:', { error: String(err) });
       }
     }
   }, [composition.connections, deploymentId, mode]);
@@ -197,7 +199,7 @@ export function ToolRuntime({
         }
       }
     } catch (err) {
-      console.error('Backend sync failed:', err);
+      logger.error('Backend sync failed:', { error: String(err) });
     }
   };
 
@@ -230,12 +232,12 @@ export function ToolRuntime({
           }].slice(-50));
         }
       } catch (err) {
-        console.error('Action execution failed:', err);
+        logger.error('Action execution failed:', { error: String(err) });
         onError?.(`Failed to execute action: ${action}`);
       }
     } else {
       // Preview mode - just update local state
-      console.log(`Preview action: ${action}`, { instanceId, payload });
+      
     }
   };
 
@@ -308,7 +310,7 @@ export function ToolRuntime({
                     id: element.instanceId,
                     config: element.config,
                     data: elementState?.data,
-                    onChange: (data) => handleElementChange(element.instanceId, data),
+                    onChange: (data: any) => handleElementChange(element.instanceId, data),
                     onAction: (action, payload) => handleElementAction(element.instanceId, action, payload)
                   })}
                 </CardContent>
@@ -381,7 +383,7 @@ export function ToolRuntime({
 
       {/* Error Display */}
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="error">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}

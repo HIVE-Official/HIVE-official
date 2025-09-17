@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": false
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.*",
+    "**/*.spec.*", 
+    "src/test/**/*",
+    "**/__tests__/**/*",
+    "**/__mocks__/**/*",
+    "**/*.stories.*",
+    "vitest.config.*",
+    "playwright.config.*",
+    "scripts/**/*"
+  ]
+}

@@ -10,15 +10,19 @@
     "typecheck": "npx tsc --noEmit"
   },
   "dependencies": {
+    "@hive/api-client": "workspace:*",
     "@hive/auth-logic": "workspace:*",
-    "@hive/core": "workspace:*"
+    "@hive/core": "workspace:*",
+    "@tanstack/react-query": "^5.87.1",
+    "@tanstack/react-query-devtools": "^5.80.7",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
     "@hive/typescript-config": "workspace:*",
     "@types/node": "^24.0.1",
     "@types/react": "^18.3.23",
-    "eslint": "^9.28.0",
+    "eslint": "^8.57.0",
     "typescript": "^5.8.3"
   },
   "overrides": {

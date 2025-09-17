@@ -1,0 +1,5 @@
+{
+  "projectId": "hive-9265c",
+  "useEnvironmentVariables": true,
+  "note": "Service account credentials should be loaded from FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY environment variables, not local files"
+} 

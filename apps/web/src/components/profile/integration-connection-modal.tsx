@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Button, Card, Switch, Badge, Progress } from "@hive/ui";
-import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
+import { Modal, ModalContent, ModalHeader, ModalTitle, ModalFooter } from "@hive/ui";
+import { Alert, AlertDescription } from "@hive/ui";
 import { 
   Link, 
   Shield, 
@@ -124,13 +124,13 @@ export function IntegrationConnectionModal({
 
   if (connectionStep === 'connecting') {
     return (
-      <HiveModal open={isOpen} onOpenChange={onClose} size="lg">
-        <HiveModalContent className="max-w-md">
+      <Modal open={isOpen} onOpenChange={onClose} size="lg">
+        <ModalContent className="max-w-md">
           <div className="p-8 text-center">
             <div className="w-16 h-16 bg-hive-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <Loader2 className="h-8 w-8 text-hive-gold animate-spin" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">
               Connecting to {integration.name}
             </h3>
             <p className="text-hive-text-mutedLight mb-4">
@@ -138,38 +138,38 @@ export function IntegrationConnectionModal({
             </p>
             <Progress value={75} className="h-2" />
           </div>
-        </HiveModalContent>
-      </HiveModal>
+        </ModalContent>
+      </Modal>
     );
   }
 
   if (connectionStep === 'success') {
     return (
-      <HiveModal open={isOpen} onOpenChange={onClose} size="lg">
-        <HiveModalContent className="max-w-md">
+      <Modal open={isOpen} onOpenChange={onClose} size="lg">
+        <ModalContent className="max-w-md">
           <div className="p-8 text-center">
             <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="h-8 w-8 text-green-400" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">
               Successfully Connected!
             </h3>
             <p className="text-hive-text-mutedLight">
               {integration.name} has been connected to your HIVE profile
             </p>
           </div>
-        </HiveModalContent>
-      </HiveModal>
+        </ModalContent>
+      </Modal>
     );
   }
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} size="lg">
-      <HiveModalContent className="max-w-2xl">
-        <HiveModalHeader>
-          <HiveModalTitle className="flex items-center space-x-3">
+    <Modal open={isOpen} onOpenChange={onClose} size="lg">
+      <ModalContent className="max-w-2xl">
+        <ModalHeader>
+          <ModalTitle className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-              <IconComponent className="h-5 w-5 text-white" />
+              <IconComponent className="h-5 w-5 text-[var(--hive-text-inverse)]" />
             </div>
             <div>
               <div className="flex items-center space-x-3">
@@ -180,8 +180,8 @@ export function IntegrationConnectionModal({
                 {integration.description}
               </div>
             </div>
-          </HiveModalTitle>
-        </HiveModalHeader>
+          </ModalTitle>
+        </ModalHeader>
 
         <div className="p-6 space-y-6">
           {/* Connection Status */}
@@ -189,7 +189,7 @@ export function IntegrationConnectionModal({
             <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-medium text-white mb-1">Connection Status</h3>
+                  <h3 className="font-medium text-[var(--hive-text-inverse)] mb-1">Connection Status</h3>
                   <p className="text-sm text-hive-text-mutedLight">
                     Last synced: {integration.lastSync ? new Date(integration.lastSync).toLocaleString() : 'Never'}
                   </p>
@@ -203,7 +203,7 @@ export function IntegrationConnectionModal({
 
           {/* Features */}
           <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-            <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
+            <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center space-x-2">
               <Settings className="h-4 w-4" />
               <span>Features & Benefits</span>
             </h3>
@@ -219,16 +219,16 @@ export function IntegrationConnectionModal({
 
           {/* Permissions */}
           <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-            <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
+            <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center space-x-2">
               <Shield className="h-4 w-4" />
               <span>Permissions</span>
             </h3>
             <div className="space-y-3">
-              {integration.permissions.map((permission) => (
+              {integration.permissions.map((permission: any) => (
                 <div key={permission.id} className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium text-white">{permission.name}</span>
+                      <span className="font-medium text-[var(--hive-text-inverse)]">{permission.name}</span>
                       {permission.required && (
                         <Badge variant="secondary" className="text-xs">Required</Badge>
                       )}
@@ -251,7 +251,7 @@ export function IntegrationConnectionModal({
               <div className="flex items-start space-x-3">
                 <Shield className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
-                  <h4 className="font-medium text-white mb-1">Privacy & Data</h4>
+                  <h4 className="font-medium text-[var(--hive-text-inverse)] mb-1">Privacy & Data</h4>
                   <div className="space-y-2">
                     <p className="text-sm text-hive-text-mutedLight">
                       {showPrivacyDetails ? integration.privacyNote : `${integration.privacyNote.slice(0, 100)}...`}
@@ -289,7 +289,7 @@ export function IntegrationConnectionModal({
           )}
         </div>
 
-        <HiveModalFooter>
+        <ModalFooter>
           <div className="flex items-center justify-between w-full">
             <div>
               {integration.isConnected && onDisconnect && (
@@ -332,8 +332,8 @@ export function IntegrationConnectionModal({
               )}
             </div>
           </div>
-        </HiveModalFooter>
-      </HiveModalContent>
-    </HiveModal>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

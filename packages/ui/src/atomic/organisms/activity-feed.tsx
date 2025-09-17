@@ -316,7 +316,7 @@ export function ActivityFeed({
         setFeedState(prev => ({
           ...prev,
           isLoading: false,
-          error: error instanceof Error ? error.message : 'Failed to load posts'
+          error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Failed to load posts'
         }));
       }
     };
@@ -419,9 +419,9 @@ export function ActivityFeed({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <User className="h-6 w-6 text-white" />
+            <User className="h-6 w-6 text-[var(--hive-text-inverse)]" />
           </div>
-          <p className="text-white mb-2">Failed to load activity feed</p>
+          <p className="text-[var(--hive-text-inverse)] mb-2">Failed to load activity feed</p>
           <p className="text-red-400 text-sm">{feedState.error}</p>
           <Button 
             onClick={refreshFeed} 
@@ -504,7 +504,7 @@ export function ActivityFeed({
                     <input
                       type="checkbox"
                       checked={filters.postTypes.includes(type)}
-                      onChange={(e) => {
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         if (e.target.checked) {
                           setFilters(prev => ({ ...prev, postTypes: [...prev.postTypes, type] }));
                         } else {
@@ -527,7 +527,7 @@ export function ActivityFeed({
               </label>
               <select
                 value={filters.timeRange}
-                onChange={(e) => setFilters(prev => ({ ...prev, timeRange: e.target.value as any }))}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters(prev => ({ ...prev, timeRange: e.target.value as 'today' | 'week' | 'month' | 'all' }))}
                 className="w-full p-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
               >
                 <option value="today">Today</option>
@@ -543,7 +543,7 @@ export function ActivityFeed({
               </label>
               <select
                 value={filters.sortBy}
-                onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters(prev => ({ ...prev, sortBy: e.target.value as 'recent' | 'popular' | 'trending' }))}
                 className="w-full p-2 bg-hive-surface-elevated border border-hive-border-subtle rounded-lg text-hive-text-primary"
               >
                 <option value="recent">Most Recent</option>
@@ -557,7 +557,7 @@ export function ActivityFeed({
 
       {/* Posts */}
       <div className="space-y-6">
-        {feedState.posts.map((post) => {
+        {feedState.posts.map((post: any) => {
           const PostIcon = getPostIcon(post.type);
           const typeColor = getPostTypeColor(post.type);
           
@@ -578,7 +578,7 @@ export function ActivityFeed({
                       </h3>
                       {post.author.isVerified && (
                         <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                          <User className="h-2 w-2 text-white" />
+                          <User className="h-2 w-2 text-[var(--hive-text-inverse)]" />
                         </div>
                       )}
                       <PostIcon className={`h-4 w-4 ${typeColor}`} />
@@ -614,7 +614,7 @@ export function ActivityFeed({
               {/* Attachments */}
               {post.attachments && post.attachments.length > 0 && (
                 <div className="mb-4">
-                  {post.attachments.map((attachment, index) => (
+                  {post.attachments.map((attachment: { type: string; name: string; url?: string; title?: string; description?: string }, index: number) => (
                     <div
                       key={index}
                       className="p-3 bg-hive-surface-elevated rounded-lg border border-hive-border-subtle"

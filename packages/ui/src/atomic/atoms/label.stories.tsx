@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Label } from './label';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import '../../hive-tokens.css';
@@ -84,7 +84,7 @@ export const Default: Story = {
     disabled: false,
     children: 'Student Email Address',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -115,7 +115,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎭 VARIANTS</Badge>
+            <Badge variant="emerald">🎭 VARIANTS</Badge>
             Label Variants - Form Layout Options
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -134,7 +134,7 @@ export const CompleteShowcase: Story = {
                   <div className="grid md:grid-cols-2 gap-6">
                     
                     <div className="space-y-2">
-                      <Label variant="default" htmlFor="student-id" required>Student ID</Label>
+                      <Label variant="primary" htmlFor="student-id" required>Student ID</Label>
                       <input
                         id="student-id"
                         type="text"
@@ -144,7 +144,7 @@ export const CompleteShowcase: Story = {
                     </div>
 
                     <div className="space-y-2">
-                      <Label variant="default" htmlFor="student-name" required>Full Name</Label>
+                      <Label variant="primary" htmlFor="student-name" required>Full Name</Label>
                       <input
                         id="student-name"
                         type="text"
@@ -154,7 +154,7 @@ export const CompleteShowcase: Story = {
                     </div>
 
                     <div className="space-y-2">
-                      <Label variant="default" htmlFor="student-email" required>University Email</Label>
+                      <Label variant="primary" htmlFor="student-email" required>University Email</Label>
                       <input
                         id="student-email"
                         type="email"
@@ -164,7 +164,7 @@ export const CompleteShowcase: Story = {
                     </div>
 
                     <div className="space-y-2">
-                      <Label variant="default" htmlFor="student-major">Academic Major</Label>
+                      <Label variant="primary" htmlFor="student-major">Academic Major</Label>
                       <select
                         id="student-major"
                         className="w-full px-3 py-2 border border-[var(--hive-border-primary)] rounded-lg bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] focus:ring-2 focus:ring-[var(--hive-brand-primary)] focus:border-transparent"
@@ -451,7 +451,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">⚡ STATES</Badge>
+            <Badge variant="gold">⚡ STATES</Badge>
             Label States - Form Context
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -820,7 +820,7 @@ export const Playground: Story = {
     disabled: false,
     children: 'University Email',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PageContainer } from "@/components/temp-stubs";
+import { logger } from '@/lib/logger';
+
+import { PageContainer } from "@hive/ui";
 
 import { Handshake, ArrowLeft } from "lucide-react";
 import { ErrorBoundary } from "../../../../../components/error-boundary";
@@ -43,7 +45,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
           userRole: 'admin'
         });
       } catch (error) {
-        console.error('Failed to load collaboration data:', error);
+        logger.error('Failed to load collaboration data:', { error: String(error) });
       } finally {
         setIsLoading(false);
       }
@@ -54,11 +56,11 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading..." maxWidth="7xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading collaboration...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading collaboration...</p>
           </div>
         </div>
       </PageContainer>
@@ -67,9 +69,9 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
 
   if (!spaceData) {
     return (
-      <PageContainer title="Space Not Found" maxWidth="7xl">
+      <PageContainer>
         <div className="text-center py-12">
-          <h3 className="text-xl font-semibold text-white mb-2">Space Not Found</h3>
+          <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Space Not Found</h3>
           <p className="text-zinc-400 mb-6">The space you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.</p>
           <button
             onClick={() => router.push('/spaces')}
@@ -91,7 +93,7 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
           { 
             label: "Spaces", 
             href: "/spaces",
-            icon: ArrowLeft
+            icon: <ArrowLeft className="h-4 w-4" />
           },
           { 
             label: spaceData.name, 
@@ -99,10 +101,10 @@ export default function SpaceCollaborationPage({ params }: SpaceCollaborationPag
           },
           { 
             label: "Collaboration", 
-            icon: Handshake 
+            icon: <Handshake />
           }
         ]}
-        maxWidth="7xl"
+       
       >
         <CrossSpaceCollaboration
           currentSpaceId={spaceId}

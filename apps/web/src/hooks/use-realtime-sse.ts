@@ -4,7 +4,9 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { RealtimeMessage } from '@/lib/sse-realtime-service';
+import { logger } from '@/lib/logger';
+
+import { RealtimeMessage } from '@/lib/services/sse-realtime-service';
 
 export interface SSEConnectionState {
   connected: boolean;
@@ -66,7 +68,6 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
       });
 
       eventSource.onopen = () => {
-        console.log('SSE connection opened');
         reconnectAttemptsRef.current = 0;
         updateState({
           connected: true,
@@ -75,7 +76,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
         });
       };
 
-      eventSource.onmessage = (event) => {
+      eventSource.onmessage = (event: any) => {
         try {
           const data = JSON.parse(event.data);
           
@@ -96,12 +97,12 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
             onMessage?.(message);
           }
         } catch (error) {
-          console.error('Error parsing SSE message:', error);
+          logger.error('Error parsing SSE message:', { error: String(error) });
         }
       };
 
-      eventSource.onerror = (error) => {
-        console.error('SSE connection error:', error);
+      eventSource.onerror = (error: any) => {
+        logger.error('SSE connection error:', { error: String(error) });
         
         updateState({
           connected: false,
@@ -114,7 +115,6 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
           reconnectAttemptsRef.current++;
           
           reconnectTimeoutRef.current = setTimeout(() => {
-            console.log(`Attempting SSE reconnection (${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
             connect();
           }, reconnectDelay * reconnectAttemptsRef.current);
         } else {
@@ -127,7 +127,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
       eventSourceRef.current = eventSource;
 
     } catch (error) {
-      console.error('Error creating SSE connection:', error);
+      logger.error('Error creating SSE connection:', { error: String(error) });
       updateState({
         connected: false,
         connecting: false,
@@ -187,7 +187,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
       const result = await response.json();
       return result.messageId;
     } catch (error) {
-      console.error('Error sending message:', error);
+      logger.error('Error sending message:', { error: String(error) });
       throw error;
     }
   }, []);
@@ -220,7 +220,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
         })
       });
     } catch (error) {
-      console.error('Error updating presence:', error);
+      logger.error('Error updating presence:', { error: String(error) });
     }
   }, []);
 

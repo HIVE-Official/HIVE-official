@@ -1,46 +1,44 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import React, { useState } from 'react';
-import { UnifiedAuthProvider, ShellProvider } from "@hive/ui";
+import { QueryClientProvider } from '@tanstack/react-query';
+import React, { lazy, Suspense } from 'react';
+import { queryClient } from '@hive/hooks';
+import { ShellProvider } from "@hive/ui";
 import { ModalProvider } from '../components/ui/modal-system';
 import ErrorProvider from '../components/error-provider';
-import createFirebaseAuthIntegration from '../lib/firebase-auth-integration';
+import { AuthErrorBoundary } from '../components/auth/auth-error-boundary';
+import { FirebaseAuthProvider } from '../providers/firebase-auth-provider';
+
+// Lazy load dev tools only in development
+const ReactQueryDevtools = process.env.NODE_ENV === 'development' 
+  ? lazy(() => import('@tanstack/react-query-devtools').then(mod => ({ default: mod.ReactQueryDevtools })))
+  : () => null;
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000, // 1 minute
-        retry: 1,
-      },
-    },
-  }));
-
-  const [firebaseIntegration] = useState(() => {
-    // Only create Firebase integration on client-side
-    if (typeof window !== 'undefined') {
-      try {
-        return createFirebaseAuthIntegration();
-      } catch (error) {
-        console.warn('Firebase auth integration failed to initialize:', error);
-        return undefined;
-      }
-    }
-    return undefined;
-  });
-
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorProvider>
         <ModalProvider>
-          <UnifiedAuthProvider firebaseIntegration={firebaseIntegration}>
-            <ShellProvider>
-              {children}
-              <ReactQueryDevtools initialIsOpen={false} />
-            </ShellProvider>
-          </UnifiedAuthProvider>
+          <AuthErrorBoundary>
+            <FirebaseAuthProvider>
+              <ShellProvider>
+                {children}
+                {process.env.NODE_ENV === 'development' && (
+                  <Suspense fallback={null}>
+                    <ReactQueryDevtools 
+                      initialIsOpen={false} 
+                      position="bottom-left"
+                      panelProps={{
+                        style: {
+                          zIndex: 999999,
+                        }
+                      }}
+                    />
+                  </Suspense>
+                )}
+              </ShellProvider>
+            </FirebaseAuthProvider>
+          </AuthErrorBoundary>
         </ModalProvider>
       </ErrorProvider>
     </QueryClientProvider>

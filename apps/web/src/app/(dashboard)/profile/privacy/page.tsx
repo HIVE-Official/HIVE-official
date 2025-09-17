@@ -5,6 +5,8 @@
 // Following the successful profile edit and settings page patterns
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { logger } from '@/lib/logger';
+
 import { useRouter } from 'next/navigation';
 import { 
   PageContainer,
@@ -14,7 +16,6 @@ import {
   FormField,
   HiveConfirmModal,
   Badge,
-  HiveModal
 } from "@hive/ui";
 import { useHiveProfile } from '../../../../hooks/use-hive-profile';
 import { ErrorBoundary } from '../../../../components/error-boundary';
@@ -24,15 +25,10 @@ import {
   Globe,
   Eye,
   EyeOff,
-  Ghost,
   MessageCircle,
   Save,
   UserX,
   Check,
-  AlertTriangle,
-  Users,
-  Lock,
-  Settings as SettingsIcon,
   Moon
 } from 'lucide-react';
 
@@ -58,9 +54,9 @@ interface PrivacySettings {
   ghostMode: {
     enabled: boolean;
     level: 'minimal' | 'moderate' | 'maximum';
-    hideActivity: boolean;
-    hideOnlineStatus: boolean;
-    hideMemberships: boolean;
+    hideActivity?: boolean;
+    hideOnlineStatus?: boolean;
+    hideMemberships?: boolean;
   };
 }
 
@@ -113,7 +109,13 @@ export default function ProfilePrivacyStorybook() {
         showConnections: profile.privacy.showConnections,
         showOnlineStatus: profile.privacy.showOnlineStatus,
         allowDirectMessages: profile.privacy.allowDirectMessages,
-        ghostMode: profile.privacy.ghostMode
+        ghostMode: {
+          enabled: profile.privacy.ghostMode?.enabled || false,
+          level: profile.privacy.ghostMode?.level || 'minimal',
+          hideActivity: profile.privacy.ghostMode?.hideActivity || false,
+          hideOnlineStatus: profile.privacy.ghostMode?.hideOnlineStatus || false,
+          hideMemberships: profile.privacy.ghostMode?.hideMemberships || false
+        }
       }));
     }
   }, [profile]);
@@ -188,7 +190,7 @@ export default function ProfilePrivacyStorybook() {
       }
       setShowGoPrivateModal(false);
     } catch (error) {
-      console.error('Failed to go private:', error);
+      logger.error('Failed to go private:', { error: String(error) });
     }
   };
 
@@ -238,7 +240,7 @@ export default function ProfilePrivacyStorybook() {
       }
       setShowGoPublicModal(false);
     } catch (error) {
-      console.error('Failed to go public:', error);
+      logger.error('Failed to go public:', { error: String(error) });
     }
   };
 
@@ -263,7 +265,7 @@ export default function ProfilePrivacyStorybook() {
         setTimeout(() => setSaveSuccess(false), 3000);
       }
     } catch (error) {
-      console.error('Failed to save privacy settings:', error);
+      logger.error('Failed to save privacy settings:', { error: String(error) });
     }
   };
 
@@ -273,7 +275,7 @@ export default function ProfilePrivacyStorybook() {
       setShowGhostModeModal(false);
       handleGhostModeChange('enabled', !privacySettings.ghostMode.enabled);
     } catch (error) {
-      console.error('Failed to toggle ghost mode:', error);
+      logger.error('Failed to toggle ghost mode:', { error: String(error) });
     }
   };
 
@@ -284,13 +286,13 @@ export default function ProfilePrivacyStorybook() {
   };
 
   const getPrivacyLevelColor = () => {
-    if (privacySettings.ghostMode.enabled) return 'bg-purple-500/10 border-purple-500/20 text-purple-400';
+    if (privacySettings.ghostMode.enabled) return 'bg-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]';
     if (!privacySettings.isPublic) return 'bg-red-500/10 border-red-500/20 text-red-400';
     return 'bg-green-500/10 border-green-500/20 text-green-400';
   };
 
   // Current user context for components
-  const currentUser = useMemo(() => {
+  const _currentUser = useMemo(() => {
     if (!profile) return null;
     return {
       id: profile.identity.id,
@@ -305,11 +307,11 @@ export default function ProfilePrivacyStorybook() {
 
   if (isLoading || !profile) {
     return (
-      <PageContainer title="Loading..." maxWidth="4xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your privacy settings...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading your privacy settings...</p>
           </div>
         </div>
       </PageContainer>
@@ -350,7 +352,7 @@ export default function ProfilePrivacyStorybook() {
             )}
           </div>
         }
-        maxWidth="4xl"
+       
       >
         {/* ✅ **SUCCESS MESSAGE** */}
         {saveSuccess && (
@@ -371,7 +373,7 @@ export default function ProfilePrivacyStorybook() {
                 <EyeOff className="h-6 w-6 text-red-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-2">Go Private</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Go Private</h3>
                 <p className="text-sm text-gray-400">
                   Instantly hide your profile, enable ghost mode, and minimize your campus presence. 
                   Perfect for finals week or when you need focused study time.
@@ -395,7 +397,7 @@ export default function ProfilePrivacyStorybook() {
                 <Globe className="h-6 w-6 text-green-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-2">Go Public</h3>
+                <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-2">Go Public</h3>
                 <p className="text-sm text-gray-400">
                   Open your profile to campus connections, enable collaboration, and maximize 
                   your networking opportunities within the UB community.
@@ -415,7 +417,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* 👁️ **PROFILE VISIBILITY SETTINGS** */}
         <Card className="p-6 mb-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
             <Globe className="h-5 w-5 text-hive-gold" />
             Profile Visibility
           </h3>
@@ -427,7 +429,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.isPublic}
-                onCheckedChange={(checked) => handlePrivacyChange('isPublic', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('isPublic', checked)}
               />
             </FormField>
             
@@ -437,7 +439,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.showActivity}
-                onCheckedChange={(checked) => handlePrivacyChange('showActivity', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('showActivity', checked)}
               />
             </FormField>
             
@@ -447,7 +449,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.showSpaces}
-                onCheckedChange={(checked) => handlePrivacyChange('showSpaces', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('showSpaces', checked)}
               />
             </FormField>
             
@@ -457,7 +459,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.showConnections}
-                onCheckedChange={(checked) => handlePrivacyChange('showConnections', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('showConnections', checked)}
               />
             </FormField>
             
@@ -467,7 +469,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.showOnlineStatus}
-                onCheckedChange={(checked) => handlePrivacyChange('showOnlineStatus', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('showOnlineStatus', checked)}
               />
             </FormField>
           </div>
@@ -475,7 +477,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* 💬 **COMMUNICATION SETTINGS** */}
         <Card className="p-6 mb-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-hive-gold" />
             Communication & Invitations
           </h3>
@@ -487,7 +489,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowDirectMessages}
-                onCheckedChange={(checked) => handlePrivacyChange('allowDirectMessages', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowDirectMessages', checked)}
               />
             </FormField>
             
@@ -497,7 +499,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowSpaceInvites}
-                onCheckedChange={(checked) => handlePrivacyChange('allowSpaceInvites', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowSpaceInvites', checked)}
               />
             </FormField>
             
@@ -507,20 +509,20 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowEventInvites}
-                onCheckedChange={(checked) => handlePrivacyChange('allowEventInvites', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowEventInvites', checked)}
               />
             </FormField>
           </div>
         </Card>
 
         {/* 👻 **UB GHOST MODE** */}
-        <Card className="p-6 border-purple-500/20 bg-purple-500/5 mb-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Moon className="h-5 w-5 text-purple-400" />
+        <Card className="p-6 border-[var(--hive-gold)]/20 bg-[var(--hive-gold)]/5 mb-6">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
+            <Moon className="h-5 w-5 text-[var(--hive-gold)]" />
             Ghost Mode
             <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
             {privacySettings.ghostMode.enabled && (
-              <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">
+              <Badge variant="secondary" className="text-xs bg-[var(--hive-gold)]/20 text-purple-300">
                 Active - {privacySettings.ghostMode.level}
               </Badge>
             )}
@@ -546,25 +548,25 @@ export default function ProfilePrivacyStorybook() {
             </FormField>
             
             {privacySettings.ghostMode.enabled && (
-              <div className="pl-4 border-l-2 border-purple-500/20 space-y-3 mt-4">
+              <div className="pl-4 border-l-2 border-[var(--hive-gold)]/20 space-y-3 mt-4">
                 <FormField label="Hide Activity Feed">
                   <Switch
                     checked={privacySettings.ghostMode.hideActivity}
-                    onCheckedChange={(checked) => handleGhostModeChange('hideActivity', checked)}
+                    onCheckedChange={(checked: any) => handleGhostModeChange('hideActivity', checked)}
                   />
                 </FormField>
                 
                 <FormField label="Hide Online Status">
                   <Switch
                     checked={privacySettings.ghostMode.hideOnlineStatus}
-                    onCheckedChange={(checked) => handleGhostModeChange('hideOnlineStatus', checked)}
+                    onCheckedChange={(checked: any) => handleGhostModeChange('hideOnlineStatus', checked)}
                   />
                 </FormField>
                 
                 <FormField label="Hide Space Memberships">
                   <Switch
                     checked={privacySettings.ghostMode.hideMemberships}
-                    onCheckedChange={(checked) => handleGhostModeChange('hideMemberships', checked)}
+                    onCheckedChange={(checked: any) => handleGhostModeChange('hideMemberships', checked)}
                   />
                 </FormField>
               </div>
@@ -574,7 +576,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* 🛡️ **DATA & ANALYTICS** */}
         <Card className="p-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center gap-2">
             <Shield className="h-5 w-5 text-hive-gold" />
             Data & Analytics
           </h3>
@@ -586,7 +588,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowAnalytics}
-                onCheckedChange={(checked) => handlePrivacyChange('allowAnalytics', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowAnalytics', checked)}
               />
             </FormField>
             
@@ -596,7 +598,7 @@ export default function ProfilePrivacyStorybook() {
             >
               <Switch
                 checked={privacySettings.allowPersonalization}
-                onCheckedChange={(checked) => handlePrivacyChange('allowPersonalization', checked)}
+                onCheckedChange={(checked: any) => handlePrivacyChange('allowPersonalization', checked)}
               />
             </FormField>
           </div>
@@ -606,7 +608,7 @@ export default function ProfilePrivacyStorybook() {
         
         {/* Go Private Confirmation */}
         <HiveConfirmModal
-          open={showGoPrivateModal}
+          isOpen={showGoPrivateModal}
           onClose={() => setShowGoPrivateModal(false)}
           title="Make Everything Private?"
           description="This will hide your profile from other students, disable direct messages, and enable maximum ghost mode. You can still access all your tools and spaces, but your campus presence will be minimized."
@@ -618,7 +620,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* Go Public Confirmation */}
         <HiveConfirmModal
-          open={showGoPublicModal}
+          isOpen={showGoPublicModal}
           onClose={() => setShowGoPublicModal(false)}
           title="Make Profile Public?"
           description="This will make your profile visible to other UB students, enable campus connections, and turn off ghost mode. You'll be discoverable for networking and collaboration."
@@ -630,7 +632,7 @@ export default function ProfilePrivacyStorybook() {
 
         {/* Ghost Mode Confirmation */}
         <HiveConfirmModal
-          open={showGhostModeModal}
+          isOpen={showGhostModeModal}
           onClose={() => setShowGhostModeModal(false)}
           title={privacySettings.ghostMode.enabled ? "Disable Ghost Mode?" : "Enable Ghost Mode?"}
           description={privacySettings.ghostMode.enabled 

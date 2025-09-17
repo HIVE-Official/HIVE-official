@@ -6,6 +6,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core';
+
+import Image from 'next/image';
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
@@ -282,7 +285,7 @@ const UserCard: React.FC<{
               <div className="relative">
                 <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
                   {user.profilePhoto ? (
-                    <img src={user.profilePhoto} alt={user.displayName} className="w-full h-full object-cover" />
+                    <Image src={user.profilePhoto} alt={user.displayName} width={48} height={48} className="w-full h-full object-cover" />
                   ) : (
                     <Users className="w-6 h-6 text-gray-400" />
                   )}
@@ -426,7 +429,7 @@ const UserCard: React.FC<{
                       <div className="flex items-center space-x-2">
                         {getSpaceCategoryIcon(space.spaceCategory)}
                         <span className="text-white truncate max-w-[120px]">{space.spaceName}</span>
-                        <Badge size="xs" className="bg-purple-500/10 text-purple-400">
+                        <Badge size="sm" className="bg-purple-500/10 text-purple-400">
                           {space.role}
                         </Badge>
                       </div>
@@ -513,16 +516,6 @@ export const HiveAdminUserManagement: React.FC<HiveAdminUserManagementProps> = (
   const [statusFilter, setStatusFilter] = useState<UserStatus | 'all'>('all');
   // const [showBulkActions, setShowBulkActions] = useState(false);
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">User management system is not available</p>
-      </div>
-    );
-  }
-
   const loadUsers = useCallback(async () => {
     if (!admin) return;
 
@@ -542,7 +535,7 @@ export const HiveAdminUserManagement: React.FC<HiveAdminUserManagementProps> = (
       const data = await response.json();
       setUsers(data.users || []);
     } catch (error) {
-      console.error('Failed to load users:', error);
+      logger.error('Failed to load users:', error);
     } finally {
       setLoading(false);
     }
@@ -551,6 +544,16 @@ export const HiveAdminUserManagement: React.FC<HiveAdminUserManagementProps> = (
   useEffect(() => {
     loadUsers();
   }, [loadUsers]);
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">User management system is not available</p>
+      </div>
+    );
+  }
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = searchTerm === '' || 
@@ -832,10 +835,10 @@ export const HiveAdminUserManagement: React.FC<HiveAdminUserManagementProps> = (
                 <UserCard
                   key={user.id}
                   user={user}
-                  onViewDetails={() => console.log('View details:', user.id)}
-                  onEdit={() => console.log('Edit user:', user.id)}
-                  onSuspend={() => console.log('Suspend user:', user.id)}
-                  onDelete={() => console.log('Delete user:', user.id)}
+                  onViewDetails={() => {/* View details: user.id */}}
+                  onEdit={() => {/* Edit user: user.id */}}
+                  onSuspend={() => {/* Suspend user: user.id */}}
+                  onDelete={() => {/* Delete user: user.id */}}
                   isSelected={selectedUsers.has(user.id)}
                   onSelect={(selected) => handleSelectUser(user.id, selected)}
                 />

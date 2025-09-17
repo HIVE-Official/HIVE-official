@@ -29,7 +29,12 @@ export const createPost = functions.https.onCall(async (data, context) => {
 
     const userData = userDoc.data() as User;
 
-    const postRef = db.collection('spaces').doc(spaceId).collection('posts').doc();
+    // Use flat spacePosts collection
+    const postRef = db.collection('spacePosts').doc();
+    
+    // Get space data for additional context
+    const spaceDoc = await db.collection('spaces').doc(spaceId).get();
+    const spaceData = spaceDoc.data();
     
     const newPost = {
       id: postRef.id,
@@ -39,12 +44,23 @@ export const createPost = functions.https.onCall(async (data, context) => {
         avatarUrl: userData.avatarUrl || null,
       },
       spaceId: spaceId,
+      spaceName: spaceData?.name || 'Unknown Space',
+      spaceCategory: spaceData?.category || spaceData?.type || 'general',
       content: content,
+      likeCount: 0,
+      commentCount: 0,
+      isPinned: false,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 
     await postRef.set(newPost);
+    
+    // Update space post count
+    await db.collection('spaces').doc(spaceId).update({
+      postCount: admin.firestore.FieldValue.increment(1),
+      lastActivityAt: admin.firestore.FieldValue.serverTimestamp()
+    });
 
     functions.logger.info(`User ${uid} created post ${postRef.id} in space ${spaceId}`);
     return { success: true, postId: postRef.id };

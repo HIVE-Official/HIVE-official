@@ -3,8 +3,8 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home, ArrowLeft } from 'lucide-react';
 import { Button, Card } from "@hive/ui";
-import { Alert as _Alert } from "@/components/temp-stubs";
-import { logger } from '../../../../lib/logger';
+import { Alert as _Alert } from "@hive/ui";
+import { logger } from '@/lib/logger';
 
 interface SpaceErrorBoundaryState {
   hasError: boolean;
@@ -70,7 +70,7 @@ class SpaceErrorBoundary extends React.Component<SpaceErrorBoundaryProps, SpaceE
               <AlertTriangle className="h-8 w-8 text-red-400" />
             </div>
             
-            <h2 className="text-xl font-semibold text-white mb-3">
+            <h2 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-3">
               Something went wrong
             </h2>
             
@@ -80,7 +80,7 @@ class SpaceErrorBoundary extends React.Component<SpaceErrorBoundaryProps, SpaceE
             
             <div className="space-y-3">
               <Button
-                className="w-full bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+                className="w-full bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] hover:bg-[#FFE255]"
                 onClick={this.resetError}
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
@@ -90,7 +90,7 @@ class SpaceErrorBoundary extends React.Component<SpaceErrorBoundaryProps, SpaceE
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
+                  className="flex-1 border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
                   onClick={() => window.history.back()}
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
@@ -99,7 +99,7 @@ class SpaceErrorBoundary extends React.Component<SpaceErrorBoundaryProps, SpaceE
                 
                 <Button
                   variant="outline"
-                  className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
+                  className="flex-1 border-white/[0.2] text-[var(--hive-text-inverse)] hover:bg-white/[0.1]"
                   onClick={() => window.location.href = '/spaces'}
                 >
                   <Home className="h-4 w-4 mr-2" />

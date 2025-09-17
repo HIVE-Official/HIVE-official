@@ -1,0 +1,202 @@
+import { type Timestamp } from "firebase/firestore";
+import { z } from "zod";
+
+/**
+ * Onboarding session data for tracking user progress through the registration flow
+ */
+export interface OnboardingSession {
+  id: string; // Document ID - typically the user's UID
+  userId?: string; // Auth UID if user is authenticated
+  
+  // Session info
+  sessionStarted: Timestamp;
+  sessionExpires: Timestamp; // 1 hour from start
+  currentStep: OnboardingStep;
+  isComplete: boolean;
+  
+  // User data being collected
+  email: string;
+  schoolId: string;
+  schoolDomain: string;
+  
+  // Profile data
+  fullName?: string;
+  handle?: string;
+  avatarUrl?: string;
+  
+  // Academic info
+  majorId?: string;
+  graduationYear?: number;
+  academicLevel?: 'undergraduate' | 'graduate' | 'phd' | 'faculty' | 'alumni';
+  
+  // Interests and preferences
+  interestTags: string[];
+  isFirstYear: boolean;
+  isLeaderCandidate: boolean;
+  
+  // Space selection
+  selectedSpaces: string[]; // Space IDs user wants to join
+  autoJoinSpaces: string[]; // Spaces they'll be auto-joined to
+  
+  // Privacy and consent
+  consentGiven: boolean;
+  builderOptIn: boolean;
+  
+  // Progress tracking
+  stepsCompleted: OnboardingStep[];
+  lastActivity: Timestamp;
+  completedAt?: Timestamp;
+  
+  // Error tracking
+  errors: OnboardingError[];
+}
+
+export type OnboardingStep = 
+  | 'email_verification'
+  | 'school_selection'
+  | 'profile_setup'
+  | 'academic_info'
+  | 'interests'
+  | 'space_discovery'
+  | 'consent'
+  | 'completion';
+
+export interface OnboardingError {
+  step: OnboardingStep;
+  error: string;
+  timestamp: Timestamp;
+  resolved: boolean;
+}
+
+/**
+ * Waitlist entry for schools that aren't open yet
+ */
+export interface WaitlistEntry {
+  id: string;
+  schoolId: string;
+  email: string;
+  fullName?: string;
+  graduationYear?: number;
+  interests: string[];
+  referralSource?: string;
+  
+  // Status
+  status: 'pending' | 'approved' | 'rejected';
+  position?: number; // Position in waitlist
+  
+  // Notifications
+  emailVerified: boolean;
+  notificationsEnabled: boolean;
+  
+  // Timestamps
+  joinedAt: Timestamp;
+  approvedAt?: Timestamp;
+  notifiedAt?: Timestamp;
+}
+
+/**
+ * School invitation for early access or beta testing
+ */
+export interface SchoolInvitation {
+  id: string;
+  schoolId: string;
+  email: string;
+  invitedBy: string; // User ID who sent invitation
+  
+  // Invitation details
+  role?: 'student' | 'faculty' | 'admin';
+  message?: string;
+  
+  // Status
+  status: 'pending' | 'accepted' | 'expired' | 'revoked';
+  
+  // Timestamps
+  sentAt: Timestamp;
+  expiresAt: Timestamp;
+  acceptedAt?: Timestamp;
+  revokedAt?: Timestamp;
+}
+
+// Zod validation schemas
+export const OnboardingErrorSchema = z.object({
+  step: z.enum(['email_verification', 'school_selection', 'profile_setup', 'academic_info', 'interests', 'space_discovery', 'consent', 'completion']),
+  error: z.string(),
+  timestamp: z.union([z.date(), z.number()]),
+  resolved: z.boolean().default(false),
+});
+
+export const OnboardingSessionSchema = z.object({
+  id: z.string(),
+  userId: z.string().optional(),
+  sessionStarted: z.union([z.date(), z.number()]),
+  sessionExpires: z.union([z.date(), z.number()]),
+  currentStep: z.enum(['email_verification', 'school_selection', 'profile_setup', 'academic_info', 'interests', 'space_discovery', 'consent', 'completion']),
+  isComplete: z.boolean().default(false),
+  email: z.string().email(),
+  schoolId: z.string(),
+  schoolDomain: z.string(),
+  fullName: z.string().optional(),
+  handle: z.string().optional(),
+  avatarUrl: z.string().optional(),
+  majorId: z.string().optional(),
+  graduationYear: z.number().optional(),
+  academicLevel: z.enum(['undergraduate', 'graduate', 'phd', 'faculty', 'alumni']).optional(),
+  interestTags: z.array(z.string()).default([]),
+  isFirstYear: z.boolean().default(false),
+  isLeaderCandidate: z.boolean().default(false),
+  selectedSpaces: z.array(z.string()).default([]),
+  autoJoinSpaces: z.array(z.string()).default([]),
+  consentGiven: z.boolean().default(false),
+  builderOptIn: z.boolean().default(false),
+  stepsCompleted: z.array(z.enum(['email_verification', 'school_selection', 'profile_setup', 'academic_info', 'interests', 'space_discovery', 'consent', 'completion'])).default([]),
+  lastActivity: z.union([z.date(), z.number()]),
+  completedAt: z.union([z.date(), z.number()]).optional(),
+  errors: z.array(OnboardingErrorSchema).default([]),
+});
+
+export const WaitlistEntrySchema = z.object({
+  id: z.string(),
+  schoolId: z.string(),
+  email: z.string().email(),
+  fullName: z.string().optional(),
+  graduationYear: z.number().optional(),
+  interests: z.array(z.string()).default([]),
+  referralSource: z.string().optional(),
+  status: z.enum(['pending', 'approved', 'rejected']).default('pending'),
+  position: z.number().optional(),
+  emailVerified: z.boolean().default(false),
+  notificationsEnabled: z.boolean().default(true),
+  joinedAt: z.union([z.date(), z.number()]),
+  approvedAt: z.union([z.date(), z.number()]).optional(),
+  notifiedAt: z.union([z.date(), z.number()]).optional(),
+});
+
+export const SchoolInvitationSchema = z.object({
+  id: z.string(),
+  schoolId: z.string(),
+  email: z.string().email(),
+  invitedBy: z.string(),
+  role: z.enum(['student', 'faculty', 'admin']).optional(),
+  message: z.string().optional(),
+  status: z.enum(['pending', 'accepted', 'expired', 'revoked']).default('pending'),
+  sentAt: z.union([z.date(), z.number()]),
+  expiresAt: z.union([z.date(), z.number()]),
+  acceptedAt: z.union([z.date(), z.number()]).optional(),
+  revokedAt: z.union([z.date(), z.number()]).optional(),
+});
+
+export const CreateOnboardingSessionSchema = OnboardingSessionSchema.omit({
+  id: true,
+  sessionStarted: true,
+  lastActivity: true,
+});
+
+export const UpdateOnboardingSessionSchema = OnboardingSessionSchema.partial().omit({
+  id: true,
+  sessionStarted: true,
+});
+
+export type CreateOnboardingSessionData = z.infer<typeof CreateOnboardingSessionSchema>;
+export type UpdateOnboardingSessionData = z.infer<typeof UpdateOnboardingSessionSchema>;
+export type CreateWaitlistEntryData = z.infer<typeof WaitlistEntrySchema>;
+export type CreateSchoolInvitationData = z.infer<typeof SchoolInvitationSchema>;

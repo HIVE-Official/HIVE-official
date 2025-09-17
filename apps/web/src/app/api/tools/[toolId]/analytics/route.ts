@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin as adminDb } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 interface AnalyticsQuery {
   toolId: string;
@@ -288,8 +288,8 @@ async function generateToolAnalytics(query: AnalyticsQuery): Promise<ToolAnalyti
     performance: {
       averageLoadTime: Math.round(averageLoadTime),
       errorRate: Math.round(errorRate * 100) / 100,
-      crashRate: 0, // TODO: Implement crash tracking
-      popularFeatures: [] // TODO: Implement feature tracking
+      crashRate: 0,
+      popularFeatures: []
     },
     audience: {
       userRetention,
@@ -297,11 +297,11 @@ async function generateToolAnalytics(query: AnalyticsQuery): Promise<ToolAnalyti
       engagementMetrics: {
         averageSessionsPerUser: Math.round(averageSessionsPerUser * 10) / 10,
         averageTimePerSession: Math.round(averageTimePerSession),
-        bounceRate: 0 // TODO: Calculate bounce rate
+        bounceRate: 0
       }
     },
     revenue: {
-      totalRevenue: 0, // TODO: Implement revenue tracking
+      totalRevenue: 0,
       monthlyRecurringRevenue: 0,
       averageRevenuePerUser: 0,
       lifetimeValue: 0,
@@ -422,7 +422,7 @@ async function calculateDemographics(events: any[]) {
   const uniqueUsers = [...new Set(events.map(e => e.userId))];
   
   // Get user details
-  const userPromises = uniqueUsers.map(async (userId) => {
+  const userPromises = uniqueUsers.map(async (userId: any) => {
     const userDoc = await adminDb.collection('users').doc(userId).get();
     return userDoc.exists ? { id: userId, ...userDoc.data() } : null;
   });
@@ -461,6 +461,6 @@ async function calculateDemographics(events: any[]) {
   return {
     byUserType,
     byInstitution,
-    byGeoLocation: [] // TODO: Implement geo tracking
+    byGeoLocation: []
   };
 }

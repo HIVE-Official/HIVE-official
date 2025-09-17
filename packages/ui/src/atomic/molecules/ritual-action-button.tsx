@@ -34,21 +34,21 @@ const getRitualConfig = (ritualType: string) => {
       description: 'Build your foundation',
       icon: Target,
       color: 'hive-gold',
-      gradient: 'from-hive-gold to-yellow-500'
+      gradient: 'from-hive-gold to-[var(--hive-gold)]'
     },
     discover: {
       title: 'Discover',
       description: 'Find your communities',
       icon: Compass,
       color: 'hive-brand-secondary',
-      gradient: 'from-hive-brand-secondary to-purple-500'
+      gradient: 'from-hive-brand-secondary to-[var(--hive-gold)]'
     },
     connect: {
       title: 'Connect',
       description: 'Build your network',
       icon: UserPlus,
-      color: 'purple-400',
-      gradient: 'from-purple-500 to-pink-500'
+      color: '[var(--hive-gold)]',
+      gradient: 'from-[var(--hive-gold)] to-pink-500'
     },
     launch: {
       title: 'Launch',
@@ -148,23 +148,23 @@ export function RitualActionButton({
         <div className="relative z-10 p-6 text-left w-full">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                <RitualIcon className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 bg-[var(--hive-white)]/20 rounded-full flex items-center justify-center">
+                <RitualIcon className="h-6 w-6 text-[var(--hive-text-inverse)]" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-[var(--hive-text-inverse)]">
                   {ritualConfig.title}
                 </h3>
-                <p className="text-white/80 text-sm">
+                <p className="text-[var(--hive-text-inverse)]/80 text-sm">
                   {ritualConfig.description}
                 </p>
               </div>
             </div>
             
             <div className="flex items-center space-x-2">
-              <ActionIcon className="h-5 w-5 text-white" />
+              <ActionIcon className="h-5 w-5 text-[var(--hive-text-inverse)]" />
               {isLoading && (
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-[var(--hive-white)] border-t-transparent" />
               )}
             </div>
           </div>
@@ -172,13 +172,13 @@ export function RitualActionButton({
           {/* Progress bar for continue/complete actions */}
           {(actionType === 'continue' || actionType === 'complete') && (
             <div className="mb-4">
-              <div className="flex items-center justify-between text-white/80 text-xs mb-2">
+              <div className="flex items-center justify-between text-[var(--hive-text-inverse)]/80 text-xs mb-2">
                 <span>Progress</span>
                 <span>{progress}% complete</span>
               </div>
-              <div className="w-full bg-white/20 rounded-full h-2">
+              <div className="w-full bg-[var(--hive-white)]/20 rounded-full h-2">
                 <div 
-                  className="bg-white rounded-full h-2 transition-all duration-500"
+                  className="bg-[var(--hive-white)] rounded-full h-2 transition-all duration-500"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -188,23 +188,23 @@ export function RitualActionButton({
           {/* Action label and meta info */}
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-white font-semibold">
+              <div className="text-[var(--hive-text-inverse)] font-semibold">
                 {actionConfig.label}
               </div>
-              <div className="text-white/70 text-xs">
+              <div className="text-[var(--hive-text-inverse)]/70 text-xs">
                 {actionConfig.description}
               </div>
             </div>
             
             <div className="text-right">
               {estimatedTime && (
-                <div className="flex items-center space-x-1 text-white/70 text-xs mb-1">
+                <div className="flex items-center space-x-1 text-[var(--hive-text-inverse)]/70 text-xs mb-1">
                   <Clock className="h-3 w-3" />
                   <span>~{estimatedTime}m</span>
                 </div>
               )}
               {participantCount && (
-                <div className="flex items-center space-x-1 text-white/70 text-xs">
+                <div className="flex items-center space-x-1 text-[var(--hive-text-inverse)]/70 text-xs">
                   <Users className="h-3 w-3" />
                   <span>{participantCount.toLocaleString()} active</span>
                 </div>

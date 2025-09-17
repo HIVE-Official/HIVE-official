@@ -1,4 +1,4 @@
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { getFirestore, FieldValue, type Transaction } from "firebase-admin/firestore";
 
 export async function joinWaitlist(email: string, schoolId: string): Promise<{ success: boolean; message?: string }> {
   if (!email || !schoolId) {
@@ -9,7 +9,7 @@ export async function joinWaitlist(email: string, schoolId: string): Promise<{ s
   const schoolRef = db.collection("schools").doc(schoolId);
   const waitlistRef = schoolRef.collection("waitlist_entries").doc(email);
 
-  await db.runTransaction(async (transaction) => {
+  await db.runTransaction(async (transaction: Transaction) => {
     const schoolDoc = await transaction.get(schoolRef);
     const waitlistDoc = await transaction.get(waitlistRef);
 

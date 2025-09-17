@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 // In-memory store for development mode profile data (shared with profile route)
 const devProfileStore: Record<string, any> = {};
@@ -47,7 +47,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     
     // Update user profile in Firebase with new avatar
     try {
-      const { dbAdmin } = await import('@/lib/firebase-admin');
+      const { dbAdmin } = await import('@/lib/firebase/admin/firebase-admin');
       await dbAdmin.collection('users').doc(userId).update({
         avatarUrl,
         profilePhoto: avatarUrl,
@@ -68,7 +68,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
   } catch (error) {
     logger.error('Avatar generation error');
-    return NextResponse.json(ApiResponseHelper.error("Failed to generate avatar", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return NextResponse.json(ApiResponseHelper.error("Failed to generate avatar", { error: String("INTERNAL_ERROR") }), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, { 
   allowDevelopmentBypass: true, // Avatar generation is safe for development

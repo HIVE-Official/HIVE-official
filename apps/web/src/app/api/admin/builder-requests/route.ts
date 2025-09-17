@@ -2,10 +2,10 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 /**
  * Admin Builder Request Management API
@@ -30,7 +30,6 @@ const ADMIN_USER_IDS = [
  * Check if user is an admin
  */
 async function isAdmin(userId: string): Promise<boolean> {
-  // TODO: Implement proper admin checking with admin roles table
   return ADMIN_USER_IDS.includes(userId);
 }
 
@@ -258,7 +257,7 @@ export async function GET(request: NextRequest) {
         expiresAt: data.expiresAt?.toDate?.()?.toISOString(),
         // Calculate time since submission
         hoursWaiting: data.submittedAt ? 
-          Math.floor((Date.now() - data.submittedAt.toDate().getTime()) / (1000 * 60 * 60)) : 0
+          Math.floor((Date.now() - (data.submittedAt?.toDate ? data.submittedAt?.toDate().getTime() : new Date(data.submittedAt).getTime())) / (1000 * 60 * 60)) : 0
       };
     });
 

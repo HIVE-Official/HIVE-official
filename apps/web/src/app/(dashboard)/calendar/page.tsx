@@ -4,9 +4,12 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
-import { Button, Card, Badge } from "@hive/ui";
-import { HiveModal } from "@/components/temp-stubs";
-import { PageContainer } from "@/components/temp-stubs";
+import { logger } from '@/lib/logger';
+
+import dynamicImport from "next/dynamic";
+import { Card, Badge, Button } from "@hive/ui";
+import { PageContainer } from "@hive/ui";
+import { Modal } from "@hive/ui";
 import { 
   Calendar, 
   Plus, 
@@ -25,8 +28,37 @@ import {
 import { useSession } from "../../../hooks/use-session";
 // import { useCalendarData } from "../../../hooks/use-calendar-data";
 import { ErrorBoundary } from "../../../components/error-boundary";
-import { EventDetailsModal } from "../../../components/events/event-details-modal";
-import { CreateEventModal } from "../../../components/events/create-event-modal";
+
+// Dynamic imports for heavy modal components
+const EventDetailsModal = dynamicImport(
+  async () => {
+    const mod = await import("../../../components/events/event-details-modal");
+    return { default: mod.EventDetailsModal };
+  },
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+      </div>
+    )
+  }
+);
+
+const CreateEventModal = dynamicImport(
+  async () => {
+    const mod = await import("../../../components/events/event-modal");
+    return { default: mod.CreateEventModal };
+  },
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 bg-[var(--hive-black)]/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+      </div>
+    )
+  }
+);
 
 // Calendar interfaces
 interface CalendarEvent {
@@ -90,7 +122,7 @@ export default function CalendarPage() {
                 const parsed = JSON.parse(session) as { userId?: string };
                 return parsed.userId || 'anonymous';
               } catch (error) {
-                console.error('Failed to parse session for calendar auth:', error);
+                logger.error('Failed to parse session for calendar auth:', { error: String(error) });
                 return 'anonymous';
               }
             })()}`,
@@ -152,7 +184,7 @@ export default function CalendarPage() {
         setEvents(transformedEvents);
         setIntegrations(defaultIntegrations);
       } catch (error) {
-        console.error('Error fetching calendar events:', error);
+        logger.error('Error fetching calendar events:', { error: String(error) });
         // Fallback to empty state on error
         setEvents([]);
         setIntegrations([]);
@@ -302,8 +334,8 @@ export default function CalendarPage() {
     switch (type) {
       case 'event': return 'bg-blue-500';
       case 'class': return 'bg-green-500';
-      case 'assignment': return 'bg-yellow-500';
-      case 'meeting': return 'bg-purple-500';
+      case 'assignment': return 'bg-[var(--hive-gold)]';
+      case 'meeting': return 'bg-[var(--hive-gold)]';
       case 'personal': return 'bg-pink-500';
       default: return 'bg-gray-500';
     }
@@ -322,11 +354,11 @@ export default function CalendarPage() {
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading Calendar..." maxWidth="7xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your calendar...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading your calendar...</p>
           </div>
         </div>
       </PageContainer>
@@ -335,18 +367,19 @@ export default function CalendarPage() {
 
   return (
     <ErrorBoundary>
-      <PageContainer
-        title="Calendar"
-        subtitle="Your personal schedule and campus coordination hub"
-        breadcrumbs={[
-          { label: "Calendar", icon: Calendar }
-        ]}
-        actions={
-          <div className="flex items-center space-x-3">
-            {/* Conflict Warning */}
-            {conflictEvents.length > 0 && (
-              <Button
-                variant="outline"
+      <PageContainer>
+        <div className="space-y-6">
+          {/* Page Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Calendar</h1>
+              <p className="text-sm text-muted-foreground">Your personal schedule and campus coordination hub</p>
+            </div>
+            <div className="flex items-center space-x-3">
+              {/* Conflict Warning */}
+              {conflictEvents.length > 0 && (
+                <Button
+                  variant="outline"
                 size="sm"
                 onClick={() => setShowConflicts(true)}
                 className="border-red-500 text-red-400 hover:bg-red-500/10"
@@ -358,7 +391,7 @@ export default function CalendarPage() {
             
             {/* View Mode Toggle */}
             <div className="flex items-center bg-zinc-800 rounded-lg p-1">
-              {['day', 'week', 'month'].map((mode) => (
+              {['day', 'week', 'month'].map((mode: any) => (
                 <Button
                   key={mode}
                   variant={viewMode === mode ? 'primary' : 'ghost'}
@@ -390,9 +423,8 @@ export default function CalendarPage() {
               Add Event
             </Button>
           </div>
-        }
-        maxWidth="7xl"
-      >
+        </div>
+        
         {/* Calendar Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
@@ -405,7 +437,7 @@ export default function CalendarPage() {
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               
-              <h2 className="text-2xl font-bold text-white min-w-[200px] text-center">
+              <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] min-w-[200px] text-center">
                 {viewMode === 'month' && currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 {viewMode === 'week' && `Week of ${currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
                 {viewMode === 'day' && currentDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
@@ -434,8 +466,8 @@ export default function CalendarPage() {
             <Filter className="h-4 w-4 text-zinc-400" />
             <select
               value={eventTypeFilter}
-              onChange={(e) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
-              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-white text-sm focus:border-hive-gold focus:outline-none"
+              onChange={(e: any) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
+              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Events</option>
               <option value="event">Campus Events</option>
@@ -449,13 +481,13 @@ export default function CalendarPage() {
 
         {/* Integration Status */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {integrations.filter(i => i.isConnected).map((integration) => (
+          {integrations.filter(i => i.isConnected).map((integration: any) => (
             <Card key={integration.id} className="p-4 bg-zinc-800/50 border-zinc-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                   <div>
-                    <div className="font-medium text-white text-sm">{integration.name}</div>
+                    <div className="font-medium text-[var(--hive-text-inverse)] text-sm">{integration.name}</div>
                     <div className="text-xs text-zinc-400">
                       {integration.eventCount} events • Last sync: {integration.lastSync && new Date(integration.lastSync).toLocaleTimeString()}
                     </div>
@@ -472,7 +504,7 @@ export default function CalendarPage() {
           {viewEvents.length === 0 ? (
             <div className="text-center py-12">
               <Calendar className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No events scheduled</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">No events scheduled</h3>
               <p className="text-zinc-400 mb-6">
                 {eventTypeFilter !== 'all' 
                   ? `No ${eventTypeFilter} events found for this ${viewMode}`
@@ -509,7 +541,7 @@ export default function CalendarPage() {
                     )}
                   </div>
 
-                  <h3 className="font-semibold text-white mb-2 leading-tight">
+                  <h3 className="font-semibold text-[var(--hive-text-inverse)] mb-2 leading-tight">
                     {event.title}
                   </h3>
 
@@ -566,36 +598,17 @@ export default function CalendarPage() {
         <CreateEventModal
           isOpen={showAddEvent}
           onClose={() => setShowAddEvent(false)}
-          onCreateEvent={(eventData) => {
-            // Convert CreateEventData to CalendarEvent format
-            const newEvent: CalendarEvent = {
-              id: `event-${Date.now()}`,
-              title: eventData.title,
-              description: eventData.description,
-              startTime: eventData.datetime.start,
-              endTime: eventData.datetime.end,
-              location: eventData.location.name,
-              type: eventData.type === 'academic' ? 'class' :
-                     eventData.type === 'social' ? 'event' :
-                     eventData.type === 'professional' ? 'meeting' :
-                     eventData.type === 'recreational' ? 'event' : 'personal',
-              color: eventData.type === 'academic' ? '#3B82F6' : 
-                     eventData.type === 'social' ? '#EC4899' :
-                     eventData.type === 'professional' ? '#10B981' :
-                     eventData.type === 'recreational' ? '#F59E0B' : '#8B5CF6',
-              source: 'hive',
-              attendees: [],
-              rsvpStatus: 'going',
-              tools: eventData.tools,
-              space: undefined
-            };
-            
-            setEvents(prev => [newEvent, ...prev]);
+          spaceId=""
+          onSuccess={(eventId: string) => {
+            // Event created successfully
+            console.log('Event created with ID:', eventId);
+            setShowAddEvent(false);
+            // Would refresh calendar here in real app
           }}
         />
 
         {/* Calendar Integrations Modal */}
-        <HiveModal
+        <Modal
           isOpen={showIntegrations}
           onClose={() => setShowIntegrations(false)}
           title="Calendar Sync & Integrations"
@@ -603,12 +616,12 @@ export default function CalendarPage() {
         >
           <div className="space-y-6">
             <div className="space-y-4">
-              {integrations.map((integration) => (
+              {integrations.map((integration: any) => (
                 <div key={integration.id} className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className={`w-3 h-3 rounded-full ${integration.isConnected ? 'bg-green-400' : 'bg-zinc-500'}`}></div>
                     <div>
-                      <div className="font-medium text-white">{integration.name}</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">{integration.name}</div>
                       <div className="text-sm text-zinc-400">
                         {integration.isConnected 
                           ? `${integration.eventCount} events synced`
@@ -634,10 +647,10 @@ export default function CalendarPage() {
               </Button>
             </div>
           </div>
-        </HiveModal>
+        </Modal>
 
         {/* Conflicts Modal */}
-        <HiveModal
+        <Modal
           isOpen={showConflicts}
           onClose={() => setShowConflicts(false)}
           title="Schedule Conflicts"
@@ -647,7 +660,7 @@ export default function CalendarPage() {
             {conflictEvents.map((event) => (
               <div key={event.id} className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-white">{event.title}</h3>
+                  <h3 className="font-semibold text-[var(--hive-text-inverse)]">{event.title}</h3>
                   <AlertTriangle className="h-5 w-5 text-red-400" />
                 </div>
                 <p className="text-sm text-zinc-400 mb-3">
@@ -668,7 +681,7 @@ export default function CalendarPage() {
               </div>
             ))}
           </div>
-        </HiveModal>
+        </Modal>
 
         {/* Event Details Modal */}
         <EventDetailsModal
@@ -685,10 +698,11 @@ export default function CalendarPage() {
               )
             );
           }}
-          onBookmark={(eventId) => {
-            console.log('Bookmark event:', eventId);
+          onBookmark={(_eventId: any) => {
+            
           }}
         />
+        </div>
       </PageContainer>
     </ErrorBoundary>
   );

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useCallback, useMemo, useState } from 'react';
+import type React from 'react';
+import { createContext, useContext, useCallback, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 interface NavigationContextType {
@@ -199,7 +200,7 @@ export function useRouteTransitions() {
       const router = useRouter();
       await router.push(path);
     } catch (error) {
-      setNavigationError(error instanceof Error ? error.message : 'Navigation failed');
+      setNavigationError(error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Navigation failed');
     } finally {
       setIsNavigating(false);
     }

@@ -3,7 +3,16 @@ import React from 'react';
 import { ChevronDown, Users, BookOpen, MapPin, Clock, GraduationCap, Home, Building, Calendar } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 
-const meta: Meta = {
+// Create a component wrapper for the story
+const SelectDropdownSystem = () => (
+  <div className="p-6 space-y-8">
+    <h2 className="text-2xl font-semibold">Select & Dropdown System</h2>
+    <p className="text-muted-foreground">Campus selection interface system</p>
+  </div>
+);
+
+const meta: Meta<typeof SelectDropdownSystem> = {
+  component: SelectDropdownSystem,
   title: '02-Atoms/Interactive-Elements/Select & Dropdown System',
   parameters: {
     docs: {
@@ -130,7 +139,7 @@ export const AcademicSelections: Story = {
                 <SelectValue placeholder="Choose your major" />
               </SelectTrigger>
               <SelectContent>
-                {campusSelectOptions.academics.majors.map((major) => (
+                {campusSelectOptions.academics.majors.map((major: any) => (
                   <SelectItem key={major.value} value={major.value}>
                     <div>
                       <div className="font-medium">{major.label}</div>
@@ -159,7 +168,7 @@ export const AcademicSelections: Story = {
                 <SelectValue placeholder="Select your academic year" />
               </SelectTrigger>
               <SelectContent>
-                {campusSelectOptions.academics.years.map((year) => (
+                {campusSelectOptions.academics.years.map((year: any) => (
                   <SelectItem key={year.value} value={year.value}>
                     <div>
                       <div className="font-medium">{year.label}</div>
@@ -188,7 +197,7 @@ export const AcademicSelections: Story = {
                 <SelectValue placeholder="Choose semester" />
               </SelectTrigger>
               <SelectContent>
-                {campusSelectOptions.academics.semesters.map((semester) => (
+                {campusSelectOptions.academics.semesters.map((semester: any) => (
                   <SelectItem key={semester.value} value={semester.value}>
                     <div className="flex items-center justify-between w-full">
                       <span className="font-medium">{semester.label}</span>
@@ -264,7 +273,7 @@ export const CampusLocationSelections: Story = {
                 <SelectValue placeholder="Select a building" />
               </SelectTrigger>
               <SelectContent>
-                {campusSelectOptions.campus.buildings.map((building) => (
+                {campusSelectOptions.campus.buildings.map((building: any) => (
                   <SelectItem key={building.value} value={building.value}>
                     <div>
                       <div className="font-medium">{building.label}</div>
@@ -293,7 +302,7 @@ export const CampusLocationSelections: Story = {
                 <SelectValue placeholder="Choose dining location" />
               </SelectTrigger>
               <SelectContent>
-                {campusSelectOptions.campus.diningLocations.map((location) => (
+                {campusSelectOptions.campus.diningLocations.map((location: any) => (
                   <SelectItem key={location.value} value={location.value}>
                     <div>
                       <div className="font-medium">{location.label}</div>
@@ -322,7 +331,7 @@ export const CampusLocationSelections: Story = {
                 <SelectValue placeholder="Select your residence" />
               </SelectTrigger>
               <SelectContent>
-                {campusSelectOptions.campus.residenceHalls.map((hall) => (
+                {campusSelectOptions.campus.residenceHalls.map((hall: any) => (
                   <SelectItem key={hall.value} value={hall.value}>
                     <div>
                       <div className="font-medium">{hall.label}</div>
@@ -404,7 +413,7 @@ export const SocialPrivacySelections: Story = {
                 <SelectValue placeholder="Choose space type" />
               </SelectTrigger>
               <SelectContent>
-                {campusSelectOptions.social.spaceCategories.map((category) => {
+                {campusSelectOptions.social.spaceCategories.map((category: any) => {
                   const IconComponent = category.icon;
                   return (
                     <SelectItem key={category.value} value={category.value}>
@@ -439,7 +448,7 @@ export const SocialPrivacySelections: Story = {
                 <SelectValue placeholder="Choose privacy level" />
               </SelectTrigger>
               <SelectContent>
-                {campusSelectOptions.social.privacyLevels.map((level) => (
+                {campusSelectOptions.social.privacyLevels.map((level: any) => (
                   <SelectItem key={level.value} value={level.value}>
                     <div>
                       <div className="font-medium">{level.label}</div>
@@ -539,12 +548,12 @@ export const InteractiveSelectDemo: Story = {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">Academic Major</label>
-              <Select onValueChange={(value) => handleSelectionChange('major', value)}>
+              <Select onValueChange={(value: unknown) => handleSelectionChange('major', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose your major" />
                 </SelectTrigger>
                 <SelectContent>
-                  {campusSelectOptions.academics.majors.slice(0, 6).map((major) => (
+                  {campusSelectOptions.academics.majors.slice(0, 6).map((major: any) => (
                     <SelectItem key={major.value} value={major.value}>
                       <div>
                         <div className="font-medium">{major.label}</div>
@@ -558,12 +567,12 @@ export const InteractiveSelectDemo: Story = {
 
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">Academic Year</label>
-              <Select onValueChange={(value) => handleSelectionChange('year', value)}>
+              <Select onValueChange={(value: unknown) => handleSelectionChange('year', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your year" />
                 </SelectTrigger>
                 <SelectContent>
-                  {campusSelectOptions.academics.years.slice(0, 4).map((year) => (
+                  {campusSelectOptions.academics.years.slice(0, 4).map((year: any) => (
                     <SelectItem key={year.value} value={year.value}>
                       {year.label}
                     </SelectItem>
@@ -574,12 +583,12 @@ export const InteractiveSelectDemo: Story = {
 
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">Preferred Building</label>
-              <Select onValueChange={(value) => handleSelectionChange('building', value)}>
+              <Select onValueChange={(value: unknown) => handleSelectionChange('building', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose a building" />
                 </SelectTrigger>
                 <SelectContent>
-                  {campusSelectOptions.campus.buildings.slice(0, 5).map((building) => (
+                  {campusSelectOptions.campus.buildings.slice(0, 5).map((building: any) => (
                     <SelectItem key={building.value} value={building.value}>
                       {building.label}
                     </SelectItem>
@@ -590,12 +599,12 @@ export const InteractiveSelectDemo: Story = {
 
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">Privacy Level</label>
-              <Select onValueChange={(value) => handleSelectionChange('privacy', value)}>
+              <Select onValueChange={(value: unknown) => handleSelectionChange('privacy', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose privacy setting" />
                 </SelectTrigger>
                 <SelectContent>
-                  {campusSelectOptions.social.privacyLevels.slice(0, 4).map((level) => (
+                  {campusSelectOptions.social.privacyLevels.slice(0, 4).map((level: any) => (
                     <SelectItem key={level.value} value={level.value}>
                       {level.label}
                     </SelectItem>

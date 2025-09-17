@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Card, Button, Badge, HiveModal } from "@hive/ui";
-import { Alert } from "@/components/temp-stubs";
+import { Card, Button, Badge, Modal } from "@hive/ui";
+import { Alert } from "@hive/ui";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -170,25 +170,36 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       }
     };
 
-    // Generate time series data
-    const mockTimeSeries: TimeSeriesData[] = Array.from({ length: 30 }, (_, i) => ({
-      date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      members: 100 + Math.floor(Math.random() * 27),
-      posts: 5 + Math.floor(Math.random() * 15),
-      engagement: 60 + Math.floor(Math.random() * 30)
-    }));
+    // Generate time series data with realistic trends
+    const mockTimeSeries: TimeSeriesData[] = Array.from({ length: 30 }, (_, i) => {
+      // Create realistic growth trends instead of random numbers
+      const baseMembers = 100;
+      const basePosts = 5;
+      const baseEngagement = 60;
+      
+      // Simulate weekend patterns (lower on weekends)
+      const dayOfWeek = new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).getDay();
+      const weekendFactor = (dayOfWeek === 0 || dayOfWeek === 6) ? 0.7 : 1.0;
+      
+      // Gradual growth over time
+      const growthFactor = 1 + (i * 0.01); // 1% growth per day
+      
+      return {
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        members: Math.floor(baseMembers * growthFactor),
+        posts: Math.floor(basePosts * weekendFactor * growthFactor + (i % 3)), // Variation based on day
+        engagement: Math.floor(baseEngagement * weekendFactor + (i % 7) * 2) // Weekly cycle
+      };
+    });
 
       setMetrics(mockMetrics);
       setTimeSeriesData(mockTimeSeries);
       setLastUpdated(new Date());
     } catch (error) {
-      // TODO: Implement proper error tracking
-      setMetrics(null);
-    } finally {
-      setIsLoading(false);
+      console.error('Failed to fetch analytics:', error);
     }
   };
-
+  
   const healthScoreColor = useMemo(() => {
     if (!metrics) return 'text-zinc-400';
     const score = metrics.overview.healthScore;
@@ -210,7 +221,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
     return (
       <div className="text-center py-12">
         <BarChart3 className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-white mb-2">Analytics Access Restricted</h3>
+        <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Analytics Access Restricted</h3>
         <p className="text-zinc-400">Space analytics are only available to administrators and moderators.</p>
       </div>
     );
@@ -238,7 +249,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
     return (
       <div className="text-center py-12">
         <AlertTriangle className="h-16 w-16 text-red-400 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-white mb-2">Failed to Load Analytics</h3>
+        <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">Failed to Load Analytics</h3>
         <p className="text-zinc-400 mb-6">We couldn't load the analytics data. Please try again.</p>
         <Button onClick={fetchAnalytics} className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">
           <RefreshCw className="h-4 w-4 mr-2" />
@@ -253,7 +264,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">Space Analytics</h2>
+          <h2 className="text-2xl font-bold text-[var(--hive-text-inverse)] mb-2">Space Analytics</h2>
           <p className="text-zinc-400">
             {spaceName} • Last updated {lastUpdated.toLocaleTimeString()}
           </p>
@@ -273,7 +284,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       {/* Health Score Overview */}
       <Card className="p-6 bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 border-zinc-700">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">Space Health Score</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Space Health Score</h3>
           <Badge variant="building-tools" className={healthScoreColor}>
             {healthScoreStatus}
           </Badge>
@@ -313,28 +324,28 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
                 <Users className="h-4 w-4 text-blue-400" />
                 <span className="text-sm text-zinc-400">Member Retention</span>
               </div>
-              <div className="text-xl font-semibold text-white">{metrics.health.memberRetention.toFixed(1)}%</div>
+              <div className="text-xl font-semibold text-[var(--hive-text-inverse)]">{metrics.health.memberRetention.toFixed(1)}%</div>
             </div>
             <div>
               <div className="flex items-center space-x-2 mb-1">
                 <Activity className="h-4 w-4 text-green-400" />
                 <span className="text-sm text-zinc-400">Engagement Rate</span>
               </div>
-              <div className="text-xl font-semibold text-white">{metrics.overview.engagementRate.toFixed(1)}%</div>
+              <div className="text-xl font-semibold text-[var(--hive-text-inverse)]">{metrics.overview.engagementRate.toFixed(1)}%</div>
             </div>
             <div>
               <div className="flex items-center space-x-2 mb-1">
                 <Target className="h-4 w-4 text-purple-400" />
                 <span className="text-sm text-zinc-400">Collaboration Score</span>
               </div>
-              <div className="text-xl font-semibold text-white">{metrics.health.collaborationScore.toFixed(1)}%</div>
+              <div className="text-xl font-semibold text-[var(--hive-text-inverse)]">{metrics.health.collaborationScore.toFixed(1)}%</div>
             </div>
             <div>
               <div className="flex items-center space-x-2 mb-1">
                 <Star className="h-4 w-4 text-hive-gold" />
                 <span className="text-sm text-zinc-400">Content Quality</span>
               </div>
-              <div className="text-xl font-semibold text-white">{metrics.content.contentQuality.toFixed(1)}%</div>
+              <div className="text-xl font-semibold text-[var(--hive-text-inverse)]">{metrics.content.contentQuality.toFixed(1)}%</div>
             </div>
           </div>
         </div>
@@ -345,7 +356,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
         <Card className="p-4 bg-zinc-800/50 border-zinc-700">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-white">{metrics.overview.totalMembers}</div>
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{metrics.overview.totalMembers}</div>
               <div className="text-sm text-zinc-400">Total Members</div>
             </div>
             <Users className="h-8 w-8 text-blue-400" />
@@ -365,7 +376,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
         <Card className="p-4 bg-zinc-800/50 border-zinc-700">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-white">{metrics.engagement.postsCreated}</div>
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{metrics.engagement.postsCreated}</div>
               <div className="text-sm text-zinc-400">Posts Created</div>
             </div>
             <MessageSquare className="h-8 w-8 text-green-400" />
@@ -378,7 +389,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
         <Card className="p-4 bg-zinc-800/50 border-zinc-700">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-white">{metrics.events.totalEvents}</div>
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{metrics.events.totalEvents}</div>
               <div className="text-sm text-zinc-400">Events Hosted</div>
             </div>
             <Calendar className="h-8 w-8 text-purple-400" />
@@ -391,7 +402,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
         <Card className="p-4 bg-zinc-800/50 border-zinc-700">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-white">{metrics.engagement.toolUsage}</div>
+              <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{metrics.engagement.toolUsage}</div>
               <div className="text-sm text-zinc-400">Tool Interactions</div>
             </div>
             <Zap className="h-8 w-8 text-hive-gold" />
@@ -405,9 +416,9 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       {/* Activity Trends */}
       <Card className="p-6 bg-zinc-800/50 border-zinc-700">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">Activity Trends</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)]">Activity Trends</h3>
           <div className="flex items-center space-x-2">
-            {['members', 'posts', 'engagement'].map((metric) => (
+            {['members', 'posts', 'engagement'].map((metric: any) => (
               <Button
                 key={metric}
                 variant={selectedMetric === metric ? "primary" : "outline"}
@@ -415,7 +426,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
                 onClick={() => setSelectedMetric(metric as any)}
                 className={selectedMetric === metric ? 
                   "bg-hive-gold text-hive-obsidian" : 
-                  "border-zinc-600 text-zinc-400 hover:text-white"
+                  "border-zinc-600 text-zinc-400 hover:text-[var(--hive-text-inverse)]"
                 }
               >
                 {metric.charAt(0).toUpperCase() + metric.slice(1)}
@@ -443,7 +454,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       {/* Content Analysis & Top Contributors */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6 bg-zinc-800/50 border-zinc-700">
-          <h3 className="text-lg font-semibold text-white mb-4">Content Breakdown</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Content Breakdown</h3>
           <div className="space-y-3">
             {metrics.content.postsByCategory.map((category, index) => (
               <div key={category.category} className="flex items-center justify-between">
@@ -452,7 +463,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: `hsl(${index * 60}, 60%, 60%)` }}
                   />
-                  <span className="text-white">{category.category}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{category.category}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-zinc-400">{category.count}</span>
@@ -470,14 +481,14 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
         </Card>
 
         <Card className="p-6 bg-zinc-800/50 border-zinc-700">
-          <h3 className="text-lg font-semibold text-white mb-4">Top Contributors</h3>
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4">Top Contributors</h3>
           <div className="space-y-3">
             {metrics.content.topContributors.map((contributor, index) => (
               <div key={contributor.handle} className="flex items-center justify-between p-3 bg-zinc-800/30 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
                     <div className="w-10 h-10 bg-zinc-600 rounded-full flex items-center justify-center">
-                      <span className="text-white font-semibold text-sm">
+                      <span className="text-[var(--hive-text-inverse)] font-semibold text-sm">
                         {contributor.name.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
@@ -488,12 +499,12 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
                     )}
                   </div>
                   <div>
-                    <div className="font-medium text-white">{contributor.name}</div>
+                    <div className="font-medium text-[var(--hive-text-inverse)]">{contributor.name}</div>
                     <div className="text-sm text-zinc-400">@{contributor.handle}</div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium text-white">{contributor.contributions}</div>
+                  <div className="font-medium text-[var(--hive-text-inverse)]">{contributor.contributions}</div>
                   <div className="text-xs text-zinc-400">contributions</div>
                 </div>
               </div>
@@ -505,7 +516,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       {/* Insights & Recommendations */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6 bg-zinc-800/50 border-zinc-700">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
             <Lightbulb className="h-5 w-5 text-hive-gold mr-2" />
             Growth Opportunities
           </h3>
@@ -513,14 +524,14 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
             {metrics.insights.growthOpportunities.map((opportunity, index) => (
               <div key={index} className="flex items-start space-x-3 p-3 bg-hive-gold/5 border border-hive-gold/20 rounded-lg">
                 <TrendingUp className="h-4 w-4 text-hive-gold mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-white">{opportunity}</span>
+                <span className="text-sm text-[var(--hive-text-inverse)]">{opportunity}</span>
               </div>
             ))}
           </div>
         </Card>
 
         <Card className="p-6 bg-zinc-800/50 border-zinc-700">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+          <h3 className="text-lg font-semibold text-[var(--hive-text-inverse)] mb-4 flex items-center">
             <Target className="h-5 w-5 text-blue-400 mr-2" />
             Recommendations
           </h3>
@@ -528,7 +539,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
             {metrics.insights.recommendations.map((recommendation, index) => (
               <div key={index} className="flex items-start space-x-3 p-3 bg-blue-400/5 border border-blue-400/20 rounded-lg">
                 <CheckCircle className="h-4 w-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-white">{recommendation}</span>
+                <span className="text-sm text-[var(--hive-text-inverse)]">{recommendation}</span>
               </div>
             ))}
           </div>
@@ -536,7 +547,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
       </div>
 
       {/* Export Modal */}
-      <HiveModal
+      <Modal
         isOpen={showExportModal}
         onClose={() => setShowExportModal(false)}
         title="Export Analytics"
@@ -548,7 +559,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
           <div className="space-y-3">
             <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
               <div>
-                <div className="font-medium text-white">CSV Report</div>
+                <div className="font-medium text-[var(--hive-text-inverse)]">CSV Report</div>
                 <div className="text-sm text-zinc-400">Comprehensive data export</div>
               </div>
               <Button variant="outline" size="sm">
@@ -558,7 +569,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
             
             <div className="flex items-center justify-between p-3 border border-zinc-700 rounded-lg">
               <div>
-                <div className="font-medium text-white">PDF Summary</div>
+                <div className="font-medium text-[var(--hive-text-inverse)]">PDF Summary</div>
                 <div className="text-sm text-zinc-400">Executive summary report</div>
               </div>
               <Button variant="outline" size="sm">
@@ -576,7 +587,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
             </Button>
           </div>
         </div>
-      </HiveModal>
+      </Modal>
     </div>
   );
 }

@@ -7,10 +7,10 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Badge } from '../../../components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Avatar } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Avatar } from '../../../atomic/atoms/avatar';
 import { 
   GraduationCap,
   Users,
@@ -371,7 +371,7 @@ const BadgeVariantsShowcase = () => {
           <Card key={index} className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
             <CardContent className="p-4 text-center">
               <div className="mb-4">
-                <Badge variant={badge.variant as any} className="text-sm">
+                <Badge variant={badge.variant as unknown} className="text-sm">
                   {badge.example}
                 </Badge>
               </div>
@@ -397,9 +397,9 @@ const CampusBadgeShowcase = () => {
   const getColorClasses = (color: string) => {
     const colors = {
       green: 'from-green-500/20 to-green-600/10 border-green-500/20',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20',
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20',
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20',
       indigo: 'from-indigo-500/20 to-indigo-600/10 border-indigo-500/20',
       red: 'from-red-500/20 to-red-600/10 border-red-500/20'
     };
@@ -414,7 +414,7 @@ const CampusBadgeShowcase = () => {
       
       {/* Category Navigation */}
       <div className="flex flex-wrap gap-2">
-        {campusBadgeCategories.map((category) => (
+        {campusBadgeCategories.map((category: any) => (
           <Button
             key={category.category}
             variant={activeCategory === category.category ? 'primary' : 'secondary'}
@@ -448,7 +448,7 @@ const CampusBadgeShowcase = () => {
                       className="p-4 rounded-lg bg-[var(--hive-background-secondary)] border border-[var(--hive-border-default)]"
                     >
                       <div className="flex items-center justify-center mb-3">
-                        <Badge variant={badge.variant as any} className="flex items-center gap-1">
+                        <Badge variant={badge.variant as unknown} className="flex items-center gap-1">
                           <badge.icon className="w-3 h-3" />
                           {badge.text}
                         </Badge>
@@ -479,7 +479,7 @@ const BadgeSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-8">
-            {badgeSizes.map((size) => (
+            {badgeSizes.map((size: any) => (
               <div key={size.size} className="flex items-center gap-8">
                 <div className="w-32">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -491,18 +491,18 @@ const BadgeSizesShowcase = () => {
                 </div>
                 
                 <div className="flex items-center gap-4">
-                  <Badge variant="default" size={size.size as any}>
+                  <Badge variant="primary" size={size.size as unknown}>
                     {size.example}
                   </Badge>
-                  <Badge variant="primary" size={size.size as any}>
+                  <Badge variant="primary" size={size.size as unknown}>
                     <Star className="w-3 h-3 mr-1" />
                     Featured
                   </Badge>
-                  <Badge variant="success" size={size.size as any}>
+                  <Badge variant="success" size={size.size as unknown}>
                     <CheckCircle className="w-3 h-3 mr-1" />
                     Completed
                   </Badge>
-                  <Badge variant="warning" size={size.size as any}>
+                  <Badge variant="warning" size={size.size as unknown}>
                     <Clock className="w-3 h-3 mr-1" />
                     Due Soon
                   </Badge>
@@ -764,7 +764,7 @@ const AccessibilityShowcase = () => {
                         aria-label={badge.action}
                       >
                         <Badge 
-                          variant={badge.variant as any}
+                          variant={badge.variant as unknown}
                           className={`cursor-pointer transition-all ${
                             focusedBadge === `${featureIndex}-${badgeIndex}` ? 'scale-105' : ''
                           }`}
@@ -774,7 +774,7 @@ const AccessibilityShowcase = () => {
                       </button>
                     ) : (
                       <Badge 
-                        variant={badge.variant as any}
+                        variant={badge.variant as unknown}
                         aria-label={badge.ariaLabel}
                       >
                         {badge.text}
@@ -867,7 +867,7 @@ const BadgeSystemShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}
@@ -1017,7 +1017,7 @@ export const AccessibilityFeatures: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge variant="default">Default</Badge>
+      <Badge variant="primary">Default</Badge>
       <Badge variant="primary">Primary</Badge>
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="success">Success</Badge>

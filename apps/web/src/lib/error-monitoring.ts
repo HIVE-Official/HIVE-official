@@ -1,446 +1,500 @@
 /**
- * Production-ready error monitoring and logging system
- * Integrates with Sentry for error tracking and provides structured logging
+ * Error Monitoring Service
+ * 
+ * Comprehensive error tracking and monitoring for the HIVE platform.
+ * Captures, categorizes, and reports errors with context for debugging.
+ * In production, this would integrate with services like Sentry or Rollbar.
  */
 
-import { currentEnvironment } from './env';
-
-// Sentry types (will be loaded dynamically)
-interface SentryUser {
-  id?: string;
-  email?: string;
-  username?: string;
-  segment?: string;
-}
-
-interface SentryScope {
-  setUser(user: SentryUser): void;
-  setTag(_key: string, _value: string): void;
-  setContext(_key: string, _context: Record<string, any>): void;
-  setLevel(_level: 'fatal' | 'error' | 'warning' | 'info' | 'debug'): void;
-  setExtra(_key: string, _extra: any): void;
-  setFingerprint(_fingerprint: string[]): void;
-}
-
-interface SentryHub {
-  withScope(_callback: (_scope: SentryScope) => void): void;
-  captureException(_exception: any): string;
-  captureMessage(_message: string, _level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug'): string;
-  addBreadcrumb(_breadcrumb: {
-    message?: string;
-    category?: string;
-    level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
-    data?: Record<string, any>;
-    timestamp?: number;
-  }): void;
-}
-
-// Global error tracking state
-let isInitialized = false;
-let sentryHub: SentryHub | null = null;
+import { logger } from './utils/structured-logger';
 
 /**
- * Initialize error monitoring
- * Loads Sentry dynamically to avoid bundling issues
+ * Error severity levels
  */
-export async function initializeErrorMonitoring(): Promise<void> {
-  if (isInitialized) return;
-
-  try {
-    const sentryDsn = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
-    
-    if (!sentryDsn) {
-      if (currentEnvironment === 'production') {
-        console.warn('⚠️ Sentry DSN not configured in production');
-      }
-      // Silent in development - no need to log missing Sentry config
-      isInitialized = true;
-      return;
-    }
-
-    // Dynamic import to avoid SSR issues
-    let Sentry;
-    try {
-      Sentry = await import('@sentry/nextjs');
-    } catch (_importError) {
-      console.warn('⚠️ Sentry not installed - error monitoring disabled');
-      isInitialized = true;
-      return;
-    }
-    
-    Sentry.init({
-      dsn: sentryDsn,
-      environment: currentEnvironment,
-      debug: currentEnvironment === 'development',
-      
-      // Performance monitoring
-      tracesSampleRate: currentEnvironment === 'production' ? 0.1 : 1.0,
-      
-      // Session replay
-      replaysSessionSampleRate: currentEnvironment === 'production' ? 0.01 : 0.1,
-      replaysOnErrorSampleRate: 1.0,
-      
-      // Error filtering
-      beforeSend(event, hint) {
-        // Filter out development-only errors
-        if (currentEnvironment !== 'production') {
-          const error = hint.originalException;
-          if (error instanceof Error) {
-            // Skip HMR and development errors
-            if (error.message.includes('ChunkLoadError') || 
-                error.message.includes('Loading chunk') ||
-                error.message.includes('Module parse failed')) {
-              return null;
-            }
-          }
-        }
-        
-        // Filter out known non-critical errors
-        if (event.exception?.values?.[0]?.value?.includes('Network request failed')) {
-          event.level = 'warning';
-        }
-        
-        return event;
-      },
-      
-      // Additional configuration for Next.js
-      integrations: [
-        // Add additional integrations as needed
-      ],
-      
-      // Privacy settings
-      sendDefaultPii: false,
-      
-      // Release tracking
-      release: process.env.VERCEL_GIT_COMMIT_SHA || process.env.npm_package_version,
-    });
-
-    sentryHub = Sentry.getCurrentHub();
-    isInitialized = true;
-    console.log(`✅ Error monitoring initialized for ${currentEnvironment}`);
-  } catch (error) {
-    console.error('❌ Failed to initialize error monitoring:', error);
-    isInitialized = true; // Prevent retry loops
-  }
-}
-
-/**
- * Log levels for structured logging
- */
-export enum LogLevel {
-   
+export enum ErrorSeverity {
   DEBUG = 'debug',
-   
   INFO = 'info',
-   
-  WARN = 'warning',
-   
+  WARNING = 'warning',
   ERROR = 'error',
-   
-  FATAL = 'fatal'
+  CRITICAL = 'critical'
 }
 
 /**
- * Structured log entry
+ * Error categories
  */
-export interface LogEntry {
-  level: LogLevel;
-  message: string;
-  timestamp: string;
-  environment: string;
-  context?: Record<string, any>;
-  userId?: string;
-  requestId?: string;
-  userAgent?: string;
-  ip?: string;
-  path?: string;
-  method?: string;
-  statusCode?: number;
-  duration?: number;
-  error?: {
-    name: string;
-    message: string;
-    stack?: string;
-  };
+export enum ErrorCategory {
+  AUTHENTICATION = 'authentication',
+  AUTHORIZATION = 'authorization',
+  VALIDATION = 'validation',
+  NETWORK = 'network',
+  DATABASE = 'database',
+  EXTERNAL_SERVICE = 'external_service',
+  BUSINESS_LOGIC = 'business_logic',
+  SYSTEM = 'system',
+  UNKNOWN = 'unknown'
 }
 
 /**
- * Enhanced error with context
+ * Error context interface
  */
 export interface ErrorContext {
   userId?: string;
+  sessionId?: string;
   requestId?: string;
+  url?: string;
+  method?: string;
   userAgent?: string;
   ip?: string;
-  path?: string;
-  method?: string;
-  tags?: Record<string, string>;
-  extra?: Record<string, any>;
-  level?: LogLevel;
-  fingerprint?: string[];
+  component?: string;
+  action?: string;
+  metadata?: Record<string, any>;
 }
 
 /**
- * Error monitoring service
+ * Monitored error interface
  */
-export class ErrorMonitor {
-  private static instance: ErrorMonitor;
+export interface MonitoredError {
+  id: string;
+  timestamp: Date;
+  message: string;
+  stack?: string;
+  severity: ErrorSeverity;
+  category: ErrorCategory;
+  context: ErrorContext;
+  fingerprint: string;
+  occurrences: number;
+  resolved: boolean;
+  tags?: string[];
+}
 
-  static getInstance(): ErrorMonitor {
-    if (!ErrorMonitor.instance) {
-      ErrorMonitor.instance = new ErrorMonitor();
-    }
-    return ErrorMonitor.instance;
-  }
+/**
+ * Error monitoring configuration
+ */
+interface ErrorMonitoringConfig {
+  enabled: boolean;
+  environment: string;
+  release?: string;
+  sampleRate: number;
+  captureUnhandledRejections: boolean;
+  ignoreErrors: string[];
+  beforeSend?: (error: MonitoredError) => MonitoredError | null;
+}
 
-  private constructor() {
-    // Initialize on first use
-    this.ensureInitialized();
-  }
+/**
+ * Error Monitoring Service Class
+ */
+class ErrorMonitoringService {
+  private config: ErrorMonitoringConfig;
+  private errorBuffer: MonitoredError[] = [];
+  private errorCounts: Map<string, number> = new Map();
+  private readonly maxBufferSize = 100;
+  private initialized = false;
 
-  private async ensureInitialized(): Promise<void> {
-    if (!isInitialized) {
-      await initializeErrorMonitoring();
-    }
-  }
-
-  /**
-   * Log a structured message
-   */
-  async log(level: LogLevel, message: string, context?: Record<string, any>): Promise<void> {
-    await this.ensureInitialized();
-
-    const logEntry: LogEntry = {
-      level,
-      message,
-      timestamp: new Date().toISOString(),
-      environment: currentEnvironment,
-      context,
+  constructor() {
+    this.config = {
+      enabled: process.env.NODE_ENV === 'production',
+      environment: process.env.NODE_ENV || 'development',
+      release: process.env.NEXT_PUBLIC_APP_VERSION,
+      sampleRate: 1.0,
+      captureUnhandledRejections: true,
+      ignoreErrors: [
+        'ResizeObserver loop limit exceeded',
+        'Non-Error promise rejection captured',
+        'Network request failed'
+      ]
     };
+  }
 
-    // Console logging for development
-    this.logToConsole(logEntry);
+  /**
+   * Initialize error monitoring
+   */
+  initialize(customConfig?: Partial<ErrorMonitoringConfig>): void {
+    if (this.initialized) return;
 
-    // Send to Sentry if available
-    if (sentryHub) {
-      sentryHub.addBreadcrumb({
-        message,
-        level: level as any,
-        data: context,
-        timestamp: Date.now() / 1000,
+    // Merge custom config
+    if (customConfig) {
+      this.config = { ...this.config, ...customConfig };
+    }
+
+    // Set up global error handlers
+    if (typeof window !== 'undefined') {
+      this.setupBrowserHandlers();
+    } else {
+      this.setupServerHandlers();
+    }
+
+    this.initialized = true;
+    logger.info('Error monitoring initialized', {
+      environment: this.config.environment,
+      enabled: this.config.enabled
+    });
+  }
+
+  /**
+   * Set up browser error handlers
+   */
+  private setupBrowserHandlers(): void {
+    // Handle uncaught errors
+    window.addEventListener('error', (event) => {
+      this.captureError(event.error || new Error(event.message), {
+        component: 'window',
+        url: event.filename,
+        metadata: {
+          lineno: event.lineno,
+          colno: event.colno
+        }
       });
+    });
 
-      if (level === LogLevel.ERROR || level === LogLevel.FATAL) {
-        sentryHub.captureMessage(message, level as any);
-      }
+    // Handle unhandled promise rejections
+    if (this.config.captureUnhandledRejections) {
+      window.addEventListener('unhandledrejection', (event) => {
+        this.captureError(
+          new Error(`Unhandled Promise Rejection: ${event.reason}`),
+          {
+            component: 'promise',
+            metadata: { reason: event.reason }
+          }
+        );
+      });
     }
   }
 
   /**
-   * Capture an error with full context
+   * Set up server error handlers
    */
-  async captureError(error: Error, context?: ErrorContext): Promise<string | null> {
-    await this.ensureInitialized();
+  private setupServerHandlers(): void {
+    // Handle uncaught exceptions
+    process.on('uncaughtException', (error) => {
+      this.captureError(error, {
+        component: 'process',
+        severity: ErrorSeverity.CRITICAL
+      });
+    });
 
-    const errorId = this.generateErrorId();
+    // Handle unhandled promise rejections
+    if (this.config.captureUnhandledRejections) {
+      process.on('unhandledRejection', (reason, promise) => {
+        this.captureError(
+          new Error(`Unhandled Promise Rejection: ${reason}`),
+          {
+            component: 'promise',
+            metadata: { promise: promise.toString() }
+          }
+        );
+      });
+    }
+  }
 
-    // Create structured log entry
-    const logEntry: LogEntry = {
-      level: context?.level || LogLevel.ERROR,
+  /**
+   * Capture an error
+   */
+  captureError(
+    error: Error | string,
+    context?: Partial<ErrorContext> & { 
+      severity?: ErrorSeverity; 
+      category?: ErrorCategory;
+      tags?: string[];
+    }
+  ): string {
+    // Convert string errors to Error objects
+    const errorObj = typeof error === 'string' ? new Error(error) : error;
+    
+    // Check if error should be ignored
+    if (this.shouldIgnoreError(errorObj)) {
+      return '';
+    }
+
+    // Apply sampling
+    if (Math.random() > this.config.sampleRate) {
+      return '';
+    }
+
+    // Create monitored error
+    const monitoredError = this.createMonitoredError(errorObj, context);
+    
+    // Apply beforeSend hook
+    const processedError = this.config.beforeSend 
+      ? this.config.beforeSend(monitoredError)
+      : monitoredError;
+    
+    if (!processedError) {
+      return '';
+    }
+
+    // Store error
+    this.storeError(processedError);
+    
+    // Log error
+    this.logError(processedError);
+    
+    // Send to external service in production
+    if (this.config.enabled) {
+      this.sendToExternalService(processedError);
+    }
+
+    return processedError.id;
+  }
+
+  /**
+   * Capture a message
+   */
+  captureMessage(
+    message: string,
+    severity: ErrorSeverity = ErrorSeverity.INFO,
+    context?: ErrorContext
+  ): void {
+    const error = new Error(message);
+    this.captureError(error, { ...context, severity });
+  }
+
+  /**
+   * Create a monitored error object
+   */
+  private createMonitoredError(
+    error: Error,
+    context?: Partial<ErrorContext> & {
+      severity?: ErrorSeverity;
+      category?: ErrorCategory;
+      tags?: string[];
+    }
+  ): MonitoredError {
+    const fingerprint = this.generateFingerprint(error);
+    const occurrences = (this.errorCounts.get(fingerprint) || 0) + 1;
+    this.errorCounts.set(fingerprint, occurrences);
+
+    return {
+      id: this.generateErrorId(),
+      timestamp: new Date(),
       message: error.message,
-      timestamp: new Date().toISOString(),
-      environment: currentEnvironment,
-      context: context?.extra,
-      userId: context?.userId,
-      requestId: context?.requestId,
-      userAgent: context?.userAgent,
-      ip: context?.ip,
-      path: context?.path,
-      method: context?.method,
-      error: {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-      },
+      stack: error.stack,
+      severity: context?.severity || this.categorizeErrorSeverity(error),
+      category: context?.category || this.categorizeError(error),
+      context: this.enrichContext(context || {}),
+      fingerprint,
+      occurrences,
+      resolved: false,
+      tags: context?.tags
     };
-
-    // Console logging
-    this.logToConsole(logEntry);
-
-    // Send to Sentry
-    if (sentryHub) {
-      return await this.sendToSentry(error, context, errorId);
-    }
-
-    return errorId;
   }
 
   /**
-   * Set user context for error tracking
+   * Generate error fingerprint for deduplication
    */
-  async setUser(user: { id?: string; email?: string; username?: string }): Promise<void> {
-    await this.ensureInitialized();
-
-    if (sentryHub) {
-      sentryHub.withScope((scope) => {
-        scope.setUser(user);
-      });
+  private generateFingerprint(error: Error): string {
+    const key = `${error.name}-${error.message}`;
+    // Simple hash function
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      const char = key.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
     }
+    return hash.toString(36);
   }
 
   /**
-   * Add breadcrumb for debugging
+   * Generate unique error ID
    */
-  async addBreadcrumb(message: string, category?: string, data?: Record<string, any>): Promise<void> {
-    await this.ensureInitialized();
-
-    if (sentryHub) {
-      sentryHub.addBreadcrumb({
-        message,
-        category: category || 'custom',
-        level: 'info',
-        data,
-        timestamp: Date.now() / 1000,
-      });
-    }
-  }
-
-  /**
-   * Monitor API performance
-   */
-  async trackApiCall(
-    method: string,
-    path: string,
-    statusCode: number,
-    duration: number,
-    context?: Record<string, any>
-  ): Promise<void> {
-    const level = statusCode >= 500 ? LogLevel.ERROR : 
-                  statusCode >= 400 ? LogLevel.WARN : 
-                  LogLevel.INFO;
-
-    await this.log(level, `API ${method} ${path}`, {
-      method,
-      path,
-      statusCode,
-      duration,
-      ...context,
-    });
-  }
-
-  private logToConsole(entry: LogEntry): void {
-    const timestamp = entry.timestamp;
-    const prefix = `[${timestamp}] [${entry.level.toUpperCase()}]`;
-
-    switch (entry.level) {
-      case LogLevel.DEBUG:
-        console.debug(prefix, entry.message, entry.context);
-        break;
-      case LogLevel.INFO:
-        console.info(prefix, entry.message, entry.context);
-        break;
-      case LogLevel.WARN:
-        console.warn(prefix, entry.message, entry.context);
-        break;
-      case LogLevel.ERROR:
-      case LogLevel.FATAL:
-        console.error(prefix, entry.message, entry.error, entry.context);
-        break;
-    }
-  }
-
-  private async sendToSentry(error: Error, context?: ErrorContext, errorId?: string): Promise<string> {
-    return new Promise((resolve) => {
-      sentryHub!.withScope((scope) => {
-        // Set user context
-        if (context?.userId) {
-          scope.setUser({ id: context.userId });
-        }
-
-        // Set tags
-        if (context?.tags) {
-          Object.entries(context.tags).forEach(([key, value]) => {
-            scope.setTag(key, value);
-          });
-        }
-
-        // Set extra context
-        if (context?.extra) {
-          Object.entries(context.extra).forEach(([key, value]) => {
-            scope.setExtra(key, value);
-          });
-        }
-
-        // Set request context
-        if (context?.path || context?.method) {
-          scope.setContext('request', {
-            path: context.path,
-            method: context.method,
-            userAgent: context.userAgent,
-            ip: context.ip,
-          });
-        }
-
-        // Set level
-        if (context?.level) {
-          scope.setLevel(context.level as any);
-        }
-
-        // Set fingerprint for grouping
-        if (context?.fingerprint) {
-          scope.setFingerprint(context.fingerprint);
-        }
-
-        // Add error ID for tracking
-        if (errorId) {
-          scope.setExtra('errorId', errorId);
-        }
-
-        const sentryEventId = sentryHub!.captureException(error);
-        resolve(sentryEventId || errorId || 'unknown');
-      });
-    });
-  }
-
   private generateErrorId(): string {
-    return `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Categorize error severity
+   */
+  private categorizeErrorSeverity(error: Error): ErrorSeverity {
+    const message = error.message.toLowerCase();
+    
+    if (message.includes('critical') || message.includes('fatal')) {
+      return ErrorSeverity.CRITICAL;
+    }
+    if (message.includes('error') || error.name === 'Error') {
+      return ErrorSeverity.ERROR;
+    }
+    if (message.includes('warning') || message.includes('warn')) {
+      return ErrorSeverity.WARNING;
+    }
+    return ErrorSeverity.INFO;
+  }
+
+  /**
+   * Categorize error type
+   */
+  private categorizeError(error: Error): ErrorCategory {
+    const message = error.message.toLowerCase();
+    const name = error.name.toLowerCase();
+    
+    if (message.includes('auth') || name.includes('auth')) {
+      return message.includes('unauthorized') || message.includes('403')
+        ? ErrorCategory.AUTHORIZATION
+        : ErrorCategory.AUTHENTICATION;
+    }
+    if (message.includes('validation') || name.includes('validation')) {
+      return ErrorCategory.VALIDATION;
+    }
+    if (message.includes('network') || message.includes('fetch')) {
+      return ErrorCategory.NETWORK;
+    }
+    if (message.includes('database') || message.includes('firestore')) {
+      return ErrorCategory.DATABASE;
+    }
+    if (name.includes('system') || name.includes('internal')) {
+      return ErrorCategory.SYSTEM;
+    }
+    
+    return ErrorCategory.UNKNOWN;
+  }
+
+  /**
+   * Enrich error context
+   */
+  private enrichContext(context: Partial<ErrorContext>): ErrorContext {
+    const enriched: ErrorContext = { ...context };
+    
+    if (typeof window !== 'undefined') {
+      enriched.url = enriched.url || window.location.href;
+      enriched.userAgent = enriched.userAgent || navigator.userAgent;
+    }
+    
+    return enriched;
+  }
+
+  /**
+   * Check if error should be ignored
+   */
+  private shouldIgnoreError(error: Error): boolean {
+    return this.config.ignoreErrors.some(pattern => 
+      error.message.includes(pattern) || error.name.includes(pattern)
+    );
+  }
+
+  /**
+   * Store error in buffer
+   */
+  private storeError(error: MonitoredError): void {
+    this.errorBuffer.push(error);
+    
+    // Maintain buffer size
+    if (this.errorBuffer.length > this.maxBufferSize) {
+      this.errorBuffer.shift();
+    }
+  }
+
+  /**
+   * Log error using structured logger
+   */
+  private logError(error: MonitoredError): void {
+    const logLevel = error.severity === ErrorSeverity.CRITICAL ? 'error' : 'warn';
+    logger[logLevel](`[${error.category}] ${error.message}`, {
+      errorId: error.id,
+      severity: error.severity,
+      fingerprint: error.fingerprint,
+      occurrences: error.occurrences,
+      context: error.context
+    });
+  }
+
+  /**
+   * Send error to external monitoring service
+   */
+  private async sendToExternalService(error: MonitoredError): Promise<void> {
+    // In production, this would send to Sentry, Rollbar, etc.
+    // For now, we'll just store in localStorage for debugging
+    try {
+      if (typeof window !== 'undefined') {
+        const errors = JSON.parse(localStorage.getItem('hive_error_monitoring') || '[]');
+        errors.push({
+          ...error,
+          timestamp: error.timestamp.toISOString()
+        });
+        
+        // Keep only last 50 errors
+        if (errors.length > 50) {
+          errors.splice(0, errors.length - 50);
+        }
+        
+        localStorage.setItem('hive_error_monitoring', JSON.stringify(errors));
+      }
+    } catch (e) {
+      // Fail silently
+      logger.error('Failed to store error for monitoring:', { error: String(e) });
+    }
+  }
+
+  /**
+   * Get error statistics
+   */
+  getStatistics(): {
+    totalErrors: number;
+    uniqueErrors: number;
+    errorsByCategory: Record<ErrorCategory, number>;
+    errorsBySeverity: Record<ErrorSeverity, number>;
+    topErrors: Array<{ fingerprint: string; count: number; message: string }>;
+  } {
+    const errorsByCategory: Record<string, number> = {};
+    const errorsBySeverity: Record<string, number> = {};
+    const topErrors: Array<{ fingerprint: string; count: number; message: string }> = [];
+
+    this.errorBuffer.forEach(error => {
+      errorsByCategory[error.category] = (errorsByCategory[error.category] || 0) + 1;
+      errorsBySeverity[error.severity] = (errorsBySeverity[error.severity] || 0) + 1;
+    });
+
+    // Get top 5 errors
+    const sortedErrors = Array.from(this.errorCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+    
+    sortedErrors.forEach(([fingerprint, count]) => {
+      const error = this.errorBuffer.find(e => e.fingerprint === fingerprint);
+      if (error) {
+        topErrors.push({
+          fingerprint,
+          count,
+          message: error.message
+        });
+      }
+    });
+
+    return {
+      totalErrors: this.errorBuffer.length,
+      uniqueErrors: this.errorCounts.size,
+      errorsByCategory: errorsByCategory as Record<ErrorCategory, number>,
+      errorsBySeverity: errorsBySeverity as Record<ErrorSeverity, number>,
+      topErrors
+    };
+  }
+
+  /**
+   * Clear error buffer
+   */
+  clearBuffer(): void {
+    this.errorBuffer = [];
+    this.errorCounts.clear();
+  }
+
+  /**
+   * Get recent errors
+   */
+  getRecentErrors(limit: number = 10): MonitoredError[] {
+    return this.errorBuffer.slice(-limit);
   }
 }
 
-// Export singleton instance
-export const errorMonitor = ErrorMonitor.getInstance();
+// Create and export singleton instance
+export const errorMonitoring = new ErrorMonitoringService();
 
-// Convenience functions
-export const logDebug = (message: string, context?: Record<string, any>) => 
-  errorMonitor.log(LogLevel.DEBUG, message, context);
-
-export const logInfo = (message: string, context?: Record<string, any>) => 
-  errorMonitor.log(LogLevel.INFO, message, context);
-
-export const logWarn = (message: string, context?: Record<string, any>) => 
-  errorMonitor.log(LogLevel.WARN, message, context);
-
-export const logError = (message: string, context?: Record<string, any>) => 
-  errorMonitor.log(LogLevel.ERROR, message, context);
-
-export const captureError = (error: Error, context?: ErrorContext) => 
-  errorMonitor.captureError(error, context);
-
-export const setUser = (user: { id?: string; email?: string; username?: string }) => 
-  errorMonitor.setUser(user);
-
-export const addBreadcrumb = (message: string, category?: string, data?: Record<string, any>) => 
-  errorMonitor.addBreadcrumb(message, category, data);
-
-export const trackApiCall = (
-  method: string,
-  path: string,
-  statusCode: number,
-  duration: number,
-  context?: Record<string, any>
-) => errorMonitor.trackApiCall(method, path, statusCode, duration, context);
-
-// Initialize on module load in production
-if (typeof window !== 'undefined' && currentEnvironment === 'production') {
-  initializeErrorMonitoring().catch(console.error);
+// Initialize on import
+if (typeof window !== 'undefined' || typeof process !== 'undefined') {
+  errorMonitoring.initialize();
 }
+
+// Export types
+export type { MonitoredError, ErrorContext, ErrorMonitoringConfig };
+
+// Convenience exports
+export const captureError = (error: Error, context?: ErrorContext) => 
+  errorMonitoring.captureError(error, context);
+
+export { ErrorSeverity as LogLevel };

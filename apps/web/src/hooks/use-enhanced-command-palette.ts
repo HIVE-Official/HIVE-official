@@ -1,4 +1,6 @@
 import { useState, useCallback } from 'react';
+import { logger } from '@/lib/logger';
+
 import { SearchableItem } from "@hive/ui";
 
 interface SearchAPI {
@@ -300,7 +302,7 @@ export function useEnhancedCommandPalette() {
       });
       
     } catch (error) {
-      console.error('Search error:', error);
+      logger.error('Search error:', { error: String(error) });
       return [];
     }
   }, [searchAPI]);

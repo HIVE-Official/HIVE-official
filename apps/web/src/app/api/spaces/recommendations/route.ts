@@ -1,11 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { type Space } from '@hive/core';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import type { Space  } from '@/types/core';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse as _ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 const recommendationsSchema = z.object({
   limit: z.coerce.number().min(1).max(20).default(10),
@@ -148,7 +148,7 @@ async function getUserProfile(userId: string): Promise<UserProfile> {
 /**
  * Extract user interests from profile and behavior
  */
-function extractUserInterests(userData: any, joinedSpaces: string[], spaceTypes: string[]): string[] {
+function extractUserInterests(userData: any, _joinedSpaces: string[], spaceTypes: string[]): string[] {
   const interests: string[] = [];
   
   // From explicit profile interests
@@ -198,7 +198,7 @@ async function getAllSpaces(): Promise<any[]> {
         .get();
 
       const spaces = await Promise.all(
-        spacesSnapshot.docs.map(async (doc) => {
+        spacesSnapshot.docs.map(async (doc: any) => {
           const data = doc.data();
           
           // Get member count
@@ -320,7 +320,7 @@ function calculateRecommendationScore(userProfile: UserProfile, space: any) {
 
   // Freshness boost for new spaces (0-5 points)
   if (space.createdAt) {
-    const daysSinceCreated = (Date.now() - space.createdAt.toDate().getTime()) / (1000 * 60 * 60 * 24);
+    const daysSinceCreated = (Date.now() - (space.createdAt?.toDate ? space.createdAt.toDate().getTime() : new Date(space.createdAt).getTime())) / (1000 * 60 * 60 * 24);
     if (daysSinceCreated < 30) {
       factors.freshness = 5 - (daysSinceCreated / 6);
     }
@@ -357,8 +357,6 @@ function getSizePreferenceScore(userProfile: UserProfile, memberCount: number): 
     // New users prefer medium-sized spaces
     return memberCount >= 10 && memberCount <= 50 ? 5 : 2;
   }
-  
-  // TODO: Calculate average size of user's joined spaces and score accordingly
   return memberCount >= 5 ? Math.min(memberCount / 10, 5) : 1;
 }
 

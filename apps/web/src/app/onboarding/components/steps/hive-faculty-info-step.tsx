@@ -2,8 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, User, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveInput } from "@hive/ui";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import { Card, Input } from "@hive/ui";
+import type { HiveOnboardingData } from "../../types/onboarding-types";
 
 interface HiveFacultyInfoStepProps {
   data: HiveOnboardingData;
@@ -13,7 +13,7 @@ interface HiveFacultyInfoStepProps {
 
 // Auto-capitalize first letter of each word
 const autoCapitalize = (value: string): string => {
-  return value.replace(/\b\w/g, (char) => char.toUpperCase());
+  return value.replace(/\b\w/g, (char: any) => char.toUpperCase());
 };
 
 export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepProps) {
@@ -76,15 +76,15 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
         transition={{ delay: 0.3 }}
         className="space-y-[var(--hive-spacing-6)]"
       >
-        <HiveCard variant="elevated" className="p-[var(--hive-spacing-6)]">
+        <Card variant="elevated" className="p-[var(--hive-spacing-6)]">
           <div className="space-y-[var(--hive-spacing-5)]">
             {/* Name Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hive-spacing-4)]">
-              <HiveInput
+              <Input
                 label="First Name"
                 placeholder="First name"
                 value={firstName}
-                onChange={(e) => handleFirstNameChange(e.target.value)}
+                onChange={(e: any) => handleFirstNameChange(e.target.value)}
                 variant="premium"
                 size="lg"
                 floatingLabel={false}
@@ -92,11 +92,11 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 required
               />
               
-              <HiveInput
+              <Input
                 label="Last Name"
                 placeholder="Last name"
                 value={lastName}
-                onChange={(e) => handleLastNameChange(e.target.value)}
+                onChange={(e: any) => handleLastNameChange(e.target.value)}
                 variant="premium"
                 size="lg"
                 floatingLabel={false}
@@ -106,10 +106,10 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
             </div>
 
           </div>
-        </HiveCard>
+        </Card>
 
         {/* Faculty Info */}
-        <HiveCard variant="default" className="p-[var(--hive-spacing-4)]">
+        <Card variant="default" className="p-[var(--hive-spacing-4)]">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
             <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
             Faculty Access
@@ -129,7 +129,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
               <span>Access to advanced moderation and content tools</span>
             </div>
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
     </motion.div>
   );

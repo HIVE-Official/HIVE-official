@@ -3,7 +3,7 @@
  * Replaces console.log statements with proper structured logging
  */
 
-import { config } from './config';
+import { config } from './utils/config';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -236,10 +236,8 @@ class Logger {
       
       switch (entry.level) {
         case 'debug':
-          console.debug(formattedMessage, entry.error);
           break;
         case 'info':
-          console.info(formattedMessage);
           break;
         case 'warn':
           console.warn(formattedMessage, entry.error);

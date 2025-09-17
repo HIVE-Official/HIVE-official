@@ -1,10 +1,18 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -19,10 +27,43 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@hive/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@hive/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@hive/core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@hive/core/*": [
+        "../../packages/core/src/*"
+      ],
+      "@hive/hooks": [
+        "../../packages/hooks/src/index.ts"
+      ],
+      "@hive/hooks/*": [
+        "../../packages/hooks/src/*"
+      ]
     },
-    "types": ["@testing-library/jest-dom", "vitest/globals"]
+    "types": [
+      "@testing-library/jest-dom",
+      "vitest/globals"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/test/vitest-jest-dom.d.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "src/test/vitest-jest-dom.d.ts",
+    "src/types/global.d.ts",
+    ".next-build/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

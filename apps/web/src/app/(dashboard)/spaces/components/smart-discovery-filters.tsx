@@ -229,9 +229,9 @@ export function SmartDiscoveryFilters({
             type="text"
             placeholder="Search communities, activities, or interests..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             onFocus={() => setShowSuggestions(searchSuggestions.length > 0)}
-            className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-xl text-white placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-xl text-[var(--hive-text-inverse)] placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none transition-colors"
           />
           {searchQuery && (
             <button
@@ -239,7 +239,7 @@ export function SmartDiscoveryFilters({
                 setSearchQuery("");
                 searchInputRef.current?.focus();
               }}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-white"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-[var(--hive-text-inverse)]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -293,7 +293,7 @@ export function SmartDiscoveryFilters({
         </Button>
 
         {/* Quick category filters */}
-        {userProfile?.interests.slice(0, 3).map((interest) => (
+        {userProfile?.interests.slice(0, 3).map((interest: any) => (
           <Button
             key={interest}
             size="sm"
@@ -345,7 +345,7 @@ export function SmartDiscoveryFilters({
               return value.map((v) => (
                 <Badge
                   key={`${filterId}-${v}`}
-                  className="bg-white/10 text-white text-xs pr-1"
+                  className="bg-white/10 text-[var(--hive-text-inverse)] text-xs pr-1"
                 >
                   {filter.options?.find(o => o.id === v)?.label || v}
                   <button
@@ -360,7 +360,7 @@ export function SmartDiscoveryFilters({
               return (
                 <Badge
                   key={filterId}
-                  className="bg-white/10 text-white text-xs pr-1"
+                  className="bg-white/10 text-[var(--hive-text-inverse)] text-xs pr-1"
                 >
                   {filter.options?.find(o => o.id === value)?.label || value}
                   <button
@@ -396,15 +396,15 @@ export function SmartDiscoveryFilters({
           >
             <Card className="p-4 border border-white/10">
               <div className="space-y-4">
-                {smartFilters.map((filter) => (
+                {smartFilters.map((filter: any) => (
                   <div key={filter.id}>
-                    <label className="text-sm font-medium text-white mb-2 block">
+                    <label className="text-sm font-medium text-[var(--hive-text-inverse)] mb-2 block">
                       {filter.label}
                     </label>
                     
                     {filter.type === "multi" && (
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {filter.options?.map((option) => {
+                        {filter.options?.map((option: any) => {
                           const isSelected = (activeFilters[filter.id] || []).includes(option.id);
                           const Icon = option.icon;
                           
@@ -437,7 +437,7 @@ export function SmartDiscoveryFilters({
 
                     {filter.type === "single" && (
                       <div className="space-y-1">
-                        {filter.options?.map((option) => {
+                        {filter.options?.map((option: any) => {
                           const isSelected = activeFilters[filter.id] === option.id;
                           const Icon = option.icon;
                           

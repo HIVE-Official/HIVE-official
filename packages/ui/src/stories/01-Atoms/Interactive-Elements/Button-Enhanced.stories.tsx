@@ -7,9 +7,9 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
 import { 
   Plus,
   ArrowRight,
@@ -221,13 +221,13 @@ const ButtonVariantsShowcase = () => {
                     {variant.description}
                   </div>
                 </div>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   Campus Use
                 </Badge>
               </div>
               
               <Button
-                variant={variant.name as any}
+                variant={variant.name as unknown}
                 onClick={() => handleClick(variant.name)}
                 disabled={loadingStates[variant.name]}
                 className="w-full"
@@ -271,7 +271,7 @@ const ButtonSizesShowcase = () => {
       <Card className="border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)]">
         <CardContent className="p-6">
           <div className="space-y-6">
-            {sizes.map((size) => (
+            {sizes.map((size: any) => (
               <div key={size.name} className="flex items-center gap-6">
                 <div className="w-32">
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -289,16 +289,16 @@ const ButtonSizesShowcase = () => {
                   
                   <div className="flex items-center gap-3">
                     {size.name === 'icon' ? (
-                      <Button variant="primary" size={size.name as any}>
+                      <Button variant="primary" size={size.name as unknown}>
                         <Settings className="w-4 h-4" />
                       </Button>
                     ) : (
-                      <Button variant="primary" size={size.name as any}>
+                      <Button variant="primary" size={size.name as unknown}>
                         Campus Action
                       </Button>
                     )}
                     
-                    <Button variant="secondary" size={size.name as any}>
+                    <Button variant="secondary" size={size.name as unknown}>
                       {size.name === 'icon' ? (
                         <Bell className="w-4 h-4" />
                       ) : (
@@ -306,7 +306,7 @@ const ButtonSizesShowcase = () => {
                       )}
                     </Button>
                     
-                    <Button variant="outline" size={size.name as any}>
+                    <Button variant="secondary" size={size.name as unknown}>
                       {size.name === 'icon' ? (
                         <Search className="w-4 h-4" />
                       ) : (
@@ -347,7 +347,7 @@ const CampusActionPresetsShowcase = () => {
                 {category.actions.map((action, actionIndex) => (
                   <div key={actionIndex} className="space-y-2">
                     <Button
-                      variant={action.variant as any}
+                      variant={action.variant as unknown}
                       className="w-full flex items-center gap-2"
                     >
                       <action.icon className="w-4 h-4" />
@@ -393,7 +393,7 @@ const AccessibilityShowcase = () => {
               {['primary', 'secondary', 'outline'].map((variant) => (
                 <Button
                   key={variant}
-                  variant={variant as any}
+                  variant={variant as unknown}
                   onFocus={() => setFocusedButton(variant)}
                   onBlur={() => setFocusedButton(null)}
                   className={`transition-all ${focusedButton === variant ? 'ring-2 ring-[var(--hive-brand-primary)] ring-offset-2' : ''}`}
@@ -493,7 +493,7 @@ const ButtonEnhancedShowcase = () => {
 
         {/* Section Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {sections.map((section) => (
+          {sections.map((section: any) => (
             <Button
               key={section.id}
               variant={activeSection === section.id ? 'primary' : 'secondary'}

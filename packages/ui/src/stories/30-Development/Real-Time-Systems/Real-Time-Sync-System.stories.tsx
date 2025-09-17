@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 import { HiveProgress as Progress } from '../../components/hive-progress';
 import { Separator } from '../../../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '../../../atomic/molecules/alert-toast-system';
 import { 
   Wifi,
   WifiOff,
@@ -86,8 +86,9 @@ import {
  * - **Performance Optimized**: Efficient delta updates and selective synchronization
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '21-Advanced Systems/Real-Time Synchronization',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -402,7 +403,7 @@ const useRealTime = () => {
     const interval = setInterval(() => {
       // Random live updates
       const updateTypes = ['post_liked', 'comment_added', 'user_joined'];
-      const randomType = updateTypes[Math.floor(Math.random() * updateTypes.length)] as any;
+      const randomType = updateTypes[Math.floor(Math.random() * updateTypes.length)] as unknown;
       
       if (Math.random() < 0.3) {
         const liveUpdate: LiveUpdate = {
@@ -458,7 +459,7 @@ const ConnectionStatus = ({
   const getStatusColor = () => {
     switch (status) {
       case 'connected': return 'text-green-400';
-      case 'connecting': case 'reconnecting': return 'text-yellow-400';
+      case 'connecting': case 'reconnecting': return 'text-[var(--hive-gold)]';
       case 'disconnected': return 'text-gray-400';
       case 'error': return 'text-red-400';
       default: return 'text-gray-400';
@@ -468,7 +469,7 @@ const ConnectionStatus = ({
   const getStatusIcon = () => {
     switch (status) {
       case 'connected': return <CheckCircle className="h-4 w-4 text-green-400" />;
-      case 'connecting': case 'reconnecting': return <Loader2 className="h-4 w-4 text-yellow-400 animate-spin" />;
+      case 'connecting': case 'reconnecting': return <Loader2 className="h-4 w-4 text-[var(--hive-gold)] animate-spin" />;
       case 'disconnected': return <XCircle className="h-4 w-4 text-gray-400" />;
       case 'error': return <AlertCircle className="h-4 w-4 text-red-400" />;
       default: return <Radio className="h-4 w-4 text-gray-400" />;
@@ -478,7 +479,7 @@ const ConnectionStatus = ({
   return (
     <Card className="bg-gray-900 border-gray-800">
       <CardHeader>
-        <CardTitle className="text-white flex items-center">
+        <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
           <Activity className="mr-2 h-5 w-5" />
           Connection Status
         </CardTitle>
@@ -521,13 +522,13 @@ const ConnectionStatus = ({
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <div className="text-gray-400">Latency</div>
-            <div className="text-white font-mono">
+            <div className="text-[var(--hive-text-primary)] font-mono">
               {status === 'connected' ? '32ms' : '---'}
             </div>
           </div>
           <div>
             <div className="text-gray-400">Messages/sec</div>
-            <div className="text-white font-mono">
+            <div className="text-[var(--hive-text-primary)] font-mono">
               {status === 'connected' ? '2.4' : '0.0'}
             </div>
           </div>
@@ -541,7 +542,7 @@ const ConnectionStatus = ({
 const ActiveUsersPanel = ({ users }: { users: OnlineUser[] }) => (
   <Card className="bg-gray-900 border-gray-800">
     <CardHeader>
-      <CardTitle className="text-white flex items-center">
+      <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
         <Users className="mr-2 h-5 w-5" />
         Active Users ({users.length})
       </CardTitle>
@@ -553,27 +554,27 @@ const ActiveUsersPanel = ({ users }: { users: OnlineUser[] }) => (
             <div className="relative">
               <Avatar className="w-8 h-8">
                 <AvatarImage src={user.avatar} />
-                <AvatarFallback className="bg-gray-700 text-white text-xs">
+                <AvatarFallback className="bg-gray-700 text-[var(--hive-text-primary)] text-xs">
                   {user.name.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
               <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-gray-900 ${
                 user.status === 'online' ? 'bg-green-500' :
-                user.status === 'typing' ? 'bg-yellow-500 animate-pulse' :
-                user.status === 'away' ? 'bg-orange-500' : 'bg-gray-500'
+                user.status === 'typing' ? 'bg-[var(--hive-gold)] animate-pulse' :
+                user.status === 'away' ? 'bg-[var(--hive-gold)]' : 'bg-gray-500'
               }`} />
             </div>
             
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2">
-                <span className="text-white text-sm font-medium truncate">
+                <span className="text-[var(--hive-text-primary)] text-sm font-medium truncate">
                   {user.name}
                 </span>
                 {user.isTyping && (
                   <div className="flex space-x-1">
-                    <div className="w-1 h-1 bg-yellow-500 rounded-full animate-bounce" />
-                    <div className="w-1 h-1 bg-yellow-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                    <div className="w-1 h-1 bg-yellow-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                    <div className="w-1 h-1 bg-[var(--hive-gold)] rounded-full animate-bounce" />
+                    <div className="w-1 h-1 bg-[var(--hive-gold)] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                    <div className="w-1 h-1 bg-[var(--hive-gold)] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
                   </div>
                 )}
               </div>
@@ -633,7 +634,7 @@ const LiveChat = ({
   return (
     <Card className="bg-gray-900 border-gray-800 h-96 flex flex-col">
       <CardHeader className="pb-3">
-        <CardTitle className="text-white flex items-center">
+        <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
           <MessageCircle className="mr-2 h-5 w-5" />
           Live Chat
           {!isConnected && (
@@ -652,21 +653,21 @@ const LiveChat = ({
               <div className="flex items-start space-x-3">
                 <Avatar className="w-8 h-8">
                   <AvatarImage src={message.userAvatar} />
-                  <AvatarFallback className="bg-gray-700 text-white text-xs">
+                  <AvatarFallback className="bg-gray-700 text-[var(--hive-text-primary)] text-xs">
                     {message.userName.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
                 
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="text-white text-sm font-medium">
+                    <span className="text-[var(--hive-text-primary)] text-sm font-medium">
                       {message.userName}
                     </span>
                     <span className="text-gray-500 text-xs">
                       {new Date(message.timestamp).toLocaleTimeString()}
                     </span>
                     <div className="flex items-center space-x-1">
-                      {message.status === 'sending' && <Loader2 className="h-3 w-3 text-yellow-500 animate-spin" />}
+                      {message.status === 'sending' && <Loader2 className="h-3 w-3 text-[var(--hive-gold)] animate-spin" />}
                       {message.status === 'sent' && <CheckCircle className="h-3 w-3 text-gray-500" />}
                       {message.status === 'delivered' && <CheckCircle className="h-3 w-3 text-blue-400" />}
                       {message.status === 'read' && <Eye className="h-3 w-3 text-green-400" />}
@@ -688,7 +689,7 @@ const LiveChat = ({
                           className={`
                             flex items-center space-x-1 px-2 py-1 rounded-full text-xs transition-colors
                             ${reaction.users.includes('current-user') ? 
-                              'bg-yellow-500 text-black' : 
+                              'bg-[var(--hive-gold)] text-[var(--hive-black)]' : 
                               'bg-gray-800 text-gray-300 hover:bg-gray-700'
                             }
                           `}
@@ -728,7 +729,7 @@ const LiveChat = ({
                 onChange={(e) => handleTyping(e.target.value)}
                 placeholder={isConnected ? "Type a message..." : "Connect to send messages"}
                 disabled={!isConnected}
-                className="bg-gray-800 border-gray-700 text-white"
+                className="bg-gray-800 border-gray-700 text-[var(--hive-text-primary)]"
                 onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
               />
             </div>
@@ -736,7 +737,7 @@ const LiveChat = ({
               onClick={handleSend}
               disabled={!newMessage.trim() || !isConnected}
               size="sm"
-              className="bg-yellow-500 hover:bg-yellow-600 text-black"
+              className="bg-[var(--hive-gold)] hover:bg-yellow-600 text-[var(--hive-black)]"
             >
               <Send className="h-4 w-4" />
             </Button>
@@ -751,7 +752,7 @@ const LiveChat = ({
 const LiveUpdatesFeed = ({ updates }: { updates: LiveUpdate[] }) => (
   <Card className="bg-gray-900 border-gray-800">
     <CardHeader>
-      <CardTitle className="text-white flex items-center">
+      <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
         <Zap className="mr-2 h-5 w-5" />
         Live Campus Updates
       </CardTitle>
@@ -772,7 +773,7 @@ const LiveUpdatesFeed = ({ updates }: { updates: LiveUpdate[] }) => (
               <div className="w-2 h-2 bg-green-400 rounded-full mt-2" />
               <div className="flex-1 space-y-1">
                 <div className="flex items-center space-x-2 text-sm">
-                  <span className="text-white font-medium">{update.userName}</span>
+                  <span className="text-[var(--hive-text-primary)] font-medium">{update.userName}</span>
                   <span className="text-gray-400">
                     {update.type.replace('_', ' ')}
                   </span>
@@ -823,7 +824,7 @@ const RealTimeAnalytics = ({ connectionStatus }: { connectionStatus: string }) =
   return (
     <Card className="bg-gray-900 border-gray-800">
       <CardHeader>
-        <CardTitle className="text-white flex items-center">
+        <CardTitle className="text-[var(--hive-text-primary)] flex items-center">
           <BarChart3 className="mr-2 h-5 w-5" />
           Real-Time Metrics
         </CardTitle>
@@ -831,7 +832,7 @@ const RealTimeAnalytics = ({ connectionStatus }: { connectionStatus: string }) =
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center p-3 bg-gray-800 rounded-lg">
-            <div className="text-2xl font-bold text-yellow-500">
+            <div className="text-2xl font-bold text-[var(--hive-gold)]">
               {metrics.activeConnections}
             </div>
             <div className="text-xs text-gray-400">Active Users</div>
@@ -852,7 +853,7 @@ const RealTimeAnalytics = ({ connectionStatus }: { connectionStatus: string }) =
           </div>
           
           <div className="text-center p-3 bg-gray-800 rounded-lg">
-            <div className="text-2xl font-bold text-purple-400">
+            <div className="text-2xl font-bold text-[var(--hive-gold)]">
               {Math.floor(metrics.uptime / 60)}:{String(metrics.uptime % 60).padStart(2, '0')}
             </div>
             <div className="text-xs text-gray-400">Uptime</div>
@@ -877,11 +878,11 @@ const RealTimeSyncSystem = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[var(--hive-black)] text-[var(--hive-text-primary)]">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4 flex items-center">
+          <h1 className="text-4xl font-bold text-[var(--hive-text-primary)] mb-4 flex items-center">
             <Radio className="mr-4 h-10 w-10" />
             Real-Time Synchronization System
           </h1>

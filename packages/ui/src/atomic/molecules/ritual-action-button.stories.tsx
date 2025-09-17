@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { RitualActionButton } from './ritual-action-button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -103,7 +103,7 @@ export const Default: Story = {
     participantCount: 1247,
     onClick: action('ritual-started'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -129,7 +129,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🎯 RITUAL TYPES</Badge>
+            <Badge variant="emerald">🎯 RITUAL TYPES</Badge>
             Student Journey Workflows
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -671,7 +671,7 @@ export const Playground: Story = {
     participantCount: 1247,
     onClick: action('playground-ritual'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

@@ -1,3 +1,5 @@
+import { logger } from '@hive/core';
+
 // Admin notifications system for monitoring platform activity
 
 export type NotificationType = 
@@ -77,7 +79,7 @@ class AdminNotificationSystem {
     await this.sendToChannels(newNotification);
 
     // Log the notification
-    console.log(`[ADMIN_NOTIFICATION] ${notification.type}: ${notification.title}`);
+    // [ADMIN_NOTIFICATION] ${notification.type}: ${notification.title}
 
     return newNotification;
   }
@@ -175,7 +177,7 @@ class AdminNotificationSystem {
       try {
         await this.sendToChannel(channel, notification);
       } catch (error) {
-        console.error(`Failed to send notification to channel ${channel.name}:`, error);
+        logger.error('Failed to send notification to channel ${channel.name}:', error);
       }
     }
   }
@@ -204,9 +206,8 @@ class AdminNotificationSystem {
   /**
    * Send security alert
    */
-  private async sendSecurityAlert(notification: AdminNotification): Promise<void> {
-    // TODO: Implement security alert system (email, Slack, etc.)
-    console.log(`[SECURITY_ALERT] ${notification.title}: ${notification.message}`);
+  private async sendSecurityAlert(_notification: AdminNotification): Promise<void> {
+    // [SECURITY_ALERT] ${notification.title}: ${notification.message}
   }
 
   /**
@@ -223,7 +224,7 @@ class AdminNotificationSystem {
         }),
       });
     } catch (error) {
-      console.error('Failed to send webhook:', error);
+      logger.error('Failed to send webhook:', error);
     }
   }
 

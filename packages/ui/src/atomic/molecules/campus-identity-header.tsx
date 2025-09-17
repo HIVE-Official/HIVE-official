@@ -25,7 +25,6 @@ export interface CampusIdentityHeaderProps {
 
 export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
   user,
-  variant = 'default',
   showStatus = true,
   onAvatarClick,
   onEditClick,
@@ -129,7 +128,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
           )}
           
           {/* Avatar with Premium Treatment */}
-          <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden bg-gradient-to-br from-charcoal via-graphite to-charcoal border-2 border-steel/20 group-hover:border-gold/40 transition-all duration-300 shadow-lg">
+          <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden bg-gradient-to-br from-charcoal via-graphite to-charcoal border-2 border-steel/20 group-hover:border-[var(--hive-brand-secondary)]/40 transition-all duration-300 shadow-lg">
             {avatar ? (
               <img
                 src={avatar}
@@ -194,8 +193,8 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
                   }}
                   className="relative"
                 >
-                  <div className="px-3 py-1 bg-gradient-to-r from-gold/20 to-champagne/20 border border-gold/30 rounded-full backdrop-blur-sm">
-                    <span className="text-gold text-xs font-semibold tracking-wide">Builder</span>
+                  <div className="px-3 py-1 bg-gradient-to-r from-gold/20 to-champagne/20 border border-[var(--hive-brand-secondary)]/30 rounded-full backdrop-blur-sm">
+                    <span className="text-[var(--hive-brand-secondary)] text-xs font-semibold tracking-wide">Builder</span>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-r from-gold/10 to-transparent rounded-full blur-sm" />
                 </motion.div>
@@ -214,7 +213,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
           {/* Academic Identity */}
           <div className="flex items-center gap-2 text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-gold/60" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--hive-brand-secondary)]/60" />
               <span className="text-platinum font-medium">{major || 'Undeclared'}</span>
               <span className="text-steel/60">•</span>
               <span className="text-mercury font-medium">Class of '{year ? year.slice(-2) : 'TBD'}</span>
@@ -277,7 +276,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
           className={cn(
             'relative p-3 rounded-2xl bg-gradient-to-br from-charcoal/60 to-graphite/60',
             'border border-steel/20 backdrop-blur-md',
-            'hover:border-gold/40 hover:from-charcoal/80 hover:to-graphite/80',
+            'hover:border-[var(--hive-brand-secondary)]/40 hover:from-charcoal/80 hover:to-graphite/80',
             'focus:outline-none focus:ring-2 focus:ring-gold/50 focus:ring-offset-2 focus:ring-offset-transparent',
             'transition-all duration-300 ease-hive-smooth',
             'shadow-lg hover:shadow-xl',
@@ -290,7 +289,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
           
           {/* Edit Icon */}
           <svg
-            className="w-5 h-5 text-silver group-hover:text-gold transition-colors duration-300 relative z-10"
+            className="w-5 h-5 text-silver group-hover:text-[var(--hive-brand-secondary)] transition-colors duration-300 relative z-10"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -309,7 +308,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
 };
 
 // Compact variant for use in navigation or cards
-export const CompactCampusIdentity: React.FC<Omit<CampusIdentityHeaderProps, 'variant'>> = (props) => (
+export const CompactCampusIdentity: React.FC<Omit<CampusIdentityHeaderProps, 'variant'>> = (props: Omit<CampusIdentityHeaderProps, 'variant'>) => (
   <CampusIdentityHeader {...props} variant="compact" />
 );
 

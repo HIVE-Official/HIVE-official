@@ -1,11 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { type Post } from '@hive/core';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import type { Post  } from '@/types/core';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 // Temporary fallback implementations for development
 type FeedContentType = 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import';
 
@@ -44,13 +44,152 @@ interface AggregatedFeedItem {
   };
 }
 
-function createFeedAggregator(_userId: string, _spaceIds: string[]) {
+function createFeedAggregator(userId: string, spaceIds: string[]) {
   return {
-    aggregateContent: async (_limit: number, _cursor?: string): Promise<AggregatedFeedItem[]> => {
-      // Mock aggregated content for development
-      return [];
+    aggregateContent: async (limit: number, cursor?: string): Promise<AggregatedFeedItem[]> => {
+      try {
+        // Get real posts from user's spaces
+        const aggregatedItems: AggregatedFeedItem[] = [];
+        
+        // Query posts from each space the user is a member of
+        // Use Promise.all for parallel fetching
+        const spacePromises = spaceIds.slice(0, 10).map(async (spaceId: any) => {
+          try {
+            // Direct query to posts collection in each space
+            const postsQuery = dbAdmin
+              .collection('spaces')
+              .doc(spaceId)
+              .collection('posts')
+              .orderBy('createdAt', 'desc')
+              .limit(Math.max(5, Math.ceil(limit / Math.min(spaceIds.length, 3))));
+            
+            const postsSnapshot = await postsQuery.get();
+            
+            if (!postsSnapshot.empty) {
+              // Get space details for metadata
+              const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+              const spaceData = spaceDoc.data();
+              
+              return postsSnapshot.docs.map(doc => {
+                const postData = doc.data();
+                return {
+                  content: {
+                    id: doc.id,
+                    ...postData,
+                    createdAt: postData.createdAt?.toDate() || new Date(),
+                    updatedAt: postData.updatedAt?.toDate() || new Date(),
+                    spaceName: spaceData?.name || 'Unknown Space',
+                    spaceType: spaceData?.type || 'general'
+                  },
+                  spaceId,
+                  source: `space_${spaceData?.type || 'general'}`,
+                  priority: calculatePostPriority(postData),
+                  contentType: determineContentType(postData),
+                  timestamp: postData.createdAt?.toMillis() || Date.now(),
+                  validationData: {
+                    confidence: 95
+                  }
+                };
+              });
+            }
+            return [];
+          } catch (spaceError) {
+            logger.error('Error fetching posts from space', { spaceId, error: spaceError });
+            return [];
+          }
+        });
+        
+        // Wait for all space queries to complete
+        const spaceResults = await Promise.all(spacePromises);
+        
+        // Flatten results from all spaces
+        for (const posts of spaceResults) {
+          aggregatedItems.push(...posts);
+        }
+        
+        // Also fetch coordination posts (study sessions, food runs, etc)
+        try {
+          const coordinationQuery = dbAdmin
+            .collectionGroup('posts')
+            .where('type', 'in', ['coordination', 'study_session', 'food_run', 'ride_share', 'meetup'])
+            .orderBy('createdAt', 'desc')
+            .limit(20);
+          
+          const coordinationSnapshot = await coordinationQuery.get();
+          
+          for (const doc of coordinationSnapshot.docs) {
+            const postData = doc.data();
+            const spaceId = doc.ref.parent.parent?.id || 'unknown';
+            
+            aggregatedItems.push({
+              content: {
+                id: doc.id,
+                ...postData,
+                createdAt: postData.createdAt?.toDate() || new Date(),
+                updatedAt: postData.updatedAt?.toDate() || new Date()
+              },
+              spaceId,
+              source: 'coordination',
+              priority: 90, // High priority for coordination posts
+              contentType: 'space_event',
+              timestamp: postData.createdAt?.toMillis() || Date.now(),
+              validationData: {
+                confidence: 100
+              }
+            });
+          }
+        } catch (coordError) {
+          logger.error('Error fetching coordination posts', { error: coordError });
+        }
+        
+        // Sort by priority first, then timestamp
+        aggregatedItems.sort((a, b) => {
+          if (Math.abs(a.priority - b.priority) > 10) {
+            return b.priority - a.priority;
+          }
+          return b.timestamp - a.timestamp;
+        });
+        
+        return aggregatedItems.slice(0, limit);
+        
+      } catch (error) {
+        logger.error('Feed aggregation error', { error, userId, spaceIds });
+        return [];
+      }
     }
   };
+}
+
+// Helper function to calculate post priority
+function calculatePostPriority(postData: any): number {
+  let priority = 50; // Base priority
+  
+  // Boost for recent posts
+  const ageInHours = (Date.now() - (postData.createdAt?.toMillis() || Date.now())) / (1000 * 60 * 60);
+  if (ageInHours < 1) priority += 40;
+  else if (ageInHours < 6) priority += 30;
+  else if (ageInHours < 24) priority += 20;
+  else if (ageInHours < 72) priority += 10;
+  
+  // Boost for posts with engagement
+  if (postData.reactions?.heart > 0) priority += 15;
+  if (postData.commentCount > 0) priority += 10;
+  if (postData.isPinned) priority += 30;
+  
+  // Boost for coordination posts
+  if (postData.type === 'coordination' || postData.type === 'study_session') priority += 20;
+  if (postData.type === 'food_run' || postData.type === 'ride_share') priority += 15;
+  
+  return Math.min(100, priority);
+}
+
+// Helper function to determine content type
+function determineContentType(postData: any): FeedContentType {
+  if (postData.toolId) return 'tool_generated';
+  if (postData.type === 'event') return 'space_event';
+  if (postData.type === 'announcement') return 'builder_announcement';
+  if (postData.source === 'rss') return 'rss_import';
+  return 'tool_enhanced';
 }
 
 // Scalable feed query schema
@@ -226,36 +365,92 @@ async function getUserMembershipData(
 ): Promise<UserMembershipData[]> {
   const _cacheKey = `user_memberships_${userId}`;
   
-  // Redis cache implementation ready for production deployment
-  
   try {
-    // Use collectionGroup query for efficient membership lookup
-    const membershipsSnapshot = await dbAdmin.collectionGroup('members')
-      .where('userId', '==', userId)
-      .limit(100) // Reasonable limit for space memberships
-      .get();
-    
     const memberships: UserMembershipData[] = [];
     
-    for (const doc of membershipsSnapshot.docs) {
-      const data = doc.data();
-      const spaceId = doc.ref.parent.parent?.id;
+    // First try collectionGroup query for members
+    try {
+      const membershipsSnapshot = await dbAdmin.collectionGroup('members')
+        .where('userId', '==', userId)
+        .limit(100)
+        .get();
       
-      if (!spaceId) continue;
-      
-      // Calculate engagement score based on activity
-      const engagementScore = calculateEngagementScore(data);
-      
-      memberships.push({
-        spaceId,
-        role: data.role || 'member',
-        joinedAt: data.joinedAt?.toDate() || new Date(),
-        lastActiveAt: data.lastActiveAt?.toDate() || new Date(),
-        engagementScore
-      });
+      for (const doc of membershipsSnapshot.docs) {
+        const data = doc.data();
+        const spaceId = doc.ref.parent.parent?.id;
+        
+        if (!spaceId) continue;
+        
+        const engagementScore = calculateEngagementScore(data);
+        
+        memberships.push({
+          spaceId,
+          role: data.role || 'member',
+          joinedAt: data.joinedAt?.toDate() || new Date(),
+          lastActiveAt: data.lastActiveAt?.toDate() || new Date(),
+          engagementScore
+        });
+      }
+    } catch (e) {
+      logger.warn('CollectionGroup query failed, trying alternative', { error: e });
     }
     
-    logger.info('📊 Foundmemberships for user', { memberships, userId, endpoint: '/api/feed' });
+    // If no memberships found, try querying user's spaces from user document
+    if (memberships.length === 0) {
+      try {
+        const userDoc = await dbAdmin.collection('users').doc(userId).get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          const userSpaces = userData?.spaces || userData?.joinedSpaces || [];
+          
+          // If user has spaces listed, create membership data
+          for (const spaceId of userSpaces) {
+            memberships.push({
+              spaceId,
+              role: 'member',
+              joinedAt: userData?.createdAt?.toDate() || new Date(),
+              lastActiveAt: userData?.lastActiveAt?.toDate() || new Date(),
+              engagementScore: 50 // Default engagement
+            });
+          }
+        }
+      } catch (e) {
+        logger.warn('Failed to get user spaces from user doc', { error: e });
+      }
+    }
+    
+    // If still no memberships, provide some default spaces for new users
+    if (memberships.length === 0) {
+      logger.info('No memberships found, providing default spaces for user', { userId });
+      
+      // Get some public/default spaces
+      try {
+        const publicSpaces = await dbAdmin.collection('spaces')
+          .where('isPublic', '==', true)
+          .limit(5)
+          .get();
+        
+        for (const spaceDoc of publicSpaces.docs) {
+          memberships.push({
+            spaceId: spaceDoc.id,
+            role: 'member',
+            joinedAt: new Date(),
+            lastActiveAt: new Date(),
+            engagementScore: 30 // Low engagement for auto-added spaces
+          });
+        }
+      } catch (e) {
+        logger.warn('Failed to get public spaces', { error: e });
+      }
+    }
+    
+    logger.info('📊 Found memberships for user', { 
+      count: memberships.length, 
+      userId, 
+      spaceIds: memberships.map(m => m.spaceId),
+      endpoint: '/api/feed' 
+    });
+    
     return memberships;
     
   } catch (error) {
@@ -378,18 +573,33 @@ async function getSpacePosts(
   cursor?: string
 ): Promise<Post[]> {
   try {
-    const query = dbAdmin.collection('spaces')
+    let query = dbAdmin.collection('spaces')
       .doc(spaceId)
       .collection('posts')
-      .where('isDeleted', '==', false)
       .orderBy('createdAt', 'desc')
       .limit(limit);
     
+    // Don't filter by isDeleted if field doesn't exist
+    // Just order by creation date
+    
     if (cursor) {
-      // Cursor-based pagination ready for implementation
+      // Decode cursor and apply to query
+      try {
+        const cursorData = JSON.parse(Buffer.from(cursor, 'base64').toString());
+        if (cursorData.timestamp) {
+          query = query.startAfter(new Date(cursorData.timestamp));
+        }
+      } catch (e) {
+        logger.warn('Invalid cursor', { cursor, error: e });
+      }
     }
     
     const snapshot = await query.get();
+    
+    if (snapshot.empty) {
+      logger.info('No posts found in space', { spaceId });
+      return [];
+    }
     
     return snapshot.docs.map(doc => ({
       id: doc.id,
@@ -415,7 +625,7 @@ function calculateRelevanceScore(
   let score = 0;
   
   // Base score from user's engagement with the space
-  score += membership.engagementScore * 0.4; // 40% weight
+  score += membership?.engagementScore * 0.4; // 40% weight
   
   // Recency score (newer posts get higher scores)
   const ageHours = (Date.now() - post.createdAt.getTime()) / (1000 * 60 * 60);
@@ -431,7 +641,7 @@ function calculateRelevanceScore(
   if (post.isPinned) score += 15; // Pinned content gets bonus
   
   // Role-based bonus
-  if (membership.role === 'builder' || membership.role === 'admin') {
+  if (membership?.role === 'builder' || membership?.role === 'admin') {
     score += 5; // Builders see more content
   }
   

@@ -1,0 +1,168 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="🐝 HIVE Design System/Welcome" />
+
+<div style={{
+  background: '#0A0A0A',
+  color: '#FFFFFF',
+  padding: '3rem',
+  borderRadius: '12px',
+  border: '1px solid #2A2A2A',
+  fontFamily: 'system-ui, -apple-system, sans-serif'
+}}>
+
+# 🐝 HIVE Design System
+
+**The programmable campus layer where students find their people, make decisions together, and build tools that spread.**
+
+---
+
+## Design Philosophy
+
+### "Minimal Surface. Maximal Spark."
+
+Our design philosophy balances restraint with celebration—like a natural beehive that's structured yet alive with energy. We create interfaces that are technically precise with purposeful moments of delight.
+
+#### Core Principles
+- **Precision First**: Every pixel serves a purpose. Every interaction has intent.
+- **Celebratory Moments**: When users achieve, we celebrate with subtle gold flourishes.
+- **Social + Technical**: We bridge community warmth with technical excellence.
+- **Progressive Enhancement**: Layers of delight reveal themselves through interaction.
+
+---
+
+## 🎨 Visual Identity
+
+### Color Palette
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', margin: '2rem 0' }}>
+  <div style={{ padding: '1rem', background: '#0A0A0A', border: '1px solid #2A2A2A', borderRadius: '8px' }}>
+    <div style={{ width: '100%', height: '60px', background: '#0A0A0A', borderRadius: '4px', marginBottom: '0.5rem' }}></div>
+    <strong>Primary Black</strong><br/>
+    <code>#0A0A0A</code><br/>
+    <small>Main background, primary surfaces</small>
+  </div>
+  <div style={{ padding: '1rem', background: '#111111', border: '1px solid #2A2A2A', borderRadius: '8px' }}>
+    <div style={{ width: '100%', height: '60px', background: '#111111', borderRadius: '4px', marginBottom: '0.5rem' }}></div>
+    <strong>Surface</strong><br/>
+    <code>#111111</code><br/>
+    <small>Cards, elevated elements</small>
+  </div>
+  <div style={{ padding: '1rem', background: '#0A0A0A', border: '1px solid #2A2A2A', borderRadius: '8px' }}>
+    <div style={{ width: '100%', height: '60px', background: '#2A2A2A', borderRadius: '4px', marginBottom: '0.5rem' }}></div>
+    <strong>Border</strong><br/>
+    <code>#2A2A2A</code><br/>
+    <small>Subtle divisions, component borders</small>
+  </div>
+  <div style={{ padding: '1rem', background: '#0A0A0A', border: '1px solid #FFD700', borderRadius: '8px' }}>
+    <div style={{ width: '100%', height: '60px', background: '#FFD700', borderRadius: '4px', marginBottom: '0.5rem' }}></div>
+    <strong>Gold Accent</strong><br/>
+    <code>#FFD700</code><br/>
+    <small>Focus rings, achievements, highlights</small>
+  </div>
+  <div style={{ padding: '1rem', background: '#0A0A0A', border: '1px solid #2A2A2A', borderRadius: '8px' }}>
+    <div style={{ width: '100%', height: '60px', background: '#6B7280', borderRadius: '4px', marginBottom: '0.5rem' }}></div>
+    <strong>Muted Text</strong><br/>
+    <code>#6B7280</code><br/>
+    <small>Secondary text, descriptions</small>
+  </div>
+</div>
+
+### Gold Usage Strategy
+<div style={{ background: '#111111', padding: '1.5rem', borderRadius: '8px', border: '1px solid #FFD700', margin: '1rem 0' }}>
+
+✅ **DO Use Gold For:**
+- Focus rings on all interactive elements
+- Hover/click borders on buttons and cards  
+- Success states and achievements
+- Active states in tabs and selections
+- Special/elevated component variants
+
+❌ **DON'T Use Gold For:**
+- Large surface areas or backgrounds
+- Default states or decorative elements
+- Primary text color (except special cases)
+- Overuse that diminishes impact
+
+</div>
+
+---
+
+## ⚡ Motion System
+
+### HIVE Motion Curve
+```css
+/* Primary Curve */
+cubic-bezier(0.33, 0.65, 0, 1)
+
+/* Duration System */
+duration: 180ms  /* Standard interactions */
+```
+
+Our motion feels **organic, not mechanical**—following natural laws that make interactions feel alive with student energy.
+
+---
+
+## 🏗️ Architecture
+
+### Design Token System
+```css
+/* HIVE Design Tokens */
+:root {
+  /* Colors */
+  --color-background: #0A0A0A;
+  --color-surface: #111111;
+  --color-border: #2A2A2A;
+  --color-accent: #FFD700;
+  --color-muted: #6B7280;
+  
+  /* Motion */
+  --motion-curve: cubic-bezier(0.33, 0.65, 0, 1);
+  --motion-duration: 180ms;
+}
+```
+
+### Component Patterns
+- **Radix UI Primitives**: For accessibility
+- **Class Variance Authority**: For variant management  
+- **forwardRef Patterns**: For composition
+- **TypeScript Strict**: Throughout all components
+
+---
+
+## 📚 Storybook Organization
+
+### 🏛️ Foundation
+Core design principles, color systems, typography, spacing, and motion guidelines.
+
+### 🧱 Components  
+Interactive UI components—buttons, inputs, cards, and form elements with campus use cases.
+
+### 🎭 Interfaces
+Complete interface patterns for authentication, onboarding, profiles, spaces, and feed experiences.
+
+### 🎨 Visual Improvements
+Experimental and alternative component styles for A/B testing and future iterations.
+
+---
+
+## 🎯 Campus Energy
+
+Our interface adapts to the natural energy rhythms of campus life:
+
+- **High Energy**: Beginning of terms, events, social peaks
+- **Focus Periods**: Study weeks, exams, project deadlines  
+- **Transitions**: Between semesters, orientation periods
+
+The design system creates interfaces that feel both **sophisticated and alive** with authentic student energy.
+
+---
+
+<div style={{ textAlign: 'center', marginTop: '3rem', padding: '2rem', background: '#FFD700', color: '#0A0A0A', borderRadius: '8px' }}>
+
+**Ready to build the future of campus connection?**
+
+Explore our complete component library and see how every element works together to create the programmable campus layer.
+
+</div>
+
+</div>

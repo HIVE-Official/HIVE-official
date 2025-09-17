@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from './icon';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { 
@@ -95,7 +95,7 @@ export const Default: Story = {
     color: 'primary',
     variant: 'default',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="p-6">
@@ -125,7 +125,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📏 SIZES</Badge>
+            <Badge variant="emerald">📏 SIZES</Badge>
             Icon Sizes - From UI Details to Touch Targets
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -275,11 +275,11 @@ export const CompleteShowcase: Story = {
               <h4 className="font-medium text-[var(--hive-text-primary)]">Default Variant:</h4>
               <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-4">
                 <div className="flex items-center gap-3">
-                  <Icon icon={Home} size="lg" color="primary" variant="default" />
+                  <Icon icon={Home} size="lg" color="primary" variant="primary" />
                   <Text variant="body-sm" color="secondary">Standard appearance</Text>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Icon icon={Calendar} size="lg" color="gold" variant="default" />
+                  <Icon icon={Calendar} size="lg" color="gold" variant="primary" />
                   <Text variant="body-sm" color="secondary">Balanced stroke and fill</Text>
                 </div>
               </div>
@@ -321,7 +321,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🎓 UB CAMPUS</Badge>
+            <Badge variant="gold">🎓 UB CAMPUS</Badge>
             Common University at Buffalo Icon Patterns
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -608,7 +608,7 @@ export const Playground: Story = {
     color: 'gold',
     variant: 'default',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

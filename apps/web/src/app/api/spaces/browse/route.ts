@@ -1,11 +1,11 @@
 import type { NextRequest} from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { type Space } from '@hive/core';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import type { Space  } from '@/types/core';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
@@ -72,13 +72,17 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         description: data.description,
         type: data.type,
         status: data.status || 'active',
-        memberCount: data.metrics?.memberCount || 0,
+        memberCount: data.metrics?.memberCount || data.memberCount || 0,
+        potentialMembers: data.potentialMembers || 0,
+        awaitingLeader: data.awaitingLeader || false,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
         tags: data.tags || [],
         bannerUrl: data.bannerUrl,
         isPrivate: data.isPrivate || false,
-        metrics: data.metrics || { memberCount: 0, postCount: 0, eventCount: 0 }
+        metrics: data.metrics || { memberCount: 0, postCount: 0, eventCount: 0 },
+        featuredInPreview: data.featuredInPreview || false,
+        activationRequests: data.activationRequests || []
       };
     });
 
@@ -148,11 +152,15 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       tags: space.tags,
       status: space.status,
       memberCount: space.memberCount,
+      potentialMembers: space.potentialMembers,
+      awaitingLeader: space.awaitingLeader,
       createdAt: space.createdAt,
       updatedAt: space.updatedAt,
       bannerUrl: space.bannerUrl,
       isPrivate: space.isPrivate,
-      isMember: userSpaceIds.has(space.id)
+      isMember: userSpaceIds.has(space.id),
+      featuredInPreview: space.featuredInPreview,
+      hasRequestedActivation: space.activationRequests?.includes(userId) || false
     }));
 
     // Group spaces by type for better organization

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Separator, HorizontalSeparator, VerticalSeparator, GradientDivider } from './separator';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import '../../hive-tokens.css';
@@ -85,7 +85,7 @@ export const Default: Story = {
     spacing: 'md',
     decorative: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -111,7 +111,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ ORIENTATIONS</Badge>
+            <Badge variant="emerald">✅ ORIENTATIONS</Badge>
             Separator Orientations - Horizontal & Vertical
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -320,7 +320,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="warning">🎯 PRESETS</Badge>
+            <Badge variant="gold">🎯 PRESETS</Badge>
             Separator Presets - Common Campus Patterns
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -661,7 +661,7 @@ export const Playground: Story = {
     spacing: 'md',
     decorative: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

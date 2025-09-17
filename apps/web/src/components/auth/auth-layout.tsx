@@ -1,7 +1,13 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { HiveLogo } from "@hive/ui";
+// import { HiveLogo } from "@hive/ui";
+// Temporary fallback logo component until export resolution is fixed
+const HiveLogo = ({ size = 'md' }: { size?: string }) => (
+  <div className="w-8 h-8 bg-gradient-to-br from-[var(--hive-gold)] to-[var(--hive-gold)] rounded-lg flex items-center justify-center">
+    <span className="text-[var(--hive-black)] font-bold text-sm">H</span>
+  </div>
+);
 
 interface AuthLayoutProps {
   children: ReactNode;

@@ -6,11 +6,11 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Input } from '../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Avatar, AvatarFallback } from '../../atomic/atoms/avatar';
+import { Input } from '../../atomic/atoms/input-enhanced';
 import { Separator } from '../../components/ui/separator';
 import { hiveVariants, hiveEasing, hiveDuration } from '../../motion/hive-motion';
 import '../../hive-tokens.css';
@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 
 const meta = {
+  component: MoleculeShowcase,
   title: '03-Molecules/Combined Components',
   parameters: {
     layout: 'fullscreen',
@@ -104,11 +105,11 @@ const MoleculeShowcase = () => {
             onHoverEnd={() => setHoveredMolecule(null)}
           >
             <Card className="hive-interactive cursor-pointer" style={{ backgroundColor: 'var(--hive-background-secondary)', borderColor: 'var(--hive-border-primary)' }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}>
@@ -124,21 +125,21 @@ const MoleculeShowcase = () => {
                 
                 {/* Academic Space */}
                 <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
-                     onMouseEnter={(e) => {
+                     onMouseEnter={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                      }}
-                     onMouseLeave={(e) => {
+                     onMouseLeave={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                        e.currentTarget.style.boxShadow = 'none';
                      }}>
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-                        <BookOpen className="w-6 h-6 text-white" />
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-[var(--hive-gold)] rounded-lg flex items-center justify-center mr-3">
+                        <BookOpen className="w-6 h-6 text-[var(--hive-text-primary)]" />
                       </div>
                       <div>
-                        <h4 className="text-white font-semibold">CS 101 Study Group</h4>
+                        <h4 className="text-[var(--hive-text-primary)] font-semibold">CS 101 Study Group</h4>
                         <p className="text-gray-400 text-sm">Computer Science</p>
                       </div>
                     </div>
@@ -168,10 +169,10 @@ const MoleculeShowcase = () => {
                       <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-red-400">
                         <Heart className="w-4 h-4" />
                       </Button>
-                      <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-white">
+                      <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-[var(--hive-text-primary)]">
                         <MessageSquare className="w-4 h-4" />
                       </Button>
-                      <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-white">
+                      <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-[var(--hive-text-primary)]">
                         <Share className="w-4 h-4" />
                       </Button>
                     </div>
@@ -183,25 +184,25 @@ const MoleculeShowcase = () => {
 
                 {/* Housing Space */}
                 <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
-                     onMouseEnter={(e) => {
+                     onMouseEnter={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                      }}
-                     onMouseLeave={(e) => {
+                     onMouseLeave={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                        e.currentTarget.style.boxShadow = 'none';
                      }}>
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center">
                       <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center mr-3">
-                        <Home className="w-6 h-6 text-white" />
+                        <Home className="w-6 h-6 text-[var(--hive-text-primary)]" />
                       </div>
                       <div>
-                        <h4 className="text-white font-semibold">Ellicott 3rd Floor</h4>
+                        <h4 className="text-[var(--hive-text-primary)] font-semibold">Ellicott 3rd Floor</h4>
                         <p className="text-gray-400 text-sm">Housing • Dorm</p>
                       </div>
                     </div>
-                    <Badge className="bg-green-500 text-white">17 Active</Badge>
+                    <Badge className="bg-green-500 text-[var(--hive-text-primary)]">17 Active</Badge>
                   </div>
                   
                   <p className="text-gray-300 text-sm mb-4">
@@ -224,15 +225,15 @@ const MoleculeShowcase = () => {
                   
                   <div className="flex items-center justify-between">
                     <div className="flex -space-x-2">
-                      {[1, 2, 3, 4].map((i) => (
+                      {[1, 2, 3, 4].map((i: any) => (
                         <Avatar key={i} className="w-6 h-6 border-2" style={{ borderColor: 'var(--hive-border-primary)' }}>
-                          <AvatarFallback className="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs">
+                          <AvatarFallback className="bg-gradient-to-r from-pink-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)] text-xs">
                             {String.fromCharCode(65 + i)}
                           </AvatarFallback>
                         </Avatar>
                       ))}
                     </div>
-                    <Button size="sm" variant="outline" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
+                    <Button size="sm" variant="secondary" className="text-[var(--hive-text-primary)]" style={{ borderColor: 'var(--hive-border-primary)' }}>
                       Member
                     </Button>
                   </div>
@@ -240,21 +241,21 @@ const MoleculeShowcase = () => {
 
                 {/* Social Space */}
                 <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
-                     onMouseEnter={(e) => {
+                     onMouseEnter={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                      }}
-                     onMouseLeave={(e) => {
+                     onMouseLeave={(e: any) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                        e.currentTarget.style.boxShadow = 'none';
                      }}>
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center mr-3">
-                        <Calendar className="w-6 h-6 text-white" />
+                      <div className="w-12 h-12 bg-gradient-to-r from-[var(--hive-gold)] to-red-500 rounded-lg flex items-center justify-center mr-3">
+                        <Calendar className="w-6 h-6 text-[var(--hive-text-primary)]" />
                       </div>
                       <div>
-                        <h4 className="text-white font-semibold">Weekend Campus Events</h4>
+                        <h4 className="text-[var(--hive-text-primary)] font-semibold">Weekend Campus Events</h4>
                         <p className="text-gray-400 text-sm">Social • Events</p>
                       </div>
                     </div>
@@ -276,7 +277,7 @@ const MoleculeShowcase = () => {
                         Hot
                       </span>
                     </div>
-                    <Badge className="bg-orange-500 text-white">Popular</Badge>
+                    <Badge className="bg-[var(--hive-gold)] text-[var(--hive-text-primary)]">Popular</Badge>
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -284,10 +285,10 @@ const MoleculeShowcase = () => {
                       <Button size="icon" variant="ghost" className="w-8 h-8 text-red-400">
                         <Heart className="w-4 h-4 fill-current" />
                       </Button>
-                      <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-white">
+                      <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-[var(--hive-text-primary)]">
                         <MessageSquare className="w-4 h-4" />
                       </Button>
-                      <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-white">
+                      <Button size="icon" variant="ghost" className="w-8 h-8 text-gray-400 hover:text-[var(--hive-text-primary)]">
                         <Share className="w-4 h-4" />
                       </Button>
                     </div>
@@ -309,11 +310,11 @@ const MoleculeShowcase = () => {
             onHoverEnd={() => setHoveredMolecule(null)}
           >
             <Card className="hive-interactive cursor-pointer" style={{ backgroundColor: 'var(--hive-background-secondary)', borderColor: 'var(--hive-border-primary)' }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}>
@@ -334,7 +335,7 @@ const MoleculeShowcase = () => {
                       <AvatarFallback className="font-semibold" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>SC</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <h4 className="text-white font-semibold">Sarah Chen</h4>
+                      <h4 className="text-[var(--hive-text-primary)] font-semibold">Sarah Chen</h4>
                       <p className="text-gray-400 text-sm">@sarahc</p>
                     </div>
                     <Badge style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>Builder</Badge>
@@ -359,7 +360,7 @@ const MoleculeShowcase = () => {
                     <Button size="sm" className="flex-1 hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
                       Connect
                     </Button>
-                    <Button size="sm" variant="outline" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
+                    <Button size="sm" variant="secondary" className="text-[var(--hive-text-primary)]" style={{ borderColor: 'var(--hive-border-primary)' }}>
                       View Profile
                     </Button>
                   </div>
@@ -369,10 +370,10 @@ const MoleculeShowcase = () => {
                 <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}>
                   <div className="flex items-center mb-4">
                     <Avatar className="w-12 h-12 mr-3">
-                      <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold">MJ</AvatarFallback>
+                      <AvatarFallback className="bg-gradient-to-r from-blue-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)] font-semibold">MJ</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <h4 className="text-white font-semibold">Marcus Johnson</h4>
+                      <h4 className="text-[var(--hive-text-primary)] font-semibold">Marcus Johnson</h4>
                       <p className="text-gray-400 text-sm">@mjohnson</p>
                     </div>
                     <Badge style={{ backgroundColor: 'var(--hive-status-info)', color: 'var(--hive-text-inverse)' }}>RA</Badge>
@@ -397,7 +398,7 @@ const MoleculeShowcase = () => {
                     <Button size="sm" className="flex-1" style={{ backgroundColor: 'var(--hive-status-info)', color: 'var(--hive-text-inverse)' }}>
                       Follow
                     </Button>
-                    <Button size="sm" variant="outline" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
+                    <Button size="sm" variant="secondary" className="text-[var(--hive-text-primary)]" style={{ borderColor: 'var(--hive-border-primary)' }}>
                       Message
                     </Button>
                   </div>
@@ -407,13 +408,13 @@ const MoleculeShowcase = () => {
                 <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}>
                   <div className="flex items-center mb-4">
                     <Avatar className="w-12 h-12 mr-3">
-                      <AvatarFallback className="bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold">AL</AvatarFallback>
+                      <AvatarFallback className="bg-gradient-to-r from-green-500 to-teal-500 text-[var(--hive-text-primary)] font-semibold">AL</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <h4 className="text-white font-semibold">Alex Liu</h4>
+                      <h4 className="text-[var(--hive-text-primary)] font-semibold">Alex Liu</h4>
                       <p className="text-gray-400 text-sm">@alexl</p>
                     </div>
-                    <Badge variant="outline" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }}>Freshman</Badge>
+                    <Badge variant="secondary" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }}>Freshman</Badge>
                   </div>
                   
                   <p className="text-gray-300 text-sm mb-4">
@@ -432,10 +433,10 @@ const MoleculeShowcase = () => {
                   </div>
                   
                   <div className="flex space-x-2">
-                    <Button size="sm" className="flex-1 bg-green-500 text-white hover:bg-green-600">
+                    <Button size="sm" className="flex-1 bg-green-500 text-[var(--hive-text-primary)] hover:bg-green-600">
                       Connect
                     </Button>
-                    <Button size="sm" variant="outline" className="text-white" style={{ borderColor: 'var(--hive-border-primary)' }}>
+                    <Button size="sm" variant="secondary" className="text-[var(--hive-text-primary)]" style={{ borderColor: 'var(--hive-border-primary)' }}>
                       View Profile
                     </Button>
                   </div>
@@ -459,11 +460,11 @@ const MoleculeShowcase = () => {
                   borderColor: 'var(--hive-border-subtle)',
                   transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}>
@@ -500,9 +501,9 @@ const MoleculeShowcase = () => {
                     </Button>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    <Badge variant="outline" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Academic</Badge>
-                    <Badge variant="outline" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Social</Badge>
-                    <Badge variant="outline" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Housing</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Academic</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Social</Badge>
+                    <Badge variant="secondary" className="cursor-pointer hive-interactive" style={{ borderColor: 'var(--hive-border-primary)', color: 'var(--hive-text-secondary)' }} onMouseEnter={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-brand-primary)'; e.currentTarget.style.color = 'var(--hive-brand-primary)'; }} onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = 'var(--hive-border-primary)'; e.currentTarget.style.color = 'var(--hive-text-muted)'; }}>Housing</Badge>
                   </div>
                 </div>
 
@@ -519,7 +520,7 @@ const MoleculeShowcase = () => {
                         color: 'var(--hive-text-primary)'
                       }}
                     />
-                    <Badge className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-green-500 text-white text-xs">
+                    <Badge className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-green-500 text-[var(--hive-text-primary)] text-xs">
                       Verified
                     </Badge>
                   </div>
@@ -554,11 +555,11 @@ const MoleculeShowcase = () => {
                   borderColor: 'var(--hive-border-subtle)',
                   transition: 'all var(--hive-duration-smooth) var(--hive-easing-liquid)'
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={(e: any) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}>
@@ -573,7 +574,7 @@ const MoleculeShowcase = () => {
                 
                 {/* Main Navigation Items */}
                 <div className="space-y-2">
-                  <h4 className="text-white font-medium mb-3">Main Navigation</h4>
+                  <h4 className="text-[var(--hive-text-primary)] font-medium mb-3">Main Navigation</h4>
                   <div className="space-y-1">
                     {[
                       { icon: Home, label: 'Feed', active: true, badge: null },
@@ -586,8 +587,8 @@ const MoleculeShowcase = () => {
                         key={label}
                         className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors hive-interactive ${
                           active 
-                            ? 'text-white border'
-                            : 'hover:bg-gray-800 text-gray-300 hover:text-white'
+                            ? 'text-[var(--hive-text-primary)] border'
+                            : 'hover:bg-gray-800 text-gray-300 hover:text-[var(--hive-text-primary)]'
                         }`}
                         style={active ? {
                           backgroundColor: 'var(--hive-overlay-gold-subtle)',
@@ -601,7 +602,7 @@ const MoleculeShowcase = () => {
                         </div>
                         <div className="flex items-center">
                           {badge && (
-                            <Badge className="bg-red-500 text-white mr-2">{badge}</Badge>
+                            <Badge className="bg-red-500 text-[var(--hive-text-primary)] mr-2">{badge}</Badge>
                           )}
                           <ChevronRight className="w-4 h-4 text-gray-500" />
                         </div>
@@ -614,7 +615,7 @@ const MoleculeShowcase = () => {
 
                 {/* Settings Navigation */}
                 <div className="space-y-2">
-                  <h4 className="text-white font-medium mb-3">Settings</h4>
+                  <h4 className="text-[var(--hive-text-primary)] font-medium mb-3">Settings</h4>
                   <div className="space-y-1">
                     {[
                       { icon: Bell, label: 'Notifications', active: false },
@@ -625,8 +626,8 @@ const MoleculeShowcase = () => {
                         key={label}
                         className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors hive-interactive ${
                           active 
-                            ? 'text-white border'
-                            : 'hover:bg-gray-800 text-gray-300 hover:text-white'
+                            ? 'text-[var(--hive-text-primary)] border'
+                            : 'hover:bg-gray-800 text-gray-300 hover:text-[var(--hive-text-primary)]'
                         }`}
                         style={active ? {
                           backgroundColor: 'var(--hive-overlay-gold-subtle)',
@@ -662,19 +663,19 @@ const MoleculeShowcase = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <h4 className="text-white font-medium mb-2">Campus Context</h4>
+                <h4 className="text-[var(--hive-text-primary)] font-medium mb-2">Campus Context</h4>
                 <p className="text-gray-400 text-sm">
                   Every molecule reflects real university social dynamics and student needs.
                 </p>
               </div>
               <div>
-                <h4 className="text-white font-medium mb-2">Social Utility</h4>
+                <h4 className="text-[var(--hive-text-primary)] font-medium mb-2">Social Utility</h4>
                 <p className="text-gray-400 text-sm">
                   Components serve both social connection and practical utility functions.
                 </p>
               </div>
               <div>
-                <h4 className="text-white font-medium mb-2">Viral Growth</h4>
+                <h4 className="text-[var(--hive-text-primary)] font-medium mb-2">Viral Growth</h4>
                 <p className="text-gray-400 text-sm">
                   Built-in sharing and invitation mechanics encourage organic platform growth.
                 </p>

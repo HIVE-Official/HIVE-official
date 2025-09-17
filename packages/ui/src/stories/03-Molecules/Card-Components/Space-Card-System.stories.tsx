@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Users, MapPin, Clock, Star, Settings, ArrowRight, BookOpen, Home, Building, GraduationCap, Calendar, MessageSquare, Lock, Globe } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Avatar, AvatarFallback } from '../../../atomic/atoms/avatar';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Card-Components/Space Card System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {
@@ -176,7 +177,7 @@ export const SpaceBrowseCards: Story = {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        {campusSpaceData.map((space) => (
+        {campusSpaceData.map((space: any) => (
           <Card key={space.id} className={`overflow-hidden hover:shadow-lg transition-shadow ${
             space.featured ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
           }`}>
@@ -270,7 +271,7 @@ export const SpaceBrowseCards: Story = {
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {space.tags.slice(0, 3).map((tag, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
+                  <Badge key={index} variant="secondary" className="text-xs">
                     {tag}
                   </Badge>
                 ))}
@@ -306,7 +307,7 @@ export const SpaceBrowseCards: Story = {
                       <MessageSquare className="h-4 w-4 mr-2" />
                       Open Space
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="secondary">
                       <Settings className="h-4 w-4" />
                     </Button>
                   </>
@@ -316,11 +317,11 @@ export const SpaceBrowseCards: Story = {
                     Join Space
                   </Button>
                 ) : (
-                  <Button size="sm" variant="outline" disabled className="flex-1">
+                  <Button size="sm" variant="secondary" disabled className="flex-1">
                     {space.inviteOnly ? 'Invite Required' : 'Space Full'}
                   </Button>
                 )}
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   View Details
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -343,7 +344,7 @@ export const CompactSpaceCards: Story = {
       </div>
 
       <div className="space-y-4">
-        {campusSpaceData.map((space) => (
+        {campusSpaceData.map((space: any) => (
           <Card key={space.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4">
               <div className="flex items-center gap-4">
@@ -377,7 +378,7 @@ export const CompactSpaceCards: Story = {
                           <Clock className="h-3 w-3" />
                           {space.lastActive}
                         </span>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           {space.category}
                         </Badge>
                       </div>
@@ -386,7 +387,7 @@ export const CompactSpaceCards: Story = {
                     {/* Action Buttons */}
                     <div className="flex items-center gap-2 ml-4">
                       {space.isJoined ? (
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           <Settings className="h-4 w-4" />
                         </Button>
                       ) : space.canJoin ? (
@@ -394,7 +395,7 @@ export const CompactSpaceCards: Story = {
                           Join
                         </Button>
                       ) : (
-                        <Button size="sm" variant="outline" disabled>
+                        <Button size="sm" variant="secondary" disabled>
                           {space.isPrivate ? 'Private' : 'Full'}
                         </Button>
                       )}
@@ -435,7 +436,7 @@ export const InteractiveSpaceCards: Story = {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {campusSpaceData.slice(0, 4).map((space) => {
+          {campusSpaceData.slice(0, 4).map((space: any) => {
             const isJoined = joinedSpaces.includes(space.id);
             const isHovered = hoveredCard === space.id;
 
@@ -491,7 +492,7 @@ export const InteractiveSpaceCards: Story = {
                   {/* Member Preview */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex -space-x-2">
-                      {space.members.slice(0, 3).map((member) => (
+                      {space.members.slice(0, 3).map((member: any) => (
                         <Avatar key={member.id} className="h-6 w-6 border-2 border-white">
                           <AvatarImage src={member.avatar} alt={member.name} />
                           <AvatarFallback className="text-xs bg-gray-100">
@@ -519,7 +520,7 @@ export const InteractiveSpaceCards: Story = {
                         </Button>
                         <Button 
                           size="sm" 
-                          variant="outline"
+                          variant="secondary"
                           onClick={() => handleLeaveSpace(space.id)}
                         >
                           Leave
@@ -535,7 +536,7 @@ export const InteractiveSpaceCards: Story = {
                         Join Space
                       </Button>
                     ) : (
-                      <Button size="sm" variant="outline" disabled className="flex-1">
+                      <Button size="sm" variant="secondary" disabled className="flex-1">
                         {space.inviteOnly ? 'Invite Required' : 'Space Full'}
                       </Button>
                     )}

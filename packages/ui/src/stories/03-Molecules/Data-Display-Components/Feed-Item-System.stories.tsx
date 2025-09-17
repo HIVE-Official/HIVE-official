@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, Users, MapPin, Clock, Calendar, BookOpen, Pin, Trash2, Edit, ChevronUp, ChevronDown } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Badge } from '../../../components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Data-Display-Components/Feed Item System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {
@@ -279,7 +280,7 @@ export const TextPostFeedItems: Story = {
                         {item.author.major} • {item.author.year}
                       </div>
                       <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           {item.space.name}
                         </Badge>
                         {item.location && (
@@ -457,7 +458,7 @@ export const EventAnnouncementFeedItems: Story = {
                       <div className="text-sm text-gray-600">
                         {item.author.major} • {item.author.year}
                       </div>
-                      <Badge variant="outline" className="text-xs mt-1">
+                      <Badge variant="secondary" className="text-xs mt-1">
                         {item.space.name}
                       </Badge>
                     </div>
@@ -713,7 +714,7 @@ export const InteractiveFeedDemo: Story = {
                       <div className="text-sm text-gray-600">
                         {item.author.major} • {item.author.year}
                       </div>
-                      <Badge variant="outline" className="text-xs mt-1">
+                      <Badge variant="secondary" className="text-xs mt-1">
                         {item.space.name}
                       </Badge>
                     </div>

@@ -7,9 +7,9 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
 import { 
   UBSpaceTemplateCard,
   UBSpacesDirectory,
@@ -55,8 +55,9 @@ import '../../../hive-tokens.css';
 // META CONFIGURATION
 // =============================================================================
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '🏛️ SPACES SYSTEM/Complete Interactive System',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -290,7 +291,7 @@ const CompleteSpacesSystem = () => {
         <Button
           key={id}
           variant={activeView === id ? 'primary' : 'secondary'}
-          onClick={() => setActiveView(id as any)}
+          onClick={() => setActiveView(id as unknown)}
           className="flex items-center gap-2"
         >
           <Icon className="w-4 h-4" />

@@ -63,6 +63,8 @@ export interface SelectProps
   allowClear?: boolean;
   onClear?: () => void;
   searchable?: boolean;
+  onValueChange?: (value: string) => void;
+  value?: string;
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
@@ -82,6 +84,8 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     onClear,
     value,
     id,
+    onValueChange,
+    onChange,
     ...props 
   }, ref) => {
     const selectId = id || React.useId();
@@ -101,6 +105,10 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           )}
           ref={ref}
           value={value}
+          onChange={(e) => {
+            onChange?.(e);
+            onValueChange?.(e.target.value);
+          }}
           {...props}
         >
           {placeholder && (
@@ -108,7 +116,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               {placeholder}
             </option>
           )}
-          {options.map((option) => (
+          {options.map((option: SelectOption) => (
             <option 
               key={option.value} 
               value={option.value}
@@ -199,7 +207,7 @@ const MultiSelect = React.forwardRef<HTMLSelectElement, MultiSelectProps>(
     return (
       <Select
         ref={ref}
-        value={value}
+        value={value as unknown as string}
         onChange={handleChange}
         multiple
         className="min-h-20"
@@ -325,4 +333,7 @@ export {
   selectVariants 
 };
 
-export type { SelectOption as SelectOptionEnhanced };
+export type { 
+  SelectOption as SelectOptionEnhanced,
+  SelectProps as SelectEnhancedProps 
+};

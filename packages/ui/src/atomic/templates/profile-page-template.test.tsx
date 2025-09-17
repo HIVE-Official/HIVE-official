@@ -1,18 +1,17 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ProfilePageTemplate } from './profile-page-template';
 
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('../../components/framer-motion-proxy', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 // Mock window.addEventListener
-const mockAddEventListener = jest.fn();
-const mockRemoveEventListener = jest.fn();
+const mockAddEventListener = (() => {});
+const mockRemoveEventListener = (() => {});
 
 Object.defineProperty(window, 'addEventListener', {
   value: mockAddEventListener,
@@ -161,10 +160,10 @@ describe('ProfilePageTemplate', () => {
 
   it('handles navigation callbacks correctly', () => {
     const mockCallbacks = {
-      onNavigationClick: jest.fn(),
-      onNotificationsClick: jest.fn(),
-      onUserMenuClick: jest.fn(),
-      onLogoClick: jest.fn(),
+      onNavigationClick: (() => {}),
+      onNotificationsClick: (() => {}),
+      onUserMenuClick: (() => {}),
+      onLogoClick: (() => {}),
     };
 
     render(<ProfilePageTemplate {...defaultProps} {...mockCallbacks} />);
@@ -177,10 +176,10 @@ describe('ProfilePageTemplate', () => {
 
   it('handles profile dashboard callbacks correctly', () => {
     const mockCallbacks = {
-      onEditProfile: jest.fn(),
-      onSpaceClick: jest.fn(),
-      onActivityClick: jest.fn(),
-      onToolClick: jest.fn(),
+      onEditProfile: (() => {}),
+      onSpaceClick: (() => {}),
+      onActivityClick: (() => {}),
+      onToolClick: (() => {}),
     };
 
     render(<ProfilePageTemplate {...defaultProps} {...mockCallbacks} />);

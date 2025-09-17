@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { ritualFramework } from '@/lib/rituals-framework';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { ritualFramework } from '@/lib/spaces/rituals/rituals-framework';
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
+import { withAuth } from '@/lib/api/middleware/api-auth-middleware';
 
 // Join ritual schema
 const JoinRitualSchema = z.object({

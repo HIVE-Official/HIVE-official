@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
+import { logger } from '@/lib/logger';
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from 'next/image';
-import { HiveInput, HiveButton, Textarea } from "@hive/ui";
+import { Input, Button, Textarea } from "@hive/ui";
 import { useSession } from '../../hooks/use-session';
+import { authenticatedFetch } from '@/lib/api/api-client';
 
 interface CampusProfile {
   fullName: string;
@@ -12,12 +15,13 @@ interface CampusProfile {
   profilePhoto?: string;
   avatarUrl?: string;
   academicYear: 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'other';
-  major: string;
+  majors: string[]; // Changed from major: string to majors: string[]
   housing: string;
   pronouns?: string;
   statusMessage?: string;
   isBuilder?: boolean;
   age?: number;
+  interests?: string[]; // Added interests array
 }
 
 interface ProfileIdentityModalProps {
@@ -84,18 +88,32 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
   
   const queryClient = useQueryClient();
   
-  // Stub profile methods (useSession doesn't provide these)
+  // Profile update methods
   const updateProfile = async (data: any): Promise<any> => {
-    // Return mock data for now - implement actual API call later
-    return { success: true, ...data };
+    const response = await authenticatedFetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Failed to update profile');
+    return response.json();
   };
+  
   const uploadPhoto = async (file: File): Promise<{ avatarUrl: string }> => {
-    // Return mock data for now - implement actual API call later
-    return { avatarUrl: URL.createObjectURL(file) };
+    const formData = new FormData();
+    formData.append('photo', file);
+    
+    const response = await authenticatedFetch('/api/profile/upload-photo', {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) throw new Error('Failed to upload photo');
+    return response.json();
   };
-  const isUpdating = false;
-  const _profileError = null;
-  const _clearError = () => {};
+  
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const clearError = () => setProfileError(null);
   
   // PWA Camera Support Detection
   const isCameraSupported = typeof navigator !== 'undefined' && 
@@ -199,7 +217,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
       queryClient.invalidateQueries({ queryKey: ["campus-profile"] });
       queryClient.refetchQueries({ queryKey: ["campus-profile"] });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       setUploadError(error instanceof Error ? error.message : 'Generation failed');
     }
   });
@@ -243,7 +261,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
         videoRef.current.srcObject = mediaStream;
       }
     } catch (error) {
-      console.error('Camera access denied:', error);
+      logger.error('Camera access denied:', { error: String(error) });
       setUploadError('Camera access denied. Please allow camera permissions.');
     }
   }, [isCameraSupported]);
@@ -273,7 +291,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
     context.drawImage(video, 0, 0);
     
     // Convert to blob and upload
-    canvas.toBlob((blob) => {
+    canvas.toBlob((blob: any) => {
       if (blob) {
         const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
         handlePhotoUpload(file);
@@ -398,7 +416,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                 /> */}
                 
                 {/* Fallback Upload Button */}
-                <HiveButton
+                <Button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                   className="w-full"
@@ -414,11 +432,11 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                       📁 Upload Photo
                     </span>
                   )}
-                </HiveButton>
+                </Button>
 
                 {/* Take Photo (PWA) */}
                 {isCameraSupported && (
-                  <HiveButton
+                  <Button
                     onClick={showCamera ? capturePhoto : startCamera}
                     disabled={isUploading}
                     variant="outline"
@@ -427,11 +445,11 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     <span className="transition-all duration-200 hover:scale-105 inline-flex items-center">
                       📱 {showCamera ? 'Capture Photo' : 'Take Photo'}
                     </span>
-                  </HiveButton>
+                  </Button>
                 )}
 
                 {/* Generate Avatar */}
-                <HiveButton
+                <Button
                   onClick={() => generateAvatarMutation.mutate()}
                   disabled={generateAvatarMutation.isPending}
                   variant="outline"
@@ -447,17 +465,17 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                       🎨 Generate Avatar
                     </span>
                   )}
-                </HiveButton>
+                </Button>
 
                 {/* Remove Photo */}
                 {photoPreview && (
-                  <HiveButton
+                  <Button
                     onClick={() => setPhotoPreview(null)}
                     variant="destructive"
                     className="w-full"
                   >
                     🗑️ Remove Photo
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
 
@@ -492,9 +510,9 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                     Display Name
                   </label>
-                  <HiveInput
+                  <Input
                     value={formData.fullName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                     placeholder="Your full name"
                     className="w-full"
                   />
@@ -505,9 +523,9 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                     Preferred Name (Optional)
                   </label>
-                  <HiveInput
+                  <Input
                     value={formData.preferredName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, preferredName: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, preferredName: e.target.value }))}
                     placeholder="What should we call you?"
                     className="w-full"
                   />
@@ -519,10 +537,10 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                       Age
                     </label>
-                    <HiveInput
+                    <Input
                       type="number"
                       value={formData.age}
-                      onChange={(e) => setFormData(prev => ({ ...prev, age: e.target.value }))}
+                      onChange={(e: any) => setFormData(prev => ({ ...prev, age: e.target.value }))}
                       placeholder="18"
                       className="w-full"
                     />
@@ -534,7 +552,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     </label>
                     <select
                       value={formData.academicYear}
-                      onChange={(e) => setFormData(prev => ({ ...prev, academicYear: e.target.value as any }))}
+                      onChange={(e: any) => setFormData(prev => ({ ...prev, academicYear: e.target.value as any }))}
                       className="w-full px-4 py-3 bg-hive-background-secondary border border-hive-border-primary rounded-xl text-hive-text-primary focus:border-hive-brand-primary/40 focus:outline-none transition-colors"
                     >
                       {ACADEMIC_YEARS.map(year => (
@@ -553,7 +571,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <select
                     value={formData.major}
-                    onChange={(e) => setFormData(prev => ({ ...prev, major: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, major: e.target.value }))}
                     className="w-full px-4 py-3 bg-hive-background-secondary border border-hive-border-primary rounded-xl text-hive-text-primary focus:border-hive-brand-primary/40 focus:outline-none transition-colors"
                   >
                     <option value="">Select your major</option>
@@ -570,9 +588,9 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                     Dorm/Housing
                   </label>
-                  <HiveInput
+                  <Input
                     value={formData.housing}
-                    onChange={(e) => setFormData(prev => ({ ...prev, housing: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, housing: e.target.value }))}
                     placeholder="e.g., Smith Hall, Room 305"
                     className="w-full"
                   />
@@ -583,9 +601,9 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <label className="block text-sm font-medium text-hive-text-secondary mb-2">
                     Pronouns (Optional)
                   </label>
-                  <HiveInput
+                  <Input
                     value={formData.pronouns}
-                    onChange={(e) => setFormData(prev => ({ ...prev, pronouns: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, pronouns: e.target.value }))}
                     placeholder="e.g., they/them, she/her, he/him"
                     className="w-full"
                   />
@@ -598,7 +616,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <Textarea
                     value={formData.statusMessage}
-                    onChange={(e) => setFormData(prev => ({ ...prev, statusMessage: e.target.value }))}
+                    onChange={(e: any) => setFormData(prev => ({ ...prev, statusMessage: e.target.value }))}
                     placeholder="Tell your campus story..."
                     rows={3}
                     maxLength={200}
@@ -612,7 +630,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
 
               {/* Builder Status Info */}
               {profile.isBuilder && (
-                <div className="p-4 bg-gradient-to-r from-[#FFD700]/10 to-[#FFD700]/5 border border-[#FFD700]/20 rounded-xl">
+                <div className="p-4 bg-gradient-to-r from-[var(--hive-brand-secondary)]/10 to-[var(--hive-brand-secondary)]/5 border border-[var(--hive-brand-secondary)]/20 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xl">🔨</span>
                     <h4 className="font-semibold text-[#E5E5E7]">Builder Status</h4>
@@ -631,14 +649,14 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
 
         {/* Footer Actions */}
         <div className="p-6 border-t border-hive-border-primary flex justify-end gap-3">
-            <HiveButton
+            <Button
               onClick={onClose}
               variant="outline"
               className="px-6 py-3"
             >
               Cancel
-            </HiveButton>
-            <HiveButton
+            </Button>
+            <Button
               onClick={handleUpdateProfile}
               disabled={isUpdating}
               variant="primary"
@@ -652,7 +670,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
               ) : (
                 'Save Changes'
               )}
-            </HiveButton>
+            </Button>
           </div>
       </div>
 

@@ -6,7 +6,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
+import { Button } from '../../../../atomic/atoms/button-enhanced';
 import { Badge } from '../../../../components/ui/badge';
 import { Progress } from '../../../../components/ui/progress';
 import { 
@@ -107,7 +107,7 @@ const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {
             className="bg-gray-700"
             style={{ 
               '--progress-foreground': 'var(--hive-brand-primary)' 
-            } as any}
+            } as unknown}
           />
         </div>
 
@@ -161,7 +161,7 @@ const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {
                   {isCompleting ? 'Completing...' : 'Complete Now'}
                 </Button>
               )}
-              <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-white hover:bg-gray-800">
                 <Settings className="w-4 h-4" />
               </Button>
             </>
@@ -177,7 +177,7 @@ const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {
               </Button>
               <Button 
                 size="icon" 
-                variant="outline" 
+                variant="secondary" 
                 className="border-gray-600 text-white hover:bg-gray-800"
                 onClick={() => onToggleFavorite?.(ritual.id)}
               >
@@ -236,7 +236,6 @@ export const ActiveRitual: Story = {
       campusRanking: 23
     },
     onComplete: (id: string) => {
-      console.log('Completing ritual:', id);
       return Promise.resolve();
     },
     onStart: (id: string) => console.log('Starting ritual:', id),

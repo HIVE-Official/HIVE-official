@@ -6,10 +6,10 @@
 import React, { useState, useMemo } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { 
   // Core Interface Icons
   Home, Users, Calendar, Search, Plus, Settings, Menu, X, ChevronRight, ChevronLeft, ChevronUp, ChevronDown,
@@ -33,6 +33,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '11-Icon-System/Documentation',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -210,11 +211,11 @@ const IconSystemShowcase = () => {
           setSelectedIcon(icon);
           copyIconName(icon.name);
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={(e: any) => {
           e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
           e.currentTarget.style.backgroundColor = 'var(--hive-background-interactive)';
         }}
-        onMouseLeave={(e) => {
+        onMouseLeave={(e: any) => {
           if (selectedIcon?.name !== icon.name) {
             e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
           }
@@ -344,7 +345,7 @@ const IconSystemShowcase = () => {
               placeholder="Search icons by name, usage, or context..."
               className="pl-10 text-lg py-3"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
               style={{
                 backgroundColor: 'var(--hive-background-secondary)',
                 borderColor: 'var(--hive-border-primary)',

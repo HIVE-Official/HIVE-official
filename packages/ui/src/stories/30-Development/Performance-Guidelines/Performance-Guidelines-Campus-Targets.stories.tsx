@@ -6,9 +6,9 @@
 import React, { useState, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Button } from '../../../atomic/atoms/button-enhanced';
 import { Progress } from '../../../components/ui/progress';
 import { 
   Zap, 
@@ -37,6 +37,7 @@ import '../../../hive-tokens.css';
 
 const meta = {
   title: '10-Performance/Campus Guidelines & Targets',
+  component: () => null,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -440,7 +441,7 @@ const PerformanceShowcase = () => {
                   <span style={{ color: 'var(--hive-text-secondary)' }}>Constraints:</span>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {scenario.constraints.map((constraint, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs"
+                      <Badge key={idx} variant="secondary" className="text-xs"
                              style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                         {constraint}
                       </Badge>
@@ -603,7 +604,7 @@ const PerformanceShowcase = () => {
 
                       {/* Network Condition Metrics */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {Object.keys(metric.target).map((networkType) => (
+                        {Object.keys(metric.target).map((networkType: any) => (
                           <MetricVisualization 
                             key={networkType}
                             metric={metric}
@@ -619,7 +620,7 @@ const PerformanceShowcase = () => {
                         </h5>
                         <div className="flex flex-wrap gap-2">
                           {metric.optimizations.map((optimization: string, idx: number) => (
-                            <Badge key={idx} variant="outline" className="text-xs"
+                            <Badge key={idx} variant="secondary" className="text-xs"
                                    style={{ borderColor: 'var(--hive-border-subtle)', color: 'var(--hive-text-muted)' }}>
                               {optimization}
                             </Badge>

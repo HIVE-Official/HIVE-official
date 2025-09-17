@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from '@/lib/logger';
+
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Loader2, Hexagon } from "lucide-react";
-import { HiveButton } from "@hive/ui";
+import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { ButtonEnhanced as HiveButton } from "@hive/ui";
 
 export function FeedbackToast() {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,8 +54,7 @@ export function FeedbackToast() {
       }, 2000);
       
     } catch (_error) {
-      console.error('Failed to submit feedback:', _error);
-      // TODO: Show error state to user
+      logger.error('Failed to submit feedback:', { error: String(_error) });
     } finally {
       setIsSubmitting(false);
     }
@@ -61,7 +63,6 @@ export function FeedbackToast() {
   const handleDismiss = () => {
     setIsDismissed(true);
     setIsOpen(false);
-    setIsExpanded(false);
   };
 
   if (isDismissed || !isMounted) return null;
@@ -71,30 +72,28 @@ export function FeedbackToast() {
       <AnimatePresence>
         {!isOpen && (
           <motion.button
-            initial={{ opacity: 0, scale: 0.8, x: 100 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 0.8, x: 100 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             onClick={() => setIsOpen(true)}
-            className="group bg-[var(--hive-background-secondary)] hover:bg-[var(--hive-background-tertiary)] 
-                     border-2 border-[var(--hive-border-primary)] shadow-xl hover:shadow-2xl
-                     rounded-2xl p-4 transition-all duration-300
-                     flex items-center gap-3 max-w-xs"
+            className="w-12 h-12 bg-[var(--hive-background-secondary)] hover:bg-[var(--hive-background-tertiary)] 
+                     border border-[var(--hive-border-primary)] shadow-lg hover:shadow-xl
+                     rounded-full transition-all duration-200 flex items-center justify-center
+                     hover:scale-105"
+            title="We're new! Problems? Requests? Tell us!"
           >
-            <div className="flex-shrink-0">
-              <Hexagon className="w-6 h-6 text-[var(--hive-brand-primary)]" />
-            </div>
-            
-            <div className="text-left">
-              <div className="text-sm font-semibold text-[var(--hive-text-primary)]">
-                We're new! 
-              </div>
-              <div className="text-xs text-[var(--hive-text-secondary)] group-hover:text-[var(--hive-text-primary)] transition-colors">
-                Problems? Requests? Tell us!
-              </div>
-            </div>
-            
-            <MessageCircle className="w-5 h-5 text-[var(--hive-text-muted)] group-hover:text-[var(--hive-text-secondary)] transition-colors" />
+            <Image
+              src="/assets/hive-logo-gold.svg"
+              alt="HIVE"
+              width={20}
+              height={20}
+              className="w-5 h-5"
+              onError={(e: any) => {
+                const target = e.target as HTMLImageElement;
+                target.src = "/assets/hive-logo-white.svg";
+              }}
+            />
           </motion.button>
         )}
       </AnimatePresence>
@@ -106,18 +105,28 @@ export function FeedbackToast() {
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.9, x: 50 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="bg-[var(--hive-background-primary)] border-2 border-[var(--hive-border-primary)] 
-                     rounded-2xl shadow-2xl overflow-hidden w-80"
+            className="bg-[var(--hive-background-primary)] border border-[var(--hive-border-primary)] 
+                     rounded-xl shadow-xl overflow-hidden w-64"
           >
             {/* Header */}
-            <div className="p-4 border-b border-[var(--hive-border-subtle)] bg-[var(--hive-background-tertiary)]">
+            <div className="p-3 border-b border-[var(--hive-border-subtle)] bg-[var(--hive-background-tertiary)]">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
-                    <Hexagon className="w-6 h-6 text-[var(--hive-brand-primary)]" />
+                    <Image
+                      src="/assets/hive-logo-gold.svg"
+                      alt="HIVE"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5"
+                      onError={(e: any) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/assets/hive-logo-white.svg";
+                      }}
+                    />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-semibold text-[var(--hive-text-primary)]">
+                    <div className="text-sm font-medium text-[var(--hive-text-primary)]">
                       Feedback
                     </div>
                     <div className="text-xs text-[var(--hive-text-secondary)]">
@@ -137,18 +146,18 @@ export function FeedbackToast() {
             </div>
 
             {/* Content */}
-            <div className="p-6">
+            <div className="p-4">
               {isSubmitted ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-6"
+                  className="text-center py-4"
                 >
-                  <div className="w-12 h-12 bg-[var(--hive-background-tertiary)] rounded-full 
-                                flex items-center justify-center mx-auto mb-4 border border-[var(--hive-status-success)]">
-                    <MessageCircle className="w-6 h-6 text-[var(--hive-status-success)]" />
+                  <div className="w-10 h-10 bg-[var(--hive-background-tertiary)] rounded-full 
+                                flex items-center justify-center mx-auto mb-3 border border-[var(--hive-status-success)]">
+                    <MessageCircle className="w-5 h-5 text-[var(--hive-status-success)]" />
                   </div>
-                  <div className="text-sm font-medium text-[var(--hive-text-primary)] mb-2">
+                  <div className="text-sm font-medium text-[var(--hive-text-primary)] mb-1">
                     Thanks for your feedback!
                   </div>
                   <div className="text-xs text-[var(--hive-text-secondary)]">
@@ -156,39 +165,38 @@ export function FeedbackToast() {
                   </div>
                 </motion.div>
               ) : (
-                <div className="space-y-5">
-                  <div className="text-sm text-[var(--hive-text-secondary)] leading-relaxed">
-                    Found a bug? Have a feature request? Just want to say hi? 
-                    We'd love to hear from you!
+                <div className="space-y-4">
+                  <div className="text-sm text-[var(--hive-text-secondary)]">
+                    Found a bug? Have a request? We'd love to hear from you!
                   </div>
                   
                   <div className="relative">
                     <textarea
                       placeholder="Tell us what's on your mind..."
                       value={feedback}
-                      onChange={(e) => setFeedback(e.target.value)}
-                      rows={4}
+                      onChange={(e: any) => setFeedback(e.target.value)}
+                      rows={3}
                       maxLength={500}
-                      className="w-full px-4 py-3 bg-[var(--hive-background-secondary)] 
-                               border border-[var(--hive-border-subtle)] rounded-xl
+                      className="w-full px-3 py-2 bg-[var(--hive-background-secondary)] 
+                               border border-[var(--hive-border-subtle)] rounded-lg
                                text-sm text-[var(--hive-text-primary)]
                                placeholder:text-[var(--hive-text-muted)]
                                focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50
                                focus:border-[var(--hive-brand-primary)]/50
                                resize-none transition-all duration-200"
                     />
-                    <div className="absolute bottom-3 right-3 text-xs text-[var(--hive-text-muted)] bg-[var(--hive-background-primary)] px-2 py-1 rounded">
+                    <div className="absolute bottom-2 right-2 text-xs text-[var(--hive-text-muted)] bg-[var(--hive-background-primary)] px-1.5 py-0.5 rounded">
                       {feedback.length}/500
                     </div>
                   </div>
                   
-                  <div className="flex justify-between items-center pt-2">
+                  <div className="flex justify-between items-center pt-1">
                     <button
                       onClick={() => setIsOpen(false)}
                       className="text-sm text-[var(--hive-text-muted)] hover:text-[var(--hive-text-secondary)] 
-                               transition-colors px-2 py-1 rounded hover:bg-[var(--hive-background-tertiary)]"
+                               transition-colors px-1 py-1 rounded hover:bg-[var(--hive-background-tertiary)]"
                     >
-                      Maybe later
+                      Later
                     </button>
                     
                     <HiveButton

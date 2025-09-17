@@ -4,6 +4,12 @@
   "compilerOptions": {
     "types": ["node", "vitest/globals"],
     "moduleResolution": "bundler",
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
@@ -16,6 +22,6 @@
     },
     "typeRoots": ["../../node_modules/@types", "../../node_modules"]
   },
-  "include": ["src", "vitest.config.ts"],
+  "include": ["src/**/*"],
   "exclude": ["dist", "build", "node_modules"]
 }

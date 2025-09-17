@@ -1,210 +1,308 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
-import { z } from 'zod';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { logger } from '@/lib/logger';
 
-// In-memory store for development mode profile data
-const devProfileStore: Record<string, any> = {};
+import { dbAdmin as db, authAdmin as auth } from '@/lib/firebase/admin/firebase-admin';
+import * as admin from 'firebase-admin';
 
-// Validation schema for profile updates
-const updateProfileSchema = z.object({
-  fullName: z.string().min(1).max(100).optional(),
-  major: z.string().min(1).max(100).optional(),
-  academicYear: z.enum(['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'other']).optional(),
-  graduationYear: z.number().int().min(1900).max(2040).optional(),
-  housing: z.string().max(200).optional(),
-  pronouns: z.string().max(50).optional(),
-  bio: z.string().max(500).optional(),
-  statusMessage: z.string().max(200).optional(),
-  avatarUrl: z.string().url().optional().or(z.literal("")),
-  profilePhoto: z.string().url().optional().or(z.literal("")),
-  isPublic: z.boolean().optional(),
-  builderOptIn: z.boolean().optional(),
-  userType: z.enum(['student', 'alumni', 'faculty']).optional() });
-
-/**
- * Get user profile
- * GET /api/profile
- */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
+// GET /api/profile - Get current user's profile or search profiles
+export async function GET(request: NextRequest) {
   try {
-    const userId = authContext.userId;
-
-    // For development mode, provide mock data structured like HiveProfile
-    if (userId === 'test-user' || userId === 'dev_user_123') {
-      const storedProfile = devProfileStore[userId] || {};
-      
-      return NextResponse.json({
-        success: true,
-        user: {
-          id: userId,
-          email: `dev@hive.com`,
-          fullName: storedProfile.fullName || 'Dev User',
-          handle: storedProfile.handle || 'devuser',
-          major: storedProfile.major || 'Computer Science',
-          academicYear: storedProfile.academicYear || 'Senior',
-          graduationYear: storedProfile.graduationYear || 2025,
-          housing: storedProfile.housing || 'Smith Hall, Room 305',
-          pronouns: storedProfile.pronouns || 'they/them',
-          bio: storedProfile.bio || 'Building the future of campus collaboration with HIVE 🚀',
-          statusMessage: storedProfile.statusMessage || 'Building epic study tools',
-          profilePhoto: storedProfile.profilePhoto || storedProfile.avatarUrl || '',
-          avatarUrl: storedProfile.avatarUrl || '',
-          schoolId: 'dev_school',
-          userType: storedProfile.userType || 'student',
-          emailVerified: true,
-          builderOptIn: storedProfile.builderOptIn || true,
-          isBuilder: storedProfile.isBuilder || true,
-          isPublic: storedProfile.isPublic !== false,
-          onboardingCompleted: true,
-          joinedAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-          lastActive: new Date().toISOString(),
-          lastActiveAt: new Date().toISOString(),
-          createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-          updatedAt: new Date().toISOString(),
-          consentGiven: true,
-          consentGivenAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-          // SECURITY: Development mode removed for production safety,
-          // Additional fields for complete profile
-          spacesJoined: 8,
-          spacesActive: 5, 
-          spacesLed: 3,
-          toolsUsed: 12,
-          toolsCreated: 4,
-          connectionsCount: 156,
-          totalActivity: 342,
-          currentStreak: 7,
-          longestStreak: 21,
-          reputation: 89,
-          achievements: 12,
-          showActivity: storedProfile.showActivity !== false,
-          showSpaces: storedProfile.showSpaces !== false,
-          showConnections: storedProfile.showConnections !== false,
-          allowDirectMessages: storedProfile.allowDirectMessages !== false,
-          showOnlineStatus: storedProfile.showOnlineStatus !== false,
-          ghostMode: {
-            enabled: storedProfile.ghostMode?.enabled || false,
-            level: storedProfile.ghostMode?.level || 'minimal'
-          },
-          builderLevel: 'intermediate',
-          specializations: ['web-development', 'ui-ux', 'productivity-tools'],
-          interests: ['coding', 'design', 'collaboration', 'student-life']
-        }
-      });
-    }
-
-    // Get user document from Firestore
-    const userDoc = await dbAdmin.collection('users').doc(userId).get();
-    
-    if (!userDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("User profile not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const userData = userDoc.data();
-    
-    // Return sanitized user profile
-    const userProfile = {
-      id: userId,
-      email: userData?.email,
-      fullName: userData?.fullName || '',
-      handle: userData?.handle || '',
-      major: userData?.major || '',
-      academicYear: userData?.academicYear || '',
-      graduationYear: userData?.graduationYear,
-      housing: userData?.housing || '',
-      pronouns: userData?.pronouns || '',
-      bio: userData?.bio || '',
-      statusMessage: userData?.statusMessage || '',
-      avatarUrl: userData?.avatarUrl || '',
-      profilePhoto: userData?.profilePhoto || userData?.avatarUrl || '',
-      schoolId: userData?.schoolId || '',
-      userType: userData?.userType || 'student',
-      emailVerified: userData?.emailVerified || false,
-      builderOptIn: userData?.builderOptIn || false,
-      isBuilder: userData?.isBuilder || false,
-      isPublic: userData?.isPublic || false,
-      onboardingCompleted: !!userData?.onboardingCompletedAt,
-      joinedAt: userData?.createdAt || new Date().toISOString(),
-      lastActive: userData?.lastActiveAt || userData?.updatedAt || new Date().toISOString(),
-      createdAt: userData?.createdAt,
-      updatedAt: userData?.updatedAt,
-      consentGiven: userData?.consentGiven || false,
-      consentGivenAt: userData?.consentGivenAt,
-    };
-
-    return NextResponse.json({
-      success: true,
-      user: userProfile
-    });
-
-  } catch (error) {
-    logger.error('Profile fetch error', { error: error, endpoint: '/api/profile' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch profile", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  operation: 'fetch_user_profile',
-  requireAuth: true // SECURITY: Always require authentication in production
-});
-
-/**
- * Update user profile
- * PATCH /api/profile
- */
-export const PATCH = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
-
-    // Parse and validate the update data
-    const body = await request.json();
-    const updateData = updateProfileSchema.parse(body);
-
-    // For development mode, store in memory
-    if (userId === 'test-user' || userId === 'dev_user_123') {
-      devProfileStore[userId] = {
-        ...devProfileStore[userId],
-        ...updateData,
-      };
-      
-      logger.info('Development mode profile update', { data: updateData, endpoint: '/api/profile' });
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Profile updated successfully (development mode)',
-        updated: updateData
-      });
-    }
-
-    // Update the user document in Firestore
-    const userRef = dbAdmin.collection('users').doc(userId);
-    const updatePayload = {
-      ...updateData,
-      updatedAt: FieldValue.serverTimestamp(),
-    };
-
-    await userRef.update(updatePayload);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Profile updated successfully',
-      updated: Object.keys(updateData)
-    });
-
-  } catch (error) {
-    logger.error('Profile update error', { error: error, endpoint: '/api/profile' });
-    
-    if (error instanceof z.ZodError) {
+    // Get auth token from header
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json(
-        { error: 'Invalid data', details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
+        { error: 'Authentication required' },
+        { status: 401 }
       );
     }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to update profile", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    
+    const token = authHeader.split('Bearer ')[1];
+    const decodedToken = await auth.verifyIdToken(token);
+    const userId = decodedToken.uid;
+    
+    // Check for search parameters
+    const searchParams = request.nextUrl.searchParams;
+    const search = searchParams.get('search');
+    const filter = searchParams.get('filter');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    
+    // If searching for profiles
+    if (search) {
+      const query = db.collection('users')
+        .where('privacy.profileVisibility', 'in', ['public', 'connections'])
+        .limit(Math.min(limit, 50));
+      
+      // Search by handle or name (Firestore doesn't support full-text search natively)
+      // In production, use Algolia or ElasticSearch
+      const profiles = await query.get();
+      const searchLower = search.toLowerCase();
+      
+      const results = profiles.docs
+        .map(doc => ({
+          uid: doc.id,
+          ...doc.data()
+        }))
+        .filter(profile => 
+          profile.handle?.toLowerCase().includes(searchLower) ||
+          profile.displayName?.toLowerCase().includes(searchLower) ||
+          profile.major?.toLowerCase().includes(searchLower)
+        )
+        .slice(0, limit);
+      
+      return NextResponse.json({
+        profiles: results,
+        count: results.length
+      });
+    }
+    
+    // Otherwise, get current user's profile
+    const userDoc = await db.collection('users').doc(userId).get();
+    
+    if (!userDoc.exists) {
+      return NextResponse.json(
+        { error: 'Profile not found. Please complete onboarding.' },
+        { status: 404 }
+      );
+    }
+    
+    const userData = userDoc.data();
+    
+    // Get additional stats
+    const [spacesSnapshot, connectionsSnapshot] = await Promise.all([
+      db.collection('spaceMembers')
+        .where('userId', '==', userId)
+        .get(),
+      db.collection('connections')
+        .where('user1', '==', userId)
+        .where('status', '==', 'connected')
+        .get()
+    ]);
+    
+    const connections2Snapshot = await db.collection('connections')
+      .where('user2', '==', userId)
+      .where('status', '==', 'connected')
+      .get();
+    
+    const totalConnections = connectionsSnapshot.size + connections2Snapshot.size;
+    
+    return NextResponse.json({
+      ...userData,
+      uid: userId,
+      stats: {
+        ...userData?.stats,
+        spacesJoined: spacesSnapshot.size,
+        connectionsCount: totalConnections
+      }
+    });
+    
+  } catch (error) {
+    logger.error('Error fetching profile:', { error: String(error) });
+    return NextResponse.json(
+      { error: 'Failed to fetch profile' },
+      { status: 500 }
+    );
   }
-}, { 
-  allowDevelopmentBypass: true, // Allow for profile updates but with secure auth
-  operation: 'update_user_profile' 
-});
+}
+
+// POST /api/profile - Create a new profile
+export async function POST(request: NextRequest) {
+  try {
+    // Verify authentication
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+    
+    const token = authHeader.split('Bearer ')[1];
+    const decodedToken = await auth.verifyIdToken(token);
+    const userId = decodedToken.uid;
+    const userEmail = decodedToken.email;
+    
+    // Check if profile already exists
+    const existingProfile = await db.collection('users').doc(userId).get();
+    if (existingProfile.exists) {
+      return NextResponse.json(
+        { error: 'Profile already exists' },
+        { status: 400 }
+      );
+    }
+    
+    // Validate email domain
+    if (!userEmail?.endsWith('@buffalo.edu')) {
+      return NextResponse.json(
+        { error: 'Must use a @buffalo.edu email address' },
+        { status: 400 }
+      );
+    }
+    
+    const profileData = await request.json();
+    
+    // Validate required fields
+    if (!profileData.handle || !profileData.displayName) {
+      return NextResponse.json(
+        { error: 'Handle and display name are required' },
+        { status: 400 }
+      );
+    }
+    
+    // Check if handle is available
+    const handleQuery = await db
+      .collection('users')
+      .where('handle', '==', profileData.handle)
+      .get();
+    
+    if (!handleQuery.empty) {
+      return NextResponse.json(
+        { error: 'Handle already taken' },
+        { status: 400 }
+      );
+    }
+    
+    // Validate handle format
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(profileData.handle)) {
+      return NextResponse.json(
+        { error: 'Invalid handle format. Use 3-20 alphanumeric characters or underscores.' },
+        { status: 400 }
+      );
+    }
+    
+    // Create profile document
+    const newProfile = {
+      uid: userId,
+      email: userEmail,
+      handle: profileData.handle,
+      displayName: profileData.displayName,
+      bio: profileData.bio || '',
+      major: profileData.major || '',
+      graduationYear: profileData.graduationYear || null,
+      year: profileData.year || null,
+      interests: profileData.interests || [],
+      skills: profileData.skills || [],
+      campusId: 'ub-buffalo',
+      housing: profileData.housing || '',
+      photoURL: profileData.photoURL || null,
+      avatarStyle: profileData.avatarStyle || {
+        backgroundColor: '#6B46C1',
+        textColor: '#FFFFFF'
+      },
+      privacy: {
+        profileVisibility: 'public',
+        showEmail: false,
+        showActivity: true,
+        allowMessages: 'connections'
+      },
+      isBuilder: false,
+      isVerified: false,
+      onboardingCompleted: true,
+      createdAt: admin.firestore.Timestamp.now(),
+      updatedAt: admin.firestore.Timestamp.now(),
+      lastActive: admin.firestore.Timestamp.now(),
+      stats: {
+        spacesJoined: 0,
+        spacesCreated: 0,
+        toolsBuilt: 0,
+        connectionsCount: 0,
+        resourcesShared: 0,
+        studyGroupsJoined: 0
+      }
+    };
+    
+    // Save to Firestore
+    await db.collection('users').doc(userId).set(newProfile);
+    
+    // Update metadata
+    await db.collection('metadata').doc('collections').update({
+      'users.count': admin.firestore.FieldValue.increment(1),
+      'users.lastUpdated': admin.firestore.Timestamp.now()
+    });
+    
+    return NextResponse.json({
+      message: 'Profile created successfully',
+      profile: newProfile
+    });
+    
+  } catch (error) {
+    logger.error('Error creating profile:', { error: String(error) });
+    return NextResponse.json(
+      { error: 'Failed to create profile' },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT /api/profile - Update current user's profile
+export async function PUT(request: NextRequest) {
+  try {
+    // Verify authentication
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+    
+    const token = authHeader.split('Bearer ')[1];
+    const decodedToken = await auth.verifyIdToken(token);
+    const userId = decodedToken.uid;
+    
+    const updates = await request.json();
+    
+    // Fields that cannot be updated
+    const protectedFields = ['uid', 'email', 'createdAt', 'isVerified'];
+    protectedFields.forEach(field => delete updates[field]);
+    
+    // Validate handle if being updated
+    if (updates.handle) {
+      // Check if handle is already taken
+      const handleQuery = await db
+        .collection('users')
+        .where('handle', '==', updates.handle)
+        .get();
+      
+      if (!handleQuery.empty && handleQuery.docs[0].id !== userId) {
+        return NextResponse.json(
+          { error: 'Handle already taken' },
+          { status: 400 }
+        );
+      }
+      
+      // Validate handle format
+      if (!/^[a-zA-Z0-9_]{3,20}$/.test(updates.handle)) {
+        return NextResponse.json(
+          { error: 'Invalid handle format' },
+          { status: 400 }
+        );
+      }
+    }
+    
+    // Add updated timestamp
+    updates.updatedAt = admin.firestore.Timestamp.now();
+    updates.lastActive = admin.firestore.Timestamp.now();
+    
+    // Update the profile
+    await db.collection('users').doc(userId).update(updates);
+    
+    // Fetch and return updated profile
+    const updatedDoc = await db.collection('users').doc(userId).get();
+    const updatedData = updatedDoc.data();
+    
+    return NextResponse.json({
+      message: 'Profile updated successfully',
+      profile: {
+        ...updatedData,
+        uid: userId
+      }
+    });
+    
+  } catch (error) {
+    logger.error('Error updating profile:', { error: String(error) });
+    return NextResponse.json(
+      { error: 'Failed to update profile' },
+      { status: 500 }
+    );
+  }
+}

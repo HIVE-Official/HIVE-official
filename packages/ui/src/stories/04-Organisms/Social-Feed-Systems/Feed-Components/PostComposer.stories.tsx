@@ -6,7 +6,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Card, CardContent } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
+import { Button } from '../../../../atomic/atoms/button-enhanced';
 import { Textarea } from '../../../../components/ui/textarea';
 import { Badge } from '../../../../components/ui/badge';
 import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
@@ -168,7 +168,7 @@ const PostComposer = ({
                 </div>
               </div>
               {onCancel && (
-                <Button variant="outline" size="sm" onClick={onCancel} className="border-gray-600 text-white">
+                <Button variant="secondary" size="sm" onClick={onCancel} className="border-gray-600 text-white">
                   <X className="h-4 w-4" />
                 </Button>
               )}
@@ -178,7 +178,7 @@ const PostComposer = ({
             <div className="space-y-3">
               <Textarea
                 value={content}
-                onChange={(e) => handleContentChange(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleContentChange(e.target.value)}
                 placeholder={placeholder}
                 className={`min-h-[80px] resize-none bg-gray-900 border-gray-700 text-white placeholder-gray-400 ${
                   isOverLimit ? 'border-red-500' : ''
@@ -203,7 +203,7 @@ const PostComposer = ({
                   <input
                     type="text"
                     value={poll.question}
-                    onChange={(e) => setPoll(prev => ({ ...prev, question: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoll(prev => ({ ...prev, question: e.target.value }))}
                     placeholder="Ask a question..."
                     className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none"
                   />
@@ -215,13 +215,13 @@ const PostComposer = ({
                         <input
                           type="text"
                           value={option}
-                          onChange={(e) => updatePollOption(index, e.target.value)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePollOption(index, e.target.value)}
                           placeholder={`Option ${index + 1}`}
                           className="flex-1 bg-transparent text-white placeholder-gray-400 border-none outline-none"
                         />
                         {poll.options.length > 2 && (
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             onClick={() => removePollOption(index)}
                             className="text-red-400 border-red-400"
@@ -235,7 +235,7 @@ const PostComposer = ({
                   
                   <div className="flex items-center justify-between">
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={addPollOption}
                       disabled={poll.options.length >= 4}
@@ -249,7 +249,7 @@ const PostComposer = ({
                       <input
                         type="checkbox"
                         checked={poll.allowMultiple}
-                        onChange={(e) => setPoll(prev => ({ ...prev, allowMultiple: e.target.checked }))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoll(prev => ({ ...prev, allowMultiple: e.target.checked }))}
                         className="rounded"
                       />
                       <span>Allow multiple choices</span>
@@ -263,14 +263,14 @@ const PostComposer = ({
                   <input
                     type="text"
                     value={event.title}
-                    onChange={(e) => setEvent(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, title: e.target.value }))}
                     placeholder="Event title"
                     className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none font-medium"
                   />
                   
                   <textarea
                     value={event.description}
-                    onChange={(e) => setEvent(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEvent(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Event description"
                     rows={2}
                     className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none resize-none"
@@ -282,7 +282,7 @@ const PostComposer = ({
                       <input
                         type="datetime-local"
                         value={event.startTime}
-                        onChange={(e) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
                         className="w-full mt-1 bg-transparent text-white border border-gray-700 rounded px-2 py-1"
                       />
                     </div>
@@ -291,7 +291,7 @@ const PostComposer = ({
                       <input
                         type="datetime-local"
                         value={event.endTime}
-                        onChange={(e) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
                         className="w-full mt-1 bg-transparent text-white border border-gray-700 rounded px-2 py-1"
                       />
                     </div>
@@ -316,7 +316,7 @@ const PostComposer = ({
                   {allowedTypes.map((type: string) => (
                     <Button
                       key={type}
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() => setPostType(type)}
                       className={`border-gray-600 text-white ${postType === type ? 'hive-interactive' : ''}`}
@@ -338,14 +338,14 @@ const PostComposer = ({
 
                 {/* Media Upload */}
                 {allowedTypes.includes('image') && (
-                  <Button variant="outline" size="sm" className="border-gray-600 text-white">
+                  <Button variant="secondary" size="sm" className="border-gray-600 text-white">
                     <Paperclip className="h-4 w-4" />
                   </Button>
                 )}
 
                 {/* Additional Tools */}
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => setShowAdvanced(!showAdvanced)}
                   className={`border-gray-600 text-white ${showAdvanced ? 'hive-interactive' : ''}`}
@@ -379,7 +379,7 @@ const PostComposer = ({
                     {['public', 'space', 'private'].map(vis => (
                       <Button
                         key={vis}
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => setVisibility(vis)}
                         className={`border-gray-600 text-white ${visibility === vis ? 'hive-interactive' : ''}`}
@@ -430,7 +430,6 @@ export const Default: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating post:', post);
       return Promise.resolve();
     },
     placeholder: "What's happening on campus?",
@@ -444,7 +443,6 @@ export const WithSpaceContext: Story = {
     user: mockUser,
     spaceId: 'cs101_study',
     onPost: (post: any) => {
-      console.log('Creating post in space:', post);
       return Promise.resolve();
     },
     placeholder: "Share with your study group...",
@@ -457,7 +455,6 @@ export const PollComposer: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating poll:', post);
       return Promise.resolve();
     },
     placeholder: "Ask your community a question...",
@@ -477,7 +474,6 @@ export const EventComposer: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating event:', post);
       return Promise.resolve();
     },
     placeholder: "Create an event for your community...",
@@ -497,7 +493,6 @@ export const LimitedComposer: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating limited post:', post);
       return Promise.resolve();
     },
     placeholder: "Quick update...",
@@ -510,11 +505,9 @@ export const WithCancelButton: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating post:', post);
       return Promise.resolve();
     },
     onCancel: () => {
-      console.log('Cancelled post creation');
     },
     placeholder: "What's on your mind?",
     maxLength: 500,
@@ -526,7 +519,6 @@ export const AllPostTypes: Story = {
   args: {
     user: mockUser,
     onPost: (post: any) => {
-      console.log('Creating post:', post);
       return Promise.resolve();
     },
     placeholder: "Create any type of content...",

@@ -1,0 +1,13 @@
+
+> @hive/ui@0.0.0 build
+> npx tsc --noEmitOnError false --skipLibCheck && cp ./src/styles.css ./dist/styles.css && node fix-imports.cjs
+
+index.ts(108,41): error TS2305: Module '"./src/contexts/hive-auth-context"' has no exported member 'useAuth'.
+src/components/onboarding/academic-step.tsx(9,15): error TS2305: Module '"@hive/core"' has no exported member 'AcademicLevel'.
+src/components/onboarding/create-profile-step.tsx(133,34): error TS2339: Property 'generateHandleSuggestions' does not exist on type 'typeof import("C:/hive/packages/core/src/index")'.
+src/components/onboarding/create-profile-step.tsx(415,56): error TS2322: Type '{ id: string; checked: boolean; onCheckedChange: (checked: boolean) => void; className: string; }' is not assignable to type 'IntrinsicAttributes & CheckboxProps & RefAttributes<HTMLInputElement>'.
+  Property 'onCheckedChange' does not exist on type 'IntrinsicAttributes & CheckboxProps & RefAttributes<HTMLInputElement>'.
+npm ERR! Lifecycle script `build` failed with error: 
+npm ERR! Error: command failed 
+npm ERR!   in workspace: @hive/ui@0.0.0 
+npm ERR!   at location: C:\hive\packages\ui 

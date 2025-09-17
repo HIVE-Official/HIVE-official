@@ -91,7 +91,7 @@ const InteractiveNavigation = ({ currentPath: initialPath = '/', ...props }: any
 
 // Basic Examples
 export const Default: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: sampleUser,
@@ -99,7 +99,7 @@ export const Default: Story = {
 };
 
 export const WithoutUser: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: null,
@@ -108,7 +108,7 @@ export const WithoutUser: Story = {
 
 // Variant Examples
 export const FullVariant: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: sampleUser,
@@ -123,7 +123,7 @@ export const FullVariant: Story = {
 };
 
 export const CompactVariant: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'compact',
     user: sampleUser,
@@ -139,7 +139,7 @@ export const CompactVariant: Story = {
 
 // Active States
 export const FeedActive: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: sampleUser,
@@ -148,7 +148,7 @@ export const FeedActive: Story = {
 };
 
 export const SpacesActive: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: sampleUser,
@@ -157,7 +157,7 @@ export const SpacesActive: Story = {
 };
 
 export const HiveLabActive: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: sampleUser,
@@ -166,7 +166,7 @@ export const HiveLabActive: Story = {
 };
 
 export const ProfileActive: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: sampleUser,
@@ -176,7 +176,7 @@ export const ProfileActive: Story = {
 
 // User Variants
 export const StudentUser: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: {
@@ -188,7 +188,7 @@ export const StudentUser: Story = {
 };
 
 export const FacultyUser: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: {
@@ -200,7 +200,7 @@ export const FacultyUser: Story = {
 };
 
 export const LongNameUser: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: {
@@ -220,7 +220,7 @@ export const LongNameUser: Story = {
 
 // Compact Variants
 export const CompactWithUser: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'compact',
     user: alternateUser,
@@ -228,7 +228,7 @@ export const CompactWithUser: Story = {
 };
 
 export const CompactWithoutUser: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'compact',
     user: null,
@@ -236,7 +236,7 @@ export const CompactWithoutUser: Story = {
 };
 
 export const CompactSpacesActive: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'compact',
     user: sampleUser,
@@ -286,7 +286,7 @@ export const SideBySideComparison: Story = {
 
 // Campus Scenarios
 export const StudentDashboard: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: {
@@ -306,7 +306,7 @@ export const StudentDashboard: Story = {
 };
 
 export const BuilderWorkspace: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'compact',
     user: {
@@ -326,7 +326,7 @@ export const BuilderWorkspace: Story = {
 };
 
 export const SpaceLeaderView: Story = {
-  render: (args) => <InteractiveNavigation {...args} />,
+  render: (args: any) => <InteractiveNavigation {...args} />,
   args: {
     variant: 'full',
     user: {
@@ -347,7 +347,7 @@ export const SpaceLeaderView: Story = {
 
 // Responsive Behavior
 export const MobileLayout: Story = {
-  render: (args) => (
+  render: (args: any) => (
     <div className="w-full max-w-sm mx-auto h-screen bg-[var(--hive-background-primary)]">
       <InteractiveNavigation {...args} />
     </div>
@@ -372,7 +372,7 @@ export const StaticFull: Story = {
     user: sampleUser,
     currentPath: '/spaces',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="h-screen bg-[var(--hive-background-primary)]">
       <HiveNavigation {...args} />
     </div>
@@ -385,7 +385,7 @@ export const StaticCompact: Story = {
     user: sampleUser,
     currentPath: '/hivelab',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="h-screen bg-[var(--hive-background-primary)]">
       <HiveNavigation {...args} />
     </div>

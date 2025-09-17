@@ -1,727 +1,400 @@
 "use client";
 
 /**
- * HIVE Unified Auth Context Provider
- * Provides consistent authentication state across all systems
- * Integrates with Firebase Auth, session management, and API endpoints
+ * HIVE Pure Firebase Auth Context
+ * EMERGENCY REWRITE - Clean Firebase Authentication Only
+ * Eliminates session auth chaos and implements proper Firebase flow
  */
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { logger } from '../utils/logger';
 
-// Simple logger for UI package
-const logger = {
-  info: (message: string, context?: Record<string, unknown>) => {
-    console.info(`[HIVE UI] ${message}`, context);
-  },
-  warn: (message: string, context?: Record<string, unknown>) => {
-    console.warn(`[HIVE UI] ${message}`, context);
-  },
-  error: (message: string, context?: Record<string, unknown>) => {
-    console.error(`[HIVE UI] ${message}`, context);
-  },
-  debug: (message: string, context?: Record<string, unknown>) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.debug(`[HIVE UI] ${message}`, context);
-    }
+import type { 
+  User as FirebaseUser,
+  Auth} from 'firebase/auth';
+import type { FirebaseApp } from 'firebase/app';
+import {
+  onAuthStateChanged,
+  signInWithCustomToken,
+  signOut as firebaseSignOut,
+  getIdToken,
+  getAuth
+} from 'firebase/auth';
+import { initializeApp, getApps } from 'firebase/app';
+
+// Initialize Firebase app with proper error handling
+function initializeFirebaseApp() {
+  // Validate required Firebase configuration
+  const firebaseConfig = {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  };
+
+  // Validate critical configuration values
+  if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+    throw new Error('Missing critical Firebase configuration. Check environment variables.');
   }
-};
 
-// Advanced auth features disabled for now - causing import failures
-const AdvancedAuthSecurity: any = null;
-const AuthPerformanceOptimizer: any = null;
+  try {
+    // Return existing app if already initialized
+    if (getApps().length > 0) {
+      return getApps()[0];
+    }
+    
+    // Initialize new Firebase app
+    return initializeApp(firebaseConfig);
+  } catch (error) {
+    logger.error('Failed to initialize Firebase:', { error });
+    throw new Error('Firebase initialization failed. Check your configuration.');
+  }
+}
 
-// Unified User Interface
+let app: FirebaseApp | null;
+let auth: Auth | null;
+
+try {
+  app = initializeFirebaseApp();
+  auth = getAuth(app);
+} catch (error) {
+  logger.error('Critical Firebase initialization error:', { error });
+  // In production, you might want to redirect to an error page
+  app = null;
+  auth = null;
+}
+
+// Use the imported logger from @hive/core
+// Logger is already imported at the top of the file
+
+// HIVE User Interface (Firebase-only)
 export interface HiveUser {
-  id: string;
-  uid: string; // Firebase User ID - required for deployment and auth integration
+  id: string;          // Firebase UID
+  uid: string;         // Firebase UID (duplicate for compatibility)
   email: string;
+  emailVerified: boolean;
   fullName?: string;
   handle?: string;
-  major?: string;
+  major?: string;      // Legacy field for backward compatibility
+  majors?: string[];   // New field for multiple majors
   avatarUrl?: string;
   schoolId?: string;
-  builderOptIn?: boolean;
+  builderOptIn?: boolean;  // Added missing field
   onboardingCompleted: boolean;
-  emailVerified?: boolean;
   createdAt?: string;
   updatedAt?: string;
-  
-  // Additional profile data
-  profileCompletion?: number;
-  preferences?: {
-    theme?: 'light' | 'dark';
-    notifications?: boolean;
-    privacy?: 'public' | 'private';
-  };
-  
-  // System flags
-  isDeveloper?: boolean;
-  isAdmin?: boolean;
-  developmentMode?: boolean;
+  token?: string;      // Firebase ID token for API calls
 }
 
-// Session Information
-export interface HiveSession {
-  token: string | null;
-  issuedAt?: string;
-  expiresAt?: string;
-  developmentMode?: boolean;
-  lastActivity?: string;
-}
-
-// Auth State
-export interface UnifiedAuthState {
+// Auth State Interface
+export interface FirebaseAuthState {
   user: HiveUser | null;
-  session: HiveSession | null;
+  firebaseUser: FirebaseUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   error: string | null;
 }
 
-// Auth Context Interface
-export interface UnifiedAuthContextType extends UnifiedAuthState {
-  // Authentication Methods
-  login: (email: string, password?: string) => Promise<void>;
-  logout: () => Promise<void>;
-  sendMagicLink: (email: string) => Promise<void>;
-  verifyMagicLink: (token: string) => Promise<void>;
-  
-  // Session Management
-  refreshSession: () => Promise<void>;
-  validateSession: () => Promise<boolean>;
+// Context Interface
+export interface FirebaseAuthContextType extends FirebaseAuthState {
+  // Core Authentication
+  signInWithMagicLink: (customToken: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  logout: () => Promise<void>;  // Alias for backward compatibility
+  refreshUserData: () => Promise<void>;
   getAuthToken: () => Promise<string | null>;
   
-  // Profile Management
-  updateProfile: (updates: Partial<HiveUser>) => Promise<void>;
-  completeOnboarding: (onboardingData: {
-    fullName: string;
-    userType: 'student' | 'alumni' | 'faculty';
-    firstName?: string;
-    lastName?: string;
-    major: string;
-    academicLevel?: string;
-    graduationYear: number;
-    handle: string;
-    avatarUrl?: string;
-    builderRequestSpaces?: string[];
-    consentGiven: boolean;
-  }) => Promise<{
-    user: any;
-    builderRequestsCreated: number;
-    success: boolean;
-    message: string;
-  }>;
-  
-  // Development Utilities
-  devLogin: (userId?: string) => Promise<void>;
-  clearDevSession: () => void;
-  
-  // State Queries
+  // Onboarding
+  completeOnboarding: (data: OnboardingData) => Promise<OnboardingResult>;
   requiresOnboarding: () => boolean;
-  hasValidSession: () => boolean;
-  canAccessFeature: (feature: string) => boolean;
-  
-  // Error Recovery
-  clearError: () => void;
-  retryInitialization: () => Promise<void>;
 }
 
-// Create the context
-const UnifiedAuthContext = createContext<UnifiedAuthContextType | null>(null);
+// Onboarding Types
+export interface OnboardingData {
+  fullName: string;
+  userType: 'student' | 'alumni' | 'faculty';
+  firstName?: string;
+  lastName?: string;
+  major?: string;      // Legacy field for backward compatibility
+  majors: string[];    // New field for multiple majors
+  academicLevel?: string;
+  graduationYear: number;
+  handle: string;
+  avatarUrl?: string;
+  builderRequestSpaces?: string[];
+  interests?: string[]; // Added interests array
+  consentGiven: boolean;
+}
 
-// Hook for consuming the context
-export const useUnifiedAuth = () => {
-  const context = useContext(UnifiedAuthContext);
-  if (!context) {
-    throw new Error('useUnifiedAuth must be used within a UnifiedAuthProvider');
+export interface OnboardingResult {
+  success: boolean;
+  user?: HiveUser;
+  builderRequestsCreated?: number;
+  error?: string;
+}
+
+// Create Context
+const FirebaseAuthContext = createContext<FirebaseAuthContextType | null>(null);
+
+export function FirebaseAuthProvider({ children }: { children: React.ReactNode }) {
+  // Check for Firebase initialization errors
+  if (!auth || !app) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="max-w-md w-full text-center space-y-4">
+          <h2 className="text-xl font-bold text-foreground">Configuration Error</h2>
+          <p className="text-muted-foreground">
+            Firebase authentication is not properly configured. Please check your environment variables.
+          </p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
-  return context;
-};
 
-// SECURITY: Development mode detection removed for production safety
-// All authentication must use proper validation channels
-const isDevelopmentMode = () => {
-  return false; // Always enforce production security
-};
-
-// Firebase Integration Interface (optional dependency injection)
-export interface FirebaseAuthIntegration {
-  listenToAuthChanges: (callback: (user: any) => void) => () => void;
-  handleEmailLinkSignIn: (email?: string) => Promise<void>;
-  getFirebaseToken: () => Promise<string | null>;
-  signOut: () => Promise<void>;
-  isEmailLinkSignIn: () => boolean;
-}
-
-// Provider Component
-export const UnifiedAuthProvider: React.FC<{ 
-  children: React.ReactNode;
-  firebaseIntegration?: FirebaseAuthIntegration;
-}> = ({ children, firebaseIntegration }) => {
-
-  // Core State
-  const [authState, setAuthState] = useState<UnifiedAuthState>({
-    user: null,
-    session: null,
-    isLoading: true,
-    isAuthenticated: false,
-    error: null,
-  });
-
-  // Update auth state helper
-  const updateAuthState = useCallback((updates: Partial<UnifiedAuthState>) => {
-    setAuthState(prev => ({ ...prev, ...updates }));
-  }, []);
-
-  // Get Auth Token - MOVED BEFORE validateSession to fix circular dependency
-  const getAuthToken = useCallback(async (): Promise<string | null> => {
-    if (typeof window === 'undefined') return null;
-
-    // Use Firebase token if integration is available
-    if (firebaseIntegration) {
+  // Pure Firebase State with session persistence
+  const [authState, setAuthState] = useState<FirebaseAuthState>(() => {
+    // Initialize from stored session if available
+    if (typeof window !== 'undefined') {
       try {
-        const firebaseToken = await firebaseIntegration.getFirebaseToken();
-        if (firebaseToken) return firebaseToken;
+        const storedSession = localStorage.getItem('hive-auth-session');
+        if (storedSession) {
+          const session = JSON.parse(storedSession);
+          // Validate session data structure
+          if (session.user && session.user.id && session.user.email) {
+            return {
+              user: session.user,
+              firebaseUser: null, // Will be restored by Firebase auth state listener
+              isLoading: true, // Still loading Firebase user
+              isAuthenticated: true,
+              error: null,
+            };
+          }
+        }
       } catch (error) {
-        logger.error('Failed to get Firebase token', { error });
+        logger.warn('Failed to restore session from localStorage', { error });
+        // Clear corrupted session data
+        localStorage.removeItem('hive-auth-session');
       }
     }
+    
+    return {
+      user: null,
+      firebaseUser: null,
+      isLoading: true,
+      isAuthenticated: false,
+      error: null,
+    };
+  });
 
-    // Fallback to stored token
-    return window.localStorage.getItem('auth_token') || 
-           window.localStorage.getItem('firebase_token') ||
-           null;
-  }, [firebaseIntegration]);
+  // Update auth state helper with session persistence
+  const updateAuthState = useCallback((updates: Partial<FirebaseAuthState>) => {
+    setAuthState(prev => {
+      const newState = { ...prev, ...updates };
+      
+      // Persist session to localStorage when user data is available
+      if (typeof window !== 'undefined') {
+        try {
+          if (newState.user && newState.isAuthenticated) {
+            // Store authenticated session
+            const sessionData = {
+              user: newState.user,
+              timestamp: Date.now(),
+              expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
+            };
+            localStorage.setItem('hive-auth-session', JSON.stringify(sessionData));
+          } else if (!newState.isAuthenticated) {
+            // Clear session on sign out
+            localStorage.removeItem('hive-auth-session');
+          }
+        } catch (error) {
+          logger.warn('Failed to persist session to localStorage', { error });
+        }
+      }
+      
+      return newState;
+    });
+  }, []);
 
-  // Session Validation
-  const validateSession = useCallback(async (): Promise<boolean> => {
+  // Validate stored session
+  const validateStoredSession = useCallback((): boolean => {
+    if (typeof window === 'undefined') return false;
+    
     try {
-      const token = await getAuthToken();
-      if (!token) return false;
+      const storedSession = localStorage.getItem('hive-auth-session');
+      if (!storedSession) return false;
+      
+      const session = JSON.parse(storedSession);
+      
+      // Check session structure
+      if (!session.user || !session.user.id || !session.user.email) {
+        return false;
+      }
+      
+      // Check expiration
+      if (session.expiresAt && Date.now() > session.expiresAt) {
+        logger.info('Stored session expired, clearing');
+        localStorage.removeItem('hive-auth-session');
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      logger.warn('Failed to validate stored session', { error });
+      localStorage.removeItem('hive-auth-session');
+      return false;
+    }
+  }, []);
 
-      // Development token validation removed for production security
+  // Get Firebase ID Token
+  const getAuthToken = useCallback(async (): Promise<string | null> => {
+    if (!authState.firebaseUser) {
+      return null;
+    }
+    
+    try {
+      const token = await getIdToken(authState.firebaseUser);
+      return token;
+    } catch (error) {
+      logger.error('Failed to get ID token', { error });
+      return null;
+    }
+  }, [authState.firebaseUser]);
 
-      // Validate with backend for production sessions
-      const response = await fetch('/api/auth/session', {
+  // Load HIVE user profile from Firestore
+  const loadHiveUserProfile = useCallback(async (firebaseUser: FirebaseUser): Promise<HiveUser | null> => {
+    try {
+      const token = await getIdToken(firebaseUser);
+      
+      const response = await fetch('/api/profile/me', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        logger.warn(`Session validation failed: ${response.status}`);
-        return false;
-      }
-
-      const data = await response.json();
-      return data.valid === true;
-    } catch (error) {
-      logger.error('Session validation failed', { error });
-      return false;
-    }
-  }, [getAuthToken]);
-
-  // Enhanced Session Persistence with Advanced Security
-  const persistSession = useCallback(async (user: HiveUser, session: HiveSession) => {
-    if (typeof window === 'undefined') return;
-    
-    let sessionData = {
-      userId: user.id,
-      email: user.email,
-      schoolId: user.schoolId,
-      onboardingCompleted: user.onboardingCompleted,
-      verifiedAt: session.issuedAt || new Date().toISOString(),
-      profileData: {
-        fullName: user.fullName || '',
-        handle: user.handle || '',
-        major: user.major || '',
-        avatarUrl: user.avatarUrl || '',
-        builderOptIn: user.builderOptIn || false,
-      },
-      token: session.token,
-      developmentMode: session.developmentMode || false,
-    };
-
-    // Enhance with security features if available
-    if (AdvancedAuthSecurity) {
-      try {
-        const securityInstance = AdvancedAuthSecurity.getInstance();
-        sessionData = securityInstance.createSecureSession(user.id, sessionData);
-      } catch (error) {
-        logger.warn('Advanced security features failed, using basic session');
-      }
-    }
-
-    // Use performance optimizer for async storage if available
-    if (AuthPerformanceOptimizer) {
-      try {
-        const optimizer = AuthPerformanceOptimizer.getInstance();
-        await optimizer.setStorageAsync('hive_session', JSON.stringify(sessionData));
-        
-        // Cache user data for performance
-        optimizer.setCachedUserData(user.id, user);
-        
-        if (session.developmentMode) {
-          await optimizer.setStorageAsync('dev_auth_mode', 'true');
+        if (response.status === 404) {
+          // User exists in Firebase but not in Firestore - needs onboarding
+          return {
+            id: firebaseUser.uid,
+            uid: firebaseUser.uid,
+            email: firebaseUser.email!,
+            emailVerified: firebaseUser.emailVerified,
+            onboardingCompleted: false,
+          };
         }
-        return;
-      } catch (error) {
-        logger.warn('Performance optimizer failed, falling back to sync storage');
+        throw new Error(`Failed to load profile: ${response.status}`);
       }
-    }
 
-    // Standard session storage (basic security - server validates tokens)
-    window.localStorage.setItem('hive_session', JSON.stringify(sessionData));
-    
-    // Store auth token separately for API calls
-    if (sessionData.token) {
-      window.localStorage.setItem('auth_token', sessionData.token);
-    }
-  }, []);
-
-  // Session Loading Helper
-  const loadPersistedSession = useCallback((): { user: HiveUser; session: HiveSession } | null => {
-    if (typeof window === 'undefined') return null;
-    
-    const sessionJson = window.localStorage.getItem('hive_session');
-    if (!sessionJson) return null;
-    
-    try {
-      const sessionData = JSON.parse(sessionJson);
+      const profileData = await response.json();
       
-      const user: HiveUser = {
-        id: sessionData.userId,
-        uid: sessionData.userId, // Map id to uid for Firebase compatibility
-        email: sessionData.email,
-        schoolId: sessionData.schoolId,
-        onboardingCompleted: sessionData.onboardingCompleted || false,
-        fullName: sessionData.profileData?.fullName,
-        handle: sessionData.profileData?.handle,
-        major: sessionData.profileData?.major,
-        avatarUrl: sessionData.profileData?.avatarUrl,
-        builderOptIn: sessionData.profileData?.builderOptIn || false,
-        developmentMode: sessionData.developmentMode || false,
-        isDeveloper: sessionData.developmentMode || false,
+      return {
+        id: firebaseUser.uid,
+        uid: firebaseUser.uid,
+        email: firebaseUser.email!,
+        emailVerified: firebaseUser.emailVerified,
+        ...profileData,
       };
-
-      const session: HiveSession = {
-        token: sessionData.token || null,
-        issuedAt: sessionData.verifiedAt,
-        developmentMode: sessionData.developmentMode || false,
-      };
-      
-      // SECURITY: Reject sessions without valid tokens
-      if (!session.token) {
-        logger.warn('Session has no valid token, rejecting');
-        return null;
-      }
-      
-      return { user, session };
     } catch (error) {
-      logger.error('Failed to parse persisted session', { error });
+      logger.error('Failed to load HIVE profile', { error, uid: firebaseUser.uid });
       return null;
     }
   }, []);
 
-  // Initialize Auth State
-  const initializeAuth = useCallback(async () => {
+  // Refresh user data
+  const refreshUserData = useCallback(async () => {
+    if (!authState.firebaseUser) {
+      return;
+    }
+
+    updateAuthState({ isLoading: true, error: null });
+    
     try {
-      updateAuthState({ isLoading: true, error: null });
-
-      // If Firebase integration is available, use it for auth state
-      if (firebaseIntegration && typeof window !== 'undefined') {
-        // Check if this is an email link sign-in
-        if (firebaseIntegration.isEmailLinkSignIn()) {
-          try {
-            await firebaseIntegration.handleEmailLinkSignIn();
-            // Firebase auth state will trigger updates via listener
-            return;
-          } catch (error) {
-            logger.error('Email link sign-in failed', { error });
-            updateAuthState({
-              error: error instanceof Error ? error.message : 'Email link sign-in failed',
-              isLoading: false,
-            });
-            return;
-          }
-        }
-
-        // Firebase will handle auth state via listener
-        // Just wait for the auth state to resolve
-        return;
-      }
-
-      // Fallback to session-based auth
-      const persistedAuth = loadPersistedSession();
+      const hiveUser = await loadHiveUserProfile(authState.firebaseUser);
       
-      if (persistedAuth) {
-        // SECURITY FIX: Validate session before trusting it
-        const isValid = await validateSession();
-        if (isValid) {
-          updateAuthState({
-            user: persistedAuth.user,
-            session: persistedAuth.session,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-          return;
-        } else {
-          // Clear invalid session
-          clearPersistedSession();
-        }
+      if (hiveUser) {
+        updateAuthState({
+          user: hiveUser,
+          isAuthenticated: true,
+          isLoading: false,
+        });
+      } else {
+        throw new Error('Failed to load user profile');
       }
-
-      // No valid session found
-      updateAuthState({
-        user: null,
-        session: null,
-        isAuthenticated: false,
-        isLoading: false,
-      });
-
     } catch (error) {
-      logger.error('Auth initialization failed', { error });
+      logger.error('Refresh user data failed', { error });
       updateAuthState({
-        user: null,
-        session: null,
-        isAuthenticated: false,
+        error: 'Failed to refresh user data',
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Authentication failed',
       });
     }
-  }, [updateAuthState, loadPersistedSession, firebaseIntegration]);
+  }, [authState.firebaseUser, loadHiveUserProfile, updateAuthState]);
 
-  // Clear Persisted Session Helper
-  const clearPersistedSession = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    
-    // Clear all auth-related storage keys
-    const keysToRemove = [
-      'hive_session',
-      'auth_token', 
-      'firebase_token',
-      'dev_auth_mode',
-      'emailForSignIn'
-    ];
-    
-    keysToRemove.forEach(key => {
-      window.localStorage.removeItem(key);
-    });
+  // Sign in with Firebase Custom Token (from magic link)
+  const signInWithMagicLink = useCallback(async (customToken: string) => {
+    try {
+      updateAuthState({ isLoading: true, error: null });
+      
+      // Sign in with Firebase
+      const userCredential = await signInWithCustomToken(auth, customToken);
+      
+      // Firebase auth state change will trigger profile loading
+      logger.info('Magic link sign-in successful', { uid: userCredential.user.uid });
+      
+    } catch (error) {
+      logger.error('Magic link sign-in failed', { error });
+      updateAuthState({
+        error: error instanceof Error ? (error instanceof Error ? error.message : "Unknown error") : 'Sign-in failed',
+        isLoading: false,
+      });
+      throw error;
+    }
+  }, [updateAuthState]);
+
+  // Sign out
+  const signOut = useCallback(async () => {
+    try {
+      // Clear session storage immediately
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('hive-auth-session');
+        // Also clear any other auth-related storage
+        localStorage.removeItem('firebase-auth-token');
+        localStorage.removeItem('hive-user-data');
+        sessionStorage.clear();
+      }
+      
+      await firebaseSignOut(auth);
+      // Auth state change will clear user data
+      logger.info('User signed out successfully');
+    } catch (error) {
+      logger.error('Sign out failed', { error });
+      // Even if Firebase sign out fails, clear local storage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('hive-auth-session');
+      }
+    }
   }, []);
 
-  // Login Methods
-  const login = useCallback(async (email: string, password?: string) => {
-    try {
-      updateAuthState({ isLoading: true, error: null });
-
-      if (isDevelopmentMode()) {
-        // Dev login logic
-        await devLogin(email);
-        return;
-      }
-
-      // Production login would integrate with Firebase or magic link
-      throw new Error('Production login not yet implemented');
-    } catch (error) {
-      updateAuthState({
-        isLoading: false,
-        error: error instanceof Error ? error.message : 'Login failed',
-      });
-      throw error;
-    }
-  }, [updateAuthState]);
-
-  // Development Login - Re-enabled for development workflow
-  const devLogin = useCallback(async (userId = 'dev_user_123') => {
-    if (process.env.NODE_ENV !== 'development') {
-      throw new Error('Development login only available in development mode');
-    }
-
-    try {
-      updateAuthState({ isLoading: true, error: null });
-
-      const devUser: HiveUser = {
-        id: userId,
-        uid: userId,
-        email: 'dev@hive.com',
-        fullName: 'Dev User',
-        handle: 'devuser',
-        major: 'Computer Science',
-        schoolId: 'dev_school',
-        onboardingCompleted: true,
-        emailVerified: true,
-        builderOptIn: true,
-        isDeveloper: true,
-        developmentMode: true,
-        profileCompletion: 100,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      const devSession: HiveSession = {
-        token: `dev_session_${userId}_${Date.now()}`,
-        issuedAt: new Date().toISOString(),
-        developmentMode: true,
-        lastActivity: new Date().toISOString(),
-      };
-
-      updateAuthState({
-        user: devUser,
-        session: devSession,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-
-      await persistSession(devUser, devSession);
-      
-      // Set dev auth mode flag
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem('dev_auth_mode', 'true');
-      }
-
-      logger.info('Development login successful', { userId });
-    } catch (error) {
-      updateAuthState({
-        isLoading: false,
-        error: error instanceof Error ? error.message : 'Development login failed',
-      });
-      throw error;
-    }
-  }, [updateAuthState, persistSession]);
-
-  // Logout
-  const logout = useCallback(async () => {
-    try {
-      updateAuthState({ isLoading: true });
-
-      // Use Firebase signout if integration is available
-      if (firebaseIntegration) {
-        try {
-          await firebaseIntegration.signOut();
-        } catch (error) {
-          logger.error('Firebase logout failed', { error });
-        }
-      }
-
-      // Call logout API if not in dev mode
-      if (!isDevelopmentMode()) {
-        try {
-          await fetch('/api/auth/logout', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${await getAuthToken()}`,
-            },
-          });
-        } catch (error) {
-          logger.error('Logout API call failed', { error });
-        }
-      }
-
-      // Clear all persisted auth data
-      clearPersistedSession();
-
-      updateAuthState({
-        user: null,
-        session: null,
-        isAuthenticated: false,
-        isLoading: false,
-      });
-    } catch (error) {
-      logger.error('Logout failed', { error });
-      updateAuthState({
-        user: null,
-        session: null,
-        isAuthenticated: false,
-        isLoading: false,
-        error: error instanceof Error ? error.message : 'Logout failed',
-      });
-    }
-  }, [updateAuthState, getAuthToken, clearPersistedSession, firebaseIntegration]);
-
-  // Magic Link Implementation
-  const sendMagicLink = useCallback(async (email: string, schoolId?: string) => {
-    try {
-      updateAuthState({ isLoading: true, error: null });
-
-      const response = await fetch('/api/auth/send-magic-link', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          schoolId: schoolId || 'default'
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send magic link');
-      }
-
-      const data = await response.json();
-      logger.info('Magic link sent successfully', { email });
-      
-      updateAuthState({ isLoading: false });
-      return data;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
-      updateAuthState({
-        isLoading: false,
-        error: errorMessage,
-      });
-      throw error;
-    }
-  }, [updateAuthState]);
-
-  const verifyMagicLink = useCallback(async (token: string, email?: string, schoolId?: string) => {
-    try {
-      updateAuthState({ isLoading: true, error: null });
-
-      const response = await fetch('/api/auth/verify-magic-link', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token,
-          email: email || window.localStorage.getItem('emailForSignIn'),
-          schoolId: schoolId || 'default'
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to verify magic link');
-      }
-
-      const data = await response.json();
-      
-      if (data.success) {
-        // Clear stored email
-        window.localStorage.removeItem('emailForSignIn');
-        
-        if (data.needsOnboarding) {
-          // User needs onboarding
-          const newUser: HiveUser = {
-            id: data.userId,
-            uid: data.userId,
-            email: email || '',
-            onboardingCompleted: false,
-            emailVerified: true
-          };
-          
-          const newSession: HiveSession = {
-            token: token,
-            issuedAt: new Date().toISOString(),
-            developmentMode: data.dev || false
-          };
-          
-          updateAuthState({
-            user: newUser,
-            session: newSession,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-          
-          await persistSession(newUser, newSession);
-        } else {
-          // Existing user, they can proceed to app
-          await initializeAuth();
-        }
-        
-        logger.info('Magic link verified successfully', { userId: data.userId });
-        return data;
-      }
-      
-      throw new Error('Magic link verification failed');
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to verify magic link';
-      updateAuthState({
-        isLoading: false,
-        error: errorMessage,
-      });
-      throw error;
-    }
-  }, [updateAuthState, persistSession]);
-
-  const refreshSession = useCallback(async () => {
-    await initializeAuth();
-  }, [initializeAuth]);
-
-  const updateProfile = useCallback(async (updates: Partial<HiveUser>) => {
-    if (!authState.user) return;
-    
-    // Update local state
-    const updatedUser = { ...authState.user, ...updates };
-    updateAuthState({ user: updatedUser });
-    
-    // TODO: Sync with backend
-  }, [authState.user, updateAuthState]);
-
-  // Profile Data Hydration - syncs user data to profile system
-  const hydrateProfileData = useCallback(async (user: HiveUser) => {
-    try {
-      // Call profile API to ensure data is synced
-      const token = await getAuthToken();
-      if (!token) return;
-
-      const profileResponse = await fetch('/api/profile/route', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          fullName: user.fullName,
-          handle: user.handle,
-          major: user.major,
-          avatarUrl: user.avatarUrl,
-          schoolId: user.schoolId,
-          builderOptIn: user.builderOptIn,
-          onboardingCompleted: true,
-        }),
-      });
-
-      if (profileResponse.ok) {
-        logger.info('Profile data hydrated successfully', { userId: user.id });
-      } else {
-        logger.warn('Profile hydration failed', { 
-          userId: user.id, 
-          status: profileResponse.status 
-        });
-      }
-    } catch (error) {
-      logger.error('Profile hydration error', { error, userId: user.id });
-    }
-  }, [getAuthToken]);
-
-  const completeOnboarding = useCallback(async (onboardingData: {
-    fullName: string;
-    userType: 'student' | 'alumni' | 'faculty';
-    firstName?: string;
-    lastName?: string;
-    major: string;
-    academicLevel?: string;
-    graduationYear: number;
-    handle: string;
-    avatarUrl?: string;
-    builderRequestSpaces?: string[];
-    consentGiven: boolean;
-  }) => {
-    if (!authState.user) {
-      throw new Error('No authenticated user for onboarding completion');
+  // Complete onboarding
+  const completeOnboarding = useCallback(async (onboardingData: OnboardingData): Promise<OnboardingResult> => {
+    if (!authState.user || !authState.firebaseUser) {
+      throw new Error('No authenticated user for onboarding');
     }
     
     try {
-      updateAuthState({ isLoading: true, error: null });
-
       const token = await getAuthToken();
       if (!token) {
         throw new Error('No auth token available');
       }
 
-      // Call the complete onboarding API
       const response = await fetch('/api/auth/complete-onboarding', {
         method: 'POST',
         headers: {
@@ -738,239 +411,138 @@ export const UnifiedAuthProvider: React.FC<{
 
       const result = await response.json();
       
-      // Update user state with completed onboarding data
-      const updatedUser: HiveUser = { 
-        ...authState.user,
-        fullName: onboardingData.fullName,
-        handle: onboardingData.handle,
-        major: onboardingData.major,
-        avatarUrl: onboardingData.avatarUrl,
-        onboardingCompleted: true,
-        profileCompletion: 90, // High completion after onboarding
-        updatedAt: new Date().toISOString(),
-      };
-      
-      updateAuthState({ 
-        user: updatedUser, 
-        isLoading: false 
-      });
-      
-      // Update persisted session using centralized method
-      const updatedSession: HiveSession = {
-        ...authState.session!,
-        lastActivity: new Date().toISOString(),
-      };
-      persistSession(updatedUser, updatedSession);
-
-      // Trigger profile data hydration
-      await hydrateProfileData(updatedUser);
+      // Refresh user data to get updated profile
+      await refreshUserData();
       
       return {
-        user: result.user,
-        builderRequestsCreated: result.builderRequestsCreated,
-        success: result.success,
-        message: result.message,
+        success: true,
+        user: authState.user,
+        builderRequestsCreated: result.builderRequestsCreated || 0,
       };
+      
     } catch (error) {
-      updateAuthState({
-        isLoading: false,
-        error: error instanceof Error ? error.message : 'Onboarding completion failed',
-      });
-      throw error;
+      logger.error('Onboarding completion failed', { error });
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
-  }, [authState.user, authState.session, updateAuthState, getAuthToken, hydrateProfileData, persistSession]);
+  }, [authState.user, authState.firebaseUser, getAuthToken, refreshUserData]);
 
-  const clearDevSession = useCallback(() => {
-    clearPersistedSession();
-    updateAuthState({
-      user: null,
-      session: null,
-      isAuthenticated: false,
-      isLoading: false,
-    });
-  }, [updateAuthState, clearPersistedSession]);
+  // Check if onboarding required
+  const requiresOnboarding = useCallback((): boolean => {
+    return authState.user ? !authState.user.onboardingCompleted : false;
+  }, [authState.user]);
 
-  // State Queries
-  const requiresOnboarding = useCallback(() => {
-    return authState.isAuthenticated && !authState.user?.onboardingCompleted;
-  }, [authState.isAuthenticated, authState.user?.onboardingCompleted]);
-
-  const hasValidSession = useCallback(() => {
-    return authState.isAuthenticated && !!authState.session?.token;
-  }, [authState.isAuthenticated, authState.session?.token]);
-
-  const canAccessFeature = useCallback((feature: string) => {
-    if (!authState.isAuthenticated) return false;
-    
-    switch (feature) {
-      case 'builder':
-        return authState.user?.builderOptIn === true;
-      case 'admin':
-        return authState.user?.isAdmin === true;
-      default:
-        return true;
-    }
-  }, [authState.isAuthenticated, authState.user]);
-
-  // Error Recovery
-  const clearError = useCallback(() => {
-    updateAuthState({ error: null });
-  }, [updateAuthState]);
-
-  const retryInitialization = useCallback(async () => {
-    await initializeAuth();
-  }, [initializeAuth]);
-
-  // Firebase auth state listener
+  // Firebase Auth State Listener
   useEffect(() => {
-    if (!firebaseIntegration || typeof window === 'undefined') return;
-
-    const unsubscribe = firebaseIntegration.listenToAuthChanges(async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // User is signed in with Firebase
+        // User signed in
+        updateAuthState({
+          firebaseUser,
+          isLoading: true,
+          error: null,
+        });
+        
         try {
-          // Get or create user session
-          const token = await firebaseIntegration.getFirebaseToken();
-          if (!token) {
-            logger.error('No Firebase token available');
-            return;
-          }
-
-          // Validate session with backend
-          const response = await fetch('/api/auth/session', {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
-          if (response.ok) {
-            const sessionData = await response.json();
-            const user: HiveUser = {
-              id: sessionData.user.id,
-              uid: sessionData.user.id,
-              email: sessionData.user.email,
-              fullName: sessionData.user.fullName,
-              handle: sessionData.user.handle,
-              major: sessionData.user.major,
-              avatarUrl: sessionData.user.avatarUrl,
-              schoolId: sessionData.user.schoolId,
-              onboardingCompleted: sessionData.user.onboardingCompleted,
-              emailVerified: sessionData.user.emailVerified,
-              builderOptIn: sessionData.user.builderOptIn,
-            };
-
-            const session: HiveSession = {
-              token,
-              issuedAt: sessionData.session.issuedAt,
-              expiresAt: sessionData.session.expiresAt,
-            };
-
+          const hiveUser = await loadHiveUserProfile(firebaseUser);
+          
+          if (hiveUser) {
             updateAuthState({
-              user,
-              session,
+              user: hiveUser,
               isAuthenticated: true,
               isLoading: false,
-              error: null,
             });
-
-            // Persist session
-            await persistSession(user, session);
           } else {
-            logger.error('Session validation failed', { status: response.status });
-            updateAuthState({
-              user: null,
-              session: null,
-              isAuthenticated: false,
-              isLoading: false,
-            });
+            throw new Error('Failed to load user profile');
           }
         } catch (error) {
-          logger.error('Error processing Firebase auth state', { error });
+          logger.error('Auth state change failed', { error });
           updateAuthState({
-            user: null,
-            session: null,
-            isAuthenticated: false,
+            error: 'Authentication failed',
             isLoading: false,
-            error: error instanceof Error ? error.message : 'Authentication failed',
           });
         }
       } else {
-        // User is signed out
+        // User signed out
         updateAuthState({
           user: null,
-          session: null,
+          firebaseUser: null,
           isAuthenticated: false,
           isLoading: false,
+          error: null,
         });
-        clearPersistedSession();
       }
     });
 
     return unsubscribe;
-  }, [firebaseIntegration, updateAuthState, persistSession, clearPersistedSession]);
+  }, [loadHiveUserProfile, updateAuthState]);
 
-  // Initialize auth on mount - SECURITY FIX: Properly await async operation
+  // Session validation and cleanup effect
   useEffect(() => {
-    initializeAuth().catch(error => {
-      logger.error('Auth initialization failed on mount', { error });
-    });
-  }, [initializeAuth]);
-
-  // Listen for storage changes (multi-tab sync)
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'hive_session' || e.key === 'auth_token') {
-        // SECURITY FIX: Properly await async operation
-        initializeAuth().catch(error => {
-          logger.error('Auth initialization failed on storage change', { error });
+    // Validate session on mount and periodically
+    const validateSession = () => {
+      if (!validateStoredSession() && authState.isAuthenticated && !authState.firebaseUser) {
+        // Stored session is invalid but we think user is authenticated
+        // Reset auth state to force re-authentication
+        updateAuthState({
+          user: null,
+          firebaseUser: null,
+          isAuthenticated: false,
+          isLoading: false,
+          error: 'Session expired',
         });
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [initializeAuth]);
+    // Initial validation
+    validateSession();
 
-  // Auto-retry on network errors
-  useEffect(() => {
-    if (authState.error && authState.error.includes('network')) {
-      const retryTimer = setTimeout(() => {
-        logger.info('Auto-retrying after network error');
-        retryInitialization();
-      }, 5000);
+    // Periodic validation every 5 minutes
+    const interval = setInterval(validateSession, 5 * 60 * 1000);
 
-      return () => clearTimeout(retryTimer);
-    }
-  }, [authState.error, retryInitialization]);
+    // Cleanup on visibility change (tab becomes active)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        validateSession();
+      }
+    };
 
-  const contextValue: UnifiedAuthContextType = {
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [authState.isAuthenticated, authState.firebaseUser, updateAuthState, validateStoredSession]);
+
+  const contextValue: FirebaseAuthContextType = {
     ...authState,
-    login,
-    logout,
-    sendMagicLink,
-    verifyMagicLink,
-    refreshSession,
-    validateSession,
+    signInWithMagicLink,
+    signOut,
+    logout: signOut,  // Alias for backward compatibility
+    refreshUserData,
     getAuthToken,
-    updateProfile,
     completeOnboarding,
-    devLogin,
-    clearDevSession,
     requiresOnboarding,
-    hasValidSession,
-    canAccessFeature,
-    clearError,
-    retryInitialization,
   };
 
   return (
-    <UnifiedAuthContext.Provider value={contextValue}>
+    <FirebaseAuthContext.Provider value={contextValue}>
       {children}
-    </UnifiedAuthContext.Provider>
+    </FirebaseAuthContext.Provider>
   );
-};
+}
 
-// Export context for advanced usage
-export { UnifiedAuthContext };
+// Hook to use Firebase Auth
+export function useFirebaseAuth(): FirebaseAuthContextType {
+  const context = useContext(FirebaseAuthContext);
+  if (!context) {
+    throw new Error('useFirebaseAuth must be used within a FirebaseAuthProvider');
+  }
+  return context;
+}
+
+// Compatibility alias
+export const useUnifiedAuth = useFirebaseAuth;

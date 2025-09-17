@@ -5,7 +5,8 @@
 // Only export what actually exists to avoid build errors
 export * from './hive-space-card';
 export * from './header';
-export * from './profile-card';
+export { ProfileCard } from './profile-card';
+export type { HiveActivityItem, ActivityItem as ProfileActivityItem } from './profile-card';
 export * from './profile-dashboard';
 export * from './profile-system';
 
@@ -15,12 +16,26 @@ export * from './space-dashboard';
 export * from './space-member-directory';
 export * from './space-category-browser';
 
+// === HIVE SPACE SURFACES ===
+export * from './hive-posts-surface';
+export * from './hive-members-surface';
+export * from './hive-events-surface';
+export * from './hive-pinned-surface';
+export * from './hive-tools-surface';
+
+// === SPACE UTILITY COMPONENTS ===
+export * from './space-surface-error-boundary';
+export * from './space-surface-skeleton';
+
 // === HIVE TOOLS SYSTEM ===
 export * from './tool-library-modal';
 export * from './tool-configuration-panel';
 
 // === HIVE CONTENT CREATION ===
 export * from './post-creation-modal';
+
+// === HIVE FEED COMPONENTS ===
+// Note: Feed components deleted in nuclear rebuild
 
 // === HIVE FEED & RITUALS SYSTEM ===
 export * from './rituals-hub';
@@ -35,7 +50,8 @@ export * from './profile-avatar-widget';
 export * from './profile-calendar-widget';
 export * from './profile-tools-widget';
 export * from './profile-spaces-widget';
-export * from './profile-activity-widget';
+export { ProfileActivityWidget } from './profile-activity-widget';
+export type { ActivityItem as WidgetActivityItem } from './profile-activity-widget';
 export * from './profile-ghost-mode-widget';
 export * from './profile-hivelab-widget';
 export * from './profile-stats-widget';

@@ -1,16 +1,16 @@
-import { dbAdmin } from "@/lib/firebase-admin";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
 import type { School } from "@hive/core";
 import { NextResponse } from "next/server";
 import { currentEnvironment } from "@/lib/env";
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus as _HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { logger } from "@/lib/utils/structured-logger";
+import { ApiResponseHelper, HttpStatus as _HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 export async function GET() {
   try {
     // PRODUCTION: Always use Firebase database
     const schoolsSnapshot = await dbAdmin.collection("schools").get();
     const schools = schoolsSnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as School
+      (doc: any) => ({ id: doc.id, ...doc.data() }) as School
     );
     
     // In development, always include test university at the top

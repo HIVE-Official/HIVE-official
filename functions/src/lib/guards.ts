@@ -19,7 +19,9 @@ export const assertIsBuilder = async (uid: string | undefined, spaceId: string):
     );
   }
 
-  const memberRef = db.collection('spaces').doc(spaceId).collection('members').doc(uid);
+  // Use flat spaceMembers collection with composite key
+  const compositeKey = `${spaceId}_${uid}`;
+  const memberRef = db.collection('spaceMembers').doc(compositeKey);
   const memberDoc = await memberRef.get();
 
   if (!memberDoc.exists) {
@@ -53,7 +55,9 @@ export const assertIsMember = async (uid: string | undefined, spaceId: string): 
         );
     }
 
-    const memberRef = db.collection('spaces').doc(spaceId).collection('members').doc(uid);
+    // Use flat spaceMembers collection with composite key
+    const compositeKey = `${spaceId}_${uid}`;
+    const memberRef = db.collection('spaceMembers').doc(compositeKey);
     const memberDoc = await memberRef.get();
 
     if (!memberDoc.exists) {

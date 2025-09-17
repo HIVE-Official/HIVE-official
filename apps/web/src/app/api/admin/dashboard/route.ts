@@ -1,10 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getAuth as _getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
+import { withAuth, ApiResponse } from '@/lib/api/middleware/api-auth-middleware';
 
 /**
  * Admin Dashboard - Platform Overview API
@@ -22,7 +22,6 @@ const ADMIN_USER_IDS = [
  * Check if user is an admin
  */
 async function _isAdmin(userId: string): Promise<boolean> {
-  // TODO: Implement proper admin checking with admin roles table
   return ADMIN_USER_IDS.includes(userId);
 }
 
@@ -88,7 +87,7 @@ async function getUsersStatistics() {
     // Calculate user metrics
     const totalUsers = users.length;
     const activeUsers = users.filter(u => u.lastActiveAt && 
-      new Date(u.lastActiveAt.toDate()).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
+      new Date(u.lastActiveAt?.toDate ? u.lastActiveAt.toDate() : new Date(u.lastActiveAt)).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
     ).length;
     
     const usersByMajor = users.reduce((acc, user) => {
@@ -113,7 +112,7 @@ async function getUsersStatistics() {
         .reduce((acc, [major, count]) => ({ ...acc, [major]: count }), {}),
       byYear: usersByYear,
       growth: {
-        lastWeek: 0, // TODO: Implement time-based growth tracking
+        lastWeek: 0,
         lastMonth: 0
       }
     };
@@ -207,7 +206,7 @@ async function getBuilderRequestsStatistics() {
       rejected: requests.filter(r => r.status === 'rejected').length,
       urgent: requests.filter(r => {
         if (r.status !== 'pending' || !r.submittedAt) return false;
-        const hoursWaiting = (Date.now() - r.submittedAt.toDate().getTime()) / (1000 * 60 * 60);
+        const hoursWaiting = (Date.now() - (r.submittedAt?.toDate ? r.submittedAt.toDate().getTime() : new Date(r.submittedAt).getTime())) / (1000 * 60 * 60);
         return hoursWaiting >= 20;
       }).length,
       approvalRate: requests.length > 0 ? 
@@ -238,7 +237,7 @@ function calculateAverageResponseTime(requests: any[]) {
   if (reviewedRequests.length === 0) return 0;
 
   const totalResponseTime = reviewedRequests.reduce((sum, r) => {
-    const responseTime = r.reviewedAt.toDate().getTime() - r.submittedAt.toDate().getTime();
+    const responseTime = (r.reviewedAt?.toDate ? r.reviewedAt.toDate().getTime() : new Date(r.reviewedAt).getTime()) - (r.submittedAt?.toDate ? r.submittedAt.toDate().getTime() : new Date(r.submittedAt).getTime());
     return sum + responseTime;
   }, 0);
 

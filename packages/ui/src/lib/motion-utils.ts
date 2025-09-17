@@ -1,10 +1,10 @@
 // Unified HIVE Motion System Utilities
 // Consolidates all motion patterns into a single, comprehensive system
 
-import { Variants } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 
 // Utility to separate conflicting props for Framer Motion components
-export function separateMotionProps<T extends Record<string, any>>(props: T) {
+export function separateMotionProps<T extends Record<string, unknown>>(props: T) {
   const {
     layout,
     onDrag,
@@ -28,12 +28,12 @@ export function separateMotionProps<T extends Record<string, any>>(props: T) {
 }
 
 // Type-safe prop separation for motion components
-export function getMotionProps<T extends Record<string, any>>(props: T) {
-  return separateMotionProps(props) as any;
+export function getMotionProps<T extends Record<string, unknown>>(props: T) {
+  return separateMotionProps(props) as unknown;
 }
 
 // Specific utility for logo components
-export function getLogoMotionProps<T extends Record<string, any>>(props: T) {
+export function getLogoMotionProps<T extends Record<string, unknown>>(props: T) {
   const {
     layout,
     onDrag,
@@ -50,7 +50,7 @@ export function getLogoMotionProps<T extends Record<string, any>>(props: T) {
     ...cleanProps
   } = props;
   
-  return cleanProps as any;
+  return cleanProps as unknown;
 }
 
 // Core HIVE Motion Personality Constants

@@ -10,7 +10,7 @@
 
 import React, { memo, useState, useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { NavigationUser } from '../core/types';
+import type { NavigationUser } from '../core/types';
 import { useNavigationState } from '../hooks/useNavigationState';
 import { MobileNavigation } from './MobileNavigation';
 import { DesktopSidebar, SidebarOverlay } from './DesktopSidebar';

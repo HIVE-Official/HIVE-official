@@ -1,11 +1,11 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FormField, TextFormField, EmailFormField, PasswordFormField } from './form-field';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { SelectEnhanced as Select } from '../atoms/select-enhanced';
+import { Input as Input } from '../atoms/input-enhanced';
+import { Select as Select } from '../atoms/select-enhanced';
 import { Textarea } from '../atoms/textarea-enhanced';
 import { Checkbox } from '../atoms/checkbox-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { action } from '@storybook/addon-actions';
@@ -84,7 +84,7 @@ export const Default: Story = {
     description: 'Select your primary academic major at University at Buffalo',
     required: true,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -112,7 +112,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">📝 FORM FIELD TYPES</Badge>
+            <Badge variant="emerald">📝 FORM FIELD TYPES</Badge>
             Input Control Wrapper
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -780,7 +780,7 @@ export const Playground: Story = {
     required: false,
     error: '',
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

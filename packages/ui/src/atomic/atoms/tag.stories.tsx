@@ -12,7 +12,7 @@ import {
   GhostTag, 
   GradientTag 
 } from './tag';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Hash, User, Calendar, MapPin, Book, GraduationCap, Star, Bookmark, Clock } from 'lucide-react';
 import '../../hive-tokens.css';
@@ -110,7 +110,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">✅ COLORS</Badge>
+            <Badge variant="emerald">✅ COLORS</Badge>
             Tag Colors - Perfect Semantic Token Usage
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -152,9 +152,9 @@ export const CompleteShowcase: Story = {
             <div className="space-y-4">
               <h4 className="font-medium text-[var(--hive-text-primary)]">Primary Color Variants:</h4>
               <div className="flex flex-wrap gap-3">
-                <Tag variant="default" color="primary">Default (Filled)</Tag>
+                <Tag variant="primary" color="primary">Default (Filled)</Tag>
                 <Tag variant="filled" color="primary">Explicit Filled</Tag>
-                <Tag variant="outline" color="primary">Outline Style</Tag>
+                <Tag variant="secondary" color="primary">Outline Style</Tag>
                 <Tag variant="ghost" color="primary">Ghost Style</Tag>
                 <Tag variant="gradient" color="primary">Gradient Style</Tag>
               </div>
@@ -164,7 +164,7 @@ export const CompleteShowcase: Story = {
               <h4 className="font-medium text-[var(--hive-text-primary)]">Success Color Variants:</h4>
               <div className="flex flex-wrap gap-3">
                 <Tag variant="filled" color="success">Success Filled</Tag>
-                <Tag variant="outline" color="success">Success Outline</Tag>
+                <Tag variant="secondary" color="success">Success Outline</Tag>
                 <Tag variant="ghost" color="success">Success Ghost</Tag>
                 <Tag variant="gradient" color="success">Success Gradient</Tag>
               </div>
@@ -174,7 +174,7 @@ export const CompleteShowcase: Story = {
               <h4 className="font-medium text-[var(--hive-text-primary)]">Warning Color Variants:</h4>
               <div className="flex flex-wrap gap-3">
                 <Tag variant="filled" color="warning">Warning Filled</Tag>
-                <Tag variant="outline" color="warning">Warning Outline</Tag>
+                <Tag variant="secondary" color="warning">Warning Outline</Tag>
                 <Tag variant="ghost" color="warning">Warning Ghost</Tag>
                 <Tag variant="gradient" color="warning">Warning Gradient</Tag>
               </div>
@@ -506,7 +506,7 @@ export const CompleteShowcase: Story = {
                 <h5 className="font-medium text-[var(--hive-text-primary)]">Course Difficulty Levels:</h5>
                 <div className="flex flex-wrap gap-2">
                   <Tag variant="ghost" color="success" size="sm">Introductory</Tag>
-                  <Tag variant="outline" color="primary" size="sm">Intermediate</Tag>
+                  <Tag variant="secondary" color="primary" size="sm">Intermediate</Tag>
                   <Tag variant="filled" color="warning" size="sm">Advanced</Tag>
                   <Tag variant="gradient" color="error" size="sm">Graduate Level</Tag>
                 </div>
@@ -677,28 +677,28 @@ export const CompleteShowcase: Story = {
                 <div className="flex flex-wrap gap-2">
                   <Tag 
                     color="gold" 
-                    variant="outline"
+                    variant="secondary"
                     leftIcon={<Star className="w-4 h-4" />}
                   >
                     Tech Industry
                   </Tag>
                   <Tag 
                     color="emerald" 
-                    variant="outline"
+                    variant="secondary"
                     leftIcon={<Book className="w-4 h-4" />}
                   >
                     Graduate School
                   </Tag>
                   <Tag 
                     color="sapphire" 
-                    variant="outline"
+                    variant="secondary"
                     leftIcon={<GraduationCap className="w-4 h-4" />}
                   >
                     Research
                   </Tag>
                   <Tag 
                     color="primary" 
-                    variant="outline"
+                    variant="secondary"
                     leftIcon={<User className="w-4 h-4" />}
                   >
                     Entrepreneurship
@@ -729,12 +729,12 @@ export const CompleteShowcase: Story = {
               <div className="space-y-3">
                 <h5 className="font-medium text-[var(--hive-text-primary)]">Academic Resource Types:</h5>
                 <div className="flex flex-wrap gap-2">
-                  <Tag color="primary" variant="outline" size="sm">Lecture Notes</Tag>
-                  <Tag color="success" variant="outline" size="sm">Past Exams</Tag>
-                  <Tag color="emerald" variant="outline" size="sm">Study Guides</Tag>
-                  <Tag color="sapphire" variant="outline" size="sm">Lab Materials</Tag>
-                  <Tag color="warning" variant="outline" size="sm">Project Examples</Tag>
-                  <Tag color="gold" variant="outline" size="sm">Extra Credit</Tag>
+                  <Tag color="primary" variant="secondary" size="sm">Lecture Notes</Tag>
+                  <Tag color="success" variant="secondary" size="sm">Past Exams</Tag>
+                  <Tag color="emerald" variant="secondary" size="sm">Study Guides</Tag>
+                  <Tag color="sapphire" variant="secondary" size="sm">Lab Materials</Tag>
+                  <Tag color="warning" variant="secondary" size="sm">Project Examples</Tag>
+                  <Tag color="gold" variant="secondary" size="sm">Extra Credit</Tag>
                 </div>
               </div>
               
@@ -771,7 +771,7 @@ export const Playground: Story = {
     disabled: false,
     interactive: false,
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

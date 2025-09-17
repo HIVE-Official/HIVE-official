@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
 import { Badge } from '../atoms/badge';
 import { Text } from '../atoms/text';
 import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
@@ -94,9 +94,9 @@ const getMetricCategoryConfig = (category: string) => {
       label: 'Academic'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
+      borderColor: 'border-[var(--hive-gold)]/20',
       icon: Users,
       label: 'Social'
     },
@@ -146,8 +146,8 @@ const getGoalCategoryConfig = (category: string) => {
       label: 'Academic'
     },
     social: {
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-[var(--hive-gold)]',
+      bgColor: 'bg-[var(--hive-gold)]/10',
       icon: Users,
       label: 'Social'
     },
@@ -213,7 +213,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
               Personal Analytics
             </Text>
             {streak > 0 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <Trophy className="h-3 w-3 mr-1" />
                 Level {platformLevel}
               </Badge>
@@ -295,7 +295,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
             </div>
             <div className="w-full bg-[var(--hive-background-secondary)] rounded-full h-2">
               <div 
-                className="bg-purple-500 rounded-full h-2 transition-all duration-500"
+                className="bg-[var(--hive-gold)] rounded-full h-2 transition-all duration-500"
                 style={{ width: `${socialEngagement}%` }}
               />
             </div>
@@ -314,7 +314,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
               )}
             </div>
             <div className="space-y-1">
-              {topMetrics.map((metric) => {
+              {topMetrics.map((metric: any) => {
                 const config = getMetricCategoryConfig(metric.category);
                 const TrendIcon = getTrendIcon(metric.trend);
                 const trendColor = getTrendColor(metric.trend);
@@ -360,7 +360,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
               </Text>
             </div>
             <div className="space-y-2">
-              {activeGoals.slice(0, 2).map((goal) => {
+              {activeGoals.slice(0, 2).map((goal: any) => {
                 const config = getGoalCategoryConfig(goal.category);
                 const progress = Math.min((goal.current / goal.target) * 100, 100);
                 const isCompleted = goal.current >= goal.target;
@@ -425,7 +425,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
         <div className="flex gap-2 pt-2 border-t border-[var(--hive-border-primary)]">
           {isEditable && onSetGoal && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onSetGoal}
               className="flex-1"
@@ -437,7 +437,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
           
           {onViewAllStats && (
             <Button
-              variant="default"
+              variant="primary"
               size="sm"
               onClick={onViewAllStats}
               className="flex-1"
@@ -482,7 +482,7 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
             </Text>
             {isEditable && onSetGoal && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={onSetGoal}
               >

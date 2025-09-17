@@ -7,7 +7,8 @@
  */
 
 import { User, Activity, Users, Zap } from 'lucide-react';
-import { NavigationItem, NAVIGATION_SECTIONS } from './types';
+import type { NavigationItem} from './types';
+import { NAVIGATION_SECTIONS } from './types';
 
 // ============================================================================
 // BRAND-CONSISTENT NAVIGATION ITEMS

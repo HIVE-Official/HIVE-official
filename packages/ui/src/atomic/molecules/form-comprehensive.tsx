@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { SelectEnhanced as Select, SelectOptionEnhanced as SelectOption } from '../atoms/select-enhanced';
+import { Input as Input } from '../atoms/input-enhanced';
+import type { SelectOptionEnhanced as SelectOption } from '../atoms/select-enhanced';
+import { Select as Select } from '../atoms/select-enhanced';
 import { FormField } from './form-field';
 import { 
   Mail, 
@@ -271,7 +272,7 @@ export const DormSelectionFieldMolecule: React.FC<DormSelectionFieldProps> = ({
 }) => {
   const handleRoomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Allow alphanumeric room numbers
-    const sanitized = e.target.value.replace(/[^a-zA-Z0-9\-]/g, '');
+    const sanitized = e.target.value.replace(/[^a-zA-Z0-9-]/g, '');
     onRoomChange?.(sanitized);
   };
 

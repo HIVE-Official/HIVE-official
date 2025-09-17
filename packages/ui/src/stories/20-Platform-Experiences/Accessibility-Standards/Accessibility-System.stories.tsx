@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 import { Progress } from '../../../components/ui/progress';
 import { Separator } from '../../../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Switch } from '../../../components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../atomic/ui/tabs';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { Slider } from '../../../components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
-import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '../../../atomic/molecules/alert-toast-system';
 import { 
   Accessibility,
   Eye,
@@ -92,8 +92,9 @@ import {
  * - **Multi-modal Feedback**: Visual, auditory, and haptic feedback options
  */
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '19-Advanced Systems/Accessibility & Inclusive Design',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -616,7 +617,7 @@ const AccessibilitySettingsPanel = () => {
                 <Label className="text-white">Font Size: {settings.visual.fontSize}px</Label>
                 <Slider
                   value={[settings.visual.fontSize]}
-                  onValueChange={(value) => updateSetting('visual', 'fontSize', value[0])}
+                  onValueChange={(value: unknown) => updateSetting('visual', 'fontSize', value[0])}
                   min={12}
                   max={24}
                   step={1}
@@ -631,7 +632,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Select
                   value={settings.visual.contrast}
-                  onValueChange={(value) => updateSetting('visual', 'contrast', value)}
+                  onValueChange={(value: unknown) => updateSetting('visual', 'contrast', value)}
                 >
                   <SelectTrigger className="w-32 bg-gray-800 border-gray-700">
                     <SelectValue />
@@ -651,7 +652,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.visual.reduceMotion}
-                  onCheckedChange={(checked) => updateSetting('visual', 'reduceMotion', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('visual', 'reduceMotion', checked)}
                 />
               </div>
 
@@ -662,7 +663,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Select
                   value={settings.visual.colorBlindMode}
-                  onValueChange={(value) => updateSetting('visual', 'colorBlindMode', value)}
+                  onValueChange={(value: unknown) => updateSetting('visual', 'colorBlindMode', value)}
                 >
                   <SelectTrigger className="w-40 bg-gray-800 border-gray-700">
                     <SelectValue />
@@ -683,7 +684,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Select
                   value={settings.visual.focusIndicator}
-                  onValueChange={(value) => updateSetting('visual', 'focusIndicator', value)}
+                  onValueChange={(value: unknown) => updateSetting('visual', 'focusIndicator', value)}
                 >
                   <SelectTrigger className="w-40 bg-gray-800 border-gray-700">
                     <SelectValue />
@@ -715,7 +716,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.motor.largeClickTargets}
-                  onCheckedChange={(checked) => updateSetting('motor', 'largeClickTargets', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('motor', 'largeClickTargets', checked)}
                 />
               </div>
 
@@ -726,7 +727,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.motor.gestureAlternatives}
-                  onCheckedChange={(checked) => updateSetting('motor', 'gestureAlternatives', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('motor', 'gestureAlternatives', checked)}
                 />
               </div>
 
@@ -737,7 +738,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.motor.dwellClick}
-                  onCheckedChange={(checked) => updateSetting('motor', 'dwellClick', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('motor', 'dwellClick', checked)}
                 />
               </div>
 
@@ -746,7 +747,7 @@ const AccessibilitySettingsPanel = () => {
                   <Label className="text-white">Dwell Time: {settings.motor.dwellTime}ms</Label>
                   <Slider
                     value={[settings.motor.dwellTime]}
-                    onValueChange={(value) => updateSetting('motor', 'dwellTime', value[0])}
+                    onValueChange={(value: unknown) => updateSetting('motor', 'dwellTime', value[0])}
                     min={500}
                     max={3000}
                     step={100}
@@ -774,7 +775,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.auditory.soundEnabled}
-                  onCheckedChange={(checked) => updateSetting('auditory', 'soundEnabled', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('auditory', 'soundEnabled', checked)}
                 />
               </div>
 
@@ -783,7 +784,7 @@ const AccessibilitySettingsPanel = () => {
                   <Label className="text-white">Volume: {settings.auditory.soundVolume}%</Label>
                   <Slider
                     value={[settings.auditory.soundVolume]}
-                    onValueChange={(value) => updateSetting('auditory', 'soundVolume', value[0])}
+                    onValueChange={(value: unknown) => updateSetting('auditory', 'soundVolume', value[0])}
                     min={0}
                     max={100}
                     step={5}
@@ -799,7 +800,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.auditory.captionsEnabled}
-                  onCheckedChange={(checked) => updateSetting('auditory', 'captionsEnabled', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('auditory', 'captionsEnabled', checked)}
                 />
               </div>
 
@@ -810,7 +811,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.auditory.visualIndicators}
-                  onCheckedChange={(checked) => updateSetting('auditory', 'visualIndicators', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('auditory', 'visualIndicators', checked)}
                 />
               </div>
             </CardContent>
@@ -833,7 +834,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.simplifiedInterface}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'simplifiedInterface', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('cognitive', 'simplifiedInterface', checked)}
                 />
               </div>
 
@@ -844,7 +845,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.readingGuide}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'readingGuide', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('cognitive', 'readingGuide', checked)}
                 />
               </div>
 
@@ -855,7 +856,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.autoComplete}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'autoComplete', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('cognitive', 'autoComplete', checked)}
                 />
               </div>
 
@@ -866,7 +867,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.confirmActions}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'confirmActions', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('cognitive', 'confirmActions', checked)}
                 />
               </div>
 
@@ -877,7 +878,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.helpText}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'helpText', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('cognitive', 'helpText', checked)}
                 />
               </div>
 
@@ -885,7 +886,7 @@ const AccessibilitySettingsPanel = () => {
                 <Label className="text-white">Session Timeout: {settings.cognitive.sessionTimeout} minutes</Label>
                 <Slider
                   value={[settings.cognitive.sessionTimeout]}
-                  onValueChange={(value) => updateSetting('cognitive', 'sessionTimeout', value[0])}
+                  onValueChange={(value: unknown) => updateSetting('cognitive', 'sessionTimeout', value[0])}
                   min={15}
                   max={120}
                   step={15}
@@ -912,7 +913,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.keyboard.skipLinks}
-                  onCheckedChange={(checked) => updateSetting('keyboard', 'skipLinks', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('keyboard', 'skipLinks', checked)}
                 />
               </div>
 
@@ -923,7 +924,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.keyboard.keyboardShortcuts}
-                  onCheckedChange={(checked) => updateSetting('keyboard', 'keyboardShortcuts', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('keyboard', 'keyboardShortcuts', checked)}
                 />
               </div>
 
@@ -934,7 +935,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.keyboard.focusTrap}
-                  onCheckedChange={(checked) => updateSetting('keyboard', 'focusTrap', checked)}
+                  onCheckedChange={(checked: any) => updateSetting('keyboard', 'focusTrap', checked)}
                 />
               </div>
 
@@ -945,7 +946,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Select
                   value={settings.keyboard.tabOrder}
-                  onValueChange={(value) => updateSetting('keyboard', 'tabOrder', value)}
+                  onValueChange={(value: unknown) => updateSetting('keyboard', 'tabOrder', value)}
                 >
                   <SelectTrigger className="w-32 bg-gray-800 border-gray-700">
                     <SelectValue />
@@ -1098,7 +1099,7 @@ const AccessibilitySystem = () => {
 
                 <TabsContent value="feed" className="space-y-6">
                   <div className="space-y-4">
-                    {mockPosts.map((post) => (
+                    {mockPosts.map((post: any) => (
                       <AccessiblePost key={post.id} post={post} />
                     ))}
                   </div>
@@ -1145,7 +1146,7 @@ const AccessibilitySystem = () => {
 
                       <div className="flex justify-end space-x-4">
                         <AccessibleButton
-                          variant="outline"
+                          variant="secondary"
                           shortcut="Esc"
                         >
                           Cancel
@@ -1182,7 +1183,7 @@ const AccessibilitySystem = () => {
                           ].map((item) => (
                             <AccessibleButton
                               key={item.name}
-                              variant="outline"
+                              variant="secondary"
                               className="h-16 justify-start"
                               ariaLabel={`Navigate to ${item.name} section`}
                               shortcut={item.shortcut}

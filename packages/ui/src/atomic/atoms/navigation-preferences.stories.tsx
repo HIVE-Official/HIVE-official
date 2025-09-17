@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { NavigationPreferences, NavigationStyle } from './navigation-preferences';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { Monitor, Sidebar, MoreHorizontal, Smartphone, Tablet, Laptop } from 'lucide-react';
@@ -101,7 +101,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">🧭 NAVIGATION OPTIONS</Badge>
+            <Badge variant="emerald">🧭 NAVIGATION OPTIONS</Badge>
             Navigation Preference Types
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">

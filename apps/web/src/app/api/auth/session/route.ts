@@ -1,9 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin } from "@/lib/firebase/admin/firebase-admin";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 
 /**
  * Session validation endpoint - verifies token and returns user session info

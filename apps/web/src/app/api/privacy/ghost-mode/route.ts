@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api/response-types/api-response-types";
 import * as admin from 'firebase-admin';
 
 // Ghost Mode quick toggle and status
@@ -234,7 +234,7 @@ async function applyGhostModeChanges(userId: string, ghostMode: any) {
 
     const membershipsSnapshot = await membershipsQuery.get();
     
-    const updates = membershipsSnapshot.docs.map(async (memberDoc) => {
+    const updates = membershipsSnapshot.docs.map(async (memberDoc: any) => {
       const memberData = memberDoc.data();
       
       const updatedMemberData = {

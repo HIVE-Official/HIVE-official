@@ -4,15 +4,15 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Input } from '../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Avatar, AvatarFallback } from '../../atomic/atoms/avatar';
+import { Input } from '../../atomic/atoms/input-enhanced';
 import { HiveProgress } from '../../components/hive-progress';
 import { Separator } from '../../components/ui/separator';
-import { Switch } from '../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 import { 
   Home,
   Search, 
@@ -329,7 +329,7 @@ function EnhancedFeedDiscoverySystem() {
   const getContentPriorityColor = (priority: string) => {
     switch (priority) {
       case 'urgent': return 'border-red-400 bg-red-500/10';
-      case 'high': return 'border-orange-400 bg-orange-500/10';
+      case 'high': return 'border-[var(--hive-gold)] bg-[var(--hive-gold)]/10';
       case 'medium': return 'border-blue-400 bg-blue-500/10';
       default: return 'border-gray-600 bg-gray-800/50';
     }
@@ -339,9 +339,9 @@ function EnhancedFeedDiscoverySystem() {
     switch (type) {
       case 'coordination_opportunity': return <Users className="h-5 w-5 text-red-400" />;
       case 'academic_coordination': return <BookOpen className="h-5 w-5 text-blue-400" />;
-      case 'tool_deployment': return <Zap className="h-5 w-5 text-purple-400" />;
+      case 'tool_deployment': return <Zap className="h-5 w-5 text-[var(--hive-gold)]" />;
       case 'social_coordination': return <Calendar className="h-5 w-5 text-green-400" />;
-      case 'community_bridge': return <Sparkles className="h-5 w-5 text-yellow-400" />;
+      case 'community_bridge': return <Sparkles className="h-5 w-5 text-[var(--hive-gold)]" />;
       default: return <Activity className="h-5 w-5 text-gray-400" />;
     }
   };
@@ -355,19 +355,19 @@ function EnhancedFeedDiscoverySystem() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Enhanced Header with Temporal Intelligence */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
-                  <Compass className="h-5 w-5 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-[var(--hive-gold)] rounded-xl flex items-center justify-center">
+                  <Compass className="h-5 w-5 text-[var(--hive-text-primary)]" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-white">Campus Feed</h1>
+                  <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Campus Feed</h1>
                   <p className="text-gray-400">Coordination-focused discovery</p>
                 </div>
               </div>
@@ -392,16 +392,16 @@ function EnhancedFeedDiscoverySystem() {
                 />
               </div>
               
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Search className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white relative">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] relative">
                 <Bell className="w-4 h-4" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center">
                   3
                 </div>
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -410,19 +410,19 @@ function EnhancedFeedDiscoverySystem() {
           {/* Enhanced Navigation with Algorithm Insight */}
           <Tabs value={activeView} onValueChange={setActiveView} className="w-full">
             <TabsList className="grid w-full grid-cols-4 bg-gray-800">
-              <TabsTrigger value="coordination" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white">
+              <TabsTrigger value="coordination" className="data-[state=active]:bg-blue-500 data-[state=active]:text-[var(--hive-text-primary)]">
                 <Users className="w-4 h-4 mr-2" />
                 Coordination
               </TabsTrigger>
-              <TabsTrigger value="discovery" className="data-[state=active]:bg-purple-500 data-[state=active]:text-white">
+              <TabsTrigger value="discovery" className="data-[state=active]:bg-[var(--hive-gold)] data-[state=active]:text-[var(--hive-text-primary)]">
                 <Compass className="w-4 h-4 mr-2" />
                 Discovery  
               </TabsTrigger>
-              <TabsTrigger value="communities" className="data-[state=active]:bg-green-500 data-[state=active]:text-white">
+              <TabsTrigger value="communities" className="data-[state=active]:bg-green-500 data-[state=active]:text-[var(--hive-text-primary)]">
                 <Globe className="w-4 h-4 mr-2" />
                 Communities
               </TabsTrigger>
-              <TabsTrigger value="algorithm" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
+              <TabsTrigger value="algorithm" className="data-[state=active]:bg-[var(--hive-gold)] data-[state=active]:text-[var(--hive-text-primary)]">
                 <Sparkles className="w-4 h-4 mr-2" />
                 Algorithm
               </TabsTrigger>
@@ -444,15 +444,15 @@ function EnhancedFeedDiscoverySystem() {
                   variant={feedFilter === id ? "default" : "outline"}
                   onClick={() => setFeedFilter(id)}
                   className={feedFilter === id 
-                    ? "bg-blue-500 text-white border-blue-400"
-                    : "border-gray-600 text-white hover:bg-gray-800"
+                    ? "bg-blue-500 text-[var(--hive-text-primary)] border-blue-400"
+                    : "border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800"
                   }
                 >
                   {label} ({count})
                 </Button>
               ))}
             </div>
-            <Button size="icon" variant="outline" className="border-gray-600 text-white">
+            <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
               <Filter className="w-4 h-4" />
             </Button>
           </div>
@@ -485,7 +485,7 @@ function EnhancedFeedDiscoverySystem() {
             </Card>
             <Card className="bg-gray-800/50 border-gray-700">
               <CardContent className="pt-4 text-center">
-                <div className="text-2xl font-bold text-purple-400">156</div>
+                <div className="text-2xl font-bold text-[var(--hive-gold)]">156</div>
                 <div className="text-sm text-gray-400">Students Coordinating</div>
               </CardContent>
             </Card>
@@ -507,12 +507,12 @@ function EnhancedFeedDiscoverySystem() {
                     {/* Author & Community Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h4 className="font-medium text-white">{item.author.name}</h4>
+                        <h4 className="font-medium text-[var(--hive-text-primary)]">{item.author.name}</h4>
                         <span className="text-gray-400 text-sm">@{item.author.handle}</span>
                         {item.author.isVerified && (
                           <Award className="w-4 h-4 text-blue-400" />
                         )}
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           {item.author.role}
                         </Badge>
                       </div>
@@ -541,7 +541,7 @@ function EnhancedFeedDiscoverySystem() {
                   <div className="text-right">
                     <Badge className={`mb-2 ${
                       item.priority === 'urgent' ? 'bg-red-500/20 text-red-400' :
-                      item.priority === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                      item.priority === 'high' ? 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]' :
                       'bg-blue-500/20 text-blue-400'
                     }`}>
                       {item.priority} priority
@@ -554,7 +554,7 @@ function EnhancedFeedDiscoverySystem() {
 
                 {/* Content Body */}
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-white mb-2">{item.content.title}</h3>
+                  <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">{item.content.title}</h3>
                   <p className="text-gray-300 leading-relaxed mb-3">{item.content.text}</p>
                   
                   {/* Coordination Details */}
@@ -563,12 +563,12 @@ function EnhancedFeedDiscoverySystem() {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-2">
                           <Target className="w-5 h-5 text-blue-400" />
-                          <span className="font-medium text-white">
+                          <span className="font-medium text-[var(--hive-text-primary)]">
                             {item.content.coordinationType.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                           </span>
                         </div>
                         {item.content.responseDeadline && (
-                          <div className="flex items-center space-x-1 text-sm text-orange-400">
+                          <div className="flex items-center space-x-1 text-sm text-[var(--hive-gold)]">
                             <Clock className="w-4 h-4" />
                             <span>Respond by {item.content.responseDeadline.toLocaleTimeString()}</span>
                           </div>
@@ -580,7 +580,7 @@ function EnhancedFeedDiscoverySystem() {
                         <div className="mb-3">
                           <div className="flex justify-between text-sm mb-1">
                             <span className="text-gray-400">Participation</span>
-                            <span className="text-white">
+                            <span className="text-[var(--hive-text-primary)]">
                               {item.content.currentParticipants}/{item.content.participantSlots} slots
                             </span>
                           </div>
@@ -596,8 +596,8 @@ function EnhancedFeedDiscoverySystem() {
                         <div className="mb-3">
                           <span className="text-sm text-gray-400 block mb-2">Skills Needed:</span>
                           <div className="flex flex-wrap gap-1">
-                            {item.content.skillsNeeded.map((skill) => (
-                              <Badge key={skill} variant="outline" className="text-xs bg-blue-500/10 text-blue-400">
+                            {item.content.skillsNeeded.map((skill: any) => (
+                              <Badge key={skill} variant="secondary" className="text-xs bg-blue-500/10 text-blue-400">
                                 {skill}
                               </Badge>
                             ))}
@@ -611,7 +611,7 @@ function EnhancedFeedDiscoverySystem() {
                           <div className="text-sm text-gray-400 mb-2">Impact:</div>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
                             <div className="text-center p-2 bg-gray-700 rounded">
-                              <div className="font-bold text-white">{item.content.impact.studentsHelped}</div>
+                              <div className="font-bold text-[var(--hive-text-primary)]">{item.content.impact.studentsHelped}</div>
                               <div className="text-gray-400">Students Helped</div>
                             </div>
                             <div className="text-center p-2 bg-gray-700 rounded">
@@ -631,8 +631,8 @@ function EnhancedFeedDiscoverySystem() {
                   {/* Tags */}
                   {item.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {item.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs bg-gray-800 text-gray-400">
+                      {item.tags.map((tag: any) => (
+                        <Badge key={tag} variant="secondary" className="text-xs bg-gray-800 text-gray-400">
                           #{tag}
                         </Badge>
                       ))}
@@ -647,8 +647,8 @@ function EnhancedFeedDiscoverySystem() {
                     <Button 
                       className={`${
                         item.engagement.isUserParticipating
-                          ? 'bg-green-600 text-white' 
-                          : 'bg-blue-500 text-white hover:bg-blue-600'
+                          ? 'bg-green-600 text-[var(--hive-text-primary)]' 
+                          : 'bg-blue-500 text-[var(--hive-text-primary)] hover:bg-blue-600'
                       }`}
                     >
                       {item.engagement.isUserParticipating ? (
@@ -675,11 +675,11 @@ function EnhancedFeedDiscoverySystem() {
                     </Button>
 
                     {/* Secondary Actions */}
-                    <Button variant="outline" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                    <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-[var(--hive-text-primary)]">
                       <MessageSquare className="w-4 h-4 mr-1" />
                       {item.engagement.responses}
                     </Button>
-                    <Button variant="outline" size="sm" className="border-gray-600 text-gray-400 hover:text-white">
+                    <Button variant="secondary" size="sm" className="border-gray-600 text-gray-400 hover:text-[var(--hive-text-primary)]">
                       <Share className="w-4 h-4 mr-1" />
                       {item.engagement.shares}
                     </Button>
@@ -690,7 +690,7 @@ function EnhancedFeedDiscoverySystem() {
                     <Badge className={`text-xs ${
                       item.coordinationOutcome === 'successful' ? 'bg-green-500/20 text-green-400' :
                       item.coordinationOutcome === 'active' ? 'bg-blue-500/20 text-blue-400' :
-                      item.coordinationOutcome === 'forming' ? 'bg-orange-500/20 text-orange-400' :
+                      item.coordinationOutcome === 'forming' ? 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]' :
                       'bg-gray-500/20 text-gray-400'
                     }`}>
                       {item.coordinationOutcome.replace('_', ' ')}
@@ -708,7 +708,7 @@ function EnhancedFeedDiscoverySystem() {
 
           {/* Load More */}
           <div className="text-center mt-8">
-            <Button variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+            <Button variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
               Load More Coordination Opportunities
             </Button>
           </div>
@@ -721,7 +721,7 @@ function EnhancedFeedDiscoverySystem() {
             <Card className="bg-gray-800/50 border-gray-700">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Sparkles className="w-5 h-5 text-yellow-400" />
+                  <Sparkles className="w-5 h-5 text-[var(--hive-gold)]" />
                   <span>Feed Algorithm: Coordination-First Intelligence</span>
                 </CardTitle>
               </CardHeader>
@@ -734,7 +734,7 @@ function EnhancedFeedDiscoverySystem() {
                 {/* Algorithm Factors */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-white">Ranking Factors</h4>
+                    <h4 className="font-semibold text-[var(--hive-text-primary)]">Ranking Factors</h4>
                     <div className="space-y-2">
                       {Object.entries(mockPersonalizationFactors)
                         .filter(([key]) => key !== 'userPreferences')
@@ -750,7 +750,7 @@ function EnhancedFeedDiscoverySystem() {
                                   style={{ width: `${value * 100}%` }}
                                 />
                               </div>
-                              <span className="text-sm text-white font-medium">
+                              <span className="text-sm text-[var(--hive-text-primary)] font-medium">
                                 {Math.round(value * 100)}%
                               </span>
                             </div>
@@ -760,13 +760,13 @@ function EnhancedFeedDiscoverySystem() {
                   </div>
                   
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-white">Your Preferences</h4>
+                    <h4 className="font-semibold text-[var(--hive-text-primary)]">Your Preferences</h4>
                     <div className="space-y-2">
                       <div>
                         <span className="text-sm text-gray-400 block mb-1">Content Types:</span>
                         <div className="flex flex-wrap gap-1">
                           {mockPersonalizationFactors.userPreferences.contentTypes.map((type) => (
-                            <Badge key={type} variant="outline" className="text-xs bg-blue-500/10 text-blue-400">
+                            <Badge key={type} variant="secondary" className="text-xs bg-blue-500/10 text-blue-400">
                               {type.replace('_', ' ')}
                             </Badge>
                           ))}
@@ -775,8 +775,8 @@ function EnhancedFeedDiscoverySystem() {
                       <div>
                         <span className="text-sm text-gray-400 block mb-1">Priority Communities:</span>
                         <div className="space-y-1">
-                          {mockPersonalizationFactors.userPreferences.priorityCommunities.slice(0, 2).map((community) => (
-                            <div key={community} className="text-xs text-white bg-gray-700 rounded px-2 py-1">
+                          {mockPersonalizationFactors.userPreferences.priorityCommunities.slice(0, 2).map((community: any) => (
+                            <div key={community} className="text-xs text-[var(--hive-text-primary)] bg-gray-700 rounded px-2 py-1">
                               {community}
                             </div>
                           ))}
@@ -788,33 +788,33 @@ function EnhancedFeedDiscoverySystem() {
                 
                 {/* Algorithm Principles */}
                 <div className="bg-gray-700 rounded-lg p-4">
-                  <h4 className="font-semibold text-white mb-3">Core Principles</h4>
+                  <h4 className="font-semibold text-[var(--hive-text-primary)] mb-3">Core Principles</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div className="flex items-start space-x-2">
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <div className="font-medium text-white">Utility-First Ranking</div>
+                        <div className="font-medium text-[var(--hive-text-primary)]">Utility-First Ranking</div>
                         <div className="text-gray-400">Content that enables coordination ranks higher than entertainment</div>
                       </div>
                     </div>
                     <div className="flex items-start space-x-2">
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <div className="font-medium text-white">Community Context</div>
+                        <div className="font-medium text-[var(--hive-text-primary)]">Community Context</div>
                         <div className="text-gray-400">Content relevance based on your community memberships</div>
                       </div>
                     </div>
                     <div className="flex items-start space-x-2">
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <div className="font-medium text-white">Temporal Awareness</div>
+                        <div className="font-medium text-[var(--hive-text-primary)]">Temporal Awareness</div>
                         <div className="text-gray-400">Time-sensitive coordination gets priority placement</div>
                       </div>
                     </div>
                     <div className="flex items-start space-x-2">
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <div className="font-medium text-white">Student Agency</div>
+                        <div className="font-medium text-[var(--hive-text-primary)]">Student Agency</div>
                         <div className="text-gray-400">You control preferences; we don't manipulate engagement</div>
                       </div>
                     </div>
@@ -837,7 +837,7 @@ function EnhancedFeedDiscoverySystem() {
                     <span className="text-gray-400">Content Sources Active:</span>
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                      <span className="text-white">4 systems</span>
+                      <span className="text-[var(--hive-text-primary)]">4 systems</span>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -846,9 +846,9 @@ function EnhancedFeedDiscoverySystem() {
                       { name: 'Profile', count: 12, status: 'active' },
                       { name: 'HiveLAB', count: 8, status: 'active' },
                       { name: 'Admin', count: 3, status: 'active' }
-                    ].map((source) => (
+                    ].map((source: any) => (
                       <div key={source.name} className="bg-gray-700 rounded p-3">
-                        <div className="text-lg font-bold text-white">{source.count}</div>
+                        <div className="text-lg font-bold text-[var(--hive-text-primary)]">{source.count}</div>
                         <div className="text-xs text-gray-400">{source.name} Events</div>
                         <div className="text-xs text-green-400 mt-1">● {source.status}</div>
                       </div>

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { dbAdmin } from '@/lib/firebase/admin/firebase-admin';
+import { getCurrentUser } from '@/lib/auth/providers/auth-server';
+import { logger } from '@/lib/logger';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api/response-types/api-response-types";
 
 // Deployment data interface
 interface DeploymentData {
@@ -233,7 +233,7 @@ async function executeToolAction(params: {
   data: Record<string, unknown>;
   context: Record<string, unknown>;
 }): Promise<ToolExecutionResult> {
-  const { deployment, tool, user, action, elementId, data } = params;
+  const { deployment, tool, user, action, elementId, data } = await params;
 
   try {
     // Get or create tool state

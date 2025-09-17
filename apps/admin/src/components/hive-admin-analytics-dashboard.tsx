@@ -6,6 +6,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core';
+
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
@@ -331,7 +333,7 @@ const ViolationAlert: React.FC<{
                 {violations.topViolationTypes.slice(0, 3).map((violation) => (
                   <Badge 
                     key={violation.type} 
-                    size="xs" 
+                    size="sm" 
                     className={`${
                       violation.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
                       violation.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
@@ -373,16 +375,6 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
   const [geographicData, setGeographicData] = useState<GeographicData[]>([]);
   const [realTimeMetrics, setRealTimeMetrics] = useState<RealTimeMetrics | null>(null);
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Analytics dashboard is not available</p>
-      </div>
-    );
-  }
-
   const loadAnalyticsData = useCallback(async () => {
     if (!admin) return;
 
@@ -409,7 +401,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
       setGeographicData(data.geographicData || []);
       
     } catch (error) {
-      console.error('Failed to load analytics:', error);
+      logger.error('Failed to load analytics:', error);
     } finally {
       setLoading(false);
     }
@@ -431,7 +423,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
         setRealTimeMetrics(data.realTimeMetrics);
       }
     } catch (error) {
-      console.error('Failed to load real-time metrics:', error);
+      logger.error('Failed to load real-time metrics:', error);
     }
   }, [admin, realTimeEnabled]);
 
@@ -461,6 +453,16 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
     }
     await loadAnalyticsData();
   };
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Analytics dashboard is not available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -527,7 +529,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
             <CardTitle className="text-green-400 flex items-center space-x-2">
               <Activity className="w-5 h-5" />
               <span>Real-Time Metrics</span>
-              <Badge size="xs" className="bg-green-500/20 text-green-400 animate-pulse">
+              <Badge size="sm" className="bg-green-500/20 text-green-400 animate-pulse">
                 LIVE
               </Badge>
             </CardTitle>
@@ -630,7 +632,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
       {violationData && (
         <ViolationAlert 
           violations={violationData} 
-          onViewDetails={() => console.log('View violation details')} 
+          onViewDetails={() => { /* TODO: Implement violation details view */ }} 
         />
       )}
 
@@ -648,7 +650,7 @@ export const HiveAdminAnalyticsDashboard: React.FC<HiveAdminAnalyticsDashboardPr
             <SpaceCategoryCard
               key={category.category}
               category={category}
-              onViewDetails={() => console.log('View category details:', category.category)}
+              onViewDetails={() => { /* TODO: Implement category details view */ }}
             />
           ))}
         </div>

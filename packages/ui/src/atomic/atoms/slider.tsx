@@ -76,13 +76,13 @@ const sliderSizes = {
 export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
   min = 0,
   max = 100,
-  step = 1,
+  step: _step = 1,
   value,
   defaultValue,
   range = false,
   marks,
   size = 'md',
-  variant = 'default',
+  variant: _variant = 'default',
   color = 'primary',
   showValue = false,
   showMarks = true,
@@ -92,7 +92,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
   formatValue,
   className,
   onChange,
-  onChangeEnd,
+  onChangeEnd: _onChangeEnd,
   ...props
 }, ref) => {
   const [internalValue, setInternalValue] = React.useState<number | [number, number]>(() => {
@@ -110,7 +110,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
     }
   }, [value]);
 
-  const handleChange = (newValue: number | [number, number]) => {
+  const _handleChange = (newValue: number | [number, number]) => {
     if (value === undefined) {
       setInternalValue(newValue);
     }
@@ -303,26 +303,26 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
 Slider.displayName = 'Slider';
 
 // Convenient preset components
-export const RangeSlider: React.FC<Omit<SliderProps, 'range'>> = (props) => (
+export const RangeSlider: React.FC<Omit<SliderProps, 'range'>> = (props: Omit<SliderProps, 'range'>) => (
   <Slider range {...props} />
 );
 
-export const VerticalSlider: React.FC<Omit<SliderProps, 'vertical'>> = (props) => (
+export const VerticalSlider: React.FC<Omit<SliderProps, 'vertical'>> = (props: Omit<SliderProps, 'vertical'>) => (
   <Slider vertical {...props} />
 );
 
-export const PrimarySlider: React.FC<Omit<SliderProps, 'color'>> = (props) => (
+export const PrimarySlider: React.FC<Omit<SliderProps, 'color'>> = (props: Omit<SliderProps, 'color'>) => (
   <Slider color="primary" {...props} />
 );
 
-export const SuccessSlider: React.FC<Omit<SliderProps, 'color'>> = (props) => (
+export const SuccessSlider: React.FC<Omit<SliderProps, 'color'>> = (props: Omit<SliderProps, 'color'>) => (
   <Slider color="success" {...props} />
 );
 
-export const WarningSlider: React.FC<Omit<SliderProps, 'color'>> = (props) => (
+export const WarningSlider: React.FC<Omit<SliderProps, 'color'>> = (props: Omit<SliderProps, 'color'>) => (
   <Slider color="warning" {...props} />
 );
 
-export const ErrorSlider: React.FC<Omit<SliderProps, 'color'>> = (props) => (
+export const ErrorSlider: React.FC<Omit<SliderProps, 'color'>> = (props: Omit<SliderProps, 'color'>) => (
   <Slider color="error" {...props} />
 );

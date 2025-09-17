@@ -2,6 +2,8 @@
 
 // import { useState, useEffect } from 'react'; // TODO: For future interactive features
 import { useQuery } from '@tanstack/react-query';
+import { logger } from '@/lib/logger';
+
 import { useParams } from 'next/navigation';
 import { useSession } from '../../../../hooks/use-session';
 import { ErrorBoundary } from '../../../../components/error-boundary';
@@ -123,23 +125,23 @@ async function fetchRitualDetail(ritualId: string): Promise<RitualDetail> {
 const RITUAL_TYPES = {
   onboarding: {
     icon: Sparkles,
-    color: 'text-purple-400',
+    color: 'text-[var(--hive-gold)]',
     bgColor: 'bg-purple-900/20',
-    gradient: 'from-purple-400 to-pink-400',
+    gradient: 'from-[var(--hive-gold)] to-pink-400',
     label: 'Welcome Experience'
   },
   seasonal: {
     icon: Calendar,
-    color: 'text-orange-400',
+    color: 'text-[var(--hive-gold)]',
     bgColor: 'bg-orange-900/20',
-    gradient: 'from-orange-400 to-red-400',
+    gradient: 'from-[var(--hive-gold)] to-red-400',
     label: 'Campus Moment'
   },
   achievement: {
     icon: Trophy,
-    color: 'text-yellow-400',
+    color: 'text-[var(--hive-gold)]',
     bgColor: 'bg-yellow-900/20',
-    gradient: 'from-yellow-400 to-orange-400',
+    gradient: 'from-[var(--hive-gold)] to-[var(--hive-gold)]',
     label: 'Milestone'
   },
   community: {
@@ -153,7 +155,7 @@ const RITUAL_TYPES = {
     icon: Star,
     color: 'text-pink-400',
     bgColor: 'bg-pink-900/20',
-    gradient: 'from-pink-400 to-purple-400',
+    gradient: 'from-pink-400 to-[var(--hive-gold)]',
     label: 'Creative Challenge'
   },
   emergency: {
@@ -172,7 +174,9 @@ const RITUAL_TYPES = {
   }
 };
 
-const ACTION_TYPES = {
+type ActionType = 'post' | 'join_space' | 'create_tool' | 'interact' | 'vote' | 'share' | 'comment' | 'attend';
+
+const ACTION_TYPES: Record<ActionType, { icon: any; label: string }> = {
   post: { icon: Star, label: 'Share Post' },
   join_space: { icon: Users, label: 'Join Space' },
   create_tool: { icon: Zap, label: 'Create Tool' },
@@ -215,7 +219,7 @@ export default function RitualDetailPage() {
       // Refresh data
       window.location.reload();
     } catch (error) {
-      console.error('Failed to complete action:', error);
+      logger.error('Failed to complete action:', { error: String(error) });
       alert('Failed to complete action. Please try again.');
     }
   };
@@ -250,7 +254,7 @@ export default function RitualDetailPage() {
       <div className="min-h-screen bg-hive-background flex items-center justify-center p-6">
         <div className="text-center">
           <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="h-6 w-6 text-white" />
+            <Sparkles className="h-6 w-6 text-[var(--hive-text-inverse)]" />
           </div>
           <p className="text-hive-text-primary mb-2">Ritual not found</p>
           <p className="text-red-400 text-sm mb-4">{error?.message || 'This ritual does not exist'}</p>
@@ -288,7 +292,7 @@ export default function RitualDetailPage() {
             {/* Ritual Header */}
             <div className="flex items-start space-x-6">
               <div className={`w-16 h-16 bg-gradient-to-br ${typeConfig.gradient} rounded-2xl flex items-center justify-center`}>
-                <TypeIcon className="h-8 w-8 text-white" />
+                <TypeIcon className="h-8 w-8 text-[var(--hive-text-inverse)]" />
               </div>
               
               <div className="flex-1">
@@ -391,8 +395,17 @@ export default function RitualDetailPage() {
               <div className="bg-hive-surface border border-hive-border rounded-xl p-6">
                 <h2 className="text-xl font-semibold text-hive-text-primary mb-4">Actions to Complete</h2>
                 <div className="space-y-4">
-                  {ritual.actions.map((action) => {
-                    const ActionIcon = ACTION_TYPES[action.type].icon;
+                  {ritual.actions.map((action: { 
+                    id: string; 
+                    type: ActionType; 
+                    description: string;
+                    name?: string;
+                    isRequired?: boolean;
+                    weight?: number;
+                    maxOccurrences?: number;
+                    timeLimit?: number;
+                  }) => {
+                    const ActionIcon = ACTION_TYPES[action.type as ActionType].icon;
                     const isCompleted = ritual.userParticipation?.actionsCompleted.includes(action.id);
                     
                     return (
@@ -409,9 +422,9 @@ export default function RitualDetailPage() {
                             isCompleted ? 'bg-green-500' : 'bg-hive-brand-secondary'
                           }`}>
                             {isCompleted ? (
-                              <CheckCircle className="h-5 w-5 text-white" />
+                              <CheckCircle className="h-5 w-5 text-[var(--hive-text-inverse)]" />
                             ) : (
-                              <ActionIcon className="h-5 w-5 text-white" />
+                              <ActionIcon className="h-5 w-5 text-[var(--hive-text-inverse)]" />
                             )}
                           </div>
                           
@@ -440,7 +453,7 @@ export default function RitualDetailPage() {
                               {!isCompleted && isParticipating && (
                                 <button 
                                   onClick={() => handleCompleteAction(action.id)}
-                                  className="px-3 py-1 bg-hive-brand-secondary text-white rounded text-sm hover:bg-hive-brand-hover transition-colors"
+                                  className="px-3 py-1 bg-hive-brand-secondary text-[var(--hive-text-inverse)] rounded text-sm hover:bg-hive-brand-hover transition-colors"
                                 >
                                   Complete
                                 </button>
@@ -466,7 +479,7 @@ export default function RitualDetailPage() {
                           : 'bg-hive-background border-2 border-hive-border'
                       }`}>
                         {milestone.isReached ? (
-                          <CheckCircle className="h-4 w-4 text-white" />
+                          <CheckCircle className="h-4 w-4 text-[var(--hive-text-inverse)]" />
                         ) : (
                           <span className="text-sm font-medium text-hive-text-secondary">{index + 1}</span>
                         )}
@@ -498,7 +511,7 @@ export default function RitualDetailPage() {
                 {isParticipating ? (
                   <div className="text-center">
                     <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle className="h-6 w-6 text-white" />
+                      <CheckCircle className="h-6 w-6 text-[var(--hive-text-inverse)]" />
                     </div>
                     <h3 className="font-semibold text-hive-text-primary mb-2">You&apos;re Participating!</h3>
                     <p className="text-sm text-hive-text-secondary mb-4">
@@ -509,7 +522,7 @@ export default function RitualDetailPage() {
                 ) : ritual.status === 'active' ? (
                   <div className="text-center">
                     <div className={`w-12 h-12 bg-gradient-to-br ${typeConfig.gradient} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                      <TypeIcon className="h-6 w-6 text-white" />
+                      <TypeIcon className="h-6 w-6 text-[var(--hive-text-inverse)]" />
                     </div>
                     <h3 className="font-semibold text-hive-text-primary mb-2">Join This Ritual</h3>
                     <p className="text-sm text-hive-text-secondary mb-4">
@@ -517,7 +530,7 @@ export default function RitualDetailPage() {
                     </p>
                     <button 
                       onClick={() => window.location.href = `/rituals?join=${ritual.id}`}
-                      className={`w-full px-4 py-2 bg-gradient-to-r ${typeConfig.gradient} text-white rounded-lg hover:opacity-90 transition-opacity`}
+                      className={`w-full px-4 py-2 bg-gradient-to-r ${typeConfig.gradient} text-[var(--hive-text-inverse)] rounded-lg hover:opacity-90 transition-opacity`}
                     >
                       Join Ritual
                     </button>
@@ -544,15 +557,15 @@ export default function RitualDetailPage() {
               <div className="bg-hive-surface border border-hive-border rounded-xl p-6">
                 <h3 className="font-semibold text-hive-text-primary mb-4">Rewards</h3>
                 <div className="space-y-3">
-                  {ritual.rewards.map((reward) => (
+                  {ritual.rewards.map((reward: any) => (
                     <div key={reward.id} className="flex items-center space-x-3">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                        reward.rarity === 'legendary' ? 'bg-yellow-500' :
-                        reward.rarity === 'epic' ? 'bg-purple-500' :
+                        reward.rarity === 'legendary' ? 'bg-[var(--hive-gold)]' :
+                        reward.rarity === 'epic' ? 'bg-[var(--hive-gold)]' :
                         reward.rarity === 'rare' ? 'bg-blue-500' :
                         'bg-hive-brand-secondary'
                       }`}>
-                        <Award className="h-4 w-4 text-white" />
+                        <Award className="h-4 w-4 text-[var(--hive-text-inverse)]" />
                       </div>
                       <div className="flex-1">
                         <h4 className="text-sm font-medium text-hive-text-primary">{reward.name}</h4>

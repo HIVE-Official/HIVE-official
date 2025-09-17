@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Checkbox } from './checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Checkbox } from './checkbox-enhanced';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from './badge';
 import { Text } from './text';
 import { action } from '@storybook/addon-actions';
@@ -97,7 +97,7 @@ export const Default: Story = {
     disabled: false,
     onChange: action('checkbox-changed'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardContent className="space-y-4">
@@ -123,7 +123,7 @@ export const CompleteShowcase: Story = {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Badge variant="success">☑️ CHECKBOX VARIANTS</Badge>
+            <Badge variant="emerald">☑️ CHECKBOX VARIANTS</Badge>
             Layout Variant Options
           </CardTitle>
           <p className="text-[var(--hive-text-muted)]">
@@ -143,20 +143,20 @@ export const CompleteShowcase: Story = {
                     <Checkbox
                       label="Enable notifications"
                       description="Receive updates about space activity"
-                      variant="default"
+                      variant="primary"
                       onChange={action('default-compact')}
                     />
                     <Checkbox
                       label="Join study group"
                       description="Participate in CSE 331 algorithm study sessions"
-                      variant="default"
+                      variant="primary"
                       checked
                       onChange={action('default-compact-checked')}
                     />
                     <Checkbox
                       label="Share calendar availability"
                       description="Let group members see your free time"
-                      variant="default"
+                      variant="primary"
                       onChange={action('default-compact-calendar')}
                     />
                   </div>
@@ -837,7 +837,7 @@ export const Playground: Story = {
     indeterminate: false,
     onChange: action('playground-changed'),
   },
-  render: (args) => (
+  render: (args: any) => (
     <div className="p-6 bg-[var(--hive-background-primary)]">
       <Card>
         <CardHeader>

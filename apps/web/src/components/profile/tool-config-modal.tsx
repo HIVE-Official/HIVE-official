@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from 'react';
+import { logger } from '@/lib/logger';
+
 import {
-  HiveModal,
+  Modal,
   Button,
   Card,
   Switch,
@@ -133,7 +135,7 @@ export function ToolConfigModal({
       await onSave(config);
       onClose();
     } catch (error) {
-      console.error('Failed to save tool configuration:', error);
+      logger.error('Failed to save tool configuration:', { error: String(error) });
     } finally {
       setIsSaving(false);
     }
@@ -143,7 +145,7 @@ export function ToolConfigModal({
   const optionalPermissions = tool.permissions.filter(p => !p.required);
 
   return (
-    <HiveModal 
+    <Modal 
       open={isOpen} 
       onOpenChange={onClose} 
       size="xl"
@@ -176,15 +178,15 @@ export function ToolConfigModal({
             <TabsContent value="permissions" className="space-y-4">
               {requiredPermissions.length > 0 && (
                 <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                  <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
+                  <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center space-x-2">
                     <Key className="h-4 w-4" />
                     <span>Required Permissions</span>
                   </h3>
                   <div className="space-y-3">
-                    {requiredPermissions.map((permission) => (
+                    {requiredPermissions.map((permission: any) => (
                       <div key={permission.id} className="flex items-center justify-between">
                         <div>
-                          <div className="font-medium text-white">{permission.name}</div>
+                          <div className="font-medium text-[var(--hive-text-inverse)]">{permission.name}</div>
                           <div className="text-sm text-hive-text-mutedLight">{permission.description}</div>
                         </div>
                         <Badge variant="secondary" className="text-xs">
@@ -198,20 +200,20 @@ export function ToolConfigModal({
 
               {optionalPermissions.length > 0 && (
                 <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                  <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
+                  <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center space-x-2">
                     <Settings className="h-4 w-4" />
                     <span>Optional Permissions</span>
                   </h3>
                   <div className="space-y-3">
-                    {optionalPermissions.map((permission) => (
+                    {optionalPermissions.map((permission: any) => (
                       <div key={permission.id} className="flex items-center justify-between">
                         <div>
-                          <div className="font-medium text-white">{permission.name}</div>
+                          <div className="font-medium text-[var(--hive-text-inverse)]">{permission.name}</div>
                           <div className="text-sm text-hive-text-mutedLight">{permission.description}</div>
                         </div>
                         <Switch
                           checked={config.permissions[permission.id] || false}
-                          onCheckedChange={(checked) => handlePermissionChange(permission.id, checked)}
+                          onCheckedChange={(checked: any) => handlePermissionChange(permission.id, checked)}
                         />
                       </div>
                     ))}
@@ -223,39 +225,39 @@ export function ToolConfigModal({
             {/* Notifications Tab */}
             <TabsContent value="notifications" className="space-y-4">
               <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center space-x-2">
                   <Bell className="h-4 w-4" />
                   <span>Notification Preferences</span>
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Tool Updates</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Tool Updates</div>
                       <div className="text-sm text-hive-text-mutedLight">Get notified when the tool is updated</div>
                     </div>
                     <Switch
                       checked={config.notifications.updates}
-                      onCheckedChange={(checked) => handleNotificationChange('updates', checked)}
+                      onCheckedChange={(checked: any) => handleNotificationChange('updates', checked)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Usage Reminders</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Usage Reminders</div>
                       <div className="text-sm text-hive-text-mutedLight">Remind you to use this tool regularly</div>
                     </div>
                     <Switch
                       checked={config.notifications.usage}
-                      onCheckedChange={(checked) => handleNotificationChange('usage', checked)}
+                      onCheckedChange={(checked: any) => handleNotificationChange('usage', checked)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Sharing Activity</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Sharing Activity</div>
                       <div className="text-sm text-hive-text-mutedLight">Notify when others interact with your shared tools</div>
                     </div>
                     <Switch
                       checked={config.notifications.sharing}
-                      onCheckedChange={(checked) => handleNotificationChange('sharing', checked)}
+                      onCheckedChange={(checked: any) => handleNotificationChange('sharing', checked)}
                     />
                   </div>
                 </div>
@@ -265,39 +267,39 @@ export function ToolConfigModal({
             {/* Sharing Tab */}
             <TabsContent value="sharing" className="space-y-4">
               <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
+                <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center space-x-2">
                   <Share2 className="h-4 w-4" />
                   <span>Sharing Settings</span>
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Allow Space Sharing</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Allow Space Sharing</div>
                       <div className="text-sm text-hive-text-mutedLight">Let others in your spaces use this tool</div>
                     </div>
                     <Switch
                       checked={config.sharing.allowSpaceSharing}
-                      onCheckedChange={(checked) => handleSharingChange('allowSpaceSharing', checked)}
+                      onCheckedChange={(checked: any) => handleSharingChange('allowSpaceSharing', checked)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Public Sharing</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Public Sharing</div>
                       <div className="text-sm text-hive-text-mutedLight">Make this tool discoverable by all HIVE users</div>
                     </div>
                     <Switch
                       checked={config.sharing.allowPublicSharing}
-                      onCheckedChange={(checked) => handleSharingChange('allowPublicSharing', checked)}
+                      onCheckedChange={(checked: any) => handleSharingChange('allowPublicSharing', checked)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-white">Share Usage Stats</div>
+                      <div className="font-medium text-[var(--hive-text-inverse)]">Share Usage Stats</div>
                       <div className="text-sm text-hive-text-mutedLight">Allow others to see how often you use this tool</div>
                     </div>
                     <Switch
                       checked={config.sharing.shareUsageStats}
-                      onCheckedChange={(checked) => handleSharingChange('shareUsageStats', checked)}
+                      onCheckedChange={(checked: any) => handleSharingChange('shareUsageStats', checked)}
                     />
                   </div>
                 </div>
@@ -308,7 +310,7 @@ export function ToolConfigModal({
             <TabsContent value="usage" className="space-y-4">
               {tool.usageStats ? (
                 <Card className="p-4 bg-hive-background-overlay border-hive-border-default">
-                  <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
+                  <h3 className="font-medium text-[var(--hive-text-inverse)] mb-3 flex items-center space-x-2">
                     <Activity className="h-4 w-4" />
                     <span>Usage Statistics</span>
                   </h3>
@@ -381,6 +383,6 @@ export function ToolConfigModal({
             </Button>
           </div>
         </div>
-    </HiveModal>
+    </Modal>
   );
 }

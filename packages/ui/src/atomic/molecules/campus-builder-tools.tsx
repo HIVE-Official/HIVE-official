@@ -61,8 +61,8 @@ const toolTypeConfig = {
   },
   automation: {
     icon: '⚡',
-    color: 'from-purple-500/20 to-purple-600/10',
-    border: 'border-purple-500/30',
+    color: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10',
+    border: 'border-[var(--hive-gold)]/30',
     label: 'Automation'
   },
   widget: {
@@ -73,14 +73,14 @@ const toolTypeConfig = {
   },
   integration: {
     icon: '🔗',
-    color: 'from-orange-500/20 to-orange-600/10',
-    border: 'border-orange-500/30',
+    color: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10',
+    border: 'border-[var(--hive-gold)]/30',
     label: 'Integration'
   },
   custom: {
     icon: '🛠️',
     color: 'from-gold/20 to-champagne/10',
-    border: 'border-gold/30',
+    border: 'border-[var(--hive-brand-secondary)]/30',
     label: 'Custom'
   }
 };
@@ -96,7 +96,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
   createdTools,
   isBuilder = false,
   isLoading = false,
-  variant = 'default',
+  variant: _variant = 'default',
   showBecomeBuilder = true,
   isLocked = true, // Default to locked for vBETA
   onToolClick,
@@ -110,16 +110,6 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
   const [hoveredTool, setHoveredTool] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'available' | 'created'>('available');
 
-  const formatLastUsed = (timestamp: string): string => {
-    const now = new Date();
-    const used = new Date(timestamp);
-    const diffInHours = Math.floor((now.getTime() - used.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return `${Math.floor(diffInHours / 168)}w ago`;
-  };
 
   const displayedAvailableTools = availableTools?.slice(0, 4) ?? [];
   const displayedCreatedTools = createdTools?.slice(0, 3) ?? [];
@@ -169,7 +159,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
           'bg-gradient-to-br from-charcoal/60 via-charcoal/50 to-graphite/60',
           'backdrop-blur-xl border border-steel/8',
           'shadow-[inset_0_1px_0_0_color-mix(in_srgb,var(--hive-interactive-hover)_30%,transparent)]',
-          'hover:border-gold/10 hover:shadow-[inset_0_1px_0_0_color-mix(in_srgb,var(--hive-interactive-hover)_50%,transparent)]',
+          'hover:border-[var(--hive-brand-secondary)]/10 hover:shadow-[inset_0_1px_0_0_color-mix(in_srgb,var(--hive-interactive-hover)_50%,transparent)]',
           'transition-all duration-500 ease-hive-smooth',
           'p-6',
           className
@@ -177,9 +167,9 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
       >
         {/* Ambient Background Pattern */}
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-gradient-to-br from-gold/20 via-transparent to-purple-500/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/20 via-transparent to-[var(--hive-gold)]/10" />
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-gold/30 to-transparent rounded-full blur-2xl" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-radial from-purple-500/20 to-transparent rounded-full blur-xl" />
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-radial from-[var(--hive-gold)]/20 to-transparent rounded-full blur-xl" />
         </div>
 
         <div className="relative z-10">
@@ -195,7 +185,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
               </div>
             </div>
             
-            <div className="px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-gold/10 border border-purple-500/20 rounded-full">
+            <div className="px-3 py-1.5 bg-gradient-to-r from-[var(--hive-gold)]/10 to-gold/10 border border-[var(--hive-gold)]/20 rounded-full">
               <span className="text-purple-300/80 text-xs font-medium tracking-wide">v1 Preview</span>
             </div>
           </div>
@@ -207,7 +197,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold/10 to-purple-500/10 border border-gold/20 flex items-center justify-center relative"
+                className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold/10 to-[var(--hive-gold)]/10 border border-[var(--hive-brand-secondary)]/20 flex items-center justify-center relative"
               >
                 <motion.div
                   animate={{ 
@@ -224,7 +214,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                 </motion.div>
                 
                 {/* Subtle glow effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/5 to-purple-500/5 blur-xl animate-pulse" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/5 to-[var(--hive-gold)]/5 blur-xl animate-pulse" />
               </motion.div>
               
               <h4 className="text-platinum/80 font-semibold mb-2 text-lg">Your Personal Toolkit</h4>
@@ -240,7 +230,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                   icon: <Zap className="h-4 w-4" />,
                   title: "Custom Automations",
                   description: "Build workflows that save you hours every week",
-                  color: "from-purple-500/10 to-purple-600/5 border-purple-500/20"
+                  color: "from-[var(--hive-gold)]/10 to-[var(--hive-gold-dark)]/5 border-[var(--hive-gold)]/20"
                 },
                 {
                   icon: <Users className="h-4 w-4" />,
@@ -252,7 +242,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                   icon: <Star className="h-4 w-4" />,
                   title: "Smart Templates",
                   description: "Start with proven templates, customize to your needs",
-                  color: "from-gold/10 to-gold/5 border-gold/20"
+                  color: "from-gold/10 to-gold/5 border-[var(--hive-brand-secondary)]/20"
                 }
               ].map((feature, index) => (
                 <motion.div
@@ -266,14 +256,14 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-white/5 text-white/80 mt-0.5">
+                    <div className="p-2 rounded-lg bg-[var(--hive-white)]/5 text-[var(--hive-text-inverse)]/80 mt-0.5">
                       {feature.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h5 className="font-medium text-white/90 text-sm mb-1">
+                      <h5 className="font-medium text-[var(--hive-text-inverse)]/90 text-sm mb-1">
                         {feature.title}
                       </h5>
-                      <p className="text-white/60 text-xs leading-relaxed">
+                      <p className="text-[var(--hive-text-inverse)]/60 text-xs leading-relaxed">
                         {feature.description}
                       </p>
                     </div>
@@ -294,9 +284,9 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
               onClick={onJoinWaitlist}
               className={cn(
                 'w-full px-6 py-3 rounded-xl',
-                'bg-gradient-to-r from-gold/15 to-purple-500/15',
-                'border border-gold/30 hover:border-gold/50',
-                'text-gold hover:text-champagne transition-all duration-300',
+                'bg-gradient-to-r from-gold/15 to-[var(--hive-gold)]/15',
+                'border border-[var(--hive-brand-secondary)]/30 hover:border-[var(--hive-brand-secondary)]/50',
+                'text-[var(--hive-brand-secondary)] hover:text-champagne transition-all duration-300',
                 'font-medium text-sm group flex items-center justify-center gap-2'
               )}
             >
@@ -373,8 +363,8 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
             className={cn(
               'px-6 py-3 rounded-xl border border-steel/20',
               'bg-gradient-to-r from-charcoal/60 to-graphite/60',
-              'hover:border-gold/20 hover:from-charcoal/80 hover:to-graphite/80',
-              'text-mercury hover:text-gold transition-all duration-300',
+              'hover:border-[var(--hive-brand-secondary)]/20 hover:from-charcoal/80 hover:to-graphite/80',
+              'text-mercury hover:text-[var(--hive-brand-secondary)] transition-all duration-300',
               'text-sm font-medium group'
             )}
           >
@@ -424,15 +414,15 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
       <div className="relative z-10 mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold/15 to-champagne/8 border border-gold/15 flex items-center justify-center">
-              <span className="text-gold/80 text-lg">🛠️</span>
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold/15 to-champagne/8 border border-[var(--hive-brand-secondary)]/15 flex items-center justify-center">
+              <span className="text-[var(--hive-brand-secondary)]/80 text-lg">🛠️</span>
             </div>
             <h3 className="text-platinum/90 font-semibold text-lg tracking-tight">Builder Tools</h3>
           </div>
 
           {/* Subtle builder badge */}
-          <div className="px-3 py-1.5 bg-gradient-to-r from-gold/10 to-champagne/10 border border-gold/20 rounded-full">
-            <span className="text-gold/80 text-xs font-medium tracking-wide">Builder</span>
+          <div className="px-3 py-1.5 bg-gradient-to-r from-gold/10 to-champagne/10 border border-[var(--hive-brand-secondary)]/20 rounded-full">
+            <span className="text-[var(--hive-brand-secondary)]/80 text-xs font-medium tracking-wide">Builder</span>
           </div>
         </div>
         
@@ -447,14 +437,14 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
           {[
             { id: 'available', label: 'Create New', count: availableTools?.length ?? 0 },
             { id: 'created', label: 'My Tools', count: createdTools?.length ?? 0 }
-          ].map((tab) => (
+          ].map((tab: { id: string; label: string; count: number }) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as 'available' | 'created')}
               className={cn(
                 'flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
                 activeTab === tab.id
-                  ? 'bg-gradient-to-r from-gold/15 to-champagne/10 text-gold/90 border border-gold/20'
+                  ? 'bg-gradient-to-r from-gold/15 to-champagne/10 text-[var(--hive-brand-secondary)]/90 border border-[var(--hive-brand-secondary)]/20'
                   : 'text-mercury/70 hover:text-mercury/90 hover:bg-charcoal/40'
               )}
             >
@@ -505,7 +495,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                       <div className={cn(
                         'w-10 h-10 rounded-xl flex items-center justify-center border',
                         'bg-gradient-to-br from-charcoal/40 to-graphite/40 border-steel/15',
-                        'group-hover:border-gold/20 transition-all duration-300',
+                        'group-hover:border-[var(--hive-brand-secondary)]/20 transition-all duration-300',
                         hoveredTool === tool.id && 'scale-105'
                       )}>
                         <span className="text-lg opacity-80">
@@ -525,7 +515,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                           )}
                           
                           {tool.isPremium && (
-                            <span className="text-xs text-gold/60">✨</span>
+                            <span className="text-xs text-[var(--hive-brand-secondary)]/60">✨</span>
                           )}
                         </div>
 
@@ -552,15 +542,15 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                           e.stopPropagation();
                           onCreateTool?.(tool.type);
                         }}
                         disabled={tool.isLocked}
                         className={cn(
                           'px-3 py-1.5 rounded-lg text-xs font-medium',
-                          'bg-gradient-to-r from-gold/15 to-champagne/10 border border-gold/20',
-                          'text-gold/80 hover:text-gold hover:from-gold/20 hover:to-champagne/15',
+                          'bg-gradient-to-r from-gold/15 to-champagne/10 border border-[var(--hive-brand-secondary)]/20',
+                          'text-[var(--hive-brand-secondary)]/80 hover:text-[var(--hive-brand-secondary)] hover:from-gold/20 hover:to-champagne/15',
                           'transition-all duration-200',
                           'disabled:opacity-40 disabled:cursor-not-allowed'
                         )}
@@ -607,7 +597,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                             </h4>
                             
                             {tool.isStarred && (
-                              <span className="text-gold/60 text-xs">⭐</span>
+                              <span className="text-[var(--hive-brand-secondary)]/60 text-xs">⭐</span>
                             )}
                           </div>
 

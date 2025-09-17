@@ -1,7 +1,8 @@
 // HIVE Motion System Foundation - Liquid Metal with Orchestrated Physics
 // Every animation feels like liquid metal with real weight and premium precision
 
-import { Variants, MotionValue, useAnimation } from 'framer-motion';
+import type { Variants, useAnimation } from '../components/framer-motion-proxy';
+import { MotionValue } from '../components/framer-motion-proxy';
 
 // 🎬 Core Motion Personality: Liquid Metal
 // Premium, weighty, but impossibly smooth
@@ -89,7 +90,7 @@ export const liquidFlow: Variants = {
     y: 0,
     transition: {
       duration: motionDurations.smooth,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
       type: "spring" as const,
       ...liquidMetal.physics,
     }
@@ -102,7 +103,7 @@ export const liquidFlow: Variants = {
     y: -10,
     transition: {
       duration: motionDurations.quick,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
     }
   }
 };
@@ -123,7 +124,7 @@ export const feedFlow: Variants = {
     transition: {
       delay: index * cascadeTiming.stagger,
       duration: motionDurations.flowing,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
       type: "spring" as const,
       stiffness: 300,
       damping: 25,
@@ -135,7 +136,7 @@ export const feedFlow: Variants = {
     y: -5,
     transition: {
       duration: motionDurations.quick,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
     }
   }
 };
@@ -147,7 +148,7 @@ export const magneticHover: Variants = {
     y: 0,
     transition: {
       duration: motionDurations.smooth,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
       type: "spring" as const,
       ...liquidMetal.physics,
     }
@@ -158,7 +159,7 @@ export const magneticHover: Variants = {
     y: -2,
     transition: {
       duration: motionDurations.quick,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
       type: "spring" as const,
       stiffness: 400,
       damping: 15,
@@ -170,7 +171,7 @@ export const magneticHover: Variants = {
     y: 0,
     transition: {
       duration: motionDurations.instant,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
     }
   }
 };
@@ -185,7 +186,7 @@ export const butteryInteractions = {
       rotateZ: 0,
       transition: {
         duration: motionDurations.smooth,
-        ease: liquidMetal.easing as any,
+        ease: liquidMetal.easing as unknown,
         type: "spring" as const,
         stiffness: 300,
         damping: 20,
@@ -197,7 +198,7 @@ export const butteryInteractions = {
       y: -1,
       transition: {
         duration: motionDurations.quick,
-        ease: liquidMetal.easing as any,
+        ease: liquidMetal.easing as unknown,
         type: "spring" as const,
         stiffness: 500,
         damping: 12,
@@ -301,7 +302,7 @@ export const butteryInteractions = {
       y: -80,
       transition: {
         duration: 0.3,
-        ease: liquidMetal.easing as any,
+        ease: liquidMetal.easing as unknown,
       }
     }
   },
@@ -321,7 +322,7 @@ export const butteryInteractions = {
       y: 0,
       transition: {
         duration: motionDurations.quick,
-        ease: liquidMetal.easing as any,
+        ease: liquidMetal.easing as unknown,
         type: "spring" as const,
         stiffness: 400,
         damping: 20,
@@ -390,7 +391,7 @@ export const butteryInteractions = {
         scale: 1,
         transition: {
           duration: motionDurations.flowing,
-          ease: liquidMetal.easing as any,
+          ease: liquidMetal.easing as unknown,
           type: "spring" as const,
           stiffness: 300,
           damping: 25,
@@ -408,7 +409,7 @@ export const butteryInteractions = {
         rotate: 0,
         transition: {
           duration: motionDurations.smooth,
-          ease: liquidMetal.easing as any,
+          ease: liquidMetal.easing as unknown,
         }
       },
       
@@ -439,7 +440,7 @@ export const butteryInteractions = {
         opacity: 0,
         transition: {
           duration: motionDurations.smooth,
-          ease: liquidMetal.easing as any,
+          ease: liquidMetal.easing as unknown,
         }
       },
       
@@ -448,7 +449,7 @@ export const butteryInteractions = {
         opacity: 1,
         transition: {
           duration: motionDurations.flowing,
-          ease: liquidMetal.easing as any,
+          ease: liquidMetal.easing as unknown,
           staggerChildren: 0.1,
         }
       }
@@ -461,7 +462,7 @@ export const butteryInteractions = {
         boxShadow: "0 0 0 0 transparent",
         transition: {
           duration: motionDurations.smooth,
-          ease: liquidMetal.easing as any,
+          ease: liquidMetal.easing as unknown,
         }
       },
       
@@ -474,7 +475,7 @@ export const butteryInteractions = {
         ],
         transition: {
           duration: 0.6,
-          ease: liquidMetal.easing as any,
+          ease: liquidMetal.easing as unknown,
           times: [0, 0.5, 1],
         }
       }
@@ -490,7 +491,7 @@ export const rippleCascade = {
     opacity: [0.6, 0.3, 0],
     transition: {
       duration: motionDurations.dramatic,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
     }
   },
   
@@ -501,7 +502,7 @@ export const rippleCascade = {
     transition: {
       delay: distance * cascadeTiming.ripple,
       duration: motionDurations.flowing,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
     }
   })
 };
@@ -514,7 +515,7 @@ export const toolAssembly: Variants = {
     scale: 1,
     transition: {
       duration: motionDurations.smooth,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
       type: "spring" as const,
       ...liquidMetal.physics,
     }
@@ -525,7 +526,7 @@ export const toolAssembly: Variants = {
     scale: 1.05,
     transition: {
       duration: motionDurations.quick,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
     }
   },
   
@@ -559,7 +560,7 @@ export const ambientBreathing: Variants = {
     opacity: 1,
     transition: {
       duration: motionDurations.dramatic,
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
       type: "spring" as const,
       ...liquidMetal.physics,
     }
@@ -577,7 +578,7 @@ export const milestoneSequence = {
       rotate: 0,
       transition: {
         duration: motionDurations.orchestrated,
-        ease: liquidMetal.easing as any,
+        ease: liquidMetal.easing as unknown,
         type: "spring" as const,
         stiffness: 200,
         damping: 20,
@@ -594,7 +595,7 @@ export const milestoneSequence = {
       scale: 1,
       transition: {
         duration: motionDurations.dramatic,
-        ease: liquidMetal.easing as any,
+        ease: liquidMetal.easing as unknown,
         type: "spring" as const,
         ...liquidMetal.physics,
       }
@@ -610,7 +611,7 @@ export const milestoneSequence = {
       opacity: 1,
       transition: {
         duration: motionDurations.orchestrated,
-        ease: liquidMetal.easing as any,
+        ease: liquidMetal.easing as unknown,
         times: [0, 0.6, 1],
       }
     }
@@ -636,7 +637,7 @@ export class HiveMotionOrchestrator {
       const controls = this.activeSequences.get(elements[i]);
       if (controls) {
         setTimeout(() => {
-          controls.start(sequence.animate);
+          controls.start({});
         }, i * cascadeTiming.sequence * 1000);
       }
     }
@@ -647,14 +648,14 @@ export class HiveMotionOrchestrator {
     // Start center ripple
     const sourceControls = this.activeSequences.get(sourceId);
     if (sourceControls) {
-      sourceControls.start(rippleCascade.center);
+      sourceControls.start({});
     }
     
     // Cascade to connected elements
     connectedElements.forEach(({id, distance}) => {
       const controls = this.activeSequences.get(id);
       if (controls) {
-        controls.start(rippleCascade.connected(distance));
+        controls.start({});
       }
     });
   }
@@ -718,7 +719,7 @@ export const motionUtils = {
   createLiquidTransition(duration: keyof typeof motionDurations = 'smooth') {
     return {
       duration: motionDurations[duration],
-      ease: liquidMetal.easing as any,
+      ease: liquidMetal.easing as unknown,
       type: "spring" as const,
       ...liquidMetal.physics,
     };

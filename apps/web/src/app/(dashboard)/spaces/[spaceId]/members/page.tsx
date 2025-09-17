@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal, HiveInput } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { logger } from '@/lib/logger';
+
+import { Button, Card, Badge, Modal, Input } from "@hive/ui";
+import { PageContainer } from "@hive/ui";
 import { 
   Users, 
   UserPlus, 
@@ -232,7 +234,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
   const getRoleColor = (role: SpaceMember['role']) => {
     switch (role) {
       case 'admin': return 'bg-red-500';
-      case 'moderator': return 'bg-orange-500';
+      case 'moderator': return 'bg-[var(--hive-gold)]';
       case 'member': return 'bg-blue-500';
       default: return 'bg-gray-500';
     }
@@ -244,7 +246,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
       await navigator.clipboard.writeText(link);
       // Show success toast
     } catch (err) {
-      console.error('Failed to copy invite link:', err);
+      logger.error('Failed to copy invite link:', { error: String(err) });
     }
   };
 
@@ -264,11 +266,11 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
 
   if (isLoading) {
     return (
-      <PageContainer title="Loading..." maxWidth="7xl">
+      <PageContainer>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading members...</p>
+            <p className="text-[var(--hive-text-inverse)]">Loading members...</p>
           </div>
         </div>
       </PageContainer>
@@ -287,7 +289,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           { 
             label: "Spaces", 
             href: "/spaces",
-            icon: ArrowLeft
+            icon: <ArrowLeft className="h-4 w-4" />
           },
           { 
             label: spaceName, 
@@ -295,7 +297,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           },
           { 
             label: "Members", 
-            icon: Users 
+            icon: <Users />
           }
         ]}
         actions={
@@ -311,16 +313,16 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             )}
           </div>
         }
-        maxWidth="7xl"
+       
       >
         {/* Search and Filters */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 mb-6">
           <div className="flex items-center space-x-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
-              <HiveInput
+              <Input
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: any) => setSearchQuery(e.target.value)}
                 placeholder="Search members..."
                 className="pl-10 w-64"
               />
@@ -328,8 +330,8 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             
             <select
               value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value as 'all' | 'admin' | 'moderator' | 'member')}
-              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
+              onChange={(e: any) => setRoleFilter(e.target.value as 'all' | 'admin' | 'moderator' | 'member')}
+              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Roles</option>
               <option value="admin">Admins</option>
@@ -339,8 +341,8 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
+              onChange={(e: any) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-[var(--hive-text-inverse)] text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -359,7 +361,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           <Card className="p-4 bg-zinc-800/50 border-zinc-700">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-white">{totalMembers}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{totalMembers}</div>
                 <div className="text-sm text-zinc-400">Total Members</div>
               </div>
               <Users className="h-8 w-8 text-blue-400" />
@@ -369,7 +371,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           <Card className="p-4 bg-zinc-800/50 border-zinc-700">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-white">{activeMembers}</div>
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{activeMembers}</div>
                 <div className="text-sm text-zinc-400">Active Members</div>
               </div>
               <Activity className="h-8 w-8 text-green-400" />
@@ -379,31 +381,31 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           <Card className="p-4 bg-zinc-800/50 border-zinc-700">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">
                   {Math.round((activeMembers / totalMembers) * 100)}%
                 </div>
                 <div className="text-sm text-zinc-400">Activity Rate</div>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-400" />
+              <TrendingUp className="h-8 w-8 text-[var(--hive-gold)]" />
             </div>
           </Card>
           
           <Card className="p-4 bg-zinc-800/50 border-zinc-700">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">
                   {members.filter(m => m.role === 'admin' || m.role === 'moderator').length}
                 </div>
                 <div className="text-sm text-zinc-400">Staff Members</div>
               </div>
-              <Shield className="h-8 w-8 text-orange-400" />
+              <Shield className="h-8 w-8 text-[var(--hive-gold)]" />
             </div>
           </Card>
         </div>
 
         {/* Members List */}
         <div className="space-y-3">
-          {filteredMembers.map((member) => {
+          {filteredMembers.map((member: any) => {
             const RoleIcon = getRoleIcon(member.role);
             
             return (
@@ -412,18 +414,18 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                   <div className="flex items-center space-x-4">
                     <div className="relative">
                       <div className="w-12 h-12 bg-zinc-600 rounded-full flex items-center justify-center">
-                        <span className="text-white font-semibold">
-                          {member.name.split(' ').map(n => n[0]).join('')}
+                        <span className="text-[var(--hive-text-inverse)] font-semibold">
+                          {member.name.split(' ').map((n: string) => n[0]).join('')}
                         </span>
                       </div>
                       <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${getRoleColor(member.role)} rounded-full flex items-center justify-center`}>
-                        <RoleIcon className="h-2.5 w-2.5 text-white" />
+                        <RoleIcon className="h-2.5 w-2.5 text-[var(--hive-text-inverse)]" />
                       </div>
                     </div>
                     
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
-                        <span className="font-medium text-white">{member.name}</span>
+                        <span className="font-medium text-[var(--hive-text-inverse)]">{member.name}</span>
                         {member.verified && <Star className="h-4 w-4 text-hive-gold fill-current" />}
                         <Badge 
                           variant={
@@ -458,11 +460,11 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                     
                     <div className="hidden md:flex items-center space-x-6 text-sm text-zinc-400">
                       <div className="text-center">
-                        <div className="font-medium text-white">{member.eventsAttended}</div>
+                        <div className="font-medium text-[var(--hive-text-inverse)]">{member.eventsAttended}</div>
                         <div className="text-xs">Events</div>
                       </div>
                       <div className="text-center">
-                        <div className="font-medium text-white">{member.postsCount}</div>
+                        <div className="font-medium text-[var(--hive-text-inverse)]">{member.postsCount}</div>
                         <div className="text-xs">Posts</div>
                       </div>
                     </div>
@@ -473,7 +475,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowMemberDetails(member)}
-                      className="text-zinc-400 hover:text-white"
+                      className="text-zinc-400 hover:text-[var(--hive-text-inverse)]"
                     >
                       <MoreVertical className="h-4 w-4" />
                     </Button>
@@ -486,14 +488,14 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           {filteredMembers.length === 0 && (
             <div className="text-center py-12">
               <Users className="h-16 w-16 text-zinc-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No members found</h3>
+              <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)] mb-2">No members found</h3>
               <p className="text-zinc-400">Try adjusting your search or filters.</p>
             </div>
           )}
         </div>
 
         {/* Invite Members Modal */}
-        <HiveModal
+        <Modal
           isOpen={showInviteModal}
           onClose={() => setShowInviteModal(false)}
           title="Invite Members"
@@ -502,12 +504,12 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
           <div className="space-y-6">
             {/* Direct Invite */}
             <div>
-              <h4 className="font-medium text-white mb-3">Direct Invitation</h4>
+              <h4 className="font-medium text-[var(--hive-text-inverse)] mb-3">Direct Invitation</h4>
               <div className="flex space-x-2 mb-3">
                 <input
                   type="text"
                   placeholder="@handle or email@university.edu"
-                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
+                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-[var(--hive-text-inverse)] placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
                 />
                 <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">
                   <Mail className="h-4 w-4 mr-2" />
@@ -520,7 +522,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             {/* Invite Links */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h4 className="font-medium text-white">Invite Links</h4>
+                <h4 className="font-medium text-[var(--hive-text-inverse)]">Invite Links</h4>
                 <Button 
                   variant="outline" 
                   size="sm"
@@ -536,7 +538,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                   <div key={link.id} className="p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
                     <div className="flex items-center justify-between mb-2">
                       <div className="text-sm">
-                        <span className="text-white font-medium">
+                        <span className="text-[var(--hive-text-inverse)] font-medium">
                           {link.currentUses}/{link.maxUses} uses
                         </span>
                         <span className="text-zinc-400 ml-2">
@@ -553,7 +555,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                         type="text"
                         value={link.url}
                         readOnly
-                        className="flex-1 p-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm"
+                        className="flex-1 p-2 bg-zinc-800 border border-zinc-700 rounded text-[var(--hive-text-inverse)] text-sm"
                       />
                       <Button
                         variant="outline"
@@ -574,10 +576,10 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               </div>
             </div>
           </div>
-        </HiveModal>
+        </Modal>
 
         {/* Member Details Modal */}
-        <HiveModal
+        <Modal
           isOpen={!!showMemberDetails}
           onClose={() => setShowMemberDetails(null)}
           title={showMemberDetails ? `${showMemberDetails.name} Profile` : ''}
@@ -588,13 +590,13 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               {/* Member Info */}
               <div className="flex items-center space-x-4">
                 <div className="w-16 h-16 bg-zinc-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-lg">
+                  <span className="text-[var(--hive-text-inverse)] font-semibold text-lg">
                     {showMemberDetails.name.split(' ').map(n => n[0]).join('')}
                   </span>
                 </div>
                 <div>
                   <div className="flex items-center space-x-2 mb-1">
-                    <h3 className="text-xl font-semibold text-white">{showMemberDetails.name}</h3>
+                    <h3 className="text-xl font-semibold text-[var(--hive-text-inverse)]">{showMemberDetails.name}</h3>
                     {showMemberDetails.verified && <Star className="h-5 w-5 text-hive-gold fill-current" />}
                   </div>
                   <p className="text-zinc-400">@{showMemberDetails.handle}</p>
@@ -622,11 +624,11 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-3 bg-zinc-800/50 rounded-lg">
-                  <div className="text-2xl font-bold text-white">{showMemberDetails.contributionScore}/100</div>
+                  <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{showMemberDetails.contributionScore}/100</div>
                   <div className="text-sm text-zinc-400">Contribution Score</div>
                 </div>
                 <div className="p-3 bg-zinc-800/50 rounded-lg">
-                  <div className="text-2xl font-bold text-white">{showMemberDetails.eventsAttended}</div>
+                  <div className="text-2xl font-bold text-[var(--hive-text-inverse)]">{showMemberDetails.eventsAttended}</div>
                   <div className="text-sm text-zinc-400">Events Attended</div>
                 </div>
               </div>
@@ -635,19 +637,19 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Major:</span>
-                  <span className="text-white">{showMemberDetails.major}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{showMemberDetails.major}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Year:</span>
-                  <span className="text-white">{showMemberDetails.year}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{showMemberDetails.year}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Joined:</span>
-                  <span className="text-white">{formatDate(showMemberDetails.joinedAt)}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{formatDate(showMemberDetails.joinedAt)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Last Active:</span>
-                  <span className="text-white">{formatTimeAgo(showMemberDetails.lastActive)}</span>
+                  <span className="text-[var(--hive-text-inverse)]">{formatTimeAgo(showMemberDetails.lastActive)}</span>
                 </div>
               </div>
 
@@ -697,7 +699,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               )}
             </div>
           )}
-        </HiveModal>
+        </Modal>
       </PageContainer>
     </ErrorBoundary>
   );

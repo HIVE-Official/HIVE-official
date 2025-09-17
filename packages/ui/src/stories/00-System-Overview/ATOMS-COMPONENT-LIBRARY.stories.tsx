@@ -7,14 +7,14 @@
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Input } from '../../components/ui/input';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Avatar, AvatarFallback } from '../../atomic/atoms/avatar';
 import { Checkbox } from '../../components/ui/checkbox';
 import { Label } from '../../components/ui/label';
-import { Switch } from '../../components/ui/switch';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
 import { 
   Atom,
   Zap,
@@ -36,7 +36,8 @@ import {
 } from 'lucide-react';
 import '../../hive-tokens.css';
 
-const meta: Meta = {
+const meta: Meta<typeof AtomicComponentsLibrary> = {
+  component: AtomicComponentsLibrary,
   title: '02-Atoms/Component Library',
   parameters: {
     layout: 'fullscreen',
@@ -125,7 +126,7 @@ Each atom includes mobile-optimized variants and touch interaction patterns.
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AtomicComponentsLibrary>;
 
 // =============================================================================
 // ATOMIC COMPONENT CATEGORIES
@@ -326,7 +327,7 @@ const InteractiveShowcase = () => {
               type="email"
               placeholder="student@buffalo.edu"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInputValue(e.target.value)}
               className="mt-1"
             />
           </div>
@@ -385,8 +386,8 @@ const AtomicComponentsLibrary = () => {
     const colors = {
       blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-400',
       green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
-      purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
-      gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
+      purple: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold-dark)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]',
+      gold: 'from-[var(--hive-gold)]/20 to-[var(--hive-gold)]/10 border-[var(--hive-gold)]/20 text-[var(--hive-gold)]'
     };
     return colors[color as keyof typeof colors] || colors.blue;
   };
@@ -432,7 +433,7 @@ const AtomicComponentsLibrary = () => {
               type="text"
               placeholder="Search atomic components..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
               className="pl-10 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)]"
             />
           </div>
@@ -456,7 +457,7 @@ const AtomicComponentsLibrary = () => {
 
         {/* Category Navigation */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {atomicCategories.map((category) => (
+          {atomicCategories.map((category: any) => (
             <Button
               key={category.id}
               variant={activeCategory === category.id ? 'primary' : 'secondary'}
@@ -471,7 +472,7 @@ const AtomicComponentsLibrary = () => {
 
         {/* Component Categories */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {filteredCategories.map((category) => (
+          {filteredCategories.map((category: any) => (
             <Card 
               key={category.id} 
               className={`border-2 bg-gradient-to-br ${getColorClasses(category.color)} ${activeCategory === category.id ? 'ring-2 ring-[var(--hive-brand-primary)]' : ''}`}
@@ -506,7 +507,7 @@ const AtomicComponentsLibrary = () => {
                         </div>
                         <div className="flex items-center gap-2 mt-2">
                           <Badge 
-                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}
+                            className={`text-xs ${component.status === 'complete' ? 'bg-green-500/20 text-green-400' : 'bg-[var(--hive-gold)]/20 text-[var(--hive-gold)]'}`}
                           >
                             {component.status}
                           </Badge>
@@ -553,7 +554,7 @@ const AtomicComponentsLibrary = () => {
               </div>
               <div className="text-center">
                 <div className="p-4 rounded-lg bg-[var(--hive-background-primary)] border border-[var(--hive-border-default)] mb-4">
-                  <Users className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+                  <Users className="w-8 h-8 text-[var(--hive-gold)] mx-auto mb-3" />
                   <h4 className="font-medium text-[var(--hive-text-primary)] mb-2">Social Organizations</h4>
                   <p className="text-sm text-[var(--hive-text-secondary)]">
                     Greek life, clubs, sports teams, cultural organizations

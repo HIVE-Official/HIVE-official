@@ -6,14 +6,14 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Input } from '../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Avatar, AvatarFallback } from '../../atomic/atoms/avatar';
+import { Input } from '../../atomic/atoms/input-enhanced';
 import { HiveProgress } from '../../components/hive-progress';
 import { Separator } from '../../components/ui/separator';
-import { Switch } from '../../components/ui/switch';
+import { Switch } from '../../atomic/atoms/switch-enhanced';
 import { 
   Command,
   Search,
@@ -363,7 +363,7 @@ const CommandInterfaceDemo = () => {
 
   // Keyboard navigation simulation
   useEffect(() => {
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: any) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setCommandPaletteOpen(true);
@@ -416,7 +416,7 @@ const CommandInterfaceDemo = () => {
                   setCommandPaletteOpen(true);
                   setSearchMode(true);
                 }}
-                variant="outline" 
+                variant="secondary" 
                 className="border-gray-600 text-white"
               >
                 <Search className="w-4 h-4 mr-2" />
@@ -437,12 +437,12 @@ const CommandInterfaceDemo = () => {
               <Button
                 key={item.label}
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 className="border-gray-600 text-gray-400 hover:text-white hover:border-gray-500"
               >
                 <item.icon className="w-4 h-4 mr-2" />
                 {item.label}
-                <Badge variant="outline" className="ml-2 border-gray-500 text-gray-500 text-xs">
+                <Badge variant="secondary" className="ml-2 border-gray-500 text-gray-500 text-xs">
                   {item.shortcut}
                 </Badge>
               </Button>
@@ -464,12 +464,12 @@ const CommandInterfaceDemo = () => {
                     type="text"
                     placeholder={searchMode ? "Search across HIVE platform..." : "Type a command or search..."}
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
                     className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 pl-12 text-lg"
                     autoFocus
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                    <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                    <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       {searchMode ? '⌘+/' : '⌘+K'}
                     </Badge>
                     <Button
@@ -509,7 +509,7 @@ const CommandInterfaceDemo = () => {
                           <div className="ml-3 flex-1">
                             <div className="flex items-center justify-between">
                               <h4 className="text-white font-medium">{result.title}</h4>
-                              <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs capitalize">
+                              <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs capitalize">
                                 {result.type}
                               </Badge>
                             </div>
@@ -523,7 +523,7 @@ const CommandInterfaceDemo = () => {
                 ) : (
                   // Command Mode
                   <div className="p-2">
-                    {commandCategories.map((category) => (
+                    {commandCategories.map((category: any) => (
                       <div key={category} className="mb-4">
                         <h3 className="text-gray-400 text-xs font-semibold uppercase tracking-wider px-3 py-2">
                           {category}
@@ -548,7 +548,7 @@ const CommandInterfaceDemo = () => {
                                   <div className="flex items-center justify-between">
                                     <h4 className="text-white font-medium">{command.title}</h4>
                                     {command.shortcut && (
-                                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                                         {command.shortcut}
                                       </Badge>
                                     )}
@@ -570,15 +570,15 @@ const CommandInterfaceDemo = () => {
                 <div className="flex items-center justify-between text-xs text-gray-400">
                   <div className="flex items-center space-x-4">
                     <span className="flex items-center">
-                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs mr-1">↑↓</Badge>
+                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs mr-1">↑↓</Badge>
                       Navigate
                     </span>
                     <span className="flex items-center">
-                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs mr-1">↵</Badge>
+                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs mr-1">↵</Badge>
                       Select
                     </span>
                     <span className="flex items-center">
-                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs mr-1">ESC</Badge>
+                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs mr-1">ESC</Badge>
                       Close
                     </span>
                   </div>
@@ -607,13 +607,13 @@ const CommandInterfaceDemo = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {mockCommands.filter(cmd => cmd.shortcut).slice(0, 8).map((command) => (
+              {mockCommands.filter(cmd => cmd.shortcut).slice(0, 8).map((command: any) => (
                 <div key={command.id} className="flex items-center justify-between">
                   <div className="flex items-center">
                     <command.icon className="w-4 h-4 mr-2 text-gray-400" />
                     <span className="text-gray-300 text-sm">{command.title}</span>
                   </div>
-                  <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                  <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                     {command.shortcut}
                   </Badge>
                 </div>
@@ -630,10 +630,10 @@ const CommandInterfaceDemo = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {mockCommands.filter(cmd => cmd.category === 'Actions').map((action) => (
+              {mockCommands.filter(cmd => cmd.category === 'Actions').map((action: any) => (
                 <Button
                   key={action.id}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   className="w-full justify-start border-gray-600 text-white hover:bg-gray-700"
                 >
@@ -653,10 +653,10 @@ const CommandInterfaceDemo = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {mockCommands.filter(cmd => cmd.category === 'Campus').map((campus) => (
+              {mockCommands.filter(cmd => cmd.category === 'Campus').map((campus: any) => (
                 <Button
                   key={campus.id}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   className="w-full justify-start border-gray-600 text-white hover:bg-gray-700"
                 >
@@ -690,7 +690,7 @@ const CommandInterfaceDemo = () => {
                     { name: 'Real-time Indexing', description: 'Fresh results from live platform activity', icon: Refresh },
                     { name: 'Contextual Ranking', description: 'Results prioritized by user context', icon: Target },
                     { name: 'Smart Suggestions', description: 'AI-powered query completion', icon: Lightbulb }
-                  ].map((feature) => (
+                  ].map((feature: any) => (
                     <div key={feature.name} className="flex items-start">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 bg-gray-700">
                         <feature.icon className="w-4 h-4 text-gray-300" />
@@ -715,7 +715,7 @@ const CommandInterfaceDemo = () => {
                     { type: 'Content', description: 'Posts, discussions, and shared resources', icon: MessageSquare, count: '1.2k' },
                     { type: 'Events', description: 'Campus events and coordination activities', icon: Calendar, count: '234' },
                     { type: 'Locations', description: 'UB buildings, rooms, and campus facilities', icon: MapPin, count: '67' }
-                  ].map((resultType) => (
+                  ].map((resultType: any) => (
                     <div key={resultType.type} className="flex items-center justify-between p-3 bg-black/30 rounded-lg">
                       <div className="flex items-center">
                         <resultType.icon className="w-4 h-4 mr-3 text-gray-400" />
@@ -724,7 +724,7 @@ const CommandInterfaceDemo = () => {
                           <p className="text-gray-400 text-xs">{resultType.description}</p>
                         </div>
                       </div>
-                      <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                      <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                         {resultType.count}
                       </Badge>
                     </div>
@@ -840,7 +840,7 @@ export const KeyboardShortcuts: Story = {
                             <h4 className="text-white font-medium">{shortcut.action}</h4>
                             <div className="flex items-center space-x-1">
                               {shortcut.keys.split(' + ').map((key, keyIndex) => (
-                                <Badge key={keyIndex} variant="outline" className="border-gray-600 text-gray-300 text-xs">
+                                <Badge key={keyIndex} variant="secondary" className="border-gray-600 text-gray-300 text-xs">
                                   {key}
                                 </Badge>
                               ))}

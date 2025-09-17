@@ -4,14 +4,14 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
-import { Input } from '../../../components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback } from '../../../atomic/atoms/avatar';
+import { Input } from '../../../atomic/atoms/input-enhanced';
 import { HiveProgress } from '../../../components/hive-progress';
 import { Separator } from '../../../components/ui/separator';
-import { Switch } from '../../../components/ui/switch';
+import { Switch } from '../../../atomic/atoms/switch-enhanced';
 import { 
   Users, 
   Search, 
@@ -217,21 +217,21 @@ const SpaceDiscoverySystem = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Campus Spaces</h1>
+              <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">Campus Spaces</h1>
               <p className="text-gray-400">Discover and join your campus communities</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
               <Button className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
@@ -253,8 +253,8 @@ const SpaceDiscoverySystem = () => {
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeTab === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                 }`}
                 style={activeTab === id ? {
                   backgroundColor: 'var(--hive-brand-primary)',
@@ -275,18 +275,18 @@ const SpaceDiscoverySystem = () => {
                 type="text"
                 placeholder="Search spaces by name, topic, or tags..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-gray-900 border-gray-700 text-white placeholder-gray-400 pl-10"
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSearchQuery(e.target.value)}
+                className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 pl-10"
               />
             </div>
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Filter className="w-4 h-4" />
               </Button>
               <select 
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm"
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedCategory(e.target.value)}
+                className="bg-gray-900 border border-gray-700 text-[var(--hive-text-primary)] rounded-md px-3 py-2 text-sm"
               >
                 {categories.map(cat => (
                   <option key={cat.id} value={cat.id}>
@@ -324,7 +324,7 @@ const SpaceDiscoverySystem = () => {
           </Card>
           <Card className="bg-gray-800/50 border-gray-700 text-center">
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-purple-400">48</div>
+              <div className="text-2xl font-bold text-[var(--hive-gold)]">48</div>
               <div className="text-sm text-gray-400">New This Week</div>
             </CardContent>
           </Card>
@@ -332,13 +332,13 @@ const SpaceDiscoverySystem = () => {
 
         {/* Spaces Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredSpaces.map((space) => (
+          {filteredSpaces.map((space: any) => (
             <Card key={space.id} className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer transition-all duration-200"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -346,18 +346,18 @@ const SpaceDiscoverySystem = () => {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center mr-3 ${
-                      space.category === 'academic' ? 'bg-gradient-to-r from-blue-500 to-purple-500' :
+                      space.category === 'academic' ? 'bg-gradient-to-r from-blue-500 to-[var(--hive-gold)]' :
                       space.category === 'housing' ? 'bg-gradient-to-r from-green-500 to-teal-500' :
-                      space.category === 'social' ? 'bg-gradient-to-r from-orange-500 to-red-500' :
-                      'bg-gradient-to-r from-yellow-400 to-amber-500'
+                      space.category === 'social' ? 'bg-gradient-to-r from-[var(--hive-gold)] to-red-500' :
+                      'bg-gradient-to-r from-[var(--hive-gold)] to-[var(--hive-gold)]'
                     }`}>
-                      {space.category === 'academic' ? <BookOpen className="w-6 h-6 text-white" /> :
-                       space.category === 'housing' ? <Home className="w-6 h-6 text-white" /> :
-                       space.category === 'social' ? <Calendar className="w-6 h-6 text-white" /> :
-                       <Lightbulb className="w-6 h-6 text-black" />}
+                      {space.category === 'academic' ? <BookOpen className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+                       space.category === 'housing' ? <Home className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+                       space.category === 'social' ? <Calendar className="w-6 h-6 text-[var(--hive-text-primary)]" /> :
+                       <Lightbulb className="w-6 h-6 text-[var(--hive-black)]" />}
                     </div>
                     <div>
-                      <CardTitle className="text-white text-base">{space.name}</CardTitle>
+                      <CardTitle className="text-[var(--hive-text-primary)] text-base">{space.name}</CardTitle>
                       <p className="text-gray-400 text-sm">{space.subcategory}</p>
                     </div>
                   </div>
@@ -381,7 +381,7 @@ const SpaceDiscoverySystem = () => {
                     <span className="flex items-center">
                       <Activity className={`w-4 h-4 mr-1 ${
                         space.activityLevel === 'very-high' ? 'text-green-400' :
-                        space.activityLevel === 'high' ? 'text-yellow-400' :
+                        space.activityLevel === 'high' ? 'text-[var(--hive-gold)]' :
                         'text-blue-400'
                       }`} />
                       {space.lastActivity}
@@ -396,7 +396,7 @@ const SpaceDiscoverySystem = () => {
                 {/* Leader Info */}
                 <div className="flex items-center">
                   <Avatar className="w-6 h-6 mr-2">
-                    <AvatarFallback className="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs">
+                    <AvatarFallback className="bg-gradient-to-r from-pink-500 to-[var(--hive-gold)] text-[var(--hive-text-primary)] text-xs">
                       {space.leader.avatar}
                     </AvatarFallback>
                   </Avatar>
@@ -408,13 +408,13 @@ const SpaceDiscoverySystem = () => {
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1">
-                  {space.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                  {space.tags.slice(0, 3).map((tag: any) => (
+                    <Badge key={tag} variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       {tag}
                     </Badge>
                   ))}
                   {space.tags.length > 3 && (
-                    <Badge variant="outline" className="border-gray-600 text-gray-400 text-xs">
+                    <Badge variant="secondary" className="border-gray-600 text-gray-400 text-xs">
                       +{space.tags.length - 3}
                     </Badge>
                   )}
@@ -425,7 +425,7 @@ const SpaceDiscoverySystem = () => {
                   <div className="bg-gray-800 rounded-lg p-3">
                     <div className="flex items-center mb-2">
                       <Calendar className="w-4 h-4 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
-                      <span className="text-white text-sm font-medium">Upcoming Event</span>
+                      <span className="text-[var(--hive-text-primary)] text-sm font-medium">Upcoming Event</span>
                     </div>
                     <div className="text-gray-300 text-sm">{space.upcomingEvents[0].title}</div>
                     <div className="flex items-center text-gray-400 text-xs mt-1">
@@ -441,11 +441,11 @@ const SpaceDiscoverySystem = () => {
                 <div className="flex space-x-2 pt-2">
                   {space.isJoined ? (
                     <>
-                      <Button size="sm" className="flex-1 bg-green-600 text-white hover:bg-green-700">
+                      <Button size="sm" className="flex-1 bg-green-600 text-[var(--hive-text-primary)] hover:bg-green-700">
                         <MessageSquare className="w-4 h-4 mr-2" />
                         Open Chat
                       </Button>
-                      <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                         <Settings className="w-4 h-4" />
                       </Button>
                     </>
@@ -455,12 +455,12 @@ const SpaceDiscoverySystem = () => {
                         <Plus className="w-4 h-4 mr-2" />
                         Join Space
                       </Button>
-                      <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                      <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                         <Heart className="w-4 h-4" />
                       </Button>
                     </>
                   )}
-                  <Button size="icon" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                  <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
                     <Share className="w-4 h-4" />
                   </Button>
                 </div>
@@ -471,7 +471,7 @@ const SpaceDiscoverySystem = () => {
 
         {/* Load More */}
         <div className="text-center mt-8">
-          <Button variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+          <Button variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800">
             Load More Spaces
           </Button>
         </div>
@@ -485,18 +485,18 @@ const SpaceManagementSystem = () => {
   const [activeTab, setActiveTab] = useState('posts');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-[var(--hive-text-primary)]">
       
       {/* Space Header */}
-      <div className="border-b border-gray-800 bg-black/50 backdrop-blur-sm">
+      <div className="border-b border-gray-800 bg-[var(--hive-black)]/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto p-4">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
-                <BookOpen className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-[var(--hive-gold)] rounded-xl flex items-center justify-center mr-4">
+                <BookOpen className="w-8 h-8 text-[var(--hive-text-primary)]" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">{activeSpace.name}</h1>
+                <h1 className="text-2xl font-bold text-[var(--hive-text-primary)]">{activeSpace.name}</h1>
                 <p className="text-gray-400">{activeSpace.description}</p>
                 <div className="flex items-center mt-2 space-x-4 text-sm text-gray-400">
                   <span className="flex items-center">
@@ -513,13 +513,13 @@ const SpaceManagementSystem = () => {
             </div>
             
             <div className="flex items-center space-x-2">
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="outline" className="border-gray-600 text-white">
+              <Button size="icon" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                 <Settings className="w-4 h-4" />
               </Button>
-              <Button className="bg-red-600 text-white hover:bg-red-700">
+              <Button className="bg-red-600 text-[var(--hive-text-primary)] hover:bg-red-700">
                 Leave Space
               </Button>
             </div>
@@ -539,8 +539,8 @@ const SpaceManagementSystem = () => {
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                   activeTab === id
-                    ? 'text-black hive-interactive'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-[var(--hive-black)] hive-interactive'
+                    : 'text-gray-400 hover:text-[var(--hive-text-primary)]'
                 }`}
                 style={activeTab === id ? {
                   backgroundColor: 'var(--hive-brand-primary)',
@@ -549,7 +549,7 @@ const SpaceManagementSystem = () => {
               >
                 {label}
                 {count && (
-                  <Badge className="ml-2 bg-gray-700 text-white text-xs">{count}</Badge>
+                  <Badge className="ml-2 bg-gray-700 text-[var(--hive-text-primary)] text-xs">{count}</Badge>
                 )}
               </button>
             ))}
@@ -566,11 +566,11 @@ const SpaceManagementSystem = () => {
             
             {/* Post Composer */}
             <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -582,15 +582,15 @@ const SpaceManagementSystem = () => {
                   <div className="flex-1">
                     <Input
                       placeholder="Share something with the study group..."
-                      className="bg-gray-900 border-gray-700 text-white placeholder-gray-400 mb-3"
+                      className="bg-gray-900 border-gray-700 text-[var(--hive-text-primary)] placeholder-gray-400 mb-3"
                     />
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                           <Calendar className="w-4 h-4 mr-1" />
                           Event
                         </Button>
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white">
+                        <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)]">
                           <MapPin className="w-4 h-4 mr-1" />
                           Location
                         </Button>
@@ -608,21 +608,21 @@ const SpaceManagementSystem = () => {
             <div className="space-y-4">
               {/* Study Session Post */}
               <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
                 <CardContent className="p-4">
                   <div className="flex items-center mb-3">
                     <Avatar className="w-10 h-10 mr-3">
-                      <AvatarFallback className="bg-blue-500 text-white">MJ</AvatarFallback>
+                      <AvatarFallback className="bg-blue-500 text-[var(--hive-text-primary)]">MJ</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <h4 className="text-white font-medium">Marcus Johnson</h4>
+                      <h4 className="text-[var(--hive-text-primary)] font-medium">Marcus Johnson</h4>
                       <p className="text-gray-400 text-sm">Space Leader • 2 hours ago</p>
                     </div>
                     <Crown className="w-5 h-5" style={{ color: 'var(--hive-brand-primary)' }} />
@@ -637,7 +637,7 @@ const SpaceManagementSystem = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <Calendar className="w-4 h-4 mr-2" style={{ color: 'var(--hive-brand-primary)' }} />
-                        <span className="text-white font-medium">Tonight at 8:00 PM</span>
+                        <span className="text-[var(--hive-text-primary)] font-medium">Tonight at 8:00 PM</span>
                       </div>
                       <Button size="sm" className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}>
                         RSVP (12)
@@ -655,19 +655,19 @@ const SpaceManagementSystem = () => {
                         <Heart className="w-4 h-4 mr-1 fill-current" />
                         12
                       </Button>
-                      <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+                      <Button size="sm" variant="ghost" className="text-gray-400 hover:text-[var(--hive-text-primary)]">
                         <MessageSquare className="w-4 h-4 mr-1" />
                         5
                       </Button>
-                      <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+                      <Button size="sm" variant="ghost" className="text-gray-400 hover:text-[var(--hive-text-primary)]">
                         <Share className="w-4 h-4 mr-1" />
                         Share
                       </Button>
                     </div>
                     <div className="flex -space-x-2">
-                      {[1, 2, 3].map((i) => (
+                      {[1, 2, 3].map((i: any) => (
                         <Avatar key={i} className="w-6 h-6 border-2 border-gray-800">
-                          <AvatarFallback className="bg-gradient-to-r from-green-500 to-teal-500 text-white text-xs">
+                          <AvatarFallback className="bg-gradient-to-r from-green-500 to-teal-500 text-[var(--hive-text-primary)] text-xs">
                             {String.fromCharCode(65 + i)}
                           </AvatarFallback>
                         </Avatar>
@@ -679,21 +679,21 @@ const SpaceManagementSystem = () => {
 
               {/* Resource Share Post */}
               <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
                 <CardContent className="p-4">
                   <div className="flex items-center mb-3">
                     <Avatar className="w-10 h-10 mr-3">
-                      <AvatarFallback className="bg-green-500 text-white">AL</AvatarFallback>
+                      <AvatarFallback className="bg-green-500 text-[var(--hive-text-primary)]">AL</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <h4 className="text-white font-medium">Alex Liu</h4>
+                      <h4 className="text-[var(--hive-text-primary)] font-medium">Alex Liu</h4>
                       <p className="text-gray-400 text-sm">4 hours ago</p>
                     </div>
                   </div>
@@ -706,14 +706,14 @@ const SpaceManagementSystem = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex items-center">
                         <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-                          <BookOpen className="w-6 h-6 text-white" />
+                          <BookOpen className="w-6 h-6 text-[var(--hive-text-primary)]" />
                         </div>
                         <div>
-                          <h4 className="text-white font-semibold">C++ Practice Problems</h4>
+                          <h4 className="text-[var(--hive-text-primary)] font-semibold">C++ Practice Problems</h4>
                           <p className="text-gray-400 text-sm">pointers-and-memory-management.pdf</p>
                         </div>
                       </div>
-                      <Button size="sm" className="bg-blue-500 text-white hover:bg-blue-600">
+                      <Button size="sm" className="bg-blue-500 text-[var(--hive-text-primary)] hover:bg-blue-600">
                         Download
                       </Button>
                     </div>
@@ -725,7 +725,7 @@ const SpaceManagementSystem = () => {
                         <Heart className="w-4 h-4 mr-1" />
                         8
                       </Button>
-                      <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+                      <Button size="sm" variant="ghost" className="text-gray-400 hover:text-[var(--hive-text-primary)]">
                         <MessageSquare className="w-4 h-4 mr-1" />
                         3
                       </Button>
@@ -742,11 +742,11 @@ const SpaceManagementSystem = () => {
             
             {/* Space Stats */}
             <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -759,11 +759,11 @@ const SpaceManagementSystem = () => {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Posts this week</span>
-                  <span className="text-white font-medium">{activeSpace.stats.postsThisWeek}</span>
+                  <span className="text-[var(--hive-text-primary)] font-medium">{activeSpace.stats.postsThisWeek}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Events this month</span>
-                  <span className="text-white font-medium">{activeSpace.stats.eventsThisMonth}</span>
+                  <span className="text-[var(--hive-text-primary)] font-medium">{activeSpace.stats.eventsThisMonth}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Avg response time</span>
@@ -773,7 +773,7 @@ const SpaceManagementSystem = () => {
                 <Separator className="bg-gray-700" />
                 
                 <div>
-                  <h4 className="text-white font-medium mb-2">Engagement Level</h4>
+                  <h4 className="text-[var(--hive-text-primary)] font-medium mb-2">Engagement Level</h4>
                   <HiveProgress value={85} className="bg-gray-700" />
                   <p className="text-gray-400 text-sm mt-1">Very Active Community</p>
                 </div>
@@ -782,11 +782,11 @@ const SpaceManagementSystem = () => {
 
             {/* Recent Members */}
             <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -805,26 +805,26 @@ const SpaceManagementSystem = () => {
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center">
                       <Avatar className="w-8 h-8 mr-3">
-                        <AvatarFallback className={`text-white text-sm ${
-                          index % 3 === 0 ? 'bg-gradient-to-r from-pink-500 to-purple-500' :
+                        <AvatarFallback className={`text-[var(--hive-text-primary)] text-sm ${
+                          index % 3 === 0 ? 'bg-gradient-to-r from-pink-500 to-[var(--hive-gold)]' :
                           index % 3 === 1 ? 'bg-gradient-to-r from-blue-500 to-teal-500' :
-                          'bg-gradient-to-r from-orange-500 to-red-500'
+                          'bg-gradient-to-r from-[var(--hive-gold)] to-red-500'
                         }`}>
                           {member.avatar}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="text-white text-sm font-medium">{member.name}</div>
+                        <div className="text-[var(--hive-text-primary)] text-sm font-medium">{member.name}</div>
                         <div className="text-gray-400 text-xs">{member.time}</div>
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" className="border-gray-600 text-white text-xs">
+                    <Button size="sm" variant="secondary" className="border-gray-600 text-[var(--hive-text-primary)] text-xs">
                       Follow
                     </Button>
                   </div>
                 ))}
                 
-                <Button variant="ghost" className="w-full hive-interactive" style={{ color: 'var(--hive-brand-primary)' }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--hive-overlay-gold-subtle)'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}>
+                <Button variant="ghost" className="w-full hive-interactive" style={{ color: 'var(--hive-brand-primary)' }} onMouseEnter={(e: any) => { e.currentTarget.style.backgroundColor = 'var(--hive-overlay-gold-subtle)'; }} onMouseLeave={(e: any) => { e.currentTarget.style.backgroundColor = 'transparent'; }}>
                   View All {activeSpace.memberCount} Members
                 </Button>
               </CardContent>
@@ -832,11 +832,11 @@ const SpaceManagementSystem = () => {
 
             {/* Quick Actions */}
             <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                     e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(e: any) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}>
@@ -848,11 +848,11 @@ const SpaceManagementSystem = () => {
                   <Calendar className="w-4 h-4 mr-2" />
                   Create Event
                 </Button>
-                <Button variant="outline" className="w-full border-gray-600 text-white hover:bg-gray-800 justify-start">
+                <Button variant="secondary" className="w-full border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800 justify-start">
                   <Users className="w-4 h-4 mr-2" />
                   Invite Members
                 </Button>
-                <Button variant="outline" className="w-full border-gray-600 text-white hover:bg-gray-800 justify-start">
+                <Button variant="secondary" className="w-full border-gray-600 text-[var(--hive-text-primary)] hover:bg-gray-800 justify-start">
                   <Share className="w-4 h-4 mr-2" />
                   Share Space
                 </Button>

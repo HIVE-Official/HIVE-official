@@ -224,7 +224,7 @@ export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
   }, ref) => {
     // Determine color based on preference
     const getColor = () => {
-      if (color === "black") return "#000000";
+      if (color === "black") return "var(--hive-black)";
       if (color === "white") return "#ffffff";
       if (color === "gold") return "var(--hive-brand-secondary)";
       
@@ -255,8 +255,8 @@ export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
         size === '2xl' && "text-3xl",
         size === '3xl' && "text-4xl",
         color === 'auto' && "text-[var(--hive-brand-secondary)]",
-        color === 'black' && "text-black",
-        color === 'white' && "text-white",
+        color === 'black' && "text-[var(--hive-text-primary)]",
+        color === 'white' && "text-[var(--hive-text-inverse)]",
         color === 'gold' && "text-[var(--hive-brand-secondary)]"
       )}>
         HIVE
@@ -332,7 +332,7 @@ import {
   
   // Tools & Builder
   Wrench, Hammer, Code, Palette, Layers, Grid3X3, 
-  Play, Pause, Square, Volume2, VolumeX,
+  Play,
   
   // University context
   GraduationCap, Book, School, Home as House, Users2,
@@ -344,7 +344,7 @@ import {
   ThumbsUp, ThumbsDown, Star, Send, Reply, Forward,
   
   // System
-  Lock, Unlock, Shield, Key, Database, Server,
+  Lock, Unlock, Shield, Key,
   
   type LucideIcon
 } from "lucide-react";

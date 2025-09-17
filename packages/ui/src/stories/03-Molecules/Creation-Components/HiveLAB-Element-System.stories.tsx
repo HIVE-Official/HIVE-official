@@ -6,13 +6,14 @@ import {
   Layers, Code, Puzzle, Wrench, Lightbulb, ArrowRight,
   CheckCircle, Play, Pause, RotateCcw, Download
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../atomic/ui/card';
+import { Button } from '../../../atomic/atoms/button-enhanced';
+import { Badge } from '../../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../atomic/atoms/avatar';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '03-Molecules/Creation-Components/HiveLAB Element System',
+  component: React.Fragment,
   parameters: {
     docs: {
       description: {
@@ -242,7 +243,7 @@ export const ElementLibraryBrowser: Story = {
                 <CardDescription>Choose your building blocks</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                {categories.map((category) => {
+                {categories.map((category: any) => {
                   const IconComponent = category.icon;
                   return (
                     <button
@@ -250,7 +251,7 @@ export const ElementLibraryBrowser: Story = {
                       onClick={() => setSelectedCategory(category.id)}
                       className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
                         selectedCategory === category.id 
-                          ? 'bg-blue-600 text-white' 
+                          ? 'bg-blue-600 text-[var(--hive-text-primary)]' 
                           : 'hover:bg-gray-100'
                       }`}
                     >
@@ -275,7 +276,7 @@ export const ElementLibraryBrowser: Story = {
                   <Lightbulb className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
                   <p className="text-sm font-medium text-gray-900 mb-1">Need Something New?</p>
                   <p className="text-xs text-gray-600 mb-3">Suggest new elements based on real coordination challenges</p>
-                  <Button size="sm" variant="outline" className="w-full">
+                  <Button size="sm" variant="secondary" className="w-full">
                     <Plus className="h-4 w-4 mr-2" />
                     Suggest Element
                   </Button>
@@ -287,7 +288,7 @@ export const ElementLibraryBrowser: Story = {
           {/* Elements Grid */}
           <div className="lg:col-span-3">
             <div className="grid md:grid-cols-2 gap-6">
-              {elements.map((element) => {
+              {elements.map((element: any) => {
                 const IconComponent = element.icon;
                 const isSelected = selectedElement === element.id;
                 
@@ -308,17 +309,17 @@ export const ElementLibraryBrowser: Story = {
                           <div>
                             <CardTitle className="text-lg">{element.name}</CardTitle>
                             <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="secondary" className="text-xs">
                                 {element.complexity}
                               </Badge>
                               <div className="flex items-center gap-1 text-sm text-gray-600">
-                                <Star className="h-3 w-3 fill-current text-yellow-500" />
+                                <Star className="h-3 w-3 fill-current text-[var(--hive-gold)]" />
                                 <span>{element.popularity}%</span>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="secondary">
                           <Plus className="h-4 w-4" />
                         </Button>
                       </div>
@@ -352,10 +353,10 @@ export const ElementLibraryBrowser: Story = {
                               <Play className="h-4 w-4 mr-2" />
                               Add to Tool
                             </Button>
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="secondary">
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="secondary">
                               <Code className="h-4 w-4" />
                             </Button>
                           </div>
@@ -403,14 +404,14 @@ export const StudentCreatedTools: Story = {
 
         {/* Filter Bar */}
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {filters.map((filterOption) => (
+          {filters.map((filterOption: any) => (
             <button
               key={filterOption.id}
               onClick={() => setFilter(filterOption.id)}
               className={`px-4 py-2 rounded-lg transition-colors ${
                 filter === filterOption.id
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+                  ? 'bg-green-600 text-[var(--hive-text-primary)]'
+                  : 'bg-[var(--hive-white)] text-gray-600 hover:bg-gray-50 border border-gray-200'
               }`}
             >
               {filterOption.label} ({filterOption.count})
@@ -419,7 +420,7 @@ export const StudentCreatedTools: Story = {
         </div>
 
         <div className="space-y-6">
-          {filteredTools.map((tool) => {
+          {filteredTools.map((tool: any) => {
             const isExpanded = selectedTool === tool.id;
             
             return (
@@ -446,7 +447,7 @@ export const StudentCreatedTools: Story = {
                       
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-current text-yellow-500" />
+                          <Star className="h-4 w-4 fill-current text-[var(--hive-gold)]" />
                           <span>{tool.rating}</span>
                         </div>
                         <div className="flex items-center gap-1">
@@ -464,11 +465,11 @@ export const StudentCreatedTools: Story = {
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="secondary">
                         <Copy className="h-4 w-4 mr-2" />
                         Install
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="secondary">
                         <Share2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -502,7 +503,7 @@ export const StudentCreatedTools: Story = {
                           <h4 className="font-semibold text-gray-900 mb-2">Elements Used</h4>
                           <div className="flex flex-wrap gap-2">
                             {tool.elements.map((element, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
+                              <Badge key={index} variant="secondary" className="text-xs">
                                 <Layers className="h-3 w-3 mr-1" />
                                 {element}
                               </Badge>
@@ -629,7 +630,7 @@ export const ToolCreationInterface: Story = {
                       creationStep === item.step ? 'bg-purple-100' : 'bg-gray-50'
                     }`}>
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium ${
-                        creationStep === item.step ? 'bg-purple-600 text-white' : 'bg-gray-300 text-gray-600'
+                        creationStep === item.step ? 'bg-[var(--hive-gold-dark)] text-[var(--hive-text-primary)]' : 'bg-gray-300 text-gray-600'
                       }`}>
                         {item.step}
                       </div>
@@ -653,7 +654,7 @@ export const ToolCreationInterface: Story = {
                 {commonCombinations.map((combo, index) => (
                   <div key={index} className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                     <div className="flex items-center gap-2 mb-2">
-                      <Wrench className="h-4 w-4 text-purple-600" />
+                      <Wrench className="h-4 w-4 text-[var(--hive-gold-dark)]" />
                       <p className="font-medium text-gray-900">{combo.name}</p>
                     </div>
                     <p className="text-sm text-gray-600 mb-2">{combo.description}</p>
@@ -670,7 +671,7 @@ export const ToolCreationInterface: Story = {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Puzzle className="h-5 w-5 text-purple-600" />
+                  <Puzzle className="h-5 w-5 text-[var(--hive-gold-dark)]" />
                   Tool Configuration
                 </CardTitle>
               </CardHeader>
@@ -683,8 +684,8 @@ export const ToolCreationInterface: Story = {
                     type="text"
                     placeholder="e.g., Floor movie night, Study session for CSE 474, Food order..."
                     value={toolName}
-                    onChange={(e) => setToolName(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolName(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--hive-gold)] focus:border-transparent"
                   />
                 </div>
                 
@@ -708,7 +709,7 @@ export const ToolCreationInterface: Story = {
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-4">
-                  {availableElements.map((element) => {
+                  {availableElements.map((element: any) => {
                     const IconComponent = element.icon;
                     const isSelected = selectedElements.includes(element.id);
                     
@@ -718,7 +719,7 @@ export const ToolCreationInterface: Story = {
                         onClick={() => toggleElement(element.id)}
                         className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                           isSelected 
-                            ? 'border-purple-500 bg-purple-50' 
+                            ? 'border-[var(--hive-gold)] bg-purple-50' 
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
@@ -727,14 +728,14 @@ export const ToolCreationInterface: Story = {
                             isSelected ? 'bg-purple-100' : 'bg-gray-100'
                           }`}>
                             <IconComponent className={`h-5 w-5 ${
-                              isSelected ? 'text-purple-600' : 'text-gray-600'
+                              isSelected ? 'text-[var(--hive-gold-dark)]' : 'text-gray-600'
                             }`} />
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center justify-between">
                               <p className="font-medium text-gray-900">{element.name}</p>
                               {isSelected && (
-                                <CheckCircle className="h-5 w-5 text-purple-600" />
+                                <CheckCircle className="h-5 w-5 text-[var(--hive-gold-dark)]" />
                               )}
                             </div>
                             <p className="text-sm text-gray-600 mt-1">{element.description}</p>
@@ -752,7 +753,7 @@ export const ToolCreationInterface: Story = {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Eye className="h-5 w-5 text-purple-600" />
+                    <Eye className="h-5 w-5 text-[var(--hive-gold-dark)]" />
                     Tool Preview
                   </CardTitle>
                 </CardHeader>
@@ -774,7 +775,7 @@ export const ToolCreationInterface: Story = {
                           const IconComponent = element.icon;
                           return (
                             <div key={elementId} className="flex items-center gap-2 text-sm">
-                              <IconComponent className="h-4 w-4 text-purple-600" />
+                              <IconComponent className="h-4 w-4 text-[var(--hive-gold-dark)]" />
                               <span>{element.name}</span>
                             </div>
                           );
@@ -783,11 +784,11 @@ export const ToolCreationInterface: Story = {
                     </div>
                     
                     <div className="flex gap-3">
-                      <Button className="flex-1 bg-purple-600 hover:bg-purple-700">
+                      <Button className="flex-1 bg-[var(--hive-gold-dark)] hover:bg-purple-700">
                         <Play className="h-4 w-4 mr-2" />
                         Create Tool
                       </Button>
-                      <Button variant="outline">
+                      <Button variant="secondary">
                         <Settings className="h-4 w-4" />
                       </Button>
                     </div>

@@ -6,9 +6,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { motion } from '../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
 
 import { 
   Users, 
@@ -47,8 +47,9 @@ import {
   Lightbulb
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '05-Profile System/Profile System Index',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -132,7 +133,7 @@ const navigationCards = [
       'Builder Recognition Flow'
     ],
     storyPath: '05-profile-system-complete--complete-user-flows',
-    color: 'from-blue-500 to-purple-600',
+    color: 'from-blue-500 to-[var(--hive-gold-dark)]',
     badge: 'User Journeys'
   },
   {
@@ -160,7 +161,7 @@ const navigationCards = [
       'Performance Metrics'
     ],
     storyPath: '05-profile-system-complete--mobile-first-responsive',
-    color: 'from-orange-500 to-red-600',
+    color: 'from-[var(--hive-gold)] to-red-600',
     badge: 'Responsive Design'
   }
 ];
@@ -202,7 +203,7 @@ export const ProfileSystemIndex: StoryObj = {
     return (
       <div className="min-h-screen bg-[var(--hive-background-primary)]">
         {/* Hero Header */}
-        <div className="bg-gradient-to-br from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] text-white">
+        <div className="bg-gradient-to-br from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] text-[var(--hive-text-primary)]">
           <div className="max-w-7xl mx-auto px-6 py-16">
             <div className="text-center mb-12">
               <motion.div
@@ -211,17 +212,17 @@ export const ProfileSystemIndex: StoryObj = {
                 transition={{ duration: 0.6 }}
               >
                 <h1 className="text-5xl font-bold mb-4">HIVE Profile System</h1>
-                <p className="text-2xl text-white text-opacity-90 mb-6">
+                <p className="text-2xl text-[var(--hive-text-primary)] text-opacity-90 mb-6">
                   Streamlined Documentation for University at Buffalo
                 </p>
                 <div className="flex items-center justify-center gap-2 mb-8">
-                  <Badge className="bg-white/20 text-white border-white/20">
+                  <Badge className="bg-[var(--hive-white)]/20 text-[var(--hive-text-primary)] border-[var(--hive-white)]/20">
                     Production Ready
                   </Badge>
-                  <Badge className="bg-white/20 text-white border-white/20">
+                  <Badge className="bg-[var(--hive-white)]/20 text-[var(--hive-text-primary)] border-[var(--hive-white)]/20">
                     UB Integrated
                   </Badge>
-                  <Badge className="bg-white/20 text-white border-white/20">
+                  <Badge className="bg-[var(--hive-white)]/20 text-[var(--hive-text-primary)] border-[var(--hive-white)]/20">
                     Mobile-First
                   </Badge>
                 </div>
@@ -238,7 +239,7 @@ export const ProfileSystemIndex: StoryObj = {
                   <div key={stat.label} className="text-center">
                     <div className="text-3xl font-bold mb-1">{stat.value}</div>
                     <div className="text-sm font-medium mb-1">{stat.label}</div>
-                    <div className="text-xs text-white text-opacity-70">{stat.description}</div>
+                    <div className="text-xs text-[var(--hive-text-primary)] text-opacity-70">{stat.description}</div>
                   </div>
                 ))}
               </motion.div>
@@ -275,11 +276,11 @@ export const ProfileSystemIndex: StoryObj = {
                     <Card className="h-full border-2 hover:border-[var(--hive-brand-primary)] transition-all duration-300 cursor-pointer">
                       <CardHeader className="text-center">
                         <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <Icon className="w-8 h-8 text-white" />
+                          <Icon className="w-8 h-8 text-[var(--hive-text-primary)]" />
                         </div>
                         
                         <CardTitle className="text-xl mb-2">{card.title}</CardTitle>
-                        <Badge variant="outline">{card.badge}</Badge>
+                        <Badge variant="secondary">{card.badge}</Badge>
                       </CardHeader>
                       
                       <CardContent className="text-center">
@@ -357,7 +358,7 @@ export const ProfileSystemIndex: StoryObj = {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-6">
                     <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
-                      <Rocket className="w-8 h-8 text-white" />
+                      <Rocket className="w-8 h-8 text-[var(--hive-text-primary)]" />
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-green-800 mb-2">
@@ -392,13 +393,13 @@ export const ProfileSystemIndex: StoryObj = {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm">1</span>
+                      <span className="w-6 h-6 bg-blue-500 text-[var(--hive-text-primary)] rounded-full flex items-center justify-center text-sm">1</span>
                       Start with User Flows
                     </h4>
                     <p className="text-sm text-[var(--hive-text-muted)] mb-2">
                       Understand how UB students will interact with profiles across different scenarios.
                     </p>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Users className="w-4 h-4 mr-2" />
                       View User Flows
                     </Button>
@@ -406,13 +407,13 @@ export const ProfileSystemIndex: StoryObj = {
                   
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <span className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm">2</span>
+                      <span className="w-6 h-6 bg-green-500 text-[var(--hive-text-primary)] rounded-full flex items-center justify-center text-sm">2</span>
                       Test Components
                     </h4>
                     <p className="text-sm text-[var(--hive-text-muted)] mb-2">
                       Validate individual card behavior and test different data scenarios.
                     </p>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <TestTube className="w-4 h-4 mr-2" />
                       Open Testing Lab
                     </Button>
@@ -420,13 +421,13 @@ export const ProfileSystemIndex: StoryObj = {
                   
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm">3</span>
+                      <span className="w-6 h-6 bg-[var(--hive-gold)] text-[var(--hive-text-primary)] rounded-full flex items-center justify-center text-sm">3</span>
                       Verify Responsive
                     </h4>
                     <p className="text-sm text-[var(--hive-text-muted)] mb-2">
                       Ensure mobile-first performance across all campus usage scenarios.
                     </p>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Smartphone className="w-4 h-4 mr-2" />
                       Test Responsive
                     </Button>

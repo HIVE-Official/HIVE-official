@@ -6,10 +6,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Button } from '../../atomic/atoms/button-enhanced';
+import { Badge } from '../../atomic/atoms/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 import { Progress } from '../../components/ui/progress';
 // import { Slider } from '../../components/ui/slider';
 
@@ -65,8 +65,9 @@ import {
   TrendingUp
 } from 'lucide-react';
 
-const meta: Meta = {
+const meta: Meta<typeof React.Fragment> = {
   title: '05-Profile System/Mobile-First Responsive',
+  component: React.Fragment,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -279,7 +280,7 @@ function DeviceFrame({
               <Clock className="w-3 h-3" />
               <span>9:41</span>
               {scenario && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   {scenario.icon} {scenario.name}
                 </Badge>
               )}
@@ -620,11 +621,11 @@ export const MobileFirstResponsive: StoryObj = {
                     {effectiveDevice.name} Preview - {scenario.name}
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline">{effectiveDevice.type}</Badge>
-                    <Badge variant="outline">{scenario.networkSpeed} network</Badge>
+                    <Badge variant="secondary">{effectiveDevice.type}</Badge>
+                    <Badge variant="secondary">{scenario.networkSpeed} network</Badge>
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="secondary"
                       onClick={() => setOrientation(orientation === 'portrait' ? 'landscape' : 'portrait')}
                     >
                       <RotateCcw className="w-4 h-4 mr-2" />

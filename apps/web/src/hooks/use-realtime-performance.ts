@@ -149,9 +149,9 @@ export function useRealtimePerformance(
 
   const setupPerformanceObserver = useCallback(() => {
     try {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver((list: any) => {
         const entries = list.getEntries();
-        entries.forEach((entry) => {
+        entries.forEach((entry: any) => {
           if (entry.entryType === 'navigation') {
             // Track navigation performance
             recordLatency(entry.loadEventEnd - entry.loadEventStart);

@@ -6,6 +6,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@hive/core';
+
 import { HiveButton as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
@@ -291,16 +293,6 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'violations' | 'compliant' | 'forbidden'>('violations');
 
-  // Feature flag check
-  if (!enableFeatureFlag) {
-    return (
-      <div className="text-center py-8">
-        <Shield className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-400">Space enforcement system is not available</p>
-      </div>
-    );
-  }
-
   const runSpaceAudit = useCallback(async () => {
     if (!admin) return;
 
@@ -329,7 +321,7 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
       
       await onAuditAllSpaces();
     } catch (error) {
-      console.error('Space audit failed:', error);
+      logger.error('Space audit failed:', error);
     } finally {
       setLoading(false);
     }
@@ -343,6 +335,16 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
   useEffect(() => {
     runSpaceAudit();
   }, [runSpaceAudit]);
+
+  // Feature flag check
+  if (!enableFeatureFlag) {
+    return (
+      <div className="text-center py-8">
+        <Shield className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-400">Space enforcement system is not available</p>
+      </div>
+    );
+  }
 
   const getTabCounts = () => {
     return {
@@ -464,7 +466,7 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
         >
           <XCircle className="w-4 h-4" />
           <span>Violations</span>
-          <Badge size="xs" className={activeTab === 'violations' ? 'bg-white/20' : 'bg-red-500/20 text-red-400'}>
+          <Badge size="sm" className={activeTab === 'violations' ? 'bg-white/20' : 'bg-red-500/20 text-red-400'}>
             {tabCounts.violations}
           </Badge>
         </button>
@@ -479,7 +481,7 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
         >
           <CheckCircle className="w-4 h-4" />
           <span>Compliant Spaces</span>
-          <Badge size="xs" className={activeTab === 'compliant' ? 'bg-white/20' : 'bg-green-500/20 text-green-400'}>
+          <Badge size="sm" className={activeTab === 'compliant' ? 'bg-white/20' : 'bg-green-500/20 text-green-400'}>
             {tabCounts.compliant}
           </Badge>
         </button>
@@ -598,7 +600,7 @@ export const HiveStrictSpaceEnforcer: React.FC<HiveStrictSpaceEnforcerProps> = (
                   <p className="text-sm text-gray-400 mb-2">{config.description}</p>
                   <div className="flex flex-wrap gap-1">
                     {config.allowedSubTypes.map((subType) => (
-                      <Badge key={subType} size="xs" variant="outline" className="text-xs">
+                      <Badge key={subType} size="sm" variant="outline" className="text-xs">
                         {subType.replace('_', ' ')}
                       </Badge>
                     ))}

@@ -1,236 +1,175 @@
-# HIVE UI
+# HIVE - Campus Social Platform
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC.svg)](https://tailwindcss.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-Realtime-orange.svg)](https://firebase.google.com/)
+[![pnpm](https://img.shields.io/badge/pnpm-9.1.1-yellow.svg)](https://pnpm.io/)
 
-A beautiful, modern React/Next.js application for social discovery and networking.
+**A complete social platform for university communities - built with modern web technologies**
 
-## Overview
-
-HIVE UI is a Next.js-based web application that helps users discover, create, and engage with spaces and events. The application follows modern React patterns with TypeScript and embraces a sleek dark theme with gold accents for a premium feel.
-
-## Features
-
-- **Space Discovery**: Browse and join spaces categorized by interests and communities
-- **Event Management**: Create, discover, and RSVP to events within spaces
-- **User Profiles**: Comprehensive profile management with authentication
-- **Real-time Features**: Live updates and notifications
-- **Modern UI**: Beautiful glassmorphic design with fluid animations built on Tailwind CSS
-- **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
-- **TypeScript**: Full type safety throughout the application
-
-## Architecture
-
-The application follows modern React and Next.js patterns with a monorepo structure:
-
-### Tech Stack
-
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript 5 (strict mode)
-- **Styling**: Tailwind CSS + shadcn/ui
-- **State Management**: Zustand + React Query
-- **Authentication**: Firebase Auth
-- **Database**: Firestore
-- **UI Components**: Radix UI primitives with shadcn/ui
-- **Monorepo**: Turborepo + pnpm workspaces
-
-### Layers
-
-- **Apps**: Consumer-facing applications (web, admin)
-- **Packages**: Shared libraries and components
-- **UI Components**: Storybook-driven component library
-- **Business Logic**: Shared utilities and API clients
-
-## Project Structure
-
-```
-├── apps/
-│   ├── web/                 # Main Next.js application
-│   └── admin/               # Admin dashboard
-├── packages/
-│   ├── ui/                  # Shared UI components (Storybook)
-│   ├── hooks/               # Shared React hooks
-│   ├── core/                # Business logic and types
-│   ├── api-client/          # API client logic
-│   ├── auth-logic/          # Authentication logic
-│   ├── firebase/            # Firebase configuration
-│   └── tokens/              # Design tokens
-└── storybook/               # Storybook configuration
-```
-
-## UI Components
-
-### Design System
-
-The application uses a consistent design system built with:
-
-- **shadcn/ui**: Base component library
-- **Radix UI**: Accessible primitive components
-- **Tailwind CSS**: Utility-first styling
-- **Design Tokens**: Consistent spacing, colors, and typography
-
-### Key Features
-
-- **Dark Theme**: Sleek dark backgrounds with high contrast elements
-- **Gold Accents**: Highlights important actions and selected items
-- **Glassmorphism**: Frosted glass effects for cards and modals
-- **Responsive Design**: Mobile-first approach with desktop enhancements
-
-### State Handling
-
-The application handles various states gracefully:
-
-- **Loading States**: Skeleton screens and loading indicators
-- **Error Boundaries**: Graceful error handling with recovery options
-- **Empty States**: Informative placeholders when no content is available
-- **Optimistic Updates**: Immediate UI feedback for better UX
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18.0 or higher
-- pnpm 9.x
-- Git
-
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/yourusername/hive_ui.git
-   cd hive_ui
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   pnpm install
-   ```
-
-3. Set up environment variables:
-
-   ```bash
-   cp .env.example .env.local
-   # Fill in your Firebase and other configuration
-   ```
-
-   The application expects the following variables:
-
-   | Variable | Description |
-   | --- | --- |
-   | `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase API key |
-   | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
-   | `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase project id |
-   | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
-   | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender id |
-   | `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase app id |
-   | `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Optional analytics id |
-   | `FIREBASE_PROJECT_ID` | Firebase admin project id |
-   | `FIREBASE_CLIENT_EMAIL` | Firebase admin client email |
-   | `FIREBASE_PRIVATE_KEY` | Firebase admin private key |
-   | `NEXTAUTH_SECRET` | NextAuth secret |
-   | `NEXTAUTH_URL` | NextAuth base URL |
-
-4. Start the development server:
-
-   ```bash
-   pnpm dev
-   ```
-
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-### Development Commands
+## 🚀 Quick Start
 
 ```bash
+# Install dependencies
+pnpm install
+
+# Set up environment variables
+cp apps/web/.env.example apps/web/.env.local
+
 # Start development server
 pnpm dev
 
-# Build for production
-pnpm build
-
-# Run linting
-pnpm lint
-
-# Run type checking
-pnpm typecheck
-
-# Run tests
-pnpm test
-
-# Start Storybook
-pnpm storybook
-
-# Clean all node_modules and build artifacts
-pnpm clean
+# Open http://localhost:3000
 ```
 
-## Development Workflow
+## 📖 Documentation
 
-### Adding New Features
+All documentation is organized in the [`docs/`](./docs/) directory:
 
-1. Create components in `packages/ui/src/components/`
-2. Add business logic to `packages/core/`
-3. Create API clients in `packages/api-client/`
-4. Build pages in `apps/web/src/app/`
-5. Write Storybook stories for UI components
+- **[Developer Guide](./docs/guides/DEVELOPER_GUIDE.md)** - Quick reference for developers
+- **[Code Standards](./docs/standards/CODE_STANDARDS.md)** - Coding conventions and patterns
+- **[Architecture](./docs/architecture/)** - System design and technical decisions
+- **[CLAUDE.md](./CLAUDE.md)** - AI-assisted development guidelines
 
-### Code Style
+## 🎯 What is HIVE?
 
-The project follows TypeScript and React best practices:
+HIVE is a comprehensive social platform designed specifically for university communities:
 
-- **TypeScript**: Strict mode enabled with proper type definitions
-- **ESLint**: Enforced code quality and consistency
-- **Prettier**: Automatic code formatting
-- **Conventional Commits**: Structured commit messages
+### Core Features
+- **🏠 Spaces** - Communities for dorms, majors, clubs, and interests
+- **📅 Events** - Organize and discover campus activities
+- **🛠️ Tools** - Build and share campus utilities with visual builder
+- **🔄 Rituals** - Recurring campus traditions and events
+- **📱 Feed** - Real-time updates from your communities
+- **👤 Profiles** - Personal dashboards with privacy controls
 
-### Component Development
+## 🏗️ Project Structure
 
-- All UI components should have corresponding Storybook stories
-- Use TypeScript interfaces for all props
-- Follow the HIVE design system and patterns
-- Ensure accessibility (WCAG 2.1 AA compliance)
+```
+hive/
+├── apps/
+│   ├── web/          # Main Next.js application
+│   └── admin/        # Admin dashboard
+├── packages/
+│   ├── ui/           # Shared component library
+│   ├── core/         # Business logic and types
+│   ├── hooks/        # Shared React hooks
+│   ├── validation/   # Schema validation
+│   └── ...           # Other shared packages
+├── docs/             # All documentation
+└── scripts/          # Build and utility scripts
+```
 
-## Authentication & Authorization
+## 🛠️ Tech Stack
 
-The application uses Firebase Auth with:
+### Frontend
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **TailwindCSS** - Utility-first styling
+- **Framer Motion** - Animations
 
-- **Email/Password**: Standard authentication
-- **Social Login**: Google, Apple, and other providers
-- **Multi-Factor Authentication**: Enhanced security options
-- **Role-Based Access**: Different user roles and permissions
+### Backend
+- **Firebase** - Authentication, Firestore, Storage
+- **Next.js API Routes** - Serverless functions
+- **Zod** - Schema validation
 
-## Deployment
+### Infrastructure
+- **Turborepo** - Monorepo management
+- **pnpm** - Fast, efficient package manager
+- **ESLint/Prettier** - Code quality
 
-The application is deployed using:
+## 📦 Available Scripts
 
-- **Vercel**: Main hosting platform for the web app
-- **Firebase**: Backend services and database
-- **GitHub Actions**: CI/CD pipeline for automated deployments
+```bash
+# Development
+pnpm dev              # Start development server
+pnpm build            # Build for production
+pnpm lint             # Run ESLint
+pnpm typecheck        # Run TypeScript checks
 
-## License
+# Testing
+pnpm test             # Run tests
+pnpm test:e2e         # Run E2E tests
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+# Tools
+pnpm storybook        # Start Storybook
+```
 
-## Acknowledgements
+## 🔧 Configuration
 
-- [Next.js](https://nextjs.org/)
-- [React](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com/)
-- [Radix UI](https://www.radix-ui.com/)
-- [Firebase](https://firebase.google.com/)
+### Environment Variables
 
-## Contributing
+Create `.env.local` in `apps/web/`:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes following the coding standards
-4. Run tests and linting (`pnpm lint && pnpm typecheck && pnpm test`)
-5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+```env
+# Firebase
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
 
-Please ensure all tests pass and follow the established patterns before submitting a PR.
+# Firebase Admin
+FIREBASE_ADMIN_PROJECT_ID=
+FIREBASE_ADMIN_CLIENT_EMAIL=
+FIREBASE_ADMIN_PRIVATE_KEY=
+
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXTAUTH_SECRET=
+```
+
+## 🚦 Development Workflow
+
+1. **Check out a new branch**
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+
+2. **Make your changes**
+   - Follow [Code Standards](./docs/standards/CODE_STANDARDS.md)
+   - Write tests for new features
+   - Update documentation if needed
+
+3. **Run checks**
+   ```bash
+   pnpm lint
+   pnpm typecheck
+   pnpm test
+   ```
+
+4. **Commit and push**
+   ```bash
+   git add .
+   git commit -m "feat: your feature description"
+   git push origin feature/your-feature
+   ```
+
+## 📚 Learning Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+
+## 🤝 Contributing
+
+1. Read the [Code Standards](./docs/standards/CODE_STANDARDS.md)
+2. Check the [Developer Guide](./docs/guides/DEVELOPER_GUIDE.md)
+3. Follow the development workflow above
+4. Open a pull request with a clear description
+
+## 📄 License
+
+Proprietary - All rights reserved
+
+## 🆘 Support
+
+- Check the [documentation](./docs/)
+- Review [CLAUDE.md](./CLAUDE.md) for AI assistance
+- Open an issue for bugs or feature requests
+
+---
+
+Built with ❤️ for university communities

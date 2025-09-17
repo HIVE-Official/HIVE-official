@@ -1,0 +1,208 @@
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
+
+interface Modal {
+  id: string;
+  isOpen: boolean;
+  data?: unknown;
+}
+
+interface ConfirmDialog {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  confirmText: string;
+  cancelText: string;
+  variant: 'default' | 'warning' | 'destructive';
+  onConfirm: () => void;
+  onCancel?: () => void;
+}
+
+interface UIState {
+  // Sidebar & Navigation
+  sidebarOpen: boolean;
+  mobileMenuOpen: boolean;
+  commandPaletteOpen: boolean;
+
+  // Modals
+  modals: Record<string, Modal>;
+
+  // Confirmation Dialog
+  confirmDialog: ConfirmDialog | null;
+
+  // Toasts & Notifications
+  toasts: Array<{
+    id: string;
+    title: string;
+    description?: string;
+    type: 'success' | 'error' | 'info' | 'warning';
+    duration?: number;
+  }>;
+
+  // Loading states
+  globalLoading: boolean;
+  loadingMessage: string | null;
+
+  // Actions
+  toggleSidebar: () => void;
+  setSidebarOpen: (open: boolean) => void;
+  toggleMobileMenu: () => void;
+  setMobileMenuOpen: (open: boolean) => void;
+  toggleCommandPalette: () => void;
+
+  // Modal actions
+  openModal: (modalId: string, data?: unknown) => void;
+  closeModal: (modalId: string) => void;
+  toggleModal: (modalId: string) => void;
+
+  // Confirm dialog actions
+  showConfirm: (config: Omit<ConfirmDialog, 'isOpen'>) => void;
+  hideConfirm: () => void;
+
+  // Toast actions
+  addToast: (toast: Omit<UIState['toasts'][0], 'id'>) => void;
+  removeToast: (id: string) => void;
+  clearToasts: () => void;
+
+  // Loading actions
+  setGlobalLoading: (loading: boolean, message?: string | null) => void;
+}
+
+export const useUIStore = create<UIState>()(
+  devtools(
+    (set, _get) => ({
+      // Initial state
+      sidebarOpen: true,
+      mobileMenuOpen: false,
+      commandPaletteOpen: false,
+      modals: {},
+      confirmDialog: null,
+      toasts: [],
+      globalLoading: false,
+      loadingMessage: null,
+
+      // Sidebar actions
+      toggleSidebar: () =>
+        set((state: UIState) => ({ sidebarOpen: !state.sidebarOpen }), false, 'toggleSidebar'),
+      
+      setSidebarOpen: (sidebarOpen: boolean) =>
+        set({ sidebarOpen }, false, 'setSidebarOpen'),
+
+      toggleMobileMenu: () =>
+        set((state: UIState) => ({ mobileMenuOpen: !state.mobileMenuOpen }), false, 'toggleMobileMenu'),
+      
+      setMobileMenuOpen: (mobileMenuOpen: boolean) =>
+        set({ mobileMenuOpen }, false, 'setMobileMenuOpen'),
+
+      toggleCommandPalette: () =>
+        set(
+          (state: UIState) => ({ commandPaletteOpen: !state.commandPaletteOpen }),
+          false,
+          'toggleCommandPalette'
+        ),
+
+      // Modal actions
+      openModal: (modalId: string, data?: unknown) =>
+        set(
+          (state: UIState) => ({
+            modals: {
+              ...state.modals,
+              [modalId]: { id: modalId, isOpen: true, data },
+            },
+          }),
+          false,
+          'openModal'
+        ),
+
+      closeModal: (modalId: string) =>
+        set(
+          (state: UIState) => ({
+            modals: {
+              ...state.modals,
+              [modalId]: { ...state.modals[modalId], isOpen: false },
+            },
+          }),
+          false,
+          'closeModal'
+        ),
+
+      toggleModal: (modalId: string) =>
+        set(
+          (state: UIState) => ({
+            modals: {
+              ...state.modals,
+              [modalId]: {
+                id: modalId,
+                isOpen: !state.modals[modalId]?.isOpen,
+                data: state.modals[modalId]?.data,
+              },
+            },
+          }),
+          false,
+          'toggleModal'
+        ),
+
+      // Confirm dialog actions
+      showConfirm: (config: Omit<ConfirmDialog, 'isOpen'>) =>
+        set(
+          {
+            confirmDialog: {
+              ...config,
+              isOpen: true,
+            },
+          },
+          false,
+          'showConfirm'
+        ),
+
+      hideConfirm: () =>
+        set(
+          { confirmDialog: null },
+          false,
+          'hideConfirm'
+        ),
+
+      // Toast actions
+      addToast: (toast: Omit<UIState['toasts'][0], 'id'>) =>
+        set(
+          (state: UIState) => ({
+            toasts: [
+              ...state.toasts,
+              {
+                ...toast,
+                id: `toast-${Date.now()}-${Math.random()}`,
+              },
+            ],
+          }),
+          false,
+          'addToast'
+        ),
+
+      removeToast: (id: string) =>
+        set(
+          (state: UIState) => ({
+            toasts: state.toasts.filter((t) => t.id !== id),
+          }),
+          false,
+          'removeToast'
+        ),
+
+      clearToasts: () =>
+        set({ toasts: [] }, false, 'clearToasts'),
+
+      // Loading actions
+      setGlobalLoading: (globalLoading: boolean, loadingMessage: string | null = null) =>
+        set({ globalLoading, loadingMessage: loadingMessage ?? null }, false, 'setGlobalLoading'),
+    }),
+    {
+      name: 'UIStore',
+    }
+  )
+);
+
+// Selectors
+export const useSidebarOpen = () => useUIStore((state: UIState) => state.sidebarOpen);
+export const useMobileMenuOpen = () => useUIStore((state: UIState) => state.mobileMenuOpen);
+export const useModal = (modalId: string) => useUIStore((state: UIState) => state.modals[modalId]);
+export const useToasts = () => useUIStore((state: UIState) => state.toasts);
+export const useGlobalLoading = () => useUIStore((state: UIState) => state.globalLoading);
