@@ -1,0 +1,227 @@
+# CodeRabbit Configuration for HIVE Platform
+# AI-powered code review automation
+
+# Review settings
+reviews:
+  # Enable automatic reviews on pull requests
+  auto_review: true
+
+  # Review scope
+  drafts: false # Don't review draft PRs
+
+  # Files to include/exclude from reviews
+  path_filters:
+    # Include these paths
+    include:
+      - "apps/**"
+      - "packages/**"
+      - "functions/**"
+      - "firebase/**"
+
+    # Exclude these paths
+    exclude:
+      - "node_modules/**"
+      - "**/dist/**"
+      - "**/build/**"
+      - "**/.next/**"
+      - "**/coverage/**"
+      - "**/*.log"
+      - "**/storybook-static/**"
+      - "**/.turbo/**"
+      - "**/.cache/**"
+      - "**/public/**"
+      - "**/*.md" # Exclude markdown files for now
+      - "**/*.json" # Exclude JSON files (configs, etc.)
+
+# Language and framework specific settings
+language:
+  # TypeScript/JavaScript settings
+  typescript:
+    # Focus on type safety and modern patterns
+    review_patterns:
+      - "any_types"
+      - "unused_imports"
+      - "type_assertions"
+      - "promise_handling"
+      - "error_handling"
+      - "naming_conventions"
+
+    # Strict type checking preferences
+    prefer_explicit_types: true
+    flag_any_usage: true
+    check_async_patterns: true
+
+  # React specific patterns
+  react:
+    # Review React best practices
+    review_patterns:
+      - "component_patterns"
+      - "hook_usage"
+      - "prop_types"
+      - "lifecycle_methods"
+      - "performance_patterns"
+
+    # Prefer functional components and hooks
+    prefer_functional_components: true
+    check_accessibility: true
+    flag_deprecated_apis: true
+
+# Code quality checks
+quality:
+  # Security scanning
+  security:
+    enabled: true
+    check_dependencies: true
+    flag_secrets: true
+    check_auth_patterns: true
+
+  # Performance monitoring
+  performance:
+    enabled: true
+    check_bundle_size: true
+    flag_large_files: true
+    review_async_patterns: true
+
+  # Accessibility
+  accessibility:
+    enabled: true
+    check_aria_attributes: true
+    review_semantic_html: true
+
+# Monorepo specific settings
+monorepo:
+  # Package boundaries
+  enforce_boundaries: true
+
+  # Workspace specific rules
+  workspaces:
+    # Apps should not import from each other
+    - name: "apps"
+      isolation: "strict"
+      allowed_deps: ["packages/**"]
+
+    # Packages can import from other packages
+    - name: "packages"
+      isolation: "loose"
+      circular_deps: "warn"
+
+    # Functions are isolated
+    - name: "functions"
+      isolation: "strict"
+      allowed_deps: ["packages/core", "packages/validation"]
+
+# Framework specific configurations
+frameworks:
+  nextjs:
+    # Next.js best practices
+    check_app_router: true
+    prefer_server_components: true
+    review_metadata: true
+    check_performance: true
+
+  firebase:
+    # Firebase specific patterns
+    check_security_rules: true
+    review_firestore_queries: true
+    flag_admin_usage: true
+
+  storybook:
+    # Storybook component documentation
+    require_stories: true
+    check_accessibility: true
+
+# AI behavior customization
+ai:
+  # Review style
+  tone: "constructive"
+  detail_level: "balanced"
+
+  # Focus areas for HIVE platform
+  focus_areas:
+    - "type_safety"
+    - "security"
+    - "performance"
+    - "accessibility"
+    - "maintainability"
+    - "testing"
+
+  # Custom prompts for HIVE context
+  context_prompts:
+    - "This is a campus social platform focused on student engagement"
+    - "Security and privacy are paramount - review auth and data access patterns"
+    - "Performance matters for mobile users - flag potential performance issues"
+    - "Accessibility is required - ensure WCAG compliance"
+    - "Code should follow the established patterns in the HIVE monorepo"
+
+# Custom rules for HIVE platform
+custom_rules:
+  # Security rules
+  - name: "no_hardcoded_secrets"
+    pattern: '(password|secret|key|token).*=.*[''"][^''"]{8,}'
+    message: "Potential hardcoded secret detected. Use environment variables."
+    severity: "error"
+
+  # Firebase rules
+  - name: "firebase_admin_usage"
+    pattern: "firebase-admin"
+    message: "Ensure firebase-admin is only used in server contexts"
+    severity: "warning"
+
+  # Performance rules
+  - name: "large_bundle_import"
+    pattern: 'import.*lodash[''"]'
+    message: "Consider using specific lodash imports to reduce bundle size"
+    severity: "info"
+
+  # HIVE specific patterns
+  - name: "logger_usage"
+    pattern: "console\\.(log|error|warn)"
+    message: "Use the structured logger instead of console methods"
+    severity: "warning"
+
+# Integration settings
+integrations:
+  # GitHub integration
+  github:
+    # PR comment settings
+    comment_on_pr: true
+    collapse_old_comments: true
+
+    # Review triggers
+    triggers:
+      - "opened"
+      - "synchronize"
+      - "ready_for_review"
+
+    # Status checks
+    require_approval: false # Don't block PRs, just provide feedback
+
+  # Slack notifications (if configured)
+  slack:
+    enabled: false # Enable if you want Slack notifications
+
+# Reporting and analytics
+reporting:
+  # Generate summary reports
+  summary: true
+
+  # Code quality metrics
+  metrics:
+    - "complexity"
+    - "coverage"
+    - "dependencies"
+    - "security_score"
+
+  # Export format
+  format: "markdown"
+
+# Learning and adaptation
+learning:
+  # Learn from team preferences
+  adapt_to_team: true
+
+  # Remember past feedback
+  remember_feedback: true
+
+  # Improve suggestions over time
+  continuous_improvement: true

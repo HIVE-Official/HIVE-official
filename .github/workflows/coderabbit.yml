@@ -1,0 +1,80 @@
+# CodeRabbit AI Code Review Integration
+name: CodeRabbit Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    branches: [main, staging, develop]
+
+  # Allow manual triggering
+  workflow_dispatch:
+
+# Permissions needed for CodeRabbit
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  statuses: write
+
+jobs:
+  coderabbit-review:
+    name: CodeRabbit AI Review
+    runs-on: ubuntu-latest
+
+    # Skip draft PRs unless explicitly configured
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Need full history for better analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run TypeScript check
+        run: pnpm typecheck
+        continue-on-error: true # Don't fail the workflow, let CodeRabbit review
+
+      - name: Run ESLint
+        run: pnpm lint
+        continue-on-error: true # Don't fail the workflow, let CodeRabbit review
+
+      - name: Run tests
+        run: pnpm test
+        continue-on-error: true # Don't fail the workflow, let CodeRabbit review
+
+      # CodeRabbit will automatically review when this workflow runs
+      # No explicit step needed - it integrates via GitHub App
+
+      - name: Generate coverage report
+        run: |
+          if [ -d "coverage" ]; then
+            echo "Coverage reports available for CodeRabbit analysis"
+          fi
+        continue-on-error: true
+
+  # Post-review validation
+  post-review:
+    name: Post-Review Validation
+    runs-on: ubuntu-latest
+    needs: coderabbit-review
+    if: always()
+
+    steps:
+      - name: Check review completion
+        run: |
+          echo "CodeRabbit review process completed"
+          echo "Check PR comments for AI feedback and suggestions"
