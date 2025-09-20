@@ -380,7 +380,7 @@ export const InteractiveDemo: Story = {
                   ...option,
                   votes: option.id === optionId ? option.votes + 1 : option.votes,
                   userVoted: option.id === optionId,
-                })}}}),
+                })}),
                 totalVotes: post.poll.totalVotes + 1,
               },
             }

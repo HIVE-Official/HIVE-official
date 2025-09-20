@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
-import { MessageSquare, MessageCircle, Pin, Clock, Users, Heart, BarChart3 as Poll, Link as LinkIcon, Calendar, Crown, Loader2 } from 'lucide-react';
+import { MessageSquare, MessageCircle, Pin, Users, Heart, BarChart3 as Poll, Link as LinkIcon, Calendar, Crown } from 'lucide-react';
 // Post creation will be handled via props/callbacks
 // Coordination Post Component for campus coordination
 const CoordinationSection = ({ post, onCoordinationResponse, onUpdateStatus, currentUserId }) => {
@@ -25,45 +25,49 @@ const CoordinationSection = ({ post, onCoordinationResponse, onUpdateStatus, cur
                 responseType,
                 message: responseMessage.trim() || undefined,
             });
-            setShowResponseForm(false);
-            setResponseMessage('');
         }
-        catch (error) {
-            console.error('Failed to submit coordination response:', error);
-        }
-        finally {
-            setIsSubmitting(false);
-        }
+        finally { }
+        ;
+        setShowResponseForm(false);
+        setResponseMessage('');
     };
-    const userResponse = coordination.responses.find(r => r.userId === currentUserId);
-    const interestedCount = coordination.responses.filter(r => r.responseType === 'interested' || r.responseType === 'going').length;
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'planning': return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30';
-            case 'confirmed': return 'text-green-400 bg-green-500/20 border-green-500/30';
-            case 'in_progress': return 'text-blue-400 bg-blue-500/20 border-blue-500/30';
-            case 'completed': return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
-            case 'cancelled': return 'text-red-400 bg-red-500/20 border-red-500/30';
-            default: return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
-        }
-    };
-    return (_jsxs(motion.div, { className: "mt-4 p-4 bg-white/5 border border-white/10 rounded-lg", initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, children: [_jsxs("div", { className: "flex items-center justify-between mb-3", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: cn("px-2 py-1 rounded text-xs border", getStatusColor(coordination.status)), children: coordination.status.replace('_', ' ').toUpperCase() }), _jsxs("span", { className: "text-sm text-gray-300", children: [interestedCount, " ", interestedCount === 1 ? 'person' : 'people', " interested", coordination.maxParticipants && ` (${coordination.maxParticipants} max)`] })] }), coordination.datetime && (_jsxs("div", { className: "flex items-center gap-1 text-xs text-gray-400", children: [_jsx(Clock, { className: "w-3 h-3" }), _jsx("span", { children: new Date(coordination.datetime instanceof Date
-                                    ? coordination.datetime
-                                    : coordination.datetime.toDate()).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: '2-digit'
-                                }) })] }))] }), coordination.details && (_jsxs("div", { className: "mb-3 space-y-2", children: [coordination.details.subject && (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "Subject:" }), _jsx("span", { className: "text-white", children: coordination.details.subject })] })), coordination.details.restaurant && (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "Restaurant:" }), _jsx("span", { className: "text-white", children: coordination.details.restaurant })] })), coordination.details.destination && (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "Destination:" }), _jsx("span", { className: "text-white", children: coordination.details.destination })] })), coordination.location && (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "Location:" }), _jsx("span", { className: "text-white", children: coordination.location })] }))] })), coordination.responses.length > 0 && (_jsx("div", { className: "mb-3", children: _jsxs("div", { className: "flex flex-wrap gap-1", children: [coordination.responses.slice(0, 8).map((response, i) => (_jsxs("div", { className: "flex items-center gap-1 px-2 py-1 bg-blue-500/20 border border-blue-500/30 rounded text-xs", children: [_jsx("div", { className: "w-4 h-4 rounded-full bg-gray-600 overflow-hidden", children: response.user?.photoURL ? (_jsx("img", { src: response.user.photoURL, alt: "", className: "w-full h-full object-cover" })) : (_jsx("div", { className: "w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center", children: _jsx("span", { className: "text-xs text-white", children: (response.user?.fullName || 'U').charAt(0).toUpperCase() }) })) }), _jsx("span", { className: "text-blue-300", children: response.user?.fullName || 'User' }), response.responseType === 'going' && (_jsx("span", { className: "text-green-400", children: "\u2713" }))] }, response.id))), coordination.responses.length > 8 && (_jsxs("span", { className: "text-xs text-gray-400 px-2 py-1", children: ["+", coordination.responses.length - 8, " more"] }))] }) })), _jsx("div", { className: "flex items-center gap-2", children: userResponse ? (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "You're" }), _jsx("span", { className: cn("px-2 py-1 rounded text-xs border", userResponse.responseType === 'going' ? 'text-green-400 bg-green-500/20 border-green-500/30' :
-                                userResponse.responseType === 'interested' ? 'text-blue-400 bg-blue-500/20 border-blue-500/30' :
-                                    userResponse.responseType === 'maybe' ? 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30' :
-                                        'text-gray-400 bg-gray-500/20 border-gray-500/30'), children: userResponse.responseType.replace('_', ' ') }), _jsx(motion.button, { className: "text-xs text-blue-400 hover:text-blue-300 transition-colors", onClick: () => setShowResponseForm(true), whileHover: { scale: 1.02 }, children: "Change" })] })) : (_jsx(motion.button, { className: "px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-all text-sm", onClick: () => setShowResponseForm(true), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: "I'm Interested" })) }), showResponseForm && (_jsx(motion.div, { className: "mt-3 p-3 bg-white/5 border border-white/10 rounded-lg", initial: { opacity: 0, height: 0 }, animate: { opacity: 1, height: 'auto' }, exit: { opacity: 0, height: 0 }, children: _jsxs("div", { className: "space-y-3", children: [_jsx("div", { className: "flex flex-wrap gap-2", children: ['interested', 'going', 'maybe', 'cant_make_it'].map((type) => (_jsx(motion.button, { className: cn("px-3 py-1 rounded text-xs border transition-all", responseType === type
-                                    ? 'text-blue-400 bg-blue-500/20 border-blue-500/30'
-                                    : 'text-gray-400 bg-gray-500/20 border-gray-500/30 hover:text-white'), onClick: () => setResponseType(type), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: type.replace('_', ' ') }, type))) }), _jsx("textarea", { className: "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-400 resize-none focus:outline-none focus:border-blue-400/50 transition-colors", placeholder: "Add a message (optional)...", rows: 2, value: responseMessage, onChange: (e) => setResponseMessage(e.target.value) }), _jsxs("div", { className: "flex justify-end gap-2", children: [_jsx(motion.button, { className: "px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors", onClick: () => {
-                                        setShowResponseForm(false);
-                                        setResponseMessage('');
-                                    }, whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: "Cancel" }), _jsx(motion.button, { className: "px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-md transition-colors disabled:opacity-50", onClick: handleResponse, disabled: isSubmitting, whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: isSubmitting ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "w-3 h-3 mr-1 inline animate-spin" }), "Submitting..."] })) : ('Submit Response') })] })] }) }))] }));
+    try { }
+    catch (error) {
+        console.error('Failed to submit coordination response:', error);
+    }
+    finally {
+        setIsSubmitting(false);
+    }
 };
+const userResponse = coordination.responses.find(r => r.userId === currentUserId);
+const interestedCount = coordination.responses.filter(r => r.responseType === 'interested' || r.responseType === 'going').length;
+const getStatusColor = (status) => {
+    switch (status) {
+        case 'planning': return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30';
+        case 'confirmed': return 'text-green-400 bg-green-500/20 border-green-500/30';
+        case 'in_progress': return 'text-blue-400 bg-blue-500/20 border-blue-500/30';
+        case 'completed': return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
+        case 'cancelled': return 'text-red-400 bg-red-500/20 border-red-500/30';
+        default: return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
+    }
+};
+return (_jsxs(motion.div, { className: "mt-4 p-4 bg-white/5 border border-white/10 rounded-lg", initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, children: [_jsxs("div", { className: "flex items-center justify-between mb-3", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: cn("px-2 py-1 rounded text-xs border", getStatusColor(coordination.status)), children: coordination.status.replace('_', ' ').toUpperCase() }), _jsxs("span", { className: "text-sm text-gray-300", children: [interestedCount, " ", interestedCount === 1 ? 'person' : 'people', " interested", coordination.maxParticipants && ` (${coordination.maxParticipants} max)`] })] }), coordination.datetime && (_jsxs("div", { className: "flex items-center gap-1 text-xs text-gray-400", children: [_jsx(Clock, { className: "w-3 h-3" }), _jsx("span", { children: new Date(coordination.datetime instanceof Date
+                                ? coordination.datetime
+                                : coordination.datetime.toDate()).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit'
+                            }) })] }))] }), coordination.details && (_jsxs("div", { className: "mb-3 space-y-2", children: [coordination.details.subject && (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "Subject:" }), _jsx("span", { className: "text-white", children: coordination.details.subject })] })), coordination.details.restaurant && (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "Restaurant:" }), _jsx("span", { className: "text-white", children: coordination.details.restaurant })] })), coordination.details.destination && (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "Destination:" }), _jsx("span", { className: "text-white", children: coordination.details.destination })] })), coordination.location && (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "Location:" }), _jsx("span", { className: "text-white", children: coordination.location })] }))] })), coordination.responses.length > 0 && (_jsx("div", { className: "mb-3", children: _jsxs("div", { className: "flex flex-wrap gap-1", children: [coordination.responses.slice(0, 8).map((response, i) => (_jsxs("div", { className: "flex items-center gap-1 px-2 py-1 bg-blue-500/20 border border-blue-500/30 rounded text-xs", children: [_jsx("div", { className: "w-4 h-4 rounded-full bg-gray-600 overflow-hidden", children: response.user?.photoURL ? (_jsx("img", { src: response.user.photoURL, alt: "", className: "w-full h-full object-cover" })) : (_jsx("div", { className: "w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center", children: _jsx("span", { className: "text-xs text-white", children: (response.user?.fullName || 'U').charAt(0).toUpperCase() }) })) }), _jsx("span", { className: "text-blue-300", children: response.user?.fullName || 'User' }), response.responseType === 'going' && (_jsx("span", { className: "text-green-400", children: "\u2713" }))] }, response.id))), coordination.responses.length > 8 && (_jsxs("span", { className: "text-xs text-gray-400 px-2 py-1", children: ["+", coordination.responses.length - 8, " more"] }))] }) })), _jsx("div", { className: "flex items-center gap-2", children: userResponse ? (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("span", { className: "text-gray-400", children: "You're" }), _jsx("span", { className: cn("px-2 py-1 rounded text-xs border", userResponse.responseType === 'going' ? 'text-green-400 bg-green-500/20 border-green-500/30' :
+                            userResponse.responseType === 'interested' ? 'text-blue-400 bg-blue-500/20 border-blue-500/30' :
+                                userResponse.responseType === 'maybe' ? 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30' :
+                                    'text-gray-400 bg-gray-500/20 border-gray-500/30'), children: userResponse.responseType.replace('_', ' ') }), _jsx(motion.button, { className: "text-xs text-blue-400 hover:text-blue-300 transition-colors", onClick: () => setShowResponseForm(true), whileHover: { scale: 1.02 }, children: "Change" })] })) : (_jsx(motion.button, { className: "px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-all text-sm", onClick: () => setShowResponseForm(true), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: "I'm Interested" })) }), showResponseForm && (_jsx(motion.div, { className: "mt-3 p-3 bg-white/5 border border-white/10 rounded-lg", initial: { opacity: 0, height: 0 }, animate: { opacity: 1, height: 'auto' }, exit: { opacity: 0, height: 0 }, children: _jsxs("div", { className: "space-y-3", children: [_jsx("div", { className: "flex flex-wrap gap-2", children: ['interested', 'going', 'maybe', 'cant_make_it'].map((type) => (_jsx(motion.button, { className: cn("px-3 py-1 rounded text-xs border transition-all", responseType === type
+                                ? 'text-blue-400 bg-blue-500/20 border-blue-500/30'
+                                : 'text-gray-400 bg-gray-500/20 border-gray-500/30 hover:text-white'), onClick: () => setResponseType(type), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: type.replace('_', ' ') }, type))) }), _jsx("textarea", { className: "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-400 resize-none focus:outline-none focus:border-blue-400/50 transition-colors", placeholder: "Add a message (optional)...", rows: 2, value: responseMessage, onChange: (e) => setResponseMessage(e.target.value) }), _jsxs("div", { className: "flex justify-end gap-2", children: [_jsx(motion.button, { className: "px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors", onClick: () => {
+                                    setShowResponseForm(false);
+                                    setResponseMessage('');
+                                }, whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: "Cancel" }), _jsx(motion.button, { className: "px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-md transition-colors disabled:opacity-50", onClick: handleResponse, disabled: isSubmitting, whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: isSubmitting ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "w-3 h-3 mr-1 inline animate-spin" }), "Submitting..."] })) : ('Submit Response') })] })] }) }))] }));
+;
 // Comment Thread Component for nested replies
 const CommentThread = ({ comment, onReply, level }) => {
     const [showReplyInput, setShowReplyInput] = useState(false);
@@ -281,8 +285,8 @@ const sortedPosts = normalizedPosts
         default:
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     }
-})
-    .slice(0, maxPosts);
+});
+slice(0, maxPosts);
 const handleCreatePost = useCallback((type) => {
     onCreatePost?.(type);
     setShowCreateMenu(false);
@@ -298,7 +302,9 @@ const togglePostExpansion = useCallback((postId) => {
         }
         return newSet;
     });
-}, []);
+});
+[];
+;
 // Loading state
 if (isLoading) {
     return (_jsx("div", { ref: ref, className: cn(hivePostsSurfaceVariants({ mode, className })), ...props, children: _jsx("div", { className: "space-y-4", children: Array.from({ length: 3 }).map((_, i) => (_jsxs("div", { className: "bg-[var(--hive-background-primary)]/10 backdrop-blur-sm border border-white/5 rounded-xl p-5 animate-pulse", children: [_jsxs("div", { className: "flex items-start gap-3 mb-4", children: [_jsx("div", { className: "w-10 h-10 bg-gray-600 rounded-full" }), _jsxs("div", { className: "flex-1", children: [_jsx("div", { className: "h-4 bg-gray-600 rounded mb-2 w-32" }), _jsx("div", { className: "h-3 bg-gray-700 rounded w-24" })] })] }), _jsxs("div", { className: "space-y-2", children: [_jsx("div", { className: "h-4 bg-gray-600 rounded" }), _jsx("div", { className: "h-4 bg-gray-600 rounded w-3/4" }), _jsx("div", { className: "h-4 bg-gray-600 rounded w-1/2" })] })] }, i))) }) }));
@@ -353,10 +359,7 @@ return (_jsxs("div", { ref: ref, className: cn(hivePostsSurfaceVariants({ mode, 
                                                                 return newSet;
                                                             });
                                                         }
-                                                        else {
-                                                            setExpandedComments(prev => new Set([...prev, post.id]));
-                                                        }
-                                                    } }), ")} whileHover=", { scale: 1.05 }, "whileTap=", { scale: 0.95 }, ">", _jsx(Reply, { className: "w-4 h-4" }), _jsx("span", { children: post.replyCount || post.replies || 0 }), _jsx("span", { className: "ml-1", children: expandedComments.has(post.id) ? 'Hide' : 'Reply' })] }), _jsxs(motion.button, { className: "flex items-center gap-1.5 text-xs text-gray-400 hover:text-green-400 transition-colors", onClick: () => onSharePost?.(post.id), whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: [_jsx(Share2, { className: "w-4 h-4" }), _jsx("span", { children: "Share" })] })] }), _jsxs("div", { className: "flex items-center gap-3 text-xs text-gray-400", children: [_jsxs("div", { className: "flex items-center gap-1", children: [_jsx(Eye, { className: "w-3 h-3" }), _jsx("span", { children: post.views })] }), _jsx(motion.button, { className: "p-1 hover:text-yellow-400 transition-colors", whileHover: { scale: 1.1 }, whileTap: { scale: 0.9 }, children: _jsx(Bookmark, { className: "w-3 h-3" }) })] })] }), post.coordinationData && (_jsx(CoordinationSection, { post: post, onCoordinationResponse: onCoordinationResponse, onUpdateStatus: onUpdateCoordinationStatus, currentUserId: currentUserId })), expandedComments.has(post.id) && (_jsx(motion.div, { className: "mt-4 pt-4 border-t border-white/5", initial: { opacity: 0, height: 0 }, animate: { opacity: 1, height: 'auto' }, exit: { opacity: 0, height: 0 }, children: _jsx("div", { className: "mb-4", children: _jsxs("div", { className: "flex gap-3", children: [_jsx("div", { className: "flex-shrink-0 w-8 h-8 rounded-full bg-gray-600 overflow-hidden", children: _jsx("div", { className: "w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center", children: _jsx("span", { className: "text-xs font-medium text-[var(--hive-text-primary)]", children: "U" }) }) }), _jsxs("div", { className: "flex-1", children: [_jsx("textarea", { className: "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--hive-text-primary)] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-400/50 transition-colors", placeholder: "Add a comment...", rows: 2, value: commentText[post.id] || '', onChange: (e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value })) }), commentText[post.id]?.trim() && (_jsxs("div", { className: "flex justify-end mt-2", children: [_jsx(motion.button, { className: "px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-md transition-colors", onClick: async () => {
+                                                    }, else: true, ...setExpandedComments(prev => new Set([...prev, post.id])) }), "})} whileHover=", { scale: 1.05 }, "whileTap=", { scale: 0.95 }, ">", _jsx(Reply, { className: "w-4 h-4" }), _jsx("span", { children: post.replyCount || post.replies || 0 }), _jsx("span", { className: "ml-1", children: expandedComments.has(post.id) ? 'Hide' : 'Reply' })] }), _jsxs(motion.button, { className: "flex items-center gap-1.5 text-xs text-gray-400 hover:text-green-400 transition-colors", onClick: () => onSharePost?.(post.id), whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: [_jsx(Share2, { className: "w-4 h-4" }), _jsx("span", { children: "Share" })] })] }), _jsxs("div", { className: "flex items-center gap-3 text-xs text-gray-400", children: [_jsxs("div", { className: "flex items-center gap-1", children: [_jsx(Eye, { className: "w-3 h-3" }), _jsx("span", { children: post.views })] }), _jsx(motion.button, { className: "p-1 hover:text-yellow-400 transition-colors", whileHover: { scale: 1.1 }, whileTap: { scale: 0.9 }, children: _jsx(Bookmark, { className: "w-3 h-3" }) })] })] }), post.coordinationData && (_jsx(CoordinationSection, { post: post, onCoordinationResponse: onCoordinationResponse, onUpdateStatus: onUpdateCoordinationStatus, currentUserId: currentUserId })), expandedComments.has(post.id) && (_jsx(motion.div, { className: "mt-4 pt-4 border-t border-white/5", initial: { opacity: 0, height: 0 }, animate: { opacity: 1, height: 'auto' }, exit: { opacity: 0, height: 0 }, children: _jsx("div", { className: "mb-4", children: _jsxs("div", { className: "flex gap-3", children: [_jsx("div", { className: "flex-shrink-0 w-8 h-8 rounded-full bg-gray-600 overflow-hidden", children: _jsx("div", { className: "w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center", children: _jsx("span", { className: "text-xs font-medium text-[var(--hive-text-primary)]", children: "U" }) }) }), _jsxs("div", { className: "flex-1", children: [_jsx("textarea", { className: "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--hive-text-primary)] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-400/50 transition-colors", placeholder: "Add a comment...", rows: 2, value: commentText[post.id] || '', onChange: (e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value })) }), commentText[post.id]?.trim() && (_jsxs("div", { className: "flex justify-end mt-2", children: [_jsx(motion.button, { className: "px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-md transition-colors", onClick: async () => {
                                                                 if (onCreateComment && commentText[post.id]?.trim()) {
                                                                     try {
                                                                         await onCreateComment(post.id, commentText[post.id].trim());

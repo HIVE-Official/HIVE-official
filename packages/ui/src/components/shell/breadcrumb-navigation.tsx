@@ -48,7 +48,7 @@ export function generateBreadcrumbsFromPath(pathname: string): BreadcrumbItem[] 
         label: mapping.label,
         href: currentPath,
         icon: mapping.icon,
-      })
+      })}
     } else {
       // Dynamic segments (like IDs)
       let label = segment;
@@ -63,7 +63,7 @@ export function generateBreadcrumbsFromPath(pathname: string): BreadcrumbItem[] 
       breadcrumbs.push({
         label,
         href: currentPath,
-      })
+      })}
     }
   }
   

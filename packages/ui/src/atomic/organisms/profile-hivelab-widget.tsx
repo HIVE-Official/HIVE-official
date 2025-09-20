@@ -44,7 +44,7 @@ export interface ProfileBuilderTool {
   lastWorkedOn: string;
   isPublic: boolean;
   isFeatured?: boolean;
-  technologyStack?: string[]
+  technologyStack?: string[];
 }
 
 export interface BuilderProject {
@@ -55,14 +55,14 @@ export interface BuilderProject {
   deadline?: string;
   progress: number;
   teamSize: number;
-  isActive: boolean
+  isActive: boolean;
 }
 
 export interface ProfileHiveLabWidgetProps {
   user: {
     id: string;
     name: string;
-    builderLevel?: 'novice' | 'apprentice' | 'expert' | 'master'
+    builderLevel?: 'novice' | 'apprentice' | 'expert' | 'master';
   };
   builderTools?: ProfileBuilderTool[];
   activeProjects?: BuilderProject[];
@@ -79,7 +79,7 @@ export interface ProfileHiveLabWidgetProps {
   onDeployTool?: (toolId: string) => void;
   onViewAllBuilds?: () => void;
   onViewBuildLab?: () => void;
-  className?: string
+  className?: string;
 }
 
 const getToolCategoryConfig = (category: string) => {
@@ -121,7 +121,7 @@ const getToolCategoryConfig = (category: string) => {
     }
   };
   
-  return configs[category as keyof typeof configs] || configs.utility
+  return configs[category as keyof typeof configs] || configs.utility;
 };
 
 const getBuildStatusConfig = (status: string) => {
@@ -158,7 +158,7 @@ const getBuildStatusConfig = (status: string) => {
     }
   };
   
-  return configs[status as keyof typeof configs] || configs.concept
+  return configs[status as keyof typeof configs] || configs.concept;
 };
 
 const getBuilderLevelConfig = (level: string) => {
@@ -189,7 +189,7 @@ const getBuilderLevelConfig = (level: string) => {
     }
   };
   
-  return configs[level as keyof typeof configs] || configs.novice
+  return configs[level as keyof typeof configs] || configs.novice;
 };
 
 const formatTimeAgo = (timestamp: string) => {
@@ -199,12 +199,12 @@ const formatTimeAgo = (timestamp: string) => {
   
   if (diffInHours < 1) {
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    return diffInMinutes < 1 ? 'Just now' : `${diffInMinutes}m ago`
+    return diffInMinutes < 1 ? 'Just now' : `${diffInMinutes}m ago`;
   } else if (diffInHours < 24) {
-    return `${diffInHours}h ago`
+    return `${diffInHours}h ago`;
   } else {
     const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays}d ago`
+    return `${diffInDays}d ago`;
   }
 };
 
@@ -363,8 +363,8 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                     return <IconComponent className={cn(
                       'h-4 w-4 mt-0.5 flex-shrink-0',
                       getToolCategoryConfig(featuredBuild.category).color
-                    )} />
-                  })()}
+                    )} />;
+                  })}()}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Text variant="body-sm" weight="medium" color="primary" className="truncate">
@@ -413,8 +413,8 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onEditTool(featuredBuild.id)
-          }}
+                        onEditTool(featuredBuild.id);
+                      }}
                       className="h-6 w-6 text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]"
                     >
                       <Play className="h-3 w-3" />
@@ -426,8 +426,8 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onDeployTool(featuredBuild.id)
-          }}
+                        onDeployTool(featuredBuild.id);
+                      }}
                       className="h-6 w-6 text-green-500 hover:text-green-600"
                     >
                       <Rocket className="h-3 w-3" />
@@ -475,8 +475,8 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
                     </Text>
                     <ChevronRight className="h-3 w-3 text-[var(--hive-text-secondary)]" />
                   </div>
-                )
-          })
+                );
+              })}
             </div>
           </div>
         )}
@@ -606,5 +606,5 @@ export const ProfileHiveLabWidget: React.FC<ProfileHiveLabWidgetProps> = ({
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-500/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
-  )
+  );
 };

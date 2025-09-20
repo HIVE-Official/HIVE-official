@@ -93,7 +93,7 @@ export function useAuth() {
       dispatch({ 
         type: 'AUTH_LOGIN_SUCCESS', 
         payload: { user: mockUser, token: 'mock-session-token' } 
-      });
+      })};
       
       return true
     } catch (err) {
@@ -246,7 +246,7 @@ export function useBuilderProgression() {
   const builderLevel = currentUser?.builderLevel || 'novice';
   
   // Calculate builder progression
-  const getBuilderProgress = (): { level: BuilderLevel; percentage: number; nextLevel: BuilderLevel | null } => {
+  const getBuilderProgress = (): { level: BuilderLevel; percentage: number; nextLevel: BuilderLevel | null} => {
     const progressMap: Record<BuilderLevel, { percentage: number; nextLevel: BuilderLevel | null }> = {
       novice: { percentage: 25, nextLevel: 'intermediate' },
       intermediate: { percentage: 50, nextLevel: 'advanced' },

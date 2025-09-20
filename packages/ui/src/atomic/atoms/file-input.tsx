@@ -119,12 +119,12 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
           return URL.createObjectURL(file)
         }
         return ''
-      });
+      })
       setPreviewUrls(newUrls)
     }
 
     onFileSelect?.(files)
-  };
+  }
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();

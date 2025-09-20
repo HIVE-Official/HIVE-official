@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Badge } from '../../atomic/atoms/badge';
 import { Button } from '../../atomic/atoms/button';
 import { Text } from '../../atomic/atoms/text';
-import { cn } from '../../lib/utils';
 import { Eye, Share2, Settings, CheckSquare, Clock, Users, Calendar, FileText, Zap } from 'lucide-react';
 export const UB_TOOL_TEMPLATES = [
     {
@@ -91,19 +90,21 @@ export function SimpleToolBuilder({ selectedTemplate, onTemplateSelect, onBuildT
                 toolName: selectedTemplate.name,
                 description: selectedTemplate.description
             }));
-            setActiveStep('configure');
         }
-    }, [selectedTemplate]);
-    return (_jsxs("div", { className: cn("max-w-4xl mx-auto space-y-6", className), children: [_jsxs("div", { className: "text-center", children: [_jsxs("div", { className: "flex items-center justify-center gap-2 mb-4", children: [_jsx(Zap, { className: "h-6 w-6 text-[var(--hive-brand-secondary)]" }), _jsx(Text, { variant: "display-lg", weight: "bold", children: "UB Campus Tool Builder" })] }), _jsx(Text, { variant: "body-lg", color: "secondary", children: "Build coordination tools for your campus community in minutes" })] }), _jsx("div", { className: "flex items-center justify-center gap-4 mb-8", children: ['select', 'configure', 'preview'].map((step, index) => (_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: cn("w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium", activeStep === step
-                                ? "bg-[var(--hive-brand-secondary)] text-white"
-                                : index < ['select', 'configure', 'preview'].indexOf(activeStep)
-                                    ? "bg-[var(--hive-status-success)] text-white"
-                                    : "bg-[var(--hive-background-tertiary)] text-[var(--hive-text-secondary)]"), children: index + 1 }), _jsx(Text, { variant: "body-sm", weight: "medium", color: activeStep === step ? 'primary' : 'secondary', children: step === 'select' ? 'Choose Template' :
-                                step === 'configure' ? 'Configure Tool' : 'Preview & Build' }), index < 2 && (_jsx("div", { className: "w-8 h-px bg-[var(--hive-border-default)]" }))] }, step))) }), activeStep === 'select' && (_jsx(ToolTemplateSelection, { templates: UB_TOOL_TEMPLATES, onSelectTemplate: (template) => {
-                    onTemplateSelect?.(template);
-                    setActiveStep('configure');
-                } })), activeStep === 'configure' && selectedTemplate && (_jsx(ToolConfiguration, { template: selectedTemplate, config: buildConfig, onConfigChange: setBuildConfig, onNext: () => setActiveStep('preview'), onBack: () => setActiveStep('select') })), activeStep === 'preview' && selectedTemplate && (_jsx(ToolPreview, { template: selectedTemplate, config: buildConfig, onBuild: () => onBuildTool?.(selectedTemplate, buildConfig), onBack: () => setActiveStep('configure') }))] }));
+    });
+    setActiveStep('configure');
 }
+[selectedTemplate];
+;
+return (_jsxs("div", { className: cn("max-w-4xl mx-auto space-y-6", className), children: [_jsxs("div", { className: "text-center", children: [_jsxs("div", { className: "flex items-center justify-center gap-2 mb-4", children: [_jsx(Zap, { className: "h-6 w-6 text-[var(--hive-brand-secondary)]" }), _jsx(Text, { variant: "display-lg", weight: "bold", children: "UB Campus Tool Builder" })] }), _jsx(Text, { variant: "body-lg", color: "secondary", children: "Build coordination tools for your campus community in minutes" })] }), _jsx("div", { className: "flex items-center justify-center gap-4 mb-8", children: ['select', 'configure', 'preview'].map((step, index) => (_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: cn("w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium", activeStep === step
+                            ? "bg-[var(--hive-brand-secondary)] text-white"
+                            : index < ['select', 'configure', 'preview'].indexOf(activeStep)
+                                ? "bg-[var(--hive-status-success)] text-white"
+                                : "bg-[var(--hive-background-tertiary)] text-[var(--hive-text-secondary)]"), children: index + 1 }), _jsx(Text, { variant: "body-sm", weight: "medium", color: activeStep === step ? 'primary' : 'secondary', children: step === 'select' ? 'Choose Template' :
+                            step === 'configure' ? 'Configure Tool' : 'Preview & Build' }), index < 2 && (_jsx("div", { className: "w-8 h-px bg-[var(--hive-border-default)]" }))] }, step))) }), activeStep === 'select' && (_jsx(ToolTemplateSelection, { templates: UB_TOOL_TEMPLATES, onSelectTemplate: (template) => {
+                onTemplateSelect?.(template);
+                setActiveStep('configure');
+            } })), activeStep === 'configure' && selectedTemplate && (_jsx(ToolConfiguration, { template: selectedTemplate, config: buildConfig, onConfigChange: setBuildConfig, onNext: () => setActiveStep('preview'), onBack: () => setActiveStep('select') })), activeStep === 'preview' && selectedTemplate && (_jsx(ToolPreview, { template: selectedTemplate, config: buildConfig, onBuild: () => onBuildTool?.(selectedTemplate, buildConfig), onBack: () => setActiveStep('configure') }))] }));
 export function ToolTemplateSelection({ templates, onSelectTemplate }) {
     const categorizedTemplates = templates.reduce((acc, template) => {
         if (!acc[template.category])

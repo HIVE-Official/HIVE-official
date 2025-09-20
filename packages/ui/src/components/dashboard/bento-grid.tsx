@@ -365,7 +365,7 @@ function BentoGridItemComponent({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                       >
-                        {sizeOptions.map(({ size, label, disabled })} => (
+                        {sizeOptions.map(map}) => (
                           <button
                             key={size}
                             className={`

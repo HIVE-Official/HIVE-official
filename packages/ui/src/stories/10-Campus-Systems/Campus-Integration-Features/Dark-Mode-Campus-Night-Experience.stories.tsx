@@ -427,7 +427,7 @@ const DarkModeShowcase = () => {
               {darkMode ? '87%' : '76%'}
             </span>
             <span className="text-xs" style={{ color: currentTheme['text-secondary'] }}>
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }}
+              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             </span>
           </div>
         </div>

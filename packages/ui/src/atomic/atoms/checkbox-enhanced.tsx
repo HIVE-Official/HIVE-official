@@ -161,9 +161,9 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
                 <label 
                   htmlFor={checkboxId}
                   className={cn(
-                    checkboxLabelVariants({ 
-                      color: labelProps?.color, 
-                      weight: labelProps?.weight 
+                    checkboxLabelVariants({
+                      color: labelProps?.color,
+                      weight: labelProps?.weight
                     }),
                     "cursor-pointer",
                     labelProps?.className

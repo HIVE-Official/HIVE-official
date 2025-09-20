@@ -61,7 +61,7 @@ interface HiveUser {
   isBuilder?: boolean;
   completionPercentage?: number;
   statusMessage?: string;
-  memberSince?: string
+  memberSince?: string;
 }
 
 interface CampusSpace {
@@ -78,8 +78,8 @@ interface CampusSpace {
   recentActivity?: {
     type: 'message' | 'announcement' | 'event';
     preview: string;
-    timestamp: string
-  }
+    timestamp: string;
+  };
 }
 
 interface CampusActivity {
@@ -89,15 +89,15 @@ interface CampusActivity {
   content?: string;
   author?: {
     name: string;
-    handle: string
+    handle: string;
   };
   timestamp: string;
   priority?: 'low' | 'medium' | 'high';
   isUnread?: boolean;
   metadata?: {
     likes?: number;
-    replyCount?: number
-  }
+    replyCount?: number;
+  };
 }
 
 interface CampusTool {
@@ -113,7 +113,7 @@ interface CampusTool {
   usageCount?: number;
   createdAt?: string;
   isPublic?: boolean;
-  likes?: number
+  likes?: number;
 }
 
 interface CalendarEvent {
@@ -126,7 +126,7 @@ interface CalendarEvent {
   location?: string;
   spaceId?: string;
   spaceName?: string;
-  status: 'confirmed' | 'tentative' | 'cancelled'
+  status: 'confirmed' | 'tentative' | 'cancelled';
 }
 
 interface CalendarConflict {
@@ -140,8 +140,8 @@ interface CalendarConflict {
     action: 'reschedule' | 'cancel' | 'shorten' | 'move_location';
     eventId: string;
     newTime?: string;
-    newLocation?: string
-  }>
+    newLocation?: string;
+  }>;
 }
 
 interface UserStats {
@@ -149,7 +149,7 @@ interface UserStats {
   spaces?: number;
   tools?: number;
   achievements?: number;
-  contributions?: number
+  contributions?: number;
 }
 
 interface LoadingStates {
@@ -157,7 +157,7 @@ interface LoadingStates {
   spaces?: boolean;
   activities?: boolean;
   tools?: boolean;
-  calendar?: boolean
+  calendar?: boolean;
 }
 
 // Main component props
@@ -195,7 +195,7 @@ export interface UnifiedProfileDashboardProps {
   onDeleteEvent?: (id: string) => void;
   onResolveConflict?: (conflictId: string, resolution: string, eventId?: string) => void;
   onAvatarChange?: (file: File) => void;
-  onStatClick?: (statType: string) => void
+  onStatClick?: (statType: string) => void;
 }
 
 // Widget components
@@ -205,7 +205,7 @@ const ProfileHeaderWidget: React.FC<{
   isLoading?: boolean;
   onEditProfile?: () => void;
   onAvatarChange?: (file: File) => void;
-  onStatClick?: (statType: string) => void
+  onStatClick?: (statType: string) => void;
 }> = ({ user, stats = {}, isLoading, onEditProfile, onAvatarChange, onStatClick }) => {
   const [imageError, setImageError] = useState(false);
 
@@ -221,7 +221,7 @@ const ProfileHeaderWidget: React.FC<{
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -265,10 +265,10 @@ const ProfileHeaderWidget: React.FC<{
               input.accept = 'image/*';
               input.onchange = (e) => {
                 const file = (e.target as HTMLInputElement).files?.[0];
-                if (file && onAvatarChange) onAvatarChange(file)
+                if (file && onAvatarChange) onAvatarChange(file);
               };
-              input.click()
-          })}
+              input.click();
+            }}
             className="absolute inset-0 bg-black/0 group-hover:bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
           >
             <Camera className="text-white" size={20} />
@@ -328,7 +328,7 @@ const ProfileHeaderWidget: React.FC<{
         </div>
       </div>
     </motion.div>
-  )
+  );
 };
 
 // Activities Widget
@@ -336,7 +336,7 @@ const ActivitiesWidget: React.FC<{
   activities?: CampusActivity[];
   isLoading?: boolean;
   onActivityClick?: (activityId: string) => void;
-  onViewAllActivities?: () => void
+  onViewAllActivities?: () => void;
 }> = ({ activities = [], isLoading, onActivityClick, onViewAllActivities }) => {
   if (isLoading) {
     return (
@@ -354,7 +354,7 @@ const ActivitiesWidget: React.FC<{
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -407,7 +407,7 @@ const ActivitiesWidget: React.FC<{
         </div>
       )}
     </motion.div>
-  )
+  );
 };
 
 // Tools Widget
@@ -417,7 +417,7 @@ const ToolsWidget: React.FC<{
   isLoading?: boolean;
   onToolClick?: (toolId: string) => void;
   onCreateTool?: (toolType: string) => void;
-  onJoinToolsWaitlist?: () => void
+  onJoinToolsWaitlist?: () => void;
 }> = ({ availableTools = [], createdTools = [], isLoading, onToolClick, onCreateTool, onJoinToolsWaitlist }) => {
   if (isLoading) {
     return (
@@ -435,7 +435,7 @@ const ToolsWidget: React.FC<{
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   const allTools = [...createdTools, ...availableTools];
@@ -500,7 +500,7 @@ const ToolsWidget: React.FC<{
         </div>
       )}
     </motion.div>
-  )
+  );
 };
 
 const SpacesWidget: React.FC<{
@@ -508,7 +508,7 @@ const SpacesWidget: React.FC<{
   isLoading?: boolean;
   onSpaceClick?: (spaceId: string) => void;
   onViewAllSpaces?: () => void;
-  onJoinSpace?: () => void
+  onJoinSpace?: () => void;
 }> = ({ spaces = [], isLoading, onSpaceClick, onViewAllSpaces, onJoinSpace }) => {
   if (isLoading) {
     return (
@@ -529,7 +529,7 @@ const SpacesWidget: React.FC<{
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -595,7 +595,7 @@ const SpacesWidget: React.FC<{
         {spaces.length > 0 ? 'View All Spaces' : 'Find Spaces'}
       </button>
     </motion.div>
-  )
+  );
 };
 
 // Main component
@@ -641,7 +641,7 @@ export const UnifiedProfileDashboard: React.FC<UnifiedProfileDashboardProps> = (
       case 'tablet':
         return 'grid-cols-2 gap-6';
       default:
-        return 'grid-cols-1 lg:grid-cols-3 gap-6'
+        return 'grid-cols-1 lg:grid-cols-3 gap-6';
     }
   };
 
@@ -695,7 +695,7 @@ export const UnifiedProfileDashboard: React.FC<UnifiedProfileDashboardProps> = (
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default UnifiedProfileDashboard;

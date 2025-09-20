@@ -3,7 +3,7 @@
  * NO DEVELOPMENT BYPASSES - PRODUCTION ONLY
  */
 
-import { getAuth } from 'firebase-admin/auth';
+import * as admin from 'firebase-admin';
 import { NextRequest } from 'next/server';
 import { currentEnvironment } from './env';
 import { captureError, LogLevel } from './error-monitoring';
@@ -154,7 +154,7 @@ export async function validateProductionToken(
 
   try {
     // Use Firebase Admin SDK for token validation
-    const auth = getAuth();
+    const auth = admin.auth();
     const decodedToken = await auth.verifyIdToken(token, true); // checkRevoked = true
 
     // Additional security checks

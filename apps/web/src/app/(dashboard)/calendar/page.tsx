@@ -7,6 +7,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Button, Card, Badge } from "@hive/ui";
 import { HiveModal } from "@/components/temp-stubs";
 import { PageContainer } from "@/components/temp-stubs";
+import { logger } from "@/lib/logger";
 import { 
   Calendar, 
   Plus, 
@@ -90,7 +91,9 @@ export default function CalendarPage() {
                 const parsed = JSON.parse(session) as { userId?: string };
                 return parsed.userId || 'anonymous';
               } catch (error) {
-                console.error('Failed to parse session for calendar auth:', error);
+                logger.error('Failed to parse session for calendar auth', {
+                  error: error instanceof Error ? error.message : 'Unknown error'
+                });
                 return 'anonymous';
               }
             })()}`,
@@ -152,7 +155,10 @@ export default function CalendarPage() {
         setEvents(transformedEvents);
         setIntegrations(defaultIntegrations);
       } catch (error) {
-        console.error('Error fetching calendar events:', error);
+        logger.error('Error fetching calendar events', {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : undefined
+        });
         // Fallback to empty state on error
         setEvents([]);
         setIntegrations([]);
@@ -686,7 +692,7 @@ export default function CalendarPage() {
             );
           }}
           onBookmark={(eventId) => {
-            console.log('Bookmark event:', eventId);
+            logger.debug('Bookmark event', { eventId });
           }}
         />
       </PageContainer>

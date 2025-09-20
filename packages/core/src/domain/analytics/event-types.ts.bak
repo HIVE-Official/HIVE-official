@@ -1,0 +1,213 @@
+import type { BaseAnalyticsEvent, EventContext, TouchPoint } from './base-types';
+
+// Landing Page Specific Events
+export interface LandingPageViewEvent extends BaseAnalyticsEvent {
+  event: "landing_page_view";
+  category: "page_view";
+  properties: {
+    variant: "default" | "animated" | "minimal" | "bold";
+    heroVersion: string;
+    loadTime: number;
+    firstContentfulPaint: number;
+    largestContentfulPaint: number;
+    cumulativeLayoutShift: number;
+    firstInputDelay: number;
+    abTestVariant?: string;
+  };
+}
+
+export interface HeroInteractionEvent extends BaseAnalyticsEvent {
+  event: "hero_interaction";
+  category: "user_interaction";
+  properties: {
+    interactionType: "hover" | "click" | "scroll" | "focus";
+    element: "headline" | "cta" | "background" | "animation";
+    position: {
+      x: number;
+      y: number;
+    };
+    timeFromLoad: number;
+    scrollPosition: number;
+  };
+}
+
+export interface CTAClickEvent extends BaseAnalyticsEvent {
+  event: "cta_click";
+  category: "conversion";
+  properties: {
+    ctaText: string;
+    ctaVariant: "primary" | "secondary" | "outline" | "ghost";
+    ctaSize: "sm" | "md" | "lg" | "xl";
+    position: "hero" | "section" | "footer";
+    timeFromLoad: number;
+    scrollPosition: number;
+    clickPosition: {
+      x: number;
+      y: number;
+    };
+    destination: string;
+  };
+}
+
+export interface ScrollDepthEvent extends BaseAnalyticsEvent {
+  event: "scroll_depth";
+  category: "engagement";
+  properties: {
+    depth: number; // percentage maxDepth: number;
+    timeToDepth: number;
+    section: string;
+    totalPageHeight: number;
+    viewportHeight: number;
+  };
+}
+
+export interface AnimationViewEvent extends BaseAnalyticsEvent {
+  event: "animation_view";
+  category: "engagement";
+  properties: {
+    animationType: "gradient_flow" | "scale_in" | "slide_up" | "fade_in";
+    element: "headline" | "cta" | "background" | "section";
+    duration: number;
+    completed: boolean;
+    interrupted: boolean;
+    reducedMotion: boolean;
+  };
+}
+
+export interface FormInteractionEvent extends BaseAnalyticsEvent {
+  event: "form_interaction";
+  category: "user_interaction";
+  properties: {
+    formType: "email_capture" | "waitlist" | "contact" | "newsletter";
+    action: "focus" | "input" | "submit" | "error" | "success";
+    field?: string;
+    errorType?: string;
+    timeToComplete?: number;
+    attempts?: number;
+  };
+}
+
+export interface ConversionEvent extends BaseAnalyticsEvent {
+  event: "conversion";
+  category: "conversion";
+  properties: {
+    conversionType:
+      | "email_capture"
+      | "signup_start"
+      | "signup_complete"
+      | "campus_select";
+    value?: number;
+    currency?: string;
+    funnel: {
+      step: number;
+      totalSteps: number;
+      stepName: string;
+    };
+    timeToConvert: number;
+    touchpoints: TouchPoint[];
+  };
+}
+
+export interface PerformanceEvent extends BaseAnalyticsEvent {
+  event: "performance_metric";
+  category: "performance";
+  properties: {
+    metricType: "web_vital" | "custom" | "network" | "rendering";
+    name: string;
+    value: number;
+    unit: string;
+    threshold?: {
+      good: number;
+      poor: number;
+    };
+    rating: "good" | "needs-improvement" | "poor";
+  };
+}
+
+export interface ErrorEvent extends BaseAnalyticsEvent {
+  event: "error";
+  category: "error";
+  properties: {
+    errorType: "javascript" | "network" | "rendering" | "validation";
+    message: string;
+    stack?: string;
+    source: string;
+    line?: number;
+    column?: number;
+    severity: "low" | "medium" | "high" | "critical";
+    recoverable: boolean;
+  };
+}
+
+// Event creation functions
+export function createLandingPageViewEvent(
+  sessionId: string,
+  properties: LandingPageViewEvent["properties"],
+  context: EventContext
+): LandingPageViewEvent {
+  return {
+    id: crypto.randomUUID(),
+    timestamp: new Date(),
+    sessionId,
+    event: "landing_page_view",
+    category: "page_view",
+    properties,
+    context,
+    metadata: {
+      version: "1.0.0",
+      environment: "development",
+      buildId: "",
+      region: "",
+      processed: false,
+    }
+  };
+}
+
+export function createCTAClickEvent(
+  sessionId: string,
+  properties: CTAClickEvent["properties"],
+  context: EventContext,
+  userId?: string
+): CTAClickEvent {
+  return {
+    id: crypto.randomUUID(),
+    timestamp: new Date(),
+    sessionId,
+    userId,
+    event: "cta_click",
+    category: "conversion",
+    properties,
+    context,
+    metadata: {
+      version: "1.0.0",
+      environment: "development",
+      buildId: "",
+      region: "",
+      processed: false,
+    }
+  };
+}
+
+export function createScrollDepthEvent(
+  sessionId: string,
+  properties: ScrollDepthEvent["properties"],
+  context: EventContext,
+  userId?: string
+): ScrollDepthEvent {
+  return {
+    id: crypto.randomUUID(),
+    timestamp: new Date(),
+    sessionId,
+    userId,
+    event: "scroll_depth",
+    category: "engagement",
+    properties,
+    context,
+    metadata: {
+      version: "1.0.0",
+      environment: "development",
+      buildId: "",
+      region: "",
+      processed: false,
+    }
+  };

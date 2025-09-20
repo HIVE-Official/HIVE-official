@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
+import * as admin from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -29,7 +29,7 @@ export async function GET(
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = getAuth();
+    const auth = admin.auth();
     const decodedToken = await auth.verifyIdToken(token);
 
     // Check if user is member of the space
@@ -140,7 +140,7 @@ export async function POST(
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = getAuth();
+    const auth = admin.auth();
     const decodedToken = await auth.verifyIdToken(token);
 
     // Parse request body
@@ -220,7 +220,7 @@ export async function POST(
       .collection("posts")
       .doc(postId)
       .update({
-        replyCount: admin.firestore.FieldValue.increment(1),
+        replyCount: admin.firestore.admin.firestore.FieldValue.increment(1),
         updatedAt: new Date()
       });
 

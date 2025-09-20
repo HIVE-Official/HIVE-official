@@ -36,14 +36,14 @@ export interface ProfileAvatarWidgetProps {
     profileViews?: number;
     achievements?: number;
     connections?: number;
-    isGhostMode?: boolean
+    isGhostMode?: boolean;
   };
   isEditable?: boolean;
   onEditProfile?: () => void;
   onUploadPhoto?: () => void;
   onToggleVisibility?: () => void;
   onViewProfile?: () => void;
-  className?: string
+  className?: string;
 }
 
 export const ProfileAvatarWidget: React.FC<ProfileAvatarWidgetProps> = ({
@@ -291,5 +291,5 @@ export const ProfileAvatarWidget: React.FC<ProfileAvatarWidgetProps> = ({
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-[var(--hive-brand-secondary)]/5 rounded-lg blur-xl" />
       )}
     </Card>
-  )
+  );
 };

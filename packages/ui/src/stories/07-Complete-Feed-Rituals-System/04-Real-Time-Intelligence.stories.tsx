@@ -719,7 +719,7 @@ export const AlgorithmVisualization: Story = {
                           }}
                         />
                       )
-                    })
+                    })}
                   </div>
                   
                   {/* Center Label */}

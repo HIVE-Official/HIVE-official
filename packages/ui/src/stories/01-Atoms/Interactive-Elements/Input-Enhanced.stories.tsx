@@ -373,7 +373,7 @@ const InputVariantsShowcase = () => {
                       )}
                     </div>
                   )
-                })
+                })}
               </div>
             </CardContent>
           </Card>

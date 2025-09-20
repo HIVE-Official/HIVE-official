@@ -32,14 +32,14 @@ export function usePerformanceMonitor(componentName: string) {
         renderCount: renderCount.current,
         renderTime: `${renderTime}ms`,
         totalTime: `${now - mountTime.current}ms`
-      })
+      })};
     }
   });
 
   return {
     renderCount: renderCount.current,
     totalTime: Date.now() - mountTime.current
-  }
+  };
 }
 
 // Intelligent caching system
@@ -50,9 +50,9 @@ class ToolCache {
 
   static getInstance(): ToolCache {
     if (!ToolCache.instance) {
-      ToolCache.instance = new ToolCache()
+      ToolCache.instance = new ToolCache();
     }
-    return ToolCache.instance
+    return ToolCache.instance;
   }
 
   set(key: string, data: any, ttl: number = this.DEFAULT_TTL): void {
@@ -63,7 +63,7 @@ class ToolCache {
     });
 
     // Cleanup expired entries periodically
-    this.cleanup()
+    this.cleanup();
   }
 
   get(key: string): any | null {
@@ -73,16 +73,16 @@ class ToolCache {
     const isExpired = Date.now() - entry.timestamp > entry.ttl;
     if (isExpired) {
       this.cache.delete(key);
-      return null
+      return null;
     }
 
-    return entry.data
+    return entry.data;
   }
 
   invalidate(pattern: string): void {
     for (const [key] of this.cache) {
       if (key.includes(pattern)) {
-        this.cache.delete(key)
+        this.cache.delete(key);
       }
     }
   }
@@ -91,7 +91,7 @@ class ToolCache {
     const now = Date.now();
     for (const [key, entry] of this.cache) {
       if (now - entry.timestamp > entry.ttl) {
-        this.cache.delete(key)
+        this.cache.delete(key);
       }
     }
   }
@@ -100,7 +100,7 @@ class ToolCache {
     return {
       size: this.cache.size,
       keys: Array.from(this.cache.keys())
-    }
+    };
   }
 }
 
@@ -109,7 +109,7 @@ export function useToolCache<T>(key: string, fetcher: () => Promise<T>, ttl?: nu
   data: T | null;
   loading: boolean;
   error: Error | null;
-  refetch: () => void
+  refetch: () => void;
 } {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -126,25 +126,25 @@ export function useToolCache<T>(key: string, fetcher: () => Promise<T>, ttl?: nu
       if (cached) {
         setData(cached);
         setLoading(false);
-        return
+        return;
       }
 
       // Fetch fresh data
       const result = await fetcher();
       cache.set(key, result, ttl);
-      setData(result)
+      setData(result);
     } catch (err) {
-      setError(err as Error)
+      setError(err as Error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }, [key, fetcher, ttl, cache]);
 
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData }
+  return { data, loading, error, refetch: fetchData };
 }
 
 // Virtual scrolling for large lists
@@ -153,7 +153,7 @@ interface VirtualScrollProps {
   itemHeight: number;
   containerHeight: number;
   renderItem: (item: any, index: number) => React.ReactNode;
-  className?: string
+  className?: string;
 }
 
 export function VirtualScroll({ 
@@ -178,7 +178,7 @@ export function VirtualScroll({
   const offsetY = visibleStart * itemHeight;
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    setScrollTop(e.currentTarget.scrollTop)
+    setScrollTop(e.currentTarget.scrollTop);
   }, []);
 
   return (
@@ -198,14 +198,14 @@ export function VirtualScroll({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Lazy loading component
 interface LazyComponentProps {
   fallback?: React.ReactNode;
   threshold?: number;
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function LazyComponent({ children, fallback = null, threshold = 100 }: LazyComponentProps) {
@@ -217,24 +217,24 @@ export function LazyComponent({ children, fallback = null, threshold = 100 }: La
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect()
+          observer.disconnect();
         }
       },
       { rootMargin: `${threshold}px` }
     );
 
     if (ref.current) {
-      observer.observe(ref.current)
+      observer.observe(ref.current);
     }
 
-    return () => observer.disconnect()
+    return () => observer.disconnect();
   }, [threshold]);
 
   return (
     <div ref={ref}>
       {isVisible ? children : fallback}
     </div>
-  )
+  );
 }
 
 // Debounced input for performance
@@ -243,7 +243,7 @@ interface DebouncedInputProps {
   onChange: (value: string) => void;
   delay?: number;
   placeholder?: string;
-  className?: string
+  className?: string;
 }
 
 export function DebouncedInput({ 
@@ -257,27 +257,27 @@ export function DebouncedInput({
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    setLocalValue(value)
+    setLocalValue(value);
   }, [value]);
 
   const handleChange = useCallback((newValue: string) => {
     setLocalValue(newValue);
 
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
+      clearTimeout(timeoutRef.current);
     }
 
     timeoutRef.current = setTimeout(() => {
-      onChange(newValue)
-    }, delay)
+      onChange(newValue);
+    }, delay);
   }, [onChange, delay]);
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
+        clearTimeout(timeoutRef.current);
       }
-    }
+    };
   }, []);
 
   return (
@@ -290,7 +290,7 @@ export function DebouncedInput({
         className
       )}
     />
-  )
+  );
 }
 
 // Memoized component wrapper
@@ -298,13 +298,13 @@ export function memoize<T extends React.ComponentType<any>>(
   Component: T,
   compareProps?: (prevProps: any, nextProps: any) => boolean
 ): T {
-  return React.memo(Component, compareProps) as unknown as T
+  return React.memo(Component, compareProps) as unknown as T;
 }
 
 // Performance monitoring component
 interface PerformanceMonitorProps {
   children: React.ReactNode;
-  onMetrics?: (metrics: any) => void
+  onMetrics?: (metrics: any) => void;
 }
 
 export function PerformanceMonitor({ children, onMetrics }: PerformanceMonitorProps) {
@@ -324,9 +324,9 @@ export function PerformanceMonitor({ children, onMetrics }: PerformanceMonitorPr
             ...prev,
             renderCount: prev.renderCount + 1,
             averageRenderTime: (prev.averageRenderTime + entry.duration) / 2
-          })})
+          })});
         }
-      })
+      })};
     });
 
     observer.observe({ entryTypes: ['measure'] });
@@ -338,7 +338,7 @@ export function PerformanceMonitor({ children, onMetrics }: PerformanceMonitorPr
         setMetrics(prev => ({
           ...prev,
           memoryUsage: memory.usedJSHeapSize / 1024 / 1024 // MB
-        }))
+        }));
       }
     }, 5000);
 
@@ -349,18 +349,18 @@ export function PerformanceMonitor({ children, onMetrics }: PerformanceMonitorPr
       setMetrics(prev => ({
         ...prev,
         cacheHitRate: stats.size > 0 ? 85 : 0 // Simulated hit rate
-      }))
+      })});
     }, 10000);
 
     return () => {
       observer.disconnect();
       clearInterval(memoryInterval);
-      clearInterval(cacheInterval)
-    }
+      clearInterval(cacheInterval);
+    };
   }, []);
 
   useEffect(() => {
-    onMetrics?.(metrics)
+    onMetrics?.(metrics);
   }, [metrics, onMetrics]);
 
   if (process.env.NODE_ENV === 'development') {
@@ -374,10 +374,10 @@ export function PerformanceMonitor({ children, onMetrics }: PerformanceMonitorPr
           <div>Cache Hit: {metrics.cacheHitRate.toFixed(1)}%</div>
         </div>
       </>
-    )
+    );
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
 
 // Optimized image component
@@ -387,7 +387,7 @@ interface OptimizedImageProps {
   width?: number;
   height?: number;
   className?: string;
-  lazy?: boolean
+  lazy?: boolean;
 }
 
 export function OptimizedImage({ 
@@ -409,17 +409,17 @@ export function OptimizedImage({
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
-          observer.disconnect()
+          observer.disconnect();
         }
       },
       { threshold: 0.1 }
     );
 
     if (imgRef.current) {
-      observer.observe(imgRef.current)
+      observer.observe(imgRef.current);
     }
 
-    return () => observer.disconnect()
+    return () => observer.disconnect();
   }, [lazy]);
 
   return (
@@ -446,7 +446,7 @@ export function OptimizedImage({
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
     </div>
-  )
+  );
 }
 
 export { ToolCache };

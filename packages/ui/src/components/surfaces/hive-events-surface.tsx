@@ -314,14 +314,14 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
       .filter(event => {
         if (selectedType === 'all') return true;
         return event.type === selectedType
-      })}
+      })
       .sort((a, b) => {
         // Featured events first
         if (a.isFeatured && !b.isFeatured) return -1;
         if (!a.isFeatured && b.isFeatured) return 1;
         // Then by start date
         return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-      })
+      })}
       .slice(0, maxEvents);
     
     // Separate upcoming and past events
@@ -495,7 +495,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                 { key: 'list', icon: List },
                 { key: 'grid', icon: Grid },
                 { key: 'calendar', icon: CalendarIcon }
-              ].map(({ key, icon: Icon })} => (
+              ].map(map}) => (
                 <motion.button
                   key={key}
                   className={cn(
@@ -560,7 +560,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                   <span>{filter.label}</span>
                 </motion.button>
               )
-          })
+          })}
           </div>
         )}
         
@@ -768,7 +768,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                                 <span>{config.label}</span>
                               </motion.button>
                             )
-          })
+          })}
                           
                           <motion.button
                             className="ml-auto p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
@@ -782,7 +782,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                       </div>
                     </motion.article>
                   )
-          }}
+          })}
               </div>
             </section>
           )}

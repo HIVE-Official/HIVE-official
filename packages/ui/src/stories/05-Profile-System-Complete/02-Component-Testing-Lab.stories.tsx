@@ -220,7 +220,7 @@ function TestControlPanel({
                     {config.name}
                   </Button>
                 )
-              })
+              })}
             </div>
           </div>
 
@@ -242,7 +242,7 @@ function TestControlPanel({
                     {scenario}
                   </Button>
                 )
-              })
+              })}
             </div>
           </div>
 
@@ -256,7 +256,7 @@ function TestControlPanel({
                 { key: 'desktop', icon: Monitor },
                 { key: 'tablet', icon: Tablet },
                 { key: 'mobile', icon: Smartphone }
-              ].map(({ key, icon: Icon })} => (
+              ].map(map}) => (
                 <Button
                   key={key}
                   size="sm"
@@ -480,7 +480,7 @@ function generateTestData(cardType: string, scenario: string) {
               id: `notif-${i}`,
               title: `Notification ${i + 1}`,
               isRead: i > 7
-            })),
+            })}),
             unreadCount: 8
           };
         default:
@@ -679,7 +679,7 @@ export const ComponentTestingLab: StoryObj = {
                       </Card>
                     </motion.div>
                   )
-                })
+                })}
               </div>
             </CardContent>
           </Card>

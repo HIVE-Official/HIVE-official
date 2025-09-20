@@ -1,6 +1,6 @@
 import path from "path";
 import { fileURLToPath } from "url";
-import webpack from "webpack";
+// import webpack from "webpack";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -116,21 +116,21 @@ const nextConfig = {
     config.module.rules = config.module.rules || [];
     
     // Suppress critical dependency warnings for OpenTelemetry
-    config.plugins = config.plugins || [];
-    config.plugins.push(
-      new webpack.ContextReplacementPlugin(
-        /node_modules\/@opentelemetry\/instrumentation/,
-        (data) => {
-          // Remove critical dependency warnings
-          if (data.dependencies) {
-            data.dependencies.forEach(dep => {
-              if (dep.critical) delete dep.critical;
-            });
-          }
-          return data;
-        }
-      )
-    );
+    // config.plugins = config.plugins || [];
+    // config.plugins.push(
+    //   new webpack.ContextReplacementPlugin(
+    //     /node_modules\/@opentelemetry\/instrumentation/,
+    //     (data) => {
+    //       // Remove critical dependency warnings
+    //       if (data.dependencies) {
+    //         data.dependencies.forEach(dep => {
+    //           if (dep.critical) delete dep.critical;
+    //         });
+    //       }
+    //       return data;
+    //     }
+    //   )
+    // );
 
     // Ignore dynamic require warnings for instrumentation modules
     config.externals = config.externals || {};

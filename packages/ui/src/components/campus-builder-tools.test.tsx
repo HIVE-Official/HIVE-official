@@ -81,7 +81,7 @@ describe('CampusBuilderTools', () => {
       
       expect(screen.getByText('Build Custom Tools')).toBeInTheDocument();
       expect(screen.getByText('Create personalized tools to enhance your campus experience')).toBeInTheDocument();
-      expect(screen.getByText('Become a Builder')).toBeInTheDocument()
+      expect(screen.getByText('Become a Builder')).toBeInTheDocument();
     });
 
     it('calls onBecomeBuilder when become builder button is clicked', () => {
@@ -97,8 +97,8 @@ describe('CampusBuilderTools', () => {
       );
       
       fireEvent.click(screen.getByText('Become a Builder'));
-      expect(onBecomeBuilder).toHaveBeenCalled()
-    })
+      expect(onBecomeBuilder).toHaveBeenCalled();
+    });
   });
 
   describe('Builder view', () => {
@@ -127,7 +127,7 @@ describe('CampusBuilderTools', () => {
       
       expect(screen.getByText('Study Schedule Template')).toBeInTheDocument();
       expect(screen.getByText('Grade Tracker Widget')).toBeInTheDocument();
-      expect(screen.getByText('Create personalized study schedules')).toBeInTheDocument()
+      expect(screen.getByText('Create personalized study schedules')).toBeInTheDocument();
     });
 
     it('displays tool difficulty levels', () => {
@@ -140,7 +140,7 @@ describe('CampusBuilderTools', () => {
       );
       
       expect(screen.getByText('Beginner')).toBeInTheDocument();
-      expect(screen.getByText('Intermediate')).toBeInTheDocument()
+      expect(screen.getByText('Intermediate')).toBeInTheDocument();
     });
 
     it('displays time to create for tools', () => {
@@ -153,7 +153,7 @@ describe('CampusBuilderTools', () => {
       );
       
       expect(screen.getByText('5 min')).toBeInTheDocument();
-      expect(screen.getByText('10 min')).toBeInTheDocument()
+      expect(screen.getByText('10 min')).toBeInTheDocument();
     });
 
     it('calls onCreateTool when create button is clicked', () => {
@@ -169,7 +169,7 @@ describe('CampusBuilderTools', () => {
       
       const createButtons = screen.getAllByText('Create');
       fireEvent.click(createButtons[0]);
-      expect(onCreateTool).toHaveBeenCalledWith('template')
+      expect(onCreateTool).toHaveBeenCalledWith('template');
     });
 
     it('disables create button for locked tools', () => {
@@ -185,7 +185,7 @@ describe('CampusBuilderTools', () => {
       const lockedToolButton = createButtons.find(button => 
         (button as HTMLButtonElement).disabled
       );
-      expect(lockedToolButton).toBeDefined()
+      expect(lockedToolButton).toBeDefined();
     });
 
     it('switches between available and created tools tabs', () => {
@@ -203,7 +203,7 @@ describe('CampusBuilderTools', () => {
       // Switch to "My Tools" tab
       fireEvent.click(screen.getByText('My Tools'));
       expect(screen.getByText('My Study Planner')).toBeInTheDocument();
-      expect(screen.getByText('Private Tool')).toBeInTheDocument()
+      expect(screen.getByText('Private Tool')).toBeInTheDocument();
     });
 
     it('displays created tools information correctly', () => {
@@ -222,7 +222,7 @@ describe('CampusBuilderTools', () => {
       expect(screen.getByText('45 uses')).toBeInTheDocument();
       expect(screen.getByText('❤️ 12')).toBeInTheDocument();
       expect(screen.getByText('Public')).toBeInTheDocument();
-      expect(screen.getByText('Private')).toBeInTheDocument()
+      expect(screen.getByText('Private')).toBeInTheDocument();
     });
 
     it('calls onViewTool when created tool is clicked', () => {
@@ -240,7 +240,7 @@ describe('CampusBuilderTools', () => {
       fireEvent.click(screen.getByText('My Tools'));
       
       fireEvent.click(screen.getByText('My Study Planner'));
-      expect(onViewTool).toHaveBeenCalledWith('c1')
+      expect(onViewTool).toHaveBeenCalledWith('c1');
     });
 
     it('shows empty state when no tools are created', () => {
@@ -256,7 +256,7 @@ describe('CampusBuilderTools', () => {
       fireEvent.click(screen.getByText('My Tools'));
       
       expect(screen.getByText('No tools created yet')).toBeInTheDocument();
-      expect(screen.getByText('Start building your first tool!')).toBeInTheDocument()
+      expect(screen.getByText('Start building your first tool!')).toBeInTheDocument();
     });
 
     it('displays tool counts in tab labels', () => {
@@ -270,7 +270,7 @@ describe('CampusBuilderTools', () => {
       
       expect(screen.getByText('(3)')).toBeInTheDocument(); // Available tools count
       expect(screen.getByText('(2)')).toBeInTheDocument(); // Created tools count
-    })
+    });
   });
 
   it('renders loading state correctly', () => {
@@ -285,7 +285,7 @@ describe('CampusBuilderTools', () => {
     
     // Should show loading skeleton
     const loadingElements = document.querySelectorAll('.animate-pulse');
-    expect(loadingElements.length).toBeGreaterThan(0)
+    expect(loadingElements.length).toBeGreaterThan(0);
   });
 
   it('calls onToolClick when available tool is clicked', () => {
@@ -300,7 +300,7 @@ describe('CampusBuilderTools', () => {
     );
     
     fireEvent.click(screen.getByText('Study Schedule Template'));
-    expect(onToolClick).toHaveBeenCalledWith('1')
+    expect(onToolClick).toHaveBeenCalledWith('1');
   });
 
   it('shows starred indicators for starred created tools', () => {
@@ -316,7 +316,7 @@ describe('CampusBuilderTools', () => {
     fireEvent.click(screen.getByText('My Tools'));
     
     // Should show star emoji for starred tool
-    expect(screen.getByText('⭐')).toBeInTheDocument()
+    expect(screen.getByText('⭐')).toBeInTheDocument();
   });
 
   it('displays premium indicators for premium tools', () => {
@@ -333,6 +333,6 @@ describe('CampusBuilderTools', () => {
       />
     );
     
-    expect(screen.getByText('✨')).toBeInTheDocument()
-  })
+    expect(screen.getByText('✨')).toBeInTheDocument();
+  });
 });

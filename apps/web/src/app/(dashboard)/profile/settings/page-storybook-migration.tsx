@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { logger } from '@/lib/logger';
 import { 
   PageContainer,
   Card,
@@ -237,7 +238,10 @@ export default function ProfileSettingsStorybook() {
         setTimeout(() => setSaveSuccess(false), 3000);
       }
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      logger.error('Failed to save settings', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
     }
   };
 
@@ -250,7 +254,10 @@ export default function ProfileSettingsStorybook() {
         level: 'moderate'
       });
     } catch (error) {
-      console.error('Failed to toggle ghost mode:', error);
+      logger.error('Failed to toggle ghost mode', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
     }
   };
 
@@ -692,7 +699,7 @@ export default function ProfileSettingsStorybook() {
           confirmText="Delete Forever"
           cancelText="Keep Account"
           onConfirm={() => {
-            console.log('Account deletion requested');
+            logger.info('Account deletion requested');
             setShowDeleteModal(false);
           }}
           variant="destructive"

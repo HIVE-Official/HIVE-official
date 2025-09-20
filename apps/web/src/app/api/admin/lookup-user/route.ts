@@ -1,10 +1,8 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getAuth } from "firebase-admin/auth";
+import * as admin from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 
 // Validation schema
 const lookupUserSchema = z.object({
@@ -35,48 +33,19 @@ interface FirestoreUserData {
   updatedAt?: Date;
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    // Parse and validate request body
-    const body = (await request.json()) as unknown;
-    const { query } = lookupUserSchema.parse(body);
+export const POST = withAdminAuthAndErrors(
+  lookupUserSchema,
+  async (request: AuthenticatedRequest, context, { query }, respond) => {
+    const currentUserId = getUserId(request);
+    const db = getFirestore();
 
-    // Verify admin authentication
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+    let userData: UserData | null = null;
+    let firestoreData: FirestoreUserData | null = null;
 
-    const token = authHeader.substring(7);
-    if (!token) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid authorization format", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    try {
-      const decodedToken = await getAuth().verifyIdToken(token);
-
-      // Check if current user is admin
-      const db = getFirestore();
-      const currentUserDoc = await db
-        .collection("users")
-        .doc(decodedToken.uid)
-        .get();
-      const currentUserData = currentUserDoc.data() as
-        | FirestoreUserData
-        | undefined;
-
-      if (!currentUserData || currentUserData.role !== "admin") {
-        return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-      }
-
-      let userData: UserData | null = null;
-      let firestoreData: FirestoreUserData | null = null;
-
+    // Try to lookup by email first
+    if (query.includes("@")) {
       try {
-        // Try to lookup by email first
-        if (query.includes("@")) {
-          try {
-            const userRecord = await getAuth().getUserByEmail(query);
+            const userRecord = await admin.auth().getUserByEmail(query);
             userData = {
               uid: userRecord.uid,
               email: userRecord.email,
@@ -98,7 +67,7 @@ export async function POST(request: NextRequest) {
         } else {
           // Try to lookup by UID
           try {
-            const userRecord = await getAuth().getUser(query);
+            const userRecord = await admin.auth().getUser(query);
             userData = {
               uid: userRecord.uid,
               email: userRecord.email,
@@ -159,7 +128,7 @@ export async function POST(request: NextRequest) {
 
             // Get Auth data for this user
             try {
-              const userRecord = await getAuth().getUser(doc.id);
+              const userRecord = await admin.auth().getUser(doc.id);
               userData = {
                 uid: userRecord.uid,
                 email: userRecord.email,
@@ -182,29 +151,18 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        // Return combined data
-        return NextResponse.json({
-          found: userData !== null || firestoreData !== null,
-          auth: userData,
-          profile: firestoreData });
-      } catch (searchError) {
-        logger.error('User lookup error', { error: searchError, endpoint: '/api/admin/lookup-user' });
-        return NextResponse.json(ApiResponseHelper.error("Error searching for user", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-      }
-    } catch (authError) {
-      logger.error('Failed to verify admin token', { error: authError, endpoint: '/api/admin/lookup-user' });
-      return NextResponse.json(ApiResponseHelper.error("Invalid admin token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-  } catch (error) {
-    logger.error('Lookup user error', { error: error, endpoint: '/api/admin/lookup-user' });
+    logger.info('Admin user lookup completed', {
+      query,
+      found: userData !== null || firestoreData !== null,
+      adminUserId: currentUserId,
+      endpoint: '/api/admin/lookup-user'
+    });
 
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid request data", details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    // Return combined data
+    return respond.success({
+      found: userData !== null || firestoreData !== null,
+      auth: userData,
+      profile: firestoreData
+    });
   }
-}
+);

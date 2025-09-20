@@ -8,7 +8,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import { useState, useCallback, useEffect } from 'react';
 import { HiveButton } from '../index';
-import { Play, RefreshCw, CheckCircle } from 'lucide-react';
+import { Play, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
 import { cn } from '../../lib/utils';
 // Event Elements (complete 24-element library)
 import { TextInputElement, DatePickerElement, SelectElement, NumberInputElement, CheckboxElement, RadioElement, EventCardElement, CounterElement, QRCodeElement, RSVPElement, FilterElement, AttendeeListElement, CalendarViewElement, NotificationElement, AnalyticsChartElement, FeedbackFormElement, ShareElement, RecurrenceElement, TagsElement, StatusElement, } from '../events/event-elements';
@@ -94,19 +94,22 @@ export function ToolRuntimeEngine({ tool, userId = 'current_user', spaceId, mode
             const result = eval(action.config.formula.replace(/\{(\w+)\}/g, (match, elementId) => {
                 return state.values[elementId] || 0;
             }));
-            updateValue(action.config.targetElement, result);
         }
-        catch (error) {
-            console.error('Calculation error:', error);
-        }
+        finally { }
+        ;
+        updateValue(action.config.targetElement, result);
     }
-    break;
-    'update_element';
-    if (action.config.targetElement && action.config.value !== undefined) {
-        updateValue(action.config.targetElement, action.config.value);
+    try { }
+    catch (error) {
+        console.error('Calculation error:', error);
     }
-    break;
 }
+break;
+'update_element';
+if (action.config.targetElement && action.config.value !== undefined) {
+    updateValue(action.config.targetElement, action.config.value);
+}
+break;
 try { }
 catch (error) {
     console.error(`Action ${action.type} failed:`, error);
@@ -172,68 +175,61 @@ const renderElement = useCallback((element) => {
                     startDate: new Date(),
                     category: 'academic',
                     status: 'published'
-                } }));
+                }, showActions: element.properties.showActions, onRSVP: element.properties.onRSVP, onEdit: element.properties.onEdit, className: className }));
+            break;
+        case 'counter':
+            elementComponent = (_jsx(CounterElement, { id: element.id, label: element.label, current: element.properties.current || 0, total: element.properties.total, color: element.properties.color, className: className }));
+            break;
+        case 'qr_code':
+            elementComponent = (_jsx(QRCodeElement, { id: element.id, label: element.label, data: element.properties.data || 'https://hive.app', size: element.properties.size, onScan: element.properties.onScan, className: className }));
+            break;
+        case 'rsvp':
+            elementComponent = (_jsx(RSVPElement, { id: element.id, eventId: element.properties.eventId || 'sample-event', currentResponse: value, allowGuests: element.properties.allowGuests, maxGuests: element.properties.maxGuests, onSubmit: (response) => {
+                    onChange(response);
+                    elementActions.forEach(action => executeAction(action));
+                }, className: className }));
+            break;
+        case 'attendee_list':
+            elementComponent = (_jsx(AttendeeListElement, { id: element.id, attendees: element.properties.attendees || [], showCheckIn: element.properties.showCheckIn, onCheckIn: element.properties.onCheckIn, className: className }));
+            break;
+        case 'calendar_view':
+            elementComponent = (_jsx(CalendarViewElement, { id: element.id, events: element.properties.events || [], currentDate: value || new Date(), onDateChange: onChange, onEventClick: element.properties.onEventClick, className: className }));
+            break;
+        case 'notification':
+            elementComponent = (_jsx(NotificationElement, { id: element.id, notifications: element.properties.notifications || [], onMarkRead: element.properties.onMarkRead, onMarkAllRead: element.properties.onMarkAllRead, className: className }));
+            break;
+        case 'analytics_chart':
+            elementComponent = (_jsx(AnalyticsChartElement, { id: element.id, data: element.properties.data || [], title: element.properties.title, type: element.properties.type, className: className }));
+            break;
+        case 'feedback_form':
+            elementComponent = (_jsx(FeedbackFormElement, { id: element.id, eventId: element.properties.eventId || 'sample-event', questions: element.properties.questions, onSubmit: (feedback) => {
+                    onChange(feedback);
+                    elementActions.forEach(action => executeAction(action));
+                }, className: className }));
+            break;
+        case 'share':
+            elementComponent = (_jsx(ShareElement, { id: element.id, eventId: element.properties.eventId || 'sample-event', eventTitle: element.properties.eventTitle || 'Sample Event', shareUrl: element.properties.shareUrl, onShare: element.properties.onShare, className: className }));
+            break;
+        case 'recurrence':
+            elementComponent = (_jsx(RecurrenceElement, { id: element.id, recurrence: value || { type: 'none', interval: 1 }, onRecurrenceChange: onChange, className: className }));
+            break;
+        case 'tags':
+            elementComponent = (_jsx(TagsElement, { id: element.id, tags: value || [], availableTags: element.properties.availableTags, onTagsChange: onChange, maxTags: element.properties.maxTags, className: className }));
+            break;
+        case 'status':
+            elementComponent = (_jsx(StatusElement, { id: element.id, status: value || 'draft', statusHistory: element.properties.statusHistory, onStatusChange: (status, reason) => {
+                    onChange({ status, reason });
+                    elementActions.forEach(action => executeAction(action));
+                }, className: className }));
+            break;
+        case 'filter':
+            elementComponent = (_jsx(FilterElement, { id: element.id, filters: value || {}, onFiltersChange: onChange, className: className }));
+            break;
+        default:
+            elementComponent = (_jsx("div", { className: "p-3 bg-yellow-50 border border-yellow-200 rounded-lg", children: _jsxs("p", { className: "text-sm text-yellow-800", children: ["Unknown element type: ", element.type] }) }));
     }
-    showActions = { element, : .properties.showActions };
-    onRSVP = { element, : .properties.onRSVP };
-    onEdit = { element, : .properties.onEdit };
-    className = { className }
-        /  >
-    ;
-});
-break;
-'counter';
-elementComponent = (_jsx(CounterElement, { id: element.id, label: element.label, current: element.properties.current || 0, total: element.properties.total, color: element.properties.color, className: className }));
-break;
-'qr_code';
-elementComponent = (_jsx(QRCodeElement, { id: element.id, label: element.label, data: element.properties.data || 'https://hive.app', size: element.properties.size, onScan: element.properties.onScan, className: className }));
-break;
-'rsvp';
-elementComponent = (_jsx(RSVPElement, { id: element.id, eventId: element.properties.eventId || 'sample-event', currentResponse: value, allowGuests: element.properties.allowGuests, maxGuests: element.properties.maxGuests, onSubmit: (response) => {
-        onChange(response);
-        elementActions.forEach(action => executeAction(action));
-    }, className: className }));
-break;
-'attendee_list';
-elementComponent = (_jsx(AttendeeListElement, { id: element.id, attendees: element.properties.attendees || [], showCheckIn: element.properties.showCheckIn, onCheckIn: element.properties.onCheckIn, className: className }));
-break;
-'calendar_view';
-elementComponent = (_jsx(CalendarViewElement, { id: element.id, events: element.properties.events || [], currentDate: value || new Date(), onDateChange: onChange, onEventClick: element.properties.onEventClick, className: className }));
-break;
-'notification';
-elementComponent = (_jsx(NotificationElement, { id: element.id, notifications: element.properties.notifications || [], onMarkRead: element.properties.onMarkRead, onMarkAllRead: element.properties.onMarkAllRead, className: className }));
-break;
-'analytics_chart';
-elementComponent = (_jsx(AnalyticsChartElement, { id: element.id, data: element.properties.data || [], title: element.properties.title, type: element.properties.type, className: className }));
-break;
-'feedback_form';
-elementComponent = (_jsx(FeedbackFormElement, { id: element.id, eventId: element.properties.eventId || 'sample-event', questions: element.properties.questions, onSubmit: (feedback) => {
-        onChange(feedback);
-        elementActions.forEach(action => executeAction(action));
-    }, className: className }));
-break;
-'share';
-elementComponent = (_jsx(ShareElement, { id: element.id, eventId: element.properties.eventId || 'sample-event', eventTitle: element.properties.eventTitle || 'Sample Event', shareUrl: element.properties.shareUrl, onShare: element.properties.onShare, className: className }));
-break;
-'recurrence';
-elementComponent = (_jsx(RecurrenceElement, { id: element.id, recurrence: value || { type: 'none', interval: 1 }, onRecurrenceChange: onChange, className: className }));
-break;
-'tags';
-elementComponent = (_jsx(TagsElement, { id: element.id, tags: value || [], availableTags: element.properties.availableTags, onTagsChange: onChange, maxTags: element.properties.maxTags, className: className }));
-break;
-'status';
-elementComponent = (_jsx(StatusElement, { id: element.id, status: value || 'draft', statusHistory: element.properties.statusHistory, onStatusChange: (status, reason) => {
-        onChange({ status, reason });
-        elementActions.forEach(action => executeAction(action));
-    }, className: className }));
-break;
-'filter';
-elementComponent = (_jsx(FilterElement, { id: element.id, filters: value || {}, onFiltersChange: onChange, className: className }));
-break;
-elementComponent = (_jsx("div", { className: "p-3 bg-yellow-50 border border-yellow-200 rounded-lg", children: _jsxs("p", { className: "text-sm text-yellow-800", children: ["Unknown element type: ", element.type] }) }));
-return (_jsxs("div", { className: "space-y-2", children: [elementComponent, error && (_jsxs("div", { className: "flex items-center gap-1 text-sm text-red-600", children: [_jsx(AlertCircle, { className: "w-4 h-4" }), _jsx("span", { children: error })] }))] }, element.id));
-[state, tool.actions, updateValue, executeAction];
-;
+    return (_jsxs("div", { className: "space-y-2", children: [elementComponent, error && (_jsxs("div", { className: "flex items-center gap-1 text-sm text-red-600", children: [_jsx(AlertCircle, { className: "w-4 h-4" }), _jsx("span", { children: error })] }))] }, element.id));
+}, [state, tool.actions, updateValue, executeAction]);
 // Auto-save functionality
 useEffect(() => {
     if (mode === 'production' && Object.keys(state.values).length > 0) {

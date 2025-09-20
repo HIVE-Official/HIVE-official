@@ -4,6 +4,6 @@ interface HiveLabIntegrationProps {
     userRole?: 'admin' | 'moderator' | 'member';
     className?: string;
 }
-export declare function HiveLabIntegration({ userId, spaceId, userRole, className }: HiveLabIntegrationProps): import("react/jsx-runtime").JSX.Element;
+export declare function HiveLabIntegration({ userId, spaceId, userRole, className }: HiveLabIntegrationProps): void;
 export default HiveLabIntegration;
 //# sourceMappingURL=hive-lab-integration.d.ts.map

@@ -239,7 +239,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
         credentials: 'include',
-      });
+      })};
 
       if (response.ok) {
         console.log('✅ Auth refresh successful, retrying...');
@@ -273,7 +273,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
           analytics: this.errorTracker.getAnalytics(),
           timestamp: new Date().toISOString(),
         }),
-      })
+      })}
     } catch (reportError) {
       console.error('Failed to report critical error:', reportError)
     }

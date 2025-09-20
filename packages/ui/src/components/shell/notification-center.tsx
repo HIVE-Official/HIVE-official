@@ -136,7 +136,7 @@ export function NotificationCenter({
 
   const markAllAsRead = () => {
     setLocalNotifications(prev => 
-      prev.map(n => ({ ...n, read: true })})
+      prev.map(map}))
     )
   };
 

@@ -38,7 +38,7 @@ interface AccessibilityLogoProps {
     className?: string;
 }
 declare const ColorBlindnessFilters: React.FC;
-export declare const HiveLogoAccessible: React.MemoExoticComponent<({ variant, size, accessibility, ariaLabel, ariaDescription, ariaLabelledBy, ariaDescribedBy, role, semanticPurpose, interactive, onClick, onFocus, onBlur, context, landmarks, className, ...props }: AccessibilityLogoProps) => import("react/jsx-runtime").JSX.Element>;
+export declare const HiveLogoAccessible: React.NamedExoticComponent<AccessibilityLogoProps>, role: interactive;
 export declare const HiveSkipLink: React.FC<{
     href: string;
     children: React.ReactNode;

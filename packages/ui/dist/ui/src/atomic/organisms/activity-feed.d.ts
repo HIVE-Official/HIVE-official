@@ -4,5 +4,5 @@ export interface ActivityFeedProps {
     spaceFilter?: string[];
     className?: string;
 }
-export declare function ActivityFeed({ feedType, userId, spaceFilter, className }: ActivityFeedProps): import("react/jsx-runtime").JSX.Element;
+export declare function ActivityFeed({ feedType, userId, spaceFilter, className }: ActivityFeedProps): void;
 //# sourceMappingURL=activity-feed.d.ts.map

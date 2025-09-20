@@ -435,7 +435,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                         </Card>
                       </motion.div>
                     )
-          }}
+          })}
                 </AnimatePresence>
 
                 {/* Add Tool Card */}
@@ -514,7 +514,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                         </div>
                       </motion.div>
                     )
-          }}
+          })}
                 </AnimatePresence>
               </div>
             )}

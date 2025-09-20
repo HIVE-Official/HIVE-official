@@ -175,7 +175,7 @@ export const BottomNavWithNotifications: Story = {
 
 export const BottomNavMinimal: Story = {
   args: {
-    items: mockUBNavItems.slice(0, 3).map(item => ({ ...item, badge: undefined })}),
+    items: mockUBNavItems.slice(0, 3).map(map})),
     onNavigate: action('navigate-minimal')
   },
   parameters: {

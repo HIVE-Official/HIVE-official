@@ -387,7 +387,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 { key: 'unread', label: 'Unread' },
                 { key: 'mentions', label: 'Mentions' },
                 { key: 'social', label: 'Social' }
-              ].map(({ key, label })} => (
+              ].map(map}) => (
                 <Button
                   key={key}
                   variant={filter === key ? 'default' : 'outline'}

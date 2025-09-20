@@ -219,39 +219,58 @@ export const HiveLogoAccessible = memo(({ variant = 'primary', size = 'md', acce
             focusRing: accessibility.focusRing || 'default',
             touchTarget: touchTargetSize,
             className,
-        })),
-        role: interactive ? (role === 'img' ? 'button' : role) : role,
-        'aria-label': dynamicAriaLabel,
-        'aria-description': enhancedDescription,
-        'aria-labelledby': ariaLabelledBy,
-        'aria-describedby': ariaDescribedBy,
-        tabIndex: interactive ? (accessibility.customTabOrder || 0) : undefined,
-        onClick: interactive ? handleClick : undefined,
-        onKeyDown: interactive ? handleKeyDown : undefined,
-        onFocus: interactive ? handleFocus : undefined,
-        onBlur: interactive ? handleBlur : undefined,
-        style: {
-            minWidth: `${minTouchTarget}px`,
-            minHeight: `${minTouchTarget}px`,
-            color: colors[variant] || colors.white,
-            filter: COLOR_BLIND_FILTERS[colorBlindSupport],
-        },
-        ...animationProps,
-        ...props,
+        }))
     };
-    // Landmark wrapper for navigation context
-    const LogoComponent = () => (_jsxs(_Fragment, { children: [_jsx(ColorBlindnessFilters, {}), _jsxs(motion.div, { ...componentProps, children: [_jsx("svg", { viewBox: "0 0 1500 1500", fill: "none", className: "w-full h-full", "aria-hidden": "true" // Logo SVG is decorative, label is on container
-                        , children: _jsx("path", { d: "M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z", fill: "currentColor" }) }), !accessibility.simpleMode && (_jsx("span", { className: cn("ml-2 font-bold tracking-wide select-none", accessibility.enlargeText && "text-lg", accessibility.clearLabels && "font-extrabold"), "aria-hidden": "true" // Wordmark is decorative, main label is on container
-                        , children: "HIVE" }))] })] }));
-    // Wrap in landmark if requested
-    if (landmarks && context === 'navigation') {
-        return (_jsx("nav", { "aria-label": "Main navigation", children: _jsx(LogoComponent, {}) }));
-    }
-    if (landmarks && context === 'header') {
-        return (_jsx("header", { children: _jsx(LogoComponent, {}) }));
-    }
-    return _jsx(LogoComponent, {});
-});
+}), role;
+(role === 'img' ? 'button' : role);
+role,
+    'aria-label';
+dynamicAriaLabel,
+    'aria-description';
+enhancedDescription,
+    'aria-labelledby';
+ariaLabelledBy,
+    'aria-describedby';
+ariaDescribedBy,
+    tabIndex;
+interactive ? (accessibility.customTabOrder || 0) : undefined,
+    onClick;
+interactive ? handleClick : undefined,
+    onKeyDown;
+interactive ? handleKeyDown : undefined,
+    onFocus;
+interactive ? handleFocus : undefined,
+    onBlur;
+interactive ? handleBlur : undefined,
+    style;
+{
+    minWidth: `${minTouchTarget}px`,
+        minHeight;
+    `${minTouchTarget}px`,
+        color;
+    colors[variant] || colors.white,
+        filter;
+    COLOR_BLIND_FILTERS[colorBlindSupport],
+    ;
+}
+animationProps,
+;
+props,
+;
+;
+// Landmark wrapper for navigation context
+const LogoComponent = () => (_jsxs(_Fragment, { children: [_jsx(ColorBlindnessFilters, {}), _jsxs(motion.div, { ...componentProps, children: [_jsx("svg", { viewBox: "0 0 1500 1500", fill: "none", className: "w-full h-full", "aria-hidden": "true" // Logo SVG is decorative, label is on container
+                    , children: _jsx("path", { d: "M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z", fill: "currentColor" }) }), !accessibility.simpleMode && (_jsx("span", { className: cn("ml-2 font-bold tracking-wide select-none", accessibility.enlargeText && "text-lg", accessibility.clearLabels && "font-extrabold"), "aria-hidden": "true" // Wordmark is decorative, main label is on container
+                    , children: "HIVE" }))] })] }));
+// Wrap in landmark if requested
+if (landmarks && context === 'navigation') {
+    return (_jsx("nav", { "aria-label": "Main navigation", children: _jsx(LogoComponent, {}) }));
+}
+if (landmarks && context === 'header') {
+    return (_jsx("header", { children: _jsx(LogoComponent, {}) }));
+}
+return _jsx(LogoComponent, {});
+;
 HiveLogoAccessible.displayName = 'HiveLogoAccessible';
 // Skip link component for keyboard navigation
 export const HiveSkipLink = ({ href, children, className }) => {
@@ -283,27 +302,28 @@ export const HiveLogoAccessibilityTest = ({ className }) => {
                 touchTargetSize,
             });
         };
-        runTests();
-    }, []);
-    const calculateContrastRatio = (color1, color2) => {
-        // Simplified contrast ratio calculation
-        // In production, use a proper color contrast library
-        return 4.5; // Mock value
-    };
-    const checkKeyboardAccessibility = () => {
-        // Check if logo is keyboard accessible
-        return true; // Mock value
-    };
-    const checkScreenReaderSupport = () => {
-        // Check if logo has proper ARIA attributes
-        return true; // Mock value
-    };
-    const measureTouchTargetSize = () => {
-        // Measure touch target size
-        return 44; // Mock value
-    };
-    return (_jsxs("div", { className: cn("p-6 bg-[var(--hive-background-primary)]/20 rounded-xl space-y-4", className), children: [_jsx("h3", { className: "text-lg font-bold text-[var(--hive-text-primary)]", children: "Accessibility Test Results" }), _jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-primary)]/70", children: "Contrast Ratio:" }), _jsxs("span", { className: cn("font-semibold", testResults.contrastRatio >= 4.5 ? "text-green-400" : "text-red-400"), children: [testResults.contrastRatio, ":1 ", testResults.contrastRatio >= 4.5 ? "✓" : "✗"] })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-primary)]/70", children: "Keyboard Accessible:" }), _jsx("span", { className: cn("font-semibold", testResults.keyboardAccessible ? "text-green-400" : "text-red-400"), children: testResults.keyboardAccessible ? "✓ Pass" : "✗ Fail" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-primary)]/70", children: "Screen Reader Support:" }), _jsx("span", { className: cn("font-semibold", testResults.screenReaderFriendly ? "text-green-400" : "text-red-400"), children: testResults.screenReaderFriendly ? "✓ Pass" : "✗ Fail" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-primary)]/70", children: "Touch Target Size:" }), _jsxs("span", { className: cn("font-semibold", testResults.touchTargetSize >= 44 ? "text-green-400" : "text-red-400"), children: [testResults.touchTargetSize, "px ", testResults.touchTargetSize >= 44 ? "✓" : "✗"] })] })] })] }));
+    });
+    runTests();
+}, [];
+const calculateContrastRatio = (color1, color2) => {
+    // Simplified contrast ratio calculation
+    // In production, use a proper color contrast library
+    return 4.5; // Mock value
 };
+const checkKeyboardAccessibility = () => {
+    // Check if logo is keyboard accessible
+    return true; // Mock value
+};
+const checkScreenReaderSupport = () => {
+    // Check if logo has proper ARIA attributes
+    return true; // Mock value
+};
+const measureTouchTargetSize = () => {
+    // Measure touch target size
+    return 44; // Mock value
+};
+return (_jsxs("div", { className: cn("p-6 bg-[var(--hive-background-primary)]/20 rounded-xl space-y-4", className), children: [_jsx("h3", { className: "text-lg font-bold text-[var(--hive-text-primary)]", children: "Accessibility Test Results" }), _jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-primary)]/70", children: "Contrast Ratio:" }), _jsxs("span", { className: cn("font-semibold", testResults.contrastRatio >= 4.5 ? "text-green-400" : "text-red-400"), children: [testResults.contrastRatio, ":1 ", testResults.contrastRatio >= 4.5 ? "✓" : "✗"] })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-primary)]/70", children: "Keyboard Accessible:" }), _jsx("span", { className: cn("font-semibold", testResults.keyboardAccessible ? "text-green-400" : "text-red-400"), children: testResults.keyboardAccessible ? "✓ Pass" : "✗ Fail" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-primary)]/70", children: "Screen Reader Support:" }), _jsx("span", { className: cn("font-semibold", testResults.screenReaderFriendly ? "text-green-400" : "text-red-400"), children: testResults.screenReaderFriendly ? "✓ Pass" : "✗ Fail" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-primary)]/70", children: "Touch Target Size:" }), _jsxs("span", { className: cn("font-semibold", testResults.touchTargetSize >= 44 ? "text-green-400" : "text-red-400"), children: [testResults.touchTargetSize, "px ", testResults.touchTargetSize >= 44 ? "✓" : "✗"] })] })] })] }));
+;
 // Export accessibility components (already exported with const declarations above)
 export { ColorBlindnessFilters, };
 //# sourceMappingURL=hive-logo-accessibility.js.map

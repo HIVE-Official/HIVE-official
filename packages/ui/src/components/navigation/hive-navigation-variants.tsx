@@ -451,7 +451,7 @@ export function CommandNavigation() {
                         </div>
                       </Button>
                     )
-                  })
+                  })}
                 ) : (
                   <div className="px-3 py-8 text-center" style={{ color: semantic.text.muted }}>
                     <Search className="w-8 h-8 mx-auto mb-3" />

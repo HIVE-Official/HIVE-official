@@ -82,7 +82,7 @@ export const RatingStarsRenderer: React.FC<RatingStarsRendererProps> = ({
       onStateChange({
         rating: newRating,
         lastUpdated: Date.now(),
-      })
+      })}
     }
   };
 
@@ -141,7 +141,7 @@ export const RatingStarsRenderer: React.FC<RatingStarsRendererProps> = ({
               />
             </button>
           )
-          })
+          })}
         
         {/* Rating display */}
         <span className="ml-2 text-sm text-[var(--hive-text-secondary)]">

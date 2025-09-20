@@ -243,7 +243,7 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
           post: 6
         };
         return (typeOrder[a.type] || 10) - (typeOrder[b.type] || 10)
-      });
+      })};
       
       return filtered.slice(0, maxResults)
     }, [query, selectedCategory, allItems, recentItems, maxResults]);
@@ -256,7 +256,7 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
           groups[item.category] = []
         }
         groups[item.category].push(item)
-      });
+      })};
       return groups
     }, [filteredItems]);
     
@@ -561,10 +561,10 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
                                 </div>
                               </motion.button>
                             )
-          })
+          })}
                         </div>
                       )
-          }}
+          })}
                   </motion.div>
                 ) : (
                   <div className="px-6 py-12 text-center">

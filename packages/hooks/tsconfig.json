@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "module": "CommonJS",
     "target": "ES2020",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]

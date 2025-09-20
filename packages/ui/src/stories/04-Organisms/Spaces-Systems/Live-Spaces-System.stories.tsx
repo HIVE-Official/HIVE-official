@@ -247,7 +247,7 @@ const SpaceDiscoverySystem = () => {
               { id: 'discover', label: 'Discover', icon: Search },
               { id: 'my-spaces', label: 'My Spaces', icon: Users },
               { id: 'trending', label: 'Trending', icon: TrendingUp },
-            ].map(({ id, label, icon: Icon })} => (
+            ].map(map}) => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
@@ -533,7 +533,7 @@ const SpaceManagementSystem = () => {
               { id: 'events', label: 'Events', count: 3 },
               { id: 'resources', label: 'Resources', count: 8 },
               { id: 'settings', label: 'Settings', count: null },
-            ].map(({ id, label, count })} => (
+            ].map(map}) => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}

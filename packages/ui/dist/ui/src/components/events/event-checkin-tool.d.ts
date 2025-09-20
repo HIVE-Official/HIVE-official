@@ -9,6 +9,6 @@ interface EventCheckinProps {
     onGenerateQR?: () => Promise<string>;
     onExportAttendance?: (format: 'csv' | 'excel') => void;
 }
-export declare function EventCheckinTool({ event, rsvps, onCheckin, onGenerateQR, onExportAttendance }: EventCheckinProps): import("react/jsx-runtime").JSX.Element;
+export declare function EventCheckinTool({ event, rsvps, onCheckin, onGenerateQR, onExportAttendance }: EventCheckinProps): void;
 export default EventCheckinTool;
 //# sourceMappingURL=event-checkin-tool.d.ts.map

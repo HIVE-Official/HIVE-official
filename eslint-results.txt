@@ -1,0 +1,240 @@
+
+> hive-ui@1.0.0 lint /Users/laneyfraass/hive_ui
+> cross-env NODE_OPTIONS=--max-old-space-size=4096 turbo run lint
+
+turbo 2.5.4
+
+• Packages in scope: @hive/analytics, @hive/api-client, @hive/auth-logic, @hive/core, @hive/eslint-config, @hive/hooks, @hive/i18n, @hive/tokens, @hive/typescript-config, @hive/ui, @hive/utilities, @hive/validation, admin, web
+• Running lint in 14 packages
+• Remote caching disabled
+@hive/analytics:lint: cache miss, executing 388540a4e73a5c11
+@hive/tokens:lint: cache miss, executing 1e0e30f3035e8d62
+@hive/core:lint: cache miss, executing eb5173012f03067b
+@hive/validation:lint: cache miss, executing caf18ed687192c01
+@hive/auth-logic:lint: cache miss, executing 4ca969a41b4f0aad
+@hive/hooks:lint: cache miss, executing 4f440f64a32302f3
+@hive/utilities:lint: cache miss, executing 1a2ca06379833e9a
+admin:lint: cache miss, executing 4136d6ebfa8787b3
+@hive/ui:lint: cache miss, executing 8eccdd8ef1c791bc
+@hive/i18n:lint: cache miss, executing 377a2dce76b23351
+@hive/ui:lint: 
+@hive/ui:lint: > @hive/ui@0.0.0 lint /Users/laneyfraass/hive_ui/packages/ui
+@hive/ui:lint: > npx eslint . --max-warnings 15
+@hive/ui:lint: 
+@hive/tokens:lint: 
+@hive/tokens:lint: > @hive/tokens@0.1.0 lint /Users/laneyfraass/hive_ui/packages/tokens
+@hive/tokens:lint: > npx eslint . --max-warnings 10
+@hive/tokens:lint: 
+@hive/validation:lint: 
+@hive/validation:lint: > @hive/validation@0.1.0 lint /Users/laneyfraass/hive_ui/packages/validation
+@hive/validation:lint: > npx eslint . --max-warnings 10
+@hive/validation:lint: 
+admin:lint: 
+admin:lint: > admin@1.0.0 lint /Users/laneyfraass/hive_ui/apps/admin
+admin:lint: > npx eslint . --max-warnings 50
+admin:lint: 
+@hive/analytics:lint: 
+@hive/analytics:lint: > @hive/analytics@0.1.0 lint /Users/laneyfraass/hive_ui/packages/analytics
+@hive/analytics:lint: > npx eslint . --max-warnings 10
+@hive/analytics:lint: 
+@hive/i18n:lint: 
+@hive/i18n:lint: > @hive/i18n@0.1.0 lint /Users/laneyfraass/hive_ui/packages/i18n
+@hive/i18n:lint: > npx eslint . --max-warnings 10
+@hive/i18n:lint: 
+@hive/hooks:lint: 
+@hive/hooks:lint: > @hive/hooks@0.1.0 lint /Users/laneyfraass/hive_ui/packages/hooks
+@hive/hooks:lint: > npx eslint . --max-warnings 10
+@hive/hooks:lint: 
+@hive/auth-logic:lint: 
+@hive/auth-logic:lint: > @hive/auth-logic@0.1.0 lint /Users/laneyfraass/hive_ui/packages/auth-logic
+@hive/auth-logic:lint: > npx eslint . --max-warnings 10
+@hive/auth-logic:lint: 
+@hive/core:lint: 
+@hive/core:lint: > @hive/core@0.1.0 lint /Users/laneyfraass/hive_ui/packages/core
+@hive/core:lint: > npx eslint . --max-warnings 10
+@hive/core:lint: 
+@hive/utilities:lint: 
+@hive/utilities:lint: > @hive/utilities@0.1.0 lint /Users/laneyfraass/hive_ui/packages/utilities
+@hive/utilities:lint: > eslint . --max-warnings 10
+@hive/utilities:lint: 
+@hive/core:lint: Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/client.ts
+@hive/core:lint:   3:0  error  Parsing error: Declaration or statement expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/constants/academic-years.ts
+@hive/core:lint:   2:15  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/constants/academics.ts
+@hive/core:lint:   3:53  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/constants/majors.ts
+@hive/core:lint:   166:5  error  Parsing error: Declaration or statement expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/analytics/base-types.ts
+@hive/core:lint:   84:27  error  Parsing error: '{' expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/analytics/creation.ts
+@hive/core:lint:   259:35  error  Parsing error: Property assignment expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/analytics/event-types.ts
+@hive/core:lint:   101:28  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/analytics/feed.ts
+@hive/core:lint:   75:20  error  Parsing error: Property assignment expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/analytics/onboarding.ts
+@hive/core:lint:   185:16  error  Parsing error: Expression expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/analytics/service-types.ts
+@hive/core:lint:   62:13  error  Parsing error: ';' expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/auth/authentication-types.ts
+@hive/core:lint:   3:27  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/auth/emailLink.ts
+@hive/core:lint:   7:16  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/auth/session-context-types.ts
+@hive/core:lint:   3:21  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/auth/session-manager-types.ts
+@hive/core:lint:   8:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/auth/user-context.ts
+@hive/core:lint:   6:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/auth/user-types.ts
+@hive/core:lint:   3:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/cohort/cohort-spaces.ts
+@hive/core:lint:   8:16  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/creation/element.ts
+@hive/core:lint:   69:23  error  Parsing error: Property assignment expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/creation/posting.ts
+@hive/core:lint:   31:44  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/creation/tool.ts
+@hive/core:lint:   36:28  error  Parsing error: Property assignment expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/feed/composer.ts
+@hive/core:lint:   28:21  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/feed/main-feed.ts
+@hive/core:lint:   25:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/feed/posting.ts
+@hive/core:lint:   28:19  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/feed/top-strip.ts
+@hive/core:lint:   18:7  error  Parsing error: An enum member name must be followed by a ',', '=', or '}'
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/firestore/handle.ts
+@hive/core:lint:   65:0  error  Parsing error: '}' expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/firestore/leader-claim.ts
+@hive/core:lint:   11:48  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/firestore/member.ts
+@hive/core:lint:   17:21  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/firestore/onboarding.ts
+@hive/core:lint:   13:32  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/firestore/space.ts
+@hive/core:lint:   36:5  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/firestore/user.ts
+@hive/core:lint:   13:21  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/landing/hero-content.ts
+@hive/core:lint:   6:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/member.ts
+@hive/core:lint:   15:20  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/profile/profile.ts
+@hive/core:lint:   55:27  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/school.ts
+@hive/core:lint:   2:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/space.ts
+@hive/core:lint:   34:17  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/space/discovery.ts
+@hive/core:lint:   45:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/tools.ts
+@hive/core:lint:   3:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/tools/element-registry.ts
+@hive/core:lint:   22:19  error  Parsing error: Property assignment expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/tools/tool-runtime.ts
+@hive/core:lint:   54:21  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/tools/tool.ts
+@hive/core:lint:   10:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/domain/waitlistEntry.ts
+@hive/core:lint:   18:0  error  Parsing error: '}' expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/env.ts
+@hive/core:lint:   133:5  error  Parsing error: Declaration or statement expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/feature-flags.ts
+@hive/core:lint:   5:51  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/firebase-admin.ts
+@hive/core:lint:   30:7  error  Parsing error: ';' expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/index.ts
+@hive/core:lint:   57:6  error  Parsing error: Unexpected keyword or identifier
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/test-types.ts
+@hive/core:lint:   1:10  error  'User' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+@hive/core:lint:   1:16  error  'Space' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+@hive/core:lint:   1:23  error  'Tool' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/types/major.ts
+@hive/core:lint:   2:15  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/types/onboarding.ts
+@hive/core:lint:   20:18  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/types/space.ts
+@hive/core:lint:   4:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/utils/activity-tracker.tsx
+@hive/core:lint:   6:17  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/utils/handle-generator.ts
+@hive/core:lint:   151:49  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/utils/logger.ts
+@hive/core:lint:   21:40  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/utils/privacy-utils.tsx
+@hive/core:lint:   6:14  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: /Users/laneyfraass/hive_ui/packages/core/src/utils/profile-aggregator.tsx
+@hive/core:lint:   23:13  error  Parsing error: Property or signature expected
+@hive/core:lint: 
+@hive/core:lint: ✖ 56 problems (56 errors, 0 warnings)
+@hive/core:lint: 
+@hive/core:lint:  ELIFECYCLE  Command failed with exit code 1.
+@hive/core:lint: ERROR: command finished with error: command (/Users/laneyfraass/hive_ui/packages/core) /Users/laneyfraass/Library/pnpm/.tools/pnpm/9.1.1/bin/pnpm run lint exited (1)
+web:lint: cache miss, executing a1bfbe3a17ee73be
+@hive/api-client:lint: cache miss, executing c7dccf80b23a2809
+@hive/core#lint: command (/Users/laneyfraass/hive_ui/packages/core) /Users/laneyfraass/Library/pnpm/.tools/pnpm/9.1.1/bin/pnpm run lint exited (1)
+
+ Tasks:    0 successful, 12 total
+Cached:    0 cached, 12 total
+  Time:    5.69s 
+Failed:    @hive/core#lint
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.

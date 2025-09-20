@@ -91,7 +91,7 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
     try {
       const response = await fetch(`/api/spaces/${spaceId}/events`, {
         headers: { 'Authorization': `Bearer ${userId}` }
-      });
+      })};
       
       if (response.ok) {
         const data = await response.json();
@@ -133,7 +133,7 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
           'Authorization': `Bearer ${userId}`
         },
         body: JSON.stringify({ spaceId, data })
-      })
+      })}
     } catch (error) {
       console.error('Failed to save tool data:', error)
     }
@@ -150,7 +150,7 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
           'Authorization': `Bearer ${userId}`
         },
         body: JSON.stringify({ spaceId, data })
-      });
+      })};
       
       // Refresh events after submission
       await fetchEvents();

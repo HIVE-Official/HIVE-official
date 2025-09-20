@@ -107,7 +107,7 @@ const usePerformanceMonitor = (
             paintTime: entry.startTime,
           })})
         }
-      })
+      })}
     });
     
     observer.observe({ entryTypes: ['measure', 'paint'] });
@@ -198,7 +198,7 @@ const usePerformanceMonitor = (
       setMetrics(prev => ({
         ...prev,
         renderTime,
-      }))
+      })})
     }
   }, [componentName, config.enableProfiling]);
   

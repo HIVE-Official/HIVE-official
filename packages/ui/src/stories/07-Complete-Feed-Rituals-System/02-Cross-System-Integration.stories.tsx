@@ -316,9 +316,9 @@ function CrossSystemIntegration() {
 
   // Combine all activities for the feed
   const allActivities = [
-    ...mockCrossSystemActivity.profileActivities.map(a => ({ ...a, system: 'profile' })}),
-    ...mockCrossSystemActivity.spacesActivities.map(a => ({ ...a, system: 'spaces' })}),
-    ...mockCrossSystemActivity.hivelabActivities.map(a => ({ ...a, system: 'hivelab' })})
+    ...mockCrossSystemActivity.profileActivities.map(map})),
+    ...mockCrossSystemActivity.spacesActivities.map(map})),
+    ...mockCrossSystemActivity.hivelabActivities.map(map}))
   ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
   const filteredActivities = selectedSystem === 'all' 
@@ -428,7 +428,7 @@ function CrossSystemIntegration() {
                   { id: 'profile', label: 'Profile', count: mockCrossSystemActivity.profileActivities.length, icon: User },
                   { id: 'spaces', label: 'Spaces', count: mockCrossSystemActivity.spacesActivities.length, icon: Users },
                   { id: 'hivelab', label: 'HiveLAB', count: mockCrossSystemActivity.hivelabActivities.length, icon: Zap },
-                ].map(({ id, label, count, icon: Icon })} => (
+                ].map(map}) => (
                   <Button
                     key={id}
                     size="sm"

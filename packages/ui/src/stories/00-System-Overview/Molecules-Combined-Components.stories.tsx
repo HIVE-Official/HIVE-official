@@ -103,7 +103,7 @@ const MoleculeShowcase = () => {
             onHoverStart={() => setHoveredMolecule('space-cards')}
             onHoverEnd={() => setHoveredMolecule(null)}
           >
-            <Card className="hive-interactive cursor-pointer" style={{ backgroundColor: 'var(--hive-background-secondary)', borderColor: 'var(--hive-border-primary)' }}
+            <Card className="hive-interactive cursor-pointer" style={{ backgroundColor: 'var(--hive-background-secondary)', borderColor: 'var(--hive-border-primary)' })
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
@@ -123,7 +123,7 @@ const MoleculeShowcase = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 {/* Academic Space */}
-                <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
+                <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' })
                      onMouseEnter={(e) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
@@ -182,7 +182,7 @@ const MoleculeShowcase = () => {
                 </div>
 
                 {/* Housing Space */}
-                <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
+                <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' })
                      onMouseEnter={(e) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
@@ -239,7 +239,7 @@ const MoleculeShowcase = () => {
                 </div>
 
                 {/* Social Space */}
-                <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' }}
+                <div className="rounded-lg p-4 hive-interactive transition-colors cursor-pointer" style={{ backgroundColor: 'var(--hive-background-primary)', borderColor: 'var(--hive-border-primary)' })
                      onMouseEnter={(e) => {
                        e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                        e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
@@ -308,7 +308,7 @@ const MoleculeShowcase = () => {
             onHoverStart={() => setHoveredMolecule('user-cards')}
             onHoverEnd={() => setHoveredMolecule(null)}
           >
-            <Card className="hive-interactive cursor-pointer" style={{ backgroundColor: 'var(--hive-background-secondary)', borderColor: 'var(--hive-border-primary)' }}
+            <Card className="hive-interactive cursor-pointer" style={{ backgroundColor: 'var(--hive-background-secondary)', borderColor: 'var(--hive-border-primary)' })
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
                   e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
@@ -581,7 +581,7 @@ const MoleculeShowcase = () => {
                       { icon: User, label: 'Profile', active: false, badge: null },
                       { icon: Calendar, label: 'Calendar', active: false, badge: '2' },
                       { icon: Zap, label: 'Tools', active: false, badge: null },
-                    ].map(({ icon: Icon, label, active, badge })} => (
+                    ].map(map}) => (
                       <div 
                         key={label}
                         className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors hive-interactive ${
@@ -620,7 +620,7 @@ const MoleculeShowcase = () => {
                       { icon: Bell, label: 'Notifications', active: false },
                       { icon: Settings, label: 'Privacy', active: false },
                       { icon: User, label: 'Account', active: false },
-                    ].map(({ icon: Icon, label, active })} => (
+                    ].map(map}) => (
                       <div 
                         key={label}
                         className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors hive-interactive ${

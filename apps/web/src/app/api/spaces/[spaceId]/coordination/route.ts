@@ -1,11 +1,8 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { FieldValue } from "firebase-admin/firestore";
-import { getCurrentUser } from "@/lib/server-auth";
+import * as admin from "firebase-admin/firestore";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 const coordinationResponseSchema = z.object({
   postId: z.string().min(1),
@@ -23,78 +20,59 @@ const coordinationResponseSchema = z.object({
  * Handle coordination responses for Enhanced Post Board
  * POST /api/spaces/[spaceId]/coordination
  */
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
-) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
+export const POST = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
+) => {
+  const { spaceId } = await params;
+  const userId = getUserId(request);
+  const body = await request.json();
+  const { postId, action, message, availability, preferences } = coordinationResponseSchema.parse(body);
 
-    const { spaceId } = await params;
-    const body = await request.json();
-    const { postId, action, message, availability, preferences } = coordinationResponseSchema.parse(body);
+  // Get space and verify user is a member
+  const spaceRef = dbAdmin.collection("spaces").doc("cohort").collection("spaces").doc(spaceId);
+  const spaceDoc = await spaceRef.get();
 
-    // Get space and verify user is a member
-    const spaceRef = dbAdmin.collection("spaces").doc("cohort").collection("spaces").doc(spaceId);
-    const spaceDoc = await spaceRef.get();
-    
-    if (!spaceDoc.exists) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"),
-        { status: HttpStatus.NOT_FOUND }
-      );
-    }
+  if (!spaceDoc.exists) {
+    return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
+  }
 
-    // Check if user is a member
-    const memberRef = spaceRef.collection("members").doc(user.uid);
-    const memberDoc = await memberRef.get();
-    
-    if (!memberDoc.exists) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"),
-        { status: HttpStatus.FORBIDDEN }
-      );
-    }
+  // Check if user is a member
+  const memberRef = spaceRef.collection("members").doc(userId);
+  const memberDoc = await memberRef.get();
 
-    // Get the post
-    const postRef = spaceRef.collection("posts").doc(postId);
-    const postDoc = await postRef.get();
-    
-    if (!postDoc.exists) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"),
-        { status: HttpStatus.NOT_FOUND }
-      );
-    }
+  if (!memberDoc.exists) {
+    return respond.error("Not a member of this space", "FORBIDDEN", 403);
+  }
 
-    const postData = postDoc.data();
-    
-    // Verify this is a coordination post
-    if (!postData?.coordinationType) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Not a coordination post", "INVALID_INPUT"),
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
+  // Get the post
+  const postRef = spaceRef.collection("posts").doc(postId);
+  const postDoc = await postRef.get();
 
-    // Create or update coordination response
-    const responseRef = postRef.collection("coordination_responses").doc(user.uid);
-    const responseData = {
-      userId: user.uid,
-      userName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
-      action,
-      message: message || null,
-      availability: availability || null,
-      preferences: preferences || null,
-      timestamp: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp()
-    };
+  if (!postDoc.exists) {
+    return respond.error("Post not found", "RESOURCE_NOT_FOUND", 404);
+  }
+
+  const postData = postDoc.data();
+
+  // Verify this is a coordination post
+  if (!postData?.coordinationType) {
+    return respond.error("Not a coordination post", "INVALID_INPUT", 400);
+  }
+
+  // Create or update coordination response
+  const responseRef = postRef.collection("coordination_responses").doc(userId);
+  const responseData = {
+    userId,
+    userName: 'Anonymous', // TODO: Get from user profile when available
+    action,
+    message: message || null,
+    availability: availability || null,
+    preferences: preferences || null,
+    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+  };
 
     // Use batch for atomic operations
     const batch = dbAdmin.batch();
@@ -116,123 +94,77 @@ export async function POST(
 
     batch.update(postRef, {
       coordinationStats: currentResponses,
-      lastActivity: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp()
+      lastActivity: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
     await batch.commit();
 
-    logger.info('Coordination response added', {
-      spaceId,
-      postId,
-      userId: user.uid,
+  logger.info('Coordination response added', {
+    spaceId,
+    postId,
+    userId,
+    action,
+    coordinationType: postData.coordinationType,
+    endpoint: '/api/spaces/[spaceId]/coordination'
+  });
+
+  return respond.success({
+    message: "Coordination response recorded",
+    response: {
+      userId,
       action,
-      coordinationType: postData.coordinationType,
-      endpoint: '/api/spaces/[spaceId]/coordination'
-    });
+      message,
+      timestamp: new Date().toISOString()
+    },
+    coordinationStats: currentResponses
+  });
 
-    return NextResponse.json({
-      success: true,
-      message: "Coordination response recorded",
-      response: {
-        userId: user.uid,
-        action,
-        message,
-        timestamp: new Date().toISOString()
-      },
-      coordinationStats: currentResponses
-    });
-
-  } catch (error) {
-    logger.error('Coordination response error', {
-      error,
-      spaceId: (await params).spaceId,
-      endpoint: '/api/spaces/[spaceId]/coordination'
-    });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid request data", details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(
-      ApiResponseHelper.error("Failed to process coordination response", "INTERNAL_ERROR"),
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
-  }
-}
+});
 
 /**
  * Get coordination responses for a post
  * GET /api/spaces/[spaceId]/coordination?postId=xxx
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
-) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
+) => {
+  const { spaceId } = await params;
+  const userId = getUserId(request);
+  const url = new URL(request.url);
+  const postId = url.searchParams.get('postId');
 
-    const { spaceId } = await params;
-    const url = new URL(request.url);
-    const postId = url.searchParams.get('postId');
-    
-    if (!postId) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Post ID required", "INVALID_INPUT"),
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    // Get space and verify user is a member
-    const spaceRef = dbAdmin.collection("spaces").doc("cohort").collection("spaces").doc(spaceId);
-    const memberRef = spaceRef.collection("members").doc(user.uid);
-    const memberDoc = await memberRef.get();
-    
-    if (!memberDoc.exists) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"),
-        { status: HttpStatus.FORBIDDEN }
-      );
-    }
-
-    // Get coordination responses
-    const postRef = spaceRef.collection("posts").doc(postId);
-    const responsesSnapshot = await postRef.collection("coordination_responses")
-      .orderBy("timestamp", "desc")
-      .limit(50)
-      .get();
-
-    const responses = responsesSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      timestamp: doc.data().timestamp?.toDate?.()?.toISOString() || new Date().toISOString()
-    }));
-
-    return NextResponse.json({
-      success: true,
-      responses,
-      count: responses.length
-    });
-
-  } catch (error) {
-    logger.error('Get coordination responses error', {
-      error,
-      spaceId: (await params).spaceId,
-      endpoint: '/api/spaces/[spaceId]/coordination'
-    });
-
-    return NextResponse.json(
-      ApiResponseHelper.error("Failed to get coordination responses", "INTERNAL_ERROR"),
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
+  if (!postId) {
+    return respond.error("Post ID required", "INVALID_INPUT", 400);
   }
-}
+
+  // Get space and verify user is a member
+  const spaceRef = dbAdmin.collection("spaces").doc("cohort").collection("spaces").doc(spaceId);
+  const memberRef = spaceRef.collection("members").doc(userId);
+  const memberDoc = await memberRef.get();
+
+  if (!memberDoc.exists) {
+    return respond.error("Not a member of this space", "FORBIDDEN", 403);
+  }
+
+  // Get coordination responses
+  const postRef = spaceRef.collection("posts").doc(postId);
+  const responsesSnapshot = await postRef.collection("coordination_responses")
+    .orderBy("timestamp", "desc")
+    .limit(50)
+    .get();
+
+  const responses = responsesSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+    timestamp: doc.data().timestamp?.toDate?.()?.toISOString() || new Date().toISOString()
+  }));
+
+  return respond.success({
+    responses,
+    count: responses.length
+  });
+
+});

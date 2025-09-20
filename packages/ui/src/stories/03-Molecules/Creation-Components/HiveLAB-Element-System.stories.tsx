@@ -265,7 +265,7 @@ export const ElementLibraryBrowser: Story = {
                       </div>
                     </button>
                   )
-                })
+                })}
               </CardContent>
             </Card>
 
@@ -364,7 +364,7 @@ export const ElementLibraryBrowser: Story = {
                     </CardContent>
                   </Card>
                 )
-              })
+              })}
             </div>
           </div>
         </div>
@@ -542,7 +542,7 @@ export const StudentCreatedTools: Story = {
                 )}
               </Card>
             )
-          })
+          })}
         </div>
 
         <div className="mt-8 bg-emerald-50 rounded-xl p-6 border border-emerald-100">
@@ -742,7 +742,7 @@ export const ToolCreationInterface: Story = {
                         </div>
                       </div>
                     )
-                  })
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -778,7 +778,7 @@ export const ToolCreationInterface: Story = {
                               <span>{element.name}</span>
                             </div>
                           )
-                        })
+                        })}
                       </div>
                     </div>
                     

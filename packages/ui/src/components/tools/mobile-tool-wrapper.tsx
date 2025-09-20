@@ -20,7 +20,7 @@ interface MobileToolWrapperProps {
   toolName: string;
   onBack?: () => void;
   showMobileMenu?: boolean;
-  className?: string
+  className?: string;
 }
 
 export function MobileToolWrapper({
@@ -37,12 +37,12 @@ export function MobileToolWrapper({
   // Detect mobile viewport
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768)
+      setIsMobile(window.innerWidth < 768);
     };
 
     checkIsMobile();
     window.addEventListener('resize', checkIsMobile);
-    return () => window.removeEventListener('resize', checkIsMobile)
+    return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 
   // Mobile-specific styles and behaviors
@@ -151,18 +151,18 @@ export function MobileToolWrapper({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Mobile-optimized content wrapper
 interface MobileOptimizedContentProps {
   children: React.ReactNode;
-  isMobile: boolean
+  isMobile: boolean;
 }
 
 function MobileOptimizedContent({ children, isMobile }: MobileOptimizedContentProps) {
   if (!isMobile) {
-    return <>{children}</>
+    return <>{children}</>;
   }
 
   // Apply mobile-specific transformations to child elements
@@ -177,7 +177,7 @@ function MobileOptimizedContent({ children, isMobile }: MobileOptimizedContentPr
                 child.props.className,
                 "shadow-sm border-0 rounded-xl touch-manipulation"
               )
-            })}}}
+            })};
           }
 
           // Add mobile-optimized props to HiveButton components
@@ -187,7 +187,7 @@ function MobileOptimizedContent({ children, isMobile }: MobileOptimizedContentPr
                 child.props.className,
                 "h-12 text-base touch-manipulation"
               )
-            })
+            })};
           }
 
           // Wrap form elements in mobile-friendly containers
@@ -196,14 +196,14 @@ function MobileOptimizedContent({ children, isMobile }: MobileOptimizedContentPr
               <div key={index} className="space-y-2">
                 {child}
               </div>
-            )
+            );
           }
         }
 
-        return child
-          })}
+        return child;
+      })}
     </div>
-  )
+  );
 }
 
 export default MobileToolWrapper;

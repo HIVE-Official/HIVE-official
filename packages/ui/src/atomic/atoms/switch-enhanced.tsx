@@ -163,9 +163,9 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           <label 
             htmlFor={switchId}
             className={cn(
-              switchLabelVariants({ 
-                color: labelProps?.color, 
-                weight: labelProps?.weight 
+              switchLabelVariants({
+                color: labelProps?.color,
+                weight: labelProps?.weight
               }),
               "cursor-pointer",
               labelProps?.className

@@ -18,5 +18,7 @@ export interface LiveToolRuntimeProps {
     enableRealtime?: boolean;
     collectUsageData?: boolean;
 }
-export declare const LiveToolRuntime: React.FC<LiveToolRuntimeProps>;
+export declare const LiveToolRuntime: React.FC<LiveToolRuntimeProps>, onUpdate: (update: any) => {
+    if(showDebugInfo: any): any;
+}, console: any, log: any;
 //# sourceMappingURL=live-tool-runtime.d.ts.map

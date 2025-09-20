@@ -43,15 +43,15 @@ export const TopHorizontalNav = ({ currentPath = '/', onItemClick, user, classNa
 };
 // 4. Bottom Tab Navigation (Mobile-style)
 export const BottomTabNav = ({ currentPath = '/', onItemClick, className }) => {
-    return (_jsx("nav", { className: cn('fixed bottom-0 left-0 right-0 z-50', 'h-20 bg-[var(--hive-background-primary)]/95 backdrop-blur-xl', 'border-t border-[var(--hive-border-default)]', 'flex items-center justify-around px-4', className), children: coreItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentPath === item.href || currentPath.startsWith(item.href + '/');
-            return (_jsxs("button", { onClick: () => onItemClick?.(item.href), className: cn('flex flex-col items-center space-y-1 p-2 rounded-2xl transition-all duration-200', isActive
-                    ? 'text-[var(--hive-brand-secondary)]'
-                    : 'text-[var(--hive-text-secondary)]'), children: [_jsx("div", { className: cn('w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-200', isActive
-                            ? 'bg-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-secondary)]/20'
-                            : 'bg-transparent'), children: _jsx(Icon, { className: "h-5 w-5" }) }), _jsx("span", { className: "text-xs font-medium", children: item.label })] }, item.id));
-        }) }));
+    return (_jsxs("nav", { className: cn('fixed bottom-0 left-0 right-0 z-50', 'h-20 bg-[var(--hive-background-primary)]/95 backdrop-blur-xl', 'border-t border-[var(--hive-border-default)]', 'flex items-center justify-around px-4', className), children: [coreItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = currentPath === item.href || currentPath.startsWith(item.href + '/');
+                return (_jsxs("button", { onClick: () => onItemClick?.(item.href), className: cn('flex flex-col items-center space-y-1 p-2 rounded-2xl transition-all duration-200', isActive
+                        ? 'text-[var(--hive-brand-secondary)]'
+                        : 'text-[var(--hive-text-secondary)]'), children: [_jsx("div", { className: cn('w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-200', isActive
+                                ? 'bg-[var(--hive-brand-secondary)]/10 border border-[var(--hive-brand-secondary)]/20'
+                                : 'bg-transparent'), children: _jsx(Icon, { className: "h-5 w-5" }) }), _jsx("span", { className: "text-xs font-medium", children: item.label })] }, item.id));
+            }), ")"] }));
 };
 // 5. Compact Icon Rail
 export const CompactIconRail = ({ currentPath = '/', onItemClick, user, className }) => {

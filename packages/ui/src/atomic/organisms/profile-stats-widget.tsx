@@ -40,7 +40,7 @@ export interface StatMetric {
   trend: 'up' | 'down' | 'stable';
   trendPercentage: number;
   period: 'daily' | 'weekly' | 'monthly' | 'semester';
-  isHighlighted?: boolean
+  isHighlighted?: boolean;
 }
 
 export interface PersonalGoal {
@@ -51,14 +51,14 @@ export interface PersonalGoal {
   unit: string;
   deadline: string;
   category: 'academic' | 'social' | 'personal' | 'career';
-  isActive: boolean
+  isActive: boolean;
 }
 
 export interface ProfileStatsWidgetProps {
   user: {
     id: string;
     name: string;
-    academicYear?: 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate'
+    academicYear?: 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate';
   };
   keyMetrics?: StatMetric[];
   personalGoals?: PersonalGoal[];
@@ -74,7 +74,7 @@ export interface ProfileStatsWidgetProps {
   onSetGoal?: () => void;
   onExportData?: () => void;
   onViewInsights?: () => void;
-  className?: string
+  className?: string;
 }
 
 const getMetricCategoryConfig = (category: string) => {
@@ -116,7 +116,7 @@ const getMetricCategoryConfig = (category: string) => {
     }
   };
   
-  return configs[category as keyof typeof configs] || configs.engagement
+  return configs[category as keyof typeof configs] || configs.engagement;
 };
 
 const getTrendIcon = (trend: string) => {
@@ -125,7 +125,7 @@ const getTrendIcon = (trend: string) => {
     down: ArrowDown,
     stable: Minus
   };
-  return icons[trend as keyof typeof icons] || Minus
+  return icons[trend as keyof typeof icons] || Minus;
 };
 
 const getTrendColor = (trend: string) => {
@@ -134,7 +134,7 @@ const getTrendColor = (trend: string) => {
     down: 'text-red-500',
     stable: 'text-[var(--hive-text-muted)]'
   };
-  return colors[trend as keyof typeof colors] || colors.stable
+  return colors[trend as keyof typeof colors] || colors.stable;
 };
 
 const getGoalCategoryConfig = (category: string) => {
@@ -165,7 +165,7 @@ const getGoalCategoryConfig = (category: string) => {
     }
   };
   
-  return configs[category as keyof typeof configs] || configs.personal
+  return configs[category as keyof typeof configs] || configs.personal;
 };
 
 export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
@@ -344,8 +344,8 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
                     </div>
                     <ChevronRight className="h-3 w-3 text-[var(--hive-text-secondary)]" />
                   </div>
-                )
-          })
+                );
+              })}
             </div>
           </div>
         )}
@@ -388,8 +388,8 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
                       />
                     </div>
                   </div>
-                )
-          })
+                );
+              })}
             </div>
           </div>
         )}
@@ -500,5 +500,5 @@ export const ProfileStatsWidget: React.FC<ProfileStatsWidgetProps> = ({
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
-  )
+  );
 };

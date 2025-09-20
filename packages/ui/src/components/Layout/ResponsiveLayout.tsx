@@ -101,7 +101,7 @@ function useAdvancedViewport(): ViewportState {
         touchCapable,
         hasNotch,
         safeAreaInsets
-      })
+      })}
     };
 
     updateViewport();

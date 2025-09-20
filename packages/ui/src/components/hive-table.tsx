@@ -237,7 +237,7 @@ const HiveTable = <T extends Record<string, any>>({
           default:
             return true
         }
-      })
+      })}
     });
     
     // Apply sort
@@ -706,7 +706,7 @@ const HiveTable = <T extends Record<string, any>>({
                       {pageNum}
                     </motion.button>
                   )
-          }}
+          })}
               </div>
               
               {/* Next Page */}

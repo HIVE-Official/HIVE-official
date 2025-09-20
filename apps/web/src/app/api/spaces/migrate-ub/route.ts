@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
@@ -64,9 +64,9 @@ export async function POST(request: NextRequest) {
             schoolId: 'university-at-buffalo',
             university: 'University at Buffalo',
             universityShort: 'UB',
-            updatedAt: FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
             // Migration metadata
-            migrationDate: FieldValue.serverTimestamp(),
+            migrationDate: admin.firestore.FieldValue.serverTimestamp(),
             migrationVersion: '2.0-ub'
           });
           

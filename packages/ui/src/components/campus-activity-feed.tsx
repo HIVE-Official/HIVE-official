@@ -12,12 +12,12 @@ export interface CampusActivity {
   author?: {
     name: string;
     avatar?: string;
-    handle?: string
+    handle?: string;
   };
   space?: {
     id: string;
     name: string;
-    type: 'course' | 'housing' | 'club' | 'academic' | 'community' | 'school' | 'graduation' | 'mentoring'
+    type: 'course' | 'housing' | 'club' | 'academic' | 'community' | 'school' | 'graduation' | 'mentoring';
   };
   timestamp: string;
   priority?: 'high' | 'medium' | 'low';
@@ -27,8 +27,8 @@ export interface CampusActivity {
     replyCount?: number;
     likes?: number;
     eventDate?: string;
-    dueDate?: string
-  }
+    dueDate?: string;
+  };
 }
 
 export interface CampusActivityFeedProps {
@@ -40,7 +40,7 @@ export interface CampusActivityFeedProps {
   onActivityClick?: (activityId: string) => void;
   onViewAll?: () => void;
   onFilterChange?: (filters: string[]) => void;
-  className?: string
+  className?: string;
 }
 
 const activityTypeConfig = {
@@ -117,7 +117,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
     if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)}d ago`;
-    return `${Math.floor(diffInMinutes / 10080)}w ago`
+    return `${Math.floor(diffInMinutes / 10080)}w ago`;
   };
 
   const getInitials = (name: string): string => {
@@ -126,7 +126,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
       .map(n => n[0])
       .join('')
       .toUpperCase()
-      .slice(0, 2)
+      .slice(0, 2);
   };
 
   const displayedActivities = activities?.slice(0, maxItems) ?? [];
@@ -138,7 +138,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
       : [...activeFilters, filter];
     
     setActiveFilters(newFilters);
-    onFilterChange?.(newFilters)
+    onFilterChange?.(newFilters);
   };
 
   if (isLoading) {
@@ -169,7 +169,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
           ))}
         </div>
       </motion.div>
-    )
+    );
   }
 
   return (
@@ -179,7 +179,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
       transition={{
         duration: 0.6,
         ease: [0.23, 1, 0.32, 1]
-          }}
+      }}
       className={cn(
         // BentoGrid-inspired card treatment
         'relative overflow-hidden rounded-2xl',
@@ -250,7 +250,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
                     delay: index * 0.1,
                     duration: 0.4,
                     ease: [0.23, 1, 0.32, 1]
-          }}
+                  }}
                   onHoverStart={() => setHoveredActivity(activity.id)}
                   onHoverEnd={() => setHoveredActivity(null)}
                   onClick={() => onActivityClick?.(activity.id)}
@@ -369,8 +369,8 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
                     transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
                   />
                 </motion.div>
-              )
-          })
+              );
+            })}
           </AnimatePresence>
         </div>
 
@@ -409,7 +409,7 @@ export const CampusActivityFeed: React.FC<CampusActivityFeedProps> = ({
         )}
       </div>
     </motion.div>
-  )
+  );
 };
 
 export default CampusActivityFeed;

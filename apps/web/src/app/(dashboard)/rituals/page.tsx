@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@hive/ui';
+import { useQuery } from '@tanstack/react-query';
+import { Badge } from '@hive/ui';
 import { ErrorBoundary } from '../../../components/error-boundary';
 import { 
   Sparkles, 

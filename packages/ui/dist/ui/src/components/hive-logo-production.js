@@ -122,52 +122,56 @@ const useAdvancedGestures = (ref, gestures, analytics) => {
                 isPressed: true,
                 pressStartTime: Date.now(),
             }));
-            if (gestures.enableLongPress) {
-                longPressTimeout = setTimeout(() => {
-                    analytics?.onLogoClick?.('longpress', 'gesture');
-                    // Trigger long press action
-                }, 500);
-            }
         };
-        const handleMouseUp = () => {
-            setGestureState(prev => ({ ...prev, isPressed: false }));
-            clearTimeout(longPressTimeout);
-        };
-        const handleClick = () => {
-            if (!gestures.enableDoubleClick)
-                return;
-            setGestureState(prev => ({
-                ...prev,
-                clickCount: prev.clickCount + 1,
-            }));
-            clearTimeout(clickTimeout);
-            clickTimeout = setTimeout(() => {
-                if (gestureState.clickCount === 1) {
-                    // Single click
-                    analytics?.onLogoClick?.('single', 'gesture');
-                }
-                setGestureState(prev => ({ ...prev, clickCount: 0 }));
-            }, 300);
-            if (gestureState.clickCount === 1) {
-                // Double click detected
-                analytics?.onLogoClick?.('double', 'gesture');
-                setGestureState(prev => ({ ...prev, clickCount: 0 }));
-                clearTimeout(clickTimeout);
-            }
-        };
-        element.addEventListener('mousedown', handleMouseDown);
-        element.addEventListener('mouseup', handleMouseUp);
-        element.addEventListener('click', handleClick);
-        return () => {
-            element.removeEventListener('mousedown', handleMouseDown);
-            element.removeEventListener('mouseup', handleMouseUp);
-            element.removeEventListener('click', handleClick);
-            clearTimeout(clickTimeout);
-            clearTimeout(longPressTimeout);
-        };
-    }, [gestures, analytics, gestureState.clickCount]);
-    return gestureState;
+    });
+    if (gestures.enableLongPress) {
+        longPressTimeout = setTimeout(() => {
+            analytics?.onLogoClick?.('longpress', 'gesture');
+            // Trigger long press action
+        }, 500);
+    }
 };
+const handleMouseUp = () => {
+    setGestureState(prev => ({ ...prev, isPressed: false }));
+    clearTimeout(longPressTimeout);
+};
+const handleClick = () => {
+    if (!gestures.enableDoubleClick)
+        return;
+    setGestureState(prev => ({
+        ...prev,
+        clickCount: prev.clickCount + 1,
+    }));
+};
+clearTimeout(clickTimeout);
+clickTimeout = setTimeout(() => {
+    if (gestureState.clickCount === 1) {
+        // Single click
+        analytics?.onLogoClick?.('single', 'gesture');
+    }
+    setGestureState(prev => ({ ...prev, clickCount: 0 }));
+}, 300);
+if (gestureState.clickCount === 1) {
+    // Double click detected
+    analytics?.onLogoClick?.('double', 'gesture');
+    setGestureState(prev => ({ ...prev, clickCount: 0 }));
+    clearTimeout(clickTimeout);
+}
+;
+element.addEventListener('mousedown', handleMouseDown);
+element.addEventListener('mouseup', handleMouseUp);
+element.addEventListener('click', handleClick);
+return () => {
+    element.removeEventListener('mousedown', handleMouseDown);
+    element.removeEventListener('mouseup', handleMouseUp);
+    element.removeEventListener('click', handleClick);
+    clearTimeout(clickTimeout);
+    clearTimeout(longPressTimeout);
+};
+[gestures, analytics, gestureState.clickCount];
+;
+return gestureState;
+;
 // 1. PRODUCTION-READY ANIMATED LOGO
 export const HiveLogoProductionAnimated = memo(({ variant = 'primary', size = 'md', lazy = true, preload = false, optimizeForSpeed = false, enablePerformanceMetrics = false, accessibility = {}, analytics, customColors, context = 'navigation', environment = 'production', className, ...props }) => {
     const ref = useRef(null);

@@ -102,7 +102,7 @@ const useAnalytics = () => {
             event_category: 'hive_logo',
             event_label: `${event.variant}_${event.context}`,
             custom_map: event.customProperties,
-          })
+          })}
         }
         break;
         
@@ -226,7 +226,7 @@ const usePerformanceMonitoring = (componentName: string) => {
           setMetrics(prev => ({
             ...prev,
             renderTime: entry.duration,
-          }))
+          })})
         }
       }
     });

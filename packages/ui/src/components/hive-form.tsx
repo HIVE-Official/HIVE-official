@@ -168,7 +168,7 @@ const validateField = async (value: any, rules: ValidationRule[]): Promise<Field
       errors.push({
         type: rule.type,
         message: rule.message,
-      })
+      })}
     }
   }
   
@@ -240,7 +240,7 @@ export const HiveForm: React.FC<HiveFormProps> = ({
         ...prev,
         errors: { ...prev.errors, [name]: errors },
         validating: { ...prev.validating, [name]: false },
-      }))
+      })})
     } catch (error) {
       setState(prev => ({
         ...prev,
@@ -249,7 +249,7 @@ export const HiveForm: React.FC<HiveFormProps> = ({
           [name]: [{ type: 'validation', message: 'Validation error occurred' }] 
         },
         validating: { ...prev.validating, [name]: false },
-      }))
+      })})
     }
   }, []);
   

@@ -71,7 +71,7 @@ export const MinimalFloatingSidebar: React.FC<NavigationProps> = ({
               )} />
             </button>
           )
-          })
+          })}
       </div>
     </div>
   )

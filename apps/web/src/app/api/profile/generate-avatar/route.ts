@@ -1,14 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 // In-memory store for development mode profile data (shared with profile route)
 const devProfileStore: Record<string, any> = {};
 
-export const POST = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
+export const POST = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
+) => {
+  const userId = getUserId(request);
     
     // Handle development mode
     if (userId === 'test-user') {
@@ -30,11 +32,9 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       logger.info('Development mode: Generated avatar URL', { data: avatarUrl, endpoint: '/api/profile/generate-avatar' });
       logger.info('Stored in dev profile store', { data: devProfileStore[userId], endpoint: '/api/profile/generate-avatar' });
       
-      return NextResponse.json({
-        success: true,
+      return respond.success({
         message: 'Avatar generated successfully (development mode)',
-        avatarUrl,
-        // SECURITY: Development mode removed for production safety
+        avatarUrl
       });
     }
 
@@ -60,17 +60,9 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       // Continue anyway - avatar generation succeeded even if saving failed
     }
     
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       message: 'Avatar generated and saved successfully',
       avatarUrl
     });
 
-  } catch (error) {
-    logger.error('Avatar generation error');
-    return NextResponse.json(ApiResponseHelper.error("Failed to generate avatar", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Avatar generation is safe for development
-  operation: 'generate_avatar' 
 });

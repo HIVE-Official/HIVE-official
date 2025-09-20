@@ -459,7 +459,7 @@ const ContentStrategyShowcase = () => {
                   {section.title}
                 </Button>
               )
-            })
+            })}
             <Button
               variant={activeSection === 'templates' ? "default" : "outline"}
               size="lg"
@@ -511,7 +511,7 @@ const ContentStrategyShowcase = () => {
               <Card className="hive-glass border border-gray-700">
                 <CardHeader>
                   <CardTitle className="flex items-center" style={{ color: 'var(--hive-brand-primary)' }}>
-                    {React.createElement(voiceGuidelines[activeSection as keyof typeof voiceGuidelines].icon, { className: "w-6 h-6 mr-2" }}
+                    {React.createElement(voiceGuidelines[activeSection as keyof typeof voiceGuidelines].icon, { className: "w-6 h-6 mr-2" })
                     {voiceGuidelines[activeSection as keyof typeof voiceGuidelines].title}
                   </CardTitle>
                   <p style={{ color: 'var(--hive-text-muted)' }}>
@@ -745,7 +745,7 @@ const ContentStrategyShowcase = () => {
                                     </div>
                                   </>
                                 )
-                              })()}
+                              })}()}
                             </div>
                           </div>
                         </div>

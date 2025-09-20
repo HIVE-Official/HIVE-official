@@ -59,7 +59,7 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
         layouts: { ...prev.layouts, [layout.deviceType]: layout },
         unsavedChanges: false,
         lastSync: new Date()
-      }))
+      })})
     } catch (error) {
       console.error('Failed to save layout locally:', error)
     }
@@ -92,7 +92,7 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
         ...prev,
         syncStatus: 'success',
         lastSync: new Date()
-      }));
+      })});
       
       // Auto-hide success status after 3 seconds
       setTimeout(() => {
@@ -141,7 +141,7 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
         ...prev,
         layouts: { ...prev.layouts, [deviceType]: savedLayout },
         lastSync: savedLayout.lastModified
-      }))
+      })})
     } else {
       // Load default layout for device type
       loadDefaultLayout()

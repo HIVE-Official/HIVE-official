@@ -119,46 +119,50 @@ const generateContextualSuggestions = (space) => {
                 reason: 'Perfect for study group productivity',
                 category: 'space_specific'
             });
-            break;
-        case 'social':
-            suggestions.push({
-                element: mockElements.find(e => e.id === 'poll-creator'),
-                relevanceScore: 0.8,
-                reason: 'Great for group decision making',
-                category: 'space_specific'
-            });
-            break;
-        case 'clubs':
-            suggestions.push({
-                element: mockElements.find(e => e.id === 'attendance-tracker'),
-                relevanceScore: 0.9,
-                reason: 'Essential for club meeting management',
-                category: 'space_specific'
-            });
-            break;
     }
-    // Trending tools
-    suggestions.push({
-        element: mockElements.find(e => e.id === 'mood-check'),
-        relevanceScore: 0.7,
-        reason: 'Trending in wellness communities',
-        category: 'trending'
-    });
-    // Popular recommendations
-    mockElements
-        .filter(e => e.downloads > 1500)
-        .forEach(element => {
-        if (!suggestions.find(s => s.element.id === element.id)) {
-            suggestions.push({
-                element,
-                relevanceScore: 0.6,
-                reason: `Popular choice with ${element.downloads.toLocaleString()} downloads`,
-                category: 'popular'
-            });
-        }
-    });
-    return suggestions.sort((a, b) => b.relevanceScore - a.relevanceScore);
+    ;
+    break;
 };
+'social';
+suggestions.push({
+    element: mockElements.find(e => e.id === 'poll-creator'),
+    relevanceScore: 0.8,
+    reason: 'Great for group decision making',
+    category: 'space_specific'
+});
+;
+break;
+'clubs';
+suggestions.push({
+    element: mockElements.find(e => e.id === 'attendance-tracker'),
+    relevanceScore: 0.9,
+    reason: 'Essential for club meeting management',
+    category: 'space_specific'
+});
+;
+break;
+// Trending tools
+suggestions.push({
+    element: mockElements.find(e => e.id === 'mood-check'),
+    relevanceScore: 0.7,
+    reason: 'Trending in wellness communities',
+    category: 'trending'
+});
+// Popular recommendations
+mockElements
+    .filter(e => e.downloads > 1500)
+    .forEach(element => {
+    if (!suggestions.find(s => s.element.id === element.id)) {
+        suggestions.push({
+            element,
+            relevanceScore: 0.6,
+            reason: `Popular choice with ${element.downloads.toLocaleString()} downloads`,
+            category: 'popular'
+        });
+    }
+});
+return suggestions.sort((a, b) => b.relevanceScore - a.relevanceScore);
+;
 const SuggestionCard = ({ suggestion, onInstall, onPreview }) => {
     const { element, reason, category } = suggestion;
     const IconComponent = element.icon;

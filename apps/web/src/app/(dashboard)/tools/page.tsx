@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CompleteHIVEToolsSystem } from "@hive/ui";
 import { useSession } from "../../../hooks/use-session";
 import { ErrorBoundary } from "../../../components/error-boundary";
+import { logger } from "@/lib/logger";
 import { 
   MessageSquare, 
   Timer, 
@@ -213,7 +214,7 @@ export default function ToolsPage() {
   // Temporarily using default flags while fixing React context issue
   const flags = useMemo(() => ({
     trackEvent: (_feature: string, _action: string, _metadata?: any) => {
-      console.log('Track event:', _feature, _action, _metadata);
+      logger.debug('Track event', { feature: _feature, action: _action, metadata: _metadata });
     }
   }), []);
 
@@ -302,7 +303,11 @@ export default function ToolsPage() {
       }
       
     } catch (error) {
-      console.error('Failed to install tool:', error);
+      logger.error('Failed to install tool', {
+        toolId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
       const errorMessage = error instanceof Error ? error.message : 'Failed to install tool';
       alert(`Installation failed: ${errorMessage}`);
     }
@@ -333,7 +338,7 @@ export default function ToolsPage() {
         break;
       }
       default:
-        console.log('Unknown action:', action);
+        logger.warn('Unknown tool action', { action });
     }
   };
 

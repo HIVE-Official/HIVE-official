@@ -278,7 +278,7 @@ function LeadershipAnalyticsDemo() {
               { id: 'configure', label: 'Configure', icon: Settings, description: 'Space settings and customization' },
               { id: 'insights', label: 'Insights', icon: BarChart3, description: 'Analytics and performance metrics' },
               { id: 'manage', label: 'Manage', icon: Users, description: 'Member and content management' }
-            ].map(({ id, label, icon: Icon, description })} => (
+            ].map(map}) => (
               <button
                 key={id}
                 onClick={() => setLeaderMode(id as any)}
@@ -550,7 +550,7 @@ function InsightsMode({ activeTab, onTabChange, isLoading }: {
           { id: 'content', label: 'Content', icon: MessageSquare },
           { id: 'events', label: 'Events', icon: Calendar },
           { id: 'tools', label: 'Tools', icon: Code }
-        ].map(({ id, label, icon: Icon })}} => (
+        ].map(map}) => (
           <button
             key={id}
             onClick={() => onTabChange(id)}

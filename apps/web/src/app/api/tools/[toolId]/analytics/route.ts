@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface AnalyticsQuery {
@@ -79,57 +79,52 @@ interface ToolAnalytics {
 }
 
 // GET - Get tool analytics
-export async function GET(request: NextRequest, { params }: { params: Promise<{ toolId: string }> }) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ toolId: string }> },
+  respond
+) => {
+  const userId = getUserId(request);
+  const { toolId } = await params;
+  const { searchParams } = new URL(request.url);
 
-    const { toolId } = await params;
-    const { searchParams } = new URL(request.url);
-    
-    // Get tool details and check ownership
-    const toolDoc = await adminDb.collection('tools').doc(toolId).get();
-    if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const toolData = toolDoc.data();
-    
-    // Check permissions (owner, or admin)
-    const userDoc = await adminDb.collection('users').doc(user.uid).get();
-    const userData = userDoc.data();
-    const isAdmin = userData?.roles?.includes('admin');
-    
-    if (toolData?.ownerId !== user.uid && !isAdmin) {
-      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to view analytics", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const startDate = searchParams.get('startDate') || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-    const endDate = searchParams.get('endDate') || new Date().toISOString();
-    const granularity = (searchParams.get('granularity') as any) || 'day';
-
-    // Generate analytics data
-    const analytics = await generateToolAnalytics({
-      toolId,
-      startDate,
-      endDate,
-      granularity
-    });
-
-    return NextResponse.json({
-      toolId,
-      toolName: toolData?.name,
-      period: { startDate, endDate, granularity },
-      analytics,
-      generatedAt: new Date().toISOString()
-    });
-
-  } catch (error) {
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  // Get tool details and check ownership
+  const toolDoc = await adminDb.collection('tools').doc(toolId).get();
+  if (!toolDoc.exists) {
+    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
   }
-}
+
+  const toolData = toolDoc.data();
+
+  // Check permissions (owner, or admin)
+  const userDoc = await adminDb.collection('users').doc(userId).get();
+  const userData = userDoc.data();
+  const isAdmin = userData?.roles?.includes('admin');
+
+  if (toolData?.ownerId !== userId && !isAdmin) {
+    return respond.error("Insufficient permissions to view analytics", "FORBIDDEN", 403);
+  }
+
+  const startDate = searchParams.get('startDate') || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const endDate = searchParams.get('endDate') || new Date().toISOString();
+  const granularity = (searchParams.get('granularity') as any) || 'day';
+
+  // Generate analytics data
+  const analytics = await generateToolAnalytics({
+    toolId,
+    startDate,
+    endDate,
+    granularity
+  });
+
+  return respond.success({
+    toolId,
+    toolName: toolData?.name,
+    period: { startDate, endDate, granularity },
+    analytics,
+    generatedAt: new Date().toISOString()
+  });
+});
 
 // Helper function to generate analytics data
 async function generateToolAnalytics(query: AnalyticsQuery): Promise<ToolAnalytics> {

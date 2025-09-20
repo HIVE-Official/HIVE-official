@@ -171,96 +171,84 @@ export const ContentArea = ({ children, strategy = 'static', maxHeight, enableVi
                         top: containerRef.current.scrollHeight,
                         behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior
                     });
-                    break;
-                case 'PageUp':
-                    e.preventDefault();
-                    containerRef.current?.scrollBy({
-                        top: -containerRef.current.clientHeight * 0.8,
-                        behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior
-                    });
-                    break;
-                case 'PageDown':
-                    e.preventDefault();
-                    containerRef.current?.scrollBy({
-                        top: containerRef.current.clientHeight * 0.8,
-                        behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior
-                    });
-                    break;
             }
+            ;
+            break;
         };
-        const container = containerRef.current;
-        if (container) {
-            container.addEventListener('keydown', handleKeyDown);
-            return () => container.removeEventListener('keydown', handleKeyDown);
-        }
-    }, [enableKeyboardNavigation, scrollBehavior]);
-    // Dynamic classes
-    const containerClasses = cn(
-    // Base layout
-    'w-full relative', 
-    // Scrolling behavior
-    strategy !== 'static' && 'overflow-y-auto', scrollBehavior === 'smooth' && 'scroll-smooth', 
-    // Scroll snap
-    scrollSnapType !== 'none' && `scroll-snap-type-${scrollSnapType}`, 
-    // Performance optimizations
-    perfConfig.enableAnimations && 'transform-gpu', !perfConfig.enableAnimations && 'transform-none', 
-    // Campus network optimizations
-    optimizeForCampusWifi && 'contain-layout contain-style', 
-    // Padding
-    padding === 'adaptive' ? (viewport.isMobile ? 'p-4' : 'p-6') : {
-        none: 'p-0',
-        sm: 'p-3',
-        md: 'p-6',
-        lg: 'p-8'
-    }[padding], 
-    // Spacing
-    spacing === 'adaptive' ? (viewport.isMobile ? 'space-y-4' : 'space-y-6') : {
-        tight: 'space-y-2',
-        normal: 'space-y-4',
-        loose: 'space-y-6'
-    }[spacing], 
-    // Accessibility
-    enableKeyboardNavigation && 'focus:outline-none focus:ring-2 focus:ring-hive-gold/20', 
-    // Visibility optimizations
-    !isVisible && perfConfig.enableIntersection && 'invisible', className);
-    const contentClasses = cn(
-    // Base content styling
-    'w-full', 
-    // Virtual scrolling
-    enableVirtualization && 'contain-strict', 
-    // Loading state
-    loading && 'opacity-75 transition-opacity');
-    return (_jsx("div", { ref: containerRef, className: containerClasses, id: contentId, role: "main", "aria-label": ariaLabel || 'Content area', "aria-live": ariaLive, tabIndex: enableKeyboardNavigation ? 0 : -1, style: {
-            maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight,
-            scrollBehavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior,
-            // Performance hints
-            ...(!perfConfig.enableAnimations && {
-                willChange: 'auto'
-            }),
-            // Campus network optimizations
-            ...(optimizeForCampusWifi && {
-                contain: 'layout style paint'
-            })
-        } }));
+    });
 };
-onFocus = { manageFocus };
-onBlur = { preserveFocus }
-    >
-        _jsx("div", { className: contentClasses, children: children });
-{ /* Infinite scroll loading indicator */ }
-{
-    strategy === 'infinite-scroll' && loading && (_jsx("div", { className: "flex justify-center py-6", children: _jsxs("div", { className: "flex items-center space-x-2 text-hive-text-secondary", children: [_jsx("div", { className: "w-4 h-4 border-2 border-hive-gold border-t-transparent rounded-full animate-spin" }), _jsx("span", { className: "text-sm", children: "Loading more content..." })] }) }));
-}
-{ /* End of content indicator */ }
-{
-    strategy === 'infinite-scroll' && !hasMore && !loading && (_jsx("div", { className: "text-center py-6 text-hive-text-tertiary text-sm", children: "You've reached the end! \uD83C\uDF86" }));
-}
-{ /* Scroll position indicator for development */ }
-{
-    process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-16 right-4 bg-black/80 text-white text-xs p-2 rounded font-mono z-40", children: [_jsxs("div", { children: ["Scroll: ", Math.round(scrollState.scrollPosition), "px"] }), _jsxs("div", { children: ["Near bottom: ", scrollState.isNearBottom ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Scrolling: ", scrollState.isScrolling ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Visible: ", isVisible ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Strategy: ", strategy] })] }));
-}
-div >
+'PageUp';
+e.preventDefault();
+containerRef.current?.scrollBy({
+    top: -containerRef.current.clientHeight * 0.8,
+    behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior
+});
 ;
+break;
+'PageDown';
+e.preventDefault();
+containerRef.current?.scrollBy({
+    top: containerRef.current.clientHeight * 0.8,
+    behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior
+});
+;
+break;
+;
+const container = containerRef.current;
+if (container) {
+    container.addEventListener('keydown', handleKeyDown);
+    return () => container.removeEventListener('keydown', handleKeyDown);
+}
+[enableKeyboardNavigation, scrollBehavior];
+;
+// Dynamic classes
+const containerClasses = cn(
+// Base layout
+'w-full relative', 
+// Scrolling behavior
+strategy !== 'static' && 'overflow-y-auto', scrollBehavior === 'smooth' && 'scroll-smooth', 
+// Scroll snap
+scrollSnapType !== 'none' && `scroll-snap-type-${scrollSnapType}`, 
+// Performance optimizations
+perfConfig.enableAnimations && 'transform-gpu', !perfConfig.enableAnimations && 'transform-none', 
+// Campus network optimizations
+optimizeForCampusWifi && 'contain-layout contain-style', 
+// Padding
+padding === 'adaptive' ? (viewport.isMobile ? 'p-4' : 'p-6') : {
+    none: 'p-0',
+    sm: 'p-3',
+    md: 'p-6',
+    lg: 'p-8'
+}[padding], 
+// Spacing
+spacing === 'adaptive' ? (viewport.isMobile ? 'space-y-4' : 'space-y-6') : {
+    tight: 'space-y-2',
+    normal: 'space-y-4',
+    loose: 'space-y-6'
+}[spacing], 
+// Accessibility
+enableKeyboardNavigation && 'focus:outline-none focus:ring-2 focus:ring-hive-gold/20', 
+// Visibility optimizations
+!isVisible && perfConfig.enableIntersection && 'invisible', className);
+const contentClasses = cn(
+// Base content styling
+'w-full', 
+// Virtual scrolling
+enableVirtualization && 'contain-strict', 
+// Loading state
+loading && 'opacity-75 transition-opacity');
+return (_jsxs("div", { ref: containerRef, className: containerClasses, id: contentId, role: "main", "aria-label": ariaLabel || 'Content area', "aria-live": ariaLive, tabIndex: enableKeyboardNavigation ? 0 : -1, style: {
+        maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight,
+        scrollBehavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior,
+        // Performance hints
+        ...(!perfConfig.enableAnimations && {
+            willChange: 'auto'
+        }),
+        // Campus network optimizations
+        ...(optimizeForCampusWifi && {
+            contain: 'layout style paint'
+        })
+    }, onFocus: manageFocus, onBlur: preserveFocus, children: [_jsx("div", { className: contentClasses, children: children }), strategy === 'infinite-scroll' && loading && (_jsx("div", { className: "flex justify-center py-6", children: _jsxs("div", { className: "flex items-center space-x-2 text-hive-text-secondary", children: [_jsx("div", { className: "w-4 h-4 border-2 border-hive-gold border-t-transparent rounded-full animate-spin" }), _jsx("span", { className: "text-sm", children: "Loading more content..." })] }) })), strategy === 'infinite-scroll' && !hasMore && !loading && (_jsx("div", { className: "text-center py-6 text-hive-text-tertiary text-sm", children: "You've reached the end! \uD83C\uDF86" })), process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-16 right-4 bg-black/80 text-white text-xs p-2 rounded font-mono z-40", children: [_jsxs("div", { children: ["Scroll: ", Math.round(scrollState.scrollPosition), "px"] }), _jsxs("div", { children: ["Near bottom: ", scrollState.isNearBottom ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Scrolling: ", scrollState.isScrolling ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Visible: ", isVisible ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Strategy: ", strategy] })] }))] }));
 ;
 // Export utilities
 export { useSmartScroll, useFocusManagement, getPerformanceConfig };

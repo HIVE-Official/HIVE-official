@@ -67,6 +67,6 @@ export interface HivePinnedSurfaceProps extends React.HTMLAttributes<HTMLDivElem
     showWelcomePrompt?: boolean;
     maxItems?: number;
 }
-export declare const HivePinnedSurface: React.ForwardRefExoticComponent<HivePinnedSurfaceProps & React.RefAttributes<HTMLDivElement>>;
+export declare const HivePinnedSurface: any;
 export { hivePinnedSurfaceVariants, pinnedContentTypes };
 //# sourceMappingURL=hive-pinned-surface.d.ts.map

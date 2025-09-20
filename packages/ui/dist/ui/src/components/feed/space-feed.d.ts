@@ -16,6 +16,6 @@ interface SpaceFeedProps {
     className?: string;
     posts?: FeedPost[];
 }
-export declare const SpaceFeed: React.FC<SpaceFeedProps>;
+export declare const SpaceFeed: React.FC<SpaceFeedProps>, isFetchingNextPage: any, fetchNextPage: any, hasNextPage: any;
 export {};
 //# sourceMappingURL=space-feed.d.ts.map

@@ -72,12 +72,7 @@ export default function DebugAuthPage() {
     const sessionToken = CookieUtils.generateDevSessionToken(userId);
     CookieUtils.setSessionToken(sessionToken);
     
-    console.log('✅ Debug auth set:', {
-      localStorage: 'hive_session + dev_auth_mode',
-      cookie: 'session-token',
-      token: sessionToken,
-      redirectTo: returnTo
-    });
+    // Debug auth session created successfully
     
     // Redirect to the return URL instead of reloading
     setTimeout(() => {

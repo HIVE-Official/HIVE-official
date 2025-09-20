@@ -66,14 +66,14 @@ export interface ToolExecutionState {
     cpuUsage: number;
     memoryUsage: number;
     networkActivity: number;
-    responsiveness: number
+    responsiveness: number;
   };
   versions: {
     current: string;
-    history: ToolVersion[]
+    history: ToolVersion[];
   };
   collaborators: Collaborator[];
-  permissions: ExecutionPermissions
+  permissions: ExecutionPermissions;
 }
 
 export interface ExecutionError {
@@ -86,7 +86,7 @@ export interface ExecutionError {
   line?: number;
   column?: number;
   stackTrace?: string;
-  suggestions?: string[]
+  suggestions?: string[];
 }
 
 export interface ExecutionLog {
@@ -95,7 +95,7 @@ export interface ExecutionLog {
   message: string;
   timestamp: string;
   source: string;
-  data?: any
+  data?: any;
 }
 
 export interface ToolVersion {
@@ -106,9 +106,9 @@ export interface ToolVersion {
   author: {
     id: string;
     name: string;
-    avatar?: string
+    avatar?: string;
   };
-  isStable: boolean
+  isStable: boolean;
 }
 
 export interface Collaborator {
@@ -120,9 +120,9 @@ export interface Collaborator {
   cursor?: {
     x: number;
     y: number;
-    color: string
+    color: string;
   };
-  lastActivity?: string
+  lastActivity?: string;
 }
 
 export interface ExecutionPermissions {
@@ -132,7 +132,7 @@ export interface ExecutionPermissions {
   canShare: boolean;
   canManageCollaborators: boolean;
   canViewLogs: boolean;
-  canDebug: boolean
+  canDebug: boolean;
 }
 
 export interface ToolConfig {
@@ -146,7 +146,7 @@ export interface ToolConfig {
   permissions: string[];
   allowCollaboration: boolean;
   autoSave: boolean;
-  sandboxed: boolean
+  sandboxed: boolean;
 }
 
 interface LiveToolExecutorProps {
@@ -163,14 +163,14 @@ interface LiveToolExecutorProps {
   onInviteCollaborator?: (email: string, role: Collaborator['role']) => Promise<void>;
   onUpdatePermissions?: (userId: string, permissions: Partial<ExecutionPermissions>) => Promise<void>;
   onExportLogs?: (format: 'json' | 'csv' | 'txt') => Promise<void>;
-  enableFeatureFlag?: boolean
+  enableFeatureFlag?: boolean;
 }
 
 interface SharePermissions {
   public: boolean;
   allowEdit: boolean;
   allowExecute: boolean;
-  expiresAt?: string
+  expiresAt?: string;
 }
 
 interface ExecutionControlsProps {
@@ -180,12 +180,12 @@ interface ExecutionControlsProps {
   onStop: () => Promise<void>;
   onReset: () => Promise<void>;
   permissions: ExecutionPermissions;
-  isLoading?: boolean
+  isLoading?: boolean;
 }
 
 interface PerformanceMonitorProps {
   performance: ToolExecutionState['performance'];
-  status: ToolExecutionState['status']
+  status: ToolExecutionState['status'];
 }
 
 interface CollaboratorsPanelProps {
@@ -194,7 +194,7 @@ interface CollaboratorsPanelProps {
   permissions: ExecutionPermissions;
   onInvite?: (email: string, role: Collaborator['role']) => Promise<void>;
   onUpdateRole?: (userId: string, role: Collaborator['role']) => Promise<void>;
-  onRemove?: (userId: string) => Promise<void>
+  onRemove?: (userId: string) => Promise<void>;
 }
 
 interface LogsPanelProps {
@@ -202,7 +202,7 @@ interface LogsPanelProps {
   errors: ExecutionError[];
   permissions: ExecutionPermissions;
   onClearLogs?: () => void;
-  onExportLogs?: (format: 'json' | 'csv' | 'txt') => Promise<void>
+  onExportLogs?: (format: 'json' | 'csv' | 'txt') => Promise<void>;
 }
 
 const ExecutionControls: React.FC<ExecutionControlsProps> = ({
@@ -220,9 +220,9 @@ const ExecutionControls: React.FC<ExecutionControlsProps> = ({
     if (!permissions.canExecute || isExecuting) return;
     setIsExecuting(true);
     try {
-      await onExecute()
+      await onExecute();
     } finally {
-      setIsExecuting(false)
+      setIsExecuting(false);
     }
   }, [onExecute, permissions.canExecute, isExecuting]);
 
@@ -238,7 +238,7 @@ const ExecutionControls: React.FC<ExecutionControlsProps> = ({
       case 'crashed':
         return <AlertTriangle className="w-4 h-4 text-red-400" />;
       default:
-        return <Square className="w-4 h-4 text-gray-400" />
+        return <Square className="w-4 h-4 text-gray-400" />;
     }
   };
 
@@ -249,7 +249,7 @@ const ExecutionControls: React.FC<ExecutionControlsProps> = ({
       case 'completed': return 'Completed';
       case 'error': return 'Error';
       case 'crashed': return 'Crashed';
-      default: return 'Ready'
+      default: return 'Ready';
     }
   };
 
@@ -260,7 +260,7 @@ const ExecutionControls: React.FC<ExecutionControlsProps> = ({
       case 'completed': return 'text-green-400';
       case 'error':
       case 'crashed': return 'text-red-400';
-      default: return 'text-gray-400'
+      default: return 'text-gray-400';
     }
   };
 
@@ -332,7 +332,7 @@ const ExecutionControls: React.FC<ExecutionControlsProps> = ({
         </Button>
       </div>
     </div>
-  )
+  );
 };
 
 const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
@@ -342,7 +342,7 @@ const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   const getUsageColor = (usage: number) => {
     if (usage > 80) return 'text-red-400';
     if (usage > 60) return 'text-yellow-400';
-    return 'text-green-400'
+    return 'text-green-400';
   };
 
   const formatUsage = (usage: number) => `${usage.toFixed(1)}%`;
@@ -389,7 +389,7 @@ const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 const CollaboratorsPanel: React.FC<CollaboratorsPanelProps> = ({
@@ -412,9 +412,9 @@ const CollaboratorsPanel: React.FC<CollaboratorsPanelProps> = ({
     try {
       await onInvite?.(inviteEmail, inviteRole);
       setInviteEmail('');
-      setShowInviteForm(false)
+      setShowInviteForm(false);
     } finally {
-      setIsInviting(false)
+      setIsInviting(false);
     }
   }, [inviteEmail, inviteRole, onInvite, isInviting]);
 
@@ -430,7 +430,7 @@ const CollaboratorsPanel: React.FC<CollaboratorsPanelProps> = ({
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours}h ago`;
     const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays}d ago`
+    return `${diffDays}d ago`;
   };
 
   const getRoleColor = (role: Collaborator['role']) => {
@@ -438,7 +438,7 @@ const CollaboratorsPanel: React.FC<CollaboratorsPanelProps> = ({
       case 'owner': return 'text-purple-400';
       case 'editor': return 'text-blue-400';
       case 'viewer': return 'text-gray-400';
-      default: return 'text-gray-400'
+      default: return 'text-gray-400';
     }
   };
 
@@ -557,7 +557,7 @@ const CollaboratorsPanel: React.FC<CollaboratorsPanelProps> = ({
         ))}
       </div>
     </div>
-  )
+  );
 };
 
 const LogsPanel: React.FC<LogsPanelProps> = ({
@@ -573,17 +573,17 @@ const LogsPanel: React.FC<LogsPanelProps> = ({
 
   useEffect(() => {
     if (activeTab === 'logs') {
-      logsEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+      logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [logs, activeTab]);
 
   const filteredLogs = useMemo(() => {
     if (logLevel === 'all') return logs;
-    return logs.filter(log => log.level === logLevel)
+    return logs.filter(log => log.level === logLevel);
   }, [logs, logLevel]);
 
   const formatTimestamp = (timestamp: string) => {
-    return new Date(timestamp).toLocaleTimeString()
+    return new Date(timestamp).toLocaleTimeString();
   };
 
   const getLevelIcon = (level: ExecutionLog['level']) => {
@@ -592,7 +592,7 @@ const LogsPanel: React.FC<LogsPanelProps> = ({
       case 'info': return <CheckCircle className="w-3 h-3 text-blue-400" />;
       case 'warn': return <AlertTriangle className="w-3 h-3 text-yellow-400" />;
       case 'error': return <AlertTriangle className="w-3 h-3 text-red-400" />;
-      default: return <Clock className="w-3 h-3 text-gray-400" />
+      default: return <Clock className="w-3 h-3 text-gray-400" />;
     }
   };
 
@@ -602,7 +602,7 @@ const LogsPanel: React.FC<LogsPanelProps> = ({
       case 'info': return 'text-blue-400';
       case 'warn': return 'text-yellow-400';
       case 'error': return 'text-red-400';
-      default: return 'text-gray-400'
+      default: return 'text-gray-400';
     }
   };
 
@@ -612,7 +612,7 @@ const LogsPanel: React.FC<LogsPanelProps> = ({
       case 'medium': return 'text-yellow-400';
       case 'high': return 'text-orange-400';
       case 'critical': return 'text-red-400';
-      default: return 'text-gray-400'
+      default: return 'text-gray-400';
     }
   };
 
@@ -622,7 +622,7 @@ const LogsPanel: React.FC<LogsPanelProps> = ({
         <EyeOff className="w-8 h-8 text-[var(--hive-text-muted)] mx-auto mb-2" />
         <p className="text-[var(--hive-text-muted)]">You don't have permission to view logs</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -759,7 +759,7 @@ const LogsPanel: React.FC<LogsPanelProps> = ({
         )}
       </div>
     </div>
-  )
+  );
 };
 
 export const LiveToolExecutor: React.FC<LiveToolExecutorProps> = ({
@@ -818,29 +818,29 @@ export const LiveToolExecutor: React.FC<LiveToolExecutorProps> = ({
   if (!enableFeatureFlag) return null;
 
   useEffect(() => {
-    onStateChange?.(executionState)
+    onStateChange?.(executionState);
   }, [executionState, onStateChange]);
 
   // Auto-save functionality
   useEffect(() => {
     if (autoSave && executionState.status === 'completed') {
-      onSave?.(executionState)
+      onSave?.(executionState);
     }
   }, [autoSave, executionState, onSave]);
 
   const handleExecute = useCallback(async () => {
     setExecutionState(prev => ({ ...prev, status: 'running', startTime: new Date().toISOString() }));
-    await onExecute?.()
+    await onExecute?.();
   }, [onExecute]);
 
   const handlePause = useCallback(async () => {
     setExecutionState(prev => ({ ...prev, status: 'paused' }));
-    await onPause?.()
+    await onPause?.();
   }, [onPause]);
 
   const handleStop = useCallback(async () => {
     setExecutionState(prev => ({ ...prev, status: 'idle', endTime: new Date().toISOString() }));
-    await onStop?.()
+    await onStop?.();
   }, [onStop]);
 
   const handleReset = useCallback(async () => {
@@ -855,11 +855,11 @@ export const LiveToolExecutor: React.FC<LiveToolExecutorProps> = ({
       endTime: undefined,
       duration: undefined
     }));
-    await onReset?.()
+    await onReset?.();
   }, [onReset]);
 
   const handleSave = useCallback(async () => {
-    await onSave?.(executionState)
+    await onSave?.(executionState);
   }, [onSave, executionState]);
 
   const formatDuration = (duration?: number) => {
@@ -867,9 +867,9 @@ export const LiveToolExecutor: React.FC<LiveToolExecutorProps> = ({
     const seconds = Math.floor(duration / 1000);
     const minutes = Math.floor(seconds / 60);
     if (minutes > 0) {
-      return `${minutes}m ${seconds % 60}s`
+      return `${minutes}m ${seconds % 60}s`;
     }
-    return `${seconds}s`
+    return `${seconds}s`;
   };
 
   return (
@@ -960,7 +960,7 @@ export const LiveToolExecutor: React.FC<LiveToolExecutorProps> = ({
               { key: 'collaborators', label: 'Team', icon: Users },
               { key: 'logs', label: 'Logs', icon: Terminal },
               { key: 'settings', label: 'Settings', icon: Settings }
-            ].map(({ key, label, icon: Icon })} => (
+            ].map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
                 onClick={() => setActivePanel(key as any)}
@@ -1045,5 +1045,5 @@ export const LiveToolExecutor: React.FC<LiveToolExecutorProps> = ({
         </div>
       </div>
     </div>
-  )
+  );
 };

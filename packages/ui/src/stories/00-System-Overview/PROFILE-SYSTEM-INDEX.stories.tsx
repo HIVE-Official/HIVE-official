@@ -316,7 +316,7 @@ function QuickStartGuide() {
                 </Button>
               </div>
             )
-          })
+          })}
         </div>
       </CardContent>
     </Card>
@@ -346,7 +346,7 @@ function SystemStatus() {
                 </div>
               </div>
             )
-          })
+          })}
         </div>
       </CardContent>
     </Card>
@@ -418,7 +418,7 @@ export const ProfileSystemIndex: StoryObj = {
                   </Badge>
                 </Card>
               )
-            })
+            })}
           </div>
 
           {/* Main Content */}
@@ -441,7 +441,7 @@ export const ProfileSystemIndex: StoryObj = {
                         {section.title.split(' ')[0]}
                       </TabsTrigger>
                     )
-                  })
+                  })}
                 </TabsList>
 
                 {sections.map((section) => {
@@ -486,7 +486,7 @@ export const ProfileSystemIndex: StoryObj = {
                       </Card>
                     </TabsContent>
                   )
-                })
+                })}
               </Tabs>
 
               {/* Live Preview */}

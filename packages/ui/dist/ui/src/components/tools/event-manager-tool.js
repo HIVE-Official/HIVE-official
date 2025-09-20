@@ -70,175 +70,194 @@ export function EventManagerTool({ spaceId, spaceName, isLeader = false, current
         try {
             const fetchFunction = authenticatedFetch || fetch;
             switch (action) {
-                case 'create': {
-                    const response = await fetchFunction(`/api/spaces/${spaceId}/events`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data),
-                    });
+                case 'create':
+                    {
+                        const response = await fetchFunction(`/api/spaces/${spaceId}/events`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        });
+                    }
+                    ;
                     if (!response.ok) {
                         throw new Error(`Failed to create event: ${response.status}`);
                     }
                     break;
-                }
-                case 'edit':
-                case 'update': {
-                    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data),
-                    });
-                    if (!response.ok) {
-                        throw new Error(`Failed to update event: ${response.status}`);
-                    }
-                    break;
-                }
-                case 'delete': {
-                    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
-                    if (!response.ok) {
-                        throw new Error(`Failed to delete event: ${response.status}`);
-                    }
-                    break;
-                }
-                case 'publish': {
-                    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ status: 'published' }),
-                    });
-                    if (!response.ok) {
-                        throw new Error(`Failed to publish event: ${response.status}`);
-                    }
-                    break;
-                }
-                case 'cancel': {
-                    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ status: 'cancelled' }),
-                    });
-                    if (!response.ok) {
-                        throw new Error(`Failed to cancel event: ${response.status}`);
-                    }
-                    break;
-                }
-                case 'rsvp': {
-                    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}/rsvp`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ status: data?.status || 'going' }),
-                    });
-                    if (!response.ok) {
-                        throw new Error(`Failed to RSVP to event: ${response.status}`);
-                    }
-                    break;
-                }
-                case 'share': {
-                    // This would integrate with sharing functionality
-                    // For now, just trigger the callback
-                    if (onEventAction) {
-                        onEventAction(eventId, action, data);
-                    }
-                    return;
-                }
-                case 'copy': {
-                    // This would copy event details to clipboard
-                    if (onEventAction) {
-                        onEventAction(eventId, action, data);
-                    }
-                    return;
-                }
-                case 'analytics': {
-                    // This would show analytics for the event
-                    if (onEventAction) {
-                        onEventAction(eventId, action, data);
-                    }
-                    return;
-                }
-                default:
-                    if (onEventAction) {
-                        onEventAction(eventId, action, data);
-                    }
-                    return;
-            }
-            // Refresh event data after successful action
-            const refreshFetchFunction = authenticatedFetch || fetch;
-            const response = await refreshFetchFunction(`/api/spaces/${spaceId}/events?limit=50&upcoming=true`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (response.ok) {
-                const data = await response.json();
-                const apiEvents = data.events || [];
-                const transformedEvents = apiEvents.map((event) => ({
-                    id: event.id,
-                    title: event.title || 'Untitled Event',
-                    description: event.description || '',
-                    startDate: new Date(event.startDate || Date.now()),
-                    endDate: new Date(event.endDate || Date.now()),
-                    location: event.location || event.virtualLink || 'Location TBD',
-                    isVirtual: event.virtualLink ? true : false,
-                    maxCapacity: event.maxAttendees,
-                    currentAttendees: event.currentAttendees || 0,
-                    waitlistCount: 0,
-                    status: event.status || 'draft',
-                    visibility: event.isPrivate ? 'members' : 'public',
-                    createdBy: event.organizer?.fullName || event.organizer?.handle || 'Unknown',
-                    createdAt: new Date(event.createdAt || Date.now()),
-                    tags: event.tags || [],
-                    rsvpDeadline: event.rsvpDeadline ? new Date(event.rsvpDeadline) : undefined,
-                    requiresApproval: event.requiredRSVP || false,
-                    attendees: [],
-                    analytics: {
-                        views: 0,
-                        clicks: 0,
-                        shares: 0,
-                        conversationRate: 0
-                    }
-                }));
-                setEvents(transformedEvents);
-            }
-            // Also trigger callback for any additional handling
-            if (onEventAction) {
-                onEventAction(eventId, action, data);
             }
         }
-        catch (error) {
-            console.error(`Error performing event action ${action}:`, error);
-            // You might want to show a toast notification here
-            throw error;
+        finally {
         }
     };
-    // Filter and sort events
-    const filteredEvents = useMemo(() => {
-        return events
-            .filter(event => {
-            const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                event.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-            const matchesStatus = statusFilter === 'all' || event.status === statusFilter;
-            return matchesSearch && matchesStatus;
+    'edit';
+    'update';
+    {
+        const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
         });
-    })
-        .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+    }
+    ;
+    if (!response.ok) {
+        throw new Error(`Failed to update event: ${response.status}`);
+    }
+    break;
 }
+'delete';
+{
+    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+}
+;
+if (!response.ok) {
+    throw new Error(`Failed to delete event: ${response.status}`);
+}
+break;
+'publish';
+{
+    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'published' }),
+    });
+}
+;
+if (!response.ok) {
+    throw new Error(`Failed to publish event: ${response.status}`);
+}
+break;
+'cancel';
+{
+    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'cancelled' }),
+    });
+}
+;
+if (!response.ok) {
+    throw new Error(`Failed to cancel event: ${response.status}`);
+}
+break;
+'rsvp';
+{
+    const response = await fetchFunction(`/api/spaces/${spaceId}/events/${eventId}/rsvp`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: data?.status || 'going' }),
+    });
+}
+;
+if (!response.ok) {
+    throw new Error(`Failed to RSVP to event: ${response.status}`);
+}
+break;
+'share';
+{
+    // This would integrate with sharing functionality
+    // For now, just trigger the callback
+    if (onEventAction) {
+        onEventAction(eventId, action, data);
+    }
+    return;
+}
+'copy';
+{
+    // This would copy event details to clipboard
+    if (onEventAction) {
+        onEventAction(eventId, action, data);
+    }
+    return;
+}
+'analytics';
+{
+    // This would show analytics for the event
+    if (onEventAction) {
+        onEventAction(eventId, action, data);
+    }
+    return;
+}
+if (onEventAction) {
+    onEventAction(eventId, action, data);
+}
+return;
+// Refresh event data after successful action
+const refreshFetchFunction = authenticatedFetch || fetch;
+const response = await refreshFetchFunction(`/api/spaces/${spaceId}/events?limit=50&upcoming=true`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+;
+if (response.ok) {
+    const data = await response.json();
+    const apiEvents = data.events || [];
+    const transformedEvents = apiEvents.map((event) => ({
+        id: event.id,
+        title: event.title || 'Untitled Event',
+        description: event.description || '',
+        startDate: new Date(event.startDate || Date.now()),
+        endDate: new Date(event.endDate || Date.now()),
+        location: event.location || event.virtualLink || 'Location TBD',
+        isVirtual: event.virtualLink ? true : false,
+        maxCapacity: event.maxAttendees,
+        currentAttendees: event.currentAttendees || 0,
+        waitlistCount: 0,
+        status: event.status || 'draft',
+        visibility: event.isPrivate ? 'members' : 'public',
+        createdBy: event.organizer?.fullName || event.organizer?.handle || 'Unknown',
+        createdAt: new Date(event.createdAt || Date.now()),
+        tags: event.tags || [],
+        rsvpDeadline: event.rsvpDeadline ? new Date(event.rsvpDeadline) : undefined,
+        requiresApproval: event.requiredRSVP || false,
+        attendees: [],
+        analytics: {
+            views: 0,
+            clicks: 0,
+            shares: 0,
+            conversationRate: 0
+        }
+    }));
+    setEvents(transformedEvents);
+}
+// Also trigger callback for any additional handling
+if (onEventAction) {
+    onEventAction(eventId, action, data);
+}
+try { }
+catch (error) {
+    console.error(`Error performing event action ${action}:`, error);
+    // You might want to show a toast notification here
+    throw error;
+}
+;
+// Filter and sort events
+const filteredEvents = useMemo(() => {
+    return events
+        .filter(event => {
+        const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            event.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+        const matchesStatus = statusFilter === 'all' || event.status === statusFilter;
+        return matchesSearch && matchesStatus;
+    });
+})
+    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 [events, searchQuery, statusFilter];
 ;
 const getStatusColor = (status) => {

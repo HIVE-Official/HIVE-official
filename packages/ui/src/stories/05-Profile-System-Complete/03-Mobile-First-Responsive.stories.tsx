@@ -499,7 +499,7 @@ function ResponsiveControls({
                   </span>
                 </Button>
               )
-            })
+            })}
           </div>
         </div>
 
@@ -527,7 +527,7 @@ function ResponsiveControls({
                   </CardContent>
                 </Card>
               )
-            })
+            })}
           </div>
         </div>
 

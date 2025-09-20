@@ -27,6 +27,6 @@ interface CountdownTimerRendererProps {
         elementStates: Map<string, any>;
     };
 }
-export declare const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps>;
+export declare const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps>, config: any, onComplete: any, config: any, targetDate: any, isComplete: any, onStateChange: any;
 export {};
 //# sourceMappingURL=countdown-timer-renderer.d.ts.map

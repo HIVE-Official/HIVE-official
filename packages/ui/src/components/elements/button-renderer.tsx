@@ -87,7 +87,7 @@ export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
               type: 'custom', 
               data: config.onClick.data,
               timestamp: Date.now() 
-            })
+            })}
           }
           break
       }
@@ -99,7 +99,7 @@ export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
         clicked: true,
         lastClickedAt: Date.now(),
         clickCount: (runtimeContext?.elementStates.get(element.id)?.clickCount || 0) + 1
-      })
+      })}
     }
   };
 

@@ -205,7 +205,7 @@ const RitualsDashboard = () => {
               { id: 'my-rituals', label: 'My Rituals', icon: Target },
               { id: 'discover', label: 'Discover', icon: Search },
               { id: 'leaderboard', label: 'Leaderboard', icon: Award },
-            ].map(({ id, label, icon: Icon })} => (
+            ].map(map}) => (
               <button
                 key={id}
                 onClick={() => setViewMode(id)}
@@ -228,7 +228,7 @@ const RitualsDashboard = () => {
           {/* Category Filters */}
           {viewMode !== 'leaderboard' && (
             <div className="flex items-center space-x-2">
-              {categories.map(({ id, label, count })} => (
+              {categories.map(map}) => (
                 <Button
                   key={id}
                   size="sm"

@@ -1,4 +1,4 @@
-import React, { Component, type ReactNode, type ErrorInfo } from 'react';
+import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { type HiveError } from './ErrorBoundary';
 interface ErrorAnalytics {
     errorCount: number;
@@ -64,10 +64,7 @@ export declare class GlobalErrorBoundary extends Component<GlobalErrorBoundaryPr
     private shouldAttemptAutoRecovery;
     private attemptAutoRecovery;
     private refreshAuthAndRetry;
-    private reportCriticalError;
-    handleRetry: () => void;
-    componentWillUnmount(): void;
-    render(): string | number | boolean | Iterable<React.ReactNode> | import("react/jsx-runtime").JSX.Element;
+    catch(refreshError: any): void;
 }
 export declare function useGlobalErrorBoundary(): {
     trackError: (error: Error, context?: any) => void;

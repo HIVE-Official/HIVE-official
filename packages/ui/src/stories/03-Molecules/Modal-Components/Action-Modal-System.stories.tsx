@@ -144,7 +144,7 @@ export const CreateSpaceModal: Story = {
         location: '',
         maxMembers: '',
         tags: []
-      })
+      })}
     };
 
     return (
@@ -563,7 +563,7 @@ export const InteractiveModalDemo: Story = {
         eventDate: '',
         eventTime: '',
         eventLocation: ''
-      })
+      })}
     };
 
     return (
@@ -587,7 +587,7 @@ export const InteractiveModalDemo: Story = {
                 <div className="text-sm opacity-90">{action.description}</div>
               </button>
             )
-          })
+          })}
         </div>
 
         {/* Create Event Modal */}

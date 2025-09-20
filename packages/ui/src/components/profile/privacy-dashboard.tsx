@@ -125,7 +125,7 @@ export const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({
     onSettingsChange(newSettings)
   };
 
-  const getPrivacyScore = (): { score: number; level: string; color: string } => {
+  const getPrivacyScore = (): { score: number; level: string; color: string} => {
     let score = 0;
     let maxScore = 0;
 

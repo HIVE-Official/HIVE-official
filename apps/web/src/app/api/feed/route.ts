@@ -1,11 +1,8 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Post } from '@hive/core';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 // Temporary fallback implementations for development
 type FeedContentType = 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import';
 
@@ -90,130 +87,111 @@ interface UserMembershipData {
  * 4. Batch queries with pagination cursors
  * 5. Pre-compute trending content every 15 minutes
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const url = new URL(request.url);
-    const queryParams = Object.fromEntries(url.searchParams.entries());
-    const { limit, cursor, refresh, feedType } = FeedQuerySchema.parse(queryParams);
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const url = new URL(request.url);
+  const queryParams = Object.fromEntries(url.searchParams.entries());
+  const { limit, cursor, refresh, feedType } = FeedQuerySchema.parse(queryParams);
 
-    const userId = authContext.userId;
+  const userId = getUserId(request);
 
-    logger.info('🔄 Feed request:for user', { feedType, userId, endpoint: '/api/feed' });
-    
-    // Get user's membership data (cached for performance)
-    const userMemberships = await getUserMembershipData(userId, refresh);
-    
-    if (userMemberships.length === 0) {
-      return NextResponse.json({
-        success: true,
-        posts: [],
-        nextCursor: null,
-        feedType,
-        analytics: { message: 'No space memberships found' }
-      });
-    }
+  logger.info('🔄 Feed request for user', { feedType, userId, endpoint: '/api/feed' });
 
-    // Extract space IDs for aggregation
-    const userSpaceIds = userMemberships.map(m => m.spaceId);
-    
-    // Create aggregation engine
-    const aggregator = createFeedAggregator(userId, userSpaceIds);
-    
-    // Get aggregated content from all sources
-    const aggregatedItems = await aggregator.aggregateContent(limit, cursor);
-    
-    // Convert aggregated items to feed items
-    const feedItems: FeedItem[] = aggregatedItems.map(item => ({
-      post: item.content as Post, // Type assertion for now, will handle other types
-      spaceId: item.spaceId || 'system',
-      spaceName: getSpaceName(item.spaceId, item.source),
-      relevanceScore: item.priority,
-      contentType: item.contentType,
-      timestamp: item.timestamp,
-      validationConfidence: item.validationData.confidence
-    }));
+  // Get user's membership data (cached for performance)
+  const userMemberships = await getUserMembershipData(userId, refresh);
 
-    // Filter for valid tool-generated content only
-    const validFeedItems = feedItems.filter(item => {
-      const validation = validateFeedContent(item.post);
-      return validation.isValid;
-    });
-
-    // Sort by tool priority, then relevance score and timestamp
-    validFeedItems.sort((a, b) => {
-      // Primary sort: tool content priority
-      const aPriority = getContentTypePriority(a.contentType);
-      const bPriority = getContentTypePriority(b.contentType);
-      
-      if (aPriority !== bPriority) {
-        return bPriority - aPriority;
-      }
-      
-      // Secondary sort: relevance score (higher first)
-      if (Math.abs(a.relevanceScore - b.relevanceScore) > 0.1) {
-        return b.relevanceScore - a.relevanceScore;
-      }
-      
-      // Tertiary sort: validation confidence
-      if (Math.abs(a.validationConfidence - b.validationConfidence) > 5) {
-        return b.validationConfidence - a.validationConfidence;
-      }
-      
-      // Final sort: recency (newer first)
-      return b.timestamp - a.timestamp;
-    });
-
-    // Generate next cursor for pagination
-    const nextCursor = validFeedItems.length === limit 
-      ? generateCursor(validFeedItems[validFeedItems.length - 1])
-      : null;
-
-    // Get content distribution for analytics
-    const rawPosts = feedItems.map(item => item.post);
-    const contentDistribution = getContentDistribution(rawPosts);
-    const meetsThreshold = meetsToolContentThreshold(rawPosts, 0.9);
-
-    return NextResponse.json({
-      success: true,
-      posts: validFeedItems.map(item => ({
-        ...item.post,
-        _metadata: {
-          spaceId: item.spaceId,
-          spaceName: item.spaceName,
-          relevanceScore: item.relevanceScore,
-          contentType: item.contentType,
-          validationConfidence: item.validationConfidence
-        }
-      })),
-      nextCursor,
+  if (userMemberships.length === 0) {
+    return respond.success({
+      posts: [],
+      nextCursor: null,
       feedType,
-      analytics: {
-        totalMemberships: userMemberships.length,
-        rawFeedItems: feedItems.length,
-        validFeedItems: validFeedItems.length,
-        filterRate: validFeedItems.length / (feedItems.length || 1),
-        averageRelevance: validFeedItems.reduce((sum, item) => sum + item.relevanceScore, 0) / (validFeedItems.length || 1),
-        averageConfidence: validFeedItems.reduce((sum, item) => sum + item.validationConfidence, 0) / (validFeedItems.length || 1),
-        contentDistribution,
-        meetsToolThreshold: meetsThreshold
-      }
+      analytics: { message: 'No space memberships found' }
     });
+  }
 
-  } catch (error: unknown) {
-    logger.error('Feed API error', { error: error, endpoint: '/api/feed' });
+  // Extract space IDs for aggregation
+  const userSpaceIds = userMemberships.map(m => m.spaceId);
 
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
-      );
+  // Create aggregation engine
+  const aggregator = createFeedAggregator(userId, userSpaceIds);
+
+  // Get aggregated content from all sources
+  const aggregatedItems = await aggregator.aggregateContent(limit, cursor);
+
+  // Convert aggregated items to feed items
+  const feedItems: FeedItem[] = aggregatedItems.map(item => ({
+    post: item.content as Post, // Type assertion for now, will handle other types
+    spaceId: item.spaceId || 'system',
+    spaceName: getSpaceName(item.spaceId, item.source),
+    relevanceScore: item.priority,
+    contentType: item.contentType,
+    timestamp: item.timestamp,
+    validationConfidence: item.validationData.confidence
+  }));
+
+  // Filter for valid tool-generated content only
+  const validFeedItems = feedItems.filter(item => {
+    const validation = validateFeedContent(item.post);
+    return validation.isValid;
+  });
+
+  // Sort by tool priority, then relevance score and timestamp
+  validFeedItems.sort((a, b) => {
+    // Primary sort: tool content priority
+    const aPriority = getContentTypePriority(a.contentType);
+    const bPriority = getContentTypePriority(b.contentType);
+
+    if (aPriority !== bPriority) {
+      return bPriority - aPriority;
     }
 
-    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Feed is publicly viewable but requires auth
-  operation: 'fetch_user_feed' 
+    // Secondary sort: relevance score (higher first)
+    if (Math.abs(a.relevanceScore - b.relevanceScore) > 0.1) {
+      return b.relevanceScore - a.relevanceScore;
+    }
+
+    // Tertiary sort: validation confidence
+    if (Math.abs(a.validationConfidence - b.validationConfidence) > 5) {
+      return b.validationConfidence - a.validationConfidence;
+    }
+
+    // Final sort: recency (newer first)
+    return b.timestamp - a.timestamp;
+  });
+
+  // Generate next cursor for pagination
+  const nextCursor = validFeedItems.length === limit
+    ? generateCursor(validFeedItems[validFeedItems.length - 1])
+    : null;
+
+  // Get content distribution for analytics
+  const rawPosts = feedItems.map(item => item.post);
+  const contentDistribution = getContentDistribution(rawPosts);
+  const meetsThreshold = meetsToolContentThreshold(rawPosts, 0.9);
+
+  return respond.success({
+    posts: validFeedItems.map(item => ({
+      ...item.post,
+      _metadata: {
+        spaceId: item.spaceId,
+        spaceName: item.spaceName,
+        relevanceScore: item.relevanceScore,
+        contentType: item.contentType,
+        validationConfidence: item.validationConfidence
+      }
+    })),
+    nextCursor,
+    feedType,
+    analytics: {
+      totalMemberships: userMemberships.length,
+      rawFeedItems: feedItems.length,
+      validFeedItems: validFeedItems.length,
+      filterRate: validFeedItems.length / (feedItems.length || 1),
+      averageRelevance: validFeedItems.reduce((sum, item) => sum + item.relevanceScore, 0) / (validFeedItems.length || 1),
+      averageConfidence: validFeedItems.reduce((sum, item) => sum + item.validationConfidence, 0) / (validFeedItems.length || 1),
+      contentDistribution,
+      meetsToolThreshold: meetsThreshold
+    }
+  });
 });
 
 /**

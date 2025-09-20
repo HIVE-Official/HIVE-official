@@ -286,7 +286,7 @@ const CompleteSpacesSystem = () => {
         { id: 'personal', label: '👤 Personal Dashboard', icon: Users },
         { id: 'mobile', label: '📱 Mobile Experience', icon: Activity },
         { id: 'admin', label: '🛡️ Admin Dashboard', icon: Shield }
-      ].map(({ id, label, icon: Icon })} => (
+      ].map(map}) => (
         <Button
           key={id}
           variant={activeView === id ? 'primary' : 'secondary'}

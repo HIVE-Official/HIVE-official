@@ -265,7 +265,7 @@ const AccessibilityShowcase = () => {
             const next = e.shiftKey ? prev - 1 : prev + 1;
             const maxIndex = buttonRefs.current.length - 1;
             return Math.max(0, Math.min(maxIndex, next))
-          })
+          })}
         } else if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           buttonRefs.current[keyboardFocus]?.click()
@@ -527,7 +527,7 @@ const AccessibilityShowcase = () => {
                   {standard.title}
                 </Button>
               )
-            })
+            })}
             <Button
               variant={activeDemo === 'live-demo' ? "default" : "outline"}
               size="lg"
@@ -562,7 +562,7 @@ const AccessibilityShowcase = () => {
               <Card className="hive-glass border border-gray-700">
                 <CardHeader>
                   <CardTitle className="flex items-center" style={{ color: 'var(--hive-brand-primary)' }}>
-                    {React.createElement(accessibilityStandards[activeDemo as keyof typeof accessibilityStandards].icon, { className: "w-6 h-6 mr-2" }}
+                    {React.createElement(accessibilityStandards[activeDemo as keyof typeof accessibilityStandards].icon, { className: "w-6 h-6 mr-2" })
                     {accessibilityStandards[activeDemo as keyof typeof accessibilityStandards].title}
                   </CardTitle>
                   <p style={{ color: 'var(--hive-text-muted)' }}>

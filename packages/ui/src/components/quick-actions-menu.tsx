@@ -128,7 +128,7 @@ const defaultQuickActions: QuickAction[] = [
         key: 'k',
         metaKey: true,
         ctrlKey: true
-      });
+      })};
       document.dispatchEvent(event)
     },
     category: 'system',

@@ -177,7 +177,7 @@ const FeedbackSurveyBuilder = ({
         description: survey.description || '',
         questions: survey.questions,
         isActive: survey.isActive || false
-      })
+      })}
     }
   };
 

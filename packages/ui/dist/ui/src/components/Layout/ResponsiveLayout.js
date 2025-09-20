@@ -41,16 +41,18 @@ function useAdvancedViewport() {
                 safeAreaInsets
             });
         };
-        updateViewport();
-        window.addEventListener('resize', updateViewport);
-        window.addEventListener('orientationchange', updateViewport);
-        return () => {
-            window.removeEventListener('resize', updateViewport);
-            window.removeEventListener('orientationchange', updateViewport);
-        };
-    }, []);
-    return viewport;
+    });
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+    window.addEventListener('orientationchange', updateViewport);
+    return () => {
+        window.removeEventListener('resize', updateViewport);
+        window.removeEventListener('orientationchange', updateViewport);
+    };
 }
+[];
+;
+return viewport;
 // Dynamic spacing calculation based on content density and viewport
 function calculateDynamicSpacing(viewport, density, networkQuality) {
     const baseSpacing = {

@@ -22,28 +22,28 @@ describe('CampusIdentityHeader', () => {
     expect(screen.getByText('Computer Science')).toBeInTheDocument();
     expect(screen.getByText("'26")).toBeInTheDocument();
     expect(screen.getByText('West Campus')).toBeInTheDocument();
-    expect(screen.getByText('Online')).toBeInTheDocument()
+    expect(screen.getByText('Online')).toBeInTheDocument();
   });
 
   it('displays initials when no avatar is provided', () => {
     const userWithoutAvatar = { ...mockUser, avatar: undefined };
     render(<CampusIdentityHeader user={userWithoutAvatar} />);
     
-    expect(screen.getByText('SC')).toBeInTheDocument()
+    expect(screen.getByText('SC')).toBeInTheDocument();
   });
 
   it('shows builder badge for builder users', () => {
     const builderUser = { ...mockUser, isBuilder: true };
     render(<CampusIdentityHeader user={builderUser} />);
     
-    expect(screen.getByText('Builder')).toBeInTheDocument()
+    expect(screen.getByText('Builder')).toBeInTheDocument();
   });
 
   it('formats handle correctly with @ prefix', () => {
     const userWithoutAt = { ...mockUser, handle: 'sarahc_cs' };
     render(<CampusIdentityHeader user={userWithoutAt} />);
     
-    expect(screen.getByText('@sarahc_cs')).toBeInTheDocument()
+    expect(screen.getByText('@sarahc_cs')).toBeInTheDocument();
   });
 
   it('handles completion percentage display', () => {
@@ -51,6 +51,6 @@ describe('CampusIdentityHeader', () => {
     
     // Progress ring should be rendered with correct percentage
     const progressRing = document.querySelector('circle[stroke-dasharray]');
-    expect(progressRing).toBeInTheDocument()
-  })
+    expect(progressRing).toBeInTheDocument();
+  });
 });

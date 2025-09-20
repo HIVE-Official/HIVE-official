@@ -818,7 +818,7 @@ const MobileSystemDemo = () => {
             { id: 'notifications', label: 'Notifications', icon: Bell },
             { id: 'offline', label: 'Offline', icon: WifiOff },
             { id: 'location', label: 'Location', icon: MapPin }
-          ].map(({ id, label, icon: Icon })} => (
+          ].map(map}) => (
             <Button
               key={id}
               size="sm"

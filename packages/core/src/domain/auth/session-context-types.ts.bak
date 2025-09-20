@@ -1,0 +1,78 @@
+// Session Context and Device Information Types
+export interface SessionContext {
+  device: DeviceInfo;
+  location: LocationInfo;
+  network: NetworkInfo;
+  activity: ActivityInfo;
+  security: SecurityInfo;
+}
+
+export interface DeviceInfo {
+  type: "desktop" | "mobile" | "tablet";
+  os: string;
+  browser: string;
+  version: string;
+  userAgent: string;
+  screenResolution: {
+    width: number;
+    height: number;
+  };
+  timezone: string;
+  language: string;
+}
+
+export interface LocationInfo {
+  country?: string;
+  region?: string;
+  city?: string;
+  timezone: string;
+  campus?: {
+    id: string;
+    name: string;
+    onCampus: boolean;
+  };
+}
+
+export interface NetworkInfo {
+  ip: string;
+  isp?: string;
+  type: "wifi" | "cellular" | "ethernet" | "unknown";
+  vpn: boolean;
+}
+
+export interface ActivityInfo {
+  lastActive: Date;
+  currentPage: string;
+  sessionDuration: number;
+  pageViews: number;
+  interactions: number;
+  idleTime: number;
+}
+
+export interface SecurityInfo {
+  riskScore: number;
+  flags: SecurityFlag[];
+  lastSecurityCheck: Date;
+  trustedDevice: boolean;
+  suspiciousActivity: boolean;
+}
+
+export interface SecurityFlag {
+  type:
+    | "unusual-location"
+    | "new-device"
+    | "suspicious-activity"
+    | "rate-limit-exceeded";
+  severity: "low" | "medium" | "high" | "critical";
+  timestamp: Date;
+  description: string;
+}
+
+export interface SessionMetadata {
+  createdAt: Date;
+  updatedAt: Date;
+  expiresAt: Date;
+  version: string;
+  source: "web" | "mobile" | "api" | "admin";
+  fingerprint: string;
+  tags: string[];

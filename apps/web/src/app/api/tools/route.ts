@@ -1,11 +1,8 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
 import { z } from "zod";
 import { CreateToolSchema, ToolSchema, createToolDefaults } from "@hive/core";
 import { dbAdmin as adminDb } from "@/lib/firebase-admin";
-import { getCurrentUser } from "../../../lib/auth-server";
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 
 // Rate limiting: 10 tool creations per hour per user
 // // const createToolLimiter = rateLimit({
@@ -14,24 +11,20 @@ import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/
 // });
 
 // GET /api/tools - List user's tools
-export async function GET(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const userId = getUserId(request);
 
-    const { searchParams } = new URL(request.url);
-    const spaceId = searchParams.get("spaceId");
-    const status = searchParams.get("status");
-    const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 50);
-    const offset = parseInt(searchParams.get("offset") || "0");
+  const { searchParams } = new URL(request.url);
+  const spaceId = searchParams.get("spaceId");
+  const status = searchParams.get("status");
+  const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 50);
+  const offset = parseInt(searchParams.get("offset") || "0");
 
-    // Build query
-    let query = adminDb
-      .collection("tools")
-      .where("ownerId", "==", user.uid)
-      .orderBy("updatedAt", "desc");
+  // Build query
+  let query = adminDb
+    .collection("tools")
+    .where("ownerId", "==", userId)
+    .orderBy("updatedAt", "desc");
 
     // Filter by space if provided
     if (spaceId) {
@@ -53,23 +46,21 @@ export async function GET(request: NextRequest) {
     }));
 
     // Get total count for pagination
-    const countQuery = adminDb.collection("tools").where("ownerId", "==", user.uid);
+    const countQuery = adminDb.collection("tools").where("ownerId", "==", userId);
     const countSnapshot = await countQuery.count().get();
     const total = countSnapshot.data().count;
 
-    return NextResponse.json({
+    return respond.success({
       tools,
       pagination: {
         total,
         limit,
         offset,
         hasMore: offset + limit < total,
-      } });
-  } catch (error) {
-    logger.error('Error fetching tools', { error: error, endpoint: '/api/tools' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      }
+    });
   }
-}
+);
 
 // Enhanced schema to support template-based creation
 const EnhancedCreateToolSchema = CreateToolSchema.extend({
@@ -80,25 +71,19 @@ const EnhancedCreateToolSchema = CreateToolSchema.extend({
 });
 
 // POST /api/tools - Create new tool (supports templates)
-export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const POST = withAuthValidationAndErrors(
+  EnhancedCreateToolSchema,
+  async (request: AuthenticatedRequest, context, validatedData, respond) => {
+    const userId = getUserId(request);
 
     // Rate limiting
     try {
       // await createToolLimiter.check(); // Check rate limit for this user
     } catch {
-      return NextResponse.json(ApiResponseHelper.error("Too many tool creations. Please try again later.", "UNKNOWN_ERROR"), { status: 429 });
+      return respond.error("Too many tool creations. Please try again later.", "UNKNOWN_ERROR", 429);
     }
 
-    const body = await request.json();
-    logger.info('🔨 Creating tool for user', { userUid: user.uid, endpoint: '/api/tools'  });
-
-    // Validate request body with enhanced schema
-    const validatedData = EnhancedCreateToolSchema.parse(body);
+    logger.info('🔨 Creating tool for user', { userUid: userId, endpoint: '/api/tools'  });
 
     // If creating a space tool, verify user has builder permissions
     if (validatedData.isSpaceTool && validatedData.spaceId) {
@@ -107,14 +92,14 @@ export async function POST(request: NextRequest) {
         .doc(validatedData.spaceId)
         .get();
       if (!spaceDoc.exists) {
-        return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
       }
 
       const spaceData = spaceDoc.data();
-      const userRole = spaceData?.members?.[user.uid]?.role;
+      const userRole = spaceData?.members?.[userId]?.role;
 
       if (!["builder", "admin"].includes(userRole)) {
-        return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to create tools in this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+        return respond.error("Insufficient permissions to create tools in this space", "FORBIDDEN", 403);
       }
     }
 
@@ -140,7 +125,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create tool document
-    const toolData = createToolDefaults(user.uid, validatedData);
+    const toolData = createToolDefaults(userId, validatedData);
     const now = new Date();
 
     const tool = {
@@ -167,7 +152,7 @@ export async function POST(request: NextRequest) {
       version: "1.0.0",
       changelog: validatedData.templateId ? `Created from template ${validatedData.templateId}` : "Initial version",
       createdAt: now,
-      createdBy: user.uid,
+      createdBy: userId,
       isStable: false,
     };
 
@@ -186,7 +171,7 @@ export async function POST(request: NextRequest) {
           toolId: toolRef.id,
           name: validatedData.name,
           description: validatedData.description,
-          createdBy: user.uid,
+          createdBy: userId,
           createdAt: now,
           type: validatedData.type,
           status: 'draft'
@@ -199,7 +184,7 @@ export async function POST(request: NextRequest) {
 
     // Update user's tool count
     try {
-      const userRef = adminDb.collection('users').doc(user.uid);
+      const userRef = adminDb.collection('users').doc(userId);
       const userDoc = await userRef.get();
       const currentStats = userDoc.data()?.stats || {};
       
@@ -214,7 +199,7 @@ export async function POST(request: NextRequest) {
     // Track analytics event
     await adminDb.collection("analytics_events").add({
       eventType: "tool_created",
-      userId: user.uid,
+      userId: userId,
       toolId: toolRef.id,
       spaceId: validatedData.spaceId || null,
       isSpaceTool: validatedData.isSpaceTool,
@@ -234,65 +219,44 @@ export async function POST(request: NextRequest) {
 
     logger.info('✅ Successfully created tool', { toolRefId: toolRef.id, endpoint: '/api/tools'  });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       tool: createdTool,
       message: `Tool "${validatedData.name}" created successfully`,
-    }, { status: HttpStatus.CREATED });
-  } catch (error) {
-    logger.error('Error creating tool', { error: error, endpoint: '/api/tools' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid tool data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to create tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    }, 201);
   }
-}
+);
+
+// Schema for tool update requests
+const UpdateToolSchema = z.object({
+  toolId: z.string().min(1, 'Tool ID is required'),
+}).extend(EnhancedCreateToolSchema.partial().shape);
 
 // PUT /api/tools - Update existing tool
-export async function PUT(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const PUT = withAuthValidationAndErrors(
+  UpdateToolSchema,
+  async (request: AuthenticatedRequest, context, validatedData, respond) => {
+    const userId = getUserId(request);
+    const { toolId, ...updateData } = validatedData;
 
-    const body = await request.json();
-    const { toolId, ...updateData } = body;
-
-    if (!toolId) {
-      return NextResponse.json(ApiResponseHelper.error("Tool ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    logger.info('🔨 Updating tool for user', { toolId, userId: user.uid, endpoint: '/api/tools' });
+    logger.info('🔨 Updating tool for user', { toolId, userId, endpoint: '/api/tools' });
 
     // Get existing tool
     const toolDoc = await adminDb.collection("tools").doc(toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     const existingTool = toolDoc.data();
-    
-    // Check ownership
-    if (existingTool?.ownerId !== user.uid) {
-      return NextResponse.json(ApiResponseHelper.error("Not authorized to update this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
 
-    // Validate the update data
-    const validatedData = EnhancedCreateToolSchema.partial().parse(updateData);
+    // Check ownership
+    if (existingTool?.ownerId !== userId) {
+      return respond.error("Not authorized to update this tool", "FORBIDDEN", 403);
+    }
 
     const now = new Date();
     const updatedTool = {
       ...existingTool,
-      ...validatedData,
+      ...updateData,
       updatedAt: now,
     };
 
@@ -300,13 +264,13 @@ export async function PUT(request: NextRequest) {
     await adminDb.collection("tools").doc(toolId).update(updatedTool);
 
     // Create new version if elements changed
-    if (validatedData.elements && JSON.stringify(validatedData.elements) !== JSON.stringify(existingTool?.elements)) {
+    if (updateData.elements && JSON.stringify(updateData.elements) !== JSON.stringify(existingTool?.elements)) {
       const versionNumber = `1.${Date.now()}`;
       const newVersion = {
         version: versionNumber,
         changelog: "Tool updated via builder",
         createdAt: now,
-        createdBy: user.uid,
+        createdBy: userId,
         isStable: false,
       };
 
@@ -316,12 +280,12 @@ export async function PUT(request: NextRequest) {
     // Track analytics event
     await adminDb.collection("analytics_events").add({
       eventType: "tool_updated",
-      userId: user.uid,
+      userId: userId,
       toolId: toolId,
       timestamp: now,
       metadata: {
-        fieldsUpdated: Object.keys(validatedData),
-        hasElementsChange: !!validatedData.elements,
+        fieldsUpdated: Object.keys(updateData),
+        hasElementsChange: !!updateData.elements,
       } });
 
     const result = {
@@ -331,23 +295,9 @@ export async function PUT(request: NextRequest) {
 
     logger.info('✅ Successfully updated tool', { toolId, endpoint: '/api/tools' });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       tool: result,
-      message: `Tool "${updatedTool.name}" updated successfully` });
-  } catch (error) {
-    logger.error('Error updating tool', { error: error, endpoint: '/api/tools' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid tool data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to update tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      message: `Tool "${updatedTool.name}" updated successfully`
+    });
   }
-}
+);

@@ -375,7 +375,7 @@ export function EventCheckinTool({
         method: index % 3 === 0 ? 'qr' : index % 3 === 1 ? 'manual' : 'walk_in',
         guestCount: rsvp.guestCount,
         wasLate: rsvp.checkedInAt ? rsvp.checkedInAt > event.startDate : false
-      }));
+      })});
     
     setCheckinEntries(mockEntries)
   }, [rsvps, event.startDate]);

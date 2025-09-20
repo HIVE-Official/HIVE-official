@@ -37,7 +37,7 @@ declare function generateCampusMessage(errorType: NetworkErrorType, campusContex
     encouragement: string;
     tips: string[];
 };
-export declare const NetworkError: React.FC<NetworkErrorProps>;
+export declare const NetworkError: React.FC<NetworkErrorProps>, errorType: any, networkCondition: any, campusContext: any, retryCount: any, onErrorReport: any;
 export { useNetworkMonitoring, detectCampusNetwork, generateCampusMessage };
 export type { NetworkErrorProps, NetworkCondition, CampusNetworkContext, NetworkErrorType };
 //# sourceMappingURL=NetworkError.d.ts.map

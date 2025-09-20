@@ -210,7 +210,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
         } else {
           resolve(null)
         }
-      })
+      })}
     }, []);
     
     // Process selected files

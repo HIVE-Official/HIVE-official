@@ -94,7 +94,7 @@ export function CampusBar() {
                   <span className="font-medium">{area.label}</span>
                 </motion.button>
               )
-          })
+          })}
           </div>
 
           {/* Right: Builder Toggle + User Actions */}
@@ -239,7 +239,7 @@ export function ContextBreadcrumbs({ items, className }: ContextBreadcrumbsProps
             )}
           </React.Fragment>
         )
-          })
+          })}
     </nav>
   )
 }

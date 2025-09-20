@@ -146,7 +146,7 @@ export function FirebaseProvider({
       setAuth(prev => ({
         ...prev,
         profile: profileData.profile
-      }))
+      }));
     }
   }, [profileData?.profile]);
 
@@ -195,9 +195,9 @@ export function FirebaseProvider({
       setAuth(prev => ({ 
         ...prev, 
         loading: false, 
-        error: error.message || 'Sign in failed' 
+        error: error.message || 'Sign in failed'
       }));
-      throw error
+      throw error;
     }
   }, [enableMockAuth]);
 
@@ -232,9 +232,9 @@ export function FirebaseProvider({
       setAuth(prev => ({ 
         ...prev, 
         loading: false, 
-        error: error.message || 'Sign up failed' 
+        error: error.message || 'Sign up failed'
       }));
-      throw error
+      throw error;
     }
   }, [enableMockAuth]);
 
@@ -263,9 +263,9 @@ export function FirebaseProvider({
       setAuth(prev => ({ 
         ...prev, 
         loading: false, 
-        error: error.message || 'Magic link failed' 
+        error: error.message || 'Magic link failed'
       }));
-      throw error
+      throw error;
     }
   }, [enableMockAuth]);
 
@@ -294,9 +294,9 @@ export function FirebaseProvider({
       setAuth(prev => ({ 
         ...prev, 
         loading: false, 
-        error: error.message || 'Sign out failed' 
+        error: error.message || 'Sign out failed'
       }));
-      throw error
+      throw error;
     }
   }, [enableMockAuth]);
 

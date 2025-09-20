@@ -1,28 +1,30 @@
-import { NextRequest, NextResponse } from "next/server";
-import { FieldValue } from "firebase-admin/firestore";
+import * as admin from "firebase-admin/firestore";
+import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { validateAuth } from "../../../../../lib/auth-server";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ toolId: string }> }
-) {
-  try {
-    // Validate authentication
-    const user = await validateAuth(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+// Schema for tool state update requests
+const ToolStateSchema = z.object({
+  spaceId: z.string().min(1, "spaceId is required"),
+  userId: z.string().optional(),
+  state: z.record(z.any())
+});
 
-    const { toolId } = await params;
-    const searchParams = request.nextUrl.searchParams;
-    const spaceId = searchParams.get("spaceId");
-    const userId = searchParams.get("userId") || user.uid;
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ toolId: string }> },
+  respond
+) => {
+  const authenticatedUserId = getUserId(request);
+  const { toolId } = await params;
+  const searchParams = request.nextUrl.searchParams;
+  const spaceId = searchParams.get("spaceId");
+  const userId = searchParams.get("userId") || authenticatedUserId;
 
-    if (!spaceId) {
-      return NextResponse.json(ApiResponseHelper.error("spaceId parameter is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
+  if (!spaceId) {
+    return respond.error("spaceId parameter is required", "INVALID_INPUT", 400);
+  }
 
     const db = dbAdmin;
     
@@ -33,43 +35,29 @@ export async function GET(
       .get();
 
     if (!stateDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool state not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Tool state not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     const stateData = stateDoc.data();
-    
-    return NextResponse.json(stateData);
-  } catch (error) {
-    return NextResponse.json(ApiResponseHelper.error("Failed to load tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ toolId: string }> }
-) {
-  try {
-    // Validate authentication
-    const user = await validateAuth(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+    return respond.success(stateData);
+});
 
+export const POST = withAuthValidationAndErrors(
+  ToolStateSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ toolId: string }> },
+    { spaceId, userId: requestUserId, state },
+    respond
+  ) => {
+    const authenticatedUserId = getUserId(request);
     const { toolId } = await params;
-    const body = await request.json();
-    const { spaceId, userId: requestUserId, state } = body;
-
-    if (!spaceId || !state) {
-      return NextResponse.json(ApiResponseHelper.error("spaceId and state are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
 
     // Ensure user can only update their own state
-    const userId = requestUserId || user.uid;
-    if (userId !== user.uid) {
-      return NextResponse.json(
-        { error: "Cannot update another user's state" },
-        { status: HttpStatus.FORBIDDEN }
-      );
+    const userId = requestUserId || authenticatedUserId;
+    if (userId !== authenticatedUserId) {
+      return respond.error("Cannot update another user's state", "FORBIDDEN", 403);
     }
 
     const db = dbAdmin;
@@ -83,7 +71,7 @@ export async function POST(
       .get();
 
     if (!spaceMemberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied to this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("Access denied to this space", "FORBIDDEN", 403);
     }
 
     // Verify tool exists and is deployed to the space
@@ -93,12 +81,12 @@ export async function POST(
       .get();
 
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     const toolData = toolDoc.data();
     if (toolData?.status !== "published") {
-      return NextResponse.json(ApiResponseHelper.error("Tool is not published", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("Tool is not published", "INVALID_INPUT", 400);
     }
 
     // Check if tool is deployed to the space
@@ -111,7 +99,7 @@ export async function POST(
       .get();
 
     if (toolDeploymentDoc.empty) {
-      return NextResponse.json(ApiResponseHelper.error("Tool is not deployed to this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("Tool is not deployed to this space", "FORBIDDEN", 403);
     }
 
     // Prepare state document
@@ -124,7 +112,7 @@ export async function POST(
       metadata: {
         ...state.metadata,
         updatedAt: new Date().toISOString(),
-        savedAt: FieldValue.serverTimestamp(),
+        savedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
     };
 
@@ -142,47 +130,37 @@ export async function POST(
     await analyticsDoc.set({
       toolId,
       spaceId,
-      lastUsed: FieldValue.serverTimestamp(),
-      usageCount: FieldValue.increment(1),
-      activeUsers: FieldValue.arrayUnion(userId),
-      updatedAt: FieldValue.serverTimestamp(),
+      lastUsed: admin.firestore.FieldValue.serverTimestamp(),
+      usageCount: admin.firestore.FieldValue.increment(1),
+      activeUsers: admin.firestore.FieldValue.arrayUnion(userId),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     }, { merge: true });
 
-    return NextResponse.json({
-      success: true,
-      savedAt: new Date().toISOString() });
-  } catch (error) {
-    return NextResponse.json(ApiResponseHelper.error("Failed to save tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.success({
+      savedAt: new Date().toISOString()
+    });
   }
-}
+);
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ toolId: string }> }
-) {
-  try {
-    // Validate authentication
-    const user = await validateAuth(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const DELETE = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ toolId: string }> },
+  respond
+) => {
+  const authenticatedUserId = getUserId(request);
+  const { toolId } = await params;
+  const searchParams = request.nextUrl.searchParams;
+  const spaceId = searchParams.get("spaceId");
+  const userId = searchParams.get("userId") || authenticatedUserId;
 
-    const { toolId } = await params;
-    const searchParams = request.nextUrl.searchParams;
-    const spaceId = searchParams.get("spaceId");
-    const userId = searchParams.get("userId") || user.uid;
+  if (!spaceId) {
+    return respond.error("spaceId parameter is required", "INVALID_INPUT", 400);
+  }
 
-    if (!spaceId) {
-      return NextResponse.json(ApiResponseHelper.error("spaceId parameter is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    // Ensure user can only delete their own state
-    if (userId !== user.uid) {
-      return NextResponse.json(
-        { error: "Cannot delete another user's state" },
-        { status: HttpStatus.FORBIDDEN }
-      );
-    }
+  // Ensure user can only delete their own state
+  if (userId !== authenticatedUserId) {
+    return respond.error("Cannot delete another user's state", "FORBIDDEN", 403);
+  }
 
     const db = dbAdmin;
     
@@ -193,10 +171,7 @@ export async function DELETE(
       .doc(stateDocId)
       .delete();
 
-    return NextResponse.json({
-      success: true,
-      deletedAt: new Date().toISOString() });
-  } catch (error) {
-    return NextResponse.json(ApiResponseHelper.error("Failed to delete tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
+    return respond.success({
+      deletedAt: new Date().toISOString()
+    });
+});

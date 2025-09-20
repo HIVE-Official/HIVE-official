@@ -32,7 +32,7 @@ export interface CreatedTool {
   usageCount: number;
   isPublic: boolean;
   likes?: number;
-  isStarred?: boolean
+  isStarred?: boolean;
 }
 
 export interface CampusBuilderToolsProps {
@@ -49,7 +49,7 @@ export interface CampusBuilderToolsProps {
   onBecomeBuilder?: () => void;
   onViewAllCreated?: () => void;
   onJoinWaitlist?: () => void;
-  className?: string
+  className?: string;
 }
 
 const toolTypeConfig = {
@@ -118,7 +118,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return `${Math.floor(diffInHours / 168)}w ago`
+    return `${Math.floor(diffInHours / 168)}w ago`;
   };
 
   const displayedAvailableTools = availableTools?.slice(0, 4) ?? [];
@@ -151,7 +151,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
           ))}
         </div>
       </motion.div>
-    )
+    );
   }
 
   // Locked state for vBETA - Coming in v1 with proper teasing
@@ -163,7 +163,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
         transition={{
           duration: 0.6,
           ease: [0.23, 1, 0.32, 1]
-          }}
+        }}
         className={cn(
           'relative overflow-hidden rounded-2xl',
           'bg-gradient-to-br from-charcoal/60 via-charcoal/50 to-graphite/60',
@@ -213,11 +213,11 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                   animate={{ 
                     rotate: [0, 360],
                     scale: [1, 1.1, 1] 
-          }}
+                  }}
                   transition={{ 
                     rotate: { duration: 10, ease: "linear", repeat: Infinity },
                     scale: { duration: 2, ease: "easeInOut", repeat: Infinity }
-          }}
+                  }}
                   className="text-3xl"
                 >
                   🛠️
@@ -289,7 +289,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
               whileHover={{ 
                 scale: 1.02,
                 boxShadow: "0 8px 32px color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)"
-          }}
+              }}
               whileTap={{ scale: 0.98 }}
               onClick={onJoinWaitlist}
               className={cn(
@@ -316,7 +316,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
           </div>
         </div>
       </motion.div>
-    )
+    );
   }
 
   // Non-builder view - Subtle invitation to become a builder
@@ -328,7 +328,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
         transition={{
           duration: 0.6,
           ease: [0.23, 1, 0.32, 1]
-          }}
+        }}
         className={cn(
           // Subtle BentoGrid treatment - less prominent than other cards
           'relative overflow-hidden rounded-2xl',
@@ -367,7 +367,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
             whileHover={{ 
               scale: 1.02,
               boxShadow: "0 2 32px color-mix(in_srgb,var(--hive-brand-secondary)_8%,transparent)"
-          }}
+            }}
             whileTap={{ scale: 0.98 }}
             onClick={onBecomeBuilder}
             className={cn(
@@ -389,7 +389,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
           </motion.button>
         </div>
       </motion.div>
-    )
+    );
   }
 
   // Builder view - Full functionality with subtle aesthetics
@@ -400,7 +400,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
       transition={{
         duration: 0.6,
         ease: [0.23, 1, 0.32, 1]
-          }}
+      }}
       className={cn(
         // Subtle BentoGrid treatment - elegant but not dominant
         'relative overflow-hidden rounded-2xl',
@@ -554,8 +554,8 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                         whileTap={{ scale: 0.95 }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          onCreateTool?.(tool.type)
-          }}
+                          onCreateTool?.(tool.type);
+                        }}
                         disabled={tool.isLocked}
                         className={cn(
                           'px-3 py-1.5 rounded-lg text-xs font-medium',
@@ -569,8 +569,8 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                       </motion.button>
                     </div>
                   </motion.div>
-                )
-          })
+                );
+              })}
             </motion.div>
           ) : (
             <motion.div
@@ -633,8 +633,8 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                         </div>
                       </div>
                     </motion.div>
-                  )
-                })
+                  );
+                })}
               ) : (
                 <div className="text-center py-6">
                   <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-charcoal/40 to-graphite/40 border border-steel/15 flex items-center justify-center">
@@ -669,7 +669,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
         )}
       </div>
     </motion.div>
-  )
+  );
 };
 
 export default CampusBuilderTools;

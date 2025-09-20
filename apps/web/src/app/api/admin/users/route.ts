@@ -1,9 +1,9 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
+import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
       adminUserId = 'test-user';
     } else {
       try {
-        const auth = getAuth();
+        const auth = admin.auth();
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
       adminUserId = 'test-user';
     } else {
       try {
-        const auth = getAuth();
+        const auth = admin.auth();
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
@@ -247,7 +247,7 @@ export async function POST(request: NextRequest) {
 
     // Prepare update data
     const updateData: any = {
-      updatedAt: FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       lastModifiedBy: adminUserId
     };
 
@@ -309,7 +309,7 @@ export async function DELETE(request: NextRequest) {
       adminUserId = 'test-user';
     } else {
       try {
-        const auth = getAuth();
+        const auth = admin.auth();
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
@@ -338,7 +338,7 @@ export async function DELETE(request: NextRequest) {
 
     // Perform the requested action
     const updateData: any = {
-      updatedAt: FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       lastModifiedBy: adminUserId
     };
 
@@ -347,7 +347,7 @@ export async function DELETE(request: NextRequest) {
     switch (action) {
       case 'suspend':
         updateData.isSuspended = true;
-        updateData.suspendedAt = FieldValue.serverTimestamp();
+        updateData.suspendedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.suspendedBy = adminUserId;
         updateData.suspendedReason = reason;
         
@@ -363,7 +363,7 @@ export async function DELETE(request: NextRequest) {
 
       case 'unsuspend':
         updateData.isSuspended = false;
-        updateData.unsuspendedAt = FieldValue.serverTimestamp();
+        updateData.unsuspendedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.unsuspendedBy = adminUserId;
         updateData.unsuspendedReason = reason;
         updateData.suspendedUntil = null;
@@ -372,7 +372,7 @@ export async function DELETE(request: NextRequest) {
 
       case 'promote':
         updateData.role = 'admin';
-        updateData.promotedAt = FieldValue.serverTimestamp();
+        updateData.promotedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.promotedBy = adminUserId;
         updateData.promotedReason = reason;
         actionMessage = 'User promoted to admin';
@@ -380,7 +380,7 @@ export async function DELETE(request: NextRequest) {
 
       case 'demote':
         updateData.role = 'student';
-        updateData.demotedAt = FieldValue.serverTimestamp();
+        updateData.demotedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.demotedBy = adminUserId;
         updateData.demotedReason = reason;
         actionMessage = 'User demoted to student';
@@ -389,7 +389,7 @@ export async function DELETE(request: NextRequest) {
       case 'delete':
         // For safety, we'll mark as deleted rather than actually deleting
         updateData.isDeleted = true;
-        updateData.deletedAt = FieldValue.serverTimestamp();
+        updateData.deletedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.deletedBy = adminUserId;
         updateData.deletedReason = reason;
         actionMessage = 'User marked as deleted';
@@ -442,7 +442,7 @@ async function logAdminAction(adminUserId: string, action: string, targetUserId:
       action,
       targetUserId,
       reason,
-      timestamp: FieldValue.serverTimestamp(),
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
       type: 'user_action'
     });
   } catch (error) {

@@ -58,7 +58,7 @@ export interface SpaceMember {
   
   // Contact
   email?: string;
-  isOnline?: boolean
+  isOnline?: boolean;
 }
 
 export type MemberFilterType = 'all' | 'leaders' | 'members' | 'pending' | 'online';
@@ -74,7 +74,7 @@ export interface SpaceMemberDirectoryProps {
   onMessageMember?: (memberId: string) => void;
   onApproveMember?: (memberId: string) => Promise<void>;
   onRejectMember?: (memberId: string) => Promise<void>;
-  className?: string
+  className?: string;
 }
 
 const ROLE_CONFIG = {
@@ -144,7 +144,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
         const matchesHandle = member.handle.toLowerCase().includes(query);
         const matchesName = member.displayName.toLowerCase().includes(query);
         const matchesMajor = member.major?.toLowerCase().includes(query);
-        if (!matchesHandle && !matchesName && !matchesMajor) return false
+        if (!matchesHandle && !matchesName && !matchesMajor) return false;
       }
 
       // Role/status filter
@@ -158,7 +158,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
         case 'online':
           return member.isOnline;
         default:
-          return true
+          return true;
       }
     });
 
@@ -175,11 +175,11 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
           const bActivity = b.lastActive ? new Date(b.lastActive).getTime() : 0;
           return bActivity - aActivity;
         default:
-          return a.displayName.localeCompare(b.displayName)
+          return a.displayName.localeCompare(b.displayName);
       }
     });
 
-    return filtered
+    return filtered;
   }, [members, searchQuery, selectedFilter, sortBy]);
 
   const pendingMembers = members.filter(m => m.status === 'pending');
@@ -190,9 +190,9 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
     
     try {
       await onManageMember(memberId, action);
-      setSelectedMember(null)
+      setSelectedMember(null);
     } catch (error) {
-      console.error('Failed to manage member:', error)
+      console.error('Failed to manage member:', error);
     }
   };
 
@@ -376,7 +376,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
           )}
         </AnimatePresence>
       </motion.div>
-    )
+    );
   };
 
   return (
@@ -510,7 +510,7 @@ export const SpaceMemberDirectory: React.FC<SpaceMemberDirectoryProps> = ({
         </AnimatePresence>
       </div>
     </div>
-  )
+  );
 };
 
 export default SpaceMemberDirectory;

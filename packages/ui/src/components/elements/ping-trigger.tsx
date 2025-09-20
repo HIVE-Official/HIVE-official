@@ -86,7 +86,7 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify(target.data || {})
-            });
+            })};
 
             if (!response.ok) {
               throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -115,7 +115,7 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
         status: 'success',
         message: 'Trigger executed successfully',
         timestamp: new Date()
-      });
+      })};
 
       // Reset status after 2 seconds
       setTimeout(() => {
@@ -128,7 +128,7 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
         status: 'error',
         message: errorMessage,
         timestamp: new Date()
-      });
+      })};
 
       // Reset status after 3 seconds
       setTimeout(() => {

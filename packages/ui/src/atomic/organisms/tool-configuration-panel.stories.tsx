@@ -456,11 +456,11 @@ export const InteractiveDemo: Story = {
           lastConfigured: new Date().toISOString(),
         }));
         
-        action('save')(toolId, values)
+        action('save')(toolId, values);
       } catch (error) {
-        console.error('Failed to save:', error)
+        console.error('Failed to save:', error);
       } finally {
-        setIsSaving(false)
+        setIsSaving(false);
       }
     };
 
@@ -476,7 +476,7 @@ export const InteractiveDemo: Story = {
         message: isValid 
           ? 'Configuration test successful! Calendar connection established.'
           : 'Configuration test failed. Please check your API key and try again.',
-      }
+      };
     };
 
     const handleReset = async (toolId: string) => {
@@ -487,9 +487,9 @@ export const InteractiveDemo: Story = {
         currentValues: {},
         status: 'needs_setup',
         isConfigured: false,
-      }));
+      })});
       
-      action('reset')(toolId)
+      action('reset')(toolId);
     };
 
     return (
@@ -518,7 +518,7 @@ export const InteractiveDemo: Story = {
           isSaving={isSaving}
         />
       </div>
-    )
+    );
   },
   parameters: {
     docs: {

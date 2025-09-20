@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { FieldValue } from "firebase-admin/firestore";
+import * as admin from "firebase-admin/firestore";
 import { getCohortSpaceId, generateCohortSpaces } from "@hive/core";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -116,8 +116,8 @@ export async function POST(request: NextRequest) {
                 ...matchingSpace,
                 status: 'activated',
                 memberCount: 0,
-                createdAt: FieldValue.serverTimestamp(),
-                updatedAt: FieldValue.serverTimestamp(),
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                 name_lowercase: matchingSpace.name.toLowerCase(),
                 schoolId: 'university-at-buffalo',
                 university: 'University at Buffalo',
@@ -158,15 +158,15 @@ export async function POST(request: NextRequest) {
         const newMember = {
           uid: userId,
           role: "member",
-          joinedAt: FieldValue.serverTimestamp(),
+          joinedAt: admin.firestore.FieldValue.serverTimestamp(),
         };
 
         batch.set(memberRef, newMember);
 
         // Increment the space's member count
         batch.update(spaceRef, {
-          memberCount: FieldValue.increment(1),
-          updatedAt: FieldValue.serverTimestamp() });
+          memberCount: admin.firestore.FieldValue.increment(1),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp() });
 
         // Execute the batch
         await batch.commit();

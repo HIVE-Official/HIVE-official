@@ -178,7 +178,7 @@ const HivePremiumButton = React.forwardRef<HTMLButtonElement, HivePremiumButtonP
             size, 
             radius,
             className 
-          })
+          })}
         )}
         onClick={handleClick}
         disabled={isDisabled}

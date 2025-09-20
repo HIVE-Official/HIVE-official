@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { logger } from '@/lib/logger';
 import { Button, Card, 
   Label,
   Switch,
@@ -137,7 +138,10 @@ export default function ProfileSettingsPage() {
         
         setIsLoading(false);
       } catch (err) {
-        console.error('Failed to load settings:', err);
+        logger.error('Failed to load settings', {
+          error: err instanceof Error ? err.message : 'Unknown error',
+          stack: err instanceof Error ? err.stack : undefined
+        });
         setError(err instanceof Error ? err.message : 'Failed to load settings');
         setIsLoading(false);
       }
@@ -189,7 +193,10 @@ export default function ProfileSettingsPage() {
       setHasChanges(false);
       // Show success toast or notification
     } catch (err) {
-      console.error('Failed to save settings:', err);
+      logger.error('Failed to save settings', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        stack: err instanceof Error ? err.stack : undefined
+      });
       setError(err instanceof Error ? err.message : 'Failed to save settings');
     } finally {
       setIsSaving(false);
@@ -624,7 +631,7 @@ export default function ProfileSettingsPage() {
           onClose={() => setShowDeleteModal(false)}
           onConfirm={async () => {
             // TODO: Implement account deletion
-            console.log('Delete account requested');
+            logger.info('Delete account requested');
             setShowDeleteModal(false);
           }}
         />
@@ -634,7 +641,7 @@ export default function ProfileSettingsPage() {
           onClose={() => setShowDataExportModal(false)}
           onConfirm={async () => {
             // TODO: Implement data export
-            console.log('Data export requested');
+            logger.info('Data export requested');
             setShowDataExportModal(false);
           }}
           title="Export Your Data"

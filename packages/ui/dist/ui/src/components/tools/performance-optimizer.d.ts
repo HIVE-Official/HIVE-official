@@ -9,10 +9,7 @@
  * - Real-time performance monitoring
  */
 import React from 'react';
-export declare function usePerformanceMonitor(componentName: string): {
-    renderCount: number;
-    totalTime: number;
-};
+export declare function usePerformanceMonitor(componentName: string): void;
 declare class ToolCache {
     private static instance;
     private cache;

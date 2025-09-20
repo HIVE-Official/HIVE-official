@@ -49,7 +49,7 @@ export interface SpacesCardProps {
     onSettingsClick?: () => void;
     className?: string;
 }
-export declare function SpacesCard({ spaces, recommendedSpaces, isEditMode, onSpaceClick, onJoinSpace, onLeaveSpace, onCreateSpace, onSearchSpaces, onSettingsClick, className }: SpacesCardProps): import("react/jsx-runtime").JSX.Element;
+export declare function SpacesCard({ spaces, recommendedSpaces, isEditMode, onSpaceClick, onJoinSpace, onLeaveSpace, onCreateSpace, onSearchSpaces, onSettingsClick, className }: SpacesCardProps): void;
 export declare const mockSpaces: Space[];
 export declare const mockRecommendedSpaces: Space[];
 //# sourceMappingURL=spaces-card.d.ts.map

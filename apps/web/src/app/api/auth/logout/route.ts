@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getAuth } from "firebase-admin/auth";
+import * as admin from "firebase-admin/auth";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     // SECURITY: Development token bypass removed for production safety
     // All tokens must be validated through Firebase Auth
 
-    const auth = getAuth();
+    const auth = admin.auth();
 
     // Verify the ID token first to get the user ID
     let decodedToken;

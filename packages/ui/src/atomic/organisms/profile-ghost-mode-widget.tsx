@@ -34,7 +34,7 @@ export interface PrivacySetting {
   category: 'visibility' | 'data' | 'interaction' | 'location' | 'activity';
   isEnabled: boolean;
   level: 'public' | 'friends' | 'private' | 'hidden';
-  lastModified: string
+  lastModified: string;
 }
 
 export interface GhostModeConfig {
@@ -43,13 +43,13 @@ export interface GhostModeConfig {
   scheduledEnd?: string;
   hiddenActivities: string[];
   visibilityLevel: 'invisible' | 'minimal' | 'selective';
-  allowedInteractions: string[]
+  allowedInteractions: string[];
 }
 
 export interface ProfileGhostModeWidgetProps {
   user: {
     id: string;
-    name: string
+    name: string;
   };
   ghostModeConfig?: GhostModeConfig;
   privacySettings?: PrivacySetting[];
@@ -63,7 +63,7 @@ export interface ProfileGhostModeWidgetProps {
   onViewPrivacySettings?: () => void;
   onConfigureGhostMode?: () => void;
   onViewDataExport?: () => void;
-  className?: string
+  className?: string;
 }
 
 const getPrivacyCategoryConfig = (category: string) => {
@@ -105,7 +105,7 @@ const getPrivacyCategoryConfig = (category: string) => {
     }
   };
   
-  return configs[category as keyof typeof configs] || configs.visibility
+  return configs[category as keyof typeof configs] || configs.visibility;
 };
 
 const getVisibilityLevelConfig = (level: string) => {
@@ -136,7 +136,7 @@ const getVisibilityLevelConfig = (level: string) => {
     }
   };
   
-  return configs[level as keyof typeof configs] || configs.private
+  return configs[level as keyof typeof configs] || configs.private;
 };
 
 const formatTimeAgo = (timestamp: string) => {
@@ -146,12 +146,12 @@ const formatTimeAgo = (timestamp: string) => {
   
   if (diffInHours < 1) {
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    return diffInMinutes < 1 ? 'Just now' : `${diffInMinutes}m ago`
+    return diffInMinutes < 1 ? 'Just now' : `${diffInMinutes}m ago`;
   } else if (diffInHours < 24) {
-    return `${diffInHours}h ago`
+    return `${diffInHours}h ago`;
   } else {
     const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays}d ago`
+    return `${diffInDays}d ago`;
   }
 };
 
@@ -379,8 +379,8 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
                       <ChevronRight className="h-3 w-3 text-[var(--hive-text-secondary)]" />
                     )}
                   </div>
-                )
-          })
+                );
+              })}
             </div>
           </div>
         )}
@@ -479,5 +479,5 @@ export const ProfileGhostModeWidget: React.FC<ProfileGhostModeWidgetProps> = ({
         )} />
       )}
     </Card>
-  )
+  );
 };

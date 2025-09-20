@@ -654,7 +654,7 @@ export const CompleteShowcase: Story = {
                           isPublic: true,
                           isFeatured: true,
                           technologyStack: ['Vue.js', 'TypeScript', 'Canvas API']
-          }}
+                        }}
                         onCreateTool={action('cse-create-tool')}
                         onViewTool={action('cse-view-tool')}
                         onEditTool={action('cse-edit-tool')}
@@ -730,7 +730,7 @@ export const CompleteShowcase: Story = {
                           lastWorkedOn: '2024-01-15T12:00:00Z',
                           isPublic: false,
                           technologyStack: ['Python', 'TensorFlow', 'FastAPI', 'PostgreSQL']
-          }}
+                        }}
                         onCreateTool={action('research-create-tool')}
                         onViewTool={action('research-view-tool')}
                         onEditTool={action('research-edit-tool')}
@@ -807,7 +807,7 @@ export const CompleteShowcase: Story = {
                         lastWorkedOn: '2024-01-15T18:30:00Z',
                         isPublic: true,
                         technologyStack: ['React', 'Socket.io', 'Express', 'MongoDB']
-          }}
+                      }}
                       onCreateTool={action('hack-create-tool')}
                       onViewTool={action('hack-view-tool')}
                       onEditTool={action('hack-edit-tool')}

@@ -8,7 +8,7 @@ export const adaptEventsToCalendarCardData = (
   events: Event[],
   isLoading?: boolean,
   error?: string
-): { data?: CalendarCardData; state: CalendarCardState } => {
+): { data?: CalendarCardData; state: CalendarCardState} => {
   // Handle loading state
   if (isLoading) {
     return { state: 'loading' };

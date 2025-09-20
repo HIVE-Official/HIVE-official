@@ -4,7 +4,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
+import * as admin from 'firebase-admin';
 import { validateAuthToken, blockDevPatternsInProduction } from './security-service';
 import { AuthenticationError, AuthorizationError } from './api-error-handler';
 
@@ -94,7 +94,7 @@ export async function authenticateRequest(
 
   // Handle production Firebase tokens
   try {
-    const auth = getAuth();
+    const auth = admin.auth();
     const decodedToken = await auth.verifyIdToken(token);
     
     return {

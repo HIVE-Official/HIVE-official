@@ -105,7 +105,7 @@ export function useNotifications() {
         setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
     };
     const markAllAsRead = () => {
-        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+        setNotifications(prev => prev.map(map));
     };
 }
 ;

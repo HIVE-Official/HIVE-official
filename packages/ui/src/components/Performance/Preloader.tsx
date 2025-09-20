@@ -184,7 +184,7 @@ class CampusPreloadManager {
         
         // Tertiary sort by estimated load time (faster first)
         return a.estimatedLoadTime - b.estimatedLoadTime
-      })
+      })}
   }
   
   // Check if resource should be loaded given current conditions
@@ -363,7 +363,7 @@ class CampusPreloadManager {
       return new Promise(resolve => {
         link.onload = () => resolve(resource.data || resource.url);
         link.onerror = () => resolve(null)
-      })
+      })}
     }
     
     return resource.data
@@ -519,7 +519,7 @@ export const Preloader: React.FC<PreloaderProps> = ({
         }
         totalSize += resource.estimatedSize;
         return true
-      });
+      })};
       
       // Load resources with concurrency limit
       const semaphore = new Array(maxConcurrentLoads).fill(null);

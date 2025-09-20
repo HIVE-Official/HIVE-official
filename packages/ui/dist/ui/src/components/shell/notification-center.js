@@ -90,7 +90,7 @@ export function NotificationCenter({ isOpen, onClose, notifications = mockNotifi
         setLocalNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     };
     const markAllAsRead = () => {
-        setLocalNotifications(prev => prev.map(n => ({ ...n, read: true })));
+        setLocalNotifications(prev => prev.map(map));
     };
 }
 ;

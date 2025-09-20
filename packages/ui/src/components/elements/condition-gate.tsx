@@ -79,7 +79,7 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
   }, [toolState]);
 
   // Evaluate all conditions based on logic
-  const evaluateConditions = useCallback((): { result: boolean; details: boolean[] } => {
+  const evaluateConditions = useCallback((): { result: boolean; details: boolean[]} => {
     const startTime = performance.now();
     
     const conditionResults = conditions.map(evaluateCondition);
@@ -99,7 +99,7 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
         conditionResults,
         finalResult,
         evaluationTime
-      })
+      })}
     }
 
     return { result: finalResult, details: conditionResults }

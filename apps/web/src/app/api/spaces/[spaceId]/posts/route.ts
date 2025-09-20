@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
+import * as admin from "firebase-admin/auth";
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { postCreationRateLimit } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
@@ -35,7 +35,7 @@ export async function GET(
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = getAuth();
+    const auth = admin.auth();
     const decodedToken = await auth.verifyIdToken(token);
 
     const { spaceId } = await params;
@@ -170,7 +170,7 @@ export async function POST(
     }
 
     const token = authHeader.substring(7);
-    const auth = getAuth();
+    const auth = admin.auth();
     const decodedToken = await auth.verifyIdToken(token);
 
     // Check rate limiting

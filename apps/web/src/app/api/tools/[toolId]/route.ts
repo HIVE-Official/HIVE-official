@@ -1,10 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getAuth } from "firebase-admin/auth";
+import * as admin from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { z } from "zod";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import {
   UpdateToolSchema,
   ToolSchema,
@@ -19,108 +20,86 @@ import {
 const db = getFirestore();
 
 // GET /api/tools/[toolId] - Get tool details
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ toolId: string }> }
-) {
-  try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ toolId: string }> },
+  respond
+) => {
+  const userId = getUserId(request);
+  const { toolId } = await params;
+  const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
-    const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
-
-    const { toolId } = await params;
-    const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
-
-    if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const toolData = { id: toolDoc.id, ...toolDoc.data() };
-    const tool = ToolSchema.parse(toolData);
-
-    // Check if user can view this tool
-    if (!canUserViewTool(tool, userId)) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Increment view count if not the owner
-    if (tool.ownerId !== userId) {
-      await toolDoc.ref.update({
-        viewCount: (tool.viewCount || 0) + 1,
-        lastUsedAt: new Date() });
-    }
-
-    // Get versions if user can edit
-    let versions: any[] = [];
-    if (canUserEditTool(tool, userId)) {
-      const versionsSnapshot = await toolDoc.ref
-        .collection("versions")
-        .orderBy("createdAt", "desc")
-        .limit(10)
-        .get();
-
-      versions = versionsSnapshot.docs.map((doc) => ({
-        version: doc.id,
-        ...doc.data(),
-      }));
-    }
-
-    return NextResponse.json({
-      ...tool,
-      versions: versions.length > 0 ? versions : undefined });
-  } catch (error) {
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  if (!toolDoc.exists) {
+    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
   }
-}
+
+  const toolData = { id: toolDoc.id, ...toolDoc.data() };
+  const tool = ToolSchema.parse(toolData);
+
+  // Check if user can view this tool
+  if (!canUserViewTool(tool, userId)) {
+    return respond.error("Access denied", "FORBIDDEN", 403);
+  }
+
+  // Increment view count if not the owner
+  if (tool.ownerId !== userId) {
+    await toolDoc.ref.update({
+      viewCount: (tool.viewCount || 0) + 1,
+      lastUsedAt: new Date() });
+  }
+
+  // Get versions if user can edit
+  let versions: any[] = [];
+  if (canUserEditTool(tool, userId)) {
+    const versionsSnapshot = await toolDoc.ref
+      .collection("versions")
+      .orderBy("createdAt", "desc")
+      .limit(10)
+      .get();
+
+    versions = versionsSnapshot.docs.map((doc) => ({
+      version: doc.id,
+      ...doc.data(),
+    }));
+  }
+
+  return respond.success({
+    ...tool,
+    versions: versions.length > 0 ? versions : undefined
+  });
+});
 
 // PUT /api/tools/[toolId] - Update tool
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ toolId: string }> }
-) {
-  try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
-
+export const PUT = withAuthValidationAndErrors(
+  UpdateToolSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ toolId: string }> },
+    updateData,
+    respond
+  ) => {
+    const userId = getUserId(request);
     const { toolId } = await params;
     const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     const currentTool = ToolSchema.parse({ id: toolDoc.id, ...toolDoc.data() });
 
     // Check if user can edit this tool
     if (!canUserEditTool(currentTool, userId)) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("Access denied", "FORBIDDEN", 403);
     }
-
-    const body = await request.json();
-    const updateData = UpdateToolSchema.parse(body);
 
     // Validate tool structure if elements are being updated
     if (updateData.elements) {
       const structureValidation = validateToolStructure(updateData.elements);
       if (!structureValidation.isValid) {
-        return NextResponse.json(
-          {
-            error: "Invalid tool structure",
-            details: structureValidation.errors,
-          },
-          { status: HttpStatus.BAD_REQUEST }
-        );
+        return respond.error("Invalid tool structure", "INVALID_INPUT", 400, {
+          details: structureValidation.errors
+        });
       }
 
       // Validate each element configuration
@@ -133,20 +112,18 @@ export async function PUT(
       for (const elementInstance of updateData.elements) {
         const elementDef = elementsMap.get(elementInstance.elementId);
         if (!elementDef) {
-          return NextResponse.json(
-            {
-              error: `Element definition not found: ${elementInstance.elementId}`,
-            },
-            { status: HttpStatus.BAD_REQUEST }
+          return respond.error(
+            `Element definition not found: ${elementInstance.elementId}`,
+            "INVALID_INPUT",
+            400
           );
         }
 
         if (!validateElementConfig(elementDef, elementInstance.config)) {
-          return NextResponse.json(
-            {
-              error: `Invalid configuration for element: ${elementInstance.id}`,
-            },
-            { status: HttpStatus.BAD_REQUEST }
+          return respond.error(
+            `Invalid configuration for element: ${elementInstance.id}`,
+            "INVALID_INPUT",
+            400
           );
         }
       }
@@ -210,105 +187,80 @@ export async function PUT(
     const updatedDoc = await toolDoc.ref.get();
     const result = { id: updatedDoc.id, ...updatedDoc.data() };
 
-    return NextResponse.json(result);
-  } catch (error) {
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid update data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to update tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.success(result);
   }
-}
+);
 
 // DELETE /api/tools/[toolId] - Delete tool
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ toolId: string }> }
-) {
-  try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const DELETE = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ toolId: string }> },
+  respond
+) => {
+  const userId = getUserId(request);
+  const { toolId } = await params;
+  const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
-    const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
-
-    const { toolId } = await params;
-    const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
-
-    if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const tool = ToolSchema.parse({ id: toolDoc.id, ...toolDoc.data() });
-
-    // Only owner can delete
-    if (tool.ownerId !== userId) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Check if tool is being used in any posts
-    const postsSnapshot = await db
-      .collectionGroup("posts")
-      .where("type", "==", "tool")
-      .where("toolId", "==", toolId)
-      .limit(1)
-      .get();
-
-    if (!postsSnapshot.empty) {
-      return NextResponse.json(
-        {
-          error: "Cannot delete tool that is being used in posts",
-        },
-        { status: 409 }
-      );
-    }
-
-    // Delete tool and all subcollections
-    const batch = dbAdmin.batch();
-
-    // Delete versions
-    const versionsSnapshot = await toolDoc.ref.collection("versions").get();
-    versionsSnapshot.docs.forEach((doc) => {
-      batch.delete(doc.ref);
-    });
-
-    // Delete data records
-    const recordsSnapshot = await toolDoc.ref.collection("records").get();
-    recordsSnapshot.docs.forEach((doc) => {
-      batch.delete(doc.ref);
-    });
-
-    // Delete the tool itself
-    batch.delete(toolDoc.ref);
-
-    await batch.commit();
-
-    // Track analytics event
-    await dbAdmin.collection("analytics_events").add({
-      eventType: "tool_deleted",
-      userId: userId,
-      toolId: toolId,
-      spaceId: tool.spaceId || null,
-      timestamp: new Date(),
-      metadata: {
-        toolName: tool.name,
-        wasPublished: tool.status === "published",
-        elementsCount: tool.elements.length,
-        usageCount: tool.useCount,
-      } });
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json(ApiResponseHelper.error("Failed to delete tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  if (!toolDoc.exists) {
+    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
   }
-}
+
+  const tool = ToolSchema.parse({ id: toolDoc.id, ...toolDoc.data() });
+
+  // Only owner can delete
+  if (tool.ownerId !== userId) {
+    return respond.error("Access denied", "FORBIDDEN", 403);
+  }
+
+  // Check if tool is being used in any posts
+  const postsSnapshot = await db
+    .collectionGroup("posts")
+    .where("type", "==", "tool")
+    .where("toolId", "==", toolId)
+    .limit(1)
+    .get();
+
+  if (!postsSnapshot.empty) {
+    return respond.error(
+      "Cannot delete tool that is being used in posts",
+      "CONFLICT",
+      409
+    );
+  }
+
+  // Delete tool and all subcollections
+  const batch = dbAdmin.batch();
+
+  // Delete versions
+  const versionsSnapshot = await toolDoc.ref.collection("versions").get();
+  versionsSnapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  // Delete data records
+  const recordsSnapshot = await toolDoc.ref.collection("records").get();
+  recordsSnapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  // Delete the tool itself
+  batch.delete(toolDoc.ref);
+
+  await batch.commit();
+
+  // Track analytics event
+  await dbAdmin.collection("analytics_events").add({
+    eventType: "tool_deleted",
+    userId: userId,
+    toolId: toolId,
+    spaceId: tool.spaceId || null,
+    timestamp: new Date(),
+    metadata: {
+      toolName: tool.name,
+      wasPublished: tool.status === "published",
+      elementsCount: tool.elements.length,
+      usageCount: tool.useCount,
+    } });
+
+  return respond.success({ success: true });
+});

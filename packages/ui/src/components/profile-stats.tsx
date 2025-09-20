@@ -184,7 +184,7 @@ export function ProfileStats({
           config,
           onClick: interactive && onStatClick ? () => onStatClick(key, value) : undefined
         }
-      })
+      })}
       .filter(Boolean)
   }, [stats, priority, maxStats, interactive, onStatClick, changes]);
 

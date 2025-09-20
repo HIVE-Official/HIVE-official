@@ -399,7 +399,7 @@ const ResponsiveShowcase = () => {
                   {device.charAt(0).toUpperCase() + device.slice(1)}
                 </Button>
               )
-            })
+            })}
           </div>
 
           <Card className="hive-glass border border-gray-700">

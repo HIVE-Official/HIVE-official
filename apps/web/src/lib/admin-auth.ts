@@ -1,4 +1,4 @@
-import { getAuth } from 'firebase-admin/auth';
+import * as admin from 'firebase-admin';
 import { NextRequest } from 'next/server';
 import { validateAuthToken } from './security-service';
 
@@ -39,7 +39,7 @@ export async function getAdminUser(userId: string): Promise<AdminUser | null> {
   }
 
   try {
-    const auth = getAuth();
+    const auth = admin.auth();
     const userRecord = await auth.getUser(userId);
     
     // Get custom claims for permissions
@@ -97,7 +97,7 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
 
     // For production tokens, verify with Firebase
     try {
-      const auth = getAuth();
+      const auth = admin.auth();
       const decodedToken = await auth.verifyIdToken(token);
       return await getAdminUser(decodedToken.uid);
     } catch (authError) {

@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 interface ProfileCompletionCheck {
   isComplete: boolean;
@@ -37,9 +36,12 @@ const OPTIONAL_FIELDS = [
  * Check profile completion status
  * GET /api/profile/completion
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
+) => {
+  const userId = getUserId(request);
     
     // Handle development mode
     if (userId === 'test-user') {
@@ -53,36 +55,23 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         nextSteps: ['Your profile is complete!']
       };
 
-      return NextResponse.json({
-        success: true,
-        completion: mockCompletion,
-        // SECURITY: Development mode removed for production safety
-      });
+      return respond.success({ completion: mockCompletion });
     }
 
     // Get user document from Firestore
     const userDoc = await dbAdmin.collection('users').doc(userId).get();
     
     if (!userDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("User profile not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("User profile not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     const userData = userDoc.data();
     
-    // Check completion status
-    const completion = checkProfileCompletion(userData, authContext.user.email);
+    // Check completion status (get email from userData since middleware doesn't provide it)
+    const completion = checkProfileCompletion(userData, userData?.email || '');
 
-    return NextResponse.json({
-      success: true,
-      completion });
+    return respond.success({ completion });
 
-  } catch (error) {
-    logger.error('Profile completion check error', { error: error, endpoint: '/api/profile/completion' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to check profile completion", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Profile completion checking is safe for development
-  operation: 'check_profile_completion' 
 });
 
 /**

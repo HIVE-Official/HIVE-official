@@ -240,7 +240,7 @@ function RealTimeMetrics() {
         activeSessions: prev.activeSessions + Math.floor(Math.random() * 15) - 7,
         pageViews: prev.pageViews + Math.floor(Math.random() * 50),
         interactions: prev.interactions + Math.floor(Math.random() * 30)
-      }))
+      })})
     }, 2000);
 
     return () => clearInterval(interval)
@@ -736,7 +736,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
           duration: Math.floor(Math.random() * 300) + 30,
           referrer: document.referrer || 'direct'
         }
-      })
+      })}
     }
   };
 
@@ -750,7 +750,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
           timestamp: Date.now(),
           metadata
         }
-      })
+      })}
     }
   };
 

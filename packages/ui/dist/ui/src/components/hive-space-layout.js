@@ -104,7 +104,9 @@ const handleSurfaceToggle = useCallback((surfaceType) => {
         }
         return newSet;
     });
-}, []);
+});
+[];
+;
 // Render surface content based on type
 const renderSurfaceContent = useCallback((surface) => {
     switch (surface.type) {

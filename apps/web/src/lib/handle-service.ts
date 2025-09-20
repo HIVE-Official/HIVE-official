@@ -1,5 +1,5 @@
 import { dbAdmin } from './firebase-admin';
-import type { Transaction } from 'firebase-admin/firestore';
+import type { Transaction } from 'firebase-admin';
 
 /**
  * Centralized handle validation service

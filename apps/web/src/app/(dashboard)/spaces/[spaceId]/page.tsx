@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { authenticatedFetch } from '../../../../lib/auth-utils';
-import { Button, Badge, HivePostsSurface, HiveEventsSurface, HiveMembersSurface, HivePinnedSurface, HiveToolsSurface, type Comment } from "@hive/ui";
+import { Button, Badge, type Comment } from "@hive/ui";
 import { PageContainer } from "@/components/temp-stubs";
 import { Users, AlertTriangle, Loader2, Hash, /* Heart as _Heart, */ MessageSquare, /* Camera as _Camera, */ Code, Calendar, /* ArrowRight as _ArrowRight, */ Clock, Settings, Grid, List, Maximize2, X, Monitor, Activity } from "lucide-react";
 import Image from "next/image";
@@ -11,6 +12,32 @@ import Link from "next/link";
 import { type Space } from "@hive/core";
 import { useUnifiedAuth } from "@hive/ui";
 import { motion, AnimatePresence } from "framer-motion";
+
+// Dynamic imports for large surface components - reduces bundle size significantly
+const HivePostsSurface = dynamic(
+  () => import("@hive/ui").then(mod => ({ default: mod.HivePostsSurface })),
+  { loading: () => <div className="p-4 animate-pulse bg-hive-surface-secondary rounded-lg h-64" />, ssr: false }
+);
+
+const HiveEventsSurface = dynamic(
+  () => import("@hive/ui").then(mod => ({ default: mod.HiveEventsSurface })),
+  { loading: () => <div className="p-4 animate-pulse bg-hive-surface-secondary rounded-lg h-64" />, ssr: false }
+);
+
+const HiveMembersSurface = dynamic(
+  () => import("@hive/ui").then(mod => ({ default: mod.HiveMembersSurface })),
+  { loading: () => <div className="p-4 animate-pulse bg-hive-surface-secondary rounded-lg h-64" />, ssr: false }
+);
+
+const HivePinnedSurface = dynamic(
+  () => import("@hive/ui").then(mod => ({ default: mod.HivePinnedSurface })),
+  { loading: () => <div className="p-4 animate-pulse bg-hive-surface-secondary rounded-lg h-64" />, ssr: false }
+);
+
+const HiveToolsSurface = dynamic(
+  () => import("@hive/ui").then(mod => ({ default: mod.HiveToolsSurface })),
+  { loading: () => <div className="p-4 animate-pulse bg-hive-surface-secondary rounded-lg h-64" />, ssr: false }
+);
 import { cn } from "../../../../lib/utils";
 import { SpaceErrorBoundaryWrapper } from "../components/space-error-boundary";
 import { SpaceLoadingSkeleton } from "../components/space-loading-skeleton";

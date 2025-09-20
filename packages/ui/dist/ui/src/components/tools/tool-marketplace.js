@@ -25,37 +25,42 @@ export function ToolMarketplace({ spaceId, userId, onInstallTool, onViewTool, cl
             const response = await fetch('/api/tools/marketplace', {
                 headers: { 'Authorization': `Bearer ${userId}` }
             });
-            if (response.ok) {
-                const data = await response.json();
-                setTools(data.tools || []);
-            }
-            else {
-                // Fallback to sample tools for development
-                setTools(getSampleMarketplaceTools());
-            }
         }
-        catch (error) {
-            console.error('Failed to fetch tools:', error);
-            // Use sample tools as fallback
+        finally { }
+        ;
+        if (response.ok) {
+            const data = await response.json();
+            setTools(data.tools || []);
+        }
+        else {
+            // Fallback to sample tools for development
             setTools(getSampleMarketplaceTools());
         }
-        finally {
-            setLoading(false);
-        }
-    }, [userId]);
-    // Filter and sort tools
-    useEffect(() => {
-        let filtered = tools.filter(tool => {
-            // Search filter
-            const matchesSearch = !searchQuery ||
-                tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                tool.categories.some(cat => cat.toLowerCase().includes(searchQuery.toLowerCase()));
-            // Category filter
-            const matchesCategory = selectedCategory === 'all' ||
-                tool.categories.includes(selectedCategory);
-            return matchesSearch && matchesCategory;
-        });
+    });
+    try { }
+    catch (error) {
+        console.error('Failed to fetch tools:', error);
+        // Use sample tools as fallback
+        setTools(getSampleMarketplaceTools());
+    }
+    finally {
+        setLoading(false);
+    }
+}
+[userId];
+;
+// Filter and sort tools
+useEffect(() => {
+    let filtered = tools.filter(tool => {
+        // Search filter
+        const matchesSearch = !searchQuery ||
+            tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            tool.categories.some(cat => cat.toLowerCase().includes(searchQuery.toLowerCase()));
+        // Category filter
+        const matchesCategory = selectedCategory === 'all' ||
+            tool.categories.includes(selectedCategory);
+        return matchesSearch && matchesCategory;
     });
     // Sort tools
     filtered.sort((a, b) => {
@@ -73,9 +78,7 @@ export function ToolMarketplace({ spaceId, userId, onInstallTool, onViewTool, cl
         }
     });
     setFilteredTools(filtered);
-}
-[tools, searchQuery, selectedCategory, sortBy];
-;
+}, [tools, searchQuery, selectedCategory, sortBy]);
 // Install tool
 const handleInstallTool = async (toolId) => {
     if (!onInstallTool)
@@ -98,7 +101,9 @@ const handleInstallTool = async (toolId) => {
             return next;
         });
     }
+    ;
 };
+;
 // Load tools on mount
 useEffect(() => {
     fetchTools();

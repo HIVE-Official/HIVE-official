@@ -326,7 +326,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         if (rawRole === 'owner' || rawRole === 'admin') return 'builder';
         if (rawRole in memberRoles) return rawRole as keyof typeof memberRoles;
         return 'member' as keyof typeof memberRoles
-      })(),
+      })}(),
     }));
 
     const filteredMembers = normalizedMembers
@@ -347,7 +347,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         const statusMatch = showOfflineMembers || member.status !== 'offline';
         
         return roleMatch && searchMatch && statusMatch
-      })}
+      })
       .sort((a, b) => {
         // Builders first
         if (a.role === 'builder' && b.role !== 'builder') return -1;
@@ -365,7 +365,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         
         // Finally by join date
         return new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime()
-      })
+      })}
       .slice(0, maxMembers);
     
     // Member counts by role
@@ -459,7 +459,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                     .then(({ members, summary }) => {
                       setFetchedMembers(members);
                       setMembersSummary(summary)
-                    })
+                    })}
                     .catch(e => setError(e.message))
                     .finally(() => setIsLoading(false))
                 }
@@ -543,7 +543,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
               {[
                 { key: 'grid', icon: Grid },
                 { key: 'list', icon: List }
-              ].map(({ key, icon: Icon })} => (
+              ].map(map}) => (
                 <motion.button
                   key={key}
                   className={cn(
@@ -630,7 +630,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                   </span>
                 </motion.button>
               )
-          })
+          })}
           </div>
         </div>
         

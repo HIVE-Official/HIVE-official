@@ -1,4 +1,4 @@
-import { getAuth as _getAuth } from 'firebase-admin/auth';
+import { getAuth as _getAuth } from 'firebase-admin';
 
 export type NotificationType = 
   | 'new_user_registration'

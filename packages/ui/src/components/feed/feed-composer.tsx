@@ -219,7 +219,7 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify(postData),
-      });
+      })};
 
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse;

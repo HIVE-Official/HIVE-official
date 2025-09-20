@@ -232,7 +232,7 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                 <span className="text-sm font-medium">{tab.label}</span>
               </button>
             )
-          }}
+          })}
         </div>
       </div>
 
@@ -261,7 +261,7 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                           </span>
                         </>
                       )
-                    })()}
+                    })}()}
                   </div>
                 </div>
               </HiveCard>
@@ -285,7 +285,7 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                           </span>
                         </>
                       )
-                    })()}
+                    })}()}
                   </div>
                 </div>
               </HiveCard>

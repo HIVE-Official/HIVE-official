@@ -36,7 +36,7 @@ export interface UBToolTemplate {
   complexity: 'simple' | 'medium' | 'advanced';
   campusUseCase: string;
   expectedUsers: number;
-  buildTime: string
+  buildTime: string;
 }
 
 export const UB_TOOL_TEMPLATES: UBToolTemplate[] = [
@@ -116,7 +116,7 @@ interface SimpleToolBuilderProps {
   selectedTemplate?: UBToolTemplate;
   onTemplateSelect?: (template: UBToolTemplate) => void;
   onBuildTool?: (template: UBToolTemplate, config: ToolBuildConfig) => void;
-  className?: string
+  className?: string;
 }
 
 export interface ToolBuildConfig {
@@ -124,7 +124,7 @@ export interface ToolBuildConfig {
   description: string;
   targetSpace?: string;
   isPublic: boolean;
-  settings: Record<string, any>
+  settings: Record<string, any>;
 }
 
 export function SimpleToolBuilder({ 
@@ -149,8 +149,8 @@ export function SimpleToolBuilder({
         ...prev,
         toolName: selectedTemplate.name,
         description: selectedTemplate.description
-      }));
-      setActiveStep('configure')
+      })});
+      setActiveStep('configure');
     }
   }, [selectedTemplate]);
   
@@ -202,7 +202,7 @@ export function SimpleToolBuilder({
           templates={UB_TOOL_TEMPLATES}
           onSelectTemplate={(template) => {
             onTemplateSelect?.(template);
-            setActiveStep('configure')
+            setActiveStep('configure');
           }}
         />
       )}
@@ -228,7 +228,7 @@ export function SimpleToolBuilder({
         />
       )}
     </div>
-  )
+  );
 }
 
 // =============================================================================
@@ -237,14 +237,14 @@ export function SimpleToolBuilder({
 
 interface ToolTemplateSelectionProps {
   templates: UBToolTemplate[];
-  onSelectTemplate: (template: UBToolTemplate) => void
+  onSelectTemplate: (template: UBToolTemplate) => void;
 }
 
 export function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTemplateSelectionProps) {
   const categorizedTemplates = templates.reduce((acc, template) => {
     if (!acc[template.category]) acc[template.category] = [];
     acc[template.category].push(template);
-    return acc
+    return acc;
   }, {} as Record<string, UBToolTemplate[]>);
   
   return (
@@ -276,7 +276,7 @@ export function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTempl
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 // =============================================================================
@@ -285,7 +285,7 @@ export function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTempl
 
 interface ToolTemplateCardProps {
   template: UBToolTemplate;
-  onSelect: () => void
+  onSelect: () => void;
 }
 
 function ToolTemplateCard({ template, onSelect }: ToolTemplateCardProps) {
@@ -344,7 +344,7 @@ function ToolTemplateCard({ template, onSelect }: ToolTemplateCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // =============================================================================
@@ -356,7 +356,7 @@ interface ToolConfigurationProps {
   config: ToolBuildConfig;
   onConfigChange: (config: ToolBuildConfig) => void;
   onNext: () => void;
-  onBack: () => void
+  onBack: () => void;
 }
 
 export function ToolConfiguration({ 
@@ -448,7 +448,7 @@ export function ToolConfiguration({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // =============================================================================
@@ -459,7 +459,7 @@ interface ToolPreviewProps {
   template: UBToolTemplate;
   config: ToolBuildConfig;
   onBuild: () => void;
-  onBack: () => void
+  onBack: () => void;
 }
 
 export function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewProps) {
@@ -541,5 +541,5 @@ export function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewPr
         </div>
       </div>
     </div>
-  )
+  );
 }

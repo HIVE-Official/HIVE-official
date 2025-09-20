@@ -363,7 +363,7 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
                         )}
                       </motion.button>
                     )
-                  })
+                  })}
                 )}
               </div>
             </motion.div>

@@ -418,7 +418,7 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
               </div>
             </HiveCard>
           )
-          })
+          })}
       </div>
 
       {/* Empty State */}

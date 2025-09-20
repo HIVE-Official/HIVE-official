@@ -144,7 +144,7 @@ describe('ProfileDashboard', () => {
     
     // Builder Tools (for builder user)
     expect(screen.getByText('Builder Tools')).toBeInTheDocument();
-    expect(screen.getByText('Study Schedule Template')).toBeInTheDocument()
+    expect(screen.getByText('Study Schedule Template')).toBeInTheDocument();
   });
 
   it('shows builder invitation for non-builder users', () => {
@@ -158,14 +158,14 @@ describe('ProfileDashboard', () => {
     );
     
     expect(screen.getByText('Build Custom Tools')).toBeInTheDocument();
-    expect(screen.getByText('Become a Builder')).toBeInTheDocument()
+    expect(screen.getByText('Become a Builder')).toBeInTheDocument();
   });
 
   it('hides builder tools when showBuilder is false', () => {
     render(<ProfileDashboard {...defaultProps} showBuilder={false} />);
     
     expect(screen.queryByText('Builder Tools')).not.toBeInTheDocument();
-    expect(screen.queryByText('Study Schedule Template')).not.toBeInTheDocument()
+    expect(screen.queryByText('Study Schedule Template')).not.toBeInTheDocument();
   });
 
   it('calls appropriate callbacks when interactive elements are clicked', () => {
@@ -191,7 +191,7 @@ describe('ProfileDashboard', () => {
     
     // Test tool click
     fireEvent.click(screen.getByText('Study Schedule Template'));
-    expect(mockCallbacks.onToolClick).toHaveBeenCalledWith('1')
+    expect(mockCallbacks.onToolClick).toHaveBeenCalledWith('1');
   });
 
   it('renders different layouts correctly', () => {
@@ -210,7 +210,7 @@ describe('ProfileDashboard', () => {
     rerender(<ProfileDashboard {...defaultProps} layout="mobile" />);
     // Mobile should not have multi-column grid classes
     dashboard = document.querySelector('.lg\\:col-span-3');
-    expect(dashboard).not.toBeInTheDocument()
+    expect(dashboard).not.toBeInTheDocument();
   });
 
   it('displays loading states correctly', () => {
@@ -221,7 +221,7 @@ describe('ProfileDashboard', () => {
           spaces: true,
           activities: true,
           tools: true,
-          }}
+        }}
       />
     );
     
@@ -230,7 +230,7 @@ describe('ProfileDashboard', () => {
     
     // Should show skeleton loaders in components
     const loadingElements = document.querySelectorAll('.animate-pulse');
-    expect(loadingElements.length).toBeGreaterThan(0)
+    expect(loadingElements.length).toBeGreaterThan(0);
   });
 
   it('renders compact variant correctly', () => {
@@ -239,7 +239,7 @@ describe('ProfileDashboard', () => {
     // Should still show all main content
     expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
     expect(screen.getByText('Your Campus Spaces')).toBeInTheDocument();
-    expect(screen.getByText('Campus Activity')).toBeInTheDocument()
+    expect(screen.getByText('Campus Activity')).toBeInTheDocument();
   });
 
   it('renders focused variant without builder tools', () => {
@@ -251,7 +251,7 @@ describe('ProfileDashboard', () => {
     expect(screen.getByText('Campus Activity')).toBeInTheDocument();
     
     // Should not show builder tools even if user is a builder
-    expect(screen.queryByText('Builder Tools')).not.toBeInTheDocument()
+    expect(screen.queryByText('Builder Tools')).not.toBeInTheDocument();
   });
 
   it('handles empty states gracefully', () => {
@@ -266,7 +266,7 @@ describe('ProfileDashboard', () => {
     
     // Should show empty state messages
     expect(screen.getByText('No Spaces Yet')).toBeInTheDocument();
-    expect(screen.getByText('No Recent Activity')).toBeInTheDocument()
+    expect(screen.getByText('No Recent Activity')).toBeInTheDocument();
   });
 
   it('displays user completion percentage correctly', () => {
@@ -275,7 +275,7 @@ describe('ProfileDashboard', () => {
     
     // Should show profile completion section
     expect(screen.getByText('Profile Completion')).toBeInTheDocument();
-    expect(screen.getByText('25%')).toBeInTheDocument()
+    expect(screen.getByText('25%')).toBeInTheDocument();
   });
 
   it('shows unread indicators correctly', () => {
@@ -287,14 +287,14 @@ describe('ProfileDashboard', () => {
     
     // Should show unread indicator in activities (golden dot)
     const unreadIndicators = document.querySelectorAll('.bg-gold');
-    expect(unreadIndicators.length).toBeGreaterThan(0)
+    expect(unreadIndicators.length).toBeGreaterThan(0);
   });
 
   it('applies custom className correctly', () => {
     render(<ProfileDashboard {...defaultProps} className="custom-class" />);
     
     const dashboard = document.querySelector('.custom-class');
-    expect(dashboard).toBeInTheDocument()
+    expect(dashboard).toBeInTheDocument();
   });
 
   it('shows success toast when sections are loaded', async () => {
@@ -302,8 +302,8 @@ describe('ProfileDashboard', () => {
     
     // Wait for success toast to appear
     await waitFor(() => {
-      expect(screen.getByText('Profile loaded successfully')).toBeInTheDocument()
-    }, { timeout: 2000 })
+      expect(screen.getByText('Profile loaded successfully')).toBeInTheDocument();
+    }, { timeout: 2000 });
   });
 
   it('handles missing optional props gracefully', () => {
@@ -318,6 +318,6 @@ describe('ProfileDashboard', () => {
     render(<ProfileDashboard {...minimalProps} />);
     
     // Should render without crashing
-    expect(screen.getByText('Sarah Chen')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
+  });
 });

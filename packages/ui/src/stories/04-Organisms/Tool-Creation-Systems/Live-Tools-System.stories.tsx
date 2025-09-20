@@ -208,7 +208,7 @@ const ToolsCreationSystem = () => {
               { id: 'discover', label: 'Discover', icon: Search },
               { id: 'my-tools', label: 'My Tools', icon: Wrench },
               { id: 'trending', label: 'Trending', icon: TrendingUp },
-            ].map(({ id, label, icon: Icon })} => (
+            ].map(map}) => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}

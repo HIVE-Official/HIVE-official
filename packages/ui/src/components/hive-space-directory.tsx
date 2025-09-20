@@ -157,7 +157,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
       spaces.forEach(space => {
         const type = space.tags?.[0]?.type || 'academic';
         counts[type] = (counts[type] || 0) + 1
-      })};
+      });
       return counts
     }, [spaces]);
     
@@ -177,7 +177,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
           );
         
         return typeMatch && searchMatch
-      })};
+      });
       
       // Sorting logic
       filtered.sort((a, b) => {
@@ -206,7 +206,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
           default:
             return 0
         }
-      });
+      })};
       
       return filtered
     }, [spaces, selectedType, searchQuery, sortBy, trendingSpaceIds]);
@@ -288,7 +288,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                     {[
                       { key: 'grid', icon: Grid },
                       { key: 'list', icon: List }
-                    ].map(({ key, icon: Icon })} => (
+                    ].map(map}) => (
                       <motion.button
                         key={key}
                         className={cn(
@@ -385,7 +385,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                         </span>
                       </motion.button>
                     )
-          })
+          })}
                 </div>
                 
                 {/* Sort Options */}

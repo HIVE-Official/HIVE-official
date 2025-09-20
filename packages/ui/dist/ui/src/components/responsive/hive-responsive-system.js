@@ -206,45 +206,47 @@ export function ResponsiveProvider({ children, breakpoints = {}, customLayouts =
                 height: window.innerHeight
             });
         };
-        // Set initial size
-        handleResize();
-        // Add resize listener
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-    // Utility functions
-    const getBreakpointValue = (values) => {
-        return values[deviceType] || values.mobile || Object.values(values)[0];
-    };
-    const isBreakpointAndAbove = (breakpoint) => {
-        const breakpointOrder = ['mobile', 'tablet', 'desktop', 'wide'];
-        const currentIndex = breakpointOrder.indexOf(deviceType);
-        const targetIndex = breakpointOrder.indexOf(breakpoint);
-        return currentIndex >= targetIndex;
-    };
-    const isBreakpointAndBelow = (breakpoint) => {
-        const breakpointOrder = ['mobile', 'tablet', 'desktop', 'wide'];
-        const currentIndex = breakpointOrder.indexOf(deviceType);
-        const targetIndex = breakpointOrder.indexOf(breakpoint);
-        return currentIndex <= targetIndex;
-    };
-    const value = {
-        deviceType,
-        layoutMode,
-        layoutConfig,
-        windowSize,
-        // Boolean helpers
-        isMobile: deviceType === 'mobile',
-        isTablet: deviceType === 'tablet',
-        isDesktop: deviceType === 'desktop',
-        isWide: deviceType === 'wide',
-        // Utility functions
-        getBreakpointValue,
-        isBreakpointAndAbove,
-        isBreakpointAndBelow
-    };
-    return (_jsx(ResponsiveContext.Provider, { value: value, children: children }));
+    });
+    // Set initial size
+    handleResize();
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
 }
+[];
+;
+// Utility functions
+const getBreakpointValue = (values) => {
+    return values[deviceType] || values.mobile || Object.values(values)[0];
+};
+const isBreakpointAndAbove = (breakpoint) => {
+    const breakpointOrder = ['mobile', 'tablet', 'desktop', 'wide'];
+    const currentIndex = breakpointOrder.indexOf(deviceType);
+    const targetIndex = breakpointOrder.indexOf(breakpoint);
+    return currentIndex >= targetIndex;
+};
+const isBreakpointAndBelow = (breakpoint) => {
+    const breakpointOrder = ['mobile', 'tablet', 'desktop', 'wide'];
+    const currentIndex = breakpointOrder.indexOf(deviceType);
+    const targetIndex = breakpointOrder.indexOf(breakpoint);
+    return currentIndex <= targetIndex;
+};
+const value = {
+    deviceType,
+    layoutMode,
+    layoutConfig,
+    windowSize,
+    // Boolean helpers
+    isMobile: deviceType === 'mobile',
+    isTablet: deviceType === 'tablet',
+    isDesktop: deviceType === 'desktop',
+    isWide: deviceType === 'wide',
+    // Utility functions
+    getBreakpointValue,
+    isBreakpointAndAbove,
+    isBreakpointAndBelow
+};
+return (_jsx(ResponsiveContext.Provider, { value: value, children: children }));
 export function ResponsiveShow({ on, above, below, children, className }) {
     const { deviceType, isBreakpointAndAbove, isBreakpointAndBelow } = useResponsive();
     let shouldShow = true;

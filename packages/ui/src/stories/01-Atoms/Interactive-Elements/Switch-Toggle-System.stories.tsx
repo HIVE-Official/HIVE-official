@@ -187,7 +187,7 @@ export const PrivacyControls: Story = {
       setPrivacySettings(prev => ({
         ...prev,
         [settingId]: !prev[settingId as keyof typeof prev]
-      }))
+      })})
     };
 
     return (
@@ -257,7 +257,7 @@ export const PrivacyControls: Story = {
                 </div>
               </div>
             )
-          })
+          })}
         </div>
       </div>
     )
@@ -278,7 +278,7 @@ export const NotificationSettings: Story = {
       setNotificationSettings(prev => ({
         ...prev,
         [settingId]: !prev[settingId as keyof typeof prev]
-      }))
+      })})
     };
 
     const groupedSettings = campusToggleSettings.notifications.reduce((acc, setting) => {
@@ -334,7 +334,7 @@ export const NotificationSettings: Story = {
                       />
                     </div>
                   )
-                })
+                })}
               </div>
             </div>
           ))}
@@ -377,7 +377,7 @@ export const FeatureToggles: Story = {
       setFeatureSettings(prev => ({
         ...prev,
         [settingId]: !prev[settingId as keyof typeof prev]
-      }))
+      })})
     };
 
     return (
@@ -451,7 +451,7 @@ export const FeatureToggles: Story = {
                 )}
               </div>
             )
-          })
+          })}
         </div>
       </div>
     )

@@ -17,7 +17,7 @@ interface ToolMarketplaceProps {
   userId: string;
   onInstallTool?: (toolId: string, spaceId?: string) => Promise<void>;
   onViewTool?: (toolId: string) => void;
-  className?: string
+  className?: string;
 }
 
 interface MarketplaceTool extends ToolDefinition {
@@ -26,20 +26,20 @@ interface MarketplaceTool extends ToolDefinition {
     rating: number;
     reviews: number;
     lastUpdated: string;
-    trending: boolean
+    trending: boolean;
   };
   creator: {
     name: string;
     school: string;
-    verified: boolean
+    verified: boolean;
   };
   pricing: {
     type: 'free' | 'premium';
-    price?: number
+    price?: number;
   };
   categories: string[];
   screenshots?: string[];
-  isInstalled?: boolean
+  isInstalled?: boolean;
 }
 
 type SortOption = 'popular' | 'rating' | 'recent' | 'name';
@@ -67,21 +67,21 @@ export function ToolMarketplace({
       // In production, this would be a real API call
       const response = await fetch('/api/tools/marketplace', {
         headers: { 'Authorization': `Bearer ${userId}` }
-      });
+      })};
       
       if (response.ok) {
         const data = await response.json();
-        setTools(data.tools || [])
+        setTools(data.tools || []);
       } else {
         // Fallback to sample tools for development
-        setTools(getSampleMarketplaceTools())
+        setTools(getSampleMarketplaceTools());
       }
     } catch (error) {
       console.error('Failed to fetch tools:', error);
       // Use sample tools as fallback
-      setTools(getSampleMarketplaceTools())
+      setTools(getSampleMarketplaceTools());
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }, [userId]);
 
@@ -98,8 +98,8 @@ export function ToolMarketplace({
       const matchesCategory = selectedCategory === 'all' || 
         tool.categories.includes(selectedCategory);
 
-      return matchesSearch && matchesCategory
-    })};
+      return matchesSearch && matchesCategory;
+    });
 
     // Sort tools
     filtered.sort((a, b) => {
@@ -113,11 +113,11 @@ export function ToolMarketplace({
         case 'name':
           return a.name.localeCompare(b.name);
         default:
-          return 0
+          return 0;
       }
     });
 
-    setFilteredTools(filtered)
+    setFilteredTools(filtered);
   }, [tools, searchQuery, selectedCategory, sortBy]);
 
   // Install tool
@@ -134,21 +134,21 @@ export function ToolMarketplace({
         tool.id === toolId 
           ? { ...tool, isInstalled: true, stats: { ...tool.stats, installations: tool.stats.installations + 1 } }
           : tool
-      ))
+      ));
     } catch (error) {
-      console.error('Failed to install tool:', error)
+      console.error('Failed to install tool:', error);
     } finally {
       setInstallingTools(prev => {
         const next = new Set(prev);
         next.delete(toolId);
-        return next
-      })
+        return next;
+      })};
     }
   };
 
   // Load tools on mount
   useEffect(() => {
-    fetchTools()
+    fetchTools();
   }, [fetchTools]);
 
   if (loading) {
@@ -163,7 +163,7 @@ export function ToolMarketplace({
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -275,7 +275,7 @@ export function ToolMarketplace({
             </p>
             <HiveButton variant="outline" onClick={() => {
               setSearchQuery('');
-              setSelectedCategory('all')
+              setSelectedCategory('all');
             }}>
               Clear Filters
             </HiveButton>
@@ -295,7 +295,7 @@ export function ToolMarketplace({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // Individual Tool Card Component
@@ -304,7 +304,7 @@ interface ToolCardProps {
   compact?: boolean;
   onInstall: () => void;
   onView: () => void;
-  installing: boolean
+  installing: boolean;
 }
 
 function ToolCard({ tool, compact = false, onInstall, onView, installing }: ToolCardProps) {
@@ -390,7 +390,7 @@ function ToolCard({ tool, compact = false, onInstall, onView, installing }: Tool
         </div>
       </div>
     </HiveCard>
-  )
+  );
 }
 
 // Sample marketplace tools for development/fallback
@@ -520,7 +520,7 @@ function getSampleMarketplaceTools(): MarketplaceTool[] {
       categories: ['wellness', 'social'],
       isInstalled: false
     }
-  ]
+  ];
 }
 
 export default ToolMarketplace;

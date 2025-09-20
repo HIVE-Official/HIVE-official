@@ -312,7 +312,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                 <span className="text-sm font-medium">{tab.label}</span>
               </button>
             )
-          }}
+          })}
         </div>
       </div>
 

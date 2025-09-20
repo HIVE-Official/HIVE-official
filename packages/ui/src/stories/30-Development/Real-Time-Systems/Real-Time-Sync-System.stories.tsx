@@ -211,7 +211,7 @@ const useRealTime = () => {
         ...prev, 
         connectionStatus: 'connected',
         lastHeartbeat: Date.now()
-      }));
+      })});
       
       // Start heartbeat
       heartbeatIntervalRef.current = setInterval(() => {
@@ -257,7 +257,7 @@ const useRealTime = () => {
             ? { ...msg, status: 'delivered' as const }
             : msg
         )
-      }))
+      })})
     }, 500)
   }, []);
 
@@ -312,7 +312,7 @@ const useRealTime = () => {
           }
         }
         return msg
-      })
+      })}
     }))
   }, []);
 
@@ -428,7 +428,7 @@ const useRealTime = () => {
           ...user,
           isTyping: user.id === 'user2' ? Math.random() < 0.3 : false
         })})
-      }))
+      })})
     }, 5000);
 
     return () => clearInterval(interval)

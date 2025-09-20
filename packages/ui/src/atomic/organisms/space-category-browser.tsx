@@ -88,14 +88,14 @@ export interface SpacePreview {
     id: string;
     content: string;
     author: string;
-    timestamp: string
+    timestamp: string;
   }>;
   
   activeTools?: Array<{
     id: string;
     name: string;
-    icon: string
-  }>
+    icon: string;
+  }>;
 }
 
 export interface SpaceCategoryBrowserProps {
@@ -110,7 +110,7 @@ export interface SpaceCategoryBrowserProps {
   onBookmarkSpace?: (spaceId: string, bookmarked: boolean) => Promise<void>;
   onCreateSpace?: (category: SpaceCategory) => void;
   currentUserRole?: 'leader' | 'co_leader' | 'member';
-  className?: string
+  className?: string;
 }
 
 const CATEGORY_CONFIG = {
@@ -201,7 +201,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
         const matchesDescription = space.description.toLowerCase().includes(query);
         const matchesTags = space.tags.some(tag => tag.toLowerCase().includes(query));
         const matchesLocation = space.location?.toLowerCase().includes(query);
-        if (!matchesName && !matchesDescription && !matchesTags && !matchesLocation) return false
+        if (!matchesName && !matchesDescription && !matchesTags && !matchesLocation) return false;
       }
       
       // Content filter
@@ -215,7 +215,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
         case 'trending':
           return space.isTrending;
         default:
-          return true
+          return true;
       }
     });
 
@@ -233,11 +233,11 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
         case 'trending':
           return b.engagementScore - a.engagementScore;
         default:
-          return a.name.localeCompare(b.name)
+          return a.name.localeCompare(b.name);
       }
     });
 
-    return filtered
+    return filtered;
   }, [spaces, activeCategory, searchQuery, selectedFilter, sortBy]);
 
   const categoryStats = useMemo(() => {
@@ -246,33 +246,33 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
       ...config,
       count: spaces.filter(s => s.category === category).length,
       joined: spaces.filter(s => s.category === category && s.isJoined).length,
-    })})
+    }));
   }, [spaces]);
 
   const handleJoinSpace = async (spaceId: string) => {
     if (!onJoinSpace) return;
     try {
-      await onJoinSpace(spaceId)
+      await onJoinSpace(spaceId);
     } catch (error) {
-      console.error('Failed to join space:', error)
+      console.error('Failed to join space:', error);
     }
   };
 
   const handleLeaveSpace = async (spaceId: string) => {
     if (!onLeaveSpace) return;
     try {
-      await onLeaveSpace(spaceId)
+      await onLeaveSpace(spaceId);
     } catch (error) {
-      console.error('Failed to leave space:', error)
+      console.error('Failed to leave space:', error);
     }
   };
 
   const handleBookmarkSpace = async (spaceId: string, bookmarked: boolean) => {
     if (!onBookmarkSpace) return;
     try {
-      await onBookmarkSpace(spaceId, bookmarked)
+      await onBookmarkSpace(spaceId, bookmarked);
     } catch (error) {
-      console.error('Failed to bookmark space:', error)
+      console.error('Failed to bookmark space:', error);
     }
   };
 
@@ -403,8 +403,8 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleBookmarkSpace(space.id, !space.isBookmarked)
-          }}
+                      handleBookmarkSpace(space.id, !space.isBookmarked);
+                    }}
                     className="w-8 h-8 rounded-lg bg-[var(--hive-background-tertiary)]/60 hover:bg-[var(--hive-brand-primary)]/10 transition-colors duration-200 flex items-center justify-center"
                   >
                     {space.isBookmarked ? (
@@ -418,8 +418,8 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleLeaveSpace(space.id)
-          }}
+                        handleLeaveSpace(space.id);
+                      }}
                       className="px-3 py-1.5 rounded-lg bg-red-400/10 text-red-400 border border-red-400/30 hover:bg-red-400/20 transition-all duration-200 text-sm font-medium"
                     >
                       Leave
@@ -428,8 +428,8 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleJoinSpace(space.id)
-          }}
+                        handleJoinSpace(space.id);
+                      }}
                       className="px-3 py-1.5 rounded-lg bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)]/40 hover:bg-[var(--hive-brand-primary)]/30 transition-all duration-200 text-sm font-medium"
                     >
                       Join
@@ -483,8 +483,8 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleBookmarkSpace(space.id, !space.isBookmarked)
-          }}
+                  handleBookmarkSpace(space.id, !space.isBookmarked);
+                }}
                 className="w-8 h-8 rounded-lg bg-[var(--hive-background-tertiary)]/60 hover:bg-[var(--hive-brand-primary)]/10 transition-colors duration-200 flex items-center justify-center"
               >
                 {space.isBookmarked ? (
@@ -502,8 +502,8 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleLeaveSpace(space.id)
-          }}
+                      handleLeaveSpace(space.id);
+                    }}
                     className="px-3 py-1.5 rounded-lg bg-red-400/10 text-red-400 border border-red-400/30 hover:bg-red-400/20 transition-all duration-200 text-sm font-medium"
                   >
                     Leave
@@ -513,8 +513,8 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleJoinSpace(space.id)
-          }}
+                    handleJoinSpace(space.id);
+                  }}
                   className="px-4 py-2 rounded-xl bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)]/40 hover:bg-[var(--hive-brand-primary)]/30 transition-all duration-200 font-medium flex items-center gap-2"
                 >
                   <UserPlus className="w-4 h-4" />
@@ -525,7 +525,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
           )}
         </div>
       </motion.div>
-    )
+    );
   };
 
   return (
@@ -735,7 +735,7 @@ export const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps> = ({
         </AnimatePresence>
       </div>
     </div>
-  )
+  );
 };
 
 export default SpaceCategoryBrowser;

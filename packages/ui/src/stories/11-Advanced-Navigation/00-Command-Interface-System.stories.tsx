@@ -558,7 +558,7 @@ const CommandInterfaceDemo = () => {
                                 <ChevronRight className="w-4 h-4 text-gray-500 ml-2" />
                               </div>
                             )
-                          })
+                          })}
                       </div>
                     ))}
                   </div>

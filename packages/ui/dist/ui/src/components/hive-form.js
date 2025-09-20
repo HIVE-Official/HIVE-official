@@ -108,8 +108,9 @@ const validateField = async (value, rules) => {
             });
         }
     }
-    return errors;
 };
+return errors;
+;
 export const HiveForm = ({ children, initialValues = {}, onSubmit, validationMode = 'onBlur', className, }) => {
     const [state, setState] = useState({
         values: initialValues,
@@ -156,75 +157,80 @@ export const HiveForm = ({ children, initialValues = {}, onSubmit, validationMod
                 validating: { ...prev.validating, [name]: false },
             }));
         }
-        catch (error) {
-            setState(prev => ({
-                ...prev,
-                errors: {
-                    ...prev.errors,
-                    [name]: [{ type: 'validation', message: 'Validation error occurred' }]
-                },
-                validating: { ...prev.validating, [name]: false },
-            }));
-        }
-    }, []);
-    const resetForm = useCallback(() => {
-        setState({
-            values: initialValues,
-            errors: {},
-            touched: {},
-            validating: {},
-            valid: true,
-            submitting: false,
-        });
-    }, [initialValues]);
-    const submitForm = useCallback(async () => {
-        setState(prev => ({ ...prev, submitting: true }));
-        try {
-            if (onSubmit) {
-                await onSubmit(state.values);
-            }
-        }
-        catch (error) {
-            console.error('Form submission error:', error);
-        }
-        finally {
-            setState(prev => ({ ...prev, submitting: false }));
-        }
-    }, [onSubmit, state.values]);
-    const getFieldState = useCallback((name) => {
-        return {
-            value: state.values[name],
-            errors: state.errors[name] || [],
-            touched: state.touched[name] || false,
-            validating: state.validating[name] || false,
-            valid: !state.errors[name] || state.errors[name].length === 0,
-        };
-    }, [state]);
-    // Update form validity
-    useEffect(() => {
-        const hasErrors = Object.values(state.errors).some(errors => errors.length > 0);
-        const isValidating = Object.values(state.validating).some(Boolean);
-        setState(prev => ({
-            ...prev,
-            valid: !hasErrors && !isValidating,
-        }));
-    }, [state.errors, state.validating]);
-    const contextValue = {
-        state,
-        setValue,
-        setError,
-        setTouched,
-        setValidating,
-        validateField: validateFormField,
-        resetForm,
-        submitForm,
-        getFieldState,
-    };
-    return (_jsx(FormContext.Provider, { value: contextValue, children: _jsx("form", { className: cn("space-y-6", className), onSubmit: (e) => {
-                e.preventDefault();
-                submitForm();
-            }, children: children }) }));
+        finally { }
+    });
 };
+try { }
+catch (error) {
+    setState(prev => ({
+        ...prev,
+        errors: {
+            ...prev.errors,
+            [name]: [{ type: 'validation', message: 'Validation error occurred' }]
+        },
+        validating: { ...prev.validating, [name]: false },
+    }));
+}
+[];
+;
+const resetForm = useCallback(() => {
+    setState({
+        values: initialValues,
+        errors: {},
+        touched: {},
+        validating: {},
+        valid: true,
+        submitting: false,
+    });
+}, [initialValues]);
+const submitForm = useCallback(async () => {
+    setState(prev => ({ ...prev, submitting: true }));
+    try {
+        if (onSubmit) {
+            await onSubmit(state.values);
+        }
+    }
+    catch (error) {
+        console.error('Form submission error:', error);
+    }
+    finally {
+        setState(prev => ({ ...prev, submitting: false }));
+    }
+}, [onSubmit, state.values]);
+const getFieldState = useCallback((name) => {
+    return {
+        value: state.values[name],
+        errors: state.errors[name] || [],
+        touched: state.touched[name] || false,
+        validating: state.validating[name] || false,
+        valid: !state.errors[name] || state.errors[name].length === 0,
+    };
+}, [state]);
+// Update form validity
+useEffect(() => {
+    const hasErrors = Object.values(state.errors).some(errors => errors.length > 0);
+    const isValidating = Object.values(state.validating).some(Boolean);
+    setState(prev => ({
+        ...prev,
+        valid: !hasErrors && !isValidating,
+    }));
+}, [state.errors, state.validating]);
+const contextValue = {
+    state,
+    setValue,
+    setError,
+    setTouched,
+    setValidating,
+    validateField: validateFormField,
+    resetForm,
+    submitForm,
+    getFieldState,
+};
+return (_jsx(FormContext.Provider, { value: contextValue, children: _jsx("form", { className: cn("space-y-6", className), onSubmit: (e) => {
+            e.preventDefault();
+            submitForm();
+        }, children: children }) }));
+;
 // Form Field Hook
 export function useFormField(name) {
     const context = useContext(FormContext);

@@ -30,12 +30,14 @@ export function usePerformanceMonitor(componentName) {
                 totalTime: `${now - mountTime.current}ms`
             });
         }
+        ;
     });
-    return {
-        renderCount: renderCount.current,
-        totalTime: Date.now() - mountTime.current
-    };
 }
+;
+return {
+    renderCount: renderCount.current,
+    totalTime: Date.now() - mountTime.current
+};
 // Intelligent caching system
 class ToolCache {
     constructor() {
@@ -206,6 +208,7 @@ export function PerformanceMonitor({ children, onMetrics }) {
     });
 }
 ;
+;
 observer.observe({ entryTypes: ['measure'] });
 // Memory usage monitoring
 const memoryInterval = setInterval(() => {
@@ -225,7 +228,9 @@ const cacheInterval = setInterval(() => {
         ...prev,
         cacheHitRate: stats.size > 0 ? 85 : 0 // Simulated hit rate
     }));
-}, 10000);
+});
+10000;
+;
 return () => {
     observer.disconnect();
     clearInterval(memoryInterval);

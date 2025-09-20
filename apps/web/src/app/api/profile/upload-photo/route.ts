@@ -1,23 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { getStorage } from 'firebase-admin/storage';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 // In-memory store for development mode profile data (shared with profile route)
 const devProfileStore: Record<string, any> = {};
 
-export const POST = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
+export const POST = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
+) => {
+  const userId = getUserId(request);
 
     const formData = await request.formData();
     const file = formData.get('photo') as File;
 
     if (!file) {
-      return NextResponse.json(ApiResponseHelper.error("No photo file provided", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("No photo file provided", "INVALID_INPUT", 400);
     }
 
     // Handle development mode
@@ -34,24 +36,22 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       
       logger.info('Development mode: Photo upload simulated for file', { data: file.name, endpoint: '/api/profile/upload-photo' });
       
-      return NextResponse.json({
-        success: true,
+      return respond.success({
         message: 'Photo uploaded successfully (development mode)',
-        avatarUrl,
-        // SECURITY: Development mode removed for production safety
+        avatarUrl
       });
     }
 
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.", "INVALID_INPUT", 400);
     }
 
     // Validate file size (5MB limit)
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
-      return NextResponse.json(ApiResponseHelper.error("File too large. Maximum size is 5MB.", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("File too large. Maximum size is 5MB.", "INVALID_INPUT", 400);
     }
 
     // Upload to Firebase Storage (Admin SDK)
@@ -82,20 +82,12 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     await userRef.update({
       avatarUrl: downloadURL,
       profilePhoto: downloadURL, // For compatibility
-      updatedAt: FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       avatarUrl: downloadURL,
       message: 'Profile photo updated successfully'
     });
 
-  } catch (error) {
-    logger.error('Photo upload error', { error: error, endpoint: '/api/profile/upload-photo' });
-    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Allow for photo uploads but with secure auth
-  operation: 'upload_profile_photo' 
 });

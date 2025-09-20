@@ -18,7 +18,7 @@ interface SpaceToolsTabProps {
   spaceId: string;
   userId: string;
   userRole: 'admin' | 'moderator' | 'member';
-  className?: string
+  className?: string;
 }
 
 interface InstalledTool extends ToolDefinition {
@@ -27,13 +27,13 @@ interface InstalledTool extends ToolDefinition {
   settings: {
     enabled: boolean;
     permissions: string[];
-    position: number
+    position: number;
   };
   usage: {
     totalUsers: number;
     thisWeek: number;
-    lastUsed?: string
-  }
+    lastUsed?: string;
+  };
 }
 
 type TabView = 'installed' | 'marketplace' | 'running';
@@ -51,20 +51,20 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
     try {
       const response = await fetch(`/api/spaces/${spaceId}/tools`, {
         headers: { 'Authorization': `Bearer ${userId}` }
-      });
+      })};
       
       if (response.ok) {
         const data = await response.json();
-        setInstalledTools(data.tools || [])
+        setInstalledTools(data.tools || []);
       } else {
         // Fallback to sample tools for development
-        setInstalledTools(getSampleInstalledTools())
+        setInstalledTools(getSampleInstalledTools());
       }
     } catch (error) {
       console.error('Failed to fetch installed tools:', error);
-      setInstalledTools(getSampleInstalledTools())
+      setInstalledTools(getSampleInstalledTools());
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }, [spaceId, userId]);
 
@@ -78,25 +78,25 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
           'Authorization': `Bearer ${userId}`
         },
         body: JSON.stringify({ toolId })
-      });
+      })};
 
       if (response.ok) {
         // Refresh installed tools list
         await fetchInstalledTools();
         // Switch back to installed view
-        setCurrentView('installed')
+        setCurrentView('installed');
       } else {
-        console.error('Failed to install tool')
+        console.error('Failed to install tool');
       }
     } catch (error) {
-      console.error('Error installing tool:', error)
+      console.error('Error installing tool:', error);
     }
   };
 
   // Launch tool
   const handleLaunchTool = (tool: InstalledTool) => {
     setRunningTool(tool);
-    setCurrentView('running')
+    setCurrentView('running');
   };
 
   // Save tool data
@@ -115,9 +115,9 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
           data,
           userId 
         })
-      })
+      })};
     } catch (error) {
-      console.error('Failed to save tool data:', error)
+      console.error('Failed to save tool data:', error);
     }
   };
 
@@ -137,19 +137,19 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
           data,
           userId 
         })
-      });
+      })};
       
       // Close tool after successful submission
       setRunningTool(null);
-      setCurrentView('installed')
+      setCurrentView('installed');
     } catch (error) {
-      console.error('Failed to submit tool data:', error)
+      console.error('Failed to submit tool data:', error);
     }
   };
 
   // Load installed tools on mount
   useEffect(() => {
-    fetchInstalledTools()
+    fetchInstalledTools();
   }, [fetchInstalledTools]);
 
   // Filter tools by search
@@ -170,8 +170,8 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
               size="sm"
               onClick={() => {
                 setRunningTool(null);
-                setCurrentView('installed')
-          }}
+                setCurrentView('installed');
+              }}
             >
               ← Back to Tools
             </HiveButton>
@@ -192,7 +192,7 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
           onSubmit={handleSubmitToolData}
         />
       </div>
-    )
+    );
   }
 
   if (currentView === 'marketplace') {
@@ -216,11 +216,11 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
           onInstallTool={handleInstallTool}
           onViewTool={(toolId) => {
             // Could implement tool preview here
-            console.log('View tool:', toolId)
+            console.log('View tool:', toolId);
           }}
         />
       </div>
-    )
+    );
   }
 
   return (
@@ -303,24 +303,24 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToo
                       'Authorization': `Bearer ${userId}`
                     },
                     body: JSON.stringify({ enabled })
-                  });
+                  })};
                   
                   // Update local state
                   setInstalledTools(prev => prev.map(t => 
                     t.id === tool.id 
                       ? { ...t, settings: { ...t.settings, enabled } }
                       : t
-                  ))
+                  ));
                 } catch (error) {
-                  console.error('Failed to update tool settings:', error)
+                  console.error('Failed to update tool settings:', error);
                 }
-          })}
+              }}
             />
           ))}
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Individual Installed Tool Card
@@ -328,7 +328,7 @@ interface InstalledToolCardProps {
   tool: InstalledTool;
   userRole: 'admin' | 'moderator' | 'member';
   onLaunch: () => void;
-  onToggle: (enabled: boolean) => void
+  onToggle: (enabled: boolean) => void;
 }
 
 function InstalledToolCard({ tool, userRole, onLaunch, onToggle }: InstalledToolCardProps) {
@@ -401,7 +401,7 @@ function InstalledToolCard({ tool, userRole, onLaunch, onToggle }: InstalledTool
         </div>
       </div>
     </HiveCard>
-  )
+  );
 }
 
 // Sample installed tools for development
@@ -485,7 +485,7 @@ function getSampleInstalledTools(): InstalledTool[] {
         lastUsed: '2024-01-19T10:00:00Z'
       }
     }
-  ]
+  ];
 }
 
 export default SpaceToolsTab;

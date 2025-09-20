@@ -251,7 +251,7 @@ export const CampusLayoutExamples: Story = {
                     </div>
                   </div>
                 )
-              })
+              })}
             </div>
 
             {/* Visual spacing representation */}
@@ -280,7 +280,7 @@ export const CampusLayoutExamples: Story = {
                       )}
                     </div>
                   )
-                })
+                })}
               </div>
             </div>
           </div>
@@ -333,7 +333,7 @@ export const ResponsiveContainerDemo: Story = {
                     </div>
                   </button>
                 )
-              })
+              })}
             </div>
           </div>
 

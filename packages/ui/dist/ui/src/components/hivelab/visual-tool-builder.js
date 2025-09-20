@@ -5,15 +5,10 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Drag-and-drop interface for creating tools from elements
  */
 import { useState, useCallback, useMemo } from 'react';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useDrag, useDrop } from 'react-dnd';
 import { createToolDefaults } from '@hive/core';
-import { Button } from '../../atomic/atoms/button';
-import { LiveToolRuntime } from '../live-tool-runtime';
-import { ElementConfigPanel } from './element-config-panel';
-import { SpaceToolDeployment } from '../community/space-tool-deployment';
 import { apiClient } from '../../lib/api-client';
-import { Type, Image, Minus, Layout, MousePointer, ChevronDown, List, Star, Timer, BarChart3, Settings, Eye, Save, Play, Trash2, Zap } from 'lucide-react';
+import { Type, Image, Minus, Layout, MousePointer, List, Star, Timer, BarChart3, Trash2 } from 'lucide-react';
 // Element library with all available elements
 const ELEMENT_LIBRARY = [
     {
@@ -326,65 +321,73 @@ export const VisualToolBuilder = ({ onSave, onPreview, onDeploy, initialTool, av
                         isSpaceTool: true,
                         spaceId: deploymentConfig.spaceId,
                     });
-                savedTool = saveResult.tool;
             }
-            // Deploy the saved tool to the space using real API
-            await apiClient.deployTool({
-                toolId: savedTool.id,
-                deployTo: 'space',
-                targetId: deploymentConfig.spaceId,
-                surface: 'tools',
-                permissions: {
-                    canView: deploymentConfig.permissions?.view?.includes('all') || true,
-                    canInteract: deploymentConfig.permissions?.use?.length > 0 || true,
-                    canEdit: deploymentConfig.permissions?.manage?.length > 0 || false,
-                    allowedRoles: deploymentConfig.permissions?.use || ['member', 'moderator', 'admin'],
-                },
-                settings: {
-                    showInDirectory: deploymentConfig.settings?.isActive !== false,
-                    allowSharing: true,
-                    collectAnalytics: deploymentConfig.settings?.trackUsage !== false,
-                    notifyOnInteraction: false,
-                },
-                config: {
-                    displayName: deploymentConfig.customization?.displayName || tool.name,
-                    description: deploymentConfig.customization?.description || tool.description,
-                    category: deploymentConfig.customization?.category || 'productivity',
-                    autoLaunch: deploymentConfig.settings?.autoLaunch || false,
-                    requirePermission: deploymentConfig.settings?.requirePermission || false,
-                    maxConcurrentUsers: deploymentConfig.settings?.maxConcurrentUsers,
-                },
-            });
-            // Call original onDeploy callback if provided
-            if (onDeploy) {
-                await onDeploy(savedTool, deploymentConfig);
-            }
-            setShowDeployment(false);
+            ;
+            savedTool = saveResult.tool;
         }
-        catch (error) {
-            console.error('Deployment failed:', error);
-            throw error; // Let the deployment component handle the error display
-        }
+        // Deploy the saved tool to the space using real API
         finally {
-            setIsDeploying(false);
         }
-    }, [createTool, elements, initialTool, onDeploy]);
-    const currentTool = createTool();
-    return (_jsx(DndProvider, { backend: HTML5Backend, children: _jsxs("div", { className: "h-full flex flex-col", children: [_jsx("div", { className: "border-b border-[var(--hive-border-default)] p-4", children: _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex-1 max-w-md", children: [_jsx("input", { type: "text", value: toolName, onChange: (e) => setToolName(e.target.value), className: "text-xl font-semibold bg-transparent border-none outline-none text-[var(--hive-text-primary)] placeholder-[var(--hive-text-tertiary)] w-full", placeholder: "Tool name" }), _jsx("input", { type: "text", value: toolDescription, onChange: (e) => setToolDescription(e.target.value), className: "text-sm bg-transparent border-none outline-none text-[var(--hive-text-secondary)] placeholder-[var(--hive-text-tertiary)] w-full mt-1", placeholder: "Tool description" })] }), _jsxs("div", { className: "flex items-center space-x-2", children: [_jsxs("div", { className: "flex bg-[var(--hive-background-secondary)] rounded-lg p-1", children: [_jsxs("button", { onClick: () => setActiveTab('build'), className: `px-3 py-1 text-sm rounded-md transition-colors ${activeTab === 'build'
-                                                    ? 'bg-[var(--hive-primary)] text-white'
-                                                    : 'text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]'}`, children: [_jsx(Settings, { className: "w-4 h-4 inline mr-1" }), "Build"] }), _jsxs("button", { onClick: () => setActiveTab('preview'), className: `px-3 py-1 text-sm rounded-md transition-colors ${activeTab === 'preview'
-                                                    ? 'bg-[var(--hive-primary)] text-white'
-                                                    : 'text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]'}`, children: [_jsx(Eye, { className: "w-4 h-4 inline mr-1" }), "Preview"] })] }), _jsxs(Button, { variant: "outline", onClick: handlePreview, children: [_jsx(Play, { className: "w-4 h-4 mr-2" }), "Test"] }), _jsxs(Button, { variant: "outline", onClick: () => setShowDeployment(true), disabled: elements.length === 0, children: [_jsx(Zap, { className: "w-4 h-4 mr-2" }), "Deploy"] }), _jsxs(Button, { onClick: handleSave, children: [_jsx(Save, { className: "w-4 h-4 mr-2" }), "Save"] })] })] }) }), _jsx("div", { className: "flex-1 flex overflow-hidden", children: activeTab === 'build' ? (_jsxs(_Fragment, { children: [_jsx("div", { className: "w-80 border-r border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] overflow-y-auto", children: _jsxs("div", { className: "p-4", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-4", children: "Element Library" }), Object.entries(elementsByCategory).map(([category, categoryElements]) => (_jsxs("div", { className: "mb-6", children: [_jsxs("h4", { className: "text-sm font-medium text-[var(--hive-text-secondary)] mb-3 flex items-center", children: [category, _jsx(ChevronDown, { className: "w-4 h-4 ml-1" })] }), _jsx("div", { className: "space-y-2", children: categoryElements.map((element) => (_jsx(DraggableElement, { element: element }, element.id))) })] }, category)))] }) }), _jsx("div", { className: "flex-1 p-6 overflow-y-auto", children: _jsx(ToolCanvas, { elements: elements, selectedElementId: selectedElementId, onElementSelect: setSelectedElementId, onElementAdd: handleElementAdd, onElementDelete: handleElementDelete }) }), _jsx(ElementConfigPanel, { element: elements.find(el => el.id === selectedElementId) || null, elementDefinition: selectedElementId
-                                    ? ELEMENT_LIBRARY.find(lib => lib.id === elements.find(el => el.id === selectedElementId)?.elementId) || null
-                                    : null, onChange: (newConfig) => {
-                                    if (selectedElementId) {
-                                        handleElementConfigChange(selectedElementId, newConfig);
-                                    }
-                                } }), ")} onClose=", () => setSelectedElementId(null), "/>"] })) : (
-                    /* Preview Mode */
-                    _jsx("div", { className: "flex-1 p-6 overflow-y-auto", children: _jsx("div", { className: "max-w-2xl mx-auto", children: _jsx(LiveToolRuntime, { tool: currentTool, readOnly: false, showDebugInfo: true, onDataSubmit: (data) => {
-                                    console.log('Tool submitted:', data);
-                                    alert('Tool test completed! Check console for submission data.');
-                                } }) }) })) }), showDeployment && (_jsx("div", { className: "fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4", children: _jsx("div", { className: "bg-[var(--hive-background-primary)] rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden", children: _jsx(SpaceToolDeployment, { tool: currentTool, availableSpaces: availableSpaces, onDeploy: handleDeployment, onCancel: () => setShowDeployment(false), isDeploying: isDeploying }) }) }))] }) }));
+        // Deploy the saved tool to the space using real API
+        await apiClient.deployTool({
+            toolId: savedTool.id,
+            deployTo: 'space',
+            targetId: deploymentConfig.spaceId,
+            surface: 'tools',
+            permissions: {
+                canView: deploymentConfig.permissions?.view?.includes('all') || true,
+                canInteract: deploymentConfig.permissions?.use?.length > 0 || true,
+                canEdit: deploymentConfig.permissions?.manage?.length > 0 || false,
+                allowedRoles: deploymentConfig.permissions?.use || ['member', 'moderator', 'admin'],
+            },
+            settings: {
+                showInDirectory: deploymentConfig.settings?.isActive !== false,
+                allowSharing: true,
+                collectAnalytics: deploymentConfig.settings?.trackUsage !== false,
+                notifyOnInteraction: false,
+            },
+            config: {
+                displayName: deploymentConfig.customization?.displayName || tool.name,
+                description: deploymentConfig.customization?.description || tool.description,
+                category: deploymentConfig.customization?.category || 'productivity',
+                autoLaunch: deploymentConfig.settings?.autoLaunch || false,
+                requirePermission: deploymentConfig.settings?.requirePermission || false,
+                maxConcurrentUsers: deploymentConfig.settings?.maxConcurrentUsers,
+            },
+        });
+    });
+    // Call original onDeploy callback if provided
+    if (onDeploy) {
+        await onDeploy(savedTool, deploymentConfig);
+    }
+    setShowDeployment(false);
 };
+try { }
+catch (error) {
+    console.error('Deployment failed:', error);
+    throw error; // Let the deployment component handle the error display
+}
+finally {
+    setIsDeploying(false);
+}
+[createTool, elements, initialTool, onDeploy];
+;
+const currentTool = createTool();
+return (_jsx(DndProvider, { backend: HTML5Backend, children: _jsxs("div", { className: "h-full flex flex-col", children: [_jsx("div", { className: "border-b border-[var(--hive-border-default)] p-4", children: _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex-1 max-w-md", children: [_jsx("input", { type: "text", value: toolName, onChange: (e) => setToolName(e.target.value), className: "text-xl font-semibold bg-transparent border-none outline-none text-[var(--hive-text-primary)] placeholder-[var(--hive-text-tertiary)] w-full", placeholder: "Tool name" }), _jsx("input", { type: "text", value: toolDescription, onChange: (e) => setToolDescription(e.target.value), className: "text-sm bg-transparent border-none outline-none text-[var(--hive-text-secondary)] placeholder-[var(--hive-text-tertiary)] w-full mt-1", placeholder: "Tool description" })] }), _jsxs("div", { className: "flex items-center space-x-2", children: [_jsxs("div", { className: "flex bg-[var(--hive-background-secondary)] rounded-lg p-1", children: [_jsxs("button", { onClick: () => setActiveTab('build'), className: `px-3 py-1 text-sm rounded-md transition-colors ${activeTab === 'build'
+                                                ? 'bg-[var(--hive-primary)] text-white'
+                                                : 'text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]'}`, children: [_jsx(Settings, { className: "w-4 h-4 inline mr-1" }), "Build"] }), _jsxs("button", { onClick: () => setActiveTab('preview'), className: `px-3 py-1 text-sm rounded-md transition-colors ${activeTab === 'preview'
+                                                ? 'bg-[var(--hive-primary)] text-white'
+                                                : 'text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]'}`, children: [_jsx(Eye, { className: "w-4 h-4 inline mr-1" }), "Preview"] })] }), _jsxs(Button, { variant: "outline", onClick: handlePreview, children: [_jsx(Play, { className: "w-4 h-4 mr-2" }), "Test"] }), _jsxs(Button, { variant: "outline", onClick: () => setShowDeployment(true), disabled: elements.length === 0, children: [_jsx(Zap, { className: "w-4 h-4 mr-2" }), "Deploy"] }), _jsxs(Button, { onClick: handleSave, children: [_jsx(Save, { className: "w-4 h-4 mr-2" }), "Save"] })] })] }) }), _jsx("div", { className: "flex-1 flex overflow-hidden", children: activeTab === 'build' ? (_jsxs(_Fragment, { children: [_jsx("div", { className: "w-80 border-r border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] overflow-y-auto", children: _jsxs("div", { className: "p-4", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-4", children: "Element Library" }), Object.entries(elementsByCategory).map(([category, categoryElements]) => (_jsxs("div", { className: "mb-6", children: [_jsxs("h4", { className: "text-sm font-medium text-[var(--hive-text-secondary)] mb-3 flex items-center", children: [category, _jsx(ChevronDown, { className: "w-4 h-4 ml-1" })] }), _jsx("div", { className: "space-y-2", children: categoryElements.map((element) => (_jsx(DraggableElement, { element: element }, element.id))) })] }, category)))] }) }), _jsx("div", { className: "flex-1 p-6 overflow-y-auto", children: _jsx(ToolCanvas, { elements: elements, selectedElementId: selectedElementId, onElementSelect: setSelectedElementId, onElementAdd: handleElementAdd, onElementDelete: handleElementDelete }) }), _jsx(ElementConfigPanel, { element: elements.find(el => el.id === selectedElementId) || null, elementDefinition: selectedElementId
+                                ? ELEMENT_LIBRARY.find(lib => lib.id === elements.find(el => el.id === selectedElementId)?.elementId) || null
+                                : null, onChange: (newConfig) => {
+                                if (selectedElementId) {
+                                    handleElementConfigChange(selectedElementId, newConfig);
+                                }
+                            } }), ")} onClose=", () => setSelectedElementId(null), "/>"] })) : (
+                /* Preview Mode */
+                _jsx("div", { className: "flex-1 p-6 overflow-y-auto", children: _jsx("div", { className: "max-w-2xl mx-auto", children: _jsx(LiveToolRuntime, { tool: currentTool, readOnly: false, showDebugInfo: true, onDataSubmit: (data) => {
+                                console.log('Tool submitted:', data);
+                                alert('Tool test completed! Check console for submission data.');
+                            } }) }) })) }), showDeployment && (_jsx("div", { className: "fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4", children: _jsx("div", { className: "bg-[var(--hive-background-primary)] rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden", children: _jsx(SpaceToolDeployment, { tool: currentTool, availableSpaces: availableSpaces, onDeploy: handleDeployment, onCancel: () => setShowDeployment(false), isDeploying: isDeploying }) }) }))] }) }));
+;
 //# sourceMappingURL=visual-tool-builder.js.map

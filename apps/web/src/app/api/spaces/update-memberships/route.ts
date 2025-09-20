@@ -1,13 +1,12 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getAuth } from "firebase-admin/auth";
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import * as admin from "firebase-admin";
 import { type User, UB_MAJORS } from "@hive/core";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
-// Server-side space type that allows FieldValue for timestamps
+// Server-side space type that allows admin.firestore.FieldValue for timestamps
 interface ServerSpace {
   name: string;
   name_lowercase: string;
@@ -20,15 +19,15 @@ interface ServerSpace {
     sub_type: string;
   }>;
   status: "dormant" | "activated" | "frozen";
-  createdAt: FieldValue;
-  updatedAt: FieldValue;
+  createdAt: admin.firestore.FieldValue;
+  updatedAt: admin.firestore.FieldValue;
 }
 
-// Server-side member type that allows FieldValue for timestamps
+// Server-side member type that allows admin.firestore.FieldValue for timestamps
 interface ServerMember {
   uid: string;
   role: "member" | "builder" | "requested_builder";
-  joinedAt: FieldValue;
+  joinedAt: admin.firestore.FieldValue;
 }
 
 const updateMembershipsSchema = z.object({

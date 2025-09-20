@@ -37,6 +37,7 @@ const usePerformanceMonitor = (componentName, config, onMetrics) => {
         });
     });
 };
+;
 observer.observe({ entryTypes: ['measure', 'paint'] });
 return () => observer.disconnect();
 [componentName, config.enableMetrics];
@@ -109,7 +110,9 @@ const endRender = useCallback(() => {
             renderTime,
         }));
     }
-}, [componentName, config.enableProfiling]);
+});
+[componentName, config.enableProfiling];
+;
 return { metrics, startRender, endRender };
 ;
 // SVG optimization hook

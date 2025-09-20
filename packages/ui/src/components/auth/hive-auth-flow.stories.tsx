@@ -801,7 +801,7 @@ export const PerformanceOptimization: Story = {
       setMetrics(prev => ({
         ...prev,
         renderTime: Math.round((end - start) * 100) / 100
-      }))
+      })})
     }, []);
 
     return (

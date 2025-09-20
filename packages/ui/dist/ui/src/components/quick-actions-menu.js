@@ -91,20 +91,26 @@ const defaultQuickActions = [
                 metaKey: true,
                 ctrlKey: true
             });
-            document.dispatchEvent(event);
         },
-        category: 'system',
-        shortcut: '⌘K'
+        document, : .dispatchEvent(event)
     },
-    {
-        id: 'settings',
-        title: 'Settings',
-        description: 'Account preferences',
-        icon: _jsx(Settings, { size: 18 }),
-        action: () => window.location.href = '/settings',
-        category: 'system'
-    }
+    category, 'system',
+    shortcut, '⌘K'
 ];
+{
+    id: 'settings',
+        title;
+    'Settings',
+        description;
+    'Account preferences',
+        icon;
+    _jsx(Settings, { size: 18 }),
+        action;
+    () => window.location.href = '/settings',
+        category;
+    'system';
+}
+;
 const categoryStyles = {
     create: 'text-green-400 bg-green-400/10',
     navigate: 'text-blue-400 bg-blue-400/10',

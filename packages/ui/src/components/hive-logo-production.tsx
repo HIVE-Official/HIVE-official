@@ -242,7 +242,7 @@ const useAdvancedGestures = (
         ...prev,
         isPressed: true,
         pressStartTime: Date.now(),
-      }));
+      })});
 
       if (gestures.enableLongPress) {
         longPressTimeout = setTimeout(() => {
@@ -263,7 +263,7 @@ const useAdvancedGestures = (
       setGestureState(prev => ({
         ...prev,
         clickCount: prev.clickCount + 1,
-      }));
+      })});
 
       clearTimeout(clickTimeout);
       clickTimeout = setTimeout(() => {

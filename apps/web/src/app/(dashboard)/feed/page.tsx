@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button, Card, Badge, useAuth } from "@hive/ui";
 import { 
   Activity, 
@@ -27,6 +27,29 @@ export default function FeedPage() {
   const isAuthenticated = !!user;
   const [feedFilter, setFeedFilter] = useState<'all' | 'following' | 'spaces' | 'academic'>('all');
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'trending'>('recent');
+  const [showComposer, setShowComposer] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  // Stub functions for post interactions
+  const createPost = async (postData: any) => {
+    console.log('Creating post:', postData);
+    // Implementation needed
+  };
+
+  const likePost = async (postId: string) => {
+    console.log('Liking post:', postId);
+    // Implementation needed
+  };
+
+  const commentOnPost = async (postId: string, content: string) => {
+    console.log('Commenting on post:', postId, content);
+    // Implementation needed
+  };
+
+  const sharePost = async (postId: string) => {
+    console.log('Sharing post:', postId);
+    // Implementation needed
+  };
 
   // Use the integrated feed hook
   const {
@@ -294,7 +317,7 @@ export default function FeedPage() {
           <Card className="p-4">
             <PostComposer
               user={{
-                id: user.uid,
+                id: (user as any)?.id || (user as any)?.uid || '',
                 name: user.fullName || 'User',
                 handle: user.handle || 'user',
                 avatarUrl: user.avatarUrl
@@ -351,7 +374,7 @@ export default function FeedPage() {
                     handle: post.author.handle || 'unknown'
                   }
                 }}
-                currentUserId={user.uid}
+                currentUserId={(user as any)?.id || (user as any)?.uid || ''}
                 onLike={handleLike}
                 onComment={handleComment}
                 onShare={handleShare}

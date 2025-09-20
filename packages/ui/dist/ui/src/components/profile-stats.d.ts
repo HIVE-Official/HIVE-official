@@ -29,7 +29,7 @@ export interface ProfileStatsProps extends React.HTMLAttributes<HTMLDivElement>,
     changes?: Partial<Record<keyof HiveProfileStats, number>>;
     loading?: boolean;
 }
-export declare function ProfileStats({ stats, priority, maxStats, showIcons, showTrends, interactive, onStatClick, changes, loading, layout, columns, variant, spacing, className, ...props }: ProfileStatsProps): import("react/jsx-runtime").JSX.Element;
+export declare function ProfileStats({ stats, priority, maxStats, showIcons, showTrends, interactive, onStatClick, changes, loading, layout, columns, variant, spacing, className, ...props }: ProfileStatsProps): void;
 export declare function CompactProfileStats(props: Omit<ProfileStatsProps, 'layout' | 'maxStats'>): import("react/jsx-runtime").JSX.Element;
 export declare function CardProfileStats(props: Omit<ProfileStatsProps, 'variant'>): import("react/jsx-runtime").JSX.Element;
 export declare function GridProfileStats(props: Omit<ProfileStatsProps, 'layout'>): import("react/jsx-runtime").JSX.Element;

@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getAuth } from "firebase-admin/auth";
+import * as admin from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -34,7 +34,7 @@ export async function GET(
     }
 
     const token = authHeader.substring(7);
-    const auth = getAuth();
+    const auth = admin.auth();
 
     const decodedToken = await auth.verifyIdToken(token);
     const requestingUserId = decodedToken.uid;

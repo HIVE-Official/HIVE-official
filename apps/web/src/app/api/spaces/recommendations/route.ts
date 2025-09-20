@@ -1,11 +1,8 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 const recommendationsSchema = z.object({
   limit: z.coerce.number().min(1).max(20).default(10),
@@ -34,13 +31,12 @@ interface SpaceWithScore extends Space {
  * Intelligent Space Recommendation Engine
  * Uses ML-based algorithms to suggest relevant spaces based on user behavior and preferences
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const url = new URL(request.url);
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
-    const { limit, context, includeJoined } = recommendationsSchema.parse(queryParams);
+    const { limit, context: queryContext, includeJoined } = recommendationsSchema.parse(queryParams);
 
-    const userId = authContext.userId;
+    const userId = getUserId(request);
 
     logger.info('🤖 Generating recommendations for user', { userId, endpoint: '/api/spaces/recommendations' });
 
@@ -54,36 +50,19 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     const recommendations = await generateRecommendations(
       userProfile, 
       allSpaces, 
-      { limit, context, includeJoined }
+      { limit, context: queryContext, includeJoined }
     );
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       recommendations,
       metadata: {
         userId,
-        context,
+        context: queryContext,
         totalSpacesAnalyzed: allSpaces.length,
         userJoinedSpaces: userProfile.joinedSpaces.length,
         algorithmVersion: '1.0.0'
       }
     });
-
-  } catch (error: any) {
-    logger.error('Space recommendations error', { error: error, endpoint: '/api/spaces/recommendations' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Recommendations are safe for development
-  operation: 'get_space_recommendations' 
 });
 
 /**

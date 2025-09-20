@@ -115,6 +115,6 @@ export interface HiveToolsSurfaceProps extends React.HTMLAttributes<HTMLDivEleme
     compact?: boolean;
     maxTools?: number;
 }
-export declare const HiveToolsSurface: React.ForwardRefExoticComponent<HiveToolsSurfaceProps & React.RefAttributes<HTMLDivElement>>;
+export declare const HiveToolsSurface: any;
 export { hiveToolsSurfaceVariants, toolCategories, toolStatuses };
 //# sourceMappingURL=hive-tools-surface.d.ts.map

@@ -69,12 +69,12 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
         targetProperty: z.ZodOptional<z.ZodString>;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
         targetElementId?: string;
         targetProperty?: string;
     }, {
-        type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
         targetElementId?: string;
         targetProperty?: string;
@@ -82,7 +82,7 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     id?: string;
     actions?: {
-        type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
         targetElementId?: string;
         targetProperty?: string;
@@ -96,7 +96,7 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
 }, {
     id?: string;
     actions?: {
-        type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
         targetElementId?: string;
         targetProperty?: string;
@@ -174,12 +174,12 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -187,7 +187,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -201,7 +201,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -232,7 +232,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -263,7 +263,7 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -344,12 +344,12 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -357,7 +357,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -371,7 +371,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -404,7 +404,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -437,7 +437,7 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -479,12 +479,12 @@ export declare const DividerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -492,7 +492,7 @@ export declare const DividerConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -506,7 +506,7 @@ export declare const DividerConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -525,7 +525,7 @@ export declare const DividerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -545,7 +545,7 @@ export declare const DividerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -628,12 +628,12 @@ export declare const StackConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -641,7 +641,7 @@ export declare const StackConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -655,7 +655,7 @@ export declare const StackConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -688,7 +688,7 @@ export declare const StackConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -722,7 +722,7 @@ export declare const StackConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -818,12 +818,12 @@ export declare const ButtonConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -831,7 +831,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -845,7 +845,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -884,7 +884,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -923,7 +923,7 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1018,12 +1018,12 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1031,7 +1031,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1045,7 +1045,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1084,7 +1084,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1123,7 +1123,7 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1208,12 +1208,12 @@ export declare const TextInputConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1221,7 +1221,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1235,7 +1235,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1272,7 +1272,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1309,7 +1309,7 @@ export declare const TextInputConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1393,12 +1393,12 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1406,7 +1406,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1420,7 +1420,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1454,7 +1454,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1490,7 +1490,7 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1583,12 +1583,12 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1596,7 +1596,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1610,7 +1610,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1646,7 +1646,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1683,7 +1683,7 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1769,12 +1769,12 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1782,7 +1782,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1796,7 +1796,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1832,7 +1832,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1869,7 +1869,7 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1906,11 +1906,11 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         targetElementId: z.ZodString;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "hide" | "show" | "trigger" | "setValue";
+        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }, {
-        type?: "hide" | "show" | "trigger" | "setValue";
+        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }>, "many">;
@@ -1919,11 +1919,11 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         targetElementId: z.ZodString;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "hide" | "show" | "trigger" | "setValue";
+        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }, {
-        type?: "hide" | "show" | "trigger" | "setValue";
+        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }>, "many">>;
@@ -1951,12 +1951,12 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1964,7 +1964,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1978,7 +1978,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1994,7 +1994,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -2014,12 +2014,12 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }[];
     logic?: "and" | "or";
     onTrue?: {
-        type?: "hide" | "show" | "trigger" | "setValue";
+        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }[];
     onFalse?: {
-        type?: "hide" | "show" | "trigger" | "setValue";
+        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }[];
@@ -2027,7 +2027,7 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -2047,12 +2047,12 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }[];
     logic?: "and" | "or";
     onTrue?: {
-        type?: "hide" | "show" | "trigger" | "setValue";
+        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }[];
     onFalse?: {
-        type?: "hide" | "show" | "trigger" | "setValue";
+        type?: "show" | "hide" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }[];
@@ -2144,12 +2144,12 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -2157,7 +2157,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -2171,7 +2171,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -2210,7 +2210,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -2250,7 +2250,7 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -2332,12 +2332,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2345,7 +2345,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2359,7 +2359,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2390,7 +2390,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2421,7 +2421,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2455,7 +2455,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2489,7 +2489,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2572,12 +2572,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2585,7 +2585,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2599,7 +2599,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2632,7 +2632,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2665,7 +2665,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2701,7 +2701,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2737,7 +2737,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2781,12 +2781,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2794,7 +2794,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2808,7 +2808,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2827,7 +2827,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2847,7 +2847,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2870,7 +2870,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2893,7 +2893,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2978,12 +2978,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2991,7 +2991,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3005,7 +3005,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3038,7 +3038,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3072,7 +3072,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3109,7 +3109,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3146,7 +3146,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3244,12 +3244,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3257,7 +3257,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3271,7 +3271,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3310,7 +3310,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3349,7 +3349,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3391,7 +3391,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3433,7 +3433,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3530,12 +3530,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3543,7 +3543,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3557,7 +3557,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3596,7 +3596,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3635,7 +3635,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3677,7 +3677,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3719,7 +3719,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3806,12 +3806,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3819,7 +3819,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3833,7 +3833,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3870,7 +3870,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3907,7 +3907,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3947,7 +3947,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3987,7 +3987,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4073,12 +4073,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4086,7 +4086,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4100,7 +4100,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4134,7 +4134,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4170,7 +4170,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4209,7 +4209,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4248,7 +4248,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4343,12 +4343,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4356,7 +4356,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4370,7 +4370,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4406,7 +4406,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4443,7 +4443,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4483,7 +4483,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4523,7 +4523,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4611,12 +4611,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4624,7 +4624,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4638,7 +4638,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4674,7 +4674,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4711,7 +4711,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4751,7 +4751,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4791,7 +4791,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4830,11 +4830,11 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             targetElementId: z.ZodString;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }>, "many">;
@@ -4843,11 +4843,11 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             targetElementId: z.ZodString;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }, {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }>, "many">>;
@@ -4875,12 +4875,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4888,7 +4888,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4902,7 +4902,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4918,7 +4918,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4938,12 +4938,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
@@ -4951,7 +4951,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4971,12 +4971,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
@@ -4987,7 +4987,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5007,12 +5007,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
@@ -5023,7 +5023,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5043,12 +5043,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "hide" | "show" | "trigger" | "setValue";
+            type?: "show" | "hide" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
@@ -5142,12 +5142,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5155,7 +5155,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5169,7 +5169,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5208,7 +5208,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5248,7 +5248,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5291,7 +5291,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5334,7 +5334,7 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
+                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;

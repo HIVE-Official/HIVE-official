@@ -319,7 +319,7 @@ export function ResponsiveProvider({
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight
-      })
+      })}
     };
     
     // Set initial size

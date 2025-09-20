@@ -147,7 +147,7 @@ const usePerformanceMonitoring = () => {
         apiCalls: prev.apiCalls + Math.floor(Math.random() * 3),
         imageLoaded: prev.imageLoaded + Math.floor(Math.random() * 2),
         cacheHits: prev.cacheHits + Math.floor(Math.random() * 4)
-      }))
+      })})
     }, 1000)
   }, []);
 
@@ -640,7 +640,7 @@ const CoreWebVitalsMonitor = ({ metrics }: { metrics: any }) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {webVitals.map(({ key, name, value, icon: Icon })} => (
+          {webVitals.map(map}) => (
             <div key={key} className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Icon className="h-4 w-4 text-gray-400" />

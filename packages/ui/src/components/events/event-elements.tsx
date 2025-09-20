@@ -839,7 +839,7 @@ export function CalendarViewElement({
       const dayEvents = events.filter(event => {
         const eventDate = new Date(event.startDate);
         return eventDate.toDateString() === date.toDateString()
-      })};
+      });
       days.push({ date, isCurrentMonth: true, events: dayEvents })
     }
 
@@ -852,7 +852,7 @@ export function CalendarViewElement({
     <HiveCard className={cn("p-4", mobileClasses.card, className)}>
       <div className={cn("flex items-center justify-between mb-4", isMobile && "flex-col gap-3")}>
         <h3 className={cn("font-semibold text-gray-900", isMobile ? "text-xl" : "text-lg")}>
-          {viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }}
+          {viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
         </h3>
         <div className="flex gap-2">
           <HiveButton 
@@ -996,7 +996,7 @@ export function NotificationElement({
                 </div>
               </div>
             )
-          })
+          })}
         )}
       </div>
     </HiveCard>

@@ -487,7 +487,7 @@ const useTesting = () => {
         duration: undefined,
         error: undefined,
         metrics: undefined
-      })})
+      }))
     })));
     setCurrentTest(null)
   }, []);

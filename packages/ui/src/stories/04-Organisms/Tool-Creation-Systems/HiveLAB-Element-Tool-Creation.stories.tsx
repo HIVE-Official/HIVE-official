@@ -390,7 +390,7 @@ const HiveLABShowcase = () => {
             setTimeout(() => setIsBuilding(false), 1000)
           }
         }, index * 1500)
-      })
+      })}
     };
 
     return (
@@ -677,7 +677,7 @@ const HiveLABShowcase = () => {
               { key: 'elements-library', label: 'Elements Library', icon: Layers },
               { key: 'tool-builder', label: 'Tool Builder Demo', icon: Wrench },
               { key: 'creation-workflow', label: 'Creation Workflow', icon: ArrowRight }
-            ].map(({ key, label, icon: IconComponent })} => {
+            ].map(map}) => {
               const isActive = activeDemo === key;
               return (
                 <Button
@@ -699,7 +699,7 @@ const HiveLABShowcase = () => {
                   {label}
                 </Button>
               )
-            })
+            })}
           </div>
         </motion.div>
 

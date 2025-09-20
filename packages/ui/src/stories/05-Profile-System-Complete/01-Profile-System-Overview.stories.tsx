@@ -512,7 +512,7 @@ function FlowNavigation({
             </Card>
           </motion.div>
         )
-      })
+      })}
     </div>
   )
 }

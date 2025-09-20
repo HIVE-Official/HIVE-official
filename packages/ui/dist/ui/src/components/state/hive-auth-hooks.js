@@ -77,46 +77,50 @@ export function useAuth() {
                 type: 'AUTH_LOGIN_SUCCESS',
                 payload: { user: mockUser, token: 'mock-session-token' }
             });
-            return true;
         }
-        catch (err) {
-            setError('Invalid or expired link. Please request a new one.');
-            return false;
-        }
-        finally {
-            setIsLoading(false);
-        }
+        finally { }
+        ;
+        return true;
     };
-    // Logout and return to feed
-    const logout = () => {
-        dispatch({ type: 'AUTH_LOGOUT' });
-        dispatch({ type: 'NAVIGATE_BACK_TO_FEED' });
-    };
-    // Update user profile
-    const updateProfile = (updates) => {
-        if (!currentUser)
-            return;
-        dispatch({
-            type: 'AUTH_UPDATE_PROFILE',
-            payload: updates
-        });
-    };
-    return {
-        // State
-        isAuthenticated,
-        isOnboarding,
-        isLoading,
-        error,
-        user: currentUser,
-        authStatus: state.auth.status,
-        // Actions
-        sendMagicLink,
-        verifyMagicLink,
-        logout,
-        updateProfile,
-        clearError: () => setError(null)
-    };
+    try { }
+    catch (err) {
+        setError('Invalid or expired link. Please request a new one.');
+        return false;
+    }
+    finally {
+        setIsLoading(false);
+    }
 }
+;
+// Logout and return to feed
+const logout = () => {
+    dispatch({ type: 'AUTH_LOGOUT' });
+    dispatch({ type: 'NAVIGATE_BACK_TO_FEED' });
+};
+// Update user profile
+const updateProfile = (updates) => {
+    if (!currentUser)
+        return;
+    dispatch({
+        type: 'AUTH_UPDATE_PROFILE',
+        payload: updates
+    });
+};
+return {
+    // State
+    isAuthenticated,
+    isOnboarding,
+    isLoading,
+    error,
+    user: currentUser,
+    authStatus: state.auth.status,
+    // Actions
+    sendMagicLink,
+    verifyMagicLink,
+    logout,
+    updateProfile,
+    clearError: () => setError(null)
+};
 // ============================================================================
 // ONBOARDING HOOKS
 // ============================================================================

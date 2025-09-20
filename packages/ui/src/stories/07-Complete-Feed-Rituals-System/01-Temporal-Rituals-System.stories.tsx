@@ -409,7 +409,7 @@ function TemporalRitualsSystem() {
                   </CardContent>
                 </Card>
               )
-            })
+            })}
           </div>
 
           {/* View Mode Tabs */}

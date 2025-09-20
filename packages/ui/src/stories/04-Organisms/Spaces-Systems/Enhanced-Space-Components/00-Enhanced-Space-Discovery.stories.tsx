@@ -436,7 +436,7 @@ function EnhancedSpaceDiscovery() {
               { id: 'discover', label: 'Discover', icon: Search, count: filteredSpaces.length },
               { id: 'trending', label: 'Trending', icon: TrendingUp, count: mockSpaces.filter(s => s.isTrending).length },
               { id: 'smart', label: 'Smart Discovery', icon: Sparkles, count: null },
-            ].map(({ id, label, icon: Icon, count })} => (
+            ].map(map}) => (
               <button
                 key={id}
                 onClick={() => setActiveView(id as any)}

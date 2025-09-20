@@ -357,7 +357,7 @@ function QuickActionButtons({
             {action.label}
           </HiveButton>
         )
-          })
+          })}
     </div>
   )
 }

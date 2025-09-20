@@ -40,8 +40,12 @@ async function validateTokenFormat(token: string): Promise<{ valid: boolean; rea
 
 // Minimal security logging for Edge Runtime
 async function logSecurityEvent(event: string, details: any): Promise<void> {
-  // In Edge Runtime, just use console.log for now
-  console.warn(`[SECURITY] ${event}:`, details);
+  // Structured security logging for Edge Runtime
+  console.warn(`[SECURITY-${event.toUpperCase()}]`, {
+    event,
+    timestamp: new Date().toISOString(),
+    details
+  });
 }
 
 export async function middleware(request: NextRequest) {

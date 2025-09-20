@@ -135,7 +135,7 @@ function DevicePreview({
 
   return (
     <div className="flex gap-1">
-      {devices.map(({ key, label, icon: Icon })} => (
+      {devices.map(map}) => (
         <Button
           key={key}
           size="sm"

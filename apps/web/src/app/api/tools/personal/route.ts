@@ -1,6 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { z } from 'zod';
+import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
+
+// Schema for tool installation requests
+const ToolActionSchema = z.object({
+  toolId: z.string().min(1, "toolId is required"),
+  action: z.enum(['install', 'uninstall'])
+});
 
 // Personal tool interface matching the component expectations
 interface PersonalTool {
@@ -18,14 +24,14 @@ interface PersonalTool {
 async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
   try {
     const { dbAdmin } = await import('@/lib/firebase-admin');
-    
+
     // Get user's installed tools
     const userToolsSnapshot = await dbAdmin
       .collection('user_tools')
       .where('userId', '==', userId)
       .where('isInstalled', '==', true)
       .get();
-    
+
     const tools: PersonalTool[] = userToolsSnapshot.docs.map(doc => {
       const data = doc.data();
       return {
@@ -39,7 +45,7 @@ async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
         quickLaunch: data.quickLaunch || false,
       };
     });
-    
+
     return tools;
   } catch (error) {
     console.error('Failed to fetch personal tools:', error);
@@ -51,45 +57,36 @@ async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
  * Get personal tools for the authenticated user
  * GET /api/tools/personal
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const tools = await fetchPersonalTools(authContext.userId);
-    
-    return NextResponse.json({
-      success: true,
-      tools,
-      totalCount: tools.length,
-      installedCount: tools.filter(t => t.isInstalled).length,
-      userId: authContext.userId,
-      message: 'Personal tools retrieved successfully'
-    });
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
+) => {
+  const userId = getUserId(request);
+  const tools = await fetchPersonalTools(userId);
 
-  } catch (error) {
-    return NextResponse.json(
-      { 
-        error: 'Failed to fetch personal tools',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      }, 
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
-  }
-}, { 
-  allowDevelopmentBypass: true, // Personal tools is non-sensitive for now
-  operation: 'fetch_personal_tools' 
+  return respond.success({
+    tools,
+    totalCount: tools.length,
+    installedCount: tools.filter(t => t.isInstalled).length,
+    userId,
+    message: 'Personal tools retrieved successfully'
+  });
 });
 
 /**
  * Install or uninstall a tool
  * POST /api/tools/personal
  */
-export const POST = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const body = await request.json();
-    const { toolId, action } = body;
-
-    if (!toolId || !action || !['install', 'uninstall'].includes(action)) {
-      return ApiResponse.error("Invalid request. Must specify toolId and action (install/uninstall)", "INVALID_INPUT", 400);
-    }
+export const POST = withAuthValidationAndErrors(
+  ToolActionSchema,
+  async (
+    request: AuthenticatedRequest,
+    context,
+    { toolId, action },
+    respond
+  ) => {
+    const userId = getUserId(request);
 
     // Implement actual tool installation/uninstallation in database
     try {
@@ -99,7 +96,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
         // Get tool details from marketplace or create basic entry
         const toolRef = dbAdmin.collection('user_tools').doc();
         await toolRef.set({
-          userId: authContext.userId,
+          userId: userId,
           toolId,
           isInstalled: true,
           installedAt: new Date().toISOString(),
@@ -112,7 +109,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
         // Remove tool from user's collection
         const userToolsSnapshot = await dbAdmin
           .collection('user_tools')
-          .where('userId', '==', authContext.userId)
+          .where('userId', '==', userId)
           .where('toolId', '==', toolId)
           .get();
         
@@ -124,33 +121,20 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       }
     } catch (error) {
       console.error('Failed to process tool installation:', error);
-      return NextResponse.json(
-        { 
-          error: 'Database operation failed',
-          details: error instanceof Error ? error.message : 'Unknown error'
-        }, 
-        { status: HttpStatus.INTERNAL_SERVER_ERROR }
+      return respond.error(
+        'Database operation failed',
+        "INTERNAL_ERROR",
+        500,
+        { details: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       toolId,
       action,
-      userId: authContext.userId,
+      userId,
       message: `Tool ${action}ed successfully`
     });
 
-  } catch (error) {
-    return NextResponse.json(
-      { 
-        error: 'Failed to process tool installation',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      }, 
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
   }
-}, { 
-  allowDevelopmentBypass: true, // Tool installation is non-sensitive for now
-  operation: 'modify_personal_tools' 
-});
+);

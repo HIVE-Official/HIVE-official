@@ -210,7 +210,7 @@ export const ToolPermissionsManager = ({ tool, currentConfig, spaceMembers, onCo
                                                                     } }, day));
                                                             }, disabled = {}, canModifyPermissions), "className=", `p-2 text-sm rounded-lg border transition-colors ${isSelected
                                                                 ? 'border-[var(--hive-primary)] bg-[var(--hive-primary)] text-white'
-                                                                : 'border-[var(--hive-border-default)] hover:border-[var(--hive-border-hover)] text-[var(--hive-text-primary)]'} ${!canModifyPermissions ? 'opacity-50 cursor-not-allowed' : ''}`, ">", day] }), ") })"] })] }))] }), ")}"] }))] }), ")}"] })) /* Insufficient Permissions Warning */;
+                                                                : 'border-[var(--hive-border-default)] hover:border-[var(--hive-border-hover)] text-[var(--hive-text-primary)]'} ${!canModifyPermissions ? 'opacity-50 cursor-not-allowed' : ''}`, ">", day] }), ") })}"] })] }))] }), ")}"] }))] }), ")}"] })) /* Insufficient Permissions Warning */;
     { /* Insufficient Permissions Warning */ }
     {
         !canModifyPermissions && (_jsxs("div", { className: "flex items-center space-x-3 p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg", children: [_jsx(AlertCircle, { className: "w-5 h-5 text-orange-500" }), _jsxs("div", { children: [_jsx("p", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Limited Permissions" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "You need admin permissions to modify tool access control settings." })] })] }));

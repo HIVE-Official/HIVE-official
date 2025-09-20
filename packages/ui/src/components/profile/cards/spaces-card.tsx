@@ -525,7 +525,7 @@ export function SpacesCard({
         }
         
         return b.lastActivity.getTime() - a.lastActivity.getTime()
-      })
+      })}
   }, [spaces]);
 
   const displayedSpaces = showAllSpaces ? mySpaces : mySpaces.slice(0, 4);
@@ -568,7 +568,7 @@ export function SpacesCard({
             { key: 'my', label: 'My Spaces', count: mySpaces.length },
             { key: 'recommended', label: 'Discover', count: recommendedSpaces.length },
             { key: 'search', label: 'Search' }
-          ].map(({ key, label, count })} => (
+          ].map(map}) => (
             <Button
               key={key}
               size="sm"

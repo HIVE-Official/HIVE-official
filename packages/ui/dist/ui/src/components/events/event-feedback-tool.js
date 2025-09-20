@@ -83,37 +83,38 @@ const FeedbackSurveyBuilder = ({ event, onSave }) => {
             });
         }
     };
-    const addQuestion = () => {
-        const newQuestion = {
-            id: `question_${Date.now()}`,
-            type: 'text',
-            question: '',
-            required: false,
-            category: 'custom'
-        };
-        setSurvey(prev => ({
-            ...prev,
-            questions: [...(prev.questions || []), newQuestion]
-        }));
-    };
-    const updateQuestion = (questionId, updates) => {
-        setSurvey(prev => ({
-            ...prev,
-            questions: prev.questions?.map(q => q.id === questionId ? { ...q, ...updates } : q)
-        }));
-    };
-    const removeQuestion = (questionId) => {
-        setSurvey(prev => ({
-            ...prev,
-            questions: prev.questions?.filter(q => q.id !== questionId)
-        }));
-    };
-    return (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "space-y-4", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium text-gray-900 mb-2", children: "Survey Title" }), _jsx("input", { type: "text", value: survey.title || '', onChange: (e) => setSurvey(prev => ({ ...prev, title: e.target.value })), className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium text-gray-900 mb-2", children: "Description" }), _jsx("textarea", { value: survey.description || '', onChange: (e) => setSurvey(prev => ({ ...prev, description: e.target.value })), rows: 3, className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] })] }), _jsxs("div", { children: [_jsxs("div", { className: "flex items-center justify-between mb-4", children: [_jsx("h3", { className: "text-lg font-semibold", children: "Questions" }), _jsx(HiveButton, { size: "sm", onClick: addQuestion, children: "Add Question" })] }), _jsx("div", { className: "space-y-4", children: survey.questions?.map((question, index) => (_jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex-1 space-y-3", children: [_jsxs("div", { children: [_jsxs("label", { className: "block text-sm font-medium text-gray-700 mb-1", children: ["Question ", index + 1] }), _jsx("input", { type: "text", value: question.question, onChange: (e) => updateQuestion(question.id, { question: e.target.value }), placeholder: "Enter your question...", className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] }), _jsxs("div", { className: "flex gap-4", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium text-gray-700 mb-1", children: "Type" }), _jsxs("select", { value: question.type, onChange: (e) => updateQuestion(question.id, {
-                                                                            type: e.target.value
-                                                                        }), className: "px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500", children: [_jsx("option", { value: "rating", children: "Star Rating" }), _jsx("option", { value: "text", children: "Text Response" }), _jsx("option", { value: "yes_no", children: "Yes/No" }), _jsx("option", { value: "multiple_choice", children: "Multiple Choice" })] })] }), _jsx("div", { className: "flex items-center", children: _jsxs("label", { className: "flex items-center gap-2 text-sm", children: [_jsx("input", { type: "checkbox", checked: question.required, onChange: (e) => updateQuestion(question.id, { required: e.target.checked }), className: "rounded border-gray-300 focus:ring-amber-500" }), "Required"] }) })] })] }), _jsx(HiveButton, { size: "sm", variant: "outline", onClick: () => removeQuestion(question.id), className: "ml-4", children: "Remove" })] }), question.type === 'multiple_choice' && (_jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium text-gray-700 mb-1", children: "Options (one per line)" }), _jsx("textarea", { value: question.options?.join('\n') || '', onChange: (e) => updateQuestion(question.id, {
-                                                    options: e.target.value.split('\n').filter(opt => opt.trim())
-                                                }), rows: 3, placeholder: "Option 1\nOption 2\nOption 3", className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] }))] }) }, question.id))) })] }), _jsxs("div", { className: "flex items-center justify-between pt-6 border-t", children: [_jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: survey.isActive, onChange: (e) => setSurvey(prev => ({ ...prev, isActive: e.target.checked })), className: "rounded border-gray-300 focus:ring-amber-500" }), _jsx("span", { className: "text-sm font-medium", children: "Activate survey immediately" })] }), _jsxs("div", { className: "flex gap-3", children: [_jsx(HiveButton, { variant: "outline", children: "Preview" }), _jsx(HiveButton, { onClick: handleSave, children: "Save Survey" })] })] })] }));
 };
+const addQuestion = () => {
+    const newQuestion = {
+        id: `question_${Date.now()}`,
+        type: 'text',
+        question: '',
+        required: false,
+        category: 'custom'
+    };
+    setSurvey(prev => ({
+        ...prev,
+        questions: [...(prev.questions || []), newQuestion]
+    }));
+};
+const updateQuestion = (questionId, updates) => {
+    setSurvey(prev => ({
+        ...prev,
+        questions: prev.questions?.map(q => q.id === questionId ? { ...q, ...updates } : q)
+    }));
+};
+const removeQuestion = (questionId) => {
+    setSurvey(prev => ({
+        ...prev,
+        questions: prev.questions?.filter(q => q.id !== questionId)
+    }));
+};
+return (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "space-y-4", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium text-gray-900 mb-2", children: "Survey Title" }), _jsx("input", { type: "text", value: survey.title || '', onChange: (e) => setSurvey(prev => ({ ...prev, title: e.target.value })), className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium text-gray-900 mb-2", children: "Description" }), _jsx("textarea", { value: survey.description || '', onChange: (e) => setSurvey(prev => ({ ...prev, description: e.target.value })), rows: 3, className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] })] }), _jsxs("div", { children: [_jsxs("div", { className: "flex items-center justify-between mb-4", children: [_jsx("h3", { className: "text-lg font-semibold", children: "Questions" }), _jsx(HiveButton, { size: "sm", onClick: addQuestion, children: "Add Question" })] }), _jsx("div", { className: "space-y-4", children: survey.questions?.map((question, index) => (_jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex-1 space-y-3", children: [_jsxs("div", { children: [_jsxs("label", { className: "block text-sm font-medium text-gray-700 mb-1", children: ["Question ", index + 1] }), _jsx("input", { type: "text", value: question.question, onChange: (e) => updateQuestion(question.id, { question: e.target.value }), placeholder: "Enter your question...", className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] }), _jsxs("div", { className: "flex gap-4", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium text-gray-700 mb-1", children: "Type" }), _jsxs("select", { value: question.type, onChange: (e) => updateQuestion(question.id, {
+                                                                        type: e.target.value
+                                                                    }), className: "px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500", children: [_jsx("option", { value: "rating", children: "Star Rating" }), _jsx("option", { value: "text", children: "Text Response" }), _jsx("option", { value: "yes_no", children: "Yes/No" }), _jsx("option", { value: "multiple_choice", children: "Multiple Choice" })] })] }), _jsx("div", { className: "flex items-center", children: _jsxs("label", { className: "flex items-center gap-2 text-sm", children: [_jsx("input", { type: "checkbox", checked: question.required, onChange: (e) => updateQuestion(question.id, { required: e.target.checked }), className: "rounded border-gray-300 focus:ring-amber-500" }), "Required"] }) })] })] }), _jsx(HiveButton, { size: "sm", variant: "outline", onClick: () => removeQuestion(question.id), className: "ml-4", children: "Remove" })] }), question.type === 'multiple_choice' && (_jsxs("div", { children: [_jsx("label", { className: "block text-sm font-medium text-gray-700 mb-1", children: "Options (one per line)" }), _jsx("textarea", { value: question.options?.join('\n') || '', onChange: (e) => updateQuestion(question.id, {
+                                                options: e.target.value.split('\n').filter(opt => opt.trim())
+                                            }), rows: 3, placeholder: "Option 1\nOption 2\nOption 3", className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] }))] }) }, question.id))) })] }), _jsxs("div", { className: "flex items-center justify-between pt-6 border-t", children: [_jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: survey.isActive, onChange: (e) => setSurvey(prev => ({ ...prev, isActive: e.target.checked })), className: "rounded border-gray-300 focus:ring-amber-500" }), _jsx("span", { className: "text-sm font-medium", children: "Activate survey immediately" })] }), _jsxs("div", { className: "flex gap-3", children: [_jsx(HiveButton, { variant: "outline", children: "Preview" }), _jsx(HiveButton, { onClick: handleSave, children: "Save Survey" })] })] })] }));
+;
 const FeedbackAnalytics = ({ survey, responses }) => {
     const analytics = useMemo(() => {
         const totalResponses = responses.length;

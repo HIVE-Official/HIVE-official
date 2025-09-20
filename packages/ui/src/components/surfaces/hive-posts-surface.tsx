@@ -65,7 +65,7 @@ const CoordinationSection: React.FC<{
         userId: currentUserId,
         responseType,
         message: responseMessage.trim() || undefined,
-      });
+      })};
       setShowResponseForm(false);
       setResponseMessage('')
     } catch (error) {
@@ -846,7 +846,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
           default:
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         }
-      })
+      })}
       .slice(0, maxPosts);
     
     const handleCreatePost = useCallback((type: keyof typeof postTypes) => {
@@ -863,7 +863,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
           newSet.add(postId)
         }
         return newSet
-      })
+      })}
     }, []);
     
     // Loading state
@@ -1077,7 +1077,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                               </div>
                             </motion.button>
                           )
-          })
+          })}
                       </div>
                     </motion.div>
                   )}
@@ -1357,7 +1357,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                               const newSet = new Set(prev);
                               newSet.delete(post.id);
                               return newSet
-                            })
+                            })}
                           } else {
                             setExpandedComments(prev => new Set([...prev, post.id]))
                           }
@@ -1498,7 +1498,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                                     const newSet = new Set(prev);
                                     newSet.delete(post.id);
                                     return newSet
-                                  })
+                                  })}
                                 }
                               }
           })}

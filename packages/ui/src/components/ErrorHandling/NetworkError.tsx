@@ -291,7 +291,7 @@ export const NetworkError: React.FC<NetworkErrorProps> = ({
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
         retryCount
-      })
+      })}
     }
   }, [errorType, networkCondition, campusContext, retryCount, onErrorReport]);
   

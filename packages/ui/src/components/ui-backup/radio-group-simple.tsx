@@ -30,7 +30,7 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
           checked: child.props.value === value,
           disabled: disabled || child.props.disabled,
           onChange: () => handleChange(child.props.value),
-        })}}}
+        })
       }
       return child
     });

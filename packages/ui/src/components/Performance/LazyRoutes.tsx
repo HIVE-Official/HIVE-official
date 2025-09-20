@@ -168,7 +168,7 @@ function useNavigationAnalytics(routes: LazyRoute[]): NavigationAnalytics {
         ...prev,
         userPattern,
         predictedNextRoutes: [...new Set([...predictedRoutes, ...patternRoutes])]
-      })})
+      }))
     };
     
     const timer = setTimeout(analyzePatterns, 2000); // Analyze after 2 seconds
@@ -232,7 +232,7 @@ class SmartPreloader {
           if ('requestIdleCallback' in window) {
             requestIdleCallback(() => {
               route.component().then(resolve)
-            })
+            })}
           } else {
             setTimeout(() => {
               route.component().then(resolve)
@@ -299,7 +299,7 @@ export const LazyRoutes: React.FC<LazyRoutesProps> = ({
         .map(routeId => routes.find(r => r.id === routeId))
         .filter((route): route is LazyRoute => {
           return route !== undefined && !preloadedRoutes.has(route.id)
-        })}}}
+        })
         .slice(0, maxConcurrentLoads);
       
       for (const route of routesToPreload) {

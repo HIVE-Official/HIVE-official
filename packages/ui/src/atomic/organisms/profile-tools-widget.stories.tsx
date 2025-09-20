@@ -294,7 +294,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'jamie-new-creator',
                         name: 'Jamie Park'
-          }}
+                      }}
                       personalTools={sampleTools.newCreator}
                       totalToolsCreated={1}
                       totalUsage={12}
@@ -318,7 +318,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'alex-experimental',
                         name: 'Alex Rivera'
-          }}
+                      }}
                       personalTools={sampleTools.experimentalCreator}
                       totalToolsCreated={8}
                       totalUsage={3456}
@@ -342,7 +342,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'david-empty',
                         name: 'David Kim'
-          }}
+                      }}
                       personalTools={[]}
                       totalToolsCreated={0}
                       totalUsage={0}
@@ -429,7 +429,7 @@ export const CompleteShowcase: Story = {
                         collaborators: 4,
                         isPublic: true,
                         isFeatured: true
-          }}
+                      }}
                       weeklyActivity={65}
                       isEditable={true}
                       onCreateTool={action('academic-create')}
@@ -484,7 +484,7 @@ export const CompleteShowcase: Story = {
                         collaborators: 2,
                         isPublic: true,
                         isFeatured: true
-          }}
+                      }}
                       weeklyActivity={82}
                       isEditable={true}
                       onCreateTool={action('productivity-create')}
@@ -539,7 +539,7 @@ export const CompleteShowcase: Story = {
                         collaborators: 6,
                         isPublic: true,
                         isFeatured: true
-          }}
+                      }}
                       weeklyActivity={91}
                       isEditable={true}
                       onCreateTool={action('social-create')}
@@ -594,7 +594,7 @@ export const CompleteShowcase: Story = {
                         collaborators: 3,
                         isPublic: true,
                         isFeatured: true
-          }}
+                      }}
                       weeklyActivity={73}
                       isEditable={true}
                       onCreateTool={action('utility-create')}
@@ -648,7 +648,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'sarah-cs-academic',
                         name: 'Sarah Chen',
-          }}
+                      }}
                       personalTools={[
                         {
                           id: 'cse331-visualizer',
@@ -697,7 +697,7 @@ export const CompleteShowcase: Story = {
                         collaborators: 4,
                         isPublic: true,
                         isFeatured: true
-          }}
+                      }}
                       weeklyActivity={85}
                       isEditable={true}
                       onCreateTool={action('cs-academic-create')}
@@ -717,7 +717,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'sarah-cs-research',
                         name: 'Sarah Chen',
-          }}
+                      }}
                       personalTools={[
                         {
                           id: 'ml-playground',
@@ -756,7 +756,7 @@ export const CompleteShowcase: Story = {
                         collaborators: 6,
                         isPublic: false,
                         isFeatured: true
-          }}
+                      }}
                       weeklyActivity={92}
                       isEditable={true}
                       onCreateTool={action('cs-research-create')}
@@ -790,7 +790,7 @@ export const CompleteShowcase: Story = {
                     user={{
                       id: 'alex-engineering-design',
                       name: 'Alex Rivera',
-          }}
+                    }}
                     personalTools={[
                       {
                         id: 'drone-controller-sim',
@@ -829,7 +829,7 @@ export const CompleteShowcase: Story = {
                       collaborators: 5,
                       isPublic: true,
                       isFeatured: true
-          }}
+                    }}
                     weeklyActivity={78}
                     isEditable={true}
                     onCreateTool={action('engineering-design-create')}
@@ -849,7 +849,7 @@ export const CompleteShowcase: Story = {
                     user={{
                       id: 'alex-organization-tools',
                       name: 'Alex Rivera',
-          }}
+                    }}
                     personalTools={[
                       {
                         id: 'robotics-club-manager',
@@ -888,7 +888,7 @@ export const CompleteShowcase: Story = {
                       collaborators: 12,
                       isPublic: true,
                       isFeatured: true
-          }}
+                    }}
                     weeklyActivity={65}
                     isEditable={true}
                     onCreateTool={action('organization-tools-create')}
@@ -920,7 +920,7 @@ export const CompleteShowcase: Story = {
                     user={{
                       id: 'jamie-premed-mcat',
                       name: 'Jamie Park',
-          }}
+                    }}
                     personalTools={[
                       {
                         id: 'mcat-physics-simulator',
@@ -958,7 +958,7 @@ export const CompleteShowcase: Story = {
                       collaborators: 3,
                       isPublic: true,
                       isFeatured: true
-          }}
+                    }}
                     weeklyActivity={89}
                     isEditable={true}
                     onCreateTool={action('premed-mcat-create')}
@@ -978,7 +978,7 @@ export const CompleteShowcase: Story = {
                     user={{
                       id: 'jamie-premed-research',
                       name: 'Jamie Park',
-          }}
+                    }}
                     personalTools={[
                       {
                         id: 'clinical-data-tracker',
@@ -1016,7 +1016,7 @@ export const CompleteShowcase: Story = {
                       collaborators: 4,
                       isPublic: false,
                       isFeatured: true
-          }}
+                    }}
                     weeklyActivity={76}
                     isEditable={true}
                     onCreateTool={action('premed-research-create')}

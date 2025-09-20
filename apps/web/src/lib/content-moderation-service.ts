@@ -789,7 +789,7 @@ export class ContentModerationService {
 
   private async updateRuleStats(ruleId: string): Promise<void> {
     await dbAdmin.collection('moderationRules').doc(ruleId).update({
-      'statistics.triggered': dbAdmin.FieldValue.increment(1),
+      'statistics.triggered': dbAdmin.admin.firestore.FieldValue.increment(1),
       'statistics.lastTriggered': new Date().toISOString()
     });
   }
@@ -801,7 +801,7 @@ export class ContentModerationService {
 
   private async updateReporterStats(reporterId: string): Promise<void> {
     await dbAdmin.collection('users').doc(reporterId).update({
-      'moderationStats.totalReports': dbAdmin.FieldValue.increment(1),
+      'moderationStats.totalReports': dbAdmin.admin.firestore.FieldValue.increment(1),
       'moderationStats.lastReport': new Date().toISOString()
     });
   }
@@ -818,9 +818,9 @@ export class ContentModerationService {
 
   private async updateModerationStats(moderatorId: string, action: ModerationAction): Promise<void> {
     await dbAdmin.collection('users').doc(moderatorId).update({
-      'moderationStats.actionsToday': dbAdmin.FieldValue.increment(1),
+      'moderationStats.actionsToday': dbAdmin.admin.firestore.FieldValue.increment(1),
       'moderationStats.lastAction': new Date().toISOString(),
-      [`moderationStats.actions.${action}`]: dbAdmin.FieldValue.increment(1)
+      [`moderationStats.actions.${action}`]: dbAdmin.admin.firestore.FieldValue.increment(1)
     });
   }
 

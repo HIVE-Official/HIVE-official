@@ -413,7 +413,7 @@ function QuickActions({
       </div>
       
       <div className="grid grid-cols-3 gap-1">
-        {quickTemplates.map(({ type, label, icon: Icon })} => (
+        {quickTemplates.map(map}) => (
           <Button
             key={type}
             size="sm"

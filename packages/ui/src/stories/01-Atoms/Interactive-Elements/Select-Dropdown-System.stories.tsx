@@ -417,7 +417,7 @@ export const SocialPrivacySelections: Story = {
                       </div>
                     </SelectItem>
                   )
-                })
+                })}
               </SelectContent>
             </Select>
             <p className="text-xs text-gray-500">

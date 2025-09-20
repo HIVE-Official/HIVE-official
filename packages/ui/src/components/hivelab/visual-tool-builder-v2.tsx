@@ -360,7 +360,7 @@ export function VisualToolBuilderV2() {
       setTool(prev => ({
         ...prev,
         components: [...prev.components, newComponent]
-      }));
+      })});
       setSelectedComponent(newComponent)
     }
   };

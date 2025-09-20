@@ -218,7 +218,7 @@ export const SpaceAnalyticsDashboard: React.FC<SpaceAnalyticsDashboardProps> = (
           { key: 'content', label: 'Content', icon: MessageSquare },
           { key: 'events', label: 'Events', icon: Calendar },
           { key: 'tools', label: 'Tools', icon: Zap }
-        ] as const).map(({ key, label, icon: Icon })} => (
+        ] as const).map(map}) => (
           <button
             key={key}
             onClick={() => setActiveTab(key)}

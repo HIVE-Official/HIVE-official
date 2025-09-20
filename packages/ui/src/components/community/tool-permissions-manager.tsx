@@ -286,7 +286,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                 <span className="text-sm font-medium">{tab.label}</span>
               </button>
             )
-          }}
+          })}
         </div>
       </div>
 
@@ -396,7 +396,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                       </div>
                     </div>
                   )
-          }}
+          })}
               </div>
             </HiveCard>
           </div>
@@ -756,7 +756,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                                 : [...currentDays, dayValue];
                               updateConfig({
                                 schedule: { ...config.schedule, allowedDays: newDays }
-                              })
+                              })}
           })}
                             disabled={!canModifyPermissions}
                             className={`p-2 text-sm rounded-lg border transition-colors ${
@@ -768,7 +768,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                             {day}
                           </button>
                         )
-          })
+          })}
                     </div>
                   </div>
                 </div>

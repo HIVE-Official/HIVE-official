@@ -1,11 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
+import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 
 /**
  * Admin Bulk Space Operations API
@@ -13,11 +13,7 @@ import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/
  * POST /api/admin/spaces/bulk - Execute bulk operations
  */
 
-// Admin user IDs (TODO: Move to environment variables or admin table)
-const ADMIN_USER_IDS = [
-  'test-user', // For development
-  // Add real admin user IDs here
-];
+// Removed dangerous hardcoded admin IDs - now using secure withAdminAuthAndErrors middleware
 
 const bulkOperationSchema = z.object({
   action: z.enum(['activate', 'deactivate', 'archive', 'categorize', 'tag', 'feature', 'reset', 'delete']),
@@ -57,9 +53,7 @@ interface BulkOperationResult {
 /**
  * Check if user is an admin
  */
-async function isAdmin(userId: string): Promise<boolean> {
-  return ADMIN_USER_IDS.includes(userId);
-}
+// Removed dangerous isAdmin function - now using secure withAdminAuthAndErrors middleware
 
 /**
  * Get space information by ID (searches across all types)
@@ -95,58 +89,32 @@ async function getSpaceInfo(spaceId: string): Promise<{ spaceDoc: any, spaceType
  * Execute bulk space operations
  * POST /api/admin/spaces/bulk
  */
-export async function POST(request: NextRequest) {
+export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
   const startTime = Date.now();
-  
+  const adminUserId = getUserId(request); // Guaranteed to be an admin user
+
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
     // Parse and validate request body
     const body = await request.json();
     const { action, spaceIds, params } = bulkOperationSchema.parse(body);
 
     logger.info('👑 Admin executing bulk operation on spaces', { adminUserId, action, spaceCount: spaceIds.length, endpoint: '/api/admin/spaces/bulk' });
 
-    // Initialize result tracking
-    const result: BulkOperationResult = {
-      success: false,
-      totalSpaces: spaceIds.length,
-      successfulOperations: 0,
-      failedOperations: 0,
-      errors: [],
-      operationDetails: [],
-      executionTime: 0,
-      adminUserId,
-      timestamp: new Date().toISOString()
-    };
+  // Initialize result tracking
+  const result: BulkOperationResult = {
+    success: false,
+    totalSpaces: spaceIds.length,
+    successfulOperations: 0,
+    failedOperations: 0,
+    errors: [],
+    operationDetails: [],
+    executionTime: 0,
+    adminUserId,
+    timestamp: new Date().toISOString()
+  };
 
-    // Process each space
-    const operationPromises = spaceIds.map(async (spaceId) => {
+  // Process each space
+  const operationPromises = spaceIds.map(async (spaceId) => {
       try {
         // Get space information
         const spaceInfo = await getSpaceInfo(spaceId);
@@ -167,7 +135,7 @@ export async function POST(request: NextRequest) {
         
         // Prepare update data based on action
         const updateData: any = {
-          updatedAt: FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           lastModifiedBy: adminUserId,
           lastModifiedByAdmin: true,
           bulkOperationId: `bulk_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
@@ -179,7 +147,7 @@ export async function POST(request: NextRequest) {
         switch (action) {
           case 'activate':
             updateData.status = 'activated';
-            updateData.activatedAt = FieldValue.serverTimestamp();
+            updateData.activatedAt = admin.firestore.FieldValue.serverTimestamp();
             updateData.activatedBy = adminUserId;
             updateData.activatedReason = params?.reason || 'Bulk activation';
             newState = { ...spaceData, status: 'activated' };
@@ -188,7 +156,7 @@ export async function POST(request: NextRequest) {
 
           case 'deactivate':
             updateData.status = 'dormant';
-            updateData.deactivatedAt = FieldValue.serverTimestamp();
+            updateData.deactivatedAt = admin.firestore.FieldValue.serverTimestamp();
             updateData.deactivatedBy = adminUserId;
             updateData.deactivatedReason = params?.reason || 'Bulk deactivation';
             newState = { ...spaceData, status: 'dormant' };
@@ -197,7 +165,7 @@ export async function POST(request: NextRequest) {
 
           case 'archive':
             updateData.isArchived = true;
-            updateData.archivedAt = FieldValue.serverTimestamp();
+            updateData.archivedAt = admin.firestore.FieldValue.serverTimestamp();
             updateData.archivedBy = adminUserId;
             updateData.archivedReason = params?.reason || 'Bulk archival';
             newState = { ...spaceData, isArchived: true };
@@ -208,7 +176,7 @@ export async function POST(request: NextRequest) {
             updateData.hasBuilders = false;
             updateData.builderCount = 0;
             updateData.status = 'activated';
-            updateData.resetAt = FieldValue.serverTimestamp();
+            updateData.resetAt = admin.firestore.FieldValue.serverTimestamp();
             updateData.resetBy = adminUserId;
             updateData.resetReason = params?.reason || 'Bulk reset';
             newState = { ...spaceData, hasBuilders: false, builderCount: 0, status: 'activated' };
@@ -221,7 +189,7 @@ export async function POST(request: NextRequest) {
               // For now, we'll add a category tag
               const currentTags = spaceData.tags || [];
               updateData.tags = [...currentTags, `category:${params.newCategory}`];
-              updateData.categorizedAt = FieldValue.serverTimestamp();
+              updateData.categorizedAt = admin.firestore.FieldValue.serverTimestamp();
               updateData.categorizedBy = adminUserId;
               newState = { ...spaceData, tags: updateData.tags };
               operationSuccess = true;
@@ -235,7 +203,7 @@ export async function POST(request: NextRequest) {
               const currentTags = spaceData.tags || [];
               const newTags = [...new Set([...currentTags, ...params.tags])]; // Deduplicate
               updateData.tags = newTags;
-              updateData.taggedAt = FieldValue.serverTimestamp();
+              updateData.taggedAt = admin.firestore.FieldValue.serverTimestamp();
               updateData.taggedBy = adminUserId;
               newState = { ...spaceData, tags: newTags };
               operationSuccess = true;
@@ -246,7 +214,7 @@ export async function POST(request: NextRequest) {
 
           case 'feature':
             updateData.isFeatured = params?.featured ?? true;
-            updateData.featuredAt = FieldValue.serverTimestamp();
+            updateData.featuredAt = admin.firestore.FieldValue.serverTimestamp();
             updateData.featuredBy = adminUserId;
             if (params?.priority !== undefined) {
               updateData.featuredPriority = params.priority;
@@ -258,7 +226,7 @@ export async function POST(request: NextRequest) {
           case 'delete':
             // Soft delete for safety
             updateData.isDeleted = true;
-            updateData.deletedAt = FieldValue.serverTimestamp();
+            updateData.deletedAt = admin.firestore.FieldValue.serverTimestamp();
             updateData.deletedBy = adminUserId;
             updateData.deletedReason = params?.reason || 'Bulk deletion';
             newState = { ...spaceData, isDeleted: true };
@@ -324,8 +292,7 @@ export async function POST(request: NextRequest) {
 
     logger.info('👑 Bulk completed: /successful in ms', { action,  result: result.executionTime, endpoint: '/api/admin/spaces/bulk'  });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       message: `Bulk ${action} completed`,
       result,
       summary: {
@@ -341,24 +308,22 @@ export async function POST(request: NextRequest) {
     logger.error('Bulk operation error', { error: error, endpoint: '/api/admin/spaces/bulk' });
 
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { 
-          error: 'Invalid request data', 
-          details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
-        },
-        { status: HttpStatus.BAD_REQUEST }
+      return respond.error(
+        'Invalid request data',
+        "INVALID_INPUT",
+        400,
+        { details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`) }
       );
     }
 
-    return NextResponse.json(
-      { 
-        error: 'Bulk operation failed',
-        executionTime: Date.now() - startTime
-      },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
+    return respond.error(
+      'Bulk operation failed',
+      "INTERNAL_ERROR",
+      500,
+      { executionTime: Date.now() - startTime }
     );
   }
-}
+});
 
 /**
  * Log individual bulk action for audit trail
@@ -378,7 +343,7 @@ async function logBulkAction(
       targetType: 'space',
       spaceType,
       reason,
-      timestamp: FieldValue.serverTimestamp(),
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
       type: 'bulk_space_action',
       isBulkOperation: true
     });
@@ -399,7 +364,7 @@ async function logBulkOperationSummary(
     await dbAdmin.collection('adminLogs').add({
       adminUserId,
       action: `bulk_${action}_summary`,
-      timestamp: FieldValue.serverTimestamp(),
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
       type: 'bulk_operation_summary',
       isBulkOperation: true,
       summary: {

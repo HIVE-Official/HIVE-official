@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { authenticatedFetch } from '../../../lib/auth-utils';
 import { Button, Card } from "@hive/ui";
 import { PageContainer } from "@/components/temp-stubs";
+import { logger } from "@/lib/logger";
 import { Heart, Users, Settings as _Settings, Star, Clock, Activity, Plus, Crown, Search, Grid, List, TrendingUp, ArrowUpDown, Compass, AlertCircle } from "lucide-react";
 import { type Space, type SpaceType } from "@hive/core";
 import { useDebounce } from "@hive/hooks";
@@ -228,7 +229,10 @@ export default function UnifiedSpacesPage() {
         }, 500);
       }
     } catch (error) {
-      console.error('Failed to create space:', error);
+      logger.error('Failed to create space', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
       _setCreateError(error instanceof Error ? error.message : 'Failed to create space. Please try again.');
     } finally {
       _setIsCreatingSpace(false);
@@ -266,10 +270,14 @@ export default function UnifiedSpacesPage() {
       queryClient.invalidateQueries({ queryKey: ["my-spaces"] });
       
       // Show success feedback - could add toast here
-      console.log('Successfully joined space:', spaceId);
+      logger.info('Successfully joined space', { spaceId });
       
     } catch (error) {
-      console.error('Failed to join space:', error);
+      logger.error('Failed to join space', {
+        spaceId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
       _setJoinErrors(prev => ({
         ...prev,
         [spaceId]: error instanceof Error ? error.message : 'Failed to join space'

@@ -1,18 +1,21 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { z } from "zod";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+
+const updateSpacePreferencesSchema = z.object({
+  spaceId: z.string().min(1, "Space ID is required"),
+  action: z.enum(['pin', 'unpin', 'mark_visited', 'update_notifications']),
+  value: z.any().optional()
+});
 
 /**
  * Get user's spaces with enhanced widget data
  * Returns spaces with membership info, activity, and widget-specific data
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const userId = getUserId(request);
 
     logger.info('🔍 Fetching spaces for user', { userId, endpoint: '/api/spaces/my' });
     
@@ -68,8 +71,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         endpoint: '/api/spaces/my' 
       });
       
-      return NextResponse.json({
-        success: true,
+      return respond.success({
         spaces: mockSpaces,
         activeSpaces: mockSpaces.filter(s => s.membershipStatus === 'active'),
         pinnedSpaces: mockSpaces.filter(s => s.isPinned),
@@ -93,8 +95,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
           adminSpaces: mockSpaces.filter(s => s.role === 'admin').length,
           totalNotifications: mockSpaces.reduce((sum, s) => sum + s.unreadCount, 0),
           weeklyActivity: 12
-        },
-        // SECURITY: Development mode removed for production safety
+        }
       });
     }
 
@@ -107,8 +108,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     
     if (membershipsSnapshot.empty) {
       logger.info('📊 No memberships found for user', { userId, endpoint: '/api/spaces/my' });
-      return NextResponse.json({
-        success: true,
+      return respond.success({
         activeSpaces: [],
         pinnedSpaces: [],
         recentActivity: [],
@@ -237,58 +237,23 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       timestamp: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000)
     }));
 
-    logger.info('✅ Returningspaces for user', { spaces, userId, endpoint: '/api/spaces/my' });
+    logger.info('✅ Returning spaces for user', { spacesCount: spaces.length, userId, endpoint: '/api/spaces/my' });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       activeSpaces: spaces,
       pinnedSpaces,
       recentActivity,
       stats
     });
-
-  } catch (error: any) {
-    logger.error('❌ My spaces API error', { error: error, endpoint: '/api/spaces/my' });
-
-    if (error.code === 'auth/id-token-expired') {
-      return NextResponse.json(ApiResponseHelper.error("Token expired", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    return NextResponse.json(
-      { 
-        success: false,
-        error: 'Internal server error',
-        activeSpaces: [],
-        pinnedSpaces: [],
-        recentActivity: [],
-        stats: {
-          totalSpaces: 0,
-          adminSpaces: 0,
-          totalNotifications: 0,
-          weeklyActivity: 0
-        }
-      },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
-  }
-}, { 
-  allowDevelopmentBypass: true, // User spaces are safe for development
-  operation: 'get_user_spaces' 
 });
 
 /**
  * Update user space preferences (pin/unpin, notifications, etc.)
  */
-export const PATCH = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
-
-    const body = await request.json();
-    const { spaceId, action, value } = body;
-
-    if (!spaceId || !action) {
-      return NextResponse.json(ApiResponseHelper.error("spaceId and action are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
+export const PATCH = withAuthValidationAndErrors(
+  updateSpacePreferencesSchema,
+  async (request: AuthenticatedRequest, context, { spaceId, action, value }, respond) => {
+    const userId = getUserId(request);
 
     // Find the space's membership document
     const membershipsQuery = dbAdmin.collectionGroup('members')
@@ -307,7 +272,7 @@ export const PATCH = withAuth(async (request: NextRequest, authContext) => {
     }
 
     if (!membershipRef) {
-      return NextResponse.json(ApiResponseHelper.error("Membership not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Membership not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     // Update membership based on action
@@ -327,30 +292,15 @@ export const PATCH = withAuth(async (request: NextRequest, authContext) => {
         updates.notifications = value || 0;
         break;
       default:
-        return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        return respond.error("Invalid action", "INVALID_INPUT", 400);
     }
 
     await membershipRef.update(updates);
 
     logger.info('✅ Updated membership for space, action', { spaceId, action, endpoint: '/api/spaces/my' });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({}, {
       message: `Space ${action} successful`
     });
-
-  } catch (error: any) {
-    logger.error('❌ My spaces PATCH error', { error: error, endpoint: '/api/spaces/my' });
-
-    return NextResponse.json(
-      { 
-        success: false,
-        error: 'Internal server error'
-      },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
   }
-}, { 
-  allowDevelopmentBypass: true, // Space preferences are safe for development
-  operation: 'update_space_preferences' 
-});
+);

@@ -1,4 +1,5 @@
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import * as admin from "firebase-admin";
+import { getFirestore } from "firebase-admin/firestore";
 
 export async function joinWaitlist(email: string, schoolId: string): Promise<{ success: boolean; message?: string }> {
   if (!email || !schoolId) {
@@ -24,11 +25,11 @@ export async function joinWaitlist(email: string, schoolId: string): Promise<{ s
 
     transaction.create(waitlistRef, {
       email: email,
-      joinedAt: FieldValue.serverTimestamp(),
+      joinedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
     transaction.update(schoolRef, {
-      waitlistCount: FieldValue.increment(1),
+      waitlistCount: admin.firestore.FieldValue.increment(1),
     });
   });
 

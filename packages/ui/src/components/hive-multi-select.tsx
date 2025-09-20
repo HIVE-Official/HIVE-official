@@ -198,7 +198,7 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
         const groupKey = option[groupBy as keyof MultiSelectOption] as string || 'ungrouped';
         if (!groups[groupKey]) groups[groupKey] = [];
         groups[groupKey].push(option)
-      })};
+      });
       
       return groups
     }, [filteredOptions, groupBy]);
@@ -430,7 +430,7 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
             variant, 
             size, 
             state: error ? 'error' : isOpen ? 'open' : disabled ? 'disabled' : 'default' 
-          }))}
+          })})}
           onClick={handleToggle}
           whileHover={!disabled ? { scale: 1.01 } : {}}
           whileTap={!disabled ? { scale: 0.99 } : {}}

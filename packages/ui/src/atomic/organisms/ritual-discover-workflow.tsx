@@ -31,7 +31,7 @@ export interface DiscoverRitualProps {
   onRitualComplete?: () => void;
   userInterests?: string[];
   userGoals?: string[];
-  className?: string
+  className?: string;
 }
 
 interface Space {
@@ -47,8 +47,8 @@ interface Space {
   recentActivity: string;
   nextEvent?: {
     title: string;
-    date: string
-  }
+    date: string;
+  };
 }
 
 // Mock space data based on user interests
@@ -182,8 +182,8 @@ const generateSpaceRecommendations = (interests: string[] = [], goals: string[] 
       ...space,
       matchScore: Math.min(100, score),
       isRecommended: score > 75
-    }
-  }).sort((a, b) => b.matchScore - a.matchScore)
+    };
+  }).sort((a, b) => b.matchScore - a.matchScore);
 };
 
 const getCategoryIcon = (category: string) => {
@@ -193,7 +193,7 @@ const getCategoryIcon = (category: string) => {
     case 'Creative': return Palette;
     case 'Sports': return Dumbbell;
     case 'Professional': return Briefcase;
-    default: return Users
+    default: return Users;
   }
 };
 
@@ -210,8 +210,8 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
                          space.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          space.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesCategory = categoryFilter === 'all' || space.category === categoryFilter;
-    return matchesSearch && matchesCategory
-  })};
+    return matchesSearch && matchesCategory;
+  });
 
   const recommendedSpaces = filteredSpaces.filter(space => space.isRecommended);
   const otherSpaces = filteredSpaces.filter(space => !space.isRecommended);
@@ -221,7 +221,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
       prev.includes(spaceId) 
         ? prev.filter(id => id !== spaceId)
         : [...prev, spaceId]
-    )
+    );
   };
 
   const isValid = selectedSpaces.length >= 3;
@@ -337,8 +337,8 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
                     </div>
                   )}
                 </Card>
-              )
-          })}
+              );
+            })}
           </div>
         </div>
       )}
@@ -401,8 +401,8 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
                     ))}
                   </div>
                 </Card>
-              )
-          })}
+              );
+            })}
           </div>
         </div>
       )}
@@ -423,7 +423,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
       </div>
 
       <Button
-        onClick={() => onComplete({ selectedSpaces }}
+        onClick={() => onComplete({ selectedSpaces })}
         disabled={!isValid}
         className="w-full bg-hive-gold text-hive-obsidian hover:bg-hive-gold/90"
       >
@@ -431,7 +431,7 @@ const SpaceExplorationStep = ({ onComplete, userInterests, userGoals }: any) => 
         <UserPlus className="h-4 w-4 ml-2" />
       </Button>
     </div>
-  )
+  );
 };
 
 export function RitualDiscoverWorkflow({ 
@@ -449,7 +449,7 @@ export function RitualDiscoverWorkflow({
     setJoinedSpaces(data.selectedSpaces);
     onStepComplete?.('space_discovery', data);
     setIsComplete(true);
-    onRitualComplete?.()
+    onRitualComplete?.();
   };
 
   if (isComplete) {
@@ -493,7 +493,7 @@ export function RitualDiscoverWorkflow({
           </div>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
@@ -525,5 +525,5 @@ export function RitualDiscoverWorkflow({
         />
       </Card>
     </div>
-  )
+  );
 }

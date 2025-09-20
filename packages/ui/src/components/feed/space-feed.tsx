@@ -108,7 +108,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
         if (entries[0].isIntersecting && hasNextPage) {
           void fetchNextPage()
         }
-      });
+      })};
 
       if (node) observerRef.current.observe(node)
     },
@@ -182,7 +182,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                 }
                 return post
               }),
-            })),
+            })}),
           }
         }
       )
@@ -194,7 +194,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
     mutationFn: async (postId: string) => {
       const response = await fetch(`/api/spaces/${spaceId}/posts/${postId}`, {
         method: "DELETE",
-      });
+      })};
 
       if (!response.ok) {
         throw new Error("Failed to delete post")
@@ -223,7 +223,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                 }
                 return post
               }),
-            })),
+            })}),
           }
         }
       )
@@ -469,15 +469,15 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                         onError: (error) => reject(error),
                       }
                     )
-                  })
+                  })}
           })}
                 onDelete={async (postId) => {
                   return new Promise<void>((resolve, reject) => {
                     deleteMutation.mutate(postId, {
                       onSuccess: () => resolve(),
                       onError: (error) => reject(error),
-                    })
-                  })
+                    })}
+                  })}
           })}
                 onPin={async (postId, pin) => {
                   return new Promise<void>((resolve, reject) => {
@@ -488,7 +488,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                         onError: (error) => reject(error),
                       }
                     )
-                  })
+                  })}
           })}
                 onFlag={async (postId, reason) => {
                   return new Promise<void>((resolve, reject) => {
@@ -499,7 +499,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                         onError: (error) => reject(error),
                       }
                     )
-                  })
+                  })}
           })}
               />
             </div>

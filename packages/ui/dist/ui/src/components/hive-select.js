@@ -1,10 +1,11 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
+import { cn } from '../lib/utils';
 import { liquidMetal, motionDurations, cascadeTiming } from '../motion/hive-motion-system';
-import { Check, X } from 'lucide-react';
+import { ChevronDown, Check, Search, X, Plus } from 'lucide-react';
 // HIVE Select System - Magnetic Dropdowns with Search and Multi-Select
 // Sophisticated select components with magnetic interactions and liquid metal motion
 const hiveSelectVariants = cva(
@@ -143,151 +144,155 @@ const HiveSelect = React.forwardRef(({ className, variant, size, options, value,
                 groups[group] = [];
             groups[group].push(option);
         });
-    });
-    return groups;
-}, [filteredOptions]);
-// Close dropdown on outside click
-useEffect(() => {
-    const handleClickOutside = (event) => {
-        if (selectRef.current && !selectRef.current.contains(event.target)) {
+        return groups;
+    }, [filteredOptions]);
+    // Close dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (selectRef.current && !selectRef.current.contains(event.target)) {
+                setIsOpen(false);
+                setSearchQuery('');
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+    // Keyboard navigation
+    useEffect(() => {
+        if (!isOpen)
+            return;
+        const handleKeyDown = (e) => {
+            switch (e.key) {
+                case 'Escape':
+                    setIsOpen(false);
+                    setSearchQuery('');
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    setHighlightedIndex(prev => Math.min(prev + 1, filteredOptions.length - 1));
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    setHighlightedIndex(prev => Math.max(prev - 1, 0));
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    if (filteredOptions[highlightedIndex]) {
+                        handleOptionSelect(filteredOptions[highlightedIndex]);
+                    }
+                    break;
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, highlightedIndex, filteredOptions]);
+    // Reset highlighted index when filtered options change
+    useEffect(() => {
+        setHighlightedIndex(0);
+    }, [filteredOptions]);
+    // Focus search input when opening
+    useEffect(() => {
+        if (isOpen && searchable && searchRef.current) {
+            setTimeout(() => searchRef.current?.focus(), 100);
+        }
+    }, [isOpen, searchable]);
+    const handleToggle = () => {
+        if (!disabled) {
+            setIsOpen(!isOpen);
+            if (!isOpen) {
+                setSearchQuery('');
+            }
+        }
+    };
+    const handleOptionSelect = (option) => {
+        if (option.disabled)
+            return;
+        let newValue;
+        if (multiple) {
+            const currentArray = Array.isArray(currentValue) ? currentValue : [];
+            if (currentArray.includes(option.value)) {
+                newValue = currentArray.filter(v => v !== option.value);
+            }
+            else {
+                newValue = [...currentArray, option.value];
+            }
+        }
+        else {
+            newValue = option.value;
             setIsOpen(false);
             setSearchQuery('');
         }
+        if (value === undefined) {
+            setInternalValue(newValue);
+        }
+        onValueChange?.(newValue);
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-}, []);
-// Keyboard navigation
-useEffect(() => {
-    if (!isOpen)
-        return;
-    const handleKeyDown = (e) => {
-        switch (e.key) {
-            case 'Escape':
-                setIsOpen(false);
-                setSearchQuery('');
-                break;
-            case 'ArrowDown':
-                e.preventDefault();
-                setHighlightedIndex(prev => Math.min(prev + 1, filteredOptions.length - 1));
-                break;
-            case 'ArrowUp':
-                e.preventDefault();
-                setHighlightedIndex(prev => Math.max(prev - 1, 0));
-                break;
-            case 'Enter':
-                e.preventDefault();
-                if (filteredOptions[highlightedIndex]) {
-                    handleOptionSelect(filteredOptions[highlightedIndex]);
-                }
-                break;
+    const handleClear = () => {
+        const newValue = multiple ? [] : '';
+        if (value === undefined) {
+            setInternalValue(newValue);
         }
+        onValueChange?.(newValue);
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-}, [isOpen, highlightedIndex, filteredOptions]);
-// Reset highlighted index when filtered options change
-useEffect(() => {
-    setHighlightedIndex(0);
-}, [filteredOptions]);
-// Focus search input when opening
-useEffect(() => {
-    if (isOpen && searchable && searchRef.current) {
-        setTimeout(() => searchRef.current?.focus(), 100);
-    }
-}, [isOpen, searchable]);
-const handleToggle = () => {
-    if (!disabled) {
-        setIsOpen(!isOpen);
-        if (!isOpen) {
-            setSearchQuery('');
-        }
-    }
-};
-const handleOptionSelect = (option) => {
-    if (option.disabled)
-        return;
-    let newValue;
-    if (multiple) {
-        const currentArray = Array.isArray(currentValue) ? currentValue : [];
-        if (currentArray.includes(option.value)) {
-            newValue = currentArray.filter(v => v !== option.value);
-        }
-        else {
-            newValue = [...currentArray, option.value];
-        }
-    }
-    else {
-        newValue = option.value;
-        setIsOpen(false);
+    const handleCreateOption = () => {
+        if (!creatable || !searchQuery)
+            return;
+        const newOption = {
+            value: searchQuery,
+            label: searchQuery,
+        };
+        handleOptionSelect(newOption);
         setSearchQuery('');
-    }
-    if (value === undefined) {
-        setInternalValue(newValue);
-    }
-    onValueChange?.(newValue);
-};
-const handleClear = () => {
-    const newValue = multiple ? [] : '';
-    if (value === undefined) {
-        setInternalValue(newValue);
-    }
-    onValueChange?.(newValue);
-};
-const handleCreateOption = () => {
-    if (!creatable || !searchQuery)
-        return;
-    const newOption = {
-        value: searchQuery,
-        label: searchQuery,
     };
-    handleOptionSelect(newOption);
-    setSearchQuery('');
-};
-const isSelected = (option) => {
-    if (multiple) {
-        return Array.isArray(currentValue) && currentValue.includes(option.value);
-    }
-    return currentValue === option.value;
-};
-const getDisplayValue = () => {
-    if (renderValue) {
-        return renderValue(currentValue, options);
-    }
-    if (multiple) {
-        const selectedOptions = options.filter(opt => Array.isArray(currentValue) && currentValue.includes(opt.value));
-        if (selectedOptions.length === 0)
-            return placeholder;
-        if (selectedOptions.length === 1)
-            return selectedOptions[0].label;
-        return `${selectedOptions.length} items selected`;
-    }
-    const selectedOption = options.find(opt => opt.value === currentValue);
-    return selectedOption ? selectedOption.label : placeholder;
-};
-const renderOptionContent = (option) => {
-    if (renderOption) {
-        return renderOption(option);
-    }
-    return (_jsxs("div", { className: "flex items-center justify-between w-full", children: [_jsxs("div", { className: "flex items-center space-x-3 flex-1 min-w-0", children: [option.icon && (_jsx("div", { className: "text-[var(--hive-text-primary)]/60 shrink-0", children: option.icon })), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("div", { className: "font-medium text-[var(--hive-text-primary)] truncate", children: option.label }), option.description && (_jsx("div", { className: "text-xs text-[var(--hive-text-primary)]/50 truncate", children: option.description }))] })] }), isSelected(option) && (_jsx(Check, { size: 16, className: "text-yellow-400 shrink-0" }))] }));
-};
-const shouldShowCreateOption = creatable && searchQuery &&
-    !filteredOptions.some(opt => opt.label.toLowerCase() === searchQuery.toLowerCase());
-return (_jsxs("div", { ref: selectRef, className: cn(hiveSelectVariants({ variant, size, className })), ...props, children: [_jsxs(motion.div, { className: cn(selectTriggerVariants({
-                variant,
-                size,
-                state: error ? 'error' : isOpen ? 'open' : disabled ? 'disabled' : 'default'
-            })), onClick: handleToggle, whileHover: !disabled ? { scale: 1.01 } : {}, whileTap: !disabled ? { scale: 0.99 } : {}, children: [_jsx("span", { className: cn("truncate", currentValue && (multiple ? Array.isArray(currentValue) && currentValue.length > 0 : currentValue !== '')
-                        ? "text-[var(--hive-text-primary)]"
-                        : "text-[var(--hive-text-primary)]/50"), children: getDisplayValue() }), _jsxs("div", { className: "flex items-center space-x-2 shrink-0 ml-2", children: [clearable && currentValue && (multiple ? Array.isArray(currentValue) && currentValue.length > 0 : currentValue !== '') && (_jsx(motion.button, { className: "text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 p-1", onClick: (e) => {
-                                e.stopPropagation();
-                                handleClear();
-                            }, whileHover: { scale: 1.1 }, whileTap: { scale: 0.9 }, children: _jsx(X, { size: 14 }) })), _jsx(motion.div, { animate: { rotate: isOpen ? 180 : 0 }, transition: { duration: motionDurations.quick }, children: _jsx(ChevronDown, { size: 16, className: "text-[var(--hive-text-primary)]/60" }) })] })] }), _jsx(AnimatePresence, { children: isOpen && (_jsxs(motion.div, { className: "absolute top-full left-0 right-0 z-50 mt-2 bg-[var(--hive-background-primary)]/60 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden", variants: dropdownVariants, initial: "hidden", animate: "visible", exit: "hidden", children: [searchable && (_jsx("div", { className: "p-3 border-b border-white/10", children: _jsxs("div", { className: "relative", children: [_jsx(Search, { className: "absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--hive-text-primary)]/40", size: 16 }), _jsx("input", { ref: searchRef, className: "w-full bg-[var(--hive-background-primary)]/40 border border-white/20 rounded-xl pl-10 pr-4 py-2 text-[var(--hive-text-primary)] placeholder-white/40 focus:outline-none focus:border-yellow-500/50", placeholder: searchPlaceholder, value: searchQuery, onChange: (e) => setSearchQuery(e.target.value) })] }) })), _jsx("div", { className: "max-h-60 overflow-y-auto py-2", style: { maxHeight }, children: loading ? (_jsxs("div", { className: "px-4 py-8 text-center text-[var(--hive-text-primary)]/60", children: [_jsx("div", { className: "animate-spin w-5 h-5 border-2 border-white/20 border-t-yellow-400 rounded-full mx-auto mb-2" }), "Loading options..."] })) : filteredOptions.length === 0 ? (_jsx("div", { className: "px-4 py-8 text-center text-[var(--hive-text-primary)]/60", children: searchQuery ? emptySearchMessage : noOptionsMessage })) : (_jsxs(motion.div, { variants: dropdownVariants, children: [shouldShowCreateOption && (_jsxs(motion.button, { className: "w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-[var(--hive-text-primary)]/10 transition-colors", variants: optionStaggerVariants, onClick: handleCreateOption, children: [_jsx(Plus, { size: 16, className: "text-yellow-400" }), _jsxs("span", { className: "text-[var(--hive-text-primary)]", children: ["Create \"", searchQuery, "\""] })] })), Object.entries(groupedOptions).map(([groupName, groupOptions]) => (_jsxs("div", { children: [groupName !== 'ungrouped' && (_jsx("div", { className: "px-4 py-2 text-xs font-medium text-[var(--hive-text-primary)]/40 uppercase tracking-wider", children: groupName })), groupOptions.map((option, index) => {
-                                            const globalIndex = filteredOptions.indexOf(option);
-                                            const isHighlighted = globalIndex === highlightedIndex;
-                                            const selected = isSelected(option);
-                                            return (_jsx(motion.button, { className: cn("w-full px-4 py-3 text-left transition-colors", option.disabled && "opacity-50 cursor-not-allowed"), variants: optionVariants, initial: "rest", animate: selected ? "selected" : isHighlighted ? "hover" : "rest", whileHover: !option.disabled ? "hover" : "rest", onClick: () => handleOptionSelect(option), onMouseEnter: () => setHighlightedIndex(globalIndex), disabled: option.disabled, children: _jsx(motion.div, { variants: optionStaggerVariants, children: renderOptionContent(option) }) }, option.value));
-                                        })] }, groupName)))] })) })] })) })] }));
+    const isSelected = (option) => {
+        if (multiple) {
+            return Array.isArray(currentValue) && currentValue.includes(option.value);
+        }
+        return currentValue === option.value;
+    };
+    const getDisplayValue = () => {
+        if (renderValue) {
+            return renderValue(currentValue, options);
+        }
+        if (multiple) {
+            const selectedOptions = options.filter(opt => Array.isArray(currentValue) && currentValue.includes(opt.value));
+            if (selectedOptions.length === 0)
+                return placeholder;
+            if (selectedOptions.length === 1)
+                return selectedOptions[0].label;
+            return `${selectedOptions.length} items selected`;
+        }
+        const selectedOption = options.find(opt => opt.value === currentValue);
+        return selectedOption ? selectedOption.label : placeholder;
+    };
+    const renderOptionContent = (option) => {
+        if (renderOption) {
+            return renderOption(option);
+        }
+        return (_jsxs("div", { className: "flex items-center justify-between w-full", children: [_jsxs("div", { className: "flex items-center space-x-3 flex-1 min-w-0", children: [option.icon && (_jsx("div", { className: "text-[var(--hive-text-primary)]/60 shrink-0", children: option.icon })), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("div", { className: "font-medium text-[var(--hive-text-primary)] truncate", children: option.label }), option.description && (_jsx("div", { className: "text-xs text-[var(--hive-text-primary)]/50 truncate", children: option.description }))] })] }), isSelected(option) && (_jsx(Check, { size: 16, className: "text-yellow-400 shrink-0" }))] }));
+    };
+    const shouldShowCreateOption = creatable && searchQuery &&
+        !filteredOptions.some(opt => opt.label.toLowerCase() === searchQuery.toLowerCase());
+    return (_jsxs("div", { ref: selectRef, className: cn(hiveSelectVariants({ variant, size, className })), ...props, children: [_jsx(motion.div, { className: cn(selectTriggerVariants({
+                    variant,
+                    size,
+                    state: error ? 'error' : isOpen ? 'open' : disabled ? 'disabled' : 'default'
+                })) }), ")} onClick=", handleToggle, "whileHover=", !disabled ? { scale: 1.01 } : {}, "whileTap=", !disabled ? { scale: 0.99 } : {}, ">", _jsx("span", { className: cn("truncate", currentValue && (multiple ? Array.isArray(currentValue) && currentValue.length > 0 : currentValue !== '')
+                    ? "text-[var(--hive-text-primary)]"
+                    : "text-[var(--hive-text-primary)]/50"), children: getDisplayValue() }), _jsxs("div", { className: "flex items-center space-x-2 shrink-0 ml-2", children: [clearable && currentValue && (multiple ? Array.isArray(currentValue) && currentValue.length > 0 : currentValue !== '') && (_jsx(motion.button, { className: "text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 p-1", onClick: (e) => {
+                            e.stopPropagation();
+                            handleClear();
+                        }, whileHover: { scale: 1.1 }, whileTap: { scale: 0.9 }, children: _jsx(X, { size: 14 }) })), _jsx(motion.div, { animate: { rotate: isOpen ? 180 : 0 }, transition: { duration: motionDurations.quick }, children: _jsx(ChevronDown, { size: 16, className: "text-[var(--hive-text-primary)]/60" }) })] })] })) /* Dropdown */;
+    { /* Dropdown */ }
+    _jsx(AnimatePresence, { children: isOpen && (_jsxs(motion.div, { className: "absolute top-full left-0 right-0 z-50 mt-2 bg-[var(--hive-background-primary)]/60 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden", variants: dropdownVariants, initial: "hidden", animate: "visible", exit: "hidden", children: [searchable && (_jsx("div", { className: "p-3 border-b border-white/10", children: _jsxs("div", { className: "relative", children: [_jsx(Search, { className: "absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--hive-text-primary)]/40", size: 16 }), _jsx("input", { ref: searchRef, className: "w-full bg-[var(--hive-background-primary)]/40 border border-white/20 rounded-xl pl-10 pr-4 py-2 text-[var(--hive-text-primary)] placeholder-white/40 focus:outline-none focus:border-yellow-500/50", placeholder: searchPlaceholder, value: searchQuery, onChange: (e) => setSearchQuery(e.target.value) })] }) })), _jsx("div", { className: "max-h-60 overflow-y-auto py-2", style: { maxHeight }, children: loading ? (_jsxs("div", { className: "px-4 py-8 text-center text-[var(--hive-text-primary)]/60", children: [_jsx("div", { className: "animate-spin w-5 h-5 border-2 border-white/20 border-t-yellow-400 rounded-full mx-auto mb-2" }), "Loading options..."] })) : filteredOptions.length === 0 ? (_jsx("div", { className: "px-4 py-8 text-center text-[var(--hive-text-primary)]/60", children: searchQuery ? emptySearchMessage : noOptionsMessage })) : (_jsxs(motion.div, { variants: dropdownVariants, children: [shouldShowCreateOption && (_jsxs(motion.button, { className: "w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-[var(--hive-text-primary)]/10 transition-colors", variants: optionStaggerVariants, onClick: handleCreateOption, children: [_jsx(Plus, { size: 16, className: "text-yellow-400" }), _jsxs("span", { className: "text-[var(--hive-text-primary)]", children: ["Create \"", searchQuery, "\""] })] })), Object.entries(groupedOptions).map(([groupName, groupOptions]) => (_jsxs("div", { children: [groupName !== 'ungrouped' && (_jsx("div", { className: "px-4 py-2 text-xs font-medium text-[var(--hive-text-primary)]/40 uppercase tracking-wider", children: groupName })), groupOptions.map((option, index) => {
+                                        const globalIndex = filteredOptions.indexOf(option);
+                                        const isHighlighted = globalIndex === highlightedIndex;
+                                        const selected = isSelected(option);
+                                        return (_jsx(motion.button, { className: cn("w-full px-4 py-3 text-left transition-colors", option.disabled && "opacity-50 cursor-not-allowed"), variants: optionVariants, initial: "rest", animate: selected ? "selected" : isHighlighted ? "hover" : "rest", whileHover: !option.disabled ? "hover" : "rest", onClick: () => handleOptionSelect(option), onMouseEnter: () => setHighlightedIndex(globalIndex), disabled: option.disabled, children: _jsx(motion.div, { variants: optionStaggerVariants, children: renderOptionContent(option) }) }, option.value));
+                                    })] }, groupName)))] })) })] })) });
+});
+div >
+;
 ;
 HiveSelect.displayName = "HiveSelect";
 // Multi-select tag component for displaying selected values

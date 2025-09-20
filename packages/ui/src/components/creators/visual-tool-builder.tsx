@@ -418,7 +418,7 @@ export const VisualToolBuilder: React.FC<VisualBuilderProps> = ({
             
             const dragEvent = new DragEvent('dragstart', {
               dataTransfer: new DataTransfer()
-            });
+            })};
             
             // Store element for canvas drop handling
             (window as any).hiveDraggedElement = element

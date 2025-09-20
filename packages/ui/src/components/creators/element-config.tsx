@@ -53,7 +53,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
         // Dropdown for predefined options
         return (
           <HiveSelect
-            options={property.options.map(opt => ({ value: opt, label: opt })})}
+            options={property.options.map(map}))}
             value={value || property.default}
             onValueChange={onChange}
             placeholder="Select option..."
@@ -274,7 +274,7 @@ export const ElementConfig: React.FC<ElementConfigProps> = ({
             { id: 'properties', label: 'Properties', icon: Settings },
             { id: 'style', label: 'Style', icon: Palette },
             { id: 'events', label: 'Events', icon: Hash }
-          ].map(({ id, label, icon: Icon })} => (
+          ].map(map}) => (
             <button
               key={id}
               className={cn(

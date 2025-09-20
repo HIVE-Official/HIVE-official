@@ -545,7 +545,7 @@ export const MobileHeaderNavigation: Story = {
                           <span>{action.label}</span>
                         </button>
                       )
-                    })
+                    })}
                   </div>
                 </div>
 
@@ -635,7 +635,7 @@ export const InteractiveHeaderDemo: Story = {
                       <span className="font-medium">{tab.label}</span>
                     </button>
                   )
-                })
+                })}
               </nav>
 
               {/* Actions */}

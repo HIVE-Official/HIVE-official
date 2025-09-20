@@ -247,7 +247,7 @@ export const PostCard: React.FC<PostCardProps> = ({
 
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                   <time dateTime={post.createdAt.toString()}>
-                    {formatDistanceToNow(createdAt, { addSuffix: true }}
+                    {formatDistanceToNow(createdAt, { addSuffix: true })
                   </time>
 
                   {post.isEdited && (

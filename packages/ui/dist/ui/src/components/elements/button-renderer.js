@@ -1,5 +1,4 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { Button } from '../../atomic/atoms/button';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 export const ButtonRenderer = ({ element, config, onChange, onStateChange, readOnly = false, runtimeContext }) => {
     // Use standard style system (flexible input, consistent output)
@@ -42,36 +41,38 @@ export const ButtonRenderer = ({ element, config, onChange, onStateChange, readO
                             timestamp: Date.now()
                         });
                     }
-                    break;
             }
-        }
-        // Standard analytics tracking
-        if (onStateChange) {
-            onStateChange({
-                clicked: true,
-                lastClickedAt: Date.now(),
-                clickCount: (runtimeContext?.elementStates.get(element.id)?.clickCount || 0) + 1
-            });
+            break;
         }
     };
-    // Map element-specific variants (keep flexibility)
-    const getButtonVariant = (variant) => {
-        switch (variant) {
-            case 'primary': return 'default';
-            case 'secondary': return 'secondary';
-            case 'outline': return 'outline';
-            case 'ghost': return 'ghost';
-            default: return 'default';
-        }
-    };
-    const getButtonSize = (size) => {
-        switch (size) {
-            case 'sm': return 'sm';
-            case 'md': return 'default';
-            case 'lg': return 'lg';
-            default: return 'default';
-        }
-    };
-    return (_jsx("div", { className: `${classes.container} ${classes.spacing}`, children: _jsx(Button, { variant: getButtonVariant(config.variant), size: getButtonSize(config.size), onClick: handleClick, disabled: behavior.isDisabled, style: styles, className: `${classes.element} ${config.variant === 'primary' ? 'bg-[var(--hive-primary)] hover:bg-[var(--hive-primary-dark)] text-white' : ''}`, ...behavior.ariaAttributes, children: config.text }) }));
+    // Standard analytics tracking
+    if (onStateChange) {
+        onStateChange({
+            clicked: true,
+            lastClickedAt: Date.now(),
+            clickCount: (runtimeContext?.elementStates.get(element.id)?.clickCount || 0) + 1
+        });
+    }
 };
+;
+// Map element-specific variants (keep flexibility)
+const getButtonVariant = (variant) => {
+    switch (variant) {
+        case 'primary': return 'default';
+        case 'secondary': return 'secondary';
+        case 'outline': return 'outline';
+        case 'ghost': return 'ghost';
+        default: return 'default';
+    }
+};
+const getButtonSize = (size) => {
+    switch (size) {
+        case 'sm': return 'sm';
+        case 'md': return 'default';
+        case 'lg': return 'lg';
+        default: return 'default';
+    }
+};
+return (_jsx("div", { className: `${classes.container} ${classes.spacing}`, children: _jsx(Button, { variant: getButtonVariant(config.variant), size: getButtonSize(config.size), onClick: handleClick, disabled: behavior.isDisabled, style: styles, className: `${classes.element} ${config.variant === 'primary' ? 'bg-[var(--hive-primary)] hover:bg-[var(--hive-primary-dark)] text-white' : ''}`, ...behavior.ariaAttributes, children: config.text }) }));
+;
 //# sourceMappingURL=button-renderer.js.map

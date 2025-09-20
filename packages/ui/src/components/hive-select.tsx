@@ -222,7 +222,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
         const group = option.group || 'ungrouped';
         if (!groups[group]) groups[group] = [];
         groups[group].push(option)
-      })};
+      });
       
       return groups
     }, [filteredOptions]);
@@ -409,7 +409,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
             variant, 
             size, 
             state: error ? 'error' : isOpen ? 'open' : disabled ? 'disabled' : 'default' 
-          }))}
+          })})}
           onClick={handleToggle}
           whileHover={!disabled ? { scale: 1.01 } : {}}
           whileTap={!disabled ? { scale: 0.99 } : {}}

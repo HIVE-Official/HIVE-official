@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponse as _ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse as _ApiResponse } from '@/lib/api-auth-middleware';
 
 // Usage statistics interface matching the component expectations
@@ -84,7 +84,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     const { toolId, action, metadata } = body;
 
     if (!toolId || !action) {
-      return NextResponse.json(ApiResponse as _ApiResponseHelper.error("Invalid request. Must specify toolId and action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return NextResponse.json(ApiResponseHelper.error("Invalid request. Must specify toolId and action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
     // Simulate processing delay

@@ -381,7 +381,7 @@ export const HiveLogoAccessible = memo(({
         focusRing: accessibility.focusRing || 'default',
         touchTarget: touchTargetSize,
         className,
-      })
+      })}
     ),
     role: interactive ? (role === 'img' ? 'button' : role) : role,
     'aria-label': dynamicAriaLabel,
@@ -511,7 +511,7 @@ export const HiveLogoAccessibilityTest: React.FC<{
         keyboardAccessible,
         screenReaderFriendly,
         touchTargetSize,
-      })
+      })}
     };
     
     runTests()

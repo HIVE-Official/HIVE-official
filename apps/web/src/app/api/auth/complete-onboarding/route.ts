@@ -1,18 +1,13 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
 import { type Timestamp } from "firebase-admin/firestore";
 import { validateHandleFormat } from "@/lib/handle-service";
-import { 
-  executeOnboardingTransaction, 
+import {
+  executeOnboardingTransaction,
   executeBuilderRequestCreation,
   TransactionError
 } from "@/lib/transaction-manager";
 import { createRequestLogger } from "@/lib/structured-logger";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { withAuthValidationAndErrors, getUserId, getUserEmail, type AuthenticatedRequest } from "@/lib/middleware";
 
 
 const completeOnboardingSchema = z.object({
@@ -57,65 +52,16 @@ interface UserData {
   updatedAt?: Timestamp;
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    // Get the authorization header
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Missing or invalid authorization header", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const idToken = authHeader.substring(7);
-    
-    // SECURITY: Development token bypass removed for production safety
-    // All tokens must be validated through Firebase Auth
-    
-    const auth = getAuth();
-
-    // Verify the ID token
-    let decodedToken;
-    try {
-      decodedToken = await auth.verifyIdToken(idToken);
-    } catch (error) {
-      logger.error('Invalid ID token', { error: error, endpoint: '/api/auth/complete-onboarding' });
-      return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    if (!decodedToken?.uid || !decodedToken?.email) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid token data", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const userId = decodedToken.uid;
-    const userEmail = decodedToken.email;
-
-    // Parse and validate the request body
-    let body: unknown;
-    try {
-      body = await request.json();
-    } catch (jsonError) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid JSON in request body", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    let onboardingData;
-    try {
-      onboardingData = completeOnboardingSchema.parse(body);
-    } catch (validationError) {
-      if (validationError instanceof z.ZodError) {
-        return NextResponse.json(
-          { error: "Invalid request data", details: validationError.errors },
-          { status: HttpStatus.BAD_REQUEST }
-        );
-      }
-      throw validationError;
-    }
+export const POST = withAuthValidationAndErrors(
+  completeOnboardingSchema,
+  async (request: AuthenticatedRequest, context, onboardingData, respond) => {
+    const userId = getUserId(request);
+    const userEmail = getUserEmail(request);
 
     // Validate handle format first (outside transaction)
     const formatValidation = validateHandleFormat(onboardingData.handle);
     if (!formatValidation.isAvailable) {
-      return NextResponse.json(
-        { error: formatValidation.error },
-        { status: HttpStatus.BAD_REQUEST }
-      );
+      return respond.error(formatValidation.error, "INVALID_INPUT", { status: 400 });
     }
 
     const normalizedHandle = formatValidation.normalizedHandle!;
@@ -152,17 +98,17 @@ export async function POST(request: NextRequest) {
       if (transactionResult.error instanceof TransactionError) {
         const message = transactionResult.error.message;
         if (message.includes('Handle is already taken')) {
-          return NextResponse.json(ApiResponseHelper.error("Handle is already taken", "UNKNOWN_ERROR"), { status: 409 });
+          return respond.error("Handle is already taken", "CONFLICT", { status: 409 });
         }
         if (message.includes('Onboarding already completed')) {
-          return NextResponse.json(ApiResponseHelper.error("Onboarding already completed", "UNKNOWN_ERROR"), { status: 409 });
+          return respond.error("Onboarding already completed", "CONFLICT", { status: 409 });
         }
         if (message.includes('User not found')) {
-          return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+          return respond.error("User not found", "RESOURCE_NOT_FOUND", { status: 404 });
         }
       }
 
-      return NextResponse.json(ApiResponseHelper.error("Failed to complete onboarding", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      return respond.error("Failed to complete onboarding", "INTERNAL_ERROR", { status: 500 });
     }
 
     const result = transactionResult.data!;
@@ -221,7 +167,7 @@ export async function POST(request: NextRequest) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${idToken}`,
+            "Authorization": request.headers.get("authorization") || "",
           },
           body: JSON.stringify({
             major: onboardingData.major,
@@ -289,9 +235,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "Onboarding completed successfully",
+    return respond.success({
       user: {
         id: userId,
         fullName: result.updatedUserData.fullName,
@@ -302,31 +246,9 @@ export async function POST(request: NextRequest) {
         graduationYear: result.updatedUserData.graduationYear,
         builderRequestSpaces: result.updatedUserData.builderRequestSpaces,
       },
-      builderRequestsCreated: onboardingData.builderRequestSpaces?.length || 0 });
-  } catch (error) {
-    logger.error('Error completing onboarding', { error: error, endpoint: '/api/auth/complete-onboarding' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid request data", details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    if (error instanceof Error) {
-      if (error.message === "Handle is already taken") {
-        return NextResponse.json(ApiResponseHelper.error("Handle is already taken", "UNKNOWN_ERROR"), { status: 409 });
-      }
-
-      if (error.message === "Onboarding already completed") {
-        return NextResponse.json(ApiResponseHelper.error("Onboarding already completed", "UNKNOWN_ERROR"), { status: 409 });
-      }
-
-      if (error.message === "User not found") {
-        return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-      }
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to complete onboarding", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      builderRequestsCreated: onboardingData.builderRequestSpaces?.length || 0,
+    }, {
+      message: "Onboarding completed successfully"
+    });
   }
-}
+);

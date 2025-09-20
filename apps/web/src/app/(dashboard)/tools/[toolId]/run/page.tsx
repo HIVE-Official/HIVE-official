@@ -9,6 +9,7 @@ import { ArrowLeft, Settings, Share, Download, Activity, Zap, Clock, AlertCircle
 import { useFeatureFlags } from "@hive/hooks";
 import { useSession } from "../../../../../hooks/use-session";
 import type { ElementInstance, Tool } from "@hive/core";
+import { logger } from "@/lib/logger";
 
 interface ToolWithInstances {
   tool: Tool;
@@ -258,7 +259,7 @@ export default function ToolRunPage() {
   }, [flags, toolId]);
 
   const _handleToolAction = (instanceId: string, action: string, data?: any) => {
-    console.log('Tool action:', { instanceId, action, data });
+    logger.debug('Tool action', { instanceId, action, data });
     
     // Log the action
     setActionLog(prev => [{
@@ -269,7 +270,7 @@ export default function ToolRunPage() {
     
     // Handle specific actions
     if (action === 'click' && data?.type === 'submit') {
-      console.log('Form submitted with poll data');
+      logger.debug('Form submitted with poll data', { data });
       // Here you would typically send data to your backend
     }
   };

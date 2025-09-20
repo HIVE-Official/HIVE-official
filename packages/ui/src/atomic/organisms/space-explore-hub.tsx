@@ -10,14 +10,14 @@ export interface SpaceExploreStats {
   totalSpaces: number;
   totalMembers: number;
   activeToday: number;
-  newThisWeek: number
+  newThisWeek: number;
 }
 
 export interface SpaceCategoryStats {
   type: SpaceCategoryType;
   count: number;
   trending?: boolean;
-  recentActivity?: number
+  recentActivity?: number;
 }
 
 export interface SpaceExploreHubProps {
@@ -28,7 +28,7 @@ export interface SpaceExploreHubProps {
   onShowFilters?: () => void;
   searchQuery?: string;
   isLoading?: boolean;
-  className?: string
+  className?: string;
 }
 
 export const SpaceExploreHub: React.FC<SpaceExploreHubProps> = ({
@@ -45,7 +45,7 @@ export const SpaceExploreHub: React.FC<SpaceExploreHubProps> = ({
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch?.(localSearchQuery)
+    onSearch?.(localSearchQuery);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +79,7 @@ export const SpaceExploreHub: React.FC<SpaceExploreHubProps> = ({
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -220,7 +220,7 @@ export const SpaceExploreHub: React.FC<SpaceExploreHubProps> = ({
                   delay: 0.6 + (index * 0.1), 
                   duration: 0.5,
                   ease: [0.23, 1, 0.32, 1]
-          }}
+                }}
                 className="relative"
               >
                 {/* Trending Badge */}
@@ -238,8 +238,8 @@ export const SpaceExploreHub: React.FC<SpaceExploreHubProps> = ({
                   onClick={onCategoryClick}
                 />
               </motion.div>
-            )
-          })
+            );
+          })}
         </div>
       </motion.div>
 
@@ -281,7 +281,7 @@ export const SpaceExploreHub: React.FC<SpaceExploreHubProps> = ({
         </div>
       </motion.div>
     </motion.div>
-  )
+  );
 };
 
 export default SpaceExploreHub;

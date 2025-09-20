@@ -527,7 +527,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                       {new Date(message.timestamp).toLocaleTimeString('en-US', {
                         hour: 'numeric',
                         minute: '2-digit'
-          }}
+          })}
                     </time>
                     
                     {message.isEdited && (
@@ -541,7 +541,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                 </div>
               </motion.div>
             )
-          })
+          })}
           
           {/* Typing Indicator */}
           {showTypingIndicator && typingUsers.length > 0 && (

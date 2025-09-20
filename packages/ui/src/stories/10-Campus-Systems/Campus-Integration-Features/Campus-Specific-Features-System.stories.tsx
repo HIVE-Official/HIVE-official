@@ -731,7 +731,7 @@ const CampusTransportation = () => {
                 </div>
               </div>
             )
-          })
+          })}
           <Button variant="outline" className="w-full border-gray-700 text-gray-300">
             <MapPin className="mr-2 h-4 w-4" />
             View Parking Map

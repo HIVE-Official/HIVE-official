@@ -10,5 +10,5 @@ export interface MemberDirectoryWidgetProps {
     authenticatedFetch?: (url: string, options?: RequestInit) => Promise<Response>;
     className?: string;
 }
-export declare function MemberDirectoryWidget({ space, isLeader, currentUserRole, leaderMode, showCompact, maxMembers, onMemberAction, authenticatedFetch, className }: MemberDirectoryWidgetProps): void;
+export declare function MemberDirectoryWidget({ space, isLeader, currentUserRole, leaderMode, showCompact, maxMembers, onMemberAction, authenticatedFetch, className }: MemberDirectoryWidgetProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=member-directory-widget.d.ts.map

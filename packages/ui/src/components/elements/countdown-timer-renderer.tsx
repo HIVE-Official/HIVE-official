@@ -109,7 +109,7 @@ export const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps> = ({
                   completed: true,
                   completedAt: Date.now(),
                   triggerValue: config.onComplete.value
-                })
+                })}
               }
               break
           }

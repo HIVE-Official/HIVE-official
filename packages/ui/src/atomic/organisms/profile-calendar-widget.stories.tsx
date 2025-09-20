@@ -565,7 +565,7 @@ export const CompleteShowcase: Story = {
                         id: 'sarah-cs-morning',
                         name: 'Sarah Chen',
                         timezone: 'America/New_York'
-          }}
+                      }}
                       todayEvents={[
                         {
                           id: 'cse331-morning',
@@ -610,7 +610,7 @@ export const CompleteShowcase: Story = {
                         id: 'sarah-cs-afternoon',
                         name: 'Sarah Chen',
                         timezone: 'America/New_York'
-          }}
+                      }}
                       todayEvents={[
                         {
                           id: 'lunch-study-group',
@@ -679,7 +679,7 @@ export const CompleteShowcase: Story = {
                       id: 'jamie-premed',
                       name: 'Jamie Park',
                       timezone: 'America/New_York'
-          }}
+                    }}
                     todayEvents={[
                       {
                         id: 'organic-chem-lab',
@@ -723,7 +723,7 @@ export const CompleteShowcase: Story = {
                       id: 'jamie-mcat-prep',
                       name: 'Jamie Park',
                       timezone: 'America/New_York'
-          }}
+                    }}
                     todayEvents={[
                       {
                         id: 'mcat-study-session',
@@ -787,7 +787,7 @@ export const CompleteShowcase: Story = {
                       id: 'alex-engineering',
                       name: 'Alex Rivera',
                       timezone: 'America/New_York'
-          }}
+                    }}
                     todayEvents={[
                       {
                         id: 'senior-design-meeting',
@@ -842,7 +842,7 @@ export const CompleteShowcase: Story = {
                       id: 'alex-leadership',
                       name: 'Alex Rivera',
                       timezone: 'America/New_York'
-          }}
+                    }}
                     todayEvents={[
                       {
                         id: 'robotics-club-meeting',

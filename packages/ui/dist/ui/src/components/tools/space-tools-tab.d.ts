@@ -4,6 +4,6 @@ interface SpaceToolsTabProps {
     userRole: 'admin' | 'moderator' | 'member';
     className?: string;
 }
-export declare function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToolsTabProps): import("react/jsx-runtime").JSX.Element;
+export declare function SpaceToolsTab({ spaceId, userId, userRole, className }: SpaceToolsTabProps): void;
 export default SpaceToolsTab;
 //# sourceMappingURL=space-tools-tab.d.ts.map

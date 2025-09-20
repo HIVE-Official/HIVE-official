@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import * as admin from 'firebase-admin';
 import { z } from 'zod';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -135,8 +135,8 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       // Create default privacy settings if they don't exist
       privacySettings = {
         ...DEFAULT_PRIVACY_SETTINGS,
-        createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       };
       
       await dbAdmin.collection('privacySettings').doc(userId).set(privacySettings);
@@ -190,7 +190,7 @@ export const PATCH = withAuth(async (request: NextRequest, authContext) => {
     const privacyRef = dbAdmin.collection('privacySettings').doc(userId);
     const updatePayload = {
       ...updateData,
-      updatedAt: FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 
     await privacyRef.set(updatePayload, { merge: true });
@@ -199,7 +199,7 @@ export const PATCH = withAuth(async (request: NextRequest, authContext) => {
     if (updateData.isPublic !== undefined) {
       await dbAdmin.collection('users').doc(userId).update({
         isPublic: updateData.isPublic,
-        updatedAt: FieldValue.serverTimestamp() });
+        updatedAt: admin.firestore.FieldValue.serverTimestamp() });
     }
 
     return NextResponse.json({

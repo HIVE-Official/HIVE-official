@@ -145,3 +145,7 @@ fix-*.js
 
 # Claude-specific files
 .claude/
+
+# Archived scripts (one-time fixes)
+scripts/archive/
+firebase/node_modules

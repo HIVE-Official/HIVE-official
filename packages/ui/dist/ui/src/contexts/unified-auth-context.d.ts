@@ -89,6 +89,6 @@ export interface FirebaseAuthIntegration {
 export declare const UnifiedAuthProvider: React.FC<{
     children: React.ReactNode;
     firebaseIntegration?: FirebaseAuthIntegration;
-}>;
+}>, firebaseIntegration: any, updateAuthState: any, persistSession: any, clearPersistedSession: any;
 export { UnifiedAuthContext };
 //# sourceMappingURL=unified-auth-context.d.ts.map

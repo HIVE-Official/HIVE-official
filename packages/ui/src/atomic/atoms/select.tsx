@@ -239,7 +239,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
                       )}
                     </div>
                   )
-                })
+                })}
               )}
             </div>
           </div>

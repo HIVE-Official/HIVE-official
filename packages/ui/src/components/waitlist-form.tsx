@@ -25,14 +25,14 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
     void onSubmit(email)
       .then(() => {
         setSuccess(true)
-      })
+      })}
       .catch((error) => {
         console.error("Waitlist submission failed:", error);
         // Handle error appropriately - maybe show a toast or error state
-      })
+      })}
       .finally(() => {
         setLoading(false)
-      })
+      })}
   };
 
   return (

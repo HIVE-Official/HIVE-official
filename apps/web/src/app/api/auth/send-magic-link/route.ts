@@ -1,18 +1,18 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getDefaultActionCodeSettings, validateEmailDomain } from "@hive/core";
-import { getAuth } from "firebase-admin/auth";
+import * as admin from "firebase-admin/auth";
 import { sendMagicLinkEmail } from "@/lib/email";
-import { handleApiError, ValidationError } from "@/lib/api-error-handler";
+import { ValidationError } from "@/lib/api-error-handler";
 import { auditAuthEvent } from "@/lib/production-auth";
 import { currentEnvironment } from "@/lib/env";
 import { validateWithSecurity, ApiSchemas } from "@/lib/secure-input-validation";
 import { enforceRateLimit } from "@/lib/secure-rate-limiter";
 import { isDevUser, validateDevSchool, createDevSession } from "@/lib/dev-auth-helper";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { withValidation } from "@/lib/middleware";
+import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 
 /**
  * PRODUCTION-SAFE magic link sending
@@ -70,43 +70,35 @@ async function validateSchool(schoolId: string): Promise<SchoolData | null> {
 /**
  * PRODUCTION-ONLY magic link sending
  */
-export async function POST(request: NextRequest) {
-  const requestId = request.headers.get('x-request-id') || `req_${Date.now()}`;
-  
-  try {
-    // SECURITY: Rate limiting with strict enforcement
-    const rateLimitResult = await enforceRateLimit('magicLink', request);
-    if (!rateLimitResult.allowed) {
-      return NextResponse.json(
-        { error: rateLimitResult.error },
-        { 
-          status: rateLimitResult.status,
-          headers: rateLimitResult.headers
-        }
-      );
-    }
+export const POST = withValidation(
+  sendMagicLinkSchema,
+  async (request, context, { email, schoolId }, respond) => {
+    const requestId = request.headers.get('x-request-id') || `req_${Date.now()}`;
 
-    // SECURITY: Comprehensive input validation with threat detection
-    const body = await request.json().catch(() => {
-      throw new ValidationError('Invalid JSON in request body');
-    });
-    
-    const validationResult = await validateWithSecurity(body, sendMagicLinkSchema, {
-      operation: 'send_magic_link',
-      ip: request.headers.get('x-forwarded-for') || undefined
-    });
+    try {
+      // SECURITY: Rate limiting with strict enforcement
+      const rateLimitResult = await enforceRateLimit('magicLink', request);
+      if (!rateLimitResult.allowed) {
+        return respond.error(rateLimitResult.error, "RATE_LIMITED", {
+          status: rateLimitResult.status
+        });
+      }
 
-    if (!validationResult.success || validationResult.securityLevel === 'dangerous') {
-      await auditAuthEvent('suspicious', request, {
+      // SECURITY: Additional threat detection (schema validation already done by middleware)
+      const validationResult = await validateWithSecurity({ email, schoolId }, sendMagicLinkSchema, {
         operation: 'send_magic_link',
-        threats: validationResult.errors?.map(e => e.code).join(',') || 'unknown',
-        securityLevel: validationResult.securityLevel
+        ip: request.headers.get('x-forwarded-for') || undefined
       });
-      
-      return NextResponse.json(ApiResponseHelper.error("Request validation failed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
 
-    const { email, schoolId } = validationResult.data!;
+      if (!validationResult.success || validationResult.securityLevel === 'dangerous') {
+        await auditAuthEvent('suspicious', request, {
+          operation: 'send_magic_link',
+          threats: validationResult.errors?.map(e => e.code).join(',') || 'unknown',
+          securityLevel: validationResult.securityLevel
+        });
+
+        return respond.error("Request validation failed", "INVALID_INPUT", { status: 400 });
+      }
     
     // DEVELOPMENT: Handle development users FIRST before any validation
     // Check for development users regardless of environment detection to ensure dev access works
@@ -212,7 +204,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Use Firebase Admin SDK to generate magic link
-    const auth = getAuth();
+    const auth = admin.auth();
     const actionCodeSettings = getDefaultActionCodeSettings(schoolId);
     
     // Generate the sign-in link
@@ -277,16 +269,17 @@ export async function POST(request: NextRequest) {
       operation: 'send_magic_link'
     });
     
-    return NextResponse.json({
-      success: true,
-      message: "Magic link sent to your email address" });
-    
-  } catch (error) {
-    await auditAuthEvent('failure', request, {
-      operation: 'send_magic_link',
-      error: error instanceof Error ? error.message : 'unknown'
-    });
-    
-    return handleApiError(error, request);
+      return respond.success({
+        message: "Magic link sent to your email address"
+      });
+
+    } catch (error) {
+      await auditAuthEvent('failure', request, {
+        operation: 'send_magic_link',
+        error: error instanceof Error ? error.message : 'unknown'
+      });
+
+      throw error; // Let middleware handle the error
+    }
   }
-}
+);

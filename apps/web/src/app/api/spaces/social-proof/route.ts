@@ -1,10 +1,7 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 
 const socialProofSchema = z.object({
   spaceIds: z.string().optional(), // Comma-separated space IDs
@@ -56,13 +53,12 @@ interface SocialProofData {
  * Social Proof API - Provides social context for space discovery
  * Shows friends, similar users, and peer activity to drive engagement
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const url = new URL(request.url);
-    const queryParams = Object.fromEntries(url.searchParams.entries());
-    const { spaceIds, includeActivity, includeMutualFriends, includeSimilarUsers } = socialProofSchema.parse(queryParams);
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const url = new URL(request.url);
+  const queryParams = Object.fromEntries(url.searchParams.entries());
+  const { spaceIds, includeActivity, includeMutualFriends, includeSimilarUsers } = socialProofSchema.parse(queryParams);
 
-    const userId = authContext.userId;
+  const userId = getUserId(request);
 
     logger.info('👥 Getting social proof for user', { userId, endpoint: '/api/spaces/social-proof' });
 
@@ -98,8 +94,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       }
     }
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       socialProof,
       metadata: {
         userId,
@@ -108,22 +103,6 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         userSpacesCount: userProfile.joinedSpaces.length
       }
     });
-
-  } catch (error: any) {
-    logger.error('Social proof error', { error: error, endpoint: '/api/spaces/social-proof' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Social proof is safe for development
-  operation: 'get_social_proof' 
 });
 
 /**

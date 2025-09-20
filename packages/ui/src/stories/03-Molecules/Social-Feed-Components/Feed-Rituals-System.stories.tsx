@@ -318,7 +318,7 @@ export const CampusFeedInterface: Story = {
                       </Badge>
                     </div>
                   )
-                })
+                })}
               </CardContent>
             </Card>
           </div>
@@ -592,7 +592,7 @@ export const RitualCreationInterface: Story = {
                       </div>
                     </button>
                   )
-                })
+                })}
               </CardContent>
             </Card>
           </div>

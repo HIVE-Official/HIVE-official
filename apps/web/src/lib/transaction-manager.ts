@@ -4,7 +4,7 @@
  */
 
 import { dbAdmin } from './firebase-admin';
-import { Transaction, WriteBatch } from 'firebase-admin/firestore';
+import { Transaction, WriteBatch } from 'firebase-admin';
 import { logger } from './structured-logger';
 
 /**

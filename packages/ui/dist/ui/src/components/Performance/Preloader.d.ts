@@ -91,22 +91,8 @@ declare class CampusPreloadManager {
     private bandwidthMonitor;
     static getInstance(): CampusPreloadManager;
     prioritizeResources(resources: PreloadResource[], campusContext?: CampusPreloadContext, userContext?: UserPreloadContext): PreloadResource[];
-    private shouldLoadResource;
-    loadResource(resource: PreloadResource, campusContext?: CampusPreloadContext): Promise<any>;
-    private selectLoadingStrategy;
-    private executeLoadingStrategy;
-    private preloadResource;
-    private prefetchResource;
-    private backgroundFetchResource;
-    private lazyLoadResource;
-    private cacheResource;
-    private getResourceAs;
-    private processResponse;
-    private updateBandwidthEstimate;
-    getStats(): PreloadStats;
-    getBandwidthEstimate(): number;
 }
-export declare const Preloader: React.FC<PreloaderProps>;
+export declare const Preloader: React.FC<PreloaderProps>, resources: any, campusContext: any, userContext: any, enableIntelligentPreloading: any;
 export declare function createPreloadResource(id: string, type: ResourceType, options: Partial<Omit<PreloadResource, 'id' | 'type'>>): PreloadResource;
 export { CampusPreloadManager };
 export type { PreloaderProps, PreloadResource, ResourceType, CampusPreloadContext, UserPreloadContext, PreloadStats };

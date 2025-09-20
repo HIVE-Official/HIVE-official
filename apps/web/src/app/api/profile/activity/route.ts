@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import * as admin from 'firebase-admin';
 import { z } from 'zod';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
@@ -73,9 +73,9 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     const activityEvent = {
       userId,
       ...activityData,
-      timestamp: FieldValue.serverTimestamp(),
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
       date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
-      createdAt: FieldValue.serverTimestamp(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 
     // Log the activity event
@@ -86,7 +86,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
     // Update user's last active timestamp
     await dbAdmin.collection('users').doc(userId).update({
-      lastActiveAt: FieldValue.serverTimestamp() });
+      lastActiveAt: admin.firestore.FieldValue.serverTimestamp() });
 
     return NextResponse.json({
       success: true,
@@ -270,13 +270,13 @@ async function updateDailyActivitySummary(userId: string, activityData: Activity
         toolsUsed: activityData.toolId ? [activityData.toolId] : [],
         contentCreated: activityData.type === 'content_creation' ? 1 : 0,
         socialInteractions: activityData.type === 'social_interaction' ? 1 : 0,
-        createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp() });
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp() });
     } else {
       // Update existing summary
       const existingData = summaryDoc.data();
       const updates: Record<string, unknown> = {
-        updatedAt: FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       };
       
       if (activityData.duration) {

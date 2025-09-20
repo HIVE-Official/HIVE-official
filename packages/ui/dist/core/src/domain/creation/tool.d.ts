@@ -10,13 +10,13 @@ export declare const ToolCollaboratorSchema: z.ZodObject<{
     addedAt: z.ZodDate;
     addedBy: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    permission?: "view" | "edit" | "comment";
     userId?: string;
+    permission?: "view" | "edit" | "comment";
     addedAt?: Date;
     addedBy?: string;
 }, {
-    permission?: "view" | "edit" | "comment";
     userId?: string;
+    permission?: "view" | "edit" | "comment";
     addedAt?: Date;
     addedBy?: string;
 }>;
@@ -303,13 +303,13 @@ export declare const ToolSchema: z.ZodObject<{
         addedAt: z.ZodDate;
         addedBy: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        permission?: "view" | "edit" | "comment";
         userId?: string;
+        permission?: "view" | "edit" | "comment";
         addedAt?: Date;
         addedBy?: string;
     }, {
-        permission?: "view" | "edit" | "comment";
         userId?: string;
+        permission?: "view" | "edit" | "comment";
         addedAt?: Date;
         addedBy?: string;
     }>, "many">>;
@@ -632,8 +632,8 @@ export declare const ToolSchema: z.ZodObject<{
     updatedAt?: Date;
     ownerId?: string;
     collaborators?: {
-        permission?: "view" | "edit" | "comment";
         userId?: string;
+        permission?: "view" | "edit" | "comment";
         addedAt?: Date;
         addedBy?: string;
     }[];
@@ -723,8 +723,8 @@ export declare const ToolSchema: z.ZodObject<{
     updatedAt?: Date;
     ownerId?: string;
     collaborators?: {
-        permission?: "view" | "edit" | "comment";
         userId?: string;
+        permission?: "view" | "edit" | "comment";
         addedAt?: Date;
         addedBy?: string;
     }[];

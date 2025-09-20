@@ -192,7 +192,7 @@ export interface CalendarViewElementProps extends ElementProps {
     onDateChange?: (date: Date) => void;
     onEventClick?: (eventId: string) => void;
 }
-export declare function CalendarViewElement({ events, currentDate, onDateChange, onEventClick, className }: CalendarViewElementProps): any;
+export declare function CalendarViewElement({ events, currentDate, onDateChange, onEventClick, className }: CalendarViewElementProps): import("react/jsx-runtime").JSX.Element;
 export interface NotificationElementProps extends ElementProps {
     notifications: Array<{
         id: string;

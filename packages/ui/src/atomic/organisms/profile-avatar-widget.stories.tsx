@@ -385,7 +385,7 @@ export const CompleteShowcase: Story = {
                         achievements: 47,
                         connections: 234,
                         isGhostMode: false
-          }}
+                      }}
                       isEditable={true}
                       onEditProfile={action('edit-excellence-profile')}
                       onUploadPhoto={action('upload-excellence-photo')}
@@ -415,7 +415,7 @@ export const CompleteShowcase: Story = {
                         achievements: 52,
                         connections: 189,
                         isGhostMode: false
-          }}
+                      }}
                       isEditable={true}
                       onEditProfile={action('edit-leader-profile')}
                       onUploadPhoto={action('upload-leader-photo')}
@@ -457,7 +457,7 @@ export const CompleteShowcase: Story = {
                       achievements: 8,
                       connections: 34,
                       isGhostMode: false
-          }}
+                    }}
                     isEditable={true}
                     onEditProfile={action('edit-freshman-profile')}
                     onUploadPhoto={action('upload-freshman-photo')}
@@ -485,7 +485,7 @@ export const CompleteShowcase: Story = {
                       achievements: 34,
                       connections: 145,
                       isGhostMode: false
-          }}
+                    }}
                     isEditable={true}
                     onEditProfile={action('edit-researcher-profile')}
                     onUploadPhoto={action('upload-researcher-photo')}
@@ -514,7 +514,7 @@ export const CompleteShowcase: Story = {
                       achievements: 19,
                       connections: 167,
                       isGhostMode: false
-          }}
+                    }}
                     isEditable={true}
                     onEditProfile={action('edit-international-profile')}
                     onUploadPhoto={action('upload-international-photo')}
@@ -556,7 +556,7 @@ export const CompleteShowcase: Story = {
                       achievements: 28,
                       connections: 98,
                       isGhostMode: true
-          }}
+                    }}
                     isEditable={true}
                     onEditProfile={action('edit-ghost-focus-profile')}
                     onUploadPhoto={action('upload-ghost-focus-photo')}
@@ -585,7 +585,7 @@ export const CompleteShowcase: Story = {
                       achievements: 73,
                       connections: 456,
                       isGhostMode: false
-          }}
+                    }}
                     isEditable={true}
                     onEditProfile={action('edit-connector-profile')}
                     onUploadPhoto={action('upload-connector-photo')}

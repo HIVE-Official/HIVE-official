@@ -274,7 +274,7 @@ const PerformanceShowcase = () => {
         loadTime: loadTimes[condition],
         condition: condition,
         timestamp: Date.now()
-      })
+      })}
     }, loadTimes[condition])
   };
 
@@ -554,7 +554,7 @@ const PerformanceShowcase = () => {
                   {target.title}
                 </Button>
               )
-            })
+            })}
           </div>
           
           <p className="text-lg mt-4" style={{ color: 'var(--hive-text-muted)' }}>

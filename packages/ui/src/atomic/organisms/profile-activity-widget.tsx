@@ -37,20 +37,20 @@ export interface ProfileActivityItem {
   timestamp: string;
   contextSpace?: {
     name: string;
-    type: 'academic' | 'residential' | 'social' | 'professional' | 'hobby'
+    type: 'academic' | 'residential' | 'social' | 'professional' | 'hobby';
   };
   engagement?: {
     likes: number;
     comments: number;
-    shares: number
+    shares: number;
   };
-  isHighlighted?: boolean
+  isHighlighted?: boolean;
 }
 
 export interface ProfileActivityWidgetProps {
   user: {
     id: string;
-    name: string
+    name: string;
   };
   recentActivities?: ProfileActivityItem[];
   todayActivities?: number;
@@ -63,7 +63,7 @@ export interface ProfileActivityWidgetProps {
   onViewAllActivities?: () => void;
   onCreatePost?: () => void;
   onEngageMore?: () => void;
-  className?: string
+  className?: string;
 }
 
 const getActivityTypeConfig = (type: string) => {
@@ -126,7 +126,7 @@ const getActivityTypeConfig = (type: string) => {
     }
   };
   
-  return configs[type as keyof typeof configs] || configs.post
+  return configs[type as keyof typeof configs] || configs.post;
 };
 
 const getSpaceTypeIcon = (type: string) => {
@@ -137,7 +137,7 @@ const getSpaceTypeIcon = (type: string) => {
     professional: Award,
     hobby: Code
   };
-  return icons[type as keyof typeof icons] || Heart
+  return icons[type as keyof typeof icons] || Heart;
 };
 
 const formatTimestamp = (timestamp: string) => {
@@ -147,12 +147,12 @@ const formatTimestamp = (timestamp: string) => {
   
   if (diffInHours < 1) {
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    return diffInMinutes < 1 ? 'Just now' : `${diffInMinutes}m ago`
+    return diffInMinutes < 1 ? 'Just now' : `${diffInMinutes}m ago`;
   } else if (diffInHours < 24) {
-    return `${diffInHours}h ago`
+    return `${diffInHours}h ago`;
   } else {
     const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays}d ago`
+    return `${diffInDays}d ago`;
   }
 };
 
@@ -336,8 +336,8 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
                     )}
                     <ChevronRight className="h-3 w-3 text-[var(--hive-text-secondary)] flex-shrink-0" />
                   </div>
-                )
-          })}
+                );
+              })}
             </div>
           </div>
         )}
@@ -357,8 +357,8 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
                   return <IconComponent className={cn(
                     'h-4 w-4',
                     getActivityTypeConfig(topActivityType).color
-                  )} />
-                })()}
+                  )} />;
+                })}()}
                 <Text variant="body-sm" color="primary">
                   Most active in: {getActivityTypeConfig(topActivityType).label.toLowerCase()}
                 </Text>
@@ -438,5 +438,5 @@ export const ProfileActivityWidget: React.FC<ProfileActivityWidgetProps> = ({
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-lg blur-xl" />
       )}
     </Card>
-  )
+  );
 };

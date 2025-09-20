@@ -78,55 +78,58 @@ export const FileInput = React.forwardRef(({ accept, multiple = false, maxSize, 
                 }
                 return '';
             });
-            setPreviewUrls(newUrls);
         }
-        onFileSelect?.(files);
+        ;
+        setPreviewUrls(newUrls);
     };
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setDragActive(false);
-        if (!disabled) {
-            handleFileChange(e.dataTransfer.files);
+    onFileSelect?.(files);
+});
+const handleDrop = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+    if (!disabled) {
+        handleFileChange(e.dataTransfer.files);
+    }
+};
+const handleDragOver = (e) => {
+    e.preventDefault();
+    if (!disabled) {
+        setDragActive(true);
+    }
+};
+const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+};
+const removeFile = (index) => {
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    setSelectedFiles(newFiles);
+    if (preview) {
+        const newUrls = previewUrls.filter((_, i) => i !== index);
+        // Clean up old URL
+        if (previewUrls[index]) {
+            URL.revokeObjectURL(previewUrls[index]);
         }
+        setPreviewUrls(newUrls);
+    }
+    onFileRemove?.(index);
+};
+const openFileDialog = () => {
+    if (!disabled) {
+        inputRef.current?.click();
+    }
+};
+// Cleanup URLs on unmount
+React.useEffect(() => {
+    return () => {
+        previewUrls.forEach(url => {
+            if (url)
+                URL.revokeObjectURL(url);
+        });
     };
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        if (!disabled) {
-            setDragActive(true);
-        }
-    };
-    const handleDragLeave = (e) => {
-        e.preventDefault();
-        setDragActive(false);
-    };
-    const removeFile = (index) => {
-        const newFiles = selectedFiles.filter((_, i) => i !== index);
-        setSelectedFiles(newFiles);
-        if (preview) {
-            const newUrls = previewUrls.filter((_, i) => i !== index);
-            // Clean up old URL
-            if (previewUrls[index]) {
-                URL.revokeObjectURL(previewUrls[index]);
-            }
-            setPreviewUrls(newUrls);
-        }
-        onFileRemove?.(index);
-    };
-    const openFileDialog = () => {
-        if (!disabled) {
-            inputRef.current?.click();
-        }
-    };
-    // Cleanup URLs on unmount
-    React.useEffect(() => {
-        return () => {
-            previewUrls.forEach(url => {
-                if (url)
-                    URL.revokeObjectURL(url);
-            });
-        };
-    });
-}, []);
+});
+[];
+;
 const renderDefaultInput = () => (_jsx("div", { className: "space-y-2", children: _jsxs("div", { className: cn('relative', 'border-2 border-dashed border-[var(--hive-border-primary)]', 'rounded-xl', 'transition-all duration-200 ease-out', fileInputSizes[size].dropzone, dragActive && 'border-[var(--hive-brand-gold)] bg-[var(--hive-brand-secondary)]/5', error && 'border-[var(--hive-status-error)]', disabled && 'opacity-50 cursor-not-allowed'), children: [_jsx("input", { ref: inputRef, type: "file", accept: accept, multiple: multiple, disabled: disabled, onChange: (e) => handleFileChange(e.target.files), className: "sr-only", ...props }), _jsxs("div", { className: "text-center", children: [_jsx(Upload, { className: "mx-auto h-8 w-8 text-[var(--hive-text-secondary)] mb-2" }), _jsx("p", { className: "text-[var(--hive-text-primary)] font-medium", children: "Click to upload or drag and drop" }), accept && (_jsx("p", { className: "text-[var(--hive-text-secondary)] text-sm mt-1", children: accept.split(',').join(', ') })), maxSize && (_jsxs("p", { className: "text-[var(--hive-text-secondary)] text-sm", children: ["Max size: ", formatFileSize(maxSize)] }))] })] }) }));
 const renderDropzone = () => (_jsxs("div", { className: cn('border-2 border-dashed rounded-xl', 'transition-all duration-200 ease-out', 'cursor-pointer', fileInputSizes[size].dropzone, dragActive
         ? 'border-[var(--hive-brand-gold)] bg-[var(--hive-brand-secondary)]/5'

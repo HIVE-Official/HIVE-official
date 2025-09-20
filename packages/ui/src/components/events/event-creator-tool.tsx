@@ -481,7 +481,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
                 )}
               </React.Fragment>
             )
-          })
+          })}
         </div>
       </div>
 

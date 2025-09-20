@@ -505,7 +505,7 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
               description: tool.description,
               isSpaceTool: true,
               spaceId: deploymentConfig.spaceId,
-            });
+            })};
         
         savedTool = saveResult.tool
       }
@@ -536,7 +536,7 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
           requirePermission: deploymentConfig.settings?.requirePermission || false,
           maxConcurrentUsers: deploymentConfig.settings?.maxConcurrentUsers,
         },
-      });
+      })};
 
       // Call original onDeploy callback if provided
       if (onDeploy) {

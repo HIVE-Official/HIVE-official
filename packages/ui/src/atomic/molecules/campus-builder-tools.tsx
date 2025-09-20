@@ -634,7 +634,7 @@ export const CampusBuilderTools: React.FC<CampusBuilderToolsProps> = ({
                       </div>
                     </motion.div>
                   )
-                })
+                })}
               ) : (
                 <div className="text-center py-6">
                   <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-charcoal/40 to-graphite/40 border border-steel/15 flex items-center justify-center">

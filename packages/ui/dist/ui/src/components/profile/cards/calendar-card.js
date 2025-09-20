@@ -6,7 +6,7 @@ import { cn } from '../../../lib/utils';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
-import { Calendar, Clock, MapPin, Users, ChevronLeft, ChevronRight, CheckCircle, XCircle, Circle, BookOpen, Coffee, Presentation, MoreHorizontal } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, CheckCircle, XCircle, Circle, BookOpen, Coffee, Presentation, MoreHorizontal } from 'lucide-react';
 // Event Type Configuration
 const eventTypeConfig = {
     academic: {
@@ -144,19 +144,21 @@ function CalendarMiniView({ events, selectedDate, onDateSelect }) {
                 hasEvents: dayEvents.length > 0
             });
         }
-        return days;
-    }, [currentMonth, events, selectedDate]);
-    const navigateMonth = useCallback((direction) => {
-        setCurrentMonth(prev => {
-            const newDate = new Date(prev);
-            newDate.setMonth(prev.getMonth() + (direction === 'next' ? 1 : -1));
-            return newDate;
-        });
-    }, []);
-    return (_jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h3", { className: "font-medium text-[var(--hive-text-primary)]", children: currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) }), _jsxs("div", { className: "flex gap-1", children: [_jsx(Button, { size: "sm", variant: "ghost", className: "h-6 w-6 p-0", onClick: () => navigateMonth('prev'), children: _jsx(ChevronLeft, { className: "w-3 h-3" }) }), _jsx(Button, { size: "sm", variant: "ghost", className: "h-6 w-6 p-0", onClick: () => navigateMonth('next'), children: _jsx(ChevronRight, { className: "w-3 h-3" }) })] })] }), _jsxs("div", { className: "grid grid-cols-7 gap-1 text-xs", children: [['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (_jsx("div", { className: "text-center font-medium text-[var(--hive-text-muted)] py-1", children: day }, day))), daysInMonth.map((day, index) => (_jsxs("button", { className: cn('aspect-square flex items-center justify-center rounded text-xs relative transition-colors', day.isCurrentMonth
-                            ? 'text-[var(--hive-text-primary)]'
-                            : 'text-[var(--hive-text-muted)]', day.isToday && 'bg-[var(--hive-brand-primary)] text-white font-medium', day.isSelected && !day.isToday && 'bg-[var(--hive-background-secondary)] ring-1 ring-[var(--hive-brand-primary)]', 'hover:bg-[var(--hive-background-secondary)]'), onClick: () => onDateSelect(day.date), children: [day.date.getDate(), day.hasEvents && !day.isToday && (_jsx("div", { className: "absolute bottom-0.5 right-0.5 w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full" }))] }, index)))] })] }));
+    });
+    return days;
 }
+[currentMonth, events, selectedDate];
+;
+const navigateMonth = useCallback((direction) => {
+    setCurrentMonth(prev => {
+        const newDate = new Date(prev);
+        newDate.setMonth(prev.getMonth() + (direction === 'next' ? 1 : -1));
+        return newDate;
+    });
+}, []);
+return (_jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h3", { className: "font-medium text-[var(--hive-text-primary)]", children: currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) }), _jsxs("div", { className: "flex gap-1", children: [_jsx(Button, { size: "sm", variant: "ghost", className: "h-6 w-6 p-0", onClick: () => navigateMonth('prev'), children: _jsx(ChevronLeft, { className: "w-3 h-3" }) }), _jsx(Button, { size: "sm", variant: "ghost", className: "h-6 w-6 p-0", onClick: () => navigateMonth('next'), children: _jsx(ChevronRight, { className: "w-3 h-3" }) })] })] }), _jsxs("div", { className: "grid grid-cols-7 gap-1 text-xs", children: [['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (_jsx("div", { className: "text-center font-medium text-[var(--hive-text-muted)] py-1", children: day }, day))), daysInMonth.map((day, index) => (_jsxs("button", { className: cn('aspect-square flex items-center justify-center rounded text-xs relative transition-colors', day.isCurrentMonth
+                        ? 'text-[var(--hive-text-primary)]'
+                        : 'text-[var(--hive-text-muted)]', day.isToday && 'bg-[var(--hive-brand-primary)] text-white font-medium', day.isSelected && !day.isToday && 'bg-[var(--hive-background-secondary)] ring-1 ring-[var(--hive-brand-primary)]', 'hover:bg-[var(--hive-background-secondary)]'), onClick: () => onDateSelect(day.date), children: [day.date.getDate(), day.hasEvents && !day.isToday && (_jsx("div", { className: "absolute bottom-0.5 right-0.5 w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full" }))] }, index)))] })] }));
 // Main Calendar Card Component
 export function CalendarCard({ events, isEditMode, onEventCreate, onEventUpdate, onRSVP, onSettingsClick, className }) {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -210,7 +212,7 @@ return (_jsxs(Card, { className: cn('h-full overflow-hidden', className), childr
                             { key: 'today', label: 'Today', count: todayEventsCount },
                             { key: 'upcoming', label: 'Upcoming' },
                             { key: 'calendar', label: 'Calendar' }
-                        ].map(({ key, label, count })), " => (", _jsxs(Button, { size: "sm", variant: viewMode === key ? "default" : "ghost", className: "h-7 px-3 text-xs", onClick: () => setViewMode(key), children: [label, count !== undefined && count > 0 && (_jsx(Badge, { variant: "secondary", className: "ml-1 h-4 px-1 text-xs", children: count }))] }, key), "))}"] })] }), _jsxs(CardContent, { className: "space-y-4", children: [viewMode === 'today' && nextEvent && (_jsxs(motion.div, { initial: { opacity: 0, y: -10 }, animate: { opacity: 1, y: 0 }, className: "p-3 bg-[var(--hive-background-tertiary)] rounded-lg border", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Bell, { className: "w-4 h-4 text-[var(--hive-brand-primary)]" }), _jsx("span", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Next Up" })] }), _jsxs("p", { className: "text-sm text-[var(--hive-text-secondary)] mt-1", children: [nextEvent.title, " \u2022 ", getTimeUntilEvent(nextEvent.startTime)] })] })), viewMode === 'calendar' && (_jsx(CalendarMiniView, { events: events, selectedDate: selectedDate, onDateSelect: setSelectedDate })), _jsxs("div", { className: "space-y-3", children: [viewMode !== 'calendar' && (_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h4", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: viewMode === 'today' ? `Today, ${formatDate(new Date())}` : 'Upcoming Events' }), viewMode === 'upcoming' && !showAllEvents && filteredEvents.length === 5 && (_jsxs(Button, { size: "sm", variant: "ghost", className: "h-6 px-2 text-xs", onClick: () => setShowAllEvents(true), children: [_jsx(Eye, { className: "w-3 h-3 mr-1" }), "View All"] }))] })), _jsx(ScrollArea, { className: "max-h-80", children: _jsx("div", { className: "space-y-2", children: _jsx(AnimatePresence, { children: filteredEvents.length > 0 ? (filteredEvents.map((event) => (_jsx(EventItem, { event: event, onRSVP: onRSVP, isCompact: viewMode === 'upcoming' }, event.id)))) : (_jsxs(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, className: "text-center py-8 text-[var(--hive-text-muted)]", children: [_jsx(Calendar, { className: "w-12 h-12 mx-auto mb-3 opacity-50" }), _jsx("p", { className: "text-sm", children: viewMode === 'today'
+                        ].map(map), ") => (", _jsxs(Button, { size: "sm", variant: viewMode === key ? "default" : "ghost", className: "h-7 px-3 text-xs", onClick: () => setViewMode(key), children: [label, count !== undefined && count > 0 && (_jsx(Badge, { variant: "secondary", className: "ml-1 h-4 px-1 text-xs", children: count }))] }, key), "))}"] })] }), _jsxs(CardContent, { className: "space-y-4", children: [viewMode === 'today' && nextEvent && (_jsxs(motion.div, { initial: { opacity: 0, y: -10 }, animate: { opacity: 1, y: 0 }, className: "p-3 bg-[var(--hive-background-tertiary)] rounded-lg border", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Bell, { className: "w-4 h-4 text-[var(--hive-brand-primary)]" }), _jsx("span", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Next Up" })] }), _jsxs("p", { className: "text-sm text-[var(--hive-text-secondary)] mt-1", children: [nextEvent.title, " \u2022 ", getTimeUntilEvent(nextEvent.startTime)] })] })), viewMode === 'calendar' && (_jsx(CalendarMiniView, { events: events, selectedDate: selectedDate, onDateSelect: setSelectedDate })), _jsxs("div", { className: "space-y-3", children: [viewMode !== 'calendar' && (_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h4", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: viewMode === 'today' ? `Today, ${formatDate(new Date())}` : 'Upcoming Events' }), viewMode === 'upcoming' && !showAllEvents && filteredEvents.length === 5 && (_jsxs(Button, { size: "sm", variant: "ghost", className: "h-6 px-2 text-xs", onClick: () => setShowAllEvents(true), children: [_jsx(Eye, { className: "w-3 h-3 mr-1" }), "View All"] }))] })), _jsx(ScrollArea, { className: "max-h-80", children: _jsx("div", { className: "space-y-2", children: _jsx(AnimatePresence, { children: filteredEvents.length > 0 ? (filteredEvents.map((event) => (_jsx(EventItem, { event: event, onRSVP: onRSVP, isCompact: viewMode === 'upcoming' }, event.id)))) : (_jsxs(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, className: "text-center py-8 text-[var(--hive-text-muted)]", children: [_jsx(Calendar, { className: "w-12 h-12 mx-auto mb-3 opacity-50" }), _jsx("p", { className: "text-sm", children: viewMode === 'today'
                                                     ? 'No events today'
                                                     : viewMode === 'calendar'
                                                         ? `No events on ${formatDate(selectedDate)}`

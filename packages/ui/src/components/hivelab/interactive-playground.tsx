@@ -242,7 +242,7 @@ const CodeViewer = ({
         } else {
           return `  ${key}={${JSON.stringify(value)}}`
         }
-      })
+      })}
       .filter(Boolean)
       .join('\n');
 
@@ -322,7 +322,7 @@ export function InteractivePlayground({
         } else {
           return `${key}={${JSON.stringify(value)}}`
         }
-      })
+      })}
       .filter(Boolean)
       .join(' ')} />`;
     

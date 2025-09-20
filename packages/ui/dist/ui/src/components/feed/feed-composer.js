@@ -1,13 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useRef, useEffect } from "react";
-import { Button } from "../../atomic/atoms/button-enhanced";
-import { Textarea } from "../../atomic/atoms/textarea-enhanced";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Image, BarChart3, Calendar, Wrench, Loader2, AlertCircle, SendIcon, } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { Image, BarChart3, Calendar, Wrench, } from "lucide-react";
 const POST_TYPE_CONFIG = {
     text: { icon: null, label: "Text", color: "default" },
     image: { icon: Image, label: "Image", color: "blue" },
@@ -139,61 +133,65 @@ export const FeedComposer = ({ spaceId, currentUser, onPostCreated, className, }
                 },
                 body: JSON.stringify(postData),
             });
-            if (!response.ok) {
-                const errorData = (await response.json());
-                throw new Error(errorData.error || "Failed to create post");
-            }
-            const responseData = (await response.json());
-            const { post } = responseData;
-            // Clear form and draft
-            setContent("");
-            setPostType("text");
-            localStorage.removeItem(`hive-draft-${spaceId}`);
-            // Notify parent
-            onPostCreated(post);
         }
-        catch (error) {
-            console.error("Error creating post:", error);
-            setError(error instanceof Error ? error.message : "Failed to create post");
+        finally { }
+        ;
+        if (!response.ok) {
+            const errorData = (await response.json());
+            throw new Error(errorData.error || "Failed to create post");
         }
-        finally {
-            setIsSubmitting(false);
-        }
+        const responseData = (await response.json());
+        const { post } = responseData;
+        // Clear form and draft
+        setContent("");
+        setPostType("text");
+        localStorage.removeItem(`hive-draft-${spaceId}`);
+        // Notify parent
+        onPostCreated(post);
     };
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-            e.preventDefault();
-            handleSubmit(e);
-        }
-        if (showMentions) {
-            if (e.key === "Escape") {
-                setShowMentions(false);
-            }
-            // Handle arrow keys and enter for mention selection
-            // Implementation would go here for full keyboard navigation
-        }
-    };
-    const canSubmit = content.trim().length > 0 && remainingChars >= 0 && !isSubmitting;
-    return (_jsxs(Card, { className: cn("sticky top-4 z-10 bg-background/95 backdrop-blur", className), ref: composerRef, children: [_jsx(CardHeader, { children: _jsx(CardTitle, { children: "What's on your mind?" }) }), _jsx(CardContent, { className: "p-4", children: _jsxs("form", { onSubmit: handleSubmit, className: "space-y-4", children: [_jsxs("div", { className: "flex gap-3", children: [_jsxs(Avatar, { className: "h-10 w-10 flex-shrink-0", children: [_jsx(AvatarImage, { src: currentUser.photoURL, alt: currentUser.fullName }), _jsx(AvatarFallback, { children: currentUser.fullName
-                                                .split(" ")
-                                                .map((n) => n[0])
-                                                .join("")
-                                                .toUpperCase() })] }), _jsxs("div", { className: "flex-1 space-y-3", children: [_jsx("div", { className: "flex gap-2 flex-wrap", children: Object.entries(POST_TYPE_CONFIG).map(([type, config]) => {
-                                                const Icon = config.icon;
-                                                const isSelected = postType === type;
-                                                return (_jsxs(Button, { variant: isSelected ? "primary" : "outline", size: "sm", onClick: (e) => {
-                                                        e.preventDefault();
-                                                        setPostType(type);
-                                                    }, className: "h-7 text-xs", children: [Icon && _jsx(Icon, { className: "h-3 w-3 mr-1" }), config.label] }, type));
-                                            }) }), _jsxs("div", { className: "relative", children: [_jsx(Textarea, { ref: textareaRef, value: content, onChange: (e) => setContent(e.target.value), onKeyDown: handleKeyDown, placeholder: `What's happening in this space?`, className: "min-h-20 resize-none border-0 p-0 text-base placeholder:text-muted-foreground focus-visible:ring-0", maxLength: CHAR_LIMIT }), showMentions && mentionSuggestions.length > 0 && (_jsx(Card, { className: "absolute top-full left-0 right-0 mt-1 z-50 max-h-48 overflow-y-auto", children: _jsx(CardContent, { className: "p-2", children: mentionSuggestions.map((user) => (_jsxs("button", { onClick: (e) => {
-                                                                e.preventDefault();
-                                                                handleMentionSelect(user);
-                                                            }, className: "w-full flex items-center gap-2 p-2 rounded hover:bg-muted text-left", children: [_jsxs(Avatar, { className: "h-6 w-6", children: [_jsx(AvatarImage, { src: user.photoURL, alt: user.fullName }), _jsx(AvatarFallback, { className: "text-xs", children: user.fullName
-                                                                                .split(" ")
-                                                                                .map((n) => n[0])
-                                                                                .join("")
-                                                                                .toUpperCase() })] }), _jsxs("div", { children: [_jsx("div", { className: "font-medium text-sm", children: user.fullName }), _jsxs("div", { className: "text-xs text-muted-foreground", children: ["@", user.handle] })] })] }, user.id))) }) }))] }), error && (_jsxs("div", { className: "flex items-center gap-2 text-sm text-destructive", children: [_jsx(AlertCircle, { className: "h-4 w-4" }), error] }))] })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-4", children: [_jsx("div", { className: cn("text-sm", remainingChars < 50
-                                                ? "text-orange-500"
-                                                : "text-muted-foreground", remainingChars < 0 ? "text-destructive" : ""), children: remainingChars }), content.trim() && (_jsx(Badge, { variant: "outline", className: "text-xs", children: "Draft saved" }))] }), _jsx(Button, { type: "submit", disabled: !canSubmit, size: "sm", className: "min-w-20", children: isSubmitting ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "h-4 w-4 mr-2 animate-spin" }), "Posting..."] })) : (_jsxs(_Fragment, { children: [_jsx(SendIcon, { className: "w-4 h-4 mr-2" }), "Post"] })) })] })] }) })] }));
+    try { }
+    catch (error) {
+        console.error("Error creating post:", error);
+        setError(error instanceof Error ? error.message : "Failed to create post");
+    }
+    finally {
+        setIsSubmitting(false);
+    }
 };
+const handleKeyDown = (e) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        handleSubmit(e);
+    }
+    if (showMentions) {
+        if (e.key === "Escape") {
+            setShowMentions(false);
+        }
+        // Handle arrow keys and enter for mention selection
+        // Implementation would go here for full keyboard navigation
+    }
+};
+const canSubmit = content.trim().length > 0 && remainingChars >= 0 && !isSubmitting;
+return (_jsxs(Card, { className: cn("sticky top-4 z-10 bg-background/95 backdrop-blur", className), ref: composerRef, children: [_jsx(CardHeader, { children: _jsx(CardTitle, { children: "What's on your mind?" }) }), _jsx(CardContent, { className: "p-4", children: _jsxs("form", { onSubmit: handleSubmit, className: "space-y-4", children: [_jsxs("div", { className: "flex gap-3", children: [_jsxs(Avatar, { className: "h-10 w-10 flex-shrink-0", children: [_jsx(AvatarImage, { src: currentUser.photoURL, alt: currentUser.fullName }), _jsx(AvatarFallback, { children: currentUser.fullName
+                                            .split(" ")
+                                            .map((n) => n[0])
+                                            .join("")
+                                            .toUpperCase() })] }), _jsxs("div", { className: "flex-1 space-y-3", children: [_jsx("div", { className: "flex gap-2 flex-wrap", children: Object.entries(POST_TYPE_CONFIG).map(([type, config]) => {
+                                            const Icon = config.icon;
+                                            const isSelected = postType === type;
+                                            return (_jsxs(Button, { variant: isSelected ? "primary" : "outline", size: "sm", onClick: (e) => {
+                                                    e.preventDefault();
+                                                    setPostType(type);
+                                                }, className: "h-7 text-xs", children: [Icon && _jsx(Icon, { className: "h-3 w-3 mr-1" }), config.label] }, type));
+                                        }) }), _jsxs("div", { className: "relative", children: [_jsx(Textarea, { ref: textareaRef, value: content, onChange: (e) => setContent(e.target.value), onKeyDown: handleKeyDown, placeholder: `What's happening in this space?`, className: "min-h-20 resize-none border-0 p-0 text-base placeholder:text-muted-foreground focus-visible:ring-0", maxLength: CHAR_LIMIT }), showMentions && mentionSuggestions.length > 0 && (_jsx(Card, { className: "absolute top-full left-0 right-0 mt-1 z-50 max-h-48 overflow-y-auto", children: _jsx(CardContent, { className: "p-2", children: mentionSuggestions.map((user) => (_jsxs("button", { onClick: (e) => {
+                                                            e.preventDefault();
+                                                            handleMentionSelect(user);
+                                                        }, className: "w-full flex items-center gap-2 p-2 rounded hover:bg-muted text-left", children: [_jsxs(Avatar, { className: "h-6 w-6", children: [_jsx(AvatarImage, { src: user.photoURL, alt: user.fullName }), _jsx(AvatarFallback, { className: "text-xs", children: user.fullName
+                                                                            .split(" ")
+                                                                            .map((n) => n[0])
+                                                                            .join("")
+                                                                            .toUpperCase() })] }), _jsxs("div", { children: [_jsx("div", { className: "font-medium text-sm", children: user.fullName }), _jsxs("div", { className: "text-xs text-muted-foreground", children: ["@", user.handle] })] })] }, user.id))) }) }))] }), error && (_jsxs("div", { className: "flex items-center gap-2 text-sm text-destructive", children: [_jsx(AlertCircle, { className: "h-4 w-4" }), error] }))] })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-4", children: [_jsx("div", { className: cn("text-sm", remainingChars < 50
+                                            ? "text-orange-500"
+                                            : "text-muted-foreground", remainingChars < 0 ? "text-destructive" : ""), children: remainingChars }), content.trim() && (_jsx(Badge, { variant: "outline", className: "text-xs", children: "Draft saved" }))] }), _jsx(Button, { type: "submit", disabled: !canSubmit, size: "sm", className: "min-w-20", children: isSubmitting ? (_jsxs(_Fragment, { children: [_jsx(Loader2, { className: "h-4 w-4 mr-2 animate-spin" }), "Posting..."] })) : (_jsxs(_Fragment, { children: [_jsx(SendIcon, { className: "w-4 h-4 mr-2" }), "Post"] })) })] })] }) })] }));
+;
 //# sourceMappingURL=feed-composer.js.map

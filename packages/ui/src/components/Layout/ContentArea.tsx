@@ -312,21 +312,21 @@ export const ContentArea: React.FC<ContentAreaProps> = ({
           containerRef.current?.scrollTo({ 
             top: containerRef.current.scrollHeight, 
             behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior 
-          });
+          })};
           break;
         case 'PageUp':
           e.preventDefault();
           containerRef.current?.scrollBy({ 
             top: -containerRef.current.clientHeight * 0.8, 
             behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior 
-          });
+          })};
           break;
         case 'PageDown':
           e.preventDefault();
           containerRef.current?.scrollBy({ 
             top: containerRef.current.clientHeight * 0.8, 
             behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior 
-          });
+          })};
           break
       }
     };

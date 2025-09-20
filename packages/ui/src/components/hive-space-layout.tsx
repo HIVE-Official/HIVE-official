@@ -248,7 +248,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
           newSet.add(surfaceType)
         }
         return newSet
-      })
+      })}
     }, []);
     
     // Render surface content based on type
@@ -426,7 +426,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
                         )}
                       </motion.button>
                     )
-          })
+          })}
                 </div>
                 
                 {/* Builder Mode Toggle */}

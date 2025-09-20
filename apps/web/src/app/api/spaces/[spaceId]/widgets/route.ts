@@ -1,22 +1,18 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 /**
  * Get widget data for a specific space
  * Returns data for all widgets: posts, events, members, pinned, tools
  */
-export const GET = withAuth(async (
-  request: NextRequest,
-  authContext,
-  { params }: { params: Promise<{ spaceId: string }> }
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
 ) => {
-  try {
-    const { spaceId } = await params;
-    const userId = authContext.userId;
+  const { spaceId } = await params;
+  const userId = getUserId(request);
 
     logger.info('🔍 Fetching widget data for space:, user', { spaceId, userId, endpoint: '/api/spaces/[spaceId]/widgets' });
 
@@ -198,8 +194,7 @@ export const GET = withAuth(async (
 
     logger.info('✅ Returning widget data for space', { spaceId, endpoint: '/api/spaces/[spaceId]/widgets' });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       spaceId,
       widgets: widgetData,
       userPermissions: {
@@ -212,20 +207,6 @@ export const GET = withAuth(async (
       }
     });
 
-  } catch (error: any) {
-    logger.error('❌ Widget data API error', { error: error, endpoint: '/api/spaces/[spaceId]/widgets' });
-
-    return NextResponse.json(
-      { 
-        success: false,
-        error: 'Internal server error'
-      },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
-  }
-}, { 
-  allowDevelopmentBypass: true, // Widget data viewing is safe for development
-  operation: 'get_space_widgets' 
 });
 
 /**

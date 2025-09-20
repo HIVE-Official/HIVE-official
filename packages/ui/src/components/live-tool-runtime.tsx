@@ -87,7 +87,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
       setRuntimeState(prev => ({
         ...prev,
         formData: { ...prev.formData, ...newState },
-      }))
+      })})
     },
     onUpdate: (update) => {
       if (showDebugInfo) {
@@ -135,7 +135,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
 
       apiClient.collectCommunityData(trackingData).catch(error => {
         console.warn('Failed to track session start:', error)
-      })
+      })}
     }
   }, [toolId, tool?.id, spaceId, deploymentId, collectUsageData, sessionStartTime]);
 
@@ -177,7 +177,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
         true // optimistic update
       ).catch(error => {
         console.warn('Failed to sync real-time state:', error)
-      })
+      })}
     }
 
     // Track user interaction
@@ -197,9 +197,9 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
           deploymentId,
           interactionCount: interactionCount + 1,
         },
-      }).catch(error => {
+      })}.catch(error => {
         console.warn('Failed to track interaction:', error)
-      })
+      })}
     }
   }, [enableRealtime, realtimeActions, collectUsageData, toolId, tool?.id, spaceId, deploymentId, interactionCount]);
 
@@ -300,7 +300,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
         if (config?.required && !runtimeState.formData[element.id]) {
           errors.push(`${config.label || element.id} is required`)
         }
-      });
+      })};
 
       if (errors.length > 0) {
         setRuntimeState(prev => ({ 
@@ -366,7 +366,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
         ...prev, 
         isSubmitting: false,
         submitResult: 'success'
-      }))
+      })})
 
     } catch (error) {
       console.error('Tool submission error:', error);
@@ -412,7 +412,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
         isSubmitting: false,
         errors: [errorMessage],
         submitResult: 'error'
-      }));
+      })});
 
       if (onError) {
         onError(error instanceof Error ? error : new Error(errorMessage))

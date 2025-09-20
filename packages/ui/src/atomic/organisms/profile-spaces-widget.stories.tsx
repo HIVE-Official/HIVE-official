@@ -330,7 +330,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'alex-community-leader',
                         name: 'Alex Rivera'
-          }}
+                      }}
                       joinedSpaces={sampleSpaces.communityLeader}
                       totalSpaces={12}
                       spacesCreated={6}
@@ -355,7 +355,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'jamie-new-student',
                         name: 'Jamie Park'
-          }}
+                      }}
                       joinedSpaces={sampleSpaces.newStudent}
                       totalSpaces={3}
                       spacesCreated={0}
@@ -380,7 +380,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'david-empty-spaces',
                         name: 'David Kim'
-          }}
+                      }}
                       joinedSpaces={[]}
                       totalSpaces={0}
                       spacesCreated={0}
@@ -477,7 +477,7 @@ export const CompleteShowcase: Story = {
                         activityLevel: 'high',
                         unreadMessages: 15,
                         upcomingEvents: 3
-          }}
+                      }}
                       isEditable={true}
                       onJoinSpace={action('academic-join')}
                       onViewSpace={action('academic-view')}
@@ -540,7 +540,7 @@ export const CompleteShowcase: Story = {
                         activityLevel: 'high',
                         unreadMessages: 12,
                         upcomingEvents: 2
-          }}
+                      }}
                       isEditable={true}
                       onJoinSpace={action('residential-join')}
                       onViewSpace={action('residential-view')}
@@ -603,7 +603,7 @@ export const CompleteShowcase: Story = {
                         activityLevel: 'high',
                         unreadMessages: 23,
                         upcomingEvents: 4
-          }}
+                      }}
                       isEditable={true}
                       onJoinSpace={action('professional-join')}
                       onViewSpace={action('professional-view')}
@@ -666,7 +666,7 @@ export const CompleteShowcase: Story = {
                         activityLevel: 'medium',
                         unreadMessages: 5,
                         upcomingEvents: 2
-          }}
+                      }}
                       isEditable={true}
                       onJoinSpace={action('social-hobby-join')}
                       onViewSpace={action('social-hobby-view')}
@@ -719,7 +719,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'sarah-cs-academic-leader',
                         name: 'Sarah Chen',
-          }}
+                      }}
                       joinedSpaces={[
                         {
                           id: 'cse331-study-leadership',
@@ -780,7 +780,7 @@ export const CompleteShowcase: Story = {
                         activityLevel: 'high',
                         unreadMessages: 18,
                         upcomingEvents: 3
-          }}
+                      }}
                       isEditable={true}
                       onJoinSpace={action('cs-academic-leader-join')}
                       onViewSpace={action('cs-academic-leader-view')}
@@ -799,7 +799,7 @@ export const CompleteShowcase: Story = {
                       user={{
                         id: 'sarah-cs-campus-life',
                         name: 'Sarah Chen',
-          }}
+                      }}
                       joinedSpaces={[
                         {
                           id: 'ellicott-porter-tech-floor',
@@ -847,7 +847,7 @@ export const CompleteShowcase: Story = {
                         activityLevel: 'high',
                         unreadMessages: 9,
                         upcomingEvents: 2
-          }}
+                      }}
                       isEditable={true}
                       onJoinSpace={action('cs-campus-life-join')}
                       onViewSpace={action('cs-campus-life-view')}
@@ -880,7 +880,7 @@ export const CompleteShowcase: Story = {
                     user={{
                       id: 'alex-engineering-leader',
                       name: 'Alex Rivera',
-          }}
+                    }}
                     joinedSpaces={[
                       {
                         id: 'ub-robotics-club-leadership',
@@ -928,7 +928,7 @@ export const CompleteShowcase: Story = {
                       activityLevel: 'high',
                       unreadMessages: 25,
                       upcomingEvents: 5
-          }}
+                    }}
                     isEditable={true}
                     onJoinSpace={action('engineering-leader-join')}
                     onViewSpace={action('engineering-leader-view')}
@@ -947,7 +947,7 @@ export const CompleteShowcase: Story = {
                     user={{
                       id: 'alex-mentorship-leader',
                       name: 'Alex Rivera',
-          }}
+                    }}
                     joinedSpaces={[
                       {
                         id: 'engineering-peer-mentorship',
@@ -995,7 +995,7 @@ export const CompleteShowcase: Story = {
                       activityLevel: 'high',
                       unreadMessages: 18,
                       upcomingEvents: 2
-          }}
+                    }}
                     isEditable={true}
                     onJoinSpace={action('mentorship-leader-join')}
                     onViewSpace={action('mentorship-leader-view')}
@@ -1026,7 +1026,7 @@ export const CompleteShowcase: Story = {
                     user={{
                       id: 'jamie-premed-academic',
                       name: 'Jamie Park',
-          }}
+                    }}
                     joinedSpaces={[
                       {
                         id: 'ub-pre-med-society-leadership',
@@ -1074,7 +1074,7 @@ export const CompleteShowcase: Story = {
                       activityLevel: 'high',
                       unreadMessages: 14,
                       upcomingEvents: 4
-          }}
+                    }}
                     isEditable={true}
                     onJoinSpace={action('premed-academic-join')}
                     onViewSpace={action('premed-academic-view')}
@@ -1093,7 +1093,7 @@ export const CompleteShowcase: Story = {
                     user={{
                       id: 'jamie-premed-research',
                       name: 'Jamie Park',
-          }}
+                    }}
                     joinedSpaces={[
                       {
                         id: 'clinical-research-interns',
@@ -1140,7 +1140,7 @@ export const CompleteShowcase: Story = {
                       activityLevel: 'medium',
                       unreadMessages: 3,
                       upcomingEvents: 1
-          }}
+                    }}
                     isEditable={true}
                     onJoinSpace={action('premed-research-join')}
                     onViewSpace={action('premed-research-view')}

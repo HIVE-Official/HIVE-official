@@ -254,7 +254,7 @@ function GhostModeSettingsDialog({
           ...(settings as any)[parent],
           [child]: value
         }
-      })
+      })}
     } else {
       onSettingsChange({ [key]: value })
     }
@@ -298,7 +298,7 @@ function GhostModeSettingsDialog({
                     </div>
                   </button>
                 )
-          })
+          })}
             </div>
           </div>
 
@@ -312,7 +312,7 @@ function GhostModeSettingsDialog({
                 { key: 'hideLocation', label: 'Location Info', icon: MapPin },
                 { key: 'hideSpaces', label: 'Space Memberships', icon: Users },
                 { key: 'muteNotifications', label: 'Mute Notifications', icon: Bell }
-              ].map(({ key, label, icon: Icon })} => (
+              ].map(map}) => (
                 <div key={key} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Icon className="w-4 h-4 text-[var(--hive-text-muted)]" />
@@ -335,7 +335,7 @@ function GhostModeSettingsDialog({
                 { key: 'temporary', label: '1 Hour', description: 'Auto-disable after 1 hour' },
                 { key: 'session', label: 'This Session', description: 'Until you log out' },
                 { key: 'indefinite', label: 'Until Disabled', description: 'Stays on until manually turned off' }
-              ].map(({ key, label, description })} => (
+              ].map(map}) => (
                 <button
                   key={key}
                   className={cn(

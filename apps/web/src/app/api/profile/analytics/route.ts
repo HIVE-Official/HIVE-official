@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 // Profile analytics interface
 interface ProfileAnalytics {
@@ -77,9 +76,12 @@ interface ProfileAnalytics {
 }
 
 // GET - Fetch detailed profile analytics
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
+) => {
+  const userId = getUserId(request);
     const { searchParams } = new URL(request.url);
     const timeRange = searchParams.get('timeRange') || 'month'; // week, month, semester, year
     const includeInsights = searchParams.get('includeInsights') !== 'false';
@@ -205,8 +207,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         endpoint: '/api/profile/analytics' 
       });
       
-      return NextResponse.json({
-        success: true,
+      return respond.success({
         analytics: mockAnalytics,
         metadata: {
           timeRange,
@@ -272,8 +273,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       }
     };
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       analytics: basicAnalytics,
       metadata: {
         timeRange,
@@ -283,11 +283,4 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       }
     });
     
-  } catch (error) {
-    logger.error('Error fetching profile analytics', { error: error, endpoint: '/api/profile/analytics' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch profile analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true,
-  operation: 'get_profile_analytics' 
 });

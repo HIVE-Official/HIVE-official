@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getAuth } from 'firebase-admin/auth';
-import { getAuthTokenFromRequest } from '@/lib/auth';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 // RSS Feed Configuration Schema
 const RSSFeedConfigSchema = z.object({
@@ -173,132 +170,109 @@ function convertRSSItemToEvent(item: any, spaceId: string, organizerId: string) 
 }
 
 // GET /api/spaces/rss-integration - Get RSS integration status and feeds
-export const GET = withAuth(async (
-  request: NextRequest,
-  authContext
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
 ) => {
-  try {
-    // Check if user is admin
-    const userDoc = await dbAdmin.collection('users').doc(authContext.userId).get();
-    const userData = userDoc.data();
-    if (!userDoc.exists || !userData?.isAdmin) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Get RSS feed configurations
-    const feedsSnapshot = await dbAdmin.collection('rss_feeds').get();
-    const feeds = feedsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-
-    // Get recent RSS integration logs
-    const logsSnapshot = await dbAdmin
-      .collection('rss_integration_logs')
-      .orderBy('timestamp', 'desc')
-      .limit(50)
-      .get();
-    
-    const logs = logsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      timestamp: doc.data().timestamp?.toDate?.()?.toISOString(),
-    }));
-
-    return NextResponse.json({
-      feeds,
-      logs,
-      summary: {
-        totalFeeds: feeds.length,
-        activeFeeds: feeds.filter((f: any) => f.isActive).length,
-        lastSync: logs[0]?.timestamp || null,
-      }
-    }, { status: HttpStatus.OK });
-
-  } catch (error) {
-    logger.error('Error fetching RSS integration data', { error, endpoint: '/api/spaces/rss-integration' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch RSS data", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  // Check if user is admin
+  const userId = getUserId(request);
+  const userDoc = await dbAdmin.collection('users').doc(userId).get();
+  const userData = userDoc.data();
+  if (!userDoc.exists || !userData?.isAdmin) {
+    return respond.error("Admin access required", "FORBIDDEN", 403);
   }
-}, { 
-  allowDevelopmentBypass: false,
-  operation: 'fetch_rss_integration'
+
+  // Get RSS feed configurations
+  const feedsSnapshot = await dbAdmin.collection('rss_feeds').get();
+  const feeds = feedsSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  // Get recent RSS integration logs
+  const logsSnapshot = await dbAdmin
+    .collection('rss_integration_logs')
+    .orderBy('timestamp', 'desc')
+    .limit(50)
+    .get();
+
+  const logs = logsSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+    timestamp: doc.data().timestamp?.toDate?.()?.toISOString(),
+  }));
+
+  return respond.success({
+    feeds,
+    logs,
+    summary: {
+      totalFeeds: feeds.length,
+      activeFeeds: feeds.filter((f: any) => f.isActive).length,
+      lastSync: logs[0]?.timestamp || null,
+    }
+  });
 });
 
 // POST /api/spaces/rss-integration - Create RSS feed configuration
-export const POST = withAuth(async (
-  request: NextRequest,
-  authContext
+export const POST = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
 ) => {
-  try {
-    // Check if user is admin
-    const userDoc = await dbAdmin.collection('users').doc(authContext.userId).get();
-    const userData = userDoc.data();
-    if (!userDoc.exists || !userData?.isAdmin) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const body = await request.json();
-    const validatedData = RSSFeedConfigSchema.parse(body);
-
-    // Test the RSS feed first
-    try {
-      const testItems = await parseRSSFeed(validatedData.url);
-      if (testItems.length === 0) {
-        return NextResponse.json(ApiResponseHelper.error("RSS feed appears to be empty or invalid", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-      }
-    } catch (error) {
-      return NextResponse.json(ApiResponseHelper.error(`Invalid RSS feed: ${error instanceof Error ? error.message : 'Unknown error'}`, "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    // Create RSS feed configuration
-    const feedData = {
-      ...validatedData,
-      createdBy: authContext.userId,
-      createdAt: new Date(),
-      lastSyncAt: null,
-      lastSyncStatus: 'pending',
-      totalEventsSynced: 0,
-    };
-
-    const feedRef = await dbAdmin.collection('rss_feeds').add(feedData);
-
-    return NextResponse.json({
-      feedId: feedRef.id,
-      ...feedData,
-      createdAt: feedData.createdAt.toISOString(),
-    }, { status: HttpStatus.CREATED });
-
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Invalid RSS feed configuration',
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    logger.error('Error creating RSS feed configuration', { error, endpoint: '/api/spaces/rss-integration' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to create RSS feed", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  // Check if user is admin
+  const userId = getUserId(request);
+  const userDoc = await dbAdmin.collection('users').doc(userId).get();
+  const userData = userDoc.data();
+  if (!userDoc.exists || !userData?.isAdmin) {
+    return respond.error("Admin access required", "FORBIDDEN", 403);
   }
-}, { 
-  allowDevelopmentBypass: false,
-  operation: 'create_rss_feed'
+
+  const body = await request.json();
+  const validatedData = RSSFeedConfigSchema.parse(body);
+
+  // Test the RSS feed first
+  try {
+    const testItems = await parseRSSFeed(validatedData.url);
+    if (testItems.length === 0) {
+      return respond.error("RSS feed appears to be empty or invalid", "INVALID_INPUT", 400);
+    }
+  } catch (error) {
+    return respond.error(`Invalid RSS feed: ${error instanceof Error ? error.message : 'Unknown error'}`, "INVALID_INPUT", 400);
+  }
+
+  // Create RSS feed configuration
+  const feedData = {
+    ...validatedData,
+    createdBy: userId,
+    createdAt: new Date(),
+    lastSyncAt: null,
+    lastSyncStatus: 'pending',
+    totalEventsSynced: 0,
+  };
+
+  const feedRef = await dbAdmin.collection('rss_feeds').add(feedData);
+
+  return respond.success({
+    feedId: feedRef.id,
+    ...feedData,
+    createdAt: feedData.createdAt.toISOString(),
+  }, 201);
 });
 
 // PUT /api/spaces/rss-integration/sync - Trigger RSS sync
-export const PUT = withAuth(async (
-  request: NextRequest,
-  authContext
+export const PUT = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
 ) => {
-  try {
-    // Check if user is admin
-    const userDoc = await dbAdmin.collection('users').doc(authContext.userId).get();
-    const userData = userDoc.data();
-    if (!userDoc.exists || !userData?.isAdmin) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+  // Check if user is admin
+  const userId = getUserId(request);
+  const userDoc = await dbAdmin.collection('users').doc(userId).get();
+  const userData = userDoc.data();
+  if (!userDoc.exists || !userData?.isAdmin) {
+    return respond.error("Admin access required", "FORBIDDEN", 403);
+  }
 
     const { feedId } = await request.json();
 
@@ -308,7 +282,7 @@ export const PUT = withAuth(async (
       // Sync specific feed
       const feedDoc = await dbAdmin.collection('rss_feeds').doc(feedId).get();
       if (!feedDoc.exists) {
-        return NextResponse.json(ApiResponseHelper.error("RSS feed not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("RSS feed not found", "RESOURCE_NOT_FOUND", 404);
       }
       feedsToSync = [{ id: feedDoc.id, ...feedDoc.data() }];
     } else {
@@ -367,7 +341,7 @@ export const PUT = withAuth(async (
                 eventsUpdated++;
               } else if (feed.autoCreate) {
                 // Create new event
-                const eventData = convertRSSItemToEvent(item, spaceId, authContext.userId);
+                const eventData = convertRSSItemToEvent(item, spaceId, userId);
                 
                 await dbAdmin
                   .collection('spaces')
@@ -405,7 +379,7 @@ export const PUT = withAuth(async (
           eventsCreated,
           eventsUpdated,
           spacesMatched: Object.keys(spaceMatches).filter(spaceId => spaceMatches[spaceId].length > 0).length,
-          syncTriggeredBy: authContext.userId,
+          syncTriggeredBy: userId,
         });
 
         syncResults.push({
@@ -433,7 +407,7 @@ export const PUT = withAuth(async (
           timestamp: new Date(),
           status: 'error',
           error: feedError instanceof Error ? feedError.message : 'Unknown error',
-          syncTriggeredBy: authContext.userId,
+          syncTriggeredBy: userId,
         });
 
         syncResults.push({
@@ -445,22 +419,14 @@ export const PUT = withAuth(async (
       }
     }
 
-    return NextResponse.json({
-      syncResults,
-      summary: {
-        totalFeeds: syncResults.length,
-        successfulFeeds: syncResults.filter(r => r.status === 'success').length,
-        failedFeeds: syncResults.filter(r => r.status === 'error').length,
-        totalEventsCreated: syncResults.reduce((sum, r) => sum + (r.eventsCreated || 0), 0),
-        totalEventsUpdated: syncResults.reduce((sum, r) => sum + (r.eventsUpdated || 0), 0),
-      }
-    }, { status: HttpStatus.OK });
-
-  } catch (error) {
-    logger.error('Error triggering RSS sync', { error, endpoint: '/api/spaces/rss-integration/sync' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to sync RSS feeds", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: false,
-  operation: 'sync_rss_feeds'
+  return respond.success({
+    syncResults,
+    summary: {
+      totalFeeds: syncResults.length,
+      successfulFeeds: syncResults.filter(r => r.status === 'success').length,
+      failedFeeds: syncResults.filter(r => r.status === 'error').length,
+      totalEventsCreated: syncResults.reduce((sum, r) => sum + (r.eventsCreated || 0), 0),
+      totalEventsUpdated: syncResults.reduce((sum, r) => sum + (r.eventsUpdated || 0), 0),
+    }
+  });
 });

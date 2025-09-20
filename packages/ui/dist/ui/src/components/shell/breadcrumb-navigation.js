@@ -33,24 +33,24 @@ export function generateBreadcrumbsFromPath(pathname) {
                 icon: mapping.icon,
             });
         }
-        else {
-            // Dynamic segments (like IDs)
-            let label = segment;
-            // Format dynamic segments
-            if (segment.length > 20) {
-                label = `${segment.slice(0, 10)}...${segment.slice(-6)}`;
-            }
-            else {
-                label = segment.charAt(0).toUpperCase() + segment.slice(1);
-            }
-            breadcrumbs.push({
-                label,
-                href: currentPath,
-            });
-        }
     }
-    return breadcrumbs;
+    {
+        // Dynamic segments (like IDs)
+        let label = segment;
+        // Format dynamic segments
+        if (segment.length > 20) {
+            label = `${segment.slice(0, 10)}...${segment.slice(-6)}`;
+        }
+        else {
+            label = segment.charAt(0).toUpperCase() + segment.slice(1);
+        }
+        breadcrumbs.push({
+            label,
+            href: currentPath,
+        });
+    }
 }
+return breadcrumbs;
 export function BreadcrumbNavigation({ items, className, showHome = true, maxItems = 5 }) {
     // Truncate items if they exceed maxItems
     const displayItems = items.length > maxItems

@@ -254,7 +254,7 @@ function SpacePreviewActivationFlow() {
               { id: 'preview', label: 'Preview Mode', icon: Eye, description: 'Dormant space ready for activation' },
               { id: 'frozen', label: 'View Only', icon: Lock, description: 'Archived space with read-only access' },
               { id: 'active', label: 'Active Space', icon: CheckCircle, description: 'Fully activated community' },
-            ].map(({ id, label, icon: Icon, description })} => (
+            ].map(map}) => (
               <button
                 key={id}
                 onClick={() => setActiveDemo(id as any)}
@@ -827,7 +827,7 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
                     )}
                   </div>
                 )
-              })
+              })}
             </div>
             
             {/* Current Step */}

@@ -79,7 +79,7 @@ interface ResponsiveProviderProps {
     breakpoints?: Partial<ResponsiveBreakpoints>;
     customLayouts?: Partial<Record<DeviceType, ResponsiveLayoutConfig>>;
 }
-export declare function ResponsiveProvider({ children, breakpoints, customLayouts }: ResponsiveProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function ResponsiveProvider({ children, breakpoints, customLayouts }: ResponsiveProviderProps): () => void;
 /**
  * Show/hide content based on breakpoints
  */

@@ -664,7 +664,7 @@ const ResponsiveShowcase = () => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-[var(--hive-text-secondary)] text-sm mr-2">Viewport:</span>
-            {viewportSizes.map(({ id, label, icon: Icon })} => (
+            {viewportSizes.map(map}) => (
               <Button
                 key={id}
                 size="sm"

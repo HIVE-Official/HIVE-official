@@ -1,11 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-// Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
-import { getCurrentUser as _getCurrentUser } from '@/lib/server-auth';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 // Space movement restrictions
 interface MovementRestriction {
@@ -54,18 +50,17 @@ interface MovementValidationResult {
 }
 
 // POST - Transfer between spaces of the same type with restrictions
-export const POST = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
+export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const userId = getUserId(request);
     const body = await request.json();
     const { fromSpaceId, toSpaceId, reason, adminOverride = false } = body;
 
     if (!fromSpaceId || !toSpaceId) {
-      return NextResponse.json(ApiResponseHelper.error("Both fromSpaceId and toSpaceId are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("Both fromSpaceId and toSpaceId are required", "INVALID_INPUT", 400);
     }
 
     if (fromSpaceId === toSpaceId) {
-      return NextResponse.json(ApiResponseHelper.error("Cannot transfer to the same space", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("Cannot transfer to the same space", "INVALID_INPUT", 400);
     }
 
     // Find both spaces and validate they're the same type
@@ -73,11 +68,11 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     const toSpaceInfo = await findSpaceInfo(toSpaceId);
 
     if (!fromSpaceInfo || !toSpaceInfo) {
-      return NextResponse.json(ApiResponseHelper.error("One or both spaces not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("One or both spaces not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     if (fromSpaceInfo.spaceType !== toSpaceInfo.spaceType) {
-      return NextResponse.json(ApiResponseHelper.error("Cannot transfer between different space types", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("Cannot transfer between different space types", "INVALID_INPUT", 400);
     }
 
     // Check if user is a member of the source space
@@ -87,7 +82,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       .where('status', '==', 'active')
       .get();
     if (membershipSnapshot.empty) {
-      return NextResponse.json(ApiResponseHelper.error("You are not a member of the source space", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+      return respond.error("You are not a member of the source space", "UNAUTHORIZED", 401);
     }
 
     const memberData = membershipSnapshot.docs[0].data();
@@ -97,12 +92,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       const validationResult = await validateMovementRestrictions(userId, fromSpaceInfo.spaceType, fromSpaceInfo.space, toSpaceInfo.space);
       
       if (!validationResult.canMove) {
-        return NextResponse.json({
-          success: false,
-          error: "Movement restricted",
+        return respond.error(validationResult.reason || "Cannot move at this time", "MOVEMENT_RESTRICTED", 403, {
           details: validationResult,
           message: validationResult.reason || "Cannot move at this time"
-        }, { status: HttpStatus.FORBIDDEN });
+        });
       }
     }
 
@@ -112,7 +105,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       .where('spaceId', '==', toSpaceId)
       .get();
     if (!targetMembershipSnapshot.empty) {
-      return NextResponse.json(ApiResponseHelper.error("You are already a member of the target space", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("You are already a member of the target space", "INVALID_INPUT", 400);
     }
 
     // Special handling for fraternity_and_sorority (only 1 membership allowed)
@@ -132,7 +125,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       }
 
       if (greekMemberships.length > 1) {
-        return NextResponse.json(ApiResponseHelper.error("You can only be a member of one Greek organization at a time", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        return respond.error("You can only be a member of one Greek organization at a time", "INVALID_INPUT", 400);
       }
     }
 
@@ -152,7 +145,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       spaceType: toSpaceInfo.spaceType,
       role: memberData.role || 'member',
       status: 'active',
-      joinedAt: FieldValue.serverTimestamp(),
+      joinedAt: admin.firestore.FieldValue.serverTimestamp(),
       transferredFrom: fromSpaceId,
       transferReason: reason || 'User requested transfer'
     });
@@ -163,12 +156,12 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
     batch.update(fromSpaceRef, {
       memberCount: fromSpaceInfo.space.memberCount - 1,
-      updatedAt: FieldValue.serverTimestamp()
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
     batch.update(toSpaceRef, {
       memberCount: (toSpaceInfo.space.memberCount || 0) + 1,
-      updatedAt: FieldValue.serverTimestamp()
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
     // 4. Record the movement for cooldown tracking
@@ -198,8 +191,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       endpoint: '/api/spaces/transfer'
     });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       message: 'Successfully transferred spaces',
       transfer: {
         from: {
@@ -216,19 +208,11 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       }
     });
 
-  } catch (error) {
-    logger.error('Error transferring spaces', { error: error, endpoint: '/api/spaces/transfer' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to transfer spaces", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true,
-  operation: 'transfer_space' 
 });
 
 // GET - Check if user can move and get movement history
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const userId = getUserId(request);
     const { searchParams } = new URL(request.url);
     const spaceType = searchParams.get('spaceType');
     const fromSpaceId = searchParams.get('fromSpaceId');
@@ -240,12 +224,12 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       const toSpaceInfo = await findSpaceInfo(toSpaceId);
 
       if (!fromSpaceInfo || !toSpaceInfo) {
-        return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
       }
 
       const validationResult = await validateMovementRestrictions(userId, spaceType as any, fromSpaceInfo.space, toSpaceInfo.space);
 
-      return NextResponse.json({
+      return respond.success({
         canMove: validationResult.canMove,
         restrictions: validationResult,
         spaceType,
@@ -281,19 +265,12 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       }
     }
 
-    return NextResponse.json({
+    return respond.success({
       movementHistory,
       currentRestrictions: restrictions,
       restrictionRules: MOVEMENT_RESTRICTIONS
     });
 
-  } catch (error) {
-    logger.error('Error getting movement info', { error: error, endpoint: '/api/spaces/transfer' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to get movement info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true,
-  operation: 'get_movement_info' 
 });
 
 // Helper function to find space info across all types

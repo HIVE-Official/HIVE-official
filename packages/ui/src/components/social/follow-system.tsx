@@ -762,7 +762,7 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
                 { key: 'all', label: 'All' },
                 { key: 'following', label: 'Following' },
                 { key: 'suggested', label: 'Suggested' }
-              ].map(({ key, label })} => (
+              ].map(map}) => (
                 <Button
                   key={key}
                   variant={filter === key ? 'default' : 'outline'}

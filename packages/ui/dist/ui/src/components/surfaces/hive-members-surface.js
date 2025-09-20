@@ -178,22 +178,23 @@ export const HiveMembersSurface = React.forwardRef(({ className, mode, space, me
             if (rawRole in memberRoles)
                 return rawRole;
             return 'member';
-        })(),
-    }));
-    const filteredMembers = normalizedMembers
-        .filter(member => {
-        // Role filter
-        const roleMatch = selectedRole === 'all' || member.role === selectedRole;
-        // Search filter
-        const searchMatch = searchQuery === '' ||
-            member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            member.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            member.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            member.interests?.some(interest => interest.toLowerCase().includes(searchQuery.toLowerCase()));
-        // Offline filter
-        const statusMatch = showOfflineMembers || member.status !== 'offline';
-        return roleMatch && searchMatch && statusMatch;
-    });
+        })
+    }(),
+    ));
+});
+const filteredMembers = normalizedMembers
+    .filter(member => {
+    // Role filter
+    const roleMatch = selectedRole === 'all' || member.role === selectedRole;
+    // Search filter
+    const searchMatch = searchQuery === '' ||
+        member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        member.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        member.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        member.interests?.some(interest => interest.toLowerCase().includes(searchQuery.toLowerCase()));
+    // Offline filter
+    const statusMatch = showOfflineMembers || member.status !== 'offline';
+    return roleMatch && searchMatch && statusMatch;
 })
     .sort((a, b) => {
     // Builders first
@@ -213,8 +214,8 @@ export const HiveMembersSurface = React.forwardRef(({ className, mode, space, me
         return 1;
     // Finally by join date
     return new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime();
-})
-    .slice(0, maxMembers);
+});
+slice(0, maxMembers);
 // Member counts by role
 const roleCounts = members.reduce((acc, member) => {
     acc[member.role] = (acc[member.role] || 0) + 1;
@@ -248,11 +249,9 @@ if (error) {
                                 .then(({ members, summary }) => {
                                 setFetchedMembers(members);
                                 setMembersSummary(summary);
-                            })
-                                .catch(e => setError(e.message))
-                                .finally(() => setIsLoading(false));
+                            });
                         }
-                    } }), ")} whileHover=", { scale: 1.02 }, "whileTap=", { scale: 0.98 }, "> Try Again"] }) }));
+                    } }), ".catch(e => setError(e.message)) .finally(() => setIsLoading(false)) } })} whileHover=", { scale: 1.02 }, "whileTap=", { scale: 0.98 }, "> Try Again"] }) }));
     div >
     ;
 }
@@ -263,7 +262,7 @@ if (members.length === 0) {
 return (_jsxs("div", { ref: ref, className: cn(hiveMembersSurfaceVariants({ mode, className })), ...props, children: [_jsxs("div", { className: "flex items-center justify-between mb-6", children: [_jsxs("div", { className: "flex items-center gap-4", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)]", children: "Members" }), _jsxs("div", { className: "flex items-center gap-3 text-sm text-gray-400", children: [_jsxs("span", { children: [members.length, " total"] }), _jsx("span", { children: "\u2022" }), _jsxs("div", { className: "flex items-center gap-1", children: [_jsx("div", { className: "w-2 h-2 bg-green-500 rounded-full" }), _jsxs("span", { children: [onlineCount, " online"] })] })] })] }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsxs("div", { className: "flex bg-[var(--hive-background-primary)]/20 rounded-xl border border-white/10 p-1", children: [[
                                     { key: 'grid', icon: Grid },
                                     { key: 'list', icon: List }
-                                ].map(({ key, icon: Icon })), " => (", _jsx(motion.button, { className: cn("p-2 rounded-lg transition-all duration-200", currentViewMode === key
+                                ].map(map), ") => (", _jsx(motion.button, { className: cn("p-2 rounded-lg transition-all duration-200", currentViewMode === key
                                         ? "bg-gray-500/20 text-gray-400"
                                         : "text-gray-400 hover:text-[var(--hive-text-primary)]"), onClick: () => setCurrentViewMode(key), whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: _jsx(Icon, { className: "w-4 h-4" }) }, key), "))}"] }), canModerate && (_jsxs(motion.button, { className: "flex items-center gap-2 px-4 py-2 bg-gray-500/20 text-gray-400 border border-gray-500/30 rounded-xl hover:bg-gray-500/30 transition-all duration-200 font-medium", onClick: onInviteMember, whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [_jsx(UserPlus, { className: "w-4 h-4" }), _jsx("span", { className: "hidden sm:inline", children: "Invite" })] }))] })] }), _jsxs("div", { className: "space-y-4 mb-6", children: [_jsxs("div", { className: "relative", children: [_jsx(Search, { className: "absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" }), _jsx("input", { type: "text", placeholder: "Search members...", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), className: "w-full pl-12 pr-4 py-3 bg-[var(--hive-background-primary)]/20 backdrop-blur-sm border border-white/10 rounded-xl text-[var(--hive-text-primary)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500/50 focus:border-gray-500/30 transition-all duration-200" })] }), _jsxs("div", { className: "flex items-center gap-2 overflow-x-auto pb-2", children: [[
                             { key: 'all', label: 'All Members', icon: Users, color: 'text-[var(--hive-text-primary)]', count: members.length },
@@ -278,7 +277,7 @@ return (_jsxs("div", { ref: ref, className: cn(hiveMembersSurfaceVariants({ mode
                                 ? "bg-gray-500/20 text-gray-400 border-gray-500/30"
                                 : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-[var(--hive-text-primary)]"), onClick: () => setSelectedRole(filter.key), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [_jsx(Icon, { className: cn("w-4 h-4", isActive ? "text-gray-400" : filter.color) }), _jsx("span", { children: filter.label }), _jsx("span", { className: cn("px-1.5 py-0.5 rounded-full text-xs", isActive
                                         ? "bg-gray-500/30 text-gray-300"
-                                        : "bg-[var(--hive-text-primary)]/10 text-gray-500"), children: filter.count })] }, filter.key), ") })"] })] }), _jsx("div", { className: cn(currentViewMode === 'grid'
+                                        : "bg-[var(--hive-text-primary)]/10 text-gray-500"), children: filter.count })] }, filter.key), ") })}"] })] }), _jsx("div", { className: cn(currentViewMode === 'grid'
                 ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
                 : "space-y-3"), children: filteredMembers.map((member, index) => {
                 const roleConfig = memberRoles[member.role];

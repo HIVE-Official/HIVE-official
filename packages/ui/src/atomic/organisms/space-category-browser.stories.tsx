@@ -459,7 +459,7 @@ export const InteractiveDemo: Story = {
         )
       );
       
-      action('join-space')(spaceId)
+      action('join-space')(spaceId);
     };
 
     const handleLeaveSpace = async (spaceId: string) => {
@@ -473,7 +473,7 @@ export const InteractiveDemo: Story = {
         )
       );
       
-      action('leave-space')(spaceId)
+      action('leave-space')(spaceId);
     };
 
     const handleBookmarkSpace = async (spaceId: string, bookmarked: boolean) => {
@@ -487,7 +487,7 @@ export const InteractiveDemo: Story = {
         )
       );
       
-      action('bookmark-space')(spaceId, bookmarked)
+      action('bookmark-space')(spaceId, bookmarked);
     };
 
     return (
@@ -506,7 +506,7 @@ export const InteractiveDemo: Story = {
           />
         </div>
       </div>
-    )
+    );
   },
   parameters: {
     docs: {
@@ -523,7 +523,7 @@ export const TrendingSpaces: Story = {
       ...space,
       isTrending: Math.random() > 0.6,
       isRecommended: Math.random() > 0.7,
-    })}),
+    })),
     showCategoryFilter: true,
     showJoinActions: true,
     onSpaceClick: action('space-click'),
@@ -548,7 +548,7 @@ export const UserAsLeader: Story = {
       ...space,
       isJoined: Math.random() > 0.5,
       userRole: space.isJoined ? (['leader', 'co_leader', 'member'][Math.floor(Math.random() * 3)] as any) : undefined,
-    })}),
+    })),
     showCategoryFilter: true,
     showJoinActions: true,
     onSpaceClick: action('space-click'),

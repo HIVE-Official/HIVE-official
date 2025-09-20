@@ -677,13 +677,13 @@ export class AutomatedModerationWorkflows {
   private async updateWorkflowStats(workflowId: string, result: 'success' | 'error'): Promise<void> {
     const updateData = {
       'statistics.lastTriggered': new Date().toISOString(),
-      'statistics.triggeredCount': dbAdmin.FieldValue.increment(1)
+      'statistics.triggeredCount': dbAdmin.admin.firestore.FieldValue.increment(1)
     };
 
     if (result === 'success') {
-      updateData['statistics.successCount'] = dbAdmin.FieldValue.increment(1);
+      updateData['statistics.successCount'] = dbAdmin.admin.firestore.FieldValue.increment(1);
     } else {
-      updateData['statistics.errorCount'] = dbAdmin.FieldValue.increment(1);
+      updateData['statistics.errorCount'] = dbAdmin.admin.firestore.FieldValue.increment(1);
     }
 
     await dbAdmin.collection('automatedWorkflows').doc(workflowId).update(updateData);

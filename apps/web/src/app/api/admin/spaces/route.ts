@@ -1,11 +1,10 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
+import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 
 /**
  * Admin Space Management API
@@ -14,12 +13,6 @@ import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/
  * POST /api/admin/spaces - Create or update space
  * DELETE /api/admin/spaces - Delete/archive space
  */
-
-// Admin user IDs (TODO: Move to environment variables or admin table)
-const ADMIN_USER_IDS = [
-  'test-user', // For development
-  // Add real admin user IDs here
-];
 
 const spaceActionSchema = z.object({
   spaceId: z.string().min(1, 'Space ID is required'),
@@ -48,54 +41,21 @@ const spaceCreateSchema = z.object({
 });
 
 /**
- * Check if user is an admin
- */
-async function isAdmin(userId: string): Promise<boolean> {
-  return ADMIN_USER_IDS.includes(userId);
-}
-
-/**
  * Get spaces with filtering and pagination
  * GET /api/admin/spaces
  */
-export async function GET(request: NextRequest) {
-  try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const adminUserId = getUserId(request);
 
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
+  // Parse query parameters
+  const url = new URL(request.url);
+  const search = url.searchParams.get('search') || '';
+  const spaceType = url.searchParams.get('type') || 'all';
+  const status = url.searchParams.get('status') || 'all'; // all, active, dormant, archived
+  const limit = parseInt(url.searchParams.get('limit') || '50');
+  const offset = parseInt(url.searchParams.get('offset') || '0');
 
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Parse query parameters
-    const url = new URL(request.url);
-    const search = url.searchParams.get('search') || '';
-    const spaceType = url.searchParams.get('type') || 'all';
-    const status = url.searchParams.get('status') || 'all'; // all, active, dormant, archived
-    const limit = parseInt(url.searchParams.get('limit') || '50');
-    const offset = parseInt(url.searchParams.get('offset') || '0');
-
-    logger.info('👑 Admin accessing space management', { adminUserId, endpoint: '/api/admin/spaces' });
+  logger.info('👑 Admin accessing space management', { adminUserId, endpoint: '/api/admin/spaces' });
 
     // Get spaces across all types or specific type
     const spaceTypes = spaceType === 'all' ? 
@@ -229,65 +189,32 @@ export async function GET(request: NextRequest) {
       }, {} as Record<string, any>)
     };
 
-    return NextResponse.json({
-      success: true,
-      spaces: spacesWithDetails,
-      pagination: {
-        limit,
-        offset,
-        totalCount,
-        hasMore: offset + limit < totalCount,
-        nextOffset: offset + limit < totalCount ? offset + limit : null
-      },
-      filters: {
-        search: search || null,
-        type: spaceType || null,
-        status: status || null
-      },
-      summary
-    });
-
-  } catch (error) {
-    logger.error('Admin spaces GET error', { error: error, endpoint: '/api/admin/spaces' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to get spaces", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
+  return respond.success({
+    spaces: spacesWithDetails,
+    pagination: {
+      limit,
+      offset,
+      totalCount,
+      hasMore: offset + limit < totalCount,
+      nextOffset: offset + limit < totalCount ? offset + limit : null
+    },
+    filters: {
+      search: search || null,
+      type: spaceType || null,
+      status: status || null
+    },
+    summary
+  });
+});
 
 /**
  * Create new space or update existing space
  * POST /api/admin/spaces
  */
-export async function POST(request: NextRequest) {
-  try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const body = await request.json();
-    const action = body.action || 'create';
+export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const adminUserId = getUserId(request);
+  const body = await request.json();
+  const action = body.action || 'create';
 
     if (action === 'create') {
       // Create new space
@@ -311,8 +238,8 @@ export async function POST(request: NextRequest) {
         hasBuilders: false,
         builderCount: 0,
         isAutoGenerated: false,
-        createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         createdBy: adminUserId,
         createdByAdmin: true
       };
@@ -321,14 +248,13 @@ export async function POST(request: NextRequest) {
 
       logger.info('👑 Admin created space', { adminUserId, spaceId: spaceRef.id, endpoint: '/api/admin/spaces' });
 
-      return NextResponse.json({
-        success: true,
-        message: 'Space created successfully',
-        spaceId: spaceRef.id,
-        spaceType,
-        name,
-        createdBy: adminUserId
-      });
+    return respond.success({
+      message: 'Space created successfully',
+      spaceId: spaceRef.id,
+      spaceType,
+      name,
+      createdBy: adminUserId
+    });
 
     } else if (action === 'update') {
       // Update existing space
@@ -346,7 +272,7 @@ export async function POST(request: NextRequest) {
       }
 
       const updateData: any = {
-        updatedAt: FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         lastModifiedBy: adminUserId,
         lastModifiedByAdmin: true
       };
@@ -361,68 +287,24 @@ export async function POST(request: NextRequest) {
 
       logger.info('👑 Adminupdated space', { adminUserId, spaceId, endpoint: '/api/admin/spaces' });
 
-      return NextResponse.json({
-        success: true,
-        message: 'Space updated successfully',
-        spaceId,
-        spaceType,
-        updatedFields: Object.keys(updateData).filter(key => !key.startsWith('updated') && !key.startsWith('lastModified')),
-        updatedBy: adminUserId
-      });
-    }
-
-  } catch (error: any) {
-    logger.error('Admin spaces POST error', { error: error, endpoint: '/api/admin/spaces' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { 
-          error: 'Invalid request data', 
-          details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to create/update space", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.success({
+      message: 'Space updated successfully',
+      spaceId,
+      spaceType,
+      updatedFields: Object.keys(updateData).filter(key => !key.startsWith('updated') && !key.startsWith('lastModified')),
+      updatedBy: adminUserId
+    });
   }
-}
+});
 
 /**
  * Space actions (activate, deactivate, archive, delete)
  * DELETE /api/admin/spaces
  */
-export async function DELETE(request: NextRequest) {
-  try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const body = await request.json();
-    const { spaceId, spaceType, action, reason } = spaceActionSchema.parse(body);
+export const DELETE = withAdminAuthAndErrors(
+  spaceActionSchema,
+  async (request: AuthenticatedRequest, context, { spaceId, spaceType, action, reason }, respond) => {
+    const adminUserId = getUserId(request);
 
     const spaceRef = dbAdmin
       .collection('spaces')
@@ -436,7 +318,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const updateData: any = {
-      updatedAt: FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       lastModifiedBy: adminUserId,
       lastModifiedByAdmin: true
     };
@@ -446,7 +328,7 @@ export async function DELETE(request: NextRequest) {
     switch (action) {
       case 'activate':
         updateData.status = 'activated';
-        updateData.activatedAt = FieldValue.serverTimestamp();
+        updateData.activatedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.activatedBy = adminUserId;
         updateData.activatedReason = reason;
         actionMessage = 'Space activated';
@@ -454,7 +336,7 @@ export async function DELETE(request: NextRequest) {
 
       case 'deactivate':
         updateData.status = 'dormant';
-        updateData.deactivatedAt = FieldValue.serverTimestamp();
+        updateData.deactivatedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.deactivatedBy = adminUserId;
         updateData.deactivatedReason = reason;
         actionMessage = 'Space deactivated';
@@ -462,7 +344,7 @@ export async function DELETE(request: NextRequest) {
 
       case 'archive':
         updateData.isArchived = true;
-        updateData.archivedAt = FieldValue.serverTimestamp();
+        updateData.archivedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.archivedBy = adminUserId;
         updateData.archivedReason = reason;
         actionMessage = 'Space archived';
@@ -473,7 +355,7 @@ export async function DELETE(request: NextRequest) {
         updateData.hasBuilders = false;
         updateData.builderCount = 0;
         updateData.status = 'activated';
-        updateData.resetAt = FieldValue.serverTimestamp();
+        updateData.resetAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.resetBy = adminUserId;
         updateData.resetReason = reason;
         actionMessage = 'Space reset to initial state';
@@ -482,7 +364,7 @@ export async function DELETE(request: NextRequest) {
       case 'delete':
         // For safety, we'll archive rather than actually delete
         updateData.isDeleted = true;
-        updateData.deletedAt = FieldValue.serverTimestamp();
+        updateData.deletedAt = admin.firestore.FieldValue.serverTimestamp();
         updateData.deletedBy = adminUserId;
         updateData.deletedReason = reason;
         actionMessage = 'Space marked as deleted';
@@ -496,33 +378,17 @@ export async function DELETE(request: NextRequest) {
 
     logger.info('👑 Admin performedon space', {  action, spaceId, endpoint: '/api/admin/spaces'  });
 
-    return NextResponse.json({
-      success: true,
-      message: actionMessage,
-      action,
-      spaceId,
-      spaceType,
-      reason,
-      performedBy: adminUserId,
-      timestamp: new Date().toISOString()
-    });
-
-  } catch (error: any) {
-    logger.error('Admin spaces DELETE error', { error: error, endpoint: '/api/admin/spaces' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { 
-          error: 'Invalid request data', 
-          details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to perform space action", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  return respond.success({
+    message: actionMessage,
+    action,
+    spaceId,
+    spaceType,
+    reason,
+    performedBy: adminUserId,
+    timestamp: new Date().toISOString()
+  });
   }
-}
+);
 
 /**
  * Calculate space health score based on activity and engagement
@@ -563,7 +429,7 @@ async function logAdminAction(adminUserId: string, action: string, targetId: str
       action,
       targetId,
       reason,
-      timestamp: FieldValue.serverTimestamp(),
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
       type: 'space_action'
     });
   } catch (error) {

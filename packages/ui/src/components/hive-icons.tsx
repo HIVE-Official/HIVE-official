@@ -143,7 +143,7 @@ export const IconWrapper = ({
       className={cn("inline-flex items-center justify-center", className)}
       style={{ width: iconSize, height: iconSize }}
     >
-      {React.cloneElement(children as React.ReactElement, { size: iconSize }}
+      {React.cloneElement(children as React.ReactElement, { size: iconSize })
     </span>
   )
 };

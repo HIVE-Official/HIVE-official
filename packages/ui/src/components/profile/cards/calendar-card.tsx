@@ -360,7 +360,7 @@ function CalendarMiniView({
         isSelected: date.toDateString() === selectedDate.toDateString(),
         events: dayEvents,
         hasEvents: dayEvents.length > 0
-      })
+      })}
     }
     return days
   }, [currentMonth, events, selectedDate]);
@@ -378,7 +378,7 @@ function CalendarMiniView({
       {/* Month Navigation */}
       <div className="flex items-center justify-between">
         <h3 className="font-medium text-[var(--hive-text-primary)]">
-          {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }}
+          {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
         </h3>
         <div className="flex gap-1">
           <Button
@@ -526,7 +526,7 @@ export function CalendarCard({
             { key: 'today', label: 'Today', count: todayEventsCount },
             { key: 'upcoming', label: 'Upcoming' },
             { key: 'calendar', label: 'Calendar' }
-          ].map(({ key, label, count })} => (
+          ].map(map}) => (
             <Button
               key={key}
               size="sm"

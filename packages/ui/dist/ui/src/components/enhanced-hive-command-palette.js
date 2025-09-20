@@ -1,11 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from './framer-motion-proxy';
 import { cva } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 import { liquidMetal, motionDurations, cascadeTiming } from '../motion/hive-motion-system';
-import { Search, ArrowRight, User, Settings, Code, Zap, Users, Calendar, MessageSquare, Home, Compass, BookOpen, TrendingUp, Plus, Heart } from 'lucide-react';
+import { User, Settings, Code, Zap, Users, Calendar, MessageSquare, Home, Compass, BookOpen, TrendingUp, Plus, Heart } from 'lucide-react';
 // Enhanced HIVE Command Palette with Global Search
 // Integrates search across spaces, tools, people, events, posts, and navigation
 const enhancedCommandPaletteVariants = cva("fixed inset-0 z-50 flex items-start justify-center pt-[20vh]", {
@@ -141,152 +140,155 @@ const EnhancedHiveCommandPalette = React.forwardRef(({ className, variant, isOpe
             };
             return (typeOrder[a.type] || 10) - (typeOrder[b.type] || 10);
         });
-        return filtered.slice(0, maxResults);
-    }, [query, selectedCategory, allItems, recentItems, maxResults]);
-    // Group filtered items by category
-    const groupedItems = useMemo(() => {
-        const groups = {};
-        filteredItems.forEach(item => {
-            if (!groups[item.category]) {
-                groups[item.category] = [];
-            }
-            groups[item.category].push(item);
-        });
-        return groups;
-    }, [filteredItems]);
-    // Live search with debouncing
-    useEffect(() => {
-        if (!enableLiveSearch || !onSearch || !query) {
-            setSearchResults([]);
-            return;
+    });
+    return filtered.slice(0, maxResults);
+}, [query, selectedCategory, allItems, recentItems, maxResults]);
+// Group filtered items by category
+const groupedItems = useMemo(() => {
+    const groups = {};
+    filteredItems.forEach(item => {
+        if (!groups[item.category]) {
+            groups[item.category] = [];
         }
-        // Clear previous timeout
+        groups[item.category].push(item);
+    });
+});
+return groups;
+[filteredItems];
+;
+// Live search with debouncing
+useEffect(() => {
+    if (!enableLiveSearch || !onSearch || !query) {
+        setSearchResults([]);
+        return;
+    }
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+    }
+    // Debounce search
+    searchTimeoutRef.current = setTimeout(async () => {
+        setIsSearching(true);
+        try {
+            const results = await onSearch(query, selectedCategory || undefined);
+            setSearchResults(results);
+        }
+        catch (error) {
+            console.warn('Search failed:', error);
+            setSearchResults([]);
+        }
+        finally {
+            setIsSearching(false);
+        }
+    }, 300);
+    return () => {
         if (searchTimeoutRef.current) {
             clearTimeout(searchTimeoutRef.current);
         }
-        // Debounce search
-        searchTimeoutRef.current = setTimeout(async () => {
-            setIsSearching(true);
-            try {
-                const results = await onSearch(query, selectedCategory || undefined);
-                setSearchResults(results);
-            }
-            catch (error) {
-                console.warn('Search failed:', error);
-                setSearchResults([]);
-            }
-            finally {
-                setIsSearching(false);
-            }
-        }, 300);
-        return () => {
-            if (searchTimeoutRef.current) {
-                clearTimeout(searchTimeoutRef.current);
-            }
-        };
-    }, [query, selectedCategory, onSearch, enableLiveSearch]);
-    // Handle keyboard navigation
-    useEffect(() => {
-        if (!isOpen)
-            return;
-        const handleKeyDown = (e) => {
-            switch (e.key) {
-                case 'Escape':
-                    onClose();
-                    break;
-                case 'ArrowDown':
-                    e.preventDefault();
-                    setSelectedIndex(prev => Math.min(prev + 1, filteredItems.length - 1));
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    setSelectedIndex(prev => Math.max(prev - 1, 0));
-                    break;
-                case 'Enter':
-                    e.preventDefault();
-                    if (filteredItems[selectedIndex]) {
-                        handleSelect(filteredItems[selectedIndex]);
-                    }
-                    break;
-                case 'Tab':
-                    e.preventDefault();
-                    // Cycle through categories
-                    const currentIndex = categories.findIndex(c => c.id === selectedCategory);
-                    const nextIndex = (currentIndex + 1) % (categories.length + 1);
-                    setSelectedCategory(nextIndex === 0 ? null : categories[nextIndex - 1].id);
-                    break;
-            }
-        };
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen, selectedIndex, filteredItems, selectedCategory, categories, onClose]);
-    // Reset state when opening
-    useEffect(() => {
-        if (isOpen) {
-            setQuery('');
-            setSelectedIndex(0);
-            setSelectedCategory(null);
-            setSearchResults([]);
-            setTimeout(() => inputRef.current?.focus(), 100);
+    };
+}, [query, selectedCategory, onSearch, enableLiveSearch]);
+// Handle keyboard navigation
+useEffect(() => {
+    if (!isOpen)
+        return;
+    const handleKeyDown = (e) => {
+        switch (e.key) {
+            case 'Escape':
+                onClose();
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                setSelectedIndex(prev => Math.min(prev + 1, filteredItems.length - 1));
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                setSelectedIndex(prev => Math.max(prev - 1, 0));
+                break;
+            case 'Enter':
+                e.preventDefault();
+                if (filteredItems[selectedIndex]) {
+                    handleSelect(filteredItems[selectedIndex]);
+                }
+                break;
+            case 'Tab':
+                e.preventDefault();
+                // Cycle through categories
+                const currentIndex = categories.findIndex(c => c.id === selectedCategory);
+                const nextIndex = (currentIndex + 1) % (categories.length + 1);
+                setSelectedCategory(nextIndex === 0 ? null : categories[nextIndex - 1].id);
+                break;
         }
-    }, [isOpen]);
-    // Update selected index when filtered items change
-    useEffect(() => {
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+}, [isOpen, selectedIndex, filteredItems, selectedCategory, categories, onClose]);
+// Reset state when opening
+useEffect(() => {
+    if (isOpen) {
+        setQuery('');
         setSelectedIndex(0);
-    }, [filteredItems]);
-    const handleSelect = (item) => {
-        onSelect?.(item);
-        item.action();
+        setSelectedCategory(null);
+        setSearchResults([]);
+        setTimeout(() => inputRef.current?.focus(), 100);
+    }
+}, [isOpen]);
+// Update selected index when filtered items change
+useEffect(() => {
+    setSelectedIndex(0);
+}, [filteredItems]);
+const handleSelect = (item) => {
+    onSelect?.(item);
+    item.action();
+    onClose();
+};
+const handleCategorySelect = (categoryId) => {
+    if (selectedCategory === categoryId) {
+        setSelectedCategory(null);
+    }
+    else {
+        setSelectedCategory(categoryId);
+        setQuery('');
+    }
+};
+const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
         onClose();
-    };
-    const handleCategorySelect = (categoryId) => {
-        if (selectedCategory === categoryId) {
-            setSelectedCategory(null);
-        }
-        else {
-            setSelectedCategory(categoryId);
-            setQuery('');
-        }
-    };
-    const handleBackdropClick = (e) => {
-        if (e.target === e.currentTarget) {
-            onClose();
-        }
-    };
-    const renderItemIcon = (item) => {
-        return (_jsx("div", { className: cn("text-current shrink-0", selectedIndex === filteredItems.indexOf(item) ? "text-[var(--hive-brand-secondary)]" : "text-[var(--hive-text-primary)]/60"), children: item.icon }));
-    };
-    const renderItemMetadata = (item) => {
-        if (!item.metadata)
-            return null;
-        const metadata = [];
-        if (item.metadata.memberCount) {
-            metadata.push(`${item.metadata.memberCount} members`);
-        }
-        if (item.metadata.rating) {
-            metadata.push(`${item.metadata.rating}★`);
-        }
-        if (item.metadata.creator) {
-            metadata.push(`by ${item.metadata.creator}`);
-        }
-        if (item.metadata.date) {
-            metadata.push(item.metadata.date);
-        }
-        return metadata.length > 0 ? (_jsx("div", { className: "text-xs text-[var(--hive-text-primary)]/40 mt-0.5", children: metadata.join(' • ') })) : null;
-    };
-    return (_jsx(AnimatePresence, { mode: "wait", children: isOpen && (_jsxs(motion.div, { ref: ref, className: cn(enhancedCommandPaletteVariants({ variant, className })), initial: "hidden", animate: "visible", exit: "hidden", onClick: handleBackdropClick, ...props, children: [_jsx(motion.div, { className: "absolute inset-0 bg-[var(--hive-background-primary)]/80 backdrop-blur-sm", initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }), _jsxs(motion.div, { className: "relative w-full max-w-2xl mx-4 bg-[color-mix(in_srgb,var(--hive-background-primary)_95%,transparent)]/80 backdrop-blur-2xl border border-[color-mix(in_srgb,var(--hive-border-hover)_60%,transparent)] rounded-2xl shadow-2xl overflow-hidden", variants: paletteVariants, children: [_jsxs("div", { className: "flex items-center px-6 py-4 border-b border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]", children: [_jsx(Search, { className: "text-[var(--hive-text-tertiary)] mr-3", size: 20 }), _jsx("input", { ref: inputRef, className: "flex-1 bg-transparent text-[var(--hive-text-primary)] placeholder-[var(--hive-text-tertiary)] focus:outline-none text-lg", placeholder: placeholder, value: query, onChange: (e) => setQuery(e.target.value) }), isSearching && (_jsx("div", { className: "text-[var(--hive-text-tertiary)] text-sm animate-spin", children: "\u27F3" })), _jsx("div", { className: "text-[var(--hive-text-tertiary)] text-sm font-mono ml-3", children: hotkey })] }), !query && (_jsx("div", { className: "px-6 py-4 border-b border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]", children: _jsxs("div", { className: "flex items-center space-x-2 overflow-x-auto", children: [_jsx(motion.button, { className: cn("px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shrink-0", !selectedCategory
-                                            ? "bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30"
-                                            : "bg-[var(--hive-interactive-hover)] text-[var(--hive-text-primary)]/60 hover:bg-[var(--hive-interactive-active)]"), onClick: () => setSelectedCategory(null), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: "All" }), categories.map((category) => (_jsxs(motion.button, { className: cn("flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shrink-0", selectedCategory === category.id
-                                            ? "bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30"
-                                            : "bg-[var(--hive-interactive-hover)] text-[var(--hive-text-primary)]/60 hover:bg-[var(--hive-interactive-active)]"), onClick: () => handleCategorySelect(category.id), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [category.icon, _jsx("span", { children: category.title })] }, category.id)))] }) })), _jsx("div", { className: "max-h-96 overflow-y-auto", children: filteredItems.length > 0 ? (_jsx(motion.div, { className: "p-2", variants: resultListVariants, initial: "hidden", animate: "visible", children: Object.entries(groupedItems).map(([categoryId, categoryItems]) => {
-                                    const category = categories.find(c => c.id === categoryId);
-                                    return (_jsxs("div", { className: "mb-4 last:mb-0", children: [category && Object.keys(groupedItems).length > 1 && (_jsxs("div", { className: "flex items-center space-x-2 px-3 py-2 text-xs font-medium text-[var(--hive-text-primary)]/60 uppercase tracking-wider", children: [category.icon, _jsx("span", { children: category.title })] })), categoryItems.map((item, index) => {
-                                                const globalIndex = filteredItems.indexOf(item);
-                                                const isSelected = globalIndex === selectedIndex;
-                                                return (_jsxs(motion.button, { className: "w-full flex items-center justify-between px-4 py-3 rounded-xl text-left", variants: commandItemVariants, initial: "rest", animate: isSelected ? "selected" : "rest", whileHover: !isSelected ? "hover" : "selected", onClick: () => handleSelect(item), onMouseEnter: () => setSelectedIndex(globalIndex), children: [_jsxs(motion.div, { className: "flex items-center space-x-3 flex-1 min-w-0", variants: resultItemVariants, children: [renderItemIcon(item), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("div", { className: cn("font-medium truncate", isSelected ? "text-[var(--hive-text-primary)]" : "text-[var(--hive-text-primary)]/80"), children: item.title }), item.description && (_jsx("div", { className: "text-sm text-[var(--hive-text-primary)]/50 truncate", children: item.description })), renderItemMetadata(item)] })] }), _jsxs("div", { className: "flex items-center space-x-2 shrink-0 ml-4", children: [item.shortcut && (_jsx("div", { className: "text-xs font-mono text-[var(--hive-text-primary)]/40 bg-[var(--hive-interactive-hover)] px-2 py-1 rounded border border-[var(--hive-interactive-active)]", children: item.shortcut })), _jsx(ArrowRight, { className: cn("transition-colors", isSelected ? "text-[var(--hive-brand-secondary)]" : "text-[var(--hive-text-primary)]/40"), size: 16 })] })] }, item.id));
-                                            })] }, categoryId));
-                                }) })) : (_jsxs("div", { className: "px-6 py-12 text-center", children: [_jsx(Search, { className: "mx-auto mb-4 text-[var(--hive-text-primary)]/40", size: 48 }), _jsx("div", { className: "text-[var(--hive-text-primary)]/60 font-medium mb-2", children: isSearching ? 'Searching...' : 'No results found' }), _jsx("div", { className: "text-[var(--hive-text-primary)]/40 text-sm", children: query ? `Try different keywords or browse categories` : 'Start typing to search across all of HIVE' })] })) }), _jsx("div", { className: "px-6 py-3 bg-[var(--hive-background-primary)]/20 border-t border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]", children: _jsxs("div", { className: "flex items-center justify-between text-xs text-[var(--hive-text-primary)]/50", children: [_jsxs("div", { className: "flex items-center space-x-4", children: [_jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("div", { className: "w-4 h-4 bg-[var(--hive-interactive-active)] rounded border border-[var(--hive-border-hover)] flex items-center justify-center", children: "\u21B5" }), _jsx("span", { children: "select" })] }), _jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("div", { className: "w-4 h-4 bg-[var(--hive-interactive-active)] rounded border border-[var(--hive-border-hover)] flex items-center justify-center", children: "\u2193\u2191" }), _jsx("span", { children: "navigate" })] }), _jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("div", { className: "w-4 h-4 bg-[var(--hive-interactive-active)] rounded border border-[var(--hive-border-hover)] flex items-center justify-center", children: "\u21E5" }), _jsx("span", { children: "filter" })] })] }), _jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("span", { children: "esc" }), _jsx("span", { children: "close" })] })] }) })] })] })) }));
-});
+    }
+};
+const renderItemIcon = (item) => {
+    return (_jsx("div", { className: cn("text-current shrink-0", selectedIndex === filteredItems.indexOf(item) ? "text-[var(--hive-brand-secondary)]" : "text-[var(--hive-text-primary)]/60"), children: item.icon }));
+};
+const renderItemMetadata = (item) => {
+    if (!item.metadata)
+        return null;
+    const metadata = [];
+    if (item.metadata.memberCount) {
+        metadata.push(`${item.metadata.memberCount} members`);
+    }
+    if (item.metadata.rating) {
+        metadata.push(`${item.metadata.rating}★`);
+    }
+    if (item.metadata.creator) {
+        metadata.push(`by ${item.metadata.creator}`);
+    }
+    if (item.metadata.date) {
+        metadata.push(item.metadata.date);
+    }
+    return metadata.length > 0 ? (_jsx("div", { className: "text-xs text-[var(--hive-text-primary)]/40 mt-0.5", children: metadata.join(' • ') })) : null;
+};
+return (_jsx(AnimatePresence, { mode: "wait", children: isOpen && (_jsxs(motion.div, { ref: ref, className: cn(enhancedCommandPaletteVariants({ variant, className })), initial: "hidden", animate: "visible", exit: "hidden", onClick: handleBackdropClick, ...props, children: [_jsx(motion.div, { className: "absolute inset-0 bg-[var(--hive-background-primary)]/80 backdrop-blur-sm", initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }), _jsxs(motion.div, { className: "relative w-full max-w-2xl mx-4 bg-[color-mix(in_srgb,var(--hive-background-primary)_95%,transparent)]/80 backdrop-blur-2xl border border-[color-mix(in_srgb,var(--hive-border-hover)_60%,transparent)] rounded-2xl shadow-2xl overflow-hidden", variants: paletteVariants, children: [_jsxs("div", { className: "flex items-center px-6 py-4 border-b border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]", children: [_jsx(Search, { className: "text-[var(--hive-text-tertiary)] mr-3", size: 20 }), _jsx("input", { ref: inputRef, className: "flex-1 bg-transparent text-[var(--hive-text-primary)] placeholder-[var(--hive-text-tertiary)] focus:outline-none text-lg", placeholder: placeholder, value: query, onChange: (e) => setQuery(e.target.value) }), isSearching && (_jsx("div", { className: "text-[var(--hive-text-tertiary)] text-sm animate-spin", children: "\u27F3" })), _jsx("div", { className: "text-[var(--hive-text-tertiary)] text-sm font-mono ml-3", children: hotkey })] }), !query && (_jsx("div", { className: "px-6 py-4 border-b border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]", children: _jsxs("div", { className: "flex items-center space-x-2 overflow-x-auto", children: [_jsx(motion.button, { className: cn("px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shrink-0", !selectedCategory
+                                        ? "bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30"
+                                        : "bg-[var(--hive-interactive-hover)] text-[var(--hive-text-primary)]/60 hover:bg-[var(--hive-interactive-active)]"), onClick: () => setSelectedCategory(null), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: "All" }), categories.map((category) => (_jsxs(motion.button, { className: cn("flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors shrink-0", selectedCategory === category.id
+                                        ? "bg-[var(--hive-brand-secondary)]/20 text-[var(--hive-brand-secondary)] border border-[var(--hive-brand-secondary)]/30"
+                                        : "bg-[var(--hive-interactive-hover)] text-[var(--hive-text-primary)]/60 hover:bg-[var(--hive-interactive-active)]"), onClick: () => handleCategorySelect(category.id), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [category.icon, _jsx("span", { children: category.title })] }, category.id)))] }) })), _jsx("div", { className: "max-h-96 overflow-y-auto", children: filteredItems.length > 0 ? (_jsx(motion.div, { className: "p-2", variants: resultListVariants, initial: "hidden", animate: "visible", children: Object.entries(groupedItems).map(([categoryId, categoryItems]) => {
+                                const category = categories.find(c => c.id === categoryId);
+                                return (_jsxs("div", { className: "mb-4 last:mb-0", children: [category && Object.keys(groupedItems).length > 1 && (_jsxs("div", { className: "flex items-center space-x-2 px-3 py-2 text-xs font-medium text-[var(--hive-text-primary)]/60 uppercase tracking-wider", children: [category.icon, _jsx("span", { children: category.title })] })), categoryItems.map((item, index) => {
+                                            const globalIndex = filteredItems.indexOf(item);
+                                            const isSelected = globalIndex === selectedIndex;
+                                            return (_jsxs(motion.button, { className: "w-full flex items-center justify-between px-4 py-3 rounded-xl text-left", variants: commandItemVariants, initial: "rest", animate: isSelected ? "selected" : "rest", whileHover: !isSelected ? "hover" : "selected", onClick: () => handleSelect(item), onMouseEnter: () => setSelectedIndex(globalIndex), children: [_jsxs(motion.div, { className: "flex items-center space-x-3 flex-1 min-w-0", variants: resultItemVariants, children: [renderItemIcon(item), _jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("div", { className: cn("font-medium truncate", isSelected ? "text-[var(--hive-text-primary)]" : "text-[var(--hive-text-primary)]/80"), children: item.title }), item.description && (_jsx("div", { className: "text-sm text-[var(--hive-text-primary)]/50 truncate", children: item.description })), renderItemMetadata(item)] })] }), _jsxs("div", { className: "flex items-center space-x-2 shrink-0 ml-4", children: [item.shortcut && (_jsx("div", { className: "text-xs font-mono text-[var(--hive-text-primary)]/40 bg-[var(--hive-interactive-hover)] px-2 py-1 rounded border border-[var(--hive-interactive-active)]", children: item.shortcut })), _jsx(ArrowRight, { className: cn("transition-colors", isSelected ? "text-[var(--hive-brand-secondary)]" : "text-[var(--hive-text-primary)]/40"), size: 16 })] })] }, item.id));
+                                        })] }, categoryId));
+                            }) })) : (_jsxs("div", { className: "px-6 py-12 text-center", children: [_jsx(Search, { className: "mx-auto mb-4 text-[var(--hive-text-primary)]/40", size: 48 }), _jsx("div", { className: "text-[var(--hive-text-primary)]/60 font-medium mb-2", children: isSearching ? 'Searching...' : 'No results found' }), _jsx("div", { className: "text-[var(--hive-text-primary)]/40 text-sm", children: query ? `Try different keywords or browse categories` : 'Start typing to search across all of HIVE' })] })) }), _jsx("div", { className: "px-6 py-3 bg-[var(--hive-background-primary)]/20 border-t border-[color-mix(in_srgb,var(--hive-interactive-active)_60%,transparent)]", children: _jsxs("div", { className: "flex items-center justify-between text-xs text-[var(--hive-text-primary)]/50", children: [_jsxs("div", { className: "flex items-center space-x-4", children: [_jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("div", { className: "w-4 h-4 bg-[var(--hive-interactive-active)] rounded border border-[var(--hive-border-hover)] flex items-center justify-center", children: "\u21B5" }), _jsx("span", { children: "select" })] }), _jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("div", { className: "w-4 h-4 bg-[var(--hive-interactive-active)] rounded border border-[var(--hive-border-hover)] flex items-center justify-center", children: "\u2193\u2191" }), _jsx("span", { children: "navigate" })] }), _jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("div", { className: "w-4 h-4 bg-[var(--hive-interactive-active)] rounded border border-[var(--hive-border-hover)] flex items-center justify-center", children: "\u21E5" }), _jsx("span", { children: "filter" })] })] }), _jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("span", { children: "esc" }), _jsx("span", { children: "close" })] })] }) })] })] })) }));
+;
 EnhancedHiveCommandPalette.displayName = "EnhancedHiveCommandPalette";
 // Pre-built categories for comprehensive search
 export const comprehensiveSearchCategories = [

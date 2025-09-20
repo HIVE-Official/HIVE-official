@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
 import { HiveCard, HiveButton, HiveBadge } from '../index';
-import { Play, RotateCcw, Code, Eye, Settings, Copy, Download, Save, Share, Maximize, Minimize, Palette, Sliders, Type, Hash, ToggleLeft, ToggleRight, Upload } from 'lucide-react';
+import { Play, RotateCcw, Code, Eye, Settings, Download, Save, Share, Maximize, Minimize, Palette, Sliders, Type, Hash, ToggleLeft, ToggleRight, Upload } from 'lucide-react';
 import { cn } from '../../lib/utils';
 const PropertyEditor = ({ prop, value, onChange }) => {
     const renderInput = () => {
@@ -74,18 +74,19 @@ const CodeViewer = ({ element, props }) => {
             else {
                 return `  ${key}={${JSON.stringify(value)}}`;
             }
-        })
-            .filter(Boolean)
-            .join('\n');
-        return `<${element.name}${propsString ? '\n' + propsString + '\n' : ''}/>`;
-    }, [element, props]);
-    const handleCopy = () => {
-        navigator.clipboard.writeText(generatedCode);
-        // Show toast notification in real implementation
-        alert('Code copied to clipboard!');
-    };
-    return (_jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h3", { className: "text-sm font-medium text-gray-900", children: "Generated Code" }), _jsxs(HiveButton, { size: "sm", variant: "outline", onClick: handleCopy, children: [_jsx(Copy, { className: "w-3 h-3 mr-1" }), "Copy"] })] }), _jsx("div", { className: "relative", children: _jsx("pre", { className: "bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto", children: _jsx("code", { children: generatedCode }) }) })] }));
+        });
+    })
+        .filter(Boolean)
+        .join('\n');
+    return `<${element.name}${propsString ? '\n' + propsString + '\n' : ''}/>`;
+}, [element, props];
+const handleCopy = () => {
+    navigator.clipboard.writeText(generatedCode);
+    // Show toast notification in real implementation
+    alert('Code copied to clipboard!');
 };
+return (_jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h3", { className: "text-sm font-medium text-gray-900", children: "Generated Code" }), _jsxs(HiveButton, { size: "sm", variant: "outline", onClick: handleCopy, children: [_jsx(Copy, { className: "w-3 h-3 mr-1" }), "Copy"] })] }), _jsx("div", { className: "relative", children: _jsx("pre", { className: "bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto", children: _jsx("code", { children: generatedCode }) }) })] }));
+;
 export function InteractivePlayground({ element, onSave, onClose, className }) {
     const [currentProps, setCurrentProps] = useState(element.defaultProps);
     const [activeTab, setActiveTab] = useState('properties');
@@ -126,9 +127,9 @@ export function InteractivePlayground({ element, onSave, onClose, className }) {
             else {
                 return `${key}={${JSON.stringify(value)}}`;
             }
-        })
-            .filter(Boolean)
-            .join(' ')} />`;
+        })}
+      .filter(Boolean)
+      .join(' ')} />`;
         // In a real implementation, this would trigger a download
         navigator.clipboard.writeText(code);
         alert('Code copied to clipboard!');

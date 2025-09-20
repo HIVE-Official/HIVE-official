@@ -26,7 +26,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { major, graduationYear, majorShortName } = createCohortSpacesSchema.parse(body);
     
-    console.log(`🎓 Creating cohort spaces for user ${user.uid}: ${major} '${graduationYear.toString().slice(-2)}`);
+    logger.info('Creating cohort spaces', {
+      userId: user.uid,
+      major,
+      graduationYear,
+      majorShortName
+    });
     
     // Generate cohort space configurations
     const cohortConfig: CohortSpaceConfig = {

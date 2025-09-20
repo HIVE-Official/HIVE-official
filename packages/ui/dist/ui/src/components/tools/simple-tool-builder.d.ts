@@ -24,7 +24,7 @@ export interface ToolBuildConfig {
     isPublic: boolean;
     settings: Record<string, any>;
 }
-export declare function SimpleToolBuilder({ selectedTemplate, onTemplateSelect, onBuildTool, className }: SimpleToolBuilderProps): import("react/jsx-runtime").JSX.Element;
+export declare function SimpleToolBuilder({ selectedTemplate, onTemplateSelect, onBuildTool, className }: SimpleToolBuilderProps): void;
 interface ToolTemplateSelectionProps {
     templates: UBToolTemplate[];
     onSelectTemplate: (template: UBToolTemplate) => void;

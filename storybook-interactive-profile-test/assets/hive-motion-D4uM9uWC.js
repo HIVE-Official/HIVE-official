@@ -1,1 +1,0 @@
-const a={feedCascade:{hidden:{y:20,opacity:0},visible:e=>({y:0,opacity:1,transition:{delay:e*.1,duration:.35,ease:[.19,1,.22,1]}})},hoverScale:{rest:{scale:1},hover:{scale:1.02,transition:{duration:.25,ease:[.16,1,.3,1]}}}};export{a as h};

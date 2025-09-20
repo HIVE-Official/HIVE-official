@@ -359,7 +359,7 @@ const PollSurface = ({
               </button>
             </div>
           )
-          })
+          })}
       </div>
 
       {/* Vote Button */}

@@ -63,12 +63,6 @@ declare class SmartPreloader {
     constructor(maxBudget?: number);
     static getInstance(maxBudget?: number): SmartPreloader;
     preloadRoute(route: LazyRoute, priority?: 'high' | 'medium' | 'low', campusContext?: CampusContext): Promise<boolean>;
-    getStats(): {
-        loadedChunks: number;
-        budgetUsed: number;
-        maxBudget: number;
-        budgetRemaining: number;
-    };
 }
 export declare const LazyRoutes: React.FC<LazyRoutesProps>;
 export declare function createLazyRoute(id: string, path: string, component: () => Promise<{

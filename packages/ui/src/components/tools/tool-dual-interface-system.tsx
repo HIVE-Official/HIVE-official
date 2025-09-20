@@ -38,7 +38,7 @@ interface ToolDualInterfaceProps {
   onToggleActive?: () => void;
   onConfigureInterface?: () => void;
   onConfigureSurface?: () => void;
-  className?: string
+  className?: string;
 }
 
 interface ToolInterface {
@@ -55,13 +55,13 @@ interface ToolInterface {
   visibility: {
     showInToolGrid: boolean;
     showInPostBoard: boolean;
-    requiresAuth: boolean
+    requiresAuth: boolean;
   };
   analytics: {
     views: number;
     interactions: number;
-    lastUsed: Date
-  }
+    lastUsed: Date;
+  };
 }
 
 interface ToolState {
@@ -70,7 +70,7 @@ interface ToolState {
   totalInteractions: number;
   lastActivity: Date;
   surfaceData: Record<string, any>;
-  interfaceData: Record<string, any>
+  interfaceData: Record<string, any>;
 }
 
 // Mock Interface Component (Utility Side - for leaders/builders)
@@ -109,8 +109,8 @@ const PollInterface = ({ toolState, onUpdate }: { toolState: any; onUpdate: (dat
               onChange={(e) => {
                 const newOptions = [...(toolState?.options || [])];
                 newOptions[index] = e.target.value;
-                onUpdate({ options: newOptions })
-          })}
+                onUpdate({ options: newOptions });
+              }}
               className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
             />
             <span className="ml-2 text-sm text-gray-500">
@@ -164,8 +164,8 @@ const PollSurface = ({ toolState }: { toolState: any }) => (
               />
             </div>
           </div>
-        )
-          })
+        );
+      })}
     </div>
 
     <div className="pt-2 border-t border-gray-200 flex items-center justify-between text-sm text-gray-500">
@@ -184,7 +184,7 @@ const InterfacePreviewCard = ({
   interface: ToolInterface; 
   isActive: boolean;
   onToggle: () => void;
-  onConfigure: () => void
+  onConfigure: () => void;
 }) => (
   <HiveCard className={cn(
     "p-4 transition-all",
@@ -343,7 +343,7 @@ export function ToolDualInterfaceSystem({
   const handleViewChange = (view: 'interface' | 'surface' | 'both') => {
     setCurrentView(view);
     if (view !== 'both') {
-      onToggleInterface?.(view === 'interface')
+      onToggleInterface?.(view === 'interface');
     }
   };
 
@@ -352,7 +352,7 @@ export function ToolDualInterfaceSystem({
       ...prev,
       interfaceData: { ...prev.interfaceData, ...data },
       lastActivity: new Date()
-    }))
+    }));
   };
 
   return (
@@ -466,15 +466,15 @@ export function ToolDualInterfaceSystem({
             }
             onToggle={() => {
               const newView = iface.type === 'interface' ? 'interface' : 'surface';
-              handleViewChange(newView)
-          }}
+              handleViewChange(newView);
+            }}
             onConfigure={() => {
               if (iface.type === 'interface') {
-                onConfigureInterface?.()
+                onConfigureInterface?.();
               } else {
-                onConfigureSurface?.()
+                onConfigureSurface?.();
               }
-          })}
+            }}
           />
         ))}
       </div>
@@ -551,7 +551,7 @@ export function ToolDualInterfaceSystem({
         </div>
       </HiveCard>
     </div>
-  )
+  );
 }
 
 export default ToolDualInterfaceSystem;

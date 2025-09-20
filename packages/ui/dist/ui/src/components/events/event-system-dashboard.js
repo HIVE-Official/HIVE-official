@@ -8,10 +8,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import { useState, useEffect, useCallback } from 'react';
 import { HiveCard, HiveButton, HiveBadge } from '../index';
-import { Calendar, Users, QrCode, BarChart3, MessageSquare, Plus, Clock } from 'lucide-react';
+import { Calendar, Users, QrCode, MessageSquare, Plus } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { EventCreatorToolV2 } from './event-creator-tool-v2';
-import { ToolRuntimeEngine } from '../tools/tool-runtime-engine';
 export function EventSystemDashboard({ spaceId, userId, userRole, className }) {
     const [currentView, setCurrentView] = useState('dashboard');
     const [selectedTool, setSelectedTool] = useState(null);
@@ -69,94 +67,107 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }) {
             const response = await fetch(`/api/spaces/${spaceId}/events`, {
                 headers: { 'Authorization': `Bearer ${userId}` }
             });
-            if (response.ok) {
-                const data = await response.json();
-                setEvents(data.events || []);
-                setUpcomingEvents((data.events || []).filter((event) => new Date(event.startDate) > new Date()).slice(0, 5));
-            }
-            else {
-                // Fallback to sample events
-                const sampleEvents = getSampleEvents();
-                setEvents(sampleEvents);
-                setUpcomingEvents(sampleEvents.slice(0, 5));
-            }
         }
-        catch (error) {
-            console.error('Failed to fetch events:', error);
+        finally { }
+        ;
+        if (response.ok) {
+            const data = await response.json();
+            setEvents(data.events || []);
+            setUpcomingEvents((data.events || []).filter((event) => new Date(event.startDate) > new Date()).slice(0, 5));
+        }
+        else {
+            // Fallback to sample events
             const sampleEvents = getSampleEvents();
             setEvents(sampleEvents);
             setUpcomingEvents(sampleEvents.slice(0, 5));
         }
-        finally {
-            setLoading(false);
-        }
-    }, [spaceId, userId]);
-    // Launch tool
-    const handleLaunchTool = (tool) => {
-        setSelectedTool(tool);
-        setCurrentView('tool');
-    };
-    // Handle tool actions
-    const handleToolSave = async (data) => {
-        if (!selectedTool)
-            return;
-        try {
-            await fetch(`/api/tools/${selectedTool.id}/save`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${userId}`
-                },
-                body: JSON.stringify({ spaceId, data })
-            });
-        }
-        catch (error) {
-            console.error('Failed to save tool data:', error);
-        }
-    };
-    const handleToolSubmit = async (data) => {
-        if (!selectedTool)
-            return;
-        try {
-            await fetch(`/api/tools/${selectedTool.id}/submit`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${userId}`
-                },
-                body: JSON.stringify({ spaceId, data })
-            });
-            // Refresh events after submission
-            await fetchEvents();
-            // Return to dashboard
-            setSelectedTool(null);
-            setCurrentView('dashboard');
-        }
-        catch (error) {
-            console.error('Failed to submit tool data:', error);
-        }
-    };
-    // Load events on mount
-    useEffect(() => {
-        fetchEvents();
-    }, [fetchEvents]);
-    // Tool Runtime View
-    if (currentView === 'tool' && selectedTool) {
-        return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsx("div", { className: "flex items-center justify-between", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx(HiveButton, { variant: "outline", size: "sm", onClick: () => {
-                                    setSelectedTool(null);
-                                    setCurrentView('dashboard');
-                                }, children: "\u2190 Back to Event System" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx(selectedTool.icon, { className: "w-5 h-5 text-amber-600" }), _jsx("span", { className: "font-medium text-gray-900", children: selectedTool.name })] })] }) }), _jsx(ToolRuntimeEngine, { tool: selectedTool.toolDefinition, userId: userId, spaceId: spaceId, mode: "production", onSave: handleToolSave, onSubmit: handleToolSubmit })] }));
+    });
+    try { }
+    catch (error) {
+        console.error('Failed to fetch events:', error);
+        const sampleEvents = getSampleEvents();
+        setEvents(sampleEvents);
+        setUpcomingEvents(sampleEvents.slice(0, 5));
     }
-    // Event Creator View
-    if (currentView === 'create') {
-        return (_jsx("div", { className: cn("", className), children: _jsx(EventCreatorToolV2, { spaceId: spaceId, onEventCreated: async (event) => {
-                    await fetchEvents();
-                    setCurrentView('dashboard');
-                }, onCancel: () => setCurrentView('dashboard') }) }));
+    finally {
+        setLoading(false);
     }
-    // Main Dashboard View
-    return (_jsxs("div", { className: cn("space-y-6", className), children: [_jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", children: [_jsxs("div", { children: [_jsx("h1", { className: "text-3xl font-bold text-gray-900", children: "Event Management System" }), _jsx("p", { className: "text-gray-600", children: "Complete event coordination for your campus community" })] }), _jsxs("div", { className: "flex items-center gap-3", children: [_jsxs(HiveBadge, { variant: "outline", children: [events.length, " total events"] }), _jsxs(HiveButton, { onClick: () => setCurrentView('create'), children: [_jsx(Plus, { className: "w-4 h-4 mr-2" }), "Create Event"] })] })] }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-4 gap-4", children: [_jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center", children: _jsx(Calendar, { className: "w-5 h-5 text-blue-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "text-2xl font-bold text-gray-900", children: upcomingEvents.length }), _jsx("p", { className: "text-sm text-gray-600", children: "Upcoming Events" })] })] }) }), _jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center", children: _jsx(Users, { className: "w-5 h-5 text-green-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "text-2xl font-bold text-gray-900", children: "847" }), _jsx("p", { className: "text-sm text-gray-600", children: "Total RSVPs" })] })] }) }), _jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center", children: _jsx(Clock, { className: "w-5 h-5 text-amber-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "text-2xl font-bold text-gray-900", children: "94%" }), _jsx("p", { className: "text-sm text-gray-600", children: "Attendance Rate" })] })] }) }), _jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center", children: _jsx(BarChart3, { className: "w-5 h-5 text-purple-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "text-2xl font-bold text-gray-900", children: "4.8" }), _jsx("p", { className: "text-sm text-gray-600", children: "Avg Rating" })] })] }) })] }), _jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: "Event Tools" }), _jsx(HiveBadge, { variant: "outline", children: "5 tools" })] }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: eventTools.map(tool => (_jsx(EventToolCard, { tool: tool, onLaunch: () => handleLaunchTool(tool) }, tool.id))) })] }), _jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: "Upcoming Events" }), _jsx(HiveButton, { variant: "outline", size: "sm", children: "View All Events" })] }), loading ? (_jsx("div", { className: "space-y-3", children: [1, 2, 3].map(i => (_jsx("div", { className: "animate-pulse", children: _jsx("div", { className: "h-20 bg-gray-200 rounded-lg" }) }, i))) })) : upcomingEvents.length === 0 ? (_jsxs(HiveCard, { className: "p-8 text-center", children: [_jsx(Calendar, { className: "w-12 h-12 text-gray-400 mx-auto mb-4" }), _jsx("h3", { className: "text-lg font-medium text-gray-900 mb-2", children: "No upcoming events" }), _jsx("p", { className: "text-gray-600 mb-4", children: "Create your first event to get started" }), _jsx(HiveButton, { onClick: () => setCurrentView('create'), children: "Create Event" })] })) : (_jsx("div", { className: "space-y-3", children: upcomingEvents.map(event => (_jsx(EventCard, { event: event }, event.id))) }))] }), _jsxs("div", { className: "bg-amber-50 border border-amber-200 rounded-lg p-4", children: [_jsx("h4", { className: "font-medium text-amber-800 mb-2", children: "\uD83C\uDFAF vBETA Event System" }), _jsx("p", { className: "text-sm text-amber-700 mb-2", children: "This is HIVE's focused Event Management System - the single system we're launching for vBETA." }), _jsxs("div", { className: "text-xs text-amber-600 space-y-1", children: [_jsxs("p", { children: ["\u2022 ", _jsx("strong", { children: "5 Integrated Tools" }), ": Event Creator, RSVP Manager, Check-In System, Calendar, Feedback"] }), _jsxs("p", { children: ["\u2022 ", _jsx("strong", { children: "Complete Workflow" }), ": Plan \u2192 Promote \u2192 Execute \u2192 Analyze"] }), _jsxs("p", { children: ["\u2022 ", _jsx("strong", { children: "Campus Integration" }), ": Works across all Spaces with unified coordination"] }), _jsxs("p", { children: ["\u2022 ", _jsx("strong", { children: "Built with Elements" }), ": Shows students how tools are constructed from reusable components"] })] })] })] }));
 }
+[spaceId, userId];
+;
+// Launch tool
+const handleLaunchTool = (tool) => {
+    setSelectedTool(tool);
+    setCurrentView('tool');
+};
+// Handle tool actions
+const handleToolSave = async (data) => {
+    if (!selectedTool)
+        return;
+    try {
+        await fetch(`/api/tools/${selectedTool.id}/save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userId}`
+            },
+            body: JSON.stringify({ spaceId, data })
+        });
+    }
+    finally {
+    }
+};
+try { }
+catch (error) {
+    console.error('Failed to save tool data:', error);
+}
+;
+const handleToolSubmit = async (data) => {
+    if (!selectedTool)
+        return;
+    try {
+        await fetch(`/api/tools/${selectedTool.id}/submit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userId}`
+            },
+            body: JSON.stringify({ spaceId, data })
+        });
+    }
+    finally { }
+    ;
+    // Refresh events after submission
+    await fetchEvents();
+    // Return to dashboard
+    setSelectedTool(null);
+    setCurrentView('dashboard');
+};
+try { }
+catch (error) {
+    console.error('Failed to submit tool data:', error);
+}
+;
+// Load events on mount
+useEffect(() => {
+    fetchEvents();
+}, [fetchEvents]);
+// Tool Runtime View
+if (currentView === 'tool' && selectedTool) {
+    return (_jsxs("div", { className: cn("space-y-4", className), children: [_jsx("div", { className: "flex items-center justify-between", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx(HiveButton, { variant: "outline", size: "sm", onClick: () => {
+                                setSelectedTool(null);
+                                setCurrentView('dashboard');
+                            }, children: "\u2190 Back to Event System" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx(selectedTool.icon, { className: "w-5 h-5 text-amber-600" }), _jsx("span", { className: "font-medium text-gray-900", children: selectedTool.name })] })] }) }), _jsx(ToolRuntimeEngine, { tool: selectedTool.toolDefinition, userId: userId, spaceId: spaceId, mode: "production", onSave: handleToolSave, onSubmit: handleToolSubmit })] }));
+}
+// Event Creator View
+if (currentView === 'create') {
+    return (_jsx("div", { className: cn("", className), children: _jsx(EventCreatorToolV2, { spaceId: spaceId, onEventCreated: async (event) => {
+                await fetchEvents();
+                setCurrentView('dashboard');
+            }, onCancel: () => setCurrentView('dashboard') }) }));
+}
+// Main Dashboard View
+return (_jsxs("div", { className: cn("space-y-6", className), children: [_jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", children: [_jsxs("div", { children: [_jsx("h1", { className: "text-3xl font-bold text-gray-900", children: "Event Management System" }), _jsx("p", { className: "text-gray-600", children: "Complete event coordination for your campus community" })] }), _jsxs("div", { className: "flex items-center gap-3", children: [_jsxs(HiveBadge, { variant: "outline", children: [events.length, " total events"] }), _jsxs(HiveButton, { onClick: () => setCurrentView('create'), children: [_jsx(Plus, { className: "w-4 h-4 mr-2" }), "Create Event"] })] })] }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-4 gap-4", children: [_jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center", children: _jsx(Calendar, { className: "w-5 h-5 text-blue-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "text-2xl font-bold text-gray-900", children: upcomingEvents.length }), _jsx("p", { className: "text-sm text-gray-600", children: "Upcoming Events" })] })] }) }), _jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center", children: _jsx(Users, { className: "w-5 h-5 text-green-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "text-2xl font-bold text-gray-900", children: "847" }), _jsx("p", { className: "text-sm text-gray-600", children: "Total RSVPs" })] })] }) }), _jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center", children: _jsx(Clock, { className: "w-5 h-5 text-amber-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "text-2xl font-bold text-gray-900", children: "94%" }), _jsx("p", { className: "text-sm text-gray-600", children: "Attendance Rate" })] })] }) }), _jsx(HiveCard, { className: "p-4", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center", children: _jsx(BarChart3, { className: "w-5 h-5 text-purple-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "text-2xl font-bold text-gray-900", children: "4.8" }), _jsx("p", { className: "text-sm text-gray-600", children: "Avg Rating" })] })] }) })] }), _jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: "Event Tools" }), _jsx(HiveBadge, { variant: "outline", children: "5 tools" })] }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: eventTools.map(tool => (_jsx(EventToolCard, { tool: tool, onLaunch: () => handleLaunchTool(tool) }, tool.id))) })] }), _jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: "Upcoming Events" }), _jsx(HiveButton, { variant: "outline", size: "sm", children: "View All Events" })] }), loading ? (_jsx("div", { className: "space-y-3", children: [1, 2, 3].map(i => (_jsx("div", { className: "animate-pulse", children: _jsx("div", { className: "h-20 bg-gray-200 rounded-lg" }) }, i))) })) : upcomingEvents.length === 0 ? (_jsxs(HiveCard, { className: "p-8 text-center", children: [_jsx(Calendar, { className: "w-12 h-12 text-gray-400 mx-auto mb-4" }), _jsx("h3", { className: "text-lg font-medium text-gray-900 mb-2", children: "No upcoming events" }), _jsx("p", { className: "text-gray-600 mb-4", children: "Create your first event to get started" }), _jsx(HiveButton, { onClick: () => setCurrentView('create'), children: "Create Event" })] })) : (_jsx("div", { className: "space-y-3", children: upcomingEvents.map(event => (_jsx(EventCard, { event: event }, event.id))) }))] }), _jsxs("div", { className: "bg-amber-50 border border-amber-200 rounded-lg p-4", children: [_jsx("h4", { className: "font-medium text-amber-800 mb-2", children: "\uD83C\uDFAF vBETA Event System" }), _jsx("p", { className: "text-sm text-amber-700 mb-2", children: "This is HIVE's focused Event Management System - the single system we're launching for vBETA." }), _jsxs("div", { className: "text-xs text-amber-600 space-y-1", children: [_jsxs("p", { children: ["\u2022 ", _jsx("strong", { children: "5 Integrated Tools" }), ": Event Creator, RSVP Manager, Check-In System, Calendar, Feedback"] }), _jsxs("p", { children: ["\u2022 ", _jsx("strong", { children: "Complete Workflow" }), ": Plan \u2192 Promote \u2192 Execute \u2192 Analyze"] }), _jsxs("p", { children: ["\u2022 ", _jsx("strong", { children: "Campus Integration" }), ": Works across all Spaces with unified coordination"] }), _jsxs("p", { children: ["\u2022 ", _jsx("strong", { children: "Built with Elements" }), ": Shows students how tools are constructed from reusable components"] })] })] })] }));
 function EventToolCard({ tool, onLaunch }) {
     const categoryColors = {
         creation: 'bg-green-100 text-green-800',

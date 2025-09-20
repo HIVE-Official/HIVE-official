@@ -63,7 +63,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
             occupiedPositions.add(`${x},${y}`)
           }
         }
-      });
+      })};
 
     // Generate all possible drop zones
     for (let y = 0; y < 10; y++) { // Assume max 10 rows
@@ -76,7 +76,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
             size: { width: 1, height: 1 },
             isOccupied: false,
             isValid: true
-          })
+          })}
         }
 
         // Check 2x1 zones (if not mobile)
@@ -88,7 +88,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
               size: { width: 2, height: 1 },
               isOccupied: false,
               isValid: true
-            })
+            })}
           }
         }
 
@@ -100,7 +100,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
             size: { width: 1, height: 2 },
             isOccupied: false,
             isValid: true
-          })
+          })}
         }
 
         // Check 2x2 zones (if not mobile)
@@ -112,7 +112,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
               size: { width: 2, height: 2 },
               isOccupied: false,
               isValid: true
-            })
+            })}
           }
         }
       }

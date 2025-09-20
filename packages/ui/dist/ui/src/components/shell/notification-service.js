@@ -54,7 +54,7 @@ export function NotificationProvider({ children }) {
         setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     };
     const markAllAsRead = () => {
-        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+        setNotifications(prev => prev.map(map));
     };
 }
 ;

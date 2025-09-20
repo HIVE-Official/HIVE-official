@@ -199,7 +199,7 @@ export const ProgressBarVariants: Story = {
                   )}
                 </div>
               )
-            })
+            })}
           </div>
         </div>
       ))}
@@ -388,7 +388,7 @@ export const InteractiveProgressDemo: Story = {
                   </div>
                 </button>
               )
-            })
+            })}
           </div>
 
           {(isLoading || progress > 0) && (

@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { NextRequest } from 'next/server';
 
 // Mock dependencies
 vi.mock('@/lib/firebase-admin');

@@ -38,13 +38,13 @@ export interface PersonalTool {
   collaborators?: number;
   lastUsed?: string;
   isPublic: boolean;
-  isFeatured?: boolean
+  isFeatured?: boolean;
 }
 
 export interface ProfileToolsWidgetProps {
   user: {
     id: string;
-    name: string
+    name: string;
   };
   personalTools?: PersonalTool[];
   totalToolsCreated?: number;
@@ -57,7 +57,7 @@ export interface ProfileToolsWidgetProps {
   onEditTool?: (toolId: string) => void;
   onViewAllTools?: () => void;
   onToolMarketplace?: () => void;
-  className?: string
+  className?: string;
 }
 
 const getToolCategoryConfig = (category: string) => {
@@ -99,7 +99,7 @@ const getToolCategoryConfig = (category: string) => {
     }
   };
   
-  return configs[category as keyof typeof configs] || configs.utility
+  return configs[category as keyof typeof configs] || configs.utility;
 };
 
 const getToolStatusConfig = (status: string) => {
@@ -126,7 +126,7 @@ const getToolStatusConfig = (status: string) => {
     }
   };
   
-  return configs[status as keyof typeof configs] || configs.draft
+  return configs[status as keyof typeof configs] || configs.draft;
 };
 
 export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
@@ -250,8 +250,8 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                     return <IconComponent className={cn(
                       'h-4 w-4 mt-0.5 flex-shrink-0',
                       getToolCategoryConfig(featuredTool.category).color
-                    )} />
-                  })()}
+                    )} />;
+                  })}()}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Text variant="body-sm" weight="medium" color="primary" className="truncate">
@@ -296,8 +296,8 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onEditTool(featuredTool.id)
-          }}
+                        onEditTool(featuredTool.id);
+                      }}
                       className="h-6 w-6 text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]"
                     >
                       <Play className="h-3 w-3" />
@@ -308,8 +308,8 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                     size="icon"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onViewTool?.(featuredTool.id)
-          }}
+                      onViewTool?.(featuredTool.id);
+                    }}
                     className="h-6 w-6 text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]"
                   >
                     <ExternalLink className="h-3 w-3" />
@@ -360,8 +360,8 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
                       <ChevronRight className="h-3 w-3 text-[var(--hive-text-secondary)]" />
                     </div>
                   </div>
-                )
-          })}
+                );
+              })}
             </div>
           </div>
         )}
@@ -455,5 +455,5 @@ export const ProfileToolsWidget: React.FC<ProfileToolsWidgetProps> = ({
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[var(--hive-gold)]/5 to-purple-500/5 rounded-lg blur-xl" />
       )}
     </Card>
-  )
+  );
 };

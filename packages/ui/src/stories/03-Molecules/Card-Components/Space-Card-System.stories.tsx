@@ -543,7 +543,7 @@ export const InteractiveSpaceCards: Story = {
                 </CardContent>
               </Card>
             )
-          })
+          })}
         </div>
 
         <div className="mt-8 bg-indigo-50 rounded-xl p-6 border border-indigo-100">

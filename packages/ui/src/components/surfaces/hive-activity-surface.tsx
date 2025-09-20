@@ -714,7 +714,7 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
                 </AnimatePresence>
               </motion.article>
             )
-          })
+          })}
         </div>
         
         {/* Builder Hint */}

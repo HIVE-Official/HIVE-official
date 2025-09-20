@@ -1,10 +1,7 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 /**
  * Space Builder Status and Activation API
@@ -16,14 +13,13 @@ import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
  * Check user's builder status for a space
  * GET /api/spaces/[spaceId]/builder-status
  */
-export const GET = withAuth(async (
-  request: NextRequest,
-  authContext,
-  { params }: { params: Promise<{ spaceId: string }> }
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
 ) => {
-  try {
-    const { spaceId } = await params;
-    const userId = authContext.userId;
+  const { spaceId } = await params;
+  const userId = getUserId(request);
 
     // Find the space in nested structure
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
@@ -46,7 +42,7 @@ export const GET = withAuth(async (
     }
 
     if (!spaceDoc || !spaceDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     const spaceData = spaceDoc.data();
@@ -98,8 +94,7 @@ export const GET = withAuth(async (
     const builderCount = spaceData.builderCount || 0;
     const isSpaceActive = spaceData.status === 'activated' && hasBuilders;
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       space: {
         id: spaceId,
         name: spaceData.name,
@@ -152,27 +147,19 @@ export const GET = withAuth(async (
       ]
     });
 
-  } catch (error) {
-    logger.error('Get builder status error', { error: error, endpoint: '/api/spaces/[spaceId]/builder-status' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to get builder status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Builder status checking is safe for development
-  operation: 'get_builder_status' 
 });
 
 /**
  * Activate space (builder only)
  * POST /api/spaces/[spaceId]/builder-status
  */
-export const POST = withAuth(async (
-  request: NextRequest,
-  authContext,
-  { params }: { params: Promise<{ spaceId: string }> }
+export const POST = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
 ) => {
-  try {
-    const { spaceId } = await params;
-    const userId = authContext.userId;
+  const { spaceId } = await params;
+  const userId = getUserId(request);
 
     // Find the space in nested structure
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
@@ -197,7 +184,7 @@ export const POST = withAuth(async (
     }
 
     if (!spaceDoc || !spaceDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     // Check if user is a builder
@@ -211,21 +198,21 @@ export const POST = withAuth(async (
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("You are not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("You are not a member of this space", "FORBIDDEN", 403);
     }
 
     const memberData = memberDoc.data();
     const userRole = memberData?.role;
 
     if (userRole !== 'builder' && userRole !== 'admin') {
-      return NextResponse.json(ApiResponseHelper.error("Builder rights required to activate space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("Builder rights required to activate space", "FORBIDDEN", 403);
     }
 
     const spaceData = spaceDoc.data();
 
     // Check if space is already active
     if (spaceData.status === 'activated' && spaceData.hasBuilders) {
-      return NextResponse.json(ApiResponseHelper.error("Space is already activated", "UNKNOWN_ERROR"), { status: 409 });
+      return respond.error("Space is already activated", "ALREADY_ACTIVATED", 409);
     }
 
     // Activate the space
@@ -233,17 +220,17 @@ export const POST = withAuth(async (
       status: 'activated',
       hasBuilders: true,
       isActive: true,
-      activatedAt: FieldValue.serverTimestamp(),
+      activatedAt: admin.firestore.FieldValue.serverTimestamp(),
       activatedBy: userId,
-      updatedAt: FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       // Initialize 6 universal surfaces
       surfaces: {
-        pinned: { enabled: true, lastUpdated: FieldValue.serverTimestamp() },
-        posts: { enabled: true, lastUpdated: FieldValue.serverTimestamp() },
-        events: { enabled: true, lastUpdated: FieldValue.serverTimestamp() },
-        tools: { enabled: true, lastUpdated: FieldValue.serverTimestamp() },
-        chat: { enabled: true, lastUpdated: FieldValue.serverTimestamp() },
-        members: { enabled: true, lastUpdated: FieldValue.serverTimestamp() }
+        pinned: { enabled: true, lastUpdated: admin.firestore.FieldValue.serverTimestamp() },
+        posts: { enabled: true, lastUpdated: admin.firestore.FieldValue.serverTimestamp() },
+        events: { enabled: true, lastUpdated: admin.firestore.FieldValue.serverTimestamp() },
+        tools: { enabled: true, lastUpdated: admin.firestore.FieldValue.serverTimestamp() },
+        chat: { enabled: true, lastUpdated: admin.firestore.FieldValue.serverTimestamp() },
+        members: { enabled: true, lastUpdated: admin.firestore.FieldValue.serverTimestamp() }
       }
     };
 
@@ -251,8 +238,7 @@ export const POST = withAuth(async (
 
     logger.info('🎉 Spaceactivated by builder', { spaceId, userId, endpoint: '/api/spaces/[spaceId]/builder-status' });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       message: 'Space activated successfully!',
       space: {
         id: spaceId,
@@ -278,13 +264,6 @@ export const POST = withAuth(async (
         'Invite core community members',
         'Establish space guidelines'
       ]
-    });
+    }, 201);
 
-  } catch (error) {
-    logger.error('Activate space error', { error: error, endpoint: '/api/spaces/[spaceId]/builder-status' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to activate space", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: false, // Space activation is sensitive - require real auth
-  operation: 'activate_space' 
 });

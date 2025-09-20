@@ -93,7 +93,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
   const markAllAsRead = () => {
     setNotifications(prev => 
-      prev.map(n => ({ ...n, read: true })})
+      prev.map(map}))
     )
   };
 

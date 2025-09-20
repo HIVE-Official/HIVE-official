@@ -1,5 +1,5 @@
 "use client";
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -105,13 +105,28 @@ const HivePremiumButton = React.forwardRef(({ className, variant, size, radius, 
     };
     // Motion configuration based on props
     const motionProps = magneticHover ? magneticMotion : {};
-    return (_jsxs(motion.button, { ref: buttonRef, className: cn(hivePremiumButtonVariants({
+    return (_jsx(motion.button, { ref: buttonRef, className: cn(hivePremiumButtonVariants({
             variant,
             size,
             radius,
             className
-        })), onClick: handleClick, disabled: isDisabled, ...motionProps, ...props, children: [ripples.map(ripple => (_jsx(RippleEffect, { x: ripple.x, y: ripple.y, show: ripple.show }, ripple.id))), loading && (_jsx(Loader2, { className: "mr-2 h-4 w-4 animate-spin" })), leftIcon && !loading && (_jsx("span", { className: "mr-2 flex items-center", children: leftIcon })), _jsx("span", { className: "relative z-10", children: children }), rightIcon && (_jsx("span", { className: "ml-2 flex items-center", children: rightIcon }))] }));
-});
+        })) }));
+}, onClick = { handleClick }, disabled = { isDisabled }, { ...motionProps }, { ...props }
+    >
+        { /* Ripple Effects */}, { ripples, : .map(ripple => (_jsx(RippleEffect, { x: ripple.x, y: ripple.y, show: ripple.show }, ripple.id))) }, { /* Loading Spinner */}, { loading } && (_jsx(Loader2, { className: "mr-2 h-4 w-4 animate-spin" })));
+{ /* Left Icon */ }
+{
+    leftIcon && !loading && (_jsx("span", { className: "mr-2 flex items-center", children: leftIcon }));
+}
+{ /* Content */ }
+_jsx("span", { className: "relative z-10", children: children });
+{ /* Right Icon */ }
+{
+    rightIcon && (_jsx("span", { className: "ml-2 flex items-center", children: rightIcon }));
+}
+motion.button >
+;
+;
 HivePremiumButton.displayName = "HivePremiumButton";
 const HivePremiumButtonGroup = React.forwardRef(({ className, cascade = false, spacing = "md", children, ...props }, ref) => {
     const spacingClasses = {

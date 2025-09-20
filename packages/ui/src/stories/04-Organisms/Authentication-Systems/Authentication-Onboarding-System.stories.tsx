@@ -654,7 +654,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 profileVisible: checked
-              })
+              })}
             }
             className="border-gray-600 data-[state=checked]:bg-yellow-500 data-[state=checked]:border-yellow-500"
           />
@@ -673,7 +673,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 allowMessages: checked
-              })
+              })}
             }
             className="border-gray-600 data-[state=checked]:bg-yellow-500 data-[state=checked]:border-yellow-500"
           />
@@ -692,7 +692,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 showActivity: checked
-              })
+              })}
             }
             className="border-gray-600 data-[state=checked]:bg-yellow-500 data-[state=checked]:border-yellow-500"
           />

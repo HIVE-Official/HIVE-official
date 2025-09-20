@@ -43,5 +43,5 @@ export interface HiveAnalyticsData {
         toolsInUse: number;
     };
 }
-export declare function AnalyticsDashboard(): import("react/jsx-runtime").JSX.Element;
+export declare function AnalyticsDashboard(): () => void;
 //# sourceMappingURL=analytics-dashboard.d.ts.map

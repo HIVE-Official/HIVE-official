@@ -11,6 +11,7 @@ import {
   Settings,
   Clock,
   Cpu,
+  Memory,
   CheckCircle,
   XCircle,
   AlertTriangle,

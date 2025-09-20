@@ -31,7 +31,7 @@ export interface ActivityFeedProps {
   feedType?: 'personal' | 'campus' | 'trending';
   userId?: string;
   spaceFilter?: string[];
-  className?: string
+  className?: string;
 }
 
 interface FeedPost {
@@ -45,7 +45,7 @@ interface FeedPost {
     handle: string;
     avatarUrl?: string;
     isVerified?: boolean;
-    badges?: string[]
+    badges?: string[];
   };
   createdAt: string;
   spaceId?: string;
@@ -54,7 +54,7 @@ interface FeedPost {
     type: 'image' | 'link' | 'tool' | 'event';
     url?: string;
     title?: string;
-    description?: string
+    description?: string;
   }[];
   engagement: {
     likes: number;
@@ -62,21 +62,21 @@ interface FeedPost {
     shares: number;
     views: number;
     hasLiked: boolean;
-    hasBookmarked: boolean
+    hasBookmarked: boolean;
   };
   metadata?: {
     eventDate?: string;
     toolName?: string;
     collaborators?: string[];
-    milestoneType?: string
-  }
+    milestoneType?: string;
+  };
 }
 
 interface FeedFilters {
   postTypes: string[];
   timeRange: 'today' | 'week' | 'month' | 'all';
   spaces: string[];
-  sortBy: 'recent' | 'popular' | 'trending'
+  sortBy: 'recent' | 'popular' | 'trending';
 }
 
 export function ActivityFeed({
@@ -250,7 +250,7 @@ export function ActivityFeed({
           hasBookmarked: false
         }
       }
-    ]
+    ];
   }, []);
 
   // Load posts with filters applied
@@ -266,13 +266,13 @@ export function ActivityFeed({
         
         // Apply filters
         if (filters.postTypes.length > 0) {
-          posts = posts.filter(post => filters.postTypes.includes(post.type))
+          posts = posts.filter(post => filters.postTypes.includes(post.type));
         }
         
         if (filters.spaces.length > 0) {
           posts = posts.filter(post => 
             post.spaceId && filters.spaces.includes(post.spaceId)
-          )
+          );
         }
         
         // Apply time filter
@@ -302,7 +302,7 @@ export function ActivityFeed({
             break;
           case 'recent':
           default:
-            posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         }
         
         setFeedState(prev => ({
@@ -310,18 +310,18 @@ export function ActivityFeed({
           posts,
           isLoading: false,
           lastUpdated: new Date()
-        }))
+        }));
         
       } catch (error) {
         setFeedState(prev => ({
           ...prev,
           isLoading: false,
           error: error instanceof Error ? error.message : 'Failed to load posts'
-        }))
+        }));
       }
     };
 
-    loadPosts()
+    loadPosts();
   }, [filters, generateMockPosts]);
 
   const handleLike = useCallback((postId: string) => {
@@ -341,7 +341,7 @@ export function ActivityFeed({
             }
           : post
       )
-    }))
+    }));
   }, []);
 
   const handleBookmark = useCallback((postId: string) => {
@@ -358,7 +358,7 @@ export function ActivityFeed({
             }
           : post
       )
-    }))
+    }));
   }, []);
 
   const handleShare = useCallback((postId: string) => {
@@ -366,11 +366,11 @@ export function ActivityFeed({
       navigator.share({
         title: 'HIVE Post',
         url: `${window.location.origin}/post/${postId}`
-      }).catch(() => {
-        navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`)
-      })
+      })}.catch(() => {
+        navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
+      })};
     } else {
-      navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`)
+      navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
     }
   }, []);
 
@@ -382,7 +382,7 @@ export function ActivityFeed({
       case 'ritual_milestone': return Award;
       case 'space_join': return Users;
       case 'collaboration': return Sparkles;
-      default: return Hash
+      default: return Hash;
     }
   };
 
@@ -394,7 +394,7 @@ export function ActivityFeed({
       case 'ritual_milestone': return 'text-purple-400';
       case 'space_join': return 'text-hive-brand-secondary';
       case 'collaboration': return 'text-pink-400';
-      default: return 'text-hive-text-secondary'
+      default: return 'text-hive-text-secondary';
     }
   };
 
@@ -407,11 +407,11 @@ export function ActivityFeed({
     
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
-    return 'Just now'
+    return 'Just now';
   }, []);
 
   const refreshFeed = useCallback(() => {
-    setFeedState(prev => ({ ...prev, posts: [], hasMore: true }))
+    setFeedState(prev => ({ ...prev, posts: [], hasMore: true }));
   }, []);
 
   if (feedState.error) {
@@ -431,7 +431,7 @@ export function ActivityFeed({
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   if (feedState.isLoading) {
@@ -453,7 +453,7 @@ export function ActivityFeed({
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -506,11 +506,11 @@ export function ActivityFeed({
                       checked={filters.postTypes.includes(type)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setFilters(prev => ({ ...prev, postTypes: [...prev.postTypes, type] }))
+                          setFilters(prev => ({ ...prev, postTypes: [...prev.postTypes, type] }));
                         } else {
-                          setFilters(prev => ({ ...prev, postTypes: prev.postTypes.filter(t => t !== type) }))
+                          setFilters(prev => ({ ...prev, postTypes: prev.postTypes.filter(t => t !== type) }));
                         }
-          })}
+                      }}
                       className="mr-2"
                     />
                     <span className="text-sm text-hive-text-secondary capitalize">
@@ -678,8 +678,8 @@ export function ActivityFeed({
                 </Button>
               </div>
             </Card>
-          )
-          })
+          );
+        })}
 
         {/* Load More */}
         {feedState.hasMore && (
@@ -700,5 +700,5 @@ export function ActivityFeed({
         )}
       </div>
     </div>
-  )
+  );
 }

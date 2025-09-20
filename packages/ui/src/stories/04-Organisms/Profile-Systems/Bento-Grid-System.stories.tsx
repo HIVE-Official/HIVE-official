@@ -180,7 +180,7 @@ function DeviceControls({
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-[var(--hive-text-primary)]">Device Preview:</span>
         <div className="flex gap-1">
-          {devices.map(({ key, label, icon: Icon, columns })} => (
+          {devices.map(map}) => (
             <Button
               key={key}
               size="sm"
@@ -531,7 +531,7 @@ export const EditModeFeaturesDemo: StoryObj = {
                             </span>
                           </div>
                         )
-                      })
+                      })}
                     </div>
                   </div>
                   <Button
@@ -607,7 +607,7 @@ export const EditModeFeaturesDemo: StoryObj = {
                       />
                     </div>
                   )
-                })
+                })}
               </div>
             </CardContent>
           </Card>

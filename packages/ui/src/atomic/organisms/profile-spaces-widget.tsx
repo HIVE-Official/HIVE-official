@@ -39,13 +39,13 @@ export interface JoinedSpace {
   isPrivate: boolean;
   activityLevel: 'high' | 'medium' | 'low';
   unreadMessages?: number;
-  upcomingEvents?: number
+  upcomingEvents?: number;
 }
 
 export interface ProfileSpacesWidgetProps {
   user: {
     id: string;
-    name: string
+    name: string;
   };
   joinedSpaces?: JoinedSpace[];
   totalSpaces?: number;
@@ -59,7 +59,7 @@ export interface ProfileSpacesWidgetProps {
   onCreateSpace?: () => void;
   onViewAllSpaces?: () => void;
   onExploreSpaces?: () => void;
-  className?: string
+  className?: string;
 }
 
 const getSpaceTypeConfig = (type: string) => {
@@ -101,7 +101,7 @@ const getSpaceTypeConfig = (type: string) => {
     }
   };
   
-  return configs[type as keyof typeof configs] || configs.social
+  return configs[type as keyof typeof configs] || configs.social;
 };
 
 const getRoleConfig = (role: string) => {
@@ -132,7 +132,7 @@ const getRoleConfig = (role: string) => {
     }
   };
   
-  return configs[role as keyof typeof configs] || configs.member
+  return configs[role as keyof typeof configs] || configs.member;
 };
 
 const getActivityLevelConfig = (level: string) => {
@@ -154,7 +154,7 @@ const getActivityLevelConfig = (level: string) => {
     }
   };
   
-  return configs[level as keyof typeof configs] || configs.medium
+  return configs[level as keyof typeof configs] || configs.medium;
 };
 
 export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
@@ -274,8 +274,8 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
                 return <IconComponent className={cn(
                   'h-3 w-3',
                   getRoleConfig(featuredSpace.role).color
-                )} />
-              })()}
+                )} />;
+              })}()}
             </div>
             <div className={cn(
               'p-3 rounded-lg border transition-colors hover:bg-[var(--hive-background-secondary)] cursor-pointer',
@@ -291,8 +291,8 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
                     return <IconComponent className={cn(
                       'h-4 w-4 mt-0.5 flex-shrink-0',
                       getSpaceTypeConfig(featuredSpace.type).color
-                    )} />
-                  })()}
+                    )} />;
+                  })}()}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Text variant="body-sm" weight="medium" color="primary" className="truncate">
@@ -339,8 +339,8 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
                   size="icon"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onViewSpace?.(featuredSpace.id)
-          }}
+                    onViewSpace?.(featuredSpace.id);
+                  }}
                   className="h-6 w-6 text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] flex-shrink-0 ml-2"
                 >
                   <ExternalLink className="h-3 w-3" />
@@ -384,8 +384,8 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
                     <div className={cn('w-2 h-2 rounded-full', activityConfig.color.replace('text-', 'bg-'))} />
                     <ChevronRight className="h-3 w-3 text-[var(--hive-text-secondary)]" />
                   </div>
-                )
-          })
+                );
+              })}
             </div>
           </div>
         )}
@@ -479,5 +479,5 @@ export const ProfileSpacesWidget: React.FC<ProfileSpacesWidgetProps> = ({
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-500/5 to-green-500/5 rounded-lg blur-xl" />
       )}
     </Card>
-  )
+  );
 };

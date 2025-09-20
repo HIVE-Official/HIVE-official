@@ -159,6 +159,14 @@ export default [
     },
   },
 
+  // Disable Next.js link rule for test files
+  {
+    files: ["**/*.test.tsx", "**/*.test.ts", "**/test/**/*.tsx", "**/test/**/*.ts"],
+    rules: {
+      "@next/next/no-html-link-for-pages": "off",
+    },
+  },
+
   // Ignore patterns specific to web app
   {
     ignores: [

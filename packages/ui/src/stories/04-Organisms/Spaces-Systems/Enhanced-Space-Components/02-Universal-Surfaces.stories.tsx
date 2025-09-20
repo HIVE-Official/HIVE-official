@@ -440,7 +440,7 @@ function UniversalSurfacesDemo() {
 
           {/* Surface Navigation */}
           <div className="flex space-x-1 bg-gray-800 rounded-lg p-1">
-            {surfaces.map(({ id, label, icon: Icon, count })} => (
+            {surfaces.map(map}) => (
               <button
                 key={id}
                 onClick={() => setActiveSurface(id as any)}

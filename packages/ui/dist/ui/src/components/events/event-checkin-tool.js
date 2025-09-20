@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { HiveCard, HiveButton, HiveBadge } from '../index';
-import { QrCode, Scan, UserCheck, Users, Clock, Search, CheckCircle, AlertCircle, Camera, Download, RefreshCw, Monitor, Smartphone, EyeOff } from 'lucide-react';
+import { HiveButton, HiveBadge } from '../index';
+import { UserCheck, Users, Search, AlertCircle, Camera, RefreshCw, EyeOff } from 'lucide-react';
 import { cn } from '../../lib/utils';
 const CheckinMethodBadge = ({ method }) => {
     const config = {
@@ -114,77 +114,79 @@ export function EventCheckinTool({ event, rsvps, onCheckin, onGenerateQR, onExpo
             guestCount: rsvp.guestCount,
             wasLate: rsvp.checkedInAt ? rsvp.checkedInAt > event.startDate : false
         }));
-        setCheckinEntries(mockEntries);
-    }, [rsvps, event.startDate]);
-    const handleGenerateQR = useCallback(async () => {
-        try {
-            const code = onGenerateQR ? await onGenerateQR() : `checkin_qr_${event.id}_${Date.now()}`;
-            setQRCode(code);
-        }
-        catch (error) {
-            console.error('Failed to generate QR code:', error);
-        }
-    }, [event.id, onGenerateQR]);
-    const handleQRScan = useCallback(async (scannedCode) => {
-        try {
-            // Mock QR scan processing
-            const userId = scannedCode.replace('mock_qr_code_user_', '');
-            await onCheckin(userId);
-            // Add to checkin entries
+    });
+    setCheckinEntries(mockEntries);
+}
+[rsvps, event.startDate];
+;
+const handleGenerateQR = useCallback(async () => {
+    try {
+        const code = onGenerateQR ? await onGenerateQR() : `checkin_qr_${event.id}_${Date.now()}`;
+        setQRCode(code);
+    }
+    catch (error) {
+        console.error('Failed to generate QR code:', error);
+    }
+}, [event.id, onGenerateQR]);
+const handleQRScan = useCallback(async (scannedCode) => {
+    try {
+        // Mock QR scan processing
+        const userId = scannedCode.replace('mock_qr_code_user_', '');
+        await onCheckin(userId);
+        // Add to checkin entries
+        const newEntry = {
+            id: `checkin_qr_${Date.now()}`,
+            userId,
+            userName: `User ${userId}`,
+            userEmail: `user${userId}@university.edu`,
+            checkedInAt: new Date(),
+            method: 'qr',
+            guestCount: 0,
+            wasLate: new Date() > event.startDate
+        };
+        setCheckinEntries(prev => [newEntry, ...prev]);
+    }
+    catch (error) {
+        console.error('Failed to process QR scan:', error);
+    }
+}, [onCheckin, event.startDate]);
+const handleManualCheckin = useCallback(async (userId, guestCount = 0) => {
+    try {
+        await onCheckin(userId, guestCount);
+        const rsvp = rsvps.find(r => r.userId === userId);
+        if (rsvp) {
             const newEntry = {
-                id: `checkin_qr_${Date.now()}`,
+                id: `checkin_manual_${Date.now()}`,
                 userId,
-                userName: `User ${userId}`,
-                userEmail: `user${userId}@university.edu`,
+                userName: rsvp.userName,
+                userEmail: rsvp.userEmail,
                 checkedInAt: new Date(),
-                method: 'qr',
-                guestCount: 0,
+                method: 'manual',
+                guestCount,
                 wasLate: new Date() > event.startDate
             };
             setCheckinEntries(prev => [newEntry, ...prev]);
         }
-        catch (error) {
-            console.error('Failed to process QR scan:', error);
-        }
-    }, [onCheckin, event.startDate]);
-    const handleManualCheckin = useCallback(async (userId, guestCount = 0) => {
-        try {
-            await onCheckin(userId, guestCount);
-            const rsvp = rsvps.find(r => r.userId === userId);
-            if (rsvp) {
-                const newEntry = {
-                    id: `checkin_manual_${Date.now()}`,
-                    userId,
-                    userName: rsvp.userName,
-                    userEmail: rsvp.userEmail,
-                    checkedInAt: new Date(),
-                    method: 'manual',
-                    guestCount,
-                    wasLate: new Date() > event.startDate
-                };
-                setCheckinEntries(prev => [newEntry, ...prev]);
-            }
-        }
-        catch (error) {
-            console.error('Failed to check in attendee:', error);
-        }
-    }, [onCheckin, rsvps, event.startDate]);
-    const filteredEntries = checkinEntries.filter(entry => !searchQuery ||
-        entry.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        entry.userEmail.toLowerCase().includes(searchQuery.toLowerCase()));
-    // Initialize QR code on mount
-    useEffect(() => {
-        if (viewMode === 'qr' && !qrCode) {
-            handleGenerateQR();
-        }
-    }, [viewMode, qrCode, handleGenerateQR]);
-    if (viewMode === 'qr') {
-        return (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-2xl font-bold text-gray-900", children: "QR Code Check-in" }), _jsx("p", { className: "text-gray-600", children: "Display this code for attendees to scan" })] }), _jsx(HiveButton, { onClick: () => setViewMode('dashboard'), children: "Back to Dashboard" })] }), _jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-2 gap-8", children: [_jsx(HiveCard, { className: "p-8", children: _jsx(QRCodeDisplay, { qrCode: qrCode, onRefresh: handleGenerateQR }) }), _jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "text-lg font-semibold mb-4", children: "Instructions" }), _jsxs("div", { className: "space-y-4 text-sm", children: [_jsxs("div", { className: "flex gap-3", children: [_jsx(Monitor, { className: "w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" }), _jsxs("div", { children: [_jsx("p", { className: "font-medium", children: "Display Mode" }), _jsx("p", { className: "text-gray-600", children: "Show this screen on a large display at the entrance" })] })] }), _jsxs("div", { className: "flex gap-3", children: [_jsx(Smartphone, { className: "w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" }), _jsxs("div", { children: [_jsx("p", { className: "font-medium", children: "Attendee Scanning" }), _jsx("p", { className: "text-gray-600", children: "Attendees scan with their phone camera or any QR scanner app" })] })] }), _jsxs("div", { className: "flex gap-3", children: [_jsx(RefreshCw, { className: "w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" }), _jsxs("div", { children: [_jsx("p", { className: "font-medium", children: "Security" }), _jsx("p", { className: "text-gray-600", children: "Code refreshes every 5 minutes for security" })] })] })] }), _jsxs("div", { className: "mt-6 p-4 bg-amber-50 rounded-lg", children: [_jsx("h4", { className: "font-medium text-amber-800 mb-1", children: "Live Stats" }), _jsxs("p", { className: "text-sm text-amber-700", children: [stats.checkedIn, " checked in \u2022 ", stats.totalExpected - stats.checkedIn, " remaining"] })] })] })] })] }));
     }
-    return (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-2xl font-bold text-gray-900", children: "Event Check-in" }), _jsxs("p", { className: "text-gray-600", children: ["Real-time attendance tracking for ", event.title] })] }), _jsxs("div", { className: "flex items-center gap-3", children: [_jsxs(HiveButton, { variant: "outline", onClick: () => onExportAttendance?.('csv'), children: [_jsx(Download, { className: "w-4 h-4 mr-2" }), "Export"] }), _jsxs(HiveButton, { onClick: () => setShowManualModal(true), children: [_jsx(UserCheck, { className: "w-4 h-4 mr-2" }), "Manual Check-in"] })] })] }), _jsxs("div", { className: "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4", children: [_jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-gray-900", children: stats.checkedIn }), _jsx("div", { className: "text-sm text-gray-500", children: "Checked In" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsxs("div", { className: "text-2xl font-bold text-green-600", children: [stats.checkinRate.toFixed(0), "%"] }), _jsx("div", { className: "text-sm text-gray-500", children: "Check-in Rate" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-blue-600", children: stats.onTime }), _jsx("div", { className: "text-sm text-gray-500", children: "On Time" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-orange-600", children: stats.late }), _jsx("div", { className: "text-sm text-gray-500", children: "Late" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-red-600", children: stats.noShow }), _jsx("div", { className: "text-sm text-gray-500", children: "No Show" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-purple-600", children: stats.walkIns }), _jsx("div", { className: "text-sm text-gray-500", children: "Walk-ins" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-gray-600", children: stats.totalExpected }), _jsx("div", { className: "text-sm text-gray-500", children: "Expected" })] })] }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6", children: [_jsx(HiveCard, { className: "p-6 cursor-pointer hover:shadow-md transition-shadow", onClick: () => setViewMode('qr'), children: _jsxs("div", { className: "text-center", children: [_jsx(QrCode, { className: "w-12 h-12 text-amber-500 mx-auto mb-4" }), _jsx("h3", { className: "font-semibold text-gray-900 mb-2", children: "QR Code Display" }), _jsx("p", { className: "text-sm text-gray-600", children: "Show QR code for attendees to scan themselves" })] }) }), _jsx(HiveCard, { className: "p-6 cursor-pointer hover:shadow-md transition-shadow", onClick: () => setShowQRScanner(true), children: _jsxs("div", { className: "text-center", children: [_jsx(Scan, { className: "w-12 h-12 text-green-500 mx-auto mb-4" }), _jsx("h3", { className: "font-semibold text-gray-900 mb-2", children: "Scan QR Codes" }), _jsx("p", { className: "text-sm text-gray-600", children: "Use camera to scan attendee QR codes" })] }) }), _jsx(HiveCard, { className: "p-6 cursor-pointer hover:shadow-md transition-shadow", onClick: () => setShowManualModal(true), children: _jsxs("div", { className: "text-center", children: [_jsx(UserCheck, { className: "w-12 h-12 text-blue-500 mx-auto mb-4" }), _jsx("h3", { className: "font-semibold text-gray-900 mb-2", children: "Manual Check-in" }), _jsx("p", { className: "text-sm text-gray-600", children: "Search and check in attendees manually" })] }) })] }), _jsx(HiveCard, { children: _jsxs("div", { className: "p-6", children: [_jsxs("div", { className: "flex items-center justify-between mb-4", children: [_jsx("h3", { className: "text-lg font-semibold", children: "Recent Check-ins" }), _jsxs("div", { className: "relative", children: [_jsx(Search, { className: "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" }), _jsx("input", { type: "text", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), placeholder: "Search check-ins...", className: "pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] })] }), _jsx("div", { className: "space-y-3", children: filteredEntries.length === 0 ? (_jsxs("div", { className: "text-center py-8", children: [_jsx(Clock, { className: "w-8 h-8 text-gray-400 mx-auto mb-2" }), _jsx("p", { className: "text-gray-500", children: "No check-ins yet" })] })) : (filteredEntries.slice(0, 10).map((entry) => (_jsxs("div", { className: "flex items-center justify-between p-3 bg-gray-50 rounded-lg", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-8 h-8 bg-green-100 rounded-full flex items-center justify-center", children: _jsx(CheckCircle, { className: "w-4 h-4 text-green-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "font-medium text-gray-900", children: entry.userName }), _jsx("p", { className: "text-sm text-gray-500", children: entry.userEmail })] })] }), _jsxs("div", { className: "flex items-center gap-3 text-sm", children: [_jsx(CheckinMethodBadge, { method: entry.method }), entry.guestCount > 0 && (_jsxs("span", { className: "text-gray-500", children: ["+", entry.guestCount] })), entry.wasLate && (_jsx(HiveBadge, { className: "bg-orange-100 text-orange-800 border-orange-200", children: "Late" })), _jsx("span", { className: "text-gray-500", children: entry.checkedInAt.toLocaleTimeString([], {
-                                                    hour: '2-digit',
-                                                    minute: '2-digit'
-                                                }) })] })] }, entry.id)))) }), filteredEntries.length > 10 && (_jsx("div", { className: "text-center mt-4", children: _jsxs("p", { className: "text-sm text-gray-500", children: ["Showing 10 of ", filteredEntries.length, " check-ins"] }) }))] }) }), _jsx(QRScanner, { isActive: showQRScanner, onScan: handleQRScan, onClose: () => setShowQRScanner(false) }), _jsx(ManualCheckinModal, { isOpen: showManualModal, rsvps: rsvps, onCheckin: handleManualCheckin, onClose: () => setShowManualModal(false) })] }));
+    catch (error) {
+        console.error('Failed to check in attendee:', error);
+    }
+}, [onCheckin, rsvps, event.startDate]);
+const filteredEntries = checkinEntries.filter(entry => !searchQuery ||
+    entry.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    entry.userEmail.toLowerCase().includes(searchQuery.toLowerCase()));
+// Initialize QR code on mount
+useEffect(() => {
+    if (viewMode === 'qr' && !qrCode) {
+        handleGenerateQR();
+    }
+}, [viewMode, qrCode, handleGenerateQR]);
+if (viewMode === 'qr') {
+    return (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-2xl font-bold text-gray-900", children: "QR Code Check-in" }), _jsx("p", { className: "text-gray-600", children: "Display this code for attendees to scan" })] }), _jsx(HiveButton, { onClick: () => setViewMode('dashboard'), children: "Back to Dashboard" })] }), _jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-2 gap-8", children: [_jsx(HiveCard, { className: "p-8", children: _jsx(QRCodeDisplay, { qrCode: qrCode, onRefresh: handleGenerateQR }) }), _jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "text-lg font-semibold mb-4", children: "Instructions" }), _jsxs("div", { className: "space-y-4 text-sm", children: [_jsxs("div", { className: "flex gap-3", children: [_jsx(Monitor, { className: "w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" }), _jsxs("div", { children: [_jsx("p", { className: "font-medium", children: "Display Mode" }), _jsx("p", { className: "text-gray-600", children: "Show this screen on a large display at the entrance" })] })] }), _jsxs("div", { className: "flex gap-3", children: [_jsx(Smartphone, { className: "w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" }), _jsxs("div", { children: [_jsx("p", { className: "font-medium", children: "Attendee Scanning" }), _jsx("p", { className: "text-gray-600", children: "Attendees scan with their phone camera or any QR scanner app" })] })] }), _jsxs("div", { className: "flex gap-3", children: [_jsx(RefreshCw, { className: "w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" }), _jsxs("div", { children: [_jsx("p", { className: "font-medium", children: "Security" }), _jsx("p", { className: "text-gray-600", children: "Code refreshes every 5 minutes for security" })] })] })] }), _jsxs("div", { className: "mt-6 p-4 bg-amber-50 rounded-lg", children: [_jsx("h4", { className: "font-medium text-amber-800 mb-1", children: "Live Stats" }), _jsxs("p", { className: "text-sm text-amber-700", children: [stats.checkedIn, " checked in \u2022 ", stats.totalExpected - stats.checkedIn, " remaining"] })] })] })] })] }));
 }
+return (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-2xl font-bold text-gray-900", children: "Event Check-in" }), _jsxs("p", { className: "text-gray-600", children: ["Real-time attendance tracking for ", event.title] })] }), _jsxs("div", { className: "flex items-center gap-3", children: [_jsxs(HiveButton, { variant: "outline", onClick: () => onExportAttendance?.('csv'), children: [_jsx(Download, { className: "w-4 h-4 mr-2" }), "Export"] }), _jsxs(HiveButton, { onClick: () => setShowManualModal(true), children: [_jsx(UserCheck, { className: "w-4 h-4 mr-2" }), "Manual Check-in"] })] })] }), _jsxs("div", { className: "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4", children: [_jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-gray-900", children: stats.checkedIn }), _jsx("div", { className: "text-sm text-gray-500", children: "Checked In" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsxs("div", { className: "text-2xl font-bold text-green-600", children: [stats.checkinRate.toFixed(0), "%"] }), _jsx("div", { className: "text-sm text-gray-500", children: "Check-in Rate" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-blue-600", children: stats.onTime }), _jsx("div", { className: "text-sm text-gray-500", children: "On Time" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-orange-600", children: stats.late }), _jsx("div", { className: "text-sm text-gray-500", children: "Late" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-red-600", children: stats.noShow }), _jsx("div", { className: "text-sm text-gray-500", children: "No Show" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-purple-600", children: stats.walkIns }), _jsx("div", { className: "text-sm text-gray-500", children: "Walk-ins" })] }), _jsxs(HiveCard, { className: "p-4 text-center", children: [_jsx("div", { className: "text-2xl font-bold text-gray-600", children: stats.totalExpected }), _jsx("div", { className: "text-sm text-gray-500", children: "Expected" })] })] }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6", children: [_jsx(HiveCard, { className: "p-6 cursor-pointer hover:shadow-md transition-shadow", onClick: () => setViewMode('qr'), children: _jsxs("div", { className: "text-center", children: [_jsx(QrCode, { className: "w-12 h-12 text-amber-500 mx-auto mb-4" }), _jsx("h3", { className: "font-semibold text-gray-900 mb-2", children: "QR Code Display" }), _jsx("p", { className: "text-sm text-gray-600", children: "Show QR code for attendees to scan themselves" })] }) }), _jsx(HiveCard, { className: "p-6 cursor-pointer hover:shadow-md transition-shadow", onClick: () => setShowQRScanner(true), children: _jsxs("div", { className: "text-center", children: [_jsx(Scan, { className: "w-12 h-12 text-green-500 mx-auto mb-4" }), _jsx("h3", { className: "font-semibold text-gray-900 mb-2", children: "Scan QR Codes" }), _jsx("p", { className: "text-sm text-gray-600", children: "Use camera to scan attendee QR codes" })] }) }), _jsx(HiveCard, { className: "p-6 cursor-pointer hover:shadow-md transition-shadow", onClick: () => setShowManualModal(true), children: _jsxs("div", { className: "text-center", children: [_jsx(UserCheck, { className: "w-12 h-12 text-blue-500 mx-auto mb-4" }), _jsx("h3", { className: "font-semibold text-gray-900 mb-2", children: "Manual Check-in" }), _jsx("p", { className: "text-sm text-gray-600", children: "Search and check in attendees manually" })] }) })] }), _jsx(HiveCard, { children: _jsxs("div", { className: "p-6", children: [_jsxs("div", { className: "flex items-center justify-between mb-4", children: [_jsx("h3", { className: "text-lg font-semibold", children: "Recent Check-ins" }), _jsxs("div", { className: "relative", children: [_jsx(Search, { className: "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" }), _jsx("input", { type: "text", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), placeholder: "Search check-ins...", className: "pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] })] }), _jsx("div", { className: "space-y-3", children: filteredEntries.length === 0 ? (_jsxs("div", { className: "text-center py-8", children: [_jsx(Clock, { className: "w-8 h-8 text-gray-400 mx-auto mb-2" }), _jsx("p", { className: "text-gray-500", children: "No check-ins yet" })] })) : (filteredEntries.slice(0, 10).map((entry) => (_jsxs("div", { className: "flex items-center justify-between p-3 bg-gray-50 rounded-lg", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "w-8 h-8 bg-green-100 rounded-full flex items-center justify-center", children: _jsx(CheckCircle, { className: "w-4 h-4 text-green-600" }) }), _jsxs("div", { children: [_jsx("p", { className: "font-medium text-gray-900", children: entry.userName }), _jsx("p", { className: "text-sm text-gray-500", children: entry.userEmail })] })] }), _jsxs("div", { className: "flex items-center gap-3 text-sm", children: [_jsx(CheckinMethodBadge, { method: entry.method }), entry.guestCount > 0 && (_jsxs("span", { className: "text-gray-500", children: ["+", entry.guestCount] })), entry.wasLate && (_jsx(HiveBadge, { className: "bg-orange-100 text-orange-800 border-orange-200", children: "Late" })), _jsx("span", { className: "text-gray-500", children: entry.checkedInAt.toLocaleTimeString([], {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) })] })] }, entry.id)))) }), filteredEntries.length > 10 && (_jsx("div", { className: "text-center mt-4", children: _jsxs("p", { className: "text-sm text-gray-500", children: ["Showing 10 of ", filteredEntries.length, " check-ins"] }) }))] }) }), _jsx(QRScanner, { isActive: showQRScanner, onScan: handleQRScan, onClose: () => setShowQRScanner(false) }), _jsx(ManualCheckinModal, { isOpen: showManualModal, rsvps: rsvps, onCheckin: handleManualCheckin, onClose: () => setShowManualModal(false) })] }));
 export default EventCheckinTool;
 //# sourceMappingURL=event-checkin-tool.js.map

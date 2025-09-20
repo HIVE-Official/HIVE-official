@@ -171,7 +171,7 @@ const useErrorHandling = () => {
           isRetrying: false,
           autoRetry: true
         }
-      }))
+      })})
     }
   }, []);
 

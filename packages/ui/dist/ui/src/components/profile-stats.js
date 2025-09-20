@@ -2,8 +2,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../lib/utils';
-import { ProfileStatistic } from '../atomic/atoms/profile-statistic';
 import { Users, Zap, BookOpen, Star, TrendingUp, Award, Calendar } from 'lucide-react';
 const profileStatsVariants = cva("flex transition-all duration-200", {
     variants: {
@@ -135,30 +133,32 @@ export function ProfileStats({ stats, priority = ['spacesJoined', 'spacesActive'
                 config,
                 onClick: interactive && onStatClick ? () => onStatClick(key, value) : undefined
             };
-        })
-            .filter(Boolean);
-    }, [stats, priority, maxStats, interactive, onStatClick, changes]);
-    // Determine stat size based on layout
-    const statSize = React.useMemo(() => {
-        if (layout === "compact")
-            return "xs";
-        if (layout === "vertical")
-            return "md";
-        return "sm";
-    }, [layout]);
-    // Determine stat variant based on container variant
-    const statVariant = React.useMemo(() => {
-        if (variant === "ghost" || variant === "minimal")
-            return "ghost";
-        if (layout === "compact")
-            return "compact";
-        return "default";
-    }, [variant, layout]);
-    if (loading) {
-        return (_jsx("div", { className: cn(profileStatsVariants({ layout, columns: determinedColumns, variant, spacing }), className), children: Array.from({ length: Math.min(priority.length, maxStats) }).map((_, i) => (_jsx(ProfileStatistic, { value: "", label: "", loading: true, size: statSize, variant: statVariant }, i))) }));
-    }
-    return (_jsx("div", { className: cn(profileStatsVariants({ layout, columns: determinedColumns, variant, spacing }), className), ...props, children: displayStats.map((stat) => (_jsx(ProfileStatistic, { value: stat.value, label: stat.config.label, icon: showIcons ? stat.config.icon : undefined, iconColor: stat.config.iconColor, emphasis: stat.config.emphasis, change: stat.change, showTrend: showTrends && stat.change !== undefined, size: statSize, variant: statVariant, interactive: !!stat.onClick, onClick: stat.onClick }, stat.key))) }));
+        });
+    })
+        .filter(Boolean);
 }
+[stats, priority, maxStats, interactive, onStatClick, changes];
+;
+// Determine stat size based on layout
+const statSize = React.useMemo(() => {
+    if (layout === "compact")
+        return "xs";
+    if (layout === "vertical")
+        return "md";
+    return "sm";
+}, [layout]);
+// Determine stat variant based on container variant
+const statVariant = React.useMemo(() => {
+    if (variant === "ghost" || variant === "minimal")
+        return "ghost";
+    if (layout === "compact")
+        return "compact";
+    return "default";
+}, [variant, layout]);
+if (loading) {
+    return (_jsx("div", { className: cn(profileStatsVariants({ layout, columns: determinedColumns, variant, spacing }), className), children: Array.from({ length: Math.min(priority.length, maxStats) }).map((_, i) => (_jsx(ProfileStatistic, { value: "", label: "", loading: true, size: statSize, variant: statVariant }, i))) }));
+}
+return (_jsx("div", { className: cn(profileStatsVariants({ layout, columns: determinedColumns, variant, spacing }), className), ...props, children: displayStats.map((stat) => (_jsx(ProfileStatistic, { value: stat.value, label: stat.config.label, icon: showIcons ? stat.config.icon : undefined, iconColor: stat.config.iconColor, emphasis: stat.config.emphasis, change: stat.change, showTrend: showTrends && stat.change !== undefined, size: statSize, variant: statVariant, interactive: !!stat.onClick, onClick: stat.onClick }, stat.key))) }));
 // Preset variants for common use cases
 export function CompactProfileStats(props) {
     return (_jsx(ProfileStats, { layout: "compact", maxStats: 3, showIcons: false, variant: "ghost", ...props }));

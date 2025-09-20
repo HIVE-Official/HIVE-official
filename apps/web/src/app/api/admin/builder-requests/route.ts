@@ -1,9 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAuth } from 'firebase-admin/auth';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import { dbAdmin, authAdmin } from '@/lib/firebase-admin';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
@@ -54,7 +53,7 @@ export async function POST(request: NextRequest) {
       adminUserId = 'test-user';
     } else {
       try {
-        const auth = getAuth();
+        const auth = admin.auth();
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
@@ -93,7 +92,7 @@ export async function POST(request: NextRequest) {
     // Update request status
     const updateData: any = {
       status: action === 'approve' ? 'approved' : 'rejected',
-      reviewedAt: FieldValue.serverTimestamp(),
+      reviewedAt: admin.firestore.FieldValue.serverTimestamp(),
       reviewedBy: adminUserId,
       reviewNotes: notes || null
     };
@@ -117,8 +116,8 @@ export async function POST(request: NextRequest) {
         const memberData = {
           uid: requestData.userId,
           role: 'builder',
-          joinedAt: memberDoc.exists ? memberDoc.data()?.joinedAt : FieldValue.serverTimestamp(),
-          promotedToBuilderAt: FieldValue.serverTimestamp(),
+          joinedAt: memberDoc.exists ? memberDoc.data()?.joinedAt : admin.firestore.FieldValue.serverTimestamp(),
+          promotedToBuilderAt: admin.firestore.FieldValue.serverTimestamp(),
           promotedBy: adminUserId,
           builderRequestId: requestId
         };
@@ -128,17 +127,17 @@ export async function POST(request: NextRequest) {
         // Update space member count if user wasn't already a member
         if (!memberDoc.exists) {
           await spaceRef.update({
-            memberCount: FieldValue.increment(1),
-            updatedAt: FieldValue.serverTimestamp()
+            memberCount: admin.firestore.FieldValue.increment(1),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
           });
         }
 
         // Update space to indicate it has builders
         await spaceRef.update({
           hasBuilders: true,
-          builderCount: FieldValue.increment(1),
-          lastBuilderAddedAt: FieldValue.serverTimestamp(),
-          updatedAt: FieldValue.serverTimestamp()
+          builderCount: admin.firestore.FieldValue.increment(1),
+          lastBuilderAddedAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
         });
 
         logger.info('✅ Granted builder rights for space', {  requestData: requestData.spaceId, endpoint: '/api/admin/builder-requests'  });
@@ -223,7 +222,7 @@ export async function GET(request: NextRequest) {
       adminUserId = 'test-user';
     } else {
       try {
-        const auth = getAuth();
+        const auth = admin.auth();
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {

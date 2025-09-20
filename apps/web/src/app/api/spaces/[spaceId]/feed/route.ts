@@ -1,9 +1,7 @@
-import { NextResponse } from "next/server";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { type Post } from "@hive/core";
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { z } from 'zod';
 
 const GetActivityFeedSchema = z.object({
@@ -33,19 +31,17 @@ export interface ActivityItem {
   };
 }
 
-export const GET = withAuth(async (
-  request: Request,
-  authContext,
-  { params }: { params: Promise<{ spaceId: string }> }
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
 ) => {
-  let spaceId: string | undefined;
+  const userId = getUserId(request);
+  const { spaceId } = await params;
 
-  try {
-    ({ spaceId } = await params);
-
-    if (!spaceId) {
-      return NextResponse.json(ApiResponseHelper.error("Space ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
+  if (!spaceId) {
+    return respond.error("Space ID is required", "INVALID_INPUT", 400);
+  }
 
     const { searchParams } = new URL(request.url);
     const { limit, offset, types, since } = GetActivityFeedSchema.parse(
@@ -61,11 +57,11 @@ export const GET = withAuth(async (
       .collection('spaces')
       .doc(spaceId)
       .collection('members')
-      .doc(authContext.userId)
+      .doc(userId)
       .get();
 
     if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("Not a member of this space", "FORBIDDEN", 403);
     }
 
     const activities: ActivityItem[] = [];
@@ -304,7 +300,7 @@ export const GET = withAuth(async (
     // Apply pagination
     const paginatedActivities = activities.slice(offset, offset + limit);
 
-    return NextResponse.json({
+    return respond.success({
       activities: paginatedActivities,
       total: activities.length,
       hasMore: activities.length > offset + limit,
@@ -321,27 +317,5 @@ export const GET = withAuth(async (
         }, {} as Record<string, number>),
         lastActivity: activities[0]?.timestamp || null,
       }
-    }, { status: HttpStatus.OK });
-
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Invalid query parameters',
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    logger.error('Error fetching space activity feed', {
-      spaceId: spaceId || "unknown",
-      error: error instanceof Error ? error.message : String(error),
-      endpoint: '/api/spaces/[spaceId]/feed'
     });
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch activity feed", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: false,
-  operation: 'fetch_space_activity_feed' 
 });

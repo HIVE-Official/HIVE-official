@@ -167,7 +167,7 @@ const generateContextualSuggestions = (space: any): ToolSuggestion[] => {
         relevanceScore: 0.9,
         reason: 'Perfect for study group productivity',
         category: 'space_specific'
-      });
+      })};
       break;
     
     case 'social':
@@ -176,7 +176,7 @@ const generateContextualSuggestions = (space: any): ToolSuggestion[] => {
         relevanceScore: 0.8,
         reason: 'Great for group decision making',
         category: 'space_specific'
-      });
+      })};
       break;
     
     case 'clubs':
@@ -185,7 +185,7 @@ const generateContextualSuggestions = (space: any): ToolSuggestion[] => {
         relevanceScore: 0.9,
         reason: 'Essential for club meeting management',
         category: 'space_specific'
-      });
+      })};
       break
   }
 
@@ -532,7 +532,7 @@ export function LibraryContextualAccess({
                     onPreview={handlePreview}
                   />
                 )
-          })
+          })}
             </div>
           )}
         </div>

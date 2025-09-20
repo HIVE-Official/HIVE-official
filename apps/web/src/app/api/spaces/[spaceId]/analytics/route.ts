@@ -1,7 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { dbAdmin } from '@/lib/firebase-admin';
 
 // Space Analytics interfaces
@@ -60,20 +58,21 @@ interface SpaceAnalytics {
 }
 
 // GET - Fetch space analytics (leaders and moderators only)
-export const GET = withAuth(async (request: NextRequest, authContext, { params }) => {
-  try {
-    const spaceId = params.spaceId;
-    const { searchParams } = new URL(request.url);
-    const timeRange = searchParams.get('timeRange') || '30d';
-    
-    // Verify user has analytics access to this space
-    const hasAccess = await verifyAnalyticsAccess(authContext.userId, spaceId);
-    if (!hasAccess) {
-      return NextResponse.json(
-        ApiResponseHelper.error("Insufficient permissions to view space analytics", "FORBIDDEN"), 
-        { status: HttpStatus.FORBIDDEN }
-      );
-    }
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
+) => {
+  const userId = getUserId(request);
+  const { spaceId } = await params;
+  const { searchParams } = new URL(request.url);
+  const timeRange = searchParams.get('timeRange') || '30d';
+
+  // Verify user has analytics access to this space
+  const hasAccess = await verifyAnalyticsAccess(userId, spaceId);
+  if (!hasAccess) {
+    return respond.error("Insufficient permissions to view space analytics", "FORBIDDEN", 403);
+  }
 
     // For development mode, return comprehensive mock analytics
     if (process.env.NODE_ENV !== 'production') {
@@ -85,39 +84,22 @@ export const GET = withAuth(async (request: NextRequest, authContext, { params }
         endpoint: '/api/spaces/[spaceId]/analytics' 
       });
       
-      return NextResponse.json({
-        success: true,
+      return respond.success({
         analytics: mockAnalytics,
         metadata: {
           timeRange,
-          generatedAt: new Date().toISOString(),
-          // SECURITY: Development mode removed for production safety
+          generatedAt: new Date().toISOString()
         }
       });
     }
     
     // Production implementation would fetch real analytics from Firebase
     // For now, return empty state for production
-    return NextResponse.json({
-      success: true,
-      analytics: null,
+    return respond.success({
+      analytics: null
+    }, {
       message: 'Space analytics not yet implemented for production'
     });
-    
-  } catch (error) {
-    logger.error('Error fetching space analytics', { 
-      error: error, 
-      spaceId: params.spaceId,
-      endpoint: '/api/spaces/[spaceId]/analytics' 
-    });
-    return NextResponse.json(
-      ApiResponseHelper.error("Failed to fetch space analytics", "INTERNAL_ERROR"), 
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
-  }
-}, { 
-  allowDevelopmentBypass: true,
-  operation: 'get_space_analytics' 
 });
 
 // Helper function to verify analytics access

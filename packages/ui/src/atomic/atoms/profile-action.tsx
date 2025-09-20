@@ -267,12 +267,12 @@ export function ProfileAction({
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener noreferrer' : undefined}
         className={cn(
-          profileActionVariants({ 
-            size, 
-            variant: finalVariant, 
-            shape, 
-            width, 
-            interactive 
+          profileActionVariants({
+            size,
+            variant: finalVariant,
+            shape,
+            width,
+            interactive
           }),
           finalDisabled && "pointer-events-none",
           className

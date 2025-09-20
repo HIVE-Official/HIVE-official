@@ -279,7 +279,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
         if (!tool.isVisible && !canManageTools) return false;
         if (selectedCategory === 'all') return true;
         return tool.category === selectedCategory
-      })}}}
+      })}
       .sort((a, b) => {
         // Pinned tools first
         if (a.isPinned && !b.isPinned) return -1;
@@ -288,7 +288,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
         if (a.usageCount !== b.usageCount) return b.usageCount - a.usageCount;
         // Finally by added date
         return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
-      })
+      })}
       .slice(0, maxTools);
     
     // Tool category counts
@@ -491,7 +491,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                 </span>
               </motion.button>
             )
-          })
+          })}
         </div>
         
         {/* Tools Grid */}
@@ -702,7 +702,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                 </div>
               </motion.article>
             )
-          })
+          })}
         </div>
         
         {/* Builder Hint */}

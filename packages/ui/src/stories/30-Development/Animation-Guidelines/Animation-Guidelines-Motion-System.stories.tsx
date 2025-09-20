@@ -495,7 +495,7 @@ const AnimationShowcase = () => {
               { key: 'easing-curves', label: 'Easing Curves', icon: Waves },
               { key: 'campus-patterns', label: 'Campus Patterns', icon: Users },
               { key: 'live-demo', label: 'Live Demo', icon: Play }
-            ].map(({ key, label, icon: IconComponent })} => {
+            ].map(map}) => {
               const isActive = activeDemo === key;
               return (
                 <Button
@@ -517,7 +517,7 @@ const AnimationShowcase = () => {
                   {label}
                 </Button>
               )
-            })
+            })}
           </div>
         </motion.div>
 

@@ -590,7 +590,7 @@ const GestureDemo = () => {
             { direction: 'down', icon: ArrowDown },
             { direction: 'left', icon: ArrowLeft },
             { direction: 'right', icon: ArrowRight }
-          ].map(({ direction, icon: Icon })} => (
+          ].map(map}) => (
             <div
               key={direction}
               className={`

@@ -495,11 +495,11 @@ export const HighActivity: Story = {
     spaces: mockSpaces.map(space => ({
       ...space,
       unreadCount: Math.floor(Math.random() * 50) + 1
-    })}),
+    })),
     activities: mockActivities.map((activity, index) => ({
       ...activity,
       isUnread: index < 4
-    })}),
+    })),
     availableTools: mockAvailableTools,
     createdTools: mockCreatedTools,
     layout: 'desktop',

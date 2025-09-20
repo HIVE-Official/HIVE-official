@@ -800,7 +800,7 @@ const MobileNavigation = () => {
                 <p className="text-gray-400 text-sm">Swipe left/right to navigate</p>
               </div>
             ) : null
-          }}
+          })}
         </div>
 
         {/* Gesture Feedback */}
@@ -843,7 +843,7 @@ const MobileNavigation = () => {
                 )}
               </button>
             )
-          })
+          })}
         </div>
       </div>
     </div>
@@ -1010,7 +1010,7 @@ const CampusQuickActions = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                 </span>
               </button>
             )
-          })
+          })}
         </div>
 
         <div className="mt-6 text-center">

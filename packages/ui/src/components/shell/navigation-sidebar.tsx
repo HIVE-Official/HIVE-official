@@ -133,7 +133,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
               )}
             </button>
           )
-          })
+          })}
       </nav>
 
       {/* User Section */}

@@ -4,23 +4,11 @@
  * Handles .edu verification, onboarding flow, and profile completion tracking
  * Social-first approach with privacy defaults during vBETA
  */
-import type { User, ProfileCompletionStage, AuthStatus, BuilderLevel } from './hive-state-management';
+import type { ProfileCompletionStage, BuilderLevel } from './hive-state-management';
 /**
  * Main authentication hook with .edu verification
  */
-export declare function useAuth(): {
-    isAuthenticated: boolean;
-    isOnboarding: boolean;
-    isLoading: boolean;
-    error: string;
-    user: User;
-    authStatus: AuthStatus;
-    sendMagicLink: (email: string) => Promise<boolean>;
-    verifyMagicLink: (token: string) => Promise<boolean>;
-    logout: () => void;
-    updateProfile: (updates: Partial<User>) => void;
-    clearError: () => void;
-};
+export declare function useAuth(): boolean;
 /**
  * Profile completion and onboarding flow
  */

@@ -2,7 +2,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Component } from 'react';
 import { HiveErrorHandler } from './ErrorBoundary';
-import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator';
 class GlobalErrorTracker {
     constructor() {
         this.analytics = {
@@ -103,16 +102,6 @@ export class GlobalErrorBoundary extends Component {
         super(props);
         this.errorTracker = GlobalErrorTracker.getInstance();
         this.recoveryTimer = null;
-        this.handleRetry = () => {
-            this.setState(prevState => ({
-                hasError: false,
-                error: null,
-                hiveError: null,
-                errorId: '',
-                retryCount: prevState.retryCount + 1,
-                isRecovering: false,
-            }));
-        };
         this.state = {
             hasError: false,
             error: null,
@@ -188,73 +177,92 @@ export class GlobalErrorBoundary extends Component {
                 method: 'POST',
                 credentials: 'include',
             });
-            if (response.ok) {
-                console.log('✅ Auth refresh successful, retrying...');
-                this.handleRetry();
-            }
-            else {
-                console.log('❌ Auth refresh failed');
-                this.setState({ isRecovering: false });
-            }
         }
-        catch (refreshError) {
-            console.error('Auth refresh error:', refreshError);
+        finally { }
+        ;
+        if (response.ok) {
+            console.log('✅ Auth refresh successful, retrying...');
+            this.handleRetry();
+        }
+        else {
+            console.log('❌ Auth refresh failed');
             this.setState({ isRecovering: false });
         }
     }
-    async reportCriticalError(error, errorInfo, hiveError) {
-        try {
-            // Send critical errors to monitoring service immediately
-            await fetch('/api/errors/critical', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    error: {
-                        message: error.message,
-                        stack: error.stack,
-                        name: error.name,
-                    },
-                    errorInfo,
-                    hiveError,
-                    errorId: this.state.errorId,
-                    context: this.props.context,
-                    analytics: this.errorTracker.getAnalytics(),
-                    timestamp: new Date().toISOString(),
-                }),
-            });
-        }
-        catch (reportError) {
-            console.error('Failed to report critical error:', reportError);
-        }
+    catch(refreshError) {
+        console.error('Auth refresh error:', refreshError);
+        this.setState({ isRecovering: false });
     }
-    componentWillUnmount() {
-        if (this.recoveryTimer) {
-            clearTimeout(this.recoveryTimer);
-        }
+}
+async;
+reportCriticalError(error, Error, errorInfo, ErrorInfo, hiveError, HiveError);
+{
+    try {
+        // Send critical errors to monitoring service immediately
+        await fetch('/api/errors/critical', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                error: {
+                    message: error.message,
+                    stack: error.stack,
+                    name: error.name,
+                },
+                errorInfo,
+                hiveError,
+                errorId: this.state.errorId,
+                context: this.props.context,
+                analytics: this.errorTracker.getAnalytics(),
+                timestamp: new Date().toISOString(),
+            }),
+        });
     }
-    render() {
-        // Show recovery screen during auto-recovery
-        if (this.state.isRecovering) {
-            return (_jsx("div", { className: "min-h-screen flex items-center justify-center p-4 bg-hive-background-primary", children: _jsxs("div", { className: "text-center space-y-6", children: [_jsx(LoadingOrchestrator, { resources: [
-                                {
-                                    id: 'recovery',
-                                    name: 'Attempting to recover',
-                                    priority: 'critical',
-                                    estimatedTime: 2000,
-                                }
-                            ], strategy: "progressive", showStudentFriendlyMessages: true, campusContext: {
-                                networkQuality: 'fair',
-                                timeOfDay: 'morning',
-                                campusLoad: 'medium',
-                                deviceType: 'desktop',
-                            } }), _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-hive-text-secondary text-sm", children: "HIVE is trying to fix this automatically..." }), _jsx("button", { onClick: this.handleRetry, className: "px-4 py-2 text-hive-text-secondary hover:text-hive-text-secondary transition-colors text-xs", children: "Skip auto-recovery" })] })] }) }));
-        }
-        // If there's an error, show enhanced error boundary
-        if (this.state.hasError && this.state.hiveError) {
-            return (_jsx(GlobalErrorFallback, { error: this.state.hiveError, errorId: this.state.errorId, retryCount: this.state.retryCount, analytics: this.errorTracker.getAnalytics(), onRetry: this.handleRetry, context: this.props.context, maxRetryAttempts: this.props.maxRetryAttempts || 3 }));
-        }
-        return this.props.children;
+    finally {
     }
+}
+try { }
+catch (reportError) {
+    console.error('Failed to report critical error:', reportError);
+}
+handleRetry = () => {
+    this.setState(prevState => ({
+        hasError: false,
+        error: null,
+        hiveError: null,
+        errorId: '',
+        retryCount: prevState.retryCount + 1,
+        isRecovering: false,
+    }));
+};
+componentWillUnmount();
+{
+    if (this.recoveryTimer) {
+        clearTimeout(this.recoveryTimer);
+    }
+}
+render();
+{
+    // Show recovery screen during auto-recovery
+    if (this.state.isRecovering) {
+        return (_jsx("div", { className: "min-h-screen flex items-center justify-center p-4 bg-hive-background-primary", children: _jsxs("div", { className: "text-center space-y-6", children: [_jsx(LoadingOrchestrator, { resources: [
+                            {
+                                id: 'recovery',
+                                name: 'Attempting to recover',
+                                priority: 'critical',
+                                estimatedTime: 2000,
+                            }
+                        ], strategy: "progressive", showStudentFriendlyMessages: true, campusContext: {
+                            networkQuality: 'fair',
+                            timeOfDay: 'morning',
+                            campusLoad: 'medium',
+                            deviceType: 'desktop',
+                        } }), _jsxs("div", { className: "text-center space-y-2", children: [_jsx("p", { className: "text-hive-text-secondary text-sm", children: "HIVE is trying to fix this automatically..." }), _jsx("button", { onClick: this.handleRetry, className: "px-4 py-2 text-hive-text-secondary hover:text-hive-text-secondary transition-colors text-xs", children: "Skip auto-recovery" })] })] }) }));
+    }
+    // If there's an error, show enhanced error boundary
+    if (this.state.hasError && this.state.hiveError) {
+        return (_jsx(GlobalErrorFallback, { error: this.state.hiveError, errorId: this.state.errorId, retryCount: this.state.retryCount, analytics: this.errorTracker.getAnalytics(), onRetry: this.handleRetry, context: this.props.context, maxRetryAttempts: this.props.maxRetryAttempts || 3 }));
+    }
+    return this.props.children;
 }
 function GlobalErrorFallback({ error, errorId, retryCount, analytics, onRetry, context, maxRetryAttempts, }) {
     const isRepeatedError = analytics.userPatterns.hasMultipleErrors;

@@ -605,7 +605,7 @@ export const CompleteAdminWorkflow: Story = {
           approved: prev.content.approved + 1,
           reported: Math.max(0, prev.content.reported - 1)
         }
-      }));
+      })});
       action('workflow-approve')(itemId)
     };
     
@@ -618,7 +618,7 @@ export const CompleteAdminWorkflow: Story = {
           moderated: prev.content.moderated + 1,
           reported: Math.max(0, prev.content.reported - 1)
         }
-      }));
+      })});
       action('workflow-reject')(itemId)
     };
     

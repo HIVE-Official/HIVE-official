@@ -145,7 +145,7 @@ function NotificationFilters({ activeFilter, onFilterChange, counts }) {
         { key: 'social', label: 'Social', count: counts.social },
         { key: 'academic', label: 'Academic', count: counts.academic }
     ];
-    return (_jsxs("div", { className: "flex gap-1 overflow-x-auto", children: [filters.map(({ key, label, count })), " => (", _jsxs(Button, { size: "sm", variant: activeFilter === key ? "default" : "ghost", className: "h-6 px-2 text-xs whitespace-nowrap", onClick: () => onFilterChange(key), children: [label, count > 0 && (_jsx(Badge, { variant: "secondary", className: "ml-1 h-3 px-1 text-xs", children: count }))] }, key), "))}"] }));
+    return (_jsxs("div", { className: "flex gap-1 overflow-x-auto", children: [filters.map(map), ") => (", _jsxs(Button, { size: "sm", variant: activeFilter === key ? "default" : "ghost", className: "h-6 px-2 text-xs whitespace-nowrap", onClick: () => onFilterChange(key), children: [label, count > 0 && (_jsx(Badge, { variant: "secondary", className: "ml-1 h-3 px-1 text-xs", children: count }))] }, key), "))}"] }));
 }
 // Notification Settings Dialog
 function NotificationSettingsDialog({ isOpen, onOpenChange }) {

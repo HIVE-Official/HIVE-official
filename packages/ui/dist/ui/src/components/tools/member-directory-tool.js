@@ -105,161 +105,161 @@ export function MemberDirectoryTool({ spaceId, spaceName, isLeader, currentUserR
                     'Content-Type': 'application/json',
                 },
             });
-            if (!response.ok) {
-                throw new Error(`Failed to fetch members: ${response.status}`);
-            }
-            const data = await response.json();
-            const apiMembers = data.members || [];
-            // Transform API data to match DirectoryMember interface
-            const transformedMembers = apiMembers.map((member) => ({
-                id: member.uid || member.id,
-                name: member.displayName || member.name || 'Unknown User',
-                username: member.username || member.handle || member.email?.split('@')[0] || 'user',
-                avatar: member.photoURL || member.avatar,
-                role: member.role || 'member',
-                status: member.status || (member.lastActive && new Date(member.lastActive) > new Date(Date.now() - 15 * 60 * 1000) ? 'online' : 'offline'),
-                joinedAt: new Date(member.joinedAt || member.createdAt || Date.now()),
-                lastActive: new Date(member.lastActive || member.lastActiveAt || Date.now()),
-                // Academic info from profile
-                major: member.profile?.major || member.major,
-                graduationYear: member.profile?.graduationYear || member.graduationYear,
-                gpa: member.profile?.gpa || member.gpa,
-                // Social metrics - calculated from real activity
-                contributionScore: member.contributionScore || member.points || Math.floor(Math.random() * 1000), // TODO: Calculate real contribution score
-                postsCount: member.postsCount || member.stats?.posts || 0,
-                eventsAttended: member.eventsAttended || member.stats?.eventsAttended || 0,
-                helpfulVotes: member.helpfulVotes || member.stats?.helpfulVotes || 0,
-                // Contact info from profile
-                email: member.email,
-                phone: member.profile?.phone || member.phone,
-                location: member.profile?.location || member.location,
-                // Skills & interests from profile
-                skills: member.profile?.skills || member.skills || [],
-                interests: member.profile?.interests || member.interests || [],
-                lookingForHelp: member.profile?.lookingForHelp || member.lookingForHelp || [],
-                canHelpWith: member.profile?.canHelpWith || member.canHelpWith || [],
-                // Verification status
-                isVerified: member.emailVerified || member.isVerified || false,
-                verificationBadges: member.verificationBadges || [],
-                // Privacy settings - use safe defaults
-                profileVisibility: member.profile?.visibility || 'members-only',
-                contactVisible: member.profile?.contactVisible !== false, // Default to visible
-                academicInfoVisible: member.profile?.academicInfoVisible !== false, // Default to visible
-            }));
         }
         finally { }
         ;
-        setMembers(transformedMembers);
-        // If this is the first load or mock data, show some example members for empty spaces
-        if (transformedMembers.length === 0) {
-            // Generate a few example members for empty spaces in development
-            const exampleMembers = [
-                {
-                    id: '1',
-                    name: 'Sarah Chen',
-                    username: 'sarah_c',
-                    avatar: 'https://api.dicebear.com/7.x/avatars/svg?seed=sarah',
-                    role: 'admin',
-                    status: 'online',
-                    joinedAt: new Date('2024-01-15'),
-                    lastActive: new Date(),
-                    major: 'Computer Science',
-                    graduationYear: 2025,
-                    gpa: 3.8,
-                    postsCount: 45,
-                    contributionScore: 890,
-                    helpfulnessRating: 4.8,
-                    studyGroupsJoined: 8,
-                    eventsAttended: 12,
-                    toolsUsed: 15,
-                    email: 'sarah.chen@university.edu',
-                    preferredContactMethod: 'discord',
-                    availableHours: '2-6 PM weekdays',
-                    location: 'Main Library',
-                    skills: ['React', 'Python', 'Data Structures', 'Machine Learning'],
-                    interests: ['AI', 'Web Development', 'Study Groups'],
-                    lookingForHelp: ['Advanced Algorithms'],
-                    canHelpWith: ['JavaScript', 'React', 'Study Techniques'],
-                    isVerified: true,
-                    verificationBadges: ['Academic Honor', 'Top Contributor'],
-                    profileVisibility: 'public',
-                    contactVisible: true,
-                    academicInfoVisible: true
-                },
-                {
-                    id: '2',
-                    name: 'Marcus Johnson',
-                    username: 'mjohnson',
-                    avatar: 'https://api.dicebear.com/7.x/avatars/svg?seed=marcus',
-                    role: 'moderator',
-                    status: 'away',
-                    joinedAt: new Date('2024-02-20'),
-                    lastActive: new Date(Date.now() - 30 * 60 * 1000),
-                    major: 'Business Administration',
-                    graduationYear: 2024,
-                    postsCount: 28,
-                    contributionScore: 650,
-                    helpfulnessRating: 4.5,
-                    studyGroupsJoined: 5,
-                    eventsAttended: 8,
-                    toolsUsed: 10,
-                    email: 'marcus.j@university.edu',
-                    preferredContactMethod: 'email',
-                    availableHours: 'Evenings',
-                    skills: ['Leadership', 'Project Management', 'Public Speaking'],
-                    interests: ['Entrepreneurship', 'Marketing', 'Networking'],
-                    lookingForHelp: ['Advanced Statistics'],
-                    canHelpWith: ['Business Strategy', 'Presentation Skills'],
-                    isVerified: true,
-                    verificationBadges: ['Leadership Award'],
-                    profileVisibility: 'members-only',
-                    contactVisible: true,
-                    academicInfoVisible: true
-                },
-                {
-                    id: '3',
-                    name: 'Emma Rodriguez',
-                    username: 'emma_r',
-                    avatar: 'https://api.dicebear.com/7.x/avatars/svg?seed=emma',
-                    role: 'member',
-                    status: 'online',
-                    joinedAt: new Date('2024-03-10'),
-                    lastActive: new Date(Date.now() - 5 * 60 * 1000),
-                    major: 'Psychology',
-                    graduationYear: 2026,
-                    postsCount: 18,
-                    contributionScore: 420,
-                    helpfulnessRating: 4.2,
-                    studyGroupsJoined: 6,
-                    eventsAttended: 4,
-                    toolsUsed: 8,
-                    preferredContactMethod: 'in-person',
-                    availableHours: '10 AM - 2 PM',
-                    location: 'Student Union',
-                    skills: ['Research Methods', 'Statistics', 'Writing'],
-                    interests: ['Mental Health', 'Research', 'Study Groups'],
-                    lookingForHelp: ['Advanced Statistics', 'Graduate School Prep'],
-                    canHelpWith: ['Research Writing', 'Study Strategies'],
-                    isVerified: false,
-                    verificationBadges: [],
-                    profileVisibility: 'public',
-                    contactVisible: false,
-                    academicInfoVisible: true
-                }
-            ];
-            setMembers(exampleMembers);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch members: ${response.status}`);
         }
-        else {
-            setMembers(transformedMembers);
-        }
+        const data = await response.json();
+        const apiMembers = data.members || [];
+        // Transform API data to match DirectoryMember interface
+        const transformedMembers = apiMembers.map((member) => ({
+            id: member.uid || member.id,
+            name: member.displayName || member.name || 'Unknown User',
+            username: member.username || member.handle || member.email?.split('@')[0] || 'user',
+            avatar: member.photoURL || member.avatar,
+            role: member.role || 'member',
+            status: member.status || (member.lastActive && new Date(member.lastActive) > new Date(Date.now() - 15 * 60 * 1000) ? 'online' : 'offline'),
+            joinedAt: new Date(member.joinedAt || member.createdAt || Date.now()),
+            lastActive: new Date(member.lastActive || member.lastActiveAt || Date.now()),
+            // Academic info from profile
+            major: member.profile?.major || member.major,
+            graduationYear: member.profile?.graduationYear || member.graduationYear,
+            gpa: member.profile?.gpa || member.gpa,
+            // Social metrics - calculated from real activity
+            contributionScore: member.contributionScore || member.points || Math.floor(Math.random() * 1000), // TODO: Calculate real contribution score
+            postsCount: member.postsCount || member.stats?.posts || 0,
+            eventsAttended: member.eventsAttended || member.stats?.eventsAttended || 0,
+            helpfulVotes: member.helpfulVotes || member.stats?.helpfulVotes || 0,
+            // Contact info from profile
+            email: member.email,
+            phone: member.profile?.phone || member.phone,
+            location: member.profile?.location || member.location,
+            // Skills & interests from profile
+            skills: member.profile?.skills || member.skills || [],
+            interests: member.profile?.interests || member.interests || [],
+            lookingForHelp: member.profile?.lookingForHelp || member.lookingForHelp || [],
+            canHelpWith: member.profile?.canHelpWith || member.canHelpWith || [],
+            // Verification status
+            isVerified: member.emailVerified || member.isVerified || false,
+            verificationBadges: member.verificationBadges || [],
+            // Privacy settings - use safe defaults
+            profileVisibility: member.profile?.visibility || 'members-only',
+            contactVisible: member.profile?.contactVisible !== false, // Default to visible
+            academicInfoVisible: member.profile?.academicInfoVisible !== false, // Default to visible
+        }));
     };
-    try { }
-    catch (error) {
-        console.error('Failed to fetch members:', error);
+    setMembers(transformedMembers);
+    // If this is the first load or mock data, show some example members for empty spaces
+    if (transformedMembers.length === 0) {
+        // Generate a few example members for empty spaces in development
+        const exampleMembers = [
+            {
+                id: '1',
+                name: 'Sarah Chen',
+                username: 'sarah_c',
+                avatar: 'https://api.dicebear.com/7.x/avatars/svg?seed=sarah',
+                role: 'admin',
+                status: 'online',
+                joinedAt: new Date('2024-01-15'),
+                lastActive: new Date(),
+                major: 'Computer Science',
+                graduationYear: 2025,
+                gpa: 3.8,
+                postsCount: 45,
+                contributionScore: 890,
+                helpfulnessRating: 4.8,
+                studyGroupsJoined: 8,
+                eventsAttended: 12,
+                toolsUsed: 15,
+                email: 'sarah.chen@university.edu',
+                preferredContactMethod: 'discord',
+                availableHours: '2-6 PM weekdays',
+                location: 'Main Library',
+                skills: ['React', 'Python', 'Data Structures', 'Machine Learning'],
+                interests: ['AI', 'Web Development', 'Study Groups'],
+                lookingForHelp: ['Advanced Algorithms'],
+                canHelpWith: ['JavaScript', 'React', 'Study Techniques'],
+                isVerified: true,
+                verificationBadges: ['Academic Honor', 'Top Contributor'],
+                profileVisibility: 'public',
+                contactVisible: true,
+                academicInfoVisible: true
+            },
+            {
+                id: '2',
+                name: 'Marcus Johnson',
+                username: 'mjohnson',
+                avatar: 'https://api.dicebear.com/7.x/avatars/svg?seed=marcus',
+                role: 'moderator',
+                status: 'away',
+                joinedAt: new Date('2024-02-20'),
+                lastActive: new Date(Date.now() - 30 * 60 * 1000),
+                major: 'Business Administration',
+                graduationYear: 2024,
+                postsCount: 28,
+                contributionScore: 650,
+                helpfulnessRating: 4.5,
+                studyGroupsJoined: 5,
+                eventsAttended: 8,
+                toolsUsed: 10,
+                email: 'marcus.j@university.edu',
+                preferredContactMethod: 'email',
+                availableHours: 'Evenings',
+                skills: ['Leadership', 'Project Management', 'Public Speaking'],
+                interests: ['Entrepreneurship', 'Marketing', 'Networking'],
+                lookingForHelp: ['Advanced Statistics'],
+                canHelpWith: ['Business Strategy', 'Presentation Skills'],
+                isVerified: true,
+                verificationBadges: ['Leadership Award'],
+                profileVisibility: 'members-only',
+                contactVisible: true,
+                academicInfoVisible: true
+            },
+            {
+                id: '3',
+                name: 'Emma Rodriguez',
+                username: 'emma_r',
+                avatar: 'https://api.dicebear.com/7.x/avatars/svg?seed=emma',
+                role: 'member',
+                status: 'online',
+                joinedAt: new Date('2024-03-10'),
+                lastActive: new Date(Date.now() - 5 * 60 * 1000),
+                major: 'Psychology',
+                graduationYear: 2026,
+                postsCount: 18,
+                contributionScore: 420,
+                helpfulnessRating: 4.2,
+                studyGroupsJoined: 6,
+                eventsAttended: 4,
+                toolsUsed: 8,
+                preferredContactMethod: 'in-person',
+                availableHours: '10 AM - 2 PM',
+                location: 'Student Union',
+                skills: ['Research Methods', 'Statistics', 'Writing'],
+                interests: ['Mental Health', 'Research', 'Study Groups'],
+                lookingForHelp: ['Advanced Statistics', 'Graduate School Prep'],
+                canHelpWith: ['Research Writing', 'Study Strategies'],
+                isVerified: false,
+                verificationBadges: [],
+                profileVisibility: 'public',
+                contactVisible: false,
+                academicInfoVisible: true
+            }
+        ];
+        setMembers(exampleMembers);
     }
-    finally {
-        setLoading(false);
+    else {
+        setMembers(transformedMembers);
     }
+}
+try { }
+catch (error) {
+    console.error('Failed to fetch members:', error);
+}
+finally {
+    setLoading(false);
 }
 ;
 const handleMemberClick = (member) => {
@@ -269,150 +269,165 @@ const handleMemberAction = async (memberId, action, data) => {
     try {
         const fetchFunction = authenticatedFetch || fetch;
         switch (action) {
-            case 'promote': {
-                // Promote member to next role level
-                const currentMember = members.find(m => m.id === memberId);
-                if (!currentMember)
-                    return;
-                let newRole;
-                switch (currentMember.role) {
-                    case 'member':
-                        newRole = 'moderator';
-                        break;
-                    case 'moderator':
-                        newRole = 'admin';
-                        break;
-                    default:
-                        return; // Can't promote admin or owner
+            case 'promote':
+                {
+                    // Promote member to next role level
+                    const currentMember = members.find(m => m.id === memberId);
+                    if (!currentMember)
+                        return;
+                    let newRole;
+                    switch (currentMember.role) {
+                        case 'member':
+                            newRole = 'moderator';
+                            break;
+                        case 'moderator':
+                            newRole = 'admin';
+                            break;
+                        default:
+                            return; // Can't promote admin or owner
+                    }
+                    const response = await fetchFunction(`/api/spaces/${spaceId}/members`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            userId: memberId,
+                            role: newRole,
+                            reason: data?.reason || 'Promoted by space leader'
+                        }),
+                    });
                 }
-                const response = await fetchFunction(`/api/spaces/${spaceId}/members`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId: memberId,
-                        role: newRole,
-                        reason: data?.reason || 'Promoted by space leader'
-                    }),
-                });
+                ;
                 if (!response.ok) {
                     throw new Error(`Failed to promote member: ${response.status}`);
                 }
                 break;
-            }
-            case 'demote': {
-                // Demote member to previous role level
-                const currentMember = members.find(m => m.id === memberId);
-                if (!currentMember)
-                    return;
-                let newRole;
-                switch (currentMember.role) {
-                    case 'admin':
-                        newRole = 'moderator';
-                        break;
-                    case 'moderator':
-                        newRole = 'member';
-                        break;
-                    default:
-                        return; // Can't demote member or owner
-                }
-                const response = await fetchFunction(`/api/spaces/${spaceId}/members`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId: memberId,
-                        role: newRole,
-                        reason: data?.reason || 'Demoted by space leader'
-                    }),
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to demote member: ${response.status}`);
-                }
-                break;
-            }
-            case 'suspend': {
-                const response = await fetchFunction(`/api/spaces/${spaceId}/members`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId: memberId,
-                        action: 'suspend',
-                        reason: data?.reason || 'Suspended by space leader'
-                    }),
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to suspend member: ${response.status}`);
-                }
-                break;
-            }
-            case 'unsuspend': {
-                const response = await fetchFunction(`/api/spaces/${spaceId}/members`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId: memberId,
-                        action: 'unsuspend',
-                        reason: data?.reason || 'Unsuspended by space leader'
-                    }),
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to unsuspend member: ${response.status}`);
-                }
-                break;
-            }
-            case 'remove': {
-                const response = await fetchFunction(`/api/spaces/${spaceId}/members?userId=${memberId}&reason=${encodeURIComponent(data?.reason || 'Removed by space leader')}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to remove member: ${response.status}`);
-                }
-                break;
-            }
-            case 'message': {
-                // This would integrate with a messaging system
-                // For now, just trigger the callback
-                if (onMemberAction) {
-                    onMemberAction(memberId, action, data);
-                }
-                return;
-            }
-            case 'view_profile': {
-                // This would navigate to the member's profile
-                if (onMemberAction) {
-                    onMemberAction(memberId, action, data);
-                }
-                return;
-            }
-            default:
-                if (onMemberAction) {
-                    onMemberAction(memberId, action, data);
-                }
-                return;
-        }
-        // Refresh member data after successful action
-        await fetchMembers();
-        // Also trigger callback for any additional handling
-        if (onMemberAction) {
-            onMemberAction(memberId, action, data);
         }
     }
-    catch (error) {
-        console.error(`Error performing member action ${action}:`, error);
-        // You might want to show a toast notification here
-        throw error;
+    finally {
     }
 };
+'demote';
+{
+    // Demote member to previous role level
+    const currentMember = members.find(m => m.id === memberId);
+    if (!currentMember)
+        return;
+    let newRole;
+    switch (currentMember.role) {
+        case 'admin':
+            newRole = 'moderator';
+            break;
+        case 'moderator':
+            newRole = 'member';
+            break;
+        default:
+            return; // Can't demote member or owner
+    }
+    const response = await fetchFunction(`/api/spaces/${spaceId}/members`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: memberId,
+            role: newRole,
+            reason: data?.reason || 'Demoted by space leader'
+        }),
+    });
+}
+;
+if (!response.ok) {
+    throw new Error(`Failed to demote member: ${response.status}`);
+}
+break;
+'suspend';
+{
+    const response = await fetchFunction(`/api/spaces/${spaceId}/members`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: memberId,
+            action: 'suspend',
+            reason: data?.reason || 'Suspended by space leader'
+        }),
+    });
+}
+;
+if (!response.ok) {
+    throw new Error(`Failed to suspend member: ${response.status}`);
+}
+break;
+'unsuspend';
+{
+    const response = await fetchFunction(`/api/spaces/${spaceId}/members`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: memberId,
+            action: 'unsuspend',
+            reason: data?.reason || 'Unsuspended by space leader'
+        }),
+    });
+}
+;
+if (!response.ok) {
+    throw new Error(`Failed to unsuspend member: ${response.status}`);
+}
+break;
+'remove';
+{
+    const response = await fetchFunction(`/api/spaces/${spaceId}/members?userId=${memberId}&reason=${encodeURIComponent(data?.reason || 'Removed by space leader')}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+}
+;
+if (!response.ok) {
+    throw new Error(`Failed to remove member: ${response.status}`);
+}
+break;
+'message';
+{
+    // This would integrate with a messaging system
+    // For now, just trigger the callback
+    if (onMemberAction) {
+        onMemberAction(memberId, action, data);
+    }
+    return;
+}
+'view_profile';
+{
+    // This would navigate to the member's profile
+    if (onMemberAction) {
+        onMemberAction(memberId, action, data);
+    }
+    return;
+}
+if (onMemberAction) {
+    onMemberAction(memberId, action, data);
+}
+return;
+// Refresh member data after successful action
+await fetchMembers();
+// Also trigger callback for any additional handling
+if (onMemberAction) {
+    onMemberAction(memberId, action, data);
+}
+try { }
+catch (error) {
+    console.error(`Error performing member action ${action}:`, error);
+    // You might want to show a toast notification here
+    throw error;
+}
+;
 if (loading) {
     return (_jsxs("div", { className: "flex items-center justify-center p-8", children: [_jsx("div", { className: "animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFD700]" }), _jsx("span", { className: "ml-3 text-neutral-400", children: "Loading member directory..." })] }));
 }

@@ -217,7 +217,7 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
           groups[item.category] = []
         }
         groups[item.category].push(item)
-      });
+      })};
       return groups
     }, [filteredItems]);
     
@@ -445,10 +445,10 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                                 </div>
                               </motion.button>
                             )
-          })
+          })}
                         </div>
                       )
-          }}
+          })}
                   </motion.div>
                 ) : (
                   <div className="px-6 py-12 text-center">

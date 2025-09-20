@@ -71,7 +71,7 @@ function MiniCalendarWidget() {
     <div className="p-4">
       <div className="text-center mb-4">
         <h3 className="font-semibold text-gray-900">
-          {today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }}
+          {today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
         </h3>
       </div>
       <div className="grid grid-cols-7 gap-1 text-xs">

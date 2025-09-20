@@ -336,7 +336,7 @@ const CampusFeedSystem = () => {
               { id: 'feed', label: 'Feed', icon: Home },
               { id: 'trending', label: 'Trending', icon: TrendingUp },
               { id: 'spaces', label: 'My Spaces', icon: Users },
-            ].map(({ id, label, icon: Icon })}} => (
+            ].map(map}) => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
@@ -364,7 +364,7 @@ const CampusFeedSystem = () => {
                 { id: 'events', label: 'Events' },
                 { id: 'tools', label: 'Tools' },
                 { id: 'rituals', label: 'Rituals' },
-              ].map(({ id, label })} => (
+              ].map(map}) => (
                 <Button
                   key={id}
                   size="sm"
@@ -425,7 +425,7 @@ const CampusFeedSystem = () => {
                   </div>
                   <Button 
                     size="sm" 
-                    className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}
+                    className="hive-interactive" style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' })
                     disabled={!postText.trim()}
                   >
                     Post
@@ -572,7 +572,7 @@ const CampusFeedSystem = () => {
                             </div>
                           </div>
                         )
-                      })
+                      })}
                     </div>
                     <p className="text-gray-400 text-sm">{post.content.poll.totalVotes} total votes</p>
                   </div>
@@ -705,7 +705,7 @@ const CampusRitualsSystem = () => {
 
           {/* Category Filters */}
           <div className="flex items-center space-x-2">
-            {categories.map(({ id, label, count })} => (
+            {categories.map(map}) => (
               <Button
                 key={id}
                 size="sm"

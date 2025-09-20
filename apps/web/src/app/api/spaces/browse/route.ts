@@ -1,11 +1,8 @@
-import type { NextRequest} from 'next/server';
-import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
@@ -20,14 +17,13 @@ const browseSpacesSchema = z.object({
  * Browse available spaces at a user's school
  * Returns paginated list of spaces with membership status
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    // Parse query parameters
-    const url = new URL(request.url);
-    const queryParams = Object.fromEntries(url.searchParams.entries());
-    const { schoolId, type, subType, limit, offset, search } = browseSpacesSchema.parse(queryParams);
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  // Parse query parameters
+  const url = new URL(request.url);
+  const queryParams = Object.fromEntries(url.searchParams.entries());
+  const { schoolId, type, subType, limit, offset, search } = browseSpacesSchema.parse(queryParams);
 
-    const userId = authContext.userId;
+  const userId = getUserId(request);
 
     // Note: Removed schoolId logic since spaces don't have this field
 
@@ -165,41 +161,26 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       return acc;
     }, {} as Record<string, typeof spacesWithMembership>);
 
-    return NextResponse.json({
-      success: true,
-      spaces: spacesWithMembership,
-      spacesByType: spacesByType,
-      pagination: {
-        limit,
-        offset,
-        totalCount,
-        hasMore: offset + limit < totalCount,
-        nextOffset: offset + limit < totalCount ? offset + limit : null
-      },
-      filters: {
-        type: type || null,
-        subType: subType || null,
-        search: search || null
-      },
-      typeCounts: Object.keys(spacesByType).reduce((acc, type) => {
-        acc[type] = spacesByType[type].length;
-        return acc;
-      }, {} as Record<string, number>)
-    });
-
-  } catch (error: any) {
-    logger.error('Browse spaces error', { error: error, endpoint: '/api/spaces/browse' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Space browsing is safe for development
-  operation: 'browse_spaces' 
+  return respond.success({
+    spaces: spacesWithMembership,
+    spacesByType: spacesByType,
+    pagination: {
+      limit,
+      offset,
+      totalCount,
+      hasMore: offset + limit < totalCount,
+      nextOffset: offset + limit < totalCount ? offset + limit : null
+    },
+    filters: {
+      type: type || null,
+      subType: subType || null,
+      search: search || null
+    },
+    typeCounts: Object.keys(spacesByType).reduce((acc, type) => {
+      acc[type] = spacesByType[type].length;
+      return acc;
+    }, {} as Record<string, number>)
+  }, {
+    message: `Found ${spacesWithMembership.length} spaces`
+  });
 }); 

@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { logger } from '@/lib/logger';
 import { 
   PageContainer,
   Button, 
@@ -289,11 +290,14 @@ export default function ProfileCustomizePage() {
   const handleSave = async () => {
     try {
       // TODO: Save layout to API
-      console.log('Saving layout:', cards);
+      logger.info('Saving layout', { cards });
       setHasChanges(false);
       router.push('/profile');
     } catch (error) {
-      console.error('Failed to save layout:', error);
+      logger.error('Failed to save layout', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
     }
   };
 

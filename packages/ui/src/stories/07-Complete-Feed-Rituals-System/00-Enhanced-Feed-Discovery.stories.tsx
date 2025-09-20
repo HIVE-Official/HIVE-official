@@ -437,7 +437,7 @@ function EnhancedFeedDiscoverySystem() {
                 { id: 'urgent', label: 'Urgent', count: mockEnhancedFeedContent.filter(i => i.priority === 'urgent').length },
                 { id: 'coordination', label: 'Coordination', count: mockEnhancedFeedContent.filter(i => i.type.includes('coordination')).length },
                 { id: 'tools', label: 'Tools', count: mockEnhancedFeedContent.filter(i => i.type === 'tool_deployment').length },
-              ].map(({ id, label, count })} => (
+              ].map(map}) => (
                 <Button
                   key={id}
                   size="sm"

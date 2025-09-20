@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { generateAutoSpaces, type AutoSpaceConfig } from '../../../../lib/auto-space-creation';
+import { logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -101,7 +102,10 @@ export async function POST(request: NextRequest) {
             spaceExists = true;
           } else {
             const createError = await createResponse.text();
-            console.warn(`Failed to create space ${template.name}:`, createError);
+            logger.warn('Failed to create space', {
+              spaceName: template.name,
+              error: createError
+            });
             results.errors.push(`Failed to create ${template.name}`);
             continue;
           }
@@ -126,7 +130,10 @@ export async function POST(request: NextRequest) {
             results.joined.push(template.name);
           } else {
             const joinError = await joinResponse.text();
-            console.warn(`Failed to join space ${template.name}:`, joinError);
+            logger.warn('Failed to join space', {
+              spaceName: template.name,
+              error: joinError
+            });
             results.errors.push(`Failed to join ${template.name}`);
           }
         }
@@ -143,20 +150,24 @@ export async function POST(request: NextRequest) {
         }
 
       } catch (error) {
-        console.error(`Error processing space ${template.name}:`, error);
+        logger.error('Error processing space', {
+          spaceName: template.name,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
         results.errors.push(`Error processing ${template.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
 
     // Log results for monitoring
-    console.log('🏗️ Auto-space creation completed:', {
-      user: { schoolId, major, year, userType },
-      results: {
-        spacesCreated: results.created.length,
-        spacesJoined: results.joined.length,
-        errors: results.errors.length,
-        recommended: results.recommended.length
-      }
+    logger.info('Auto-space creation completed', {
+      schoolId,
+      major,
+      year,
+      userType,
+      spacesCreated: results.created.length,
+      spacesJoined: results.joined.length,
+      errors: results.errors.length,
+      recommended: results.recommended.length
     });
 
     return NextResponse.json({
@@ -172,7 +183,10 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Auto-space creation API error:', error);
+    logger.error('Auto-space creation API error', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return NextResponse.json(
       { 
         error: 'Internal server error',
@@ -228,7 +242,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Auto-space preview API error:', error);
+    logger.error('Auto-space preview API error', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return NextResponse.json(
       { 
         error: 'Internal server error',

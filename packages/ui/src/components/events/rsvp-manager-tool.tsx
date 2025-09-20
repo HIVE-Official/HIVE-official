@@ -104,7 +104,7 @@ const AttendeeRow = ({
           {/* Response Time */}
           <div className="text-xs text-gray-400 text-right">
             <p>{new Date(rsvp.respondedAt).toLocaleDateString()}</p>
-            <p>{new Date(rsvp.respondedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+            <p>{new Date(rsvp.respondedAt).toLocaleTimeString(toLocaleTimeString})</p>
           </div>
         </div>
 

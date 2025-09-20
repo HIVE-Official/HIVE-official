@@ -151,8 +151,8 @@ export const HiveToolsSurface = React.forwardRef(({ className, mode, space, tool
             return true;
         return tool.category === selectedCategory;
     });
-});
-sort((a, b) => {
+})
+    .sort((a, b) => {
     // Pinned tools first
     if (a.isPinned && !b.isPinned)
         return -1;
@@ -163,8 +163,8 @@ sort((a, b) => {
         return b.usageCount - a.usageCount;
     // Finally by added date
     return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
-})
-    .slice(0, maxTools);
+});
+slice(0, maxTools);
 // Tool category counts
 const categoryCounts = tools.reduce((acc, tool) => {
     acc[tool.category] = (acc[tool.category] || 0) + 1;
@@ -204,7 +204,7 @@ return (_jsxs("div", { ref: ref, className: cn(hiveToolsSurfaceVariants({ mode, 
                         ? "bg-purple-500/20 text-purple-400 border-purple-500/30"
                         : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:border-white/20 hover:text-[var(--hive-text-primary)]"), onClick: () => setSelectedCategory(filter.key), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [_jsx(Icon, { className: cn("w-4 h-4", isActive ? "text-purple-400" : filter.color) }), _jsx("span", { children: filter.label }), _jsx("span", { className: cn("px-1.5 py-0.5 rounded-full text-xs", isActive
                                 ? "bg-purple-500/30 text-purple-300"
-                                : "bg-[var(--hive-text-primary)]/10 text-gray-500"), children: filter.count })] }, filter.key), ") })"] }), _jsx("div", { className: cn(compact
+                                : "bg-[var(--hive-text-primary)]/10 text-gray-500"), children: filter.count })] }, filter.key), ") })}"] }), _jsx("div", { className: cn(compact
                 ? "space-y-3"
                 : "grid grid-cols-1 sm:grid-cols-2 gap-4"), children: filteredTools.map((tool, index) => {
                 const categoryConfig = toolCategories[tool.category];

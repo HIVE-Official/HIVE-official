@@ -89,7 +89,7 @@ const PostComposer = ({
         poll: postType === 'poll' ? poll : undefined,
         event: postType === 'event' ? event : undefined,
         spaceId
-      });
+      })};
       
       // Reset form
       setContent('');
@@ -124,7 +124,7 @@ const PostComposer = ({
       setPoll(prev => ({
         ...prev,
         options: prev.options.filter((_, i) => i !== index)
-      }))
+      })})
     }
   };
 

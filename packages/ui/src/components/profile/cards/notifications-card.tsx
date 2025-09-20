@@ -393,7 +393,7 @@ function NotificationFilters({
 
   return (
     <div className="flex gap-1 overflow-x-auto">
-      {filters.map(({ key, label, count })} => (
+      {filters.map(map}) => (
         <Button
           key={key}
           size="sm"

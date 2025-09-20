@@ -30,29 +30,31 @@ const useAnalytics = () => {
                         custom_map: event.customProperties,
                     });
                 }
-                break;
-            case 'mixpanel':
-                if (typeof window !== 'undefined' && window.mixpanel) {
-                    window.mixpanel.track(`Logo ${event.action}`, fullEvent);
-                }
-                break;
-            case 'amplitude':
-                if (typeof window !== 'undefined' && window.amplitude) {
-                    window.amplitude.getInstance().logEvent(`Logo ${event.action}`, fullEvent);
-                }
-                break;
-            case 'custom':
-                config.analytics?.customTracker?.(event.action, fullEvent);
-                break;
-            default:
-                // Fallback to console in development
-                if (process.env.NODE_ENV === 'development') {
-                    console.log('[HIVE Analytics]', fullEvent);
-                }
         }
-    }, [config.analytics]);
-    return { track };
+        break;
+    });
 };
+'mixpanel';
+if (typeof window !== 'undefined' && window.mixpanel) {
+    window.mixpanel.track(`Logo ${event.action}`, fullEvent);
+}
+break;
+'amplitude';
+if (typeof window !== 'undefined' && window.amplitude) {
+    window.amplitude.getInstance().logEvent(`Logo ${event.action}`, fullEvent);
+}
+break;
+'custom';
+config.analytics?.customTracker?.(event.action, fullEvent);
+break;
+// Fallback to console in development
+if (process.env.NODE_ENV === 'development') {
+    console.log('[HIVE Analytics]', fullEvent);
+}
+[config.analytics];
+;
+return { track };
+;
 // A/B testing hook
 const useABTesting = (experimentId, variants, userId) => {
     const config = useHiveLogoConfig();
@@ -136,11 +138,15 @@ const usePerformanceMonitoring = (componentName) => {
                 }
             }
         });
-        observer.observe({ entryTypes: ['measure'] });
-        return () => observer.disconnect();
-    }, [componentName, config.performance]);
-    return metrics;
+    });
 };
+;
+observer.observe({ entryTypes: ['measure'] });
+return () => observer.disconnect();
+[componentName, config.performance];
+;
+return metrics;
+;
 export const HiveLogoEnterprise = memo(({ variant = 'primary', size = 'md', experimentId, userId, sessionId, customTheme, whiteLabel, context = 'default', trackingProperties = {}, accessibility = {}, className, onClick, ...props }) => {
     const config = useHiveLogoConfig();
     const { track } = useAnalytics();

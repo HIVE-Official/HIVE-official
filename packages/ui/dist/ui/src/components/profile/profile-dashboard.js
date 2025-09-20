@@ -76,7 +76,7 @@ function DevicePreview({ device, onDeviceChange }) {
         { key: 'tablet', label: 'Tablet', icon: Tablet },
         { key: 'desktop', label: 'Desktop', icon: Monitor }
     ];
-    return (_jsxs("div", { className: "flex gap-1", children: [devices.map(({ key, label, icon: Icon })), " => (", _jsxs(Button, { size: "sm", variant: device === key ? "default" : "outline", className: "h-8 px-3", onClick: () => onDeviceChange(key), children: [_jsx(Icon, { className: "w-4 h-4 mr-2" }), label] }, key), "))}"] }));
+    return (_jsxs("div", { className: "flex gap-1", children: [devices.map(map), ") => (", _jsxs(Button, { size: "sm", variant: device === key ? "default" : "outline", className: "h-8 px-3", onClick: () => onDeviceChange(key), children: [_jsx(Icon, { className: "w-4 h-4 mr-2" }), label] }, key), "))}"] }));
 }
 // Card Visibility Settings
 function CardVisibilitySettings({ items, onItemToggle }) {

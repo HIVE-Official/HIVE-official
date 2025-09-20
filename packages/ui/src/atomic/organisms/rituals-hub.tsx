@@ -34,29 +34,29 @@ export interface Ritual {
     status: 'invited' | 'joined' | 'active' | 'completed' | 'dropped';
     progressPercentage: number;
     currentStep: string;
-    nextAction: string
+    nextAction: string;
   };
   milestones: Array<{
     id: string;
     name: string;
     description: string;
     isReached: boolean;
-    progress?: number
+    progress?: number;
   }>;
   actions: Array<{
     id: string;
     name: string;
     description: string;
     isCompleted: boolean;
-    type: 'initialize' | 'connect' | 'discover' | 'complete'
-  }>
+    type: 'initialize' | 'connect' | 'discover' | 'complete';
+  }>;
 }
 
 export interface RitualsHubProps {
   currentWeek?: number;
   availableRituals?: Ritual[];
   completedRituals?: Ritual[];
-  className?: string
+  className?: string;
 }
 
 const WEEK_THEMES = {
@@ -84,13 +84,13 @@ export function RitualsHub({
     const currentWeekRitual = availableRituals.find(ritual => 
       ritual.week === currentWeek && ritual.userParticipation?.status === 'active'
     );
-    setActiveRitual(currentWeekRitual || availableRituals[0] || null)
+    setActiveRitual(currentWeekRitual || availableRituals[0] || null);
   }, [currentWeek, availableRituals]);
 
   const getWeekStatus = (week: number) => {
     if (week < currentWeek) return 'completed';
     if (week === currentWeek) return 'active';
-    return 'upcoming'
+    return 'upcoming';
   };
 
   const getRitualIcon = (type: string) => {
@@ -98,7 +98,7 @@ export function RitualsHub({
       case 'onboarding': return Target;
       case 'community': return Users;
       case 'creative': return Sparkles;
-      default: return CheckCircle
+      default: return CheckCircle;
     }
   };
 
@@ -106,7 +106,7 @@ export function RitualsHub({
     if (minutes < 60) return `${minutes}m`;
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`
+    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
   };
 
   return (
@@ -169,8 +169,8 @@ export function RitualsHub({
                   {theme.description}
                 </p>
               </Card>
-            )
-          })
+            );
+          })}
         </div>
       </div>
 
@@ -213,7 +213,7 @@ export function RitualsHub({
               <div className="w-16 h-16 bg-gradient-to-br from-hive-gold to-hive-brand-secondary rounded-xl flex items-center justify-center">
                 {React.createElement(getRitualIcon(activeRitual.type), {
                   className: "h-8 w-8 text-hive-obsidian"
-          })}
+                })}
               </div>
               <div>
                 <h2 className="text-xl font-bold text-hive-text-primary mb-1">
@@ -337,5 +337,5 @@ export function RitualsHub({
         </div>
       )}
     </div>
-  )
+  );
 }

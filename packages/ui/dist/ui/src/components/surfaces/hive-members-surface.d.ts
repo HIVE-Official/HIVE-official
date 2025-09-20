@@ -117,6 +117,6 @@ export interface HiveMembersSurfaceProps extends React.HTMLAttributes<HTMLDivEle
     autoFetch?: boolean;
     authToken?: string;
 }
-export declare const HiveMembersSurface: any;
+export declare const HiveMembersSurface: React.ForwardRefExoticComponent<HiveMembersSurfaceProps & React.RefAttributes<HTMLDivElement>>;
 export { hiveMembersSurfaceVariants, memberRoles, memberStatuses };
 //# sourceMappingURL=hive-members-surface.d.ts.map

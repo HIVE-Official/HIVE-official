@@ -145,7 +145,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
           return priorityOrder[b.priority] - priorityOrder[a.priority]
         }
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-      })
+      })}
       .slice(0, maxItems);
     
     const handleAddContent = useCallback((type: keyof typeof pinnedContentTypes) => {
@@ -340,7 +340,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
                 </div>
               </motion.article>
             )
-          })
+          })}
         </div>
         
         {/* Add Content Button */}
@@ -389,7 +389,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
                             </div>
                           </motion.button>
                         )
-          })
+          })}
                     </div>
                   </motion.div>
                 )}

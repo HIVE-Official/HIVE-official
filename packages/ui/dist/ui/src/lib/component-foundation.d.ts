@@ -85,7 +85,7 @@ export declare function createLoadingIndicator(loading?: boolean, size?: 'sm' | 
  */
 export declare function createIconSlot(icon?: React.ReactNode, position?: 'left' | 'right', loading?: boolean): React.DetailedReactHTMLElement<{
     className: string;
-    children: string | number | true | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal;
+    children: string | number | bigint | true | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode>;
 }, HTMLElement>;
 /**
  * Validation State Factory

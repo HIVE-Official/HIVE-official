@@ -96,7 +96,7 @@ const useErrorStates = () => {
           return 100
         }
         return prev + (100 / (duration / 100))
-      })
+      })}
     }, 100);
 
     return () => clearInterval(interval)

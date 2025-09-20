@@ -1,11 +1,8 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 /**
  * Builder Activation System - "Request to Lead" API
@@ -35,19 +32,18 @@ interface BuilderRequest {
   plans: string;
   timeCommitment: string;
   status: 'pending' | 'approved' | 'rejected';
-  submittedAt: FieldValue;
-  reviewedAt?: FieldValue;
+  submittedAt: admin.firestore.FieldValue;
+  reviewedAt?: admin.firestore.FieldValue;
   reviewedBy?: string;
   reviewNotes?: string;
-  expiresAt: FieldValue; // Auto-expire requests after 7 days
+  expiresAt: admin.firestore.FieldValue; // Auto-expire requests after 7 days
 }
 
-export const POST = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
+export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const userId = getUserId(request);
     
-    // For development mode, use mock email
-    let userEmail = 'test@example.com';
+  // For development mode, use mock email
+  let userEmail = 'test@example.com';
     if (userId !== 'test-user') {
       // TODO: Get user email from database or token for production
       userEmail = 'user@example.com';
@@ -80,14 +76,14 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     }
 
     if (!spaceDoc || !spaceDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
     }
 
     const spaceData = spaceDoc.data();
 
     // Check if space is eligible for builder requests
     if (spaceData.isPrivate) {
-      return NextResponse.json(ApiResponseHelper.error("Private spaces cannot accept builder requests", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("Private spaces cannot accept builder requests", "FORBIDDEN", 403);
     }
 
     // Check if user is already a member with elevated permissions
@@ -103,7 +99,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     if (memberDoc.exists) {
       const memberData = memberDoc.data();
       if (memberData?.role === 'builder' || memberData?.role === 'admin') {
-        return NextResponse.json(ApiResponseHelper.error("You already have builder rights for this space", "UNKNOWN_ERROR"), { status: 409 });
+        return respond.error("You already have builder rights for this space", "ALREADY_BUILDER", 409);
       }
     }
 
@@ -116,7 +112,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       .get();
 
     if (!existingRequestQuery.empty) {
-      return NextResponse.json(ApiResponseHelper.error("You already have a pending request for this space", "UNKNOWN_ERROR"), { status: 409 });
+      return respond.error("You already have a pending request for this space", "REQUEST_EXISTS", 409);
     }
 
     // Get user profile for additional context
@@ -146,22 +142,21 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       plans,
       timeCommitment,
       status: 'pending',
-      submittedAt: FieldValue.serverTimestamp(),
-      expiresAt: FieldValue.serverTimestamp() // Will be updated with actual expiry
+      submittedAt: admin.firestore.FieldValue.serverTimestamp(),
+      expiresAt: admin.firestore.FieldValue.serverTimestamp() // Will be updated with actual expiry
     };
 
     // Set expiry to 7 days from now
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 7);
-    builderRequest.expiresAt = FieldValue.serverTimestamp();
+    builderRequest.expiresAt = admin.firestore.FieldValue.serverTimestamp();
 
     await requestRef.set(builderRequest);
 
     // TODO: Send notification to admins (implement when notification system is ready)
     logger.info('📧 Admin notification needed for builder request', { requestRefId: requestRef.id, endpoint: '/api/spaces/request-to-lead'  });
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       message: 'Builder request submitted successfully',
       requestId: requestRef.id,
       space: {
@@ -176,36 +171,17 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
         'Approved builders get access to HiveLAB tools and space management'
       ],
       estimatedReviewTime: '24 hours'
-    });
+    }, 201);
 
-  } catch (error: any) {
-    logger.error('Request to Lead error', { error: error, endpoint: '/api/spaces/request-to-lead' });
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { 
-          error: 'Invalid request data', 
-          details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to submit builder request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: false, // Builder requests are sensitive - require real auth
-  operation: 'request_to_lead_space' 
 });
 
 /**
  * Get builder requests for a user (their submitted requests)
  * GET /api/spaces/request-to-lead?userId=USER_ID
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const url = new URL(request.url);
-    const userId = url.searchParams.get('userId') || authContext.userId;
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const url = new URL(request.url);
+  const userId = url.searchParams.get('userId') || getUserId(request);
 
     // Get user's builder requests
     const requestsSnapshot = await dbAdmin
@@ -235,8 +211,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       return acc;
     }, {} as Record<string, typeof requests>);
 
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       requests,
       requestsByStatus,
       summary: {
@@ -247,11 +222,4 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       }
     });
 
-  } catch (error) {
-    logger.error('Get builder requests error', { error: error, endpoint: '/api/spaces/request-to-lead' });
-    return NextResponse.json(ApiResponseHelper.error("Failed to get builder requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}, { 
-  allowDevelopmentBypass: true, // Getting own requests is safe for development
-  operation: 'get_builder_requests' 
 });
