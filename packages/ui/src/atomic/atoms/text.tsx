@@ -9,11 +9,11 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
     | 'display-2xl' | 'display-xl' | 'display-lg' | 'display-md' | 'display-sm'
     | 'heading-xl' | 'heading-lg' | 'heading-md' | 'heading-sm'
     | 'body-lg' | 'body-md' | 'body-sm' | 'body-xs' | 'body-2xs';
-  color?: 'primary' | 'secondary' | 'muted' | 'mutedLight' | 'mutedDark' | 'subtle' | 'gold' | 'ruby' | 'emerald';
+  color?: 'primary' | 'secondary' | 'muted' | 'mutedLight' | 'mutedDark' | 'subtle' | 'gold' | 'ruby' | 'emerald' | 'success' | 'warning';
   weight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
   align?: 'left' | 'center' | 'right';
   truncate?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const textVariants = {
@@ -47,7 +47,9 @@ const textVariants = {
     subtle: 'text-[var(--hive-text-tertiary)]',
     gold: 'text-[var(--hive-brand-secondary)]',
     ruby: 'text-[var(--hive-status-error)]',
-    emerald: 'text-[var(--hive-status-success)]'
+    emerald: 'text-[var(--hive-status-success)]',
+    success: 'text-[var(--hive-status-success)]',
+    warning: 'text-[var(--hive-status-warning)]'
   },
   weight: {
     light: 'font-light',
@@ -100,5 +102,5 @@ export const Text: React.FC<TextProps> = ({
     >
       {children}
     </Component>
-  );
+  )
 };

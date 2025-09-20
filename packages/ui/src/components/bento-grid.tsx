@@ -22,7 +22,7 @@ export interface BentoCard {
   children: React.ReactNode;
   onResize?: (newSize: BentoCardSize) => void;
   onToggleVisibility?: () => void;
-  onSettings?: () => void;
+  onSettings?: () => void
 }
 
 export interface BentoGridProps {
@@ -31,7 +31,7 @@ export interface BentoGridProps {
   isEditMode?: boolean;
   onCardReorder?: (cards: BentoCard[]) => void;
   onToggleEditMode?: () => void;
-  className?: string;
+  className?: string
 }
 
 const sizeClasses = {
@@ -52,14 +52,14 @@ const BentoCardWrapper: React.FC<{
   card: BentoCard;
   isEditMode: boolean;
   isMobile: boolean;
-  dragConstraints: React.RefObject<HTMLDivElement>;
+  dragConstraints: React.RefObject<HTMLDivElement>
 }> = ({ card, isEditMode, isMobile, dragConstraints }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleResize = useCallback((newSize: BentoCardSize) => {
     if (card.onResize) {
-      card.onResize(newSize);
+      card.onResize(newSize)
     }
   }, [card]);
 
@@ -181,7 +181,7 @@ const BentoCardWrapper: React.FC<{
         </div>
       </HiveCard>
     </motion.div>
-  );
+  )
 };
 
 export const BentoGrid: React.FC<BentoGridProps> = ({
@@ -198,12 +198,12 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
 
   React.useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 768)
     };
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile)
   }, []);
 
   const handleReorder = useCallback((reorderedCards: BentoCard[]) => {
@@ -211,7 +211,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
       const allCards = [...cards];
       const hiddenCards = cards.filter(card => !card.isVisible);
       
-      onCardReorder([...reorderedCards, ...hiddenCards]);
+      onCardReorder([...reorderedCards, ...hiddenCards])
     }
   }, [cards, onCardReorder]);
 
@@ -307,7 +307,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 };
 
 export default BentoGrid;

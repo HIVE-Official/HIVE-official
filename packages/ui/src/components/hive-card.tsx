@@ -119,7 +119,7 @@ export interface HiveCardProps
   'aria-describedby'?: string;
   'data-testid'?: string;
   // Loading state
-  loading?: boolean;
+  loading?: boolean
 }
 
 const HiveCard = React.forwardRef<HTMLDivElement, HiveCardProps>(
@@ -207,7 +207,7 @@ const HiveCard = React.forwardRef<HTMLDivElement, HiveCardProps>(
         onKeyDown={interactive ? (e) => {
           if ((e.key === 'Enter' || e.key === ' ') && onClick && !loading) {
             e.preventDefault();
-            onClick(e as any);
+            onClick(e as any)
           }
         } : undefined}
         {...cardMotionProps}
@@ -230,10 +230,10 @@ const HiveCard = React.forwardRef<HTMLDivElement, HiveCardProps>(
         >
           {CardComponent}
         </HiveMagneticHover>
-      );
+      )
     }
     
-    return CardComponent;
+    return CardComponent
   }
 );
 

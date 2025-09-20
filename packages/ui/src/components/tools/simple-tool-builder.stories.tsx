@@ -167,7 +167,7 @@ export const ToolConfigurationStep: StoryObj<typeof ToolConfiguration> = {
         onNext={action('config-next')}
         onBack={action('config-back')}
       />
-    );
+    )
   },
   parameters: {
     docs: {
@@ -196,7 +196,7 @@ export const LaundryTrackerConfiguration: StoryObj<typeof ToolConfiguration> = {
         onNext={action('laundry-config-next')}
         onBack={action('laundry-config-back')}
       />
-    );
+    )
   },
   parameters: {
     docs: {
@@ -221,7 +221,7 @@ export const ToolPreviewStep: StoryObj<typeof ToolPreview> = {
         targetSpace: 'cse-department',
         isPublic: true,
         settings: {}
-      }}
+          }}
       onBuild={action('build-tool')}
       onBack={action('preview-back')}
     />
@@ -245,7 +245,7 @@ export const GroupFoodOrderPreview: StoryObj<typeof ToolPreview> = {
         targetSpace: 'governors-complex',
         isPublic: false,
         settings: {}
-      }}
+          }}
       onBuild={action('build-food-order-tool')}
       onBack={action('food-preview-back')}
     />
@@ -286,7 +286,7 @@ export const UBFreshmanToolBuilding: Story = {
             onBuildTool={action('freshman-build-tool')}
           />
         </div>
-      );
+      )
     }
 
     return (
@@ -304,8 +304,8 @@ export const UBFreshmanToolBuilding: Story = {
           <button
             onClick={() => {
               setSelectedTemplate(UB_TOOL_TEMPLATES[0]);
-              setMode('build');
-            }}
+              setMode('build')
+          }}
             className="p-6 border border-[var(--hive-border-default)] rounded-lg hover:border-[var(--hive-brand-secondary)] transition-colors text-left"
           >
             <h3 className="font-semibold text-[var(--hive-text-primary)] mb-2">
@@ -319,8 +319,8 @@ export const UBFreshmanToolBuilding: Story = {
           <button
             onClick={() => {
               setSelectedTemplate(UB_TOOL_TEMPLATES[1]);
-              setMode('build');
-            }}
+              setMode('build')
+          }}
             className="p-6 border border-[var(--hive-border-default)] rounded-lg hover:border-[var(--hive-brand-secondary)] transition-colors text-left"
           >
             <h3 className="font-semibold text-[var(--hive-text-primary)] mb-2">
@@ -332,7 +332,7 @@ export const UBFreshmanToolBuilding: Story = {
           </button>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -435,17 +435,17 @@ export const CompleteToolBuildingFlow: Story = {
         description: template.description
       }));
       setStep('configure');
-      action('flow-template-select')(template);
+      action('flow-template-select')(template)
     };
 
     const handleConfigNext = () => {
       setStep('preview');
-      action('flow-config-complete')(config);
+      action('flow-config-complete')(config)
     };
 
     const handleBuild = () => {
       action('flow-tool-built')({ template: selectedTemplate, config });
-      alert('Tool built successfully! 🎉');
+      alert('Tool built successfully! 🎉')
     };
 
     return (
@@ -485,7 +485,7 @@ export const CompleteToolBuildingFlow: Story = {
           />
         )}
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -610,7 +610,7 @@ export const LargeTemplateSet: StoryObj<typeof ToolTemplateSelection> = {
         templates={expandedTemplates}
         onSelectTemplate={action('large-set-select-template')}
       />
-    );
+    )
   },
   parameters: {
     docs: {

@@ -35,7 +35,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { cn } from '../../lib/utils';
 
 // Achievement System Types
@@ -56,7 +56,7 @@ export interface Achievement {
   progress?: {
     current: number;
     total: number;
-    unit?: string;
+    unit?: string
   };
   unlockedAt?: string;
   claimedAt?: string;
@@ -87,7 +87,7 @@ export interface UnlockCriteria {
   type: 'count' | 'streak' | 'time' | 'rating' | 'collaboration' | 'milestone';
   target: number;
   timeframe?: 'day' | 'week' | 'month' | 'semester' | 'year';
-  conditions?: Record<string, any>;
+  conditions?: Record<string, any>
 }
 
 export interface AchievementReward {
@@ -105,13 +105,13 @@ export interface AchievementStats {
   streaks: {
     current: number;
     longest: number;
-    type: string;
+    type: string
   }[];
   leaderboardRank?: {
     position: number;
     total: number;
-    percentile: number;
-  };
+    percentile: number
+  }
 }
 
 interface AchievementSystemProps {
@@ -121,7 +121,7 @@ interface AchievementSystemProps {
   onAchievementClick?: (achievement: Achievement) => void;
   onClaimReward?: (achievement: Achievement) => void;
   onShareAchievement?: (achievement: Achievement) => void;
-  className?: string;
+  className?: string
 }
 
 export const AchievementSystem: React.FC<AchievementSystemProps> = ({
@@ -172,17 +172,17 @@ export const AchievementSystem: React.FC<AchievementSystemProps> = ({
         break;
       case 'available':
         filtered = filtered.filter(a => a.status === 'available' || a.status === 'locked');
-        break;
+        break
     }
 
     // Filter by category
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(a => a.category === selectedCategory);
+      filtered = filtered.filter(a => a.category === selectedCategory)
     }
 
     // Filter by rarity
     if (selectedRarity !== 'all') {
-      filtered = filtered.filter(a => a.rarity === selectedRarity);
+      filtered = filtered.filter(a => a.rarity === selectedRarity)
     }
 
     // Filter by search
@@ -190,20 +190,20 @@ export const AchievementSystem: React.FC<AchievementSystemProps> = ({
       filtered = filtered.filter(a => 
         a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      )
     }
 
     // Filter secrets
     if (!showSecrets) {
-      filtered = filtered.filter(a => !a.isSecret || a.status === 'completed');
+      filtered = filtered.filter(a => !a.isSecret || a.status === 'completed')
     }
 
-    return filtered;
+    return filtered
   }, [achievements, activeTab, selectedCategory, selectedRarity, searchQuery, showSecrets]);
 
   const getRarityColor = (rarity: AchievementRarity): string => {
     const rarityItem = rarities.find(r => r.id === rarity);
-    return rarityItem?.color || 'text-hive-text-secondary';
+    return rarityItem?.color || 'text-hive-text-secondary'
   };
 
   const getRarityGlow = (rarity: AchievementRarity): string => {
@@ -219,13 +219,13 @@ export const AchievementSystem: React.FC<AchievementSystemProps> = ({
       case 'legendary':
         return 'shadow-yellow-500/20';
       default:
-        return '';
+        return ''
     }
   };
 
   const getProgressPercentage = (achievement: Achievement): number => {
     if (!achievement.progress) return 0;
-    return Math.min((achievement.progress.current / achievement.progress.total) * 100, 100);
+    return Math.min((achievement.progress.current / achievement.progress.total) * 100, 100)
   };
 
   return (
@@ -454,7 +454,7 @@ export const AchievementSystem: React.FC<AchievementSystemProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Achievement Card Component
@@ -463,7 +463,7 @@ interface AchievementCardProps {
   onClick: () => void;
   onClaim: () => void;
   onShare: () => void;
-  isOwnProfile: boolean;
+  isOwnProfile: boolean
 }
 
 const AchievementCard: React.FC<AchievementCardProps> = ({
@@ -493,7 +493,7 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
       case 'legendary':
         return 'text-yellow-400 border-yellow-400/20';
       default:
-        return 'text-hive-text-secondary border-hive-border-subtle';
+        return 'text-hive-text-secondary border-hive-border-subtle'
     }
   };
 
@@ -508,7 +508,7 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
       case 'legendary':
         return 'shadow-xl shadow-yellow-500/30';
       default:
-        return '';
+        return ''
     }
   };
 
@@ -602,7 +602,7 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
           <HiveButton
             variant="ghost" 
             size="sm"
-            onClick={(e) => { e.stopPropagation(); onShare(); }}
+            onClick={(e) => { e.stopPropagation(); onShare() }}
           >
             <Share2 className="h-4 w-4" />
           </HiveButton>
@@ -617,7 +617,7 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export default AchievementSystem;

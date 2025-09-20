@@ -254,7 +254,7 @@ function SpacePreviewActivationFlow() {
               { id: 'preview', label: 'Preview Mode', icon: Eye, description: 'Dormant space ready for activation' },
               { id: 'frozen', label: 'View Only', icon: Lock, description: 'Archived space with read-only access' },
               { id: 'active', label: 'Active Space', icon: CheckCircle, description: 'Fully activated community' },
-            ].map(({ id, label, icon: Icon, description }) => (
+            ].map(({ id, label, icon: Icon, description })} => (
               <button
                 key={id}
                 onClick={() => setActiveDemo(id as any)}
@@ -573,7 +573,7 @@ function SpacePreviewActivationFlow() {
           isOpen={showActivationFlow}
           onClose={() => {
             setShowActivationFlow(false);
-            setActivationStep(0);
+            setActivationStep(0)
           }}
           space={mockPreviewSpace}
           currentStep={activationStep}
@@ -581,7 +581,7 @@ function SpacePreviewActivationFlow() {
         />
       )}
     </div>
-  );
+  )
 }
 
 // Helper Components
@@ -598,7 +598,7 @@ function SpaceStatusBadge({ status }: { status: string }) {
     <Badge variant={config.variant} className={`text-xs ${config.color}`}>
       {config.label}
     </Badge>
-  );
+  )
 }
 
 function PreviewSidebarInfo({ space }: { space: any }) {
@@ -650,7 +650,7 @@ function PreviewSidebarInfo({ space }: { space: any }) {
         </CardContent>
       </Card>
     </>
-  );
+  )
 }
 
 function FrozenSidebarInfo({ space }: { space: any }) {
@@ -700,7 +700,7 @@ function FrozenSidebarInfo({ space }: { space: any }) {
         </CardContent>
       </Card>
     </>
-  );
+  )
 }
 
 function UniversalSurfaceCard({ widget, space }: { widget: any; space: any }) {
@@ -710,11 +710,11 @@ function UniversalSurfaceCard({ widget, space }: { widget: any; space: any }) {
     <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer"
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
-            e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+            e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
-            e.currentTarget.style.boxShadow = 'none';
+            e.currentTarget.style.boxShadow = 'none'
           }}>
       <CardHeader>
         <div className="flex items-center justify-between">
@@ -754,7 +754,7 @@ function UniversalSurfaceCard({ widget, space }: { widget: any; space: any }) {
         </Button>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange }: {
@@ -762,7 +762,7 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
   onClose: () => void;
   space: any;
   currentStep: number;
-  onStepChange: (step: number) => void;
+  onStepChange: (step: number) => void
 }) {
   const steps = [
     {
@@ -826,8 +826,8 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
                       }`} />
                     )}
                   </div>
-                );
-              })}
+                )
+              })
             </div>
             
             {/* Current Step */}
@@ -887,9 +887,9 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
               style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}
               onClick={() => {
                 if (currentStep < steps.length - 1) {
-                  onStepChange(currentStep + 1);
+                  onStepChange(currentStep + 1)
                 } else {
-                  onClose();
+                  onClose()
                 }
               }}
             >
@@ -899,7 +899,7 @@ function ActivationFlowModal({ isOpen, onClose, space, currentStep, onStepChange
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export const PreviewModeSpace: Story = {
@@ -916,9 +916,9 @@ export const FrozenArchiveSpace: Story = {
   render: () => {
     const Component = () => {
       const [activeDemo] = useState('frozen');
-      return <SpacePreviewActivationFlow />;
+      return <SpacePreviewActivationFlow />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -932,9 +932,9 @@ export const ActiveCommunitySpace: Story = {
   render: () => {
     const Component = () => {
       const [activeDemo] = useState('active');
-      return <SpacePreviewActivationFlow />;
+      return <SpacePreviewActivationFlow />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -948,9 +948,9 @@ export const ActivationFlowDemo: Story = {
   render: () => {
     const Component = () => {
       const [showActivationFlow] = useState(true);
-      return <SpacePreviewActivationFlow />;
+      return <SpacePreviewActivationFlow />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',

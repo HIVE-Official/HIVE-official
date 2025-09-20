@@ -91,18 +91,23 @@ export const Stack = ({ config, children, className, style }) => {
             }),
             // Additional inline styles
             ...style
-        }, children: childArray.map((child, index) => {
-            // Don't animate if child is not a valid React element
-            if (!React.isValidElement(child)) {
-                return child;
-            }
-            return (_jsx(motion.div, { variants: childVariants, className: cn(
-                // Stack item base styles
-                "flex-shrink-0", 
-                // Handle stretch alignment for children
-                alignment === 'stretch' && direction === 'vertical' && "w-full", alignment === 'stretch' && direction === 'horizontal' && "h-full"), children: child }, index));
-        }) }));
+        } }));
 };
+    >
+        { childArray, : .map((child, index) => {
+                // Don't animate if child is not a valid React element
+                if (!React.isValidElement(child)) {
+                    return child;
+                }
+                return (_jsx(motion.div, { variants: childVariants, className: cn(
+                    // Stack item base styles
+                    "flex-shrink-0", 
+                    // Handle stretch alignment for children
+                    alignment === 'stretch' && direction === 'vertical' && "w-full", alignment === 'stretch' && direction === 'horizontal' && "h-full"), children: child }, index));
+            }) };
+motion.div >
+;
+;
 export const StackItem = ({ children, grow = false, shrink = true, basis = 'auto', align, className, style }) => {
     // Convert numeric basis to rem units
     const flexBasis = typeof basis === 'number' ? `${basis * 0.25}rem` : basis;

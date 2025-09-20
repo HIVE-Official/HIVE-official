@@ -60,7 +60,7 @@ interface PerformanceMonitorProps {
     children: React.ReactNode;
     onMetrics?: (metrics: any) => void;
 }
-export declare function PerformanceMonitor({ children, onMetrics }: PerformanceMonitorProps): import("react/jsx-runtime").JSX.Element;
+export declare function PerformanceMonitor({ children, onMetrics }: PerformanceMonitorProps): void;
 interface OptimizedImageProps {
     src: string;
     alt: string;

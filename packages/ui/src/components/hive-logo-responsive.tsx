@@ -50,8 +50,8 @@ export interface HiveResponsiveProps
   userPreferences?: {
     reducedMotion?: boolean;
     highContrast?: boolean;
-    fontSize?: 'small' | 'medium' | 'large';
-  };
+    fontSize?: 'small' | 'medium' | 'large'
+  }
 }
 
 // Hook to detect screen size
@@ -64,15 +64,15 @@ const useBreakpoint = () => {
       if (width < 640) setBreakpoint('mobile');
       else if (width < 1024) setBreakpoint('tablet');
       else if (width < 1920) setBreakpoint('desktop');
-      else setBreakpoint('wide');
+      else setBreakpoint('wide')
     };
 
     checkBreakpoint();
     window.addEventListener('resize', checkBreakpoint);
-    return () => window.removeEventListener('resize', checkBreakpoint);
+    return () => window.removeEventListener('resize', checkBreakpoint)
   }, []);
 
-  return breakpoint;
+  return breakpoint
 };
 
 // Hook to detect theme preference
@@ -82,16 +82,16 @@ const useThemeDetection = () => {
   useEffect(() => {
     const checkTheme = () => {
       const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(isDark ? 'dark' : 'light');
+      setTheme(isDark ? 'dark' : 'light')
     };
 
     checkTheme();
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     mediaQuery.addEventListener('change', checkTheme);
-    return () => mediaQuery.removeEventListener('change', checkTheme);
+    return () => mediaQuery.removeEventListener('change', checkTheme)
   }, []);
 
-  return theme;
+  return theme
 };
 
 // Base HIVE logo path
@@ -168,7 +168,7 @@ export const HiveLogoResponsive = ({
         )}
       </AnimatePresence>
     </motion.div>
-  );
+  )
 };
 
 // 2. NAVIGATION LOGO (Context-Aware)
@@ -190,7 +190,7 @@ export const HiveLogoNavigation = ({
       animate={{
         scale: isScrolled ? 0.8 : 1,
         opacity: isMenuOpen ? 0.7 : 1,
-      }}
+          }}
       transition={{ duration: 0.2, ease: "easeOut" }}
       {...getLogoMotionProps(props)}
     >
@@ -200,7 +200,7 @@ export const HiveLogoNavigation = ({
         userPreferences={{ reducedMotion: false }}
       />
     </motion.div>
-  );
+  )
 };
 
 // 3. ADAPTIVE FAVICON SYSTEM
@@ -229,7 +229,7 @@ export const HiveLogofavicon = ({
         width: size, 
         height: size,
         color: contextColors[context]
-      }}
+          }}
       animate={shouldPulse ? {
         scale: [1, 1.1, 1],
         opacity: [1, 0.8, 1],
@@ -256,7 +256,7 @@ export const HiveLogofavicon = ({
         )}
       </svg>
     </motion.div>
-  );
+  )
 };
 
 // 4. THEME-ADAPTIVE LOGO
@@ -268,7 +268,7 @@ export const HiveLogoThemeAdaptive = ({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true)
   }, []);
 
   if (!mounted) {
@@ -290,7 +290,7 @@ export const HiveLogoThemeAdaptive = ({
         adaptToContext={false}
       />
     </motion.div>
-  );
+  )
 };
 
 // 5. LOADING STATE LOGO
@@ -348,7 +348,7 @@ export const HiveLogoLoading = ({
             style={{
               strokeDasharray: "251.2", // 2 * π * r where r = 40% of viewbox
               strokeDashoffset: 251.2 * (1 - progress / 100),
-            }}
+          }}
           />
         </svg>
       </motion.div>
@@ -359,7 +359,7 @@ export const HiveLogoLoading = ({
         <div className="text-[var(--hive-text-primary)]/60 text-sm">{Math.round(progress)}%</div>
       </div>
     </motion.div>
-  );
+  )
 };
 
 // 6. USER STATUS LOGO
@@ -371,7 +371,7 @@ export const HiveLogoUserStatus = ({
   ...props 
 }: HiveResponsiveProps & { 
   status?: "online" | "away" | "busy" | "offline";
-  showStatus?: boolean;
+  showStatus?: boolean
 }) => {
   const statusColors = {
     online: "var(--hive-status-success)",
@@ -408,7 +408,7 @@ export const HiveLogoUserStatus = ({
         />
       )}
     </div>
-  );
+  )
 };
 
 // 7. CONTEXTUAL APP LOGO
@@ -460,7 +460,7 @@ export const HiveLogoApp = ({
         {appSection}
       </motion.div>
     </motion.div>
-  );
+  )
 };
 
 // Export all responsive variants

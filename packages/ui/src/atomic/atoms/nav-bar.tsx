@@ -11,7 +11,7 @@ export interface NavBarProps {
     id: string;
     name: string;
     handle: string;
-    avatar?: string;
+    avatar?: string
   } | null;
   showSearch?: boolean;
   showNotifications?: boolean;
@@ -20,7 +20,7 @@ export interface NavBarProps {
   onNotificationsClick?: () => void;
   onSettingsClick?: () => void;
   onUserClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 export const NavBar: React.FC<NavBarProps> = ({
@@ -148,5 +148,5 @@ export const NavBar: React.FC<NavBarProps> = ({
         )}
       </div>
     </nav>
-  );
+  )
 };

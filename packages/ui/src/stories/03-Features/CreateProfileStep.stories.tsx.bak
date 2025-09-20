@@ -1,0 +1,92 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { CreateProfileStep, CreateProfileStepProps } from '../../components/onboarding/create-profile-step';
+import { action } from '@storybook/addon-actions';
+
+const meta: Meta<typeof CreateProfileStep> = {
+  title: 'Onboarding/CreateProfileStep',
+  component: CreateProfileStep,
+  parameters: {
+    layout: 'centered',
+  }
+        tags: ['autodocs'],
+  argTypes: {
+    displayName: { control: 'text' },
+    handle: { control: 'text' },
+    avatarUrl: { control: 'text' },
+    isUploading: { control: 'boolean' },
+    error: { control: 'text' },
+    termsAccepted: { control: 'boolean' },
+  }
+};
+
+export default meta;
+
+const Template: StoryObj<CreateProfileStepProps> = {
+  render: (args) => <CreateProfileStep {...args} />,
+};
+
+export const Default: StoryObj<CreateProfileStepProps> = {
+  ...Template,
+  args: {
+    displayName: 'Ada Lovelace',
+    handle: 'ada.lovelace',
+    handleAvailability: { isChecking: false, available: null },
+    isUploading: false,
+    error: '',
+    selectedFile: null,
+    onDisplayNameChange: action('onDisplayNameChange'),
+    onHandleChange: action('onHandleChange'),
+    onFileSelect: action('onFileSelect'),
+    onSubmit: action('onSubmit'),
+    termsAccepted: true,
+    onTermsAcceptedChange: action('onTermsAcceptedChange'),
+  }
+};
+
+export const TermsNotAccepted: StoryObj<CreateProfileStepProps> = {
+  ...Template,
+  args: {
+    ...Default.args,
+    termsAccepted: false,
+  }
+};
+
+export const CheckingHandle: StoryObj<CreateProfileStepProps> = {
+  ...Template,
+  args: {
+    ...Default.args,
+    handleAvailability: { isChecking: true, available: null },
+  }
+};
+
+export const HandleAvailable: StoryObj<CreateProfileStepProps> = {
+  ...Template,
+  args: {
+    ...Default.args,
+    handleAvailability: { isChecking: false, available: true },
+  }
+};
+
+export const HandleUnavailable: StoryObj<CreateProfileStepProps> = {
+  ...Template,
+  args: {
+    ...Default.args,
+    handleAvailability: { isChecking: false, available: false },
+  }
+};
+
+export const WithError: StoryObj<CreateProfileStepProps> = {
+  ...Template,
+  args: {
+    ...Default.args,
+    error: 'This username is too short.',
+  }
+};
+
+export const Uploading: StoryObj<CreateProfileStepProps> = {
+  ...Template,
+  args: {
+    ...Default.args,
+    isUploading: true,
+  }
+}; 

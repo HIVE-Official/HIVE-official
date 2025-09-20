@@ -68,7 +68,7 @@ export interface HiveNavigationItemProps
   isActive?: boolean;
   isCollapsed?: boolean;
   level?: 0 | 1 | 2 | 3;
-  onNavigate?: (item: NavigationItem) => void;
+  onNavigate?: (item: NavigationItem) => void
 }
 
 export function HiveNavigationItem({ 
@@ -96,9 +96,9 @@ export function HiveNavigationItem({
     if (item.isDisabled) return;
     
     if (hasChildren) {
-      setIsExpanded(!isExpanded);
+      setIsExpanded(!isExpanded)
     } else {
-      onNavigate?.(item);
+      onNavigate?.(item)
     }
   };
 
@@ -128,7 +128,7 @@ export function HiveNavigationItem({
           transformOrigin: 'center',
           backfaceVisibility: 'hidden' as const,
           transform: 'translateZ(0)',
-        }}
+          }}
         whileHover={{ scale: item.isDisabled ? 1 : 1.02 }}
         whileTap={{ scale: item.isDisabled ? 1 : 0.98 }}
         {...props}
@@ -161,7 +161,7 @@ export function HiveNavigationItem({
                         ? 'var(--hive-status-success)'
                         : 'var(--hive-brand-primary)',
                   color: 'var(--hive-text-inverse)'
-                }}
+          }}
                 animate={item.badge.pulse ? { scale: [1, 1.1, 1] } : {}}
                 transition={item.badge.pulse ? { duration: 2, repeat: Infinity } : {}}
               >
@@ -202,14 +202,14 @@ export function HiveNavigationItem({
         </motion.div>
       )}
     </div>
-  );
+  )
 }
 
 // Section Header Component
 export interface HiveNavigationSectionProps {
   label: string;
   collapsed?: boolean;
-  className?: string;
+  className?: string
 }
 
 export function HiveNavigationSection({ 
@@ -229,19 +229,19 @@ export function HiveNavigationSection({
           fontSize: 'var(--hive-font-size-xs)',
           fontWeight: 'var(--hive-font-weight-semibold)',
           letterSpacing: 'var(--hive-letter-spacing-wider)'
-        }}
+          }}
       >
         {label}
       </h3>
     </div>
-  );
+  )
 }
 
 // Create Button Component
 export interface HiveNavigationCreateButtonProps {
   collapsed?: boolean;
   onClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 export function HiveNavigationCreateButton({ 
@@ -281,7 +281,7 @@ export function HiveNavigationCreateButton({
         {!collapsed && <span>Create</span>}
       </div>
     </motion.button>
-  );
+  )
 }
 
 export type { NavigationItem } from './hive-navigation-system';

@@ -341,12 +341,12 @@ const CheckboxPatternsShowcase = () => {
   const [selections, setSelections] = useState<Record<string, boolean>>({});
 
   const handleSelectionChange = (id: string, checked: boolean) => {
-    setSelections(prev => ({ ...prev, [id]: checked }));
+    setSelections(prev => ({ ...prev, [id]: checked }))
   };
 
   const getGroupProgress = (options: any[]) => {
     const selected = options.filter(option => selections[option.id]).length;
-    return `${selected}/${options.length} selected`;
+    return `${selected}/${options.length} selected`
   };
 
   return (
@@ -386,7 +386,7 @@ const CheckboxPatternsShowcase = () => {
                           <Checkbox
                             id={option.id}
                             checked={selections[option.id] || false}
-                            onCheckedChange={(checked) => handleSelectionChange(option.id, checked as boolean)}
+                            onChange={(e) => { const checked = e.target.checked; handleSelectionChange(option.id, checked as boolean)}
                             className="mt-0.5"
                           />
                           <div className="flex-1">
@@ -411,7 +411,7 @@ const CheckboxPatternsShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const CheckboxSizesShowcase = () => {
@@ -484,7 +484,7 @@ const CheckboxSizesShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const CheckboxStatesShowcase = () => {
@@ -506,7 +506,7 @@ const CheckboxStatesShowcase = () => {
       child1: checked,
       child2: checked,
       child3: checked
-    });
+    })}
   };
 
   return (
@@ -590,7 +590,7 @@ const CheckboxStatesShowcase = () => {
                   <Checkbox
                     id="child1"
                     checked={stateDemo.child1}
-                    onCheckedChange={(checked) => setStateDemo(prev => ({ ...prev, child1: checked as boolean }))}
+                    onChange={(e) => { const checked = e.target.checked; setStateDemo(prev => ({ ...prev, child1: checked as boolean }))}
                   />
                   <Label htmlFor="child1" className="text-[var(--hive-text-primary)]">
                     Academic Updates
@@ -601,7 +601,7 @@ const CheckboxStatesShowcase = () => {
                   <Checkbox
                     id="child2"
                     checked={stateDemo.child2}
-                    onCheckedChange={(checked) => setStateDemo(prev => ({ ...prev, child2: checked as boolean }))}
+                    onChange={(e) => { const checked = e.target.checked; setStateDemo(prev => ({ ...prev, child2: checked as boolean }))}
                   />
                   <Label htmlFor="child2" className="text-[var(--hive-text-primary)]">
                     Social Events
@@ -612,7 +612,7 @@ const CheckboxStatesShowcase = () => {
                   <Checkbox
                     id="child3"
                     checked={stateDemo.child3}
-                    onCheckedChange={(checked) => setStateDemo(prev => ({ ...prev, child3: checked as boolean }))}
+                    onChange={(e) => { const checked = e.target.checked; setStateDemo(prev => ({ ...prev, child3: checked as boolean }))}
                   />
                   <Label htmlFor="child3" className="text-[var(--hive-text-primary)]">
                     Administrative
@@ -628,7 +628,7 @@ const CheckboxStatesShowcase = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 const AccessibilityShowcase = () => {
@@ -672,7 +672,7 @@ const AccessibilityShowcase = () => {
                     <Checkbox
                       id={option.id}
                       checked={accessibilitySelections[option.id] || false}
-                      onCheckedChange={(checked) => setAccessibilitySelections(prev => ({ ...prev, [option.id]: checked as boolean }))}
+                      onChange={(e) => { const checked = e.target.checked; setAccessibilitySelections(prev => ({ ...prev, [option.id]: checked as boolean }))}
                       onFocus={() => setFocusedCheckbox(option.id)}
                       onBlur={() => setFocusedCheckbox(null)}
                       className={`mt-0.5 ${focusedCheckbox === option.id ? 'ring-2 ring-[var(--hive-brand-primary)]' : ''}`}
@@ -747,7 +747,7 @@ const AccessibilityShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -874,7 +874,7 @@ const CheckboxEnhancedShowcase = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

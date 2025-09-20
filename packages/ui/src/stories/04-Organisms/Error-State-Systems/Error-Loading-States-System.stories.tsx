@@ -93,22 +93,22 @@ const useErrorStates = () => {
         if (prev >= 100) {
           clearInterval(interval);
           setCurrentState('success');
-          return 100;
+          return 100
         }
-        return prev + (100 / (duration / 100));
-      });
+        return prev + (100 / (duration / 100))
+      })
     }, 100);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   };
 
   const simulateError = (errorType = 'network') => {
     setCurrentState(errorType);
-    setRetryAttempts(prev => prev + 1);
+    setRetryAttempts(prev => prev + 1)
   };
 
   const retry = () => {
-    simulateLoading(2000);
+    simulateLoading(2000)
   };
 
   return {
@@ -121,7 +121,7 @@ const useErrorStates = () => {
     simulateLoading,
     simulateError,
     retry
-  };
+  }
 };
 
 // Loading Skeletons
@@ -204,7 +204,7 @@ const LoadingSpinner = ({ size = 'default', message }: { size?: 'small' | 'defau
       <Loader2 className={`${sizeClasses[size]} animate-spin text-yellow-500`} />
       {message && <p className="text-gray-400 text-sm">{message}</p>}
     </div>
-  );
+  )
 };
 
 const ProgressLoader = ({ progress, message }: { progress: number, message: string }) => (
@@ -799,7 +799,7 @@ const ErrorLoadingDemo = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export const CompleteErrorLoadingSystem: Story = {
@@ -873,7 +873,7 @@ export const LoadingStates: Story = {
           </Tabs>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

@@ -10,14 +10,14 @@ export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   value?: string;
   onValueChange?: (value: string) => void;
   name: string;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   ({ className, value, onValueChange, name, disabled, children, ...props }, ref) => {
     const handleChange = (newValue: string) => {
       if (onValueChange) {
-        onValueChange(newValue);
+        onValueChange(newValue)
       }
     };
 
@@ -30,9 +30,9 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
           checked: child.props.value === value,
           disabled: disabled || child.props.disabled,
           onChange: () => handleChange(child.props.value),
-        });
+        })}}}
       }
-      return child;
+      return child
     });
 
     return (
@@ -44,14 +44,14 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
       >
         {clonedChildren}
       </div>
-    );
+    )
   }
 );
 
 RadioGroup.displayName = 'RadioGroup';
 
 export interface RadioGroupItemProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  value: string;
+  value: string
 }
 
 export const RadioGroupItem = React.forwardRef<HTMLInputElement, RadioGroupItemProps>(
@@ -66,7 +66,7 @@ export const RadioGroupItem = React.forwardRef<HTMLInputElement, RadioGroupItemP
         )}
         {...props}
       />
-    );
+    )
   }
 );
 

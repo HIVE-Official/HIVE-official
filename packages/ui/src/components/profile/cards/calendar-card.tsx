@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { ScrollArea } from '../../components/ui/scroll-area';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Card, CardContent, CardHeader } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { ScrollArea } from '../../ui/scroll-area';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { 
   Calendar,
   CalendarDays,
@@ -47,7 +47,7 @@ export interface CalendarEvent {
     id: string;
     name: string;
     avatar?: string;
-    status: 'going' | 'maybe' | 'not-going' | 'pending';
+    status: 'going' | 'maybe' | 'not-going' | 'pending'
   }[];
   isRSVPRequired: boolean;
   userRSVPStatus?: 'going' | 'maybe' | 'not-going' | 'pending';
@@ -55,7 +55,7 @@ export interface CalendarEvent {
   spaceName?: string;
   color?: string;
   isConflicting?: boolean;
-  priority: 'low' | 'medium' | 'high';
+  priority: 'low' | 'medium' | 'high'
 }
 
 export interface CalendarCardProps {
@@ -65,7 +65,7 @@ export interface CalendarCardProps {
   onEventUpdate?: (id: string, updates: Partial<CalendarEvent>) => void;
   onRSVP?: (eventId: string, status: 'going' | 'maybe' | 'not-going') => void;
   onSettingsClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 // Event Type Configuration
@@ -128,7 +128,7 @@ function formatTime(date: Date): string {
     hour: 'numeric', 
     minute: '2-digit',
     hour12: true 
-  });
+  })
 }
 
 function formatDate(date: Date): string {
@@ -137,15 +137,15 @@ function formatDate(date: Date): string {
   tomorrow.setDate(tomorrow.getDate() + 1);
   
   if (date.toDateString() === today.toDateString()) {
-    return 'Today';
+    return 'Today'
   } else if (date.toDateString() === tomorrow.toDateString()) {
-    return 'Tomorrow';
+    return 'Tomorrow'
   } else {
     return date.toLocaleDateString('en-US', { 
       month: 'short', 
       day: 'numeric',
       weekday: 'short'
-    });
+    })
   }
 }
 
@@ -159,7 +159,7 @@ function getTimeUntilEvent(date: Date): string {
   if (diffMins < 0) return 'Started';
   if (diffMins < 60) return `in ${diffMins}m`;
   if (diffHours < 24) return `in ${diffHours}h`;
-  return `in ${diffDays}d`;
+  return `in ${diffDays}d`
 }
 
 // Event Quick Actions Component
@@ -168,7 +168,7 @@ function EventQuickActions({
   onRSVP 
 }: { 
   event: CalendarEvent; 
-  onRSVP?: (status: 'going' | 'maybe' | 'not-going') => void;
+  onRSVP?: (status: 'going' | 'maybe' | 'not-going') => void
 }) {
   if (!event.isRSVPRequired) return null;
 
@@ -194,10 +194,10 @@ function EventQuickActions({
             <Icon className="w-3 h-3 mr-1" />
             {config.label}
           </Button>
-        );
-      })}
+        )
+          })}
     </div>
-  );
+  )
 }
 
 // Event Item Component
@@ -208,14 +208,14 @@ function EventItem({
 }: { 
   event: CalendarEvent; 
   onRSVP?: (eventId: string, status: 'going' | 'maybe' | 'not-going') => void;
-  isCompact?: boolean;
+  isCompact?: boolean
 }) {
   const config = eventTypeConfig[event.type];
   const Icon = config.icon;
   const timeUntil = getTimeUntilEvent(event.startTime);
 
   const handleRSVP = useCallback((status: 'going' | 'maybe' | 'not-going') => {
-    onRSVP?.(event.id, status);
+    onRSVP?.(event.id, status)
   }, [event.id, onRSVP]);
 
   return (
@@ -321,7 +321,7 @@ function EventItem({
         </Button>
       </div>
     </motion.div>
-  );
+  )
 }
 
 // Calendar Mini View Component
@@ -332,7 +332,7 @@ function CalendarMiniView({
 }: { 
   events: CalendarEvent[];
   selectedDate: Date;
-  onDateSelect: (date: Date) => void;
+  onDateSelect: (date: Date) => void
 }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -360,17 +360,17 @@ function CalendarMiniView({
         isSelected: date.toDateString() === selectedDate.toDateString(),
         events: dayEvents,
         hasEvents: dayEvents.length > 0
-      });
+      })
     }
-    return days;
+    return days
   }, [currentMonth, events, selectedDate]);
 
   const navigateMonth = useCallback((direction: 'prev' | 'next') => {
     setCurrentMonth(prev => {
       const newDate = new Date(prev);
       newDate.setMonth(prev.getMonth() + (direction === 'next' ? 1 : -1));
-      return newDate;
-    });
+      return newDate
+    })
   }, []);
 
   return (
@@ -378,7 +378,7 @@ function CalendarMiniView({
       {/* Month Navigation */}
       <div className="flex items-center justify-between">
         <h3 className="font-medium text-[var(--hive-text-primary)]">
-          {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }}
         </h3>
         <div className="flex gap-1">
           <Button
@@ -430,7 +430,7 @@ function CalendarMiniView({
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Main Calendar Card Component
@@ -457,8 +457,8 @@ export function CalendarCard({
       case 'today':
         return events.filter(event => {
           const eventDate = new Date(event.startTime.getFullYear(), event.startTime.getMonth(), event.startTime.getDate());
-          return eventDate.getTime() === today.getTime();
-        }).sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+          return eventDate.getTime() === today.getTime()
+        })}.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
       
       case 'upcoming':
         return events.filter(event => event.startTime >= now)
@@ -468,11 +468,11 @@ export function CalendarCard({
       case 'calendar':
         return events.filter(event => {
           const eventDate = new Date(event.startTime.getFullYear(), event.startTime.getMonth(), event.startTime.getDate());
-          return eventDate.getTime() === selectedDay.getTime();
-        }).sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+          return eventDate.getTime() === selectedDay.getTime()
+        })}.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
       
       default:
-        return [];
+        return []
     }
   }, [events, viewMode, selectedDate, showAllEvents]);
 
@@ -481,15 +481,15 @@ export function CalendarCard({
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     return events.filter(event => {
       const eventDate = new Date(event.startTime.getFullYear(), event.startTime.getMonth(), event.startTime.getDate());
-      return eventDate.getTime() === todayStart.getTime();
-    }).length;
+      return eventDate.getTime() === todayStart.getTime()
+    })}.length
   }, [events]);
 
   const nextEvent = useMemo(() => {
     const now = new Date();
     return events
       .filter(event => event.startTime > now)
-      .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())[0];
+      .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())[0]
   }, [events]);
 
   return (
@@ -526,7 +526,7 @@ export function CalendarCard({
             { key: 'today', label: 'Today', count: todayEventsCount },
             { key: 'upcoming', label: 'Upcoming' },
             { key: 'calendar', label: 'Calendar' }
-          ].map(({ key, label, count }) => (
+          ].map(({ key, label, count })} => (
             <Button
               key={key}
               size="sm"
@@ -640,7 +640,7 @@ export function CalendarCard({
               isRSVPRequired: false,
               source: 'manual',
               priority: 'medium'
-            })}
+          }}
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Event
@@ -648,7 +648,7 @@ export function CalendarCard({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Default props for development

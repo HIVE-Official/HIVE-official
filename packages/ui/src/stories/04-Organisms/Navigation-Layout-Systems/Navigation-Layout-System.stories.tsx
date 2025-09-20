@@ -472,18 +472,18 @@ const NavigationLayoutSystem = () => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile)
   }, []);
   
   const navigationItems = createNavigationItems(activeSection);
   
   const handleNavigate = (href: string) => {
     const section = href.replace('/', '');
-    setActiveSection(section);
+    setActiveSection(section)
   };
   
   const handleToggleCollapse = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
+    setSidebarCollapsed(!sidebarCollapsed)
   };
 
   return (
@@ -637,7 +637,7 @@ const NavigationLayoutSystem = () => {
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Responsive Showcase Component
@@ -664,7 +664,7 @@ const ResponsiveShowcase = () => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-[var(--hive-text-secondary)] text-sm mr-2">Viewport:</span>
-            {viewportSizes.map(({ id, label, icon: Icon }) => (
+            {viewportSizes.map(({ id, label, icon: Icon })} => (
               <Button
                 key={id}
                 size="sm"
@@ -733,7 +733,7 @@ const ResponsiveShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // Story Definitions
@@ -757,7 +757,7 @@ export const FeedLayout: Story = {
         const checkMobile = () => setIsMobile(window.innerWidth < 1024);
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile)
       }, []);
       
       const navigationItems = createNavigationItems('feed');
@@ -788,9 +788,9 @@ export const FeedLayout: Story = {
             </div>
           )}
         </div>
-      );
+      )
     };
-    return <NavigationWithFeed />;
+    return <NavigationWithFeed />
   },
   parameters: {
     layout: 'fullscreen',
@@ -809,7 +809,7 @@ export const SpacesLayout: Story = {
         const checkMobile = () => setIsMobile(window.innerWidth < 1024);
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile)
       }, []);
       
       const navigationItems = createNavigationItems('spaces');
@@ -840,9 +840,9 @@ export const SpacesLayout: Story = {
             </div>
           )}
         </div>
-      );
+      )
     };
-    return <NavigationWithSpaces />;
+    return <NavigationWithSpaces />
   },
   parameters: {
     layout: 'fullscreen',
@@ -860,7 +860,7 @@ export const HiveLabLayout: Story = {
         const checkMobile = () => setIsMobile(window.innerWidth < 1024);
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile)
       }, []);
       
       const navigationItems = createNavigationItems('hivelab');
@@ -891,9 +891,9 @@ export const HiveLabLayout: Story = {
             </div>
           )}
         </div>
-      );
+      )
     };
-    return <NavigationWithHiveLab />;
+    return <NavigationWithHiveLab />
   },
   parameters: {
     layout: 'fullscreen',
@@ -911,7 +911,7 @@ export const ProfileLayout: Story = {
         const checkMobile = () => setIsMobile(window.innerWidth < 1024);
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile)
       }, []);
       
       const navigationItems = createNavigationItems('profile');
@@ -942,9 +942,9 @@ export const ProfileLayout: Story = {
             </div>
           )}
         </div>
-      );
+      )
     };
-    return <NavigationWithProfile />;
+    return <NavigationWithProfile />
   },
   parameters: {
     layout: 'fullscreen',

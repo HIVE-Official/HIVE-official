@@ -174,8 +174,8 @@ const ToolsCreationSystem = () => {
   const filteredTools = mockTools.filter(tool => {
     if (selectedCategory !== 'all' && tool.category.toLowerCase() !== selectedCategory) return false;
     if (searchQuery && !tool.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
+    return true
+  })};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
@@ -208,7 +208,7 @@ const ToolsCreationSystem = () => {
               { id: 'discover', label: 'Discover', icon: Search },
               { id: 'my-tools', label: 'My Tools', icon: Wrench },
               { id: 'trending', label: 'Trending', icon: TrendingUp },
-            ].map(({ id, label, icon: Icon }) => (
+            ].map(({ id, label, icon: Icon })} => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
@@ -297,11 +297,11 @@ const ToolsCreationSystem = () => {
             <Card key={tool.id} className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer transition-all duration-200"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
-                    e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                    e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
-                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.boxShadow = 'none'
                   }}>
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
@@ -433,7 +433,7 @@ const ToolsCreationSystem = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export const ToolsMarketplace: Story = {

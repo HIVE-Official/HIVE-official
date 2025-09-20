@@ -8,14 +8,14 @@ import { cn } from '../../lib/utils';
 interface BreadcrumbItem {
   label: string;
   href?: string;
-  icon?: React.ElementType;
+  icon?: React.ElementType
 }
 
 interface BreadcrumbNavigationProps {
   items: BreadcrumbItem[];
   className?: string;
   showHome?: boolean;
-  maxItems?: number;
+  maxItems?: number
 }
 
 // Route mappings for generating breadcrumbs from pathname
@@ -48,33 +48,33 @@ export function generateBreadcrumbsFromPath(pathname: string): BreadcrumbItem[] 
         label: mapping.label,
         href: currentPath,
         icon: mapping.icon,
-      });
+      })
     } else {
       // Dynamic segments (like IDs)
       let label = segment;
       
       // Format dynamic segments
       if (segment.length > 20) {
-        label = `${segment.slice(0, 10)}...${segment.slice(-6)}`;
+        label = `${segment.slice(0, 10)}...${segment.slice(-6)}`
       } else {
-        label = segment.charAt(0).toUpperCase() + segment.slice(1);
+        label = segment.charAt(0).toUpperCase() + segment.slice(1)
       }
       
       breadcrumbs.push({
         label,
         href: currentPath,
-      });
+      })
     }
   }
   
-  return breadcrumbs;
+  return breadcrumbs
 }
 
 // Smart breadcrumb component that can auto-generate from pathname
 interface SmartBreadcrumbNavigationProps extends Omit<BreadcrumbNavigationProps, 'items'> {
   items?: BreadcrumbItem[];
   pathname?: string;
-  autoGenerate?: boolean;
+  autoGenerate?: boolean
 }
 
 export function BreadcrumbNavigation({ 
@@ -163,10 +163,10 @@ export function BreadcrumbNavigation({
               <ChevronRight className="h-3 w-3 text-[var(--hive-border-default)] shrink-0" />
             )}
           </React.Fragment>
-        );
-      })}
+        )
+          })}
     </nav>
-  );
+  )
 }
 
 // Smart breadcrumb component that auto-generates from pathname
@@ -181,9 +181,9 @@ export function SmartBreadcrumbNavigation({
   const breadcrumbItems = React.useMemo(() => {
     if (items) return items;
     if (autoGenerate && pathname) {
-      return generateBreadcrumbsFromPath(pathname);
+      return generateBreadcrumbsFromPath(pathname)
     }
-    return [];
+    return []
   }, [items, pathname, autoGenerate]);
 
   return (
@@ -193,5 +193,5 @@ export function SmartBreadcrumbNavigation({
       showHome={showHome}
       maxItems={maxItems}
     />
-  );
+  )
 }

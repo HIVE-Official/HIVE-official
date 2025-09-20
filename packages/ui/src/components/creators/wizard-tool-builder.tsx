@@ -43,7 +43,7 @@ interface WizardStep {
   description: string;
   icon: React.ComponentType<any>;
   isCompleted?: boolean;
-  isOptional?: boolean;
+  isOptional?: boolean
 }
 
 const WIZARD_STEPS: WizardStep[] = [
@@ -212,7 +212,7 @@ interface StepWrapperProps {
   step: WizardStep;
   isActive: boolean;
   isCompleted: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const StepWrapper: React.FC<StepWrapperProps> = ({ 
@@ -257,7 +257,7 @@ const StepWrapper: React.FC<StepWrapperProps> = ({
         </HiveCardContent>
       </HiveCard>
     </motion.div>
-  );
+  )
 };
 
 // Individual step components
@@ -273,7 +273,7 @@ const PurposeStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({
         </label>
         <HiveInput
           value={tool.name}
-          onChange={(e) => onChange({ ...tool, name: e.target.value })}
+          onChange={(e) => onChange({ ...tool, name: e.target.value }}
           placeholder="Give your tool a descriptive name..."
           className="text-lg"
         />
@@ -285,7 +285,7 @@ const PurposeStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({
         </label>
         <HiveTextarea
           value={tool.description}
-          onChange={(e) => onChange({ ...tool, description: e.target.value })}
+          onChange={(e) => onChange({ ...tool, description: e.target.value }}
           placeholder="Describe the problem your tool addresses and how it helps users..."
           rows={4}
         />
@@ -312,7 +312,7 @@ const PurposeStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({
               onClick={() => onChange({ 
                 ...tool, 
                 description: idea + '. This tool will help students by providing an easy-to-use interface for this common campus need.'
-              })}
+          }}
               className="text-left h-auto py-3 justify-start"
             >
               <span className="text-sm">{idea}</span>
@@ -321,7 +321,7 @@ const PurposeStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 const AudienceStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({ 
@@ -351,7 +351,7 @@ const AudienceStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = (
         ...tool.metadata, 
         tags: [...(tool.metadata.tags || []), ...newAudience] 
       }
-    });
+    })
   };
 
   return (
@@ -412,7 +412,7 @@ const AudienceStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = (
             </div>
             <HiveSwitch
               checked={tool.isPublic}
-              onCheckedChange={(checked) => onChange({ ...tool, isPublic: checked })}
+              onChange={(e) => { const checked = e.target.checked; onChange({ ...tool, isPublic: checked }}
             />
           </div>
           
@@ -425,16 +425,16 @@ const AudienceStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = (
             </div>
             <HiveSwitch
               checked={tool.config.requireAuthentication}
-              onCheckedChange={(checked) => onChange({ 
+              onChange={(e) => { const checked = e.target.checked; onChange({ 
                 ...tool, 
                 config: { ...tool.config, requireAuthentication: checked }
-              })}
+          })}
             />
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 const CategoryStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({ 
@@ -451,7 +451,7 @@ const CategoryStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = (
         ...tool.metadata,
         category: categoryId as ToolCategory
       }
-    });
+    })
   };
 
   return (
@@ -508,7 +508,7 @@ const CategoryStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = (
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const DesignStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({ 
@@ -526,7 +526,7 @@ const DesignStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({
         primaryColor: theme.primary,
         backgroundColor: theme.secondary
       }
-    });
+    })
   };
 
   return (
@@ -597,7 +597,7 @@ const DesignStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({
               onValueChange={(value) => onChange({
                 ...tool,
                 config: { ...tool.config, theme: value as any }
-              })}
+          })}
               options={[
                 { value: 'auto', label: 'Auto (System Preference)' },
                 { value: 'light', label: 'Light Mode' },
@@ -608,7 +608,7 @@ const DesignStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 const FeaturesStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = ({ 
@@ -628,24 +628,24 @@ const FeaturesStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = (
     const updatedConfig = { ...tool.config };
     
     if (newFeatures.includes('user-auth')) {
-      updatedConfig.requireAuthentication = true;
+      updatedConfig.requireAuthentication = true
     }
     if (newFeatures.includes('analytics')) {
-      updatedConfig.trackingEnabled = true;
+      updatedConfig.trackingEnabled = true
     }
     if (newFeatures.includes('notifications')) {
-      updatedConfig.notifyOnSubmission = true;
+      updatedConfig.notifyOnSubmission = true
     }
 
-    onChange({ ...tool, config: updatedConfig });
+    onChange({ ...tool, config: updatedConfig })
   };
 
   const featuresByCategory = TOOL_FEATURES.reduce((acc, feature) => {
     if (!acc[feature.category]) {
-      acc[feature.category] = [];
+      acc[feature.category] = []
     }
     acc[feature.category].push(feature);
-    return acc;
+    return acc
   }, {} as Record<string, typeof TOOL_FEATURES>);
 
   return (
@@ -705,7 +705,7 @@ const FeaturesStep: React.FC<{ tool: Tool; onChange: (tool: Tool) => void }> = (
         </div>
       ))}
     </div>
-  );
+  )
 };
 
 const PreviewStep: React.FC<{ tool: Tool }> = ({ tool }) => {
@@ -808,7 +808,7 @@ const PreviewStep: React.FC<{ tool: Tool }> = ({ tool }) => {
         />
       )}
     </div>
-  );
+  )
 };
 
 // Main Wizard Tool Builder component
@@ -842,7 +842,7 @@ export const WizardToolBuilder: React.FC<WizardBuilderProps> = ({
       case 'preview':
         return true; // Preview step is always considered complete
       default:
-        return false;
+        return false
     }
   }, [tool, currentStepData.id]);
 
@@ -851,7 +851,7 @@ export const WizardToolBuilder: React.FC<WizardBuilderProps> = ({
     if (isCurrentStepCompleted()) {
       setCompletedSteps(prev => new Set([...prev, currentStep]));
       if (!isLastStep) {
-        setCurrentStep(currentStep + 1);
+        setCurrentStep(currentStep + 1)
       }
     }
   };
@@ -859,14 +859,14 @@ export const WizardToolBuilder: React.FC<WizardBuilderProps> = ({
   // Handle previous step
   const handlePrevious = () => {
     if (!isFirstStep) {
-      setCurrentStep(currentStep - 1);
+      setCurrentStep(currentStep - 1)
     }
   };
 
   // Handle step navigation
   const goToStep = (stepIndex: number) => {
     if (stepIndex <= currentStep || completedSteps.has(stepIndex - 1)) {
-      setCurrentStep(stepIndex);
+      setCurrentStep(stepIndex)
     }
   };
 
@@ -886,7 +886,7 @@ export const WizardToolBuilder: React.FC<WizardBuilderProps> = ({
       case 'preview':
         return <PreviewStep tool={tool} />;
       default:
-        return null;
+        return null
     }
   };
 
@@ -932,8 +932,8 @@ export const WizardToolBuilder: React.FC<WizardBuilderProps> = ({
                     />
                   )}
                 </div>
-              );
-            })}
+              )
+          })}
           </div>
 
           {/* Progress bar */}
@@ -1015,7 +1015,7 @@ export const WizardToolBuilder: React.FC<WizardBuilderProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default WizardToolBuilder;

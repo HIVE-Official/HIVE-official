@@ -53,7 +53,7 @@ export const containerVariants = cva(
 export interface ContainerProps extends VariantProps<typeof containerVariants> {
   children: React.ReactNode;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof JSX.IntrinsicElements
 }
 
 export const Container: React.FC<ContainerProps> = ({ 
@@ -72,7 +72,7 @@ export const Container: React.FC<ContainerProps> = ({
     >
       {children}
     </Component>
-  );
+  )
 };
 
 // ContainerProps already exported inline above

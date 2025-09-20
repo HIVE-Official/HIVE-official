@@ -128,7 +128,7 @@ export const Default: Story = {
     mockMode: true,
     onAuthSuccess: (user) => {
       console.log('Auth success:', user);
-      alert(`Welcome to HIVE, ${user.name}! (${user.isNewUser ? 'New User' : 'Returning User'})`);
+      alert(`Welcome to HIVE, ${user.name}! (${user.isNewUser ? 'New User' : 'Returning User'})`)
     }
   },
   parameters: {
@@ -162,7 +162,7 @@ export const SignUpFlow: Story = {
     initialStep: 'sign-up',
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Sign up success:', user);
+      console.log('Sign up success:', user)
     }
   },
   parameters: {
@@ -198,7 +198,7 @@ export const SignInFlow: Story = {
     initialStep: 'sign-in',
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Sign in success:', user);
+      console.log('Sign in success:', user)
     }
   },
   parameters: {
@@ -233,7 +233,7 @@ export const ForgotPasswordFlow: Story = {
     initialStep: 'forgot-password',
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Password reset success:', user);
+      console.log('Password reset success:', user)
     }
   },
   parameters: {
@@ -263,7 +263,7 @@ export const EmailVerificationFlow: Story = {
     initialStep: 'verify-email',
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Email verified:', user);
+      console.log('Email verified:', user)
     }
   },
   parameters: {
@@ -293,7 +293,7 @@ export const MagicLinkSentFlow: Story = {
     initialStep: 'magic-link-sent',
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Magic link success:', user);
+      console.log('Magic link success:', user)
     }
   },
   parameters: {
@@ -328,7 +328,7 @@ export const InteractiveDemo: Story = {
     
     const handleAuthSuccess = (user: any) => {
       setAuthResult(user);
-      console.log('Demo auth success:', user);
+      console.log('Demo auth success:', user)
     };
 
     return (
@@ -347,7 +347,7 @@ export const InteractiveDemo: Story = {
           </div>
         )}
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -456,11 +456,11 @@ export const UniversityOfBuffaloScenarios: Story = {
           initialStep={scenarios[currentScenario as keyof typeof scenarios].step}
           mockMode={true}
           onAuthSuccess={(user) => {
-            alert(`${scenarios[currentScenario as keyof typeof scenarios].title} - Welcome to HIVE, ${user.name}!`);
-          }}
+            alert(`${scenarios[currentScenario as keyof typeof scenarios].title} - Welcome to HIVE, ${user.name}!`)
+          })}
         />
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',
@@ -581,7 +581,7 @@ export const ErrorHandlingScenarios: Story = {
             </div>
           </div>
         </AuthProvider>
-      );
+      )
     };
 
     return (
@@ -609,7 +609,7 @@ export const ErrorHandlingScenarios: Story = {
 
         <ErrorDemoFlow />
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',
@@ -661,8 +661,8 @@ export const MobileExperience: Story = {
       <HiveAuthFlow 
         mockMode={true}
         onAuthSuccess={(user) => {
-          alert(`Mobile auth success: ${user.name}`);
-        }}
+          alert(`Mobile auth success: ${user.name}`)
+          })}
       />
     </div>
   ),
@@ -725,7 +725,7 @@ export const AccessibilityFeatures: Story = {
   args: {
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Accessible auth success:', user);
+      console.log('Accessible auth success:', user)
     }
   },
   parameters: {
@@ -801,7 +801,7 @@ export const PerformanceOptimization: Story = {
       setMetrics(prev => ({
         ...prev,
         renderTime: Math.round((end - start) * 100) / 100
-      }));
+      }))
     }, []);
 
     return (
@@ -832,11 +832,11 @@ export const PerformanceOptimization: Story = {
         <HiveAuthFlow 
           mockMode={true}
           onAuthSuccess={(user) => {
-            console.log('Performance test success:', user);
+            console.log('Performance test success:', user)
           }}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

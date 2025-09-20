@@ -138,14 +138,14 @@ export interface CommandItem {
   category: string;
   keywords: string[];
   action: () => void;
-  shortcut?: string;
+  shortcut?: string
 }
 
 export interface CommandCategory {
   id: string;
   title: string;
   icon: React.ReactNode;
-  color: string;
+  color: string
 }
 
 export interface HiveCommandPaletteProps
@@ -159,7 +159,7 @@ export interface HiveCommandPaletteProps
   placeholder?: string;
   hotkey?: string;
   recentItems?: CommandItem[];
-  maxResults?: number;
+  maxResults?: number
 }
 
 const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPaletteProps>(
@@ -186,14 +186,14 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
     // Filter and search logic
     const filteredItems = useMemo(() => {
       if (!query && !selectedCategory) {
-        return recentItems.slice(0, maxResults);
+        return recentItems.slice(0, maxResults)
       }
       
       let filtered = items;
       
       // Filter by category if selected
       if (selectedCategory) {
-        filtered = filtered.filter(item => item.category === selectedCategory);
+        filtered = filtered.filter(item => item.category === selectedCategory)
       }
       
       // Filter by search query
@@ -203,10 +203,10 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
           item.title.toLowerCase().includes(lowercaseQuery) ||
           item.description?.toLowerCase().includes(lowercaseQuery) ||
           item.keywords.some(keyword => keyword.toLowerCase().includes(lowercaseQuery))
-        );
+        )
       }
       
-      return filtered.slice(0, maxResults);
+      return filtered.slice(0, maxResults)
     }, [query, selectedCategory, items, recentItems, maxResults]);
     
     // Group filtered items by category
@@ -214,11 +214,11 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
       const groups: Record<string, CommandItem[]> = {};
       filteredItems.forEach(item => {
         if (!groups[item.category]) {
-          groups[item.category] = [];
+          groups[item.category] = []
         }
-        groups[item.category].push(item);
+        groups[item.category].push(item)
       });
-      return groups;
+      return groups
     }, [filteredItems]);
     
     // Handle keyboard navigation
@@ -241,14 +241,14 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
           case 'Enter':
             e.preventDefault();
             if (filteredItems[selectedIndex]) {
-              handleSelect(filteredItems[selectedIndex]);
+              handleSelect(filteredItems[selectedIndex])
             }
-            break;
+            break
         }
       };
       
       document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown)
     }, [isOpen, selectedIndex, filteredItems, onClose]);
     
     // Reset state when opening
@@ -257,33 +257,33 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
         setQuery('');
         setSelectedIndex(0);
         setSelectedCategory(null);
-        setTimeout(() => inputRef.current?.focus(), 100);
+        setTimeout(() => inputRef.current?.focus(), 100)
       }
     }, [isOpen]);
     
     // Update selected index when filtered items change
     useEffect(() => {
-      setSelectedIndex(0);
+      setSelectedIndex(0)
     }, [filteredItems]);
     
     const handleSelect = (item: CommandItem) => {
       onSelect?.(item);
       item.action();
-      onClose();
+      onClose()
     };
     
     const handleCategorySelect = (categoryId: string) => {
       if (selectedCategory === categoryId) {
-        setSelectedCategory(null);
+        setSelectedCategory(null)
       } else {
         setSelectedCategory(categoryId);
-        setQuery('');
+        setQuery('')
       }
     };
     
     const handleBackdropClick = (e: React.MouseEvent) => {
       if (e.target === e.currentTarget) {
-        onClose();
+        onClose()
       }
     };
     
@@ -444,11 +444,11 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
                                   />
                                 </div>
                               </motion.button>
-                            );
-                          })}
+                            )
+          })
                         </div>
-                      );
-                    })}
+                      )
+          }}
                   </motion.div>
                 ) : (
                   <div className="px-6 py-12 text-center">
@@ -488,7 +488,7 @@ const HiveCommandPalette = React.forwardRef<HTMLDivElement, HiveCommandPalettePr
           </motion.div>
         )}
       </AnimatePresence>
-    );
+    )
   }
 );
 
@@ -504,12 +504,12 @@ export function useHiveCommandPalette(hotkey = 'mod+k') {
       
       if (hotkey === 'mod+k' && isMod && e.key === 'k') {
         e.preventDefault();
-        setIsOpen(true);
+        setIsOpen(true)
       }
     };
     
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [hotkey]);
   
   const open = () => setIsOpen(true);
@@ -521,7 +521,7 @@ export function useHiveCommandPalette(hotkey = 'mod+k') {
     open,
     close,
     toggle,
-  };
+  }
 }
 
 // Pre-built command categories for builder tools

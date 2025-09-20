@@ -26,18 +26,18 @@ interface DesktopSidebarProps {
   onNavigate: (href: string) => void;
   onToggleCollapse: () => void;
   className?: string;
-  testId?: string;
+  testId?: string
 }
 
 interface SidebarItemProps {
   item: NavigationItem;
   collapsed: boolean;
-  onNavigate: (href: string) => void;
+  onNavigate: (href: string) => void
 }
 
 interface SidebarHeaderProps {
   collapsed: boolean;
-  onToggleCollapse: () => void;
+  onToggleCollapse: () => void
 }
 
 // ============================================================================
@@ -101,7 +101,7 @@ const SidebarHeader = memo<SidebarHeaderProps>(({ collapsed, onToggleCollapse })
         )}
       </motion.button>
     </div>
-  );
+  )
 });
 
 SidebarHeader.displayName = 'SidebarHeader';
@@ -117,14 +117,14 @@ const SidebarItem = memo<SidebarItemProps>(({ item, collapsed, onNavigate }) => 
   
   const handleClick = useCallback(() => {
     if (!item.isDisabled) {
-      onNavigate(item.href);
+      onNavigate(item.href)
     }
   }, [item.href, item.isDisabled, onNavigate]);
   
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     if ((event.key === 'Enter' || event.key === ' ') && !item.isDisabled) {
       event.preventDefault();
-      onNavigate(item.href);
+      onNavigate(item.href)
     }
   }, [item.href, item.isDisabled, onNavigate]);
   
@@ -284,7 +284,7 @@ const SidebarItem = memo<SidebarItemProps>(({ item, collapsed, onNavigate }) => 
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 });
 
 SidebarItem.displayName = 'SidebarItem';
@@ -304,7 +304,7 @@ const UserProfileSection = memo<{ user: NavigationUser; collapsed: boolean }>(({
           {user.name.charAt(0).toUpperCase()}
         </div>
       </div>
-    );
+    )
   }
   
   return (
@@ -331,7 +331,7 @@ const UserProfileSection = memo<{ user: NavigationUser; collapsed: boolean }>(({
         )}
       </div>
     </motion.div>
-  );
+  )
 });
 
 UserProfileSection.displayName = 'UserProfileSection';
@@ -412,7 +412,7 @@ export const DesktopSidebar = memo<DesktopSidebarProps>(({
         )}
       </motion.div>
     </motion.aside>
-  );
+  )
 });
 
 DesktopSidebar.displayName = 'DesktopSidebar';
@@ -423,7 +423,7 @@ DesktopSidebar.displayName = 'DesktopSidebar';
 
 interface SidebarOverlayProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: () => void
 }
 
 export const SidebarOverlay = memo<SidebarOverlayProps>(({ isOpen, onClose }) => {
@@ -441,7 +441,7 @@ export const SidebarOverlay = memo<SidebarOverlayProps>(({ isOpen, onClose }) =>
         />
       )}
     </AnimatePresence>
-  );
+  )
 });
 
 SidebarOverlay.displayName = 'SidebarOverlay';

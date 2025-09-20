@@ -12,7 +12,7 @@ export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   showValue?: boolean;
   animated?: boolean;
   indeterminate?: boolean;
-  label?: string;
+  label?: string
 }
 
 const progressSizes = {
@@ -86,7 +86,7 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(({
         className={className}
         {...props}
       />
-    );
+    )
   }
 
   const trackClasses = [
@@ -150,14 +150,14 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(({
         />
       </div>
     </div>
-  );
+  )
 });
 
 Progress.displayName = 'Progress';
 
 // Circular Progress Component
 interface CircularProgressProps extends Omit<ProgressProps, 'variant'> {
-  strokeWidth?: number;
+  strokeWidth?: number
 }
 
 const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>(({
@@ -257,7 +257,7 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
         </div>
       )}
     </div>
-  );
+  )
 });
 
 CircularProgress.displayName = 'CircularProgress';

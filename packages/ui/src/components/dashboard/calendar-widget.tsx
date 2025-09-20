@@ -15,9 +15,9 @@ import {
   Bell,
   BookOpen
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 
 // Calendar event types
 export interface CalendarEvent {
@@ -34,7 +34,7 @@ export interface CalendarEvent {
   attendeeCount?: number;
   color?: string;
   isAllDay?: boolean;
-  reminderSet?: boolean;
+  reminderSet?: boolean
 }
 
 export interface CalendarWidgetData {
@@ -46,7 +46,7 @@ export interface CalendarWidgetData {
     type: 'assignment' | 'exam' | 'project';
     spaceId?: string;
     spaceName?: string;
-    priority: 'high' | 'medium' | 'low';
+    priority: 'high' | 'medium' | 'low'
   }>;
   weeklySchedule?: Array<{
     dayOfWeek: number;
@@ -54,9 +54,9 @@ export interface CalendarWidgetData {
       startTime: string;
       endTime: string;
       title: string;
-      recurring: boolean;
-    }>;
-  }>;
+      recurring: boolean
+    }>
+  }>
 }
 
 interface CalendarWidgetProps {
@@ -66,7 +66,7 @@ interface CalendarWidgetProps {
   onDateSelect?: (date: Date) => void;
   onAddEvent?: () => void;
   className?: string;
-  viewMode?: 'month' | 'week' | 'agenda';
+  viewMode?: 'month' | 'week' | 'agenda'
 }
 
 // Animation variants
@@ -117,8 +117,8 @@ export function CalendarWidget({
     
     return data.events.filter(event => {
       const eventDate = new Date(event.date);
-      return eventDate >= startOfWeek && eventDate <= endOfWeek;
-    }).sort((a, b) => new Date(a.date + ' ' + a.startTime).getTime() - new Date(b.date + ' ' + b.startTime).getTime());
+      return eventDate >= startOfWeek && eventDate <= endOfWeek
+    })}.sort((a, b) => new Date(a.date + ' ' + a.startTime).getTime() - new Date(b.date + ' ' + b.startTime).getTime())
   }, [data?.events, currentDate]);
 
   // Get today's events
@@ -126,7 +126,7 @@ export function CalendarWidget({
     if (!data?.events) return [];
     
     const today = new Date().toISOString().split('T')[0];
-    return data.events.filter(event => event.date === today);
+    return data.events.filter(event => event.date === today)
   }, [data?.events]);
 
   // Get upcoming deadlines (next 7 days)
@@ -139,8 +139,8 @@ export function CalendarWidget({
     
     return data.upcomingDeadlines.filter(deadline => {
       const dueDate = new Date(deadline.dueDate);
-      return dueDate >= today && dueDate <= nextWeek;
-    }).sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+      return dueDate >= today && dueDate <= nextWeek
+    })}.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
   }, [data?.upcomingDeadlines]);
 
   const formatTime = (time: string) => {
@@ -148,7 +148,7 @@ export function CalendarWidget({
     const hour = parseInt(hours);
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    return `${displayHour}:${minutes} ${ampm}`;
+    return `${displayHour}:${minutes} ${ampm}`
   };
 
   const formatDate = (dateStr: string) => {
@@ -164,7 +164,7 @@ export function CalendarWidget({
       weekday: 'short', 
       month: 'short', 
       day: 'numeric' 
-    });
+    })
   };
 
   const getEventTypeColor = (type: string) => {
@@ -173,7 +173,7 @@ export function CalendarWidget({
       case 'personal': return 'bg-green-100 text-green-700 border-green-200';
       case 'space': return 'bg-purple-100 text-purple-700 border-purple-200';
       case 'social': return 'bg-orange-100 text-orange-700 border-orange-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      default: return 'bg-gray-100 text-gray-700 border-gray-200'
     }
   };
 
@@ -182,12 +182,12 @@ export function CalendarWidget({
       case 'high': return 'bg-red-100 text-red-700 border-red-200';
       case 'medium': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       case 'low': return 'bg-green-100 text-green-700 border-green-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      default: return 'bg-gray-100 text-gray-700 border-gray-200'
     }
   };
 
   if (isLoading) {
-    return <CalendarSkeleton />;
+    return <CalendarSkeleton />
   }
 
   if (!data) {
@@ -198,7 +198,7 @@ export function CalendarWidget({
           <Button onClick={() => window.location.reload()}>Try Again</Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -311,7 +311,7 @@ export function CalendarWidget({
               <CardTitle className="flex items-center space-x-2">
                 <BookOpen className="h-5 w-5 text-red-600" />
                 <span>Upcoming Deadlines</span>
-                <Badge variant="destructive">{upcomingDeadlines.length}</Badge>
+                <Badge variant="error">{upcomingDeadlines.length}</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -369,8 +369,8 @@ export function CalendarWidget({
                   onClick={() => {
                     const prevWeek = new Date(currentDate);
                     prevWeek.setDate(currentDate.getDate() - 7);
-                    setCurrentDate(prevWeek);
-                  }}
+                    setCurrentDate(prevWeek)
+          }}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -380,8 +380,8 @@ export function CalendarWidget({
                   onClick={() => {
                     const nextWeek = new Date(currentDate);
                     nextWeek.setDate(currentDate.getDate() + 7);
-                    setCurrentDate(nextWeek);
-                  }}
+                    setCurrentDate(nextWeek)
+          }}
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -425,7 +425,7 @@ export function CalendarWidget({
         </Card>
       </motion.div>
     </motion.div>
-  );
+  )
 }
 
 // Loading Skeleton
@@ -437,7 +437,7 @@ function CalendarSkeleton() {
       <div className="h-24 bg-gray-200 rounded-lg animate-pulse"></div>
       <div className="h-40 bg-gray-200 rounded-lg animate-pulse"></div>
     </div>
-  );
+  )
 }
 
 // Mock data for development

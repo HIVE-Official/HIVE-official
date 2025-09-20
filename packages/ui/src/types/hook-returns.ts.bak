@@ -1,0 +1,61 @@
+// Return type definitions for complex hooks
+
+export interface AuthProviderReturn {
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  login: (credentials: Record<string, unknown>) => Promise<void>;
+  logout: () => Promise<void>;
+  signup: (data: Record<string, unknown>) => Promise<void>;
+}
+
+export interface OnboardingFlowReturn {
+  currentStep: number;
+  totalSteps: number;
+  progress: number;
+  isComplete: boolean;
+  nextStep: () => void;
+  previousStep: () => void;
+  goToStep: (step: number) => void;
+  completeOnboarding: () => Promise<void>;
+  skipStep: () => void;
+  data: Record<string, unknown>;
+  updateData: (data: Record<string, unknown>) => void;
+}
+
+export interface ShellContextValue {
+  isOpen: boolean;
+  toggle: () => void;
+  close: () => void;
+  open: () => void;
+  activeView: string;
+  setActiveView: (view: string) => void;
+}
+
+export interface HiveAuthContextValue {
+  user: HiveUser | null;
+  loading: boolean;
+  error: Error | null;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
+  sendPasswordReset: (email: string) => Promise<void>;
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+  token?: string;
+}
+
+export interface HiveUser extends AuthUser {
+  uid: string;
+  handle?: string;
+  fullName?: string;
+  school?: string;
+  major?: string;
+  year?: string;
+}

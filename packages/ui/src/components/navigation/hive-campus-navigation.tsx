@@ -60,7 +60,7 @@ export function CampusBar() {
         backgroundColor: 'var(--hive-background-primary)',
         backdropFilter: 'blur(3) saturate(180%)',
         borderColor: 'var(--hive-border-primary)',
-      }}
+          }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -86,15 +86,15 @@ export function CampusBar() {
                   )}
                   style={{
                     color: area.isActive ? 'var(--hive-brand-primary)' : 'var(--hive-text-primary)'
-                  }}
+          }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <Icon className="w-4 h-4" />
                   <span className="font-medium">{area.label}</span>
                 </motion.button>
-              );
-            })}
+              )
+          })
           </div>
 
           {/* Right: Builder Toggle + User Actions */}
@@ -176,7 +176,7 @@ export function CampusBar() {
         </div>
       </div>
     </NavigationContainer>
-  );
+  )
 }
 
 // ============================================================================
@@ -187,12 +187,12 @@ interface BreadcrumbItem {
   id: string;
   label: string;
   href?: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  icon?: React.ComponentType<{ className?: string }>
 }
 
 interface ContextBreadcrumbsProps {
   items: BreadcrumbItem[];
-  className?: string;
+  className?: string
 }
 
 export function ContextBreadcrumbs({ items, className }: ContextBreadcrumbsProps) {
@@ -217,7 +217,7 @@ export function ContextBreadcrumbs({ items, className }: ContextBreadcrumbsProps
                   className="hover:text-[var(--hive-brand-primary)] transition-colors"
                   style={{ 
                     color: isLast ? 'var(--hive-text-primary)' : 'var(--hive-text-muted)'
-                  }}
+          }}
                 >
                   {item.label}
                 </a>
@@ -225,7 +225,7 @@ export function ContextBreadcrumbs({ items, className }: ContextBreadcrumbsProps
                 <span
                   style={{ 
                     color: isLast ? 'var(--hive-text-primary)' : 'var(--hive-text-muted)'
-                  }}
+          }}
                 >
                   {item.label}
                 </span>
@@ -238,10 +238,10 @@ export function ContextBreadcrumbs({ items, className }: ContextBreadcrumbsProps
               </span>
             )}
           </React.Fragment>
-        );
-      })}
+        )
+          })
     </nav>
-  );
+  )
 }
 
 // ============================================================================
@@ -253,13 +253,13 @@ interface Surface {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   count?: number;
-  isActive?: boolean;
+  isActive?: boolean
 }
 
 interface SixSurfacesTabBarProps {
   surfaces: Surface[];
   onSurfaceChange?: (surfaceId: string) => void;
-  className?: string;
+  className?: string
 }
 
 export function SixSurfacesTabBar({ 
@@ -276,7 +276,7 @@ export function SixSurfacesTabBar({
       style={{
         backgroundColor: 'var(--hive-background-secondary)',
         borderColor: 'var(--hive-border-primary)'
-      }}
+          }}
     >
       {surfaces.map((surface) => {
         const Icon = surface.icon;
@@ -307,16 +307,16 @@ export function SixSurfacesTabBar({
                   color: surface.isActive 
                     ? 'var(--hive-text-primary)' 
                     : 'var(--hive-text-muted)'
-                }}
+          }}
               >
                 {surface.count}
               </span>
             )}
           </motion.button>
-        );
-      })}
+        )
+          })}
     </div>
-  );
+  )
 }
 
 // ============================================================================
@@ -328,7 +328,7 @@ interface CampusLayoutShellProps {
   breadcrumbs?: BreadcrumbItem[];
   surfaces?: Surface[];
   onSurfaceChange?: (surfaceId: string) => void;
-  className?: string;
+  className?: string
 }
 
 export function CampusLayoutShell({
@@ -371,5 +371,5 @@ export function CampusLayoutShell({
         {children}
       </main>
     </div>
-  );
+  )
 }

@@ -264,8 +264,8 @@ export const ElementLibraryBrowser: Story = {
                         </p>
                       </div>
                     </button>
-                  );
-                })}
+                  )
+                })
               </CardContent>
             </Card>
 
@@ -363,13 +363,13 @@ export const ElementLibraryBrowser: Story = {
                       )}
                     </CardContent>
                   </Card>
-                );
-              })}
+                )
+              })
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -391,8 +391,8 @@ export const StudentCreatedTools: Story = {
       if (filter === 'trending') return tool.installations > 50;
       if (filter === 'academic') return tool.category === 'Academic';
       if (filter === 'social') return tool.category === 'Social Events';
-      return true;
-    });
+      return true
+    })};
 
     return (
       <div className="w-full max-w-7xl mx-auto p-8 bg-gradient-to-br from-green-50 to-teal-50">
@@ -541,8 +541,8 @@ export const StudentCreatedTools: Story = {
                   </CardContent>
                 )}
               </Card>
-            );
-          })}
+            )
+          })
         </div>
 
         <div className="mt-8 bg-emerald-50 rounded-xl p-6 border border-emerald-100">
@@ -555,7 +555,7 @@ export const StudentCreatedTools: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -579,7 +579,7 @@ export const ToolCreationInterface: Story = {
         prev.includes(elementId) 
           ? prev.filter(id => id !== elementId)
           : [...prev, elementId]
-      );
+      )
     };
 
     const commonCombinations = [
@@ -741,8 +741,8 @@ export const ToolCreationInterface: Story = {
                           </div>
                         </div>
                       </div>
-                    );
-                  })}
+                    )
+                  })
                 </div>
               </CardContent>
             </Card>
@@ -777,8 +777,8 @@ export const ToolCreationInterface: Story = {
                               <IconComponent className="h-4 w-4 text-purple-600" />
                               <span>{element.name}</span>
                             </div>
-                          );
-                        })}
+                          )
+                        })
                       </div>
                     </div>
                     
@@ -808,6 +808,6 @@ export const ToolCreationInterface: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

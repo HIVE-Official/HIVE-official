@@ -185,7 +185,7 @@ function TestControlPanel({
   isEditMode: boolean;
   onEditModeChange: (enabled: boolean) => void;
   autoPlay: boolean;
-  onAutoPlayChange: (enabled: boolean) => void;
+  onAutoPlayChange: (enabled: boolean) => void
 }) {
   const selectedConfig = cardConfigs.find(c => c.id === selectedCard);
 
@@ -219,8 +219,8 @@ function TestControlPanel({
                     <Icon className="w-4 h-4" />
                     {config.name}
                   </Button>
-                );
-              })}
+                )
+              })
             </div>
           </div>
 
@@ -241,8 +241,8 @@ function TestControlPanel({
                   >
                     {scenario}
                   </Button>
-                );
-              })}
+                )
+              })
             </div>
           </div>
 
@@ -256,7 +256,7 @@ function TestControlPanel({
                 { key: 'desktop', icon: Monitor },
                 { key: 'tablet', icon: Tablet },
                 { key: 'mobile', icon: Smartphone }
-              ].map(({ key, icon: Icon }) => (
+              ].map(({ key, icon: Icon })} => (
                 <Button
                   key={key}
                   size="sm"
@@ -323,7 +323,7 @@ function TestControlPanel({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Component Test Results
@@ -334,7 +334,7 @@ function TestResults({
     renderTime: number; 
     componentState: string; 
     errors: string[]; 
-    warnings: string[]; 
+    warnings: string[] 
   } 
 }) {
   return (
@@ -395,7 +395,7 @@ function TestResults({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Generate test data based on scenario
@@ -438,7 +438,7 @@ function generateTestData(cardType: string, scenario: string) {
             }
           };
         default:
-          return { profile: mockUserProfile };
+          return { profile: mockUserProfile }
       }
       
     case 'calendar':
@@ -466,7 +466,7 @@ function generateTestData(cardType: string, scenario: string) {
             ]
           };
         default:
-          return { events: mockCalendarEvents };
+          return { events: mockCalendarEvents }
       }
       
     case 'notifications':
@@ -484,11 +484,11 @@ function generateTestData(cardType: string, scenario: string) {
             unreadCount: 8
           };
         default:
-          return { notifications: mockNotifications, unreadCount: 3 };
+          return { notifications: mockNotifications, unreadCount: 3 }
       }
       
     default:
-      return {};
+      return {}
   }
 }
 
@@ -566,7 +566,7 @@ export const ComponentTestingLab: StoryObj = {
             />
           );
         default:
-          return <div>Component not found</div>;
+          return <div>Component not found</div>
       }
     };
 
@@ -678,14 +678,14 @@ export const ComponentTestingLab: StoryObj = {
                         </CardContent>
                       </Card>
                     </motion.div>
-                  );
-                })}
+                  )
+                })
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

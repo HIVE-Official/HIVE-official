@@ -17,7 +17,7 @@ import { cn } from '../../lib/utils';
 
 interface CommandPaletteProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: () => void
 }
 
 interface Command {
@@ -27,12 +27,12 @@ interface Command {
   icon: React.ElementType;
   action: () => void;
   category: 'navigation' | 'actions' | 'search';
-  keywords?: string[];
+  keywords?: string[]
 }
 
 interface CommandPaletteProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: () => void
 }
 
 export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
@@ -41,7 +41,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
   // Create navigation function
   const navigate = (path: string) => {
-    window.location.href = path;
+    window.location.href = path
   };
 
   const commands: Command[] = [
@@ -149,17 +149,17 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       command.label.toLowerCase().includes(searchText) ||
       command.description?.toLowerCase().includes(searchText) ||
       command.keywords?.some(keyword => keyword.includes(searchText))
-    );
-  });
+    )
+  })};
 
   useEffect(() => {
-    setSelectedIndex(0);
+    setSelectedIndex(0)
   }, [query]);
 
   useEffect(() => {
     if (!isOpen) {
       setQuery('');
-      setSelectedIndex(0);
+      setSelectedIndex(0)
     }
   }, [isOpen]);
 
@@ -183,14 +183,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           event.preventDefault();
           if (filteredCommands[selectedIndex]) {
             filteredCommands[selectedIndex].action();
-            onClose();
+            onClose()
           }
-          break;
+          break
       }
     }
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, selectedIndex, filteredCommands, onClose]);
 
   if (!isOpen) return null;
@@ -235,8 +235,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       )}
                       onClick={() => {
                         command.action();
-                        onClose();
-                      }}
+                        onClose()
+          }}
                     >
                       <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
@@ -248,8 +248,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         )}
                       </div>
                     </Button>
-                  );
-                })}
+                  )
+          })}
               </div>
             )}
           </div>
@@ -262,5 +262,5 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

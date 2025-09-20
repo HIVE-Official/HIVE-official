@@ -29,9 +29,9 @@ export interface ConnectRitualProps {
   userProfile?: {
     name: string;
     handle: string;
-    interests: string[];
+    interests: string[]
   };
-  className?: string;
+  className?: string
 }
 
 const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
@@ -76,7 +76,7 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareableLink);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2000)
   };
 
   const handleSendInvite = (method: string) => {
@@ -192,8 +192,8 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
                 </div>
               </div>
             </Card>
-          );
-        })}
+          )
+          })}
       </div>
 
       {/* Social Proof */}
@@ -228,7 +228,7 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
       </div>
 
       <Button
-        onClick={() => onComplete({ invitesSent, inviteCode })}
+        onClick={() => onComplete({ invitesSent, inviteCode }}
         disabled={!isComplete}
         className="w-full bg-hive-gold text-hive-obsidian hover:bg-hive-gold/90"
       >
@@ -236,7 +236,7 @@ const InvitationMethodStep = ({ onComplete, userProfile }: any) => {
         <Sparkles className="h-4 w-4 ml-2" />
       </Button>
     </div>
-  );
+  )
 };
 
 export function RitualConnectWorkflow({ 
@@ -253,7 +253,7 @@ export function RitualConnectWorkflow({
     setConnectData(data);
     onStepComplete?.('friend_invitations', data);
     setIsComplete(true);
-    onRitualComplete?.();
+    onRitualComplete?.()
   };
 
   if (isComplete) {
@@ -308,7 +308,7 @@ export function RitualConnectWorkflow({
           </div>
         </Card>
       </div>
-    );
+    )
   }
 
   return (
@@ -355,5 +355,5 @@ export function RitualConnectWorkflow({
         />
       </Card>
     </div>
-  );
+  )
 }

@@ -30,25 +30,25 @@ interface ProfileAnalytics {
     week: string;
     spacesActive: number;
     toolsUsed: number;
-    timeSpent: number;
+    timeSpent: number
   }>;
   topSpaces: Array<{
     id: string;
     name: string;
     timeSpent: number;
-    engagement: number;
+    engagement: number
   }>;
   topTools: Array<{
     id: string;
     name: string;
     usageCount: number;
-    productivity: number;
+    productivity: number
   }>;
   socialMetrics: {
     connectionsGrowth: number;
     engagementRate: number;
-    helpfulnessScore: number;
-  };
+    helpfulnessScore: number
+  }
 }
 
 interface EnhancedProfileAnalyticsProps {
@@ -56,7 +56,7 @@ interface EnhancedProfileAnalyticsProps {
   isLoading?: boolean;
   timeRange?: 'week' | 'month' | 'semester';
   onTimeRangeChange?: (range: 'week' | 'month' | 'semester') => void;
-  className?: string;
+  className?: string
 }
 
 // Mini chart component for trends
@@ -64,7 +64,7 @@ const MiniChart: React.FC<{
   data: number[]; 
   color: string; 
   height?: number;
-  trend: 'up' | 'down' | 'stable';
+  trend: 'up' | 'down' | 'stable'
 }> = ({ data, color, height = 40, trend }) => {
   const max = Math.max(...data);
   const min = Math.min(...data);
@@ -73,7 +73,7 @@ const MiniChart: React.FC<{
   const points = data.map((value, index) => {
     const x = (index / (data.length - 1)) * 100;
     const y = ((value - min) / range) * height;
-    return `${x},${height - y}`;
+    return `${x},${height - y}`
   }).join(' ');
 
   const trendColor = trend === 'up' ? '#10B981' : trend === 'down' ? '#EF4444' : '#6B7280';
@@ -114,7 +114,7 @@ const MiniChart: React.FC<{
          <Activity className="h-3 w-3" />}
       </div>
     </div>
-  );
+  )
 };
 
 // Metric card component
@@ -126,7 +126,7 @@ const MetricCard: React.FC<{
   color: string;
   trend?: 'up' | 'down' | 'stable';
   chartData?: number[];
-  subtitle?: string;
+  subtitle?: string
 }> = ({ title, value, change, icon: Icon, color, trend, chartData, subtitle }) => (
   <HiveCard className="p-6 h-full">
     <div className="flex items-start justify-between mb-4">
@@ -181,7 +181,7 @@ const ProgressRing: React.FC<{
   size?: number;
   strokeWidth?: number;
   color?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }> = ({ progress, size = 60, strokeWidth = 6, color = '#10B981', children }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -218,7 +218,7 @@ const ProgressRing: React.FC<{
         </div>
       )}
     </div>
-  );
+  )
 };
 
 export const EnhancedProfileAnalytics: React.FC<EnhancedProfileAnalyticsProps> = ({
@@ -248,7 +248,7 @@ export const EnhancedProfileAnalytics: React.FC<EnhancedProfileAnalyticsProps> =
           </div>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   // Calculate derived metrics
@@ -518,7 +518,7 @@ export const EnhancedProfileAnalytics: React.FC<EnhancedProfileAnalyticsProps> =
         </div>
       </motion.div>
     </div>
-  );
+  )
 };
 
 export default EnhancedProfileAnalytics;

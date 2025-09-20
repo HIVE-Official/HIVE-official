@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, RefreshCw, Wifi, WifiOff, Clock } from 'lucide-react';
-import { Card, CardContent } from '../../components/ui/card';
+import { Card, CardContent } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
 
 // Loading state interfaces
@@ -11,7 +11,7 @@ export interface LoadingState {
   isLoading: boolean;
   progress?: number;
   message?: string;
-  stage?: string;
+  stage?: string
 }
 
 export interface ErrorState {
@@ -19,14 +19,14 @@ export interface ErrorState {
   error?: Error | string;
   errorCode?: string;
   isRecoverable?: boolean;
-  retryCount?: number;
+  retryCount?: number
 }
 
 export interface ConnectionState {
   isOnline: boolean;
   isConnected: boolean;
   lastSync?: Date;
-  syncStatus: 'synced' | 'syncing' | 'error' | 'offline';
+  syncStatus: 'synced' | 'syncing' | 'error' | 'offline'
 }
 
 // Simple loading skeleton
@@ -37,7 +37,7 @@ export function DashboardSkeleton({ className = "" }: { className?: string }) {
       <div className="h-32 bg-gray-200 rounded animate-pulse" />
       <div className="h-64 bg-gray-200 rounded animate-pulse" />
     </div>
-  );
+  )
 }
 
 // Widget skeleton
@@ -49,7 +49,7 @@ export function WidgetSkeleton({ className = "" }: { className?: string }) {
         <div className="h-8 bg-gray-200 rounded animate-pulse" />
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Error component
@@ -60,7 +60,7 @@ export function DashboardError({
 }: {
   error: ErrorState;
   onRetry?: () => void;
-  className?: string;
+  className?: string
 }) {
   return (
     <Card className={`dashboard-error ${className}`}>
@@ -78,7 +78,7 @@ export function DashboardError({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Loading progress
@@ -87,7 +87,7 @@ export function LoadingProgress({
   className = ""
 }: {
   state: LoadingState;
-  className?: string;
+  className?: string
 }) {
   return (
     <Card className={`loading-progress ${className}`}>
@@ -108,7 +108,7 @@ export function LoadingProgress({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Connection status
@@ -119,7 +119,7 @@ export function ConnectionStatus({
 }: {
   state: ConnectionState;
   onReconnect?: () => void;
-  className?: string;
+  className?: string
 }) {
   return (
     <Card className={`connection-status ${className}`}>
@@ -143,7 +143,7 @@ export function ConnectionStatus({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Accessibility announcer
@@ -152,7 +152,7 @@ export function AccessibilityAnnouncer({
   type = 'polite'
 }: {
   message: string;
-  type?: 'polite' | 'assertive';
+  type?: 'polite' | 'assertive'
 }) {
   return (
     <div
@@ -163,7 +163,7 @@ export function AccessibilityAnnouncer({
     >
       {message}
     </div>
-  );
+  )
 }
 
 // Empty state
@@ -178,7 +178,7 @@ export function EmptyState({
   title: string;
   description: string;
   action?: React.ReactNode;
-  className?: string;
+  className?: string
 }) {
   return (
     <Card className={`empty-state ${className}`}>
@@ -189,7 +189,7 @@ export function EmptyState({
         {action && <div>{action}</div>}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 export default {

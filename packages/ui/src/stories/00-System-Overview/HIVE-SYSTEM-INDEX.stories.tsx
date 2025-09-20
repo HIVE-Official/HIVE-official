@@ -335,7 +335,7 @@ const HIVESystemIndex = () => {
       yellow: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/20 text-yellow-400',
       gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
     };
-    return colors[color as keyof typeof colors] || colors.blue;
+    return colors[color as keyof typeof colors] || colors.blue
   };
 
   const filteredCategories = systemCategories.filter(category =>
@@ -604,7 +604,7 @@ const HIVESystemIndex = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

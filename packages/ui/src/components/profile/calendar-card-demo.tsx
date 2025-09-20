@@ -80,7 +80,7 @@ const mockData: CalendarCardData = {
 interface CalendarCardDemoProps {
   state?: CalendarCardState;
   variant?: 'desktop' | 'mobile';
-  showActions?: boolean;
+  showActions?: boolean
 }
 
 export const CalendarCardDemo: React.FC<CalendarCardDemoProps> = ({ 
@@ -125,7 +125,7 @@ export const CalendarCardDemo: React.FC<CalendarCardDemoProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };
 
 export default CalendarCardDemo;

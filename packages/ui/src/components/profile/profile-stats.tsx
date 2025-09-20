@@ -18,7 +18,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
           <Loader2 className="h-6 w-6 animate-spin text-[var(--hive-brand-secondary)]" />
         </div>
       </HiveCard>
-    );
+    )
   }
 
   const statItems = [
@@ -180,7 +180,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export default ProfileStats;

@@ -8,8 +8,8 @@
 import React, { useState, useMemo } from 'react';
 import { Tool } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Badge } from '../../atomic/atoms/badge';
 import { 
   BarChart3,
   Users,
@@ -43,7 +43,7 @@ interface ToolUsageData {
     duration?: number; // in seconds
     completedSuccessfully: boolean;
     dataSubmitted?: any;
-    errors?: string[];
+    errors?: string[]
   }>;
   analytics: {
     totalSessions: number;
@@ -55,17 +55,17 @@ interface ToolUsageData {
     dailyUsage: Array<{
       date: string;
       sessions: number;
-      users: number;
+      users: number
     }>;
     hourlyUsage: Array<{
       hour: number;
-      sessions: number;
+      sessions: number
     }>;
     userGrowth: Array<{
       period: string;
       newUsers: number;
-      returningUsers: number;
-    }>;
+      returningUsers: number
+    }>
   };
   feedback: Array<{
     id: string;
@@ -73,14 +73,14 @@ interface ToolUsageData {
     userName: string;
     rating: number;
     comment?: string;
-    timestamp: string;
+    timestamp: string
   }>;
   performance: {
     loadTime: number; // in ms
     renderTime: number; // in ms
     errorFrequency: number;
-    crashes: number;
-  };
+    crashes: number
+  }
 }
 
 interface ToolUsageTrackerProps {
@@ -89,7 +89,7 @@ interface ToolUsageTrackerProps {
   dateRange: '7d' | '30d' | '90d' | '1y';
   onDateRangeChange: (range: '7d' | '30d' | '90d' | '1y') => void;
   onExportData: () => void;
-  userRole: 'admin' | 'moderator' | 'member';
+  userRole: 'admin' | 'moderator' | 'member'
 }
 
 export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
@@ -123,14 +123,14 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
       users: usersTrend,
       completion: analytics.completionRate,
       errors: analytics.errorRate
-    };
+    }
   }, [usageData.analytics]);
 
   // Get trend icon and color
   const getTrendIndicator = (trend: number) => {
     if (trend > 5) return { icon: ArrowUp, color: 'text-green-500' };
     if (trend < -5) return { icon: ArrowDown, color: 'text-red-500' };
-    return { icon: Minus, color: 'text-gray-500' };
+    return { icon: Minus, color: 'text-gray-500' }
   };
 
   // Format duration
@@ -138,12 +138,12 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     if (minutes === 0) return `${remainingSeconds}s`;
-    return `${minutes}m ${remainingSeconds}s`;
+    return `${minutes}m ${remainingSeconds}s`
   };
 
   // Format percentage
   const formatPercentage = (value: number) => {
-    return `${Math.round(value * 100) / 100}%`;
+    return `${Math.round(value * 100) / 100}%`
   };
 
   // Get rating stars
@@ -153,19 +153,19 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
     const hasHalfStar = rating % 1 !== 0;
     
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />);
+      stars.push(<Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />)
     }
     
     if (hasHalfStar) {
-      stars.push(<Star key="half" className="w-3 h-3 fill-yellow-400/50 text-yellow-400" />);
+      stars.push(<Star key="half" className="w-3 h-3 fill-yellow-400/50 text-yellow-400" />)
     }
     
     const emptyStars = 5 - Math.ceil(rating);
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="w-3 h-3 text-gray-400" />);
+      stars.push(<Star key={`empty-${i}`} className="w-3 h-3 text-gray-400" />)
     }
     
-    return stars;
+    return stars
   };
 
   // Check permissions
@@ -231,8 +231,8 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                 <Icon className="w-4 h-4" />
                 <span className="text-sm font-medium">{tab.label}</span>
               </button>
-            );
-          })}
+            )
+          }}
         </div>
       </div>
 
@@ -260,7 +260,7 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                             {Math.abs(trends.sessions).toFixed(1)}%
                           </span>
                         </>
-                      );
+                      )
                     })()}
                   </div>
                 </div>
@@ -284,7 +284,7 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                             {Math.abs(trends.users).toFixed(1)}%
                           </span>
                         </>
-                      );
+                      )
                     })()}
                   </div>
                 </div>
@@ -430,9 +430,9 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
                           </p>
                           <div className="flex items-center space-x-2">
                             {session.completedSuccessfully ? (
-                              <Badge variant="default" className="text-xs">Completed</Badge>
+                              <Badge variant="secondary" className="text-xs">Completed</Badge>
                             ) : session.errors && session.errors.length > 0 ? (
-                              <Badge variant="destructive" className="text-xs">Error</Badge>
+                              <Badge variant="error" className="text-xs">Error</Badge>
                             ) : (
                               <Badge variant="secondary" className="text-xs">Incomplete</Badge>
                             )}
@@ -677,5 +677,5 @@ export const ToolUsageTracker: React.FC<ToolUsageTrackerProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };

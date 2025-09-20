@@ -34,10 +34,10 @@ import {
   Search
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
 // import { UniversalBottomNav } from '../navigation/universal-bottom-nav'; // Component doesn't exist
 import { cn } from '../../lib/utils';
 
@@ -77,7 +77,7 @@ export interface UniversalProfileUser {
     connectionsCount: number;
     totalActivity: number;
     weekStreak: number;
-    reputation: number;
+    reputation: number
   };
   
   // Preferences
@@ -86,8 +86,8 @@ export interface UniversalProfileUser {
     showSpaces: boolean;
     showConnections: boolean;
     allowMessages: boolean;
-    showOnlineStatus: boolean;
-  };
+    showOnlineStatus: boolean
+  }
 }
 
 interface ProfileSpace {
@@ -99,7 +99,7 @@ interface ProfileSpace {
   lastActivity: string;
   isPrivate: boolean;
   color: string;
-  icon?: string;
+  icon?: string
 }
 
 interface ProfileTool {
@@ -113,7 +113,7 @@ interface ProfileTool {
   isCreated: boolean;
   isFavorite: boolean;
   rating?: number;
-  tags: string[];
+  tags: string[]
 }
 
 interface ActivityItem {
@@ -122,7 +122,7 @@ interface ActivityItem {
   title: string;
   description: string;
   timestamp: string;
-  metadata?: any;
+  metadata?: any
 }
 
 interface UniversalProfileSystemProps {
@@ -137,7 +137,7 @@ interface UniversalProfileSystemProps {
   onFollowUser?: () => void;
   onShareProfile?: () => void;
   onPrivacySettings?: () => void;
-  className?: string;
+  className?: string
 }
 
 export function UniversalProfileSystem({
@@ -175,7 +175,7 @@ export function UniversalProfileSystem({
     if (user.stats.connectionsCount > 0) completed++;
     if (user.isVerified) completed++;
     
-    return Math.round((completed / total) * 100);
+    return Math.round((completed / total) * 100)
   };
 
   const completionPercentage = calculateCompletion();
@@ -183,7 +183,7 @@ export function UniversalProfileSystem({
   // Format numbers for display
   const formatNumber = (num: number) => {
     if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
-    return num.toString();
+    return num.toString()
   };
 
   // Get online status color
@@ -192,7 +192,7 @@ export function UniversalProfileSystem({
       case 'online': return 'bg-green-500';
       case 'away': return 'bg-yellow-500';
       case 'busy': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      default: return 'bg-gray-500'
     }
   };
 
@@ -206,7 +206,7 @@ export function UniversalProfileSystem({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -455,7 +455,7 @@ export function UniversalProfileSystem({
       {/* Universal Bottom Navigation */}
       {/* <UniversalBottomNav user={user} /> Component doesn't exist */}
     </div>
-  );
+  )
 }
 
 // Individual Tab Components
@@ -472,7 +472,7 @@ function OverviewTab({
   tools: ProfileTool[];
   recentActivity: ActivityItem[];
   viewMode: 'grid' | 'list';
-  completionPercentage: number;
+  completionPercentage: number
 }) {
   return (
     <div className="space-y-4">
@@ -547,7 +547,7 @@ function OverviewTab({
         </Card>
       </div>
     </div>
-  );
+  )
 }
 
 function SpacesTab({ 
@@ -559,7 +559,7 @@ function SpacesTab({
   spaces: ProfileSpace[];
   viewMode: 'grid' | 'list';
   showAll: boolean;
-  onToggleShowAll: () => void;
+  onToggleShowAll: () => void
 }) {
   return (
     <div className="space-y-4">
@@ -584,7 +584,7 @@ function SpacesTab({
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 function ToolsTab({ 
@@ -596,7 +596,7 @@ function ToolsTab({
   tools: ProfileTool[];
   viewMode: 'grid' | 'list';
   showAll: boolean;
-  onToggleShowAll: () => void;
+  onToggleShowAll: () => void
 }) {
   return (
     <div className="space-y-4">
@@ -621,7 +621,7 @@ function ToolsTab({
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 function ActivityTab({ activity }: { activity: ActivityItem[] }) {
@@ -637,7 +637,7 @@ function ActivityTab({ activity }: { activity: ActivityItem[] }) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Helper Components
@@ -646,7 +646,7 @@ function SpaceCard({ space, compact = false }: { space: ProfileSpace; compact?: 
     switch (role) {
       case 'leader': return 'text-[var(--hive-brand-secondary)] bg-[var(--hive-brand-secondary)]/10';
       case 'moderator': return 'text-purple-400 bg-purple-400/10';
-      default: return 'text-hive-text-secondary bg-hive-surface-elevated';
+      default: return 'text-hive-text-secondary bg-hive-surface-elevated'
     }
   };
 
@@ -667,7 +667,7 @@ function SpaceCard({ space, compact = false }: { space: ProfileSpace; compact?: 
           {space.role}
         </Badge>
       </div>
-    );
+    )
   }
 
   return (
@@ -695,7 +695,7 @@ function SpaceCard({ space, compact = false }: { space: ProfileSpace; compact?: 
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function ToolCard({ tool, compact = false }: { tool: ProfileTool; compact?: boolean }) {
@@ -714,7 +714,7 @@ function ToolCard({ tool, compact = false }: { tool: ProfileTool; compact?: bool
           {tool.isCreated && <Crown className="h-4 w-4 text-[var(--hive-brand-secondary)]" />}
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -744,7 +744,7 @@ function ToolCard({ tool, compact = false }: { tool: ProfileTool; compact?: bool
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function ActivityItem({ activity }: { activity: ActivityItem }) {
@@ -755,7 +755,7 @@ function ActivityItem({ activity }: { activity: ActivityItem }) {
       case 'tool_used': return <Activity className="h-4 w-4 text-green-400" />;
       case 'connection_made': return <UserPlus className="h-4 w-4 text-purple-400" />;
       case 'achievement_earned': return <Award className="h-4 w-4 text-yellow-400" />;
-      default: return <Activity className="h-4 w-4 text-hive-text-secondary" />;
+      default: return <Activity className="h-4 w-4 text-hive-text-secondary" />
     }
   };
 
@@ -773,5 +773,5 @@ function ActivityItem({ activity }: { activity: ActivityItem }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -8,11 +8,11 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Tool } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Checkbox } from '../../components/ui/checkbox';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Label } from '../../atomic/atoms/label';
+import { Checkbox } from '../../atomic/atoms/checkbox';
+import { Badge } from '../../atomic/atoms/badge';
 import { 
   Users,
   Lock,
@@ -48,7 +48,7 @@ interface UserPermission {
   permissions: PermissionAction[];
   grantedBy: string;
   grantedAt: string;
-  expiresAt?: string;
+  expiresAt?: string
 }
 
 interface RolePermission {
@@ -57,8 +57,8 @@ interface RolePermission {
   restrictions?: {
     timeLimit?: number; // minutes
     usageLimit?: number; // uses per day/week
-    requireApproval?: boolean;
-  };
+    requireApproval?: boolean
+  }
 }
 
 interface ToolPermissionConfig {
@@ -73,14 +73,14 @@ interface ToolPermissionConfig {
     allowAnonymous?: boolean;
     requireApproval?: boolean;
     allowSharing?: boolean;
-    trackUsage: boolean;
+    trackUsage: boolean
   };
   schedule?: {
     enabled: boolean;
     allowedHours?: { start: string; end: string };
     allowedDays?: string[];
-    timezone?: string;
-  };
+    timezone?: string
+  }
 }
 
 interface ToolPermissionsManagerProps {
@@ -92,12 +92,12 @@ interface ToolPermissionsManagerProps {
     handle: string;
     avatar?: string;
     role: 'admin' | 'moderator' | 'member';
-    joinedAt: string;
+    joinedAt: string
   }>;
   onConfigChange: (config: ToolPermissionConfig) => void;
   onSave: (config: ToolPermissionConfig) => Promise<void>;
   userRole: 'admin' | 'moderator' | 'member';
-  isLoading?: boolean;
+  isLoading?: boolean
 }
 
 export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
@@ -139,7 +139,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
   const updateConfig = useCallback((updates: Partial<ToolPermissionConfig>) => {
     const newConfig = { ...config, ...updates };
     setConfig(newConfig);
-    onConfigChange(newConfig);
+    onConfigChange(newConfig)
   }, [config, onConfigChange]);
 
   // Update role permissions
@@ -149,10 +149,10 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
     );
     
     if (!newRolePermissions.find(rp => rp.role === role)) {
-      newRolePermissions.push({ role, permissions, restrictions });
+      newRolePermissions.push({ role, permissions, restrictions })
     }
 
-    updateConfig({ rolePermissions: newRolePermissions });
+    updateConfig({ rolePermissions: newRolePermissions })
   }, [config.rolePermissions, updateConfig]);
 
   // Add user permission
@@ -173,25 +173,25 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
     updateConfig({ 
       userPermissions: [...config.userPermissions.filter(up => up.userId !== userId), newUserPermission] 
     });
-    setShowAddUser(false);
+    setShowAddUser(false)
   }, [spaceMembers, config.userPermissions, updateConfig]);
 
   // Remove user permission
   const removeUserPermission = useCallback((userId: string) => {
     updateConfig({ 
       userPermissions: config.userPermissions.filter(up => up.userId !== userId) 
-    });
+    })
   }, [config.userPermissions, updateConfig]);
 
   // Handle save
   const handleSave = useCallback(async () => {
     setSaving(true);
     try {
-      await onSave(config);
+      await onSave(config)
     } catch (error) {
-      console.error('Failed to save permissions:', error);
+      console.error('Failed to save permissions:', error)
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
   }, [config, onSave]);
 
@@ -202,12 +202,12 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
       (searchQuery === '' || 
        member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
        member.handle.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    )
   }, [spaceMembers, config.userPermissions, searchQuery]);
 
   // Get role permissions
   const getRolePermissions = useCallback((role: 'admin' | 'moderator' | 'member') => {
-    return config.rolePermissions.find(rp => rp.role === role)?.permissions || [];
+    return config.rolePermissions.find(rp => rp.role === role)?.permissions || []
   }, [config.rolePermissions]);
 
   if (isLoading) {
@@ -217,7 +217,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
           <div className="w-8 h-8 bg-[var(--hive-primary)] rounded-lg animate-pulse" />
         </div>
       </HiveCard>
-    );
+    )
   }
 
   return (
@@ -285,8 +285,8 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                 <Icon className="w-4 h-4" />
                 <span className="text-sm font-medium">{tab.label}</span>
               </button>
-            );
-          })}
+            )
+          }}
         </div>
       </div>
 
@@ -309,7 +309,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                   </div>
                   <Checkbox
                     checked={config.isPublic}
-                    onCheckedChange={(checked) => updateConfig({ isPublic: !!checked })}
+                    onChange={(e) => { const checked = e.target.checked; updateConfig({ isPublic: !!checked }}}
                     disabled={!canModifyPermissions}
                   />
                 </div>
@@ -323,9 +323,9 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                   </div>
                   <Checkbox
                     checked={config.restrictions.trackUsage}
-                    onCheckedChange={(checked) => updateConfig({ 
+                    onChange={(e) => { const checked = e.target.checked; updateConfig({ 
                       restrictions: { ...config.restrictions, trackUsage: !!checked }
-                    })}
+          })}
                     disabled={!canModifyPermissions}
                   />
                 </div>
@@ -339,9 +339,9 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                   </div>
                   <Checkbox
                     checked={config.restrictions.allowSharing}
-                    onCheckedChange={(checked) => updateConfig({ 
+                    onChange={(e) => { const checked = e.target.checked; updateConfig({ 
                       restrictions: { ...config.restrictions, allowSharing: !!checked }
-                    })}
+          })}
                     disabled={!canModifyPermissions}
                   />
                 </div>
@@ -385,18 +385,18 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                         </div>
                         <Checkbox
                           checked={isGranted}
-                          onCheckedChange={(checked) => {
+                          onChange={(e) => { const checked = e.target.checked; {
                             const newPermissions = checked
                               ? [...config.defaultPermissions, action.key]
                               : config.defaultPermissions.filter(p => p !== action.key);
-                            updateConfig({ defaultPermissions: newPermissions });
-                          }}
+                            updateConfig({ defaultPermissions: newPermissions })
+          })}
                           disabled={!canModifyPermissions}
                         />
                       </div>
                     </div>
-                  );
-                })}
+                  )
+          }}
               </div>
             </HiveCard>
           </div>
@@ -435,8 +435,8 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                             const newPermissions = isGranted
                               ? permissions.filter(p => p !== action.key)
                               : [...permissions, action.key];
-                            updateRolePermissions(role.key, newPermissions);
-                          }}
+                            updateRolePermissions(role.key, newPermissions)
+          }}
                           disabled={!canModifyPermissions}
                           className={`p-3 rounded-lg border transition-all duration-200 text-left ${
                             isGranted
@@ -450,12 +450,12 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                             {isGranted && <CheckCircle className="w-4 h-4 ml-auto" />}
                           </div>
                         </button>
-                      );
-                    })}
+                      )
+          })}
                   </div>
                 </HiveCard>
-              );
-            })}
+              )
+          })}
           </div>
         )}
 
@@ -542,7 +542,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                       </h3>
                       <Button variant="ghost" onClick={() => {
                         setShowAddUser(false);
-                        setSearchQuery('');
+                        setSearchQuery('')
                       }}>
                         <X className="w-4 h-4" />
                       </Button>
@@ -624,7 +624,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                       ...config.restrictions,
                       maxConcurrentUsers: e.target.value ? parseInt(e.target.value) : undefined
                     }
-                  })}
+          })}
                   placeholder="No limit"
                   disabled={!canModifyPermissions}
                   className="mt-1"
@@ -643,9 +643,9 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                 </div>
                 <Checkbox
                   checked={config.restrictions.allowAnonymous}
-                  onCheckedChange={(checked) => updateConfig({
+                  onChange={(e) => { const checked = e.target.checked; updateConfig({
                     restrictions: { ...config.restrictions, allowAnonymous: !!checked }
-                  })}
+          })}
                   disabled={!canModifyPermissions}
                 />
               </div>
@@ -659,9 +659,9 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                 </div>
                 <Checkbox
                   checked={config.restrictions.requireApproval}
-                  onCheckedChange={(checked) => updateConfig({
+                  onChange={(e) => { const checked = e.target.checked; updateConfig({
                     restrictions: { ...config.restrictions, requireApproval: !!checked }
-                  })}
+          })}
                   disabled={!canModifyPermissions}
                 />
               </div>
@@ -685,9 +685,9 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                 </div>
                 <Checkbox
                   checked={config.schedule?.enabled || false}
-                  onCheckedChange={(checked) => updateConfig({
+                  onChange={(e) => { const checked = e.target.checked; updateConfig({
                     schedule: { ...config.schedule, enabled: !!checked }
-                  })}
+          })}
                   disabled={!canModifyPermissions}
                 />
               </div>
@@ -710,7 +710,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                               end: config.schedule?.allowedHours?.end || '23:59'
                             }
                           }
-                        })}
+          })}
                         disabled={!canModifyPermissions}
                         className="mt-1"
                       />
@@ -731,7 +731,7 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                               ...config.schedule?.allowedHours
                             }
                           }
-                        })}
+          })}
                         disabled={!canModifyPermissions}
                         className="mt-1"
                       />
@@ -756,8 +756,8 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                                 : [...currentDays, dayValue];
                               updateConfig({
                                 schedule: { ...config.schedule, allowedDays: newDays }
-                              });
-                            }}
+                              })
+          })}
                             disabled={!canModifyPermissions}
                             className={`p-2 text-sm rounded-lg border transition-colors ${
                               isSelected
@@ -767,8 +767,8 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
                           >
                             {day}
                           </button>
-                        );
-                      })}
+                        )
+          })
                     </div>
                   </div>
                 </div>
@@ -793,5 +793,5 @@ export const ToolPermissionsManager: React.FC<ToolPermissionsManagerProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };

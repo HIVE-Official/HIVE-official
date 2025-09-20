@@ -198,8 +198,8 @@ export const ProgressBarVariants: Story = {
                     </div>
                   )}
                 </div>
-              );
-            })}
+              )
+            })
           </div>
         </div>
       ))}
@@ -345,11 +345,11 @@ export const InteractiveProgressDemo: Story = {
           if (prev >= 100) {
             clearInterval(interval);
             setIsLoading(false);
-            return 100;
+            return 100
           }
-          return prev + Math.random() * 15;
-        });
-      }, 200);
+          return prev + Math.random() * 15
+        })
+      }, 200)
     };
 
     const campusOperations = [
@@ -387,8 +387,8 @@ export const InteractiveProgressDemo: Story = {
                     <div className="text-sm text-gray-600">~{operation.estimatedTime}</div>
                   </div>
                 </button>
-              );
-            })}
+              )
+            })
           </div>
 
           {(isLoading || progress > 0) && (
@@ -425,6 +425,6 @@ export const InteractiveProgressDemo: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

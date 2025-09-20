@@ -31,14 +31,14 @@ export interface CalendarEvent {
   location?: string;
   participants?: number;
   isRecurring?: boolean;
-  status: 'confirmed' | 'tentative' | 'completed';
+  status: 'confirmed' | 'tentative' | 'completed'
 }
 
 export interface ProfileCalendarWidgetProps {
   user: {
     id: string;
     name: string;
-    timezone?: string;
+    timezone?: string
   };
   todayEvents?: CalendarEvent[];
   upcomingEvents?: CalendarEvent[];
@@ -51,7 +51,7 @@ export interface ProfileCalendarWidgetProps {
   onViewCalendar?: () => void;
   onEditEvent?: (eventId: string) => void;
   onUpdateAvailability?: () => void;
-  className?: string;
+  className?: string
 }
 
 const getEventTypeConfig = (type: string) => {
@@ -93,7 +93,7 @@ const getEventTypeConfig = (type: string) => {
     }
   };
   
-  return configs[type as keyof typeof configs] || configs.personal;
+  return configs[type as keyof typeof configs] || configs.personal
 };
 
 const getAvailabilityConfig = (status: string) => {
@@ -130,7 +130,7 @@ const getAvailabilityConfig = (status: string) => {
     }
   };
   
-  return configs[status as keyof typeof configs] || configs.offline;
+  return configs[status as keyof typeof configs] || configs.offline
 };
 
 export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
@@ -161,7 +161,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
       hour: 'numeric',
       minute: '2-digit',
       hour12: true
-    });
+    })
   };
 
   return (
@@ -261,7 +261,7 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
                     return <IconComponent className={cn(
                       'h-4 w-4 mt-0.5 flex-shrink-0',
                       getEventTypeConfig(nextEvent.type).color
-                    )} />;
+                    )} />
                   })()}
                   <div className="min-w-0 flex-1">
                     <Text variant="body-sm" weight="medium" color="primary" className="truncate">
@@ -337,8 +337,8 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
                       <CheckCircle2 className="h-3 w-3 text-green-500" />
                     )}
                   </div>
-                );
-              })}
+                )
+          })}
               {todayEvents.length > 3 && (
                 <div className="text-center pt-1">
                   <Text variant="body-xs" color="secondary">
@@ -393,5 +393,5 @@ export const ProfileCalendarWidget: React.FC<ProfileCalendarWidgetProps> = ({
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/5 to-[var(--hive-gold)]/5 rounded-lg blur-xl" />
       )}
     </Card>
-  );
+  )
 };

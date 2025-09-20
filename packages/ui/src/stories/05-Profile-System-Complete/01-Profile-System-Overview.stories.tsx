@@ -436,7 +436,7 @@ function FlowNavigation({
   onFlowChange 
 }: { 
   currentFlow: string; 
-  onFlowChange: (flow: string) => void; 
+  onFlowChange: (flow: string) => void 
 }) {
   const flows = [
     { 
@@ -511,10 +511,10 @@ function FlowNavigation({
               </CardContent>
             </Card>
           </motion.div>
-        );
-      })}
+        )
+      })
     </div>
-  );
+  )
 }
 
 // User Flow Stats Component
@@ -571,7 +571,7 @@ function FlowStats({ profile }: { profile: any }) {
         </Card>
       ))}
     </div>
-  );
+  )
 }
 
 // Helper function to calculate profile completion
@@ -588,7 +588,7 @@ function calculateProfileCompletion(profile: any) {
   if (profile.tools?.length > 0) completed++;
   if (profile.user.builderStatus) completed++;
   
-  return Math.round((completed / total) * 100);
+  return Math.round((completed / total) * 100)
 }
 
 // Main Story Component
@@ -602,7 +602,7 @@ export const CompleteUserFlows: StoryObj = {
         case 'onboarding': return newStudentProfile;
         case 'active': return activeStudentProfile;
         case 'builder': return builderProfile;
-        default: return activeStudentProfile;
+        default: return activeStudentProfile
       }
     };
 
@@ -725,7 +725,7 @@ export const CompleteUserFlows: StoryObj = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

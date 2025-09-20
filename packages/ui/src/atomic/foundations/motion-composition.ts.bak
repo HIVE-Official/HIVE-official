@@ -1,0 +1,398 @@
+/**
+ * HIVE Motion Composition System - PRODUCTION READY
+ * Apple-like, tech sleek motion for social platform
+ * 
+ * Web-first approach with mobile readiness.
+ * Two-tier animation system: Fast interactions + Ultra-slow liquid morphing
+ * 
+ * Status: ✅ COMPLETE - See MOTION_SYSTEM_COMPLETE.md for full documentation
+ * Version: v1.0.0
+ * Date: August 26, 2025
+ */
+
+// === CORE MOTION PRINCIPLES ===
+export const motionPrinciples: Record<string, unknown> = {
+  philosophy: "Apple-like tech sleek motion for social interactions",
+        rules: [
+    "Respect prefers-reduced-motion universally", 
+    "GPU-accelerated transforms only",
+    "Purposeful motion that enhances social context",
+    "Web-first with mobile readiness"
+  ]
+} as const;
+
+// === DURATION SYSTEM ===
+export const durationSystem: Record<string, unknown> = {
+  // Apple-like timing - clean and purposeful micro: {
+    value: 'var(--hive-duration-instant)',      // 100ms - matches design-tokens.css use: 'Button press feedback, toggle states',
+    ms: '100ms'
+  }
+  
+  fast: {
+    value: 'var(--hive-duration-fast)',         // 150ms - matches design-tokens.css use: 'Hover states, focus transitions',
+    ms: '150ms'
+  }
+  
+  standard: {
+    value: 'var(--hive-duration-base)',         // 200ms - matches design-tokens.css use: 'Card expansions, modal appearances',
+    ms: '200ms'
+  }
+  
+  deliberate: {
+    value: 'var(--hive-duration-slow)',         // 300ms - matches design-tokens.css use: 'Page transitions, important state changes',
+    ms: '300ms'
+  }
+  
+  cinematic: {
+    value: 'var(--hive-duration-slower)',       // 500ms - matches design-tokens.css use: 'Onboarding, major workflow completions',
+    ms: '500ms'
+  }
+
+  // === MORPHING SYSTEM === morphing: {
+    subtle: {
+      value: '700ms',
+      use: 'Ghost button radius changes, subtle shape morphing'
+    }
+    standard: {
+      value: '800ms', 
+      use: 'Primary button radius changes, standard morphing'
+    }
+    deliberate: {
+      value: '1000ms',
+      use: 'Share button morphing, social interaction shapes'
+    }
+    cinematic: {
+      value: '1200ms',
+      use: 'Card border-radius morphing, major shape changes'
+    }
+    liquid: {
+      value: '2000ms',
+      use: 'Ultra-slow liquid card morphing, organic transformations'
+    }
+  }
+} as const;
+
+// === SPRING PHYSICS SYSTEM ===
+export const springPhysics: Record<string, unknown> = {
+  // HIVE's distinctive liquid feel - spring-based motion gentle: {
+    tension: 120,
+    friction: 14,
+    description: 'Subtle spring - gentle interactions',
+    use: ['Button hovers', 'Card lifts', 'Micro-interactions'],
+    cssApproximation: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+  }
+  
+  bouncy: {
+    tension: 200,
+    friction: 12,
+    description: 'Bouncy spring - social feedback',
+    use: ['Like animations', 'Social actions', 'Success states'],
+    cssApproximation: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+  }
+  
+  fluid: {
+    tension: 300,
+    friction: 25,
+    description: 'Fluid spring - smooth content motion',
+    use: ['Modal appearances', 'Page transitions', 'Content reveals'],
+    cssApproximation: 'cubic-bezier(0.23, 1, 0.32, 1)'
+  }
+  
+  liquid: {
+    tension: 400,
+    friction: 30,
+    description: 'Liquid spring - organic feeling motion',
+    use: ['Drag interactions', 'Complex animations', 'Organic responses'],
+    cssApproximation: 'cubic-bezier(0.175, 0.885, 0.32, 1)'
+  }
+
+  snap: {
+    tension: 500,
+    friction: 20,
+    description: 'Snappy spring - immediate response',
+    use: ['Quick actions', 'Toggle states', 'Immediate feedback'],
+    cssApproximation: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+  }
+} as const;
+
+// === LIQUID MOTION PATTERNS ===
+export const liquidMotion: Record<string, unknown> = {
+  // Distinctive HIVE motion language ripple: {
+    description: 'Liquid ripple effect from interaction point',
+    animation: 'Expanding circle with spring physics',
+    use: ['Button presses', 'Touch feedback', 'Social actions']
+  }
+  
+  morphBlob: {
+    description: 'Organic shape morphing',
+    animation: 'CSS clip-path with spring transitions',
+    use: ['Loading states', 'Background elements', 'Hover effects']
+  }
+  
+  fluidScale: {
+    description: 'Non-uniform scaling that feels organic',
+    animation: 'Different scale values on X/Y with spring physics',
+    use: ['Card interactions', 'Image reveals', 'Content emphasis']
+  }
+  
+  liquidFlow: {
+    description: 'Content flows like liquid between states',
+    animation: 'Staggered spring animations with varying delays',
+    use: ['List animations', 'Page transitions', 'Content reveals']
+  }
+} as const;
+
+// === LIQUID COMPONENT MOTION ===
+export const componentMotion: Record<string, unknown> = {
+  button: {
+    idle: {
+      transform: 'scale(1)',
+      borderRadius: 'var(--hive-radius-base)'
+    }
+    hover: {
+      transform: 'scale(1.02) translateY(-1px)',
+      borderRadius: 'calc(var(--hive-radius-base) * 1.2)',
+      spring: springPhysics.gentle,
+      ripple: liquidMotion.ripple
+    }
+    press: {
+      transform: 'scale(0.98) scaleX(1.02)',  // Organic squish borderRadius: 'calc(var(--hive-radius-base) * 0.8)'      spring: springPhysics.snap,
+      duration: durationSystem.micro.value
+    }
+    release: {
+      transform: 'scale(1.05) scaleX(0.98)',  // Spring back overshoot spring: springPhysics.bouncy      duration: durationSystem.fast.value
+    }
+  }
+
+  card: {
+    idle: {
+      transform: 'scale(1)',
+      borderRadius: 'var(--hive-radius-lg)',
+      clipPath: 'inset(0% 0% 0% 0% round var(--hive-radius-lg))'
+    }
+    hover: {
+      transform: 'scale(1.02) translateY(-4px) rotateX(2deg)',
+      borderRadius: 'calc(var(--hive-radius-lg) * 1.1)',
+      clipPath: 'inset(0% 0% 0% 0% round calc(var(--hive-radius-lg) * 1.1))',
+      shadow: 'var(--hive-shadow-xl)',
+      spring: springPhysics.fluid
+    }
+    press: {
+      transform: 'scale(0.98) translateY(-1px)',
+      spring: springPhysics.snap
+    }
+    morphOnLoad: {
+      clipPath: [
+        'inset(50% 50% 50% 50% round 50%)',  // Start as circle
+        'inset(0% 0% 0% 0% round var(--hive-radius-lg))'  // Morph to card
+      ],
+      spring: springPhysics.liquid,
+      duration: durationSystem.deliberate.value
+    }
+  }
+
+  modal: {
+    backdrop: {
+      opacity: 'from 0 to 1',
+      backdropFilter: 'blur(from 0px to 20px)',
+      spring: springPhysics.fluid
+    }
+    content: {
+      opacity: 'from 0 to 1',
+      transform: [
+        'scale(0.8) translateY(20px)',  // Start smaller and lower
+        'scale(1.05) translateY(-5px)', // Overshoot
+        'scale(1) translateY(0px)'      // Settle
+      ],
+      borderRadius: [
+        'calc(var(--hive-radius-xl) * 2)',  // Start very rounded
+        'var(--hive-radius-xl)'             // Settle to normal
+      ],
+      spring: springPhysics.bouncy,
+      stagger: '50ms'
+    }
+  }
+
+  navigation: {
+    pageTransition: {
+      exit: {
+        opacity: 'from 1 to 0',
+        transform: 'translateX(from 0 to -20px)',
+        duration: durationSystem.fast.value,
+        easing: springPhysics.gentle.cssApproximation
+      }
+      enter: {
+        opacity: 'from 0 to 1',
+        transform: 'translateX(from 20px to 0)',
+        duration: durationSystem.standard.value,
+        easing: springPhysics.liquid.cssApproximation
+      }
+    }
+    mobileSwipe: {
+      gesture: {
+        transform: 'translateX(var(--gesture-x))',
+        duration: '0ms', // Real-time during gesture easing: 'linear'
+      }
+      snap: {
+        duration: durationSystem.fast.value,
+        easing: springPhysics.snap.cssApproximation
+      }
+    }
+  }
+} as const;
+
+// === LIQUID SOCIAL INTERACTIONS ===
+export const socialMotion: Record<string, unknown> = {
+  // Distinctive social feedback with liquid physics like: {
+    sequence: [
+      { transform: 'scale(0.8)', spring: springPhysics.snap },
+      { transform: 'scale(1.3) rotate(5deg)', spring: springPhysics.bouncy },
+      { transform: 'scale(1) rotate(0deg)', spring: springPhysics.fluid }
+    ],
+    rippleEffect: {
+      clipPath: 'circle(0% at 50% 50%)',
+      clipPathEnd: 'circle(150% at 50% 50%)',
+      spring: springPhysics.liquid
+    }
+    stagger: '100ms'
+  }
+
+  share: {
+    morph: {
+      borderRadius: [
+        'var(--hive-radius-base)',
+        'calc(var(--hive-radius-base) * 3)',
+        'var(--hive-radius-base)'
+      ],
+      transform: [
+        'scale(1)',
+        'scale(1.1) scaleX(0.9)',
+        'scale(1)'
+      ],
+      spring: springPhysics.fluid
+    }
+    pulse: liquidMotion.ripple
+  }
+
+  connect: {
+    celebration: {
+      transform: [
+        'scale(1) rotate(0deg)',
+        'scale(1.2) rotate(10deg) translateY(-10px)',
+        'scale(0.95) rotate(-5deg) translateY(5px)',
+        'scale(1) rotate(0deg) translateY(0px)'
+      ],
+      spring: springPhysics.bouncy,
+      duration: durationSystem.cinematic.value
+    }
+    particles: 'Burst effect with staggered spring physics'
+  }
+
+  comment: {
+    appear: {
+      clipPath: [
+        'inset(0% 100% 0% 0%)',  // Slide in from right
+        'inset(0% 0% 0% 0%)'
+      ],
+      spring: springPhysics.fluid,
+      stagger: '150ms'
+    }
+    typing: {
+      transform: 'scaleY(0.95) scaleX(1.02)',
+      spring: springPhysics.gentle,
+      repeat: 'infinite',
+      repeatDelay: '800ms'
+    }
+  }
+
+  notifications: {
+    liquidDrop: {
+      clipPath: [
+        'circle(10% at 90% 20%)',  // Start as small drop
+        'circle(120% at 50% 50%)'  // Expand to full notification
+      ],
+      spring: springPhysics.liquid,
+      backdropFilter: 'blur(0px) to blur(10px)'
+    }
+    
+    bounce: {
+      transform: [
+        'translateY(-100%) scale(0.8)',
+        'translateY(10px) scale(1.1)',
+        'translateY(0px) scale(1)'
+      ],
+      spring: springPhysics.bouncy
+    }
+  }
+} as const;
+
+// === PERFORMANCE MOTION ===
+export const performanceMotion: Record<string, unknown> = {
+  optimization: {
+    gpuAcceleration: [
+      'transform: translateZ(0)', // Force GPU layer
+      'will-change: transform, opacity', // Optimize for known changes
+      'backface-visibility: hidden' // Prevent flickering
+    ],
+    
+    avoidance: [
+      'Never animate: width, height, padding, margin',
+      'Never animate: box-shadow directly (use pseudo-elements)',
+      'Never animate: border-width, font-size'
+    ],
+    
+    preferred: [
+      'transform: translate3d(), scale(), rotate()',
+      'opacity: 0 to 1',
+      'clip-path for complex reveals'
+    ]
+  }
+
+  budgets: {
+    mobileCPU: '16ms per frame (60fps)',
+    animationLimit: 'Maximum 3 concurrent animations',
+    memoryUsage: 'Auto-cleanup after animation complete'
+  }
+} as const;
+
+// === ACCESSIBILITY MOTION ===
+export const accessibilityMotion: Record<string, unknown> = {
+  reducedMotionSupport: {
+    respectPreference: 'prefers-reduced-motion: reduce',
+    fallbacks: {
+      animations: 'Instant state changes',
+      transitions: 'Crossfade only',
+      parallax: 'Static positioning',
+      autoplay: 'Disabled completely'
+    }
+  }
+
+  vestigialMotion: {
+    description: 'Minimal motion that preserves UX even with reduced-motion',
+    allowed: [
+      'Focus ring appearance',
+      'Loading state indication',
+      'Error state feedback',
+      'Form validation signals'
+    ],
+    implementation: 'duration: 100ms, easing: ease-out'
+  }
+} as const;
+
+// === COMPREHENSIVE EXPORT ===
+export const motionComposition: Record<string, unknown> = {
+  principles: motionPrinciples,
+  durations: durationSystem,
+  springs: springPhysics,
+  liquid: liquidMotion,
+  components: componentMotion,
+  social: socialMotion,
+  performance: performanceMotion,
+  accessibility: accessibilityMotion
+} as const;
+
+export type MotionComposition = typeof motionComposition;
+export type SpringPhysics = typeof springPhysics;
+export type LiquidMotion = typeof liquidMotion;
+export type ComponentMotion = typeof componentMotion;
+export type SocialMotion = typeof socialMotion;

@@ -21,7 +21,7 @@ import {
 export interface LockedFeedSkeletonProps {
   activationDate?: Date;
   currentRitualProgress?: number;
-  className?: string;
+  className?: string
 }
 
 export function LockedFeedSkeleton({ 
@@ -49,11 +49,11 @@ export function LockedFeedSkeleton({
           hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
           minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((difference % (1000 * 60)) / 1000)
-        });
+        })
       }
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => clearInterval(timer)
   }, [activationDate]);
 
   const mockPosts = [
@@ -94,7 +94,7 @@ export function LockedFeedSkeleton({
       case 'space_event': return Calendar;
       case 'tool_success': return Target;
       case 'community_post': return MessageCircle;
-      default: return Hash;
+      default: return Hash
     }
   };
 
@@ -236,7 +236,7 @@ export function LockedFeedSkeleton({
                   </div>
                 </div>
               </Card>
-            );
+            )
           })}
         </div>
 
@@ -296,5 +296,5 @@ export function LockedFeedSkeleton({
         </div>
       </Card>
     </div>
-  );
+  )
 }

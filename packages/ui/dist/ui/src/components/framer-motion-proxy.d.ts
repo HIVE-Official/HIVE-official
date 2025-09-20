@@ -41,4 +41,8 @@ export declare const useTransform: (motionValue: any, input?: any, output?: any)
 };
 export declare const MotionSpan: (props: any) => import("react/jsx-runtime").JSX.Element;
 export declare const MotionSection: (props: any) => import("react/jsx-runtime").JSX.Element;
+export declare const Reorder: {
+    Group: ({ children, ...props }: any) => import("react/jsx-runtime").JSX.Element;
+    Item: ({ children, ...props }: any) => import("react/jsx-runtime").JSX.Element;
+};
 //# sourceMappingURL=framer-motion-proxy.d.ts.map

@@ -4,7 +4,6 @@ import React from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 import { Camera, Crown, Shield, EyeOff, Upload } from 'lucide-react';
-import Image from 'next/image';
 const profileAvatarVariants = cva("relative flex-shrink-0 bg-[var(--hive-background-secondary)] border-[var(--hive-border-primary)] overflow-hidden", {
     variants: {
         size: {
@@ -161,20 +160,7 @@ export function ProfileAvatar({ src, alt, name, isBuilder = false, isVerified = 
             onEdit();
         }
     };
-    // Get avatar size for Next.js Image
-    const getAvatarSize = () => {
-        const sizeMap = {
-            xs: 32,
-            sm: 48,
-            md: 64,
-            lg: 80,
-            xl: 96,
-            xxl: 128
-        };
-        return sizeMap[size];
-    };
-    return (_jsxs("div", { className: cn(profileAvatarVariants({ size, shape, border: determinedBorder, status: determinedStatus }), "group cursor-pointer transition-all duration-200", editable && "hover:brightness-110 hover:scale-105", className), onClick: editable ? handleClick : undefined, ...props, children: [loading ? (_jsx("div", { className: "w-full h-full bg-[var(--hive-background-secondary)] animate-pulse" })) : src ? (_jsx(Image, { src: src, alt: alt || `${name}'s profile`, width: getAvatarSize(), height: getAvatarSize(), className: "w-full h-full object-cover", loading: "lazy", onError: () => {
-                    // Image loading error will be handled by Next.js
+    return (_jsxs("div", { className: cn(profileAvatarVariants({ size, shape, border: determinedBorder, status: determinedStatus }), "group cursor-pointer transition-all duration-200", editable && "hover:brightness-110 hover:scale-105", className), onClick: editable ? handleClick : undefined, ...props, children: [loading ? (_jsx("div", { className: "w-full h-full bg-[var(--hive-background-secondary)] animate-pulse" })) : src ? (_jsx("img", { src: src, alt: alt || `${name}'s profile`, className: "w-full h-full object-cover", loading: "lazy", onError: () => {
                     console.warn(`Failed to load avatar image: ${src}`);
                 } })) : (_jsx("div", { className: "w-full h-full bg-gradient-to-br from-[var(--hive-brand-gold)]/20 to-[var(--hive-brand-secondary)]/20 flex items-center justify-center", children: _jsx("span", { className: cn("font-bold text-[var(--hive-text-primary)]", textSize), children: initials }) })), src && (_jsx("div", { className: "absolute inset-0 bg-gradient-to-br from-[var(--hive-brand-gold)]/20 to-[var(--hive-brand-secondary)]/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity", children: _jsx("span", { className: cn("font-bold text-[var(--hive-text-primary)]", textSize), children: initials }) })), showStatus && (_jsx("div", { className: cn(statusDotVariants({ size, status: determinedStatus })) })), showBadges && (_jsxs(_Fragment, { children: [isBuilder && (_jsx("div", { className: cn(badgeVariants({ size, type: "builder" })), children: _jsx(Crown, { className: iconSize }) })), isVerified && !isBuilder && (_jsx("div", { className: cn(badgeVariants({ size, type: "verified" })), children: _jsx(Shield, { className: iconSize }) })), ghostMode && !isBuilder && !isVerified && (_jsx("div", { className: cn(badgeVariants({ size, type: "ghost" })), children: _jsx(EyeOff, { className: iconSize }) }))] })), editable && (_jsxs(_Fragment, { children: [_jsx("div", { className: "absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center", children: _jsxs("div", { className: "flex flex-col items-center space-y-1 text-white", children: [_jsx(Camera, { className: cn("text-white", iconSize) }), _jsx("span", { className: "text-xs font-medium hidden sm:block", children: onUpload ? 'Upload' : 'Edit' })] }) }), onUpload && (_jsxs(_Fragment, { children: [_jsx("input", { ref: fileInputRef, type: "file", accept: "image/*", onChange: handleFileChange, className: "hidden", "aria-label": "Upload profile photo" }), _jsx("button", { onClick: triggerUpload, className: "absolute -bottom-2 -right-2 w-6 h-6 bg-[var(--hive-brand-primary)] rounded-full border-2 border-[var(--hive-background-primary)] flex items-center justify-center hover:scale-110 transition-transform sm:hidden", "aria-label": "Upload profile photo", children: _jsx(Upload, { className: "w-3 h-3 text-[var(--hive-background-primary)]" }) })] }))] })), ghostMode && (_jsx("div", { className: "absolute inset-0 bg-[var(--hive-text-muted)]/20 flex items-center justify-center", children: _jsx(EyeOff, { className: cn("text-[var(--hive-text-muted)]", iconSize) }) }))] }));
 }

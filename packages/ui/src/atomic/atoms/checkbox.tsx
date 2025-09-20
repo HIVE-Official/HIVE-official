@@ -10,7 +10,7 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
   error?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'card';
-  indeterminate?: boolean;
+  indeterminate?: boolean
 }
 
 const checkboxSizes = {
@@ -49,7 +49,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
 
   React.useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.indeterminate = indeterminate;
+      inputRef.current.indeterminate = indeterminate
     }
   }, [indeterminate]);
 
@@ -160,7 +160,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
         </div>
       )}
     </label>
-  );
+  )
 });
 
 Checkbox.displayName = 'Checkbox';

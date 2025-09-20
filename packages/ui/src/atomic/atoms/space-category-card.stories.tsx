@@ -323,7 +323,7 @@ export const CompleteShowcase: Story = {
                             ...SPACE_CATEGORIES.university,
                             count: 247,
                             examples: ['CSE 331', 'CSE 250', 'Engineering College'],
-                          }}
+          }}
                           onClick={action('academic-discovery')}
                         />
                       </div>
@@ -342,7 +342,7 @@ export const CompleteShowcase: Story = {
                             ...SPACE_CATEGORIES.student,
                             count: 156,
                             examples: ['Algorithm Study Group', 'CS Project Teams', 'Programming Club'],
-                          }}
+          }}
                           onClick={action('study-group-discovery')}
                         />
                       </div>
@@ -375,7 +375,7 @@ export const CompleteShowcase: Story = {
                           ...SPACE_CATEGORIES.residential,
                           count: 89,
                           examples: ['Ellicott Complex', 'Governors Floor 8', 'South Campus'],
-                        }}
+          }}
                         onClick={action('residential-discovery')}
                       />
                     </div>
@@ -394,7 +394,7 @@ export const CompleteShowcase: Story = {
                           ...SPACE_CATEGORIES.greek,
                           count: 34,
                           examples: ['Alpha Phi Alpha', 'Delta Sigma Theta', 'Sigma Chi'],
-                        }}
+          }}
                         onClick={action('greek-discovery')}
                       />
                     </div>
@@ -413,7 +413,7 @@ export const CompleteShowcase: Story = {
                           ...SPACE_CATEGORIES.student,
                           count: 156,
                           examples: ['UB Gaming Club', 'Engineering Society', 'Debate Team'],
-                        }}
+          }}
                         onClick={action('organization-discovery')}
                       />
                     </div>

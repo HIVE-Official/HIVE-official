@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, Reorder } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence, Reorder } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Button } from '../../components/ui/button';
-import { Card } from '../../components/ui/card';
+import { Button } from '../../ui/button';
+import { Card } from '../../ui/card';
 import { 
   Edit, 
   Save, 
@@ -23,7 +23,7 @@ export interface GridItem {
   position: { x: number; y: number };
   size: { width: 1 | 2; height: 1 | 2 };
   isVisible: boolean;
-  settings?: Record<string, any>;
+  settings?: Record<string, any>
 }
 
 export interface BentoGridProps {
@@ -33,7 +33,7 @@ export interface BentoGridProps {
   onEditModeChange: (isEdit: boolean) => void;
   className?: string;
   maxColumns?: number;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // Grid Layout Hook for responsive behavior
@@ -57,10 +57,10 @@ function useGridLayout(maxColumns: number = 4) {
 
     updateColumns();
     window.addEventListener('resize', updateColumns);
-    return () => window.removeEventListener('resize', updateColumns);
+    return () => window.removeEventListener('resize', updateColumns)
   }, [maxColumns]);
 
-  return { columns, containerRef };
+  return { columns, containerRef }
 }
 
 // Grid Position Calculator
@@ -74,7 +74,7 @@ function calculateGridPosition(items: GridItem[], newItem: Partial<GridItem>, co
     for (let y = item.position.y; y < item.position.y + item.size.height; y++) {
       for (let x = item.position.x; x < item.position.x + item.size.width; x++) {
         if (grid[y] && grid[y][x] !== undefined) {
-          grid[y][x] = true;
+          grid[y][x] = true
         }
       }
     }
@@ -91,19 +91,19 @@ function calculateGridPosition(items: GridItem[], newItem: Partial<GridItem>, co
       for (let dy = 0; dy < height && canPlace; dy++) {
         for (let dx = 0; dx < width && canPlace; dx++) {
           if (grid[y + dy][x + dx]) {
-            canPlace = false;
+            canPlace = false
           }
         }
       }
       
       if (canPlace) {
-        return { x, y };
+        return { x, y }
       }
     }
   }
   
   // If no space found, place at end
-  return { x: 0, y: grid.length };
+  return { x: 0, y: grid.length }
 }
 
 // Grid Item Component
@@ -113,7 +113,7 @@ interface GridItemWrapperProps {
   columns: number;
   onResize?: (id: string, size: { width: 1 | 2; height: 1 | 2 }) => void;
   onSettingsClick?: (id: string) => void;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 function GridItemWrapper({ 
@@ -134,7 +134,7 @@ function GridItemWrapper({
   const handleResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsResizing(true);
+    setIsResizing(true)
   }, []);
 
   const handleResize = useCallback((direction: 'width' | 'height', delta: 1 | -1) => {
@@ -142,13 +142,13 @@ function GridItemWrapper({
     
     const newSize = { ...item.size };
     if (direction === 'width') {
-      newSize.width = Math.max(1, Math.min(2, newSize.width + delta)) as 1 | 2;
+      newSize.width = Math.max(1, Math.min(2, newSize.width + delta)) as 1 | 2
     } else {
-      newSize.height = Math.max(1, Math.min(2, newSize.height + delta)) as 1 | 2;
+      newSize.height = Math.max(1, Math.min(2, newSize.height + delta)) as 1 | 2
     }
     
     onResize(item.id, newSize);
-    setIsResizing(false);
+    setIsResizing(false)
   }, [item.id, item.size, onResize]);
 
   return (
@@ -167,7 +167,7 @@ function GridItemWrapper({
       )}
       style={{
         minHeight: columns === 1 ? 'auto' : `${item.size.height * 200}px`
-      }}
+          }}
       onDragStart={() => setIsDragging(true)}
       onDragEnd={() => setIsDragging(false)}
     >
@@ -233,12 +233,12 @@ function GridItemWrapper({
           boxShadow: isDragging 
             ? '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
             : '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'
-        }}
+          }}
       >
         {children}
       </motion.div>
     </motion.div>
-  );
+  )
 }
 
 // Main Bento Grid Component
@@ -258,27 +258,27 @@ export function BentoGridLayout({
     // Recalculate positions for new order
     const updatedItems = newOrder.map((item, index) => {
       const position = calculateGridPosition(newOrder.slice(0, index), item, columns);
-      return { ...item, position };
+      return { ...item, position }
     });
     
     onItemsChange(updatedItems);
-    setDraggedItem(null);
+    setDraggedItem(null)
   }, [columns, onItemsChange]);
 
   const handleResize = useCallback((id: string, size: { width: 1 | 2; height: 1 | 2 }) => {
     const updatedItems = items.map(item => {
       if (item.id === id) {
         const position = calculateGridPosition(items, { ...item, size }, columns);
-        return { ...item, size, position };
+        return { ...item, size, position }
       }
-      return item;
+      return item
     });
-    onItemsChange(updatedItems);
+    onItemsChange(updatedItems)
   }, [items, columns, onItemsChange]);
 
   const handleSettingsClick = useCallback((id: string) => {
     // Handle card-specific settings
-    console.log('Settings clicked for:', id);
+    console.log('Settings clicked for:', id)
   }, []);
 
   const handleSaveLayout = useCallback(() => {
@@ -420,7 +420,7 @@ export function BentoGridLayout({
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }
 
 // Hook for managing grid state
@@ -434,7 +434,7 @@ export function useBentoGrid(initialItems: GridItem[] = []) {
   }, []);
 
   const toggleEditMode = useCallback(() => {
-    setIsEditMode(prev => !prev);
+    setIsEditMode(prev => !prev)
   }, []);
 
   const addCard = useCallback((cardType: GridItem['cardType']) => {
@@ -450,17 +450,17 @@ export function useBentoGrid(initialItems: GridItem[] = []) {
     const position = calculateGridPosition(items, newCard, 4);
     newCard.position = position;
 
-    setItems(prev => [...prev, newCard]);
+    setItems(prev => [...prev, newCard])
   }, [items]);
 
   const removeCard = useCallback((id: string) => {
-    setItems(prev => prev.filter(item => item.id !== id));
+    setItems(prev => prev.filter(item => item.id !== id))
   }, []);
 
   const updateCardSettings = useCallback((id: string, settings: Record<string, any>) => {
     setItems(prev => prev.map(item => 
       item.id === id ? { ...item, settings: { ...item.settings, ...settings } } : item
-    ));
+    ))
   }, []);
 
   return {
@@ -472,5 +472,5 @@ export function useBentoGrid(initialItems: GridItem[] = []) {
     removeCard,
     updateCardSettings,
     setIsEditMode
-  };
+  }
 }

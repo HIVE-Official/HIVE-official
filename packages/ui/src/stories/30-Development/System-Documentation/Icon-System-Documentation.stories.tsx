@@ -176,14 +176,14 @@ const IconSystemShowcase = () => {
       icon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       icon.usage.toLowerCase().includes(searchQuery.toLowerCase()) ||
       icon.context.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    )
   }, [activeCategory, searchQuery]);
 
   // Copy icon name to clipboard
   const copyIconName = (iconName: string) => {
     navigator.clipboard.writeText(`<${iconName} className="w-5 h-5" />`);
     setCopiedIcon(iconName);
-    setTimeout(() => setCopiedIcon(null), 2000);
+    setTimeout(() => setCopiedIcon(null), 2000)
   };
 
   // Icon Display Component
@@ -208,17 +208,17 @@ const IconSystemShowcase = () => {
         }}
         onClick={() => {
           setSelectedIcon(icon);
-          copyIconName(icon.name);
+          copyIconName(icon.name)
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
-          e.currentTarget.style.backgroundColor = 'var(--hive-background-interactive)';
+          e.currentTarget.style.backgroundColor = 'var(--hive-background-interactive)'
         }}
         onMouseLeave={(e) => {
           if (selectedIcon?.name !== icon.name) {
-            e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
+            e.currentTarget.style.borderColor = 'var(--hive-border-primary)'
           }
-          e.currentTarget.style.backgroundColor = 'var(--hive-background-secondary)';
+          e.currentTarget.style.backgroundColor = 'var(--hive-background-secondary)'
         }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -252,7 +252,7 @@ const IconSystemShowcase = () => {
           )}
         </div>
       </motion.div>
-    );
+    )
   };
 
   // Campus Use Case Examples
@@ -374,7 +374,7 @@ const IconSystemShowcase = () => {
                   onClick={() => {
                     setActiveCategory(key);
                     setSearchQuery('');
-                    setSelectedIcon(null);
+                    setSelectedIcon(null)
                   }}
                 >
                   {category.title}
@@ -388,8 +388,8 @@ const IconSystemShowcase = () => {
                     {category.icons.length}
                   </Badge>
                 </Button>
-              );
-            })}
+              )
+            })
           </div>
         </motion.div>
 
@@ -467,7 +467,7 @@ const IconSystemShowcase = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center" 
                              style={{ color: iconCategories[activeCategory as keyof typeof iconCategories].color }}>
-                    {React.createElement(selectedIcon.component, { className: "w-8 h-8 mr-3" })}
+                    {React.createElement(selectedIcon.component, { className: "w-8 h-8 mr-3" }}
                     {selectedIcon.name} Icon
                   </CardTitle>
                 </CardHeader>
@@ -499,19 +499,19 @@ const IconSystemShowcase = () => {
                         </h4>
                         <div className="flex items-center space-x-4">
                           <div className="text-center">
-                            {React.createElement(selectedIcon.component, { className: "w-4 h-4 mx-auto mb-1", style: { color: 'var(--hive-text-primary)' } })}
+                            {React.createElement(selectedIcon.component, { className: "w-4 h-4 mx-auto mb-1", style: { color: 'var(--hive-text-primary)' } }}
                             <div className="text-xs" style={{ color: 'var(--hive-text-muted)' }}>16px</div>
                           </div>
                           <div className="text-center">
-                            {React.createElement(selectedIcon.component, { className: "w-5 h-5 mx-auto mb-1", style: { color: 'var(--hive-text-primary)' } })}
+                            {React.createElement(selectedIcon.component, { className: "w-5 h-5 mx-auto mb-1", style: { color: 'var(--hive-text-primary)' } }}
                             <div className="text-xs" style={{ color: 'var(--hive-text-muted)' }}>20px</div>
                           </div>
                           <div className="text-center">
-                            {React.createElement(selectedIcon.component, { className: "w-6 h-6 mx-auto mb-1", style: { color: 'var(--hive-text-primary)' } })}
+                            {React.createElement(selectedIcon.component, { className: "w-6 h-6 mx-auto mb-1", style: { color: 'var(--hive-text-primary)' } }}
                             <div className="text-xs" style={{ color: 'var(--hive-text-muted)' }}>24px</div>
                           </div>
                           <div className="text-center">
-                            {React.createElement(selectedIcon.component, { className: "w-8 h-8 mx-auto mb-1", style: { color: 'var(--hive-text-primary)' } })}
+                            {React.createElement(selectedIcon.component, { className: "w-8 h-8 mx-auto mb-1", style: { color: 'var(--hive-text-primary)' } }}
                             <div className="text-xs" style={{ color: 'var(--hive-text-muted)' }}>32px</div>
                           </div>
                         </div>
@@ -521,13 +521,13 @@ const IconSystemShowcase = () => {
                           Color Variations
                         </h4>
                         <div className="flex items-center space-x-4">
-                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-text-primary)' } })}
-                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-text-secondary)' } })}
-                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-text-muted)' } })}
-                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-brand-primary)' } })}
-                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-status-success)' } })}
-                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-status-warning)' } })}
-                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-status-error)' } })}
+                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-text-primary)' } }}
+                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-text-secondary)' } }}
+                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-text-muted)' } }}
+                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-brand-primary)' } }}
+                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-status-success)' } }}
+                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-status-warning)' } }}
+                          {React.createElement(selectedIcon.component, { className: "w-6 h-6", style: { color: 'var(--hive-status-error)' } }}
                         </div>
                       </div>
                     </div>
@@ -596,7 +596,7 @@ const IconSystemShowcase = () => {
                             {React.createElement(icon.component, { 
                               className: "w-5 h-5 flex-shrink-0", 
                               style: { color: 'var(--hive-brand-primary)' } 
-                            })}
+                            }}
                             <div className="flex-1 min-w-0">
                               <div className="font-medium text-sm" style={{ color: 'var(--hive-text-primary)' }}>
                                 {icon.name}
@@ -737,7 +737,7 @@ const IconSystemShowcase = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const IconSystemDocumentation: Story = {

@@ -101,7 +101,7 @@ export interface MultiSelectOption {
   disabled?: boolean;
   group?: string;
   variant?: 'default' | 'premium' | 'elevated' | 'minimal';
-  metadata?: Record<string, any>;
+  metadata?: Record<string, any>
 }
 
 export interface HiveMultiSelectProps
@@ -130,7 +130,7 @@ export interface HiveMultiSelectProps
   renderOption?: (option: MultiSelectOption) => React.ReactNode;
   renderCreateOption?: (query: string) => React.ReactNode;
   onCreateOption?: (query: string) => MultiSelectOption;
-  validateNewOption?: (query: string) => boolean;
+  validateNewOption?: (query: string) => boolean
 }
 
 const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
@@ -185,7 +185,7 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
         option.label.toLowerCase().includes(query) ||
         option.description?.toLowerCase().includes(query) ||
         option.group?.toLowerCase().includes(query)
-      );
+      )
     }, [options, searchQuery]);
     
     // Group options by specified property
@@ -197,15 +197,15 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
       filteredOptions.forEach(option => {
         const groupKey = option[groupBy as keyof MultiSelectOption] as string || 'ungrouped';
         if (!groups[groupKey]) groups[groupKey] = [];
-        groups[groupKey].push(option);
-      });
+        groups[groupKey].push(option)
+      })};
       
-      return groups;
+      return groups
     }, [filteredOptions, groupBy]);
     
     // Selected options for display
     const selectedOptions = useMemo(() => {
-      return options.filter(option => currentValue.includes(option.value));
+      return options.filter(option => currentValue.includes(option.value))
     }, [options, currentValue]);
     
     // Close dropdown on outside click
@@ -213,12 +213,12 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
       const handleClickOutside = (event: MouseEvent) => {
         if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
           setIsOpen(false);
-          setSearchQuery('');
+          setSearchQuery('')
         }
       };
       
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside)
     }, []);
     
     // Keyboard navigation
@@ -242,49 +242,49 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
           case 'Enter':
             e.preventDefault();
             if (filteredOptions[highlightedIndex]) {
-              handleOptionSelect(filteredOptions[highlightedIndex]);
+              handleOptionSelect(filteredOptions[highlightedIndex])
             } else if (shouldShowCreateOption && creatable) {
-              handleCreateOption();
+              handleCreateOption()
             }
             break;
           case 'Backspace':
             if (searchQuery === '' && currentValue.length > 0) {
               // Remove last tag when backspace is pressed with empty search
               const newValue = currentValue.slice(0, -1);
-              updateValue(newValue);
+              updateValue(newValue)
             }
-            break;
+            break
         }
       };
       
       document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown)
     }, [isOpen, highlightedIndex, filteredOptions, searchQuery, currentValue]);
     
     // Reset highlighted index when filtered options change
     useEffect(() => {
-      setHighlightedIndex(0);
+      setHighlightedIndex(0)
     }, [filteredOptions]);
     
     // Focus search input when opening
     useEffect(() => {
       if (isOpen && searchRef.current) {
-        setTimeout(() => searchRef.current?.focus(), 100);
+        setTimeout(() => searchRef.current?.focus(), 100)
       }
     }, [isOpen]);
     
     const updateValue = (newValue: string[]) => {
       if (value === undefined) {
-        setInternalValue(newValue);
+        setInternalValue(newValue)
       }
-      onValueChange?.(newValue);
+      onValueChange?.(newValue)
     };
     
     const handleToggle = () => {
       if (!disabled) {
         setIsOpen(!isOpen);
         if (!isOpen) {
-          setSearchQuery('');
+          setSearchQuery('')
         }
       }
     };
@@ -305,17 +305,17 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
       
       // Keep dropdown open for multi-select
       if (searchRef.current) {
-        searchRef.current.focus();
+        searchRef.current.focus()
       }
     };
     
     const handleRemoveTag = (optionValue: string) => {
       const newValue = currentValue.filter(v => v !== optionValue);
-      updateValue(newValue);
+      updateValue(newValue)
     };
     
     const handleClear = () => {
-      updateValue([]);
+      updateValue([])
     };
     
     const handleCreateOption = () => {
@@ -323,13 +323,13 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
       
       // Validate new option if validator provided
       if (validateNewOption && !validateNewOption(searchQuery)) {
-        return;
+        return
       }
       
       let newOption: MultiSelectOption;
       
       if (onCreateOption) {
-        newOption = onCreateOption(searchQuery);
+        newOption = onCreateOption(searchQuery)
       } else {
         // Default option creation
         newOption = {
@@ -337,17 +337,17 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
           label: searchQuery,
           variant: 'default',
           metadata: { created: true, timestamp: Date.now() }
-        };
+        }
       }
       
       // Add to options and select
       options.push(newOption);
       handleOptionSelect(newOption);
-      setSearchQuery('');
+      setSearchQuery('')
     };
     
     const isSelected = (option: MultiSelectOption) => {
-      return currentValue.includes(option.value);
+      return currentValue.includes(option.value)
     };
     
     const shouldShowCreateOption = creatable && searchQuery && 
@@ -358,7 +358,7 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
     
     const renderTagComponent = (option: MultiSelectOption, onRemove: () => void) => {
       if (renderTag) {
-        return renderTag(option, onRemove);
+        return renderTag(option, onRemove)
       }
       
       return (
@@ -376,19 +376,19 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onRemove();
-            }}
+              onRemove()
+          }}
             className="shrink-0 hover:bg-[var(--hive-text-primary)]/10 rounded-full p-0.5 transition-colors"
           >
             <X size={12} />
           </button>
         </motion.div>
-      );
+      )
     };
     
     const renderOptionComponent = (option: MultiSelectOption) => {
       if (renderOption) {
-        return renderOption(option);
+        return renderOption(option)
       }
       
       return (
@@ -415,7 +415,7 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
             <Check size={16} className="text-[var(--hive-brand-primary)] shrink-0" />
           )}
         </div>
-      );
+      )
     };
     
     return (
@@ -473,8 +473,8 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
                 className="text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] p-1 rounded-full hover:bg-[var(--hive-overlay-glass)]"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleClear();
-                }}
+                  handleClear()
+          }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -580,8 +580,8 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
                             >
                               {renderOptionComponent(option)}
                             </motion.button>
-                          );
-                        })}
+                          )
+          })}
                       </div>
                     ))}
                   </div>
@@ -591,7 +591,7 @@ const HiveMultiSelect = React.forwardRef<HTMLDivElement, HiveMultiSelectProps>(
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 

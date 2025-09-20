@@ -36,7 +36,7 @@ export interface CompleteHIVEProfileSystemProps {
   onUploadAvatar?: (file: File) => void;
   onToggleGhostMode?: () => void;
   loading?: boolean;
-  error?: string | null;
+  error?: string | null
 }
 
 export const CompleteHIVEProfileSystem: React.FC<CompleteHIVEProfileSystemProps> = ({
@@ -71,7 +71,7 @@ export const CompleteHIVEProfileSystem: React.FC<CompleteHIVEProfileSystemProps>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Error state
@@ -91,7 +91,7 @@ export const CompleteHIVEProfileSystem: React.FC<CompleteHIVEProfileSystemProps>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Handle missing user data
@@ -108,7 +108,7 @@ export const CompleteHIVEProfileSystem: React.FC<CompleteHIVEProfileSystemProps>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   const mockSpaces = [
@@ -292,7 +292,7 @@ export const CompleteHIVEProfileSystem: React.FC<CompleteHIVEProfileSystemProps>
                   availableTools: [],
                   createdTools: [],
                   comingSoon: []
-                }}
+          }}
                 onCreateTool={() => console.log('Create tool')}
               />
             </motion.div>
@@ -315,7 +315,7 @@ export const CompleteHIVEProfileSystem: React.FC<CompleteHIVEProfileSystemProps>
                   connections: [],
                   conflicts: [],
                   lastUpdated: new Date()
-                }}
+          }}
                 state="default"
                 onEventClick={(event) => console.log('Event clicked:', event.id)}
               />
@@ -363,5 +363,5 @@ export const CompleteHIVEProfileSystem: React.FC<CompleteHIVEProfileSystemProps>
         )}
       </div>
     </div>
-  );
+  )
 };

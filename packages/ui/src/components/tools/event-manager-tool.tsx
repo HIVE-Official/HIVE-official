@@ -37,8 +37,8 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Badge } from '../../atomic/atoms/badge';
 import { type Space } from '@hive/core';
 
 export interface EventManagerToolProps {
@@ -49,7 +49,7 @@ export interface EventManagerToolProps {
   leaderMode?: 'moderate' | 'manage' | 'configure' | 'insights' | null;
   onEventAction?: (eventId: string, action: string, data?: any) => void;
   authenticatedFetch?: (url: string, options?: RequestInit) => Promise<Response>;
-  className?: string;
+  className?: string
 }
 
 interface Event {
@@ -75,14 +75,14 @@ interface Event {
     name: string;
     avatar?: string;
     status: 'going' | 'maybe' | 'not_going' | 'waitlist';
-    rsvpedAt: Date;
+    rsvpedAt: Date
   }>;
   analytics?: {
     views: number;
     clicks: number;
     shares: number;
-    conversationRate: number;
-  };
+    conversationRate: number
+  }
 }
 
 export function EventManagerTool({
@@ -116,7 +116,7 @@ export function EventManagerTool({
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch events: ${response.status}`);
+          throw new Error(`Failed to fetch events: ${response.status}`)
         }
 
         const data = await response.json();
@@ -150,17 +150,17 @@ export function EventManagerTool({
           }
         }));
 
-        setEvents(transformedEvents);
+        setEvents(transformedEvents)
       } catch (error) {
         console.error('Error fetching events:', error);
         // Fallback to empty array on error
-        setEvents([]);
+        setEvents([])
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
     }
 
-    fetchEvents();
+    fetchEvents()
   }, [spaceId, authenticatedFetch]);
 
   const handleEventAction = async (eventId: string, action: string, data?: any) => {
@@ -178,10 +178,10 @@ export function EventManagerTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to create event: ${response.status}`);
+            throw new Error(`Failed to create event: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'edit':
@@ -195,10 +195,10 @@ export function EventManagerTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to update event: ${response.status}`);
+            throw new Error(`Failed to update event: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'delete': {
@@ -210,10 +210,10 @@ export function EventManagerTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to delete event: ${response.status}`);
+            throw new Error(`Failed to delete event: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'publish': {
@@ -226,10 +226,10 @@ export function EventManagerTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to publish event: ${response.status}`);
+            throw new Error(`Failed to publish event: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'cancel': {
@@ -242,10 +242,10 @@ export function EventManagerTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to cancel event: ${response.status}`);
+            throw new Error(`Failed to cancel event: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'rsvp': {
@@ -258,42 +258,42 @@ export function EventManagerTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to RSVP to event: ${response.status}`);
+            throw new Error(`Failed to RSVP to event: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'share': {
           // This would integrate with sharing functionality
           // For now, just trigger the callback
           if (onEventAction) {
-            onEventAction(eventId, action, data);
+            onEventAction(eventId, action, data)
           }
-          return;
+          return
         }
         
         case 'copy': {
           // This would copy event details to clipboard
           if (onEventAction) {
-            onEventAction(eventId, action, data);
+            onEventAction(eventId, action, data)
           }
-          return;
+          return
         }
         
         case 'analytics': {
           // This would show analytics for the event
           if (onEventAction) {
-            onEventAction(eventId, action, data);
+            onEventAction(eventId, action, data)
           }
-          return;
+          return
         }
         
         default:
           if (onEventAction) {
-            onEventAction(eventId, action, data);
+            onEventAction(eventId, action, data)
           }
-          return;
+          return
       }
       
       // Refresh event data after successful action
@@ -334,18 +334,18 @@ export function EventManagerTool({
             conversationRate: 0
           }
         }));
-        setEvents(transformedEvents);
+        setEvents(transformedEvents)
       }
       
       // Also trigger callback for any additional handling
       if (onEventAction) {
-        onEventAction(eventId, action, data);
+        onEventAction(eventId, action, data)
       }
       
     } catch (error) {
       console.error(`Error performing event action ${action}:`, error);
       // You might want to show a toast notification here
-      throw error;
+      throw error
     }
   };
 
@@ -359,9 +359,9 @@ export function EventManagerTool({
         
         const matchesStatus = statusFilter === 'all' || event.status === statusFilter;
         
-        return matchesSearch && matchesStatus;
-      })
-      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+        return matchesSearch && matchesStatus
+      })}
+      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
   }, [events, searchQuery, statusFilter]);
 
   const getStatusColor = (status: Event['status']) => {
@@ -371,7 +371,7 @@ export function EventManagerTool({
       case 'ongoing': return 'text-blue-400 bg-blue-500/20';
       case 'completed': return 'text-purple-400 bg-purple-500/20';
       case 'cancelled': return 'text-red-400 bg-red-500/20';
-      default: return 'text-gray-400 bg-gray-500/20';
+      default: return 'text-gray-400 bg-gray-500/20'
     }
   };
 
@@ -382,7 +382,7 @@ export function EventManagerTool({
       case 'ongoing': return Activity;
       case 'completed': return Star;
       case 'cancelled': return XCircle;
-      default: return AlertCircle;
+      default: return AlertCircle
     }
   };
 
@@ -392,7 +392,7 @@ export function EventManagerTool({
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit'
-    }).format(date);
+    }).format(date)
   };
 
   const getCapacityColor = (current: number, max?: number) => {
@@ -400,7 +400,7 @@ export function EventManagerTool({
     const percentage = current / max;
     if (percentage >= 0.9) return 'text-red-400';
     if (percentage >= 0.7) return 'text-yellow-400';
-    return 'text-green-400';
+    return 'text-green-400'
   };
 
   return (
@@ -484,8 +484,8 @@ export function EventManagerTool({
                 >
                   <Icon className="h-4 w-4" />
                 </button>
-              );
-            })}
+              )
+          })
           </div>
         </div>
       </div>
@@ -711,8 +711,8 @@ export function EventManagerTool({
                 </div>
               </div>
             </motion.div>
-          );
-        })}
+          )
+          })
       </div>
 
       {/* Empty State */}
@@ -857,5 +857,5 @@ export function EventManagerTool({
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }

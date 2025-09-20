@@ -20,7 +20,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
           <Loader2 className="h-6 w-6 animate-spin text-[var(--hive-brand-secondary)]" />
         </div>
       </HiveCard>
-    );
+    )
   }
 
   const getToolIcon = (toolName: string) => {
@@ -32,7 +32,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
       case 'study planner':
         return <BookOpen className="h-4 w-4" />;
       default:
-        return <Wrench className="h-4 w-4" />;
+        return <Wrench className="h-4 w-4" />
     }
   };
 
@@ -221,7 +221,7 @@ export const HiveLabSection: React.FC<HiveLabSectionProps> = ({
         </div>
       )}
     </HiveCard>
-  );
+  )
 };
 
 export default HiveLabSection;

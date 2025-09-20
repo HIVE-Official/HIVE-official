@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { ProfileStatistic } from '../atoms/profile-statistic';
+import { cn } from '../lib/utils';
+import { ProfileStatistic } from '../atomic/atoms/profile-statistic';
 import { Users, Zap, BookOpen, Star, TrendingUp, Award, Calendar } from 'lucide-react';
 
 const profileStatsVariants = cva(
@@ -55,7 +55,7 @@ export interface HiveProfileStats {
   currentStreak?: number;
   longestStreak?: number;
   reputation?: number;
-  achievements?: number;
+  achievements?: number
 }
 
 export interface ProfileStatsProps 
@@ -69,7 +69,7 @@ export interface ProfileStatsProps
   interactive?: boolean;
   onStatClick?: (statKey: string, value: number) => void;
   changes?: Partial<Record<keyof HiveProfileStats, number>>;
-  loading?: boolean;
+  loading?: boolean
 }
 
 // HIVE stat configurations aligned with unified data model
@@ -163,7 +163,7 @@ export function ProfileStats({
     if (statsCount <= 2) return "2";
     if (statsCount <= 3) return "3";
     if (statsCount <= 4) return "4";
-    return "5";
+    return "5"
   }, [layout, columns, priority.length, maxStats]);
 
   // Filter and prioritize stats
@@ -183,23 +183,23 @@ export function ProfileStats({
           change,
           config,
           onClick: interactive && onStatClick ? () => onStatClick(key, value) : undefined
-        };
+        }
       })
-      .filter(Boolean);
+      .filter(Boolean)
   }, [stats, priority, maxStats, interactive, onStatClick, changes]);
 
   // Determine stat size based on layout
   const statSize = React.useMemo(() => {
     if (layout === "compact") return "xs";
     if (layout === "vertical") return "md";
-    return "sm";
+    return "sm"
   }, [layout]);
 
   // Determine stat variant based on container variant
   const statVariant = React.useMemo(() => {
     if (variant === "ghost" || variant === "minimal") return "ghost";
     if (layout === "compact") return "compact";
-    return "default";
+    return "default"
   }, [variant, layout]);
 
   if (loading) {
@@ -216,7 +216,7 @@ export function ProfileStats({
           />
         ))}
       </div>
-    );
+    )
   }
 
   return (
@@ -241,7 +241,7 @@ export function ProfileStats({
         />
       ))}
     </div>
-  );
+  )
 }
 
 // Preset variants for common use cases
@@ -254,15 +254,15 @@ export function CompactProfileStats(props: Omit<ProfileStatsProps, 'layout' | 'm
       variant="ghost"
       {...props} 
     />
-  );
+  )
 }
 
 export function CardProfileStats(props: Omit<ProfileStatsProps, 'variant'>) {
-  return <ProfileStats variant="card" {...props} />;
+  return <ProfileStats variant="card" {...props} />
 }
 
 export function GridProfileStats(props: Omit<ProfileStatsProps, 'layout'>) {
-  return <ProfileStats layout="grid" {...props} />;
+  return <ProfileStats layout="grid" {...props} />
 }
 
 export function StudentProfileStats(props: Omit<ProfileStatsProps, 'priority'>) {
@@ -271,7 +271,7 @@ export function StudentProfileStats(props: Omit<ProfileStatsProps, 'priority'>) 
       priority={['spacesJoined', 'connectionsCount', 'currentStreak', 'reputation']}
       {...props} 
     />
-  );
+  )
 }
 
 export function BuilderProfileStats(props: Omit<ProfileStatsProps, 'priority'>) {
@@ -280,7 +280,7 @@ export function BuilderProfileStats(props: Omit<ProfileStatsProps, 'priority'>) 
       priority={['toolsUsed', 'spacesLed', 'reputation', 'totalActivity']}
       {...props} 
     />
-  );
+  )
 }
 
 export function ActiveUserProfileStats(props: Omit<ProfileStatsProps, 'priority'>) {
@@ -289,7 +289,7 @@ export function ActiveUserProfileStats(props: Omit<ProfileStatsProps, 'priority'
       priority={['spacesActive', 'currentStreak', 'totalActivity', 'achievements']}
       {...props} 
     />
-  );
+  )
 }
 
 // Export variants for external use

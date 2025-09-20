@@ -19,7 +19,7 @@ export const ELEMENT_CATEGORIES: Array<{
   name: string;
   description: string;
   icon: React.ComponentType;
-  color: string;
+  color: string
 }> = [
   {
     id: 'all',
@@ -84,7 +84,7 @@ interface ElementCardProps {
   element: Element;
   onSelect: (element: Element) => void;
   isSelected?: boolean;
-  viewMode: 'grid' | 'list';
+  viewMode: 'grid' | 'list'
 }
 
 const ElementCard: React.FC<ElementCardProps> = ({ 
@@ -169,7 +169,7 @@ const ElementCard: React.FC<ElementCardProps> = ({
         </HiveCardContent>
       </HiveCard>
     </HiveMotionWrapper>
-  );
+  )
 };
 
 // Category filter component
@@ -177,7 +177,7 @@ interface CategoryFilterProps {
   categories: typeof ELEMENT_CATEGORIES;
   selectedCategory: ElementCategory | 'all';
   onCategoryChange: (category: ElementCategory | 'all') => void;
-  elementCounts: Record<string, number>;
+  elementCounts: Record<string, number>
 }
 
 const CategoryFilter: React.FC<CategoryFilterProps> = ({
@@ -216,8 +216,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 size="sm"
                 onClick={() => {
                   onCategoryChange(category.id);
-                  setIsExpanded(false);
-                }}
+                  setIsExpanded(false)
+          }}
                 className="w-full justify-start"
               >
                 <category.icon />
@@ -250,7 +250,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 // Main Element Picker component
@@ -271,7 +271,7 @@ export const ElementPicker: React.FC<ElementPickerProps> = ({
 
     // Filter by category
     if (currentCategory !== 'all') {
-      filtered = filtered.filter(element => element.category === currentCategory);
+      filtered = filtered.filter(element => element.category === currentCategory)
     }
 
     // Filter by search term
@@ -281,18 +281,18 @@ export const ElementPicker: React.FC<ElementPickerProps> = ({
         element.name.toLowerCase().includes(query) ||
         element.description.toLowerCase().includes(query) ||
         element.tags.some(tag => tag.toLowerCase().includes(query))
-      );
+      )
     }
 
     // Sort by popularity (usage) and name
     return filtered.sort((a, b) => {
       // Prioritize non-deprecated elements
       if (a.isDeprecated !== b.isDeprecated) {
-        return a.isDeprecated ? 1 : -1;
+        return a.isDeprecated ? 1 : -1
       }
       // Then sort by name
-      return a.name.localeCompare(b.name);
-    });
+      return a.name.localeCompare(b.name)
+    })
   }, [elements, currentCategory, searchTerm]);
 
   // Calculate element counts per category
@@ -301,16 +301,16 @@ export const ElementPicker: React.FC<ElementPickerProps> = ({
     
     ELEMENT_CATEGORIES.forEach(category => {
       if (category.id !== 'all') {
-        counts[category.id] = elements.filter(el => el.category === category.id).length;
+        counts[category.id] = elements.filter(el => el.category === category.id).length
       }
     });
     
-    return counts;
+    return counts
   }, [elements]);
 
   const handleElementSelect = (element: Element) => {
     setSelectedElement(element.id);
-    onElementSelect(element);
+    onElementSelect(element)
   };
 
   return (
@@ -419,7 +419,7 @@ export const ElementPicker: React.FC<ElementPickerProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default ElementPicker;

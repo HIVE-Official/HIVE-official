@@ -34,7 +34,7 @@ export interface CompleteHIVESpacesSystemProps {
   onNavigate?: (view: string, data?: any) => void;
   spacesData?: any;
   loading?: boolean;
-  error?: string | null;
+  error?: string | null
 }
 
 export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> = ({
@@ -70,7 +70,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Error state
@@ -90,7 +90,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   const mockFeaturedSpaces = [
@@ -157,7 +157,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
             </div>
           </div>
         </div>
-      );
+      )
     }
 
     return (
@@ -315,7 +315,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
                     <HiveButton
                       size="sm"
                       className="w-full bg-[#FFD700] text-black hover:bg-[#FFE255]"
-                      onClick={() => onNavigate?.('space-preview', { spaceId: space.id })}
+                      onClick={() => onNavigate?.('space-preview', { spaceId: space.id }}
                     >
                       View Space
                     </HiveButton>
@@ -351,7 +351,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
                         <HiveButton
                           size="sm"
                           className="bg-[#FFD700] text-black hover:bg-[#FFE255]"
-                          onClick={() => onNavigate?.('space-preview', { spaceId: space.id })}
+                          onClick={() => onNavigate?.('space-preview', { spaceId: space.id }}
                         >
                           View
                         </HiveButton>
@@ -364,7 +364,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
           </motion.div>
         </div>
       </div>
-    );
+    )
   }
 
   // Main Explore View
@@ -428,7 +428,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <CategoryGridOrganism 
-            onCategoryClick={(categoryId) => onNavigate?.('category', { categoryType: categoryId })}
+            onCategoryClick={(categoryId) => onNavigate?.('category', { categoryType: categoryId }}
           />
         </motion.div>
 
@@ -470,7 +470,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
                     <span className="text-xs text-gray-400">{space.recentActivity}</span>
                     <HiveButton
                       size="sm"
-                      onClick={() => onNavigate?.('space-preview', { spaceId: space.id })}
+                      onClick={() => onNavigate?.('space-preview', { spaceId: space.id }}
                       className="bg-[#FFD700] text-black hover:bg-[#FFE255]"
                     >
                       Join
@@ -513,7 +513,7 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
                     <HiveButton 
                       size="sm" 
                       variant="outline"
-                      onClick={() => onNavigate?.('space-preview', { spaceId: space.id })}
+                      onClick={() => onNavigate?.('space-preview', { spaceId: space.id }}
                     >
                       View
                     </HiveButton>
@@ -545,5 +545,5 @@ export const CompleteHIVESpacesSystem: React.FC<CompleteHIVESpacesSystemProps> =
         )}
       </div>
     </div>
-  );
+  )
 };

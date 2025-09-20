@@ -1,0 +1,131 @@
+/**
+ * Space Data Types
+ * Proper interfaces for posts, events, members, and activities in spaces
+ */
+
+// Base Space Post interface
+export interface SpacePost {
+  id: string;
+  spaceId: string;
+  authorId: string;
+  content: string;
+  timestamp: string | Date;
+  likes?: number;
+  comments?: number;
+  attachments?: string[];
+  pinned?: boolean;
+  edited?: boolean;
+  editedAt?: string | Date;
+}
+
+// Space Event interface
+export interface SpaceEvent {
+  id: string;
+  spaceId: string;
+  title: string;
+  description?: string;
+  startTime: string | Date;
+  endTime?: string | Date;
+  location?: string;
+  creatorId: string;
+  attendees?: string[];
+  maxAttendees?: number;
+  tags?: string[];
+  recurring?: boolean;
+}
+
+// Space Member interface
+export interface SpaceMember {
+  id: string;
+  spaceId: string;
+  userId: string;
+  role: 'member' | 'moderator' | 'admin' | 'leader';
+  joinedAt: string | Date;
+  isActive?: boolean;
+  permissions?: string[];
+  displayName?: string;
+  avatar?: string;
+}
+
+// Activity Feed item interface
+export interface SpaceActivity {
+  id: string;
+  spaceId?: string;
+  type: 'post' | 'event' | 'join' | 'like' | 'comment' | 'mention';
+  actorId: string;
+  targetId?: string;
+  content?: string;
+  timestamp: string | Date;
+  read?: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+// Type guards for runtime type checking
+export function isSpacePost(item: unknown): item is SpacePost {
+  return !!(
+    item &&
+    typeof item === 'object' &&
+    'id' in item &&
+    'spaceId' in item &&
+    'content' in item &&
+    'timestamp' in item &&
+    typeof (item as Record<string, unknown>).id === 'string' &&
+    typeof (item as Record<string, unknown>).spaceId === 'string'
+  );
+}
+
+export function isSpaceEvent(item: unknown): item is SpaceEvent {
+  return !!(
+    item &&
+    typeof item === 'object' &&
+    'id' in item &&
+    'spaceId' in item &&
+    'title' in item &&
+    'startTime' in item &&
+    typeof (item as Record<string, unknown>).id === 'string' &&
+    typeof (item as Record<string, unknown>).spaceId === 'string'
+  );
+}
+
+export function isSpaceMember(item: unknown): item is SpaceMember {
+  return !!(
+    item &&
+    typeof item === 'object' &&
+    'id' in item &&
+    'spaceId' in item &&
+    'userId' in item &&
+    'role' in item &&
+    typeof (item as Record<string, unknown>).id === 'string' &&
+    typeof (item as Record<string, unknown>).spaceId === 'string'
+  );
+}
+
+export function isSpaceActivity(item: unknown): item is SpaceActivity {
+  return !!(
+    item &&
+    typeof item === 'object' &&
+    'id' in item &&
+    'type' in item &&
+    'actorId' in item &&
+    'timestamp' in item &&
+    typeof (item as Record<string, unknown>).id === 'string' &&
+    typeof (item as Record<string, unknown>).type === 'string'
+  );
+}
+
+// Utility functions for safe type conversion
+export function parseSpacePosts(items: unknown[]): SpacePost[] {
+  return items.filter(isSpacePost);
+}
+
+export function parseSpaceEvents(items: unknown[]): SpaceEvent[] {
+  return items.filter(isSpaceEvent);
+}
+
+export function parseSpaceMembers(items: unknown[]): SpaceMember[] {
+  return items.filter(isSpaceMember);
+}
+
+export function parseSpaceActivities(items: unknown[]): SpaceActivity[] {
+  return items.filter(isSpaceActivity);
+}

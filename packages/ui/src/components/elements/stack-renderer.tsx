@@ -28,11 +28,11 @@ interface StackRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
+    elementStates: Map<string, any>
   };
   // Additional props for rendering children
   tool?: Tool;
-  renderElement?: (element: ElementInstance) => React.ReactNode;
+  renderElement?: (element: ElementInstance) => React.ReactNode
 }
 
 export const StackRenderer: React.FC<StackRendererProps> = ({
@@ -58,7 +58,7 @@ export const StackRenderer: React.FC<StackRendererProps> = ({
       case 'center': return 'center';
       case 'end': return 'flex-end';
       case 'stretch': return 'stretch';
-      default: return 'flex-start';
+      default: return 'flex-start'
     }
   };
 
@@ -66,7 +66,7 @@ export const StackRenderer: React.FC<StackRendererProps> = ({
     switch (alignment) {
       case 'center': return 'center';
       case 'end': return 'flex-end';
-      default: return 'flex-start';
+      default: return 'flex-start'
     }
   };
 
@@ -97,5 +97,5 @@ export const StackRenderer: React.FC<StackRendererProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };

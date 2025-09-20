@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, createContext, useContext, useEffect } from 'react';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { HiveBadge as Badge } from '../index';
 import { 
   Settings, 
@@ -87,9 +87,9 @@ export interface FeatureFlag {
     usageCount: number;
     errorRate: number;
     performanceImpact: number;
-    userSatisfaction: number;
+    userSatisfaction: number
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, any>
 }
 
 export interface FeatureFlagGroup {
@@ -97,7 +97,7 @@ export interface FeatureFlagGroup {
   name: string;
   description: string;
   flags: string[];
-  isCollapsed?: boolean;
+  isCollapsed?: boolean
 }
 
 interface FeatureFlagSystemProps {
@@ -111,14 +111,14 @@ interface FeatureFlagSystemProps {
   onBulkToggle?: (flagIds: string[], enabled: boolean) => Promise<void>;
   onExportFlags?: (format: 'json' | 'csv') => Promise<void>;
   onImportFlags?: (data: any) => Promise<void>;
-  enableFeatureFlag?: boolean;
+  enableFeatureFlag?: boolean
 }
 
 interface FeatureFlagContextType {
   flags: Record<string, boolean>;
   isEnabled: (flagId: string) => boolean;
   toggleFlag: (flagId: string) => void;
-  refreshFlags: () => void;
+  refreshFlags: () => void
 }
 
 const FeatureFlagContext = createContext<FeatureFlagContextType | null>(null);
@@ -127,9 +127,9 @@ export const useFeatureFlag = (flagId: string): boolean => {
   const context = useContext(FeatureFlagContext);
   if (!context) {
     console.warn(`Feature flag context not found. Defaulting ${flagId} to false.`);
-    return false;
+    return false
   }
-  return context.isEnabled(flagId);
+  return context.isEnabled(flagId)
 };
 
 export const useFeatureFlags = () => {
@@ -141,9 +141,9 @@ export const useFeatureFlags = () => {
       isEnabled: () => false,
       toggleFlag: () => {},
       refreshFlags: () => {}
-    };
+    }
   }
-  return context;
+  return context
 };
 
 // Default feature flags for HIVE platform
@@ -352,7 +352,7 @@ const FeatureFlagCard: React.FC<{
   flag: FeatureFlag;
   canEdit: boolean;
   onToggle: (flagId: string, enabled: boolean) => Promise<void>;
-  onUpdate?: (flagId: string, updates: Partial<FeatureFlag>) => Promise<void>;
+  onUpdate?: (flagId: string, updates: Partial<FeatureFlag>) => Promise<void>
 }> = ({ flag, canEdit, onToggle, onUpdate }) => {
   const [isToggling, setIsToggling] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -362,9 +362,9 @@ const FeatureFlagCard: React.FC<{
     
     setIsToggling(true);
     try {
-      await onToggle(flag.id, !flag.isEnabled);
+      await onToggle(flag.id, !flag.isEnabled)
     } finally {
-      setIsToggling(false);
+      setIsToggling(false)
     }
   }, [flag.id, flag.isEnabled, onToggle, canEdit, isToggling]);
 
@@ -377,7 +377,7 @@ const FeatureFlagCard: React.FC<{
       case 'system': return Settings;
       case 'analytics': return BarChart3;
       case 'experimental': return Activity;
-      default: return Settings;
+      default: return Settings
     }
   };
 
@@ -390,7 +390,7 @@ const FeatureFlagCard: React.FC<{
       case 'system': return 'text-gray-400';
       case 'analytics': return 'text-orange-400';
       case 'experimental': return 'text-pink-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -400,7 +400,7 @@ const FeatureFlagCard: React.FC<{
       case 'disabled': return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
       case 'beta': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
       case 'deprecated': return 'bg-red-500/10 text-red-400 border-red-500/20';
-      default: return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+      default: return 'bg-gray-500/10 text-gray-400 border-gray-500/20'
     }
   };
 
@@ -410,7 +410,7 @@ const FeatureFlagCard: React.FC<{
       case 'medium': return 'text-yellow-400';
       case 'high': return 'text-orange-400';
       case 'critical': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -609,7 +609,7 @@ const FeatureFlagCard: React.FC<{
         )}
       </AnimatePresence>
     </motion.div>
-  );
+  )
 };
 
 const Circle: React.FC<{ className?: string }> = ({ className }) => (
@@ -620,24 +620,24 @@ const Circle: React.FC<{ className?: string }> = ({ className }) => (
 
 export const FeatureFlagProvider: React.FC<{
   children: React.ReactNode;
-  initialFlags?: Record<string, boolean>;
+  initialFlags?: Record<string, boolean>
 }> = ({ children, initialFlags = {} }) => {
   const [flags, setFlags] = useState<Record<string, boolean>>(initialFlags);
 
   const isEnabled = useCallback((flagId: string): boolean => {
-    return flags[flagId] ?? false;
+    return flags[flagId] ?? false
   }, [flags]);
 
   const toggleFlag = useCallback((flagId: string) => {
     setFlags(prev => ({
       ...prev,
       [flagId]: !prev[flagId]
-    }));
+    }))
   }, []);
 
   const refreshFlags = useCallback(() => {
     // This would typically fetch from an API
-    console.log('Refreshing feature flags...');
+    console.log('Refreshing feature flags...')
   }, []);
 
   const value: FeatureFlagContextType = {
@@ -651,7 +651,7 @@ export const FeatureFlagProvider: React.FC<{
     <FeatureFlagContext.Provider value={value}>
       {children}
     </FeatureFlagContext.Provider>
-  );
+  )
 };
 
 export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
@@ -684,50 +684,50 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
       // Search filter
       if (searchQuery && !flag.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
           !flag.description.toLowerCase().includes(searchQuery.toLowerCase())) {
-        return false;
+        return false
       }
 
       // Category filter
       if (filterCategory !== 'all' && flag.category !== filterCategory) {
-        return false;
+        return false
       }
 
       // Status filter
       if (filterStatus !== 'all' && flag.status !== filterStatus) {
-        return false;
+        return false
       }
 
       // Environment filter
       if (flag.environment && !flag.environment.includes(environment)) {
-        return false;
+        return false
       }
 
-      return true;
-    });
+      return true
+    })
   }, [flags, searchQuery, filterCategory, filterStatus, environment]);
 
   const categories = React.useMemo(() => {
     const cats = Array.from(new Set(flags.map(f => f.category)));
-    return cats.sort();
+    return cats.sort()
   }, [flags]);
 
   const statuses = React.useMemo(() => {
     const stats = Array.from(new Set(flags.map(f => f.status)));
-    return stats.sort();
+    return stats.sort()
   }, [flags]);
 
   const handleBulkToggle = useCallback(async (enabled: boolean) => {
     if (selectedFlags.length === 0) return;
     await onBulkToggle?.(selectedFlags, enabled);
     setSelectedFlags([]);
-    setShowBulkActions(false);
+    setShowBulkActions(false)
   }, [selectedFlags, onBulkToggle]);
 
   const handleSelectAll = useCallback(() => {
     if (selectedFlags.length === filteredFlags.length) {
-      setSelectedFlags([]);
+      setSelectedFlags([])
     } else {
-      setSelectedFlags(filteredFlags.map(f => f.id));
+      setSelectedFlags(filteredFlags.map(f => f.id))
     }
   }, [selectedFlags, filteredFlags]);
 
@@ -736,7 +736,7 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
       prev.includes(groupId) 
         ? prev.filter(id => id !== groupId)
         : [...prev, groupId]
-    );
+    )
   }, []);
 
   const getFlagStats = () => {
@@ -745,7 +745,7 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
     const beta = flags.filter(f => f.status === 'beta').length;
     const experimental = flags.filter(f => f.category === 'experimental').length;
     
-    return { enabled, total, beta, experimental };
+    return { enabled, total, beta, experimental }
   };
 
   const stats = getFlagStats();
@@ -793,14 +793,14 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
                     reader.onload = (event) => {
                       try {
                         const data = JSON.parse(event.target?.result as string);
-                        onImportFlags?.(data);
+                        onImportFlags?.(data)
                       } catch (error) {
-                        console.error('Failed to parse import file:', error);
+                        console.error('Failed to parse import file:', error)
                       }
                     };
-                    reader.readAsText(file);
+                    reader.readAsText(file)
                   }
-                }}
+          })}
               />
             </>
           )}
@@ -973,11 +973,11 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
                     checked={selectedFlags.includes(flag.id)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedFlags(prev => [...prev, flag.id]);
+                        setSelectedFlags(prev => [...prev, flag.id])
                       } else {
-                        setSelectedFlags(prev => prev.filter(id => id !== flag.id));
+                        setSelectedFlags(prev => prev.filter(id => id !== flag.id))
                       }
-                    }}
+          })}
                     className="absolute top-2 left-2 z-10"
                   />
                 )}
@@ -993,5 +993,5 @@ export const FeatureFlagSystem: React.FC<FeatureFlagSystemProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };

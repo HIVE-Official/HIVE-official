@@ -12,7 +12,7 @@ type StandardSize = 'xs' | 'sm' | 'default' | 'lg';
 
 export interface ButtonProps extends Omit<HiveButtonProps, 'variant' | 'size'> {
   variant?: StandardVariant;
-  size?: StandardSize;
+  size?: StandardSize
 }
 
 // Map standard variants to HIVE variants
@@ -23,7 +23,7 @@ const mapVariant = (variant?: StandardVariant): HiveButtonProps['variant'] => {
     case 'outline': return 'secondary'; // No direct outline in HIVE, use secondary
     case 'ghost': return 'ghost';
     case 'destructive': return 'destructive';
-    default: return 'primary';
+    default: return 'primary'
   }
 };
 
@@ -34,7 +34,7 @@ const mapSize = (size?: StandardSize): HiveButtonProps['size'] => {
     case 'sm': return 'sm';
     case 'default': return 'default';
     case 'lg': return 'lg';
-    default: return 'default';
+    default: return 'default'
   }
 };
 
@@ -47,7 +47,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         size={mapSize(size)}
         {...props}
       />
-    );
+    )
   }
 );
 

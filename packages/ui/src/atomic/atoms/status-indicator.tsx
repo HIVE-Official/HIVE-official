@@ -10,7 +10,7 @@ export interface StatusIndicatorProps extends React.HTMLAttributes<HTMLDivElemen
   label?: string;
   position?: 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   showLabel?: boolean;
-  animate?: boolean;
+  animate?: boolean
 }
 
 const statusColors = {
@@ -145,7 +145,7 @@ export const StatusIndicator = React.forwardRef<HTMLDivElement, StatusIndicatorP
           {displayLabel}
         </span>
       </div>
-    );
+    )
   }
 
   return (
@@ -157,7 +157,7 @@ export const StatusIndicator = React.forwardRef<HTMLDivElement, StatusIndicatorP
     >
       <div className={dotClasses} />
     </div>
-  );
+  )
 });
 
 StatusIndicator.displayName = 'StatusIndicator';
@@ -203,7 +203,7 @@ export const GlowIndicator: React.FC<Omit<StatusIndicatorProps, 'variant'>> = (p
 export interface StatusBadgeProps extends Omit<StatusIndicatorProps, 'showLabel'> {
   children?: React.ReactNode;
   count?: number;
-  max?: number;
+  max?: number
 }
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({
@@ -221,7 +221,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   const displayCount = count !== undefined ? (count > max ? `${max}+` : count.toString()) : '';
 
   if (!hasContent) {
-    return <StatusIndicator status={status} size={size} variant={variant} className={className} {...props} />;
+    return <StatusIndicator status={status} size={size} variant={variant} className={className} {...props} />
   }
 
   return (
@@ -249,5 +249,5 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };

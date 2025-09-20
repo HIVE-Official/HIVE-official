@@ -1,7 +1,22 @@
 "use client";
 
 import React, { createContext, useContext, useCallback, useMemo, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+// Optional Next.js navigation - only works when Next.js is available
+let usePathname: () => string;
+let useRouter: () => { push: (path: string) => Promise<boolean>, back: () => void };
+
+try {
+  const nextNavigation = require('next/navigation');
+  usePathname = nextNavigation.usePathname;
+  useRouter = nextNavigation.useRouter;
+} catch {
+  // Fallback when Next.js is not available
+  usePathname = () => '/';
+  useRouter = () => ({
+    push: async () => false,
+    back: () => {}
+  });
+}
 
 interface NavigationContextType {
   currentPath: string;

@@ -20,11 +20,11 @@ interface VisualComponent {
   style?: {
     color?: string;
     size?: 'sm' | 'md' | 'lg';
-    variant?: 'default' | 'outline' | 'ghost' | 'destructive';
+    variant?: 'default' | 'outline' | 'ghost' | 'destructive'
   };
   position: { x: number; y: number };
   width: number;
-  height: number;
+  height: number
 }
 
 interface ToolDefinition {
@@ -36,15 +36,15 @@ interface ToolDefinition {
   theme: {
     primaryColor: string;
     backgroundColor: string;
-    textColor: string;
-  };
+    textColor: string
+  }
 }
 
 interface ToolAction {
   id: string;
   trigger: string; // component ID that triggers this action
   type: 'calculate' | 'save' | 'share' | 'redirect' | 'show_message';
-  config: any;
+  config: any
 }
 
 // Component Palette - Visual library students can understand
@@ -96,7 +96,7 @@ function PaletteItem({ component }: { component: typeof COMPONENT_PALETTE[0] }) 
         <p className="text-xs text-gray-500 truncate">{component.description}</p>
       </div>
     </div>
-  );
+  )
 }
 
 // Canvas Component - Where students build
@@ -105,7 +105,7 @@ function CanvasComponent({ component, isSelected, onSelect, onUpdate, onDelete }
   isSelected: boolean;
   onSelect: () => void;
   onUpdate: (updates: Partial<VisualComponent>) => void;
-  onDelete: () => void;
+  onDelete: () => void
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id: component.id,
@@ -170,7 +170,7 @@ function CanvasComponent({ component, isSelected, onSelect, onUpdate, onDelete }
           </HiveCard>
         );
       default:
-        return <div className="p-2 bg-gray-100 rounded text-sm">{component.type}</div>;
+        return <div className="p-2 bg-gray-100 rounded text-sm">{component.type}</div>
     }
   };
 
@@ -200,7 +200,7 @@ function CanvasComponent({ component, isSelected, onSelect, onUpdate, onDelete }
 
       {/* Delete Button */}
       <button
-        onClick={(e) => { e.stopPropagation(); onDelete(); }}
+        onClick={(e) => { e.stopPropagation(); onDelete() }}
         className={cn(
           "absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full",
           "flex items-center justify-center",
@@ -215,13 +215,13 @@ function CanvasComponent({ component, isSelected, onSelect, onUpdate, onDelete }
         {renderComponent()}
       </div>
     </div>
-  );
+  )
 }
 
 // Property Panel - Simple settings students can understand
 function PropertyPanel({ component, onUpdate }: {
   component: VisualComponent | null;
-  onUpdate: (updates: Partial<VisualComponent>) => void;
+  onUpdate: (updates: Partial<VisualComponent>) => void
 }) {
   if (!component) {
     return (
@@ -229,7 +229,7 @@ function PropertyPanel({ component, onUpdate }: {
         <Settings className="w-8 h-8 mx-auto mb-2 text-gray-400" />
         <p>Select a component to edit its properties</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -246,7 +246,7 @@ function PropertyPanel({ component, onUpdate }: {
         </label>
         <HiveInput
           value={component.label || ''}
-          onChange={(e) => onUpdate({ label: e.target.value })}
+          onChange={(e) => onUpdate({ label: e.target.value }}
           placeholder="Enter text..."
         />
       </div>
@@ -257,7 +257,7 @@ function PropertyPanel({ component, onUpdate }: {
           <label className="block text-sm font-medium mb-1">Placeholder</label>
           <HiveInput
             value={component.placeholder || ''}
-            onChange={(e) => onUpdate({ placeholder: e.target.value })}
+            onChange={(e) => onUpdate({ placeholder: e.target.value }}
             placeholder="Hint text..."
           />
         </div>
@@ -269,7 +269,7 @@ function PropertyPanel({ component, onUpdate }: {
           <label className="block text-sm font-medium mb-1">Options (one per line)</label>
           <HiveTextarea
             value={component.options?.join('\n') || ''}
-            onChange={(e) => onUpdate({ options: e.target.value.split('\n').filter(Boolean) })}
+            onChange={(e) => onUpdate({ options: e.target.value.split('\n').filter(Boolean) }}
             placeholder="Option 1&#10;Option 2&#10;Option 3"
             rows={4}
           />
@@ -284,7 +284,7 @@ function PropertyPanel({ component, onUpdate }: {
             value={component.style?.size || 'md'}
             onChange={(e) => onUpdate({ 
               style: { ...component.style, size: e.target.value as 'sm' | 'md' | 'lg' }
-            })}
+          })}
             className="w-full p-2 border border-gray-300 rounded-md"
           >
             <option value="sm">Small</option>
@@ -300,14 +300,14 @@ function PropertyPanel({ component, onUpdate }: {
           <input
             type="checkbox"
             checked={component.required || false}
-            onChange={(e) => onUpdate({ required: e.target.checked })}
+            onChange={(e) => onUpdate({ required: e.target.checked }}
             className="rounded border-gray-300"
           />
           <span className="text-sm">Required field</span>
         </label>
       )}
     </div>
-  );
+  )
 }
 
 // Main Visual Tool Builder
@@ -335,7 +335,7 @@ export function VisualToolBuilderV2() {
   });
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
+    setActiveId(event.active.id as string)
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -361,7 +361,7 @@ export function VisualToolBuilderV2() {
         ...prev,
         components: [...prev.components, newComponent]
       }));
-      setSelectedComponent(newComponent);
+      setSelectedComponent(newComponent)
     }
   };
 
@@ -374,7 +374,7 @@ export function VisualToolBuilderV2() {
     }));
 
     if (selectedComponent?.id === id) {
-      setSelectedComponent(prev => prev ? { ...prev, ...updates } : null);
+      setSelectedComponent(prev => prev ? { ...prev, ...updates } : null)
     }
   }, [selectedComponent]);
 
@@ -384,19 +384,19 @@ export function VisualToolBuilderV2() {
       components: prev.components.filter(comp => comp.id !== id)
     }));
     if (selectedComponent?.id === id) {
-      setSelectedComponent(null);
+      setSelectedComponent(null)
     }
   }, [selectedComponent]);
 
   const saveTool = async () => {
     // TODO: Implement actual save to backend
     console.log('Saving tool:', tool);
-    alert('Tool saved! (This will connect to the backend)');
+    alert('Tool saved! (This will connect to the backend)')
   };
 
   const previewTool = () => {
     setMode('preview');
-    setSelectedComponent(null);
+    setSelectedComponent(null)
   };
 
   return (
@@ -495,9 +495,9 @@ export function VisualToolBuilderV2() {
               component={selectedComponent}
               onUpdate={(updates) => {
                 if (selectedComponent) {
-                  updateComponent(selectedComponent.id, updates);
+                  updateComponent(selectedComponent.id, updates)
                 }
-              }}
+          })}
             />
           </div>
         )}
@@ -515,7 +515,7 @@ export function VisualToolBuilderV2() {
         </DragOverlay>
       </DndContext>
     </div>
-  );
+  )
 }
 
 export default VisualToolBuilderV2;

@@ -309,16 +309,16 @@ function CrossSystemIntegration() {
   const [activityCount, setActivityCount] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
-      setActivityCount(prev => prev + Math.floor(Math.random() * 3));
+      setActivityCount(prev => prev + Math.floor(Math.random() * 3))
     }, 5000);
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, []);
 
   // Combine all activities for the feed
   const allActivities = [
-    ...mockCrossSystemActivity.profileActivities.map(a => ({ ...a, system: 'profile' })),
-    ...mockCrossSystemActivity.spacesActivities.map(a => ({ ...a, system: 'spaces' })),
-    ...mockCrossSystemActivity.hivelabActivities.map(a => ({ ...a, system: 'hivelab' }))
+    ...mockCrossSystemActivity.profileActivities.map(a => ({ ...a, system: 'profile' })}),
+    ...mockCrossSystemActivity.spacesActivities.map(a => ({ ...a, system: 'spaces' })}),
+    ...mockCrossSystemActivity.hivelabActivities.map(a => ({ ...a, system: 'hivelab' })})
   ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
   const filteredActivities = selectedSystem === 'all' 
@@ -330,7 +330,7 @@ function CrossSystemIntegration() {
       case 'profile': return <User className="w-5 h-5" />;
       case 'spaces': return <Users className="w-5 h-5" />;
       case 'hivelab': return <Zap className="w-5 h-5" />;
-      default: return <Activity className="w-5 h-5" />;
+      default: return <Activity className="w-5 h-5" />
     }
   };
 
@@ -339,7 +339,7 @@ function CrossSystemIntegration() {
       case 'profile': return 'text-green-400 bg-green-500/20';
       case 'spaces': return 'text-blue-400 bg-blue-500/20';
       case 'hivelab': return 'text-purple-400 bg-purple-500/20';
-      default: return 'text-gray-400 bg-gray-500/20';
+      default: return 'text-gray-400 bg-gray-500/20'
     }
   };
 
@@ -350,7 +350,7 @@ function CrossSystemIntegration() {
     const hours = Math.floor(minutes / 60);
     
     if (minutes < 60) return `${minutes}m ago`;
-    return `${hours}h ago`;
+    return `${hours}h ago`
   };
 
   return (
@@ -428,7 +428,7 @@ function CrossSystemIntegration() {
                   { id: 'profile', label: 'Profile', count: mockCrossSystemActivity.profileActivities.length, icon: User },
                   { id: 'spaces', label: 'Spaces', count: mockCrossSystemActivity.spacesActivities.length, icon: Users },
                   { id: 'hivelab', label: 'HiveLAB', count: mockCrossSystemActivity.hivelabActivities.length, icon: Zap },
-                ].map(({ id, label, count, icon: Icon }) => (
+                ].map(({ id, label, count, icon: Icon })} => (
                   <Button
                     key={id}
                     size="sm"
@@ -945,7 +945,7 @@ function CrossSystemIntegration() {
         </TabsContent>
       </div>
     </div>
-  );
+  )
 }
 
 export const LiveIntegrationFeed: Story = {
@@ -959,7 +959,7 @@ export const LiveIntegrationFeed: Story = {
 export const DataFlowVisualization: Story = {
   render: () => {
     const [activeTab, setActiveTab] = useState('data-flows');
-    return <CrossSystemIntegration />;
+    return <CrossSystemIntegration />
   },
   parameters: {
     layout: 'fullscreen',
@@ -970,7 +970,7 @@ export const DataFlowVisualization: Story = {
 export const SystemSynchronization: Story = {
   render: () => {
     const [activeTab, setActiveTab] = useState('sync-status');
-    return <CrossSystemIntegration />;
+    return <CrossSystemIntegration />
   },
   parameters: {
     layout: 'fullscreen',

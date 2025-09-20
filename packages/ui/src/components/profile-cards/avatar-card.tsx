@@ -7,7 +7,7 @@ import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
 import { HiveBadge } from '../hive-badge';
 import { HiveProgressBar } from '../hive-progress';
-import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '../../atomic/atoms/avatar';
 import { Camera, Upload, Sparkles, Trophy, Shield, Lock, Plus } from 'lucide-react';
 
 export interface ProfileCompletionStatus {
@@ -16,8 +16,8 @@ export interface ProfileCompletionStatus {
     basicInfo: { completed: boolean; label: string };
     academicInfo: { completed: boolean; label: string };
     interests: { completed: boolean; label: string };
-    privacy: { completed: boolean; label: string };
-  };
+    privacy: { completed: boolean; label: string }
+  }
 }
 
 export interface AvatarCardProps {
@@ -34,8 +34,8 @@ export interface AvatarCardProps {
     stats?: {
       spacesJoined: number;
       toolsUsed: number;
-      connectionsCount: number;
-    };
+      connectionsCount: number
+    }
   };
   completionStatus?: ProfileCompletionStatus;
   showOnboarding?: boolean;
@@ -44,7 +44,7 @@ export interface AvatarCardProps {
   onGenerateAvatar?: () => void;
   onEditProfile?: () => void;
   onPrivacySettings?: () => void;
-  className?: string;
+  className?: string
 }
 
 const badgeVariants = {
@@ -80,15 +80,15 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
     if (file && onPhotoUpload) {
       setIsUploading(true);
       try {
-        await onPhotoUpload(file);
+        await onPhotoUpload(file)
       } finally {
-        setIsUploading(false);
+        setIsUploading(false)
       }
     }
   };
 
   const triggerFileUpload = () => {
-    fileInputRef.current?.click();
+    fileInputRef.current?.click()
   };
 
   const getInitials = (name: string) => {
@@ -97,7 +97,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
       .map(n => n[0])
       .join('')
       .toUpperCase()
-      .slice(0, 2);
+      .slice(0, 2)
   };
 
   return (
@@ -362,7 +362,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export default AvatarCard;

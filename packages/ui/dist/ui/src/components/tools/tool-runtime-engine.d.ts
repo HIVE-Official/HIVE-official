@@ -54,7 +54,7 @@ interface ToolRuntimeEngineProps {
     onSubmit?: (data: Record<string, any>) => Promise<void>;
     className?: string;
 }
-export declare function ToolRuntimeEngine({ tool, userId, spaceId, mode, onSave, onSubmit, className }: ToolRuntimeEngineProps): import("react/jsx-runtime").JSX.Element;
+export declare function ToolRuntimeEngine({ tool, userId, spaceId, mode, onSave, onSubmit, className }: ToolRuntimeEngineProps): void;
 export declare function createSampleTool(): ToolDefinition;
 export default ToolRuntimeEngine;
 //# sourceMappingURL=tool-runtime-engine.d.ts.map

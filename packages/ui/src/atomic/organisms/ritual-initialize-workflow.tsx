@@ -26,9 +26,9 @@ export interface InitializeRitualProps {
   onRitualComplete?: () => void;
   userProgress?: {
     completedSteps: string[];
-    currentStepData?: any;
+    currentStepData?: any
   };
-  className?: string;
+  className?: string
 }
 
 interface RitualStep {
@@ -38,7 +38,7 @@ interface RitualStep {
   icon: React.ComponentType<any>;
   estimatedTime: number; // minutes
   isRequired: boolean;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<any>
 }
 
 // Step Components
@@ -143,7 +143,7 @@ const ProfileBasicsStep = ({ onComplete, initialData }: any) => {
         <ChevronRight className="h-4 w-4 ml-2" />
       </Button>
     </div>
-  );
+  )
 };
 
 const InterestsStep = ({ onComplete, initialData }: any) => {
@@ -163,7 +163,7 @@ const InterestsStep = ({ onComplete, initialData }: any) => {
       prev.includes(interest) 
         ? prev.filter(i => i !== interest)
         : [...prev, interest]
-    );
+    )
   };
 
   const isValid = selectedInterests.length >= 3;
@@ -227,7 +227,7 @@ const InterestsStep = ({ onComplete, initialData }: any) => {
       </div>
 
       <Button
-        onClick={() => onComplete({ interests: selectedInterests })}
+        onClick={() => onComplete({ interests: selectedInterests }}
         disabled={!isValid}
         className="w-full bg-hive-gold text-hive-obsidian hover:bg-hive-gold/90"
       >
@@ -235,7 +235,7 @@ const InterestsStep = ({ onComplete, initialData }: any) => {
         <ChevronRight className="h-4 w-4 ml-2" />
       </Button>
     </div>
-  );
+  )
 };
 
 const GoalsStep = ({ onComplete, initialData }: any) => {
@@ -259,7 +259,7 @@ const GoalsStep = ({ onComplete, initialData }: any) => {
       prev.includes(goalId) 
         ? prev.filter(id => id !== goalId)
         : [...prev, goalId]
-    );
+    )
   };
 
   const isValid = selectedGoals.length >= 2;
@@ -324,7 +324,7 @@ const GoalsStep = ({ onComplete, initialData }: any) => {
       </div>
 
       <Button
-        onClick={() => onComplete({ goals: selectedGoals })}
+        onClick={() => onComplete({ goals: selectedGoals }}
         disabled={!isValid}
         className="w-full bg-hive-gold text-hive-obsidian hover:bg-hive-gold/90"
       >
@@ -332,7 +332,7 @@ const GoalsStep = ({ onComplete, initialData }: any) => {
         <Sparkles className="h-4 w-4 ml-2" />
       </Button>
     </div>
-  );
+  )
 };
 
 export function RitualInitializeWorkflow({ 
@@ -384,16 +384,16 @@ export function RitualInitializeWorkflow({
     onStepComplete?.(step.id, data);
 
     if (activeStep < steps.length - 1) {
-      setActiveStep(activeStep + 1);
+      setActiveStep(activeStep + 1)
     } else {
       setIsComplete(true);
-      onRitualComplete?.();
+      onRitualComplete?.()
     }
   };
 
   const handlePreviousStep = () => {
     if (activeStep > 0) {
-      setActiveStep(activeStep - 1);
+      setActiveStep(activeStep - 1)
     }
   };
 
@@ -441,7 +441,7 @@ export function RitualInitializeWorkflow({
           </div>
         </Card>
       </div>
-    );
+    )
   }
 
   const CurrentStepComponent = steps[activeStep].component;
@@ -510,8 +510,8 @@ export function RitualInitializeWorkflow({
                   }`} />
                 )}
               </div>
-            );
-          })}
+            )
+          })
         </div>
       </Card>
 
@@ -537,5 +537,5 @@ export function RitualInitializeWorkflow({
         )}
       </Card>
     </div>
-  );
+  )
 }

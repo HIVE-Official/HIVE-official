@@ -250,8 +250,8 @@ export const CampusLayoutExamples: Story = {
                       {spacingValue}
                     </div>
                   </div>
-                );
-              })}
+                )
+              })
             </div>
 
             {/* Visual spacing representation */}
@@ -279,8 +279,8 @@ export const CampusLayoutExamples: Story = {
                         <div style={{ height: spacingMap[spacingValue as keyof typeof spacingMap] || '16px' }}></div>
                       )}
                     </div>
-                  );
-                })}
+                  )
+                })
               </div>
             </div>
           </div>
@@ -332,8 +332,8 @@ export const ResponsiveContainerDemo: Story = {
                       <div className="text-xs opacity-75">{breakpoint.width}</div>
                     </div>
                   </button>
-                );
-              })}
+                )
+              })
             </div>
           </div>
 
@@ -399,6 +399,6 @@ export const ResponsiveContainerDemo: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

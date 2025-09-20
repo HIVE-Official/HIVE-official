@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 import { Home, User, Compass, Zap } from 'lucide-react';
-import { ButtonEnhanced as Button } from '../atoms/button-enhanced';
+import { ButtonEnhanced as Button } from '../atomic/atoms/button-enhanced';
 
 export interface NavigationProps {
   currentPath?: string;
@@ -12,9 +12,9 @@ export interface NavigationProps {
     id: string;
     name: string;
     handle: string;
-    avatar?: string;
+    avatar?: string
   } | null;
-  className?: string;
+  className?: string
 }
 
 const coreItems = [
@@ -70,11 +70,11 @@ export const MinimalFloatingSidebar: React.FC<NavigationProps> = ({
                 isActive ? 'text-[var(--hive-text-inverse)]' : 'text-[var(--hive-text-secondary)]'
               )} />
             </button>
-          );
-        })}
+          )
+          })
       </div>
     </div>
-  );
+  )
 };
 
 // 2. Clean Vertical Sidebar
@@ -125,12 +125,12 @@ export const CleanVerticalSidebar: React.FC<NavigationProps> = ({
                 <Icon className="h-5 w-5 flex-shrink-0" />
                 <span className="font-medium">{item.label}</span>
               </button>
-            );
+            )
           })}
         </nav>
       </div>
     </aside>
-  );
+  )
 };
 
 // 3. Top Horizontal Navigation
@@ -168,8 +168,8 @@ export const TopHorizontalNav: React.FC<NavigationProps> = ({
               <Icon className="h-4 w-4" />
               <span className="font-medium text-sm">{item.label}</span>
             </button>
-          );
-        })}
+          )
+          })}
       </div>
 
       {/* User Avatar */}
@@ -185,7 +185,7 @@ export const TopHorizontalNav: React.FC<NavigationProps> = ({
         </div>
       )}
     </nav>
-  );
+  )
 };
 
 // 4. Bottom Tab Navigation (Mobile-style)
@@ -227,10 +227,10 @@ export const BottomTabNav: React.FC<NavigationProps> = ({
             </div>
             <span className="text-xs font-medium">{item.label}</span>
           </button>
-        );
-      })}
+        )
+          })}
     </nav>
-  );
+  )
 };
 
 // 5. Compact Icon Rail
@@ -282,9 +282,9 @@ export const CompactIconRail: React.FC<NavigationProps> = ({
                 {item.label}
               </div>
             </button>
-          );
-        })}
+          )
+          })}
       </div>
     </aside>
-  );
+  )
 };

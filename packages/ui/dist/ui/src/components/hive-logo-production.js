@@ -352,7 +352,7 @@ export const HiveLogoAccessible = memo(({ variant = 'primary', size = 'md', acce
     return (_jsxs("div", { className: cn(productionLogoVariants({ variant, size, context, className }), "focus:outline-none focus:ring-2 focus:ring-[var(--hive-color-gold)] focus:ring-offset-2 focus:ring-offset-[var(--hive-background-primary)] rounded-lg", accessibility.focusable && "cursor-pointer"), tabIndex: accessibility.focusable ? accessibility.tabIndex || 0 : -1, role: accessibility.role || 'img', "aria-label": accessibility.ariaLabel, "aria-description": accessibility.ariaDescription, onKeyDown: accessibility.focusable ? handleKeyDown : undefined, ...props, children: [_jsx(OptimizedHiveSVG, { variant: variant, size: size }), _jsx("style", { children: `
         @media (prefers-contrast: high) {
           .hive-logo {
-            filter: contrast(2) brightness(1.2);
+            filter: contrast(2) brightness(1.2)
           }
         }
       ` })] }));

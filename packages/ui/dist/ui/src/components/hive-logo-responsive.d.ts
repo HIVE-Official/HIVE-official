@@ -3,7 +3,7 @@ import { type VariantProps } from 'class-variance-authority';
 declare const responsiveVariants: (props?: {
     breakpoint?: "mobile" | "wide" | "desktop" | "tablet";
     layout?: "icon" | "horizontal" | "vertical";
-    theme?: "gold" | "dark" | "light" | "auto" | "brand";
+    theme?: "gold" | "dark" | "light" | "brand" | "auto";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveResponsiveProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd'>, VariantProps<typeof responsiveVariants> {
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

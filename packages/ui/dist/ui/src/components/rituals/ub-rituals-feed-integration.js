@@ -1,6 +1,6 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card, CardContent, CardHeader } from '../ui/card';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
 import { Badge } from '../../atomic/atoms/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';

@@ -11,7 +11,7 @@ import { HiveBentoGrid, HiveBentoCard, HiveStack, HiveCluster } from '../../layo
 
 interface BaseLayoutProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 // =============================================================================
@@ -25,7 +25,7 @@ interface ProfileLayoutProps extends BaseLayoutProps {
   calendar?: React.ReactNode;
   personalTools?: React.ReactNode;
   spaceMemberships?: React.ReactNode;
-  activityFeed?: React.ReactNode;
+  activityFeed?: React.ReactNode
 }
 
 export function ProfileLayout({ 
@@ -88,7 +88,7 @@ export function ProfileLayout({
         {children}
       </HiveBentoGrid>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -104,7 +104,7 @@ interface SpaceLayoutProps extends BaseLayoutProps {
   toolsStack?: React.ReactNode;
   chat?: React.ReactNode;
   members?: React.ReactNode;
-  surfaceLayout?: '6-grid' | 'tabbed' | 'sidebar';
+  surfaceLayout?: '6-grid' | 'tabbed' | 'sidebar'
 }
 
 export function SpaceLayout({
@@ -128,7 +128,7 @@ export function SpaceLayout({
           {children}
         </div>
       </div>
-    );
+    )
   }
 
   if (surfaceLayout === 'sidebar') {
@@ -153,7 +153,7 @@ export function SpaceLayout({
           )}
         </div>
       </div>
-    );
+    )
   }
 
   // Default 6-grid layout
@@ -214,7 +214,7 @@ export function SpaceLayout({
         {children}
       </HiveBentoGrid>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -226,7 +226,7 @@ interface FeedLayoutProps extends BaseLayoutProps {
   feedHeader?: React.ReactNode;
   feedFilters?: React.ReactNode;
   feedContent?: React.ReactNode;
-  feedSidebar?: React.ReactNode;
+  feedSidebar?: React.ReactNode
 }
 
 export function FeedLayout({
@@ -274,7 +274,7 @@ export function FeedLayout({
         )}
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -287,7 +287,7 @@ interface HiveLabLayoutProps extends BaseLayoutProps {
   elementLibrary?: React.ReactNode;
   designCanvas?: React.ReactNode;
   propertiesPanel?: React.ReactNode;
-  previewArea?: React.ReactNode;
+  previewArea?: React.ReactNode
 }
 
 export function HiveLabLayout({
@@ -346,7 +346,7 @@ export function HiveLabLayout({
 
       {children}
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -357,7 +357,7 @@ export function HiveLabLayout({
 interface RitualLayoutProps extends BaseLayoutProps {
   ritualBackground?: 'gradient' | 'particles' | 'glow' | 'minimal';
   centered?: boolean;
-  maxWidth?: string;
+  maxWidth?: string
 }
 
 export function RitualLayout({
@@ -419,7 +419,7 @@ export function RitualLayout({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -431,7 +431,7 @@ interface SplitLayoutProps extends BaseLayoutProps {
   leftPanel: React.ReactNode;
   rightPanel: React.ReactNode;
   splitRatio?: '1:1' | '1:2' | '2:1' | '1:3' | '3:1';
-  resizable?: boolean;
+  resizable?: boolean
 }
 
 export function SplitLayout({
@@ -462,7 +462,7 @@ export function SplitLayout({
         {rightPanel}
       </div>
     </div>
-  );
+  )
 }
 
 // Modal Layout for overlays
@@ -470,7 +470,7 @@ interface ModalLayoutProps extends BaseLayoutProps {
   isOpen: boolean;
   onClose: () => void;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  backdrop?: 'blur' | 'dark' | 'none';
+  backdrop?: 'blur' | 'dark' | 'none'
 }
 
 export function ModalLayout({
@@ -517,5 +517,5 @@ export function ModalLayout({
         {children}
       </div>
     </div>
-  );
+  )
 }

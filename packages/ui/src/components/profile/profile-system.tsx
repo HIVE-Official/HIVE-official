@@ -57,7 +57,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Error state
@@ -77,7 +77,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Mobile layout
@@ -179,7 +179,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Tablet layout
@@ -286,7 +286,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Desktop layout (default)
@@ -391,7 +391,7 @@ export const ProfileSystem: React.FC<ProfileSystemProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default ProfileSystem;

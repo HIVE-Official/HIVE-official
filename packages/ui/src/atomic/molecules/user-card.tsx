@@ -43,7 +43,7 @@ export interface UserCardProps extends React.HTMLAttributes<HTMLDivElement> {
     followers?: number;
     following?: number;
     spaces?: number;
-    tools?: number;
+    tools?: number
   };
   
   // Card variants
@@ -64,7 +64,7 @@ export interface UserCardProps extends React.HTMLAttributes<HTMLDivElement> {
   showStats?: boolean;
   showBio?: boolean;
   showDetails?: boolean;
-  interactive?: boolean;
+  interactive?: boolean
 }
 
 const roleData = {
@@ -111,21 +111,21 @@ export const UserCard: React.FC<UserCardProps> = ({
 
   const handleCardClick = (e: React.MouseEvent) => {
     if (interactive && onViewProfile && !e.defaultPrevented) {
-      onViewProfile(user.id);
+      onViewProfile(user.id)
     }
   };
 
   const handleActionClick = (e: React.MouseEvent, action: () => void) => {
     e.preventDefault();
     e.stopPropagation();
-    action();
+    action()
   };
 
   const formatNumber = (num: number) => {
     if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}k`;
+      return `${(num / 1000).toFixed(1)}k`
     }
-    return num.toString();
+    return num.toString()
   };
 
   // Minimal variant
@@ -184,7 +184,7 @@ export const UserCard: React.FC<UserCardProps> = ({
           </Button>
         )}
       </div>
-    );
+    )
   }
 
   // Compact variant
@@ -306,7 +306,7 @@ export const UserCard: React.FC<UserCardProps> = ({
           </div>
         )}
       </div>
-    );
+    )
   }
 
   // Default and detailed variants
@@ -498,5 +498,5 @@ export const UserCard: React.FC<UserCardProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };

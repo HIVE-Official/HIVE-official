@@ -349,16 +349,16 @@ const CommandInterfaceDemo = () => {
   // Simulate command filtering
   useEffect(() => {
     if (searchQuery.trim() === '') {
-      setFilteredCommands(mockCommands);
+      setFilteredCommands(mockCommands)
     } else {
       const filtered = mockCommands.filter(cmd => 
         cmd.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         cmd.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         cmd.category.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredCommands(filtered);
+      setFilteredCommands(filtered)
     }
-    setSelectedCommand(0);
+    setSelectedCommand(0)
   }, [searchQuery]);
 
   // Keyboard navigation simulation
@@ -367,20 +367,20 @@ const CommandInterfaceDemo = () => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setCommandPaletteOpen(true);
-        setSearchMode(false);
+        setSearchMode(false)
       } else if (e.key === '/' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setCommandPaletteOpen(true);
-        setSearchMode(true);
+        setSearchMode(true)
       } else if (e.key === 'Escape') {
         setCommandPaletteOpen(false);
         setSearchQuery('');
-        setSearchMode(false);
+        setSearchMode(false)
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress)
   }, []);
 
   const commandCategories = [...new Set(filteredCommands.map(cmd => cmd.category))];
@@ -403,7 +403,7 @@ const CommandInterfaceDemo = () => {
               <Button 
                 onClick={() => {
                   setCommandPaletteOpen(true);
-                  setSearchMode(false);
+                  setSearchMode(false)
                 }}
                 className="hive-interactive" 
                 style={{ backgroundColor: 'var(--hive-brand-primary)', color: 'var(--hive-text-inverse)' }}
@@ -414,7 +414,7 @@ const CommandInterfaceDemo = () => {
               <Button 
                 onClick={() => {
                   setCommandPaletteOpen(true);
-                  setSearchMode(true);
+                  setSearchMode(true)
                 }}
                 variant="outline" 
                 className="border-gray-600 text-white"
@@ -557,8 +557,8 @@ const CommandInterfaceDemo = () => {
                                 </div>
                                 <ChevronRight className="w-4 h-4 text-gray-500 ml-2" />
                               </div>
-                            );
-                          })}
+                            )
+                          })
                       </div>
                     ))}
                   </div>
@@ -770,7 +770,7 @@ const CommandInterfaceDemo = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 export const CommandInterface: Story = {
@@ -890,7 +890,7 @@ export const KeyboardShortcuts: Story = {
           </Card>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',

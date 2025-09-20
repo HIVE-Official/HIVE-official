@@ -325,7 +325,7 @@ export const CompleteShowcase: Story = {
                     50: 'Moderate',
                     75: 'Hard',
                     100: 'Expert'
-                  }}
+          }}
                 />
                 <Slider 
                   min={1} 
@@ -341,7 +341,7 @@ export const CompleteShowcase: Story = {
                     3: '3 - Med',
                     4: '4',
                     5: '5 - High'
-                  }}
+          }}
                 />
               </div>
             </div>
@@ -556,7 +556,7 @@ export const CompleteShowcase: Story = {
                   18: '6 PM',
                   20: '8 PM',
                   22: '10 PM'
-                }}
+          }}
               />
               <RangeSlider 
                 min={1} 
@@ -567,8 +567,8 @@ export const CompleteShowcase: Story = {
                 showValue
                 formatValue={(val) => {
                   const days = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                  return days[val];
-                }}
+                  return days[val]
+          }}
               />
               <Slider 
                 min={12} 
@@ -602,7 +602,7 @@ export const CompleteShowcase: Story = {
                   6: '6',
                   7: '7',
                   8: '8+'
-                }}
+          }}
               />
               <RangeSlider 
                 min={30} 
@@ -627,7 +627,7 @@ export const CompleteShowcase: Story = {
                   3: 'Normal',
                   4: 'Active',
                   5: 'Social'
-                }}
+          }}
               />
             </div>
           </div>
@@ -669,7 +669,7 @@ export const CompleteShowcase: Story = {
                   5: 'Moderate',
                   7: 'Active',
                   10: 'Maximum'
-                }}
+          }}
               />
             </div>
           </div>
@@ -765,7 +765,7 @@ export const CompleteShowcase: Story = {
                   5: 'Semi-formal',
                   7: 'Business',
                   10: 'Formal'
-                }}
+          }}
               />
             </div>
           </div>
@@ -787,7 +787,7 @@ export const CompleteShowcase: Story = {
                   3: 'Campus',
                   4: 'Public',
                   5: 'Open'
-                }}
+          }}
               />
               <Slider 
                 min={0} 
@@ -802,7 +802,7 @@ export const CompleteShowcase: Story = {
                   2: 'Real-time',
                   3: 'Hourly',
                   4: 'Instant'
-                }}
+          }}
               />
               <RangeSlider 
                 min={6} 

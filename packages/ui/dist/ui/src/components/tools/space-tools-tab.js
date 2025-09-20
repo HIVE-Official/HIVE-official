@@ -141,26 +141,26 @@ export function SpaceToolsTab({ spaceId, userId, userRole, className }) {
     }
     return (_jsxs("div", { className: cn("space-y-6", className), children: [_jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", children: [_jsxs("div", { children: [_jsx("h2", { className: "text-xl font-semibold text-gray-900", children: "Space Tools" }), _jsxs("p", { className: "text-sm text-gray-600", children: [installedTools.length, " tools installed \u2022 ", installedTools.filter(t => t.settings.enabled).length, " active"] })] }), (userRole === 'admin' || userRole === 'moderator') && (_jsxs(HiveButton, { onClick: () => setCurrentView('marketplace'), children: [_jsx(Plus, { className: "w-4 h-4 mr-2" }), "Add Tools"] }))] }), installedTools.length > 0 && (_jsxs("div", { className: "relative max-w-md", children: [_jsx(Search, { className: "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" }), _jsx("input", { type: "text", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), placeholder: "Search installed tools...", className: "w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" })] })), loading ? (_jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: [1, 2, 3].map(i => (_jsx("div", { className: "animate-pulse", children: _jsx("div", { className: "h-48 bg-gray-200 rounded-lg" }) }, i))) })) : filteredTools.length === 0 ? (_jsxs("div", { className: "text-center py-12", children: [_jsx("div", { className: "w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4", children: _jsx(Plus, { className: "w-8 h-8 text-gray-400" }) }), _jsx("h3", { className: "text-lg font-medium text-gray-900 mb-2", children: installedTools.length === 0 ? 'No tools installed yet' : 'No tools found' }), _jsx("p", { className: "text-gray-600 mb-4", children: installedTools.length === 0
                             ? 'Add tools from the marketplace to help coordinate your space activities'
-                            : 'Try adjusting your search terms' }), (userRole === 'admin' || userRole === 'moderator') && installedTools.length === 0 && (_jsx(HiveButton, { onClick: () => setCurrentView('marketplace'), children: "Browse Marketplace" }))] })) : (_jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", children: filteredTools.map(tool => (_jsx(InstalledToolCard, { tool: tool, userRole: userRole, onLaunch: () => handleLaunchTool(tool), onToggle: async (enabled) => {
-                        // Update tool enabled status
-                        try {
-                            await fetch(`/api/spaces/${spaceId}/tools/${tool.id}/settings`, {
-                                method: 'PATCH',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${userId}`
-                                },
-                                body: JSON.stringify({ enabled })
-                            });
-                            // Update local state
-                            setInstalledTools(prev => prev.map(t => t.id === tool.id
-                                ? { ...t, settings: { ...t.settings, enabled } }
-                                : t));
-                        }
-                        catch (error) {
-                            console.error('Failed to update tool settings:', error);
-                        }
-                    } }, tool.id))) }))] }));
+                            : 'Try adjusting your search terms' }), (userRole === 'admin' || userRole === 'moderator') && installedTools.length === 0 && (_jsx(HiveButton, { onClick: () => setCurrentView('marketplace'), children: "Browse Marketplace" }))] })) : (_jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", children: [filteredTools.map(tool => (_jsx(InstalledToolCard, { tool: tool, userRole: userRole, onLaunch: () => handleLaunchTool(tool), onToggle: async (enabled) => {
+                            // Update tool enabled status
+                            try {
+                                await fetch(`/api/spaces/${spaceId}/tools/${tool.id}/settings`, {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${userId}`
+                                    },
+                                    body: JSON.stringify({ enabled })
+                                });
+                                // Update local state
+                                setInstalledTools(prev => prev.map(t => t.id === tool.id
+                                    ? { ...t, settings: { ...t.settings, enabled } }
+                                    : t));
+                            }
+                            catch (error) {
+                                console.error('Failed to update tool settings:', error);
+                            }
+                        } }, tool.id))), "/> ))}"] }))] }));
 }
 function InstalledToolCard({ tool, userRole, onLaunch, onToggle }) {
     const canManage = userRole === 'admin' || userRole === 'moderator';

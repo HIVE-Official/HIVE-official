@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hivePremiumButtonVariants: (props?: {
-    variant?: "primary" | "secondary" | "success" | "outline" | "ghost" | "chip-gold" | "chip-glass" | "gold-glow" | "danger";
+    variant?: "primary" | "secondary" | "success" | "outline" | "ghost" | "chip-gold" | "chip-glass" | "danger" | "gold-glow";
     size?: "default" | "xs" | "sm" | "lg" | "xl" | "icon" | "icon-sm" | "icon-lg";
     radius?: "xl" | "medium" | "large" | "pill" | "soft";
 } & import("class-variance-authority/types").ClassProp) => string;

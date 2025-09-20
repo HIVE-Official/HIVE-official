@@ -519,6 +519,6 @@ export const InteractiveAvatarEditor: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

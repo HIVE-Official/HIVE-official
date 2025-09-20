@@ -111,7 +111,7 @@ export interface HiveTextareaProps
   floatingLabel?: boolean;
   resize?: boolean;
   // For basic Textarea compatibility
-  asChild?: boolean;
+  asChild?: boolean
 }
 
 const HiveTextarea = React.forwardRef<HTMLTextAreaElement, HiveTextareaProps>(
@@ -158,7 +158,7 @@ const HiveTextarea = React.forwardRef<HTMLTextAreaElement, HiveTextareaProps>(
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = e.target.value;
       setInternalValue(newValue);
-      props.onChange?.(e);
+      props.onChange?.(e)
     };
     
     // Status message to show
@@ -194,11 +194,11 @@ const HiveTextarea = React.forwardRef<HTMLTextAreaElement, HiveTextareaProps>(
                 animate={{
                   scale: shouldFloat ? 0.9 : 1,
                   y: shouldFloat ? 0 : 0,
-                }}
+          }}
                 transition={{
                   duration: 0.2,
                   ease: "easeOut",
-                }}
+          }}
               >
                 {label}
               </motion.label>
@@ -224,12 +224,12 @@ const HiveTextarea = React.forwardRef<HTMLTextAreaElement, HiveTextareaProps>(
               )}
               onFocus={(e) => {
                 setIsFocused(true);
-                props.onFocus?.(e);
-              }}
+                props.onFocus?.(e)
+          }}
               onBlur={(e) => {
                 setIsFocused(false);
-                props.onBlur?.(e);
-              }}
+                props.onBlur?.(e)
+          }}
               onChange={handleChange}
               {...props}
             />
@@ -306,7 +306,7 @@ const HiveTextarea = React.forwardRef<HTMLTextAreaElement, HiveTextareaProps>(
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 

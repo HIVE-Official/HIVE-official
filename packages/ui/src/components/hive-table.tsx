@@ -40,24 +40,24 @@ export interface TableColumn<T = any> {
   filterable?: boolean;
   render?: (value: any, row: T, index: number) => React.ReactNode;
   headerRender?: () => React.ReactNode;
-  filterRender?: (value: any, onChange: (value: any) => void) => React.ReactNode;
+  filterRender?: (value: any, onChange: (value: any) => void) => React.ReactNode
 }
 
 export interface TableFilter {
   column: string;
   value: any;
-  operator: 'equals' | 'contains' | 'startsWith' | 'endsWith' | 'greaterThan' | 'lessThan' | 'between';
+  operator: 'equals' | 'contains' | 'startsWith' | 'endsWith' | 'greaterThan' | 'lessThan' | 'between'
 }
 
 export interface TableSort {
   column: string;
-  direction: SortDirection;
+  direction: SortDirection
 }
 
 export interface PaginationOptions {
   page: number;
   pageSize: number;
-  total: number;
+  total: number
 }
 
 const hiveTableVariants = cva(
@@ -150,7 +150,7 @@ export interface HiveTableProps<T = any>
   stickyHeader?: boolean;
   virtualizeRows?: boolean;
   expandable?: boolean;
-  expandedRowRender?: (row: T, index: number) => React.ReactNode;
+  expandedRowRender?: (row: T, index: number) => React.ReactNode
 }
 
 const HiveTable = <T extends Record<string, any>>({
@@ -204,9 +204,9 @@ const HiveTable = <T extends Record<string, any>>({
               ? column.accessor(row)
               : row[column.accessor]
             : '';
-          return String(value).toLowerCase().includes(query);
-        })
-      );
+          return String(value).toLowerCase().includes(query)
+        })}
+      )
     }
     
     // Apply filters
@@ -235,9 +235,9 @@ const HiveTable = <T extends Record<string, any>>({
           case 'lessThan':
             return Number(value) < Number(filter.value);
           default:
-            return true;
+            return true
         }
-      });
+      })
     });
     
     // Apply sort
@@ -259,19 +259,19 @@ const HiveTable = <T extends Record<string, any>>({
           let comparison = 0;
           
           if (column.type === 'number') {
-            comparison = Number(aValue) - Number(bValue);
+            comparison = Number(aValue) - Number(bValue)
           } else if (column.type === 'date') {
-            comparison = new Date(aValue).getTime() - new Date(bValue).getTime();
+            comparison = new Date(aValue).getTime() - new Date(bValue).getTime()
           } else {
-            comparison = String(aValue).localeCompare(String(bValue));
+            comparison = String(aValue).localeCompare(String(bValue))
           }
           
-          return currentSort.direction === 'asc' ? comparison : -comparison;
-        });
+          return currentSort.direction === 'asc' ? comparison : -comparison
+        })
       }
     }
     
-    return filtered;
+    return filtered
   }, [data, columns, searchQuery, filters, currentSort, searchable]);
   
   // Pagination calculations
@@ -289,15 +289,15 @@ const HiveTable = <T extends Record<string, any>>({
     
     if (currentSort.column === columnId) {
       if (currentSort.direction === 'asc') {
-        newDirection = 'desc';
+        newDirection = 'desc'
       } else if (currentSort.direction === 'desc') {
-        newDirection = null;
+        newDirection = null
       }
     }
     
     const newSort = { column: columnId, direction: newDirection };
     setCurrentSort(newSort);
-    onSort?.(newSort);
+    onSort?.(newSort)
   }, [columns, currentSort, onSort]);
   
   // Handle filtering
@@ -305,19 +305,19 @@ const HiveTable = <T extends Record<string, any>>({
     const newFilters = filters.filter(f => f.column !== columnId);
     
     if (value !== '' && value !== null && value !== undefined) {
-      newFilters.push({ column: columnId, value, operator });
+      newFilters.push({ column: columnId, value, operator })
     }
     
     setFilters(newFilters);
     setCurrentPage(1); // Reset to first page
-    onFilter?.(newFilters);
+    onFilter?.(newFilters)
   }, [filters, onFilter]);
   
   // Handle search
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
     setCurrentPage(1); // Reset to first page
-    onSearch?.(query);
+    onSearch?.(query)
   }, [onSearch]);
   
   // Handle row selection
@@ -325,15 +325,15 @@ const HiveTable = <T extends Record<string, any>>({
     const newSelected = new Set(selectedRows);
     
     if (selected) {
-      newSelected.add(index);
+      newSelected.add(index)
     } else {
-      newSelected.delete(index);
+      newSelected.delete(index)
     }
     
     setSelectedRows(newSelected);
     
     const selectedData = Array.from(newSelected).map(idx => paginatedData[idx]).filter(Boolean);
-    onSelect?.(selectedData);
+    onSelect?.(selectedData)
   }, [selectedRows, paginatedData, onSelect]);
   
   // Handle select all
@@ -341,10 +341,10 @@ const HiveTable = <T extends Record<string, any>>({
     if (selected) {
       const allIndices = new Set(paginatedData.map((_, idx) => idx));
       setSelectedRows(allIndices);
-      onSelect?.(paginatedData);
+      onSelect?.(paginatedData)
     } else {
       setSelectedRows(new Set());
-      onSelect?.([]);
+      onSelect?.([])
     }
   }, [paginatedData, onSelect]);
   
@@ -353,12 +353,12 @@ const HiveTable = <T extends Record<string, any>>({
     const newExpanded = new Set(expandedRows);
     
     if (newExpanded.has(index)) {
-      newExpanded.delete(index);
+      newExpanded.delete(index)
     } else {
-      newExpanded.add(index);
+      newExpanded.add(index)
     }
     
-    setExpandedRows(newExpanded);
+    setExpandedRows(newExpanded)
   }, [expandedRows]);
   
   // Render cell content
@@ -370,7 +370,7 @@ const HiveTable = <T extends Record<string, any>>({
       : '';
     
     if (column.render) {
-      return column.render(value, row, index);
+      return column.render(value, row, index)
     }
     
     // Default rendering based on type
@@ -382,7 +382,7 @@ const HiveTable = <T extends Record<string, any>>({
       case 'number':
         return typeof value === 'number' ? value.toLocaleString() : value;
       default:
-        return String(value || '');
+        return String(value || '')
     }
   }, []);
   
@@ -466,8 +466,8 @@ const HiveTable = <T extends Record<string, any>>({
                     type="checkbox"
                     checked={allSelected}
                     ref={(input) => {
-                      if (input) input.indeterminate = someSelected;
-                    }}
+                      if (input) input.indeterminate = someSelected
+          }}
                     onChange={(e) => handleSelectAll(e.target.checked)}
                     className="rounded border-white/20 bg-[var(--hive-background-primary)]/40 text-yellow-500 focus:ring-yellow-500"
                   />
@@ -492,7 +492,7 @@ const HiveTable = <T extends Record<string, any>>({
                   style={{ 
                     width: column.width,
                     minWidth: column.minWidth 
-                  }}
+          }}
                   variants={headerVariants}
                   initial="rest"
                   whileHover={column.sortable ? "hover" : "rest"}
@@ -705,8 +705,8 @@ const HiveTable = <T extends Record<string, any>>({
                     >
                       {pageNum}
                     </motion.button>
-                  );
-                })}
+                  )
+          }}
               </div>
               
               {/* Next Page */}
@@ -735,14 +735,14 @@ const HiveTable = <T extends Record<string, any>>({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Default row actions component
 export const DefaultRowActions: React.FC<{
   onView?: () => void;
   onEdit?: () => void;
-  onDelete?: () => void;
+  onDelete?: () => void
 }> = ({ onView, onEdit, onDelete }) => (
   <div className="flex items-center space-x-1">
     {onView && (

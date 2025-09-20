@@ -241,7 +241,7 @@ const useAdminState = () => {
     setSelectedUser,
     filters,
     setFilters
-  };
+  }
 };
 
 // Admin Layout Component
@@ -254,7 +254,7 @@ const AdminLayout = ({
   children: React.ReactNode;
   title: string;
   subtitle?: string;
-  actions?: React.ReactNode;
+  actions?: React.ReactNode
 }) => (
   <div className="min-h-screen bg-black text-white">
     <div className="max-w-7xl mx-auto p-6">
@@ -976,7 +976,7 @@ const AdminSystem = () => {
         </div>
       </Tabs>
     </AdminLayout>
-  );
+  )
 };
 
 // Story Exports
@@ -1006,7 +1006,7 @@ export const ModerationQueueOnly: Story = {
       <AdminLayout title="Moderation Queue" subtitle="Review and manage community reports">
         <ModerationQueue state={adminState} />
       </AdminLayout>
-    );
+    )
   }
 };
 
@@ -1017,7 +1017,7 @@ export const UserManagementOnly: Story = {
       <AdminLayout title="User Management" subtitle="Manage UB student accounts and roles">
         <UserManagement state={adminState} />
       </AdminLayout>
-    );
+    )
   }
 };
 

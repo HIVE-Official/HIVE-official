@@ -28,8 +28,8 @@ export interface EnhancedProfileUser {
     toolsUsed: number;
     connectionsCount: number;
     toolsCreated: number;
-    spacesLed: number;
-  };
+    spacesLed: number
+  }
 }
 
 export interface ProfileCompletionStatus {
@@ -38,7 +38,7 @@ export interface ProfileCompletionStatus {
   profile: number;
   verification: number;
   privacy: number;
-  missing: string[];
+  missing: string[]
 }
 
 interface EnhancedProfileSystemProps {
@@ -57,7 +57,7 @@ interface EnhancedProfileSystemProps {
   onEventClick?: (eventId: string) => void;
   onConnectionClick?: (connectionId: string) => void;
   onJoinSpace?: (spaceId: string) => void;
-  onCreateTool?: () => void;
+  onCreateTool?: () => void
 }
 
 export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
@@ -183,14 +183,14 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
 
   const handleLayoutChange = useCallback((newWidgets: WidgetConfiguration[]) => {
     setWidgets(newWidgets);
-    setHasUnsavedChanges(true);
+    setHasUnsavedChanges(true)
   }, []);
 
   const handleWidgetSettings = useCallback((widgetId: string, settings: any) => {
     setWidgets(prev => prev.map(widget => 
       widget.id === widgetId ? { ...widget, settings } : widget
     ));
-    setHasUnsavedChanges(true);
+    setHasUnsavedChanges(true)
   }, []);
 
   const handleAddWidget = useCallback((type: WidgetType) => {
@@ -205,12 +205,12 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
     };
     
     setWidgets(prev => [...prev, newWidget]);
-    setHasUnsavedChanges(true);
+    setHasUnsavedChanges(true)
   }, [widgets]);
 
   const handleRemoveWidget = useCallback((widgetId: string) => {
     setWidgets(prev => prev.filter(widget => widget.id !== widgetId));
-    setHasUnsavedChanges(true);
+    setHasUnsavedChanges(true)
   }, []);
 
   const findNextAvailablePosition = () => {
@@ -223,11 +223,11 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
     for (let y = 0; y < 10; y++) {
       for (let x = 0; x < gridColumns; x++) {
         if (!occupiedPositions.has(`${x},${y}`)) {
-          return { x, y };
+          return { x, y }
         }
       }
     }
-    return { x: 0, y: 0 };
+    return { x: 0, y: 0 }
   };
 
   const getWidgetTitle = (type: WidgetType): string => {
@@ -241,7 +241,7 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
       'profile-stats': 'Stats',
       'campus-connections': 'Connections'
     };
-    return titles[type] || 'Widget';
+    return titles[type] || 'Widget'
   };
 
   const getDefaultWidgetSize = (type: WidgetType) => {
@@ -255,7 +255,7 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
       'profile-stats': { width: 2 as const, height: 1 as const },
       'campus-connections': { width: 1 as const, height: 1 as const }
     };
-    return sizes[type] || { width: 1 as const, height: 1 as const };
+    return sizes[type] || { width: 1 as const, height: 1 as const }
   };
 
   const getDefaultWidgetSettings = () => ({
@@ -275,13 +275,13 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
     setHasUnsavedChanges(false);
     setIsEditing(false);
     // Here you would save to backend
-    console.log('Saving layout:', widgets);
+    console.log('Saving layout:', widgets)
   };
 
   const handleCancelEdit = () => {
     if (hasUnsavedChanges) {
       const confirmed = window.confirm('You have unsaved changes. Are you sure you want to discard them?');
-      if (!confirmed) return;
+      if (!confirmed) return
     }
     setIsEditing(false);
     setHasUnsavedChanges(false);
@@ -301,13 +301,13 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
         const updatedWidgets = widgets.map(w => 
           w.id === widget.id ? { ...w, size } : w
         );
-        handleLayoutChange(updatedWidgets);
+        handleLayoutChange(updatedWidgets)
       },
       onPositionChange: (position: any) => {
         const updatedWidgets = widgets.map(w => 
           w.id === widget.id ? { ...w, position } : w
         );
-        handleLayoutChange(updatedWidgets);
+        handleLayoutChange(updatedWidgets)
       },
       onRemove: () => handleRemoveWidget(widget.id)
     };
@@ -320,14 +320,14 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
             {...baseProps}
             priorities={mockPriorities}
             onActionTaken={(priorityId, actionId) => {
-              console.log('Action taken:', priorityId, actionId);
-            }}
+              console.log('Action taken:', priorityId, actionId)
+          }}
             onPriorityClick={(priorityId) => {
-              console.log('Priority clicked:', priorityId);
-            }}
+              console.log('Priority clicked:', priorityId)
+          }}
             onViewAll={() => {
-              console.log('View all priorities');
-            }}
+              console.log('View all priorities')
+          }}
           />
         );
       
@@ -338,11 +338,11 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
             {...baseProps}
             privacySettings={mockPrivacySettings}
             onPrivacyChange={(settings) => {
-              console.log('Privacy settings changed:', settings);
-            }}
+              console.log('Privacy settings changed:', settings)
+          }}
             onOpenFullSettings={() => {
-              if (onPrivacySettings) onPrivacySettings();
-            }}
+              if (onPrivacySettings) onPrivacySettings()
+          }}
           />
         );
       
@@ -354,12 +354,12 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
             isV1Unlocked={user.isBuilder} // Builders get early access
             onJoinWaitlist={() => {
               console.log('Join v1 waitlist');
-              window.open('https://hive.ai/waitlist', '_blank');
-            }}
+              window.open('https://hive.ai/waitlist', '_blank')
+          }}
             onViewToolCategory={(category) => {
               console.log('View tool category:', category);
-              if (onCreateTool) onCreateTool();
-            }}
+              if (onCreateTool) onCreateTool()
+          }}
           />
         );
       
@@ -375,7 +375,7 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
               <p className="text-xs text-hive-text-tertiary">Coming soon</p>
             </div>
           </div>
-        );
+        )
     }
   };
 
@@ -387,7 +387,7 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
           <p className="text-hive-text-primary">Loading your HIVE Profile...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -483,12 +483,12 @@ export const EnhancedProfileSystem: React.FC<EnhancedProfileSystemProps> = ({
           onLayoutLoad={setWidgets}
           onLayoutSave={async (layout) => {
             // Save to backend
-            console.log('Saving layout to backend:', layout);
+            console.log('Saving layout to backend:', layout)
           }}
         />
       </div>
     </div>
-  );
+  )
 };
 
 export default EnhancedProfileSystem;

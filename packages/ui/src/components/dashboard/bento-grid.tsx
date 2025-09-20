@@ -3,9 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useDragControls, Reorder } from 'framer-motion';
 import { GripVertical, Maximize2, Minimize2, Settings, X, Plus } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 
 // Grid item types and sizes
 export type GridSize = 'small' | 'medium' | 'large' | 'xl';
@@ -25,7 +25,7 @@ export interface BentoGridItem {
   priority?: number;
   category?: string;
   description?: string;
-  icon?: React.ReactNode;
+  icon?: React.ReactNode
 }
 
 export interface BentoGridLayout {
@@ -37,8 +37,8 @@ export interface BentoGridLayout {
   responsive?: {
     mobile: number;
     tablet: number;
-    desktop: number;
-  };
+    desktop: number
+  }
 }
 
 interface BentoGridProps {
@@ -49,7 +49,7 @@ interface BentoGridProps {
   onItemAdd?: () => void;
   onItemConfigure?: (itemId: string) => void;
   editable?: boolean;
-  className?: string;
+  className?: string
 }
 
 // Grid size mappings
@@ -116,7 +116,7 @@ export function BentoGrid({
     onLayoutChange?.({
       ...layout,
       items: newItems
-    });
+    })
   };
 
   // Handle item size change
@@ -129,7 +129,7 @@ export function BentoGrid({
     onLayoutChange?.({
       ...layout,
       items: updatedItems
-    });
+    })
   };
 
   // Handle item removal
@@ -140,7 +140,7 @@ export function BentoGrid({
     onLayoutChange?.({
       ...layout,
       items: updatedItems
-    });
+    })
   };
 
   // Get grid item style based on size
@@ -150,7 +150,7 @@ export function BentoGrid({
       gridColumn: `span ${mapping.cols}`,
       gridRow: `span ${mapping.rows}`,
       minHeight: `${mapping.rows * 120}px`
-    };
+    }
   };
 
   // Get responsive grid columns
@@ -164,11 +164,11 @@ export function BentoGrid({
         '@media (max-width: theme(screens.md))': {
           gridTemplateColumns: `repeat(${layout.responsive.mobile}, 1fr)`
         }
-      };
+      }
     }
     return {
       gridTemplateColumns: `repeat(${layout.columns}, 1fr)`
-    };
+    }
   };
 
   return (
@@ -233,7 +233,7 @@ export function BentoGrid({
                 scale: 1.05, 
                 zIndex: 50,
                 boxShadow: "0 5 6 -5px color-mix(in_srgb,var(--hive-background-primary)_10%,transparent), 0 10px 10px -5px color-mix(in_srgb,var(--hive-background-primary)_4%,transparent)"
-              }}
+          }}
               onDragStart={() => setDraggedItem(item.id)}
               onDragEnd={() => setDraggedItem(null)}
             >
@@ -273,7 +273,7 @@ export function BentoGrid({
         </motion.div>
       )}
     </motion.div>
-  );
+  )
 }
 
 // Individual grid item component
@@ -286,7 +286,7 @@ interface BentoGridItemComponentProps {
   onRemove: () => void;
   onConfigure: () => void;
   onResizeStart: () => void;
-  onResizeEnd: () => void;
+  onResizeEnd: () => void
 }
 
 function BentoGridItemComponent({
@@ -312,8 +312,8 @@ function BentoGridItemComponent({
   ].filter(option => {
     if (item.minSize && option.size < item.minSize) return false;
     if (item.maxSize && option.size > item.maxSize) return false;
-    return true;
-  });
+    return true
+  })};
 
   return (
     <motion.div
@@ -365,7 +365,7 @@ function BentoGridItemComponent({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                       >
-                        {sizeOptions.map(({ size, label, disabled }) => (
+                        {sizeOptions.map(({ size, label, disabled })} => (
                           <button
                             key={size}
                             className={`
@@ -376,9 +376,9 @@ function BentoGridItemComponent({
                             onClick={() => {
                               if (!disabled) {
                                 onResize(size);
-                                setShowSizeMenu(false);
+                                setShowSizeMenu(false)
                               }
-                            }}
+          }}
                             disabled={disabled}
                           >
                             {label}
@@ -438,7 +438,7 @@ function BentoGridItemComponent({
         </CardContent>
       </Card>
     </motion.div>
-  );
+  )
 }
 
 // Predefined layouts
@@ -503,12 +503,12 @@ export const optimizeLayout = (items: BentoGridItem[], columns: number): BentoGr
   // Sort by priority and size for optimal positioning
   return items.sort((a, b) => {
     if (a.priority !== b.priority) {
-      return (b.priority || 0) - (a.priority || 0);
+      return (b.priority || 0) - (a.priority || 0)
     }
     
     const sizeOrder = { xl: 4, large: 3, medium: 2, small: 1 };
-    return sizeOrder[b.size] - sizeOrder[a.size];
-  });
+    return sizeOrder[b.size] - sizeOrder[a.size]
+  })
 };
 
 export default BentoGrid;

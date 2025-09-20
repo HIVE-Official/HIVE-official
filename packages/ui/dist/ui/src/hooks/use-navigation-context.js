@@ -1,6 +1,21 @@
 "use client";
 import { createContext, useContext, useCallback, useMemo, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+// Optional Next.js navigation - only works when Next.js is available
+let usePathname;
+let useRouter;
+try {
+    const nextNavigation = require('next/navigation');
+    usePathname = nextNavigation.usePathname;
+    useRouter = nextNavigation.useRouter;
+}
+catch {
+    // Fallback when Next.js is not available
+    usePathname = () => '/';
+    useRouter = () => ({
+        push: async () => false,
+        back: () => { }
+    });
+}
 const NavigationContext = createContext(null);
 // Route metadata for generating page info
 const ROUTE_METADATA = {

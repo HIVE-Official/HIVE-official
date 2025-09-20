@@ -6,7 +6,7 @@ import { cn } from '../../lib/utils';
 interface AlertProps {
   children: React.ReactNode;
   variant?: 'default' | 'destructive';
-  className?: string;
+  className?: string
 }
 
 export const Alert: React.FC<AlertProps> = ({ 
@@ -25,7 +25,7 @@ export const Alert: React.FC<AlertProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };
 
 export const AlertTitle: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
@@ -36,7 +36,7 @@ export const AlertTitle: React.FC<{ children: React.ReactNode; className?: strin
     <h5 className={cn('mb-1 font-medium leading-none tracking-tight', className)}>
       {children}
     </h5>
-  );
+  )
 };
 
 export const AlertDescription: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
@@ -47,5 +47,5 @@ export const AlertDescription: React.FC<{ children: React.ReactNode; className?:
     <div className={cn('text-sm [&_p]:leading-relaxed', className)}>
       {children}
     </div>
-  );
+  )
 };

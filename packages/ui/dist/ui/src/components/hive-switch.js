@@ -120,7 +120,7 @@ HiveSwitch.displayName = "HiveSwitch";
 const HiveGoldSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "gold", ...props })));
 const HiveSuccessSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "success", ...props })));
 const HiveMinimalSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "minimal", ...props })));
-const HiveNotificationSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "default", label: "Push Notifications", description: "Receive notifications about new messages and updates", ...props })));
+const HiveNotificationSwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "secondary", label: "Push Notifications", description: "Receive notifications about new messages and updates", ...props })));
 const HivePrivacySwitch = React.forwardRef((props, ref) => (_jsx(HiveSwitch, { ref: ref, variant: "minimal", label: "Public Profile", description: "Make your profile visible to other HIVE users", ...props })));
 HiveGoldSwitch.displayName = "HiveGoldSwitch";
 HiveSuccessSwitch.displayName = "HiveSuccessSwitch";

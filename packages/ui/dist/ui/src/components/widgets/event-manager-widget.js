@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, Plus, Eye, Activity, TrendingUp, UserCheck, Share2, BarChart3, Download } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button, Badge } from '../../atomic/atoms';
+import { Button } from '../../atomic/atoms/button';
+import { Badge } from '../../atomic/atoms/badge';
 import { EventManagerTool } from '../tools/event-manager-tool';
 export function EventManagerWidget({ space, isLeader = false, currentUserRole = 'member', leaderMode, showCompact = false, maxEvents = 6, onEventAction, authenticatedFetch, className }) {
     const [showFullManager, setShowFullManager] = useState(false);

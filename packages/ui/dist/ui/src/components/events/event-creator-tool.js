@@ -148,12 +148,16 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
                                     if (currentIndex > 0) {
                                         setCurrentStep(steps[currentIndex - 1].id);
                                     }
-                                }, children: "Back" })), currentStep === 'preview' ? (_jsxs(_Fragment, { children: [_jsxs(HiveButton, { variant: "outline", onClick: () => handleSaveEvent(false), disabled: isLoading, children: [_jsx(Save, { className: "w-4 h-4 mr-2" }), "Save Draft"] }), _jsxs(HiveButton, { onClick: () => handleSaveEvent(true), disabled: isLoading, children: [_jsx(Share, { className: "w-4 h-4 mr-2" }), "Publish Event"] })] })) : (_jsx(HiveButton, { onClick: () => {
-                                    const currentIndex = steps.findIndex(s => s.id === currentStep);
-                                    if (currentIndex < steps.length - 1) {
-                                        handleStepChange(steps[currentIndex + 1].id);
-                                    }
-                                }, children: "Next" }))] })] })] }));
+                                } })), "> Back"] }), ")}", currentStep === 'preview' ? (_jsxs(_Fragment, { children: [_jsxs(HiveButton, { variant: "outline", onClick: () => handleSaveEvent(false), disabled: isLoading, children: [_jsx(Save, { className: "w-4 h-4 mr-2" }), "Save Draft"] }), _jsxs(HiveButton, { onClick: () => handleSaveEvent(true), disabled: isLoading, children: [_jsx(Share, { className: "w-4 h-4 mr-2" }), "Publish Event"] })] })) : (_jsx(HiveButton, { onClick: () => {
+                            const currentIndex = steps.findIndex(s => s.id === currentStep);
+                            if (currentIndex < steps.length - 1) {
+                                handleStepChange(steps[currentIndex + 1].id);
+                            }
+                        } })), "> Next"] }), ")}"] }));
+    div >
+    ;
+    div >
+    ;
 }
 export default EventCreatorTool;
 //# sourceMappingURL=event-creator-tool.js.map

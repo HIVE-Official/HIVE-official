@@ -30,7 +30,7 @@ export interface PaginationOptions {
     total: number;
 }
 declare const hiveTableVariants: (props?: {
-    variant?: "default" | "minimal" | "premium";
+    variant?: "default" | "premium" | "minimal";
     density?: "default" | "compact" | "spacious";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveTableProps<T = any> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>, VariantProps<typeof hiveTableVariants> {
@@ -58,7 +58,7 @@ export interface HiveTableProps<T = any> extends Omit<React.HTMLAttributes<HTMLD
     expandable?: boolean;
     expandedRowRender?: (row: T, index: number) => React.ReactNode;
 }
-declare const HiveTable: <T extends Record<string, any>>({ className, variant, density, data, columns, loading, empty, sortable, filterable, searchable, selectable, pagination, pageSize, onSort, onFilter, onSearch, onSelect, onRowClick, onRowDoubleClick, rowActions, bulkActions, toolbar, stickyHeader, virtualizeRows, expandable, expandedRowRender, ...props }: HiveTableProps<T>) => import("react/jsx-runtime").JSX.Element;
+declare const HiveTable: <T extends Record<string, any>>({ className, variant, density, data, columns, loading, empty, sortable, filterable, searchable, selectable, pagination, pageSize, onSort, onFilter, onSearch, onSelect, onRowClick, onRowDoubleClick, rowActions, bulkActions, toolbar, stickyHeader, virtualizeRows, expandable, expandedRowRender, ...props }: HiveTableProps<T>) => void;
 export declare const DefaultRowActions: React.FC<{
     onView?: () => void;
     onEdit?: () => void;

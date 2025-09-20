@@ -171,12 +171,12 @@ const TransitionSystemDemo = () => {
             setCurrentPhase('v1');
             setShowCelebration(true);
             clearInterval(interval);
-            return 100;
+            return 100
           }
-          return prev + 2;
-        });
+          return prev + 2
+        })
       }, 50);
-      return () => clearInterval(interval);
+      return () => clearInterval(interval)
     }
   }, [currentPhase]);
 
@@ -254,7 +254,7 @@ const TransitionSystemDemo = () => {
               onClick={() => {
                 setCurrentPhase('vbeta');
                 setTransitionProgress(0);
-                setShowCelebration(false);
+                setShowCelebration(false)
               }}
               className={currentPhase === 'vbeta' ? 'hive-interactive' : 'border-gray-600 text-white'}
               style={currentPhase === 'vbeta' ? {
@@ -269,7 +269,7 @@ const TransitionSystemDemo = () => {
               variant="outline"
               onClick={() => {
                 setCurrentPhase('transition');
-                setTransitionProgress(0);
+                setTransitionProgress(0)
               }}
               className="border-gray-600 text-white"
               disabled={currentPhase === 'transition'}
@@ -281,7 +281,7 @@ const TransitionSystemDemo = () => {
               variant={currentPhase === 'v1' ? 'default' : 'outline'}
               onClick={() => {
                 setCurrentPhase('v1');
-                setTransitionProgress(100);
+                setTransitionProgress(100)
               }}
               className={currentPhase === 'v1' ? 'bg-purple-600 text-white' : 'border-gray-600 text-white'}
             >
@@ -569,7 +569,7 @@ const TransitionSystemDemo = () => {
         )}
       </div>
     </div>
-  );
+  )
 };
 
 export const TransitionOverview: Story = {
@@ -677,10 +677,10 @@ export const CelebrationMoment: Story = {
             </div>
           </div>
         </div>
-      );
+      )
     };
 
-    return <CelebrationDemo />;
+    return <CelebrationDemo />
   },
   parameters: {
     layout: 'fullscreen',
@@ -783,10 +783,10 @@ export const CapabilityComparison: Story = {
             </div>
           </div>
         </div>
-      );
+      )
     };
 
-    return <ComparisonDemo />;
+    return <ComparisonDemo />
   },
   parameters: {
     layout: 'fullscreen',

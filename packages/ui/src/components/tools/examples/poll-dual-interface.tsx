@@ -36,7 +36,7 @@ interface PollData {
   createdBy: string;
   createdAt: Date;
   totalVotes: number;
-  totalVoters: number;
+  totalVoters: number
 }
 
 interface PollDualInterfaceProps {
@@ -46,7 +46,7 @@ interface PollDualInterfaceProps {
   onUpdatePoll?: (updates: Partial<PollData>) => Promise<void>;
   onVote?: (optionIds: string[]) => Promise<void>;
   onDeletePoll?: () => Promise<void>;
-  showInterface?: boolean;
+  showInterface?: boolean
 }
 
 // Interface Component - For Leaders/Builders (Utility Side)
@@ -59,7 +59,7 @@ const PollInterface = ({
   poll: PollData;
   onUpdate: (updates: Partial<PollData>) => void;
   onDelete: () => void;
-  onToggleActive: () => void;
+  onToggleActive: () => void
 }) => {
   const [editingQuestion, setEditingQuestion] = useState(poll.question);
   const [editingOptions, setEditingOptions] = useState(poll.options);
@@ -71,18 +71,18 @@ const PollInterface = ({
       votes: 0,
       voters: []
     };
-    setEditingOptions([...editingOptions, newOption]);
+    setEditingOptions([...editingOptions, newOption])
   };
 
   const updateOption = (optionId: string, text: string) => {
     setEditingOptions(options => 
       options.map(opt => opt.id === optionId ? { ...opt, text } : opt)
-    );
+    )
   };
 
   const removeOption = (optionId: string) => {
     if (editingOptions.length > 2) {
-      setEditingOptions(options => options.filter(opt => opt.id !== optionId));
+      setEditingOptions(options => options.filter(opt => opt.id !== optionId))
     }
   };
 
@@ -90,7 +90,7 @@ const PollInterface = ({
     onUpdate({
       question: editingQuestion,
       options: editingOptions.filter(opt => opt.text.trim())
-    });
+    })
   };
 
   return (
@@ -205,7 +205,7 @@ const PollInterface = ({
             <input
               type="checkbox"
               checked={poll.allowMultiple}
-              onChange={(e) => onUpdate({ allowMultiple: e.target.checked })}
+              onChange={(e) => onUpdate({ allowMultiple: e.target.checked }}
               className="rounded border-gray-300 focus:ring-amber-500"
             />
             <span className="text-sm text-gray-700">Allow multiple selections</span>
@@ -215,7 +215,7 @@ const PollInterface = ({
             <input
               type="checkbox"
               checked={poll.isAnonymous}
-              onChange={(e) => onUpdate({ isAnonymous: e.target.checked })}
+              onChange={(e) => onUpdate({ isAnonymous: e.target.checked }}
               className="rounded border-gray-300 focus:ring-amber-500"
             />
             <span className="text-sm text-gray-700">Anonymous voting</span>
@@ -242,7 +242,7 @@ const PollInterface = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Surface Component - For Post Board (Informational Side)
@@ -257,7 +257,7 @@ const PollSurface = ({
   userId: string;
   userRole: string;
   onVote: (optionIds: string[]) => void;
-  hasVoted: boolean;
+  hasVoted: boolean
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
@@ -269,21 +269,21 @@ const PollSurface = ({
         prev.includes(optionId) 
           ? prev.filter(id => id !== optionId)
           : [...prev, optionId]
-      );
+      )
     } else {
-      setSelectedOptions([optionId]);
+      setSelectedOptions([optionId])
     }
   };
 
   const handleVote = () => {
     if (selectedOptions.length > 0) {
       onVote(selectedOptions);
-      setSelectedOptions([]);
+      setSelectedOptions([])
     }
   };
 
   const getOptionPercentage = (option: PollOption) => {
-    return poll.totalVotes > 0 ? Math.round((option.votes / poll.totalVotes) * 100) : 0;
+    return poll.totalVotes > 0 ? Math.round((option.votes / poll.totalVotes) * 100) : 0
   };
 
   const hasUserVoted = poll.options.some(option => option.voters.includes(userId));
@@ -358,8 +358,8 @@ const PollSurface = ({
                 </div>
               </button>
             </div>
-          );
-        })}
+          )
+          })
       </div>
 
       {/* Vote Button */}
@@ -391,7 +391,7 @@ const PollSurface = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export function PollDualInterface({
@@ -412,30 +412,30 @@ export function PollDualInterface({
 
   const handleUpdatePoll = useCallback(async (updates: Partial<PollData>) => {
     try {
-      await onUpdatePoll?.(updates);
+      await onUpdatePoll?.(updates)
     } catch (error) {
-      console.error('Failed to update poll:', error);
+      console.error('Failed to update poll:', error)
     }
   }, [onUpdatePoll]);
 
   const handleVote = useCallback(async (optionIds: string[]) => {
     try {
-      await onVote?.(optionIds);
+      await onVote?.(optionIds)
     } catch (error) {
-      console.error('Failed to vote:', error);
+      console.error('Failed to vote:', error)
     }
   }, [onVote]);
 
   const handleToggleActive = () => {
-    handleUpdatePoll({ isActive: !poll.isActive });
+    handleUpdatePoll({ isActive: !poll.isActive })
   };
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this poll?')) {
       try {
-        await onDeletePoll?.();
+        await onDeletePoll?.()
       } catch (error) {
-        console.error('Failed to delete poll:', error);
+        console.error('Failed to delete poll:', error)
       }
     }
   };
@@ -507,7 +507,7 @@ export function PollDualInterface({
         )}
       </div>
     </div>
-  );
+  )
 }
 
 export default PollDualInterface;

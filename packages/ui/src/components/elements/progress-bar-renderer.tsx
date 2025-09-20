@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { ElementInstance } from '@hive/core';
-import { Label } from '../../components/ui/label';
+import { Label } from '../../atomic/atoms/label';
 import { useStandardElementStyles } from '../../hooks/use-standard-element-styles';
 
 interface ProgressBarConfig {
@@ -32,8 +32,8 @@ interface ProgressBarRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 export const ProgressBarRenderer: React.FC<ProgressBarRendererProps> = ({
@@ -60,7 +60,7 @@ export const ProgressBarRenderer: React.FC<ProgressBarRendererProps> = ({
     // Check if there's a dynamic reference in the element config
     // This would typically be configured in the element's conditional rules
     // For now, we'll just use the current value
-    return currentValue;
+    return currentValue
   };
 
   const displayValue = getDynamicValue();
@@ -96,7 +96,7 @@ export const ProgressBarRenderer: React.FC<ProgressBarRendererProps> = ({
             style={{
               width: `${displayPercentage}%`,
               backgroundColor: barColor
-            }}
+          }}
           />
         </div>
         
@@ -118,5 +118,5 @@ export const ProgressBarRenderer: React.FC<ProgressBarRendererProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };

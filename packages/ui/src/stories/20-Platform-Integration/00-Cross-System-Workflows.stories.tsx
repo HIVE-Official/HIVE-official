@@ -659,7 +659,7 @@ const CrossSystemWorkflowsDemo = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 export const CrossSystemWorkflows: Story = {
@@ -840,7 +840,7 @@ export const SystemDataFlow: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',

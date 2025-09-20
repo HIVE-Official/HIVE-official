@@ -9,7 +9,7 @@ import { CheckCircle } from "lucide-react";
 import { Stack } from "./elements/stack";
 
 interface WaitlistFormProps {
-  onSubmit: (email: string) => Promise<void>;
+  onSubmit: (email: string) => Promise<void>
 }
 
 export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
@@ -24,15 +24,15 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
     // Fire and forget with proper error handling
     void onSubmit(email)
       .then(() => {
-        setSuccess(true);
+        setSuccess(true)
       })
       .catch((error) => {
         console.error("Waitlist submission failed:", error);
         // Handle error appropriately - maybe show a toast or error state
       })
       .finally(() => {
-        setLoading(false);
-      });
+        setLoading(false)
+      })
   };
 
   return (
@@ -75,7 +75,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
-                variant="default"
+                variant="secondary"
                 size="lg"
               />
               <HiveButton 
@@ -92,5 +92,5 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ onSubmit }) => {
         )}
       </AnimatePresence>
     </HiveCard>
-  );
+  )
 };

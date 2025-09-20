@@ -35,7 +35,7 @@ interface CalendarEvent {
   location?: string;
   spaceId?: string;
   spaceName?: string;
-  status: 'confirmed' | 'tentative' | 'cancelled';
+  status: 'confirmed' | 'tentative' | 'cancelled'
 }
 
 interface CalendarConflict {
@@ -44,7 +44,7 @@ interface CalendarConflict {
   severity: 'high' | 'medium' | 'low';
   eventIds: string[];
   description: string;
-  suggestion: string;
+  suggestion: string
 }
 
 export interface ProfileDashboardProps {
@@ -77,7 +77,7 @@ export interface ProfileDashboardProps {
     spaces?: boolean;
     activities?: boolean;
     tools?: boolean;
-    calendar?: boolean;
+    calendar?: boolean
   };
   
   // Interactive callbacks
@@ -105,7 +105,7 @@ export interface ProfileDashboardProps {
   onDeleteEvent?: (id: string) => void;
   onResolveConflict?: (conflictId: string, resolution: string, eventId?: string) => void;
   
-  className?: string;
+  className?: string
 }
 
 // Interactive Calendar Widget Component
@@ -116,7 +116,7 @@ const InteractiveCalendarWidget: React.FC<{
   onCreateEvent?: (event: Partial<CalendarEvent>) => void;
   onUpdateEvent?: (id: string, updates: Partial<CalendarEvent>) => void;
   onDeleteEvent?: (id: string) => void;
-  onResolveConflict?: (conflictId: string, resolution: string, eventId?: string) => void;
+  onResolveConflict?: (conflictId: string, resolution: string, eventId?: string) => void
 }> = ({
   events,
   conflicts,
@@ -132,7 +132,7 @@ const InteractiveCalendarWidget: React.FC<{
     startDate: string;
     endDate: string;
     type: CalendarEvent['type'];
-    location: string;
+    location: string
   }>({
     title: '',
     startDate: '',
@@ -146,7 +146,7 @@ const InteractiveCalendarWidget: React.FC<{
       hour: 'numeric',
       minute: '2-digit',
       hour12: true
-    });
+    })
   };
 
   const formatDate = (dateString: string) => {
@@ -156,11 +156,11 @@ const InteractiveCalendarWidget: React.FC<{
     tomorrow.setDate(today.getDate() + 1);
 
     if (date.toDateString() === today.toDateString()) {
-      return 'Today';
+      return 'Today'
     } else if (date.toDateString() === tomorrow.toDateString()) {
-      return 'Tomorrow';
+      return 'Tomorrow'
     } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
     }
   };
 
@@ -170,7 +170,7 @@ const InteractiveCalendarWidget: React.FC<{
       case 'study': return 'bg-green-500';
       case 'meeting': return 'bg-purple-500';
       case 'personal': return 'bg-orange-500';
-      default: return 'bg-gray-500';
+      default: return 'bg-gray-500'
     }
   };
 
@@ -192,7 +192,7 @@ const InteractiveCalendarWidget: React.FC<{
       type: 'personal',
       location: ''
     });
-    setShowCreateForm(false);
+    setShowCreateForm(false)
   };
 
   const upcomingEvents = events
@@ -352,7 +352,7 @@ const InteractiveCalendarWidget: React.FC<{
               </div>
               <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
                 <button
-                  onClick={() => onUpdateEvent?.(event.id, { status: event.status === 'confirmed' ? 'cancelled' : 'confirmed' })}
+                  onClick={() => onUpdateEvent?.(event.id, { status: event.status === 'confirmed' ? 'cancelled' : 'confirmed' }}
                   className="p-1 text-hive-text-secondary hover:text-hive-text-primary transition-colors"
                 >
                   <Edit className="h-3 w-3" />
@@ -369,7 +369,7 @@ const InteractiveCalendarWidget: React.FC<{
         </div>
       )}
     </div>
-  );
+  )
 };
 
 export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
@@ -408,7 +408,7 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
   const [loadedSections, setLoadedSections] = useState<Set<string>>(new Set());
 
   const handleSectionLoad = (section: string) => {
-    setLoadedSections(prev => new Set([...prev, section]));
+    setLoadedSections(prev => new Set([...prev, section]))
   };
 
   // Desktop BentoGrid Layout
@@ -683,7 +683,7 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
       case 'tablet':
         return <TabletLayout />;
       default:
-        return <DesktopLayout />;
+        return <DesktopLayout />
     }
   };
 
@@ -730,11 +730,11 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
                   animate={{
                     rotate: 360,
                     scale: [1, 1.1, 1]
-                  }}
+          }}
                   transition={{
                     rotate: { duration: 1, repeat: Infinity, ease: "linear" },
                     scale: { duration: 0.5, repeat: Infinity, ease: "easeInOut" }
-                  }}
+          }}
                 />
                 <span className="text-platinum text-sm font-medium">
                   Loading campus data...
@@ -767,7 +767,7 @@ export const ProfileDashboard: React.FC<ProfileDashboardProps> = ({
         )}
       </AnimatePresence>
     </motion.div>
-  );
+  )
 };
 
 // Compound components for specific use cases

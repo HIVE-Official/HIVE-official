@@ -35,8 +35,8 @@ interface ToolInstallation {
   permissions: {
     canEdit: boolean;
     canDelete: boolean;
-    canShare: boolean;
-  };
+    canShare: boolean
+  }
 }
 
 interface SpaceToolGridWithLibraryProps {
@@ -48,7 +48,7 @@ interface SpaceToolGridWithLibraryProps {
   onToolRemove?: (toolId: string) => void;
   variant?: 'grid' | 'list';
   showPlantButton?: boolean;
-  className?: string;
+  className?: string
 }
 
 const ToolCard = ({ 
@@ -62,7 +62,7 @@ const ToolCard = ({
   onLaunch?: (toolId: string) => void;
   onConfigure?: (toolId: string) => void;
   onRemove?: (toolId: string) => void;
-  variant?: 'grid' | 'list';
+  variant?: 'grid' | 'list'
 }) => {
   const [showActions, setShowActions] = useState(false);
   const IconComponent = tool.icon;
@@ -119,7 +119,7 @@ const ToolCard = ({
           </HiveButton>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -193,7 +193,7 @@ const ToolCard = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export function SpaceToolGridWithLibrary({
@@ -276,12 +276,12 @@ export function SpaceToolGridWithLibrary({
 
   const filteredTools = displayTools.filter(tool => {
     if (categoryFilter !== 'all' && tool.category !== categoryFilter) {
-      return false;
+      return false
     }
     if (!showInactive && !tool.isActive) {
-      return false;
+      return false
     }
-    return true;
+    return true
   });
 
   const categories = [...new Set(displayTools.map(tool => tool.category))];
@@ -331,7 +331,7 @@ export function SpaceToolGridWithLibrary({
             <PlantNewToolButton
               space={space}
               onToolInstall={handleToolInstall}
-              variant="default"
+              variant="secondary"
             />
           )}
         </div>
@@ -379,7 +379,7 @@ export function SpaceToolGridWithLibrary({
             <PlantNewToolButton
               space={space}
               onToolInstall={handleToolInstall}
-              variant="default"
+              variant="secondary"
             />
           )}
         </div>
@@ -423,7 +423,7 @@ export function SpaceToolGridWithLibrary({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export default SpaceToolGridWithLibrary;

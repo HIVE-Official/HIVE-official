@@ -4,54 +4,54 @@ interface AlertDialogProps {
   children: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  className?: string;
+  className?: string
 }
 
 interface AlertDialogTriggerProps {
   children: React.ReactNode;
   asChild?: boolean;
-  className?: string;
+  className?: string
 }
 
 // AlertDialogContentProps is handled by React.HTMLAttributes<HTMLDivElement>
 
 interface AlertDialogHeaderProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 interface AlertDialogTitleProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 interface AlertDialogDescriptionProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 interface AlertDialogFooterProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 interface AlertDialogActionProps {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 interface AlertDialogCancelProps {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 const AlertDialogContext = React.createContext<{
   isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  setIsOpen: (open: boolean) => void
 }>({
   isOpen: false,
   setIsOpen: () => {},
@@ -70,9 +70,9 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
   const setIsOpen = React.useCallback(
     (newOpen: boolean) => {
       if (isControlled) {
-        onOpenChange?.(newOpen);
+        onOpenChange?.(newOpen)
       } else {
-        setInternalOpen(newOpen);
+        setInternalOpen(newOpen)
       }
     },
     [isControlled, onOpenChange]
@@ -89,14 +89,14 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
         )}
         onClick={(e) => {
           if (e.target === e.currentTarget) {
-            setIsOpen(false);
+            setIsOpen(false)
           }
-        }}
+          }}
       >
         {children}
       </div>
     </AlertDialogContext.Provider>
-  );
+  )
 };
 
 export const AlertDialogTrigger: React.FC<AlertDialogTriggerProps> = ({
@@ -109,7 +109,7 @@ export const AlertDialogTrigger: React.FC<AlertDialogTriggerProps> = ({
   if (asChild) {
     return React.cloneElement(children as React.ReactElement, {
       onClick: () => setIsOpen(true),
-    });
+    })
   }
 
   return (
@@ -119,7 +119,7 @@ export const AlertDialogTrigger: React.FC<AlertDialogTriggerProps> = ({
     >
       {children}
     </button>
-  );
+  )
 };
 
 export const AlertDialogContent = React.forwardRef<
@@ -150,14 +150,14 @@ export const AlertDialogHeader: React.FC<AlertDialogHeaderProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };
 
 export const AlertDialogTitle: React.FC<AlertDialogTitleProps> = ({
   children,
   className,
 }) => {
-  return <h2 className={cn("text-lg font-semibold", className)}>{children}</h2>;
+  return <h2 className={cn("text-lg font-semibold", className)}>{children}</h2>
 };
 
 export const AlertDialogDescription: React.FC<AlertDialogDescriptionProps> = ({
@@ -166,7 +166,7 @@ export const AlertDialogDescription: React.FC<AlertDialogDescriptionProps> = ({
 }) => {
   return (
     <p className={cn("text-sm text-muted-foreground", className)}>{children}</p>
-  );
+  )
 };
 
 export const AlertDialogFooter: React.FC<AlertDialogFooterProps> = ({
@@ -182,7 +182,7 @@ export const AlertDialogFooter: React.FC<AlertDialogFooterProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };
 
 export const AlertDialogAction: React.FC<AlertDialogActionProps> = ({
@@ -196,7 +196,7 @@ export const AlertDialogAction: React.FC<AlertDialogActionProps> = ({
   const handleClick = () => {
     if (disabled) return;
     onClick?.();
-    setIsOpen(false);
+    setIsOpen(false)
   };
 
   return (
@@ -210,7 +210,7 @@ export const AlertDialogAction: React.FC<AlertDialogActionProps> = ({
     >
       {children}
     </button>
-  );
+  )
 };
 
 export const AlertDialogCancel: React.FC<AlertDialogCancelProps> = ({
@@ -224,7 +224,7 @@ export const AlertDialogCancel: React.FC<AlertDialogCancelProps> = ({
   const handleClick = () => {
     if (disabled) return;
     onClick?.();
-    setIsOpen(false);
+    setIsOpen(false)
   };
 
   return (
@@ -238,5 +238,5 @@ export const AlertDialogCancel: React.FC<AlertDialogCancelProps> = ({
     >
       {children}
     </button>
-  );
+  )
 };

@@ -17,10 +17,10 @@ import {
   Grid3X3,
   List
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Badge } from '../../atomic/atoms/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 import { cn } from '../../lib/utils';
 import { EventSystemContainer } from '../tools';
 import type { EventSystemConfig, MarketplaceTool } from '../tools';
@@ -36,8 +36,8 @@ export interface ProfileToolInstallation {
   usage: {
     totalSessions: number;
     totalTime: number; // milliseconds
-    lastActivity: Date;
-  };
+    lastActivity: Date
+  }
 }
 
 export interface ProfileToolsData {
@@ -49,8 +49,8 @@ export interface ProfileToolsData {
     toolId: string;
     action: string;
     label: string;
-    icon: React.ComponentType<{ className?: string }>;
-  }[];
+    icon: React.ComponentType<{ className?: string }>
+  }[]
 }
 
 interface EnhancedProfileToolsCardProps {
@@ -60,7 +60,7 @@ interface EnhancedProfileToolsCardProps {
   onInstallTool?: (toolId: string) => void;
   onBrowseMarketplace?: () => void;
   onConfigureTool?: (installationId: string) => void;
-  className?: string;
+  className?: string
 }
 
 // Mock Event System Configuration
@@ -182,8 +182,8 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
     let totalTime = 0;
     data.installations.forEach(i => {
       totalSessions += i.usage.totalSessions;
-      totalTime += i.usage.totalTime;
-    });
+      totalTime += i.usage.totalTime
+    })};
     const recentlyUsed = data.installations.filter(i => 
       i.lastUsed && (Date.now() - i.lastUsed.getTime()) < 7 * 24 * 60 * 60 * 1000
     ).length;
@@ -194,7 +194,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
       totalSessions,
       totalTimeHours: Math.round(totalTime / (1000 * 60 * 60) * 10) / 10,
       recentlyUsed
-    };
+    }
   }, [data.installations]);
 
   const formatTimeAgo = (date: Date) => {
@@ -204,7 +204,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
     
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
-    return 'Just now';
+    return 'Just now'
   };
 
   if (isLoading) {
@@ -214,7 +214,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
           <div className="w-8 h-8 border-2 border-[var(--hive-brand-secondary)] border-t-transparent rounded-full animate-spin" />
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
@@ -353,8 +353,8 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                       <IconComponent className="h-4 w-4" />
                       <span>{action.label}</span>
                     </Button>
-                  );
-                })}
+                  )
+          })}
               </div>
             </div>
           )}
@@ -434,8 +434,8 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                           </CardContent>
                         </Card>
                       </motion.div>
-                    );
-                  })}
+                    )
+          }}
                 </AnimatePresence>
 
                 {/* Add Tool Card */}
@@ -513,8 +513,8 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
                           </div>
                         </div>
                       </motion.div>
-                    );
-                  })}
+                    )
+          }}
                 </AnimatePresence>
               </div>
             )}
@@ -539,7 +539,7 @@ export const EnhancedProfileToolsCard: React.FC<EnhancedProfileToolsCardProps> =
         </CardContent>
       </Card>
     </motion.div>
-  );
+  )
 };
 
 export default EnhancedProfileToolsCard;

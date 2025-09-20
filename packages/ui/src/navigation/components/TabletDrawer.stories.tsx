@@ -48,7 +48,7 @@ const createMockItems = (activeSection?: string) => {
     badge: item.id === 'spaces' ? { type: 'notification' as const, count: 6 } : 
            item.id === 'feed' ? { type: 'status' as const, count: 14 } :
            item.id === 'hivelab' && activeSection !== 'hivelab' ? { type: 'feature' as const, label: 'NEW' } : undefined
-  }));
+  }))
 };
 
 // ============================================================================
@@ -143,7 +143,7 @@ const InteractiveTabletDemo = ({
 
   const handleClose = () => {
     setIsOpen(false);
-    action('close')();
+    action('close')()
   };
 
   return (
@@ -240,7 +240,7 @@ const InteractiveTabletDemo = ({
         {...props}
       />
     </div>
-  );
+  )
 };
 
 // ============================================================================
@@ -477,7 +477,7 @@ export const AnimationShowcase: Story = {
           onClose={() => setIsOpen(false)}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

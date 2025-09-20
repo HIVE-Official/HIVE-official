@@ -3,10 +3,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Check, MessageCircle, Heart, Users, Zap, Award, Calendar, AlertCircle, Info, ChevronRight, Filter, MoreHorizontal } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Badge } from '../../atomic/atoms/badge';
+import { Tabs, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 // Animation variants
 const containerVariants = {
     hidden: { opacity: 0, y: 20 },

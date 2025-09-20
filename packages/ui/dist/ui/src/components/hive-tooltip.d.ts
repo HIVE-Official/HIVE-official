@@ -2,7 +2,7 @@ import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveTooltipVariants: (props?: {
-    variant?: "default" | "success" | "warning" | "error" | "gold" | "solid" | "info" | "minimal" | "glass";
+    variant?: "default" | "success" | "warning" | "error" | "gold" | "info" | "solid" | "minimal" | "glass";
     size?: "default" | "sm" | "lg" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const HiveTooltipProvider: React.FC<TooltipPrimitive.TooltipProviderProps>;

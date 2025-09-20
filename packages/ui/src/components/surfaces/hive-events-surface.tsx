@@ -120,7 +120,7 @@ export interface Event {
     id: string;
     fullName: string;
     handle: string;
-    photoURL?: string;
+    photoURL?: string
   };
   maxAttendees?: number;
   currentAttendees: number;
@@ -140,7 +140,7 @@ export interface Event {
   spaceId?: string;
   // Legacy props for backward compatibility
   organizerName?: string;
-  organizerAvatar?: string;
+  organizerAvatar?: string
 }
 
 export interface HiveEventsSurfaceProps
@@ -163,7 +163,7 @@ export interface HiveEventsSurfaceProps
   maxEvents?: number;
   // New props for real data fetching
   autoFetch?: boolean;
-  authToken?: string;
+  authToken?: string
 }
 
 // Helper function to get auth token from session storage
@@ -176,19 +176,19 @@ const getAuthToken = (): string | null => {
       const session = JSON.parse(sessionJson);
       return process.env.NODE_ENV === 'development' 
         ? `dev_token_${session.uid}` 
-        : session.token;
+        : session.token
     }
   } catch (error) {
-    console.error('Error getting session:', error);
+    console.error('Error getting session:', error)
   }
-  return null;
+  return null
 };
 
 // API function to fetch events
 const fetchEvents = async (spaceId: string, limit = 20): Promise<Event[]> => {
   const token = getAuthToken();
   if (!token) {
-    throw new Error('No authentication token available');
+    throw new Error('No authentication token available')
   }
 
   const response = await fetch(`/api/spaces/${spaceId}/events?limit=${limit}&upcoming=true`, {
@@ -199,18 +199,18 @@ const fetchEvents = async (spaceId: string, limit = 20): Promise<Event[]> => {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch events: ${response.statusText}`);
+    throw new Error(`Failed to fetch events: ${response.statusText}`)
   }
 
   const data = await response.json();
-  return data.events || [];
+  return data.events || []
 };
 
 // API function to RSVP to an event
 const rsvpToEvent = async (spaceId: string, eventId: string, status: keyof typeof rsvpStatuses): Promise<void> => {
   const token = getAuthToken();
   if (!token) {
-    throw new Error('No authentication token available');
+    throw new Error('No authentication token available')
   }
 
   const response = await fetch(`/api/spaces/${spaceId}/events/${eventId}/rsvp`, {
@@ -223,7 +223,7 @@ const rsvpToEvent = async (spaceId: string, eventId: string, status: keyof typeo
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to RSVP: ${response.statusText}`);
+    throw new Error(`Failed to RSVP: ${response.statusText}`)
   }
 };
 
@@ -268,16 +268,16 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
           setIsLoading(true);
           setError(null);
           const events = await fetchEvents(space.id, maxEvents);
-          setFetchedEvents(events);
+          setFetchedEvents(events)
         } catch (error) {
           console.error('Failed to fetch events:', error);
-          setError(error instanceof Error ? error.message : 'Failed to fetch events');
+          setError(error instanceof Error ? error.message : 'Failed to fetch events')
         } finally {
-          setIsLoading(false);
+          setIsLoading(false)
         }
       };
 
-      loadEvents();
+      loadEvents()
     }, [autoFetch, space?.id, maxEvents]);
     
     // Use either provided events or fetched events
@@ -308,19 +308,19 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
       tags: event.tags || [],
       // Map type if needed - ensure it's a valid event type
       type: (event.type in eventTypes ? event.type : 'social') as keyof typeof eventTypes,
-    }));
+    })});
 
     const filteredEvents = normalizedEvents
       .filter(event => {
         if (selectedType === 'all') return true;
-        return event.type === selectedType;
-      })
+        return event.type === selectedType
+      })}
       .sort((a, b) => {
         // Featured events first
         if (a.isFeatured && !b.isFeatured) return -1;
         if (!a.isFeatured && b.isFeatured) return 1;
         // Then by start date
-        return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+        return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
       })
       .slice(0, maxEvents);
     
@@ -332,7 +332,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
     const handleRSVP = useCallback(async (eventId: string, status: keyof typeof rsvpStatuses) => {
       if (onRSVPEvent) {
         onRSVPEvent(eventId, status);
-        return;
+        return
       }
       
       // If no custom handler, use the API directly
@@ -341,10 +341,10 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
           await rsvpToEvent(space.id, eventId, status);
           // Refresh events to get updated attendee count
           const updatedEvents = await fetchEvents(space.id, maxEvents);
-          setFetchedEvents(updatedEvents);
+          setFetchedEvents(updatedEvents)
         } catch (error) {
           console.error('Failed to RSVP:', error);
-          setError(error instanceof Error ? error.message : 'Failed to RSVP to event');
+          setError(error instanceof Error ? error.message : 'Failed to RSVP to event')
         }
       }
     }, [onRSVPEvent, autoFetch, space?.id, maxEvents]);
@@ -379,7 +379,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
             ))}
           </div>
         </div>
-      );
+      )
     }
 
     // Error state
@@ -419,9 +419,9 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                   fetchEvents(space.id, maxEvents)
                     .then(setFetchedEvents)
                     .catch(e => setError(e.message))
-                    .finally(() => setIsLoading(false));
+                    .finally(() => setIsLoading(false))
                 }
-              }}
+          })}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -429,7 +429,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
             </motion.button>
           </motion.div>
         </div>
-      );
+      )
     }
     
     // Empty state
@@ -472,7 +472,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
             )}
           </motion.div>
         </div>
-      );
+      )
     }
     
     return (
@@ -495,7 +495,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                 { key: 'list', icon: List },
                 { key: 'grid', icon: Grid },
                 { key: 'calendar', icon: CalendarIcon }
-              ].map(({ key, icon: Icon }) => (
+              ].map(({ key, icon: Icon })} => (
                 <motion.button
                   key={key}
                   className={cn(
@@ -538,7 +538,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                 label: config.label,
                 icon: config.icon,
                 color: config.color
-              }))
+              })})
             ].map((filter) => {
               const Icon = filter.icon;
               const isActive = selectedType === filter.key;
@@ -559,8 +559,8 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                   <Icon className={cn("w-4 h-4", isActive ? "text-green-400" : filter.color)} />
                   <span>{filter.label}</span>
                 </motion.button>
-              );
-            })}
+              )
+          })
           </div>
         )}
         
@@ -685,13 +685,13 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                                 weekday: 'short',
                                 month: 'short',
                                 day: 'numeric'
-                              })}
+          })}
                             </div>
                             <div className="text-xs text-gray-400">
                               {new Date(event.startDate).toLocaleTimeString('en-US', {
                                 hour: 'numeric',
                                 minute: '2-digit'
-                              })}
+          })}
                               {event.endDate && (
                                 ` - ${new Date(event.endDate).toLocaleTimeString('en-US', {
                                   hour: 'numeric',
@@ -767,8 +767,8 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                                 <Icon className="w-3 h-3" />
                                 <span>{config.label}</span>
                               </motion.button>
-                            );
-                          })}
+                            )
+          })
                           
                           <motion.button
                             className="ml-auto p-1.5 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
@@ -781,8 +781,8 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                         </div>
                       </div>
                     </motion.article>
-                  );
-                })}
+                  )
+          }}
               </div>
             </section>
           )}
@@ -819,8 +819,8 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
                         {event.currentAttendees} attended
                       </div>
                     </motion.div>
-                  );
-                })}
+                  )
+          })}
               </div>
             </section>
           )}
@@ -846,7 +846,7 @@ export const HiveEventsSurface = React.forwardRef<HTMLDivElement, HiveEventsSurf
           </motion.div>
         )}
       </div>
-    );
+    )
   }
 );
 

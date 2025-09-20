@@ -510,7 +510,7 @@ const NavigationSystemShowcase = () => {
         </Card>
       )}
     </div>
-  );
+  )
 };
 
 const DashboardSystemShowcase = () => {
@@ -559,7 +559,7 @@ const DashboardSystemShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const ComplexSystemsShowcase = () => {
@@ -568,7 +568,7 @@ const ComplexSystemsShowcase = () => {
       <NavigationSystemShowcase />
       <DashboardSystemShowcase />
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -586,7 +586,7 @@ const OrganismSystemsLibrary = () => {
       purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
       gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
     };
-    return colors[color as keyof typeof colors] || colors.blue;
+    return colors[color as keyof typeof colors] || colors.blue
   };
 
   const getComplexityColor = (complexity: string) => {
@@ -595,7 +595,7 @@ const OrganismSystemsLibrary = () => {
       Medium: 'bg-yellow-500/20 text-yellow-400',
       High: 'bg-red-500/20 text-red-400'
     };
-    return colors[complexity as keyof typeof colors] || colors.Medium;
+    return colors[complexity as keyof typeof colors] || colors.Medium
   };
 
   const filteredCategories = organismCategories.filter(category =>
@@ -785,7 +785,7 @@ const OrganismSystemsLibrary = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

@@ -418,7 +418,7 @@ const CompleteComponentShowcase = () => {
         </CardContent>
       </Card>
     </Container>
-  );
+  )
 };
 
 const meta: Meta<typeof CompleteComponentShowcase> = {

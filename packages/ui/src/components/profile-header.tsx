@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { ProfileAvatar } from '../atoms/profile-avatar';
-import { ProfileBadge } from '../atoms/profile-badge';
-import { ProfileAction } from '../atoms/profile-action';
+import { cn } from '../lib/utils';
+import { ProfileAvatar } from '../atomic/atoms/profile-avatar';
+import { ProfileBadge } from '../atomic/atoms/profile-badge';
+import { ProfileAction } from '../atomic/atoms/profile-action';
 import { MapPin, Calendar, Link as LinkIcon, Briefcase, GraduationCap } from 'lucide-react';
 
 const profileHeaderVariants = cva(
@@ -52,7 +52,7 @@ export interface ProfileUser {
   isBuilder: boolean;
   isVerified: boolean;
   ghostMode: boolean;
-  onlineStatus?: 'online' | 'offline' | 'away' | 'busy';
+  onlineStatus?: 'online' | 'offline' | 'away' | 'busy'
 }
 
 export interface ProfileHeaderProps 
@@ -69,7 +69,7 @@ export interface ProfileHeaderProps
   onShareProfile?: () => void;
   avatarSize?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
   maxBioLength?: number;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export function ProfileHeader({
@@ -99,7 +99,7 @@ export function ProfileHeader({
   const displayBio = React.useMemo(() => {
     if (!user.bio) return undefined;
     if (user.bio.length <= maxBioLength) return user.bio;
-    return user.bio.slice(0, maxBioLength) + '...';
+    return user.bio.slice(0, maxBioLength) + '...'
   }, [user.bio, maxBioLength]);
 
   // Format join date
@@ -107,13 +107,13 @@ export function ProfileHeader({
     return new Date(user.joinedAt).toLocaleDateString('en-US', {
       month: 'long',
       year: 'numeric'
-    });
+    })
   }, [user.joinedAt]);
 
   // Format website URL for display
   const displayWebsite = React.useMemo(() => {
     if (!user.website) return undefined;
-    return user.website.replace(/^https?:\/\//, '');
+    return user.website.replace(/^https?:\/\//, '')
   }, [user.website]);
 
   const isCompact = layout === "compact";
@@ -279,7 +279,7 @@ export function ProfileHeader({
         {children}
       </div>
     </div>
-  );
+  )
 }
 
 // Preset variants for common use cases
@@ -292,11 +292,11 @@ export function CompactProfileHeader(props: Omit<ProfileHeaderProps, 'layout' | 
       showBio={false}
       {...props} 
     />
-  );
+  )
 }
 
 export function CardProfileHeader(props: Omit<ProfileHeaderProps, 'variant'>) {
-  return <ProfileHeader variant="card" {...props} />;
+  return <ProfileHeader variant="card" {...props} />
 }
 
 export function MinimalProfileHeader(props: Omit<ProfileHeaderProps, 'variant' | 'showMeta'>) {
@@ -306,7 +306,7 @@ export function MinimalProfileHeader(props: Omit<ProfileHeaderProps, 'variant' |
       showMeta={false}
       {...props} 
     />
-  );
+  )
 }
 
 // Export variants for external use

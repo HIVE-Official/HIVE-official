@@ -1,5 +1,6 @@
 export type HiveBaseVariant = 'default' | 'outline' | 'filled' | 'ghost';
-export type HiveButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
+export type HiveButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'success' | 'warning' | 'info' | 'link' | 'accent' | 'default';
+export type HiveBadgeVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost' | 'outline' | 'builder' | 'verified' | 'leader' | 'ghost-mode' | 'achievement' | 'streak' | 'scholar' | 'connector' | 'dean' | 'developer' | 'organizer' | 'helper';
 export type HiveFormVariant = 'default' | 'outline' | 'filled' | 'ghost';
 export type HiveLabelVariant = 'default' | 'inline' | 'floating';
 export type HiveTagVariant = 'default' | 'outline' | 'filled' | 'ghost' | 'gradient';

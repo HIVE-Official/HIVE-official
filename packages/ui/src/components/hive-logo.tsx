@@ -51,7 +51,7 @@ export interface HiveLogoProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>,
     VariantProps<typeof hiveLogoVariants> {
   showWordmark?: boolean;
-  interactive?: boolean;
+  interactive?: boolean
 }
 
 // Official HIVE Logo SVG glyph - inline SVG for reliable display
@@ -62,7 +62,7 @@ const HiveGlyph = ({
 }: { 
   size: keyof typeof glyphSizes;
   variant: string;
-  className?: string;
+  className?: string
 }) => {
   const glyphColor = variant === "inverted" ? "var(--hive-background-primary)" 
                   : variant === "gold" ? "var(--hive-brand-secondary)"
@@ -83,7 +83,7 @@ const HiveGlyph = ({
         fill={glyphColor}
       />
     </svg>
-  );
+  )
 };
 
 export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
@@ -117,7 +117,7 @@ export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
             </span>
           )}
         </button>
-      );
+      )
     }
     
     return (
@@ -136,7 +136,7 @@ export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
           </span>
         )}
       </div>
-    );
+    )
   }
 );
 

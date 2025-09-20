@@ -18,12 +18,12 @@ import {
   Timer,
   Brain
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Progress } from '../hive-progress';
 import { Input } from '../hive-input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 
 // Personal tool data types
 export interface PersonalTool {
@@ -38,8 +38,8 @@ export interface PersonalTool {
   quickAction?: {
     label: string;
     value?: string | number;
-    unit?: string;
-  };
+    unit?: string
+  }
 }
 
 export interface PersonalToolsData {
@@ -48,15 +48,15 @@ export interface PersonalToolsData {
     gpa: number;
     studyHours: number;
     tasksCompleted: number;
-    upcomingDeadlines: number;
+    upcomingDeadlines: number
   };
   recentActivities: Array<{
     toolId: string;
     toolName: string;
     action: string;
     timestamp: string;
-    result?: string;
-  }>;
+    result?: string
+  }>
 }
 
 interface PersonalToolsProps {
@@ -64,7 +64,7 @@ interface PersonalToolsProps {
   isLoading?: boolean;
   onToolAction?: (toolId: string, action: string, data?: any) => void;
   onAddTool?: () => void;
-  className?: string;
+  className?: string
 }
 
 // Animation variants
@@ -113,18 +113,18 @@ export function PersonalTools({
 
   // Handle quick action input
   const handleQuickAction = (toolId: string, value: string) => {
-    setQuickActionValues(prev => ({ ...prev, [toolId]: value }));
+    setQuickActionValues(prev => ({ ...prev, [toolId]: value }))
   };
 
   // Execute quick action
   const executeQuickAction = (toolId: string, action: string) => {
     const value = quickActionValues[toolId];
     onToolAction?.(toolId, action, { value });
-    setQuickActionValues(prev => ({ ...prev, [toolId]: '' }));
+    setQuickActionValues(prev => ({ ...prev, [toolId]: '' }))
   };
 
   if (isLoading) {
-    return <PersonalToolsSkeleton />;
+    return <PersonalToolsSkeleton />
   }
 
   if (!data) {
@@ -135,7 +135,7 @@ export function PersonalTools({
           <Button onClick={() => window.location.reload()}>Try Again</Button>
         </div>
       </div>
-    );
+    )
   }
 
   const categories = [
@@ -288,7 +288,7 @@ export function PersonalTools({
         </Card>
       </motion.div>
     </motion.div>
-  );
+  )
 }
 
 // Personal Tool Card Component
@@ -297,7 +297,7 @@ interface PersonalToolCardProps {
   quickActionValue: string;
   onQuickActionChange: (value: string) => void;
   onQuickActionExecute: (action: string) => void;
-  onToolAction?: (toolId: string, action: string, data?: any) => void;
+  onToolAction?: (toolId: string, action: string, data?: any) => void
 }
 
 function PersonalToolCard({ 
@@ -398,7 +398,7 @@ function PersonalToolCard({
         </Button>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Render tool-specific data
@@ -434,7 +434,7 @@ function renderToolData(tool: PersonalTool) {
       );
     
     default:
-      return null;
+      return null
   }
 }
 
@@ -443,7 +443,7 @@ interface QuickStatCardProps {
   label: string;
   value: string | number;
   icon: React.ReactNode;
-  color: 'blue' | 'green' | 'purple' | 'orange';
+  color: 'blue' | 'green' | 'purple' | 'orange'
 }
 
 function QuickStatCard({ label, value, icon, color }: QuickStatCardProps) {
@@ -462,7 +462,7 @@ function QuickStatCard({ label, value, icon, color }: QuickStatCardProps) {
       <div className="text-lg font-bold text-gray-900">{value}</div>
       <div className="text-xs text-gray-600">{label}</div>
     </div>
-  );
+  )
 }
 
 // Loading Skeleton
@@ -477,7 +477,7 @@ function PersonalToolsSkeleton() {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Helper function
@@ -490,7 +490,7 @@ function formatTimeAgo(timestamp: string): string {
   
   if (days > 0) return `${days}d ago`;
   if (hours > 0) return `${hours}h ago`;
-  return 'Just now';
+  return 'Just now'
 }
 
 // Mock tools data for development

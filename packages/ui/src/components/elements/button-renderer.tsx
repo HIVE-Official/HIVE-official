@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { ElementInstance } from '@hive/core';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 
 interface ButtonConfig {
@@ -17,7 +17,7 @@ interface ButtonConfig {
   onClick?: {
     type: 'navigate' | 'submit' | 'reset' | 'custom';
     target?: string;
-    data?: Record<string, any>;
+    data?: Record<string, any>
   };
   
   // Standard properties (any element can use these)
@@ -34,8 +34,8 @@ interface ButtonRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
@@ -61,22 +61,22 @@ export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
       switch (config.onClick.type) {
         case 'submit':
           if (onChange) {
-            onChange({ type: 'submit', timestamp: Date.now() });
+            onChange({ type: 'submit', timestamp: Date.now() })
           }
           break;
           
         case 'reset':
           if (onChange) {
-            onChange({ type: 'reset', timestamp: Date.now() });
+            onChange({ type: 'reset', timestamp: Date.now() })
           }
           break;
           
         case 'navigate':
           if (config.onClick.target) {
             if (config.onClick.target.startsWith('http')) {
-              window.open(config.onClick.target, '_blank');
+              window.open(config.onClick.target, '_blank')
             } else {
-              window.location.href = config.onClick.target;
+              window.location.href = config.onClick.target
             }
           }
           break;
@@ -87,9 +87,9 @@ export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
               type: 'custom', 
               data: config.onClick.data,
               timestamp: Date.now() 
-            });
+            })
           }
-          break;
+          break
       }
     }
 
@@ -99,7 +99,7 @@ export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
         clicked: true,
         lastClickedAt: Date.now(),
         clickCount: (runtimeContext?.elementStates.get(element.id)?.clickCount || 0) + 1
-      });
+      })
     }
   };
 
@@ -110,7 +110,7 @@ export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
       case 'secondary': return 'secondary';
       case 'outline': return 'outline';
       case 'ghost': return 'ghost';
-      default: return 'default';
+      default: return 'default'
     }
   };
 
@@ -119,7 +119,7 @@ export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
       case 'sm': return 'sm';
       case 'md': return 'default';
       case 'lg': return 'lg';
-      default: return 'default';
+      default: return 'default'
     }
   };
 
@@ -137,5 +137,5 @@ export const ButtonRenderer: React.FC<ButtonRendererProps> = ({
         {config.text}
       </Button>
     </div>
-  );
+  )
 };

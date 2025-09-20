@@ -1,7 +1,6 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { Suspense, lazy, useEffect, useState, useRef, useCallback } from 'react';
-import { cn } from '../../lib/utils';
 import { LoadingOrchestrator } from '../Loading/LoadingOrchestrator';
 import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 // Custom hook for navigation analytics and pattern recognition
@@ -80,11 +79,14 @@ function useNavigationAnalytics(routes) {
                 predictedNextRoutes: [...new Set([...predictedRoutes, ...patternRoutes])]
             }));
         };
-        const timer = setTimeout(analyzePatterns, 2000); // Analyze after 2 seconds
-        return () => clearTimeout(timer);
-    }, [analytics.currentSession, routes]);
-    return analytics;
+    });
 }
+;
+const timer = setTimeout(analyzePatterns, 2000); // Analyze after 2 seconds
+return () => clearTimeout(timer);
+[analytics.currentSession, routes];
+;
+return analytics;
 // Smart preloading manager
 class SmartPreloader {
     constructor(maxBudget = 1024) {
@@ -180,75 +182,79 @@ export const LazyRoutes = ({ routes, campusContext, enablePredictiveLoading = tr
                 .map(routeId => routes.find(r => r.id === routeId))
                 .filter((route) => {
                 return route !== undefined && !preloadedRoutes.has(route.id);
-            })
-                .slice(0, maxConcurrentLoads);
-            for (const route of routesToPreload) {
-                const success = await preloader.preloadRoute(route, 'medium', campusContext);
+            });
+        };
+    });
+};
+slice(0, maxConcurrentLoads);
+for (const route of routesToPreload) {
+    const success = await preloader.preloadRoute(route, 'medium', campusContext);
+    if (success) {
+        setPreloadedRoutes(prev => new Set([...prev, route.id]));
+    }
+}
+;
+const timer = setTimeout(preloadPredictedRoutes, 1000);
+return () => clearTimeout(timer);
+[analytics.predictedNextRoutes, enablePredictiveLoading, routes, campusContext, maxConcurrentLoads];
+;
+// Campus-aware preloading strategy
+useEffect(() => {
+    if (!campusContext)
+        return;
+    const strategicPreload = async () => {
+        // During low campus load, preload more aggressively
+        if (campusContext.campusLoad === 'low' && campusContext.networkQuality !== 'poor') {
+            const highPriorityRoutes = routes
+                .filter(route => route.priority === 'high' && !preloadedRoutes.has(route.id))
+                .slice(0, 2);
+            for (const route of highPriorityRoutes) {
+                const success = await preloader.preloadRoute(route, 'high', campusContext);
                 if (success) {
                     setPreloadedRoutes(prev => new Set([...prev, route.id]));
                 }
             }
-        };
-        const timer = setTimeout(preloadPredictedRoutes, 1000);
-        return () => clearTimeout(timer);
-    }, [analytics.predictedNextRoutes, enablePredictiveLoading, routes, campusContext, maxConcurrentLoads]);
-    // Campus-aware preloading strategy
-    useEffect(() => {
-        if (!campusContext)
-            return;
-        const strategicPreload = async () => {
-            // During low campus load, preload more aggressively
-            if (campusContext.campusLoad === 'low' && campusContext.networkQuality !== 'poor') {
-                const highPriorityRoutes = routes
-                    .filter(route => route.priority === 'high' && !preloadedRoutes.has(route.id))
-                    .slice(0, 2);
-                for (const route of highPriorityRoutes) {
-                    const success = await preloader.preloadRoute(route, 'high', campusContext);
-                    if (success) {
-                        setPreloadedRoutes(prev => new Set([...prev, route.id]));
-                    }
-                }
-            }
-            // Time-based preloading for common campus usage patterns
-            const currentHour = new Date().getHours();
-            const timeBasedRoutes = routes
-                .filter(route => route.campusUsageHours?.includes(currentHour) &&
-                !preloadedRoutes.has(route.id))
-                .slice(0, 1);
-            for (const route of timeBasedRoutes) {
-                await preloader.preloadRoute(route, 'low', campusContext);
-            }
-        };
-        const timer = setTimeout(strategicPreload, 2000);
-        return () => clearTimeout(timer);
-    }, [campusContext, routes]);
-    // Create lazy components with enhanced loading states
-    const createLazyComponent = (route) => {
-        const LazyComponent = lazy(route.component);
-        return React.forwardRef((props, ref) => {
-            // Custom loading component with route context
-            const CustomLoading = loadingComponent || (() => (_jsx(LoadingOrchestrator, { resources: [
-                    {
-                        id: route.id,
-                        name: route.title || route.id,
-                        priority: route.priority === 'critical' ? 'critical' : 'high',
-                        estimatedTime: route.estimatedSize ? route.estimatedSize * 10 : 1000
-                    }
-                ], campusContext: campusContext, showStudentFriendlyMessages: true, className: "min-h-[50vh]" })));
-            return (_jsx(Suspense, { fallback: _jsx(CustomLoading, {}), children: _jsx(LazyComponent, { ref: ref, ...props }) }));
-        });
-    };
-    // Hover preloading handler
-    const handleHoverPreload = useCallback(async (route) => {
-        if (!enableHoverPreloading || preloadedRoutes.has(route.id))
-            return;
-        const success = await preloader.preloadRoute(route, 'high', campusContext);
-        if (success) {
-            setPreloadedRoutes(prev => new Set([...prev, route.id]));
         }
-    }, [enableHoverPreloading, campusContext]);
-    return (_jsxs("div", { className: cn('w-full', className), children: [children, process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-4 left-4 bg-black/90 text-white text-xs p-3 rounded-lg font-mono z-50 max-w-xs", children: [_jsx("div", { className: "font-semibold mb-2", children: "LazyRoutes Debug" }), _jsxs("div", { children: ["Preloaded: ", preloadedRoutes.size] }), _jsxs("div", { children: ["User Pattern: ", analytics.userPattern] }), _jsxs("div", { children: ["Budget Used: ", preloader.getStats().budgetUsed, "KB"] }), _jsxs("div", { children: ["Predicted Next: ", analytics.predictedNextRoutes.slice(0, 2).join(', ')] }), _jsxs("div", { children: ["Network: ", campusContext?.networkQuality || 'unknown'] }), _jsxs("div", { children: ["Campus Load: ", campusContext?.campusLoad || 'unknown'] })] }))] }));
+        // Time-based preloading for common campus usage patterns
+        const currentHour = new Date().getHours();
+        const timeBasedRoutes = routes
+            .filter(route => route.campusUsageHours?.includes(currentHour) &&
+            !preloadedRoutes.has(route.id))
+            .slice(0, 1);
+        for (const route of timeBasedRoutes) {
+            await preloader.preloadRoute(route, 'low', campusContext);
+        }
+    };
+    const timer = setTimeout(strategicPreload, 2000);
+    return () => clearTimeout(timer);
+}, [campusContext, routes]);
+// Create lazy components with enhanced loading states
+const createLazyComponent = (route) => {
+    const LazyComponent = lazy(route.component);
+    return React.forwardRef((props, ref) => {
+        // Custom loading component with route context
+        const CustomLoading = loadingComponent || (() => (_jsx(LoadingOrchestrator, { resources: [
+                {
+                    id: route.id,
+                    name: route.title || route.id,
+                    priority: route.priority === 'critical' ? 'critical' : 'high',
+                    estimatedTime: route.estimatedSize ? route.estimatedSize * 10 : 1000
+                }
+            ], campusContext: campusContext, showStudentFriendlyMessages: true, className: "min-h-[50vh]" })));
+        return (_jsx(Suspense, { fallback: _jsx(CustomLoading, {}), children: _jsx(LazyComponent, { ref: ref, ...props }) }));
+    });
 };
+// Hover preloading handler
+const handleHoverPreload = useCallback(async (route) => {
+    if (!enableHoverPreloading || preloadedRoutes.has(route.id))
+        return;
+    const success = await preloader.preloadRoute(route, 'high', campusContext);
+    if (success) {
+        setPreloadedRoutes(prev => new Set([...prev, route.id]));
+    }
+}, [enableHoverPreloading, campusContext]);
+return (_jsxs("div", { className: cn('w-full', className), children: [children, process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-4 left-4 bg-black/90 text-white text-xs p-3 rounded-lg font-mono z-50 max-w-xs", children: [_jsx("div", { className: "font-semibold mb-2", children: "LazyRoutes Debug" }), _jsxs("div", { children: ["Preloaded: ", preloadedRoutes.size] }), _jsxs("div", { children: ["User Pattern: ", analytics.userPattern] }), _jsxs("div", { children: ["Budget Used: ", preloader.getStats().budgetUsed, "KB"] }), _jsxs("div", { children: ["Predicted Next: ", analytics.predictedNextRoutes.slice(0, 2).join(', ')] }), _jsxs("div", { children: ["Network: ", campusContext?.networkQuality || 'unknown'] }), _jsxs("div", { children: ["Campus Load: ", campusContext?.campusLoad || 'unknown'] })] }))] }));
+;
 // Utility function to create route configurations
 export function createLazyRoute(id, path, component, options = {}) {
     return {

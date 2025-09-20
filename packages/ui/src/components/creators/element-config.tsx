@@ -38,7 +38,7 @@ interface PropertyInputProps {
   property: any;
   value: any;
   onChange: (value: any) => void;
-  propertyKey: string;
+  propertyKey: string
 }
 
 const PropertyInput: React.FC<PropertyInputProps> = ({ 
@@ -53,7 +53,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
         // Dropdown for predefined options
         return (
           <HiveSelect
-            options={property.options.map(opt => ({ value: opt, label: opt }))}
+            options={property.options.map(opt => ({ value: opt, label: opt })})}
             value={value || property.default}
             onValueChange={onChange}
             placeholder="Select option..."
@@ -64,7 +64,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
               </option>
             ))}
           </HiveSelect>
-        );
+        )
       }
       
       // Text input or textarea for long strings
@@ -78,7 +78,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
             placeholder={`Enter ${property.type}...`}
             rows={3}
           />
-        );
+        )
       }
       
       return (
@@ -122,8 +122,8 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
             value={Array.isArray(value) ? value.join('\n') : ''}
             onChange={(e) => {
               const items = e.target.value.split('\n').filter(item => item.trim());
-              onChange(items);
-            }}
+              onChange(items)
+          }}
             placeholder="Enter items, one per line..."
             rows={4}
           />
@@ -140,14 +140,14 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
           value={JSON.stringify(value) || JSON.stringify(property.default) || ''}
           onChange={(e) => {
             try {
-              onChange(JSON.parse(e.target.value));
+              onChange(JSON.parse(e.target.value))
             } catch {
-              onChange(e.target.value);
+              onChange(e.target.value)
             }
-          }}
+          })}
           placeholder={`Enter ${property.type}...`}
         />
-      );
+      )
   }
 };
 
@@ -156,7 +156,7 @@ interface PropertySectionProps {
   title: string;
   icon: React.ComponentType<any>;
   children: React.ReactNode;
-  defaultExpanded?: boolean;
+  defaultExpanded?: boolean
 }
 
 const PropertySection: React.FC<PropertySectionProps> = ({ 
@@ -190,7 +190,7 @@ const PropertySection: React.FC<PropertySectionProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Main Element Configuration component
@@ -204,13 +204,13 @@ export const ElementConfig: React.FC<ElementConfigProps> = ({
   // Handle property changes
   const handlePropertyChange = useCallback((key: string, value: any) => {
     const newConfig = { ...instance.config, [key]: value };
-    onChange(newConfig);
+    onChange(newConfig)
   }, [instance.config, onChange]);
 
   // Handle style changes
   const handleStyleChange = useCallback((key: string, value: any) => {
     // This would be handled by parent component
-    console.log('Style change:', key, value);
+    console.log('Style change:', key, value)
   }, []);
 
   const IconComponent = element.icon;
@@ -274,7 +274,7 @@ export const ElementConfig: React.FC<ElementConfigProps> = ({
             { id: 'properties', label: 'Properties', icon: Settings },
             { id: 'style', label: 'Style', icon: Palette },
             { id: 'events', label: 'Events', icon: Hash }
-          ].map(({ id, label, icon: Icon }) => (
+          ].map(({ id, label, icon: Icon })} => (
             <button
               key={id}
               className={cn(
@@ -579,7 +579,7 @@ export const ElementConfig: React.FC<ElementConfigProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default ElementConfig;

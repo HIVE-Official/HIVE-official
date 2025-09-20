@@ -31,14 +31,14 @@ interface LibraryContextualAccessProps {
   onToolInstall?: (elementId: string, configuration?: any) => Promise<void>;
   onClose?: () => void;
   isOpen?: boolean;
-  triggerRef?: React.RefObject<HTMLElement>;
+  triggerRef?: React.RefObject<HTMLElement>
 }
 
 interface ToolSuggestion {
   element: ElementDefinition;
   relevanceScore: number;
   reason: string;
-  category: 'trending' | 'recommended' | 'space_specific' | 'popular';
+  category: 'trending' | 'recommended' | 'space_specific' | 'popular'
 }
 
 interface ContextualCategory {
@@ -47,7 +47,7 @@ interface ContextualCategory {
   description: string;
   icon: React.ComponentType<any>;
   elements: ElementDefinition[];
-  priority: number;
+  priority: number
 }
 
 // Mock contextual suggestions based on space type and current tools
@@ -186,7 +186,7 @@ const generateContextualSuggestions = (space: any): ToolSuggestion[] => {
         reason: 'Essential for club meeting management',
         category: 'space_specific'
       });
-      break;
+      break
   }
 
   // Trending tools
@@ -207,11 +207,11 @@ const generateContextualSuggestions = (space: any): ToolSuggestion[] => {
           relevanceScore: 0.6,
           reason: `Popular choice with ${element.downloads.toLocaleString()} downloads`,
           category: 'popular'
-        });
+        })
       }
     });
 
-  return suggestions.sort((a, b) => b.relevanceScore - a.relevanceScore);
+  return suggestions.sort((a, b) => b.relevanceScore - a.relevanceScore)
 };
 
 const SuggestionCard = ({ 
@@ -221,7 +221,7 @@ const SuggestionCard = ({
 }: { 
   suggestion: ToolSuggestion; 
   onInstall: (elementId: string) => void;
-  onPreview: (element: ElementDefinition) => void;
+  onPreview: (element: ElementDefinition) => void
 }) => {
   const { element, reason, category } = suggestion;
   const IconComponent = element.icon;
@@ -278,8 +278,8 @@ const SuggestionCard = ({
                 variant="outline"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onPreview(element);
-                }}
+                  onPreview(element)
+          }}
               >
                 Preview
               </HiveButton>
@@ -287,8 +287,8 @@ const SuggestionCard = ({
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onInstall(element.id);
-                }}
+                  onInstall(element.id)
+          }}
               >
                 <Plus className="w-3 h-3 mr-1" />
                 Add
@@ -302,7 +302,7 @@ const SuggestionCard = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 const CategorySection = ({ 
@@ -314,7 +314,7 @@ const CategorySection = ({
   category: ContextualCategory;
   suggestions: ToolSuggestion[];
   onInstall: (elementId: string) => void;
-  onPreview: (element: ElementDefinition) => void;
+  onPreview: (element: ElementDefinition) => void
 }) => {
   const IconComponent = category.icon;
   
@@ -338,7 +338,7 @@ const CategorySection = ({
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 export function LibraryContextualAccess({ 
@@ -387,13 +387,13 @@ export function LibraryContextualAccess({
     suggestions.forEach(suggestion => {
       const category = categories.find(c => c.id === suggestion.category);
       if (category) {
-        category.elements.push(suggestion.element);
+        category.elements.push(suggestion.element)
       }
     });
 
     return categories
       .filter(category => category.elements.length > 0)
-      .sort((a, b) => a.priority - b.priority);
+      .sort((a, b) => a.priority - b.priority)
   }, [suggestions, space.category]);
 
   const filteredSuggestions = useMemo(() => {
@@ -406,32 +406,32 @@ export function LibraryContextualAccess({
         suggestion.element.name.toLowerCase().includes(query) ||
         suggestion.element.description.toLowerCase().includes(query) ||
         suggestion.element.tags.some(tag => tag.toLowerCase().includes(query))
-      );
+      )
     }
 
     // Category filter
     if (activeCategory !== 'all') {
-      filtered = filtered.filter(suggestion => suggestion.category === activeCategory);
+      filtered = filtered.filter(suggestion => suggestion.category === activeCategory)
     }
 
-    return filtered;
+    return filtered
   }, [suggestions, searchQuery, activeCategory]);
 
   const handleInstall = useCallback(async (elementId: string) => {
     setLoading(true);
     try {
       await onToolInstall?.(elementId);
-      onClose?.();
+      onClose?.()
     } catch (error) {
-      console.error('Failed to install tool:', error);
+      console.error('Failed to install tool:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }, [onToolInstall, onClose]);
 
   const handlePreview = useCallback((element: ElementDefinition) => {
     // Open element preview modal or navigate to preview
-    console.log('Preview element:', element);
+    console.log('Preview element:', element)
   }, []);
 
   if (!isOpen) return null;
@@ -531,8 +531,8 @@ export function LibraryContextualAccess({
                     onInstall={handleInstall}
                     onPreview={handlePreview}
                   />
-                );
-              })}
+                )
+          })
             </div>
           )}
         </div>
@@ -557,7 +557,7 @@ export function LibraryContextualAccess({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default LibraryContextualAccess;

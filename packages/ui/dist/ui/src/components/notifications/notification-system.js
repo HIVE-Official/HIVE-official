@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, Check, Users, Zap, Calendar, Award, Info, Heart, Eye, MoreHorizontal, Settings, Filter, Trash2 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Badge } from '../ui/badge';
-import { Card, CardContent } from '../ui/card';
-import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Badge } from '../../atomic/atoms/badge';
+import { Card, CardContent } from '../../atomic/ui/card';
+import { Tabs, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
 import { cn } from '../../lib/utils';
 export function NotificationSystem({ notifications, unreadCount, isOpen, onClose, onMarkAsRead, onMarkAllAsRead, onArchive, onDelete, onAction, className }) {
     const [activeTab, setActiveTab] = useState('all');
@@ -107,32 +107,33 @@ export function useNotifications() {
     const markAllAsRead = () => {
         setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
     };
-    const archive = (id) => {
-        setNotifications(prev => prev.map(n => n.id === id ? { ...n, isArchived: true } : n));
-    };
-    const deleteNotification = (id) => {
-        setNotifications(prev => prev.filter(n => n.id !== id));
-    };
-    const addNotification = (notification) => {
-        const newNotification = {
-            ...notification,
-            id: Date.now().toString(),
-            timestamp: new Date().toISOString(),
-            isRead: false,
-            isArchived: false
-        };
-        setNotifications(prev => [newNotification, ...prev]);
-    };
-    return {
-        notifications,
-        unreadCount,
-        isOpen,
-        setIsOpen,
-        markAsRead,
-        markAllAsRead,
-        archive,
-        deleteNotification,
-        addNotification
-    };
 }
+;
+const archive = (id) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isArchived: true } : n));
+};
+const deleteNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+};
+const addNotification = (notification) => {
+    const newNotification = {
+        ...notification,
+        id: Date.now().toString(),
+        timestamp: new Date().toISOString(),
+        isRead: false,
+        isArchived: false
+    };
+    setNotifications(prev => [newNotification, ...prev]);
+};
+return {
+    notifications,
+    unreadCount,
+    isOpen,
+    setIsOpen,
+    markAsRead,
+    markAllAsRead,
+    archive,
+    deleteNotification,
+    addNotification
+};
 //# sourceMappingURL=notification-system.js.map

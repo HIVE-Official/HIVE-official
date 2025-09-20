@@ -13,6 +13,7 @@ const badgeVariants = {
     error: 'bg-[color-mix(in_srgb,var(--hive-status-error)_10%,transparent)] text-[var(--hive-status-error)] border-[var(--hive-status-error)]',
     info: 'bg-[color-mix(in_srgb,var(--hive-status-info)_10%,transparent)] text-[var(--hive-status-info)] border-[var(--hive-status-info)]',
     ghost: 'bg-transparent text-[var(--hive-text-tertiary)] border-[var(--hive-border-subtle)]',
+    outline: 'bg-transparent text-[var(--hive-text-primary)] border-[var(--hive-border-default)]',
     // === HIVE RECOGNITION VARIANTS ===
     // Builder - Gold filled for platform builders
     builder: 'bg-[var(--hive-brand-secondary)] text-[var(--hive-background-primary)] border-[var(--hive-brand-secondary)] font-semibold',

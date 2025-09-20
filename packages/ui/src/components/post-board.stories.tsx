@@ -333,19 +333,19 @@ export const InteractiveDemo: Story = {
                     }
                   : r
               ).filter(r => r.count > 0),
-            };
+            }
           } else if (add) {
             return {
               ...post,
               reactions: [...reactions, { emoji, count: 1, userReacted: true }],
-            };
+            }
           }
           
-          return post;
+          return post
         })
       );
       
-      action('reaction')(postId, emoji, add);
+      action('reaction')(postId, emoji, add)
     };
 
     const handleEventRsvp = (eventId: string, response: 'yes' | 'no' | 'maybe') => {
@@ -359,13 +359,13 @@ export const InteractiveDemo: Story = {
                 userRsvp: response,
                 rsvpCount: post.event.rsvpCount ? post.event.rsvpCount + 1 : 1,
               },
-            };
+            }
           }
-          return post;
+          return post
         })
       );
       
-      action('event-rsvp')(eventId, response);
+      action('event-rsvp')(eventId, response)
     };
 
     const handlePollVote = (pollId: string, optionId: string) => {
@@ -380,16 +380,16 @@ export const InteractiveDemo: Story = {
                   ...option,
                   votes: option.id === optionId ? option.votes + 1 : option.votes,
                   userVoted: option.id === optionId,
-                })),
+                })}}}),
                 totalVotes: post.poll.totalVotes + 1,
               },
-            };
+            }
           }
-          return post;
+          return post
         })
       );
       
-      action('poll-vote')(pollId, optionId);
+      action('poll-vote')(pollId, optionId)
     };
 
     return (
@@ -410,7 +410,7 @@ export const InteractiveDemo: Story = {
           />
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

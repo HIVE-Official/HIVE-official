@@ -49,7 +49,7 @@ const Grid = React.forwardRef<HTMLDivElement, GridProps>(
         className={cn(gridVariants({ cols, gap }), className)}
         {...props}
       />
-    );
+    )
   }
 );
 Grid.displayName = "Grid";

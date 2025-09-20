@@ -137,7 +137,7 @@ export interface ProfileBadgeProps
   showIcon?: boolean;
   showValue?: boolean;
   onClick?: () => void;
-  tooltip?: string;
+  tooltip?: string
 }
 
 export function ProfileBadge({
@@ -202,24 +202,24 @@ export function ProfileBadge({
         </span>
       )}
     </div>
-  );
+  )
 }
 
 // Preset badge components for common use cases
 export function BuilderBadge({ size = "sm", ...props }: Omit<ProfileBadgeProps, 'type'>) {
-  return <ProfileBadge type="builder" size={size} {...props} />;
+  return <ProfileBadge type="builder" size={size} {...props} />
 }
 
 export function VerifiedBadge({ size = "sm", ...props }: Omit<ProfileBadgeProps, 'type'>) {
-  return <ProfileBadge type="verified" size={size} {...props} />;
+  return <ProfileBadge type="verified" size={size} {...props} />
 }
 
 export function LeaderBadge({ size = "sm", ...props }: Omit<ProfileBadgeProps, 'type'>) {
-  return <ProfileBadge type="leader" size={size} {...props} />;
+  return <ProfileBadge type="leader" size={size} {...props} />
 }
 
 export function GhostBadge({ size = "sm", ...props }: Omit<ProfileBadgeProps, 'type'>) {
-  return <ProfileBadge type="ghost" size={size} {...props} />;
+  return <ProfileBadge type="ghost" size={size} {...props} />
 }
 
 export function StreakBadge({ 
@@ -236,7 +236,7 @@ export function StreakBadge({
       label={value !== undefined ? `${value} day streak` : "Streak"}
       {...props} 
     />
-  );
+  )
 }
 
 export function AchievementBadge({ 
@@ -253,7 +253,7 @@ export function AchievementBadge({
       label={value !== undefined ? `${value} achievements` : "Achiever"}
       {...props} 
     />
-  );
+  )
 }
 
 // Export variants for external use

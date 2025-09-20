@@ -13,7 +13,7 @@ interface StackProps {
   config: StackConfig;
   children: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
+  style?: React.CSSProperties
 }
 
 export const Stack: React.FC<StackProps> = ({
@@ -140,12 +140,12 @@ export const Stack: React.FC<StackProps> = ({
         
         // Additional inline styles
         ...style
-      }}
+          })}
     >
       {childArray.map((child, index) => {
         // Don't animate if child is not a valid React element
         if (!React.isValidElement(child)) {
-          return child;
+          return child
         }
 
         return (
@@ -163,10 +163,10 @@ export const Stack: React.FC<StackProps> = ({
           >
             {child}
           </motion.div>
-        );
-      })}
+        )
+          })}
     </motion.div>
-  );
+  )
 };
 
 // Stack.Item component for better composition
@@ -177,7 +177,7 @@ interface StackItemProps {
   basis?: string | number;
   align?: 'start' | 'center' | 'end' | 'stretch';
   className?: string;
-  style?: React.CSSProperties;
+  style?: React.CSSProperties
 }
 
 export const StackItem: React.FC<StackItemProps> = ({
@@ -215,11 +215,11 @@ export const StackItem: React.FC<StackItemProps> = ({
       style={{
         flexBasis,
         ...style
-      }}
+          }}
     >
       {children}
     </div>
-  );
+  )
 };
 
 // Compound component export

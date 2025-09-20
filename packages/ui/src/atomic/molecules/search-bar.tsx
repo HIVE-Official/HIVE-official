@@ -17,7 +17,7 @@ export interface SearchBarProps {
   className?: string;
   onSearch?: (query: string) => void;
   onChange?: (value: string) => void;
-  onClear?: () => void;
+  onClear?: () => void
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -36,24 +36,24 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [internalValue, setInternalValue] = React.useState(value);
   
   React.useEffect(() => {
-    setInternalValue(value);
+    setInternalValue(value)
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInternalValue(newValue);
-    onChange?.(newValue);
+    onChange?.(newValue)
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch?.(internalValue);
+    onSearch?.(internalValue)
   };
 
   const handleClear = () => {
     setInternalValue('');
     onChange?.('');
-    onClear?.();
+    onClear?.()
   };
 
   const showClearButton = clearable && internalValue.length > 0 && !loading;
@@ -100,5 +100,5 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         Search
       </button>
     </form>
-  );
+  )
 };

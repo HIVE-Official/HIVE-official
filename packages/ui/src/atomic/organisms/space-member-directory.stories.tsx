@@ -369,11 +369,11 @@ export const InteractiveDemo: Story = {
           case 'remove':
             return prevMembers.filter(m => m.id !== memberId);
           default:
-            return prevMembers;
+            return prevMembers
         }
       });
       
-      action('manage-member')(memberId, action);
+      action('manage-member')(memberId, action)
     };
 
     const handleApproveMember = async (memberId: string) => {
@@ -385,7 +385,7 @@ export const InteractiveDemo: Story = {
         )
       );
       
-      action('approve-member')(memberId);
+      action('approve-member')(memberId)
     };
 
     const handleRejectMember = async (memberId: string) => {
@@ -393,7 +393,7 @@ export const InteractiveDemo: Story = {
       
       setMembers(prevMembers => prevMembers.filter(m => m.id !== memberId));
       
-      action('reject-member')(memberId);
+      action('reject-member')(memberId)
     };
 
     return (
@@ -412,7 +412,7 @@ export const InteractiveDemo: Story = {
           />
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

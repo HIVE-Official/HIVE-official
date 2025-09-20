@@ -264,17 +264,17 @@ const AccessibilityShowcase = () => {
           setKeyboardFocus(prev => {
             const next = e.shiftKey ? prev - 1 : prev + 1;
             const maxIndex = buttonRefs.current.length - 1;
-            return Math.max(0, Math.min(maxIndex, next));
-          });
+            return Math.max(0, Math.min(maxIndex, next))
+          })
         } else if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          buttonRefs.current[keyboardFocus]?.click();
+          buttonRefs.current[keyboardFocus]?.click()
         }
       };
 
       if (focusMode) {
         window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown)
       }
     }, [focusMode, keyboardFocus]);
 
@@ -415,7 +415,7 @@ const AccessibilityShowcase = () => {
           {focusMode && `Keyboard navigation mode active. Current focus: item ${keyboardFocus + 1} of ${buttonRefs.current.length}`}
         </div>
       </div>
-    );
+    )
   };
 
   // Contrast Checker Component
@@ -425,13 +425,13 @@ const AccessibilityShowcase = () => {
     useEffect(() => {
       // Simple contrast ratio calculation (would use proper contrast library in real implementation)
       const ratio = 7.2; // Placeholder - would calculate actual contrast
-      setContrast(ratio);
+      setContrast(ratio)
     }, [foreground, background]);
 
     const getStatus = (ratio: number) => {
       if (ratio >= 7) return { level: 'AAA', color: 'var(--hive-status-success)' };
       if (ratio >= 4.5) return { level: 'AA', color: 'var(--hive-status-warning)' };
-      return { level: 'Fail', color: 'var(--hive-status-error)' };
+      return { level: 'Fail', color: 'var(--hive-status-error)' }
     };
 
     const status = getStatus(contrast);
@@ -456,7 +456,7 @@ const AccessibilityShowcase = () => {
           Example text at normal size demonstrating readability
         </div>
       </div>
-    );
+    )
   };
 
   return (
@@ -526,8 +526,8 @@ const AccessibilityShowcase = () => {
                   <IconComponent className="w-5 h-5 mr-2" />
                   {standard.title}
                 </Button>
-              );
-            })}
+              )
+            })
             <Button
               variant={activeDemo === 'live-demo' ? "default" : "outline"}
               size="lg"
@@ -562,7 +562,7 @@ const AccessibilityShowcase = () => {
               <Card className="hive-glass border border-gray-700">
                 <CardHeader>
                   <CardTitle className="flex items-center" style={{ color: 'var(--hive-brand-primary)' }}>
-                    {React.createElement(accessibilityStandards[activeDemo as keyof typeof accessibilityStandards].icon, { className: "w-6 h-6 mr-2" })}
+                    {React.createElement(accessibilityStandards[activeDemo as keyof typeof accessibilityStandards].icon, { className: "w-6 h-6 mr-2" }}
                     {accessibilityStandards[activeDemo as keyof typeof accessibilityStandards].title}
                   </CardTitle>
                   <p style={{ color: 'var(--hive-text-muted)' }}>
@@ -869,7 +869,7 @@ const AccessibilityShowcase = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const AccessibilityCampusStandards: Story = {

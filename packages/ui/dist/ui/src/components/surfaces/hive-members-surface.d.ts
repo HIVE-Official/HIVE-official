@@ -2,7 +2,7 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { type Space } from '@hive/core';
 declare const hiveMembersSurfaceVariants: (props?: {
-    mode?: "view" | "builder" | "edit";
+    mode?: "builder" | "view" | "edit";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const memberRoles: {
     readonly builder: {
@@ -117,6 +117,6 @@ export interface HiveMembersSurfaceProps extends React.HTMLAttributes<HTMLDivEle
     autoFetch?: boolean;
     authToken?: string;
 }
-export declare const HiveMembersSurface: React.ForwardRefExoticComponent<HiveMembersSurfaceProps & React.RefAttributes<HTMLDivElement>>;
+export declare const HiveMembersSurface: any;
 export { hiveMembersSurfaceVariants, memberRoles, memberStatuses };
 //# sourceMappingURL=hive-members-surface.d.ts.map

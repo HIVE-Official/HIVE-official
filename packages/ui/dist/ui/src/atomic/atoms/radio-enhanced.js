@@ -91,10 +91,12 @@ const RadioGroup = React.forwardRef(({ className, name, value, onChange, orienta
                 disabled: disabled || child.props.disabled,
             });
         }
-        return child;
     });
-    return (_jsxs("div", { className: "space-y-2", children: [label && (_jsxs("label", { htmlFor: groupId, className: "text-sm font-medium text-[var(--hive-text-primary)]", children: [label, required && (_jsx("span", { className: "ml-1 text-[var(--hive-status-error)]", children: "*" }))] })), description && (_jsx("p", { className: "text-xs text-[var(--hive-text-tertiary)]", children: description })), _jsx("div", { ref: ref, id: groupId, className: cn("flex", orientation === "horizontal" ? "flex-row flex-wrap items-center" : "flex-col", spacingClasses[spacing], className), role: "radiogroup", "aria-labelledby": label ? groupId : undefined, "aria-required": required, ...props, children: radioChildren }), error && (_jsx("p", { className: "text-xs text-[var(--hive-status-error)]", children: error }))] }));
 });
+return child;
+;
+return (_jsxs("div", { className: "space-y-2", children: [label && (_jsxs("label", { htmlFor: groupId, className: "text-sm font-medium text-[var(--hive-text-primary)]", children: [label, required && (_jsx("span", { className: "ml-1 text-[var(--hive-status-error)]", children: "*" }))] })), description && (_jsx("p", { className: "text-xs text-[var(--hive-text-tertiary)]", children: description })), _jsx("div", { ref: ref, id: groupId, className: cn("flex", orientation === "horizontal" ? "flex-row flex-wrap items-center" : "flex-col", spacingClasses[spacing], className), role: "radiogroup", "aria-labelledby": label ? groupId : undefined, "aria-required": required, ...props, children: radioChildren }), error && (_jsx("p", { className: "text-xs text-[var(--hive-status-error)]", children: error }))] }));
+;
 RadioGroup.displayName = "RadioGroup";
 const RadioCard = React.forwardRef(({ icon, badge, label, description, value, className, ...props }, ref) => {
     const radioId = React.useId();

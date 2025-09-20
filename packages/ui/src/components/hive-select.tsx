@@ -138,7 +138,7 @@ export interface SelectOption {
   description?: string;
   icon?: React.ReactNode;
   disabled?: boolean;
-  group?: string;
+  group?: string
 }
 
 export interface HiveSelectProps
@@ -161,7 +161,7 @@ export interface HiveSelectProps
   noOptionsMessage?: string;
   emptySearchMessage?: string;
   renderOption?: (option: SelectOption) => React.ReactNode;
-  renderValue?: (value: string | string[], options: SelectOption[]) => React.ReactNode;
+  renderValue?: (value: string | string[], options: SelectOption[]) => React.ReactNode
 }
 
 const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
@@ -211,7 +211,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
       return options.filter(option => 
         option.label.toLowerCase().includes(query) ||
         option.description?.toLowerCase().includes(query)
-      );
+      )
     }, [options, searchQuery]);
     
     // Group options by group property
@@ -221,10 +221,10 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
       filteredOptions.forEach(option => {
         const group = option.group || 'ungrouped';
         if (!groups[group]) groups[group] = [];
-        groups[group].push(option);
-      });
+        groups[group].push(option)
+      })};
       
-      return groups;
+      return groups
     }, [filteredOptions]);
     
     // Close dropdown on outside click
@@ -232,12 +232,12 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
       const handleClickOutside = (event: MouseEvent) => {
         if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
           setIsOpen(false);
-          setSearchQuery('');
+          setSearchQuery('')
         }
       };
       
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside)
     }, []);
     
     // Keyboard navigation
@@ -261,25 +261,25 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
           case 'Enter':
             e.preventDefault();
             if (filteredOptions[highlightedIndex]) {
-              handleOptionSelect(filteredOptions[highlightedIndex]);
+              handleOptionSelect(filteredOptions[highlightedIndex])
             }
-            break;
+            break
         }
       };
       
       document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown)
     }, [isOpen, highlightedIndex, filteredOptions]);
     
     // Reset highlighted index when filtered options change
     useEffect(() => {
-      setHighlightedIndex(0);
+      setHighlightedIndex(0)
     }, [filteredOptions]);
     
     // Focus search input when opening
     useEffect(() => {
       if (isOpen && searchable && searchRef.current) {
-        setTimeout(() => searchRef.current?.focus(), 100);
+        setTimeout(() => searchRef.current?.focus(), 100)
       }
     }, [isOpen, searchable]);
     
@@ -287,7 +287,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
       if (!disabled) {
         setIsOpen(!isOpen);
         if (!isOpen) {
-          setSearchQuery('');
+          setSearchQuery('')
         }
       }
     };
@@ -300,28 +300,28 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
       if (multiple) {
         const currentArray = Array.isArray(currentValue) ? currentValue : [];
         if (currentArray.includes(option.value)) {
-          newValue = currentArray.filter(v => v !== option.value);
+          newValue = currentArray.filter(v => v !== option.value)
         } else {
-          newValue = [...currentArray, option.value];
+          newValue = [...currentArray, option.value]
         }
       } else {
         newValue = option.value;
         setIsOpen(false);
-        setSearchQuery('');
+        setSearchQuery('')
       }
       
       if (value === undefined) {
-        setInternalValue(newValue);
+        setInternalValue(newValue)
       }
-      onValueChange?.(newValue);
+      onValueChange?.(newValue)
     };
     
     const handleClear = () => {
       const newValue = multiple ? [] : '';
       if (value === undefined) {
-        setInternalValue(newValue);
+        setInternalValue(newValue)
       }
-      onValueChange?.(newValue);
+      onValueChange?.(newValue)
     };
     
     const handleCreateOption = () => {
@@ -333,19 +333,19 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
       };
       
       handleOptionSelect(newOption);
-      setSearchQuery('');
+      setSearchQuery('')
     };
     
     const isSelected = (option: SelectOption) => {
       if (multiple) {
-        return Array.isArray(currentValue) && currentValue.includes(option.value);
+        return Array.isArray(currentValue) && currentValue.includes(option.value)
       }
-      return currentValue === option.value;
+      return currentValue === option.value
     };
     
     const getDisplayValue = () => {
       if (renderValue) {
-        return renderValue(currentValue, options);
+        return renderValue(currentValue, options)
       }
       
       if (multiple) {
@@ -355,16 +355,16 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
         
         if (selectedOptions.length === 0) return placeholder;
         if (selectedOptions.length === 1) return selectedOptions[0].label;
-        return `${selectedOptions.length} items selected`;
+        return `${selectedOptions.length} items selected`
       }
       
       const selectedOption = options.find(opt => opt.value === currentValue);
-      return selectedOption ? selectedOption.label : placeholder;
+      return selectedOption ? selectedOption.label : placeholder
     };
     
     const renderOptionContent = (option: SelectOption) => {
       if (renderOption) {
-        return renderOption(option);
+        return renderOption(option)
       }
       
       return (
@@ -391,7 +391,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
             <Check size={16} className="text-yellow-400 shrink-0" />
           )}
         </div>
-      );
+      )
     };
     
     const shouldShowCreateOption = creatable && searchQuery && 
@@ -429,8 +429,8 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
                 className="text-[var(--hive-text-primary)]/60 hover:text-[var(--hive-text-primary)]/80 p-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleClear();
-                }}
+                  handleClear()
+          }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -531,8 +531,8 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
                                 {renderOptionContent(option)}
                               </motion.div>
                             </motion.button>
-                          );
-                        })}
+                          )
+          })}
                       </div>
                     ))}
                   </motion.div>
@@ -542,7 +542,7 @@ const HiveSelect = React.forwardRef<HTMLDivElement, HiveSelectProps>(
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 
@@ -553,7 +553,7 @@ export const HiveSelectTags: React.FC<{
   options: SelectOption[];
   value: string[];
   onRemove: (value: string) => void;
-  maxDisplay?: number;
+  maxDisplay?: number
 }> = ({ options, value, onRemove, maxDisplay = 3 }) => {
   const selectedOptions = options.filter(opt => value.includes(opt.value));
   const displayOptions = selectedOptions.slice(0, maxDisplay);
@@ -586,7 +586,7 @@ export const HiveSelectTags: React.FC<{
         </div>
       )}
     </div>
-  );
+  )
 };
 
 export { 

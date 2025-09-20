@@ -450,7 +450,7 @@ const CalendarSystem = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 export const CompleteCalendarSystem: Story = {

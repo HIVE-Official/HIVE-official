@@ -109,7 +109,7 @@ export interface HiveModalProps
   showCloseButton?: boolean;
   closeOnBackdropClick?: boolean;
   closeOnEscape?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
@@ -140,30 +140,30 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
       
       const handleEscape = (e: KeyboardEvent) => {
         if (e.key === 'Escape' && modalIsOpen) {
-          handleClose();
+          handleClose()
         }
       };
       
       document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape)
     }, [modalIsOpen, handleClose, closeOnEscape]);
     
     // Prevent body scroll when modal is open
     useEffect(() => {
       if (modalIsOpen) {
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden'
       } else {
-        document.body.style.overflow = 'unset';
+        document.body.style.overflow = 'unset'
       }
       
       return () => {
-        document.body.style.overflow = 'unset';
-      };
+        document.body.style.overflow = 'unset'
+      }
     }, [modalIsOpen]);
     
     const handleBackdropClick = (e: React.MouseEvent) => {
       if (e.target === e.currentTarget && closeOnBackdropClick) {
-        handleClose();
+        handleClose()
       }
     };
     
@@ -230,7 +230,7 @@ const HiveModal = React.forwardRef<HTMLDivElement, HiveModalProps>(
           </motion.div>
         )}
       </AnimatePresence>
-    );
+    )
   }
 );
 
@@ -244,7 +244,7 @@ interface HiveConfirmModalProps extends Omit<HiveModalProps, 'children'> {
   onConfirm: () => void;
   onCancel?: () => void;
   confirmVariant?: 'default' | 'destructive' | 'premium';
-  loading?: boolean;
+  loading?: boolean
 }
 
 const HiveConfirmModal = React.forwardRef<HTMLDivElement, HiveConfirmModalProps>(
@@ -261,13 +261,13 @@ const HiveConfirmModal = React.forwardRef<HTMLDivElement, HiveConfirmModalProps>
     
     const handleCancel = () => {
       onCancel?.();
-      onClose();
+      onClose()
     };
     
     const handleConfirm = () => {
       onConfirm();
       if (!loading) {
-        onClose();
+        onClose()
       }
     };
     
@@ -316,7 +316,7 @@ const HiveConfirmModal = React.forwardRef<HTMLDivElement, HiveConfirmModalProps>
           </motion.button>
         </div>
       </HiveModal>
-    );
+    )
   }
 );
 
@@ -325,7 +325,7 @@ HiveConfirmModal.displayName = "HiveConfirmModal";
 // Alert Modal for notifications
 interface HiveAlertModalProps extends Omit<HiveModalProps, 'children'> {
   message: string;
-  actionText?: string;
+  actionText?: string
 }
 
 const HiveAlertModal = React.forwardRef<HTMLDivElement, HiveAlertModalProps>(
@@ -352,7 +352,7 @@ const HiveAlertModal = React.forwardRef<HTMLDivElement, HiveAlertModalProps>(
           </motion.button>
         </div>
       </HiveModal>
-    );
+    )
   }
 );
 

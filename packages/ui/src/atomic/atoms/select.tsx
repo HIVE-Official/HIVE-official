@@ -7,7 +7,7 @@ import { ChevronDown, X, Check } from 'lucide-react';
 export interface SelectOption {
   value: string;
   label: string;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 export interface SelectProps {
@@ -25,7 +25,7 @@ export interface SelectProps {
   variant?: 'default' | 'outline' | 'filled' | 'ghost';
   fullWidth?: boolean;
   onChange?: (value: string | string[]) => void;
-  onSearch?: (query: string) => void;
+  onSearch?: (query: string) => void
 }
 
 const selectVariants = {
@@ -88,12 +88,12 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
     const handleClickOutside = (event: MouseEvent) => {
       if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
         setIsOpen(false);
-        setSearchQuery('');
+        setSearchQuery('')
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, []);
 
   // Filter options based on search
@@ -101,14 +101,14 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
     if (!searchable || !searchQuery) return options;
     return options.filter(option =>
       option.label.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    )
   }, [options, searchQuery, searchable]);
 
   // Get selected options
   const selectedOptions = React.useMemo(() => {
     if (!value) return [];
     const values = Array.isArray(value) ? value : [value];
-    return options.filter(option => values.includes(option.value));
+    return options.filter(option => values.includes(option.value))
   }, [value, options]);
 
   const handleOptionClick = (option: SelectOption) => {
@@ -119,16 +119,16 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
       const newValues = currentValues.includes(option.value)
         ? currentValues.filter(v => v !== option.value)
         : [...currentValues, option.value];
-      onChange?.(newValues);
+      onChange?.(newValues)
     } else {
       onChange?.(option.value);
       setIsOpen(false);
-      setSearchQuery('');
+      setSearchQuery('')
     }
   };
 
   const handleClear = () => {
-    onChange?.(multiple ? [] : '');
+    onChange?.(multiple ? [] : '')
   };
 
   const displayText = React.useMemo(() => {
@@ -136,9 +136,9 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
     if (multiple) {
       return selectedOptions.length === 1 
         ? selectedOptions[0].label
-        : `${selectedOptions.length} selected`;
+        : `${selectedOptions.length} selected`
     }
-    return selectedOptions[0]?.label || placeholder;
+    return selectedOptions[0]?.label || placeholder
   }, [selectedOptions, placeholder, multiple]);
 
   const baseClasses = [
@@ -181,8 +181,8 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleClear();
-                }}
+                  handleClear()
+          }}
                 className="text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]"
               >
                 <X className="h-4 w-4" />
@@ -206,8 +206,8 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    onSearch?.(e.target.value);
-                  }}
+                    onSearch?.(e.target.value)
+          }}
                   className="w-full px-3 py-2 bg-[var(--hive-background-interactive)] border border-[var(--hive-border-strong)] rounded-lg text-sm focus:outline-none focus:border-[var(--hive-brand-secondary)] text-[var(--hive-text-primary)] placeholder:text-[var(--hive-text-placeholder)]"
                 />
               </div>
@@ -238,7 +238,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
                         <Check className="h-4 w-4 text-[var(--hive-brand-secondary)]" />
                       )}
                     </div>
-                  );
+                  )
                 })
               )}
             </div>
@@ -255,7 +255,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(({
         </p>
       )}
     </div>
-  );
+  )
 });
 
 Select.displayName = 'Select';

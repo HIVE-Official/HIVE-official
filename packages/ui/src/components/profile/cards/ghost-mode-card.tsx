@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Switch } from '../../components/ui/switch';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Card, CardContent, CardHeader } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Switch } from '../../ui/switch';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { 
   Eye,
   EyeOff,
@@ -34,7 +34,8 @@ import {
   Sun,
   Zap,
   Power,
-  PowerOff
+  PowerOff,
+  BookOpen
 } from 'lucide-react';
 
 // Ghost Mode Types
@@ -57,7 +58,7 @@ export interface GhostModeSettings {
     studying: boolean;
     sleeping: boolean;
     busy: boolean;
-    invisible: boolean;
+    invisible: boolean
   };
   
   // Auto settings
@@ -66,7 +67,7 @@ export interface GhostModeSettings {
     enabled: boolean;
     start: string; // "22:00"
     end: string;   // "08:00"
-  };
+  }
 }
 
 export interface GhostModeCardProps {
@@ -76,7 +77,7 @@ export interface GhostModeCardProps {
   onToggleGhostMode: (enabled: boolean) => void;
   onQuickPreset: (preset: keyof GhostModeSettings['presets']) => void;
   onSettingsClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 // Ghost Mode Level Configuration
@@ -150,7 +151,7 @@ function formatTimeRemaining(expiresAt: Date): string {
   if (diffMins < 60) return `${diffMins}m left`;
   if (diffHours < 24) return `${diffHours}h left`;
   const diffDays = Math.floor(diffHours / 24);
-  return `${diffDays}d left`;
+  return `${diffDays}d left`
 }
 
 // Quick Preset Component
@@ -161,7 +162,7 @@ function QuickPreset({
 }: { 
   preset: keyof typeof presetConfig;
   isActive: boolean;
-  onClick: () => void;
+  onClick: () => void
 }) {
   const config = presetConfig[preset];
   const Icon = config.icon;
@@ -185,7 +186,7 @@ function QuickPreset({
         </span>
       </div>
     </motion.button>
-  );
+  )
 }
 
 // Privacy Status Indicator
@@ -197,7 +198,7 @@ function PrivacyStatusIndicator({ settings }: { settings: GhostModeSettings }) {
     if (settings.hideLocation) features.push('Location');
     if (settings.hideSpaces) features.push('Spaces');
     if (settings.muteNotifications) features.push('Notifications');
-    return features;
+    return features
   }, [settings]);
 
   const config = ghostModeConfig[settings.level];
@@ -230,7 +231,7 @@ function PrivacyStatusIndicator({ settings }: { settings: GhostModeSettings }) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // Ghost Mode Settings Dialog
@@ -243,7 +244,7 @@ function GhostModeSettingsDialog({
   settings: GhostModeSettings;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSettingsChange: (settings: Partial<GhostModeSettings>) => void;
+  onSettingsChange: (settings: Partial<GhostModeSettings>) => void
 }) {
   const handleSettingChange = useCallback((key: string, value: any) => {
     if (key.includes('.')) {
@@ -253,9 +254,9 @@ function GhostModeSettingsDialog({
           ...(settings as any)[parent],
           [child]: value
         }
-      });
+      })
     } else {
-      onSettingsChange({ [key]: value });
+      onSettingsChange({ [key]: value })
     }
   }, [settings, onSettingsChange]);
 
@@ -296,8 +297,8 @@ function GhostModeSettingsDialog({
                       </div>
                     </div>
                   </button>
-                );
-              })}
+                )
+          })
             </div>
           </div>
 
@@ -311,7 +312,7 @@ function GhostModeSettingsDialog({
                 { key: 'hideLocation', label: 'Location Info', icon: MapPin },
                 { key: 'hideSpaces', label: 'Space Memberships', icon: Users },
                 { key: 'muteNotifications', label: 'Mute Notifications', icon: Bell }
-              ].map(({ key, label, icon: Icon }) => (
+              ].map(({ key, label, icon: Icon })} => (
                 <div key={key} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Icon className="w-4 h-4 text-[var(--hive-text-muted)]" />
@@ -319,7 +320,7 @@ function GhostModeSettingsDialog({
                   </div>
                   <Switch 
                     checked={(settings as any)[key]}
-                    onCheckedChange={(checked) => handleSettingChange(key, checked)}
+                    onChange={(e) => { const checked = e.target.checked; handleSettingChange(key, checked)}
                   />
                 </div>
               ))}
@@ -334,7 +335,7 @@ function GhostModeSettingsDialog({
                 { key: 'temporary', label: '1 Hour', description: 'Auto-disable after 1 hour' },
                 { key: 'session', label: 'This Session', description: 'Until you log out' },
                 { key: 'indefinite', label: 'Until Disabled', description: 'Stays on until manually turned off' }
-              ].map(({ key, label, description }) => (
+              ].map(({ key, label, description })} => (
                 <button
                   key={key}
                   className={cn(
@@ -366,7 +367,7 @@ function GhostModeSettingsDialog({
                 </div>
                 <Switch 
                   checked={settings.quietHours.enabled}
-                  onCheckedChange={(checked) => handleSettingChange('quietHours.enabled', checked)}
+                  onChange={(e) => { const checked = e.target.checked; handleSettingChange('quietHours.enabled', checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -376,7 +377,7 @@ function GhostModeSettingsDialog({
                 </div>
                 <Switch 
                   checked={settings.autoEnabled}
-                  onCheckedChange={(checked) => handleSettingChange('autoEnabled', checked)}
+                  onChange={(e) => { const checked = e.target.checked; handleSettingChange('autoEnabled', checked)}
                 />
               </div>
             </div>
@@ -384,7 +385,7 @@ function GhostModeSettingsDialog({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 // Main Ghost Mode Card Component
@@ -407,17 +408,17 @@ export function GhostModeCard({
 
   const timeRemaining = useMemo(() => {
     if (settings.expiresAt && settings.duration === 'temporary') {
-      return formatTimeRemaining(settings.expiresAt);
+      return formatTimeRemaining(settings.expiresAt)
     }
-    return null;
+    return null
   }, [settings.expiresAt, settings.duration]);
 
   const handleToggle = useCallback(() => {
-    onToggleGhostMode(!settings.isEnabled);
+    onToggleGhostMode(!settings.isEnabled)
   }, [settings.isEnabled, onToggleGhostMode]);
 
   const handlePresetClick = useCallback((preset: keyof GhostModeSettings['presets']) => {
-    onQuickPreset(preset);
+    onQuickPreset(preset)
   }, [onQuickPreset]);
 
   return (
@@ -431,7 +432,7 @@ export function GhostModeCard({
                   color: settings.isEnabled 
                     ? 'var(--hive-brand-primary)' 
                     : 'var(--hive-text-muted)'
-                }}
+          }}
               >
                 {settings.isEnabled ? (
                   <EyeOff className="w-5 h-5" />
@@ -577,7 +578,7 @@ export function GhostModeCard({
         onSettingsChange={onSettingsChange}
       />
     </>
-  );
+  )
 }
 
 // Default props for development

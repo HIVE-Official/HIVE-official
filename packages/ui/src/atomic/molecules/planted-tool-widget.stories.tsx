@@ -298,7 +298,7 @@ export const AllCategories: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -395,7 +395,7 @@ export const ToolGrid: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -436,18 +436,18 @@ export const InteractiveDemo: Story = {
             return {
               ...tool,
               status: activate ? 'active' : 'disabled',
-            };
+            }
           }
-          return tool;
+          return tool
         })
       );
       
-      action('toggle-status')(toolId, activate);
+      action('toggle-status')(toolId, activate)
     };
 
     const handleRemoveTool = (toolId: string) => {
       setTools(prevTools => prevTools.filter(tool => tool.id !== toolId));
-      action('remove')(toolId);
+      action('remove')(toolId)
     };
 
     return (
@@ -472,7 +472,7 @@ export const InteractiveDemo: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

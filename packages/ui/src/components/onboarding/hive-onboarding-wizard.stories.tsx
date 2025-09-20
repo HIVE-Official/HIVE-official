@@ -151,7 +151,7 @@ export const Default: Story = {
     mockMode: true,
     onComplete: (userData) => {
       console.log('Onboarding complete:', userData);
-      alert(`Welcome to HIVE, ${userData.name}! Your builder profile is ready.`);
+      alert(`Welcome to HIVE, ${userData.name}! Your builder profile is ready.`)
     }
   },
   parameters: {
@@ -189,7 +189,7 @@ export const NameStep: Story = {
     initialStep: 'name',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Name step complete:', userData);
+      console.log('Name step complete:', userData)
     }
   },
   parameters: {
@@ -227,7 +227,7 @@ export const HandleStep: Story = {
     initialStep: 'handle',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Handle step complete:', userData);
+      console.log('Handle step complete:', userData)
     }
   },
   parameters: {
@@ -265,7 +265,7 @@ export const PhotoStep: Story = {
     initialStep: 'photo',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Photo step complete:', userData);
+      console.log('Photo step complete:', userData)
     }
   },
   parameters: {
@@ -304,7 +304,7 @@ export const AcademicsStep: Story = {
     initialStep: 'academics',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Academics step complete:', userData);
+      console.log('Academics step complete:', userData)
     }
   },
   parameters: {
@@ -342,7 +342,7 @@ export const BuilderStep: Story = {
     initialStep: 'builder',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Builder step complete:', userData);
+      console.log('Builder step complete:', userData)
     }
   },
   parameters: {
@@ -393,7 +393,7 @@ export const LegalStep: Story = {
     initialStep: 'legal',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Legal step complete:', userData);
+      console.log('Legal step complete:', userData)
     }
   },
   parameters: {
@@ -443,7 +443,7 @@ export const CompleteStep: Story = {
     initialStep: 'complete',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Onboarding complete:', userData);
+      console.log('Onboarding complete:', userData)
     }
   },
   parameters: {
@@ -498,7 +498,7 @@ export const InteractiveFlowDemo: Story = {
     
     const handleComplete = (userData: any) => {
       setCompletedData(userData);
-      console.log('Interactive demo complete:', userData);
+      console.log('Interactive demo complete:', userData)
     };
 
     // Progress tracker component
@@ -508,7 +508,7 @@ export const InteractiveFlowDemo: Story = {
       const currentIndex = steps.indexOf(state.step);
       
       React.useEffect(() => {
-        setCurrentProgress(((currentIndex + 1) / steps.length) * 100);
+        setCurrentProgress(((currentIndex + 1) / steps.length) * 100)
       }, [currentIndex]);
 
       return (
@@ -529,7 +529,7 @@ export const InteractiveFlowDemo: Story = {
             </div>
           </div>
         </div>
-      );
+      )
     };
 
     return (
@@ -556,7 +556,7 @@ export const InteractiveFlowDemo: Story = {
           </div>
         )}
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -704,11 +704,11 @@ export const UniversityOfBuffaloScenarios: Story = {
           mockMode={true}
           onComplete={(userData) => {
             alert(`${currentScenario.title} onboarding complete! Welcome to HIVE, ${userData.name}!`);
-            console.log(`${currentScenario.title} data:`, userData);
-          }}
+            console.log(`${currentScenario.title} data:`, userData)
+          })}
         />
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',
@@ -816,12 +816,12 @@ export const StepByStepShowcase: Story = {
             initialStep={selectedStep}
             mockMode={true}
             onComplete={(userData) => {
-              console.log(`Step ${selectedStep} demo:`, userData);
-            }}
+              console.log(`Step ${selectedStep} demo:`, userData)
+          })}
           />
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',
@@ -910,8 +910,8 @@ export const MobileExperience: Story = {
       <HiveOnboardingWizard 
         mockMode={true}
         onComplete={(userData) => {
-          alert(`Mobile onboarding complete: Welcome ${userData.name}!`);
-        }}
+          alert(`Mobile onboarding complete: Welcome ${userData.name}!`)
+          })}
       />
     </div>
   ),
@@ -980,7 +980,7 @@ export const AccessibilityFeatures: Story = {
   args: {
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Accessible onboarding complete:', userData);
+      console.log('Accessible onboarding complete:', userData)
     }
   },
   parameters: {
@@ -1136,11 +1136,11 @@ export const ValidationAndErrorHandling: Story = {
         <HiveOnboardingWizard 
           mockMode={true}
           onComplete={(userData) => {
-            console.log('Validation test complete:', userData);
+            console.log('Validation test complete:', userData)
           }}
         />
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',

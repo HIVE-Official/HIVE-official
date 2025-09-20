@@ -58,10 +58,10 @@ const useMobileDetection = () => {
     const checkIsMobile = () => setIsMobile(window.innerWidth < 768);
     checkIsMobile();
     window.addEventListener('resize', checkIsMobile);
-    return () => window.removeEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile)
   }, []);
   
-  return isMobile;
+  return isMobile
 };
 
 const getMobileClasses = (isMobile: boolean) => ({
@@ -81,7 +81,7 @@ export interface ElementProps {
   onChange?: (value: any) => void;
   disabled?: boolean;
   required?: boolean;
-  className?: string;
+  className?: string
 }
 
 // Event-Specific Data Types
@@ -90,21 +90,21 @@ export interface EventLocation {
   venue?: string;
   address?: string;
   room?: string;
-  virtualLink?: string;
+  virtualLink?: string
 }
 
 export interface RSVPOption {
   status: 'yes' | 'no' | 'maybe';
   guestCount?: number;
   dietaryRestrictions?: string;
-  accessibilityNeeds?: string;
+  accessibilityNeeds?: string
 }
 
 // INPUT ELEMENTS (8 Elements)
 
 export interface TextInputElementProps extends ElementProps {
   placeholder?: string;
-  maxLength?: number;
+  maxLength?: number
 }
 
 export function TextInputElement({ 
@@ -135,13 +135,13 @@ export function TextInputElement({
         disabled={disabled}
       />
     </div>
-  );
+  )
 }
 
 export interface DatePickerElementProps extends ElementProps {
   minDate?: Date;
   maxDate?: Date;
-  includeTime?: boolean;
+  includeTime?: boolean
 }
 
 export function DatePickerElement({ 
@@ -160,9 +160,9 @@ export function DatePickerElement({
     if (!date) return '';
     const d = new Date(date);
     if (includeTime) {
-      return d.toISOString().slice(0, 16);
+      return d.toISOString().slice(0, 16)
     }
-    return d.toISOString().slice(0, 10);
+    return d.toISOString().slice(0, 10)
   };
 
   return (
@@ -187,11 +187,11 @@ export function DatePickerElement({
         <Calendar className="absolute right-3 top-2.5 w-4 h-4 text-gray-400 pointer-events-none" />
       </div>
     </div>
-  );
+  )
 }
 
 export interface LocationElementProps extends ElementProps {
-  allowedTypes?: EventLocation['type'][];
+  allowedTypes?: EventLocation['type'][]
 }
 
 export function LocationElement({ 
@@ -207,7 +207,7 @@ export function LocationElement({
   const location = value as EventLocation;
 
   const updateLocation = (updates: Partial<EventLocation>) => {
-    onChange?.({ ...location, ...updates });
+    onChange?.({ ...location, ...updates })
   };
 
   return (
@@ -220,7 +220,7 @@ export function LocationElement({
       
       <select
         value={location.type}
-        onChange={(e) => updateLocation({ type: e.target.value as EventLocation['type'] })}
+        onChange={(e) => updateLocation({ type: e.target.value as EventLocation['type'] }}
         disabled={disabled}
         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
       >
@@ -233,24 +233,24 @@ export function LocationElement({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <HiveInput
           value={location.venue || ''}
-          onChange={(e) => updateLocation({ venue: e.target.value })}
+          onChange={(e) => updateLocation({ venue: e.target.value }}
           placeholder="Venue name..."
           disabled={disabled}
         />
         <HiveInput
           value={location.room || ''}
-          onChange={(e) => updateLocation({ room: e.target.value })}
+          onChange={(e) => updateLocation({ room: e.target.value }}
           placeholder={location.type === 'virtual' ? 'Meeting link...' : 'Room/Address...'}
           disabled={disabled}
         />
       </div>
     </div>
-  );
+  )
 }
 
 export interface SelectElementProps extends ElementProps {
   options: { value: string; label: string; description?: string }[];
-  placeholder?: string;
+  placeholder?: string
 }
 
 export function SelectElement({ 
@@ -292,14 +292,14 @@ export function SelectElement({
         </p>
       )}
     </div>
-  );
+  )
 }
 
 export interface NumberInputElementProps extends ElementProps {
   min?: number;
   max?: number;
   step?: number;
-  placeholder?: string;
+  placeholder?: string
 }
 
 export function NumberInputElement({ 
@@ -335,11 +335,11 @@ export function NumberInputElement({
         disabled={disabled}
       />
     </div>
-  );
+  )
 }
 
 export interface CheckboxElementProps extends ElementProps {
-  description?: string;
+  description?: string
 }
 
 export function CheckboxElement({ 
@@ -368,11 +368,11 @@ export function CheckboxElement({
         </div>
       </label>
     </div>
-  );
+  )
 }
 
 export interface RadioElementProps extends ElementProps {
-  options: { value: string; label: string; description?: string }[];
+  options: { value: string; label: string; description?: string }[]
 }
 
 export function RadioElement({ 
@@ -411,7 +411,7 @@ export function RadioElement({
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // DISPLAY ELEMENTS (8 Elements)
@@ -425,11 +425,11 @@ export interface EventCardElementProps extends ElementProps {
     category?: string;
     capacity?: number;
     rsvpCount?: number;
-    status?: 'draft' | 'published' | 'cancelled' | 'completed';
+    status?: 'draft' | 'published' | 'cancelled' | 'completed'
   };
   showActions?: boolean;
   onRSVP?: () => void;
-  onEdit?: () => void;
+  onEdit?: () => void
 }
 
 export function EventCardElement({ 
@@ -446,7 +446,7 @@ export function EventCardElement({
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
-    });
+    })
   };
 
   return (
@@ -500,14 +500,14 @@ export function EventCardElement({
         </div>
       )}
     </HiveCard>
-  );
+  )
 }
 
 export interface CounterElementProps extends ElementProps {
   current: number;
   total?: number;
   icon?: React.ComponentType<{ className?: string }>;
-  color?: 'default' | 'success' | 'warning' | 'danger';
+  color?: 'default' | 'success' | 'warning' | 'danger'
 }
 
 export function CounterElement({ 
@@ -536,13 +536,13 @@ export function CounterElement({
         </p>
       </div>
     </div>
-  );
+  )
 }
 
 export interface QRCodeElementProps extends ElementProps {
   data: string;
   size?: number;
-  onScan?: (data: string) => void;
+  onScan?: (data: string) => void
 }
 
 export function QRCodeElement({ 
@@ -573,7 +573,7 @@ export function QRCodeElement({
         </HiveButton>
       )}
     </div>
-  );
+  )
 }
 
 // ACTION ELEMENTS (5 Elements)
@@ -583,7 +583,7 @@ export interface RSVPElementProps extends ElementProps {
   currentResponse?: RSVPOption;
   allowGuests?: boolean;
   maxGuests?: number;
-  onSubmit?: (response: RSVPOption) => void;
+  onSubmit?: (response: RSVPOption) => void
 }
 
 export function RSVPElement({ 
@@ -599,7 +599,7 @@ export function RSVPElement({
   );
 
   const handleSubmit = () => {
-    onSubmit?.(response);
+    onSubmit?.(response)
   };
 
   return (
@@ -654,7 +654,7 @@ export function RSVPElement({
         Submit RSVP
       </HiveButton>
     </HiveCard>
-  );
+  )
 }
 
 // LOGIC ELEMENTS (3 Elements)
@@ -662,11 +662,11 @@ export function RSVPElement({
 export interface ConditionalElementProps {
   condition: boolean;
   children: React.ReactNode;
-  fallback?: React.ReactNode;
+  fallback?: React.ReactNode
 }
 
 export function ConditionalElement({ condition, children, fallback }: ConditionalElementProps) {
-  return condition ? <>{children}</> : <>{fallback}</>;
+  return condition ? <>{children}</> : <>{fallback}</>
 }
 
 export interface FilterElementProps extends ElementProps {
@@ -674,9 +674,9 @@ export interface FilterElementProps extends ElementProps {
     categories?: string[];
     dateRange?: { start: Date; end: Date };
     location?: string;
-    hasCapacity?: boolean;
+    hasCapacity?: boolean
   };
-  onFiltersChange?: (filters: any) => void;
+  onFiltersChange?: (filters: any) => void
 }
 
 export function FilterElement({ 
@@ -695,7 +695,7 @@ export function FilterElement({
         onChange={(category) => onFiltersChange?.({ 
           ...filters, 
           categories: category ? [category] : undefined 
-        })}
+          }}
         options={[
           { value: 'academic', label: 'Academic' },
           { value: 'social', label: 'Social' },
@@ -712,10 +712,10 @@ export function FilterElement({
         id="has-capacity"
         label="Only show events with available spots"
         value={filters.hasCapacity || false}
-        onChange={(hasCapacity) => onFiltersChange?.({ ...filters, hasCapacity })}
+        onChange={(hasCapacity) => onFiltersChange?.({ ...filters, hasCapacity }}
       />
     </HiveCard>
-  );
+  )
 }
 
 // ADVANCED ELEMENTS (10 Elements) - Completing the 24-Element Library
@@ -727,10 +727,10 @@ export interface AttendeeListElementProps extends ElementProps {
     email: string;
     status: 'confirmed' | 'pending' | 'declined';
     checkedIn?: boolean;
-    guestCount?: number;
+    guestCount?: number
   }[];
   showCheckIn?: boolean;
-  onCheckIn?: (attendeeId: string) => void;
+  onCheckIn?: (attendeeId: string) => void
 }
 
 export function AttendeeListElement({ 
@@ -782,7 +782,7 @@ export function AttendeeListElement({
         ))}
       </div>
     </HiveCard>
-  );
+  )
 }
 
 export interface CalendarViewElementProps extends ElementProps {
@@ -792,11 +792,11 @@ export interface CalendarViewElementProps extends ElementProps {
     startDate: Date;
     endDate: Date;
     category?: string;
-    status?: string;
+    status?: string
   }>;
   currentDate?: Date;
   onDateChange?: (date: Date) => void;
-  onEventClick?: (eventId: string) => void;
+  onEventClick?: (eventId: string) => void
 }
 
 export function CalendarViewElement({ 
@@ -814,7 +814,7 @@ export function CalendarViewElement({
     const newDate = new Date(viewDate);
     newDate.setMonth(newDate.getMonth() + direction);
     setViewDate(newDate);
-    onDateChange?.(newDate);
+    onDateChange?.(newDate)
   };
 
   const getDaysInMonth = (date: Date) => {
@@ -830,7 +830,7 @@ export function CalendarViewElement({
     // Previous month's days
     for (let i = 0; i < startingDayOfWeek; i++) {
       const prevDate = new Date(year, month, -startingDayOfWeek + i + 1);
-      days.push({ date: prevDate, isCurrentMonth: false, events: [] });
+      days.push({ date: prevDate, isCurrentMonth: false, events: [] })
     }
 
     // Current month's days
@@ -838,12 +838,12 @@ export function CalendarViewElement({
       const date = new Date(year, month, day);
       const dayEvents = events.filter(event => {
         const eventDate = new Date(event.startDate);
-        return eventDate.toDateString() === date.toDateString();
-      });
-      days.push({ date, isCurrentMonth: true, events: dayEvents });
+        return eventDate.toDateString() === date.toDateString()
+      })};
+      days.push({ date, isCurrentMonth: true, events: dayEvents })
     }
 
-    return days;
+    return days
   };
 
   const days = getDaysInMonth(viewDate);
@@ -852,7 +852,7 @@ export function CalendarViewElement({
     <HiveCard className={cn("p-4", mobileClasses.card, className)}>
       <div className={cn("flex items-center justify-between mb-4", isMobile && "flex-col gap-3")}>
         <h3 className={cn("font-semibold text-gray-900", isMobile ? "text-xl" : "text-lg")}>
-          {viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          {viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }}
         </h3>
         <div className="flex gap-2">
           <HiveButton 
@@ -912,7 +912,7 @@ export function CalendarViewElement({
         ))}
       </div>
     </HiveCard>
-  );
+  )
 }
 
 export interface NotificationElementProps extends ElementProps {
@@ -923,10 +923,10 @@ export interface NotificationElementProps extends ElementProps {
     message: string;
     timestamp: Date;
     read: boolean;
-    eventId?: string;
+    eventId?: string
   }>;
   onMarkRead?: (notificationId: string) => void;
-  onMarkAllRead?: () => void;
+  onMarkAllRead?: () => void
 }
 
 export function NotificationElement({ 
@@ -943,7 +943,7 @@ export function NotificationElement({
       case 'update': return AlertCircle;
       case 'rsvp': return Users;
       case 'checkin': return CheckSquare;
-      default: return AlertCircle;
+      default: return AlertCircle
     }
   };
 
@@ -995,22 +995,22 @@ export function NotificationElement({
                   </div>
                 </div>
               </div>
-            );
+            )
           })
         )}
       </div>
     </HiveCard>
-  );
+  )
 }
 
 export interface AnalyticsChartElementProps extends ElementProps {
   data: Array<{
     label: string;
     value: number;
-    trend?: number;
+    trend?: number
   }>;
   title?: string;
-  type?: 'bar' | 'line' | 'pie';
+  type?: 'bar' | 'line' | 'pie'
 }
 
 export function AnalyticsChartElement({ 
@@ -1063,7 +1063,7 @@ export function AnalyticsChartElement({
         </div>
       )}
     </HiveCard>
-  );
+  )
 }
 
 export interface FeedbackFormElementProps extends ElementProps {
@@ -1073,9 +1073,9 @@ export interface FeedbackFormElementProps extends ElementProps {
     question: string;
     type: 'rating' | 'text' | 'select';
     options?: string[];
-    required?: boolean;
+    required?: boolean
   }>;
-  onSubmit?: (feedback: Record<string, any>) => void;
+  onSubmit?: (feedback: Record<string, any>) => void
 }
 
 export function FeedbackFormElement({ 
@@ -1090,11 +1090,11 @@ export function FeedbackFormElement({
   const [responses, setResponses] = useState<Record<string, any>>({});
 
   const updateResponse = (questionId: string, value: any) => {
-    setResponses(prev => ({ ...prev, [questionId]: value }));
+    setResponses(prev => ({ ...prev, [questionId]: value }))
   };
 
   const handleSubmit = () => {
-    onSubmit?.(responses);
+    onSubmit?.(responses)
   };
 
   return (
@@ -1155,14 +1155,14 @@ export function FeedbackFormElement({
         Submit Feedback
       </HiveButton>
     </HiveCard>
-  );
+  )
 }
 
 export interface ShareElementProps extends ElementProps {
   eventId: string;
   eventTitle: string;
   shareUrl?: string;
-  onShare?: (platform: string) => void;
+  onShare?: (platform: string) => void
 }
 
 export function ShareElement({ 
@@ -1177,7 +1177,7 @@ export function ShareElement({
       await navigator.clipboard.writeText(shareUrl);
       // Could show toast notification here
     } catch (err) {
-      console.error('Failed to copy to clipboard:', err);
+      console.error('Failed to copy to clipboard:', err)
     }
   };
 
@@ -1185,15 +1185,15 @@ export function ShareElement({
     { platform: 'copy', label: 'Copy Link', action: copyToClipboard },
     { platform: 'email', label: 'Email', action: () => {
       window.location.href = `mailto:?subject=${encodeURIComponent(eventTitle)}&body=${encodeURIComponent(shareUrl)}`;
-      onShare?.('email');
+      onShare?.('email')
     }},
     { platform: 'twitter', label: 'Twitter', action: () => {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(eventTitle)}&url=${encodeURIComponent(shareUrl)}`);
-      onShare?.('twitter');
+      onShare?.('twitter')
     }},
     { platform: 'facebook', label: 'Facebook', action: () => {
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`);
-      onShare?.('facebook');
+      onShare?.('facebook')
     }},
   ];
 
@@ -1214,7 +1214,7 @@ export function ShareElement({
         ))}
       </div>
     </HiveCard>
-  );
+  )
 }
 
 export interface RecurrenceElementProps extends ElementProps {
@@ -1222,9 +1222,9 @@ export interface RecurrenceElementProps extends ElementProps {
     type: 'none' | 'daily' | 'weekly' | 'monthly';
     interval: number;
     endDate?: Date;
-    weekdays?: number[];
+    weekdays?: number[]
   };
-  onRecurrenceChange?: (recurrence: any) => void;
+  onRecurrenceChange?: (recurrence: any) => void
 }
 
 export function RecurrenceElement({ 
@@ -1233,7 +1233,7 @@ export function RecurrenceElement({
   className 
 }: RecurrenceElementProps) {
   const updateRecurrence = (updates: any) => {
-    onRecurrenceChange?.({ ...recurrence, ...updates });
+    onRecurrenceChange?.({ ...recurrence, ...updates })
   };
 
   return (
@@ -1244,7 +1244,7 @@ export function RecurrenceElement({
         id="recurrence-type"
         label="Repeat"
         value={recurrence.type}
-        onChange={(type) => updateRecurrence({ type })}
+        onChange={(type) => updateRecurrence({ type }}
         options={[
           { value: 'none', label: 'Does not repeat' },
           { value: 'daily', label: 'Daily' },
@@ -1259,7 +1259,7 @@ export function RecurrenceElement({
             id="recurrence-interval"
             label={`Repeat every ${recurrence.type === 'daily' ? 'day(s)' : recurrence.type === 'weekly' ? 'week(s)' : 'month(s)'}`}
             value={recurrence.interval}
-            onChange={(interval) => updateRecurrence({ interval })}
+            onChange={(interval) => updateRecurrence({ interval }}
             min={1}
             max={30}
           />
@@ -1268,20 +1268,20 @@ export function RecurrenceElement({
             id="recurrence-end"
             label="End date"
             value={recurrence.endDate}
-            onChange={(endDate) => updateRecurrence({ endDate })}
+            onChange={(endDate) => updateRecurrence({ endDate }}
             includeTime={false}
           />
         </>
       )}
     </HiveCard>
-  );
+  )
 }
 
 export interface TagsElementProps extends ElementProps {
   tags: string[];
   availableTags?: string[];
   onTagsChange?: (tags: string[]) => void;
-  maxTags?: number;
+  maxTags?: number
 }
 
 export function TagsElement({ 
@@ -1295,19 +1295,19 @@ export function TagsElement({
 
   const addTag = (tag: string) => {
     if (!tags.includes(tag) && tags.length < maxTags) {
-      onTagsChange?.([...tags, tag]);
+      onTagsChange?.([...tags, tag])
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    onTagsChange?.(tags.filter(tag => tag !== tagToRemove));
+    onTagsChange?.(tags.filter(tag => tag !== tagToRemove))
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && inputValue.trim()) {
       e.preventDefault();
       addTag(inputValue.trim());
-      setInputValue('');
+      setInputValue('')
     }
   };
 
@@ -1359,7 +1359,7 @@ export function TagsElement({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export interface StatusElementProps extends ElementProps {
@@ -1368,9 +1368,9 @@ export interface StatusElementProps extends ElementProps {
     status: string;
     timestamp: Date;
     changedBy: string;
-    reason?: string;
+    reason?: string
   }>;
-  onStatusChange?: (status: string, reason?: string) => void;
+  onStatusChange?: (status: string, reason?: string) => void
 }
 
 export function StatusElement({ 
@@ -1391,16 +1391,16 @@ export function StatusElement({
 
   const handleStatusChange = (newStatus: string) => {
     if (newStatus === 'cancelled') {
-      setShowReasonInput(true);
+      setShowReasonInput(true)
     } else {
-      onStatusChange?.(newStatus);
+      onStatusChange?.(newStatus)
     }
   };
 
   const submitStatusChange = () => {
     onStatusChange?.(showReasonInput ? 'cancelled' : status, reason);
     setReason('');
-    setShowReasonInput(false);
+    setShowReasonInput(false)
   };
 
   return (
@@ -1463,5 +1463,5 @@ export function StatusElement({
         </div>
       )}
     </HiveCard>
-  );
+  )
 }

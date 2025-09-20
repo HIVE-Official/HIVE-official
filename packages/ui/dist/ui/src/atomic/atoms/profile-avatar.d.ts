@@ -3,7 +3,7 @@ import { type VariantProps } from 'class-variance-authority';
 declare const profileAvatarVariants: (props?: {
     size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
     shape?: "rounded" | "circle" | "square";
-    border?: "primary" | "none" | "builder" | "verified" | "subtle";
+    border?: "primary" | "builder" | "verified" | "none" | "subtle";
     status?: "none" | "online" | "offline" | "away" | "busy";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface ProfileAvatarProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof profileAvatarVariants> {

@@ -50,7 +50,7 @@ export interface HiveNavigationInputProps
   icon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   clearable?: boolean;
-  loading?: boolean;
+  loading?: boolean
 }
 
 export function HiveNavigationInput({
@@ -79,31 +79,31 @@ export function HiveNavigationInput({
 
   useEffect(() => {
     if (value !== undefined) {
-      setInternalValue(value);
+      setInternalValue(value)
     }
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     if (value === undefined) {
-      setInternalValue(newValue);
+      setInternalValue(newValue)
     }
     onChange?.(e);
-    onSearch?.(newValue);
+    onSearch?.(newValue)
   };
 
   const handleClear = () => {
     const newValue = '';
     if (value === undefined) {
-      setInternalValue(newValue);
+      setInternalValue(newValue)
     }
     onClear?.();
-    inputRef.current?.focus();
+    inputRef.current?.focus()
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
-      handleClear();
+      handleClear()
     }
   };
 
@@ -119,7 +119,7 @@ export function HiveNavigationInput({
         transformOrigin: 'center',
         backfaceVisibility: 'hidden' as const,
         transform: 'translateZ(0)',
-      }}
+          }}
       whileFocus={{ scale: 1.01 }}
     >
       {/* Left Icon */}
@@ -151,7 +151,7 @@ export function HiveNavigationInput({
           fontFamily: 'var(--hive-font-family-primary)',
           fontSize: `var(--hive-font-size-${size === 'sm' ? 'sm' : size === 'lg' ? 'base' : 'sm'})`,
           fontWeight: 'var(--hive-font-weight-regular)'
-        }}
+          }}
         {...props}
       />
 
@@ -194,7 +194,7 @@ export function HiveNavigationInput({
               backgroundColor: 'var(--hive-background-primary)',
               borderColor: 'var(--hive-border-subtle)',
               color: 'var(--hive-text-muted)'
-            }}
+          }}
             initial={{ opacity: 0 }}
             animate={{ opacity: isFocused ? 0 : 1 }}
             transition={{ duration: 0.2 }}
@@ -205,7 +205,7 @@ export function HiveNavigationInput({
         )}
       </div>
     </motion.div>
-  );
+  )
 }
 
 // Command Result Item Component
@@ -216,7 +216,7 @@ export interface HiveCommandResultProps {
   shortcut?: string;
   isSelected?: boolean;
   onClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 export function HiveCommandResult({
@@ -255,7 +255,7 @@ export function HiveCommandResult({
             style={{ 
               color: isSelected ? 'var(--hive-text-inverse)' : 'var(--hive-text-muted)',
               opacity: isSelected ? 0.8 : 1
-            }}
+          }}
           >
             {subtitle}
           </div>
@@ -270,7 +270,7 @@ export function HiveCommandResult({
               backgroundColor: isSelected ? 'var(--hive-background-primary)' : 'var(--hive-background-secondary)',
               borderColor: isSelected ? 'var(--hive-border-primary)' : 'var(--hive-border-subtle)',
               color: isSelected ? 'var(--hive-text-primary)' : 'var(--hive-text-muted)'
-            }}
+          }}
           >
             {shortcut}
           </kbd>
@@ -278,14 +278,14 @@ export function HiveCommandResult({
         <ArrowRight className="w-4 h-4 opacity-50" />
       </div>
     </motion.button>
-  );
+  )
 }
 
 // Command Section Header
 export interface HiveCommandSectionProps {
   title: string;
   count?: number;
-  className?: string;
+  className?: string
 }
 
 export function HiveCommandSection({ title, count, className }: HiveCommandSectionProps) {
@@ -310,12 +310,12 @@ export function HiveCommandSection({ title, count, className }: HiveCommandSecti
             style={{
               backgroundColor: 'var(--hive-background-tertiary)',
               color: 'var(--hive-text-muted)'
-            }}
+          }}
           >
             {count}
           </span>
         )}
       </div>
     </div>
-  );
+  )
 }

@@ -32,7 +32,7 @@ export function useAuth() {
   const sendMagicLink = async (email: string) => {
     if (!email.endsWith('.edu')) {
       setError('Please use your university email address (.edu)');
-      return false;
+      return false
     }
     
     setIsLoading(true);
@@ -46,12 +46,12 @@ export function useAuth() {
       // For demo purposes, we'll simulate the flow
       console.log(`Magic link sent to ${email}`);
       
-      return true;
+      return true
     } catch (err) {
       setError('Failed to send magic link. Please try again.');
-      return false;
+      return false
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   };
   
@@ -95,19 +95,19 @@ export function useAuth() {
         payload: { user: mockUser, token: 'mock-session-token' } 
       });
       
-      return true;
+      return true
     } catch (err) {
       setError('Invalid or expired link. Please request a new one.');
-      return false;
+      return false
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   };
   
   // Logout and return to feed
   const logout = () => {
     dispatch({ type: 'AUTH_LOGOUT' });
-    dispatch({ type: 'NAVIGATE_BACK_TO_FEED' });
+    dispatch({ type: 'NAVIGATE_BACK_TO_FEED' })
   };
   
   // Update user profile
@@ -117,7 +117,7 @@ export function useAuth() {
     dispatch({ 
       type: 'AUTH_UPDATE_PROFILE', 
       payload: updates 
-    });
+    })
   };
   
   return {
@@ -135,7 +135,7 @@ export function useAuth() {
     logout,
     updateProfile,
     clearError: () => setError(null)
-  };
+  }
 }
 
 // ============================================================================
@@ -177,7 +177,7 @@ export function useOnboarding() {
     dispatch({ 
       type: 'PROFILE_UPDATE_COMPLETION', 
       payload: { percentage, nextSteps } 
-    });
+    })
   };
   
   // Get next steps for current stage
@@ -196,7 +196,7 @@ export function useOnboarding() {
       case 'complete':
         return [];
       default:
-        return [];
+        return []
     }
   };
   
@@ -209,7 +209,7 @@ export function useOnboarding() {
       case 'tools': return completionPercentage >= 55;   // After handle
       case 'lab': return completionPercentage >= 75;     // After photo
       case 'social': return completionPercentage >= 100; // Full completion
-      default: return false;
+      default: return false
     }
   };
   
@@ -230,7 +230,7 @@ export function useOnboarding() {
     isHandleStage: profileCompletion.stage === 'handle',
     isPhotoStage: profileCompletion.stage === 'photo',
     isLegalStage: profileCompletion.stage === 'legal'
-  };
+  }
 }
 
 // ============================================================================
@@ -257,7 +257,7 @@ export function useBuilderProgression() {
     return {
       level: builderLevel,
       ...progressMap[builderLevel]
-    };
+    }
   };
   
   // Check what user can build
@@ -307,7 +307,7 @@ export function useBuilderProgression() {
           canCreateSpaceTools: false,
           canCreateRituals: false,
           maxPersonalTools: 0
-        };
+        }
     }
   };
   
@@ -321,7 +321,7 @@ export function useBuilderProgression() {
         ...currentUser,
         builderLevel: newLevel
       }
-    });
+    })
   };
   
   const progress = getBuilderProgress();
@@ -346,7 +346,7 @@ export function useBuilderProgression() {
     isAdvanced: builderLevel === 'advanced',
     isExpert: builderLevel === 'expert',
     canAccessLab: ['intermediate', 'advanced', 'expert'].includes(builderLevel)
-  };
+  }
 }
 
 // ============================================================================
@@ -380,7 +380,7 @@ export function usePrivacy() {
         ...currentUser,
         ghostMode: newGhostMode
       }
-    });
+    })
   };
   
   // Update privacy settings
@@ -396,7 +396,7 @@ export function usePrivacy() {
           ...updates
         }
       }
-    });
+    })
   };
   
   // Check what's visible to others
@@ -408,7 +408,7 @@ export function usePrivacy() {
         toolsVisible: false,
         spaceMembershipVisible: false,
         description: 'You are completely invisible to other users'
-      };
+      }
     }
     
     return {
@@ -417,7 +417,7 @@ export function usePrivacy() {
       toolsVisible: privacy.toolSharingDefault !== 'private',
       spaceMembershipVisible: privacy.friendDiscovery,
       description: `Profile is ${privacy.profileVisibility}, activity ${privacy.activityTracking ? 'tracked' : 'private'}`
-    };
+    }
   };
   
   return {
@@ -440,7 +440,7 @@ export function usePrivacy() {
       updatePrivacySettings({ activityTracking: !privacy.activityTracking }),
     toggleFriendDiscovery: () =>
       updatePrivacySettings({ friendDiscovery: !privacy.friendDiscovery })
-  };
+  }
 }
 
 // ============================================================================

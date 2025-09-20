@@ -304,8 +304,8 @@ export const ProfileSystemIndex: StoryObj = {
                       </CardContent>
                     </Card>
                   </motion.div>
-                );
-              })}
+                )
+              })
             </div>
           </section>
 
@@ -345,8 +345,8 @@ export const ProfileSystemIndex: StoryObj = {
                       </CardContent>
                     </Card>
                   </motion.div>
-                );
-              })}
+                )
+              })
             </div>
           </section>
 
@@ -437,7 +437,7 @@ export const ProfileSystemIndex: StoryObj = {
           </section>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

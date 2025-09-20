@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import { motion } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion } from './framer-motion-proxy';
+import { cn } from '../lib/utils';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'elevated' | 'glass' | 'interactive' | 'bordered';
   padding?: 'none' | 'sm' | 'md' | 'lg';
   rounded?: 'sm' | 'md' | 'lg' | 'xl';
   hoverable?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const cardVariants = {
@@ -82,17 +82,17 @@ export const Card: React.FC<CardProps> = ({
         whileHover={{ 
           scale: 1.02,
           y: -2
-        }}
+          }}
         whileTap={{ scale: 0.98 }}
         transition={{ 
           duration: 0.2, 
           ease: 'easeOut' 
-        }}
+          }}
         {...props}
       >
         {children}
       </motion.div>
-    );
+    )
   }
 
   return (
@@ -102,12 +102,12 @@ export const Card: React.FC<CardProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };
 
 // Card sub-components for flexible composition
 export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ 
@@ -124,7 +124,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
 );
 
 export interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export const CardContent: React.FC<CardContentProps> = ({ 
@@ -141,7 +141,7 @@ export const CardContent: React.FC<CardContentProps> = ({
 );
 
 export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export const CardFooter: React.FC<CardFooterProps> = ({ 

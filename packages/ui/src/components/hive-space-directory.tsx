@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 import { liquidMetal, motionDurations, cascadeTiming } from '../motion/hive-motion-system';
-import { HiveSpaceCard } from '../../components/spaces/hive-space-card';
+import { HiveSpaceCard } from '../spaces/hive-space-card';
 import { HiveCommandPalette } from './hive-command-palette';
 import { type Space, type SpaceType } from '@hive/core';
 import { 
@@ -115,7 +115,7 @@ export interface HiveSpaceDirectoryProps
   showLayoutToggle?: boolean;
   defaultSort?: string;
   maxSpacesPerRow?: number;
-  enableVirtualization?: boolean;
+  enableVirtualization?: boolean
 }
 
 export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDirectoryProps>(
@@ -156,9 +156,9 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
       const counts = { all: spaces.length };
       spaces.forEach(space => {
         const type = space.tags?.[0]?.type || 'academic';
-        counts[type] = (counts[type] || 0) + 1;
-      });
-      return counts;
+        counts[type] = (counts[type] || 0) + 1
+      })};
+      return counts
     }, [spaces]);
     
     // Enhanced filtering and sorting logic
@@ -176,8 +176,8 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
             tag.sub_type?.toLowerCase().includes(searchQuery.toLowerCase())
           );
         
-        return typeMatch && searchMatch;
-      });
+        return typeMatch && searchMatch
+      })};
       
       // Sorting logic
       filtered.sort((a, b) => {
@@ -204,11 +204,11 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
             return a.name.localeCompare(b.name);
           
           default:
-            return 0;
+            return 0
         }
       });
       
-      return filtered;
+      return filtered
     }, [spaces, selectedType, searchQuery, sortBy, trendingSpaceIds]);
     
     // Separate trending spaces for special section
@@ -222,7 +222,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
     const handleSearchToggle = useCallback(() => {
       setShowSearch(prev => !prev);
       if (!showSearch) {
-        setTimeout(() => searchInputRef.current?.focus(), 100);
+        setTimeout(() => searchInputRef.current?.focus(), 100)
       }
     }, [showSearch]);
     
@@ -230,11 +230,11 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
     const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
       if (e.key === '/' && !showSearch) {
         e.preventDefault();
-        handleSearchToggle();
+        handleSearchToggle()
       }
       if (e.key === 'Escape' && showSearch) {
         setShowSearch(false);
-        setSearchQuery('');
+        setSearchQuery('')
       }
     }, [showSearch, handleSearchToggle]);
     
@@ -288,7 +288,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                     {[
                       { key: 'grid', icon: Grid },
                       { key: 'list', icon: List }
-                    ].map(({ key, icon: Icon }) => (
+                    ].map(({ key, icon: Icon })} => (
                       <motion.button
                         key={key}
                         className={cn(
@@ -384,8 +384,8 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                           {count}
                         </span>
                       </motion.button>
-                    );
-                  })}
+                    )
+          })
                 </div>
                 
                 {/* Sort Options */}
@@ -496,7 +496,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                       staggerChildren: 0.05
                     }
                   }
-                }}
+          }}
                 initial="hidden"
                 animate="show"
               >
@@ -506,7 +506,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
                     variants={{
                       hidden: { opacity: 0, y: 20 },
                       show: { opacity: 1, y: 0 }
-                    }}
+          }}
                     transition={{ duration: motionDurations.smooth }}
                   >
                     <HiveSpaceCard
@@ -561,7 +561,7 @@ export const HiveSpaceDirectory = React.forwardRef<HTMLDivElement, HiveSpaceDire
           </motion.section>
         </div>
       </div>
-    );
+    )
   }
 );
 

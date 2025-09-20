@@ -6,7 +6,7 @@ import { cn } from '../lib/utils';
 
 interface HiveLogoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   size?: number;
-  variant?: 'white' | 'black' | 'gold';
+  variant?: 'white' | 'black' | 'gold'
 }
 
 // HIVE Brand Logo Component
@@ -33,7 +33,7 @@ export const HiveLogo = ({
       className={cn("hive-logo select-none", className)}
       {...props}
     />
-  );
+  )
 };
 
 // Re-export commonly used Lucide icons for convenience
@@ -128,7 +128,7 @@ export type IconSize = keyof typeof iconSizes;
 interface IconWrapperProps {
   size?: IconSize | number;
   className?: string;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export const IconWrapper = ({ 
@@ -143,7 +143,7 @@ export const IconWrapper = ({
       className={cn("inline-flex items-center justify-center", className)}
       style={{ width: iconSize, height: iconSize }}
     >
-      {React.cloneElement(children as React.ReactElement, { size: iconSize })}
+      {React.cloneElement(children as React.ReactElement, { size: iconSize }}
     </span>
-  );
+  )
 };

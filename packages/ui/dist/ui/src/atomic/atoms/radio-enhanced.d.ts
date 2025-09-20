@@ -9,7 +9,7 @@ declare const radioLabelVariants: (props?: {
     color?: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "tertiary";
     weight?: "normal" | "medium" | "semibold";
 } & import("class-variance-authority/types").ClassProp) => string;
-export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>, VariantProps<typeof radioVariants> {
+export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>, VariantProps<typeof radioIndicatorVariants> {
     label?: string;
     description?: string;
     error?: string;

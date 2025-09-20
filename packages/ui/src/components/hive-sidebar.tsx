@@ -119,7 +119,7 @@ export interface SidebarSection {
   quickActions?: QuickAction[];
   badge?: string | number;
   isExpanded?: boolean;
-  previewContent?: React.ReactNode;
+  previewContent?: React.ReactNode
 }
 
 export interface SidebarItem {
@@ -134,7 +134,7 @@ export interface SidebarItem {
   subtitle?: string;
   avatar?: string;
   status?: 'online' | 'offline' | 'busy' | 'away';
-  lastActivity?: string;
+  lastActivity?: string
 }
 
 export interface QuickAction {
@@ -142,7 +142,7 @@ export interface QuickAction {
   label: string;
   icon: React.ReactNode;
   onClick: () => void;
-  variant?: 'default' | 'primary' | 'ghost';
+  variant?: 'default' | 'primary' | 'ghost'
 }
 
 export interface HiveSidebarProps
@@ -163,8 +163,8 @@ export interface HiveSidebarProps
     name: string;
     avatar?: string;
     handle: string;
-    status?: 'online' | 'offline' | 'busy' | 'away';
-  };
+    status?: 'online' | 'offline' | 'busy' | 'away'
+  }
 }
 
 const HiveSidebar = React.forwardRef<HTMLDivElement, HiveSidebarProps>(
@@ -198,17 +198,17 @@ const HiveSidebar = React.forwardRef<HTMLDivElement, HiveSidebarProps>(
     const toggleSection = (sectionId: string) => {
       const newExpanded = new Set(expandedSections);
       if (newExpanded.has(sectionId)) {
-        newExpanded.delete(sectionId);
+        newExpanded.delete(sectionId)
       } else {
-        newExpanded.add(sectionId);
+        newExpanded.add(sectionId)
       }
       setExpandedSections(newExpanded);
-      onSectionToggle?.(sectionId);
+      onSectionToggle?.(sectionId)
     };
     
     const handleItemClick = (item: SidebarItem, sectionId: string) => {
       if (item.isDisabled) return;
-      onItemClick?.(item, sectionId);
+      onItemClick?.(item, sectionId)
     };
     
     const renderQuickAction = (action: QuickAction) => (
@@ -306,7 +306,7 @@ const HiveSidebar = React.forwardRef<HTMLDivElement, HiveSidebarProps>(
             </AnimatePresence>
           </div>
         </motion.button>
-      );
+      )
     };
 
     const renderSection = (section: SidebarSection) => {
@@ -385,7 +385,7 @@ const HiveSidebar = React.forwardRef<HTMLDivElement, HiveSidebarProps>(
                 transition={{
                   duration: motionDurations.smooth,
                   ease: liquidMetal.easing as any,
-                }}
+          }}
                 className="overflow-hidden"
               >
                 <div className="space-y-1 pb-2">
@@ -402,7 +402,7 @@ const HiveSidebar = React.forwardRef<HTMLDivElement, HiveSidebarProps>(
             )}
           </AnimatePresence>
         </div>
-      );
+      )
     };
     
     const sidebarContent = (
@@ -418,7 +418,7 @@ const HiveSidebar = React.forwardRef<HTMLDivElement, HiveSidebarProps>(
           type: "spring" as const,
           stiffness: 300,
           damping: 25,
-        }}
+          }}
         {...(props as any)}
       >
         {/* Header */}
@@ -557,10 +557,10 @@ const HiveSidebar = React.forwardRef<HTMLDivElement, HiveSidebarProps>(
             </div>
           </div>
         </AnimatePresence>
-      );
+      )
     }
     
-    return sidebarContent;
+    return sidebarContent
   }
 );
 
@@ -579,11 +579,11 @@ export function useHiveSidebar(initialCollapsed = true, initialSections: Sidebar
   const updateSection = (sectionId: string, updates: Partial<SidebarSection>) => {
     setSections(prev => prev.map(section => 
       section.id === sectionId ? { ...section, ...updates } : section
-    ));
+    ))
   };
   
   const updateSectionItems = (sectionId: string, items: SidebarItem[]) => {
-    updateSection(sectionId, { items });
+    updateSection(sectionId, { items })
   };
   
   const addSectionItem = (sectionId: string, item: SidebarItem) => {
@@ -591,7 +591,7 @@ export function useHiveSidebar(initialCollapsed = true, initialSections: Sidebar
       section.id === sectionId 
         ? { ...section, items: [...section.items, item] }
         : section
-    ));
+    ))
   };
   
   const removeSectionItem = (sectionId: string, itemId: string) => {
@@ -599,7 +599,7 @@ export function useHiveSidebar(initialCollapsed = true, initialSections: Sidebar
       section.id === sectionId 
         ? { ...section, items: section.items.filter(item => item.id !== itemId) }
         : section
-    ));
+    ))
   };
   
   return {
@@ -614,7 +614,7 @@ export function useHiveSidebar(initialCollapsed = true, initialSections: Sidebar
     updateSectionItems,
     addSectionItem,
     removeSectionItem,
-  };
+  }
 }
 
 // Helper function to create default HIVE sections
@@ -683,7 +683,7 @@ export function createDefaultHiveSections(): SidebarSection[] {
       badge: '5',
       isExpanded: true
     }
-  ];
+  ]
 }
 
 export { 

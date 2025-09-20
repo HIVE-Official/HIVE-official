@@ -30,14 +30,14 @@ export declare const ToolMetadataSchema: z.ZodObject<{
     language?: string;
     category?: string;
     estimatedTime?: number;
-    difficulty?: "beginner" | "intermediate" | "advanced";
     tags?: string[];
+    difficulty?: "beginner" | "intermediate" | "advanced";
 }, {
     language?: string;
     category?: string;
     estimatedTime?: number;
-    difficulty?: "beginner" | "intermediate" | "advanced";
     tags?: string[];
+    difficulty?: "beginner" | "intermediate" | "advanced";
 }>;
 export declare const ToolDataSchemaSchema: z.ZodObject<{
     fields: z.ZodArray<z.ZodObject<{
@@ -558,14 +558,14 @@ export declare const ToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     }, {
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     }>>;
     isPublic: z.ZodDefault<z.ZodBoolean>;
     shareToken: z.ZodOptional<z.ZodString>;
@@ -589,8 +589,8 @@ export declare const ToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     };
     description?: string;
     config?: {
@@ -628,15 +628,15 @@ export declare const ToolSchema: z.ZodObject<{
         allowAnalyticsOptOut?: boolean;
     };
     spaceId?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    ownerId?: string;
     collaborators?: {
         permission?: "view" | "edit" | "comment";
         userId?: string;
         addedAt?: Date;
         addedBy?: string;
     }[];
-    createdAt?: Date;
-    updatedAt?: Date;
-    ownerId?: string;
     currentVersion?: string;
     versions?: {
         version?: string;
@@ -680,8 +680,8 @@ export declare const ToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     };
     description?: string;
     config?: {
@@ -719,15 +719,15 @@ export declare const ToolSchema: z.ZodObject<{
         allowAnalyticsOptOut?: boolean;
     };
     spaceId?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    ownerId?: string;
     collaborators?: {
         permission?: "view" | "edit" | "comment";
         userId?: string;
         addedAt?: Date;
         addedBy?: string;
     }[];
-    createdAt?: Date;
-    updatedAt?: Date;
-    ownerId?: string;
     currentVersion?: string;
     versions?: {
         version?: string;
@@ -942,14 +942,14 @@ export declare const CreateToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     }, {
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     }>>;
 }, "strip", z.ZodTypeAny, {
     name?: string;
@@ -957,8 +957,8 @@ export declare const CreateToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     };
     description?: string;
     config?: {
@@ -1003,8 +1003,8 @@ export declare const CreateToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     };
     description?: string;
     config?: {
@@ -1269,14 +1269,14 @@ export declare const UpdateToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     }, {
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     }>>;
     changelog: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
@@ -1285,8 +1285,8 @@ export declare const UpdateToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     };
     description?: string;
     config?: {
@@ -1345,8 +1345,8 @@ export declare const UpdateToolSchema: z.ZodObject<{
         language?: string;
         category?: string;
         estimatedTime?: number;
-        difficulty?: "beginner" | "intermediate" | "advanced";
         tags?: string[];
+        difficulty?: "beginner" | "intermediate" | "advanced";
     };
     description?: string;
     config?: {
@@ -1433,12 +1433,12 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     id?: string;
     data?: Record<string, any>;
-    sessionId?: string;
     toolId?: string;
     submittedBy?: string;
     submittedAt?: Date;
     ipAddress?: string;
     userAgent?: string;
+    sessionId?: string;
     isAnonymous?: boolean;
     isValid?: boolean;
     validationErrors?: string[];
@@ -1448,12 +1448,12 @@ export declare const ToolDataRecordSchema: z.ZodObject<{
 }, {
     id?: string;
     data?: Record<string, any>;
-    sessionId?: string;
     toolId?: string;
     submittedBy?: string;
     submittedAt?: Date;
     ipAddress?: string;
     userAgent?: string;
+    sessionId?: string;
     isAnonymous?: boolean;
     isValid?: boolean;
     validationErrors?: string[];
@@ -1474,18 +1474,18 @@ export declare const ToolUsageEventSchema: z.ZodObject<{
     id?: string;
     metadata?: Record<string, any>;
     userId?: string;
-    sessionId?: string;
-    timestamp?: Date;
     toolId?: string;
+    sessionId?: string;
     eventType?: "view" | "start" | "share" | "complete" | "abandon" | "fork";
+    timestamp?: Date;
 }, {
     id?: string;
     metadata?: Record<string, any>;
     userId?: string;
-    sessionId?: string;
-    timestamp?: Date;
     toolId?: string;
+    sessionId?: string;
     eventType?: "view" | "start" | "share" | "complete" | "abandon" | "fork";
+    timestamp?: Date;
 }>;
 export type ToolUsageEvent = z.infer<typeof ToolUsageEventSchema>;
 export declare const createToolDefaults: (ownerId: string, data: CreateTool) => Omit<Tool, "id" | "createdAt" | "updatedAt">;

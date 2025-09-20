@@ -232,7 +232,7 @@ const AnimationShowcase = () => {
             size="sm"
             onClick={() => {
               setIsDemoActive(!isDemoActive);
-              setTimeout(() => setIsDemoActive(false), 1200);
+              setTimeout(() => setIsDemoActive(false), 1200)
             }}
             style={{ backgroundColor: easingData.color, color: 'white' }}
           >
@@ -299,7 +299,7 @@ const AnimationShowcase = () => {
           </div>
         </div>
       </div>
-    );
+    )
   };
 
   // Campus Component Demo
@@ -366,7 +366,7 @@ const AnimationShowcase = () => {
                 }}
                 onClick={() => {
                   setIsLiked(!isLiked);
-                  setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+                  setLikeCount(prev => isLiked ? prev - 1 : prev + 1)
                 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -443,7 +443,7 @@ const AnimationShowcase = () => {
           </AnimatePresence>
         </CardContent>
       </Card>
-    );
+    )
   };
 
   return (
@@ -495,7 +495,7 @@ const AnimationShowcase = () => {
               { key: 'easing-curves', label: 'Easing Curves', icon: Waves },
               { key: 'campus-patterns', label: 'Campus Patterns', icon: Users },
               { key: 'live-demo', label: 'Live Demo', icon: Play }
-            ].map(({ key, label, icon: IconComponent }) => {
+            ].map(({ key, label, icon: IconComponent })} => {
               const isActive = activeDemo === key;
               return (
                 <Button
@@ -516,8 +516,8 @@ const AnimationShowcase = () => {
                   <IconComponent className="w-5 h-5 mr-2" />
                   {label}
                 </Button>
-              );
-            })}
+              )
+            })
           </div>
         </motion.div>
 
@@ -821,7 +821,7 @@ const AnimationShowcase = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const AnimationGuidelinesMotionSystem: Story = {

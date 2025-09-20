@@ -113,7 +113,7 @@ const useAnimations = () => {
     const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
     mediaQuery.addEventListener('change', handler);
     
-    return () => mediaQuery.removeEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler)
   }, []);
 
   const triggerHaptic = useCallback((type: 'light' | 'medium' | 'heavy' = 'light') => {
@@ -125,7 +125,7 @@ const useAnimations = () => {
         medium: [20],
         heavy: [50]
       };
-      navigator.vibrate(patterns[type]);
+      navigator.vibrate(patterns[type])
     }
   }, [hapticFeedback]);
 
@@ -137,7 +137,7 @@ const useAnimations = () => {
     setAnimationSpeed,
     setHapticFeedback,
     triggerHaptic
-  };
+  }
 };
 
 // Animated Button with Rich Interactions
@@ -160,7 +160,7 @@ const AnimatedButton = ({
   icon?: any;
   onClick?: () => void;
   className?: string;
-  animationType?: 'bounce' | 'scale' | 'pulse' | 'shake' | 'glow';
+  animationType?: 'bounce' | 'scale' | 'pulse' | 'shake' | 'glow'
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -176,11 +176,11 @@ const AnimatedButton = ({
     // Animate success state if provided
     if (success) {
       setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 2000);
+      setTimeout(() => setShowSuccess(false), 2000)
     }
     
     setTimeout(() => setIsPressed(false), 150);
-    onClick?.();
+    onClick?.()
   };
 
   const animationClasses = {
@@ -224,7 +224,7 @@ const AnimatedButton = ({
         <div className="absolute inset-0 bg-white/20 animate-ping rounded" />
       )}
     </Button>
-  );
+  )
 };
 
 // Animated Social Interaction Button
@@ -241,7 +241,7 @@ const SocialButton = ({
   active: boolean;
   onClick: () => void;
   color: string;
-  label: string;
+  label: string
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentCount, setCurrentCount] = useState(count);
@@ -253,13 +253,13 @@ const SocialButton = ({
     
     // Update count with animation
     if (!active) {
-      setCurrentCount(prev => prev + 1);
+      setCurrentCount(prev => prev + 1)
     } else {
-      setCurrentCount(prev => prev - 1);
+      setCurrentCount(prev => prev - 1)
     }
     
     setTimeout(() => setIsAnimating(false), 300);
-    onClick();
+    onClick()
   };
 
   return (
@@ -311,7 +311,7 @@ const SocialButton = ({
         {currentCount}
       </span>
     </button>
-  );
+  )
 };
 
 // Animated Progress Indicator
@@ -326,7 +326,7 @@ const AnimatedProgress = ({
   label?: string;
   color?: string;
   showPercentage?: boolean;
-  animated?: boolean;
+  animated?: boolean
 }) => {
   const [displayValue, setDisplayValue] = useState(0);
   const { reduceMotion } = useAnimations();
@@ -334,7 +334,7 @@ const AnimatedProgress = ({
   useEffect(() => {
     if (!animated || reduceMotion) {
       setDisplayValue(value);
-      return;
+      return
     }
 
     const increment = value / 60; // 60fps animation
@@ -344,13 +344,13 @@ const AnimatedProgress = ({
       current += increment;
       if (current >= value) {
         setDisplayValue(value);
-        clearInterval(timer);
+        clearInterval(timer)
       } else {
-        setDisplayValue(current);
+        setDisplayValue(current)
       }
     }, 16.67); // ~60fps
 
-    return () => clearInterval(timer);
+    return () => clearInterval(timer)
   }, [value, animated, reduceMotion]);
 
   return (
@@ -382,7 +382,7 @@ const AnimatedProgress = ({
         )}
       </div>
     </div>
-  );
+  )
 };
 
 // Animated Loading States
@@ -464,7 +464,7 @@ const LoadingStates = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Gesture Interaction Demo
@@ -480,7 +480,7 @@ const GestureDemo = () => {
     const touch = e.touches[0];
     startPos.current = { x: touch.clientX, y: touch.clientY };
     setIsDragging(true);
-    triggerHaptic('light');
+    triggerHaptic('light')
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -490,7 +490,7 @@ const GestureDemo = () => {
     const deltaX = touch.clientX - startPos.current.x;
     const deltaY = touch.clientY - startPos.current.y;
     
-    setDragPosition({ x: deltaX, y: deltaY });
+    setDragPosition({ x: deltaX, y: deltaY })
   };
 
   const handleTouchEnd = () => {
@@ -501,22 +501,22 @@ const GestureDemo = () => {
     
     if (Math.abs(x) > threshold || Math.abs(y) > threshold) {
       if (Math.abs(x) > Math.abs(y)) {
-        setSwipeDirection(x > 0 ? 'right' : 'left');
+        setSwipeDirection(x > 0 ? 'right' : 'left')
       } else {
-        setSwipeDirection(y > 0 ? 'down' : 'up');
+        setSwipeDirection(y > 0 ? 'down' : 'up')
       }
-      triggerHaptic('medium');
+      triggerHaptic('medium')
     }
     
     setIsDragging(false);
     setDragPosition({ x: 0, y: 0 });
     
-    setTimeout(() => setSwipeDirection(null), 1000);
+    setTimeout(() => setSwipeDirection(null), 1000)
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     startPos.current = { x: e.clientX, y: e.clientY };
-    setIsDragging(true);
+    setIsDragging(true)
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -525,7 +525,7 @@ const GestureDemo = () => {
     const deltaX = e.clientX - startPos.current.x;
     const deltaY = e.clientY - startPos.current.y;
     
-    setDragPosition({ x: deltaX, y: deltaY });
+    setDragPosition({ x: deltaX, y: deltaY })
   };
 
   const handleMouseUp = handleTouchEnd;
@@ -590,7 +590,7 @@ const GestureDemo = () => {
             { direction: 'down', icon: ArrowDown },
             { direction: 'left', icon: ArrowLeft },
             { direction: 'right', icon: ArrowRight }
-          ].map(({ direction, icon: Icon }) => (
+          ].map(({ direction, icon: Icon })} => (
             <div
               key={direction}
               className={`
@@ -604,7 +604,7 @@ const GestureDemo = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Animated Post Card with Rich Interactions
@@ -634,7 +634,7 @@ const AnimatedPostCard = () => {
       ...prev,
       [type === 'liked' ? 'likes' : type === 'bookmarked' ? 'bookmarks' : type === 'shared' ? 'shares' : 'comments']: 
         prev[type === 'liked' ? 'likes' : type === 'bookmarked' ? 'bookmarks' : type === 'shared' ? 'shares' : 'comments'] + (newState ? 1 : -1)
-    }));
+    }))
   };
 
   return (
@@ -701,7 +701,7 @@ const AnimatedPostCard = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Animation Controls Panel
@@ -780,7 +780,7 @@ const AnimationControls = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Main Animations System
@@ -790,10 +790,10 @@ const AnimationsSystem = () => {
   // Simulate progress changes
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgressValue(prev => (prev + 10) % 100);
+      setProgressValue(prev => (prev + 10) % 100)
     }, 2000);
     
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, []);
 
   return (
@@ -912,22 +912,22 @@ const AnimationsSystem = () => {
         @keyframes growBar {
           0%, 40%, 100% { 
             transform: scaleY(0.4);
-            height: 8px;
+            height: 8px
           }
           20% { 
             transform: scaleY(1);
-            height: 20px;
+            height: 20px
           }
         }
         
         .motion-reduce {
           animation-duration: 0.01ms !important;
           animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important
         }
       `}</style>
     </div>
-  );
+  )
 };
 
 // Story Exports

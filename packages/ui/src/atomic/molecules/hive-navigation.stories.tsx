@@ -86,7 +86,7 @@ const InteractiveNavigation = ({ currentPath: initialPath = '/', ...props }: any
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Basic Examples

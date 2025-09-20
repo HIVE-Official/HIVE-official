@@ -47,7 +47,7 @@ export interface User {
   profileCompletion: {
     stage: ProfileCompletionStage;
     percentage: number;
-    nextSteps: string[];
+    nextSteps: string[]
   };
   
   // Privacy settings (private by default during vBETA)
@@ -55,15 +55,15 @@ export interface User {
     profileVisibility: 'private' | 'friends' | 'public';
     toolSharingDefault: 'private' | 'space' | 'public';
     activityTracking: boolean;
-    friendDiscovery: boolean;
+    friendDiscovery: boolean
   };
   
   // Social features (unlocked in V1)
   social?: {
     friends: string[];
     blockedUsers: string[];
-    favoriteSpaces: string[];
-  };
+    favoriteSpaces: string[]
+  }
 }
 
 export interface Space {
@@ -83,8 +83,8 @@ export interface Space {
   rssEvents?: {
     source: string;
     lastUpdate: Date;
-    eventCount: number;
-  };
+    eventCount: number
+  }
 }
 
 export interface Tool {
@@ -100,14 +100,14 @@ export interface Tool {
     use: ToolPermission;       // Who can interact with the tool
     edit: ToolPermission;      // Who can modify tool settings
     create: ToolPermission;    // Who can create similar tools
-    share: 'private' | 'space' | 'friends' | 'public';
+    share: 'private' | 'space' | 'friends' | 'public'
   };
   
   // Social awareness
   usageStats: {
     totalUses: number;
     uniqueUsers: number;
-    lastUsed: Date;
+    lastUsed: Date
   };
   
   // Shareable URLs
@@ -115,8 +115,8 @@ export interface Tool {
   previewCard?: {
     title: string;
     description: string;
-    image?: string;
-  };
+    image?: string
+  }
 }
 
 export interface AppState {
@@ -125,7 +125,7 @@ export interface AppState {
     status: AuthStatus;
     user: User | null;
     sessionToken?: string;
-    emailVerified: boolean;
+    emailVerified: boolean
   };
   
   // Navigation & routing
@@ -144,8 +144,8 @@ export interface AppState {
       spaceId: string;
       role: SpaceMembershipRole;
       joinedAt: Date;
-      isActive: boolean;
-    }>;
+      isActive: boolean
+    }>
   };
   
   // Tools & permissions
@@ -161,8 +161,8 @@ export interface AppState {
       canUse: boolean;
       canEdit: boolean;
       canShare: boolean;
-      lastChecked: Date;
-    }>;
+      lastChecked: Date
+    }>
   };
   
   // Feed & social
@@ -173,8 +173,8 @@ export interface AppState {
     filters: {
       spaceTypes: string[];
       showFriends: boolean;
-      showAnnouncements: boolean;
-    };
+      showAnnouncements: boolean
+    }
   };
   
   // App configuration
@@ -190,7 +190,7 @@ export interface AppState {
     // Modals & overlays
     activeModal: string | null;
     commandPaletteOpen: boolean;
-    notificationsOpen: boolean;
+    notificationsOpen: boolean
   };
   
   // Feature flags & experiments
@@ -199,7 +199,7 @@ export interface AppState {
     builderToolsEnabled: boolean;    // HiveLAB access
     ritualParticipation: boolean;    // Ritual engagement
     deepLinkSharing: boolean;        // URL sharing
-  };
+  }
 }
 
 // ============================================================================
@@ -403,7 +403,7 @@ function stateReducer(state: AppState, action: StateAction): AppState {
       };
       
     default:
-      return state;
+      return state
   }
 }
 
@@ -424,7 +424,7 @@ interface StateContextType {
   checkToolPermission: (toolId: string, permission: ToolPermission) => boolean;
   getSpaceMembership: (spaceId: string) => any | null;
   shouldReturnToFeed: () => boolean;
-  getProfileCompletionPercentage: () => number;
+  getProfileCompletionPercentage: () => number
 }
 
 const StateContext = createContext<StateContextType | null>(null);
@@ -432,9 +432,9 @@ const StateContext = createContext<StateContextType | null>(null);
 export const useHiveState = () => {
   const context = useContext(StateContext);
   if (!context) {
-    throw new Error('useHiveState must be used within a HiveStateProvider');
+    throw new Error('useHiveState must be used within a HiveStateProvider')
   }
-  return context;
+  return context
 };
 
 // ============================================================================
@@ -444,7 +444,7 @@ export const useHiveState = () => {
 interface HiveStateProviderProps {
   children: React.ReactNode;
   initialUser?: User;
-  persistenceKey?: string;
+  persistenceKey?: string
 }
 
 export function HiveStateProvider({ 
@@ -466,13 +466,13 @@ export function HiveStateProvider({
     const checkMobile = () => {
       const isMobile = window.innerWidth < 768;
       if (isMobile !== state.ui.isMobile) {
-        dispatch({ type: 'UI_SET_MOBILE', payload: isMobile });
+        dispatch({ type: 'UI_SET_MOBILE', payload: isMobile })
       }
     };
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile)
   }, [state.ui.isMobile]);
   
   // State persistence (minimal for privacy)
@@ -484,7 +484,7 @@ export function HiveStateProvider({
         feedFilters: state.feed.filters,
         lastRoute: state.navigation.currentRoute
       };
-      localStorage.setItem(persistenceKey, JSON.stringify(persistedData));
+      localStorage.setItem(persistenceKey, JSON.stringify(persistedData))
     }
   }, [state.ui.theme, state.ui.compactMode, state.feed.filters, state.navigation.currentRoute, persistenceKey]);
   
@@ -502,7 +502,7 @@ export function HiveStateProvider({
         case 'view': return cached.canView;
         case 'use': return cached.canUse;
         case 'edit': return cached.canEdit;
-        default: return false;
+        default: return false
       }
     }
     
@@ -514,20 +514,20 @@ export function HiveStateProvider({
       case 'advanced': return permission !== 'admin';
       case 'intermediate': return ['view', 'use'].includes(permission);
       case 'novice': return permission === 'view';
-      default: return false;
+      default: return false
     }
   };
   
   const getSpaceMembership = (spaceId: string) => {
-    return state.spaces.memberships[spaceId] || null;
+    return state.spaces.memberships[spaceId] || null
   };
   
   const shouldReturnToFeed = (): boolean => {
-    return state.navigation.returnToFeed && !state.navigation.deepLinked;
+    return state.navigation.returnToFeed && !state.navigation.deepLinked
   };
   
   const getProfileCompletionPercentage = (): number => {
-    return currentUser?.profileCompletion.percentage || 0;
+    return currentUser?.profileCompletion.percentage || 0
   };
   
   const value: StateContextType = {
@@ -546,7 +546,7 @@ export function HiveStateProvider({
     <StateContext.Provider value={value}>
       {children}
     </StateContext.Provider>
-  );
+  )
 }
 
 // ============================================================================
@@ -575,7 +575,7 @@ export function canPerformToolAction(
     case 'edit': return ['intermediate', 'advanced', 'expert'].includes(user.builderLevel);
     case 'create': return ['advanced', 'expert'].includes(user.builderLevel);
     case 'admin': return user.builderLevel === 'expert';
-    default: return false;
+    default: return false
   }
 }
 
@@ -591,6 +591,6 @@ export function generateToolShareUrl(tool: Tool, baseUrl: string = ''): string {
   urlObj.searchParams.set('utm_source', 'hive_tool');
   urlObj.searchParams.set('created_by', tool.createdBy);
   
-  return urlObj.toString();
+  return urlObj.toString()
 }
 

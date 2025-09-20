@@ -34,7 +34,7 @@ export interface ToolLibraryTool {
   tags: string[];
   isOfficial: boolean;
   isPremium?: boolean;
-  requirements?: string[];
+  requirements?: string[]
 }
 
 export interface ToolLibraryModalProps {
@@ -45,7 +45,7 @@ export interface ToolLibraryModalProps {
   spaceType?: 'university' | 'residential' | 'greek' | 'student';
   isPlanting?: boolean;
   plantingToolId?: string;
-  className?: string;
+  className?: string
 }
 
 const CATEGORY_INFO = {
@@ -98,16 +98,16 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
     
     const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory;
     
-    return matchesSearch && matchesCategory;
-  });
+    return matchesSearch && matchesCategory
+  })};
 
   const handlePlantTool = (tool: ToolLibraryTool) => {
-    onPlantTool?.(tool);
+    onPlantTool?.(tool)
   };
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
-    return num.toString();
+    return num.toString()
   };
 
   const formatDate = (dateString: string): string => {
@@ -117,7 +117,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
     
     if (diffInDays < 7) return `${diffInDays}d ago`;
     if (diffInDays < 30) return `${Math.floor(diffInDays / 7)}w ago`;
-    return `${Math.floor(diffInDays / 30)}mo ago`;
+    return `${Math.floor(diffInDays / 30)}mo ago`
   };
 
   if (!isOpen) return null;
@@ -221,8 +221,8 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                           }
                         </span>
                       </button>
-                    );
-                  })}
+                    )
+          })}
                 </div>
               </div>
             </div>
@@ -366,7 +366,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                                     'border'
                                   )}>
                                     <span className={categoryInfo.color}>
-                                      {React.cloneElement(categoryInfo.icon, { className: 'w-3 h-3' })}
+                                      {React.cloneElement(categoryInfo.icon, { className: 'w-3 h-3' }}
                                     </span>
                                     <span className={categoryInfo.color}>{tool.category}</span>
                                   </div>
@@ -402,8 +402,8 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handlePlantTool(tool);
-                              }}
+                                handlePlantTool(tool)
+          }}
                               disabled={isPlanting && plantingToolId === tool.id}
                               className="px-3 py-1.5 bg-[var(--hive-brand-primary)]/10 text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)]/30 rounded-lg font-medium hover:bg-[var(--hive-brand-primary)]/20 transition-all duration-200 disabled:opacity-50"
                             >
@@ -411,8 +411,8 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
                             </button>
                           </div>
                         </motion.div>
-                      );
-                    })}
+                      )
+          })}
                   </div>
 
                   {filteredTools.length === 0 && (
@@ -429,7 +429,7 @@ export const ToolLibraryModal: React.FC<ToolLibraryModalProps> = ({
         </motion.div>
       </motion.div>
     </AnimatePresence>
-  );
+  )
 };
 
 export default ToolLibraryModal;

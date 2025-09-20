@@ -17,7 +17,7 @@ import {
   Shield,
   Star
 } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '../../atomic/atoms/avatar';
 import { Button } from '../../atomic/atoms/button-enhanced';
 import {
   DropdownMenu,
@@ -27,7 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuGroup,
-} from '../../components/ui/dropdown-menu';
+} from '../../atomic/atoms/dropdown-menu';
 
 interface UserMenuProps {
   user: {
@@ -36,9 +36,9 @@ interface UserMenuProps {
     handle: string;
     avatar?: string;
     builderStatus?: 'none' | 'pending' | 'active';
-    role?: 'student' | 'faculty' | 'admin';
+    role?: 'student' | 'faculty' | 'admin'
   };
-  onSignOut?: () => void;
+  onSignOut?: () => void
 }
 
 export function UserMenu({ user, onSignOut }: UserMenuProps) {
@@ -50,19 +50,19 @@ export function UserMenu({ user, onSignOut }: UserMenuProps) {
     .slice(0, 2);
 
   const handleNavigation = (path: string) => {
-    window.location.href = path;
+    window.location.href = path
   };
 
   const getRoleBadge = () => {
     if (user.role === 'admin') return <Shield className="h-3 w-3 text-[var(--hive-brand-secondary)]" />;
     if (user.role === 'faculty') return <Star className="h-3 w-3 text-[var(--hive-brand-secondary)]" />;
-    return null;
+    return null
   };
 
   const getBuilderStatus = () => {
     if (user.builderStatus === 'active') return 'Active Builder';
     if (user.builderStatus === 'pending') return 'Builder Pending';
-    return null;
+    return null
   };
 
   return (
@@ -208,5 +208,5 @@ export function UserMenu({ user, onSignOut }: UserMenuProps) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

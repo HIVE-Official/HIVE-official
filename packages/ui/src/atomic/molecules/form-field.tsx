@@ -11,7 +11,7 @@ export interface FormFieldProps {
   error?: string;
   required?: boolean;
   children: React.ReactElement;
-  className?: string;
+  className?: string
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -80,7 +80,7 @@ export const FormField: React.FC<FormFieldProps> = ({
         </Text>
       )}
     </div>
-  );
+  )
 };
 
 // Composed form field components for common patterns

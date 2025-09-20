@@ -519,7 +519,7 @@ export const RitualFeedFilters: StoryObj<typeof UBRitualFeedFilters> = {
         onTypeChange={setSelectedTypes}
         onParticipationChange={setSelectedParticipation}
       />
-    );
+    )
   },
   parameters: {
     docs: {
@@ -542,7 +542,7 @@ export const EmptyRitualFilters: StoryObj<typeof UBRitualFeedFilters> = {
         onTypeChange={setSelectedTypes}
         onParticipationChange={setSelectedParticipation}
       />
-    );
+    )
   },
   parameters: {
     docs: {
@@ -673,7 +673,7 @@ export const InteractiveRitualFeed: Story = {
             : post
         )
       );
-      action('interactive-like')(postId);
+      action('interactive-like')(postId)
     };
     
     const handleJoinRitual = (ritualId: string) => {
@@ -691,7 +691,7 @@ export const InteractiveRitualFeed: Story = {
             : post
         )
       );
-      action('interactive-join-ritual')(ritualId);
+      action('interactive-join-ritual')(ritualId)
     };
     
     return (
@@ -714,7 +714,7 @@ export const InteractiveRitualFeed: Story = {
           onViewRitual={action('interactive-view-ritual')}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

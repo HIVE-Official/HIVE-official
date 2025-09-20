@@ -9,12 +9,40 @@ export type HiveBaseVariant =
   | 'ghost';
 
 // Extended variants for specific component types
-export type HiveButtonVariant = 
+export type HiveButtonVariant =
   | 'primary'
   | 'secondary'
   | 'outline'
   | 'ghost'
-  | 'destructive';
+  | 'destructive'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'link'
+  | 'accent'
+  | 'default';
+
+export type HiveBadgeVariant =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info'
+  | 'ghost'
+  | 'outline'
+  | 'builder'
+  | 'verified'
+  | 'leader'
+  | 'ghost-mode'
+  | 'achievement'
+  | 'streak'
+  | 'scholar'
+  | 'connector'
+  | 'dean'
+  | 'developer'
+  | 'organizer'
+  | 'helper';
 
 export type HiveFormVariant =
   | 'default'

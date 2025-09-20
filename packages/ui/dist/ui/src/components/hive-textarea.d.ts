@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveTextareaVariants: (props?: {
-    variant?: "default" | "success" | "error" | "disabled" | "minimal" | "premium";
+    variant?: "default" | "success" | "error" | "premium" | "disabled" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
     radius?: "default" | "sm" | "lg" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;

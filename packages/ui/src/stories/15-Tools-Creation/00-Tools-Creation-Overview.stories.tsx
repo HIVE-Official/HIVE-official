@@ -342,7 +342,7 @@ const ToolsCreationOverview = () => {
         </CardContent>
       </Card>
     </Container>
-  );
+  )
 };
 
 const meta: Meta<typeof ToolsCreationOverview> = {

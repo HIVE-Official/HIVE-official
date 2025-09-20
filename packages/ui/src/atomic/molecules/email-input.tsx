@@ -11,7 +11,7 @@ export interface EmailInputProps {
   label?: string;
   error?: string;
   size?: 'sm' | 'md' | 'lg';
-  className?: string;
+  className?: string
 }
 
 const emailSizes = {
@@ -87,7 +87,7 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(({
         </p>
       )}
     </div>
-  );
+  )
 });
 
 EmailInput.displayName = 'EmailInput';

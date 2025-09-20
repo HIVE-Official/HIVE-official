@@ -58,14 +58,14 @@ export interface ChartDataPoint {
   label: string;
   value: number;
   color?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, any>
 }
 
 export interface TimeSeriesDataPoint {
   timestamp: string | number;
   value: number;
   label?: string;
-  color?: string;
+  color?: string
 }
 
 export interface MetricData {
@@ -75,7 +75,7 @@ export interface MetricData {
   changeType?: 'increase' | 'decrease' | 'neutral';
   icon?: React.ReactNode;
   color?: string;
-  subtitle?: string;
+  subtitle?: string
 }
 
 // Base Chart Props
@@ -90,7 +90,7 @@ export interface BaseChartProps
   actions?: React.ReactNode;
   showLegend?: boolean;
   showTooltip?: boolean;
-  animated?: boolean;
+  animated?: boolean
 }
 
 // Chart container with header
@@ -156,14 +156,14 @@ const ChartContainer: React.FC<BaseChartProps & { children: React.ReactNode }> =
         )}
       </div>
     </div>
-  );
+  )
 };
 
 // Metric Card Component
 export interface HiveMetricCardProps extends BaseChartProps {
   data: MetricData;
   trend?: 'up' | 'down' | 'neutral';
-  sparklineData?: number[];
+  sparklineData?: number[]
 }
 
 export const HiveMetricCard: React.FC<HiveMetricCardProps> = ({
@@ -182,7 +182,7 @@ export const HiveMetricCard: React.FC<HiveMetricCardProps> = ({
       case 'decrease':
         return <ArrowDown size={16} className="text-red-400" />;
       default:
-        return <Minus size={16} className="text-[var(--hive-text-primary)]/40" />;
+        return <Minus size={16} className="text-[var(--hive-text-primary)]/40" />
     }
   };
   
@@ -193,7 +193,7 @@ export const HiveMetricCard: React.FC<HiveMetricCardProps> = ({
       case 'decrease':
         return 'text-red-400';
       default:
-        return 'text-[var(--hive-text-primary)]/60';
+        return 'text-[var(--hive-text-primary)]/60'
     }
   };
   
@@ -252,13 +252,13 @@ export const HiveMetricCard: React.FC<HiveMetricCardProps> = ({
         )}
       </div>
     </ChartContainer>
-  );
+  )
 };
 
 // Mini Sparkline Component
 const MiniSparkline: React.FC<{
   data: number[];
-  trend?: 'up' | 'down' | 'neutral';
+  trend?: 'up' | 'down' | 'neutral'
 }> = ({ data, trend }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   
@@ -276,10 +276,10 @@ const MiniSparkline: React.FC<{
     const points = data.map((value, index) => {
       const x = padding + (index / (data.length - 1)) * (width - padding * 2);
       const y = height - padding - ((value - min) / range) * (height - padding * 2);
-      return `${x},${y}`;
+      return `${x},${y}`
     });
     
-    return `M ${points.join(' L ')}`;
+    return `M ${points.join(' L ')}`
   }, [data]);
   
   const trendColor = trend === 'up' ? 'var(--hive-status-success)' : trend === 'down' ? 'var(--hive-status-error)' : 'var(--hive-text-disabled)';
@@ -296,7 +296,7 @@ const MiniSparkline: React.FC<{
         transition={{ duration: 1, ease: liquidMetal.easing as any }}
       />
     </svg>
-  );
+  )
 };
 
 // Bar Chart Component
@@ -304,7 +304,7 @@ export interface HiveBarChartProps extends BaseChartProps {
   data: ChartDataPoint[];
   horizontal?: boolean;
   showValues?: boolean;
-  colorScheme?: string[];
+  colorScheme?: string[]
 }
 
 export const HiveBarChart: React.FC<HiveBarChartProps> = ({
@@ -336,19 +336,19 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
                     style={{ 
                       backgroundColor: item.color || colorScheme[index % colorScheme.length],
                       opacity: 0.8,
-                    }}
+          }}
                     initial={{ height: 0 }}
                     animate={{ height: animated ? `${(item.value / maxValue) * 160}px` : `${(item.value / maxValue) * 160}px` }}
                     transition={{ 
                       duration: animated ? motionDurations.smooth : 0,
                       delay: animated ? index * 0.1 : 0,
                       ease: liquidMetal.easing as any 
-                    }}
+          }}
                     whileHover={{ 
                       opacity: 1,
                       scale: 1.02,
                       transition: { duration: motionDurations.quick }
-                    }}
+          }}
                   >
                     {showValues && (
                       <motion.div
@@ -358,7 +358,7 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
                         transition={{ 
                           duration: motionDurations.smooth,
                           delay: animated ? index * 0.1 + 0.3 : 0 
-                        }}
+          }}
                       >
                         {item.value}
                       </motion.div>
@@ -388,18 +388,18 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
                     className="h-full rounded-full"
                     style={{ 
                       backgroundColor: item.color || colorScheme[index % colorScheme.length] 
-                    }}
+          }}
                     initial={{ width: 0 }}
                     animate={{ width: `${(item.value / maxValue) * 100}%` }}
                     transition={{ 
                       duration: animated ? motionDurations.smooth : 0,
                       delay: animated ? index * 0.1 : 0,
                       ease: liquidMetal.easing as any 
-                    }}
+          }}
                     whileHover={{ 
                       scale: 1.02,
                       transition: { duration: motionDurations.quick }
-                    }}
+          }}
                   />
                 </div>
               </div>
@@ -422,14 +422,14 @@ export const HiveBarChart: React.FC<HiveBarChartProps> = ({
         )}
       </div>
     </ChartContainer>
-  );
+  )
 };
 
 // Donut Chart Component
 export interface HiveDonutChartProps extends BaseChartProps {
   data: ChartDataPoint[];
   innerRadius?: number;
-  colorScheme?: string[];
+  colorScheme?: string[]
 }
 
 export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
@@ -484,7 +484,7 @@ export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
       pathData,
       percentage,
       color: item.color || colorScheme[index % colorScheme.length],
-    };
+    }
   });
   
   return (
@@ -506,12 +506,12 @@ export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
                   duration: animated ? motionDurations.smooth : 0,
                   delay: animated ? index * 0.1 : 0,
                   ease: liquidMetal.easing as any 
-                }}
+          }}
                 whileHover={{ 
                   opacity: 1,
                   scale: 1.05,
                   transition: { duration: motionDurations.quick }
-                }}
+          }}
               />
             ))}
           </svg>
@@ -544,7 +544,7 @@ export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
                 transition={{ 
                   duration: motionDurations.smooth,
                   delay: animated ? index * 0.1 + 0.3 : 0 
-                }}
+          }}
               >
                 <div 
                   className="w-3 h-3 rounded-full"
@@ -562,7 +562,7 @@ export const HiveDonutChart: React.FC<HiveDonutChartProps> = ({
         )}
       </div>
     </ChartContainer>
-  );
+  )
 };
 
 // Line Chart Component
@@ -571,7 +571,7 @@ export interface HiveLineChartProps extends BaseChartProps {
   smooth?: boolean;
   area?: boolean;
   gradient?: boolean;
-  color?: string;
+  color?: string
 }
 
 export const HiveLineChart: React.FC<HiveLineChartProps> = ({
@@ -602,7 +602,7 @@ export const HiveLineChart: React.FC<HiveLineChartProps> = ({
     const points = data.map((point, index) => {
       const x = padding + (index / (data.length - 1)) * (width - padding * 2);
       const y = height - padding - ((point.value - minValue) / range) * (height - padding * 2);
-      return { x, y, value: point.value };
+      return { x, y, value: point.value }
     });
     
     const pathCommands = points.map((point, index) => {
@@ -614,10 +614,10 @@ export const HiveLineChart: React.FC<HiveLineChartProps> = ({
         const cpy1 = prevPoint.y;
         const cpx2 = prevPoint.x + (point.x - prevPoint.x) * 0.5;
         const cpy2 = point.y;
-        return `C ${cpx1},${cpy1} ${cpx2},${cpy2} ${point.x},${point.y}`;
+        return `C ${cpx1},${cpy1} ${cpx2},${cpy2} ${point.x},${point.y}`
       }
       
-      return `L ${point.x},${point.y}`;
+      return `L ${point.x},${point.y}`
     });
     
     const pathData = pathCommands.join(' ');
@@ -626,7 +626,7 @@ export const HiveLineChart: React.FC<HiveLineChartProps> = ({
       pathData + ` L ${points[points.length - 1].x},${height - padding} L ${padding},${height - padding} Z` : 
       '';
     
-    return { pathData, areaData, points };
+    return { pathData, areaData, points }
   }, [data, smooth, area]);
   
   return (
@@ -667,7 +667,7 @@ export const HiveLineChart: React.FC<HiveLineChartProps> = ({
             transition={{ 
               duration: animated ? motionDurations.smooth * 1.5 : 0,
               ease: liquidMetal.easing as any 
-            }}
+          }}
           />
           
           {/* Data Points */}
@@ -685,17 +685,17 @@ export const HiveLineChart: React.FC<HiveLineChartProps> = ({
               transition={{ 
                 duration: animated ? motionDurations.quick : 0,
                 delay: animated ? index * 0.05 + 0.5 : 0 
-              }}
+          }}
               whileHover={{ 
                 scale: 1.5,
                 transition: { duration: motionDurations.quick }
-              }}
+          }}
             />
           ))}
         </svg>
       </div>
     </ChartContainer>
-  );
+  )
 };
 
 // Chart Actions
@@ -704,7 +704,7 @@ export const ChartActions: React.FC<{
   onDownload?: () => void;
   onShare?: () => void;
   onToggleVisibility?: () => void;
-  visible?: boolean;
+  visible?: boolean
 }> = ({ 
   onMaximize, 
   onDownload, 
@@ -766,7 +766,7 @@ export interface HiveChartsProps extends BaseChartProps {
   interactive?: boolean;
   onDataPointClick?: (data: any) => void;
   onDataPointHover?: (data: any) => void;
-  emptyStateAction?: string;
+  emptyStateAction?: string
 }
 
 export const HiveCharts: React.FC<HiveChartsProps> = ({
@@ -871,7 +871,7 @@ export const HiveCharts: React.FC<HiveChartsProps> = ({
             data={chartData || sampleBarData}
             {...props}
           />
-        );
+        )
     }
   };
 
@@ -889,10 +889,10 @@ export const HiveCharts: React.FC<HiveChartsProps> = ({
           </button>
         </div>
       </ChartContainer>
-    );
+    )
   }
 
-  return renderChart();
+  return renderChart()
 };
 
 export { 

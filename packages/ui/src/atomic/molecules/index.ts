@@ -1,43 +1,36 @@
 // HIVE Molecular Components - Combinations of Atoms
 // Built using atomic components with HIVE design tokens
 
-// === IMPLEMENTED MOLECULES ===
+// === FORM MOLECULES ===
 export * from './form-field';
+export * from './email-input';
+
+// === NAVIGATION MOLECULES ===
 export * from './search-bar';
+export * from './navigation-variants';
+export * from './hive-navigation';
+
+// === CARD MOLECULES ===
 export * from './card';
-// ButtonGroup and InputGroup are now part of enhanced atoms
+export * from './avatar-card';
+export * from './user-card';
+
+// === CAMPUS SYSTEM MOLECULES ===
 export * from './campus-identity-header';
 export * from './campus-spaces-card';
 export * from './campus-activity-feed';
 export * from './campus-builder-tools';
-export * from './email-input';
-export * from './avatar-card';
-export * from './navigation-variants';
-export * from './hive-navigation';
-export * from './user-card';
-export * from './profile-header';
 
-// === HIVE SPACES SYSTEM ===
+// === PROFILE SYSTEM MOLECULES ===
+export * from './profile-header';
+export * from './profile-stats';
+
+// === SPACES SYSTEM MOLECULES ===
 export * from './post-board';
 
-// === HIVE TOOLS SYSTEM ===
+// === TOOLS SYSTEM MOLECULES ===
 export * from './planted-tool-widget';
 
-// === HIVE FEED & RITUALS SYSTEM ===
+// === FEED & RITUALS SYSTEM MOLECULES ===
 export * from './ritual-action-button';
 export * from './milestone-celebration';
-
-// === PLANNED MOLECULES ===
-// These will be implemented as part of the atomic design system completion
-// export * from './stat-card';
-// export * from './info-card';
-// export * from './breadcrumb';
-// export * from './pagination';
-// export * from './tab-group';
-// export * from './alert';
-// export * from './toast';
-// export * from './empty-state';
-// export * from './loading-card';
-// export * from './avatar-group';
-// export * from './tag-list';
-// export * from './progress-bar';

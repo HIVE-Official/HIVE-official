@@ -178,7 +178,7 @@ interface CampusBuilding {
   accessLevel: 'public' | 'student' | 'restricted';
   floors: number;
   capacity?: number;
-  currentOccupancy?: number;
+  currentOccupancy?: number
 }
 
 interface DiningLocation {
@@ -209,7 +209,7 @@ interface TransportService {
   }[];
   location?: { lat: number; lng: number };
   capacity?: number;
-  currentLoad?: number;
+  currentLoad?: number
 }
 
 interface CampusEvent {
@@ -222,18 +222,18 @@ interface CampusEvent {
   location: {
     building: string;
     room?: string;
-    coordinates?: { lat: number; lng: number };
+    coordinates?: { lat: number; lng: number }
   };
   organizer: {
     name: string;
     type: 'department' | 'club' | 'athletics' | 'student_life';
-    contact?: string;
+    contact?: string
   };
   registrationRequired: boolean;
   capacity?: number;
   registered?: number;
   cost?: number;
-  tags: string[];
+  tags: string[]
 }
 
 interface WeatherData {
@@ -245,7 +245,7 @@ interface WeatherData {
     wind_direction: string;
     conditions: string;
     icon: string;
-    visibility: number;
+    visibility: number
   };
   forecast: Array<{
     date: string;
@@ -254,7 +254,7 @@ interface WeatherData {
     conditions: string;
     icon: string;
     precipitation: number;
-    wind: number;
+    wind: number
   }>;
   alerts: Array<{
     id: string;
@@ -263,8 +263,8 @@ interface WeatherData {
     title: string;
     description: string;
     start: Date;
-    end: Date;
-  }>;
+    end: Date
+  }>
 }
 
 // Campus Integration Hook
@@ -491,7 +491,7 @@ const useCampusIntegration = () => {
     campusEvents,
     setWeatherData,
     setCampusEvents
-  };
+  }
 };
 
 // Campus Building Card
@@ -500,7 +500,7 @@ const CampusBuildingCard = ({ building }: { building: CampusBuilding }) => {
   const getOccupancyColor = () => {
     if (occupancyPercentage < 50) return 'text-green-400';
     if (occupancyPercentage < 80) return 'text-yellow-400';
-    return 'text-red-400';
+    return 'text-red-400'
   };
 
   const getBuildingIcon = () => {
@@ -511,7 +511,7 @@ const CampusBuildingCard = ({ building }: { building: CampusBuilding }) => {
       case 'recreation': return <Dumbbell className="h-5 w-5" />;
       case 'administrative': return <Building2 className="h-5 w-5" />;
       case 'parking': return <Car className="h-5 w-5" />;
-      default: return <Building className="h-5 w-5" />;
+      default: return <Building className="h-5 w-5" />
     }
   };
 
@@ -519,7 +519,7 @@ const CampusBuildingCard = ({ building }: { building: CampusBuilding }) => {
     switch (building.accessLevel) {
       case 'public': return <Globe className="h-4 w-4 text-green-400" />;
       case 'student': return <GraduationCap className="h-4 w-4 text-blue-400" />;
-      case 'restricted': return <Lock className="h-4 w-4 text-red-400" />;
+      case 'restricted': return <Lock className="h-4 w-4 text-red-400" />
     }
   };
 
@@ -584,7 +584,7 @@ const CampusBuildingCard = ({ building }: { building: CampusBuilding }) => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Dining Services Component
@@ -604,7 +604,7 @@ const DiningServicesPanel = ({ diningLocations }: { diningLocations: DiningLocat
     const closeTime = closeHour * 60 + closeMin + (todayHours.close.includes('PM') && closeHour !== 12 ? 12 * 60 : 0);
     
     if (currentTime >= openTime && currentTime <= closeTime) return 'open';
-    return 'closed';
+    return 'closed'
   };
 
   const getBusyLevelColor = (level: string) => {
@@ -612,7 +612,7 @@ const DiningServicesPanel = ({ diningLocations }: { diningLocations: DiningLocat
       case 'low': return 'text-green-400';
       case 'medium': return 'text-yellow-400';
       case 'high': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -675,7 +675,7 @@ const DiningServicesPanel = ({ diningLocations }: { diningLocations: DiningLocat
         ))}
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Transportation Hub
@@ -686,7 +686,7 @@ const TransportationHub = ({ services }: { services: TransportService[] }) => {
       case 'delayed': return 'text-yellow-400';
       case 'offline': return 'text-red-400';
       case 'maintenance': return 'text-gray-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -697,7 +697,7 @@ const TransportationHub = ({ services }: { services: TransportService[] }) => {
       case 'metro': return <Train className="h-5 w-5" />;
       case 'bike_share': return <Navigation className="h-5 w-5" />;
       case 'rideshare': return <Car className="h-5 w-5" />;
-      default: return <Navigation className="h-5 w-5" />;
+      default: return <Navigation className="h-5 w-5" />
     }
   };
 
@@ -767,7 +767,7 @@ const TransportationHub = ({ services }: { services: TransportService[] }) => {
         ))}
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Buffalo Weather Widget
@@ -778,7 +778,7 @@ const BuffaloWeatherWidget = ({ weather }: { weather: WeatherData }) => {
       case 'cloudy': case 'overcast': return <Cloud className="h-8 w-8 text-gray-400" />;
       case 'rain': case 'showers': return <CloudRain className="h-8 w-8 text-blue-400" />;
       case 'snow': case 'snow showers': return <CloudSnow className="h-8 w-8 text-blue-200" />;
-      default: return <Cloud className="h-8 w-8 text-gray-400" />;
+      default: return <Cloud className="h-8 w-8 text-gray-400" />
     }
   };
 
@@ -788,7 +788,7 @@ const BuffaloWeatherWidget = ({ weather }: { weather: WeatherData }) => {
       case 'moderate': return 'border-orange-600 bg-orange-900/20';
       case 'severe': return 'border-red-600 bg-red-900/20';
       case 'extreme': return 'border-purple-600 bg-purple-900/20';
-      default: return 'border-gray-600 bg-gray-900/20';
+      default: return 'border-gray-600 bg-gray-900/20'
     }
   };
 
@@ -879,7 +879,7 @@ const BuffaloWeatherWidget = ({ weather }: { weather: WeatherData }) => {
         )}
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Campus Events Feed
@@ -892,7 +892,7 @@ const CampusEventsFeed = ({ events }: { events: CampusEvent[] }) => {
       case 'cultural': return <Palette className="h-4 w-4" />;
       case 'career': return <Target className="h-4 w-4" />;
       case 'health': return <Heart className="h-4 w-4" />;
-      default: return <Calendar className="h-4 w-4" />;
+      default: return <Calendar className="h-4 w-4" />
     }
   };
 
@@ -904,7 +904,7 @@ const CampusEventsFeed = ({ events }: { events: CampusEvent[] }) => {
       case 'cultural': return 'bg-pink-600';
       case 'career': return 'bg-green-600';
       case 'health': return 'bg-orange-600';
-      default: return 'bg-gray-600';
+      default: return 'bg-gray-600'
     }
   };
 
@@ -915,7 +915,7 @@ const CampusEventsFeed = ({ events }: { events: CampusEvent[] }) => {
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit'
-    });
+    })
   };
 
   return (
@@ -994,7 +994,7 @@ const CampusEventsFeed = ({ events }: { events: CampusEvent[] }) => {
         ))}
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Campus Integration Dashboard
@@ -1042,7 +1042,7 @@ const CampusIntegrationDashboard = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Story Exports
@@ -1068,7 +1068,7 @@ export const CampusBuildings: Story = {
           ))}
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -1086,7 +1086,7 @@ export const DiningServices: Story = {
       <div className="max-w-md mx-auto p-6 bg-black">
         <DiningServicesPanel diningLocations={campus.diningLocations} />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -1104,7 +1104,7 @@ export const BuffaloWeather: Story = {
       <div className="max-w-md mx-auto p-6 bg-black">
         <BuffaloWeatherWidget weather={campus.weatherData} />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -1122,7 +1122,7 @@ export const Transportation: Story = {
       <div className="max-w-md mx-auto p-6 bg-black">
         <TransportationHub services={campus.transportServices} />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -1140,7 +1140,7 @@ export const CampusEvents: Story = {
       <div className="max-w-2xl mx-auto p-6 bg-black">
         <CampusEventsFeed events={campus.campusEvents} />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

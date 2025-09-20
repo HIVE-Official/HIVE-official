@@ -52,8 +52,8 @@ export interface ToolDefinition {
     createdBy: string;
     createdAt: string;
     category: string;
-    tags: string[];
-  };
+    tags: string[]
+  }
 }
 
 export interface ToolElement {
@@ -67,22 +67,22 @@ export interface ToolElement {
     required?: boolean;
     minLength?: number;
     maxLength?: number;
-    pattern?: string;
-  };
+    pattern?: string
+  }
 }
 
 export interface ToolAction {
   id: string;
   trigger: string; // element ID that triggers this
   type: 'save' | 'calculate' | 'submit' | 'redirect' | 'show_message' | 'update_element';
-  config: Record<string, any>;
+  config: Record<string, any>
 }
 
 export interface ToolStyle {
   primaryColor?: string;
   backgroundColor?: string;
   borderRadius?: string;
-  spacing?: 'compact' | 'normal' | 'relaxed';
+  spacing?: 'compact' | 'normal' | 'relaxed'
 }
 
 // Tool Runtime State
@@ -101,7 +101,7 @@ interface ToolRuntimeEngineProps {
   mode?: 'preview' | 'production';
   onSave?: (data: Record<string, any>) => Promise<void>;
   onSubmit?: (data: Record<string, any>) => Promise<void>;
-  className?: string;
+  className?: string
 }
 
 export function ToolRuntimeEngine({
@@ -127,7 +127,7 @@ export function ToolRuntimeEngine({
       ...prev,
       values: { ...prev.values, [elementId]: value },
       errors: { ...prev.errors, [elementId]: '' }, // Clear error when value changes
-    }));
+    }))
   }, []);
 
   // Validate element
@@ -136,25 +136,25 @@ export function ToolRuntimeEngine({
     if (!validation) return '';
 
     if (validation.required && (!value || value === '')) {
-      return `${element.label || 'This field'} is required`;
+      return `${element.label || 'This field'} is required`
     }
 
     if (validation.minLength && value && value.length < validation.minLength) {
-      return `Minimum length is ${validation.minLength} characters`;
+      return `Minimum length is ${validation.minLength} characters`
     }
 
     if (validation.maxLength && value && value.length > validation.maxLength) {
-      return `Maximum length is ${validation.maxLength} characters`;
+      return `Maximum length is ${validation.maxLength} characters`
     }
 
     if (validation.pattern && value) {
       const regex = new RegExp(validation.pattern);
       if (!regex.test(value)) {
-        return 'Invalid format';
+        return 'Invalid format'
       }
     }
 
-    return '';
+    return ''
   }, []);
 
   // Execute tool action
@@ -166,7 +166,7 @@ export function ToolRuntimeEngine({
         case 'save':
           if (onSave) {
             await onSave(state.values);
-            setState(prev => ({ ...prev, lastSaved: new Date().toISOString() }));
+            setState(prev => ({ ...prev, lastSaved: new Date().toISOString() }))
           }
           break;
 
@@ -175,16 +175,16 @@ export function ToolRuntimeEngine({
           const errors: Record<string, string> = {};
           tool.elements.forEach(element => {
             const error = validateElement(element, state.values[element.id]);
-            if (error) errors[element.id] = error;
-          });
+            if (error) errors[element.id] = error
+          })};
 
           if (Object.keys(errors).length > 0) {
             setState(prev => ({ ...prev, errors }));
-            return;
+            return
           }
 
           if (onSubmit) {
-            await onSubmit(state.values);
+            await onSubmit(state.values)
           }
           break;
 
@@ -198,26 +198,26 @@ export function ToolRuntimeEngine({
             try {
               // Simple calculation - in production this would be more sophisticated
               const result = eval(action.config.formula.replace(/\{(\w+)\}/g, (match: string, elementId: string) => {
-                return state.values[elementId] || 0;
+                return state.values[elementId] || 0
               }));
-              updateValue(action.config.targetElement, result);
+              updateValue(action.config.targetElement, result)
             } catch (error) {
-              console.error('Calculation error:', error);
+              console.error('Calculation error:', error)
             }
           }
           break;
 
         case 'update_element':
           if (action.config.targetElement && action.config.value !== undefined) {
-            updateValue(action.config.targetElement, action.config.value);
+            updateValue(action.config.targetElement, action.config.value)
           }
-          break;
+          break
       }
     } catch (error) {
       console.error(`Action ${action.type} failed:`, error);
       // Show error to user
     } finally {
-      setState(prev => ({ ...prev, actions: { ...prev.actions, [action.id]: false } }));
+      setState(prev => ({ ...prev, actions: { ...prev.actions, [action.id]: false } }))
     }
   }, [state.values, tool.elements, validateElement, updateValue, onSave, onSubmit]);
 
@@ -334,8 +334,8 @@ export function ToolRuntimeEngine({
         elementComponent = (
           <HiveButton
             onClick={() => {
-              elementActions.forEach(action => executeAction(action));
-            }}
+              elementActions.forEach(action => executeAction(action))
+          }}
             disabled={state.loading || elementActions.some(a => state.actions[a.id])}
             variant={element.properties.variant || 'default'}
             size={element.properties.size || 'md'}
@@ -380,7 +380,7 @@ export function ToolRuntimeEngine({
               startDate: new Date(),
               category: 'academic',
               status: 'published'
-            }}
+          })}
             showActions={element.properties.showActions}
             onRSVP={element.properties.onRSVP}
             onEdit={element.properties.onEdit}
@@ -425,8 +425,8 @@ export function ToolRuntimeEngine({
             maxGuests={element.properties.maxGuests}
             onSubmit={(response) => {
               onChange(response);
-              elementActions.forEach(action => executeAction(action));
-            }}
+              elementActions.forEach(action => executeAction(action))
+          }}
             className={className}
           />
         );
@@ -489,8 +489,8 @@ export function ToolRuntimeEngine({
             questions={element.properties.questions}
             onSubmit={(feedback) => {
               onChange(feedback);
-              elementActions.forEach(action => executeAction(action));
-            }}
+              elementActions.forEach(action => executeAction(action))
+          }}
             className={className}
           />
         );
@@ -541,8 +541,8 @@ export function ToolRuntimeEngine({
             statusHistory={element.properties.statusHistory}
             onStatusChange={(status, reason) => {
               onChange({ status, reason });
-              elementActions.forEach(action => executeAction(action));
-            }}
+              elementActions.forEach(action => executeAction(action))
+          })}
             className={className}
           />
         );
@@ -566,7 +566,7 @@ export function ToolRuntimeEngine({
               Unknown element type: {element.type}
             </p>
           </div>
-        );
+        )
     }
 
     return (
@@ -579,7 +579,7 @@ export function ToolRuntimeEngine({
           </div>
         )}
       </div>
-    );
+    )
   }, [state, tool.actions, updateValue, executeAction]);
 
   // Auto-save functionality
@@ -587,11 +587,11 @@ export function ToolRuntimeEngine({
     if (mode === 'production' && Object.keys(state.values).length > 0) {
       const autoSave = setTimeout(() => {
         if (onSave) {
-          onSave(state.values).catch(console.error);
+          onSave(state.values).catch(console.error)
         }
       }, 2000); // Auto-save after 2 seconds of inactivity
 
-      return () => clearTimeout(autoSave);
+      return () => clearTimeout(autoSave)
     }
   }, [state.values, mode, onSave]);
 
@@ -679,7 +679,7 @@ export function ToolRuntimeEngine({
     >
       {toolContent}
     </MobileToolWrapper>
-  );
+  )
 }
 
 // Helper function to create a simple tool for testing
@@ -763,7 +763,7 @@ export function createSampleTool(): ToolDefinition {
       category: 'feedback',
       tags: ['event', 'feedback', 'form']
     }
-  };
+  }
 }
 
 export default ToolRuntimeEngine;

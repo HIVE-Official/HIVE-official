@@ -12,7 +12,7 @@ interface Feature {
   category: "Platform" | "HiveLAB" | "Spaces" | "Rituals";
   timeline: "July 2025" | "August 2025" | "Fall 2025" | "Winter 2025";
   icon: React.ReactNode;
-  status: "coming" | "in-development" | "design";
+  status: "coming" | "in-development" | "design"
 }
 
 const upcomingFeatures: Feature[] = [
@@ -82,7 +82,7 @@ const categoryColors = {
 export interface HiveComingSoonModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onWaitlistClick?: () => void;
+  onWaitlistClick?: () => void
 }
 
 const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModalProps>(
@@ -101,7 +101,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
         isOpen={isOpen}
         onClose={onClose}
         size="full"
-        variant="default"
+        variant="secondary"
         className="max-h-[90vh] overflow-hidden"
       >
         <div className="relative">
@@ -149,7 +149,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                   borderColor: selectedCategory === category 
                     ? `color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent)` 
                     : undefined
-                }}
+          }}
               >
                 {category}
               </button>
@@ -165,7 +165,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                   className="bg-[var(--hive-text-primary)]/5 p-5 rounded-xl border hover:border-opacity-60 transition-all group cursor-pointer"
                   style={{ 
                     borderColor: `color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)`,
-                  }}
+          }}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div 
@@ -173,7 +173,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                       style={{ 
                         backgroundColor: `color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)`,
                         color: `var(--hive-brand-secondary)`
-                      }}
+          }}
                     >
                       {feature.icon}
                     </div>
@@ -183,7 +183,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                         style={{ 
                           backgroundColor: `color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)`,
                           color: `var(--hive-brand-secondary)`
-                        }}
+          }}
                       >
                         {feature.category}
                       </span>
@@ -227,8 +227,8 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
                 className="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/30 px-6 py-3 rounded-xl flex items-center gap-2 mx-auto transition-all hover:scale-105"
                 onClick={() => {
                   onWaitlistClick?.();
-                  onClose();
-                }}
+                  onClose()
+          }}
               >
                 Find Your University
                 <ArrowRight className="w-4 h-4" />
@@ -237,7 +237,7 @@ const HiveComingSoonModal = React.forwardRef<HTMLDivElement, HiveComingSoonModal
           </div>
         </div>
       </HiveModal>
-    );
+    )
   }
 );
 

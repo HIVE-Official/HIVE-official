@@ -244,7 +244,7 @@ className="border border-gray-600
           </p>
         </div>
       </div>
-    );
+    )
   },
 };
 

@@ -38,7 +38,7 @@ export interface HiveSpace {
   
   // Metadata
   createdAt: string;
-  updatedAt: string;
+  updatedAt: string
 }
 
 // University-specific space data
@@ -51,14 +51,14 @@ export interface UniversitySpace extends HiveSpace {
     semester?: string;
     professor?: string;
     schedule?: string;
-    isOfficial: boolean;
+    isOfficial: boolean
   };
   enrollment: {
     capacity?: number;
     enrolled: number;
     waitlist?: number;
-    status: 'open' | 'waitlist' | 'closed' | 'approval_required';
-  };
+    status: 'open' | 'waitlist' | 'closed' | 'approval_required'
+  }
 }
 
 // Greek life space data
@@ -69,7 +69,7 @@ export interface GreekSpace extends HiveSpace {
     chapter: string;
     founded?: number;
     motto?: string;
-    colors: string[];
+    colors: string[]
   };
   rush: {
     isActive: boolean;
@@ -78,8 +78,8 @@ export interface GreekSpace extends HiveSpace {
     nextEvent?: {
       name: string;
       date: string;
-      type: 'social' | 'info' | 'interview';
-    };
+      type: 'social' | 'info' | 'interview'
+    }
   };
   community: {
     activeMembers: number;
@@ -87,9 +87,9 @@ export interface GreekSpace extends HiveSpace {
     averageGPA?: number;
     philanthropy?: {
       cause: string;
-      raised?: number;
-    };
-  };
+      raised?: number
+    }
+  }
 }
 
 // Residential space data
@@ -100,16 +100,16 @@ export interface ResidentialSpace extends HiveSpace {
     floor?: number;
     wing?: string;
     buildingType: 'dorm' | 'apartment' | 'house';
-    capacity: number;
+    capacity: number
   };
   community: {
     residents: number;
     ra?: {
       name: string;
-      contact: string;
+      contact: string
     };
-    amenities: string[];
-  };
+    amenities: string[]
+  }
 }
 
 // Student-created space data
@@ -118,10 +118,10 @@ export interface StudentSpace extends HiveSpace {
   creator: {
     name: string;
     year?: string;
-    major?: string;
+    major?: string
   };
   category: 'club' | 'study' | 'social' | 'hobby' | 'professional';
-  requirements?: string[];
+  requirements?: string[]
 }
 
 // Union type for all space types
@@ -135,7 +135,7 @@ export interface HiveSpaceCardProps {
     id: string;
     major?: string;
     year?: string;
-    building?: string;
+    building?: string
   };
   
   // Social proof
@@ -143,7 +143,7 @@ export interface HiveSpaceCardProps {
     id: string;
     name: string;
     avatar?: string;
-    role?: string;
+    role?: string
   }>;
   
   // Interaction handlers
@@ -154,7 +154,7 @@ export interface HiveSpaceCardProps {
   showSocialProof?: boolean;
   variant?: 'default' | 'compact' | 'featured';
   
-  className?: string;
+  className?: string
 }
 
 export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
@@ -180,7 +180,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
       case 'residential':
         return space.housing.buildingName === currentUser.building;
       default:
-        return false;
+        return false
     }
   }, [space, currentUser]);
 
@@ -193,7 +193,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
           case 'open': return { text: 'Join Class', variant: 'primary' as const };
           case 'waitlist': return { text: 'Join Waitlist', variant: 'secondary' as const };
           case 'approval_required': return { text: 'Request Access', variant: 'secondary' as const };
-          case 'closed': return { text: 'View Details', variant: 'ghost' as const };
+          case 'closed': return { text: 'View Details', variant: 'ghost' as const }
         }
         break;
       case 'greek':
@@ -204,7 +204,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
       case 'residential':
         return { text: 'Join Floor', variant: 'primary' as const };
       case 'student':
-        return { text: 'Join Group', variant: 'primary' as const };
+        return { text: 'Join Group', variant: 'primary' as const }
     }
   };
 
@@ -214,14 +214,14 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
     e.stopPropagation();
     setIsJoining(true);
     try {
-      await onJoin?.(space);
+      await onJoin?.(space)
     } finally {
-      setIsJoining(false);
+      setIsJoining(false)
     }
   };
 
   const handleCardClick = () => {
-    onView?.(space);
+    onView?.(space)
   };
 
   // Get space-specific icon and metadata
@@ -230,7 +230,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
       case 'university': return '🎓';
       case 'greek': return '👥';
       case 'residential': return '🏠';
-      case 'student': return '⭐';
+      case 'student': return '⭐'
     }
   };
 
@@ -263,7 +263,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
           studentSpace.category,
           studentSpace.creator.name,
           studentSpace.creator.major
-        ].filter(Boolean);
+        ].filter(Boolean)
     }
   };
 
@@ -278,7 +278,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
         rotateX: 1, 
         rotateY: 1,
         transition: { duration: 0.3, ease: [0.23, 1, 0.32, 1] }
-      }}
+          }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onClick={handleCardClick}
@@ -298,7 +298,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
       )}
       style={{
         transformStyle: 'preserve-3d'
-      }}
+          }}
     >
       {/* Perfect Match Indicator */}
       {isPerfectMatch && (
@@ -347,7 +347,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
               background: space.primaryColor 
                 ? `linear-gradient(135deg, ${space.primaryColor}40, ${space.primaryColor}20)`
                 : 'linear-gradient(135deg, var(--hive-status-info)/25, var(--hive-brand-primary)/15)'
-            }}
+          }}
           />
         )}
         
@@ -504,7 +504,7 @@ export const HiveSpaceCard: React.FC<HiveSpaceCardProps> = ({
       {/* Glass Reflection */}
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-text-primary)]/3 via-transparent to-transparent pointer-events-none rounded-3xl" />
     </motion.div>
-  );
+  )
 };
 
 export default HiveSpaceCard;

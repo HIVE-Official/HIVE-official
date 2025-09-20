@@ -272,330 +272,107 @@ export const UnifiedAuthProvider = ({ children, firebaseIntegration }) => {
         keysToRemove.forEach(key => {
             window.localStorage.removeItem(key);
         });
-    }, []);
-    // Login Methods
-    const login = useCallback(async (email, password) => {
-        try {
-            updateAuthState({ isLoading: true, error: null });
-            if (isDevelopmentMode()) {
-                // Dev login logic
-                await devLogin(email);
-                return;
-            }
-            // Production login would integrate with Firebase or magic link
-            throw new Error('Production login not yet implemented');
-        }
-        catch (error) {
-            updateAuthState({
-                isLoading: false,
-                error: error instanceof Error ? error.message : 'Login failed',
-            });
-            throw error;
-        }
-    }, [updateAuthState]);
-    // Development Login - Re-enabled for development workflow
-    const devLogin = useCallback(async (userId = 'dev_user_123') => {
-        if (process.env.NODE_ENV !== 'development') {
-            throw new Error('Development login only available in development mode');
-        }
-        try {
-            updateAuthState({ isLoading: true, error: null });
-            const devUser = {
-                id: userId,
-                uid: userId,
-                email: 'dev@hive.com',
-                fullName: 'Dev User',
-                handle: 'devuser',
-                major: 'Computer Science',
-                schoolId: 'dev_school',
-                onboardingCompleted: true,
-                emailVerified: true,
-                builderOptIn: true,
-                isDeveloper: true,
-                developmentMode: true,
-                profileCompletion: 100,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            };
-            const devSession = {
-                token: `dev_session_${userId}_${Date.now()}`,
-                issuedAt: new Date().toISOString(),
-                developmentMode: true,
-                lastActivity: new Date().toISOString(),
-            };
-            updateAuthState({
-                user: devUser,
-                session: devSession,
-                isAuthenticated: true,
-                isLoading: false,
-            });
-            await persistSession(devUser, devSession);
-            // Set dev auth mode flag
-            if (typeof window !== 'undefined') {
-                window.localStorage.setItem('dev_auth_mode', 'true');
-            }
-            logger.info('Development login successful', { userId });
-        }
-        catch (error) {
-            updateAuthState({
-                isLoading: false,
-                error: error instanceof Error ? error.message : 'Development login failed',
-            });
-            throw error;
-        }
-    }, [updateAuthState, persistSession]);
-    // Logout
-    const logout = useCallback(async () => {
-        try {
-            updateAuthState({ isLoading: true });
-            // Use Firebase signout if integration is available
-            if (firebaseIntegration) {
-                try {
-                    await firebaseIntegration.signOut();
-                }
-                catch (error) {
-                    logger.error('Firebase logout failed', { error });
-                }
-            }
-            // Call logout API if not in dev mode
-            if (!isDevelopmentMode()) {
-                try {
-                    await fetch('/api/auth/logout', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${await getAuthToken()}`,
-                        },
-                    });
-                }
-                catch (error) {
-                    logger.error('Logout API call failed', { error });
-                }
-            }
-            // Clear all persisted auth data
-            clearPersistedSession();
-            updateAuthState({
-                user: null,
-                session: null,
-                isAuthenticated: false,
-                isLoading: false,
-            });
-        }
-        catch (error) {
-            logger.error('Logout failed', { error });
-            updateAuthState({
-                user: null,
-                session: null,
-                isAuthenticated: false,
-                isLoading: false,
-                error: error instanceof Error ? error.message : 'Logout failed',
-            });
-        }
-    }, [updateAuthState, getAuthToken, clearPersistedSession, firebaseIntegration]);
-    // Magic Link Implementation
-    const sendMagicLink = useCallback(async (email, schoolId) => {
-        try {
-            updateAuthState({ isLoading: true, error: null });
-            const response = await fetch('/api/auth/send-magic-link', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    schoolId: schoolId || 'default'
-                }),
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to send magic link');
-            }
-            const data = await response.json();
-            logger.info('Magic link sent successfully', { email });
-            updateAuthState({ isLoading: false });
-            return data;
-        }
-        catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
-            updateAuthState({
-                isLoading: false,
-                error: errorMessage,
-            });
-            throw error;
-        }
-    }, [updateAuthState]);
-    const verifyMagicLink = useCallback(async (token, email, schoolId) => {
-        try {
-            updateAuthState({ isLoading: true, error: null });
-            const response = await fetch('/api/auth/verify-magic-link', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    token,
-                    email: email || window.localStorage.getItem('emailForSignIn'),
-                    schoolId: schoolId || 'default'
-                }),
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to verify magic link');
-            }
-            const data = await response.json();
-            if (data.success) {
-                // Clear stored email
-                window.localStorage.removeItem('emailForSignIn');
-                if (data.needsOnboarding) {
-                    // User needs onboarding
-                    const newUser = {
-                        id: data.userId,
-                        uid: data.userId,
-                        email: email || '',
-                        onboardingCompleted: false,
-                        emailVerified: true
-                    };
-                    const newSession = {
-                        token: token,
-                        issuedAt: new Date().toISOString(),
-                        developmentMode: data.dev || false
-                    };
-                    updateAuthState({
-                        user: newUser,
-                        session: newSession,
-                        isAuthenticated: true,
-                        isLoading: false,
-                    });
-                    await persistSession(newUser, newSession);
-                }
-                else {
-                    // Existing user, they can proceed to app
-                    await initializeAuth();
-                }
-                logger.info('Magic link verified successfully', { userId: data.userId });
-                return data;
-            }
-            throw new Error('Magic link verification failed');
-        }
-        catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Failed to verify magic link';
-            updateAuthState({
-                isLoading: false,
-                error: errorMessage,
-            });
-            throw error;
-        }
-    }, [updateAuthState, persistSession]);
-    const refreshSession = useCallback(async () => {
-        await initializeAuth();
-    }, [initializeAuth]);
-    const updateProfile = useCallback(async (updates) => {
-        if (!authState.user)
+    });
+}, [];
+// Login Methods
+const login = useCallback(async (email, password) => {
+    try {
+        updateAuthState({ isLoading: true, error: null });
+        if (isDevelopmentMode()) {
+            // Dev login logic
+            await devLogin(email);
             return;
-        // Update local state
-        const updatedUser = { ...authState.user, ...updates };
-        updateAuthState({ user: updatedUser });
-        // TODO: Sync with backend
-    }, [authState.user, updateAuthState]);
-    // Profile Data Hydration - syncs user data to profile system
-    const hydrateProfileData = useCallback(async (user) => {
-        try {
-            // Call profile API to ensure data is synced
-            const token = await getAuthToken();
-            if (!token)
-                return;
-            const profileResponse = await fetch('/api/profile/route', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    fullName: user.fullName,
-                    handle: user.handle,
-                    major: user.major,
-                    avatarUrl: user.avatarUrl,
-                    schoolId: user.schoolId,
-                    builderOptIn: user.builderOptIn,
-                    onboardingCompleted: true,
-                }),
-            });
-            if (profileResponse.ok) {
-                logger.info('Profile data hydrated successfully', { userId: user.id });
+        }
+        // Production login would integrate with Firebase or magic link
+        throw new Error('Production login not yet implemented');
+    }
+    catch (error) {
+        updateAuthState({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Login failed',
+        });
+        throw error;
+    }
+}, [updateAuthState]);
+// Development Login - Re-enabled for development workflow
+const devLogin = useCallback(async (userId = 'dev_user_123') => {
+    if (process.env.NODE_ENV !== 'development') {
+        throw new Error('Development login only available in development mode');
+    }
+    try {
+        updateAuthState({ isLoading: true, error: null });
+        const devUser = {
+            id: userId,
+            uid: userId,
+            email: 'dev@hive.com',
+            fullName: 'Dev User',
+            handle: 'devuser',
+            major: 'Computer Science',
+            schoolId: 'dev_school',
+            onboardingCompleted: true,
+            emailVerified: true,
+            builderOptIn: true,
+            isDeveloper: true,
+            developmentMode: true,
+            profileCompletion: 100,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        };
+        const devSession = {
+            token: `dev_session_${userId}_${Date.now()}`,
+            issuedAt: new Date().toISOString(),
+            developmentMode: true,
+            lastActivity: new Date().toISOString(),
+        };
+        updateAuthState({
+            user: devUser,
+            session: devSession,
+            isAuthenticated: true,
+            isLoading: false,
+        });
+        await persistSession(devUser, devSession);
+        // Set dev auth mode flag
+        if (typeof window !== 'undefined') {
+            window.localStorage.setItem('dev_auth_mode', 'true');
+        }
+        logger.info('Development login successful', { userId });
+    }
+    catch (error) {
+        updateAuthState({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Development login failed',
+        });
+        throw error;
+    }
+}, [updateAuthState, persistSession]);
+// Logout
+const logout = useCallback(async () => {
+    try {
+        updateAuthState({ isLoading: true });
+        // Use Firebase signout if integration is available
+        if (firebaseIntegration) {
+            try {
+                await firebaseIntegration.signOut();
             }
-            else {
-                logger.warn('Profile hydration failed', {
-                    userId: user.id,
-                    status: profileResponse.status
+            catch (error) {
+                logger.error('Firebase logout failed', { error });
+            }
+        }
+        // Call logout API if not in dev mode
+        if (!isDevelopmentMode()) {
+            try {
+                await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${await getAuthToken()}`,
+                    },
                 });
             }
-        }
-        catch (error) {
-            logger.error('Profile hydration error', { error, userId: user.id });
-        }
-    }, [getAuthToken]);
-    const completeOnboarding = useCallback(async (onboardingData) => {
-        if (!authState.user) {
-            throw new Error('No authenticated user for onboarding completion');
-        }
-        try {
-            updateAuthState({ isLoading: true, error: null });
-            const token = await getAuthToken();
-            if (!token) {
-                throw new Error('No auth token available');
+            catch (error) {
+                logger.error('Logout API call failed', { error });
             }
-            // Call the complete onboarding API
-            const response = await fetch('/api/auth/complete-onboarding', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(onboardingData),
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to complete onboarding');
-            }
-            const result = await response.json();
-            // Update user state with completed onboarding data
-            const updatedUser = {
-                ...authState.user,
-                fullName: onboardingData.fullName,
-                handle: onboardingData.handle,
-                major: onboardingData.major,
-                avatarUrl: onboardingData.avatarUrl,
-                onboardingCompleted: true,
-                profileCompletion: 90, // High completion after onboarding
-                updatedAt: new Date().toISOString(),
-            };
-            updateAuthState({
-                user: updatedUser,
-                isLoading: false
-            });
-            // Update persisted session using centralized method
-            const updatedSession = {
-                ...authState.session,
-                lastActivity: new Date().toISOString(),
-            };
-            persistSession(updatedUser, updatedSession);
-            // Trigger profile data hydration
-            await hydrateProfileData(updatedUser);
-            return {
-                user: result.user,
-                builderRequestsCreated: result.builderRequestsCreated,
-                success: result.success,
-                message: result.message,
-            };
         }
-        catch (error) {
-            updateAuthState({
-                isLoading: false,
-                error: error instanceof Error ? error.message : 'Onboarding completion failed',
-            });
-            throw error;
-        }
-    }, [authState.user, authState.session, updateAuthState, getAuthToken, hydrateProfileData, persistSession]);
-    const clearDevSession = useCallback(() => {
+        // Clear all persisted auth data
         clearPersistedSession();
         updateAuthState({
             user: null,
@@ -603,169 +380,393 @@ export const UnifiedAuthProvider = ({ children, firebaseIntegration }) => {
             isAuthenticated: false,
             isLoading: false,
         });
-    }, [updateAuthState, clearPersistedSession]);
-    // State Queries
-    const requiresOnboarding = useCallback(() => {
-        return authState.isAuthenticated && !authState.user?.onboardingCompleted;
-    }, [authState.isAuthenticated, authState.user?.onboardingCompleted]);
-    const hasValidSession = useCallback(() => {
-        return authState.isAuthenticated && !!authState.session?.token;
-    }, [authState.isAuthenticated, authState.session?.token]);
-    const canAccessFeature = useCallback((feature) => {
-        if (!authState.isAuthenticated)
-            return false;
-        switch (feature) {
-            case 'builder':
-                return authState.user?.builderOptIn === true;
-            case 'admin':
-                return authState.user?.isAdmin === true;
-            default:
-                return true;
+    }
+    catch (error) {
+        logger.error('Logout failed', { error });
+        updateAuthState({
+            user: null,
+            session: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Logout failed',
+        });
+    }
+}, [updateAuthState, getAuthToken, clearPersistedSession, firebaseIntegration]);
+// Magic Link Implementation
+const sendMagicLink = useCallback(async (email, schoolId) => {
+    try {
+        updateAuthState({ isLoading: true, error: null });
+        const response = await fetch('/api/auth/send-magic-link', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                schoolId: schoolId || 'default'
+            }),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to send magic link');
         }
-    }, [authState.isAuthenticated, authState.user]);
-    // Error Recovery
-    const clearError = useCallback(() => {
-        updateAuthState({ error: null });
-    }, [updateAuthState]);
-    const retryInitialization = useCallback(async () => {
-        await initializeAuth();
-    }, [initializeAuth]);
-    // Firebase auth state listener
-    useEffect(() => {
-        if (!firebaseIntegration || typeof window === 'undefined')
+        const data = await response.json();
+        logger.info('Magic link sent successfully', { email });
+        updateAuthState({ isLoading: false });
+        return data;
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
+        updateAuthState({
+            isLoading: false,
+            error: errorMessage,
+        });
+        throw error;
+    }
+}, [updateAuthState]);
+const verifyMagicLink = useCallback(async (token, email, schoolId) => {
+    try {
+        updateAuthState({ isLoading: true, error: null });
+        const response = await fetch('/api/auth/verify-magic-link', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token,
+                email: email || window.localStorage.getItem('emailForSignIn'),
+                schoolId: schoolId || 'default'
+            }),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to verify magic link');
+        }
+        const data = await response.json();
+        if (data.success) {
+            // Clear stored email
+            window.localStorage.removeItem('emailForSignIn');
+            if (data.needsOnboarding) {
+                // User needs onboarding
+                const newUser = {
+                    id: data.userId,
+                    uid: data.userId,
+                    email: email || '',
+                    onboardingCompleted: false,
+                    emailVerified: true
+                };
+                const newSession = {
+                    token: token,
+                    issuedAt: new Date().toISOString(),
+                    developmentMode: data.dev || false
+                };
+                updateAuthState({
+                    user: newUser,
+                    session: newSession,
+                    isAuthenticated: true,
+                    isLoading: false,
+                });
+                await persistSession(newUser, newSession);
+            }
+            else {
+                // Existing user, they can proceed to app
+                await initializeAuth();
+            }
+            logger.info('Magic link verified successfully', { userId: data.userId });
+            return data;
+        }
+        throw new Error('Magic link verification failed');
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to verify magic link';
+        updateAuthState({
+            isLoading: false,
+            error: errorMessage,
+        });
+        throw error;
+    }
+}, [updateAuthState, persistSession]);
+const refreshSession = useCallback(async () => {
+    await initializeAuth();
+}, [initializeAuth]);
+const updateProfile = useCallback(async (updates) => {
+    if (!authState.user)
+        return;
+    // Update local state
+    const updatedUser = { ...authState.user, ...updates };
+    updateAuthState({ user: updatedUser });
+    // TODO: Sync with backend
+}, [authState.user, updateAuthState]);
+// Profile Data Hydration - syncs user data to profile system
+const hydrateProfileData = useCallback(async (user) => {
+    try {
+        // Call profile API to ensure data is synced
+        const token = await getAuthToken();
+        if (!token)
             return;
-        const unsubscribe = firebaseIntegration.listenToAuthChanges(async (firebaseUser) => {
-            if (firebaseUser) {
-                // User is signed in with Firebase
-                try {
-                    // Get or create user session
-                    const token = await firebaseIntegration.getFirebaseToken();
-                    if (!token) {
-                        logger.error('No Firebase token available');
-                        return;
-                    }
-                    // Validate session with backend
-                    const response = await fetch('/api/auth/session', {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                        },
-                    });
-                    if (response.ok) {
-                        const sessionData = await response.json();
-                        const user = {
-                            id: sessionData.user.id,
-                            uid: sessionData.user.id,
-                            email: sessionData.user.email,
-                            fullName: sessionData.user.fullName,
-                            handle: sessionData.user.handle,
-                            major: sessionData.user.major,
-                            avatarUrl: sessionData.user.avatarUrl,
-                            schoolId: sessionData.user.schoolId,
-                            onboardingCompleted: sessionData.user.onboardingCompleted,
-                            emailVerified: sessionData.user.emailVerified,
-                            builderOptIn: sessionData.user.builderOptIn,
-                        };
-                        const session = {
-                            token,
-                            issuedAt: sessionData.session.issuedAt,
-                            expiresAt: sessionData.session.expiresAt,
-                        };
-                        updateAuthState({
-                            user,
-                            session,
-                            isAuthenticated: true,
-                            isLoading: false,
-                            error: null,
-                        });
-                        // Persist session
-                        await persistSession(user, session);
-                    }
-                    else {
-                        logger.error('Session validation failed', { status: response.status });
-                        updateAuthState({
-                            user: null,
-                            session: null,
-                            isAuthenticated: false,
-                            isLoading: false,
-                        });
-                    }
+        const profileResponse = await fetch('/api/profile/route', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                fullName: user.fullName,
+                handle: user.handle,
+                major: user.major,
+                avatarUrl: user.avatarUrl,
+                schoolId: user.schoolId,
+                builderOptIn: user.builderOptIn,
+                onboardingCompleted: true,
+            }),
+        });
+        if (profileResponse.ok) {
+            logger.info('Profile data hydrated successfully', { userId: user.id });
+        }
+        else {
+            logger.warn('Profile hydration failed', {
+                userId: user.id,
+                status: profileResponse.status
+            });
+        }
+    }
+    catch (error) {
+        logger.error('Profile hydration error', { error, userId: user.id });
+    }
+}, [getAuthToken]);
+const completeOnboarding = useCallback(async (onboardingData) => {
+    if (!authState.user) {
+        throw new Error('No authenticated user for onboarding completion');
+    }
+    try {
+        updateAuthState({ isLoading: true, error: null });
+        const token = await getAuthToken();
+        if (!token) {
+            throw new Error('No auth token available');
+        }
+        // Call the complete onboarding API
+        const response = await fetch('/api/auth/complete-onboarding', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(onboardingData),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to complete onboarding');
+        }
+        const result = await response.json();
+        // Update user state with completed onboarding data
+        const updatedUser = {
+            ...authState.user,
+            fullName: onboardingData.fullName,
+            handle: onboardingData.handle,
+            major: onboardingData.major,
+            avatarUrl: onboardingData.avatarUrl,
+            onboardingCompleted: true,
+            profileCompletion: 90, // High completion after onboarding
+            updatedAt: new Date().toISOString(),
+        };
+        updateAuthState({
+            user: updatedUser,
+            isLoading: false
+        });
+        // Update persisted session using centralized method
+        const updatedSession = {
+            ...authState.session,
+            lastActivity: new Date().toISOString(),
+        };
+        persistSession(updatedUser, updatedSession);
+        // Trigger profile data hydration
+        await hydrateProfileData(updatedUser);
+        return {
+            user: result.user,
+            builderRequestsCreated: result.builderRequestsCreated,
+            success: result.success,
+            message: result.message,
+        };
+    }
+    catch (error) {
+        updateAuthState({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Onboarding completion failed',
+        });
+        throw error;
+    }
+}, [authState.user, authState.session, updateAuthState, getAuthToken, hydrateProfileData, persistSession]);
+const clearDevSession = useCallback(() => {
+    clearPersistedSession();
+    updateAuthState({
+        user: null,
+        session: null,
+        isAuthenticated: false,
+        isLoading: false,
+    });
+}, [updateAuthState, clearPersistedSession]);
+// State Queries
+const requiresOnboarding = useCallback(() => {
+    return authState.isAuthenticated && !authState.user?.onboardingCompleted;
+}, [authState.isAuthenticated, authState.user?.onboardingCompleted]);
+const hasValidSession = useCallback(() => {
+    return authState.isAuthenticated && !!authState.session?.token;
+}, [authState.isAuthenticated, authState.session?.token]);
+const canAccessFeature = useCallback((feature) => {
+    if (!authState.isAuthenticated)
+        return false;
+    switch (feature) {
+        case 'builder':
+            return authState.user?.builderOptIn === true;
+        case 'admin':
+            return authState.user?.isAdmin === true;
+        default:
+            return true;
+    }
+}, [authState.isAuthenticated, authState.user]);
+// Error Recovery
+const clearError = useCallback(() => {
+    updateAuthState({ error: null });
+}, [updateAuthState]);
+const retryInitialization = useCallback(async () => {
+    await initializeAuth();
+}, [initializeAuth]);
+// Firebase auth state listener
+useEffect(() => {
+    if (!firebaseIntegration || typeof window === 'undefined')
+        return;
+    const unsubscribe = firebaseIntegration.listenToAuthChanges(async (firebaseUser) => {
+        if (firebaseUser) {
+            // User is signed in with Firebase
+            try {
+                // Get or create user session
+                const token = await firebaseIntegration.getFirebaseToken();
+                if (!token) {
+                    logger.error('No Firebase token available');
+                    return;
                 }
-                catch (error) {
-                    logger.error('Error processing Firebase auth state', { error });
+                // Validate session with backend
+                const response = await fetch('/api/auth/session', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                if (response.ok) {
+                    const sessionData = await response.json();
+                    const user = {
+                        id: sessionData.user.id,
+                        uid: sessionData.user.id,
+                        email: sessionData.user.email,
+                        fullName: sessionData.user.fullName,
+                        handle: sessionData.user.handle,
+                        major: sessionData.user.major,
+                        avatarUrl: sessionData.user.avatarUrl,
+                        schoolId: sessionData.user.schoolId,
+                        onboardingCompleted: sessionData.user.onboardingCompleted,
+                        emailVerified: sessionData.user.emailVerified,
+                        builderOptIn: sessionData.user.builderOptIn,
+                    };
+                    const session = {
+                        token,
+                        issuedAt: sessionData.session.issuedAt,
+                        expiresAt: sessionData.session.expiresAt,
+                    };
+                    updateAuthState({
+                        user,
+                        session,
+                        isAuthenticated: true,
+                        isLoading: false,
+                        error: null,
+                    });
+                    // Persist session
+                    await persistSession(user, session);
+                }
+                else {
+                    logger.error('Session validation failed', { status: response.status });
                     updateAuthState({
                         user: null,
                         session: null,
                         isAuthenticated: false,
                         isLoading: false,
-                        error: error instanceof Error ? error.message : 'Authentication failed',
                     });
                 }
             }
-            else {
-                // User is signed out
+            catch (error) {
+                logger.error('Error processing Firebase auth state', { error });
                 updateAuthState({
                     user: null,
                     session: null,
                     isAuthenticated: false,
                     isLoading: false,
-                });
-                clearPersistedSession();
-            }
-        });
-        return unsubscribe;
-    }, [firebaseIntegration, updateAuthState, persistSession, clearPersistedSession]);
-    // Initialize auth on mount - SECURITY FIX: Properly await async operation
-    useEffect(() => {
-        initializeAuth().catch(error => {
-            logger.error('Auth initialization failed on mount', { error });
-        });
-    }, [initializeAuth]);
-    // Listen for storage changes (multi-tab sync)
-    useEffect(() => {
-        if (typeof window === 'undefined')
-            return;
-        const handleStorageChange = (e) => {
-            if (e.key === 'hive_session' || e.key === 'auth_token') {
-                // SECURITY FIX: Properly await async operation
-                initializeAuth().catch(error => {
-                    logger.error('Auth initialization failed on storage change', { error });
+                    error: error instanceof Error ? error.message : 'Authentication failed',
                 });
             }
-        };
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, [initializeAuth]);
-    // Auto-retry on network errors
-    useEffect(() => {
-        if (authState.error && authState.error.includes('network')) {
-            const retryTimer = setTimeout(() => {
-                logger.info('Auto-retrying after network error');
-                retryInitialization();
-            }, 5000);
-            return () => clearTimeout(retryTimer);
         }
-    }, [authState.error, retryInitialization]);
-    const contextValue = {
-        ...authState,
-        login,
-        logout,
-        sendMagicLink,
-        verifyMagicLink,
-        refreshSession,
-        validateSession,
-        getAuthToken,
-        updateProfile,
-        completeOnboarding,
-        devLogin,
-        clearDevSession,
-        requiresOnboarding,
-        hasValidSession,
-        canAccessFeature,
-        clearError,
-        retryInitialization,
+        else {
+            // User is signed out
+            updateAuthState({
+                user: null,
+                session: null,
+                isAuthenticated: false,
+                isLoading: false,
+            });
+            clearPersistedSession();
+        }
+    });
+    return unsubscribe;
+}, [firebaseIntegration, updateAuthState, persistSession, clearPersistedSession]);
+// Initialize auth on mount - SECURITY FIX: Properly await async operation
+useEffect(() => {
+    initializeAuth().catch(error => {
+        logger.error('Auth initialization failed on mount', { error });
+    });
+}, [initializeAuth]);
+// Listen for storage changes (multi-tab sync)
+useEffect(() => {
+    if (typeof window === 'undefined')
+        return;
+    const handleStorageChange = (e) => {
+        if (e.key === 'hive_session' || e.key === 'auth_token') {
+            // SECURITY FIX: Properly await async operation
+            initializeAuth().catch(error => {
+                logger.error('Auth initialization failed on storage change', { error });
+            });
+        }
     };
-    return (_jsx(UnifiedAuthContext.Provider, { value: contextValue, children: children }));
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+}, [initializeAuth]);
+// Auto-retry on network errors
+useEffect(() => {
+    if (authState.error && authState.error.includes('network')) {
+        const retryTimer = setTimeout(() => {
+            logger.info('Auto-retrying after network error');
+            retryInitialization();
+        }, 5000);
+        return () => clearTimeout(retryTimer);
+    }
+}, [authState.error, retryInitialization]);
+const contextValue = {
+    ...authState,
+    login,
+    logout,
+    sendMagicLink,
+    verifyMagicLink,
+    refreshSession,
+    validateSession,
+    getAuthToken,
+    updateProfile,
+    completeOnboarding,
+    devLogin,
+    clearDevSession,
+    requiresOnboarding,
+    hasValidSession,
+    canAccessFeature,
+    clearError,
+    retryInitialization,
 };
+return (_jsx(UnifiedAuthContext.Provider, { value: contextValue, children: children }));
+;
 // Export context for advanced usage
 export { UnifiedAuthContext };
 //# sourceMappingURL=unified-auth-context.js.map

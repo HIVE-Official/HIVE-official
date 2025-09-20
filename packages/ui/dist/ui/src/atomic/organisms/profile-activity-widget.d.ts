@@ -1,5 +1,5 @@
 import React from 'react';
-export interface ActivityItem {
+export interface ProfileActivityItem {
     id: string;
     type: 'post' | 'comment' | 'join' | 'create' | 'like' | 'collaborate' | 'achievement' | 'event';
     title: string;
@@ -21,7 +21,7 @@ export interface ProfileActivityWidgetProps {
         id: string;
         name: string;
     };
-    recentActivities?: ActivityItem[];
+    recentActivities?: ProfileActivityItem[];
     todayActivities?: number;
     weeklyStreak?: number;
     totalEngagement?: number;

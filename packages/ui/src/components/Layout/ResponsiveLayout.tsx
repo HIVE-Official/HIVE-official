@@ -17,8 +17,8 @@ interface ViewportState {
     top: number;
     bottom: number;
     left: number;
-    right: number;
-  };
+    right: number
+  }
 }
 
 // Content density levels for adaptive layouts
@@ -45,7 +45,7 @@ interface ResponsiveLayoutProps {
   campusContext?: {
     networkQuality: 'poor' | 'fair' | 'good' | 'excellent';
     deviceType: 'personal' | 'shared' | 'library';
-    accessibilityNeeds?: string[];
+    accessibilityNeeds?: string[]
   };
   
   // Layout customization
@@ -57,7 +57,7 @@ interface ResponsiveLayoutProps {
   announceLayoutChanges?: boolean;
   maintainFocusOnResize?: boolean;
   
-  className?: string;
+  className?: string
 }
 
 // Custom hook for advanced viewport detection
@@ -101,7 +101,7 @@ function useAdvancedViewport(): ViewportState {
         touchCapable,
         hasNotch,
         safeAreaInsets
-      });
+      })
     };
 
     updateViewport();
@@ -110,11 +110,11 @@ function useAdvancedViewport(): ViewportState {
     
     return () => {
       window.removeEventListener('resize', updateViewport);
-      window.removeEventListener('orientationchange', updateViewport);
-    };
+      window.removeEventListener('orientationchange', updateViewport)
+    }
   }, []);
 
-  return viewport;
+  return viewport
 }
 
 // Dynamic spacing calculation based on content density and viewport
@@ -131,10 +131,10 @@ function calculateDynamicSpacing(
   
   // Reduce spacing on poor network to minimize layout shifts
   if (networkQuality === 'poor') {
-    return viewport.isMobile ? 'p-2' : 'p-3';
+    return viewport.isMobile ? 'p-2' : 'p-3'
   }
   
-  return baseSpacing[density];
+  return baseSpacing[density]
 }
 
 // Adaptive max-width calculation
@@ -153,7 +153,7 @@ function calculateMaxWidth(
       case 'mobile-first': return 'max-w-5xl';
       case 'content-aware': return 'max-w-6xl';
       case 'performance-optimized': return 'max-w-4xl';
-      default: return 'max-w-5xl';
+      default: return 'max-w-5xl'
     }
   }
   
@@ -166,7 +166,7 @@ function calculateMaxWidth(
     full: 'max-w-full'
   };
   
-  return widthMap[maxWidth || 'xl'];
+  return widthMap[maxWidth || 'xl']
 }
 
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
@@ -196,11 +196,11 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
     if (!maintainFocusOnResize) return;
     
     const handleFocusChange = () => {
-      setFocusedElement(document.activeElement as HTMLElement);
+      setFocusedElement(document.activeElement as HTMLElement)
     };
     
     document.addEventListener('focusin', handleFocusChange);
-    return () => document.removeEventListener('focusin', handleFocusChange);
+    return () => document.removeEventListener('focusin', handleFocusChange)
   }, [maintainFocusOnResize]);
   
   // Restore focus after viewport changes
@@ -208,10 +208,10 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
     if (focusedElement && maintainFocusOnResize) {
       const timer = setTimeout(() => {
         if (document.contains(focusedElement)) {
-          focusedElement.focus();
+          focusedElement.focus()
         }
       }, 100);
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer)
     }
   }, [viewport.width, viewport.height, focusedElement, maintainFocusOnResize]);
   
@@ -222,13 +222,13 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'layout-shift' && !(entry as any).hadRecentInput) {
-          setLayoutShifts(prev => prev + (entry as any).value);
+          setLayoutShifts(prev => prev + (entry as any).value)
         }
       }
     });
     
     observer.observe({ entryTypes: ['layout-shift'] });
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   }, [enableLayoutShiftPrevention]);
   
   // Announce layout changes to screen readers
@@ -245,7 +245,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
     announcer.textContent = announcement;
     
     document.body.appendChild(announcer);
-    setTimeout(() => document.body.removeChild(announcer), 1000);
+    setTimeout(() => document.body.removeChild(announcer), 1000)
   }, [viewport.isMobile, viewport.isTablet, viewport.isDesktop, announceLayoutChanges]);
   
   // Calculate dynamic classes
@@ -361,7 +361,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Export utilities for other components

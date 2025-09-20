@@ -30,7 +30,7 @@ type CampusLoadingContext = {
   networkQuality: 'excellent' | 'good' | 'fair' | 'poor';
   timeOfDay: 'morning' | 'afternoon' | 'evening' | 'late-night';
   campusLoad: 'low' | 'medium' | 'high' | 'peak'; // Network congestion
-  deviceType: 'mobile' | 'tablet' | 'desktop' | 'library-computer';
+  deviceType: 'mobile' | 'tablet' | 'desktop' | 'library-computer'
 };
 
 // Resource definition for orchestrated loading
@@ -41,7 +41,7 @@ interface LoadingResource {
   estimatedTime: number; // milliseconds
   dependencies?: string[]; // Resource IDs this depends on
   skipOnSlowNetwork?: boolean;
-  offlineCapable?: boolean;
+  offlineCapable?: boolean
 }
 
 // User journey context for predictive loading
@@ -83,7 +83,7 @@ interface LoadingOrchestratorProps {
   children?: (state: LoadingState) => React.ReactNode;
   fallback?: React.ReactNode;
   
-  className?: string;
+  className?: string
 }
 
 // Comprehensive loading state
@@ -98,8 +98,8 @@ interface LoadingState {
   networkOptimized: boolean;
   predictions: {
     nextLikelyActions: string[];
-    preloadingInBackground: string[];
-  };
+    preloadingInBackground: string[]
+  }
 }
 
 // Custom hook for orchestrated loading
@@ -146,10 +146,10 @@ function useLoadingOrchestrator(
         high: 1.3,
         peak: 2.0
       };
-      baseTime *= loadMultipliers[campusContext.campusLoad];
+      baseTime *= loadMultipliers[campusContext.campusLoad]
     }
     
-    return Math.round(baseTime);
+    return Math.round(baseTime)
   }, [resources, campusContext]);
   
   // Prioritize resources based on strategy and context
@@ -160,7 +160,7 @@ function useLoadingOrchestrator(
       case 'priority-based':
         sorted.sort((a, b) => {
           const priorityOrder = { critical: 5, high: 4, medium: 3, low: 2, background: 1 };
-          return priorityOrder[b.priority] - priorityOrder[a.priority];
+          return priorityOrder[b.priority] - priorityOrder[a.priority]
         });
         break;
       
@@ -168,7 +168,7 @@ function useLoadingOrchestrator(
         // Sort by likely user needs (simplified logic)
         sorted.sort((a, b) => {
           const criticalFirst = a.priority === 'critical' ? -1 : b.priority === 'critical' ? 1 : 0;
-          return criticalFirst || a.estimatedTime - b.estimatedTime;
+          return criticalFirst || a.estimatedTime - b.estimatedTime
         });
         break;
       
@@ -176,17 +176,17 @@ function useLoadingOrchestrator(
         // Load in stages: critical → high → medium → low → background
         sorted.sort((a, b) => {
           const priorityOrder = { critical: 5, high: 4, medium: 3, low: 2, background: 1 };
-          return priorityOrder[b.priority] - priorityOrder[a.priority];
+          return priorityOrder[b.priority] - priorityOrder[a.priority]
         });
-        break;
+        break
     }
     
     // Filter out resources that should be skipped on slow networks
     if (campusContext?.networkQuality === 'poor') {
-      sorted = sorted.filter(resource => !resource.skipOnSlowNetwork);
+      sorted = sorted.filter(resource => !resource.skipOnSlowNetwork)
     }
     
-    return sorted;
+    return sorted
   }, [resources, strategy, campusContext]);
   
   // Load resources with orchestration
@@ -195,8 +195,8 @@ function useLoadingOrchestrator(
     
     const dependencyGraph = new Map<string, string[]>();
     prioritizedResources.forEach(resource => {
-      dependencyGraph.set(resource.id, resource.dependencies || []);
-    });
+      dependencyGraph.set(resource.id, resource.dependencies || [])
+    })};
     
     // Process resources respecting dependencies
     const processedResources = new Set<string>();
@@ -209,7 +209,7 @@ function useLoadingOrchestrator(
       
       if (!canProcess) {
         // Skip for now, will be retried
-        continue;
+        continue
       }
       
       try {
@@ -221,7 +221,7 @@ function useLoadingOrchestrator(
         
         // Simulate resource loading (replace with actual loading logic)
         const loadingPromise = new Promise((resolve) => {
-          setTimeout(resolve, resource.estimatedTime);
+          setTimeout(resolve, resource.estimatedTime)
         });
         
         activeLoadingRef.current.set(resource.id, loadingPromise);
@@ -243,15 +243,15 @@ function useLoadingOrchestrator(
             progress,
             estimatedTimeRemaining,
             phase: newCompleted.length === prioritizedResources.length ? 'finalizing' : 'processing'
-          };
-        });
+          }
+        })
         
       } catch (error) {
         console.error(`Failed to load resource ${resource.id}:`, error);
         setLoadingState(prev => ({
           ...prev,
           failedResources: [...prev.failedResources, resource.id]
-        }));
+        }))
       }
     }
     
@@ -259,15 +259,15 @@ function useLoadingOrchestrator(
     setLoadingState(prev => ({ ...prev, phase: 'finalizing' }));
     await new Promise(resolve => setTimeout(resolve, 200)); // Allow UI to settle
     
-    setLoadingState(prev => ({ ...prev, phase: 'complete' }));
+    setLoadingState(prev => ({ ...prev, phase: 'complete' }))
   }, [prioritizedResources]);
   
   // Start loading on mount
   useEffect(() => {
-    loadResources();
+    loadResources()
   }, [loadResources]);
   
-  return loadingState;
+  return loadingState
 }
 
 // Generate contextual loading messages
@@ -314,15 +314,15 @@ function generateLoadingMessage(
   
   // Add context-specific messages
   if (campusContext?.networkQuality === 'poor') {
-    return "Campus Wi-Fi is a bit slow today - hang tight! 📶";
+    return "Campus Wi-Fi is a bit slow today - hang tight! 📶"
   }
   
   if (userJourney?.currentPage === 'tools' && phase === 'processing') {
-    return "Loading your tools and creations...";
+    return "Loading your tools and creations..."
   }
   
   // Random selection from appropriate messages
-  return messages[Math.floor(Math.random() * messages.length)];
+  return messages[Math.floor(Math.random() * messages.length)]
 }
 
 export const LoadingOrchestrator: React.FC<LoadingOrchestratorProps> = ({
@@ -357,36 +357,36 @@ export const LoadingOrchestrator: React.FC<LoadingOrchestratorProps> = ({
       campusContext,
       userJourney
     );
-    setCurrentMessage(message);
+    setCurrentMessage(message)
   }, [loadingState.phase, loadingState.currentResource, campusContext, userJourney]);
   
   // Notify of phase changes
   useEffect(() => {
     if (onPhaseChange) {
-      onPhaseChange(loadingState.phase, loadingState.currentResource);
+      onPhaseChange(loadingState.phase, loadingState.currentResource)
     }
   }, [loadingState.phase, loadingState.currentResource, onPhaseChange]);
   
   // Notify when complete
   useEffect(() => {
     if (loadingState.phase === 'complete' && onAllComplete) {
-      onAllComplete();
+      onAllComplete()
     }
   }, [loadingState.phase, onAllComplete]);
   
   // If complete and children provided, render them
   if (loadingState.phase === 'complete' && children) {
-    return <>{children(loadingState)}</>;
+    return <>{children(loadingState)}</>
   }
   
   // If complete and no children, don't render anything
   if (loadingState.phase === 'complete') {
-    return null;
+    return null
   }
   
   // Render custom fallback if provided
   if (fallback) {
-    return <>{fallback}</>;
+    return <>{fallback}</>
   }
   
   return (
@@ -434,7 +434,7 @@ export const LoadingOrchestrator: React.FC<LoadingOrchestratorProps> = ({
                 style={{
                   strokeDasharray: '283', // 2π * 45
                   strokeDashoffset: 283 - (loadingState.progress / 100) * 283
-                }}
+          }}
               />
             </svg>
           </div>
@@ -520,7 +520,7 @@ export const LoadingOrchestrator: React.FC<LoadingOrchestratorProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Export utilities

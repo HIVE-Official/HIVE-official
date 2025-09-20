@@ -113,39 +113,39 @@ interface OnboardingState {
     lastName: string;
     email: string;
     phoneNumber: string;
-    preferredName: string;
+    preferredName: string
   };
   academicInfo: {
     major: string;
     year: string;
     previousInstitution?: string;
     expectedGraduation: string;
-    academicInterests: string[];
+    academicInterests: string[]
   };
   campusPreferences: {
     housing: string;
     diningPlan: string;
     transportation: string[];
-    activities: string[];
+    activities: string[]
   };
   socialPreferences: {
     extroverted: boolean;
     studyGroupPreference: string;
     socialActivities: string[];
-    communicationStyle: string;
+    communicationStyle: string
   };
   accessibility: {
     needsAccommodations: boolean;
     accommodationTypes: string[];
-    assistiveTechnology: string[];
+    assistiveTechnology: string[]
   };
   internationalNeeds?: {
     visaStatus: string;
     englishProficiency: string;
     culturalSupport: boolean;
-    previousUSExperience: boolean;
+    previousUSExperience: boolean
   };
-  completionStatus: Record<string, boolean>;
+  completionStatus: Record<string, boolean>
 }
 
 interface OnboardingAction {
@@ -153,7 +153,7 @@ interface OnboardingAction {
         'UPDATE_CAMPUS_PREFERENCES' | 'UPDATE_SOCIAL_PREFERENCES' | 
         'UPDATE_ACCESSIBILITY' | 'UPDATE_INTERNATIONAL' | 'NEXT_STEP' | 
         'PREVIOUS_STEP' | 'COMPLETE_STEP' | 'RESET';
-  payload?: any;
+  payload?: any
 }
 
 const initialOnboardingState: OnboardingState = {
@@ -220,13 +220,13 @@ function onboardingReducer(state: OnboardingState, action: OnboardingAction): On
     case 'RESET':
       return initialOnboardingState;
     default:
-      return state;
+      return state
   }
 }
 
 const OnboardingContext = createContext<{
   state: OnboardingState;
-  dispatch: React.Dispatch<OnboardingAction>;
+  dispatch: React.Dispatch<OnboardingAction>
 } | null>(null);
 
 // UB-Specific Data
@@ -259,7 +259,7 @@ const ubSpecificData = {
 // Onboarding Step Components
 function UserTypeSelection({ state, dispatch }: { 
   state: OnboardingState; 
-  dispatch: React.Dispatch<OnboardingAction>; 
+  dispatch: React.Dispatch<OnboardingAction> 
 }) {
   const userTypes = [
     {
@@ -324,7 +324,7 @@ function UserTypeSelection({ state, dispatch }: {
                 ? 'ring-2 ring-blue-500 bg-blue-50' 
                 : 'hover:shadow-md'
             }`}
-            onClick={() => dispatch({ type: 'SET_USER_TYPE', payload: userType.type })}
+            onClick={() => dispatch({ type: 'SET_USER_TYPE', payload: userType.type }}
           >
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-3">
@@ -355,22 +355,22 @@ function UserTypeSelection({ state, dispatch }: {
 
       {state.userType && (
         <div className="flex justify-center">
-          <Button onClick={() => dispatch({ type: 'NEXT_STEP' })} className="bg-blue-600 hover:bg-blue-700">
+          <Button onClick={() => dispatch({ type: 'NEXT_STEP' }} className="bg-blue-600 hover:bg-blue-700">
             Continue as {state.userType.charAt(0).toUpperCase() + state.userType.slice(1)}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       )}
     </div>
-  );
+  )
 }
 
 function PersonalInformation({ state, dispatch }: { 
   state: OnboardingState; 
-  dispatch: React.Dispatch<OnboardingAction>; 
+  dispatch: React.Dispatch<OnboardingAction> 
 }) {
   const handleInputChange = (field: string, value: string) => {
-    dispatch({ type: 'UPDATE_PERSONAL_INFO', payload: { [field]: value } });
+    dispatch({ type: 'UPDATE_PERSONAL_INFO', payload: { [field]: value } })
   };
 
   return (
@@ -454,12 +454,12 @@ function PersonalInformation({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' }}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
         <Button 
-          onClick={() => dispatch({ type: 'NEXT_STEP' })}
+          onClick={() => dispatch({ type: 'NEXT_STEP' }}
           disabled={!state.personalInfo.firstName || !state.personalInfo.lastName || !state.personalInfo.email}
         >
           Continue
@@ -467,15 +467,15 @@ function PersonalInformation({ state, dispatch }: {
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 function AcademicInformation({ state, dispatch }: { 
   state: OnboardingState; 
-  dispatch: React.Dispatch<OnboardingAction>; 
+  dispatch: React.Dispatch<OnboardingAction> 
 }) {
   const handleInputChange = (field: string, value: string | string[]) => {
-    dispatch({ type: 'UPDATE_ACADEMIC_INFO', payload: { [field]: value } });
+    dispatch({ type: 'UPDATE_ACADEMIC_INFO', payload: { [field]: value } })
   };
 
   const handleInterestToggle = (interest: string) => {
@@ -484,7 +484,7 @@ function AcademicInformation({ state, dispatch }: {
       ? currentInterests.filter(i => i !== interest)
       : [...currentInterests, interest];
     
-    handleInputChange('academicInterests', newInterests);
+    handleInputChange('academicInterests', newInterests)
   };
 
   const academicInterests = [
@@ -605,12 +605,12 @@ function AcademicInformation({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' }}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
         <Button 
-          onClick={() => dispatch({ type: 'NEXT_STEP' })}
+          onClick={() => dispatch({ type: 'NEXT_STEP' }}
           disabled={!state.academicInfo.major}
         >
           Continue
@@ -618,15 +618,15 @@ function AcademicInformation({ state, dispatch }: {
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 function CampusLifePreferences({ state, dispatch }: { 
   state: OnboardingState; 
-  dispatch: React.Dispatch<OnboardingAction>; 
+  dispatch: React.Dispatch<OnboardingAction> 
 }) {
   const handlePreferenceChange = (field: string, value: string | string[]) => {
-    dispatch({ type: 'UPDATE_CAMPUS_PREFERENCES', payload: { [field]: value } });
+    dispatch({ type: 'UPDATE_CAMPUS_PREFERENCES', payload: { [field]: value } })
   };
 
   const handleActivityToggle = (activity: string) => {
@@ -635,7 +635,7 @@ function CampusLifePreferences({ state, dispatch }: {
       ? currentActivities.filter(a => a !== activity)
       : [...currentActivities, activity];
     
-    handlePreferenceChange('activities', newActivities);
+    handlePreferenceChange('activities', newActivities)
   };
 
   const handleTransportationToggle = (transport: string) => {
@@ -644,7 +644,7 @@ function CampusLifePreferences({ state, dispatch }: {
       ? currentTransport.filter(t => t !== transport)
       : [...currentTransport, transport];
     
-    handlePreferenceChange('transportation', newTransport);
+    handlePreferenceChange('transportation', newTransport)
   };
 
   return (
@@ -743,25 +743,25 @@ function CampusLifePreferences({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' }}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <Button onClick={() => dispatch({ type: 'NEXT_STEP' })}>
+        <Button onClick={() => dispatch({ type: 'NEXT_STEP' }}>
           Continue
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 function SocialPreferencesStep({ state, dispatch }: { 
   state: OnboardingState; 
-  dispatch: React.Dispatch<OnboardingAction>; 
+  dispatch: React.Dispatch<OnboardingAction> 
 }) {
   const handleSocialChange = (field: string, value: boolean | string | string[]) => {
-    dispatch({ type: 'UPDATE_SOCIAL_PREFERENCES', payload: { [field]: value } });
+    dispatch({ type: 'UPDATE_SOCIAL_PREFERENCES', payload: { [field]: value } })
   };
 
   const handleSocialActivityToggle = (activity: string) => {
@@ -770,7 +770,7 @@ function SocialPreferencesStep({ state, dispatch }: {
       ? currentActivities.filter(a => a !== activity)
       : [...currentActivities, activity];
     
-    handleSocialChange('socialActivities', newActivities);
+    handleSocialChange('socialActivities', newActivities)
   };
 
   const socialActivities = [
@@ -890,25 +890,25 @@ function SocialPreferencesStep({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' }}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <Button onClick={() => dispatch({ type: 'NEXT_STEP' })}>
+        <Button onClick={() => dispatch({ type: 'NEXT_STEP' }}>
           Continue
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 function AccessibilityNeeds({ state, dispatch }: { 
   state: OnboardingState; 
-  dispatch: React.Dispatch<OnboardingAction>; 
+  dispatch: React.Dispatch<OnboardingAction> 
 }) {
   const handleAccessibilityChange = (field: string, value: boolean | string[]) => {
-    dispatch({ type: 'UPDATE_ACCESSIBILITY', payload: { [field]: value } });
+    dispatch({ type: 'UPDATE_ACCESSIBILITY', payload: { [field]: value } })
   };
 
   const handleAccommodationToggle = (accommodation: string) => {
@@ -917,7 +917,7 @@ function AccessibilityNeeds({ state, dispatch }: {
       ? current.filter(a => a !== accommodation)
       : [...current, accommodation];
     
-    handleAccessibilityChange('accommodationTypes', updated);
+    handleAccessibilityChange('accommodationTypes', updated)
   };
 
   const handleTechnologyToggle = (tech: string) => {
@@ -926,7 +926,7 @@ function AccessibilityNeeds({ state, dispatch }: {
       ? current.filter(t => t !== tech)
       : [...current, tech];
     
-    handleAccessibilityChange('assistiveTechnology', updated);
+    handleAccessibilityChange('assistiveTechnology', updated)
   };
 
   const accommodationTypes = [
@@ -957,7 +957,7 @@ function AccessibilityNeeds({ state, dispatch }: {
             <Switch
               id="needsAccommodations"
               checked={state.accessibility.needsAccommodations}
-              onCheckedChange={(checked) => handleAccessibilityChange('needsAccommodations', checked)}
+              onChange={(e) => { const checked = e.target.checked; handleAccessibilityChange('needsAccommodations', checked)}
             />
             <Label htmlFor="needsAccommodations" className="text-base">
               I need accessibility accommodations or support
@@ -1022,30 +1022,30 @@ function AccessibilityNeeds({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' }}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <Button onClick={() => dispatch({ type: 'NEXT_STEP' })}>
+        <Button onClick={() => dispatch({ type: 'NEXT_STEP' }}>
           Continue
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 function InternationalStudentNeeds({ state, dispatch }: { 
   state: OnboardingState; 
-  dispatch: React.Dispatch<OnboardingAction>; 
+  dispatch: React.Dispatch<OnboardingAction> 
 }) {
   const handleInternationalChange = (field: string, value: string | boolean) => {
-    dispatch({ type: 'UPDATE_INTERNATIONAL', payload: { [field]: value } });
+    dispatch({ type: 'UPDATE_INTERNATIONAL', payload: { [field]: value } })
   };
 
   if (state.userType !== 'international') {
     dispatch({ type: 'NEXT_STEP' });
-    return null;
+    return null
   }
 
   return (
@@ -1102,7 +1102,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Switch
               id="culturalSupport"
               checked={state.internationalNeeds?.culturalSupport || false}
-              onCheckedChange={(checked) => handleInternationalChange('culturalSupport', checked)}
+              onChange={(e) => { const checked = e.target.checked; handleInternationalChange('culturalSupport', checked)}
             />
             <Label htmlFor="culturalSupport" className="text-base">
               I'm interested in cultural support and community connections
@@ -1113,7 +1113,7 @@ function InternationalStudentNeeds({ state, dispatch }: {
             <Switch
               id="previousUSExperience"
               checked={state.internationalNeeds?.previousUSExperience || false}
-              onCheckedChange={(checked) => handleInternationalChange('previousUSExperience', checked)}
+              onChange={(e) => { const checked = e.target.checked; handleInternationalChange('previousUSExperience', checked)}
             />
             <Label htmlFor="previousUSExperience" className="text-base">
               I have previous experience living/studying in the US
@@ -1151,22 +1151,22 @@ function InternationalStudentNeeds({ state, dispatch }: {
       </Card>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' }}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <Button onClick={() => dispatch({ type: 'NEXT_STEP' })}>
+        <Button onClick={() => dispatch({ type: 'NEXT_STEP' }}>
           Continue
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 function OnboardingCompletion({ state, dispatch }: { 
   state: OnboardingState; 
-  dispatch: React.Dispatch<OnboardingAction>; 
+  dispatch: React.Dispatch<OnboardingAction> 
 }) {
   const [isCompleting, setIsCompleting] = useState(false);
 
@@ -1176,7 +1176,7 @@ function OnboardingCompletion({ state, dispatch }: {
     setTimeout(() => {
       setIsCompleting(false);
       // Redirect to dashboard would happen here
-    }, 2000);
+    }, 2000)
   };
 
   const getPersonalizedWelcome = () => {
@@ -1190,7 +1190,7 @@ function OnboardingCompletion({ state, dispatch }: {
       staff: `Welcome to the UB team, ${name}! Thank you for supporting our campus community.`
     };
 
-    return userTypeMessages[state.userType || 'freshman'];
+    return userTypeMessages[state.userType || 'freshman']
   };
 
   const getRecommendations = () => {
@@ -1198,27 +1198,27 @@ function OnboardingCompletion({ state, dispatch }: {
     
     // Housing-based recommendations
     if (state.campusPreferences.housing === 'Ellicott Complex') {
-      recommendations.push('Join the Ellicott Community space for dorm events and coordination');
+      recommendations.push('Join the Ellicott Community space for dorm events and coordination')
     }
     
     // Major-based recommendations
     if (state.academicInfo.major === 'Computer Science') {
-      recommendations.push('Check out the CS Club and Hackathon Planning spaces');
+      recommendations.push('Check out the CS Club and Hackathon Planning spaces')
     }
     
     // Social preference-based recommendations
     if (state.socialPreferences.extroverted) {
-      recommendations.push('Explore large group spaces and campus-wide events');
+      recommendations.push('Explore large group spaces and campus-wide events')
     } else {
-      recommendations.push('Look for smaller study groups and intimate community spaces');
+      recommendations.push('Look for smaller study groups and intimate community spaces')
     }
     
     // Activity-based recommendations
     if (state.campusPreferences.activities.includes('Greek Life')) {
-      recommendations.push('Connect with Greek organizations during rush periods');
+      recommendations.push('Connect with Greek organizations during rush periods')
     }
     
-    return recommendations;
+    return recommendations
   };
 
   return (
@@ -1311,7 +1311,7 @@ function OnboardingCompletion({ state, dispatch }: {
       )}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' })}>
+        <Button variant="outline" onClick={() => dispatch({ type: 'PREVIOUS_STEP' }}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -1323,7 +1323,7 @@ function OnboardingCompletion({ state, dispatch }: {
         )}
       </div>
     </div>
-  );
+  )
 }
 
 function OnboardingProvider({ children }: { children: React.ReactNode }) {
@@ -1333,7 +1333,7 @@ function OnboardingProvider({ children }: { children: React.ReactNode }) {
     <OnboardingContext.Provider value={{ state, dispatch }}>
       {children}
     </OnboardingContext.Provider>
-  );
+  )
 }
 
 // Main Onboarding System Component
@@ -1342,7 +1342,7 @@ function ComprehensiveOnboardingSystem() {
     <OnboardingProvider>
       <OnboardingFlow />
     </OnboardingProvider>
-  );
+  )
 }
 
 function OnboardingFlow() {
@@ -1410,7 +1410,7 @@ function OnboardingFlow() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Story Exports

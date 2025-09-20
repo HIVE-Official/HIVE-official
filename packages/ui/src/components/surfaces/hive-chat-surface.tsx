@@ -96,16 +96,16 @@ export interface ChatMessage {
   reactions: Array<{
     emoji: string;
     count: number;
-    userIds: string[];
+    userIds: string[]
   }>;
   attachments?: Array<{
     id: string;
     name: string;
     type: string;
     url: string;
-    size: number;
+    size: number
   }>;
-  mentions?: string[];
+  mentions?: string[]
 }
 
 export interface HiveChatSurfaceProps
@@ -126,10 +126,10 @@ export interface HiveChatSurfaceProps
   onPinMessage?: (messageId: string) => void;
   onMentionUser?: (userId: string) => void;
   showTypingIndicator?: boolean;
-  typingUsers?: Array<{ id: string; name: string; }>;
+  typingUsers?: Array<{ id: string; name: string }>;
   enableVoiceMessages?: boolean;
   enableFileSharing?: boolean;
-  maxMessageLength?: number;
+  maxMessageLength?: number
 }
 
 export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceProps>(
@@ -171,7 +171,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
     
     // Auto-scroll to bottom when new messages arrive
     useEffect(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages.length]);
     
     // Handle message submission
@@ -180,14 +180,14 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
       
       onSendMessage(messageText, 'text');
       setMessageText('');
-      setReplyToMessage(null);
+      setReplyToMessage(null)
     }, [messageText, onSendMessage]);
     
     // Handle key press in input
     const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        handleSendMessage();
+        handleSendMessage()
       }
     }, [handleSendMessage]);
     
@@ -224,7 +224,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
             </div>
           </motion.div>
         </div>
-      );
+      )
     }
     
     // Empty state
@@ -305,7 +305,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
             </div>
           )}
         </div>
-      );
+      )
     }
     
     return (
@@ -527,7 +527,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                       {new Date(message.timestamp).toLocaleTimeString('en-US', {
                         hour: 'numeric',
                         minute: '2-digit'
-                      })}
+          }}
                     </time>
                     
                     {message.isEdited && (
@@ -540,8 +540,8 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
                   </div>
                 </div>
               </motion.div>
-            );
-          })}
+            )
+          })
           
           {/* Typing Indicator */}
           {showTypingIndicator && typingUsers.length > 0 && (
@@ -709,7 +709,7 @@ export const HiveChatSurface = React.forwardRef<HTMLDivElement, HiveChatSurfaceP
           </motion.div>
         )}
       </div>
-    );
+    )
   }
 );
 

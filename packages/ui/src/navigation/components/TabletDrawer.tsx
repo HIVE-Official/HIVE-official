@@ -24,17 +24,17 @@ interface TabletDrawerProps {
   onNavigate: (href: string) => void;
   onClose: () => void;
   className?: string;
-  testId?: string;
+  testId?: string
 }
 
 interface DrawerItemProps {
   item: NavigationItem;
   onNavigate: (href: string) => void;
-  onClose: () => void;
+  onClose: () => void
 }
 
 interface DrawerHeaderProps {
-  onClose: () => void;
+  onClose: () => void
 }
 
 // ============================================================================
@@ -83,7 +83,7 @@ const DrawerHeader = memo<DrawerHeaderProps>(({ onClose }) => {
         <X className="w-5 h-5" />
       </motion.button>
     </div>
-  );
+  )
 });
 
 DrawerHeader.displayName = 'DrawerHeader';
@@ -99,14 +99,14 @@ const DrawerItem = memo<DrawerItemProps>(({ item, onNavigate, onClose }) => {
   const handleClick = useCallback(() => {
     if (!item.isDisabled) {
       onNavigate(item.href);
-      onClose();
+      onClose()
     }
   }, [item.href, item.isDisabled, onNavigate, onClose]);
   
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     if ((event.key === 'Enter' || event.key === ' ') && !item.isDisabled) {
       event.preventDefault();
-      handleClick();
+      handleClick()
     }
   }, [handleClick, item.isDisabled]);
   
@@ -203,7 +203,7 @@ const DrawerItem = memo<DrawerItemProps>(({ item, onNavigate, onClose }) => {
         />
       )}
     </motion.button>
-  );
+  )
 });
 
 DrawerItem.displayName = 'DrawerItem';
@@ -247,7 +247,7 @@ const UserProfileSection = memo<{ user: NavigationUser }>(({ user }) => {
         )}
       </div>
     </motion.div>
-  );
+  )
 });
 
 UserProfileSection.displayName = 'UserProfileSection';
@@ -268,7 +268,7 @@ export const TabletDrawer = memo<TabletDrawerProps>(({
   // Close drawer on escape key
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
-      onClose();
+      onClose()
     }
   }, [onClose]);
 
@@ -361,7 +361,7 @@ export const TabletDrawer = memo<TabletDrawerProps>(({
         </>
       )}
     </AnimatePresence>
-  );
+  )
 });
 
 TabletDrawer.displayName = 'TabletDrawer';
@@ -372,7 +372,7 @@ TabletDrawer.displayName = 'TabletDrawer';
 
 interface TabletDrawerTriggerProps {
   onOpen: () => void;
-  className?: string;
+  className?: string
 }
 
 export const TabletDrawerTrigger = memo<TabletDrawerTriggerProps>(({ onOpen, className }) => {
@@ -399,7 +399,7 @@ export const TabletDrawerTrigger = memo<TabletDrawerTriggerProps>(({ onOpen, cla
         <div className="w-5 h-0.5 bg-current rounded-full" />
       </div>
     </motion.button>
-  );
+  )
 });
 
 TabletDrawerTrigger.displayName = 'TabletDrawerTrigger';
@@ -424,18 +424,18 @@ export const useDrawerSwipeGesture = (onClose: () => void) => {
       if (deltaX < -100) {
         onClose();
         document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('touchend', handleTouchEnd);
+        document.removeEventListener('touchend', handleTouchEnd)
       }
     };
     
     const handleTouchEnd = () => {
       document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener('touchend', handleTouchEnd)
     };
     
     document.addEventListener('touchmove', handleTouchMove);
-    document.addEventListener('touchend', handleTouchEnd);
+    document.addEventListener('touchend', handleTouchEnd)
   }, [onClose]);
   
-  return handleSwipe;
+  return handleSwipe
 };

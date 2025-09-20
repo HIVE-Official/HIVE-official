@@ -44,7 +44,7 @@ export interface HivePatternProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>,
     VariantProps<typeof patternVariants> {
   animated?: boolean;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // Base simplified hexagon for patterns
@@ -89,7 +89,7 @@ export const HiveTessellation = ({
               style={{
                 left: `${col * (hexSize * 0.75)}px`,
                 top: `${row * (hexSize * 0.87) + (col % 2) * (hexSize * 0.43)}px`,
-              }}
+          }}
               initial={animated ? { opacity: 0, scale: 0 } : {}}
               animate={animated ? { opacity: 1, scale: 1 } : {}}
               transition={animated ? { 
@@ -108,7 +108,7 @@ export const HiveTessellation = ({
         {children}
       </div>
     </div>
-  );
+  )
 };
 
 // 2. WATERMARK PATTERN
@@ -131,16 +131,16 @@ export const HiveWatermark = ({
               left: `${(i % 3) * 33}%`,
               top: `${Math.floor(i / 3) * 50}%`,
               transform: "translate(-50%, -50%)",
-            }}
+          }}
             animate={{ 
               rotate: [0, 5, -5, 0],
               scale: [1, 1.05, 0.95, 1]
-            }}
+          }}
             transition={{ 
               duration: 8 + i * 2,
               repeat: Infinity,
               ease: "easeInOut"
-            }}
+          }}
           >
             <svg viewBox="0 0 1500 1500" className="w-32 h-32">
               <path
@@ -154,7 +154,7 @@ export const HiveWatermark = ({
       
       {children}
     </div>
-  );
+  )
 };
 
 // 3. BORDER DECORATION
@@ -201,7 +201,7 @@ export const HiveBorder = ({
         {children}
       </div>
     </div>
-  );
+  )
 };
 
 // 4. GLOW EFFECT BACKGROUND
@@ -252,7 +252,7 @@ export const HiveGlow = ({
         {children}
       </div>
     </div>
-  );
+  )
 };
 
 // 5. FLOATING HEXAGONS
@@ -294,7 +294,7 @@ export const HiveFloating = ({
         {children}
       </div>
     </div>
-  );
+  )
 };
 
 // 6. CORNER DECORATIONS
@@ -329,7 +329,7 @@ export const HiveCorners = ({
         {children}
       </div>
     </div>
-  );
+  )
 };
 
 // 7. LOADING PATTERN
@@ -350,13 +350,13 @@ export const HiveLoadingPattern = ({
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [0.3, 1, 0.3],
-              }}
+          }}
               transition={{
                 duration: 1.5,
                 repeat: Infinity,
                 delay: i * 0.2,
                 ease: "easeInOut",
-              }}
+          }}
             >
               <HexagonPattern size={20} />
             </motion.div>
@@ -368,7 +368,7 @@ export const HiveLoadingPattern = ({
         {children}
       </div>
     </div>
-  );
+  )
 };
 
 // Export all pattern components

@@ -18,7 +18,7 @@ export interface ExpandFocusProps {
   backdrop?: boolean;
   closeOnBackdropClick?: boolean;
   closeOnEscape?: boolean;
-  preservePosition?: boolean;
+  preservePosition?: boolean
 }
 
 export const ExpandFocus: React.FC<ExpandFocusProps> = ({
@@ -43,7 +43,7 @@ export const ExpandFocus: React.FC<ExpandFocusProps> = ({
   useEffect(() => {
     if (isExpanded && triggerRef.current && preservePosition) {
       const rect = triggerRef.current.getBoundingClientRect();
-      setTriggerRect(rect);
+      setTriggerRect(rect)
     }
   }, [isExpanded, preservePosition]);
 
@@ -53,15 +53,15 @@ export const ExpandFocus: React.FC<ExpandFocusProps> = ({
 
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isExpanded) {
-        onCollapse();
+        onCollapse()
       }
     };
 
     if (isExpanded) {
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener('keydown', handleEscape)
     }
 
-    return () => document.removeEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape)
   }, [isExpanded, closeOnEscape, onCollapse]);
 
   // Animation variants based on expand direction
@@ -149,7 +149,7 @@ export const ExpandFocus: React.FC<ExpandFocusProps> = ({
             borderRadius: '16px',
             transition: baseTransition
           }
-        };
+        }
     }
   };
 
@@ -177,7 +177,7 @@ export const ExpandFocus: React.FC<ExpandFocusProps> = ({
             width: triggerRect.width,
             height: triggerRect.height
           } : {})
-        }}
+          }}
         layoutId="expand-focus-trigger"
       >
         {children}
@@ -212,21 +212,21 @@ export const ExpandFocus: React.FC<ExpandFocusProps> = ({
               opacity: 0, 
               scale: 0.9,
               y: 20
-            }}
+          }}
             animate={{ 
               opacity: 1, 
               scale: 1,
               y: 0
-            }}
+          }}
             exit={{ 
               opacity: 0, 
               scale: 0.95,
               y: 10
-            }}
+          }}
             transition={{
               duration: animationDuration,
               ease: [0.23, 1, 0.32, 1]
-            }}
+          }}
             layoutId="expand-focus-content"
           >
             {/* Close Button */}
@@ -245,7 +245,7 @@ export const ExpandFocus: React.FC<ExpandFocusProps> = ({
         )}
       </AnimatePresence>
     </>
-  );
+  )
 };
 
 // Convenience hook for managing expand-focus state
@@ -261,7 +261,7 @@ export const useExpandFocus = (initialExpanded = false) => {
     expand,
     collapse,
     toggle
-  };
+  }
 };
 
 export default ExpandFocus;

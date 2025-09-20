@@ -2,7 +2,7 @@
 
 import React, { useState, createContext, useContext } from 'react';
 import { cn } from '../../lib/utils';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { Check, Mail, ArrowLeft, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 // =============================================================================
@@ -23,7 +23,7 @@ export interface AuthState {
   email: string;
   loading: boolean;
   error: string | null;
-  isNewUser: boolean;
+  isNewUser: boolean
 }
 
 export interface AuthContextType {
@@ -37,7 +37,7 @@ export interface AuthContextType {
   handleSignIn: (email: string, password?: string) => Promise<void>;
   handleSignUp: (email: string, password: string, name: string) => Promise<void>;
   handleMagicLink: (email: string) => Promise<void>;
-  handleForgotPassword: (email: string) => Promise<void>;
+  handleForgotPassword: (email: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -45,9 +45,9 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error('useAuth must be used within AuthProvider')
   }
-  return context;
+  return context
 }
 
 // =============================================================================
@@ -92,7 +92,7 @@ export function AuthProvider({
       'onboarding': 'welcome',
     };
     setStep(stepFlow[state.step]);
-    setError(null);
+    setError(null)
   };
 
   // Mock authentication functions for Storybook
@@ -109,7 +109,7 @@ export function AuthProvider({
         const isNewUser = email.includes('new');
         
         if (isNewUser) {
-          setStep('onboarding');
+          setStep('onboarding')
         }
         
         onAuthSuccess?.({
@@ -117,15 +117,15 @@ export function AuthProvider({
           email,
           name: email.split('@')[0],
           isNewUser
-        });
+        })
       } else {
         // Real implementation would go here
-        console.log('Real sign in:', { email, password });
+        console.log('Real sign in:', { email, password })
       }
     } catch (error) {
-      setError('Sign in failed. Please try again.');
+      setError('Sign in failed. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -136,15 +136,15 @@ export function AuthProvider({
     try {
       if (mockMode) {
         await new Promise(resolve => setTimeout(resolve, 1500));
-        setStep('verify-email');
+        setStep('verify-email')
       } else {
         // Real implementation would go here
-        console.log('Real sign up:', { email, password, name });
+        console.log('Real sign up:', { email, password, name })
       }
     } catch (error) {
-      setError('Sign up failed. Please try again.');
+      setError('Sign up failed. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -155,15 +155,15 @@ export function AuthProvider({
     try {
       if (mockMode) {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        setStep('magic-link-sent');
+        setStep('magic-link-sent')
       } else {
         // Real implementation would go here
-        console.log('Send magic link:', { email });
+        console.log('Send magic link:', { email })
       }
     } catch (error) {
-      setError('Failed to send magic link. Please try again.');
+      setError('Failed to send magic link. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -174,15 +174,15 @@ export function AuthProvider({
     try {
       if (mockMode) {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        setStep('magic-link-sent');
+        setStep('magic-link-sent')
       } else {
         // Real implementation would go here
-        console.log('Reset password:', { email });
+        console.log('Reset password:', { email })
       }
     } catch (error) {
-      setError('Failed to send reset email. Please try again.');
+      setError('Failed to send reset email. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -204,7 +204,7 @@ export function AuthProvider({
     <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
-  );
+  )
 }
 
 // =============================================================================
@@ -215,7 +215,7 @@ interface HiveAuthFlowProps {
   className?: string;
   onAuthSuccess?: (user: { id: string; email: string; name: string; isNewUser: boolean }) => void;
   initialStep?: AuthStep;
-  mockMode?: boolean;
+  mockMode?: boolean
 }
 
 export function HiveAuthFlow({ 
@@ -240,7 +240,7 @@ export function HiveAuthFlow({
         </div>
       </div>
     </AuthProvider>
-  );
+  )
 }
 
 // =============================================================================
@@ -266,7 +266,7 @@ function AuthStepRenderer() {
     case 'onboarding':
       return <OnboardingRedirectStep />;
     default:
-      return <WelcomeStep />;
+      return <WelcomeStep />
   }
 }
 
@@ -322,7 +322,7 @@ function WelcomeStep() {
         Join thousands of student builders transforming campus life
       </p>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -339,17 +339,17 @@ function SignInStep() {
     e.preventDefault();
     if (!email.trim()) {
       setError('Email is required');
-      return;
+      return
     }
 
     if (usePassword) {
       if (!password.trim()) {
         setError('Password is required');
-        return;
+        return
       }
-      await handleSignIn(email, password);
+      await handleSignIn(email, password)
     } else {
-      await handleMagicLink(email);
+      await handleMagicLink(email)
     }
   };
 
@@ -459,7 +459,7 @@ function SignInStep() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -481,30 +481,30 @@ function SignUpStep() {
     // Validation
     if (!formData.name.trim()) {
       setError('Name is required');
-      return;
+      return
     }
     if (!formData.email.trim()) {
       setError('Email is required');
-      return;
+      return
     }
     if (!formData.password) {
       setError('Password is required');
-      return;
+      return
     }
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
-      return;
+      return
     }
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters');
-      return;
+      return
     }
 
-    await handleSignUp(formData.email, formData.password, formData.name);
+    await handleSignUp(formData.email, formData.password, formData.name)
   };
 
   const updateFormData = (field: keyof typeof formData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ ...prev, [field]: value }))
   };
 
   return (
@@ -617,7 +617,7 @@ function SignUpStep() {
         </button>
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -632,9 +632,9 @@ function ForgotPasswordStep() {
     e.preventDefault();
     if (!email.trim()) {
       setError('Email is required');
-      return;
+      return
     }
-    await handleForgotPassword(email);
+    await handleForgotPassword(email)
   };
 
   return (
@@ -689,7 +689,7 @@ function ForgotPasswordStep() {
         </Button>
       </form>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -731,7 +731,7 @@ function VerifyEmailStep() {
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 function MagicLinkSentStep() {
@@ -769,7 +769,7 @@ function MagicLinkSentStep() {
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 function OnboardingRedirectStep() {
@@ -796,5 +796,5 @@ function OnboardingRedirectStep() {
         </div>
       </div>
     </div>
-  );
+  )
 }

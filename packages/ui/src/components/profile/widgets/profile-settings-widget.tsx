@@ -19,7 +19,7 @@ interface ProfileSettingsWidgetProps {
   onPrivacyClick?: () => void;
   onNotificationsClick?: () => void;
   onThemeClick?: () => void;
-  onAccountClick?: () => void;
+  onAccountClick?: () => void
 }
 
 export const ProfileSettingsWidget: React.FC<ProfileSettingsWidgetProps> = ({
@@ -69,7 +69,7 @@ export const ProfileSettingsWidget: React.FC<ProfileSettingsWidgetProps> = ({
       case 'green': return 'bg-green-500/10 text-green-400 border-green-500/20';
       case 'yellow': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
       case 'purple': return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-      default: return 'bg-hive-brand-secondary/10 text-hive-brand-secondary border-hive-brand-secondary/20';
+      default: return 'bg-hive-brand-secondary/10 text-hive-brand-secondary border-hive-brand-secondary/20'
     }
   };
 
@@ -115,8 +115,8 @@ export const ProfileSettingsWidget: React.FC<ProfileSettingsWidgetProps> = ({
                 </div>
               </div>
             </motion.button>
-          );
-        })}
+          )
+          })}
       </div>
 
       {/* Quick Settings */}
@@ -164,7 +164,7 @@ export const ProfileSettingsWidget: React.FC<ProfileSettingsWidgetProps> = ({
         </p>
       </div>
     </div>
-  );
+  )
 };
 
 export default ProfileSettingsWidget;

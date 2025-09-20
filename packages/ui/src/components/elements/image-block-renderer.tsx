@@ -30,8 +30,8 @@ interface ImageBlockRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 export const ImageBlockRenderer: React.FC<ImageBlockRendererProps> = ({
@@ -50,7 +50,7 @@ export const ImageBlockRenderer: React.FC<ImageBlockRendererProps> = ({
     setImageLoaded(true);
     setImageError(false);
     if (onStateChange) {
-      onStateChange({ loaded: true, error: false });
+      onStateChange({ loaded: true, error: false })
     }
   };
 
@@ -58,7 +58,7 @@ export const ImageBlockRenderer: React.FC<ImageBlockRendererProps> = ({
     setImageLoaded(false);
     setImageError(true);
     if (onStateChange) {
-      onStateChange({ loaded: false, error: true });
+      onStateChange({ loaded: false, error: true })
     }
   };
 
@@ -110,5 +110,5 @@ export const ImageBlockRenderer: React.FC<ImageBlockRendererProps> = ({
         </p>
       )}
     </div>
-  );
+  )
 };

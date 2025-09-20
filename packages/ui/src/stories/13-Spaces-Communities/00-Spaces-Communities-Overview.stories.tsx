@@ -286,7 +286,7 @@ const SpacesCommunitiesOverview = () => {
         </CardContent>
       </Card>
     </Container>
-  );
+  )
 };
 
 const meta: Meta<typeof SpacesCommunitiesOverview> = {

@@ -12,7 +12,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   rightIcon?: React.ReactNode;
   variant?: 'default' | 'ghost' | 'filled';
   inputSize?: 'sm' | 'md' | 'lg';
-  fullWidth?: boolean;
+  fullWidth?: boolean
 }
 
 const inputVariants = {
@@ -147,7 +147,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
         </p>
       )}
     </div>
-  );
+  )
 });
 
 Input.displayName = 'Input';

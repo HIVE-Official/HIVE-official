@@ -324,7 +324,7 @@ export const CompleteShowcase: Story = {
                             id: 'sarah-123',
                             name: 'Sarah Chen',
                             handle: 'schen_cs',
-                          }}
+          }}
                           currentPath="/feed"
                           collapsed={false}
                           onItemClick={action('morning-workflow')}
@@ -349,7 +349,7 @@ export const CompleteShowcase: Story = {
                             id: 'sarah-123',
                             name: 'Sarah Chen',
                             handle: 'schen_cs',
-                          }}
+          }}
                           currentPath="/spaces/browse"
                           collapsed={false}
                           onItemClick={action('study-workflow')}
@@ -389,7 +389,7 @@ export const CompleteShowcase: Story = {
                           id: 'alex-456',
                           name: 'Alex Rodriguez',
                           handle: 'arodriguez_cs',
-                        }}
+          }}
                         currentPath="/tools"
                         collapsed={false}
                         onItemClick={action('cs-student-nav')}
@@ -410,7 +410,7 @@ export const CompleteShowcase: Story = {
                           id: 'maria-789',
                           name: 'Maria Johnson',
                           handle: 'mjohnson_ra',
-                        }}
+          }}
                         currentPath="/events"
                         collapsed={false}
                         onItemClick={action('ra-nav')}
@@ -431,7 +431,7 @@ export const CompleteShowcase: Story = {
                           id: 'jordan-012',
                           name: 'Jordan Kim',
                           handle: 'jkim_president',
-                        }}
+          }}
                         currentPath="/spaces"
                         collapsed={false}
                         onItemClick={action('president-nav')}

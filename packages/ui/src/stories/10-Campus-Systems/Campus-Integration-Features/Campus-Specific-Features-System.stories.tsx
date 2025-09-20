@@ -203,7 +203,7 @@ const CampusDirectory = () => {
       case 'quiet': return 'text-green-400';
       case 'moderate': return 'text-yellow-400';
       case 'busy': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -356,7 +356,7 @@ const CampusDirectory = () => {
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Weather Widget Component
@@ -366,7 +366,7 @@ const BuffaloWeatherWidget = () => {
       case 'sunny': return <Sun className="h-6 w-6 text-yellow-400" />;
       case 'partly-cloudy': return <Sun className="h-6 w-6 text-yellow-300" />;
       case 'rainy': return <CloudRain className="h-6 w-6 text-blue-400" />;
-      default: return <Sun className="h-6 w-6 text-gray-400" />;
+      default: return <Sun className="h-6 w-6 text-gray-400" />
     }
   };
 
@@ -424,7 +424,7 @@ const BuffaloWeatherWidget = () => {
         )}
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Campus Events Component
@@ -435,7 +435,7 @@ const CampusEvents = () => {
       month: date.toLocaleDateString('en-US', { month: 'short' }),
       day: date.getDate(),
       time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-    };
+    }
   };
 
   return (
@@ -509,8 +509,8 @@ const CampusEvents = () => {
                 </div>
               </div>
             </div>
-          );
-        })}
+          )
+        })
         
         <Button variant="outline" className="w-full border-gray-700 text-gray-300">
           View All Campus Events
@@ -518,7 +518,7 @@ const CampusEvents = () => {
         </Button>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Dining & Local Component
@@ -529,7 +529,7 @@ const DiningAndLocal = () => {
         key={i}
         className={`h-3 w-3 ${i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-600'}`}
       />
-    ));
+    ))
   };
 
   const getPriceColor = (range: string) => {
@@ -537,7 +537,7 @@ const DiningAndLocal = () => {
       case '$': return 'text-green-400';
       case '$$': return 'text-yellow-400';
       case '$$$': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -623,7 +623,7 @@ const DiningAndLocal = () => {
         </Button>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Transportation Component
@@ -645,14 +645,14 @@ const CampusTransportation = () => {
       case 'On Time': return 'text-green-400';
       case 'Delayed': return 'text-yellow-400';
       case 'Offline': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
   const getAvailabilityColor = (percentage: number) => {
     if (percentage > 50) return 'text-green-400';
     if (percentage > 20) return 'text-yellow-400';
-    return 'text-red-400';
+    return 'text-red-400'
   };
 
   return (
@@ -730,8 +730,8 @@ const CampusTransportation = () => {
                   ></div>
                 </div>
               </div>
-            );
-          })}
+            )
+          })
           <Button variant="outline" className="w-full border-gray-700 text-gray-300">
             <MapPin className="mr-2 h-4 w-4" />
             View Parking Map
@@ -739,7 +739,7 @@ const CampusTransportation = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // Quick Actions Component
@@ -766,7 +766,7 @@ const CampusQuickActions = () => {
       yellow: 'bg-yellow-600 hover:bg-yellow-700 text-black',
       indigo: 'bg-indigo-600 hover:bg-indigo-700 text-white'
     };
-    return colors[color] || 'bg-gray-600 hover:bg-gray-700 text-white';
+    return colors[color] || 'bg-gray-600 hover:bg-gray-700 text-white'
   };
 
   return (
@@ -796,7 +796,7 @@ const CampusQuickActions = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Main Campus Features Dashboard
@@ -877,7 +877,7 @@ const CampusFeaturesDashboard = () => {
         </Tabs>
       </div>
     </div>
-  );
+  )
 };
 
 // Story Exports

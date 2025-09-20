@@ -122,14 +122,14 @@ export interface ActivityItem {
     id: string;
     name: string;
     avatar?: string;
-    handle?: string;
+    handle?: string
   };
   content: any;
   metadata?: {
     isHighlighted?: boolean;
     isPinned?: boolean;
-    [key: string]: any;
-  };
+    [key: string]: any
+  }
 }
 
 export interface HiveActivitySurfaceProps
@@ -148,7 +148,7 @@ export interface HiveActivitySurfaceProps
   refreshInterval?: number;
   // New props for real data fetching
   autoFetch?: boolean;
-  authToken?: string;
+  authToken?: string
 }
 
 // Helper function to get auth token from session storage
@@ -161,12 +161,12 @@ const getAuthToken = (): string | null => {
       const session = JSON.parse(sessionJson);
       return process.env.NODE_ENV === 'development' 
         ? `dev_token_${session.uid}` 
-        : session.token;
+        : session.token
     }
   } catch (error) {
-    console.error('Error getting session:', error);
+    console.error('Error getting session:', error)
   }
-  return null;
+  return null
 };
 
 // API function to fetch activity feed
@@ -174,11 +174,11 @@ const fetchActivityFeed = async (spaceId: string, limit = 20, types?: string[]):
   activities: ActivityItem[];
   total: number;
   hasMore: boolean;
-  summary: any;
+  summary: any
 }> => {
   const token = getAuthToken();
   if (!token) {
-    throw new Error('No authentication token available');
+    throw new Error('No authentication token available')
   }
 
   const params = new URLSearchParams({
@@ -186,7 +186,7 @@ const fetchActivityFeed = async (spaceId: string, limit = 20, types?: string[]):
   });
   
   if (types && types.length > 0) {
-    params.append('types', types.join(','));
+    params.append('types', types.join(','))
   }
 
   const response = await fetch(`/api/spaces/${spaceId}/feed?${params}`, {
@@ -197,7 +197,7 @@ const fetchActivityFeed = async (spaceId: string, limit = 20, types?: string[]):
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch activity feed: ${response.statusText}`);
+    throw new Error(`Failed to fetch activity feed: ${response.statusText}`)
   }
 
   const data = await response.json();
@@ -206,7 +206,7 @@ const fetchActivityFeed = async (spaceId: string, limit = 20, types?: string[]):
     total: data.total || 0,
     hasMore: data.hasMore || false,
     summary: data.summary || {}
-  };
+  }
 };
 
 export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivitySurfaceProps>(
@@ -248,16 +248,16 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
           const { activities, summary } = await fetchActivityFeed(space.id, maxActivities, selectedTypes);
           setFetchedActivities(activities);
           setActivitySummary(summary);
-          setLastRefresh(new Date());
+          setLastRefresh(new Date())
         } catch (error) {
           console.error('Failed to fetch activities:', error);
-          setError(error instanceof Error ? error.message : 'Failed to fetch activities');
+          setError(error instanceof Error ? error.message : 'Failed to fetch activities')
         } finally {
-          setIsLoading(false);
+          setIsLoading(false)
         }
       };
 
-      loadActivities();
+      loadActivities()
     }, [autoFetch, space?.id, maxActivities, selectedTypes]);
     
     // Auto-refresh functionality
@@ -269,13 +269,13 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
           const { activities, summary } = await fetchActivityFeed(space.id, maxActivities, selectedTypes);
           setFetchedActivities(activities);
           setActivitySummary(summary);
-          setLastRefresh(new Date());
+          setLastRefresh(new Date())
         } catch (error) {
-          console.error('Auto-refresh failed:', error);
+          console.error('Auto-refresh failed:', error)
         }
       }, refreshInterval);
       
-      return () => clearInterval(interval);
+      return () => clearInterval(interval)
     }, [autoRefresh, autoFetch, space?.id, maxActivities, selectedTypes, refreshInterval]);
     
     // Use either provided activities or fetched activities
@@ -287,7 +287,7 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
         : [...selectedTypes, type];
       
       setSelectedTypes(newTypes);
-      onFilterActivities?.(newTypes);
+      onFilterActivities?.(newTypes)
     }, [selectedTypes, onFilterActivities]);
     
     const handleRefresh = useCallback(async () => {
@@ -298,12 +298,12 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
         const { activities, summary } = await fetchActivityFeed(space.id, maxActivities, selectedTypes);
         setFetchedActivities(activities);
         setActivitySummary(summary);
-        setLastRefresh(new Date());
+        setLastRefresh(new Date())
       } catch (error) {
         console.error('Manual refresh failed:', error);
-        setError(error instanceof Error ? error.message : 'Failed to refresh activities');
+        setError(error instanceof Error ? error.message : 'Failed to refresh activities')
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
     }, [space?.id, maxActivities, selectedTypes]);
     
@@ -317,7 +317,7 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
       if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
       if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
       if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-      return activityTime.toLocaleDateString();
+      return activityTime.toLocaleDateString()
     }, []);
     
     // Render activity content based on type
@@ -425,7 +425,7 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
             <p className="text-sm text-gray-400">
               {typeConfig.description}
             </p>
-          );
+          )
       }
     }, []);
     
@@ -454,7 +454,7 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
             ))}
           </div>
         </div>
-      );
+      )
     }
 
     // Error state
@@ -495,7 +495,7 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
             </motion.button>
           </motion.div>
         </div>
-      );
+      )
     }
     
     // Empty state
@@ -526,7 +526,7 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
             </p>
           </motion.div>
         </div>
-      );
+      )
     }
     
     return (
@@ -606,8 +606,8 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
                     </span>
                   )}
                 </motion.button>
-              );
-            })}
+              )
+          })}
           </div>
         )}
         
@@ -713,8 +713,8 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
                   )}
                 </AnimatePresence>
               </motion.article>
-            );
-          })}
+            )
+          })
         </div>
         
         {/* Builder Hint */}
@@ -737,7 +737,7 @@ export const HiveActivitySurface = React.forwardRef<HTMLDivElement, HiveActivity
           </motion.div>
         )}
       </div>
-    );
+    )
   }
 );
 

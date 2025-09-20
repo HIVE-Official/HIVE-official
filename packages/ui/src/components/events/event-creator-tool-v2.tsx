@@ -28,7 +28,7 @@ interface EventCreatorToolProps {
   spaceId: string;
   onEventCreated?: (event: EventDefinition) => void;
   onCancel?: () => void;
-  initialEvent?: Partial<EventDefinition>;
+  initialEvent?: Partial<EventDefinition>
 }
 
 const EVENT_CATEGORIES = [
@@ -108,7 +108,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
     setEventData(prev => ({ ...prev, [field]: value }));
     // Clear errors when user makes changes
     if (errors.length > 0) {
-      setErrors([]);
+      setErrors([])
     }
   }, [errors.length]);
 
@@ -117,7 +117,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
     setErrors(validationErrors);
     
     if (validationErrors.length === 0) {
-      setCurrentStep(nextStep);
+      setCurrentStep(nextStep)
     }
   };
 
@@ -125,7 +125,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
     const validationErrors = validateEventDefinition(eventData);
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
-      return;
+      return
     }
 
     setIsLoading(true);
@@ -157,12 +157,12 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
 
       // TODO: API call to save event
       console.log('Saving event:', newEvent);
-      onEventCreated?.(newEvent);
+      onEventCreated?.(newEvent)
     } catch (error) {
       console.error('Error saving event:', error);
-      setErrors(['Failed to save event. Please try again.']);
+      setErrors(['Failed to save event. Please try again.'])
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   };
 
@@ -358,7 +358,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
           capacity: eventData.capacity,
           rsvpCount: 0,
           status: eventData.status,
-        }}
+          }}
         showActions={false}
       />
 
@@ -398,7 +398,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
             if (step.id === 'datetime') return acc + 4;
             if (step.id === 'settings') return acc + 5;
             if (step.id === 'preview') return acc + 1;
-            return acc;
+            return acc
           }, 0)} reusable elements</span> from the HIVE Event System
         </p>
       </div>
@@ -436,8 +436,8 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
                   )} />
                 )}
               </React.Fragment>
-            );
-          })}
+            )
+          })
         </div>
       </div>
 
@@ -529,7 +529,7 @@ export function EventCreatorToolV2({ spaceId, onEventCreated, onCancel, initialE
         </p>
       </div>
     </div>
-  );
+  )
 }
 
 export default EventCreatorToolV2;

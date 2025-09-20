@@ -9,7 +9,22 @@
  */
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+// Optional Next.js navigation - only works when Next.js is available
+let usePathname: () => string;
+let useRouter: () => { push: (path: string) => Promise<boolean>, back: () => void };
+
+try {
+  const nextNavigation = require('next/navigation');
+  usePathname = nextNavigation.usePathname;
+  useRouter = nextNavigation.useRouter;
+} catch {
+  // Fallback when Next.js is not available
+  usePathname = () => '/';
+  useRouter = () => ({
+    push: async () => false,
+    back: () => {}
+  });
+}
 import { 
   NavigationState, 
   NavigationLayout, 

@@ -115,21 +115,21 @@ interface AccessibilitySettings {
     reduceMotion: boolean;
     colorBlindMode: 'none' | 'deuteranopia' | 'protanopia' | 'tritanopia';
     darkMode: boolean;
-    focusIndicator: 'default' | 'enhanced' | 'high-contrast';
+    focusIndicator: 'default' | 'enhanced' | 'high-contrast'
   };
   motor: {
     largeClickTargets: boolean;
     stickyKeys: boolean;
     dwellClick: boolean;
     dwellTime: number;
-    gestureAlternatives: boolean;
+    gestureAlternatives: boolean
   };
   auditory: {
     soundEnabled: boolean;
     captionsEnabled: boolean;
     audioDescriptions: boolean;
     soundVolume: number;
-    visualIndicators: boolean;
+    visualIndicators: boolean
   };
   cognitive: {
     simplifiedInterface: boolean;
@@ -137,15 +137,15 @@ interface AccessibilitySettings {
     autoComplete: boolean;
     confirmActions: boolean;
     sessionTimeout: number;
-    helpText: boolean;
+    helpText: boolean
   };
   keyboard: {
     skipLinks: boolean;
     keyboardShortcuts: boolean;
     tabOrder: 'default' | 'logical' | 'custom';
     focusTrap: boolean;
-    escapeKey: boolean;
-  };
+    escapeKey: boolean
+  }
 }
 
 const useAccessibility = () => {
@@ -201,14 +201,14 @@ const useAccessibility = () => {
     }));
     
     // Screen reader announcement
-    announce(`${setting} changed to ${value}`);
+    announce(`${setting} changed to ${value}`)
   };
 
   const announce = (message: string) => {
     setAnnouncements(prev => [...prev, message]);
     setTimeout(() => {
-      setAnnouncements(prev => prev.slice(1));
-    }, 1000);
+      setAnnouncements(prev => prev.slice(1))
+    }, 1000)
   };
 
   return {
@@ -216,7 +216,7 @@ const useAccessibility = () => {
     updateSetting,
     announce,
     announcements
-  };
+  }
 };
 
 // Accessible Button Component with Enhanced Features
@@ -243,7 +243,7 @@ const AccessibleButton = ({
   shortcut?: string;
   icon?: any;
   loading?: boolean;
-  className?: string;
+  className?: string
 }) => {
   const { settings, announce } = useAccessibility();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -253,9 +253,9 @@ const AccessibleButton = ({
       // Provide audio feedback if enabled
       if (settings.auditory.soundEnabled) {
         // Simulate audio feedback
-        announce('Button activated');
+        announce('Button activated')
       }
-      onClick();
+      onClick()
     }
   };
 
@@ -263,13 +263,13 @@ const AccessibleButton = ({
     // Enhanced keyboard handling
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      handleClick();
+      handleClick()
     }
     
     // Custom shortcut handling
     if (shortcut && e.key === shortcut.toLowerCase() && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      handleClick();
+      handleClick()
     }
   };
 
@@ -311,7 +311,7 @@ const AccessibleButton = ({
         </div>
       )}
     </Button>
-  );
+  )
 };
 
 // Accessible Form Field with Comprehensive Labels
@@ -328,7 +328,7 @@ const AccessibleFormField = ({
   description?: string;
   error?: string;
   required?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }) => {
   const descriptionId = description ? `${id}-description` : undefined;
   const errorId = error ? `${id}-error` : undefined;
@@ -371,7 +371,7 @@ const AccessibleFormField = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Accessible Feed Post with Full Screen Reader Support
@@ -390,7 +390,7 @@ const AccessiblePost = ({
     shares: number;
     bookmarks: number;
     isLiked: boolean;
-    isBookmarked: boolean;
+    isBookmarked: boolean
   }
 }) => {
   const { settings, announce } = useAccessibility();
@@ -404,7 +404,7 @@ const AccessiblePost = ({
     
     // Simulate haptic feedback on mobile
     if ('vibrate' in navigator) {
-      navigator.vibrate(50);
+      navigator.vibrate(50)
     }
   };
 
@@ -412,20 +412,20 @@ const AccessiblePost = ({
     switch (e.key) {
       case 'l':
         if (!e.ctrlKey && !e.metaKey) {
-          handleInteraction('likes', post.isLiked);
+          handleInteraction('likes', post.isLiked)
         }
         break;
       case 'b':
         if (!e.ctrlKey && !e.metaKey) {
-          handleInteraction('bookmarks', post.isBookmarked);
+          handleInteraction('bookmarks', post.isBookmarked)
         }
         break;
       case 'Enter':
       case ' ':
         if (e.target === postRef.current) {
-          setIsExpanded(!isExpanded);
+          setIsExpanded(!isExpanded)
         }
-        break;
+        break
     }
   };
 
@@ -565,7 +565,7 @@ const AccessiblePost = ({
         )}
       </footer>
     </article>
-  );
+  )
 };
 
 // Accessibility Settings Panel
@@ -651,7 +651,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.visual.reduceMotion}
-                  onCheckedChange={(checked) => updateSetting('visual', 'reduceMotion', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('visual', 'reduceMotion', checked)}
                 />
               </div>
 
@@ -715,7 +715,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.motor.largeClickTargets}
-                  onCheckedChange={(checked) => updateSetting('motor', 'largeClickTargets', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('motor', 'largeClickTargets', checked)}
                 />
               </div>
 
@@ -726,7 +726,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.motor.gestureAlternatives}
-                  onCheckedChange={(checked) => updateSetting('motor', 'gestureAlternatives', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('motor', 'gestureAlternatives', checked)}
                 />
               </div>
 
@@ -737,7 +737,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.motor.dwellClick}
-                  onCheckedChange={(checked) => updateSetting('motor', 'dwellClick', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('motor', 'dwellClick', checked)}
                 />
               </div>
 
@@ -774,7 +774,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.auditory.soundEnabled}
-                  onCheckedChange={(checked) => updateSetting('auditory', 'soundEnabled', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('auditory', 'soundEnabled', checked)}
                 />
               </div>
 
@@ -799,7 +799,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.auditory.captionsEnabled}
-                  onCheckedChange={(checked) => updateSetting('auditory', 'captionsEnabled', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('auditory', 'captionsEnabled', checked)}
                 />
               </div>
 
@@ -810,7 +810,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.auditory.visualIndicators}
-                  onCheckedChange={(checked) => updateSetting('auditory', 'visualIndicators', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('auditory', 'visualIndicators', checked)}
                 />
               </div>
             </CardContent>
@@ -833,7 +833,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.simplifiedInterface}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'simplifiedInterface', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('cognitive', 'simplifiedInterface', checked)}
                 />
               </div>
 
@@ -844,7 +844,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.readingGuide}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'readingGuide', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('cognitive', 'readingGuide', checked)}
                 />
               </div>
 
@@ -855,7 +855,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.autoComplete}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'autoComplete', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('cognitive', 'autoComplete', checked)}
                 />
               </div>
 
@@ -866,7 +866,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.confirmActions}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'confirmActions', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('cognitive', 'confirmActions', checked)}
                 />
               </div>
 
@@ -877,7 +877,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.cognitive.helpText}
-                  onCheckedChange={(checked) => updateSetting('cognitive', 'helpText', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('cognitive', 'helpText', checked)}
                 />
               </div>
 
@@ -912,7 +912,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.keyboard.skipLinks}
-                  onCheckedChange={(checked) => updateSetting('keyboard', 'skipLinks', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('keyboard', 'skipLinks', checked)}
                 />
               </div>
 
@@ -923,7 +923,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.keyboard.keyboardShortcuts}
-                  onCheckedChange={(checked) => updateSetting('keyboard', 'keyboardShortcuts', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('keyboard', 'keyboardShortcuts', checked)}
                 />
               </div>
 
@@ -934,7 +934,7 @@ const AccessibilitySettingsPanel = () => {
                 </div>
                 <Switch
                   checked={settings.keyboard.focusTrap}
-                  onCheckedChange={(checked) => updateSetting('keyboard', 'focusTrap', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('keyboard', 'focusTrap', checked)}
                 />
               </div>
 
@@ -979,7 +979,7 @@ const AccessibilitySettingsPanel = () => {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 };
 
 // Live Announcements for Screen Readers
@@ -1209,10 +1209,10 @@ const AccessibilitySystem = () => {
       <div className="sr-only" tabIndex={0} onFocus={() => {
         // Return focus to first focusable element when tab cycles through
         const firstFocusable = document.querySelector('[tabindex="0"]:not(.sr-only)') as HTMLElement;
-        firstFocusable?.focus();
+        firstFocusable?.focus()
       }} />
     </div>
-  );
+  )
 };
 
 // Story Exports

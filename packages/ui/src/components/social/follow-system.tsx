@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { Avatar } from '../index';
 import { HiveBadge as Badge } from '../index';
 import { 
@@ -54,7 +54,7 @@ export interface FollowableUser {
   hasNotifications?: boolean;
   mutualFollowers?: FollowableUser[];
   commonSpaces?: string[];
-  lastActive?: string;
+  lastActive?: string
 }
 
 export interface FollowableSpace {
@@ -71,7 +71,7 @@ export interface FollowableSpace {
   visibility: 'public' | 'private' | 'invite_only';
   tags?: string[];
   recentActivity?: string;
-  createdAt: string;
+  createdAt: string
 }
 
 interface FollowSystemProps {
@@ -87,7 +87,7 @@ interface FollowSystemProps {
   onViewProfile?: (userId: string) => void;
   onViewSpace?: (spaceId: string) => void;
   isLoading?: boolean;
-  enableFeatureFlag?: boolean;
+  enableFeatureFlag?: boolean
 }
 
 interface FollowButtonProps {
@@ -98,7 +98,7 @@ interface FollowButtonProps {
   variant?: 'default' | 'compact';
   showNotificationToggle?: boolean;
   hasNotifications?: boolean;
-  onToggleNotifications?: () => Promise<void>;
+  onToggleNotifications?: () => Promise<void>
 }
 
 interface UserCardProps {
@@ -108,7 +108,7 @@ interface UserCardProps {
   onUnfollow: (userId: string) => Promise<void>;
   onToggleNotifications?: (userId: string) => Promise<void>;
   onViewProfile?: (userId: string) => void;
-  isLoading?: boolean;
+  isLoading?: boolean
 }
 
 interface SpaceCardProps {
@@ -117,7 +117,7 @@ interface SpaceCardProps {
   onUnfollow: (spaceId: string) => Promise<void>;
   onToggleNotifications?: (spaceId: string) => Promise<void>;
   onViewSpace?: (spaceId: string) => void;
-  isLoading?: boolean;
+  isLoading?: boolean
 }
 
 const FollowButton: React.FC<FollowButtonProps> = ({
@@ -138,12 +138,12 @@ const FollowButton: React.FC<FollowButtonProps> = ({
     setActionLoading(true);
     try {
       if (isFollowing) {
-        await onUnfollow();
+        await onUnfollow()
       } else {
-        await onFollow();
+        await onFollow()
       }
     } finally {
-      setActionLoading(false);
+      setActionLoading(false)
     }
   }, [isFollowing, onFollow, onUnfollow, actionLoading, isLoading]);
 
@@ -152,9 +152,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({
     
     setActionLoading(true);
     try {
-      await onToggleNotifications();
+      await onToggleNotifications()
     } finally {
-      setActionLoading(false);
+      setActionLoading(false)
     }
   }, [onToggleNotifications, actionLoading]);
 
@@ -192,7 +192,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
           </Button>
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -233,7 +233,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         </Button>
       )}
     </div>
-  );
+  )
 };
 
 const UserCard: React.FC<UserCardProps> = ({
@@ -249,7 +249,7 @@ const UserCard: React.FC<UserCardProps> = ({
 
   const formatCount = (count: number) => {
     if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
-    return count.toString();
+    return count.toString()
   };
 
   const formatLastActive = (timestamp?: string) => {
@@ -262,7 +262,7 @@ const UserCard: React.FC<UserCardProps> = ({
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
     if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
+    return date.toLocaleDateString()
   };
 
   const isOwnProfile = user.id === currentUserId;
@@ -339,8 +339,8 @@ const UserCard: React.FC<UserCardProps> = ({
                     <button
                       onClick={() => {
                         onViewProfile?.(user.id);
-                        setShowMenu(false);
-                      }}
+                        setShowMenu(false)
+          }}
                       className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                     >
                       <Eye className="w-3 h-3" />
@@ -349,8 +349,8 @@ const UserCard: React.FC<UserCardProps> = ({
                     <button
                       onClick={() => {
                         // Handle message action
-                        setShowMenu(false);
-                      }}
+                        setShowMenu(false)
+          }}
                       className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                     >
                       <MessageCircle className="w-3 h-3" />
@@ -360,8 +360,8 @@ const UserCard: React.FC<UserCardProps> = ({
                       onClick={() => {
                         // Handle share action
                         navigator.clipboard.writeText(`${window.location.origin}/profile/${user.handle}`);
-                        setShowMenu(false);
-                      }}
+                        setShowMenu(false)
+          })}
                       className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                     >
                       <Share className="w-3 h-3" />
@@ -437,7 +437,7 @@ const UserCard: React.FC<UserCardProps> = ({
         </div>
       )}
     </motion.div>
-  );
+  )
 };
 
 const SpaceCard: React.FC<SpaceCardProps> = ({
@@ -452,7 +452,7 @@ const SpaceCard: React.FC<SpaceCardProps> = ({
 
   const formatCount = (count: number) => {
     if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
-    return count.toString();
+    return count.toString()
   };
 
   const getTypeColor = (type: string) => {
@@ -462,7 +462,7 @@ const SpaceCard: React.FC<SpaceCardProps> = ({
       case 'professional': return 'bg-purple-500';
       case 'recreational': return 'bg-orange-500';
       case 'project': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      default: return 'bg-gray-500'
     }
   };
 
@@ -473,7 +473,7 @@ const SpaceCard: React.FC<SpaceCardProps> = ({
       case 'professional': return '💼';
       case 'recreational': return '🎮';
       case 'project': return '🛠️';
-      default: return '📁';
+      default: return '📁'
     }
   };
 
@@ -555,8 +555,8 @@ const SpaceCard: React.FC<SpaceCardProps> = ({
                   <button
                     onClick={() => {
                       onViewSpace?.(space.id);
-                      setShowMenu(false);
-                    }}
+                      setShowMenu(false)
+          }}
                     className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                   >
                     <Eye className="w-3 h-3" />
@@ -566,8 +566,8 @@ const SpaceCard: React.FC<SpaceCardProps> = ({
                     onClick={() => {
                       // Handle share action
                       navigator.clipboard.writeText(`${window.location.origin}/spaces/${space.id}`);
-                      setShowMenu(false);
-                    }}
+                      setShowMenu(false)
+          })}
                     className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                   >
                     <Share className="w-3 h-3" />
@@ -623,7 +623,7 @@ const SpaceCard: React.FC<SpaceCardProps> = ({
         </div>
       )}
     </motion.div>
-  );
+  )
 };
 
 export const FollowSystem: React.FC<FollowSystemProps> = ({
@@ -660,7 +660,7 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
         user.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.school?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.major?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      )
     }
 
     // Apply filter
@@ -670,7 +670,7 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
       case 'suggested':
         return filtered.filter(user => !user.isFollowing && user.mutualFollowers && user.mutualFollowers.length > 0);
       default:
-        return filtered;
+        return filtered
     }
   }, [users, searchQuery, filter]);
 
@@ -684,7 +684,7 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
         space.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         space.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
         space.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+      )
     }
 
     // Apply filter
@@ -694,7 +694,7 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
       case 'suggested':
         return filtered.filter(space => !space.isFollowing && space.visibility === 'public');
       default:
-        return filtered;
+        return filtered
     }
   }, [spaces, searchQuery, filter]);
 
@@ -703,13 +703,13 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
       switch (filter) {
         case 'following': return users.filter(u => u.isFollowing).length;
         case 'suggested': return users.filter(u => !u.isFollowing && u.mutualFollowers && u.mutualFollowers.length > 0).length;
-        default: return users.length;
+        default: return users.length
       }
     } else {
       switch (filter) {
         case 'following': return spaces.filter(s => s.isFollowing).length;
         case 'suggested': return spaces.filter(s => !s.isFollowing && s.visibility === 'public').length;
-        default: return spaces.length;
+        default: return spaces.length
       }
     }
   };
@@ -762,7 +762,7 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
                 { key: 'all', label: 'All' },
                 { key: 'following', label: 'Following' },
                 { key: 'suggested', label: 'Suggested' }
-              ].map(({ key, label }) => (
+              ].map(({ key, label })} => (
                 <Button
                   key={key}
                   variant={filter === key ? 'default' : 'outline'}
@@ -873,5 +873,5 @@ export const FollowSystem: React.FC<FollowSystemProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };

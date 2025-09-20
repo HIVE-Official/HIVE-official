@@ -37,7 +37,7 @@ describe('CampusSpacesCard', () => {
     expect(screen.getByText('3 spaces joined')).toBeInTheDocument();
     expect(screen.getByText('CS 101: Intro to Programming')).toBeInTheDocument();
     expect(screen.getByText('West Campus Residents')).toBeInTheDocument();
-    expect(screen.getByText('Robotics Club')).toBeInTheDocument();
+    expect(screen.getByText('Robotics Club')).toBeInTheDocument()
   });
 
   it('displays member counts correctly', () => {
@@ -45,14 +45,14 @@ describe('CampusSpacesCard', () => {
     
     expect(screen.getByText('847 members')).toBeInTheDocument();
     expect(screen.getByText('234 members')).toBeInTheDocument();
-    expect(screen.getByText('156 members')).toBeInTheDocument();
+    expect(screen.getByText('156 members')).toBeInTheDocument()
   });
 
   it('shows unread counts when present', () => {
     render(<CampusSpacesCard spaces={mockSpaces} />);
     
     expect(screen.getByText('3')).toBeInTheDocument();
-    expect(screen.getByText('12')).toBeInTheDocument();
+    expect(screen.getByText('12')).toBeInTheDocument()
   });
 
   it('formats member counts for large numbers', () => {
@@ -62,7 +62,7 @@ describe('CampusSpacesCard', () => {
     }];
     
     render(<CampusSpacesCard spaces={spacesWithLargeCount} />);
-    expect(screen.getByText('1.5k members')).toBeInTheDocument();
+    expect(screen.getByText('1.5k members')).toBeInTheDocument()
   });
 
   it('calls onSpaceClick when space is clicked', () => {
@@ -70,7 +70,7 @@ describe('CampusSpacesCard', () => {
     render(<CampusSpacesCard spaces={mockSpaces} onSpaceClick={onSpaceClick} />);
     
     fireEvent.click(screen.getByText('CS 101: Intro to Programming'));
-    expect(onSpaceClick).toHaveBeenCalledWith('1');
+    expect(onSpaceClick).toHaveBeenCalledWith('1')
   });
 
   it('calls onJoinSpace when join button is clicked', () => {
@@ -78,7 +78,7 @@ describe('CampusSpacesCard', () => {
     render(<CampusSpacesCard spaces={mockSpaces} onJoinSpace={onJoinSpace} />);
     
     fireEvent.click(screen.getByText('Join New Space'));
-    expect(onJoinSpace).toHaveBeenCalled();
+    expect(onJoinSpace).toHaveBeenCalled()
   });
 
   it('calls onViewAll when view all is clicked', () => {
@@ -86,7 +86,7 @@ describe('CampusSpacesCard', () => {
     render(<CampusSpacesCard spaces={mockSpaces} onViewAll={onViewAll} />);
     
     fireEvent.click(screen.getByText('View All'));
-    expect(onViewAll).toHaveBeenCalled();
+    expect(onViewAll).toHaveBeenCalled()
   });
 
   it('renders loading state correctly', () => {
@@ -94,14 +94,14 @@ describe('CampusSpacesCard', () => {
     
     // Should show loading skeleton
     const loadingElements = document.querySelectorAll('.animate-pulse');
-    expect(loadingElements.length).toBeGreaterThan(0);
+    expect(loadingElements.length).toBeGreaterThan(0)
   });
 
   it('renders empty state correctly', () => {
     render(<CampusSpacesCard spaces={[]} />);
     
     expect(screen.getByText('No Spaces Yet')).toBeInTheDocument();
-    expect(screen.getByText('Join campus spaces to connect with your community')).toBeInTheDocument();
+    expect(screen.getByText('Join campus spaces to connect with your community')).toBeInTheDocument()
   });
 
   it('limits displayed spaces to 6 and shows more indicator', () => {
@@ -115,14 +115,14 @@ describe('CampusSpacesCard', () => {
     render(<CampusSpacesCard spaces={manySpaces} onViewAll={onViewAll} />);
     
     // Should show "more spaces" indicator
-    expect(screen.getByText('+4 more spaces')).toBeInTheDocument();
+    expect(screen.getByText('+4 more spaces')).toBeInTheDocument()
   });
 
   it('hides quick actions when showQuickActions is false', () => {
     render(<CampusSpacesCard spaces={mockSpaces} showQuickActions={false} />);
     
     expect(screen.queryByText('View All')).not.toBeInTheDocument();
-    expect(screen.queryByText('Join New Space')).not.toBeInTheDocument();
+    expect(screen.queryByText('Join New Space')).not.toBeInTheDocument()
   });
 
   it('displays space type correctly', () => {
@@ -130,6 +130,6 @@ describe('CampusSpacesCard', () => {
     
     expect(screen.getByText('course')).toBeInTheDocument();
     expect(screen.getByText('housing')).toBeInTheDocument();
-    expect(screen.getByText('club')).toBeInTheDocument();
-  });
+    expect(screen.getByText('club')).toBeInTheDocument()
+  })
 });

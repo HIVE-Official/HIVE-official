@@ -388,7 +388,7 @@ const BadgeVariantsShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const CampusBadgeShowcase = () => {
@@ -403,7 +403,7 @@ const CampusBadgeShowcase = () => {
       indigo: 'from-indigo-500/20 to-indigo-600/10 border-indigo-500/20',
       red: 'from-red-500/20 to-red-600/10 border-red-500/20'
     };
-    return colors[color as keyof typeof colors] || colors.blue;
+    return colors[color as keyof typeof colors] || colors.blue
   };
 
   return (
@@ -466,7 +466,7 @@ const CampusBadgeShowcase = () => {
           ))}
       </div>
     </div>
-  );
+  )
 };
 
 const BadgeSizesShowcase = () => {
@@ -513,7 +513,7 @@ const BadgeSizesShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const CampusUsageShowcase = () => {
@@ -698,7 +698,7 @@ const CampusUsageShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const AccessibilityShowcase = () => {
@@ -821,7 +821,7 @@ const AccessibilityShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -940,7 +940,7 @@ const BadgeSystemShowcase = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

@@ -1,14 +1,14 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Switch } from '../../../components/ui/switch';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../../components/ui/dialog';
-import { Eye, EyeOff, Settings, Clock, Users, MapPin, Bell, Activity, Timer, UserX, Info, Moon, Zap } from 'lucide-react';
+import { Card, CardContent, CardHeader } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Switch } from '../../ui/switch';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../ui/dialog';
+import { Eye, EyeOff, Settings, Clock, Users, MapPin, Bell, Activity, Timer, UserX, Info, Moon, Zap, BookOpen } from 'lucide-react';
 // Ghost Mode Level Configuration
 const ghostModeConfig = {
     light: {
@@ -132,19 +132,19 @@ function GhostModeSettingsDialog({ settings, isOpen, onOpenChange, onSettingsCha
                                         return (_jsx("button", { className: cn('w-full p-3 rounded-lg border text-left transition-all', settings.level === level
                                                 ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-background-tertiary)]'
                                                 : 'border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]'), onClick: () => handleSettingChange('level', level), children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: cn('w-8 h-8 rounded-full flex items-center justify-center', config.color), children: _jsx(Icon, { className: "w-4 h-4 text-white" }) }), _jsxs("div", { children: [_jsx("div", { className: "font-medium text-[var(--hive-text-primary)]", children: config.label }), _jsx("div", { className: "text-sm text-[var(--hive-text-muted)]", children: config.description })] })] }) }, level));
-                                    }) })] }), _jsxs("div", { className: "space-y-3", children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: "What to Hide" }), _jsx("div", { className: "space-y-2", children: [
-                                        { key: 'hideOnlineStatus', label: 'Online Status', icon: Activity },
-                                        { key: 'hideActivity', label: 'Recent Activity', icon: Clock },
-                                        { key: 'hideLocation', label: 'Location Info', icon: MapPin },
-                                        { key: 'hideSpaces', label: 'Space Memberships', icon: Users },
-                                        { key: 'muteNotifications', label: 'Mute Notifications', icon: Bell }
-                                    ].map(({ key, label, icon: Icon }) => (_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Icon, { className: "w-4 h-4 text-[var(--hive-text-muted)]" }), _jsx("span", { className: "text-sm", children: label })] }), _jsx(Switch, { checked: settings[key], onCheckedChange: (checked) => handleSettingChange(key, checked) })] }, key))) })] }), _jsxs("div", { className: "space-y-3", children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: "Duration" }), _jsx("div", { className: "space-y-2", children: [
-                                        { key: 'temporary', label: '1 Hour', description: 'Auto-disable after 1 hour' },
-                                        { key: 'session', label: 'This Session', description: 'Until you log out' },
-                                        { key: 'indefinite', label: 'Until Disabled', description: 'Stays on until manually turned off' }
-                                    ].map(({ key, label, description }) => (_jsxs("button", { className: cn('w-full p-2 rounded-lg border text-left transition-all', settings.duration === key
-                                            ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-background-tertiary)]'
-                                            : 'border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]'), onClick: () => handleSettingChange('duration', key), children: [_jsx("div", { className: "font-medium text-sm text-[var(--hive-text-primary)]", children: label }), _jsx("div", { className: "text-xs text-[var(--hive-text-muted)]", children: description })] }, key))) })] }), _jsxs("div", { className: "space-y-3", children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: "Automation" }), _jsxs("div", { className: "space-y-2", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Timer, { className: "w-4 h-4 text-[var(--hive-text-muted)]" }), _jsxs("div", { children: [_jsx("span", { className: "text-sm", children: "Quiet Hours" }), _jsx("p", { className: "text-xs text-[var(--hive-text-muted)]", children: "10 PM - 8 AM" })] })] }), _jsx(Switch, { checked: settings.quietHours.enabled, onCheckedChange: (checked) => handleSettingChange('quietHours.enabled', checked) })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Zap, { className: "w-4 h-4 text-[var(--hive-text-muted)]" }), _jsx("span", { className: "text-sm", children: "Auto Ghost Mode" })] }), _jsx(Switch, { checked: settings.autoEnabled, onCheckedChange: (checked) => handleSettingChange('autoEnabled', checked) })] })] })] })] })] }) }));
+                                    }) })] }), _jsxs("div", { className: "space-y-3", children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: "What to Hide" }), _jsxs("div", { className: "space-y-2", children: [[
+                                            { key: 'hideOnlineStatus', label: 'Online Status', icon: Activity },
+                                            { key: 'hideActivity', label: 'Recent Activity', icon: Clock },
+                                            { key: 'hideLocation', label: 'Location Info', icon: MapPin },
+                                            { key: 'hideSpaces', label: 'Space Memberships', icon: Users },
+                                            { key: 'muteNotifications', label: 'Mute Notifications', icon: Bell }
+                                        ].map(({ key, label, icon: Icon })), " => (", _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Icon, { className: "w-4 h-4 text-[var(--hive-text-muted)]" }), _jsx("span", { className: "text-sm", children: label })] }), _jsx(Switch, { checked: settings[key], onChange: (e) => { const checked = e.target.checked; handleSettingChange(key, checked); } })] }, key), "))}"] })] }), _jsxs("div", { className: "space-y-3", children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: "Duration" }), _jsxs("div", { className: "space-y-2", children: [[
+                                            { key: 'temporary', label: '1 Hour', description: 'Auto-disable after 1 hour' },
+                                            { key: 'session', label: 'This Session', description: 'Until you log out' },
+                                            { key: 'indefinite', label: 'Until Disabled', description: 'Stays on until manually turned off' }
+                                        ].map(({ key, label, description })), " => (", _jsxs("button", { className: cn('w-full p-2 rounded-lg border text-left transition-all', settings.duration === key
+                                                ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-background-tertiary)]'
+                                                : 'border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]'), onClick: () => handleSettingChange('duration', key), children: [_jsx("div", { className: "font-medium text-sm text-[var(--hive-text-primary)]", children: label }), _jsx("div", { className: "text-xs text-[var(--hive-text-muted)]", children: description })] }, key), "))}"] })] }), _jsxs("div", { className: "space-y-3", children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: "Automation" }), _jsxs("div", { className: "space-y-2", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Timer, { className: "w-4 h-4 text-[var(--hive-text-muted)]" }), _jsxs("div", { children: [_jsx("span", { className: "text-sm", children: "Quiet Hours" }), _jsx("p", { className: "text-xs text-[var(--hive-text-muted)]", children: "10 PM - 8 AM" })] })] }), _jsx(Switch, { checked: settings.quietHours.enabled, onChange: (e) => { const checked = e.target.checked; handleSettingChange('quietHours.enabled', checked); } })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Zap, { className: "w-4 h-4 text-[var(--hive-text-muted)]" }), _jsx("span", { className: "text-sm", children: "Auto Ghost Mode" })] }), _jsx(Switch, { checked: settings.autoEnabled, onChange: (e) => { const checked = e.target.checked; handleSettingChange('autoEnabled', checked); } })] })] })] })] })] }) }));
 }
 // Main Ghost Mode Card Component
 export function GhostModeCard({ settings, isEditMode, onSettingsChange, onToggleGhostMode, onQuickPreset, onSettingsClick, className }) {

@@ -8,11 +8,11 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Tool, ElementInstance } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Checkbox } from '../../components/ui/checkbox';
+import { Button } from '../../atomic/atoms/button';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Label } from '../../atomic/atoms/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atomic/atoms/select-radix';
+import { Checkbox } from '../../atomic/atoms/checkbox';
 import { LiveToolRuntime } from '../live-tool-runtime';
 import { apiClient, ToolDeploymentConfig, apiUtils, Space } from '../../lib/api-client';
 import { 
@@ -40,7 +40,7 @@ interface ComponentToolDeploymentConfig {
   permissions: {
     view: ('all' | 'member' | 'moderator' | 'admin')[];
     use: ('all' | 'member' | 'moderator' | 'admin')[];
-    manage: ('admin' | 'moderator')[];
+    manage: ('admin' | 'moderator')[]
   };
   settings: {
     isActive: boolean;
@@ -48,14 +48,14 @@ interface ComponentToolDeploymentConfig {
     autoLaunch: boolean;
     maxConcurrentUsers?: number;
     allowAnonymous?: boolean;
-    trackUsage: boolean;
+    trackUsage: boolean
   };
   customization: {
     displayName?: string;
     description?: string;
     category: 'productivity' | 'collaboration' | 'communication' | 'organization' | 'engagement' | 'academic';
-    icon?: string;
-  };
+    icon?: string
+  }
 }
 
 interface SpaceToolDeploymentProps {
@@ -63,7 +63,7 @@ interface SpaceToolDeploymentProps {
   availableSpaces?: Space[]; // Made optional, will be fetched if not provided
   onDeploy: (config: ComponentToolDeploymentConfig) => Promise<void>;
   onCancel: () => void;
-  isDeploying?: boolean;
+  isDeploying?: boolean
 }
 
 export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
@@ -103,7 +103,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
   // Fetch available spaces if not provided
   useEffect(() => {
     if (!propAvailableSpaces) {
-      fetchAvailableSpaces();
+      fetchAvailableSpaces()
     }
   }, [propAvailableSpaces]);
 
@@ -120,18 +120,18 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
         space.userRole === 'admin' || space.userRole === 'moderator'
       );
       
-      setAvailableSpaces(deployableSpaces);
+      setAvailableSpaces(deployableSpaces)
     } catch (error: any) {
-      setSpacesError(apiUtils.handleApiError(error));
+      setSpacesError(apiUtils.handleApiError(error))
     } finally {
-      setLoadingSpaces(false);
+      setLoadingSpaces(false)
     }
   };
 
   // Update config when space is selected
   const handleSpaceSelect = useCallback((spaceId: string) => {
     setSelectedSpaceId(spaceId);
-    setDeploymentConfig(prev => ({ ...prev, spaceId }));
+    setDeploymentConfig(prev => ({ ...prev, spaceId }))
   }, []);
 
   // Update permissions
@@ -142,7 +142,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
         ...prev.permissions,
         [type]: values
       }
-    }));
+    }))
   }, []);
 
   // Update settings
@@ -153,7 +153,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
         ...prev.settings,
         [key]: value
       }
-    }));
+    }))
   }, []);
 
   // Update customization
@@ -164,7 +164,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
         ...prev.customization,
         [key]: value
       }
-    }));
+    }))
   }, []);
 
   // Get selected space
@@ -176,7 +176,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
   // Check if user can deploy to selected space
   const canDeploy = useMemo(() => {
     if (!selectedSpace) return false;
-    return selectedSpace.userRole === 'admin' || selectedSpace.userRole === 'moderator';
+    return selectedSpace.userRole === 'admin' || selectedSpace.userRole === 'moderator'
   }, [selectedSpace]);
 
   // Handle deployment with real API
@@ -216,10 +216,10 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
       await apiClient.deployTool(apiDeploymentConfig);
       
       // Call the original onDeploy callback for any additional handling
-      await onDeploy(deploymentConfig);
+      await onDeploy(deploymentConfig)
     } catch (error: any) {
       console.error('Deployment failed:', error);
-      throw new Error(apiUtils.handleApiError(error));
+      throw new Error(apiUtils.handleApiError(error))
     }
   }, [tool.id, selectedSpaceId, canDeploy, deploymentConfig, onDeploy]);
 
@@ -311,8 +311,8 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                 <Icon className="w-4 h-4" />
                 <span className="text-sm font-medium">{tab.label}</span>
               </button>
-            );
-          })}
+            )
+          }}
         </div>
       </div>
 
@@ -418,8 +418,8 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                       )}
                     </div>
                   </HiveCard>
-                );
-                })}
+                )
+          })}
               </div>
             )}
 
@@ -470,8 +470,8 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                               const newValues = isSelected 
                                 ? selectedValues.filter(v => v !== level.value)
                                 : [...selectedValues, level.value];
-                              updatePermissions(type as keyof ComponentToolDeploymentConfig['permissions'], newValues);
-                            }}
+                              updatePermissions(type as keyof ComponentToolDeploymentConfig['permissions'], newValues)
+          }}
                             disabled={isDisabled}
                             className={`p-3 rounded-lg border transition-all duration-200 flex items-center space-x-3 ${
                               isSelected
@@ -485,8 +485,8 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                             <span className="font-medium">{level.label}</span>
                             {isSelected && <CheckCircle className="w-4 h-4 ml-auto" />}
                           </button>
-                        );
-                      })}
+                        )
+          })}
                     </div>
                   </div>
                 ))}
@@ -577,7 +577,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                     </div>
                     <Checkbox
                       checked={deploymentConfig.settings.isActive}
-                      onCheckedChange={(checked) => updateSettings('isActive', checked)}
+                      onChange={(e) => { const checked = e.target.checked; updateSettings('isActive', checked) }}
                     />
                   </div>
 
@@ -590,7 +590,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                     </div>
                     <Checkbox
                       checked={deploymentConfig.settings.requirePermission}
-                      onCheckedChange={(checked) => updateSettings('requirePermission', checked)}
+                      onChange={(e) => { const checked = e.target.checked; updateSettings('requirePermission', checked) }}
                     />
                   </div>
 
@@ -603,7 +603,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                     </div>
                     <Checkbox
                       checked={deploymentConfig.settings.trackUsage}
-                      onCheckedChange={(checked) => updateSettings('trackUsage', checked)}
+                      onChange={(e) => { const checked = e.target.checked; updateSettings('trackUsage', checked) }}
                     />
                   </div>
 
@@ -617,7 +617,7 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
                       </div>
                       <Checkbox
                         checked={deploymentConfig.settings.allowAnonymous}
-                        onCheckedChange={(checked) => updateSettings('allowAnonymous', checked)}
+                        onChange={(e) => { const checked = e.target.checked; updateSettings('allowAnonymous', checked) }}
                       />
                     </div>
                   )}
@@ -714,5 +714,5 @@ export const SpaceToolDeployment: React.FC<SpaceToolDeploymentProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };

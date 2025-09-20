@@ -1,6 +1,6 @@
 import React from 'react';
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'ghost' | 'destructive' | 'outline' | 'accent';
+    variant?: 'primary' | 'secondary' | 'ghost' | 'destructive' | 'outline' | 'accent' | 'premium';
     size?: 'sm' | 'md' | 'lg' | 'icon';
     loading?: boolean;
     icon?: React.ReactNode;

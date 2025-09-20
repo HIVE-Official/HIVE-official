@@ -276,7 +276,7 @@ const CompleteSpacesSystem = () => {
     const space = UB_SPACE_TEMPLATES.find(s => s.id === spaceId);
     setSelectedSpace(space?.name || '');
     setModalOpen(true);
-    action('space-activation-requested')(spaceId);
+    action('space-activation-requested')(spaceId)
   };
 
   const ViewSelector = () => (
@@ -286,7 +286,7 @@ const CompleteSpacesSystem = () => {
         { id: 'personal', label: '👤 Personal Dashboard', icon: Users },
         { id: 'mobile', label: '📱 Mobile Experience', icon: Activity },
         { id: 'admin', label: '🛡️ Admin Dashboard', icon: Shield }
-      ].map(({ id, label, icon: Icon }) => (
+      ].map(({ id, label, icon: Icon })} => (
         <Button
           key={id}
           variant={activeView === id ? 'primary' : 'secondary'}
@@ -558,12 +558,12 @@ const CompleteSpacesSystem = () => {
           onClose={() => setModalOpen(false)}
           onSubmit={(data) => {
             action('activation-submitted')(data);
-            setModalOpen(false);
+            setModalOpen(false)
           }}
         />
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

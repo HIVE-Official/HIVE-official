@@ -6,13 +6,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../../components/ui/card';
+} from '../../atomic/ui/card';
 import { cn } from '../../lib/utils';
 import { SchoolSearchInput } from './school-search-input';
 
 interface WelcomeCardProps {
   className?: string;
-  onSchoolSelect?: (schoolId: string) => void;
+  onSchoolSelect?: (schoolId: string) => void
 }
 
 // A placeholder for the HIVE logomark.
@@ -44,7 +44,7 @@ const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
     };
 
     const handleSchoolSelect = (schoolId: string) => {
-      onSchoolSelect?.(schoolId);
+      onSchoolSelect?.(schoolId)
     };
 
     return (
@@ -77,7 +77,7 @@ const WelcomeCard = React.forwardRef<HTMLDivElement, WelcomeCardProps>(
           </CardContent>
         </Card>
       </motion.div>
-    );
+    )
   }
 );
 

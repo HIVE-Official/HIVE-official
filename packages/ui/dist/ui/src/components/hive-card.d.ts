@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveCardVariants: (props?: {
-    variant?: "default" | "selected" | "student" | "builder" | "online" | "minimal" | "space" | "elevated" | "announcement" | "post" | "tool" | "gold-accent" | "gold-featured" | "gold-premium" | "building" | "studying" | "clickable" | "selectable" | "featured-post";
+    variant?: "default" | "builder" | "selected" | "student" | "online" | "minimal" | "space" | "elevated" | "announcement" | "post" | "tool" | "gold-accent" | "gold-featured" | "gold-premium" | "building" | "studying" | "clickable" | "selectable" | "featured-post";
     size?: "default" | "sm" | "lg" | "xl" | "compact";
     rounded?: "default" | "sm" | "lg" | "full";
     shadow?: "default" | "sm" | "lg" | "xl" | "none";

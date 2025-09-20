@@ -358,12 +358,12 @@ export const DesktopHeaderNavigation: Story = {
             onClick={() => {
               setShowSearch(false);
               setShowNotifications(false);
-              setShowUserMenu(false);
+              setShowUserMenu(false)
             }}
           />
         )}
       </div>
-    );
+    )
   }
 };
 
@@ -544,8 +544,8 @@ export const MobileHeaderNavigation: Story = {
                           <IconComponent className="h-5 w-5" />
                           <span>{action.label}</span>
                         </button>
-                      );
-                    })}
+                      )
+                    })
                   </div>
                 </div>
 
@@ -570,7 +570,7 @@ export const MobileHeaderNavigation: Story = {
           </>
         )}
       </div>
-    );
+    )
   }
 };
 
@@ -588,7 +588,7 @@ export const InteractiveHeaderDemo: Story = {
             ? { ...notification, isRead: true }
             : notification
         )
-      );
+      )
     };
 
     const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -634,8 +634,8 @@ export const InteractiveHeaderDemo: Story = {
                       <IconComponent className="h-4 w-4" />
                       <span className="font-medium">{tab.label}</span>
                     </button>
-                  );
-                })}
+                  )
+                })
               </nav>
 
               {/* Actions */}
@@ -719,6 +719,6 @@ export const InteractiveHeaderDemo: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   }
 };

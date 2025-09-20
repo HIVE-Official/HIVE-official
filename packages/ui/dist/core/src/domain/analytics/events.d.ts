@@ -26,28 +26,28 @@ export declare const AnalyticsEventSchema: z.ZodObject<{
     type?: string;
     id?: string;
     userId?: string;
+    sessionId?: string;
+    timestamp?: Date;
+    properties?: Record<string, any>;
     context?: {
         url?: string;
         userAgent?: string;
         referrer?: string;
         ip?: string;
     };
-    sessionId?: string;
-    timestamp?: Date;
-    properties?: Record<string, any>;
 }, {
     type?: string;
     id?: string;
     userId?: string;
+    sessionId?: string;
+    timestamp?: Date;
+    properties?: Record<string, any>;
     context?: {
         url?: string;
         userAgent?: string;
         referrer?: string;
         ip?: string;
     };
-    sessionId?: string;
-    timestamp?: Date;
-    properties?: Record<string, any>;
 }>;
 export type AnalyticsEvent = z.infer<typeof AnalyticsEventSchema>;
 export declare const AnalyticsEventType: z.ZodEnum<["user_signup", "user_login", "user_logout", "user_profile_updated", "page_view", "navigation", "feature_used", "button_clicked", "form_submitted", "error_occurred", "api_error", "performance_metric", "load_time"]>;

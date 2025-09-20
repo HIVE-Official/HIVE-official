@@ -1,7 +1,7 @@
 'use client';
 
 import React, { forwardRef } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../lib/utils';
 
 export interface EmailInputProps {
   value?: string;
@@ -11,7 +11,7 @@ export interface EmailInputProps {
   label?: string;
   error?: string;
   size?: 'sm' | 'md' | 'lg';
-  className?: string;
+  className?: string
 }
 
 const emailSizes = {
@@ -87,7 +87,7 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(({
         </p>
       )}
     </div>
-  );
+  )
 });
 
 EmailInput.displayName = 'EmailInput';

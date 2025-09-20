@@ -420,11 +420,11 @@ export const InteractiveSpaceCards: Story = {
     const [hoveredCard, setHoveredCard] = React.useState<string | null>(null);
 
     const handleJoinSpace = (spaceId: string) => {
-      setJoinedSpaces(prev => [...prev, spaceId]);
+      setJoinedSpaces(prev => [...prev, spaceId])
     };
 
     const handleLeaveSpace = (spaceId: string) => {
-      setJoinedSpaces(prev => prev.filter(id => id !== spaceId));
+      setJoinedSpaces(prev => prev.filter(id => id !== spaceId))
     };
 
     return (
@@ -542,8 +542,8 @@ export const InteractiveSpaceCards: Story = {
                   </div>
                 </CardContent>
               </Card>
-            );
-          })}
+            )
+          })
         </div>
 
         <div className="mt-8 bg-indigo-50 rounded-xl p-6 border border-indigo-100">
@@ -556,6 +556,6 @@ export const InteractiveSpaceCards: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

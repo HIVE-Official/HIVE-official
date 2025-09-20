@@ -3,7 +3,7 @@
 import React, { useMemo, useRef } from 'react';
 import { cn } from '../../lib/utils';
 import { Text } from '../../atomic/atoms/text';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { useAdvancedViewport } from './ResponsiveLayout';
 
 // Page context types for intelligent header adaptation
@@ -19,7 +19,7 @@ interface BreadcrumbItem {
   label: string;
   href?: string;
   icon?: React.ComponentType<any>;
-  isActive?: boolean;
+  isActive?: boolean
 }
 
 interface PageAction {
@@ -31,7 +31,7 @@ interface PageAction {
   loading?: boolean;
   disabled?: boolean;
   priority?: 'high' | 'medium' | 'low';
-  mobileHidden?: boolean;
+  mobileHidden?: boolean
 }
 
 interface PageHeaderProps {
@@ -45,7 +45,7 @@ interface PageHeaderProps {
   backAction?: {
     label?: string;
     href?: string;
-    onClick?: () => void;
+    onClick?: () => void
   };
   
   // Actions
@@ -59,7 +59,7 @@ interface PageHeaderProps {
   campusContext?: {
     spaceName?: string;
     toolName?: string;
-    isBuilder?: boolean;
+    isBuilder?: boolean
   };
   
   // Visual behavior
@@ -78,7 +78,7 @@ interface PageHeaderProps {
   landmarkRole?: boolean;
   
   className?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // Smart action placement based on device and context
@@ -91,9 +91,9 @@ function calculateActionPlacement(
     // Intelligent placement based on device and action count
     if (viewport.isMobile) {
       // On mobile, prioritize thumb reach
-      return actionsCount <= 2 ? 'justify-between' : 'justify-end';
+      return actionsCount <= 2 ? 'justify-between' : 'justify-end'
     }
-    return 'justify-between';
+    return 'justify-between'
   }
   
   const placementMap = {
@@ -103,7 +103,7 @@ function calculateActionPlacement(
     'split': 'justify-between'
   };
   
-  return placementMap[placement] || 'justify-between';
+  return placementMap[placement] || 'justify-between'
 }
 
 // Generate contextual header content based on page type
@@ -132,7 +132,7 @@ function generateContextualContent(
         contextualHint: 'What\'s happening in your communities'
       };
     default:
-      return {};
+      return {}
   }
 }
 
@@ -144,7 +144,7 @@ function sortActionsByPriority(actions: PageAction[], isMobile: boolean): PageAc
     .filter(action => !action.mobileHidden)
     .sort((a, b) => {
       const priorityOrder = { high: 3, medium: 2, low: 1 };
-      return (priorityOrder[b.priority || 'medium'] - priorityOrder[a.priority || 'medium']);
+      return (priorityOrder[b.priority || 'medium'] - priorityOrder[a.priority || 'medium'])
     })
     .slice(0, 3); // Max 3 actions on mobile
 }
@@ -185,7 +185,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   // Process actions for mobile optimization
   const processedActions = useMemo(() => {
     const actions = primaryAction ? [primaryAction, ...secondaryActions] : secondaryActions;
-    return sortActionsByPriority(actions, viewport.isMobile);
+    return sortActionsByPriority(actions, viewport.isMobile)
   }, [primaryAction, secondaryActions, viewport.isMobile]);
   
   // Calculate dynamic classes
@@ -397,8 +397,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                     {action.icon && <action.icon className="w-4 h-4 mr-2" />}
                     {action.loading ? 'Loading...' : action.label}
                   </Button>
-                );
-              })}
+                )
+          })}
             </div>
           )}
         </div>
@@ -411,7 +411,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         )}
       </div>
     </header>
-  );
+  )
 };
 
 // Export utilities

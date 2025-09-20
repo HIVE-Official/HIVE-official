@@ -51,7 +51,7 @@ export interface ProfileSpace {
   lastActivity: string;
   isPrivate: boolean;
   color?: string;
-  icon?: string;
+  icon?: string
 }
 
 export interface ProfileTool {
@@ -65,7 +65,7 @@ export interface ProfileTool {
   isCreated: boolean;
   isFavorite: boolean;
   rating?: number;
-  tags: string[];
+  tags: string[]
 }
 
 export interface ProfileSystemProps 
@@ -83,7 +83,7 @@ export interface ProfileSystemProps
   onShareProfile?: () => void;
   onMessageUser?: () => void;
   onFollowUser?: () => void;
-  onPrivacySettings?: () => void;
+  onPrivacySettings?: () => void
 }
 
 export function ProfileSystem({
@@ -128,7 +128,7 @@ export function ProfileSystem({
     if (tools.length > 0) completed++;
     if (stats.connectionsCount > 0) completed++;
     
-    return Math.round((completed / total) * 100);
+    return Math.round((completed / total) * 100)
   };
 
   const completionPercentage = calculateCompletion();
@@ -161,7 +161,7 @@ export function ProfileSystem({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -282,7 +282,7 @@ export function ProfileSystem({
         </Tabs>
       </div>
     </div>
-  );
+  )
 }
 
 // Tab Components
@@ -299,7 +299,7 @@ function OverviewTab({
   spaces: ProfileSpace[];
   tools: ProfileTool[];
   recentActivity: ActivityItem[];
-  isOwnProfile: boolean;
+  isOwnProfile: boolean
 }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -354,7 +354,7 @@ function OverviewTab({
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 function SpacesTab({ 
@@ -366,7 +366,7 @@ function SpacesTab({
   spaces: ProfileSpace[];
   viewMode: 'grid' | 'list';
   showAll: boolean;
-  onToggleShowAll: () => void;
+  onToggleShowAll: () => void
 }) {
   return (
     <div className="space-y-4">
@@ -394,7 +394,7 @@ function SpacesTab({
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 function ToolsTab({ 
@@ -406,7 +406,7 @@ function ToolsTab({
   tools: ProfileTool[];
   viewMode: 'grid' | 'list';
   showAll: boolean;
-  onToggleShowAll: () => void;
+  onToggleShowAll: () => void
 }) {
   return (
     <div className="space-y-4">
@@ -434,7 +434,7 @@ function ToolsTab({
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Helper Components
@@ -449,7 +449,7 @@ function SpaceItem({ space }: { space: ProfileSpace }) {
         <p className="text-sm text-hive-text-secondary">{space.memberCount} members</p>
       </div>
     </div>
-  );
+  )
 }
 
 function ToolItem({ tool }: { tool: ProfileTool }) {
@@ -463,12 +463,12 @@ function ToolItem({ tool }: { tool: ProfileTool }) {
         <p className="text-sm text-hive-text-secondary truncate">{tool.description}</p>
       </div>
     </div>
-  );
+  )
 }
 
 function SpaceCard({ space, compact = false }: { space: ProfileSpace; compact?: boolean }) {
   if (compact) {
-    return <SpaceItem space={space} />;
+    return <SpaceItem space={space} />
   }
 
   return (
@@ -486,12 +486,12 @@ function SpaceCard({ space, compact = false }: { space: ProfileSpace; compact?: 
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function ToolCard({ tool, compact = false }: { tool: ProfileTool; compact?: boolean }) {
   if (compact) {
-    return <ToolItem tool={tool} />;
+    return <ToolItem tool={tool} />
   }
 
   return (
@@ -509,7 +509,7 @@ function ToolCard({ tool, compact = false }: { tool: ProfileTool; compact?: bool
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function ActivityItem({ activity }: { activity: ActivityItem }) {
@@ -524,7 +524,7 @@ function ActivityItem({ activity }: { activity: ActivityItem }) {
         <div className="text-xs text-hive-text-secondary">{activity.timestamp}</div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export variants for external use

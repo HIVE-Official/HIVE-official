@@ -45,7 +45,7 @@ export interface HiveActivityItem {
   timestamp: string;
   icon?: React.ReactNode;
   spaceId?: string;
-  toolId?: string;
+  toolId?: string
 }
 
 export interface HiveProfileCardProps 
@@ -64,7 +64,7 @@ export interface HiveProfileCardProps
   onShareProfile?: () => void;
   onViewActivity?: () => void;
   onStatClick?: (statKey: string, value: number) => void;
-  loading?: boolean;
+  loading?: boolean
 }
 
 export function HiveProfileCard({
@@ -97,7 +97,7 @@ export function HiveProfileCard({
       case 'connection': return <Users className="h-4 w-4 text-purple-400" />;
       case 'achievement': return <Award className="h-4 w-4 text-yellow-400" />;
       case 'builder': return <Zap className="h-4 w-4 text-hive-gold" />;
-      default: return <Clock className="h-4 w-4 text-hive-text-secondary" />;
+      default: return <Clock className="h-4 w-4 text-hive-text-secondary" />
     }
   };
 
@@ -110,7 +110,7 @@ export function HiveProfileCard({
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return date.toLocaleDateString();
+    return date.toLocaleDateString()
   };
 
   const displayActivities = recentActivity.slice(0, maxActivities);
@@ -134,7 +134,7 @@ export function HiveProfileCard({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -234,7 +234,7 @@ export function HiveProfileCard({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // Keep backward compatibility with old name
@@ -244,11 +244,11 @@ export type ActivityItem = HiveActivityItem;
 
 // Preset variants for common use cases
 export function StudentProfileCard(props: Omit<HiveProfileCardProps, 'layout'>) {
-  return <HiveProfileCard layout="stacked" {...props} />;
+  return <HiveProfileCard layout="stacked" {...props} />
 }
 
 export function BuilderProfileCard(props: Omit<HiveProfileCardProps, 'layout'>) {  
-  return <HiveProfileCard layout="stacked" {...props} />;
+  return <HiveProfileCard layout="stacked" {...props} />
 }
 
 export function CompactProfileCard(props: Omit<HiveProfileCardProps, 'size' | 'showActivity'>) {
@@ -259,15 +259,15 @@ export function CompactProfileCard(props: Omit<HiveProfileCardProps, 'size' | 's
       maxActivities={0}
       {...props} 
     />
-  );
+  )
 }
 
 export function InteractiveProfileCard(props: Omit<HiveProfileCardProps, 'variant'>) {
-  return <HiveProfileCard variant="interactive" {...props} />;
+  return <HiveProfileCard variant="interactive" {...props} />
 }
 
 export function MinimalProfileCard(props: Omit<HiveProfileCardProps, 'variant'>) {
-  return <HiveProfileCard variant="minimal" {...props} />;
+  return <HiveProfileCard variant="minimal" {...props} />
 }
 
 // Export variants for external use

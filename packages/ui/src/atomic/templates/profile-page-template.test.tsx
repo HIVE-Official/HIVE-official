@@ -125,7 +125,7 @@ const defaultProps = {
 
 describe('ProfilePageTemplate', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it('renders complete page template with all sections', () => {
@@ -148,7 +148,7 @@ describe('ProfilePageTemplate', () => {
     
     // Footer
     expect(screen.getByText('Built for campus communities')).toBeInTheDocument();
-    expect(screen.getByText('© 2024 HIVE. All rights reserved.')).toBeInTheDocument();
+    expect(screen.getByText('© 2024 HIVE. All rights reserved.')).toBeInTheDocument()
   });
 
   it('shows navigation badges for unread content', () => {
@@ -156,7 +156,7 @@ describe('ProfilePageTemplate', () => {
     
     // Should show notification count in header
     // Note: Badge rendering depends on Header organism implementation
-    expect(screen.getByText('HIVE')).toBeInTheDocument();
+    expect(screen.getByText('HIVE')).toBeInTheDocument()
   });
 
   it('handles navigation callbacks correctly', () => {
@@ -172,7 +172,7 @@ describe('ProfilePageTemplate', () => {
     // Test logo click
     const logo = screen.getByText('HIVE');
     fireEvent.click(logo);
-    expect(mockCallbacks.onLogoClick).toHaveBeenCalled();
+    expect(mockCallbacks.onLogoClick).toHaveBeenCalled()
   });
 
   it('handles profile dashboard callbacks correctly', () => {
@@ -196,7 +196,7 @@ describe('ProfilePageTemplate', () => {
     
     // Test activity click
     fireEvent.click(screen.getByText('Midterm Exam Schedule Released'));
-    expect(mockCallbacks.onActivityClick).toHaveBeenCalledWith('1');
+    expect(mockCallbacks.onActivityClick).toHaveBeenCalledWith('1')
   });
 
   it('hides navigation when showNavigation is false', () => {
@@ -208,7 +208,7 @@ describe('ProfilePageTemplate', () => {
     
     // Should still show page content
     expect(screen.getByText('Your Campus Profile')).toBeInTheDocument();
-    expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
+    expect(screen.getByText('Sarah Chen')).toBeInTheDocument()
   });
 
   it('shows non-builder experience correctly', () => {
@@ -222,7 +222,7 @@ describe('ProfilePageTemplate', () => {
     );
     
     expect(screen.getByText('Build Custom Tools')).toBeInTheDocument();
-    expect(screen.getByText('Become a Builder')).toBeInTheDocument();
+    expect(screen.getByText('Become a Builder')).toBeInTheDocument()
   });
 
   it('handles forced mobile layout', () => {
@@ -233,7 +233,7 @@ describe('ProfilePageTemplate', () => {
     expect(screen.getByText('Your Campus Profile')).toBeInTheDocument();
     
     // Mobile specific elements might be present
-    expect(screen.getByText('Menu')).toBeInTheDocument();
+    expect(screen.getByText('Menu')).toBeInTheDocument()
   });
 
   it('handles forced tablet layout', () => {
@@ -241,7 +241,7 @@ describe('ProfilePageTemplate', () => {
     
     // Should render tablet layout
     expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
-    expect(screen.getByText('Your Campus Profile')).toBeInTheDocument();
+    expect(screen.getByText('Your Campus Profile')).toBeInTheDocument()
   });
 
   it('displays page loading state', () => {
@@ -251,7 +251,7 @@ describe('ProfilePageTemplate', () => {
     expect(screen.getByText('Loading your campus profile...')).toBeInTheDocument();
     
     // Should not show page content while loading
-    expect(screen.queryByText('Your Campus Profile')).not.toBeInTheDocument();
+    expect(screen.queryByText('Your Campus Profile')).not.toBeInTheDocument()
   });
 
   it('displays error state correctly', () => {
@@ -263,7 +263,7 @@ describe('ProfilePageTemplate', () => {
     expect(screen.getByText('Try Again')).toBeInTheDocument();
     
     // Should not show normal page content
-    expect(screen.queryByText('Your Campus Profile')).not.toBeInTheDocument();
+    expect(screen.queryByText('Your Campus Profile')).not.toBeInTheDocument()
   });
 
   it('displays campus activity indicator for unread activities', () => {
@@ -284,14 +284,14 @@ describe('ProfilePageTemplate', () => {
       />
     );
     
-    expect(screen.getByText('2 new campus updates')).toBeInTheDocument();
+    expect(screen.getByText('2 new campus updates')).toBeInTheDocument()
   });
 
   it('applies custom className correctly', () => {
     render(<ProfilePageTemplate {...defaultProps} className="custom-page-class" />);
     
     const pageElement = document.querySelector('.custom-page-class');
-    expect(pageElement).toBeInTheDocument();
+    expect(pageElement).toBeInTheDocument()
   });
 
   it('handles custom navigation items', () => {
@@ -311,7 +311,7 @@ describe('ProfilePageTemplate', () => {
     expect(screen.getByText('Custom Page')).toBeInTheDocument();
     
     // Should not show default navigation
-    expect(screen.queryByText('Dashboard')).not.toBeInTheDocument();
+    expect(screen.queryByText('Dashboard')).not.toBeInTheDocument()
   });
 
   it('handles window resize for responsive behavior', () => {
@@ -321,7 +321,7 @@ describe('ProfilePageTemplate', () => {
     expect(mockAddEventListener).toHaveBeenCalledWith('resize', expect.any(Function));
     
     // Should show desktop layout initially
-    expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
+    expect(screen.getByText('Sarah Chen')).toBeInTheDocument()
   });
 
   it('handles missing optional props gracefully', () => {
@@ -338,19 +338,19 @@ describe('ProfilePageTemplate', () => {
     // Should render without crashing
     expect(screen.getByText('HIVE')).toBeInTheDocument();
     expect(screen.getByText('Your Campus Profile')).toBeInTheDocument();
-    expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
+    expect(screen.getByText('Sarah Chen')).toBeInTheDocument()
   });
 
   it('shows builder tools when showBuilder is true', () => {
     render(<ProfilePageTemplate {...defaultProps} showBuilder={true} />);
     
     expect(screen.getByText('Builder Tools')).toBeInTheDocument();
-    expect(screen.getByText('Study Schedule Template')).toBeInTheDocument();
+    expect(screen.getByText('Study Schedule Template')).toBeInTheDocument()
   });
 
   it('hides builder tools when showBuilder is false', () => {
     render(<ProfilePageTemplate {...defaultProps} showBuilder={false} />);
     
-    expect(screen.queryByText('Builder Tools')).not.toBeInTheDocument();
-  });
+    expect(screen.queryByText('Builder Tools')).not.toBeInTheDocument()
+  })
 });

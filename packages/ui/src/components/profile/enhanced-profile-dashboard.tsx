@@ -27,7 +27,7 @@ import { ProfileDashboard, type ProfileDashboardProps } from '../profile/profile
 
 interface EnhancedProfileDashboardProps extends ProfileDashboardProps {
   // Additional props for expand-focus functionality
-  enableExpandFocus?: boolean;
+  enableExpandFocus?: boolean
 }
 
 export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> = ({
@@ -87,7 +87,7 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
       case 'purple': return 'bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20';
       case 'green': return 'bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20';
       case 'yellow': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20 hover:bg-yellow-500/20';
-      default: return 'bg-hive-brand-secondary/10 text-hive-brand-secondary border-hive-brand-secondary/20 hover:bg-hive-brand-secondary/20';
+      default: return 'bg-hive-brand-secondary/10 text-hive-brand-secondary border-hive-brand-secondary/20 hover:bg-hive-brand-secondary/20'
     }
   };
 
@@ -171,8 +171,8 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
                       </motion.button>
                     </ExpandFocus>
                   </div>
-                );
-              })}
+                )
+          })}
             </div>
           </div>
         </motion.div>
@@ -193,7 +193,7 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         </motion.button>
       )}
     </div>
-  );
+  )
 };
 
 export default EnhancedProfileDashboard;

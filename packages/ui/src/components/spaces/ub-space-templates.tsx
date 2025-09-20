@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';
-import { Icon } from '../../components/ui/icon';
+import { Icon } from '../../atomic/atoms/icon';
 import { cn } from '../../lib/utils';
 import { 
   Building2, 
@@ -34,8 +34,8 @@ export interface UBSpaceTemplate {
     requesterName: string;
     requesterEmail: string;
     dateRequested: string;
-    leadershipExperience: string;
-  };
+    leadershipExperience: string
+  }
 }
 
 export const UB_SPACE_TEMPLATES: UBSpaceTemplate[] = [
@@ -120,7 +120,7 @@ interface UBSpaceTemplateCardProps {
   space: UBSpaceTemplate;
   onRequestActivation?: (spaceId: string) => void;
   onViewDetails?: (spaceId: string) => void;
-  className?: string;
+  className?: string
 }
 
 export function UBSpaceTemplateCard({ 
@@ -236,7 +236,7 @@ export function UBSpaceTemplateCard({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // =============================================================================
@@ -248,7 +248,7 @@ interface UBSpacesDirectoryProps {
   onRequestActivation?: (spaceId: string) => void;
   onViewDetails?: (spaceId: string) => void;
   filterCategory?: string;
-  className?: string;
+  className?: string
 }
 
 export function UBSpacesDirectory({ 
@@ -306,7 +306,7 @@ export function UBSpacesDirectory({
               size="sm" 
               color="secondary" 
             />
-            <Text variant="h3" weight="semibold">
+            <Text variant="heading-md" weight="semibold">
               Coming Soon
             </Text>
             <Badge variant="secondary">
@@ -344,7 +344,7 @@ export function UBSpacesDirectory({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -356,14 +356,14 @@ interface SpaceActivationModalProps {
   spaceName: string;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: ActivationRequestData) => void;
+  onSubmit: (data: ActivationRequestData) => void
 }
 
 export interface ActivationRequestData {
   leadershipExperience: string;
   communityVision: string;
   commitmentLevel: string;
-  contactInfo: string;
+  contactInfo: string
 }
 
 export function SpaceActivationModal({ 
@@ -443,5 +443,5 @@ export function SpaceActivationModal({
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

@@ -228,7 +228,7 @@ export const TextPostFeedItems: Story = {
               }
             }
           : item
-      ));
+      ))
     };
 
     const handleBookmark = (itemId: string) => {
@@ -243,7 +243,7 @@ export const TextPostFeedItems: Story = {
               }
             }
           : item
-      ));
+      ))
     };
 
     return (
@@ -394,7 +394,7 @@ export const TextPostFeedItems: Story = {
           ))}
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -415,7 +415,7 @@ export const EventAnnouncementFeedItems: Story = {
               }
             }
           : item
-      ));
+      ))
     };
 
     return (
@@ -579,7 +579,7 @@ export const EventAnnouncementFeedItems: Story = {
           ))}
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -602,7 +602,7 @@ export const InteractiveFeedDemo: Story = {
               }
             }
           : item
-      ));
+      ))
     };
 
     const handleBookmark = (itemId: string) => {
@@ -613,7 +613,7 @@ export const InteractiveFeedDemo: Story = {
               interactions: { ...item.interactions, hasBookmarked: !item.interactions.hasBookmarked }
             }
           : item
-      ));
+      ))
     };
 
     const filteredItems = feedItems.filter(item => {
@@ -621,14 +621,14 @@ export const InteractiveFeedDemo: Story = {
       if (filter === 'academic') return item.space.type === 'Academic';
       if (filter === 'social') return item.space.type === 'Organization' || item.space.type === 'Residential';
       if (filter === 'events') return item.type === 'event_announcement';
-      return true;
-    });
+      return true
+    })};
 
     const sortedItems = [...filteredItems].sort((a, b) => {
       if (sortBy === 'recent') return 0; // Keep original order
       if (sortBy === 'popular') return b.engagement.likes - a.engagement.likes;
       if (sortBy === 'comments') return b.engagement.comments - a.engagement.comments;
-      return 0;
+      return 0
     });
 
     return (
@@ -801,6 +801,6 @@ export const InteractiveFeedDemo: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

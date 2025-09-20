@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import { Home, Compass, Zap, User, Settings, Search, Bell, Plus, X, Calendar, Users, Building, LogOut, Crown, Shield, Activity, BookOpen, HelpCircle } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Separator } from '../../atomic/atoms/separator';
 import { cn } from '../../lib/utils';
 const primaryNavItems = [

@@ -58,6 +58,6 @@ export interface SpaceCategoryBrowserProps {
     currentUserRole?: 'leader' | 'co_leader' | 'member';
     className?: string;
 }
-export declare const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps>;
+export declare const SpaceCategoryBrowser: React.FC<SpaceCategoryBrowserProps>, spaces: any;
 export default SpaceCategoryBrowser;
 //# sourceMappingURL=space-category-browser.d.ts.map

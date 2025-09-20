@@ -109,7 +109,7 @@ interface RealTimeState {
   activeUsers: OnlineUser[];
   liveUpdates: LiveUpdate[];
   collaborativeDocs: CollaborativeDocument[];
-  notifications: RealTimeNotification[];
+  notifications: RealTimeNotification[]
 }
 
 interface OnlineUser {
@@ -120,7 +120,7 @@ interface OnlineUser {
   lastSeen: number;
   currentLocation?: string;
   isTyping?: boolean;
-  cursor?: CursorPosition;
+  cursor?: CursorPosition
 }
 
 interface Message {
@@ -133,7 +133,7 @@ interface Message {
   timestamp: number;
   status: 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
   reactions?: Reaction[];
-  replyTo?: string;
+  replyTo?: string
 }
 
 interface LiveUpdate {
@@ -143,7 +143,7 @@ interface LiveUpdate {
   timestamp: number;
   userId: string;
   userName: string;
-  spaceId?: string;
+  spaceId?: string
 }
 
 interface CollaborativeDocument {
@@ -153,7 +153,7 @@ interface CollaborativeDocument {
   cursors: Record<string, CursorPosition>;
   version: number;
   lastModified: number;
-  activeEditors: string[];
+  activeEditors: string[]
 }
 
 interface CursorPosition {
@@ -161,13 +161,13 @@ interface CursorPosition {
   userName: string;
   position: number;
   selection?: { start: number; end: number };
-  color: string;
+  color: string
 }
 
 interface Reaction {
   emoji: string;
   users: string[];
-  count: number;
+  count: number
 }
 
 interface RealTimeNotification {
@@ -181,8 +181,8 @@ interface RealTimeNotification {
   fromUser?: {
     id: string;
     name: string;
-    avatar: string;
-  };
+    avatar: string
+  }
 }
 
 const useRealTime = () => {
@@ -215,19 +215,19 @@ const useRealTime = () => {
       
       // Start heartbeat
       heartbeatIntervalRef.current = setInterval(() => {
-        setState(prev => ({ ...prev, lastHeartbeat: Date.now() }));
+        setState(prev => ({ ...prev, lastHeartbeat: Date.now() }))
       }, 30000);
 
       // Simulate initial data
-      simulateInitialData();
-    }, 1000);
+      simulateInitialData()
+    }, 1000)
   }, []);
 
   const disconnect = useCallback(() => {
     if (heartbeatIntervalRef.current) {
-      clearInterval(heartbeatIntervalRef.current);
+      clearInterval(heartbeatIntervalRef.current)
     }
-    setState(prev => ({ ...prev, connectionStatus: 'disconnected' }));
+    setState(prev => ({ ...prev, connectionStatus: 'disconnected' }))
   }, []);
 
   const sendMessage = useCallback((content: string, type: 'text' | 'image' | 'file' = 'text') => {
@@ -257,8 +257,8 @@ const useRealTime = () => {
             ? { ...msg, status: 'delivered' as const }
             : msg
         )
-      }));
-    }, 500);
+      }))
+    }, 500)
   }, []);
 
   const addReaction = useCallback((messageId: string, emoji: string) => {
@@ -283,7 +283,7 @@ const useRealTime = () => {
                       }
                     : r
                 ).filter(r => r.count > 0)
-              };
+              }
             } else {
               // Add reaction
               return {
@@ -297,7 +297,7 @@ const useRealTime = () => {
                       }
                     : r
                 )
-              };
+              }
             }
           } else {
             // New reaction
@@ -308,12 +308,12 @@ const useRealTime = () => {
                 users: ['current-user'],
                 count: 1
               }]
-            };
+            }
           }
         }
-        return msg;
+        return msg
       })
-    }));
+    }))
   }, []);
 
   const simulateInitialData = useCallback(() => {
@@ -392,7 +392,7 @@ const useRealTime = () => {
       ...prev,
       activeUsers: mockUsers,
       messageQueue: mockMessages
-    }));
+    }))
   }, []);
 
   // Simulate live updates
@@ -418,7 +418,7 @@ const useRealTime = () => {
         setState(prev => ({
           ...prev,
           liveUpdates: [liveUpdate, ...prev.liveUpdates.slice(0, 19)] // Keep last 20
-        }));
+        }))
       }
 
       // Simulate typing indicators
@@ -427,11 +427,11 @@ const useRealTime = () => {
         activeUsers: prev.activeUsers.map(user => ({
           ...user,
           isTyping: user.id === 'user2' ? Math.random() < 0.3 : false
-        }))
-      }));
+        })})
+      }))
     }, 5000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, [state.connectionStatus]);
 
   return {
@@ -440,7 +440,7 @@ const useRealTime = () => {
     disconnect,
     sendMessage,
     addReaction
-  };
+  }
 };
 
 // Connection Status Component
@@ -453,7 +453,7 @@ const ConnectionStatus = ({
   status: RealTimeState['connectionStatus'];
   lastHeartbeat: number | null;
   onConnect: () => void;
-  onDisconnect: () => void;
+  onDisconnect: () => void
 }) => {
   const getStatusColor = () => {
     switch (status) {
@@ -461,7 +461,7 @@ const ConnectionStatus = ({
       case 'connecting': case 'reconnecting': return 'text-yellow-400';
       case 'disconnected': return 'text-gray-400';
       case 'error': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -471,7 +471,7 @@ const ConnectionStatus = ({
       case 'connecting': case 'reconnecting': return <Loader2 className="h-4 w-4 text-yellow-400 animate-spin" />;
       case 'disconnected': return <XCircle className="h-4 w-4 text-gray-400" />;
       case 'error': return <AlertCircle className="h-4 w-4 text-red-400" />;
-      default: return <Radio className="h-4 w-4 text-gray-400" />;
+      default: return <Radio className="h-4 w-4 text-gray-400" />
     }
   };
 
@@ -534,7 +534,7 @@ const ConnectionStatus = ({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Active Users Panel
@@ -606,7 +606,7 @@ const LiveChat = ({
   messages: Message[];
   onSendMessage: (content: string) => void;
   onAddReaction: (messageId: string, emoji: string) => void;
-  isConnected: boolean;
+  isConnected: boolean
 }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -616,16 +616,16 @@ const LiveChat = ({
     if (!newMessage.trim() || !isConnected) return;
     onSendMessage(newMessage);
     setNewMessage('');
-    setIsTyping(false);
+    setIsTyping(false)
   };
 
   const handleTyping = (value: string) => {
     setNewMessage(value);
-    setIsTyping(value.length > 0);
+    setIsTyping(value.length > 0)
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages]);
 
   const quickReactions = ['👍', '❤️', '😂', '🎉', '📚', '💡'];
@@ -744,7 +744,7 @@ const LiveChat = ({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Live Updates Feed
@@ -811,13 +811,13 @@ const RealTimeAnalytics = ({ connectionStatus }: { connectionStatus: string }) =
           messagesPerSecond: Math.random() * 10 + 5,
           averageLatency: Math.floor(Math.random() * 20) + 25,
           uptime: prev.uptime + 1
-        }));
+        }))
       } else {
-        setMetrics(prev => ({ ...prev, messagesPerSecond: 0 }));
+        setMetrics(prev => ({ ...prev, messagesPerSecond: 0 }))
       }
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, [connectionStatus]);
 
   return (
@@ -860,7 +860,7 @@ const RealTimeAnalytics = ({ connectionStatus }: { connectionStatus: string }) =
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Main Real-Time System
@@ -872,8 +872,8 @@ const RealTimeSyncSystem = () => {
     realTime.connect();
     
     return () => {
-      realTime.disconnect();
-    };
+      realTime.disconnect()
+    }
   }, []);
 
   return (
@@ -920,7 +920,7 @@ const RealTimeSyncSystem = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Story Exports
@@ -939,7 +939,7 @@ export const LiveChatDemo: Story = {
   render: () => {
     const realTime = useRealTime();
     useEffect(() => {
-      realTime.connect();
+      realTime.connect()
     }, []);
     
     return (
@@ -951,7 +951,7 @@ export const LiveChatDemo: Story = {
           isConnected={realTime.state.connectionStatus === 'connected'}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -966,14 +966,14 @@ export const PresenceAwareness: Story = {
   render: () => {
     const realTime = useRealTime();
     useEffect(() => {
-      realTime.connect();
+      realTime.connect()
     }, []);
     
     return (
       <div className="max-w-md mx-auto p-6">
         <ActiveUsersPanel users={realTime.state.activeUsers} />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -988,14 +988,14 @@ export const LiveUpdates: Story = {
   render: () => {
     const realTime = useRealTime();
     useEffect(() => {
-      realTime.connect();
+      realTime.connect()
     }, []);
     
     return (
       <div className="max-w-md mx-auto p-6">
         <LiveUpdatesFeed updates={realTime.state.liveUpdates} />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

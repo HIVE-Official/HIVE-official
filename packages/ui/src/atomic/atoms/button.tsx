@@ -6,13 +6,13 @@ import { cn } from '../../lib/utils';
 import { Loader2 } from 'lucide-react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'destructive' | 'outline' | 'accent';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'destructive' | 'outline' | 'accent' | 'premium';
   size?: 'sm' | 'md' | 'lg' | 'icon';
   loading?: boolean;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
   fullWidth?: boolean;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 const buttonVariants = {
@@ -63,6 +63,18 @@ const buttonVariants = {
       'bg-transparent text-[var(--hive-brand-secondary)]',
       'border border-[var(--hive-brand-secondary)]',
       'hover:bg-[var(--hive-interactive-hover)]',
+      'disabled:text-[var(--hive-text-disabled)] disabled:border-[var(--hive-border-default)]'
+    ].join(' '),
+
+    // Premium variant: Enhanced gold styling
+    premium: [
+      'border-2 border-[var(--hive-brand-secondary)]',
+      'bg-[color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent)]',
+      'text-[var(--hive-brand-secondary)]',
+      'hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)]',
+      'hover:border-[var(--hive-brand-secondary)]',
+      'active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]',
+      'shadow-sm hover:shadow-md',
       'disabled:text-[var(--hive-text-disabled)] disabled:border-[var(--hive-border-default)]'
     ].join(' ')
   },
@@ -139,7 +151,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
         <span className="flex-shrink-0">{icon}</span>
       )}
     </motion.button>
-  );
+  )
 });
 
 Button.displayName = 'Button';

@@ -10,7 +10,7 @@ import { cn } from '../../../lib/utils';
 
 interface BaseWidgetWrapperProps extends BaseWidgetProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 export const BaseWidget: React.FC<BaseWidgetWrapperProps> = ({
@@ -41,16 +41,16 @@ export const BaseWidget: React.FC<BaseWidgetWrapperProps> = ({
   const handleResize = () => {
     if (size.width === 1 && size.height === 1) {
       // Expand to 2x1 first
-      onSizeChange({ width: 2, height: 1 });
+      onSizeChange({ width: 2, height: 1 })
     } else if (size.width === 2 && size.height === 1) {
       // Expand to 2x2
-      onSizeChange({ width: 2, height: 2 });
+      onSizeChange({ width: 2, height: 2 })
     } else if (size.width === 1 && size.height === 2) {
       // Shrink back to 1x1
-      onSizeChange({ width: 1, height: 1 });
+      onSizeChange({ width: 1, height: 1 })
     } else {
       // Shrink 2x2 to 1x1
-      onSizeChange({ width: 1, height: 1 });
+      onSizeChange({ width: 1, height: 1 })
     }
   };
 
@@ -62,13 +62,13 @@ export const BaseWidget: React.FC<BaseWidgetWrapperProps> = ({
         opacity: isDragging ? 0.7 : 1, 
         scale: isDragging ? 1.05 : 1,
         zIndex: isDragging ? 50 : 1
-      }}
+          }}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ 
         layout: { duration: 0.3, ease: "easeInOut" },
         opacity: { duration: 0.2 },
         scale: { duration: 0.2 }
-      }}
+          }}
       className={cn(
         gridSpan.width,
         gridSpan.height,
@@ -186,13 +186,13 @@ export const BaseWidget: React.FC<BaseWidgetWrapperProps> = ({
         )}
       </AnimatePresence>
     </motion.div>
-  );
+  )
 };
 
 interface WidgetSettingsPanelProps {
   settings: BaseWidgetProps['settings'];
   onSettingsChange: (settings: BaseWidgetProps['settings']) => void;
-  onClose: () => void;
+  onClose: () => void
 }
 
 const WidgetSettingsPanel: React.FC<WidgetSettingsPanelProps> = ({
@@ -206,11 +206,11 @@ const WidgetSettingsPanel: React.FC<WidgetSettingsPanelProps> = ({
     let current = newSettings as any;
     
     for (let i = 0; i < keys.length - 1; i++) {
-      current = current[keys[i]];
+      current = current[keys[i]]
     }
     current[keys[keys.length - 1]] = value;
     
-    onSettingsChange(newSettings);
+    onSettingsChange(newSettings)
   };
 
   return (
@@ -313,5 +313,5 @@ const WidgetSettingsPanel: React.FC<WidgetSettingsPanelProps> = ({
         </HiveButton>
       </div>
     </HiveCard>
-  );
+  )
 };

@@ -26,14 +26,14 @@ export interface PostAuthor {
   name: string;
   avatar?: string;
   role?: 'leader' | 'co_leader' | 'member';
-  verified?: boolean;
+  verified?: boolean
 }
 
 export interface PostReaction {
   emoji: string;
   count: number;
   userReacted?: boolean;
-  users?: { id: string; name: string }[];
+  users?: { id: string; name: string }[]
 }
 
 export interface PostAttachment {
@@ -42,7 +42,7 @@ export interface PostAttachment {
   url: string;
   name: string;
   size?: number;
-  preview?: string;
+  preview?: string
 }
 
 export interface PostEvent {
@@ -51,7 +51,7 @@ export interface PostEvent {
   date: string;
   location?: string;
   rsvpCount?: number;
-  userRsvp?: 'yes' | 'no' | 'maybe' | null;
+  userRsvp?: 'yes' | 'no' | 'maybe' | null
 }
 
 export interface PostPoll {
@@ -61,17 +61,17 @@ export interface PostPoll {
     id: string;
     text: string;
     votes: number;
-    userVoted?: boolean;
+    userVoted?: boolean
   }>;
   totalVotes: number;
   expiresAt?: string;
-  allowMultiple?: boolean;
+  allowMultiple?: boolean
 }
 
 export interface PostAnnouncement {
   priority: 'low' | 'medium' | 'high' | 'urgent';
   isPinned?: boolean;
-  expiresAt?: string;
+  expiresAt?: string
 }
 
 export interface SpacePost {
@@ -100,20 +100,20 @@ export interface SpacePost {
   toolSource?: {
     toolId: string;
     toolName: string;
-    icon: string;
+    icon: string
   };
   
   // Moderation
   isPinned?: boolean;
   isEdited?: boolean;
-  isReported?: boolean;
+  isReported?: boolean
 }
 
 export interface PostBoardProps {
   posts: SpacePost[];
   currentUser?: {
     id: string;
-    role?: 'leader' | 'co_leader' | 'member';
+    role?: 'leader' | 'co_leader' | 'member'
   };
   
   // Interaction handlers
@@ -130,12 +130,12 @@ export interface PostBoardProps {
   // Display options
   showComments?: boolean;
   enableInfiniteScroll?: boolean;
-  className?: string;
+  className?: string
 }
 
 const PostReactionBar: React.FC<{
   reactions: PostReaction[];
-  onReaction: (emoji: string, add: boolean) => void;
+  onReaction: (emoji: string, add: boolean) => void
 }> = ({ reactions, onReaction }) => {
   const popularReactions = ['👍', '❤️', '😊', '🎉', '👏'];
   
@@ -176,12 +176,12 @@ const PostReactionBar: React.FC<{
           </motion.button>
         ))}
     </div>
-  );
+  )
 };
 
 const PostEventCard: React.FC<{
   event: PostEvent;
-  onRsvp?: (response: 'yes' | 'no' | 'maybe') => void;
+  onRsvp?: (response: 'yes' | 'no' | 'maybe') => void
 }> = ({ event, onRsvp }) => {
   return (
     <div className="mt-3 p-4 bg-[var(--hive-brand-primary)]/10 border border-[var(--hive-brand-primary)]/20 rounded-2xl">
@@ -239,12 +239,12 @@ const PostEventCard: React.FC<{
         </div>
       )}
     </div>
-  );
+  )
 };
 
 const PostPollCard: React.FC<{
   poll: PostPoll;
-  onVote?: (optionId: string) => void;
+  onVote?: (optionId: string) => void
 }> = ({ poll, onVote }) => {
   const hasVoted = poll.options.some(option => option.userVoted);
   const timeLeft = poll.expiresAt ? new Date(poll.expiresAt).getTime() - Date.now() : null;
@@ -302,8 +302,8 @@ const PostPollCard: React.FC<{
                 </div>
               </div>
             </motion.div>
-          );
-        })}
+          )
+          })}
       </div>
 
       <div className="flex items-center justify-between text-xs text-[var(--hive-text-muted)]">
@@ -314,7 +314,7 @@ const PostPollCard: React.FC<{
         {isExpired && <span className="text-[var(--hive-status-warning)]">Poll expired</span>}
       </div>
     </div>
-  );
+  )
 };
 
 const PostCard: React.FC<{
@@ -328,7 +328,7 @@ const PostCard: React.FC<{
   onPin?: (pin: boolean) => void;
   onReport?: () => void;
   onEventRsvp?: (response: 'yes' | 'no' | 'maybe') => void;
-  onPollVote?: (optionId: string) => void;
+  onPollVote?: (optionId: string) => void
 }> = ({ 
   post, 
   currentUser, 
@@ -357,7 +357,7 @@ const PostCard: React.FC<{
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return `${Math.floor(diffInHours / 168)}w ago`;
+    return `${Math.floor(diffInHours / 168)}w ago`
   };
 
   const getPriorityColor = (priority?: string) => {
@@ -365,20 +365,20 @@ const PostCard: React.FC<{
       case 'urgent': return 'border-red-500/40 bg-red-500/10';
       case 'high': return 'border-orange-500/40 bg-orange-500/10';
       case 'medium': return 'border-yellow-500/40 bg-yellow-500/10';
-      default: return 'border-[var(--hive-border-primary)]/20 bg-[var(--hive-background-secondary)]/60';
+      default: return 'border-[var(--hive-border-primary)]/20 bg-[var(--hive-background-secondary)]/60'
     }
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
+        setShowMenu(false)
       }
     };
 
     if (showMenu) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [showMenu]);
 
@@ -468,8 +468,8 @@ const PostCard: React.FC<{
                   <button
                     onClick={() => {
                       onEdit?.();
-                      setShowMenu(false);
-                    }}
+                      setShowMenu(false)
+          }}
                     className="w-full px-4 py-2 text-left text-sm text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200"
                   >
                     Edit post
@@ -480,8 +480,8 @@ const PostCard: React.FC<{
                   <button
                     onClick={() => {
                       onPin?.(!post.isPinned);
-                      setShowMenu(false);
-                    }}
+                      setShowMenu(false)
+          }}
                     className="w-full px-4 py-2 text-left text-sm text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200"
                   >
                     {post.isPinned ? 'Unpin post' : 'Pin post'}
@@ -491,8 +491,8 @@ const PostCard: React.FC<{
                 <button
                   onClick={() => {
                     onReport?.();
-                    setShowMenu(false);
-                  }}
+                    setShowMenu(false)
+          }}
                   className="w-full px-4 py-2 text-left text-sm text-[var(--hive-status-warning)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200"
                 >
                   Report post
@@ -502,8 +502,8 @@ const PostCard: React.FC<{
                   <button
                     onClick={() => {
                       onDelete?.();
-                      setShowMenu(false);
-                    }}
+                      setShowMenu(false)
+          }}
                     className="w-full px-4 py-2 text-left text-sm text-[var(--hive-status-error)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200"
                   >
                     Delete post
@@ -583,7 +583,7 @@ const PostCard: React.FC<{
         </div>
       </div>
     </motion.div>
-  );
+  )
 };
 
 export const PostBoard: React.FC<PostBoardProps> = ({
@@ -609,8 +609,8 @@ export const PostBoard: React.FC<PostBoardProps> = ({
       if (!a.isPinned && b.isPinned) return 1;
       
       // Then by timestamp
-      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-    });
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    })
   }, [posts]);
 
   if (posts.length === 0) {
@@ -626,7 +626,7 @@ export const PostBoard: React.FC<PostBoardProps> = ({
           Be the first to share something with this community
         </p>
       </div>
-    );
+    )
   }
 
   return (
@@ -650,7 +650,7 @@ export const PostBoard: React.FC<PostBoardProps> = ({
         ))}
       </AnimatePresence>
     </div>
-  );
+  )
 };
 
 export default PostBoard;

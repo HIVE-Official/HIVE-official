@@ -187,8 +187,8 @@ const ButtonVariantsShowcase = () => {
   const handleClick = (variant: string) => {
     setLoadingStates(prev => ({ ...prev, [variant]: true }));
     setTimeout(() => {
-      setLoadingStates(prev => ({ ...prev, [variant]: false }));
-    }, 2000);
+      setLoadingStates(prev => ({ ...prev, [variant]: false }))
+    }, 2000)
   };
 
   const variants = [
@@ -249,7 +249,7 @@ const ButtonVariantsShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const ButtonSizesShowcase = () => {
@@ -321,7 +321,7 @@ const ButtonSizesShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const CampusActionPresetsShowcase = () => {
@@ -364,7 +364,7 @@ const CampusActionPresetsShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const AccessibilityShowcase = () => {
@@ -448,7 +448,7 @@ const AccessibilityShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -575,7 +575,7 @@ const ButtonEnhancedShowcase = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

@@ -5,6 +5,7 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
     status?: 'online' | 'offline' | 'away' | 'busy' | 'ghost';
     initials?: string;
+    fallback?: string;
     placeholder?: React.ReactNode;
     interactive?: boolean;
     role?: 'student' | 'builder' | 'leader' | 'verified';

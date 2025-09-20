@@ -34,7 +34,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
     if (currentHour >= 6 && currentHour < 12) return 'morning';
     if (currentHour >= 12 && currentHour < 18) return 'afternoon';
     if (currentHour >= 18 && currentHour < 24) return 'evening';
-    return 'night';
+    return 'night'
   }, [currentHour]);
 
   const getTimeBasedTitle = () => {
@@ -43,7 +43,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
       case 'afternoon': return "Today's Schedule";
       case 'evening': return "Tonight & Tomorrow";
       case 'night': return "Tomorrow's Schedule";
-      default: return "Today's Schedule";
+      default: return "Today's Schedule"
     }
   };
 
@@ -58,7 +58,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
       meeting: <Users className="h-4 w-4" />,
       milestone: <Award className="h-4 w-4" />
     };
-    return iconMap[type as keyof typeof iconMap] || <Calendar className="h-4 w-4" />;
+    return iconMap[type as keyof typeof iconMap] || <Calendar className="h-4 w-4" />
   };
 
   const getEventTypeEmoji = (type: string) => {
@@ -72,7 +72,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
       meeting: '🤝',
       milestone: '🏆'
     };
-    return emojiMap[type as keyof typeof emojiMap] || '📅';
+    return emojiMap[type as keyof typeof emojiMap] || '📅'
   };
 
   const getEventColor = (type: string) => {
@@ -87,7 +87,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
       meeting: 'from-purple-500/10 to-purple-600/10 border-purple-500/20 text-purple-300',
       milestone: 'from-yellow-500/10 to-yellow-400/10 border-yellow-500/20 text-yellow-300'
     };
-    return colorMap[type as keyof typeof colorMap] || 'from-gray-600/10 to-gray-700/10 border-gray-600/20 text-gray-300';
+    return colorMap[type as keyof typeof colorMap] || 'from-gray-600/10 to-gray-700/10 border-gray-600/20 text-gray-300'
   };
 
   const getConnectionStatusIcon = (connection: CalendarConnection) => {
@@ -100,7 +100,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
       case 'error':
         return <div className="w-2 h-2 rounded-full bg-red-500" />;
       default:
-        return <div className="w-2 h-2 rounded-full bg-gray-500" />;
+        return <div className="w-2 h-2 rounded-full bg-gray-500" />
     }
   };
 
@@ -117,7 +117,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
     if (hours < 24) return `in ${hours}h ${minutes % 60}m`;
     
     const days = Math.floor(hours / 24);
-    return `in ${days} days`;
+    return `in ${days} days`
   };
 
   // Loading State
@@ -158,7 +158,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
           </div>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   // Empty State
@@ -215,7 +215,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
           </div>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   // Error State
@@ -277,7 +277,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
           </div>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   // Default State with data
@@ -306,8 +306,8 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
             size="sm" 
             onClick={(e) => {
               e.stopPropagation();
-              onViewCalendar?.();
-            }}
+              onViewCalendar?.()
+          }}
             className="flex items-center gap-1"
           >
             {variant === 'mobile' ? 'View All' : 'View Calendar'} <ExternalLink className="h-3 w-3" />
@@ -335,8 +335,8 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
               className={`bg-gradient-to-r ${getEventColor(nextEvent.type)} border rounded-lg p-4 cursor-pointer`}
               onClick={(e) => {
                 e.stopPropagation();
-                onEventClick?.(nextEvent);
-              }}
+                onEventClick?.(nextEvent)
+          }}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
@@ -427,8 +427,8 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
               className="flex items-center gap-1 text-xs text-orange-400 cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
-                setShowConflictDetails(!showConflictDetails);
-              }}
+                setShowConflictDetails(!showConflictDetails)
+          }}
             >
               <AlertTriangle className="h-3 w-3" />
               <span>{conflicts.length} scheduling conflict{conflicts.length > 1 ? 's' : ''}</span>
@@ -478,8 +478,8 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
                         size="sm" 
                         onClick={(e) => {
                           e.stopPropagation();
-                          onResolveConflict?.(conflicts[0].id);
-                        }}
+                          onResolveConflict?.(conflicts[0].id)
+          }}
                       >
                         Resolve Conflict
                       </HiveButton>
@@ -488,8 +488,8 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setShowConflictDetails(false);
-                        }}
+                          setShowConflictDetails(false)
+          }}
                       >
                         Ignore for Now
                       </HiveButton>
@@ -510,7 +510,7 @@ export const CalendarCard: React.FC<CalendarCardProps> = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export default CalendarCard;

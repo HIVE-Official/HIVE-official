@@ -65,7 +65,7 @@ describe('CampusActivityFeed', () => {
     render(<CampusActivityFeed activities={mockActivities} />);
     
     expect(screen.getByText('Campus Activity')).toBeInTheDocument();
-    expect(screen.getByText('Recent campus activity from your spaces')).toBeInTheDocument();
+    expect(screen.getByText('Recent campus activity from your spaces')).toBeInTheDocument()
   });
 
   it('displays activities with correct information', () => {
@@ -76,7 +76,7 @@ describe('CampusActivityFeed', () => {
     expect(screen.getByText('Programming Assignment 3 Posted')).toBeInTheDocument();
     
     expect(screen.getByText('Prof. Sarah Chen')).toBeInTheDocument();
-    expect(screen.getByText('Marcus Thompson')).toBeInTheDocument();
+    expect(screen.getByText('Marcus Thompson')).toBeInTheDocument()
   });
 
   it('shows activity metadata correctly', () => {
@@ -95,7 +95,7 @@ describe('CampusActivityFeed', () => {
     
     // Should show unread indicator (golden dot)
     const unreadIndicators = document.querySelectorAll('.bg-gold.shadow-\\[0_0_4px_rgba\\(255\\,215\\,0\\,0\\.5\\)\\]');
-    expect(unreadIndicators.length).toBeGreaterThan(0);
+    expect(unreadIndicators.length).toBeGreaterThan(0)
   });
 
   it('calls onActivityClick when activity is clicked', () => {
@@ -103,7 +103,7 @@ describe('CampusActivityFeed', () => {
     render(<CampusActivityFeed activities={mockActivities} onActivityClick={onActivityClick} />);
     
     fireEvent.click(screen.getByText('Midterm Exam Schedule Released'));
-    expect(onActivityClick).toHaveBeenCalledWith('1');
+    expect(onActivityClick).toHaveBeenCalledWith('1')
   });
 
   it('calls onViewAll when view all button is clicked', () => {
@@ -111,7 +111,7 @@ describe('CampusActivityFeed', () => {
     render(<CampusActivityFeed activities={mockActivities} onViewAll={onViewAll} />);
     
     fireEvent.click(screen.getByText('View All'));
-    expect(onViewAll).toHaveBeenCalled();
+    expect(onViewAll).toHaveBeenCalled()
   });
 
   it('limits displayed activities based on maxItems prop', () => {
@@ -122,7 +122,7 @@ describe('CampusActivityFeed', () => {
     expect(screen.queryByText('Programming Assignment 3 Posted')).not.toBeInTheDocument();
     
     // Should show "more activities" indicator
-    expect(screen.getByText('+1 more activities')).toBeInTheDocument();
+    expect(screen.getByText('+1 more activities')).toBeInTheDocument()
   });
 
   it('renders loading state correctly', () => {
@@ -130,14 +130,14 @@ describe('CampusActivityFeed', () => {
     
     // Should show loading skeleton
     const loadingElements = document.querySelectorAll('.animate-pulse');
-    expect(loadingElements.length).toBeGreaterThan(0);
+    expect(loadingElements.length).toBeGreaterThan(0)
   });
 
   it('renders empty state correctly', () => {
     render(<CampusActivityFeed activities={[]} />);
     
     expect(screen.getByText('No Recent Activity')).toBeInTheDocument();
-    expect(screen.getByText('Join more spaces to see campus activity here')).toBeInTheDocument();
+    expect(screen.getByText('Join more spaces to see campus activity here')).toBeInTheDocument()
   });
 
   it('formats timestamps correctly', () => {
@@ -147,14 +147,14 @@ describe('CampusActivityFeed', () => {
     };
     
     render(<CampusActivityFeed activities={[recentActivity]} />);
-    expect(screen.getByText('30m ago')).toBeInTheDocument();
+    expect(screen.getByText('30m ago')).toBeInTheDocument()
   });
 
   it('displays due dates for assignments', () => {
     render(<CampusActivityFeed activities={mockActivities} />);
     
     // Should show due date for assignment
-    expect(screen.getByText(/Due:/)).toBeInTheDocument();
+    expect(screen.getByText(/Due:/)).toBeInTheDocument()
   });
 
   it('shows correct activity type icons', () => {
@@ -163,7 +163,7 @@ describe('CampusActivityFeed', () => {
     // Icons are rendered as text content within the activity type indicators
     // The exact emoji might vary, but we can check that activity type indicators exist
     const activityIcons = document.querySelectorAll('.w-8.h-8.rounded-xl');
-    expect(activityIcons.length).toBeGreaterThanOrEqual(3);
+    expect(activityIcons.length).toBeGreaterThanOrEqual(3)
   });
 
   it('handles activities without authors gracefully', () => {
@@ -176,5 +176,5 @@ describe('CampusActivityFeed', () => {
     
     expect(screen.getByText('Midterm Exam Schedule Released')).toBeInTheDocument();
     // Should not crash when author is undefined
-  });
+  })
 });

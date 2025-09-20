@@ -24,14 +24,14 @@ export interface NavigationItem {
   badge?: {
     count?: number;
     variant?: 'default' | 'success' | 'warning' | 'error';
-    pulse?: boolean;
+    pulse?: boolean
   };
   isActive?: boolean;
   isDisabled?: boolean;
   children?: NavigationItem[];
   keywords?: string[];
   description?: string;
-  shortcut?: string;
+  shortcut?: string
 }
 
 export interface NavigationSection {
@@ -39,7 +39,7 @@ export interface NavigationSection {
   label: string;
   items: NavigationItem[];
   collapsible?: boolean;
-  defaultCollapsed?: boolean;
+  defaultCollapsed?: boolean
 }
 
 export interface NavigationUser {
@@ -48,7 +48,7 @@ export interface NavigationUser {
   handle: string;
   avatar?: string;
   role?: string;
-  status?: 'online' | 'away' | 'busy' | 'offline';
+  status?: 'online' | 'away' | 'busy' | 'offline'
 }
 
 export interface NavigationConfig {
@@ -66,8 +66,8 @@ export interface NavigationConfig {
   accessibility?: {
     skipLinks?: boolean;
     announcements?: boolean;
-    reducedMotion?: boolean;
-  };
+    reducedMotion?: boolean
+  }
 }
 
 // ============================================================================
@@ -92,7 +92,7 @@ interface NavigationContextType {
   setUserMenuOpen: (open: boolean) => void;
   setActiveItem: (id: string | null) => void;
   updateConfig: (config: Partial<NavigationConfig>) => void;
-  navigate: (item: NavigationItem) => void;
+  navigate: (item: NavigationItem) => void
 }
 
 const NavigationContext = createContext<NavigationContextType | null>(null);
@@ -100,9 +100,9 @@ const NavigationContext = createContext<NavigationContextType | null>(null);
 export const useNavigation = () => {
   const context = useContext(NavigationContext);
   if (!context) {
-    throw new Error('useNavigation must be used within a NavigationProvider');
+    throw new Error('useNavigation must be used within a NavigationProvider')
   }
-  return context;
+  return context
 };
 
 // ============================================================================
@@ -115,7 +115,7 @@ interface NavigationProviderProps {
   user?: NavigationUser | null;
   sections: NavigationSection[];
   onNavigate?: (item: NavigationItem) => void;
-  onConfigChange?: (config: NavigationConfig) => void;
+  onConfigChange?: (config: NavigationConfig) => void
 }
 
 export function NavigationProvider({
@@ -137,12 +137,12 @@ export function NavigationProvider({
   // Handle mobile detection
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < (currentConfig.mobileBreakpoint ?? 768));
+      setIsMobile(window.innerWidth < (currentConfig.mobileBreakpoint ?? 768))
     };
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile)
   }, [currentConfig.mobileBreakpoint]);
 
   // Handle keyboard shortcuts
@@ -153,31 +153,31 @@ export function NavigationProvider({
       // Command/Ctrl + K for search
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        setSearchOpen(true);
+        setSearchOpen(true)
       }
       
       // Command/Ctrl + B for sidebar toggle
       if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
         e.preventDefault();
-        setIsCollapsed(!isCollapsed);
+        setIsCollapsed(!isCollapsed)
       }
       
       // Escape to close overlays
       if (e.key === 'Escape') {
         setSearchOpen(false);
         setNotificationsOpen(false);
-        setUserMenuOpen(false);
+        setUserMenuOpen(false)
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [currentConfig.keyboardShortcuts, isCollapsed]);
 
   const updateConfig = (newConfig: Partial<NavigationConfig>) => {
     const updatedConfig = { ...currentConfig, ...newConfig };
     setCurrentConfig(updatedConfig);
-    onConfigChange?.(updatedConfig);
+    onConfigChange?.(updatedConfig)
   };
 
   const navigate = (item: NavigationItem) => {
@@ -186,7 +186,7 @@ export function NavigationProvider({
     
     // Close mobile menu after navigation
     if (isMobile) {
-      setIsCollapsed(true);
+      setIsCollapsed(true)
     }
   };
 
@@ -213,7 +213,7 @@ export function NavigationProvider({
     <NavigationContext.Provider value={value}>
       {children}
     </NavigationContext.Provider>
-  );
+  )
 }
 
 // ============================================================================
@@ -223,7 +223,7 @@ export function NavigationProvider({
 export interface NavigationContainerProps {
   children: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
+  style?: React.CSSProperties
 }
 
 export function NavigationContainer({ children, className, style }: NavigationContainerProps) {
@@ -246,14 +246,14 @@ export function NavigationContainer({ children, className, style }: NavigationCo
         color: 'var(--hive-text-primary)',
         border: `1px solid var(--hive-border-subtle)`,
         ...style
-      }}
+          }}
       role="navigation"
       aria-label="Main navigation"
       {...getHiveMotionProps('surface')}
     >
       {children}
     </motion.nav>
-  );
+  )
 }
 
 export interface NavigationBrandProps {
@@ -261,7 +261,7 @@ export interface NavigationBrandProps {
   title?: string;
   subtitle?: string;
   href?: string;
-  className?: string;
+  className?: string
 }
 
 export function NavigationBrand({ logo, title, subtitle, href, className }: NavigationBrandProps) {
@@ -288,7 +288,7 @@ export function NavigationBrand({ logo, title, subtitle, href, className }: Navi
                 fontFamily: 'var(--hive-font-family-primary)',
                 fontSize: 'var(--hive-font-size-lg)',
                 fontWeight: 'var(--hive-font-weight-semibold)'
-              }}
+          }}
             >
               {title}
             </span>
@@ -300,7 +300,7 @@ export function NavigationBrand({ logo, title, subtitle, href, className }: Navi
                 color: 'var(--hive-text-muted)',
                 fontSize: 'var(--hive-font-size-sm)',
                 fontWeight: 'var(--hive-font-weight-regular)'
-              }}
+          }}
             >
               {subtitle}
             </span>
@@ -321,14 +321,14 @@ export function NavigationBrand({ logo, title, subtitle, href, className }: Navi
       >
         {brandContent}
       </motion.a>
-    );
+    )
   }
 
   return (
     <div className="p-4">
       {brandContent}
     </div>
-  );
+  )
 }
 
 

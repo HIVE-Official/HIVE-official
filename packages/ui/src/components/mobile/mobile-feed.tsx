@@ -32,7 +32,7 @@ interface MobileFeedProps {
   onShare: (post: FeedPost) => void;
   onComment: (postId: string) => void;
   hasMore?: boolean;
-  isLoading?: boolean;
+  isLoading?: boolean
 }
 
 interface FeedPost {
@@ -41,7 +41,7 @@ interface FeedPost {
   author: {
     name: string;
     handle: string;
-    avatar?: string;
+    avatar?: string
   };
   timestamp: string;
   likes: number;
@@ -50,15 +50,15 @@ interface FeedPost {
   isBookmarked: boolean;
   space?: {
     name: string;
-    color: string;
+    color: string
   };
   contentType: 'text' | 'image' | 'link' | 'tool';
   preview?: {
     title?: string;
     description?: string;
     image?: string;
-    url?: string;
-  };
+    url?: string
+  }
 }
 
 export function MobileFeed({
@@ -94,17 +94,17 @@ export function MobileFeed({
   // Handle post interactions with haptic feedback
   const handleLike = useCallback((postId: string) => {
     triggerHaptic('light');
-    onLike(postId);
+    onLike(postId)
   }, [onLike, triggerHaptic]);
 
   const handleBookmark = useCallback((postId: string) => {
     triggerHaptic('medium');
-    onBookmark(postId);
+    onBookmark(postId)
   }, [onBookmark, triggerHaptic]);
 
   const handleShare = useCallback((post: FeedPost) => {
     triggerHaptic('light');
-    onShare(post);
+    onShare(post)
   }, [onShare, triggerHaptic]);
 
   // Infinite scroll
@@ -115,7 +115,7 @@ export function MobileFeed({
     const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
 
     if (scrollPercentage > 0.9) {
-      onLoadMore();
+      onLoadMore()
     }
   }, [onLoadMore, isLoading, hasMore]);
 
@@ -124,7 +124,7 @@ export function MobileFeed({
     if (!feedElement) return;
 
     feedElement.addEventListener('scroll', handleScroll, { passive: true });
-    return () => feedElement.removeEventListener('scroll', handleScroll);
+    return () => feedElement.removeEventListener('scroll', handleScroll)
   }, [handleScroll]);
 
   // Pull to refresh indicator
@@ -134,7 +134,7 @@ export function MobileFeed({
       style={{ 
         transform: `translateY(${Math.max(0, pullDistance - 20)}px)`,
         opacity: pullDistance > 0 ? Math.min(pullDistance / 60, 1) : 0
-      }}
+          }}
     >
       {isRefreshing ? (
         <>
@@ -173,7 +173,7 @@ export function MobileFeed({
           transform: isPulling ? `translateY(${Math.min(pullDistance, 100)}px)` : 'translateY(0)',
           transition: isPulling ? 'none' : 'transform 0.3s ease-out',
           paddingTop: pullDistance > 0 ? `${Math.min(pullDistance, 80)}px` : '0'
-        }}
+          }}
         {...pullToRefreshHandlers}
       >
         <div className="space-y-4 px-4 py-2">
@@ -219,7 +219,7 @@ export function MobileFeed({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Mobile-optimized post card component
@@ -236,7 +236,7 @@ function MobilePostCard({
   onBookmark: (id: string) => void;
   onShare: (post: FeedPost) => void;
   onComment: (id: string) => void;
-  isSwipedOut: boolean;
+  isSwipedOut: boolean
 }) {
   const [isLikeAnimating, setIsLikeAnimating] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
@@ -249,11 +249,11 @@ function MobilePostCard({
     onSwipeLeft: () => {
       setShowQuickActions(true);
       triggerHaptic('selection');
-      setTimeout(() => setShowQuickActions(false), 3000);
+      setTimeout(() => setShowQuickActions(false), 3000)
     },
     onSwipeRight: () => {
       // Quick like on right swipe
-      handleLike();
+      handleLike()
     }
   });
 
@@ -264,7 +264,7 @@ function MobilePostCard({
     onLike(post.id);
     triggerHaptic(post.isLiked ? 'light' : 'medium');
     
-    setTimeout(() => setIsLikeAnimating(false), 300);
+    setTimeout(() => setIsLikeAnimating(false), 300)
   }, [post.id, post.isLiked, onLike, triggerHaptic, isLikeAnimating]);
 
   const formatTimestamp = (timestamp: string) => {
@@ -274,11 +274,11 @@ function MobilePostCard({
     const hours = diff / (1000 * 60 * 60);
     
     if (hours < 1) {
-      return `${Math.floor(diff / (1000 * 60))}m`;
+      return `${Math.floor(diff / (1000 * 60))}m`
     } else if (hours < 24) {
-      return `${Math.floor(hours)}h`;
+      return `${Math.floor(hours)}h`
     } else {
-      return `${Math.floor(hours / 24)}d`;
+      return `${Math.floor(hours / 24)}d`
     }
   };
 
@@ -406,5 +406,5 @@ function MobilePostCard({
       </CardContent>
     </Card>
     </div>
-  );
+  )
 }

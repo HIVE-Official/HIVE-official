@@ -60,7 +60,7 @@ export interface ModularCardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof moduleVariants> {
   stackable?: boolean;
-  connectable?: boolean;
+  connectable?: boolean
 }
 
 const ModularCard = React.forwardRef<HTMLDivElement, ModularCardProps>(
@@ -87,7 +87,7 @@ const ModularCard = React.forwardRef<HTMLDivElement, ModularCardProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 
@@ -132,7 +132,7 @@ const ModularStack = ({
 }: { 
   children: React.ReactNode;
   gap?: string;
-  direction?: "vertical" | "horizontal";
+  direction?: "vertical" | "horizontal"
 }) => (
   <div className={cn(
     "flex",
@@ -151,7 +151,7 @@ const ModularGrid = ({
 }: { 
   children: React.ReactNode;
   columns?: number;
-  gap?: string;
+  gap?: string
 }) => (
   <div className={cn(
     "grid",
@@ -170,7 +170,7 @@ export interface HiveModularCardProps extends ModularCardProps {
     media?: any;
     stats?: any;
     actions?: any;
-    footer?: any;
+    footer?: any
   };
   layout?: 'vertical' | 'horizontal' | 'grid' | 'flexible';
   loading?: boolean;
@@ -182,7 +182,7 @@ export interface HiveModularCardProps extends ModularCardProps {
   interactive?: boolean;
   onModuleClick?: (moduleType: string) => void;
   onActionClick?: (action: string) => void;
-  onCardHover?: (hovered: boolean) => void;
+  onCardHover?: (hovered: boolean) => void
 }
 
 export const HiveModularCard: React.FC<HiveModularCardProps> = ({
@@ -202,11 +202,11 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
   ...props
 }) => {
   const handleMouseEnter = () => {
-    if (onCardHover) onCardHover(true);
+    if (onCardHover) onCardHover(true)
   };
 
   const handleMouseLeave = () => {
-    if (onCardHover) onCardHover(false);
+    if (onCardHover) onCardHover(false)
   };
 
   if (loading) {
@@ -237,7 +237,7 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
           )}
         </div>
       </ModularCard>
-    );
+    )
   }
 
   if (error) {
@@ -259,7 +259,7 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
           )}
         </div>
       </ModularCard>
-    );
+    )
   }
 
   return (
@@ -355,7 +355,7 @@ export const HiveModularCard: React.FC<HiveModularCardProps> = ({
         )}
       </div>
     </ModularCard>
-  );
+  )
 };
 
 export { 

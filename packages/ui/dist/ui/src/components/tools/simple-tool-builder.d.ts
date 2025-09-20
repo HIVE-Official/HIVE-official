@@ -25,5 +25,25 @@ export interface ToolBuildConfig {
     settings: Record<string, any>;
 }
 export declare function SimpleToolBuilder({ selectedTemplate, onTemplateSelect, onBuildTool, className }: SimpleToolBuilderProps): import("react/jsx-runtime").JSX.Element;
+interface ToolTemplateSelectionProps {
+    templates: UBToolTemplate[];
+    onSelectTemplate: (template: UBToolTemplate) => void;
+}
+export declare function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTemplateSelectionProps): import("react/jsx-runtime").JSX.Element;
+interface ToolConfigurationProps {
+    template: UBToolTemplate;
+    config: ToolBuildConfig;
+    onConfigChange: (config: ToolBuildConfig) => void;
+    onNext: () => void;
+    onBack: () => void;
+}
+export declare function ToolConfiguration({ template, config, onConfigChange, onNext, onBack }: ToolConfigurationProps): import("react/jsx-runtime").JSX.Element;
+interface ToolPreviewProps {
+    template: UBToolTemplate;
+    config: ToolBuildConfig;
+    onBuild: () => void;
+    onBack: () => void;
+}
+export declare function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewProps): import("react/jsx-runtime").JSX.Element;
 export {};
 //# sourceMappingURL=simple-tool-builder.d.ts.map

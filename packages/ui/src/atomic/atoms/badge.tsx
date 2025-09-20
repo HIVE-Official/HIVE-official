@@ -4,12 +4,12 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 
+  variant?:
     // Core system variants
-    | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost'
+    | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost' | 'outline'
     // HIVE recognition variants
-    | 'builder' | 'verified' | 'leader' | 'ghost-mode' 
-    // Achievement variants 
+    | 'builder' | 'verified' | 'leader' | 'ghost-mode'
+    // Achievement variants
     | 'achievement' | 'streak' | 'scholar' | 'connector'
     // Custom role variants
     | 'dean' | 'developer' | 'organizer' | 'helper';
@@ -18,7 +18,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   count?: number;
   maxCount?: number;
   icon?: React.ReactNode;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 const badgeVariants = {
@@ -33,6 +33,7 @@ const badgeVariants = {
   error: 'bg-[color-mix(in_srgb,var(--hive-status-error)_10%,transparent)] text-[var(--hive-status-error)] border-[var(--hive-status-error)]',
   info: 'bg-[color-mix(in_srgb,var(--hive-status-info)_10%,transparent)] text-[var(--hive-status-info)] border-[var(--hive-status-info)]',
   ghost: 'bg-transparent text-[var(--hive-text-tertiary)] border-[var(--hive-border-subtle)]',
+  outline: 'bg-transparent text-[var(--hive-text-primary)] border-[var(--hive-border-default)]',
 
   // === HIVE RECOGNITION VARIANTS ===
   // Builder - Gold filled for platform builders
@@ -118,7 +119,7 @@ export const Badge: React.FC<BadgeProps> = ({
           </span>
         )}
       </span>
-    );
+    )
   }
 
   // Count variant
@@ -132,7 +133,7 @@ export const Badge: React.FC<BadgeProps> = ({
       >
         {displayCount}
       </span>
-    );
+    )
   }
 
   // Default variant
@@ -148,7 +149,7 @@ export const Badge: React.FC<BadgeProps> = ({
       )}
       {children}
     </span>
-  );
+  )
 };
 
 // HIVE Recognition Badge Presets

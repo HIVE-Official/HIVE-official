@@ -14,7 +14,7 @@ export interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   onRemove?: () => void;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const tagColors = {
@@ -110,7 +110,7 @@ export const Tag = React.forwardRef<HTMLDivElement, TagProps>(({
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!disabled && onRemove) {
-      onRemove();
+      onRemove()
     }
   };
 
@@ -165,7 +165,7 @@ export const Tag = React.forwardRef<HTMLDivElement, TagProps>(({
       onKeyDown={interactive && !disabled ? (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onClick?.(e as any);
+          onClick?.(e as any)
         }
       } : undefined}
       {...props}
@@ -206,7 +206,7 @@ export const Tag = React.forwardRef<HTMLDivElement, TagProps>(({
         </button>
       )}
     </div>
-  );
+  )
 });
 
 Tag.displayName = 'Tag';

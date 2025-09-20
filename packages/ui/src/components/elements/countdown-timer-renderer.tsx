@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ElementInstance } from '@hive/core';
-import { Label } from '../../components/ui/label';
+import { Label } from '../../atomic/atoms/label';
 import { Clock } from 'lucide-react';
 import { useStandardElementStyles } from '../../hooks/use-standard-element-styles';
 
@@ -19,7 +19,7 @@ interface CountdownTimerConfig {
   format?: 'days' | 'hours' | 'minutes' | 'seconds' | 'dhms';
   onComplete?: {
     type: 'message' | 'redirect' | 'trigger';
-    value: string;
+    value: string
   };
   
   // Standard properties (any element can use these)
@@ -35,8 +35,8 @@ interface CountdownTimerRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 interface TimeRemaining {
@@ -44,7 +44,7 @@ interface TimeRemaining {
   hours: number;
   minutes: number;
   seconds: number;
-  total: number;
+  total: number
 }
 
 export const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps> = ({
@@ -72,7 +72,7 @@ export const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps> = ({
     const difference = targetTime - currentTime;
 
     if (difference <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0 };
+      return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0 }
     }
 
     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -80,7 +80,7 @@ export const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps> = ({
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-    return { days, hours, minutes, seconds, total: difference };
+    return { days, hours, minutes, seconds, total: difference }
   };
 
   // Update timer every second
@@ -109,21 +109,21 @@ export const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps> = ({
                   completed: true,
                   completedAt: Date.now(),
                   triggerValue: config.onComplete.value
-                });
+                })
               }
-              break;
+              break
           }
         }
       }
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => clearInterval(timer)
   }, [config.onComplete, config.targetDate, isComplete, onStateChange]);
 
   // Format display based on config
   const formatTimeDisplay = (time: TimeRemaining): string => {
     if (isComplete) {
-      return "Time's up!";
+      return "Time's up!"
     }
 
     switch (config.format) {
@@ -142,7 +142,7 @@ export const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps> = ({
         if (time.hours > 0) parts.push(`${time.hours}h`);
         if (time.minutes > 0) parts.push(`${time.minutes}m`);
         if (time.seconds > 0 || parts.length === 0) parts.push(`${time.seconds}s`);
-        return parts.join(' ');
+        return parts.join(' ')
     }
   };
 
@@ -180,5 +180,5 @@ export const CountdownTimerRenderer: React.FC<CountdownTimerRendererProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };

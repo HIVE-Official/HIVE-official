@@ -110,7 +110,7 @@ export interface FileUploadItem {
   progress: number;
   error?: string;
   url?: string;
-  preview?: string;
+  preview?: string
 }
 
 export interface HiveFileUploadProps
@@ -131,7 +131,7 @@ export interface HiveFileUploadProps
   allowedTypes?: string[];
   placeholder?: React.ReactNode;
   dropzoneText?: string;
-  uploadText?: string;
+  uploadText?: string
 }
 
 const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
@@ -174,7 +174,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
       if (type.includes('text/') || type.includes('document')) return <FileText size={20} />;
       if (type.includes('zip') || type.includes('rar') || type.includes('tar')) return <Archive size={20} />;
       if (type.includes('javascript') || type.includes('json') || type.includes('css')) return <Code size={20} />;
-      return <File size={20} />;
+      return <File size={20} />
     };
     
     // File size formatting
@@ -183,20 +183,20 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
       const k = 1024;
       const sizes = ['Bytes', 'KB', 'MB', 'GB'];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
     };
     
     // File validation
     const validateFile = (file: File): string | null => {
       if (maxSize && file.size > maxSize) {
-        return `File size exceeds ${formatFileSize(maxSize)}`;
+        return `File size exceeds ${formatFileSize(maxSize)}`
       }
       
       if (allowedTypes && !allowedTypes.some(type => file.type.startsWith(type))) {
-        return `File type not allowed. Accepted types: ${allowedTypes.join(', ')}`;
+        return `File type not allowed. Accepted types: ${allowedTypes.join(', ')}`
       }
       
-      return null;
+      return null
     };
     
     // Generate file preview
@@ -206,11 +206,11 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
           const reader = new FileReader();
           reader.onload = (e) => resolve(e.target?.result as string);
           reader.onerror = () => resolve(null);
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(file)
         } else {
-          resolve(null);
+          resolve(null)
         }
-      });
+      })
     }, []);
     
     // Process selected files
@@ -221,7 +221,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
       // Check file count limit
       if (files.length + fileArray.length > maxFiles) {
         console.warn(`Maximum ${maxFiles} files allowed`);
-        return;
+        return
       }
       
       for (const file of fileArray) {
@@ -238,11 +238,11 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
           progress: 0,
           error,
           preview,
-        });
+        })
       }
       
       setFiles(prev => [...prev, ...newFiles]);
-      onFilesSelected?.(fileArray);
+      onFilesSelected?.(fileArray)
     }, [files.length, maxFiles, maxSize, allowedTypes, showPreview, onFilesSelected, generatePreview, validateFile]);
     
     // Drag and drop handlers
@@ -250,19 +250,19 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
       e.preventDefault();
       e.stopPropagation();
       if (!disabled) {
-        setDragOver(true);
+        setDragOver(true)
       }
     }, [disabled]);
     
     const handleDragLeave = useCallback((e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      setDragOver(false);
+      setDragOver(false)
     }, []);
     
     const handleDragOver = useCallback((e: React.DragEvent) => {
       e.preventDefault();
-      e.stopPropagation();
+      e.stopPropagation()
     }, []);
     
     const handleDrop = useCallback((e: React.DragEvent) => {
@@ -272,7 +272,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
       
       if (!disabled) {
         const droppedFiles = e.dataTransfer.files;
-        processFiles(droppedFiles);
+        processFiles(droppedFiles)
       }
     }, [disabled, processFiles]);
     
@@ -281,14 +281,14 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
       if (e.target.files) {
         processFiles(e.target.files);
         // Reset input value
-        e.target.value = '';
+        e.target.value = ''
       }
     }, [processFiles]);
     
     // Remove file
     const removeFile = useCallback((fileId: string) => {
       setFiles(prev => prev.filter(f => f.id !== fileId));
-      onFileRemove?.(fileId);
+      onFileRemove?.(fileId)
     }, [onFileRemove]);
     
     // Upload files
@@ -314,18 +314,18 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                 f.id === fileItem.id 
                   ? { ...f, status: 'success' as const, progress: 100, url: result.url }
                   : f
-              ));
+              ))
             } catch (error) {
               setFiles(prev => prev.map(f => 
                 f.id === fileItem.id 
                   ? { ...f, status: 'error' as const, error: error instanceof Error ? error.message : 'Upload failed' }
                   : f
-              ));
+              ))
             }
           }
         } else if (onUpload) {
           // Use provided upload handler
-          await onUpload(pendingFiles);
+          await onUpload(pendingFiles)
         } else {
           // Simulate upload with progress
           for (const fileItem of pendingFiles) {
@@ -342,27 +342,27 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
                 f.id === fileItem.id 
                   ? { ...f, progress }
                   : f
-              ));
+              ))
             }
             
             setFiles(prev => prev.map(f => 
               f.id === fileItem.id 
                 ? { ...f, status: 'success' as const }
                 : f
-            ));
+            ))
           }
         }
       } catch (error) {
-        console.error('Upload error:', error);
+        console.error('Upload error:', error)
       } finally {
-        setUploading(false);
+        setUploading(false)
       }
     }, [files, customUploadHandler, onUpload]);
     
     // Open file browser
     const openFileBrowser = () => {
       if (!disabled) {
-        fileInputRef.current?.click();
+        fileInputRef.current?.click()
       }
     };
     
@@ -580,7 +580,7 @@ const HiveFileUpload = React.forwardRef<HTMLDivElement, HiveFileUploadProps>(
           </div>
         )}
       </div>
-    );
+    )
   }
 );
 
@@ -603,21 +603,21 @@ export function useHiveFileUpload() {
     }));
     
     setFiles(prev => [...prev, ...fileItems]);
-    return fileItems;
+    return fileItems
   }, []);
   
   const removeFile = useCallback((fileId: string) => {
-    setFiles(prev => prev.filter(f => f.id !== fileId));
+    setFiles(prev => prev.filter(f => f.id !== fileId))
   }, []);
   
   const updateFileStatus = useCallback((fileId: string, updates: Partial<FileUploadItem>) => {
     setFiles(prev => prev.map(f => 
       f.id === fileId ? { ...f, ...updates } : f
-    ));
+    ))
   }, []);
   
   const clearFiles = useCallback(() => {
-    setFiles([]);
+    setFiles([])
   }, []);
   
   return {
@@ -628,7 +628,7 @@ export function useHiveFileUpload() {
     removeFile,
     updateFileStatus,
     clearFiles,
-  };
+  }
 }
 
 export { 

@@ -145,7 +145,7 @@ export interface Member {
     postsCount: number;
     likesReceived: number;
     eventsAttended: number;
-    contributionScore: number;
+    contributionScore: number
   };
   interests?: string[];
   major?: string;
@@ -156,16 +156,16 @@ export interface Member {
     twitter?: string;
     instagram?: string;
     linkedin?: string;
-    website?: string;
+    website?: string
   };
   permissions?: {
     canMessage: boolean;
     canViewProfile: boolean;
-    canInviteOthers: boolean;
+    canInviteOthers: boolean
   };
   // Additional fields from API
   spaceRole?: string;
-  isOnline?: boolean;
+  isOnline?: boolean
 }
 
 export interface HiveMembersSurfaceProps
@@ -189,7 +189,7 @@ export interface HiveMembersSurfaceProps
   maxMembers?: number;
   // New props for real data fetching
   autoFetch?: boolean;
-  authToken?: string;
+  authToken?: string
 }
 
 // Helper function to get auth token from session storage
@@ -202,19 +202,19 @@ const getAuthToken = (): string | null => {
       const session = JSON.parse(sessionJson);
       return process.env.NODE_ENV === 'development' 
         ? `dev_token_${session.uid}` 
-        : session.token;
+        : session.token
     }
   } catch (error) {
-    console.error('Error getting session:', error);
+    console.error('Error getting session:', error)
   }
-  return null;
+  return null
 };
 
 // API function to fetch members
 const fetchMembers = async (spaceId: string, limit = 50): Promise<{ members: Member[]; summary: any }> => {
   const token = getAuthToken();
   if (!token) {
-    throw new Error('No authentication token available');
+    throw new Error('No authentication token available')
   }
 
   const response = await fetch(`/api/spaces/${spaceId}/members?limit=${limit}&includeOffline=true`, {
@@ -225,14 +225,14 @@ const fetchMembers = async (spaceId: string, limit = 50): Promise<{ members: Mem
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch members: ${response.statusText}`);
+    throw new Error(`Failed to fetch members: ${response.statusText}`)
   }
 
   const data = await response.json();
   return {
     members: data.members || [],
     summary: data.summary || { totalMembers: 0, onlineMembers: 0, activeMembers: 0 }
-  };
+  }
 };
 
 export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSurfaceProps>(
@@ -280,16 +280,16 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
           setError(null);
           const { members, summary } = await fetchMembers(space.id, maxMembers);
           setFetchedMembers(members);
-          setMembersSummary(summary);
+          setMembersSummary(summary)
         } catch (error) {
           console.error('Failed to fetch members:', error);
-          setError(error instanceof Error ? error.message : 'Failed to fetch members');
+          setError(error instanceof Error ? error.message : 'Failed to fetch members')
         } finally {
-          setIsLoading(false);
+          setIsLoading(false)
         }
       };
 
-      loadMembers();
+      loadMembers()
     }, [autoFetch, space?.id, maxMembers]);
     
     // Use either provided members or fetched members
@@ -325,7 +325,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         const rawRole = member.role as string;
         if (rawRole === 'owner' || rawRole === 'admin') return 'builder';
         if (rawRole in memberRoles) return rawRole as keyof typeof memberRoles;
-        return 'member' as keyof typeof memberRoles;
+        return 'member' as keyof typeof memberRoles
       })(),
     }));
 
@@ -346,8 +346,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         // Offline filter
         const statusMatch = showOfflineMembers || member.status !== 'offline';
         
-        return roleMatch && searchMatch && statusMatch;
-      })
+        return roleMatch && searchMatch && statusMatch
+      })}
       .sort((a, b) => {
         // Builders first
         if (a.role === 'builder' && b.role !== 'builder') return -1;
@@ -356,7 +356,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         // Then by role hierarchy
         const roleOrder = { builder: 4, moderator: 3, member: 2, guest: 1 };
         if (roleOrder[a.role] !== roleOrder[b.role]) {
-          return roleOrder[b.role] - roleOrder[a.role];
+          return roleOrder[b.role] - roleOrder[a.role]
         }
         
         // Online members first
@@ -364,14 +364,14 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         if (a.status === 'offline' && b.status !== 'offline') return 1;
         
         // Finally by join date
-        return new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime();
+        return new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime()
       })
       .slice(0, maxMembers);
     
     // Member counts by role
     const roleCounts = members.reduce((acc, member) => {
       acc[member.role] = (acc[member.role] || 0) + 1;
-      return acc;
+      return acc
     }, {} as Record<string, number>);
     
     // Online member count
@@ -386,7 +386,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
         linkedin: Linkedin,
         website: Globe
       };
-      return iconMap[platform] || Globe;
+      return iconMap[platform] || Globe
     };
     
     // Loading state
@@ -418,7 +418,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
             </div>
           </div>
         </div>
-      );
+      )
     }
 
     // Error state
@@ -458,12 +458,12 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                   fetchMembers(space.id, maxMembers)
                     .then(({ members, summary }) => {
                       setFetchedMembers(members);
-                      setMembersSummary(summary);
+                      setMembersSummary(summary)
                     })
                     .catch(e => setError(e.message))
-                    .finally(() => setIsLoading(false));
+                    .finally(() => setIsLoading(false))
                 }
-              }}
+          })}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -471,7 +471,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
             </motion.button>
           </motion.div>
         </div>
-      );
+      )
     }
     
     // Empty state
@@ -514,7 +514,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
             )}
           </motion.div>
         </div>
-      );
+      )
     }
     
     return (
@@ -543,7 +543,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
               {[
                 { key: 'grid', icon: Grid },
                 { key: 'list', icon: List }
-              ].map(({ key, icon: Icon }) => (
+              ].map(({ key, icon: Icon })} => (
                 <motion.button
                   key={key}
                   className={cn(
@@ -600,7 +600,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                 icon: config.icon,
                 color: config.color,
                 count: roleCounts[key] || 0
-              }))
+              })})
             ].map((filter) => {
               const Icon = filter.icon;
               const isActive = selectedRole === filter.key;
@@ -629,8 +629,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                     {filter.count}
                   </span>
                 </motion.button>
-              );
-            })}
+              )
+          })
           </div>
         </div>
         
@@ -791,8 +791,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                         className="p-2 text-gray-400 hover:text-blue-400 rounded-lg hover:bg-blue-500/10 transition-all duration-200"
                         onClick={(e) => {
                           e.stopPropagation();
-                          onMessageMember?.(member.id);
-                        }}
+                          onMessageMember?.(member.id)
+          }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -812,8 +812,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                                 className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 border border-blue-500/30 rounded-lg text-xs text-blue-400 hover:bg-blue-500/30 transition-all"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setShowMemberMenu(showMemberMenu === member.id ? null : member.id);
-                                }}
+                                  setShowMemberMenu(showMemberMenu === member.id ? null : member.id)
+          }}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                               >
@@ -854,10 +854,10 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                                               )}
                                               onClick={() => {
                                                 if (!isCurrentRole) {
-                                                  onChangeRole?.(member.id, role as keyof typeof memberRoles);
+                                                  onChangeRole?.(member.id, role as keyof typeof memberRoles)
                                                 }
-                                                setShowMemberMenu(null);
-                                              }}
+                                                setShowMemberMenu(null)
+          })}
                                               disabled={isCurrentRole}
                                               whileHover={!isCurrentRole ? { x: 4 } : {}}
                                             >
@@ -873,8 +873,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                                                 <UserCheck className="w-3 h-3 text-blue-400" />
                                               )}
                                             </motion.button>
-                                          );
-                                        })}
+                                          )
+          })}
                                       </div>
                                       
                                       {/* Danger Actions */}
@@ -883,8 +883,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                                           className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-red-500/10 transition-all duration-200 text-sm text-red-400"
                                           onClick={() => {
                                             onRemoveMember?.(member.id);
-                                            setShowMemberMenu(null);
-                                          }}
+                                            setShowMemberMenu(null)
+          }}
                                           whileHover={{ x: 4 }}
                                         >
                                           <UserMinus className="w-4 h-4" />
@@ -895,8 +895,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                                           className="w-full flex items-center gap-3 p-2 text-left rounded-lg hover:bg-red-500/10 transition-all duration-200 text-sm text-red-400"
                                           onClick={() => {
                                             onBlockMember?.(member.id);
-                                            setShowMemberMenu(null);
-                                          }}
+                                            setShowMemberMenu(null)
+          }}
                                           whileHover={{ x: 4 }}
                                         >
                                           <UserX className="w-4 h-4" />
@@ -925,8 +925,8 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                               className="p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setShowMemberMenu(showMemberMenu === member.id ? null : member.id);
-                              }}
+                                setShowMemberMenu(showMemberMenu === member.id ? null : member.id)
+          }}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
@@ -981,7 +981,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
                   </div>
                 </div>
               </motion.article>
-            );
+            )
           })}
         </div>
         
@@ -1005,7 +1005,7 @@ export const HiveMembersSurface = React.forwardRef<HTMLDivElement, HiveMembersSu
           </motion.div>
         )}
       </div>
-    );
+    )
   }
 );
 

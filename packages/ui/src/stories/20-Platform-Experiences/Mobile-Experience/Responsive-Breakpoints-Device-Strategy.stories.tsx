@@ -398,8 +398,8 @@ const ResponsiveShowcase = () => {
                   <IconComponent className="w-5 h-5 mr-2" />
                   {device.charAt(0).toUpperCase() + device.slice(1)}
                 </Button>
-              );
-            })}
+              )
+            })
           </div>
 
           <Card className="hive-glass border border-gray-700">
@@ -707,7 +707,7 @@ const ResponsiveShowcase = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const ResponsiveBreakpoints: Story = {

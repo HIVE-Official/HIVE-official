@@ -44,4 +44,9 @@ export const useTransform = (motionValue, input, output) => ({
 });
 export const MotionSpan = motion.span;
 export const MotionSection = motion.section;
+// Mock Reorder for drag-and-drop functionality
+export const Reorder = {
+    Group: ({ children, ...props }) => _jsx("div", { ...props, children: children }),
+    Item: ({ children, ...props }) => _jsx("div", { ...props, children: children }),
+};
 //# sourceMappingURL=framer-motion-proxy.js.map

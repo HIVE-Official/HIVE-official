@@ -8,7 +8,7 @@ interface UserFriendlyError {
   code: string;
   severity: "error" | "warning" | "info";
   isRetryable: boolean;
-  action?: "retry" | "contact-support" | "sign-in" | "sign-up" | "check-email";
+  action?: "retry" | "contact-support" | "sign-in" | "sign-up" | "check-email"
 }
 
 // Simplified error handler for UI package
@@ -21,7 +21,7 @@ class SimpleErrorHandler {
       severity: "error",
       isRetryable: true,
       action: "retry"
-    };
+    }
   }
 
   static getActionButtonText(error: UserFriendlyError): string {
@@ -31,7 +31,7 @@ class SimpleErrorHandler {
       case "sign-in": return "Sign In";
       case "sign-up": return "Sign Up";
       case "check-email": return "Check Email";
-      default: return "Continue";
+      default: return "Continue"
     }
   }
 }
@@ -39,13 +39,13 @@ class SimpleErrorHandler {
 interface Props {
   children: ReactNode;
   fallback?: (error: UserFriendlyError, retry: () => void) => ReactNode;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void
 }
 
 interface State {
   hasError: boolean;
   error: Error | null;
-  errorId: string;
+  errorId: string
 }
 
 export class FirebaseErrorBoundary extends Component<Props, State> {
@@ -55,7 +55,7 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorId: "",
-    };
+    }
   }
 
   static getDerivedStateFromError(error: Error): State {
@@ -63,7 +63,7 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
       hasError: true,
       error,
       errorId: `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-    };
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -74,7 +74,7 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
     this.props.onError?.(error, errorInfo);
 
     // In a real app, you might want to send this to an error reporting service
-    // logErrorToService(error, errorInfo, this.state.errorId);
+    // logErrorToService(error, errorInfo, this.state.errorId)
   }
 
   handleRetry = () => {
@@ -82,7 +82,7 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorId: "",
-    });
+    })
   };
 
   render() {
@@ -92,7 +92,7 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
       );
 
       if (this.props.fallback) {
-        return this.props.fallback(userFriendlyError, this.handleRetry);
+        return this.props.fallback(userFriendlyError, this.handleRetry)
       }
 
       return (
@@ -101,17 +101,17 @@ export class FirebaseErrorBoundary extends Component<Props, State> {
           onRetry={this.handleRetry}
           errorId={this.state.errorId}
         />
-      );
+      )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 
 interface DefaultErrorFallbackProps {
   error: UserFriendlyError;
   onRetry: () => void;
-  errorId: string;
+  errorId: string
 }
 
 function DefaultErrorFallback({
@@ -128,7 +128,7 @@ function DefaultErrorFallback({
       case "info":
         return "ℹ️";
       default:
-        return "❌";
+        return "❌"
     }
   };
 
@@ -141,7 +141,7 @@ function DefaultErrorFallback({
       case "info":
         return "text-blue-600 border-blue-200 bg-blue-50";
       default:
-        return "text-gray-600 border-gray-200 bg-gray-50";
+        return "text-gray-600 border-gray-200 bg-gray-50"
     }
   };
 
@@ -172,8 +172,8 @@ function DefaultErrorFallback({
                 console.log("Contact support clicked", {
                   errorId,
                   errorCode: error.code,
-                });
-              }}
+                })
+          })}
               className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]"
             >
               {SimpleErrorHandler.getActionButtonText(error)}
@@ -183,8 +183,8 @@ function DefaultErrorFallback({
           {error.action === "sign-in" && (
             <button
               onClick={() => {
-                window.location.href = "/schools";
-              }}
+                window.location.href = "/schools"
+          }}
               className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]"
             >
               {SimpleErrorHandler.getActionButtonText(error)}
@@ -194,8 +194,8 @@ function DefaultErrorFallback({
           {error.action === "sign-up" && (
             <button
               onClick={() => {
-                window.location.href = "/schools";
-              }}
+                window.location.href = "/schools"
+          }}
               className="w-full px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors font-medium text-[var(--hive-text-primary)]"
             >
               {SimpleErrorHandler.getActionButtonText(error)}
@@ -228,7 +228,7 @@ function DefaultErrorFallback({
         )}
       </div>
     </div>
-  );
+  )
 }
 
 // Hook for using error boundary in functional components
@@ -236,9 +236,9 @@ export function useFirebaseErrorBoundary() {
   return {
     ErrorBoundary: FirebaseErrorBoundary,
     throwError: (error: Error) => {
-      throw error;
+      throw error
     },
-  };
+  }
 }
 
 export default FirebaseErrorBoundary;

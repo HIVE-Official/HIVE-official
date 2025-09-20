@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const buttonVariants: (props?: {
-    variant?: "primary" | "secondary" | "success" | "warning" | "ghost" | "destructive" | "info" | "link" | "accent";
+    variant?: "default" | "primary" | "secondary" | "success" | "warning" | "outline" | "ghost" | "destructive" | "info" | "link" | "accent" | "premium";
     size?: "default" | "xs" | "sm" | "md" | "lg" | "xl" | "icon";
     radius?: "default" | "sm" | "lg" | "none" | "full";
     loading?: boolean;

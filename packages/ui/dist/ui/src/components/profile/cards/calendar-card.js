@@ -1,14 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../../components/framer-motion-proxy';
+import { motion } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { ScrollArea } from '../../../components/ui/scroll-area';
-import { Calendar, Clock, MapPin, Users, Plus, ChevronLeft, ChevronRight, Settings, Bell, CheckCircle, XCircle, Circle, BookOpen, Coffee, Presentation, Eye, MoreHorizontal } from 'lucide-react';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { Calendar, Clock, MapPin, Users, ChevronLeft, ChevronRight, CheckCircle, XCircle, Circle, BookOpen, Coffee, Presentation, MoreHorizontal } from 'lucide-react';
 // Event Type Configuration
 const eventTypeConfig = {
     academic: {
@@ -174,51 +172,56 @@ export function CalendarCard({ events, isEditMode, onEventCreate, onEventUpdate,
                 return events.filter(event => {
                     const eventDate = new Date(event.startTime.getFullYear(), event.startTime.getMonth(), event.startTime.getDate());
                     return eventDate.getTime() === today.getTime();
-                }).sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
-            case 'upcoming':
-                return events.filter(event => event.startTime >= now)
-                    .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
-                    .slice(0, showAllEvents ? undefined : 5);
-            case 'calendar':
-                return events.filter(event => {
-                    const eventDate = new Date(event.startTime.getFullYear(), event.startTime.getMonth(), event.startTime.getDate());
-                    return eventDate.getTime() === selectedDay.getTime();
-                }).sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
-            default:
-                return [];
+                });
         }
-    }, [events, viewMode, selectedDate, showAllEvents]);
-    const todayEventsCount = useMemo(() => {
-        const today = new Date();
-        const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        return events.filter(event => {
-            const eventDate = new Date(event.startTime.getFullYear(), event.startTime.getMonth(), event.startTime.getDate());
-            return eventDate.getTime() === todayStart.getTime();
-        }).length;
-    }, [events]);
-    const nextEvent = useMemo(() => {
-        const now = new Date();
-        return events
-            .filter(event => event.startTime > now)
-            .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())[0];
-    }, [events]);
-    return (_jsxs(Card, { className: cn('h-full overflow-hidden', className), children: [_jsxs(CardHeader, { className: "pb-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Calendar, { className: "w-5 h-5 text-[var(--hive-brand-primary)]" }), _jsx("h3", { className: "font-semibold text-[var(--hive-text-primary)]", children: "Calendar" }), todayEventsCount > 0 && (_jsxs(Badge, { variant: "secondary", className: "text-xs", children: [todayEventsCount, " today"] }))] }), !isEditMode && (_jsx("div", { className: "flex gap-1", children: _jsx(Button, { size: "sm", variant: "ghost", className: "h-8 w-8 p-0", onClick: onSettingsClick, children: _jsx(Settings, { className: "w-4 h-4" }) }) }))] }), _jsx("div", { className: "flex gap-1 mt-2", children: [
+        sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+    });
+    'upcoming';
+    return events.filter(event => event.startTime >= now)
+        .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
+        .slice(0, showAllEvents ? undefined : 5);
+    'calendar';
+    return events.filter(event => {
+        const eventDate = new Date(event.startTime.getFullYear(), event.startTime.getMonth(), event.startTime.getDate());
+        return eventDate.getTime() === selectedDay.getTime();
+    });
+}
+sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+return [];
+[events, viewMode, selectedDate, showAllEvents];
+;
+const todayEventsCount = useMemo(() => {
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    return events.filter(event => {
+        const eventDate = new Date(event.startTime.getFullYear(), event.startTime.getMonth(), event.startTime.getDate());
+        return eventDate.getTime() === todayStart.getTime();
+    });
+}, length);
+[events];
+;
+const nextEvent = useMemo(() => {
+    const now = new Date();
+    return events
+        .filter(event => event.startTime > now)
+        .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())[0];
+}, [events]);
+return (_jsxs(Card, { className: cn('h-full overflow-hidden', className), children: [_jsxs(CardHeader, { className: "pb-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Calendar, { className: "w-5 h-5 text-[var(--hive-brand-primary)]" }), _jsx("h3", { className: "font-semibold text-[var(--hive-text-primary)]", children: "Calendar" }), todayEventsCount > 0 && (_jsxs(Badge, { variant: "secondary", className: "text-xs", children: [todayEventsCount, " today"] }))] }), !isEditMode && (_jsx("div", { className: "flex gap-1", children: _jsx(Button, { size: "sm", variant: "ghost", className: "h-8 w-8 p-0", onClick: onSettingsClick, children: _jsx(Settings, { className: "w-4 h-4" }) }) }))] }), _jsxs("div", { className: "flex gap-1 mt-2", children: [[
                             { key: 'today', label: 'Today', count: todayEventsCount },
                             { key: 'upcoming', label: 'Upcoming' },
                             { key: 'calendar', label: 'Calendar' }
-                        ].map(({ key, label, count }) => (_jsxs(Button, { size: "sm", variant: viewMode === key ? "default" : "ghost", className: "h-7 px-3 text-xs", onClick: () => setViewMode(key), children: [label, count !== undefined && count > 0 && (_jsx(Badge, { variant: "secondary", className: "ml-1 h-4 px-1 text-xs", children: count }))] }, key))) })] }), _jsxs(CardContent, { className: "space-y-4", children: [viewMode === 'today' && nextEvent && (_jsxs(motion.div, { initial: { opacity: 0, y: -10 }, animate: { opacity: 1, y: 0 }, className: "p-3 bg-[var(--hive-background-tertiary)] rounded-lg border", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Bell, { className: "w-4 h-4 text-[var(--hive-brand-primary)]" }), _jsx("span", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Next Up" })] }), _jsxs("p", { className: "text-sm text-[var(--hive-text-secondary)] mt-1", children: [nextEvent.title, " \u2022 ", getTimeUntilEvent(nextEvent.startTime)] })] })), viewMode === 'calendar' && (_jsx(CalendarMiniView, { events: events, selectedDate: selectedDate, onDateSelect: setSelectedDate })), _jsxs("div", { className: "space-y-3", children: [viewMode !== 'calendar' && (_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h4", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: viewMode === 'today' ? `Today, ${formatDate(new Date())}` : 'Upcoming Events' }), viewMode === 'upcoming' && !showAllEvents && filteredEvents.length === 5 && (_jsxs(Button, { size: "sm", variant: "ghost", className: "h-6 px-2 text-xs", onClick: () => setShowAllEvents(true), children: [_jsx(Eye, { className: "w-3 h-3 mr-1" }), "View All"] }))] })), _jsx(ScrollArea, { className: "max-h-80", children: _jsx("div", { className: "space-y-2", children: _jsx(AnimatePresence, { children: filteredEvents.length > 0 ? (filteredEvents.map((event) => (_jsx(EventItem, { event: event, onRSVP: onRSVP, isCompact: viewMode === 'upcoming' }, event.id)))) : (_jsxs(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, className: "text-center py-8 text-[var(--hive-text-muted)]", children: [_jsx(Calendar, { className: "w-12 h-12 mx-auto mb-3 opacity-50" }), _jsx("p", { className: "text-sm", children: viewMode === 'today'
-                                                        ? 'No events today'
-                                                        : viewMode === 'calendar'
-                                                            ? `No events on ${formatDate(selectedDate)}`
-                                                            : 'No upcoming events' })] })) }) }) })] }), !isEditMode && (_jsxs(Button, { variant: "outline", size: "sm", className: "w-full", onClick: () => onEventCreate?.({
-                            type: 'personal',
-                            startTime: new Date(),
-                            endTime: new Date(Date.now() + 60 * 60 * 1000),
-                            isRSVPRequired: false,
-                            source: 'manual',
-                            priority: 'medium'
-                        }), children: [_jsx(Plus, { className: "w-4 h-4 mr-2" }), "Add Event"] }))] })] }));
-}
+                        ].map(({ key, label, count })), " => (", _jsxs(Button, { size: "sm", variant: viewMode === key ? "default" : "ghost", className: "h-7 px-3 text-xs", onClick: () => setViewMode(key), children: [label, count !== undefined && count > 0 && (_jsx(Badge, { variant: "secondary", className: "ml-1 h-4 px-1 text-xs", children: count }))] }, key), "))}"] })] }), _jsxs(CardContent, { className: "space-y-4", children: [viewMode === 'today' && nextEvent && (_jsxs(motion.div, { initial: { opacity: 0, y: -10 }, animate: { opacity: 1, y: 0 }, className: "p-3 bg-[var(--hive-background-tertiary)] rounded-lg border", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Bell, { className: "w-4 h-4 text-[var(--hive-brand-primary)]" }), _jsx("span", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Next Up" })] }), _jsxs("p", { className: "text-sm text-[var(--hive-text-secondary)] mt-1", children: [nextEvent.title, " \u2022 ", getTimeUntilEvent(nextEvent.startTime)] })] })), viewMode === 'calendar' && (_jsx(CalendarMiniView, { events: events, selectedDate: selectedDate, onDateSelect: setSelectedDate })), _jsxs("div", { className: "space-y-3", children: [viewMode !== 'calendar' && (_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("h4", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: viewMode === 'today' ? `Today, ${formatDate(new Date())}` : 'Upcoming Events' }), viewMode === 'upcoming' && !showAllEvents && filteredEvents.length === 5 && (_jsxs(Button, { size: "sm", variant: "ghost", className: "h-6 px-2 text-xs", onClick: () => setShowAllEvents(true), children: [_jsx(Eye, { className: "w-3 h-3 mr-1" }), "View All"] }))] })), _jsx(ScrollArea, { className: "max-h-80", children: _jsx("div", { className: "space-y-2", children: _jsx(AnimatePresence, { children: filteredEvents.length > 0 ? (filteredEvents.map((event) => (_jsx(EventItem, { event: event, onRSVP: onRSVP, isCompact: viewMode === 'upcoming' }, event.id)))) : (_jsxs(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, className: "text-center py-8 text-[var(--hive-text-muted)]", children: [_jsx(Calendar, { className: "w-12 h-12 mx-auto mb-3 opacity-50" }), _jsx("p", { className: "text-sm", children: viewMode === 'today'
+                                                    ? 'No events today'
+                                                    : viewMode === 'calendar'
+                                                        ? `No events on ${formatDate(selectedDate)}`
+                                                        : 'No upcoming events' })] })) }) }) })] }), !isEditMode && (_jsxs(Button, { variant: "outline", size: "sm", className: "w-full", onClick: () => onEventCreate?.({
+                        type: 'personal',
+                        startTime: new Date(),
+                        endTime: new Date(Date.now() + 60 * 60 * 1000),
+                        isRSVPRequired: false,
+                        source: 'manual',
+                        priority: 'medium'
+                    }), children: [_jsx(Plus, { className: "w-4 h-4 mr-2" }), "Add Event"] }))] })] }));
 // Default props for development
 export const mockCalendarEvents = [
     {

@@ -7,7 +7,7 @@ import { cn } from '../../lib/utils';
 interface BreadcrumbItem {
   label: string;
   href?: string;
-  icon?: React.ElementType;
+  icon?: React.ElementType
 }
 
 interface PageContainerProps {
@@ -18,7 +18,7 @@ interface PageContainerProps {
   actions?: React.ReactNode;
   className?: string;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '7xl' | 'full';
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  padding?: 'none' | 'sm' | 'md' | 'lg'
 }
 
 export function PageContainer({
@@ -110,5 +110,5 @@ export function PageContainer({
         </div>
       </div>
     </div>
-  );
+  )
 }

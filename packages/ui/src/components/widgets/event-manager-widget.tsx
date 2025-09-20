@@ -22,8 +22,8 @@ import {
   Upload
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Badge } from '../../atomic/atoms/badge';
 import { EventManagerTool } from '../tools/event-manager-tool';
 import { type Space } from '@hive/core';
 
@@ -36,7 +36,7 @@ export interface EventManagerWidgetProps {
   maxEvents?: number;
   onEventAction?: (eventId: string, action: string, data?: any) => void;
   authenticatedFetch?: (url: string, options?: RequestInit) => Promise<Response>;
-  className?: string;
+  className?: string
 }
 
 export function EventManagerWidget({
@@ -115,7 +115,7 @@ export function EventManagerWidget({
       case 'ongoing': return 'bg-blue-500/20 text-blue-400';
       case 'completed': return 'bg-purple-500/20 text-purple-400';
       case 'cancelled': return 'bg-red-500/20 text-red-400';
-      default: return 'bg-gray-500/20 text-gray-400';
+      default: return 'bg-gray-500/20 text-gray-400'
     }
   };
 
@@ -125,7 +125,7 @@ export function EventManagerWidget({
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit'
-    }).format(date);
+    }).format(date)
   };
 
   const getCapacityColor = (current: number, max?: number) => {
@@ -133,7 +133,7 @@ export function EventManagerWidget({
     const percentage = current / max;
     if (percentage >= 0.9) return 'text-red-400';
     if (percentage >= 0.7) return 'text-yellow-400';
-    return 'text-green-400';
+    return 'text-green-400'
   };
 
   const filteredEvents = previewEvents
@@ -146,7 +146,7 @@ export function EventManagerWidget({
         case 'recent':
           return true; // Show all for recent
         default:
-          return true;
+          return true
       }
     })
     .slice(0, maxEvents);
@@ -234,7 +234,7 @@ export function EventManagerWidget({
           </div>
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -425,8 +425,8 @@ export function EventManagerWidget({
                     className="text-xs border-green-500/30 text-green-400 hover:bg-green-500/10"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onEventAction?.(event.id, 'rsvp');
-                    }}
+                      onEventAction?.(event.id, 'rsvp')
+          }}
                   >
                     <UserCheck className="h-3 w-3 mr-1" />
                     RSVP
@@ -440,8 +440,8 @@ export function EventManagerWidget({
                   size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onEventAction?.(event.id, 'share');
-                  }}
+                    onEventAction?.(event.id, 'share')
+          }}
                 >
                   <Share2 className="h-3 w-3" />
                 </Button>
@@ -451,8 +451,8 @@ export function EventManagerWidget({
                     size="sm" 
                     onClick={(e) => {
                       e.stopPropagation();
-                      onEventAction?.(event.id, 'analytics');
-                    }}
+                      onEventAction?.(event.id, 'analytics')
+          }}
                   >
                     <BarChart3 className="h-3 w-3" />
                   </Button>
@@ -517,5 +517,5 @@ export function EventManagerWidget({
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }

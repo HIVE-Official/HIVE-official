@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Switch } from '../../atomic/atoms/switch-enhanced';
 import { cn } from '../../lib/utils';
 
@@ -48,8 +48,8 @@ export interface PrivacySettings {
       showInMemberLists: boolean;
       showInSearchResults: boolean;
       showActivityStatus: boolean;
-      showLastSeen: boolean;
-    };
+      showLastSeen: boolean
+    }
   };
   socialBoundaries: {
     studyMode: boolean;
@@ -58,20 +58,20 @@ export interface PrivacySettings {
     coordinationPreferences: {
       preferredContactMethods: ContactMethod[];
       responseTimeExpectation: 'immediate' | 'hourly' | 'daily' | 'weekly';
-      availableForEmergencies: boolean;
-    };
+      availableForEmergencies: boolean
+    }
   };
   dataControl: {
     activitySharing: {
       shareSpaceActivity: boolean;
       shareCalendarBusy: boolean;
       shareLocationStatus: boolean;
-      shareToolUsage: boolean;
+      shareToolUsage: boolean
     };
     crossCommunityVisibility: boolean;
     searchableProfile: boolean;
-    analyticsOptOut: boolean;
-  };
+    analyticsOptOut: boolean
+  }
 }
 
 interface ScheduledPrivacy {
@@ -80,20 +80,20 @@ interface ScheduledPrivacy {
   startTime: string;
   endTime: string;
   days: string[];
-  privacyLevel: 'ghost' | 'minimal' | 'normal';
+  privacyLevel: 'ghost' | 'minimal' | 'normal'
 }
 
 interface PrivacyException {
   id: string;
   type: 'space' | 'user' | 'emergency';
   target: string;
-  permissions: string[];
+  permissions: string[]
 }
 
 interface OfficeHours {
   start: string;
   end: string;
-  days: string[];
+  days: string[]
 }
 
 type ContactMethod = 'hive-message' | 'email' | 'phone' | 'in-person';
@@ -101,7 +101,7 @@ type ContactMethod = 'hive-message' | 'email' | 'phone' | 'in-person';
 interface PrivacyDashboardProps {
   settings: PrivacySettings;
   onSettingsChange: (settings: PrivacySettings) => void;
-  className?: string;
+  className?: string
 }
 
 export const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({
@@ -118,11 +118,11 @@ export const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({
     let current: any = newSettings;
     
     for (let i = 0; i < keys.length - 1; i++) {
-      current = current[keys[i]];
+      current = current[keys[i]]
     }
     current[keys[keys.length - 1]] = value;
     
-    onSettingsChange(newSettings);
+    onSettingsChange(newSettings)
   };
 
   const getPrivacyScore = (): { score: number; level: string; color: string } => {
@@ -160,16 +160,16 @@ export const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({
     
     if (percentage >= 80) {
       level = 'Private';
-      color = 'text-green-500';
+      color = 'text-green-500'
     } else if (percentage >= 60) {
       level = 'Balanced';
-      color = 'text-yellow-500';
+      color = 'text-yellow-500'
     } else if (percentage >= 40) {
       level = 'Social';
-      color = 'text-blue-500';
+      color = 'text-blue-500'
     }
 
-    return { score: percentage, level, color };
+    return { score: percentage, level, color }
   };
 
   const privacyScore = getPrivacyScore();
@@ -272,14 +272,14 @@ export const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({
         </motion.div>
       </AnimatePresence>
     </div>
-  );
+  )
 };
 
 // Overview Section Component
 const OverviewSection: React.FC<{
   settings: PrivacySettings;
   privacyScore: { score: number; level: string; color: string };
-  onQuickToggle: (path: string, value: any) => void;
+  onQuickToggle: (path: string, value: any) => void
 }> = ({ settings, privacyScore, onQuickToggle }) => {
   const quickToggles = [
     {
@@ -372,7 +372,7 @@ const OverviewSection: React.FC<{
               
               <Switch
                 checked={toggle.value}
-                onCheckedChange={(checked) => onQuickToggle(toggle.path, checked)}
+                onChange={(e) => { const checked = e.target.checked; onQuickToggle(toggle.path, checked)}
               />
             </div>
           ))}
@@ -408,13 +408,13 @@ const OverviewSection: React.FC<{
         </div>
       </HiveCard>
     </div>
-  );
+  )
 };
 
 // Ghost Mode Section Component  
 const GhostModeSection: React.FC<{
   settings: PrivacySettings['ghostMode'];
-  onUpdate: (settings: PrivacySettings['ghostMode']) => void;
+  onUpdate: (settings: PrivacySettings['ghostMode']) => void
 }> = ({ settings, onUpdate }) => {
   return (
     <div className="space-y-6">
@@ -431,7 +431,7 @@ const GhostModeSection: React.FC<{
           
           <Switch
             checked={settings.enabled}
-            onCheckedChange={(enabled) => onUpdate({ ...settings, enabled })}
+            onCheckedChange={(enabled) => onUpdate({ ...settings, enabled }}
           />
         </div>
 
@@ -446,13 +446,13 @@ const GhostModeSection: React.FC<{
                   </label>
                   <Switch
                     checked={value}
-                    onCheckedChange={(checked) => onUpdate({
+                    onChange={(e) => { const checked = e.target.checked; onUpdate({
                       ...settings,
                       partialVisibility: {
                         ...settings.partialVisibility,
                         [key]: checked
                       }
-                    })}
+          })}
                     disabled={!settings.enabled}
                   />
                 </div>
@@ -462,13 +462,13 @@ const GhostModeSection: React.FC<{
         </div>
       </HiveCard>
     </div>
-  );
+  )
 };
 
 // Social Boundaries Section Component
 const SocialBoundariesSection: React.FC<{
   settings: PrivacySettings['socialBoundaries'];
-  onUpdate: (settings: PrivacySettings['socialBoundaries']) => void;
+  onUpdate: (settings: PrivacySettings['socialBoundaries']) => void
 }> = ({ settings, onUpdate }) => {
   return (
     <div className="space-y-6">
@@ -488,7 +488,7 @@ const SocialBoundariesSection: React.FC<{
             </div>
             <Switch
               checked={settings.studyMode}
-              onCheckedChange={(studyMode) => onUpdate({ ...settings, studyMode })}
+              onCheckedChange={(studyMode) => onUpdate({ ...settings, studyMode }}
             />
           </div>
 
@@ -499,7 +499,7 @@ const SocialBoundariesSection: React.FC<{
               {['low', 'medium', 'high'].map((level) => (
                 <button
                   key={level}
-                  onClick={() => onUpdate({ ...settings, socialEnergyLevel: level as any })}
+                  onClick={() => onUpdate({ ...settings, socialEnergyLevel: level as any }}
                   className={cn(
                     "p-3 rounded-lg border text-sm font-medium transition-colors",
                     settings.socialEnergyLevel === level
@@ -526,7 +526,7 @@ const SocialBoundariesSection: React.FC<{
                       ...settings.coordinationPreferences,
                       responseTimeExpectation: time as any
                     }
-                  })}
+          })}
                   className={cn(
                     "p-3 rounded-lg border text-sm font-medium transition-colors",
                     settings.coordinationPreferences.responseTimeExpectation === time
@@ -556,19 +556,19 @@ const SocialBoundariesSection: React.FC<{
                   ...settings.coordinationPreferences,
                   availableForEmergencies
                 }
-              })}
+          })}
             />
           </div>
         </div>
       </HiveCard>
     </div>
-  );
+  )
 };
 
 // Data Control Section Component
 const DataControlSection: React.FC<{
   settings: PrivacySettings['dataControl'];
-  onUpdate: (settings: PrivacySettings['dataControl']) => void;
+  onUpdate: (settings: PrivacySettings['dataControl']) => void
 }> = ({ settings, onUpdate }) => {
   const activitySharingOptions = [
     { key: 'shareSpaceActivity', label: 'Space Activity', description: 'Share when you join or leave spaces' },
@@ -597,13 +597,13 @@ const DataControlSection: React.FC<{
                   </div>
                   <Switch
                     checked={(settings.activitySharing as any)[option.key]}
-                    onCheckedChange={(checked) => onUpdate({
+                    onChange={(e) => { const checked = e.target.checked; onUpdate({
                       ...settings,
                       activitySharing: {
                         ...settings.activitySharing,
                         [option.key]: checked
                       }
-                    })}
+          })}
                   />
                 </div>
               ))}
@@ -626,7 +626,7 @@ const DataControlSection: React.FC<{
                   onCheckedChange={(crossCommunityVisibility) => onUpdate({ 
                     ...settings, 
                     crossCommunityVisibility 
-                  })}
+          }}
                 />
               </div>
 
@@ -642,7 +642,7 @@ const DataControlSection: React.FC<{
                   onCheckedChange={(searchableProfile) => onUpdate({ 
                     ...settings, 
                     searchableProfile 
-                  })}
+          }}
                 />
               </div>
 
@@ -658,7 +658,7 @@ const DataControlSection: React.FC<{
                   onCheckedChange={(analyticsOptOut) => onUpdate({ 
                     ...settings, 
                     analyticsOptOut 
-                  })}
+          }}
                 />
               </div>
             </div>
@@ -666,13 +666,13 @@ const DataControlSection: React.FC<{
         </div>
       </HiveCard>
     </div>
-  );
+  )
 };
 
 // Emergency Access Section Component
 const EmergencyAccessSection: React.FC<{
   settings: PrivacySettings;
-  onUpdate: (path: string, value: any) => void;
+  onUpdate: (path: string, value: any) => void
 }> = ({ settings, onUpdate }) => {
   return (
     <div className="space-y-6">
@@ -695,7 +695,7 @@ const EmergencyAccessSection: React.FC<{
               <p className="font-medium text-hive-text-primary">Emergency Override</p>
               <Switch
                 checked={settings.socialBoundaries.coordinationPreferences.availableForEmergencies}
-                onCheckedChange={(checked) => 
+                onChange={(e) => { const checked = e.target.checked; 
                   onUpdate('socialBoundaries.coordinationPreferences.availableForEmergencies', checked)
                 }
               />
@@ -739,7 +739,7 @@ const EmergencyAccessSection: React.FC<{
         </div>
       </HiveCard>
     </div>
-  );
+  )
 };
 
 export default PrivacyDashboard;

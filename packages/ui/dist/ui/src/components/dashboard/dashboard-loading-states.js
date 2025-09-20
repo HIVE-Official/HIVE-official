@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { AlertTriangle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
-import { Card, CardContent } from '../ui/card';
+import { Card, CardContent } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
 // Simple loading skeleton
 export function DashboardSkeleton({ className = "" }) {

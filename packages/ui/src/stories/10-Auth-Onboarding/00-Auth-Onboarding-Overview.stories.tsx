@@ -137,7 +137,7 @@ const AuthOnboardingOverview = () => {
         </CardContent>
       </Card>
     </Container>
-  );
+  )
 };
 
 const meta: Meta<typeof AuthOnboardingOverview> = {

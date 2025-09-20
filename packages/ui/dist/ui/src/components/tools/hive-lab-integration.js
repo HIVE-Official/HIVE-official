@@ -81,16 +81,16 @@ export function HiveLabIntegration({ userId, spaceId, userRole = 'member', class
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ userId, spaceId, data })
                             });
-                        }, onSubmit: async (data) => {
-                            await fetch(`/api/tools/${selectedTool.id}/submit`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ userId, spaceId, data })
-                            });
-                            trackLabAction('tool_submitted', { toolId: selectedTool.id, dataSize: JSON.stringify(data).length });
-                            setSelectedTool(null);
-                            setCurrentView('dashboard');
-                        } })] }) }));
+                        } }), ")} onSubmit=", async (data) => {
+                        await fetch(`/api/tools/${selectedTool.id}/submit`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId, spaceId, data })
+                        });
+                        trackLabAction('tool_submitted', { toolId: selectedTool.id, dataSize: JSON.stringify(data).length });
+                        setSelectedTool(null);
+                        setCurrentView('dashboard');
+                    }, ")} />"] }) }));
     }
     return (_jsx(PerformanceMonitor, { children: _jsxs("div", { className: cn("space-y-6", className), children: [_jsxs("div", { className: "flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4", children: [_jsxs("div", { children: [_jsxs("h1", { className: "text-3xl font-bold text-gray-900 flex items-center gap-3", children: [_jsx(Zap, { className: "w-8 h-8 text-amber-600" }), "HIVE Lab"] }), _jsx("p", { className: "text-gray-600 mt-1", children: "Your integrated development environment for campus tools" })] }), _jsxs("div", { className: "flex items-center gap-3", children: [_jsxs(HiveBadge, { variant: "outline", className: "bg-green-50 text-green-800", children: [labStats?.systemHealth || 'excellent', " health"] }), _jsxs(HiveBadge, { children: [labStats?.activeTools || 0, " tools active"] })] })] }), _jsx("div", { className: "flex gap-1 p-1 bg-gray-100 rounded-lg overflow-x-auto", children: [
                         { id: 'dashboard', label: 'Dashboard', icon: Layers },
@@ -110,9 +110,9 @@ export function HiveLabIntegration({ userId, spaceId, userRole = 'member', class
                             body: JSON.stringify({ toolId, spaceId, userId })
                         });
                         trackLabAction('tool_installed', { toolId });
-                    }, onViewTool: (toolId) => {
-                        trackLabAction('tool_viewed', { toolId });
-                    } })), currentView === 'analytics' && (_jsxs("div", { className: "space-y-6", children: [_jsx("h2", { className: "text-2xl font-bold text-gray-900", children: "Usage Analytics" }), _jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-2 gap-6", children: [_jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "font-semibold text-gray-900 mb-4", children: "Tool Usage Over Time" }), _jsx("div", { className: "h-64 bg-gray-50 rounded-lg flex items-center justify-center", children: _jsx("p", { className: "text-gray-500", children: "Analytics charts would be rendered here" }) })] }), _jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "font-semibold text-gray-900 mb-4", children: "Performance Metrics" }), _jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex justify-between items-center", children: [_jsx("span", { className: "text-sm text-gray-600", children: "Average Load Time" }), _jsx("span", { className: "text-sm font-medium", children: "1.2s" })] }), _jsxs("div", { className: "flex justify-between items-center", children: [_jsx("span", { className: "text-sm text-gray-600", children: "Cache Hit Rate" }), _jsx("span", { className: "text-sm font-medium", children: "94%" })] }), _jsxs("div", { className: "flex justify-between items-center", children: [_jsx("span", { className: "text-sm text-gray-600", children: "Error Rate" }), _jsx("span", { className: "text-sm font-medium", children: "0.1%" })] }), _jsxs("div", { className: "flex justify-between items-center", children: [_jsx("span", { className: "text-sm text-gray-600", children: "User Satisfaction" }), _jsx("span", { className: "text-sm font-medium", children: "4.8/5" })] })] })] })] })] }))] }) }));
+                    } })), "onViewTool=", (toolId) => {
+                    trackLabAction('tool_viewed', { toolId });
+                }, ")} /> )}", currentView === 'analytics' && (_jsxs("div", { className: "space-y-6", children: [_jsx("h2", { className: "text-2xl font-bold text-gray-900", children: "Usage Analytics" }), _jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-2 gap-6", children: [_jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "font-semibold text-gray-900 mb-4", children: "Tool Usage Over Time" }), _jsx("div", { className: "h-64 bg-gray-50 rounded-lg flex items-center justify-center", children: _jsx("p", { className: "text-gray-500", children: "Analytics charts would be rendered here" }) })] }), _jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "font-semibold text-gray-900 mb-4", children: "Performance Metrics" }), _jsxs("div", { className: "space-y-3", children: [_jsxs("div", { className: "flex justify-between items-center", children: [_jsx("span", { className: "text-sm text-gray-600", children: "Average Load Time" }), _jsx("span", { className: "text-sm font-medium", children: "1.2s" })] }), _jsxs("div", { className: "flex justify-between items-center", children: [_jsx("span", { className: "text-sm text-gray-600", children: "Cache Hit Rate" }), _jsx("span", { className: "text-sm font-medium", children: "94%" })] }), _jsxs("div", { className: "flex justify-between items-center", children: [_jsx("span", { className: "text-sm text-gray-600", children: "Error Rate" }), _jsx("span", { className: "text-sm font-medium", children: "0.1%" })] }), _jsxs("div", { className: "flex justify-between items-center", children: [_jsx("span", { className: "text-sm text-gray-600", children: "User Satisfaction" }), _jsx("span", { className: "text-sm font-medium", children: "4.8/5" })] })] })] })] })] }))] }) }));
 }
 export default HiveLabIntegration;
 //# sourceMappingURL=hive-lab-integration.js.map

@@ -25,7 +25,7 @@ interface CampusPreloadContext {
   campusLoad: 'low' | 'medium' | 'high' | 'peak';
   connectionType: 'wifi' | 'cellular' | 'ethernet' | 'unknown';
   bandwidthEstimate?: number; // Mbps
-  isDataSaverEnabled?: boolean;
+  isDataSaverEnabled?: boolean
 }
 
 // User context for personalized preloading
@@ -37,13 +37,13 @@ interface UserPreloadContext {
   recentActivity: {
     spaces: string[];
     tools: string[];
-    lastActiveTime: Date;
+    lastActiveTime: Date
   };
   devicePreferences: {
     preferHighQuality: boolean;
     enableBackgroundSync: boolean;
     maxPreloadSize: number; // MB
-  };
+  }
 }
 
 // Preload resource definition
@@ -65,7 +65,7 @@ interface PreloadResource {
     maxCampusLoad?: 'medium' | 'high' | 'peak';
     userTypes?: ('student' | 'faculty' | 'admin')[];
     timeRestrictions?: number[]; // Hours when this should load
-    deviceTypes?: ('mobile' | 'tablet' | 'desktop')[];
+    deviceTypes?: ('mobile' | 'tablet' | 'desktop')[]
   };
   
   // Dependencies
@@ -77,7 +77,7 @@ interface PreloadResource {
     skipOnSlowNetwork: boolean;
     compressForMobile: boolean;
     deferDuringPeakHours: boolean;
-    enableOfflineCache: boolean;
+    enableOfflineCache: boolean
   };
   
   // Loading strategy
@@ -87,7 +87,7 @@ interface PreloadResource {
     backgroundFetch?: boolean; // Fetch in service worker
     lazy?: boolean;         // Load on demand
     cache?: boolean;        // Cache in browser storage
-  };
+  }
 }
 
 interface PreloaderProps {
@@ -114,7 +114,7 @@ interface PreloaderProps {
   // Analytics
   enableAnalytics?: boolean;
   
-  className?: string;
+  className?: string
 }
 
 // Preloading statistics
@@ -147,7 +147,7 @@ class CampusPreloadManager {
   
   private bandwidthMonitor: {
     samples: number[];
-    currentEstimate: number;
+    currentEstimate: number
   } = {
     samples: [],
     currentEstimate: 0
@@ -155,9 +155,9 @@ class CampusPreloadManager {
   
   static getInstance(): CampusPreloadManager {
     if (!CampusPreloadManager.instance) {
-      CampusPreloadManager.instance = new CampusPreloadManager();
+      CampusPreloadManager.instance = new CampusPreloadManager()
     }
-    return CampusPreloadManager.instance;
+    return CampusPreloadManager.instance
   }
   
   // Intelligent resource prioritization based on campus context
@@ -179,12 +179,12 @@ class CampusPreloadManager {
         if (userContext) {
           const aPreferred = userContext.preferredFeatures.includes(a.type) ? 1 : 0;
           const bPreferred = userContext.preferredFeatures.includes(b.type) ? 1 : 0;
-          if (aPreferred !== bPreferred) return bPreferred - aPreferred;
+          if (aPreferred !== bPreferred) return bPreferred - aPreferred
         }
         
         // Tertiary sort by estimated load time (faster first)
-        return a.estimatedLoadTime - b.estimatedLoadTime;
-      });
+        return a.estimatedLoadTime - b.estimatedLoadTime
+      })
   }
   
   // Check if resource should be loaded given current conditions
@@ -200,7 +200,7 @@ class CampusPreloadManager {
     if (conditions.minNetworkQuality && campusContext) {
       const qualityOrder = { fair: 1, good: 2, excellent: 3 };
       if (qualityOrder[campusContext.networkQuality] < qualityOrder[conditions.minNetworkQuality]) {
-        return false;
+        return false
       }
     }
     
@@ -208,14 +208,14 @@ class CampusPreloadManager {
     if (conditions.maxCampusLoad && campusContext) {
       const loadOrder = { medium: 1, high: 2, peak: 3 };
       if (loadOrder[campusContext.campusLoad] > loadOrder[conditions.maxCampusLoad]) {
-        return false;
+        return false
       }
     }
     
     // User type check
     if (conditions.userTypes && userContext) {
       if (!conditions.userTypes.includes(userContext.userType)) {
-        return false;
+        return false
       }
     }
     
@@ -223,11 +223,11 @@ class CampusPreloadManager {
     if (conditions.timeRestrictions) {
       const currentHour = new Date().getHours();
       if (!conditions.timeRestrictions.includes(currentHour)) {
-        return false;
+        return false
       }
     }
     
-    return true;
+    return true
   }
   
   // Load resource with intelligent strategy selection
@@ -238,12 +238,12 @@ class CampusPreloadManager {
     // Check if already loaded
     if (this.loadedResources.has(resource.id)) {
       this.loadStats.cacheHitRate++;
-      return this.loadedResources.get(resource.id);
+      return this.loadedResources.get(resource.id)
     }
     
     // Check if currently loading
     if (this.loadingPromises.has(resource.id)) {
-      return this.loadingPromises.get(resource.id);
+      return this.loadingPromises.get(resource.id)
     }
     
     const startTime = performance.now();
@@ -270,13 +270,13 @@ class CampusPreloadManager {
       // Update bandwidth estimate
       this.updateBandwidthEstimate(resource.estimatedSize, loadTime);
       
-      return result;
+      return result
       
     } catch (error) {
       this.loadStats.failedLoads++;
-      throw error;
+      throw error
     } finally {
-      this.loadingPromises.delete(resource.id);
+      this.loadingPromises.delete(resource.id)
     }
   }
   
@@ -290,20 +290,20 @@ class CampusPreloadManager {
     
     // Critical resources should be preloaded
     if (resource.priority === 'critical') {
-      strategy = 'preload';
+      strategy = 'preload'
     }
     
     // Large resources or poor network should use background fetch
     if (resource.estimatedSize > 500 || campusContext?.networkQuality === 'poor') {
-      strategy = 'backgroundFetch';
+      strategy = 'backgroundFetch'
     }
     
     // During peak campus hours, defer non-critical resources
     if (campusContext?.campusLoad === 'peak' && resource.priority !== 'critical') {
-      strategy = 'lazy';
+      strategy = 'lazy'
     }
     
-    return strategy;
+    return strategy
   }
   
   // Execute the selected loading strategy
@@ -329,7 +329,7 @@ class CampusPreloadManager {
         return this.cacheResource(resource);
       
       default:
-        return this.prefetchResource(resource);
+        return this.prefetchResource(resource)
     }
   }
   
@@ -345,10 +345,10 @@ class CampusPreloadManager {
       
       // Fetch the resource
       const response = await fetch(resource.url);
-      return await this.processResponse(response, resource);
+      return await this.processResponse(response, resource)
     }
     
-    return resource.data;
+    return resource.data
   }
   
   private async prefetchResource(resource: PreloadResource): Promise<any> {
@@ -362,11 +362,11 @@ class CampusPreloadManager {
       // Return immediately for prefetch
       return new Promise(resolve => {
         link.onload = () => resolve(resource.data || resource.url);
-        link.onerror = () => resolve(null);
-      });
+        link.onerror = () => resolve(null)
+      })
     }
     
-    return resource.data;
+    return resource.data
   }
   
   private async backgroundFetchResource(resource: PreloadResource): Promise<any> {
@@ -377,33 +377,33 @@ class CampusPreloadManager {
           if (resource.url) {
             const response = await fetch(resource.url);
             const result = await this.processResponse(response, resource);
-            resolve(result);
+            resolve(result)
           } else {
-            resolve(resource.data);
+            resolve(resource.data)
           }
         } catch (error) {
-          reject(error);
+          reject(error)
         }
       };
       
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadInBackground);
+        requestIdleCallback(loadInBackground)
       } else {
-        setTimeout(loadInBackground, 100);
+        setTimeout(loadInBackground, 100)
       }
-    });
+    })
   }
   
   private async lazyLoadResource(resource: PreloadResource): Promise<any> {
     // Lazy load - just return a promise that resolves immediately
-    return resource.data || resource.url;
+    return resource.data || resource.url
   }
   
   private async cacheResource(resource: PreloadResource): Promise<any> {
     // Try to load from cache first
     const cached = localStorage.getItem(`preload_${resource.id}`);
     if (cached) {
-      return JSON.parse(cached);
+      return JSON.parse(cached)
     }
     
     // Load and cache
@@ -413,10 +413,10 @@ class CampusPreloadManager {
       
       // Cache the result
       localStorage.setItem(`preload_${resource.id}`, JSON.stringify(result));
-      return result;
+      return result
     }
     
-    return resource.data;
+    return resource.data
   }
   
   private getResourceAs(type: ResourceType): string {
@@ -435,18 +435,18 @@ class CampusPreloadManager {
       'media-assets': 'video'
     };
     
-    return typeMap[type] || 'fetch';
+    return typeMap[type] || 'fetch'
   }
   
   private async processResponse(response: Response, resource: PreloadResource): Promise<any> {
     const contentType = response.headers.get('content-type') || '';
     
     if (contentType.includes('application/json')) {
-      return await response.json();
+      return await response.json()
     } else if (contentType.includes('text/')) {
-      return await response.text();
+      return await response.text()
     } else {
-      return await response.blob();
+      return await response.blob()
     }
   }
   
@@ -456,21 +456,21 @@ class CampusPreloadManager {
     
     // Keep only recent samples
     if (this.bandwidthMonitor.samples.length > 10) {
-      this.bandwidthMonitor.samples.shift();
+      this.bandwidthMonitor.samples.shift()
     }
     
     // Calculate rolling average
     this.bandwidthMonitor.currentEstimate = 
       this.bandwidthMonitor.samples.reduce((a, b) => a + b, 0) / 
-      this.bandwidthMonitor.samples.length;
+      this.bandwidthMonitor.samples.length
   }
   
   getStats(): PreloadStats {
-    return { ...this.loadStats };
+    return { ...this.loadStats }
   }
   
   getBandwidthEstimate(): number {
-    return this.bandwidthMonitor.currentEstimate;
+    return this.bandwidthMonitor.currentEstimate
   }
 }
 
@@ -515,10 +515,10 @@ export const Preloader: React.FC<PreloaderProps> = ({
       const filteredResources = prioritizedResources.filter(resource => {
         if (totalSize + resource.estimatedSize > maxTotalSize * 1024) {
           onBudgetExceeded?.(resource);
-          return false;
+          return false
         }
         totalSize += resource.estimatedSize;
-        return true;
+        return true
       });
       
       // Load resources with concurrency limit
@@ -532,13 +532,13 @@ export const Preloader: React.FC<PreloaderProps> = ({
         
         try {
           await preloadManager.loadResource(resource, campusContext);
-          onResourceLoaded?.(resource);
+          onResourceLoaded?.(resource)
         } catch (error) {
-          onResourceFailed?.(resource, error as Error);
+          onResourceFailed?.(resource, error as Error)
         }
         
         // Load next resource
-        return loadNext();
+        return loadNext()
       };
       
       // Start concurrent loading
@@ -549,15 +549,15 @@ export const Preloader: React.FC<PreloaderProps> = ({
       setLoadingStats(finalStats);
       setIsLoading(false);
       
-      onLoadingComplete?.(finalStats);
+      onLoadingComplete?.(finalStats)
     };
     
-    executePreloading();
+    executePreloading()
   }, [resources, campusContext, userContext, enableIntelligentPreloading]);
   
   // Don't render anything - this is a background process
   if (!enableAnalytics && process.env.NODE_ENV !== 'development') {
-    return null;
+    return null
   }
   
   return (
@@ -582,7 +582,7 @@ export const Preloader: React.FC<PreloaderProps> = ({
         </div>
       )}
     </>
-  );
+  )
 };
 
 // Utility function to create preload resources
@@ -607,7 +607,7 @@ export function createPreloadResource(
       enableOfflineCache: false
     },
     ...options
-  };
+  }
 }
 
 export { CampusPreloadManager };

@@ -133,7 +133,7 @@ interface TouchPoint {
   x: number;
   y: number;
   timestamp: number;
-  pressure?: number;
+  pressure?: number
 }
 
 interface GestureState {
@@ -147,7 +147,7 @@ interface GestureState {
   deltaX: number;
   deltaY: number;
   startTime: number;
-  isGesturing: boolean;
+  isGesturing: boolean
 }
 
 interface SwipeAction {
@@ -156,7 +156,7 @@ interface SwipeAction {
   icon: any;
   label: string;
   color: string;
-  action: () => void;
+  action: () => void
 }
 
 // Advanced Gesture Recognition Hook
@@ -197,7 +197,7 @@ const useAdvancedGestures = () => {
         medium: [20],
         heavy: [50]
       };
-      navigator.vibrate(patterns[intensity]);
+      navigator.vibrate(patterns[intensity])
     }
   }, [settings.hapticFeedback]);
 
@@ -229,9 +229,9 @@ const useAdvancedGestures = () => {
     // Swipe gesture recognition
     if (distance > settings.gestureThreshold && velocityMagnitude > settings.velocityThreshold) {
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        return deltaX > 0 ? 'swipe-right' : 'swipe-left';
+        return deltaX > 0 ? 'swipe-right' : 'swipe-left'
       } else {
-        return deltaY > 0 ? 'swipe-down' : 'swipe-up';
+        return deltaY > 0 ? 'swipe-down' : 'swipe-up'
       }
     }
     
@@ -244,15 +244,15 @@ const useAdvancedGestures = () => {
       );
       
       // Pinch/zoom detection would go here
-      return 'multi-touch';
+      return 'multi-touch'
     }
     
     // Long press detection
     if (settings.enableLongPress && Date.now() - gestureState.startTime > settings.longPressDuration) {
-      return 'long-press';
+      return 'long-press'
     }
     
-    return null;
+    return null
   }, [gestureState, settings]);
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
@@ -262,7 +262,7 @@ const useAdvancedGestures = () => {
       y: touch.clientY,
       timestamp: Date.now(),
       pressure: touch.force || 0.5
-    }));
+    })});
 
     setGestureState(prev => ({
       ...prev,
@@ -274,7 +274,7 @@ const useAdvancedGestures = () => {
     }));
 
     previousTouches.current = touches;
-    triggerHaptic('light');
+    triggerHaptic('light')
   }, [triggerHaptic]);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
@@ -286,7 +286,7 @@ const useAdvancedGestures = () => {
       y: touch.clientY,
       timestamp: Date.now(),
       pressure: touch.force || 0.5
-    }));
+    })});
 
     const velocity = calculateVelocity(touches, previousTouches.current);
     
@@ -303,14 +303,14 @@ const useAdvancedGestures = () => {
       activeGesture: recognizeGesture(touches)
     }));
 
-    previousTouches.current = touches;
+    previousTouches.current = touches
   }, [calculateVelocity, recognizeGesture, gestureState.touches]);
 
   const handleTouchEnd = useCallback((e: TouchEvent) => {
     const finalGesture = gestureState.activeGesture;
     
     if (finalGesture && finalGesture.includes('swipe')) {
-      triggerHaptic('medium');
+      triggerHaptic('medium')
     }
 
     setGestureState(prev => ({
@@ -321,7 +321,7 @@ const useAdvancedGestures = () => {
       velocity: { x: 0, y: 0 },
       deltaX: 0,
       deltaY: 0
-    }));
+    }))
   }, [gestureState.activeGesture, triggerHaptic]);
 
   return {
@@ -332,7 +332,7 @@ const useAdvancedGestures = () => {
     handleTouchMove,
     handleTouchEnd,
     triggerHaptic
-  };
+  }
 };
 
 // Swipeable Card Component
@@ -345,7 +345,7 @@ const SwipeableCard = ({
   children: React.ReactNode;
   leftActions?: SwipeAction[];
   rightActions?: SwipeAction[];
-  onSwipe?: (direction: string) => void;
+  onSwipe?: (direction: string) => void
 }) => {
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isSwipeActive, setIsSwipeActive] = useState(false);
@@ -358,7 +358,7 @@ const SwipeableCard = ({
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setIsSwipeActive(true);
-    gestures.handleTouchStart(e.nativeEvent);
+    gestures.handleTouchStart(e.nativeEvent)
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -373,9 +373,9 @@ const SwipeableCard = ({
     if (Math.abs(clampedOffset) > actionThreshold) {
       const actions = clampedOffset > 0 ? leftActions : rightActions;
       const actionIndex = Math.min(Math.floor(Math.abs(clampedOffset) / actionThreshold) - 1, actions.length - 1);
-      setActiveAction(actions[actionIndex] || null);
+      setActiveAction(actions[actionIndex] || null)
     } else {
-      setActiveAction(null);
+      setActiveAction(null)
     }
   };
 
@@ -385,7 +385,7 @@ const SwipeableCard = ({
     if (activeAction) {
       gestures.triggerHaptic('heavy');
       activeAction.action();
-      onSwipe?.(activeAction.direction);
+      onSwipe?.(activeAction.direction)
     }
     
     // Animate back to center
@@ -401,14 +401,14 @@ const SwipeableCard = ({
       setSwipeOffset(startOffset * (1 - easeOut));
       
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        requestAnimationFrame(animate)
       } else {
         setSwipeOffset(0);
-        setActiveAction(null);
+        setActiveAction(null)
       }
     };
     
-    requestAnimationFrame(animate);
+    requestAnimationFrame(animate)
   };
 
   return (
@@ -467,7 +467,7 @@ const SwipeableCard = ({
         {children}
       </div>
     </div>
-  );
+  )
 };
 
 // Pull to Refresh Component
@@ -478,7 +478,7 @@ const PullToRefresh = ({
 }: {
   children: React.ReactNode;
   onRefresh: () => void;
-  refreshing?: boolean;
+  refreshing?: boolean
 }) => {
   const [pullDistance, setPullDistance] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
@@ -492,7 +492,7 @@ const PullToRefresh = ({
   const handleTouchStart = (e: React.TouchEvent) => {
     if (containerRef.current?.scrollTop === 0) {
       setIsPulling(true);
-      gestures.handleTouchStart(e.nativeEvent);
+      gestures.handleTouchStart(e.nativeEvent)
     }
   };
 
@@ -508,7 +508,7 @@ const PullToRefresh = ({
     setCanRefresh(distance > refreshThreshold);
     
     if (distance > 0) {
-      e.preventDefault();
+      e.preventDefault()
     }
   };
 
@@ -517,11 +517,11 @@ const PullToRefresh = ({
     
     if (canRefresh && !refreshing) {
       onRefresh();
-      gestures.triggerHaptic('medium');
+      gestures.triggerHaptic('medium')
     }
     
     setPullDistance(0);
-    setCanRefresh(false);
+    setCanRefresh(false)
   };
 
   return (
@@ -566,7 +566,7 @@ const PullToRefresh = ({
         {children}
       </div>
     </div>
-  );
+  )
 };
 
 // Campus Feed Mobile Component
@@ -629,8 +629,8 @@ const CampusFeedMobile = () => {
         liked: false,
         bookmarked: false
       };
-      setPosts(prev => [newPost, ...prev]);
-    }, 2000);
+      setPosts(prev => [newPost, ...prev])
+    }, 2000)
   };
 
   const handlePostSwipe = (postId: string, direction: string) => {
@@ -642,11 +642,11 @@ const CampusFeedMobile = () => {
           case 'left':
             return { ...post, bookmarked: !post.bookmarked };
           default:
-            return post;
+            return post
         }
       }
-      return post;
-    }));
+      return post
+    }))
   };
 
   const leftActions: SwipeAction[] = [
@@ -727,7 +727,7 @@ const CampusFeedMobile = () => {
         </div>
       </PullToRefresh>
     </div>
-  );
+  )
 };
 
 // Mobile Navigation Demo
@@ -751,33 +751,33 @@ const MobileNavigation = () => {
     let newIndex = currentIndex;
 
     if (direction === 'swipe-left' && currentIndex < tabs.length - 1) {
-      newIndex = currentIndex + 1;
+      newIndex = currentIndex + 1
     } else if (direction === 'swipe-right' && currentIndex > 0) {
-      newIndex = currentIndex - 1;
+      newIndex = currentIndex - 1
     }
 
     if (newIndex !== currentIndex) {
       setActiveTab(tabs[newIndex].id);
-      gestures.triggerHaptic('medium');
+      gestures.triggerHaptic('medium')
     }
 
-    setTimeout(() => setGestureDirection(null), 300);
+    setTimeout(() => setGestureDirection(null), 300)
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    gestures.handleTouchStart(e.nativeEvent);
+    gestures.handleTouchStart(e.nativeEvent)
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    gestures.handleTouchMove(e.nativeEvent);
+    gestures.handleTouchMove(e.nativeEvent)
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     const gesture = gestures.gestureState.activeGesture;
     if (gesture && gesture.includes('swipe')) {
-      handleSwipe(gesture);
+      handleSwipe(gesture)
     }
-    gestures.handleTouchEnd(e.nativeEvent);
+    gestures.handleTouchEnd(e.nativeEvent)
   };
 
   return (
@@ -799,8 +799,8 @@ const MobileNavigation = () => {
                 <h2 className="text-xl font-bold">{tab.label}</h2>
                 <p className="text-gray-400 text-sm">Swipe left/right to navigate</p>
               </div>
-            ) : null;
-          })}
+            ) : null
+          }}
         </div>
 
         {/* Gesture Feedback */}
@@ -842,12 +842,12 @@ const MobileNavigation = () => {
                   <div className="w-8 h-0.5 bg-yellow-500 rounded-full mt-1" />
                 )}
               </button>
-            );
-          })}
+            )
+          })
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Gesture Settings Panel
@@ -873,7 +873,7 @@ const GestureSettings = () => {
           </div>
           <Switch
             checked={gestures.settings.hapticFeedback}
-            onCheckedChange={(checked) => 
+            onChange={(e) => { const checked = e.target.checked; 
               gestures.setSettings(prev => ({ ...prev, hapticFeedback: checked }))
             }
           />
@@ -918,7 +918,7 @@ const GestureSettings = () => {
           </div>
           <Switch
             checked={gestures.settings.enableLongPress}
-            onCheckedChange={(checked) => 
+            onChange={(e) => { const checked = e.target.checked; 
               gestures.setSettings(prev => ({ ...prev, enableLongPress: checked }))
             }
           />
@@ -941,7 +941,7 @@ const GestureSettings = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Campus Quick Actions Modal
@@ -966,8 +966,8 @@ const CampusQuickActions = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
     
     setTimeout(() => {
       setSelectedAction(null);
-      onClose();
-    }, 500);
+      onClose()
+    }, 500)
   };
 
   if (!isOpen) return null;
@@ -1009,8 +1009,8 @@ const CampusQuickActions = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                   {action.label}
                 </span>
               </button>
-            );
-          })}
+            )
+          })
         </div>
 
         <div className="mt-6 text-center">
@@ -1020,7 +1020,7 @@ const CampusQuickActions = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Main Mobile Gestures System
@@ -1183,7 +1183,7 @@ const MobileGesturesSystem = () => {
         onClose={() => setShowQuickActions(false)}
       />
     </div>
-  );
+  )
 };
 
 // Story Exports
@@ -1238,7 +1238,7 @@ export const CampusQuickActionsDemo: Story = {
         </Button>
         <CampusQuickActions isOpen={isOpen} onClose={() => setIsOpen(false)} />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

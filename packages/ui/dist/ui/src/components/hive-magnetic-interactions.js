@@ -124,7 +124,7 @@ export const HiveMagneticSnap = ({ children, className, snapTarget, snapId, onSn
         document.addEventListener('mousemove', checkSnapDistance);
         return () => document.removeEventListener('mousemove', checkSnapDistance);
     }, [disabled, snapTarget, isSnapped, isApproaching]);
-    return (_jsxs(motion.div, { ref: ref, id: snapId, className: cn('relative', className), animate: controls, initial: magneticInteractions.toolSnap.floating, style: liquidMetalPerformance.gpuLayer, drag: !disabled && !isSnapped, dragMomentum: false, dragElastic: 0.1, whileDrag: disabled ? {} : {
+    return (_jsx(motion.div, { ref: ref, id: snapId, className: cn('relative', className), animate: controls, initial: magneticInteractions.toolSnap.floating, style: liquidMetalPerformance.gpuLayer, drag: !disabled && !isSnapped, dragMomentum: false, dragElastic: 0.1, whileDrag: disabled ? {} : {
             scale: 1.05,
             rotate: 2,
             transition: {
@@ -132,15 +132,24 @@ export const HiveMagneticSnap = ({ children, className, snapTarget, snapId, onSn
                 stiffness: 400,
                 damping: 25,
             }
-        }, children: [children, isApproaching && !isSnapped && (_jsx(motion.div, { className: "absolute inset-0 rounded-full border-2 border-yellow-400/30", initial: { scale: 1, opacity: 0 }, animate: {
-                    scale: [1, 1.2, 1],
-                    opacity: [0, 0.5, 0],
-                }, transition: {
-                    duration: 1,
-                    repeat: Infinity,
-                    ease: [0.23, 1, 0.32, 1],
-                } }))] }));
+        } }));
 };
+    >
+        { children };
+{ /* Magnetic field visualization when approaching */ }
+{
+    isApproaching && !isSnapped && (_jsx(motion.div, { className: "absolute inset-0 rounded-full border-2 border-yellow-400/30", initial: { scale: 1, opacity: 0 }, animate: {
+            scale: [1, 1.2, 1],
+            opacity: [0, 0.5, 0],
+        }, transition: {
+            duration: 1,
+            repeat: Infinity,
+            ease: [0.23, 1, 0.32, 1],
+        } }));
+}
+motion.div >
+;
+;
 export const HiveLiquidRipple = ({ children, className, rippleColor = 'var(--hive-brand-secondary)', intensity = 'medium', disabled = false, onRippleComplete }) => {
     const [ripples, setRipples] = useState([]);
     const intensityMap = {

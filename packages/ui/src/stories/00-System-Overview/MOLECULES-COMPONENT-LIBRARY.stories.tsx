@@ -369,7 +369,7 @@ const AvatarCardShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const SpacePreviewShowcase = () => {
@@ -464,7 +464,7 @@ const SpacePreviewShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const InteractiveComponentsShowcase = () => {
@@ -552,7 +552,7 @@ const InteractiveComponentsShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -570,7 +570,7 @@ const MolecularComponentsLibrary = () => {
       green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
       gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
     };
-    return colors[color as keyof typeof colors] || colors.blue;
+    return colors[color as keyof typeof colors] || colors.blue
   };
 
   const filteredCategories = molecularCategories.filter(category =>
@@ -757,7 +757,7 @@ const MolecularComponentsLibrary = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

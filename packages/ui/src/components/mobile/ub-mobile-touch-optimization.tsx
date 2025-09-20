@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';
-import { Icon } from '../../components/ui/icon';
+import { Icon } from '../../atomic/atoms/icon';
 import { cn } from '../../lib/utils';
 import { 
   Smartphone,
@@ -42,12 +42,12 @@ export interface TouchRipple {
   id: string;
   x: number;
   y: number;
-  timestamp: number;
+  timestamp: number
 }
 
 export interface HapticFeedbackOptions {
   type: 'light' | 'medium' | 'heavy' | 'selection' | 'impact' | 'notification';
-  enabled?: boolean;
+  enabled?: boolean
 }
 
 // Touch Ripple Hook
@@ -74,8 +74,8 @@ export function useTouchRipple() {
     
     // Remove ripple after animation
     setTimeout(() => {
-      setRipples(prev => prev.filter(r => r.id !== newRipple.id));
-    }, 600);
+      setRipples(prev => prev.filter(r => r.id !== newRipple.id))
+    }, 600)
   }, []);
   
   const rippleHandlers = {
@@ -83,7 +83,7 @@ export function useTouchRipple() {
     onMouseDown: createRipple
   };
   
-  return { ripples, rippleHandlers };
+  return { ripples, rippleHandlers }
 }
 
 // Haptic Feedback Hook
@@ -110,12 +110,12 @@ export function useHapticFeedback() {
           navigator.vibrate([100, 50, 100]);
           break;
         default:
-          navigator.vibrate(10);
+          navigator.vibrate(10)
       }
     }
   }, []);
   
-  return { triggerHaptic };
+  return { triggerHaptic }
 }
 
 // Touch Gesture Hook
@@ -126,11 +126,11 @@ export function useTouchGestures() {
   const handleTouchStart = React.useCallback((event: React.TouchEvent) => {
     const touch = event.touches[0];
     setIsPressed(true);
-    setPressPosition({ x: touch.clientX, y: touch.clientY });
+    setPressPosition({ x: touch.clientX, y: touch.clientY })
   }, []);
   
   const handleTouchEnd = React.useCallback(() => {
-    setIsPressed(false);
+    setIsPressed(false)
   }, []);
   
   const gestureHandlers = {
@@ -139,7 +139,7 @@ export function useTouchGestures() {
     onTouchCancel: handleTouchEnd
   };
   
-  return { isPressed, pressPosition, gestureHandlers };
+  return { isPressed, pressPosition, gestureHandlers }
 }
 
 // =============================================================================
@@ -154,16 +154,16 @@ export interface UBMobileNavItem {
   badge?: {
     count?: number;
     color?: 'primary' | 'secondary' | 'warning' | 'error';
-    pulse?: boolean;
+    pulse?: boolean
   };
   isActive?: boolean;
-  isDisabled?: boolean;
+  isDisabled?: boolean
 }
 
 interface UBMobileBottomNavProps {
   items: UBMobileNavItem[];
   onNavigate: (href: string) => void;
-  className?: string;
+  className?: string
 }
 
 export function UBMobileBottomNav({ items, onNavigate, className }: UBMobileBottomNavProps) {
@@ -184,18 +184,18 @@ export function UBMobileBottomNav({ items, onNavigate, className }: UBMobileBott
             item={item}
             onNavigate={(href) => {
               triggerHaptic('selection');
-              onNavigate(href);
-            }}
+              onNavigate(href)
+          }}
           />
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 interface UBMobileNavItemProps {
   item: UBMobileNavItem;
-  onNavigate: (href: string) => void;
+  onNavigate: (href: string) => void
 }
 
 function UBMobileNavItem({ item, onNavigate }: UBMobileNavItemProps) {
@@ -277,7 +277,7 @@ function UBMobileNavItem({ item, onNavigate }: UBMobileNavItemProps) {
         />
       ))}
     </button>
-  );
+  )
 }
 
 // =============================================================================
@@ -290,15 +290,15 @@ interface UBMobileHeaderProps {
   leftAction?: {
     icon: React.ComponentType<any>;
     label: string;
-    onPress: () => void;
+    onPress: () => void
   };
   rightActions?: {
     icon: React.ComponentType<any>;
     label: string;
     onPress: () => void;
-    badge?: { count?: number; pulse?: boolean };
+    badge?: { count?: number; pulse?: boolean }
   }[];
-  className?: string;
+  className?: string
 }
 
 export function UBMobileHeader({ 
@@ -327,8 +327,8 @@ export function UBMobileHeader({
               label={leftAction.label}
               onPress={() => {
                 triggerHaptic('light');
-                leftAction.onPress();
-              }}
+                leftAction.onPress()
+          }}
               size="sm"
             />
           )}
@@ -356,15 +356,15 @@ export function UBMobileHeader({
               badge={action.badge}
               onPress={() => {
                 triggerHaptic('light');
-                action.onPress();
-              }}
+                action.onPress()
+          }}
               size="sm"
             />
           ))}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -379,7 +379,7 @@ interface UBMobileTouchButtonProps {
   size?: 'sm' | 'md' | 'lg';
   badge?: { count?: number; pulse?: boolean };
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 export function UBMobileTouchButton({ 
@@ -452,7 +452,7 @@ export function UBMobileTouchButton({
         />
       ))}
     </button>
-  );
+  )
 }
 
 // =============================================================================
@@ -464,7 +464,7 @@ interface UBMobileSwipeCardProps {
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
   onPress?: () => void;
-  className?: string;
+  className?: string
 }
 
 export function UBMobileSwipeCard({ 
@@ -481,7 +481,7 @@ export function UBMobileSwipeCard({
   
   const handleTouchStart = (e: React.TouchEvent) => {
     startX.current = e.touches[0].clientX;
-    setIsDragging(true);
+    setIsDragging(true)
   };
   
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -489,7 +489,7 @@ export function UBMobileSwipeCard({
     
     currentX.current = e.touches[0].clientX;
     const deltaX = currentX.current - startX.current;
-    setDragX(deltaX);
+    setDragX(deltaX)
   };
   
   const handleTouchEnd = () => {
@@ -499,17 +499,17 @@ export function UBMobileSwipeCard({
     
     if (Math.abs(dragX) > threshold) {
       if (dragX > 0 && onSwipeRight) {
-        onSwipeRight();
+        onSwipeRight()
       } else if (dragX < 0 && onSwipeLeft) {
-        onSwipeLeft();
+        onSwipeLeft()
       }
     } else if (Math.abs(dragX) < 10 && onPress) {
       // Small movement, treat as press
-      onPress();
+      onPress()
     }
     
     setIsDragging(false);
-    setDragX(0);
+    setDragX(0)
   };
   
   return (
@@ -522,7 +522,7 @@ export function UBMobileSwipeCard({
       style={{
         transform: `translateX(${dragX}px)`,
         opacity: Math.max(0.7, 1 - Math.abs(dragX) / 200)
-      }}
+          }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -546,7 +546,7 @@ export function UBMobileSwipeCard({
         </>
       )}
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -558,7 +558,7 @@ interface UBMobilePullToRefreshProps {
   onRefresh: () => Promise<void>;
   isRefreshing?: boolean;
   threshold?: number;
-  className?: string;
+  className?: string
 }
 
 export function UBMobilePullToRefresh({ 
@@ -574,7 +574,7 @@ export function UBMobilePullToRefresh({
   const { triggerHaptic } = useHapticFeedback();
   
   const handleTouchStart = (e: React.TouchEvent) => {
-    startY.current = e.touches[0].clientY;
+    startY.current = e.touches[0].clientY
   };
   
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -586,7 +586,7 @@ export function UBMobilePullToRefresh({
       setPullDistance(Math.min(deltaY / 2, threshold * 1.5));
       
       if (deltaY > threshold && !isRefreshing) {
-        triggerHaptic('impact');
+        triggerHaptic('impact')
       }
     }
   };
@@ -594,11 +594,11 @@ export function UBMobilePullToRefresh({
   const handleTouchEnd = async () => {
     if (isPulling && pullDistance > threshold && !isRefreshing) {
       triggerHaptic('success');
-      await onRefresh();
+      await onRefresh()
     }
     
     setIsPulling(false);
-    setPullDistance(0);
+    setPullDistance(0)
   };
   
   return (
@@ -646,10 +646,10 @@ export function UBMobilePullToRefresh({
         style={{ 
           transform: `translateY(${isPulling ? pullDistance : isRefreshing ? threshold : 0}px)`,
           transition: isPulling ? 'none' : 'transform 0.3s ease-out'
-        }}
+          }}
       >
         {children}
       </div>
     </div>
-  );
+  )
 }

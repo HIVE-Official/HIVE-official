@@ -12,13 +12,13 @@ interface ErrorAnalytics {
   userPatterns: {
     hasMultipleErrors: boolean;
     errorSequence: string[];
-    timeSpent: number;
+    timeSpent: number
   };
   campusIssues: {
     networkProblems: number;
     authIssues: number;
-    campusSystemErrors: number;
-  };
+    campusSystemErrors: number
+  }
 }
 
 class GlobalErrorTracker {
@@ -41,9 +41,9 @@ class GlobalErrorTracker {
 
   static getInstance() {
     if (!GlobalErrorTracker.instance) {
-      GlobalErrorTracker.instance = new GlobalErrorTracker();
+      GlobalErrorTracker.instance = new GlobalErrorTracker()
     }
-    return GlobalErrorTracker.instance;
+    return GlobalErrorTracker.instance
   }
 
   trackError(error: HiveError, context?: any) {
@@ -63,7 +63,7 @@ class GlobalErrorTracker {
         break;
       case 'campus':
         this.analytics.campusIssues.campusSystemErrors++;
-        break;
+        break
     }
 
     // Console log for development
@@ -72,11 +72,11 @@ class GlobalErrorTracker {
       console.log('Error:', error);
       console.log('Analytics:', this.analytics);
       console.log('Context:', context);
-      console.groupEnd();
+      console.groupEnd()
     }
 
     // Send to analytics service (implement based on your needs)
-    this.sendToAnalytics(error, context);
+    this.sendToAnalytics(error, context)
   }
 
   private async sendToAnalytics(error: HiveError, context?: any) {
@@ -93,15 +93,15 @@ class GlobalErrorTracker {
           campus_id: context?.campus?.id,
           is_repeat_error: this.analytics.userPatterns.hasMultipleErrors,
           session_error_count: this.analytics.errorCount,
-        });
+        })
       }
     } catch (analyticsError) {
-      console.warn('Failed to send error analytics:', analyticsError);
+      console.warn('Failed to send error analytics:', analyticsError)
     }
   }
 
   getAnalytics(): ErrorAnalytics {
-    return { ...this.analytics };
+    return { ...this.analytics }
   }
 
   reset() {
@@ -119,7 +119,7 @@ class GlobalErrorTracker {
         campusSystemErrors: 0,
       },
     };
-    this.sessionStart = Date.now();
+    this.sessionStart = Date.now()
   }
 }
 
@@ -131,8 +131,8 @@ interface GlobalErrorBoundaryProps {
   context?: {
     user?: { id: string; name?: string; email?: string; isAdmin?: boolean };
     campus?: { id: string; name?: string };
-    session?: { startTime: Date; userAgent: string };
-  };
+    session?: { startTime: Date; userAgent: string }
+  }
 }
 
 interface GlobalErrorBoundaryState {
@@ -142,7 +142,7 @@ interface GlobalErrorBoundaryState {
   errorId: string;
   retryCount: number;
   autoRecoveryAttempted: boolean;
-  isRecovering: boolean;
+  isRecovering: boolean
 }
 
 export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, GlobalErrorBoundaryState> {
@@ -159,7 +159,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
       retryCount: 0,
       autoRecoveryAttempted: false,
       isRecovering: false,
-    };
+    }
   }
 
   static getDerivedStateFromError(error: Error): Partial<GlobalErrorBoundaryState> {
@@ -167,7 +167,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
       hasError: true,
       error,
       errorId: `global-error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-    };
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -177,12 +177,12 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
 
     // Track error in global analytics
     if (this.props.enableAnalytics !== false) {
-      this.errorTracker.trackError(hiveError, this.props.context);
+      this.errorTracker.trackError(hiveError, this.props.context)
     }
 
     // Attempt auto-recovery for certain types of errors
     if (this.props.enableAutoRecovery && this.shouldAttemptAutoRecovery(hiveError)) {
-      this.attemptAutoRecovery(hiveError);
+      this.attemptAutoRecovery(hiveError)
     }
 
     // Enhanced logging
@@ -196,7 +196,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
 
     // Report critical errors immediately
     if (hiveError.severity === 'critical') {
-      this.reportCriticalError(error, errorInfo, hiveError);
+      this.reportCriticalError(error, errorInfo, hiveError)
     }
   }
 
@@ -208,7 +208,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
       error.recovery.isRetryable &&
       this.state.retryCount < (this.props.maxRetryAttempts || 2) &&
       !this.state.autoRecoveryAttempted
-    );
+    )
   }
 
   private attemptAutoRecovery(error: HiveError) {
@@ -228,7 +228,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
           this.refreshAuthAndRetry();
           break;
         default:
-          this.setState({ isRecovering: false });
+          this.setState({ isRecovering: false })
       }
     }, 2000); // 2 second delay
   }
@@ -243,14 +243,14 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
 
       if (response.ok) {
         console.log('✅ Auth refresh successful, retrying...');
-        this.handleRetry();
+        this.handleRetry()
       } else {
         console.log('❌ Auth refresh failed');
-        this.setState({ isRecovering: false });
+        this.setState({ isRecovering: false })
       }
     } catch (refreshError) {
       console.error('Auth refresh error:', refreshError);
-      this.setState({ isRecovering: false });
+      this.setState({ isRecovering: false })
     }
   }
 
@@ -273,9 +273,9 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
           analytics: this.errorTracker.getAnalytics(),
           timestamp: new Date().toISOString(),
         }),
-      });
+      })
     } catch (reportError) {
-      console.error('Failed to report critical error:', reportError);
+      console.error('Failed to report critical error:', reportError)
     }
   }
 
@@ -287,12 +287,12 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
       errorId: '',
       retryCount: prevState.retryCount + 1,
       isRecovering: false,
-    }));
+    }))
   };
 
   componentWillUnmount() {
     if (this.recoveryTimer) {
-      clearTimeout(this.recoveryTimer);
+      clearTimeout(this.recoveryTimer)
     }
   }
 
@@ -318,7 +318,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
                 timeOfDay: 'morning',
                 campusLoad: 'medium',
                 deviceType: 'desktop',
-              }}
+          }}
             />
             <div className="text-center space-y-2">
               <p className="text-hive-text-secondary text-sm">
@@ -333,7 +333,7 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
             </div>
           </div>
         </div>
-      );
+      )
     }
 
     // If there's an error, show enhanced error boundary
@@ -348,10 +348,10 @@ export class GlobalErrorBoundary extends Component<GlobalErrorBoundaryProps, Glo
           context={this.props.context}
           maxRetryAttempts={this.props.maxRetryAttempts || 3}
         />
-      );
+      )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 
@@ -362,7 +362,7 @@ interface GlobalErrorFallbackProps {
   analytics: ErrorAnalytics;
   onRetry: () => void;
   context?: GlobalErrorBoundaryProps['context'];
-  maxRetryAttempts: number;
+  maxRetryAttempts: number
 }
 
 function GlobalErrorFallback({
@@ -389,7 +389,7 @@ function GlobalErrorFallback({
           "Try using mobile data instead of campus Wi-Fi",
           "Contact campus IT if the problem persists"
         ]
-      };
+      }
     } else if (isRepeatedError) {
       return {
         title: "Persistent issue detected",
@@ -399,9 +399,9 @@ function GlobalErrorFallback({
           "Clear your browser cache",
           "Check if HIVE has any known issues on our status page"
         ]
-      };
+      }
     } else {
-      return null;
+      return null
     }
   };
 
@@ -525,7 +525,7 @@ function GlobalErrorFallback({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Hook for using global error boundary
@@ -535,11 +535,11 @@ export function useGlobalErrorBoundary() {
   return {
     trackError: (error: Error, context?: any) => {
       const hiveError = HiveErrorHandler.handleError(error, undefined, context);
-      errorTracker.trackError(hiveError, context);
+      errorTracker.trackError(hiveError, context)
     },
     getAnalytics: () => errorTracker.getAnalytics(),
     reset: () => errorTracker.reset(),
-  };
+  }
 }
 
 export { GlobalErrorTracker };

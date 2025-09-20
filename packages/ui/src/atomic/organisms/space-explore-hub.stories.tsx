@@ -257,17 +257,17 @@ export const InteractiveDemo: Story = {
           searchQuery={searchQuery}
           onCategoryClick={(type) => {
             action('category-clicked')(type);
-            console.log(`Navigating to ${type} spaces`);
-          }}
+            console.log(`Navigating to ${type} spaces`)
+          })}
           onSearch={(query) => {
             action('search-performed')(query);
             setSearchQuery(query);
-            console.log(`Searching for: ${query}`);
-          }}
+            console.log(`Searching for: ${query}`)
+          })}
           onShowFilters={action('filters-opened')}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

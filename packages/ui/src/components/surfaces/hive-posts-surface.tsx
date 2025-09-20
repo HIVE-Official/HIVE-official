@@ -46,7 +46,7 @@ const CoordinationSection: React.FC<{
   post: Post;
   onCoordinationResponse?: (postId: string, response: Omit<CoordinationResponse, 'id' | 'createdAt'>) => Promise<void>;
   onUpdateStatus?: (postId: string, status: 'planning' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled') => Promise<void>;
-  currentUserId?: string;
+  currentUserId?: string
 }> = ({ post, onCoordinationResponse, onUpdateStatus, currentUserId }) => {
   const [showResponseForm, setShowResponseForm] = useState(false);
   const [responseType, setResponseType] = useState<'interested' | 'going' | 'maybe' | 'cant_make_it'>('interested');
@@ -67,11 +67,11 @@ const CoordinationSection: React.FC<{
         message: responseMessage.trim() || undefined,
       });
       setShowResponseForm(false);
-      setResponseMessage('');
+      setResponseMessage('')
     } catch (error) {
-      console.error('Failed to submit coordination response:', error);
+      console.error('Failed to submit coordination response:', error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
   };
   
@@ -85,7 +85,7 @@ const CoordinationSection: React.FC<{
       case 'in_progress': return 'text-blue-400 bg-blue-500/20 border-blue-500/30';
       case 'completed': return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
       case 'cancelled': return 'text-red-400 bg-red-500/20 border-red-500/30';
-      default: return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
+      default: return 'text-gray-400 bg-gray-500/20 border-gray-500/30'
     }
   };
   
@@ -120,7 +120,7 @@ const CoordinationSection: React.FC<{
                 day: 'numeric',
                 hour: 'numeric',
                 minute: '2-digit'
-              })}
+          })}
             </span>
           </div>
         )}
@@ -266,8 +266,8 @@ const CoordinationSection: React.FC<{
                 className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors"
                 onClick={() => {
                   setShowResponseForm(false);
-                  setResponseMessage('');
-                }}
+                  setResponseMessage('')
+          }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -291,14 +291,14 @@ const CoordinationSection: React.FC<{
         </motion.div>
       )}
     </motion.div>
-  );
+  )
 };
 
 // Comment Thread Component for nested replies
 const CommentThread: React.FC<{
   comment: Comment;
   onReply: (commentId: string, content: string) => void;
-  level: number;
+  level: number
 }> = ({ comment, onReply, level }) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyContent, setReplyContent] = useState('');
@@ -308,7 +308,7 @@ const CommentThread: React.FC<{
     if (replyContent.trim()) {
       onReply(comment.id, replyContent.trim());
       setReplyContent('');
-      setShowReplyInput(false);
+      setShowReplyInput(false)
     }
   };
   
@@ -403,8 +403,8 @@ const CommentThread: React.FC<{
                     className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-md transition-colors"
                     onClick={() => {
                       setShowReplyInput(false);
-                      setReplyContent('');
-                    }}
+                      setReplyContent('')
+          }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -431,7 +431,7 @@ const CommentThread: React.FC<{
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // HIVE Posts Surface - Community Discussion & Threads
@@ -531,7 +531,7 @@ export interface CoordinationResponse {
     id: string;
     fullName: string;
     handle: string;
-    photoURL?: string;
+    photoURL?: string
   };
   responseType: 'interested' | 'going' | 'maybe' | 'cant_make_it';
   message?: string;
@@ -549,8 +549,8 @@ export interface CoordinationResponse {
     seatsAvailable?: number;
     // For activities
     skillLevel?: string;
-    equipment?: string[];
-  };
+    equipment?: string[]
+  }
 }
 
 export interface Comment {
@@ -561,17 +561,17 @@ export interface Comment {
     id: string;
     fullName: string;
     handle: string;
-    photoURL?: string;
+    photoURL?: string
   };
   createdAt: Date | { toDate: () => Date };
   updatedAt: Date | { toDate: () => Date };
   parentCommentId?: string;
   replies: Comment[];
   reactions?: {
-    heart: number;
+    heart: number
   };
   isEdited?: boolean;
-  isDeleted?: boolean;
+  isDeleted?: boolean
 }
 
 export interface Post {
@@ -583,12 +583,12 @@ export interface Post {
     id: string;
     fullName: string;
     handle: string;
-    photoURL?: string;
+    photoURL?: string
   };
   createdAt: Date | { toDate: () => Date };
   updatedAt: Date | { toDate: () => Date };
   reactions?: {
-    heart: number;
+    heart: number
   };
   isPinned?: boolean;
   isEdited?: boolean;
@@ -625,8 +625,8 @@ export interface Post {
       destination?: string;
       departureTime?: Date | { toDate: () => Date };
       returnTime?: Date | { toDate: () => Date };
-      costPerPerson?: number;
-    };
+      costPerPerson?: number
+    }
   };
   
   // Legacy props for backward compatibility
@@ -639,13 +639,13 @@ export interface Post {
   isLocked?: boolean;
   tags?: string[];
   imageUrls?: string[];
-  pollOptions?: Array<{ id: string; text: string; votes: number; }>;
+  pollOptions?: Array<{ id: string; text: string; votes: number }>;
   linkPreview?: {
     title: string;
     description: string;
     imageUrl?: string;
-    domain: string;
-  };
+    domain: string
+  }
 }
 
 export interface HivePostsSurfaceProps
@@ -687,7 +687,7 @@ export interface HivePostsSurfaceProps
   onActivityUpdate?: (activity: { type: string; user: string; action: string; timestamp: Date }) => void;
   
   // User context for coordination features
-  currentUserId?: string;
+  currentUserId?: string
 }
 
 // Helper function to get auth token from session storage
@@ -700,19 +700,19 @@ const getAuthToken = (): string | null => {
       const session = JSON.parse(sessionJson);
       return process.env.NODE_ENV === 'development' 
         ? `dev_token_${session.uid}` 
-        : session.token;
+        : session.token
     }
   } catch (error) {
-    console.error('Error getting session:', error);
+    console.error('Error getting session:', error)
   }
-  return null;
+  return null
 };
 
 // API function to fetch posts
 const fetchPosts = async (spaceId: string, limit = 20): Promise<Post[]> => {
   const token = getAuthToken();
   if (!token) {
-    throw new Error('No authentication token available');
+    throw new Error('No authentication token available')
   }
 
   const response = await fetch(`/api/spaces/${spaceId}/posts?limit=${limit}`, {
@@ -723,11 +723,11 @@ const fetchPosts = async (spaceId: string, limit = 20): Promise<Post[]> => {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch posts: ${response.statusText}`);
+    throw new Error(`Failed to fetch posts: ${response.statusText}`)
   }
 
   const data = await response.json();
-  return data.posts || [];
+  return data.posts || []
 };
 
 export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfaceProps>(
@@ -786,16 +786,16 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
           setIsLoading(true);
           setError(null);
           const posts = await fetchPosts(space.id, maxPosts);
-          setFetchedPosts(posts);
+          setFetchedPosts(posts)
         } catch (error) {
           console.error('Failed to fetch posts:', error);
-          setError(error instanceof Error ? error.message : 'Failed to fetch posts');
+          setError(error instanceof Error ? error.message : 'Failed to fetch posts')
         } finally {
-          setIsLoading(false);
+          setIsLoading(false)
         }
       };
 
-      loadPosts();
+      loadPosts()
     }, [autoFetch, space?.id, maxPosts]);
     
     // Use either provided posts or fetched posts
@@ -826,7 +826,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
       type: post.type as keyof typeof postTypes || 'discussion',
       // Create title from content if not provided
       title: post.title || post.content.slice(0, 100) + (post.content.length > 100 ? '...' : ''),
-    }));
+    })});
 
     const sortedPosts = normalizedPosts
       .sort((a, b) => {
@@ -844,26 +844,26 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
             return bScore - aScore;
           case 'recent':
           default:
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         }
       })
       .slice(0, maxPosts);
     
     const handleCreatePost = useCallback((type: keyof typeof postTypes) => {
       onCreatePost?.(type);
-      setShowCreateMenu(false);
+      setShowCreateMenu(false)
     }, [onCreatePost]);
     
     const togglePostExpansion = useCallback((postId: string) => {
       setExpandedPosts(prev => {
         const newSet = new Set(prev);
         if (newSet.has(postId)) {
-          newSet.delete(postId);
+          newSet.delete(postId)
         } else {
-          newSet.add(postId);
+          newSet.add(postId)
         }
-        return newSet;
-      });
+        return newSet
+      })
     }, []);
     
     // Loading state
@@ -893,7 +893,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
             ))}
           </div>
         </div>
-      );
+      )
     }
 
     // Error state
@@ -933,9 +933,9 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                   fetchPosts(space.id, maxPosts)
                     .then(setFetchedPosts)
                     .catch(e => setError(e.message))
-                    .finally(() => setIsLoading(false));
+                    .finally(() => setIsLoading(false))
                 }
-              }}
+          })}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -943,7 +943,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
             </motion.button>
           </motion.div>
         </div>
-      );
+      )
     }
 
     // Empty state
@@ -986,7 +986,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
             )}
           </motion.div>
         </div>
-      );
+      )
     }
     
     return (
@@ -1009,11 +1009,11 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                 animate={{ 
                   opacity: 1, 
                   scale: [1, 1.05, 1]
-                }}
+          }}
                 transition={{ 
                   opacity: { duration: 0.3 },
                   scale: { repeat: Infinity, duration: 2 }
-                }}
+          }}
               >
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                 <span className="text-xs text-green-300">
@@ -1076,8 +1076,8 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                                 <div className="text-xs text-gray-400">{config.description}</div>
                               </div>
                             </motion.button>
-                          );
-                        })}
+                          )
+          })
                       </div>
                     </motion.div>
                   )}
@@ -1297,7 +1297,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                               className="absolute bottom-0 left-0 h-0.5 bg-purple-500/50 rounded-full"
                               style={{ 
                                 width: `${(option.votes / Math.max(...post.pollOptions!.map(o => o.votes))) * 100}%` 
-                              }}
+          }}
                             />
                           </motion.div>
                         ))}
@@ -1356,12 +1356,12 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                             setExpandedComments(prev => {
                               const newSet = new Set(prev);
                               newSet.delete(post.id);
-                              return newSet;
-                            });
+                              return newSet
+                            })
                           } else {
-                            setExpandedComments(prev => new Set([...prev, post.id]));
+                            setExpandedComments(prev => new Set([...prev, post.id]))
                           }
-                        }}
+          })}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -1446,10 +1446,10 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                                           // Update post with new comments - would need state management
                                         }
                                       } catch (error) {
-                                        console.error('Failed to create comment:', error);
+                                        console.error('Failed to create comment:', error)
                                       }
                                     }
-                                  }}
+          })}
                                   whileHover={{ scale: 1.02 }}
                                   whileTap={{ scale: 0.98 }}
                                 >
@@ -1471,9 +1471,9 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                               comment={comment}
                               onReply={(commentId, content) => {
                                 if (onCreateComment) {
-                                  onCreateComment(post.id, content, commentId);
+                                  onCreateComment(post.id, content, commentId)
                                 }
-                              }}
+          })}
                               level={0}
                             />
                           ))}
@@ -1492,16 +1492,16 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                                   const comments = await onLoadComments(post.id);
                                   // Would need to update the post with comments in parent state
                                 } catch (error) {
-                                  console.error('Failed to load comments:', error);
+                                  console.error('Failed to load comments:', error)
                                 } finally {
                                   setLoadingComments(prev => {
                                     const newSet = new Set(prev);
                                     newSet.delete(post.id);
-                                    return newSet;
-                                  });
+                                    return newSet
+                                  })
                                 }
                               }
-                            }}
+          })}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                           >
@@ -1517,7 +1517,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
                   )}
                 </div>
               </motion.article>
-            );
+            )
           })}
         </div>
         
@@ -1541,7 +1541,7 @@ export const HivePostsSurface = React.forwardRef<HTMLDivElement, HivePostsSurfac
           </motion.div>
         )}
       </div>
-    );
+    )
   }
 );
 

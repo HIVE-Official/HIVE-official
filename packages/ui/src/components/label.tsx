@@ -11,7 +11,7 @@ const labelVariants = cva(
 interface LabelProps
   extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>,
     VariantProps<typeof labelVariants> {
-  className?: string;
+  className?: string
 }
 
 const Label = React.forwardRef<

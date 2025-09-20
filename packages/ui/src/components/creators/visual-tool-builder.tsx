@@ -52,7 +52,7 @@ interface CanvasProps {
   onElementSelect: (elementId: string | null) => void;
   selectedElementId?: string;
   canvas: CanvasState;
-  onCanvasUpdate: (canvas: Partial<CanvasState>) => void;
+  onCanvasUpdate: (canvas: Partial<CanvasState>) => void
 }
 
 const Canvas: React.FC<CanvasProps> = ({
@@ -85,33 +85,33 @@ const Canvas: React.FC<CanvasProps> = ({
     
     onElementAdd(draggedElement, position);
     setDraggedElement(null);
-    setIsDragging(false);
+    setIsDragging(false)
   }, [draggedElement, canvas.zoom, dragOffset, onElementAdd]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
+    e.preventDefault()
   }, []);
 
   const handleDragEnter = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    setIsDragging(true);
+    setIsDragging(true)
   }, []);
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     if (!e.relatedTarget || !canvasRef.current?.contains(e.relatedTarget as Node)) {
-      setIsDragging(false);
+      setIsDragging(false)
     }
   }, []);
 
   // Handle element movement within canvas
   const handleElementDrag = useCallback((elementId: string, newPosition: Position) => {
-    onElementUpdate(elementId, { position: newPosition });
+    onElementUpdate(elementId, { position: newPosition })
   }, [onElementUpdate]);
 
   // Handle element resize
   const handleElementResize = useCallback((elementId: string, newSize: Size) => {
-    onElementUpdate(elementId, { size: newSize });
+    onElementUpdate(elementId, { size: newSize })
   }, [onElementUpdate]);
 
   // Render element instances
@@ -146,7 +146,7 @@ const Canvas: React.FC<CanvasProps> = ({
           }}
           onClick={(e) => {
             e.stopPropagation();
-            onElementSelect(instance.id);
+            onElementSelect(instance.id)
           }}
           onMouseDown={(e) => {
             e.stopPropagation();
@@ -185,8 +185,8 @@ const Canvas: React.FC<CanvasProps> = ({
                   className="w-6 h-6 bg-red-500 rounded flex items-center justify-center cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onElementDelete(instance.id);
-                  }}
+                    onElementDelete(instance.id)
+          }}
                 >
                   <Trash2 size={12} className="text-white" />
                 </div>
@@ -198,7 +198,7 @@ const Canvas: React.FC<CanvasProps> = ({
           )}
         </div>
       </HiveMotionWrapper>
-    );
+    )
   };
 
   return (
@@ -209,14 +209,14 @@ const Canvas: React.FC<CanvasProps> = ({
           <HiveButton
             variant="ghost"
             size="sm"
-            onClick={() => onCanvasUpdate({ zoom: Math.min(canvas.zoom + 0.1, 2) })}
+            onClick={() => onCanvasUpdate({ zoom: Math.min(canvas.zoom + 0.1, 2) }}
           >
             <ZoomIn size={16} />
           </HiveButton>
           <HiveButton
             variant="ghost"
             size="sm"
-            onClick={() => onCanvasUpdate({ zoom: Math.max(canvas.zoom - 0.1, 0.5) })}
+            onClick={() => onCanvasUpdate({ zoom: Math.max(canvas.zoom - 0.1, 0.5) }}
           >
             <ZoomOut size={16} />
           </HiveButton>
@@ -229,7 +229,7 @@ const Canvas: React.FC<CanvasProps> = ({
           <HiveButton
             variant={canvas.showGrid ? "primary" : "ghost"}
             size="sm"
-            onClick={() => onCanvasUpdate({ showGrid: !canvas.showGrid })}
+            onClick={() => onCanvasUpdate({ showGrid: !canvas.showGrid }}
           >
             <Grid3X3 size={16} />
           </HiveButton>
@@ -253,7 +253,7 @@ const Canvas: React.FC<CanvasProps> = ({
             ? `radial-gradient(circle, var(--hive-border-default) 1px, transparent 1px)`
             : undefined,
           backgroundSize: canvas.showGrid ? `${canvas.gridSize}px ${canvas.gridSize}px` : undefined
-        }}
+          }}
       >
         {/* Canvas content area */}
         <div 
@@ -307,7 +307,7 @@ const Canvas: React.FC<CanvasProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Main Visual Tool Builder component
@@ -366,7 +366,7 @@ export const VisualToolBuilder: React.FC<VisualBuilderProps> = ({
     };
 
     onChange(updatedTool);
-    setSelectedElementId(newInstance.id);
+    setSelectedElementId(newInstance.id)
   }, [tool, onChange]);
 
   // Handle element updates
@@ -381,7 +381,7 @@ export const VisualToolBuilder: React.FC<VisualBuilderProps> = ({
       updatedAt: new Date()
     };
 
-    onChange(updatedTool);
+    onChange(updatedTool)
   }, [tool, onChange]);
 
   // Handle element deletion
@@ -395,13 +395,13 @@ export const VisualToolBuilder: React.FC<VisualBuilderProps> = ({
     onChange(updatedTool);
     
     if (selectedElementId === elementId) {
-      setSelectedElementId(null);
+      setSelectedElementId(null)
     }
   }, [tool, onChange, selectedElementId]);
 
   // Handle canvas updates
   const handleCanvasUpdate = useCallback((canvasChanges: Partial<CanvasState>) => {
-    setCanvas(prev => ({ ...prev, ...canvasChanges }));
+    setCanvas(prev => ({ ...prev, ...canvasChanges }))
   }, []);
 
   return (
@@ -421,8 +421,8 @@ export const VisualToolBuilder: React.FC<VisualBuilderProps> = ({
             });
             
             // Store element for canvas drop handling
-            (window as any).hiveDraggedElement = element;
-          }}
+            (window as any).hiveDraggedElement = element
+          })}
         />
       </div>
 
@@ -508,8 +508,8 @@ export const VisualToolBuilder: React.FC<VisualBuilderProps> = ({
             element={elements.find(el => el.id === selectedElement.elementId)!}
             instance={selectedElement}
             onChange={(config) => {
-              handleElementUpdate(selectedElementId, { config });
-            }}
+              handleElementUpdate(selectedElementId, { config })
+          })}
           />
         </div>
       )}
@@ -522,7 +522,7 @@ export const VisualToolBuilder: React.FC<VisualBuilderProps> = ({
         />
       )}
     </div>
-  );
+  )
 };
 
 export default VisualToolBuilder;

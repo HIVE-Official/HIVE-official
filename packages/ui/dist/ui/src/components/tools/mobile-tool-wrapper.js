@@ -47,27 +47,16 @@ function MobileOptimizedContent({ children, isMobile }) {
         return _jsx(_Fragment, { children: children });
     }
     // Apply mobile-specific transformations to child elements
-    return (_jsx("div", { className: "space-y-6", children: React.Children.map(children, (child, index) => {
-            if (React.isValidElement(child)) {
-                // Add mobile-optimized props to HiveCard components
-                if (child.type === HiveCard || (child.props && child.props.className?.includes('HiveCard'))) {
-                    return React.cloneElement(child, {
-                        className: cn(child.props.className, "shadow-sm border-0 rounded-xl touch-manipulation")
-                    });
+    return (_jsxs("div", { className: "space-y-6", children: [React.Children.map(children, (child, index) => {
+                if (React.isValidElement(child)) {
+                    // Add mobile-optimized props to HiveCard components
+                    if (child.type === HiveCard || (child.props && child.props.className?.includes('HiveCard'))) {
+                        return React.cloneElement(child, {
+                            className: cn(child.props.className, "shadow-sm border-0 rounded-xl touch-manipulation")
+                        });
+                    }
                 }
-                // Add mobile-optimized props to HiveButton components
-                if (child.type === HiveButton || (child.props && child.props.className?.includes('HiveButton'))) {
-                    return React.cloneElement(child, {
-                        className: cn(child.props.className, "h-12 text-base touch-manipulation")
-                    });
-                }
-                // Wrap form elements in mobile-friendly containers
-                if (child.props && (child.props.type === 'input' || child.props.role === 'textbox')) {
-                    return (_jsx("div", { className: "space-y-2", children: child }, index));
-                }
-            }
-            return child;
-        }) }));
+            }), "// Add mobile-optimized props to HiveButton components if (child.type === HiveButton || (child.props && child.props.className?.includes('HiveButton'))) ", , "return React.cloneElement(child as React.ReactElement", _jsxs("any", { children: [", ", className, ": cn( child.props.className, \"h-12 text-base touch-manipulation\" ) }) } // Wrap form elements in mobile-friendly containers if (child.props && (child.props.type === 'input' || child.props.role === 'textbox')) ", , "return (", _jsx("div", { className: "space-y-2", children: child }, index), ") } } return child })}"] })] }));
 }
 export default MobileToolWrapper;
 //# sourceMappingURL=mobile-tool-wrapper.js.map

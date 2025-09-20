@@ -18,10 +18,10 @@ import {
   Target,
   Award
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
+import { Badge } from '../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
 import { Progress } from '../hive-progress';
 import { Switch } from '../hive-switch';
 
@@ -37,7 +37,7 @@ export interface ProfileDashboardData {
     academicYear?: string;
     interests: string[];
     joinedAt: string;
-    lastActive: string;
+    lastActive: string
   };
   summary: {
     totalSpaces: number;
@@ -47,7 +47,7 @@ export interface ProfileDashboardData {
     weeklyActivity: number;
     contentCreated: number;
     toolsUsed: number;
-    socialInteractions: number;
+    socialInteractions: number
   };
   recentActivity: {
     spaces: Array<{
@@ -55,21 +55,21 @@ export interface ProfileDashboardData {
       spaceName: string;
       action: string;
       timestamp: string;
-      duration?: number;
+      duration?: number
     }>;
     tools: Array<{
       toolId: string;
       toolName?: string;
       action: string;
       timestamp: string;
-      spaceId?: string;
+      spaceId?: string
     }>;
     social: Array<{
       type: string;
       description: string;
       timestamp: string;
-      spaceId?: string;
-    }>;
+      spaceId?: string
+    }>
   };
   upcomingEvents: Array<{
     id: string;
@@ -80,57 +80,57 @@ export interface ProfileDashboardData {
     spaceId?: string;
     spaceName?: string;
     isToday: boolean;
-    isUpcoming: boolean;
+    isUpcoming: boolean
   }>;
   quickActions: {
     favoriteSpaces: Array<{
       spaceId: string;
       spaceName: string;
       unreadCount: number;
-      lastActivity: string;
+      lastActivity: string
     }>;
     pinnedSpaces: Array<{
       spaceId: string;
       spaceName: string;
       unreadCount: number;
-      lastActivity: string;
+      lastActivity: string
     }>;
     recommendations: Array<{
       spaceId: string;
       spaceName: string;
       matchScore: number;
-      matchReasons: string[];
-    }>;
+      matchReasons: string[]
+    }>
   };
   insights: {
     peakActivityTime: string;
     mostActiveSpace: {
       spaceId: string;
       spaceName: string;
-      timeSpent: number;
+      timeSpent: number
     } | null;
     weeklyGoal: {
       target: number;
       current: number;
-      percentage: number;
+      percentage: number
     };
     streaks: {
       currentStreak: number;
       longestStreak: number;
-      type: 'daily_activity' | 'content_creation' | 'tool_usage';
-    };
+      type: 'daily_activity' | 'content_creation' | 'tool_usage'
+    }
   };
   privacy: {
     ghostMode: {
       enabled: boolean;
-      level: string;
+      level: string
     };
     visibility: {
       profileVisible: boolean;
       activityVisible: boolean;
-      onlineStatus: boolean;
-    };
-  };
+      onlineStatus: boolean
+    }
+  }
 }
 
 interface HiveDashboardProps {
@@ -138,7 +138,7 @@ interface HiveDashboardProps {
   isLoading?: boolean;
   onRefresh?: () => void;
   onNavigate?: (path: string) => void;
-  className?: string;
+  className?: string
 }
 
 // Animation variants
@@ -197,7 +197,7 @@ export function HiveDashboard({
     if (minutes < 60) return `${minutes}m`;
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
   };
 
   // Format time helper
@@ -210,11 +210,11 @@ export function HiveDashboard({
     
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
-    return 'Just now';
+    return 'Just now'
   };
 
   if (isLoading) {
-    return <DashboardSkeleton />;
+    return <DashboardSkeleton />
   }
 
   if (!data) {
@@ -225,7 +225,7 @@ export function HiveDashboard({
           <Button onClick={onRefresh}>Try Again</Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -392,7 +392,7 @@ export function HiveDashboard({
                   </div>
                   <div className="flex items-center space-x-2">
                     {space.unreadCount > 0 && (
-                      <Badge variant="destructive" className="text-xs">
+                      <Badge variant="error" className="text-xs">
                         {space.unreadCount}
                       </Badge>
                     )}
@@ -435,7 +435,7 @@ export function HiveDashboard({
                     </div>
                   </div>
                   {event.isToday && (
-                    <Badge variant="destructive" className="text-xs">Today</Badge>
+                    <Badge variant="error" className="text-xs">Today</Badge>
                   )}
                 </motion.div>
               ))}
@@ -593,7 +593,7 @@ export function HiveDashboard({
         </motion.div>
       </div>
     </motion.div>
-  );
+  )
 }
 
 // Stat Card Component
@@ -602,7 +602,7 @@ interface StatCardProps {
   value: string | number;
   total?: number;
   icon: React.ReactNode;
-  color: 'blue' | 'green' | 'purple' | 'orange';
+  color: 'blue' | 'green' | 'purple' | 'orange'
 }
 
 function StatCard({ label, value, total, icon, color }: StatCardProps) {
@@ -623,7 +623,7 @@ function StatCard({ label, value, total, icon, color }: StatCardProps) {
       </div>
       <div className="text-sm text-gray-600">{label}</div>
     </div>
-  );
+  )
 }
 
 // Loading Skeleton
@@ -648,7 +648,7 @@ function DashboardSkeleton() {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 export default HiveDashboard;

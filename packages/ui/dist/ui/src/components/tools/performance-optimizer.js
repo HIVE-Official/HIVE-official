@@ -203,40 +203,43 @@ export function PerformanceMonitor({ children, onMetrics }) {
                 }
             });
         });
-        observer.observe({ entryTypes: ['measure'] });
-        // Memory usage monitoring
-        const memoryInterval = setInterval(() => {
-            if ('memory' in performance) {
-                const memory = performance.memory;
-                setMetrics(prev => ({
-                    ...prev,
-                    memoryUsage: memory.usedJSHeapSize / 1024 / 1024 // MB
-                }));
-            }
-        }, 5000);
-        // Cache statistics
-        const cacheInterval = setInterval(() => {
-            const cache = ToolCache.getInstance();
-            const stats = cache.getStats();
-            setMetrics(prev => ({
-                ...prev,
-                cacheHitRate: stats.size > 0 ? 85 : 0 // Simulated hit rate
-            }));
-        }, 10000);
-        return () => {
-            observer.disconnect();
-            clearInterval(memoryInterval);
-            clearInterval(cacheInterval);
-        };
-    }, []);
-    useEffect(() => {
-        onMetrics?.(metrics);
-    }, [metrics, onMetrics]);
-    if (process.env.NODE_ENV === 'development') {
-        return (_jsxs(_Fragment, { children: [children, _jsxs("div", { className: "fixed bottom-4 right-4 bg-black text-white text-xs p-2 rounded font-mono", children: [_jsxs("div", { children: ["Renders: ", metrics.renderCount] }), _jsxs("div", { children: ["Avg Time: ", metrics.averageRenderTime.toFixed(2), "ms"] }), _jsxs("div", { children: ["Memory: ", metrics.memoryUsage.toFixed(2), "MB"] }), _jsxs("div", { children: ["Cache Hit: ", metrics.cacheHitRate.toFixed(1), "%"] })] })] }));
-    }
-    return _jsx(_Fragment, { children: children });
+    });
 }
+;
+observer.observe({ entryTypes: ['measure'] });
+// Memory usage monitoring
+const memoryInterval = setInterval(() => {
+    if ('memory' in performance) {
+        const memory = performance.memory;
+        setMetrics(prev => ({
+            ...prev,
+            memoryUsage: memory.usedJSHeapSize / 1024 / 1024 // MB
+        }));
+    }
+}, 5000);
+// Cache statistics
+const cacheInterval = setInterval(() => {
+    const cache = ToolCache.getInstance();
+    const stats = cache.getStats();
+    setMetrics(prev => ({
+        ...prev,
+        cacheHitRate: stats.size > 0 ? 85 : 0 // Simulated hit rate
+    }));
+}, 10000);
+return () => {
+    observer.disconnect();
+    clearInterval(memoryInterval);
+    clearInterval(cacheInterval);
+};
+[];
+;
+useEffect(() => {
+    onMetrics?.(metrics);
+}, [metrics, onMetrics]);
+if (process.env.NODE_ENV === 'development') {
+    return (_jsxs(_Fragment, { children: [children, _jsxs("div", { className: "fixed bottom-4 right-4 bg-black text-white text-xs p-2 rounded font-mono", children: [_jsxs("div", { children: ["Renders: ", metrics.renderCount] }), _jsxs("div", { children: ["Avg Time: ", metrics.averageRenderTime.toFixed(2), "ms"] }), _jsxs("div", { children: ["Memory: ", metrics.memoryUsage.toFixed(2), "MB"] }), _jsxs("div", { children: ["Cache Hit: ", metrics.cacheHitRate.toFixed(1), "%"] })] })] }));
+}
+return _jsx(_Fragment, { children: children });
 export function OptimizedImage({ src, alt, width, height, className, lazy = true }) {
     const [loaded, setLoaded] = useState(false);
     const [inView, setInView] = useState(!lazy);

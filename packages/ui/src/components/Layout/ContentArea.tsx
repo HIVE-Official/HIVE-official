@@ -60,7 +60,7 @@ interface ContentAreaProps {
   spacing?: 'tight' | 'normal' | 'loose' | 'adaptive';
   
   className?: string;
-  contentId?: string;
+  contentId?: string
 }
 
 // Custom hook for intelligent scroll management
@@ -72,7 +72,7 @@ function useSmartScroll(
     hasMore?: boolean;
     loading?: boolean;
     threshold?: number;
-    enableRestoration?: boolean;
+    enableRestoration?: boolean
   }
 ) {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -85,7 +85,7 @@ function useSmartScroll(
     if (options.enableRestoration && containerRef.current) {
       const savedPosition = sessionStorage.getItem(`scroll-${window.location.pathname}`);
       if (savedPosition) {
-        containerRef.current.scrollTo(0, parseInt(savedPosition, 10));
+        containerRef.current.scrollTo(0, parseInt(savedPosition, 10))
       }
     }
   }, [options.enableRestoration]);
@@ -106,21 +106,21 @@ function useSmartScroll(
     
     // Trigger load more for infinite scroll
     if (nearBottom && options.strategy === 'infinite-scroll' && options.hasMore && !options.loading && options.onLoadMore) {
-      options.onLoadMore();
+      options.onLoadMore()
     }
     
     // Save scroll position for restoration
     if (options.enableRestoration) {
-      sessionStorage.setItem(`scroll-${window.location.pathname}`, scrollTop.toString());
+      sessionStorage.setItem(`scroll-${window.location.pathname}`, scrollTop.toString())
     }
     
     // Reset scrolling state after delay
     if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
+      clearTimeout(scrollTimeoutRef.current)
     }
     scrollTimeoutRef.current = setTimeout(() => {
-      setIsScrolling(false);
-    }, 150);
+      setIsScrolling(false)
+    }, 150)
   }, [options.strategy, options.hasMore, options.loading, options.onLoadMore, options.threshold, options.enableRestoration]);
   
   useEffect(() => {
@@ -128,10 +128,10 @@ function useSmartScroll(
     if (!container) return;
     
     container.addEventListener('scroll', handleScroll, { passive: true });
-    return () => container.removeEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll)
   }, [handleScroll]);
   
-  return { scrollPosition, isNearBottom, isScrolling };
+  return { scrollPosition, isNearBottom, isScrolling }
 }
 
 // Custom hook for focus management
@@ -146,7 +146,7 @@ function useFocusManagement(
   // Preserve focus before updates
   const preserveFocus = useCallback(() => {
     if (preserveOnUpdate && document.activeElement instanceof HTMLElement) {
-      lastFocusedElement.current = document.activeElement;
+      lastFocusedElement.current = document.activeElement
     }
   }, [preserveOnUpdate]);
   
@@ -157,7 +157,7 @@ function useFocusManagement(
     switch (strategy) {
       case 'preserve':
         if (lastFocusedElement.current && document.contains(lastFocusedElement.current)) {
-          lastFocusedElement.current.focus();
+          lastFocusedElement.current.focus()
         }
         break;
       
@@ -170,7 +170,7 @@ function useFocusManagement(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         ) as HTMLElement;
         if (firstFocusable) {
-          firstFocusable.focus();
+          firstFocusable.focus()
         }
         break;
       
@@ -178,14 +178,14 @@ function useFocusManagement(
         if (initialSelector) {
           const customElement = containerRef.current.querySelector(initialSelector) as HTMLElement;
           if (customElement) {
-            customElement.focus();
+            customElement.focus()
           }
         }
-        break;
+        break
     }
   }, [strategy, initialSelector]);
   
-  return { preserveFocus, manageFocus };
+  return { preserveFocus, manageFocus }
 }
 
 // Performance optimization based on device capabilities
@@ -217,7 +217,7 @@ function getPerformanceConfig(level: PerformanceLevel, viewport: any) {
     }
   };
   
-  return configs[level];
+  return configs[level]
 }
 
 export const ContentArea: React.FC<ContentAreaProps> = ({
@@ -283,16 +283,16 @@ export const ContentArea: React.FC<ContentAreaProps> = ({
     
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
+        setIsVisible(entry.isIntersecting)
       },
       { threshold: 0.1 }
     );
     
     if (containerRef.current) {
-      observer.observe(containerRef.current);
+      observer.observe(containerRef.current)
     }
     
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   }, [enableIntersectionObserver, perfConfig.enableIntersection]);
   
   // Keyboard navigation
@@ -327,14 +327,14 @@ export const ContentArea: React.FC<ContentAreaProps> = ({
             top: containerRef.current.clientHeight * 0.8, 
             behavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior 
           });
-          break;
+          break
       }
     };
     
     const container = containerRef.current;
     if (container) {
       container.addEventListener('keydown', handleKeyDown);
-      return () => container.removeEventListener('keydown', handleKeyDown);
+      return () => container.removeEventListener('keydown', handleKeyDown)
     }
   }, [enableKeyboardNavigation, scrollBehavior]);
   
@@ -418,7 +418,7 @@ export const ContentArea: React.FC<ContentAreaProps> = ({
         ...(optimizeForCampusWifi && {
           contain: 'layout style paint'
         })
-      }}
+          })}
       onFocus={manageFocus}
       onBlur={preserveFocus}
     >
@@ -454,7 +454,7 @@ export const ContentArea: React.FC<ContentAreaProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Export utilities

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { Avatar, HiveBadge as Badge } from '../index';
 import { 
   MessageSquare, 
@@ -45,20 +45,20 @@ export interface Message {
   readBy: string[];
   reactions?: {
     emoji: string;
-    users: string[];
+    users: string[]
   }[];
   replyTo?: {
     messageId: string;
     content: string;
-    senderName: string;
+    senderName: string
   };
   attachments?: {
     id: string;
     name: string;
     url: string;
     type: string;
-    size: number;
-  }[];
+    size: number
+  }[]
 }
 
 export interface Conversation {
@@ -70,7 +70,7 @@ export interface Conversation {
     avatar?: string;
     handle: string;
     isOnline?: boolean;
-    lastSeen?: string;
+    lastSeen?: string
   }[];
   lastMessage?: Message;
   unreadCount: number;
@@ -99,7 +99,7 @@ interface DirectMessageSystemProps {
   onPinConversation?: (conversationId: string) => Promise<void>;
   onMuteConversation?: (conversationId: string) => Promise<void>;
   isLoading?: boolean;
-  enableFeatureFlag?: boolean;
+  enableFeatureFlag?: boolean
 }
 
 interface ConversationListProps {
@@ -109,7 +109,7 @@ interface ConversationListProps {
   onSelectConversation: (conversationId: string) => void;
   onArchiveConversation?: (conversationId: string) => Promise<void>;
   onPinConversation?: (conversationId: string) => Promise<void>;
-  onMuteConversation?: (conversationId: string) => Promise<void>;
+  onMuteConversation?: (conversationId: string) => Promise<void>
 }
 
 interface MessageListProps {
@@ -119,14 +119,14 @@ interface MessageListProps {
   onEditMessage?: (messageId: string, content: string) => Promise<void>;
   onDeleteMessage?: (messageId: string) => Promise<void>;
   onReactToMessage?: (messageId: string, emoji: string) => Promise<void>;
-  onReplyToMessage?: (message: Message) => void;
+  onReplyToMessage?: (message: Message) => void
 }
 
 interface MessageInputProps {
   onSendMessage: (content: string, replyTo?: string) => Promise<void>;
   replyTo?: Message;
   onCancelReply?: () => void;
-  isLoading?: boolean;
+  isLoading?: boolean
 }
 
 const ConversationList: React.FC<ConversationListProps> = ({
@@ -150,14 +150,14 @@ const ConversationList: React.FC<ConversationListProps> = ({
       ) ||
       conv.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       conv.lastMessage?.content.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    )
   }, [conversations, searchQuery]);
 
   const formatMessagePreview = (message: Message) => {
     if (message.type === 'image') return '📷 Image';
     if (message.type === 'file') return '📎 File';
     if (message.type === 'system') return message.content;
-    return message.content.length > 50 ? `${message.content.substring(0, 50)}...` : message.content;
+    return message.content.length > 50 ? `${message.content.substring(0, 50)}...` : message.content
   };
 
   const formatTime = (timestamp: string) => {
@@ -172,23 +172,23 @@ const ConversationList: React.FC<ConversationListProps> = ({
     if (diffMins < 60) return `${diffMins}m`;
     if (diffHours < 24) return `${diffHours}h`;
     if (diffDays < 7) return `${diffDays}d`;
-    return date.toLocaleDateString();
+    return date.toLocaleDateString()
   };
 
   const getConversationTitle = (conversation: Conversation) => {
     if (conversation.type === 'group') {
-      return conversation.title || 'Group Chat';
+      return conversation.title || 'Group Chat'
     }
     const otherParticipant = conversation.participants.find(p => p.id !== currentUserId);
-    return otherParticipant?.name || 'Unknown User';
+    return otherParticipant?.name || 'Unknown User'
   };
 
   const getConversationAvatar = (conversation: Conversation) => {
     if (conversation.type === 'group') {
-      return conversation.avatar;
+      return conversation.avatar
     }
     const otherParticipant = conversation.participants.find(p => p.id !== currentUserId);
-    return otherParticipant?.avatar;
+    return otherParticipant?.avatar
   };
 
   return (
@@ -289,8 +289,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
                       size="xs"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setShowMenu(showMenu === conversation.id ? null : conversation.id);
-                      }}
+                        setShowMenu(showMenu === conversation.id ? null : conversation.id)
+          }}
                       className="opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <MoreVertical className="w-3 h-3" />
@@ -308,8 +308,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
                             onClick={(e) => {
                               e.stopPropagation();
                               onPinConversation?.(conversation.id);
-                              setShowMenu(null);
-                            }}
+                              setShowMenu(null)
+          }}
                             className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                           >
                             <Pin className="w-3 h-3" />
@@ -319,8 +319,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
                             onClick={(e) => {
                               e.stopPropagation();
                               onMuteConversation?.(conversation.id);
-                              setShowMenu(null);
-                            }}
+                              setShowMenu(null)
+          }}
                             className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                           >
                             <div className="w-3 h-3 bg-current rounded-full opacity-50" />
@@ -330,8 +330,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
                             onClick={(e) => {
                               e.stopPropagation();
                               onArchiveConversation?.(conversation.id);
-                              setShowMenu(null);
-                            }}
+                              setShowMenu(null)
+          }}
                             className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                           >
                             <Archive className="w-3 h-3" />
@@ -348,7 +348,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };
 
 const MessageItem: React.FC<{
@@ -358,7 +358,7 @@ const MessageItem: React.FC<{
   onEdit?: (messageId: string, content: string) => Promise<void>;
   onDelete?: (messageId: string) => Promise<void>;
   onReact?: (messageId: string, emoji: string) => Promise<void>;
-  onReply?: (message: Message) => void;
+  onReply?: (message: Message) => void
 }> = ({ message, currentUserId, participants, onEdit, onDelete, onReact, onReply }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
@@ -370,21 +370,21 @@ const MessageItem: React.FC<{
   const handleEdit = useCallback(async () => {
     if (!editContent.trim() || editContent === message.content) {
       setIsEditing(false);
-      return;
+      return
     }
     await onEdit?.(message.id, editContent);
-    setIsEditing(false);
+    setIsEditing(false)
   }, [editContent, message.id, message.content, onEdit]);
 
   const formatTime = (timestamp: string) => {
-    return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
 
   const getReadStatus = () => {
     if (!isOwnMessage) return null;
     if (message.readBy.length === 0) return <Clock className="w-3 h-3 text-[var(--hive-text-muted)]" />;
     if (message.readBy.length === 1) return <Check className="w-3 h-3 text-[var(--hive-text-muted)]" />;
-    return <CheckCheck className="w-3 h-3 text-[var(--hive-primary)]" />;
+    return <CheckCheck className="w-3 h-3 text-[var(--hive-primary)]" />
   };
 
   return (
@@ -489,8 +489,8 @@ const MessageItem: React.FC<{
                   <button
                     onClick={() => {
                       onReply?.(message);
-                      setShowMenu(false);
-                    }}
+                      setShowMenu(false)
+          }}
                     className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                   >
                     <Reply className="w-3 h-3" />
@@ -499,8 +499,8 @@ const MessageItem: React.FC<{
                   <button
                     onClick={() => {
                       onReact?.(message.id, '👍');
-                      setShowMenu(false);
-                    }}
+                      setShowMenu(false)
+          }}
                     className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                   >
                     <Smile className="w-3 h-3" />
@@ -511,8 +511,8 @@ const MessageItem: React.FC<{
                       <button
                         onClick={() => {
                           setIsEditing(true);
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                       >
                         <Edit3 className="w-3 h-3" />
@@ -521,8 +521,8 @@ const MessageItem: React.FC<{
                       <button
                         onClick={() => {
                           onDelete?.(message.id);
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2 text-[var(--hive-status-error)]"
                       >
                         <Trash2 className="w-3 h-3" />
@@ -564,7 +564,7 @@ const MessageItem: React.FC<{
         )}
       </div>
     </motion.div>
-  );
+  )
 };
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -579,7 +579,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages]);
 
   return (
@@ -608,7 +608,7 @@ const MessageList: React.FC<MessageListProps> = ({
       )}
       <div ref={messagesEndRef} />
     </div>
-  );
+  )
 };
 
 const MessageInput: React.FC<MessageInputProps> = ({
@@ -626,13 +626,13 @@ const MessageInput: React.FC<MessageInputProps> = ({
     
     await onSendMessage(message, replyTo?.id);
     setMessage('');
-    onCancelReply?.();
+    onCancelReply?.()
   }, [message, isLoading, onSendMessage, replyTo, onCancelReply]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit();
+      handleSubmit()
     }
   };
 
@@ -704,7 +704,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         </Button>
       </div>
     </div>
-  );
+  )
 };
 
 export const DirectMessageSystem: React.FC<DirectMessageSystemProps> = ({
@@ -736,23 +736,23 @@ export const DirectMessageSystem: React.FC<DirectMessageSystemProps> = ({
 
   const handleSendMessage = useCallback(async (content: string, replyToId?: string) => {
     if (!activeConversationId) return;
-    await onSendMessage?.(activeConversationId, content, replyToId);
+    await onSendMessage?.(activeConversationId, content, replyToId)
   }, [activeConversationId, onSendMessage]);
 
   const handleSelectConversation = useCallback(async (conversationId: string) => {
-    await onMarkAsRead?.(conversationId);
+    await onMarkAsRead?.(conversationId)
   }, [onMarkAsRead]);
 
   const handleReplyToMessage = useCallback((message: Message) => {
-    setReplyTo(message);
+    setReplyTo(message)
   }, []);
 
   const getConversationTitle = (conversation: Conversation) => {
     if (conversation.type === 'group') {
-      return conversation.title || 'Group Chat';
+      return conversation.title || 'Group Chat'
     }
     const otherParticipant = conversation.participants.find(p => p.id !== currentUserId);
-    return otherParticipant?.name || 'Unknown User';
+    return otherParticipant?.name || 'Unknown User'
   };
 
   return (
@@ -904,5 +904,5 @@ export const DirectMessageSystem: React.FC<DirectMessageSystemProps> = ({
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 };

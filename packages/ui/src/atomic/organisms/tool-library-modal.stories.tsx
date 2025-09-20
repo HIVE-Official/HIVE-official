@@ -307,7 +307,7 @@ export const InteractiveDemo: Story = {
       action('tool-planted')(tool);
       setIsPlanting(false);
       setPlantingToolId('');
-      setIsOpen(false);
+      setIsOpen(false)
     };
 
     return (
@@ -329,7 +329,7 @@ export const InteractiveDemo: Story = {
           plantingToolId={plantingToolId}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

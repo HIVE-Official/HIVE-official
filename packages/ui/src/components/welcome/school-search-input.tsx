@@ -17,7 +17,7 @@ const MOCK_SCHOOLS = [
 
 interface SchoolSearchInputProps {
   onSchoolSelect: (schoolId: string) => void;
-  className?: string;
+  className?: string
 }
 
 const SchoolSearchInput = React.forwardRef<
@@ -32,7 +32,7 @@ const SchoolSearchInput = React.forwardRef<
     }
     return MOCK_SCHOOLS.filter((school) =>
       school.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    )
   }, [searchQuery]);
 
   return (
@@ -73,7 +73,7 @@ const SchoolSearchInput = React.forwardRef<
         </div>
       )}
     </div>
-  );
+  )
 });
 
 SchoolSearchInput.displayName = 'SchoolSearchInput';

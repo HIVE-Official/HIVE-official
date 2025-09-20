@@ -44,7 +44,7 @@ const createMockItems = (activeSection = 'feed') => {
     isActive: item.id === activeSection,
     badge: item.id === 'spaces' ? { type: 'notification' as const, count: 5 } : 
            item.id === 'feed' ? { type: 'status' as const, count: 12 } : undefined
-  }));
+  }))
 };
 
 // ============================================================================
@@ -380,7 +380,7 @@ const ResponsiveShowcase = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // ============================================================================

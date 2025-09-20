@@ -40,7 +40,7 @@ interface AccessibilitySettings {
   // Cognitive accessibility
   simpleMode?: boolean;
   noAnimations?: boolean;
-  clearLabels?: boolean;
+  clearLabels?: boolean
 }
 
 interface AccessibilityLogoProps {
@@ -71,7 +71,7 @@ interface AccessibilityLogoProps {
   context?: 'header' | 'footer' | 'sidebar' | 'main' | 'navigation';
   landmarks?: boolean; // Add ARIA landmarks
   
-  className?: string;
+  className?: string
 }
 
 // WCAG compliant color contrast ratios
@@ -170,13 +170,13 @@ const useScreenReaderAnnouncement = () => {
       liveRegion.textContent = message;
       setTimeout(() => {
         if (document.body.contains(liveRegion)) {
-          document.body.removeChild(liveRegion);
+          document.body.removeChild(liveRegion)
         }
-      }, 2000);
-    }, 100);
+      }, 2000)
+    }, 100)
   }, []);
   
-  return { announce, announcement };
+  return { announce, announcement }
 };
 
 // High contrast mode detection
@@ -187,7 +187,7 @@ const useHighContrastMode = () => {
     const checkHighContrast = () => {
       // Check for Windows high contrast mode
       const highContrastMedia = window.matchMedia('(prefers-contrast: high)');
-      setIsHighContrast(highContrastMedia.matches);
+      setIsHighContrast(highContrastMedia.matches)
     };
     
     checkHighContrast();
@@ -196,10 +196,10 @@ const useHighContrastMode = () => {
     const handleChange = () => checkHighContrast();
     
     highContrastMedia.addEventListener('change', handleChange);
-    return () => highContrastMedia.removeEventListener('change', handleChange);
+    return () => highContrastMedia.removeEventListener('change', handleChange)
   }, []);
   
-  return isHighContrast;
+  return isHighContrast
 };
 
 // Color blindness filters component
@@ -297,7 +297,7 @@ export const HiveLogoAccessible = memo(({
       navigation: 'in navigation',
     };
     
-    return `${purposeText[semanticPurpose]} ${contextText[context]}`;
+    return `${purposeText[semanticPurpose]} ${contextText[context]}`
   }, [ariaLabel, semanticPurpose, context]);
   
   // Enhanced description for screen readers
@@ -305,7 +305,7 @@ export const HiveLogoAccessible = memo(({
     if (ariaDescription) return ariaDescription;
     if (!accessibility.describeLogo) return undefined;
     
-    return `Hexagonal interlocking logo design representing the HIVE brand. ${interactive ? 'Interactive element.' : ''} ${variant === 'gold' ? 'Displayed in gold color.' : `Displayed in ${variant} variant.`}`;
+    return `Hexagonal interlocking logo design representing the HIVE brand. ${interactive ? 'Interactive element.' : ''} ${variant === 'gold' ? 'Displayed in gold color.' : `Displayed in ${variant} variant.`}`
   }, [ariaDescription, accessibility.describeLogo, interactive, variant]);
   
   // Keyboard event handler
@@ -316,24 +316,24 @@ export const HiveLogoAccessible = memo(({
       event.preventDefault();
       
       if (accessibility.announceChanges) {
-        announce(`${dynamicAriaLabel} activated`, 'assertive');
+        announce(`${dynamicAriaLabel} activated`, 'assertive')
       }
       
-      onClick?.(event);
+      onClick?.(event)
     }
   }, [interactive, onClick, dynamicAriaLabel, accessibility.announceChanges, announce]);
   
   // Focus handlers with announcements
   const handleFocus = useCallback((event: React.FocusEvent) => {
     if (accessibility.announceChanges) {
-      announce(`Focused on ${dynamicAriaLabel}`, 'polite');
+      announce(`Focused on ${dynamicAriaLabel}`, 'polite')
     }
     
-    onFocus?.(event);
+    onFocus?.(event)
   }, [onFocus, dynamicAriaLabel, accessibility.announceChanges, announce]);
   
   const handleBlur = useCallback((event: React.FocusEvent) => {
-    onBlur?.(event);
+    onBlur?.(event)
   }, [onBlur]);
   
   // Click handler with haptic feedback
@@ -343,23 +343,23 @@ export const HiveLogoAccessible = memo(({
     }
     
     if (accessibility.announceChanges) {
-      announce(`${dynamicAriaLabel} activated`, 'assertive');
+      announce(`${dynamicAriaLabel} activated`, 'assertive')
     }
     
-    onClick?.(event);
+    onClick?.(event)
   }, [onClick, dynamicAriaLabel, accessibility.announceChanges, accessibility.hapticFeedback, announce]);
   
   // Touch target size enforcement
   const touchTargetSize = useMemo(() => {
     if (minTouchTarget <= 44) return 'small';
     if (minTouchTarget <= 48) return 'medium';
-    return 'large';
+    return 'large'
   }, [minTouchTarget]);
   
   // Animation configuration
   const animationProps = useMemo(() => {
     if (shouldReduceMotion || accessibility.noAnimations || accessibility.reducedMotion) {
-      return {};
+      return {}
     }
     
     return {
@@ -367,7 +367,7 @@ export const HiveLogoAccessible = memo(({
       whileHover: interactive ? { scale: 1.05 } : {},
       whileTap: interactive ? { scale: 0.98 } : {},
       transition: { duration: 0.2 },
-    };
+    }
   }, [shouldReduceMotion, accessibility, interactive]);
   
   // Component props
@@ -443,7 +443,7 @@ export const HiveLogoAccessible = memo(({
       <nav aria-label="Main navigation">
         <LogoComponent />
       </nav>
-    );
+    )
   }
   
   if (landmarks && context === 'header') {
@@ -451,10 +451,10 @@ export const HiveLogoAccessible = memo(({
       <header>
         <LogoComponent />
       </header>
-    );
+    )
   }
   
-  return <LogoComponent />;
+  return <LogoComponent />
 });
 
 HiveLogoAccessible.displayName = 'HiveLogoAccessible';
@@ -463,7 +463,7 @@ HiveLogoAccessible.displayName = 'HiveLogoAccessible';
 export const HiveSkipLink: React.FC<{
   href: string;
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }> = ({ href, children, className }) => {
   return (
     <a
@@ -477,12 +477,12 @@ export const HiveSkipLink: React.FC<{
     >
       {children}
     </a>
-  );
+  )
 };
 
 // Accessibility testing component
 export const HiveLogoAccessibilityTest: React.FC<{
-  className?: string;
+  className?: string
 }> = ({ className }) => {
   const [testResults, setTestResults] = useState({
     contrastRatio: 0,
@@ -511,10 +511,10 @@ export const HiveLogoAccessibilityTest: React.FC<{
         keyboardAccessible,
         screenReaderFriendly,
         touchTargetSize,
-      });
+      })
     };
     
-    runTests();
+    runTests()
   }, []);
   
   const calculateContrastRatio = (color1: string, color2: string): number => {
@@ -584,7 +584,7 @@ export const HiveLogoAccessibilityTest: React.FC<{
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Export accessibility components (already exported with const declarations above)

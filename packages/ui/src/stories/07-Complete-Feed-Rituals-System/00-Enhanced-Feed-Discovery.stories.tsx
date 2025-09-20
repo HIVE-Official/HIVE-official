@@ -312,7 +312,7 @@ function EnhancedFeedDiscoverySystem() {
       // Update timestamps and engagement metrics
     }, 30000); // Every 30 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, [realTimeMode]);
 
   const formatTimeAgo = (timestamp: Date) => {
@@ -323,7 +323,7 @@ function EnhancedFeedDiscoverySystem() {
     
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
-    return `${Math.floor(hours / 24)}d ago`;
+    return `${Math.floor(hours / 24)}d ago`
   };
 
   const getContentPriorityColor = (priority: string) => {
@@ -331,7 +331,7 @@ function EnhancedFeedDiscoverySystem() {
       case 'urgent': return 'border-red-400 bg-red-500/10';
       case 'high': return 'border-orange-400 bg-orange-500/10';
       case 'medium': return 'border-blue-400 bg-blue-500/10';
-      default: return 'border-gray-600 bg-gray-800/50';
+      default: return 'border-gray-600 bg-gray-800/50'
     }
   };
 
@@ -342,7 +342,7 @@ function EnhancedFeedDiscoverySystem() {
       case 'tool_deployment': return <Zap className="h-5 w-5 text-purple-400" />;
       case 'social_coordination': return <Calendar className="h-5 w-5 text-green-400" />;
       case 'community_bridge': return <Sparkles className="h-5 w-5 text-yellow-400" />;
-      default: return <Activity className="h-5 w-5 text-gray-400" />;
+      default: return <Activity className="h-5 w-5 text-gray-400" />
     }
   };
 
@@ -351,8 +351,8 @@ function EnhancedFeedDiscoverySystem() {
     if (feedFilter === 'urgent') return item.priority === 'urgent';
     if (feedFilter === 'coordination') return item.type.includes('coordination');
     if (feedFilter === 'tools') return item.type === 'tool_deployment';
-    return true;
-  });
+    return true
+  })};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
@@ -437,7 +437,7 @@ function EnhancedFeedDiscoverySystem() {
                 { id: 'urgent', label: 'Urgent', count: mockEnhancedFeedContent.filter(i => i.priority === 'urgent').length },
                 { id: 'coordination', label: 'Coordination', count: mockEnhancedFeedContent.filter(i => i.type.includes('coordination')).length },
                 { id: 'tools', label: 'Tools', count: mockEnhancedFeedContent.filter(i => i.type === 'tool_deployment').length },
-              ].map(({ id, label, count }) => (
+              ].map(({ id, label, count })} => (
                 <Button
                   key={id}
                   size="sm"
@@ -861,7 +861,7 @@ function EnhancedFeedDiscoverySystem() {
         </TabsContent>
       </div>
     </div>
-  );
+  )
 }
 
 export const EnhancedCoordinationFeed: Story = {
@@ -887,7 +887,7 @@ export const MobileFeedExperience: Story = {
 export const AlgorithmDemonstration: Story = {
   render: () => {
     const [activeTab, setActiveTab] = useState('algorithm');
-    return <EnhancedFeedDiscoverySystem />;
+    return <EnhancedFeedDiscoverySystem />
   },
   parameters: {
     layout: 'fullscreen',

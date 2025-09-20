@@ -115,7 +115,7 @@ export interface HivePremiumButtonProps
   rippleEffect?: boolean;
   loading?: boolean;
   leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode
 }
 
 const HivePremiumButton = React.forwardRef<HTMLButtonElement, HivePremiumButtonProps>(
@@ -159,11 +159,11 @@ const HivePremiumButton = React.forwardRef<HTMLButtonElement, HivePremiumButtonP
         
         // Remove ripple after animation
         setTimeout(() => {
-          setRipples(prev => prev.filter(r => r.id !== newRipple.id));
-        }, 500);
+          setRipples(prev => prev.filter(r => r.id !== newRipple.id))
+        }, 500)
       }
       
-      onClick?.(e);
+      onClick?.(e)
     };
     
     // Motion configuration based on props
@@ -215,7 +215,7 @@ const HivePremiumButton = React.forwardRef<HTMLButtonElement, HivePremiumButtonP
           <span className="ml-2 flex items-center">{rightIcon}</span>
         )}
       </motion.button>
-    );
+    )
   }
 );
 
@@ -224,7 +224,7 @@ HivePremiumButton.displayName = "HivePremiumButton";
 // Button Group Component for cascading animations
 export interface HivePremiumButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   cascade?: boolean;
-  spacing?: "sm" | "md" | "lg";
+  spacing?: "sm" | "md" | "lg"
 }
 
 const HivePremiumButtonGroup = React.forwardRef<HTMLDivElement, HivePremiumButtonGroupProps>(
@@ -262,7 +262,7 @@ const HivePremiumButtonGroup = React.forwardRef<HTMLDivElement, HivePremiumButto
                 type: "spring",
                 stiffness: 400,
                 damping: 25
-              }}
+          }}
             >
               {child}
             </motion.div>
@@ -271,7 +271,7 @@ const HivePremiumButtonGroup = React.forwardRef<HTMLDivElement, HivePremiumButto
           children
         )}
       </div>
-    );
+    )
   }
 );
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { type Space } from '@hive/core';
 declare const hivePostsSurfaceVariants: (props?: {
-    mode?: "view" | "builder" | "edit";
+    mode?: "builder" | "view" | "edit";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const postTypes: {
     readonly discussion: {

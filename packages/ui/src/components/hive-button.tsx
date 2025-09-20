@@ -100,7 +100,7 @@ export interface HiveButtonProps
   rightIcon?: React.ReactNode;
   magneticHover?: boolean;
   magneticIntensity?: 'subtle' | 'medium' | 'strong';
-  rippleEffect?: boolean;
+  rippleEffect?: boolean
 }
 
 const HiveButton = React.forwardRef<HTMLButtonElement, HiveButtonProps>(
@@ -165,10 +165,10 @@ const HiveButton = React.forwardRef<HTMLButtonElement, HiveButtonProps>(
         >
           {ButtonComponent}
         </HiveMagneticHover>
-      );
+      )
     }
     
-    return ButtonComponent;
+    return ButtonComponent
   }
 );
 

@@ -127,14 +127,14 @@ export interface CourseSchedule {
   endTime: string;
   location: string;
   building?: string;
-  room?: string;
+  room?: string
 }
 
 export interface CoursePrerequisite {
   id: string;
   code: string;
   title: string;
-  required: boolean;
+  required: boolean
 }
 
 export interface CourseInstructor {
@@ -143,7 +143,7 @@ export interface CourseInstructor {
   title: string;
   email?: string;
   avatar?: string;
-  departmentId?: string;
+  departmentId?: string
 }
 
 export interface CourseMetadata {
@@ -156,7 +156,7 @@ export interface CourseMetadata {
   enrolled: number;
   waitlist?: number;
   reviews?: number;
-  lastUpdated?: Date;
+  lastUpdated?: Date
 }
 
 export interface Course {
@@ -183,7 +183,7 @@ export interface Course {
   spaceId?: string;
   toolsRequired?: string[];
   projectBased?: boolean;
-  collaborationLevel?: 'individual' | 'pair' | 'team' | 'mixed';
+  collaborationLevel?: 'individual' | 'pair' | 'team' | 'mixed'
 }
 
 export interface HiveCourseCardProps
@@ -217,7 +217,7 @@ export interface HiveCourseCardProps
   isFavorited?: boolean;
   isBookmarked?: boolean;
   isEnrolled?: boolean;
-  userRole?: 'student' | 'instructor' | 'admin';
+  userRole?: 'student' | 'instructor' | 'admin'
 }
 
 // ============================================================================
@@ -237,7 +237,7 @@ const getStatusIcon = (status: Course['status']) => {
     case 'completed':
       return <Award size={12} />;
     default:
-      return <AlertCircle size={12} />;
+      return <AlertCircle size={12} />
   }
 };
 
@@ -252,7 +252,7 @@ const getDifficultyLabel = (difficulty: Course['difficulty']) => {
     case 'expert':
       return 'Expert';
     default:
-      return 'Unknown';
+      return 'Unknown'
   }
 };
 
@@ -261,18 +261,18 @@ const formatEnrollmentStatus = (course: Course) => {
   const available = capacity - enrolled;
   
   if (course.status === 'closed') {
-    return { text: 'Closed', color: 'error' };
+    return { text: 'Closed', color: 'error' }
   }
   
   if (available > 0) {
-    return { text: `${available} spots left`, color: 'success' };
+    return { text: `${available} spots left`, color: 'success' }
   }
   
   if (waitlist && waitlist > 0) {
-    return { text: `${waitlist} on waitlist`, color: 'warning' };
+    return { text: `${waitlist} on waitlist`, color: 'warning' }
   }
   
-  return { text: 'Full', color: 'error' };
+  return { text: 'Full', color: 'error' }
 };
 
 // ============================================================================
@@ -329,7 +329,7 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
           icon: <Minus size={16} />,
           onClick: () => onDrop?.(course.id),
           variant: 'danger' as const,
-        };
+        }
       }
       
       if (canEnroll) {
@@ -338,7 +338,7 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
           icon: <Plus size={16} />,
           onClick: () => onEnroll?.(course.id),
           variant: 'primary' as const,
-        };
+        }
       }
       
       if (canWaitlist) {
@@ -347,7 +347,7 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
           icon: <Clock size={16} />,
           onClick: () => onWaitlist?.(course.id),
           variant: 'secondary' as const,
-        };
+        }
       }
       
       return {
@@ -355,7 +355,7 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
         icon: <ExternalLink size={16} />,
         onClick: () => onViewDetails?.(course.id),
         variant: 'secondary' as const,
-      };
+      }
     };
     
     const primaryAction = getPrimaryAction();
@@ -485,8 +485,8 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
                       )}
                       onClick={(e) => {
                         e.stopPropagation();
-                        onViewPrerequisite?.(prereq.id);
-                      }}
+                        onViewPrerequisite?.(prereq.id)
+          }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -521,8 +521,8 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
                   className="p-2 rounded-lg hover:bg-[var(--hive-overlay-glass)] transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onFavorite?.(course.id);
-                  }}
+                    onFavorite?.(course.id)
+          }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -541,8 +541,8 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
                   className="p-2 rounded-lg hover:bg-[var(--hive-overlay-glass)] transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onBookmark?.(course.id);
-                  }}
+                    onBookmark?.(course.id)
+          }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -561,8 +561,8 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
                   className="p-2 rounded-lg hover:bg-[var(--hive-overlay-glass)] transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onShare?.(course.id);
-                  }}
+                    onShare?.(course.id)
+          }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -579,8 +579,8 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
                 )}
                 onClick={(e) => {
                   e.stopPropagation();
-                  primaryAction.onClick();
-                }}
+                  primaryAction.onClick()
+          }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -593,7 +593,7 @@ const HiveCourseCard = React.forwardRef<HTMLDivElement, HiveCourseCardProps>(
         
         {...cardProps}
       />
-    );
+    )
   }
 );
 

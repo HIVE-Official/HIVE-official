@@ -7,7 +7,7 @@ import { ToolDetailsWidget } from '../tools/tool-details-widget';
 import { Star, Download, Eye, Heart, Edit3, Plus, Search, Crown, Award, Zap, TrendingUp, Users, Palette, Database, Package, BookOpen, Target } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { cn } from '../../lib/utils';
 export const BuilderPortfolio = ({ tools, achievements, stats, isOwnProfile = false, onToolClick, onEditTool, onCreateTool, onViewAnalytics, className }) => {
     const [view, setView] = useState('grid');

@@ -539,7 +539,7 @@ export const CompleteShowcase: Story = {
                           hiddenActivities: ['social', 'casual', 'entertainment'],
                           visibilityLevel: 'selective',
                           allowedInteractions: ['academic', 'study-groups', 'emergency', 'professors']
-                        }}
+          }}
                         privacySettings={[
                           {
                             id: 'finals-001',
@@ -596,7 +596,7 @@ export const CompleteShowcase: Story = {
                           hiddenActivities: ['posts', 'comments', 'likes'],
                           visibilityLevel: 'minimal',
                           allowedInteractions: ['close-friends', 'emergency']
-                        }}
+          }}
                         privacySettings={mockPrivacySettingsAdvanced}
                         visibilityLevel="ghost"
                         lastPrivacyUpdate="2024-01-15T11:30:00Z"

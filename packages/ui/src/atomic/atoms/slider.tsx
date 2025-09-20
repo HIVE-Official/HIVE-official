@@ -21,7 +21,7 @@ export interface SliderProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   label?: string;
   formatValue?: (value: number) => string;
   onChange?: (value: number | [number, number]) => void;
-  onChangeEnd?: (value: number | [number, number]) => void;
+  onChangeEnd?: (value: number | [number, number]) => void
 }
 
 const sliderColors = {
@@ -98,7 +98,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
   const [internalValue, setInternalValue] = React.useState<number | [number, number]>(() => {
     if (value !== undefined) return value;
     if (defaultValue !== undefined) return defaultValue;
-    return range ? [min, max] : min;
+    return range ? [min, max] : min
   });
 
   const currentValue = value !== undefined ? value : internalValue;
@@ -106,23 +106,23 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
 
   React.useEffect(() => {
     if (value !== undefined) {
-      setInternalValue(value);
+      setInternalValue(value)
     }
   }, [value]);
 
   const handleChange = (newValue: number | [number, number]) => {
     if (value === undefined) {
-      setInternalValue(newValue);
+      setInternalValue(newValue)
     }
-    onChange?.(newValue);
+    onChange?.(newValue)
   };
 
   const getPercentage = (val: number) => {
-    return ((val - min) / (max - min)) * 100;
+    return ((val - min) / (max - min)) * 100
   };
 
   const formatDisplayValue = (val: number) => {
-    return formatValue ? formatValue(val) : val.toString();
+    return formatValue ? formatValue(val) : val.toString()
   };
 
   const trackClasses = [
@@ -191,7 +191,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
           />
         </div>
       </div>
-    );
+    )
   };
 
   const renderRangeSlider = () => {
@@ -242,7 +242,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
           />
         </div>
       </div>
-    );
+    )
   };
 
   const renderMarks = () => {
@@ -268,10 +268,10 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
             >
               <span>{markLabel}</span>
             </div>
-          );
+          )
         })}
       </div>
-    );
+    )
   };
 
   return (
@@ -297,7 +297,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
         {renderMarks()}
       </div>
     </div>
-  );
+  )
 });
 
 Slider.displayName = 'Slider';

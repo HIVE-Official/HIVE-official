@@ -26,41 +26,41 @@ interface PrivacySettings {
       showInMemberLists: boolean;
       showInSearchResults: boolean;
       showActivityStatus: boolean;
-      showLastSeen: boolean;
-    };
+      showLastSeen: boolean
+    }
   };
   socialBoundaries: {
     studyMode: boolean;
     officeHours: Array<{
       start: string;
       end: string;
-      days: string[];
+      days: string[]
     }>;
     socialEnergyLevel: 'low' | 'medium' | 'high';
     coordinationPreferences: {
       preferredContactMethods: string[];
       responseTimeExpectation: 'immediate' | 'hourly' | 'daily';
-      availableForEmergencies: boolean;
-    };
+      availableForEmergencies: boolean
+    }
   };
   dataControl: {
     activitySharing: {
       shareSpaceActivity: boolean;
       shareCalendarBusy: boolean;
       shareLocationStatus: boolean;
-      shareToolUsage: boolean;
+      shareToolUsage: boolean
     };
     crossCommunityVisibility: boolean;
     searchableProfile: boolean;
-    analyticsOptOut: boolean;
-  };
+    analyticsOptOut: boolean
+  }
 }
 
 interface PrivacyControlWidgetProps extends BaseWidgetProps {
   privacySettings: PrivacySettings;
   isLoading?: boolean;
   onPrivacyChange: (settings: PrivacySettings) => void;
-  onOpenFullSettings: () => void;
+  onOpenFullSettings: () => void
 }
 
 export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
@@ -78,15 +78,15 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
     let current = newSettings as any;
     
     for (let i = 0; i < keys.length - 1; i++) {
-      current = current[keys[i]];
+      current = current[keys[i]]
     }
     current[keys[keys.length - 1]] = value;
     
-    onPrivacyChange(newSettings);
+    onPrivacyChange(newSettings)
   };
 
   const toggleGhostMode = () => {
-    updatePrivacySetting('ghostMode.enabled', !privacySettings.ghostMode.enabled);
+    updatePrivacySetting('ghostMode.enabled', !privacySettings.ghostMode.enabled)
   };
 
   const getSocialEnergyColor = (level: string) => {
@@ -95,7 +95,7 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
       medium: 'text-yellow-400 bg-yellow-400/10',
       high: 'text-green-400 bg-green-400/10'
     };
-    return colorMap[level as keyof typeof colorMap] || 'text-gray-400 bg-gray-400/10';
+    return colorMap[level as keyof typeof colorMap] || 'text-gray-400 bg-gray-400/10'
   };
 
   const getSocialEnergyEmoji = (level: string) => {
@@ -104,7 +104,7 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
       medium: '⚡',
       high: '🚀'
     };
-    return emojiMap[level as keyof typeof emojiMap] || '📊';
+    return emojiMap[level as keyof typeof emojiMap] || '📊'
   };
 
   const renderStatusTab = () => (
@@ -202,7 +202,7 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
         </div>
         <HiveSwitch
           checked={privacySettings.socialBoundaries.studyMode}
-          onCheckedChange={(checked) => updatePrivacySetting('socialBoundaries.studyMode', checked)}
+          onChange={(e) => { const checked = e.target.checked; updatePrivacySetting('socialBoundaries.studyMode', checked)}
         />
       </div>
 
@@ -273,7 +273,7 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
             </div>
             <HiveSwitch
               checked={privacySettings.dataControl.activitySharing[item.key as keyof typeof privacySettings.dataControl.activitySharing]}
-              onCheckedChange={(checked) => 
+              onChange={(e) => { const checked = e.target.checked; 
                 updatePrivacySetting(`dataControl.activitySharing.${item.key}`, checked)
               }
             />
@@ -289,7 +289,7 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
           </div>
           <HiveSwitch
             checked={!privacySettings.dataControl.analyticsOptOut}
-            onCheckedChange={(checked) => 
+            onChange={(e) => { const checked = e.target.checked; 
               updatePrivacySetting('dataControl.analyticsOptOut', !checked)
             }
           />
@@ -339,8 +339,8 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
                     />
                   )}
                 </button>
-              );
-            })}
+              )
+          })}
           </div>
 
           {/* Tab Content */}
@@ -381,5 +381,5 @@ export const PrivacyControlWidget: React.FC<PrivacyControlWidgetProps> = ({
     <BaseWidget {...baseProps}>
       {widgetContent}
     </BaseWidget>
-  );
+  )
 };

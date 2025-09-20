@@ -21,7 +21,7 @@ export const MySpacesFeed: React.FC<MySpacesFeedProps> = ({
           <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
         </div>
       </HiveCard>
-    );
+    )
   }
 
   if (error) {
@@ -35,7 +35,7 @@ export const MySpacesFeed: React.FC<MySpacesFeedProps> = ({
           </div>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   return (
@@ -159,7 +159,7 @@ export const MySpacesFeed: React.FC<MySpacesFeedProps> = ({
         </div>
       )}
     </HiveCard>
-  );
+  )
 };
 
 export default MySpacesFeed;

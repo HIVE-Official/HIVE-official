@@ -24,10 +24,10 @@ import {
   Trash2
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Badge } from '../../components/ui/badge';
-import { Card, CardContent } from '../../components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
+import { Badge } from '../../atomic/atoms/badge';
+import { Card, CardContent } from '../../atomic/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
 import { cn } from '../../lib/utils';
 
 export interface Notification {
@@ -44,14 +44,14 @@ export interface Notification {
   sender?: {
     id: string;
     name: string;
-    avatar?: string;
+    avatar?: string
   };
   metadata?: {
     spaceId?: string;
     toolId?: string;
     eventId?: string;
-    achievementId?: string;
-  };
+    achievementId?: string
+  }
 }
 
 interface NotificationSystemProps {
@@ -64,7 +64,7 @@ interface NotificationSystemProps {
   onArchive: (id: string) => void;
   onDelete: (id: string) => void;
   onAction: (notification: Notification) => void;
-  className?: string;
+  className?: string
 }
 
 export function NotificationSystem({
@@ -84,14 +84,14 @@ export function NotificationSystem({
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'unset'
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
-    };
+      document.body.style.overflow = 'unset'
+    }
   }, [isOpen]);
 
   const getFilteredNotifications = () => {
@@ -103,7 +103,7 @@ export function NotificationSystem({
       case 'system':
         return notifications.filter(n => n.type === 'system' && !n.isArchived);
       default:
-        return notifications.filter(n => !n.isArchived);
+        return notifications.filter(n => !n.isArchived)
     }
   };
 
@@ -118,7 +118,7 @@ export function NotificationSystem({
       case 'calendar': return <Calendar className="h-4 w-4 text-green-400" />;
       case 'achievement': return <Award className="h-4 w-4 text-yellow-400" />;
       case 'system': return <Info className="h-4 w-4 text-purple-400" />;
-      default: return <Bell className="h-4 w-4 text-hive-text-secondary" />;
+      default: return <Bell className="h-4 w-4 text-hive-text-secondary" />
     }
   };
 
@@ -127,7 +127,7 @@ export function NotificationSystem({
       case 'urgent': return 'border-l-red-500';
       case 'high': return 'border-l-orange-400';
       case 'medium': return 'border-l-yellow-400';
-      default: return 'border-l-transparent';
+      default: return 'border-l-transparent'
     }
   };
 
@@ -140,7 +140,7 @@ export function NotificationSystem({
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    return time.toLocaleDateString();
+    return time.toLocaleDateString()
   };
 
   return (
@@ -273,7 +273,7 @@ export function NotificationSystem({
         </>
       )}
     </AnimatePresence>
-  );
+  )
 }
 
 interface NotificationItemProps {
@@ -284,7 +284,7 @@ interface NotificationItemProps {
   onAction: (notification: Notification) => void;
   getNotificationIcon: (type: string) => React.ReactNode;
   getPriorityColor: (priority: string) => string;
-  formatTimeAgo: (timestamp: string) => string;
+  formatTimeAgo: (timestamp: string) => string
 }
 
 function NotificationItem({
@@ -350,8 +350,8 @@ function NotificationItem({
                     className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setShowActions(!showActions);
-                    }}
+                      setShowActions(!showActions)
+          }}
                   >
                     <MoreHorizontal className="h-3 w-3" />
                   </Button>
@@ -396,8 +396,8 @@ function NotificationItem({
                     onClick={(e) => {
                       e.stopPropagation();
                       onMarkAsRead(notification.id);
-                      setShowActions(false);
-                    }}
+                      setShowActions(false)
+          }}
                     className="text-xs"
                   >
                     <Check className="h-3 w-3 mr-1" />
@@ -410,8 +410,8 @@ function NotificationItem({
                   onClick={(e) => {
                     e.stopPropagation();
                     onArchive(notification.id);
-                    setShowActions(false);
-                  }}
+                    setShowActions(false)
+          }}
                   className="text-xs"
                 >
                   <Eye className="h-3 w-3 mr-1" />
@@ -423,8 +423,8 @@ function NotificationItem({
                   onClick={(e) => {
                     e.stopPropagation();
                     onDelete(notification.id);
-                    setShowActions(false);
-                  }}
+                    setShowActions(false)
+          }}
                   className="text-xs text-red-400 hover:text-red-300"
                 >
                   <Trash2 className="h-3 w-3 mr-1" />
@@ -436,14 +436,14 @@ function NotificationItem({
         </CardContent>
       </Card>
     </motion.div>
-  );
+  )
 }
 
 // Notification Bell Component for Header
 interface NotificationBellProps {
   unreadCount: number;
   onClick: () => void;
-  className?: string;
+  className?: string
 }
 
 export function NotificationBell({ unreadCount, onClick, className }: NotificationBellProps) {
@@ -461,7 +461,7 @@ export function NotificationBell({ unreadCount, onClick, className }: Notificati
         </Badge>
       )}
     </Button>
-  );
+  )
 }
 
 // Hook for managing notification state
@@ -474,23 +474,23 @@ export function useNotifications() {
   const markAsRead = (id: string) => {
     setNotifications(prev => 
       prev.map(n => n.id === id ? { ...n, isRead: true } : n)
-    );
+    )
   };
 
   const markAllAsRead = () => {
     setNotifications(prev => 
-      prev.map(n => ({ ...n, isRead: true }))
-    );
+      prev.map(n => ({ ...n, isRead: true })})
+    )
   };
 
   const archive = (id: string) => {
     setNotifications(prev => 
       prev.map(n => n.id === id ? { ...n, isArchived: true } : n)
-    );
+    )
   };
 
   const deleteNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications(prev => prev.filter(n => n.id !== id))
   };
 
   const addNotification = (notification: Omit<Notification, 'id' | 'timestamp' | 'isRead' | 'isArchived'>) => {
@@ -502,7 +502,7 @@ export function useNotifications() {
       isArchived: false
     };
     
-    setNotifications(prev => [newNotification, ...prev]);
+    setNotifications(prev => [newNotification, ...prev])
   };
 
   return {
@@ -515,5 +515,5 @@ export function useNotifications() {
     archive,
     deleteNotification,
     addNotification
-  };
+  }
 }

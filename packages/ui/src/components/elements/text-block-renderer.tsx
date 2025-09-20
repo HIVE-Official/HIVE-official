@@ -25,8 +25,8 @@ interface TextBlockRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 export const TextBlockRenderer: React.FC<TextBlockRendererProps> = ({
@@ -43,8 +43,8 @@ export const TextBlockRenderer: React.FC<TextBlockRendererProps> = ({
     // Replace {{elementId}} with values from form data
     return text.replace(/\{\{([^}]+)\}\}/g, (match, elementId) => {
       const value = runtimeContext.formData[elementId];
-      return value !== undefined ? String(value) : match;
-    });
+      return value !== undefined ? String(value) : match
+    })
   };
 
   const processedText = processText(config.text);
@@ -61,5 +61,5 @@ export const TextBlockRenderer: React.FC<TextBlockRendererProps> = ({
         <span>{processedText}</span>
       )}
     </div>
-  );
+  )
 };

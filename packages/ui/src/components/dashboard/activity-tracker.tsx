@@ -17,11 +17,11 @@ import {
   Download,
   RefreshCw
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Progress } from '../hive-progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 
 // Activity data types
 export interface ActivityMetric {
@@ -33,7 +33,7 @@ export interface ActivityMetric {
   changeType: 'increase' | 'decrease' | 'neutral';
   target?: number;
   color: string;
-  icon: React.ReactNode;
+  icon: React.ReactNode
 }
 
 export interface ActivitySession {
@@ -47,9 +47,9 @@ export interface ActivitySession {
   toolsUsed?: string[];
   contentCreated?: {
     type: string;
-    count: number;
+    count: number
   }[];
-  interactions?: number;
+  interactions?: number
 }
 
 export interface ActivityInsight {
@@ -61,8 +61,8 @@ export interface ActivityInsight {
   actionable: boolean;
   action?: {
     label: string;
-    url?: string;
-  };
+    url?: string
+  }
 }
 
 export interface ActivityGoal {
@@ -74,7 +74,7 @@ export interface ActivityGoal {
   unit: string;
   deadline: string;
   category: 'daily' | 'weekly' | 'monthly';
-  color: string;
+  color: string
 }
 
 export interface ActivityTrackerData {
@@ -89,12 +89,12 @@ export interface ActivityTrackerData {
     mostActiveDay: string;
     preferredTimeSlot: string;
     spacesVisited: number;
-    toolsUsed: number;
+    toolsUsed: number
   };
   heatmapData?: Array<{
     date: string;
-    value: number;
-  }>;
+    value: number
+  }>
 }
 
 interface ActivityTrackerProps {
@@ -104,7 +104,7 @@ interface ActivityTrackerProps {
   onRefresh?: () => void;
   onExport?: () => void;
   onGoalUpdate?: (goalId: string, newTarget: number) => void;
-  className?: string;
+  className?: string
 }
 
 // Animation variants
@@ -145,7 +145,7 @@ export function ActivityTracker({
 
   const handleTimeRangeChange = (range: 'today' | 'week' | 'month') => {
     setTimeRange(range);
-    onTimeRangeChange?.(range);
+    onTimeRangeChange?.(range)
   };
 
   // Calculate completion percentage for goals
@@ -153,8 +153,8 @@ export function ActivityTracker({
     if (!data?.goals) return {};
     return data.goals.reduce((acc, goal) => {
       acc[goal.id] = Math.min((goal.current / goal.target) * 100, 100);
-      return acc;
-    }, {} as Record<string, number>);
+      return acc
+    }, {} as Record<string, number>)
   }, [data?.goals]);
 
   // Group sessions by date
@@ -164,8 +164,8 @@ export function ActivityTracker({
       const date = session.startTime.split('T')[0];
       if (!acc[date]) acc[date] = [];
       acc[date].push(session);
-      return acc;
-    }, {} as Record<string, ActivitySession[]>);
+      return acc
+    }, {} as Record<string, ActivitySession[]>)
   }, [data?.sessions]);
 
   // Format duration
@@ -173,7 +173,7 @@ export function ActivityTracker({
     if (minutes < 60) return `${minutes}m`;
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
   };
 
   // Format time
@@ -182,11 +182,11 @@ export function ActivityTracker({
       hour: 'numeric', 
       minute: '2-digit',
       hour12: true 
-    });
+    })
   };
 
   if (isLoading) {
-    return <ActivityTrackerSkeleton />;
+    return <ActivityTrackerSkeleton />
   }
 
   if (!data) {
@@ -197,7 +197,7 @@ export function ActivityTracker({
           <Button onClick={onRefresh}>Try Again</Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -416,7 +416,7 @@ export function ActivityTracker({
                             weekday: 'long', 
                             month: 'short', 
                             day: 'numeric' 
-                          })}
+          })}
                         </h4>
                         <div className="space-y-2">
                           {sessions.map((session) => (
@@ -505,7 +505,7 @@ export function ActivityTracker({
         </Tabs>
       </motion.div>
     </motion.div>
-  );
+  )
 }
 
 // Loading Skeleton
@@ -522,7 +522,7 @@ function ActivityTrackerSkeleton() {
       <div className="h-40 bg-gray-200 rounded-lg animate-pulse"></div>
       <div className="h-48 bg-gray-200 rounded-lg animate-pulse"></div>
     </div>
-  );
+  )
 }
 
 // Mock data for development

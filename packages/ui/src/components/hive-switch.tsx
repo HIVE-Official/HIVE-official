@@ -98,7 +98,7 @@ export interface HiveSwitchProps
   label?: string;
   description?: string;
   variant?: "default" | "gold" | "success" | "minimal";
-  size?: "sm" | "default" | "lg" | "xl";
+  size?: "sm" | "default" | "lg" | "xl"
 }
 
 const HiveSwitch = React.forwardRef<HTMLButtonElement, HiveSwitchProps>(
@@ -117,7 +117,7 @@ const HiveSwitch = React.forwardRef<HTMLButtonElement, HiveSwitchProps>(
     
     const handleClick = () => {
       if (!disabled && onCheckedChange) {
-        onCheckedChange(!checked);
+        onCheckedChange(!checked)
       }
     };
     
@@ -128,7 +128,7 @@ const HiveSwitch = React.forwardRef<HTMLButtonElement, HiveSwitchProps>(
         case 'default': return 20; // 11*4 - 5*4 = 24px  
         case 'lg': return 24; // 13*4 - 6*4 = 28px
         case 'xl': return 28; // 15*4 - 7*4 = 32px
-        default: return 20;
+        default: return 20
       }
     };
     
@@ -143,10 +143,10 @@ const HiveSwitch = React.forwardRef<HTMLButtonElement, HiveSwitchProps>(
           case 'minimal':
             return "bg-[var(--hive-background-tertiary)] border-[var(--hive-border-primary)]";
           default:
-            return "bg-[var(--hive-brand-primary)]/15 border-[var(--hive-brand-primary)]/30";
+            return "bg-[var(--hive-brand-primary)]/15 border-[var(--hive-brand-primary)]/30"
         }
       } else {
-        return "bg-[var(--hive-background-secondary)]/40 border-[var(--hive-border-subtle)]";
+        return "bg-[var(--hive-background-secondary)]/40 border-[var(--hive-border-subtle)]"
       }
     };
     
@@ -178,7 +178,7 @@ const HiveSwitch = React.forwardRef<HTMLButtonElement, HiveSwitchProps>(
             style={{
               marginLeft: size === 'sm' ? 2 : size === 'default' ? 2 : size === 'lg' ? 2 : 2,
               marginTop: size === 'sm' ? 2 : size === 'default' ? 2 : size === 'lg' ? 2 : 2,
-            }}
+          }}
           />
         </button>
         
@@ -204,7 +204,7 @@ const HiveSwitch = React.forwardRef<HTMLButtonElement, HiveSwitchProps>(
           </div>
         )}
       </div>
-    );
+    )
   }
 );
 
@@ -245,7 +245,7 @@ const HiveNotificationSwitch = React.forwardRef<HTMLButtonElement, Omit<HiveSwit
   (props, ref) => (
     <HiveSwitch
       ref={ref}
-      variant="default"
+      variant="secondary"
       label="Push Notifications"
       description="Receive notifications about new messages and updates"
       {...props}

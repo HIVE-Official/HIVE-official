@@ -50,7 +50,7 @@ export interface ResponsiveLayoutConfig {
     showSidebar: boolean;
     showBottomTabs: boolean;
     sidebarCollapsible: boolean;
-    defaultCollapsed: boolean;
+    defaultCollapsed: boolean
   };
   
   // Content layout configuration
@@ -59,7 +59,7 @@ export interface ResponsiveLayoutConfig {
     padding: string;
     columns: number;
     gridGap: string;
-    cardSpacing: string;
+    cardSpacing: string
   };
   
   // Feed-specific layouts
@@ -67,7 +67,7 @@ export interface ResponsiveLayoutConfig {
     itemsPerPage: number;
     showSidePanels: boolean;
     compactMode: boolean;
-    previewImages: boolean;
+    previewImages: boolean
   };
   
   // Bento grid behavior
@@ -76,7 +76,7 @@ export interface ResponsiveLayoutConfig {
     minCardWidth: string;
     maxCardHeight: string;
     allowReordering: boolean;
-    showExpandButtons: boolean;
+    showExpandButtons: boolean
   };
   
   // Space layouts (6-surface architecture)
@@ -84,8 +84,8 @@ export interface ResponsiveLayoutConfig {
     surfaceColumns: number;
     showAllSurfaces: boolean;
     allowHorizontalScroll: boolean;
-    surfacePreview: boolean;
-  };
+    surfacePreview: boolean
+  }
 }
 
 // ============================================================================
@@ -265,7 +265,7 @@ interface ResponsiveContextType {
   // Configuration helpers
   getBreakpointValue: (values: Partial<Record<DeviceType, any>>) => any;
   isBreakpointAndAbove: (breakpoint: DeviceType) => boolean;
-  isBreakpointAndBelow: (breakpoint: DeviceType) => boolean;
+  isBreakpointAndBelow: (breakpoint: DeviceType) => boolean
 }
 
 const ResponsiveContext = createContext<ResponsiveContextType | null>(null);
@@ -273,9 +273,9 @@ const ResponsiveContext = createContext<ResponsiveContextType | null>(null);
 export const useResponsive = () => {
   const context = useContext(ResponsiveContext);
   if (!context) {
-    throw new Error('useResponsive must be used within a ResponsiveProvider');
+    throw new Error('useResponsive must be used within a ResponsiveProvider')
   }
-  return context;
+  return context
 };
 
 // ============================================================================
@@ -285,7 +285,7 @@ export const useResponsive = () => {
 interface ResponsiveProviderProps {
   children: React.ReactNode;
   breakpoints?: Partial<ResponsiveBreakpoints>;
-  customLayouts?: Partial<Record<DeviceType, ResponsiveLayoutConfig>>;
+  customLayouts?: Partial<Record<DeviceType, ResponsiveLayoutConfig>>
 }
 
 export function ResponsiveProvider({ 
@@ -306,7 +306,7 @@ export function ResponsiveProvider({
     if (width >= mergedBreakpoints.wide) return 'wide';
     if (width >= mergedBreakpoints.desktop) return 'desktop';
     if (width >= mergedBreakpoints.tablet) return 'tablet';
-    return 'mobile';
+    return 'mobile'
   };
   
   const deviceType = getDeviceType(windowSize.width);
@@ -319,7 +319,7 @@ export function ResponsiveProvider({
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight
-      });
+      })
     };
     
     // Set initial size
@@ -327,26 +327,26 @@ export function ResponsiveProvider({
     
     // Add resize listener
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize)
   }, []);
   
   // Utility functions
   const getBreakpointValue = (values: Partial<Record<DeviceType, any>>) => {
-    return values[deviceType] || values.mobile || Object.values(values)[0];
+    return values[deviceType] || values.mobile || Object.values(values)[0]
   };
   
   const isBreakpointAndAbove = (breakpoint: DeviceType): boolean => {
     const breakpointOrder: DeviceType[] = ['mobile', 'tablet', 'desktop', 'wide'];
     const currentIndex = breakpointOrder.indexOf(deviceType);
     const targetIndex = breakpointOrder.indexOf(breakpoint);
-    return currentIndex >= targetIndex;
+    return currentIndex >= targetIndex
   };
   
   const isBreakpointAndBelow = (breakpoint: DeviceType): boolean => {
     const breakpointOrder: DeviceType[] = ['mobile', 'tablet', 'desktop', 'wide'];
     const currentIndex = breakpointOrder.indexOf(deviceType);
     const targetIndex = breakpointOrder.indexOf(breakpoint);
-    return currentIndex <= targetIndex;
+    return currentIndex <= targetIndex
   };
   
   const value: ResponsiveContextType = {
@@ -371,7 +371,7 @@ export function ResponsiveProvider({
     <ResponsiveContext.Provider value={value}>
       {children}
     </ResponsiveContext.Provider>
-  );
+  )
 }
 
 // ============================================================================
@@ -386,7 +386,7 @@ interface ResponsiveShowProps {
   above?: DeviceType;
   below?: DeviceType;
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 export function ResponsiveShow({ 
@@ -401,20 +401,20 @@ export function ResponsiveShow({
   let shouldShow = true;
   
   if (on && !on.includes(deviceType)) {
-    shouldShow = false;
+    shouldShow = false
   }
   
   if (above && !isBreakpointAndAbove(above)) {
-    shouldShow = false;
+    shouldShow = false
   }
   
   if (below && !isBreakpointAndBelow(below)) {
-    shouldShow = false;
+    shouldShow = false
   }
   
   if (!shouldShow) return null;
   
-  return <div className={className}>{children}</div>;
+  return <div className={className}>{children}</div>
 }
 
 /**
@@ -425,7 +425,7 @@ interface ResponsiveContainerProps {
   className?: string;
   maxWidth?: boolean;
   padding?: boolean;
-  centered?: boolean;
+  centered?: boolean
 }
 
 export function ResponsiveContainer({ 
@@ -448,11 +448,11 @@ export function ResponsiveContainer({
       style={{
         maxWidth: maxWidth ? layoutConfig.content.maxWidth : undefined,
         padding: padding ? layoutConfig.content.padding : undefined
-      }}
+          }}
     >
       {children}
     </div>
-  );
+  )
 }
 
 /**
@@ -462,7 +462,7 @@ interface ResponsiveGridProps {
   children: React.ReactNode;
   className?: string;
   useLayoutColumns?: boolean;
-  customColumns?: Partial<Record<DeviceType, number>>;
+  customColumns?: Partial<Record<DeviceType, number>>
 }
 
 export function ResponsiveGrid({ 
@@ -483,11 +483,11 @@ export function ResponsiveGrid({
       style={{
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         gap: layoutConfig.content.gridGap
-      }}
+          }}
     >
       {children}
     </div>
-  );
+  )
 }
 
 /**
@@ -500,17 +500,17 @@ interface MobileBottomTabsProps {
     icon: React.ComponentType<{ className?: string }>;
     href: string;
     badge?: number;
-    isActive?: boolean;
+    isActive?: boolean
   }>;
   onTabClick?: (tabId: string) => void;
-  className?: string;
+  className?: string
 }
 
 export function MobileBottomTabs({ tabs, onTabClick, className }: MobileBottomTabsProps) {
   const { isMobile, layoutConfig } = useResponsive();
   
   if (!isMobile || !layoutConfig.navigation.showBottomTabs) {
-    return null;
+    return null
   }
   
   return (
@@ -545,11 +545,11 @@ export function MobileBottomTabs({ tabs, onTabClick, className }: MobileBottomTa
               </div>
               <span className="truncate">{tab.label}</span>
             </button>
-          );
-        })}
+          )
+          })}
       </div>
     </div>
-  );
+  )
 }
 
 // ============================================================================
@@ -561,7 +561,7 @@ export function MobileBottomTabs({ tabs, onTabClick, className }: MobileBottomTa
  */
 export function useResponsiveValue<T>(values: Partial<Record<DeviceType, T>>): T | undefined {
   const { getBreakpointValue } = useResponsive();
-  return getBreakpointValue(values);
+  return getBreakpointValue(values)
 }
 
 /**
@@ -577,10 +577,10 @@ export function useMediaQuery(query: string): boolean {
     const handler = (event: MediaQueryListEvent) => setMatches(event.matches);
     mediaQuery.addEventListener('change', handler);
     
-    return () => mediaQuery.removeEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler)
   }, [query]);
   
-  return matches;
+  return matches
 }
 
 // ============================================================================
@@ -610,12 +610,12 @@ export function generateResponsiveClasses(
         break;
       case 'wide':
         classes.push(`xl:${variant}`);
-        break;
+        break
     }
-    });
+    })
   }
   
-  return classes.join(' ');
+  return classes.join(' ')
 }
 
 

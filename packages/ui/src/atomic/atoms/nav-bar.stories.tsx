@@ -164,7 +164,7 @@ export const CompleteShowcase: Story = {
                     id: 'user-2',
                     name: 'Alex Thompson',
                     handle: 'alexthompson',
-                  }}
+          }}
                   showSearch={true}
                   showNotifications={true}
                   unreadCount={15}
@@ -399,7 +399,7 @@ export const CompleteShowcase: Story = {
                       id: 'student-1',
                       name: 'Emily Rodriguez',
                       handle: 'erodriguez',
-                    }}
+          }}
                     showSearch={true}
                     showNotifications={true}
                     unreadCount={7}
@@ -441,7 +441,7 @@ export const CompleteShowcase: Story = {
                         id: 'student-2',
                         name: 'Marcus Johnson',
                         handle: 'mjohnson',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={2}
@@ -460,7 +460,7 @@ export const CompleteShowcase: Story = {
                         id: 'student-3',
                         name: 'Priya Patel',
                         handle: 'ppatel',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={6}
@@ -479,7 +479,7 @@ export const CompleteShowcase: Story = {
                         id: 'student-4',
                         name: 'David Kim',
                         handle: 'dkim',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={23}
@@ -510,7 +510,7 @@ export const CompleteShowcase: Story = {
                         id: 'undergrad-1',
                         name: 'Taylor Wilson',
                         handle: 'twilson',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={4}
@@ -529,7 +529,7 @@ export const CompleteShowcase: Story = {
                         id: 'grad-1',
                         name: 'Dr. Maria Santos',
                         handle: 'msantos',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={8}
@@ -548,7 +548,7 @@ export const CompleteShowcase: Story = {
                         id: 'faculty-1',
                         name: 'Prof. John Anderson',
                         handle: 'janderson',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={12}
@@ -598,7 +598,7 @@ export const CompleteShowcase: Story = {
                         id: 'finals-student',
                         name: 'Jordan Lee',
                         handle: 'jlee',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={15}
@@ -617,7 +617,7 @@ export const CompleteShowcase: Story = {
                         id: 'registration-student',
                         name: 'Alex Chen',
                         handle: 'achen',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={9}
@@ -636,7 +636,7 @@ export const CompleteShowcase: Story = {
                         id: 'new-semester-student',
                         name: 'Sam Rivera',
                         handle: 'srivera',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={21}
@@ -655,7 +655,7 @@ export const CompleteShowcase: Story = {
                         id: 'summer-student',
                         name: 'Riley Thompson',
                         handle: 'rthompson',
-                      }}
+          }}
                       showSearch={true}
                       showNotifications={true}
                       unreadCount={1}

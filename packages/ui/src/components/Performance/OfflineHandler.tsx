@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { cn } from '../../lib/utils';
 import { Text } from '../../atomic/atoms/text';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 
 // Offline capability levels
@@ -30,7 +30,7 @@ interface CampusOfflineContext {
     reliability: 'high' | 'medium' | 'low';
     alternatives: string[]; // Suggested locations with better connectivity
   };
-  campusWifiStatus: 'operational' | 'maintenance' | 'outage' | 'unknown';
+  campusWifiStatus: 'operational' | 'maintenance' | 'outage' | 'unknown'
 }
 
 // User activity during offline periods
@@ -40,7 +40,7 @@ interface OfflineActivity {
     type: 'create' | 'edit' | 'delete' | 'view' | 'interact';
     data: any;
     timestamp: Date;
-    syncPriority: 'high' | 'medium' | 'low';
+    syncPriority: 'high' | 'medium' | 'low'
   }[];
   contentViewed: string[];
   timeSpentOffline: number; // milliseconds
@@ -82,7 +82,7 @@ interface OfflineHandlerProps {
   offlineMessage?: string;
   reconnectingMessage?: string;
   className?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // Sync operation result
@@ -90,7 +90,7 @@ interface SyncResult {
   actionId: string;
   success: boolean;
   error?: string;
-  serverResponse?: any;
+  serverResponse?: any
 }
 
 // Connection state with detailed information
@@ -113,9 +113,9 @@ class CampusOfflineManager {
   
   static getInstance(): CampusOfflineManager {
     if (!CampusOfflineManager.instance) {
-      CampusOfflineManager.instance = new CampusOfflineManager();
+      CampusOfflineManager.instance = new CampusOfflineManager()
     }
-    return CampusOfflineManager.instance;
+    return CampusOfflineManager.instance
   }
   
   // Queue action for sync when online
@@ -131,13 +131,13 @@ class CampusOfflineManager {
         ...this.pendingActions[existingIndex],
         data: { ...this.pendingActions[existingIndex].data, ...action.data },
         timestamp: action.timestamp
-      };
+      }
     } else {
-      this.pendingActions.push(action);
+      this.pendingActions.push(action)
     }
     
     // Store in localStorage for persistence
-    this.persistPendingActions();
+    this.persistPendingActions()
   }
   
   // Cache content for offline access
@@ -152,9 +152,9 @@ class CampusOfflineManager {
     
     // Store in localStorage
     try {
-      localStorage.setItem(`offline_${key}`, JSON.stringify(cacheEntry));
+      localStorage.setItem(`offline_${key}`, JSON.stringify(cacheEntry))
     } catch (error) {
-      console.warn('Failed to cache content offline:', error);
+      console.warn('Failed to cache content offline:', error)
     }
   }
   
@@ -163,7 +163,7 @@ class CampusOfflineManager {
     // Check memory cache first
     const memoryCache = this.offlineContent.get(key);
     if (memoryCache && memoryCache.expiryTime > Date.now()) {
-      return memoryCache.content;
+      return memoryCache.content
     }
     
     // Check localStorage
@@ -174,14 +174,14 @@ class CampusOfflineManager {
         if (cacheEntry.expiryTime > Date.now()) {
           // Restore to memory cache
           this.offlineContent.set(key, cacheEntry);
-          return cacheEntry.content;
+          return cacheEntry.content
         }
       }
     } catch (error) {
-      console.warn('Failed to retrieve cached content:', error);
+      console.warn('Failed to retrieve cached content:', error)
     }
     
-    return null;
+    return null
   }
   
   // Sync pending actions when connection returns
@@ -191,7 +191,7 @@ class CampusOfflineManager {
     maxRetries: number = 3
   ): Promise<SyncResult[]> {
     if (this.pendingActions.length === 0) {
-      return [];
+      return []
     }
     
     const results: SyncResult[] = [];
@@ -201,7 +201,7 @@ class CampusOfflineManager {
         // Sync all actions immediately
         for (const action of this.pendingActions) {
           const result = await this.syncSingleAction(action, maxRetries);
-          results.push(result);
+          results.push(result)
         }
         break;
         
@@ -216,7 +216,7 @@ class CampusOfflineManager {
           
           // Small delay between batches to avoid overwhelming server
           if (i + batchSize < this.pendingActions.length) {
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 100))
           }
         }
         break;
@@ -232,12 +232,12 @@ class CampusOfflineManager {
         for (const [priority, actions] of Object.entries(priorityGroups)) {
           for (const action of actions) {
             const result = await this.syncSingleAction(action, maxRetries);
-            results.push(result);
+            results.push(result)
           }
           
           // Longer delay after high priority items
           if (priority === 'high' && actions.length > 0) {
-            await new Promise(resolve => setTimeout(resolve, 200));
+            await new Promise(resolve => setTimeout(resolve, 200))
           }
         }
         break;
@@ -246,10 +246,10 @@ class CampusOfflineManager {
         // Sync silently in background
         setTimeout(async () => {
           for (const action of this.pendingActions) {
-            await this.syncSingleAction(action, maxRetries);
+            await this.syncSingleAction(action, maxRetries)
           }
         }, 1000);
-        break;
+        break
     }
     
     // Clear successfully synced actions
@@ -263,7 +263,7 @@ class CampusOfflineManager {
     
     this.persistPendingActions();
     
-    return results;
+    return results
   }
   
   private async syncSingleAction(
@@ -279,20 +279,20 @@ class CampusOfflineManager {
           actionId: action.id,
           success: true,
           serverResponse: response
-        };
+        }
       } catch (error) {
         if (attempt === maxRetries) {
           return {
             actionId: action.id,
             success: false,
             error: (error as Error).message
-          };
+          }
         }
         
         // Exponential backoff
         await new Promise(resolve => 
           setTimeout(resolve, Math.pow(2, attempt) * 1000)
-        );
+        )
       }
     }
     
@@ -300,7 +300,7 @@ class CampusOfflineManager {
       actionId: action.id,
       success: false,
       error: 'Max retries exceeded'
-    };
+    }
   }
   
   private async simulateApiCall(action: any): Promise<any> {
@@ -308,12 +308,12 @@ class CampusOfflineManager {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (Math.random() > 0.1) { // 90% success rate
-          resolve({ id: action.id, synced: true });
+          resolve({ id: action.id, synced: true })
         } else {
-          reject(new Error('Sync failed'));
+          reject(new Error('Sync failed'))
         }
-      }, 500 + Math.random() * 1000);
-    });
+      }, 500 + Math.random() * 1000)
+    })
   }
   
   private persistPendingActions() {
@@ -321,19 +321,19 @@ class CampusOfflineManager {
       localStorage.setItem(
         'offline_pending_actions',
         JSON.stringify(this.pendingActions)
-      );
+      )
     } catch (error) {
-      console.warn('Failed to persist pending actions:', error);
+      console.warn('Failed to persist pending actions:', error)
     }
   }
   
   getPendingActionsCount(): number {
-    return this.pendingActions.length;
+    return this.pendingActions.length
   }
   
   clearPendingActions() {
     this.pendingActions = [];
-    localStorage.removeItem('offline_pending_actions');
+    localStorage.removeItem('offline_pending_actions')
   }
 }
 
@@ -365,7 +365,7 @@ function useConnectionMonitor(): ConnectionState {
         }));
         
         offlineStartTime.current = null;
-        reconnectAttempts.current = 0;
+        reconnectAttempts.current = 0
       } else if (!isOnline && connectionState.isOnline) {
         // Just went offline
         offlineStartTime.current = now;
@@ -373,7 +373,7 @@ function useConnectionMonitor(): ConnectionState {
           ...prev,
           isOnline: false,
           isReconnecting: false
-        }));
+        }))
       }
     };
     
@@ -386,16 +386,16 @@ function useConnectionMonitor(): ConnectionState {
         let quality: ConnectionState['connectionQuality'] = 'unknown';
         
         if (connection.effectiveType === '4g' && connection.downlink > 10) {
-          quality = 'excellent';
+          quality = 'excellent'
         } else if (connection.effectiveType === '4g' || connection.downlink > 5) {
-          quality = 'good';
+          quality = 'good'
         } else if (connection.effectiveType === '3g' || connection.downlink > 1) {
-          quality = 'fair';
+          quality = 'fair'
         } else {
-          quality = 'poor';
+          quality = 'poor'
         }
         
-        setConnectionState(prev => ({ ...prev, connectionQuality: quality }));
+        setConnectionState(prev => ({ ...prev, connectionQuality: quality }))
       }
     };
     
@@ -403,7 +403,7 @@ function useConnectionMonitor(): ConnectionState {
     const updateOfflineDuration = () => {
       if (!connectionState.isOnline && offlineStartTime.current) {
         const duration = Date.now() - offlineStartTime.current;
-        setConnectionState(prev => ({ ...prev, offlineDuration: duration }));
+        setConnectionState(prev => ({ ...prev, offlineDuration: duration }))
       }
     };
     
@@ -417,7 +417,7 @@ function useConnectionMonitor(): ConnectionState {
     // @ts-ignore
     const connection = navigator.connection;
     if (connection) {
-      connection.addEventListener('change', monitorQuality);
+      connection.addEventListener('change', monitorQuality)
     }
     
     // Periodic updates
@@ -428,14 +428,14 @@ function useConnectionMonitor(): ConnectionState {
       window.removeEventListener('online', updateConnectionState);
       window.removeEventListener('offline', updateConnectionState);
       if (connection) {
-        connection.removeEventListener('change', monitorQuality);
+        connection.removeEventListener('change', monitorQuality)
       }
       clearInterval(qualityInterval);
-      clearInterval(durationInterval);
-    };
+      clearInterval(durationInterval)
+    }
   }, [connectionState.isOnline]);
   
-  return connectionState;
+  return connectionState
 }
 
 export const OfflineHandler: React.FC<OfflineHandlerProps> = ({
@@ -477,14 +477,14 @@ export const OfflineHandler: React.FC<OfflineHandlerProps> = ({
   // Handle offline/online transitions
   useEffect(() => {
     if (!connectionState.isOnline) {
-      onOffline?.(campusContext);
+      onOffline?.(campusContext)
     } else if (connectionState.lastOnlineTime) {
       // Just came back online
       onOnline?.(offlineActivity);
       
       // Start sync if enabled
       if (enableSmartSync && pendingCount > 0) {
-        handleSync();
+        handleSync()
       }
     }
   }, [connectionState.isOnline]);
@@ -492,12 +492,12 @@ export const OfflineHandler: React.FC<OfflineHandlerProps> = ({
   // Update pending actions count
   useEffect(() => {
     const updateCount = () => {
-      setPendingCount(offlineManager.getPendingActionsCount());
+      setPendingCount(offlineManager.getPendingActionsCount())
     };
     
     updateCount();
     const interval = setInterval(updateCount, 1000);
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, []);
   
   // Handle sync operation
@@ -519,13 +519,13 @@ export const OfflineHandler: React.FC<OfflineHandlerProps> = ({
       // Check for failed syncs
       const failures = results.filter(r => !r.success);
       if (failures.length > 0) {
-        console.warn(`${failures.length} sync operations failed:`, failures);
+        console.warn(`${failures.length} sync operations failed:`, failures)
       }
       
     } catch (error) {
-      onSyncError?.(error as Error, 0);
+      onSyncError?.(error as Error, 0)
     } finally {
-      setIsSyncing(false);
+      setIsSyncing(false)
     }
   }, [isSyncing, connectionState.isOnline, syncStrategy, syncBatchSize, maxRetries]);
   
@@ -542,10 +542,10 @@ export const OfflineHandler: React.FC<OfflineHandlerProps> = ({
         commuting: "You're on the move - HIVE works great offline too!",
         unknown: "Connection lost, but HIVE keeps working offline!"
       };
-      return locationMessages[campusContext.location];
+      return locationMessages[campusContext.location]
     }
     
-    return "You're offline, but don't worry - HIVE has you covered!";
+    return "You're offline, but don't worry - HIVE has you covered!"
   };
   
   // Don't show offline UI if capability is 'none'
@@ -564,7 +564,7 @@ export const OfflineHandler: React.FC<OfflineHandlerProps> = ({
           </Text>
         </div>
       </div>
-    );
+    )
   }
   
   return (
@@ -653,7 +653,7 @@ export const OfflineHandler: React.FC<OfflineHandlerProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Export utilities

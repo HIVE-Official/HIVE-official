@@ -167,14 +167,14 @@ export interface Tool {
     canView: boolean;
     canEdit: boolean;
     canDelete: boolean;
-    canConfigure: boolean;
+    canConfigure: boolean
   };
   analytics?: {
     views: number;
     interactions: number;
     activeUsers: number;
-    lastActivity: Date;
-  };
+    lastActivity: Date
+  }
 }
 
 export interface HiveToolsSurfaceProps
@@ -192,7 +192,7 @@ export interface HiveToolsSurfaceProps
   onViewToolAnalytics?: (toolId: string) => void;
   showAnalytics?: boolean;
   compact?: boolean;
-  maxTools?: number;
+  maxTools?: number
 }
 
 // Convert DeployedTool to Tool interface
@@ -238,7 +238,7 @@ function convertDeployedToolToTool(deployedTool: DeployedTool): Tool {
       activeUsers: Math.floor(deployedTool.usageCount / 10), // Rough estimate
       lastActivity: deployedTool.lastUsed || new Date(deployedTool.deployedAt),
     },
-  };
+  }
 }
 
 export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfaceProps>(
@@ -278,8 +278,8 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
       .filter(tool => {
         if (!tool.isVisible && !canManageTools) return false;
         if (selectedCategory === 'all') return true;
-        return tool.category === selectedCategory;
-      })
+        return tool.category === selectedCategory
+      })}}}
       .sort((a, b) => {
         // Pinned tools first
         if (a.isPinned && !b.isPinned) return -1;
@@ -287,14 +287,14 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
         // Then by usage count
         if (a.usageCount !== b.usageCount) return b.usageCount - a.usageCount;
         // Finally by added date
-        return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
+        return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
       })
       .slice(0, maxTools);
     
     // Tool category counts
     const categoryCounts = tools.reduce((acc, tool) => {
       acc[tool.category] = (acc[tool.category] || 0) + 1;
-      return acc;
+      return acc
     }, {} as Record<string, number>);
     
     // Get tool icon component
@@ -304,7 +304,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
         Calculator, Map, Camera, Mic, Gamepad2, Bookmark, LinkIcon,
         Database, Code, Palette, Globe, CheckCircle, Users, Activity
       };
-      return iconMap[iconName] || Wrench;
+      return iconMap[iconName] || Wrench
     };
     
     // Loading state
@@ -335,7 +335,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
             </p>
           </motion.div>
         </div>
-      );
+      )
     }
 
     // Error state
@@ -376,7 +376,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
             </motion.button>
           </motion.div>
         </div>
-      );
+      )
     }
     
     // Empty state
@@ -419,7 +419,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
             )}
           </motion.div>
         </div>
-      );
+      )
     }
     
     return (
@@ -461,7 +461,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
               icon: config.icon,
               color: config.color,
               count: categoryCounts[key] || 0
-            }))
+            })})
           ].map((filter) => {
             const Icon = filter.icon;
             const isActive = selectedCategory === filter.key;
@@ -490,8 +490,8 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                   {filter.count}
                 </span>
               </motion.button>
-            );
-          })}
+            )
+          })
         </div>
         
         {/* Tools Grid */}
@@ -701,8 +701,8 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
                   </div>
                 </div>
               </motion.article>
-            );
-          })}
+            )
+          })
         </div>
         
         {/* Builder Hint */}
@@ -725,7 +725,7 @@ export const HiveToolsSurface = React.forwardRef<HTMLDivElement, HiveToolsSurfac
           </motion.div>
         )}
       </div>
-    );
+    )
   }
 );
 

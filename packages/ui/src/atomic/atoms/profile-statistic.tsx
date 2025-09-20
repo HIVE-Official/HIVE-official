@@ -126,7 +126,7 @@ export interface ProfileStatisticProps
   showTrend?: boolean;
   emphasis?: 'normal' | 'gold' | 'secondary';
   loading?: boolean;
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 export function ProfileStatistic({
@@ -154,7 +154,7 @@ export function ProfileStatistic({
     if (!showTrend || change === undefined) return "none";
     if (change > 0) return "up";
     if (change < 0) return "down";
-    return "neutral";
+    return "neutral"
   }, [trend, showTrend, change]);
 
   // Auto-determine interactive from onClick
@@ -167,7 +167,7 @@ export function ProfileStatistic({
     
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
-    return num.toString();
+    return num.toString()
   };
 
   // Get trend icon
@@ -176,7 +176,7 @@ export function ProfileStatistic({
       case "up": return TrendingUp;
       case "down": return TrendingDown;
       case "neutral": return Minus;
-      default: return null;
+      default: return null
     }
   }, [determinedTrend]);
 
@@ -186,19 +186,19 @@ export function ProfileStatistic({
         <div className="space-y-2 w-full">
           <div className={cn("bg-[var(--hive-background-secondary)] animate-pulse rounded", {
             "h-6": size === "xs",
-            "h-7": size === "sm", 
+            "h-7": size === "sm",
             "h-8": size === "md",
             "h-10": size === "lg"
-          })} />
+          }} />
           <div className={cn("bg-[var(--hive-background-secondary)] animate-pulse rounded", {
             "h-3": size === "xs",
             "h-4": size === "sm",
-            "h-5": size === "md", 
+            "h-5": size === "md",
             "h-6": size === "lg"
-          })} />
+          }} />
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -234,13 +234,13 @@ export function ProfileStatistic({
               "text-[var(--hive-status-success)]": determinedTrend === "up",
               "text-[var(--hive-status-error)]": determinedTrend === "down",
               "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
-            })} />
+            }} />
             {changeLabel && (
               <span className={cn("text-xs font-medium", {
                 "text-[var(--hive-status-success)]": determinedTrend === "up",
-                "text-[var(--hive-status-error)]": determinedTrend === "down", 
+                "text-[var(--hive-status-error)]": determinedTrend === "down",
                 "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
-              })}>
+              }}>
                 {changeLabel}
               </span>
             )}
@@ -259,12 +259,12 @@ export function ProfileStatistic({
           "text-[var(--hive-status-success)]": determinedTrend === "up",
           "text-[var(--hive-status-error)]": determinedTrend === "down",
           "text-[var(--hive-text-muted)]": determinedTrend === "neutral"
-        })}>
+        }}>
           {change > 0 ? `+${change}` : change}
         </span>
       )}
     </div>
-  );
+  )
 }
 
 // Export variants for external use

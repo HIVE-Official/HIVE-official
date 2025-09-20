@@ -7,17 +7,17 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 
 export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: string) => void
 }
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, onValueChange, onChange, children, ...props }, ref) => {
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       if (onValueChange) {
-        onValueChange(e.target.value);
+        onValueChange(e.target.value)
       }
       if (onChange) {
-        onChange(e);
+        onChange(e)
       }
     };
 
@@ -33,7 +33,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       >
         {children}
       </select>
-    );
+    )
   }
 );
 

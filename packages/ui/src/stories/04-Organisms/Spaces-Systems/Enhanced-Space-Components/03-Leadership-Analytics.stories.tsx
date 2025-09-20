@@ -278,7 +278,7 @@ function LeadershipAnalyticsDemo() {
               { id: 'configure', label: 'Configure', icon: Settings, description: 'Space settings and customization' },
               { id: 'insights', label: 'Insights', icon: BarChart3, description: 'Analytics and performance metrics' },
               { id: 'manage', label: 'Manage', icon: Users, description: 'Member and content management' }
-            ].map(({ id, label, icon: Icon, description }) => (
+            ].map(({ id, label, icon: Icon, description })} => (
               <button
                 key={id}
                 onClick={() => setLeaderMode(id as any)}
@@ -314,7 +314,7 @@ function LeadershipAnalyticsDemo() {
         {leaderMode === 'manage' && <ManageMode />}
       </div>
     </div>
-  );
+  )
 }
 
 // Configure Mode Component
@@ -330,7 +330,7 @@ function ConfigureMode() {
         [key]: value
       }
     }));
-    setHasChanges(true);
+    setHasChanges(true)
   };
 
   return (
@@ -390,14 +390,14 @@ function ConfigureMode() {
                 <span className="text-white text-sm">Public Discovery</span>
                 <Switch 
                   checked={settings.general.discoverability}
-                  onCheckedChange={(checked) => updateSetting('general', 'discoverability', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('general', 'discoverability', checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-white text-sm">Auto-approve Members</span>
                 <Switch 
                   checked={settings.general.autoApprove}
-                  onCheckedChange={(checked) => updateSetting('general', 'autoApprove', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('general', 'autoApprove', checked)}
                 />
               </div>
             </div>
@@ -420,7 +420,7 @@ function ConfigureMode() {
                 </span>
                 <Switch 
                   checked={enabled as boolean}
-                  onCheckedChange={(checked) => updateSetting('features', feature, checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('features', feature, checked)}
                 />
               </div>
             ))}
@@ -443,7 +443,7 @@ function ConfigureMode() {
                 </span>
                 <Switch 
                   checked={enabled as boolean}
-                  onCheckedChange={(checked) => updateSetting('moderation', setting, checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('moderation', setting, checked)}
                 />
               </div>
             ))}
@@ -466,7 +466,7 @@ function ConfigureMode() {
                 </span>
                 <Switch 
                   checked={enabled as boolean}
-                  onCheckedChange={(checked) => updateSetting('notifications', notification, checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateSetting('notifications', notification, checked)}
                 />
               </div>
             ))}
@@ -506,14 +506,14 @@ function ConfigureMode() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 // Insights Mode Component
 function InsightsMode({ activeTab, onTabChange, isLoading }: {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  isLoading: boolean;
+  isLoading: boolean
 }) {
   return (
     <div className="space-y-6">
@@ -550,7 +550,7 @@ function InsightsMode({ activeTab, onTabChange, isLoading }: {
           { id: 'content', label: 'Content', icon: MessageSquare },
           { id: 'events', label: 'Events', icon: Calendar },
           { id: 'tools', label: 'Tools', icon: Code }
-        ].map(({ id, label, icon: Icon }) => (
+        ].map(({ id, label, icon: Icon })}} => (
           <button
             key={id}
             onClick={() => onTabChange(id)}
@@ -573,7 +573,7 @@ function InsightsMode({ activeTab, onTabChange, isLoading }: {
       {activeTab === 'events' && <EventAnalytics isLoading={isLoading} />}
       {activeTab === 'tools' && <ToolAnalytics isLoading={isLoading} />}
     </div>
-  );
+  )
 }
 
 // Manage Mode Component
@@ -622,7 +622,7 @@ function ManageMode() {
       {activeManageTab === 'content' && <ContentModeration />}
       {activeManageTab === 'moderation' && <ModerationQueue />}
     </div>
-  );
+  )
 }
 
 // Analytics Components
@@ -633,7 +633,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
         <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
         <span className="ml-3 text-gray-400">Loading analytics...</span>
       </div>
-    );
+    )
   }
 
   return (
@@ -747,7 +747,7 @@ function OverviewAnalytics({ isLoading }: { isLoading: boolean }) {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 function MemberAnalytics({ isLoading }: { isLoading: boolean }) {
@@ -797,7 +797,7 @@ function MemberAnalytics({ isLoading }: { isLoading: boolean }) {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 function ContentAnalytics({ isLoading }: { isLoading: boolean }) {
@@ -849,7 +849,7 @@ function ContentAnalytics({ isLoading }: { isLoading: boolean }) {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 function EventAnalytics({ isLoading }: { isLoading: boolean }) {
@@ -901,7 +901,7 @@ function EventAnalytics({ isLoading }: { isLoading: boolean }) {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 function ToolAnalytics({ isLoading }: { isLoading: boolean }) {
@@ -934,7 +934,7 @@ function ToolAnalytics({ isLoading }: { isLoading: boolean }) {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 // Management Components
@@ -947,7 +947,7 @@ function MemberManagement() {
         <p className="text-sm">Including bulk actions, role management, and member analytics</p>
       </div>
     </div>
-  );
+  )
 }
 
 function ContentModeration() {
@@ -959,7 +959,7 @@ function ContentModeration() {
         <p className="text-sm">Including post management, comment moderation, and content filtering</p>
       </div>
     </div>
-  );
+  )
 }
 
 function ModerationQueue() {
@@ -996,7 +996,7 @@ function ModerationQueue() {
         </Card>
       ))}
     </div>
-  );
+  )
 }
 
 export const LeadershipDashboard: Story = {
@@ -1013,9 +1013,9 @@ export const ConfigureModeDemo: Story = {
   render: () => {
     const Component = () => {
       const [leaderMode] = useState('configure');
-      return <LeadershipAnalyticsDemo />;
+      return <LeadershipAnalyticsDemo />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -1029,9 +1029,9 @@ export const InsightsModeDemo: Story = {
   render: () => {
     const Component = () => {
       const [leaderMode] = useState('insights');
-      return <LeadershipAnalyticsDemo />;
+      return <LeadershipAnalyticsDemo />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -1045,9 +1045,9 @@ export const ManageModeDemo: Story = {
   render: () => {
     const Component = () => {
       const [leaderMode] = useState('manage');
-      return <LeadershipAnalyticsDemo />;
+      return <LeadershipAnalyticsDemo />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',

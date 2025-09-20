@@ -139,11 +139,11 @@ const HiveSlider = React.forwardRef(({ className, variant = "default", size = "d
 });
 HiveSlider.displayName = "HiveSlider";
 // Pre-built Slider variants for common use cases
-const HiveVolumeSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Volume", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "default", ...props })));
+const HiveVolumeSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Volume", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "secondary", ...props })));
 const HiveBrightnessSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Brightness", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "gold", ...props })));
 const HiveProgressSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Progress", min: 0, max: 100, showValue: true, valueFormatter: (value) => `${value}%`, variant: "success", disabled: true, ...props })));
 const HivePriceRangeSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Price Range", min: 0, max: 1000, showValue: true, valueFormatter: (value) => `$${value}`, variant: "minimal", ...props })));
-const HiveTemperatureSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Temperature", min: 60, max: 80, showValue: true, valueFormatter: (value) => `${value}°F`, variant: "default", ...props })));
+const HiveTemperatureSlider = React.forwardRef(({ ...props }, ref) => (_jsx(HiveSlider, { ref: ref, label: "Temperature", min: 60, max: 80, showValue: true, valueFormatter: (value) => `${value}°F`, variant: "secondary", ...props })));
 HiveVolumeSlider.displayName = "HiveVolumeSlider";
 HiveBrightnessSlider.displayName = "HiveBrightnessSlider";
 HiveProgressSlider.displayName = "HiveProgressSlider";

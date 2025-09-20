@@ -8,7 +8,7 @@ import { PersonalTools, mockPersonalToolsData } from './personal-tools';
 import { CalendarWidget, mockCalendarData } from './calendar-widget';
 import { ActivityTracker, mockActivityTrackerData } from './activity-tracker';
 import { Button } from '../hive-button';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Progress } from '../hive-progress';
 // Quick Stats Widget
 function QuickStatsWidget() {
@@ -157,15 +157,15 @@ export function DashboardDemo({ variant = 'academic', editable = true, showContr
         const baseLayout = defaultLayouts[newVariant];
         // Add items logic here similar to useState initialization
     };
-    return (_jsxs(motion.div, { className: `dashboard-demo space-y-6 ${className}`, initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5 }, children: [showControls && (_jsxs(motion.div, { className: "flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200", initial: { y: -20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.2 }, children: [_jsxs("div", { children: [_jsx("h2", { className: "text-lg font-semibold text-gray-900", children: "HIVE Dashboard Demo" }), _jsx("p", { className: "text-sm text-gray-600", children: "Interactive dashboard components with customizable layouts" })] }), _jsx("div", { className: "flex items-center space-x-2", children: ['academic', 'productivity', 'social'].map((layoutVariant) => (_jsx(Button, { variant: currentVariant === layoutVariant ? "primary" : "outline", size: "sm", onClick: () => handleVariantChange(layoutVariant), className: "capitalize", children: layoutVariant }, layoutVariant))) })] })), _jsx(motion.div, { initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.4 }, children: _jsx(BentoGrid, { layout: layout, onLayoutChange: setLayout, onItemResize: (itemId, newSize) => {
-                        console.log(`Item ${itemId} resized to ${newSize}`);
-                    }, onItemRemove: (itemId) => {
-                        console.log(`Item ${itemId} removed`);
-                    }, onItemAdd: () => {
-                        console.log('Add new item requested');
-                    }, onItemConfigure: (itemId) => {
-                        console.log(`Configure item ${itemId}`);
-                    }, editable: editable }) }), editable && showControls && (_jsxs(motion.div, { className: "p-4 bg-gray-50 rounded-lg", initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.6 }, children: [_jsx("h3", { className: "font-medium text-gray-900 mb-2", children: "Interactive Features" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600", children: [_jsxs("div", { children: [_jsx("strong", { children: "Drag & Drop:" }), " Hover over widgets and use the grip handle to reorder"] }), _jsxs("div", { children: [_jsx("strong", { children: "Resize:" }), " Use the expand icon to change widget sizes"] }), _jsxs("div", { children: [_jsx("strong", { children: "Configure:" }), " Access widget settings and removal options"] })] })] }))] }));
+    return (_jsxs(motion.div, { className: `dashboard-demo space-y-6 ${className}`, initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5 }, children: [showControls && (_jsxs(motion.div, { className: "flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200", initial: { y: -20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.2 }, children: [_jsxs("div", { children: [_jsx("h2", { className: "text-lg font-semibold text-gray-900", children: "HIVE Dashboard Demo" }), _jsx("p", { className: "text-sm text-gray-600", children: "Interactive dashboard components with customizable layouts" })] }), _jsx("div", { className: "flex items-center space-x-2", children: ['academic', 'productivity', 'social'].map((layoutVariant) => (_jsx(Button, { variant: currentVariant === layoutVariant ? "primary" : "outline", size: "sm", onClick: () => handleVariantChange(layoutVariant), className: "capitalize", children: layoutVariant }, layoutVariant))) })] })), _jsxs(motion.div, { initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.4 }, children: [_jsx(BentoGrid, { layout: layout, onLayoutChange: setLayout, onItemResize: (itemId, newSize) => {
+                            console.log(`Item ${itemId} resized to ${newSize}`);
+                        }, onItemRemove: (itemId) => {
+                            console.log(`Item ${itemId} removed`);
+                        }, onItemAdd: () => {
+                            console.log('Add new item requested');
+                        }, onItemConfigure: (itemId) => {
+                            console.log(`Configure item ${itemId}`);
+                        } }), ")} editable=", editable, "/>"] }), editable && showControls && (_jsxs(motion.div, { className: "p-4 bg-gray-50 rounded-lg", initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { delay: 0.6 }, children: [_jsx("h3", { className: "font-medium text-gray-900 mb-2", children: "Interactive Features" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600", children: [_jsxs("div", { children: [_jsx("strong", { children: "Drag & Drop:" }), " Hover over widgets and use the grip handle to reorder"] }), _jsxs("div", { children: [_jsx("strong", { children: "Resize:" }), " Use the expand icon to change widget sizes"] }), _jsxs("div", { children: [_jsx("strong", { children: "Configure:" }), " Access widget settings and removal options"] })] })] }))] }));
 }
 export default DashboardDemo;
 //# sourceMappingURL=dashboard-demo.js.map

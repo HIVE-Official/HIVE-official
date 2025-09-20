@@ -120,7 +120,7 @@ export interface HiveBadgeProps
   'data-testid'?: string;
   // Interactive properties
   interactive?: boolean;
-  selected?: boolean;
+  selected?: boolean
 }
 
 const HiveBadge = React.forwardRef<HTMLDivElement, HiveBadgeProps>(
@@ -147,9 +147,9 @@ const HiveBadge = React.forwardRef<HTMLDivElement, HiveBadgeProps>(
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (interactive && (e.key === 'Enter' || e.key === ' ')) {
         e.preventDefault();
-        onClick?.(e as any);
+        onClick?.(e as any)
       }
-      onKeyDown?.(e);
+      onKeyDown?.(e)
     };
     
     return (
@@ -184,7 +184,7 @@ const HiveBadge = React.forwardRef<HTMLDivElement, HiveBadgeProps>(
           />
         )}
       </div>
-    );
+    )
   }
 );
 

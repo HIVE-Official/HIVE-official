@@ -10,6 +10,8 @@ export { ProfileStats } from './profile-stats';
 export { adaptSmartCalendarProps } from './calendar-data-adapter';
 // Enhanced Profile Dashboard with Expand-Focus
 export { EnhancedProfileDashboard } from './enhanced-profile-dashboard';
+// Complete HIVE Profile System - Production Component
+export { CompleteHIVEProfileSystem } from './complete-hive-profile-system';
 // Enhanced Profile System (Bento Grid) - temporarily disabled due to import errors
 // export { EnhancedProfileSystem } from './enhanced-profile-system';
 // export type { EnhancedProfileUser, ProfileCompletionStatus } from './enhanced-profile-system';

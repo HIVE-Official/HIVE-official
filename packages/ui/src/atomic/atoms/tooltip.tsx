@@ -12,7 +12,7 @@ export interface TooltipProps {
   variant?: 'default' | 'dark' | 'light';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
-  children: React.ReactElement;
+  children: React.ReactElement
 }
 
 const tooltipVariants = {
@@ -97,27 +97,27 @@ export const Tooltip: React.FC<TooltipProps> = ({
     if (disabled) return;
     
     if (timeoutId) {
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId)
     }
     
     const id = setTimeout(() => {
-      setIsVisible(true);
+      setIsVisible(true)
     }, delay);
     
-    setTimeoutId(id);
+    setTimeoutId(id)
   }, [disabled, delay, timeoutId]);
 
   const hideTooltip = React.useCallback(() => {
     if (timeoutId) {
       clearTimeout(timeoutId);
-      setTimeoutId(null);
+      setTimeoutId(null)
     }
-    setIsVisible(false);
+    setIsVisible(false)
   }, [timeoutId]);
 
   const toggleTooltip = React.useCallback(() => {
     if (disabled) return;
-    setIsVisible(prev => !prev);
+    setIsVisible(prev => !prev)
   }, [disabled]);
 
   // Handle outside clicks for click trigger
@@ -131,21 +131,21 @@ export const Tooltip: React.FC<TooltipProps> = ({
         !tooltipRef.current.contains(event.target as Node) &&
         !triggerRef.current.contains(event.target as Node)
       ) {
-        hideTooltip();
+        hideTooltip()
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [trigger, isVisible, hideTooltip]);
 
   // Cleanup timeout on unmount
   React.useEffect(() => {
     return () => {
       if (timeoutId) {
-        clearTimeout(timeoutId);
+        clearTimeout(timeoutId)
       }
-    };
+    }
   }, [timeoutId]);
 
   const getEventHandlers = () => {
@@ -167,7 +167,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
           onBlur: hideTooltip
         };
       default:
-        return {};
+        return {}
     }
   };
 
@@ -213,7 +213,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Convenient preset components

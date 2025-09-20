@@ -43,7 +43,7 @@ export interface HiveLogoProps
   withText?: boolean;
   textPosition?: 'right' | 'bottom' | 'center';
   glowEffect?: boolean;
-  rounded?: boolean;
+  rounded?: boolean
 }
 
 // Inline SVG components for better control and styling
@@ -81,7 +81,7 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
           filter={glowEffect ? "url(#glow)" : undefined}
         />
       </svg>
-    );
+    )
   }
 
   if (variant === 'glass') {
@@ -106,7 +106,7 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
           style={{ backdropFilter: 'blur(10px)' }}
         />
       </svg>
-    );
+    )
   }
 
   if (variant === 'neon') {
@@ -127,13 +127,13 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
           stroke={color || "var(--hive-brand-secondary)"}
           strokeWidth="8"
           filter="url(#neonGlow)"
-          style={{ 
+          style={{
             filter: 'drop-shadow(0 0 10px currentColor)',
             animation: 'pulse 2s infinite'
           }}
         />
       </svg>
-    );
+    )
   }
 
   if (variant === 'textured') {
@@ -149,7 +149,7 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
         </defs>
         <path d={logoPath} fill="url(#texture)" />
       </svg>
-    );
+    )
   }
 
   if (variant === 'animated') {
@@ -158,13 +158,13 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
         <path 
           d={logoPath} 
           fill={color || "currentColor"}
-          style={{ 
+          style={{
             transformOrigin: 'center',
             animation: 'pulse 2s ease-in-out infinite alternate'
           }}
         />
       </svg>
-    );
+    )
   }
 
   if (variant === 'monochrome') {
@@ -172,7 +172,7 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
       <svg {...baseProps} style={{ filter: 'grayscale(100%) contrast(1.2)' }}>
         <path d={logoPath} fill={color || "currentColor"} />
       </svg>
-    );
+    )
   }
 
   if (variant === 'outline') {
@@ -185,7 +185,7 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
           fill="none"
         />
       </svg>
-    );
+    )
   }
   
   if (variant === 'minimal') {
@@ -199,7 +199,7 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
         <polygon points="50,10 85,30 85,70 50,90 15,70 15,30" />
         <polygon points="50,25 70,35 70,65 50,75 30,65 30,35" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
       </svg>
-    );
+    )
   }
   
   // Default solid variant
@@ -207,7 +207,7 @@ const HiveLogoSVG = ({ color, variant, className, glowEffect }: { color?: string
     <svg {...baseProps} fill={color || "currentColor"}>
       <path d={logoPath} />
     </svg>
-  );
+  )
 };
 
 export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
@@ -229,7 +229,7 @@ export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
       if (color === "gold") return "var(--hive-brand-secondary)";
       
       // Auto mode - use current color for theme adaptation
-      return undefined;
+      return undefined
     };
     
     const logoColor = getColor();
@@ -306,7 +306,7 @@ export const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
         </div>
         {textElement}
       </div>
-    );
+    )
   }
 );
 HiveLogo.displayName = "HiveLogo";
@@ -391,7 +391,7 @@ const iconVariants = cva(
 export interface IconProps 
   extends Omit<React.SVGProps<SVGSVGElement>, 'color'>,
     VariantProps<typeof iconVariants> {
-  icon: LucideIcon;
+  icon: LucideIcon
 }
 
 export const Icon = React.forwardRef<SVGSVGElement, IconProps>(
@@ -402,7 +402,7 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>(
         className={cn(iconVariants({ size, color, interactive }), className)}
         {...props}
       />
-    );
+    )
   }
 );
 Icon.displayName = "Icon";

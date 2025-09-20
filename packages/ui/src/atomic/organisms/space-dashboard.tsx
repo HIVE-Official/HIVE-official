@@ -29,7 +29,7 @@ export interface SpaceDashboardProps {
   // User context
   currentUser?: {
     id: string;
-    role?: 'leader' | 'co_leader' | 'member' | 'non_member';
+    role?: 'leader' | 'co_leader' | 'member' | 'non_member'
   };
   
   // Interaction handlers
@@ -46,7 +46,7 @@ export interface SpaceDashboardProps {
   // Display options
   variant?: 'default' | 'compact';
   showToolGrid?: boolean;
-  className?: string;
+  className?: string
 }
 
 export const SpaceDashboard: React.FC<SpaceDashboardProps> = ({
@@ -77,7 +77,7 @@ export const SpaceDashboard: React.FC<SpaceDashboardProps> = ({
       case 'university': return '🎓';
       case 'residential': return '🏠';
       case 'greek': return '👥';
-      case 'student': return '⭐';
+      case 'student': return '⭐'
     }
   };
 
@@ -89,7 +89,7 @@ export const SpaceDashboard: React.FC<SpaceDashboardProps> = ({
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return `${Math.floor(diffInHours / 168)}w ago`;
+    return `${Math.floor(diffInHours / 168)}w ago`
   };
 
   return (
@@ -412,7 +412,7 @@ export const SpaceDashboard: React.FC<SpaceDashboardProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default SpaceDashboard;

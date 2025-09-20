@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, Reorder } from '../../../components/framer-motion-proxy';
+import { motion, AnimatePresence, Reorder } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Button } from '../../../components/ui/button';
-import { Card } from '../../../components/ui/card';
+import { Button } from '../../ui/button';
+import { Card } from '../../ui/card';
 import { Save, X, GripVertical, Plus, Settings, Maximize, Minimize } from 'lucide-react';
 // Grid Layout Hook for responsive behavior
 function useGridLayout(maxColumns = 4) {

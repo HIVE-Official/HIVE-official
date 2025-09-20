@@ -13,7 +13,7 @@ interface NavigationHeaderProps {
     name: string;
     handle: string;
     avatar?: string;
-    builderStatus?: 'none' | 'pending' | 'active';
+    builderStatus?: 'none' | 'pending' | 'active'
   } | null;
   currentSection?: 'profile' | 'spaces' | 'feed' | 'hivelab' | 'rituals';
   onToggleSidebar: () => void;
@@ -25,7 +25,7 @@ interface NavigationHeaderProps {
   onOpenCommandPalette?: () => void;
   unreadNotificationCount?: number;
   height?: 'compact' | 'standard' | 'tall';
-  className?: string;
+  className?: string
 }
 
 export function NavigationHeader({ 
@@ -50,7 +50,7 @@ export function NavigationHeader({
     if (pathname.startsWith('/spaces')) return 'spaces';
     if (pathname.startsWith('/profile')) return 'profile';
     if (pathname.startsWith('/build')) return 'hivelab';
-    return currentSection;
+    return currentSection
   };
 
   const activeSection = getCurrentSection();
@@ -87,7 +87,7 @@ export function NavigationHeader({
         backdropFilter: 'blur(4) saturate(180%)',
         borderColor: 'var(--hive-border-primary)',
         padding: `0 var(--hive-spacing-4)`,
-      }}
+          }}
     >
       {/* Left Section */}
       <div className="flex items-center gap-2">
@@ -210,5 +210,5 @@ export function NavigationHeader({
         )}
       </div>
     </header>
-  );
+  )
 }

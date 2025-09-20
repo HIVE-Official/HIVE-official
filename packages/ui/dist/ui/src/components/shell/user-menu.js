@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { User, Settings, LogOut, Moon, Bell, HelpCircle, Zap, Users, Code, Calendar, Shield, Star } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '../../atomic/atoms/avatar';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup, } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup, } from '../../atomic/atoms/dropdown-menu';
 export function UserMenu({ user, onSignOut }) {
     const initials = user.name
         .split(' ')

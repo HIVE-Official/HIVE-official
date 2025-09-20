@@ -440,7 +440,7 @@ function UniversalSurfacesDemo() {
 
           {/* Surface Navigation */}
           <div className="flex space-x-1 bg-gray-800 rounded-lg p-1">
-            {surfaces.map(({ id, label, icon: Icon, count }) => (
+            {surfaces.map(({ id, label, icon: Icon, count })} => (
               <button
                 key={id}
                 onClick={() => setActiveSurface(id as any)}
@@ -472,7 +472,7 @@ function UniversalSurfacesDemo() {
         {activeSurface === 'pinned' && <PinnedSurface viewMode={viewMode} />}
       </div>
     </div>
-  );
+  )
 }
 
 // Post Board Surface Component
@@ -571,7 +571,7 @@ function PostBoardSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Events Surface Component  
@@ -625,7 +625,7 @@ function EventsSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Members Surface Component
@@ -695,7 +695,7 @@ function MembersSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Tools Surface Component
@@ -734,7 +734,7 @@ function ToolsSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Pinned Surface Component
@@ -786,7 +786,7 @@ function PinnedSurface({ viewMode }: { viewMode: 'view' | 'manage' }) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Individual Card Components
@@ -958,7 +958,7 @@ function PostCard({ post, viewMode }: { post: any; viewMode: 'view' | 'manage' }
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function EventCard({ event, viewMode }: { event: any; viewMode: 'view' | 'manage' }) {
@@ -1012,7 +1012,7 @@ function EventCard({ event, viewMode }: { event: any; viewMode: 'view' | 'manage
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function MemberCard({ member, viewMode }: { member: any; viewMode: 'view' | 'manage' }) {
@@ -1084,7 +1084,7 @@ function MemberCard({ member, viewMode }: { member: any; viewMode: 'view' | 'man
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function ToolCard({ tool, viewMode }: { tool: any; viewMode: 'view' | 'manage' }) {
@@ -1153,7 +1153,7 @@ function ToolCard({ tool, viewMode }: { tool: any; viewMode: 'view' | 'manage' }
         </Button>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function PinnedItemCard({ item, viewMode }: { item: any; viewMode: 'view' | 'manage' }) {
@@ -1212,7 +1212,7 @@ function PinnedItemCard({ item, viewMode }: { item: any; viewMode: 'view' | 'man
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 export const CompleteSurfacesDemo: Story = {
@@ -1229,9 +1229,9 @@ export const PostBoardShowcase: Story = {
   render: () => {
     const Component = () => {
       const [activeSurface] = useState('posts');
-      return <UniversalSurfacesDemo />;
+      return <UniversalSurfacesDemo />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -1245,9 +1245,9 @@ export const EventsCalendarShowcase: Story = {
   render: () => {
     const Component = () => {
       const [activeSurface] = useState('events');
-      return <UniversalSurfacesDemo />;
+      return <UniversalSurfacesDemo />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -1261,9 +1261,9 @@ export const MembersDirectoryShowcase: Story = {
   render: () => {
     const Component = () => {
       const [activeSurface] = useState('members');
-      return <UniversalSurfacesDemo />;
+      return <UniversalSurfacesDemo />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -1277,9 +1277,9 @@ export const ToolsSystemShowcase: Story = {
   render: () => {
     const Component = () => {
       const [activeSurface] = useState('tools');
-      return <UniversalSurfacesDemo />;
+      return <UniversalSurfacesDemo />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -1293,9 +1293,9 @@ export const PinnedResourcesShowcase: Story = {
   render: () => {
     const Component = () => {
       const [activeSurface] = useState('pinned');
-      return <UniversalSurfacesDemo />;
+      return <UniversalSurfacesDemo />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',

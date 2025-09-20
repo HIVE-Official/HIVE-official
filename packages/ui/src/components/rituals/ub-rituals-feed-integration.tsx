@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';
-import { Icon } from '../../components/ui/icon';
+import { Icon } from '../../atomic/atoms/icon';
 import { cn } from '../../lib/utils';
 import { 
   Sparkles,
@@ -50,19 +50,19 @@ export interface UBRitual {
     buildings?: string[];
     dorms?: string[];
     departments?: string[];
-    campusAreas?: ('north' | 'south' | 'downtown')[];
+    campusAreas?: ('north' | 'south' | 'downtown')[]
   };
   metrics: {
     participationRate: number;
     completionRate: number;
     engagementScore: number;
-    campusImpact: number;
+    campusImpact: number
   };
   rewards?: {
     points: number;
     badges: string[];
-    swag?: string[];
-  };
+    swag?: string[]
+  }
 }
 
 export interface UBRitualFeedPost {
@@ -74,7 +74,7 @@ export interface UBRitualFeedPost {
     name: string;
     handle: string;
     avatar?: string;
-    role?: string;
+    role?: string
   };
   content: string;
   timestamp: string;
@@ -82,15 +82,15 @@ export interface UBRitualFeedPost {
     likes: number;
     comments: number;
     shares: number;
-    participants: number;
+    participants: number
   };
   milestone?: {
     achievement: string;
     participantCount: number;
-    completionRate: number;
+    completionRate: number
   };
   isParticipating?: boolean;
-  hasCompleted?: boolean;
+  hasCompleted?: boolean
 }
 
 // UB-specific ritual configurations
@@ -166,7 +166,7 @@ interface UBRitualFeedCardProps {
   onShare?: (postId: string) => void;
   onJoinRitual?: (ritualId: string) => void;
   onViewRitual?: (ritualId: string) => void;
-  className?: string;
+  className?: string
 }
 
 export function UBRitualFeedCard({ 
@@ -193,7 +193,7 @@ export function UBRitualFeedCard({
     
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
-    return 'Just now';
+    return 'Just now'
   };
 
   const getPostTypeIndicator = () => {
@@ -207,7 +207,7 @@ export function UBRitualFeedCard({
       case 'ritual_reminder':
         return { icon: Clock, label: 'Ritual Reminder', color: 'text-blue-400' };
       default:
-        return { icon: Activity, label: 'Campus Activity', color: 'text-gray-400' };
+        return { icon: Activity, label: 'Campus Activity', color: 'text-gray-400' }
     }
   };
 
@@ -435,7 +435,7 @@ export function UBRitualFeedCard({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // =============================================================================
@@ -451,7 +451,7 @@ interface UBRitualsFeedIntegrationProps {
   onViewRitual?: (ritualId: string) => void;
   showHeader?: boolean;
   maxPosts?: number;
-  className?: string;
+  className?: string
 }
 
 export function UBRitualsFeedIntegration({ 
@@ -468,7 +468,7 @@ export function UBRitualsFeedIntegration({
   const displayPosts = maxPosts ? ritualPosts.slice(0, maxPosts) : ritualPosts;
   
   if (ritualPosts.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -515,7 +515,7 @@ export function UBRitualsFeedIntegration({
         )}
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -527,7 +527,7 @@ interface UBRitualFeedFiltersProps {
   selectedParticipation: string[];
   onTypeChange: (types: string[]) => void;
   onParticipationChange: (participation: string[]) => void;
-  className?: string;
+  className?: string
 }
 
 export function UBRitualFeedFilters({
@@ -539,17 +539,17 @@ export function UBRitualFeedFilters({
 }: UBRitualFeedFiltersProps) {
   const toggleType = (type: string) => {
     if (selectedTypes.includes(type)) {
-      onTypeChange(selectedTypes.filter(t => t !== type));
+      onTypeChange(selectedTypes.filter(t => t !== type))
     } else {
-      onTypeChange([...selectedTypes, type]);
+      onTypeChange([...selectedTypes, type])
     }
   };
 
   const toggleParticipation = (participation: string) => {
     if (selectedParticipation.includes(participation)) {
-      onParticipationChange(selectedParticipation.filter(p => p !== participation));
+      onParticipationChange(selectedParticipation.filter(p => p !== participation))
     } else {
-      onParticipationChange([...selectedParticipation, participation]);
+      onParticipationChange([...selectedParticipation, participation])
     }
   };
 
@@ -580,8 +580,8 @@ export function UBRitualFeedFilters({
                   <Icon className="h-3 w-3 mr-1" />
                   {config.label}
                 </Button>
-              );
-            })}
+              )
+          })}
           </div>
         </div>
         
@@ -605,11 +605,11 @@ export function UBRitualFeedFilters({
                   <Icon className="h-3 w-3 mr-1" />
                   {config.label}
                 </Button>
-              );
-            })}
+              )
+          })}
           </div>
         </div>
       </div>
     </Card>
-  );
+  )
 }

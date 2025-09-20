@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 import { motion } from '../framer-motion-proxy';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from '../ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from '../../atomic/ui/card';
 import { cn } from '../../lib/utils';
 import { SchoolSearchInput } from './school-search-input';
 // A placeholder for the HIVE logomark.

@@ -18,11 +18,11 @@ import {
   Filter,
   MoreHorizontal
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Badge } from '../../atomic/atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../atomic/atoms/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../atomic/ui/tabs';
 
 // Notification interfaces
 export interface HiveNotification {
@@ -43,8 +43,8 @@ export interface HiveNotification {
     toolId?: string;
     toolName?: string;
     achievementId?: string;
-    eventId?: string;
-  };
+    eventId?: string
+  }
 }
 
 interface NotificationCenterProps {
@@ -53,7 +53,7 @@ interface NotificationCenterProps {
   onNotificationAction: (notificationId: string, action: string) => void;
   onMarkAllRead: () => void;
   onNotificationClick: (notification: HiveNotification) => void;
-  className?: string;
+  className?: string
 }
 
 // Animation variants
@@ -110,7 +110,7 @@ export function NotificationCenter({
       case 'achievements':
         return notification.type === 'achievement';
       default:
-        return true;
+        return true
     }
   });
 
@@ -118,7 +118,7 @@ export function NotificationCenter({
   const groupedNotifications = filteredNotifications.reduce((acc, notification) => {
     if (!acc[notification.priority]) acc[notification.priority] = [];
     acc[notification.priority].push(notification);
-    return acc;
+    return acc
   }, {} as Record<string, HiveNotification[]>);
 
   // Get notification icon
@@ -140,7 +140,7 @@ export function NotificationCenter({
       case 'system':
         return <Info className="h-4 w-4" />;
       default:
-        return <Bell className="h-4 w-4" />;
+        return <Bell className="h-4 w-4" />
     }
   };
 
@@ -164,7 +164,7 @@ export function NotificationCenter({
       case 'reminder':
         return 'text-indigo-400 bg-indigo-500/20';
       default:
-        return 'text-gray-400 bg-gray-500/20';
+        return 'text-gray-400 bg-gray-500/20'
     }
   };
 
@@ -180,7 +180,7 @@ export function NotificationCenter({
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
     if (minutes > 0) return `${minutes}m ago`;
-    return 'Just now';
+    return 'Just now'
   };
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -330,7 +330,7 @@ export function NotificationCenter({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Individual Notification Item Component
@@ -341,7 +341,7 @@ interface NotificationItemProps {
   onClick: (notification: HiveNotification) => void;
   getIcon: (type: HiveNotification['type']) => React.ReactNode;
   getColor: (type: HiveNotification['type'], priority: HiveNotification['priority']) => string;
-  formatTimeAgo: (timestamp: string) => string;
+  formatTimeAgo: (timestamp: string) => string
 }
 
 function NotificationItem({
@@ -419,8 +419,8 @@ function NotificationItem({
               size="sm"
               onClick={(e) => {
                 e.stopPropagation();
-                onRead(notification.id);
-              }}
+                onRead(notification.id)
+          }}
               className="h-6 w-6 p-0"
             >
               <Check className="h-3 w-3" />
@@ -433,8 +433,8 @@ function NotificationItem({
               size="sm"
               onClick={(e) => {
                 e.stopPropagation();
-                onAction(notification.id, 'navigate');
-              }}
+                onAction(notification.id, 'navigate')
+          }}
               className="h-6 w-6 p-0"
             >
               <ChevronRight className="h-3 w-3" />
@@ -443,7 +443,7 @@ function NotificationItem({
         </div>
       </div>
     </motion.div>
-  );
+  )
 }
 
 export default NotificationCenter;

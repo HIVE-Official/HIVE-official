@@ -1,5 +1,5 @@
 import React from 'react';
-export interface BuilderTool {
+export interface ProfileBuilderTool {
     id: string;
     name: string;
     description: string;
@@ -29,14 +29,14 @@ export interface ProfileHiveLabWidgetProps {
         name: string;
         builderLevel?: 'novice' | 'apprentice' | 'expert' | 'master';
     };
-    builderTools?: BuilderTool[];
+    builderTools?: ProfileBuilderTool[];
     activeProjects?: BuilderProject[];
     totalBuilds?: number;
     totalDeployments?: number;
     totalCollaborations?: number;
     builderScore?: number;
     weeklyBuildTime?: number;
-    featuredBuild?: BuilderTool;
+    featuredBuild?: ProfileBuilderTool;
     isEditable?: boolean;
     onCreateTool?: () => void;
     onViewTool?: (toolId: string) => void;

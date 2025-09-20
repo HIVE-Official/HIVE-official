@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 import { motionDurations } from '../motion/hive-motion-system';
-import { Pin, MessageSquare, Calendar, Wrench, MessageCircle, Users, Settings, Crown, Maximize2, Minimize2, MoreHorizontal, ArrowLeft, Sparkles } from 'lucide-react';
+import { Pin, MessageSquare, Calendar, Wrench, MessageCircle, Users, Settings, Maximize2, Minimize2 } from 'lucide-react';
 // Import individual surface components
 import { HivePinnedSurface, HivePostsSurface, HiveEventsSurface, HiveToolsSurface, HiveChatSurface, HiveMembersSurface } from './surfaces';
 // Surface configuration with HIVE design patterns
@@ -88,80 +88,81 @@ canCreateContent = true, canModerate = false, showBuilderHints = false, builderO
         .map(surface => ({
         ...surface,
         config: surfaceConfig[surface.type]
-    }))
-        .sort((a, b) => a.config.order - b.config.order)
-        .filter(surface => surface.visible), [surfaces]);
-    // Handle surface collapse/expand
-    const handleSurfaceToggle = useCallback((surfaceType) => {
-        setCollapsedSurfaces(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(surfaceType)) {
-                newSet.delete(surfaceType);
-            }
-            else {
-                newSet.add(surfaceType);
-            }
-            return newSet;
-        });
-    }, []);
-    // Render surface content based on type
-    const renderSurfaceContent = useCallback((surface) => {
-        switch (surface.type) {
-            case 'pinned':
-                return renderPinnedSurface?.() || (_jsx(HivePinnedSurface, { space: space, pinnedContent: pinnedContent, isBuilder: isBuilder, canEdit: canEdit, mode: mode }));
-            case 'posts':
-                return renderPostsSurface?.() || (_jsx(HivePostsSurface, { space: space, posts: posts, isBuilder: isBuilder, canPost: canCreateContent, canModerate: canModerate, mode: mode }));
-            case 'events':
-                return renderEventsSurface?.() || (_jsx(HiveEventsSurface, { space: space, events: events, isBuilder: isBuilder, canCreateEvents: canCreateContent, canModerate: canModerate, mode: mode }));
-            case 'tools':
-                return renderToolsSurface?.() || (_jsx(HiveToolsSurface, { space: space, tools: tools, isBuilder: isBuilder, canManageTools: canEdit, mode: mode, compact: true }));
-            case 'chat':
-                return renderChatSurface?.() || (_jsx(HiveChatSurface, { space: space, messages: messages, currentUserId: currentUserId, isBuilder: isBuilder, canSendMessages: canCreateContent, canModerate: canModerate, isLocked: chatIsLocked, mode: mode }));
-            case 'members':
-                return renderMembersSurface?.() || (_jsx(HiveMembersSurface, { space: space, members: members, currentUserId: currentUserId, isBuilder: isBuilder, canModerate: canModerate, mode: mode }));
-            default:
-                return null;
+    })));
+})
+    .sort((a, b) => a.config.order - b.config.order)
+    .filter(surface => surface.visible), [surfaces];
+// Handle surface collapse/expand
+const handleSurfaceToggle = useCallback((surfaceType) => {
+    setCollapsedSurfaces(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(surfaceType)) {
+            newSet.delete(surfaceType);
         }
-    }, [
-        space,
-        pinnedContent,
-        posts,
-        events,
-        tools,
-        messages,
-        members,
-        currentUserId,
-        isBuilder,
-        canEdit,
-        canCreateContent,
-        canModerate,
-        chatIsLocked,
-        mode,
-        renderPinnedSurface,
-        renderPostsSurface,
-        renderEventsSurface,
-        renderToolsSurface,
-        renderChatSurface,
-        renderMembersSurface
-    ]);
-    return (_jsxs("div", { ref: ref, className: cn(hiveSpaceLayoutVariants({ mode, layout, className })), ...props, children: [_jsx(motion.header, { className: "sticky top-0 z-40 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border-b border-white/10", initial: { opacity: 0, y: -20 }, animate: { opacity: 1, y: 0 }, transition: { duration: motionDurations.smooth }, children: _jsxs("div", { className: "max-w-7xl mx-auto px-6 py-4", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-4", children: [_jsx(motion.button, { className: "p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200", onClick: onBackToDirectory, whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: _jsx(ArrowLeft, { className: "w-5 h-5" }) }), _jsxs("div", { children: [_jsx("h1", { className: "text-xl font-bold text-[var(--hive-text-primary)]", children: space.name }), _jsxs("div", { className: "flex items-center gap-3 text-sm text-gray-400", children: [_jsxs("span", { children: [space.memberCount, " members"] }), _jsx("span", { children: "\u2022" }), _jsx("span", { className: "capitalize", children: space.tags?.[0]?.sub_type || space.tags?.[0]?.type }), isBuilder && (_jsxs(_Fragment, { children: [_jsx("span", { children: "\u2022" }), _jsxs("div", { className: "flex items-center gap-1 text-yellow-400", children: [_jsx(Crown, { className: "w-3 h-3" }), _jsx("span", { className: "font-medium", children: "Builder" })] })] }))] })] })] }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: "hidden md:flex items-center gap-1 bg-[var(--hive-background-primary)]/20 rounded-xl p-1 border border-white/10", children: activeSurfaces.map((surface) => {
-                                                const Icon = surface.config.icon;
-                                                const isCollapsed = collapsedSurfaces.has(surface.type);
-                                                return (_jsxs(motion.button, { className: cn("flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200", hoveredSurface === surface.type
-                                                        ? "bg-yellow-500/20 text-yellow-400"
-                                                        : isCollapsed
-                                                            ? "text-gray-500"
-                                                            : "text-gray-300 hover:text-[var(--hive-text-primary)] hover:bg-[var(--hive-text-primary)]/5"), onClick: () => handleSurfaceToggle(surface.type), onMouseEnter: () => setHoveredSurface(surface.type), onMouseLeave: () => setHoveredSurface(null), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [_jsx(Icon, { className: cn("w-4 h-4", surface.config.color) }), _jsx("span", { className: "hidden lg:inline", children: surface.config.label }), surface.type === 'tools' && surface.toolCount && (_jsx("span", { className: "px-1.5 py-0.5 bg-purple-500/20 text-purple-400 rounded-full text-xs", children: surface.toolCount }))] }, surface.type));
-                                            }) }), canEdit && (_jsxs(motion.button, { className: cn("flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all duration-200", mode === 'builder'
-                                                ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-                                                : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:text-[var(--hive-text-primary)] hover:border-white/20"), onClick: onBuilderMode, whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [_jsx(Wrench, { className: "w-4 h-4" }), _jsx("span", { children: mode === 'builder' ? 'Exit Builder' : 'Builder Mode' })] })), canEdit && (_jsx(motion.button, { className: "p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200", onClick: onSpaceSettings, whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: _jsx(Settings, { className: "w-5 h-5" }) })), _jsx(motion.button, { className: "p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200", whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: _jsx(MoreHorizontal, { className: "w-5 h-5" }) })] })] }), builderOnboarding && isBuilder && (_jsxs(motion.div, { className: "mt-4 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl", initial: { opacity: 0, height: 0 }, animate: { opacity: 1, height: 'auto' }, transition: { delay: 0.3 }, children: [_jsxs("div", { className: "flex items-center justify-between mb-3", children: [_jsx("h3", { className: "text-sm font-medium text-yellow-400", children: "Builder Setup Progress" }), _jsxs("span", { className: "text-xs text-yellow-300", children: [builderOnboarding.step, " of ", builderOnboarding.total] })] }), _jsx("div", { className: "space-y-2", children: builderOnboarding.checklist.map((item, index) => (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("div", { className: cn("w-4 h-4 rounded-full border-2 flex items-center justify-center", item.completed
-                                                    ? "bg-green-500 border-green-500 text-[var(--hive-text-primary)]"
-                                                    : "border-yellow-500/50 text-yellow-400"), children: item.completed && _jsx("span", { className: "text-xs", children: "\u2713" }) }), _jsx("span", { className: item.completed ? "text-green-400" : "text-yellow-300", children: item.label })] }, index))) })] }))] }) }), _jsx("main", { className: "max-w-7xl mx-auto px-6 py-8", children: _jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-8", children: [_jsx("div", { className: "lg:col-span-8 space-y-8", children: activeSurfaces
-                                .filter(surface => ['pinned', 'posts', 'events'].includes(surface.type))
-                                .map((surface, index) => (_jsx(SurfaceContainer, { surface: surface, isCollapsed: collapsedSurfaces.has(surface.type), onToggle: () => handleSurfaceToggle(surface.type), onSettings: () => onSurfaceSettings?.(surface.type), canEdit: canEdit, builderMode: mode === 'builder', index: index, children: renderSurfaceContent(surface) }, surface.type))) }), _jsx("div", { className: "lg:col-span-4 space-y-6", children: activeSurfaces
-                                .filter(surface => ['tools', 'chat', 'members'].includes(surface.type))
-                                .map((surface, index) => (_jsx(SurfaceContainer, { surface: surface, isCollapsed: collapsedSurfaces.has(surface.type), onToggle: () => handleSurfaceToggle(surface.type), onSettings: () => onSurfaceSettings?.(surface.type), canEdit: canEdit, builderMode: mode === 'builder', index: index, compact: true, children: renderSurfaceContent(surface) }, surface.type))) })] }) }), _jsx(AnimatePresence, { children: showBuilderHints && mode === 'builder' && (_jsx(motion.div, { className: "fixed inset-0 bg-[var(--hive-background-primary)]/60 backdrop-blur-sm z-50 flex items-center justify-center p-6", initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, children: _jsx(motion.div, { className: "max-w-md bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-yellow-500/30 rounded-2xl p-6", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 }, children: _jsxs("div", { className: "text-center", children: [_jsx(Sparkles, { className: "w-12 h-12 text-yellow-400 mx-auto mb-4" }), _jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-2", children: "Builder Mode Active" }), _jsx("p", { className: "text-gray-400 mb-6", children: "You can now customize your Space by adding Tools, editing content, and organizing surfaces." }), _jsx(motion.button, { className: "px-4 py-2 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-xl hover:bg-yellow-500/30 transition-all duration-200", whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: "Got it!" })] }) }) })) })] }));
-});
+        else {
+            newSet.add(surfaceType);
+        }
+        return newSet;
+    });
+}, []);
+// Render surface content based on type
+const renderSurfaceContent = useCallback((surface) => {
+    switch (surface.type) {
+        case 'pinned':
+            return renderPinnedSurface?.() || (_jsx(HivePinnedSurface, { space: space, pinnedContent: pinnedContent, isBuilder: isBuilder, canEdit: canEdit, mode: mode }));
+        case 'posts':
+            return renderPostsSurface?.() || (_jsx(HivePostsSurface, { space: space, posts: posts, isBuilder: isBuilder, canPost: canCreateContent, canModerate: canModerate, mode: mode }));
+        case 'events':
+            return renderEventsSurface?.() || (_jsx(HiveEventsSurface, { space: space, events: events, isBuilder: isBuilder, canCreateEvents: canCreateContent, canModerate: canModerate, mode: mode }));
+        case 'tools':
+            return renderToolsSurface?.() || (_jsx(HiveToolsSurface, { space: space, tools: tools, isBuilder: isBuilder, canManageTools: canEdit, mode: mode, compact: true }));
+        case 'chat':
+            return renderChatSurface?.() || (_jsx(HiveChatSurface, { space: space, messages: messages, currentUserId: currentUserId, isBuilder: isBuilder, canSendMessages: canCreateContent, canModerate: canModerate, isLocked: chatIsLocked, mode: mode }));
+        case 'members':
+            return renderMembersSurface?.() || (_jsx(HiveMembersSurface, { space: space, members: members, currentUserId: currentUserId, isBuilder: isBuilder, canModerate: canModerate, mode: mode }));
+        default:
+            return null;
+    }
+}, [
+    space,
+    pinnedContent,
+    posts,
+    events,
+    tools,
+    messages,
+    members,
+    currentUserId,
+    isBuilder,
+    canEdit,
+    canCreateContent,
+    canModerate,
+    chatIsLocked,
+    mode,
+    renderPinnedSurface,
+    renderPostsSurface,
+    renderEventsSurface,
+    renderToolsSurface,
+    renderChatSurface,
+    renderMembersSurface
+]);
+return (_jsxs("div", { ref: ref, className: cn(hiveSpaceLayoutVariants({ mode, layout, className })), ...props, children: [_jsx(motion.header, { className: "sticky top-0 z-40 bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border-b border-white/10", initial: { opacity: 0, y: -20 }, animate: { opacity: 1, y: 0 }, transition: { duration: motionDurations.smooth }, children: _jsxs("div", { className: "max-w-7xl mx-auto px-6 py-4", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-4", children: [_jsx(motion.button, { className: "p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200", onClick: onBackToDirectory, whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: _jsx(ArrowLeft, { className: "w-5 h-5" }) }), _jsxs("div", { children: [_jsx("h1", { className: "text-xl font-bold text-[var(--hive-text-primary)]", children: space.name }), _jsxs("div", { className: "flex items-center gap-3 text-sm text-gray-400", children: [_jsxs("span", { children: [space.memberCount, " members"] }), _jsx("span", { children: "\u2022" }), _jsx("span", { className: "capitalize", children: space.tags?.[0]?.sub_type || space.tags?.[0]?.type }), isBuilder && (_jsxs(_Fragment, { children: [_jsx("span", { children: "\u2022" }), _jsxs("div", { className: "flex items-center gap-1 text-yellow-400", children: [_jsx(Crown, { className: "w-3 h-3" }), _jsx("span", { className: "font-medium", children: "Builder" })] })] }))] })] })] }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: "hidden md:flex items-center gap-1 bg-[var(--hive-background-primary)]/20 rounded-xl p-1 border border-white/10", children: activeSurfaces.map((surface) => {
+                                            const Icon = surface.config.icon;
+                                            const isCollapsed = collapsedSurfaces.has(surface.type);
+                                            return (_jsxs(motion.button, { className: cn("flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200", hoveredSurface === surface.type
+                                                    ? "bg-yellow-500/20 text-yellow-400"
+                                                    : isCollapsed
+                                                        ? "text-gray-500"
+                                                        : "text-gray-300 hover:text-[var(--hive-text-primary)] hover:bg-[var(--hive-text-primary)]/5"), onClick: () => handleSurfaceToggle(surface.type), onMouseEnter: () => setHoveredSurface(surface.type), onMouseLeave: () => setHoveredSurface(null), whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [_jsx(Icon, { className: cn("w-4 h-4", surface.config.color) }), _jsx("span", { className: "hidden lg:inline", children: surface.config.label }), surface.type === 'tools' && surface.toolCount && (_jsx("span", { className: "px-1.5 py-0.5 bg-purple-500/20 text-purple-400 rounded-full text-xs", children: surface.toolCount }))] }, surface.type));
+                                        }) }), canEdit && (_jsxs(motion.button, { className: cn("flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all duration-200", mode === 'builder'
+                                            ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+                                            : "bg-[var(--hive-background-primary)]/20 text-gray-400 border-white/10 hover:text-[var(--hive-text-primary)] hover:border-white/20"), onClick: onBuilderMode, whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: [_jsx(Wrench, { className: "w-4 h-4" }), _jsx("span", { children: mode === 'builder' ? 'Exit Builder' : 'Builder Mode' })] })), canEdit && (_jsx(motion.button, { className: "p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200", onClick: onSpaceSettings, whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: _jsx(Settings, { className: "w-5 h-5" }) })), _jsx(motion.button, { className: "p-2 text-gray-400 hover:text-[var(--hive-text-primary)] rounded-lg hover:bg-[var(--hive-text-primary)]/5 transition-all duration-200", whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 }, children: _jsx(MoreHorizontal, { className: "w-5 h-5" }) })] })] }), builderOnboarding && isBuilder && (_jsxs(motion.div, { className: "mt-4 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl", initial: { opacity: 0, height: 0 }, animate: { opacity: 1, height: 'auto' }, transition: { delay: 0.3 }, children: [_jsxs("div", { className: "flex items-center justify-between mb-3", children: [_jsx("h3", { className: "text-sm font-medium text-yellow-400", children: "Builder Setup Progress" }), _jsxs("span", { className: "text-xs text-yellow-300", children: [builderOnboarding.step, " of ", builderOnboarding.total] })] }), _jsx("div", { className: "space-y-2", children: builderOnboarding.checklist.map((item, index) => (_jsxs("div", { className: "flex items-center gap-2 text-sm", children: [_jsx("div", { className: cn("w-4 h-4 rounded-full border-2 flex items-center justify-center", item.completed
+                                                ? "bg-green-500 border-green-500 text-[var(--hive-text-primary)]"
+                                                : "border-yellow-500/50 text-yellow-400"), children: item.completed && _jsx("span", { className: "text-xs", children: "\u2713" }) }), _jsx("span", { className: item.completed ? "text-green-400" : "text-yellow-300", children: item.label })] }, index))) })] }))] }) }), _jsx("main", { className: "max-w-7xl mx-auto px-6 py-8", children: _jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-8", children: [_jsx("div", { className: "lg:col-span-8 space-y-8", children: activeSurfaces
+                            .filter(surface => ['pinned', 'posts', 'events'].includes(surface.type))
+                            .map((surface, index) => (_jsx(SurfaceContainer, { surface: surface, isCollapsed: collapsedSurfaces.has(surface.type), onToggle: () => handleSurfaceToggle(surface.type), onSettings: () => onSurfaceSettings?.(surface.type), canEdit: canEdit, builderMode: mode === 'builder', index: index, children: renderSurfaceContent(surface) }, surface.type))) }), _jsx("div", { className: "lg:col-span-4 space-y-6", children: activeSurfaces
+                            .filter(surface => ['tools', 'chat', 'members'].includes(surface.type))
+                            .map((surface, index) => (_jsx(SurfaceContainer, { surface: surface, isCollapsed: collapsedSurfaces.has(surface.type), onToggle: () => handleSurfaceToggle(surface.type), onSettings: () => onSurfaceSettings?.(surface.type), canEdit: canEdit, builderMode: mode === 'builder', index: index, compact: true, children: renderSurfaceContent(surface) }, surface.type))) })] }) }), _jsx(AnimatePresence, { children: showBuilderHints && mode === 'builder' && (_jsx(motion.div, { className: "fixed inset-0 bg-[var(--hive-background-primary)]/60 backdrop-blur-sm z-50 flex items-center justify-center p-6", initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, children: _jsx(motion.div, { className: "max-w-md bg-[var(--hive-background-primary)]/80 backdrop-blur-xl border border-yellow-500/30 rounded-2xl p-6", initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 }, children: _jsxs("div", { className: "text-center", children: [_jsx(Sparkles, { className: "w-12 h-12 text-yellow-400 mx-auto mb-4" }), _jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-2", children: "Builder Mode Active" }), _jsx("p", { className: "text-gray-400 mb-6", children: "You can now customize your Space by adding Tools, editing content, and organizing surfaces." }), _jsx(motion.button, { className: "px-4 py-2 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-xl hover:bg-yellow-500/30 transition-all duration-200", whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 }, children: "Got it!" })] }) }) })) })] }));
+;
 HiveSpaceLayout.displayName = "HiveSpaceLayout";
 const SurfaceContainer = ({ surface, isCollapsed, onToggle, onSettings, canEdit, builderMode, index, compact = false, children }) => {
     const Icon = surface.config.icon;

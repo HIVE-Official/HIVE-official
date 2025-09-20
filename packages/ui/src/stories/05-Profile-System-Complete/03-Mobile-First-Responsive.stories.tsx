@@ -232,7 +232,7 @@ function DeviceFrame({
 }: { 
   device: any; 
   children: React.ReactNode; 
-  scenario?: any;
+  scenario?: any
 }) {
   const frameStyle = {
     width: device.width + 32,
@@ -311,7 +311,7 @@ function DeviceFrame({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Performance Monitor
@@ -320,7 +320,7 @@ function PerformanceMonitor({
   scenario
 }: {
   device: any;
-  scenario: any;
+  scenario: any
 }) {
   const [metrics, setMetrics] = useState({
     loadTime: 0,
@@ -355,7 +355,7 @@ function PerformanceMonitor({
       networkLatency,
       memoryUsage,
       batteryImpact: device.type === 'mobile' ? 'medium' : 'low'
-    });
+    })
   }, [device, scenario]);
 
   const getMetricColor = (metric: string, value: any) => {
@@ -369,7 +369,7 @@ function PerformanceMonitor({
       case 'memoryUsage':
         return value < 30 ? 'text-green-500' : value < 50 ? 'text-yellow-500' : 'text-red-500';
       default:
-        return 'text-gray-500';
+        return 'text-gray-500'
     }
   };
 
@@ -443,7 +443,7 @@ function PerformanceMonitor({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Responsive Controls
@@ -464,7 +464,7 @@ function ResponsiveControls({
   customWidth: number;
   onCustomWidthChange: (width: number) => void;
   showPerformance: boolean;
-  onShowPerformanceChange: (show: boolean) => void;
+  onShowPerformanceChange: (show: boolean) => void
 }) {
   return (
     <Card className="mb-6">
@@ -498,8 +498,8 @@ function ResponsiveControls({
                     {device.width}×{device.height}
                   </span>
                 </Button>
-              );
-            })}
+              )
+            })
           </div>
         </div>
 
@@ -526,8 +526,8 @@ function ResponsiveControls({
                     <div className="text-xs text-gray-500">{scenario.description}</div>
                   </CardContent>
                 </Card>
-              );
-            })}
+              )
+            })
           </div>
         </div>
 
@@ -561,7 +561,7 @@ function ResponsiveControls({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Main Responsive Testing Component
@@ -750,7 +750,7 @@ export const MobileFirstResponsive: StoryObj = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

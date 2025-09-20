@@ -175,7 +175,7 @@ export const BottomNavWithNotifications: Story = {
 
 export const BottomNavMinimal: Story = {
   args: {
-    items: mockUBNavItems.slice(0, 3).map(item => ({ ...item, badge: undefined })),
+    items: mockUBNavItems.slice(0, 3).map(item => ({ ...item, badge: undefined })}),
     onNavigate: action('navigate-minimal')
   },
   parameters: {
@@ -203,7 +203,7 @@ export const MobileHeaderBasic: StoryObj<typeof UBMobileHeader> = {
         icon: Menu,
         label: 'Open menu',
         onPress: action('open-menu')
-      }}
+          }}
       rightActions={[
         {
           icon: Search,
@@ -240,7 +240,7 @@ export const MobileHeaderWithBack: StoryObj<typeof UBMobileHeader> = {
         icon: ArrowLeft,
         label: 'Go back',
         onPress: action('go-back')
-      }}
+          }}
       rightActions={[
         {
           icon: MoreHorizontal,
@@ -270,7 +270,7 @@ export const MobileHeaderCompose: StoryObj<typeof UBMobileHeader> = {
         icon: ArrowLeft,
         label: 'Cancel',
         onPress: action('cancel-compose')
-      }}
+          }}
       rightActions={[
         {
           icon: Plus,
@@ -430,12 +430,12 @@ export const SwipeCardDemo: StoryObj<typeof UBMobileSwipeCard> = {
     
     const handleSwipeLeft = (cardId: string) => {
       setCards(prev => prev.filter(card => card.id !== cardId));
-      action('swipe-left')(cardId);
+      action('swipe-left')(cardId)
     };
     
     const handleSwipeRight = (cardId: string) => {
       setCards(prev => prev.filter(card => card.id !== cardId));
-      action('swipe-right')(cardId);
+      action('swipe-right')(cardId)
     };
     
     return (
@@ -481,7 +481,7 @@ export const SwipeCardDemo: StoryObj<typeof UBMobileSwipeCard> = {
           ))
         )}
       </div>
-    );
+    )
   },
   parameters: {
     viewport: {
@@ -523,7 +523,7 @@ export const PullToRefreshDemo: StoryObj<typeof UBMobilePullToRefresh> = {
       ]);
       
       setIsRefreshing(false);
-      action('refresh-completed')();
+      action('refresh-completed')()
     };
     
     return (
@@ -554,7 +554,7 @@ export const PullToRefreshDemo: StoryObj<typeof UBMobilePullToRefresh> = {
           ))}
         </div>
       </UBMobilePullToRefresh>
-    );
+    )
   },
   parameters: {
     viewport: {
@@ -582,7 +582,7 @@ export const WalkingBetweenClassesScenario: Story = {
           icon: ArrowLeft,
           label: 'Back',
           onPress: action('scenario-back')
-        }}
+          }}
         rightActions={[
           {
             icon: Bell,
@@ -663,8 +663,8 @@ export const StudyBreakScenario: Story = {
       <UBMobilePullToRefresh
         onRefresh={async () => {
           await new Promise(resolve => setTimeout(resolve, 1500));
-          action('refresh-during-break')();
-        }}
+          action('refresh-during-break')()
+          }}
       >
         <UBMobileHeader
           title="Study Break"

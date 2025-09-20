@@ -98,7 +98,7 @@ interface HiveTooltipContentProps
   variant?: "default" | "glass" | "gold" | "success" | "warning" | "error" | "info" | "minimal" | "solid";
   size?: "sm" | "default" | "lg" | "xl";
   withArrow?: boolean;
-  animated?: boolean;
+  animated?: boolean
 }
 
 const HiveTooltipContent = React.forwardRef<
@@ -147,7 +147,7 @@ interface HiveMotionTooltipProps extends Omit<HiveTooltipContentProps, 'content'
   children: React.ReactNode;
   content: React.ReactNode;
   side?: "top" | "bottom" | "left" | "right";
-  delayDuration?: number;
+  delayDuration?: number
 }
 
 const HiveMotionTooltip = React.forwardRef<

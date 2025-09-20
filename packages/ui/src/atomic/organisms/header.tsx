@@ -15,12 +15,12 @@ export interface HeaderProps {
     label: string;
     href: string;
     active?: boolean;
-    badge?: number;
+    badge?: number
   }>;
   user?: {
     name: string;
     avatar?: string;
-    status?: 'online' | 'offline' | 'away' | 'busy';
+    status?: 'online' | 'offline' | 'away' | 'busy'
   };
   actions?: React.ReactNode;
   notifications?: number;
@@ -28,7 +28,7 @@ export interface HeaderProps {
   sticky?: boolean;
   className?: string;
   onUserClick?: () => void;
-  onNotificationsClick?: () => void;
+  onNotificationsClick?: () => void
 }
 
 const headerVariants = {
@@ -217,5 +217,5 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
       )}
     </header>
-  );
+  )
 };

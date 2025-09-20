@@ -13,7 +13,7 @@ interface WelcomeMatProps {
   /** User's name for personalization */
   userName?: string;
   /** Custom className for styling */
-  className?: string;
+  className?: string
 }
 
 export const WelcomeMat = ({
@@ -29,29 +29,29 @@ export const WelcomeMat = ({
     // Small delay to allow exit animation
     setTimeout(() => {
       onDismiss();
-      setIsAnimating(false);
-    }, 300);
+      setIsAnimating(false)
+    }, 300)
   };
 
   const handleExploreSpaces = () => {
-    window.location.href = "/spaces";
+    window.location.href = "/spaces"
   };
 
   const handleViewProfile = () => {
-    window.location.href = "/profile";
+    window.location.href = "/profile"
   };
 
   // Prevent body scroll when overlay is visible
   useEffect(() => {
     if (isVisible) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = "hidden"
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "unset"
     }
 
     return () => {
-      document.body.style.overflow = "unset";
-    };
+      document.body.style.overflow = "unset"
+    }
   }, [isVisible]);
 
   return (
@@ -177,7 +177,7 @@ export const WelcomeMat = ({
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 };
 
 // Hook for managing welcome mat state
@@ -191,25 +191,25 @@ export const useWelcomeMat = () => {
       try {
         const dismissed = localStorage.getItem("welcomeMatDismissed");
         const shouldShow = !dismissed;
-        setIsVisible(shouldShow);
+        setIsVisible(shouldShow)
       } catch (error) {
         console.warn("Failed to check welcome mat status:", error);
-        setIsVisible(false);
+        setIsVisible(false)
       } finally {
-        setHasCheckedStorage(true);
+        setHasCheckedStorage(true)
       }
     };
 
-    checkWelcomeMatStatus();
+    checkWelcomeMatStatus()
   }, []);
 
   const dismissWelcomeMat = () => {
     try {
       localStorage.setItem("welcomeMatDismissed", "true");
-      setIsVisible(false);
+      setIsVisible(false)
     } catch (error) {
       console.warn("Failed to save welcome mat dismissal:", error);
-      setIsVisible(false);
+      setIsVisible(false)
     }
   };
 
@@ -217,5 +217,5 @@ export const useWelcomeMat = () => {
     isVisible: hasCheckedStorage && isVisible,
     dismissWelcomeMat,
     hasCheckedStorage,
-  };
+  }
 };

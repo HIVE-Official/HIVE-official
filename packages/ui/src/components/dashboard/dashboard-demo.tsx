@@ -19,16 +19,16 @@ import { HiveDashboard } from './hive-dashboard';
 import { PersonalTools, mockPersonalToolsData } from './personal-tools';
 import { CalendarWidget, mockCalendarData } from './calendar-widget';
 import { ActivityTracker, mockActivityTrackerData } from './activity-tracker';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
 import { Button } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { Progress } from '../hive-progress';
 
 interface DashboardDemoProps {
   variant?: 'academic' | 'productivity' | 'social' | 'custom';
   editable?: boolean;
   showControls?: boolean;
-  className?: string;
+  className?: string
 }
 
 // Quick Stats Widget
@@ -58,7 +58,7 @@ function QuickStatsWidget() {
         </motion.div>
       ))}
     </div>
-  );
+  )
 }
 
 // Mini Calendar Widget
@@ -71,7 +71,7 @@ function MiniCalendarWidget() {
     <div className="p-4">
       <div className="text-center mb-4">
         <h3 className="font-semibold text-gray-900">
-          {today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          {today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }}
         </h3>
       </div>
       <div className="grid grid-cols-7 gap-1 text-xs">
@@ -106,11 +106,11 @@ function MiniCalendarWidget() {
                 <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full"></div>
               )}
             </div>
-          );
-        })}
+          )
+          })}
       </div>
     </div>
-  );
+  )
 }
 
 // Goals Progress Widget
@@ -139,7 +139,7 @@ function GoalsProgressWidget() {
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 // Recent Activity Widget
@@ -157,7 +157,7 @@ function RecentActivityWidget() {
       case 'tool': return 'bg-blue-100 text-blue-700';
       case 'social': return 'bg-green-100 text-green-700';
       case 'academic': return 'bg-orange-100 text-orange-700';
-      default: return 'bg-gray-100 text-gray-700';
+      default: return 'bg-gray-100 text-gray-700'
     }
   };
 
@@ -185,7 +185,7 @@ function RecentActivityWidget() {
         </motion.div>
       ))}
     </div>
-  );
+  )
 }
 
 export function DashboardDemo({
@@ -239,7 +239,7 @@ export function DashboardDemo({
           priority: 9,
           minSize: 'large'
         })
-      );
+      )
     } else if (currentVariant === 'productivity') {
       items.push(
         createGridItem('activity-tracker', 'Activity Tracker', <ActivityTracker data={mockActivityTrackerData} />, {
@@ -262,7 +262,7 @@ export function DashboardDemo({
           icon: <Target className="h-4 w-4" />,
           priority: 7
         })
-      );
+      )
     } else if (currentVariant === 'social') {
       items.push(
         createGridItem('calendar-widget', 'Calendar & Events', <CalendarWidget data={mockCalendarData} />, {
@@ -284,13 +284,13 @@ export function DashboardDemo({
           icon: <Users className="h-4 w-4" />,
           priority: 7
         })
-      );
+      )
     }
     
     return {
       ...baseLayout,
       items
-    };
+    }
   });
 
   const handleVariantChange = (newVariant: 'academic' | 'productivity' | 'social' | 'custom') => {
@@ -347,17 +347,17 @@ export function DashboardDemo({
           layout={layout}
           onLayoutChange={setLayout}
           onItemResize={(itemId, newSize) => {
-            console.log(`Item ${itemId} resized to ${newSize}`);
+            console.log(`Item ${itemId} resized to ${newSize}`)
           }}
           onItemRemove={(itemId) => {
-            console.log(`Item ${itemId} removed`);
+            console.log(`Item ${itemId} removed`)
           }}
           onItemAdd={() => {
-            console.log('Add new item requested');
+            console.log('Add new item requested')
           }}
           onItemConfigure={(itemId) => {
-            console.log(`Configure item ${itemId}`);
-          }}
+            console.log(`Configure item ${itemId}`)
+          })}
           editable={editable}
         />
       </motion.div>
@@ -385,7 +385,7 @@ export function DashboardDemo({
         </motion.div>
       )}
     </motion.div>
-  );
+  )
 }
 
 export default DashboardDemo;

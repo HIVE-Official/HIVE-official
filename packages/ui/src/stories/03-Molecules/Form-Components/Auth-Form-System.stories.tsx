@@ -100,13 +100,13 @@ export const LoginFormSystem: Story = {
       if (!email.endsWith('@buffalo.edu')) return 'Please use your UB email address (@buffalo.edu)';
       const emailRegex = /^[^\s@]+@buffalo\.edu$/;
       if (!emailRegex.test(email)) return 'Please enter a valid UB email address';
-      return '';
+      return ''
     };
 
     const validatePassword = (password: string) => {
       if (!password) return 'Password is required';
       if (password.length < 8) return 'Password must be at least 8 characters';
-      return '';
+      return ''
     };
 
     const handleInputChange = (field: string, value: string | boolean) => {
@@ -114,7 +114,7 @@ export const LoginFormSystem: Story = {
       
       // Clear errors on change
       if (errors[field]) {
-        setErrors(prev => ({ ...prev, [field]: '' }));
+        setErrors(prev => ({ ...prev, [field]: '' }))
       }
     };
 
@@ -133,8 +133,8 @@ export const LoginFormSystem: Story = {
         // Simulate API call
         setTimeout(() => {
           setIsLoading(false);
-          console.log('Login successful:', formData);
-        }, 2000);
+          console.log('Login successful:', formData)
+        }, 2000)
       }
     };
 
@@ -211,7 +211,7 @@ export const LoginFormSystem: Story = {
                 <Checkbox
                   id="remember"
                   checked={formData.rememberMe}
-                  onCheckedChange={(checked) => handleInputChange('rememberMe', checked as boolean)}
+                  onChange={(e) => { const checked = e.target.checked; handleInputChange('rememberMe', checked as boolean)}
                   disabled={isLoading}
                 />
                 <Label htmlFor="remember" className="text-sm text-gray-600">
@@ -262,7 +262,7 @@ export const LoginFormSystem: Story = {
           </CardContent>
         </Card>
       </div>
-    );
+    )
   }
 };
 
@@ -293,7 +293,7 @@ export const RegistrationFormSystem: Story = {
       if (!formData.password) newErrors.password = 'Password is required';
       else if (formData.password.length < 8) newErrors.password = 'Must be at least 8 characters';
       if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords must match';
-      return newErrors;
+      return newErrors
     };
 
     const validateStep2 = () => {
@@ -302,14 +302,14 @@ export const RegistrationFormSystem: Story = {
       if (!formData.lastName) newErrors.lastName = 'Last name is required';
       if (!formData.major) newErrors.major = 'Please select your major';
       if (!formData.academicYear) newErrors.academicYear = 'Please select your academic year';
-      return newErrors;
+      return newErrors
     };
 
     const validateStep3 = () => {
       const newErrors: Record<string, string> = {};
       if (!formData.dorm) newErrors.dorm = 'Please select your housing situation';
       if (!formData.agreeToTerms) newErrors.agreeToTerms = 'You must agree to the terms';
-      return newErrors;
+      return newErrors
     };
 
     const handleNext = () => {
@@ -323,9 +323,9 @@ export const RegistrationFormSystem: Story = {
       
       if (Object.keys(newErrors).length === 0) {
         if (currentStep < totalSteps) {
-          setCurrentStep(currentStep + 1);
+          setCurrentStep(currentStep + 1)
         } else {
-          handleSubmit();
+          handleSubmit()
         }
       }
     };
@@ -335,14 +335,14 @@ export const RegistrationFormSystem: Story = {
       // Simulate API call
       setTimeout(() => {
         setIsLoading(false);
-        console.log('Registration successful:', formData);
-      }, 2000);
+        console.log('Registration successful:', formData)
+      }, 2000)
     };
 
     const handleInputChange = (field: string, value: string | boolean) => {
       setFormData(prev => ({ ...prev, [field]: value }));
       if (errors[field]) {
-        setErrors(prev => ({ ...prev, [field]: '' }));
+        setErrors(prev => ({ ...prev, [field]: '' }))
       }
     };
 
@@ -577,7 +577,7 @@ export const RegistrationFormSystem: Story = {
                     <Checkbox
                       id="terms"
                       checked={formData.agreeToTerms}
-                      onCheckedChange={(checked) => handleInputChange('agreeToTerms', checked as boolean)}
+                      onChange={(e) => { const checked = e.target.checked; handleInputChange('agreeToTerms', checked as boolean)}
                     />
                     <Label htmlFor="terms" className="text-sm text-gray-600 leading-relaxed">
                       I agree to the HIVE Terms of Service and Privacy Policy. I understand this platform is for University at Buffalo students only.
@@ -629,7 +629,7 @@ export const RegistrationFormSystem: Story = {
           </CardContent>
         </Card>
       </div>
-    );
+    )
   }
 };
 
@@ -646,12 +646,12 @@ export const PasswordRecoveryForm: Story = {
       
       if (!email) {
         setError('Email is required');
-        return;
+        return
       }
       
       if (!email.endsWith('@buffalo.edu')) {
         setError('Please use your UB email address');
-        return;
+        return
       }
       
       setIsLoading(true);
@@ -660,8 +660,8 @@ export const PasswordRecoveryForm: Story = {
       // Simulate API call
       setTimeout(() => {
         setIsLoading(false);
-        setIsSubmitted(true);
-      }, 2000);
+        setIsSubmitted(true)
+      }, 2000)
     };
 
     if (isSubmitted) {
@@ -686,7 +686,7 @@ export const PasswordRecoveryForm: Story = {
                 variant="outline" 
                 onClick={() => {
                   setIsSubmitted(false);
-                  setEmail('');
+                  setEmail('')
                 }}
                 className="w-full"
               >
@@ -695,7 +695,7 @@ export const PasswordRecoveryForm: Story = {
             </CardContent>
           </Card>
         </div>
-      );
+      )
     }
 
     return (
@@ -719,7 +719,7 @@ export const PasswordRecoveryForm: Story = {
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      setError('');
+                      setError('')
                     }}
                     className={`pl-10 ${error ? 'border-red-500' : ''}`}
                     disabled={isLoading}
@@ -761,6 +761,6 @@ export const PasswordRecoveryForm: Story = {
           </CardContent>
         </Card>
       </div>
-    );
+    )
   }
 };

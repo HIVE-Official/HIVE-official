@@ -114,7 +114,7 @@ export interface CategoryGridOrganismProps {
   /** Loading state */
   isLoading?: boolean;
   /** Custom className */
-  className?: string;
+  className?: string
 }
 
 export function CategoryGridOrganism({
@@ -131,7 +131,7 @@ export function CategoryGridOrganism({
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   const handleCategoryClick = (categoryId: string) => {
-    onCategoryClick?.(categoryId);
+    onCategoryClick?.(categoryId)
   };
 
   const getGridCols = () => {
@@ -141,7 +141,7 @@ export function CategoryGridOrganism({
       case "featured":
         return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
       default:
-        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
+        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
     }
   };
 
@@ -152,7 +152,7 @@ export function CategoryGridOrganism({
       case "featured":
         return "p-8";
       default:
-        return "p-6";
+        return "p-6"
     }
   };
 
@@ -173,7 +173,7 @@ export function CategoryGridOrganism({
           ))}
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -237,9 +237,9 @@ export function CategoryGridOrganism({
                 </div>
               </div>
             </HiveCard>
-          );
-        })}
+          )
+          })}
       </div>
     </div>
-  );
+  )
 }

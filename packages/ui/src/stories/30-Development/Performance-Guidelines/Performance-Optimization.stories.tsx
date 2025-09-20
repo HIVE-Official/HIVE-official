@@ -147,23 +147,23 @@ const usePerformanceMonitoring = () => {
         apiCalls: prev.apiCalls + Math.floor(Math.random() * 3),
         imageLoaded: prev.imageLoaded + Math.floor(Math.random() * 2),
         cacheHits: prev.cacheHits + Math.floor(Math.random() * 4)
-      }));
-    }, 1000);
+      }))
+    }, 1000)
   }, []);
 
   const stopMonitoring = useCallback(() => {
     setIsMonitoring(false);
     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+      clearInterval(intervalRef.current)
     }
   }, []);
 
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+        clearInterval(intervalRef.current)
       }
-    };
+    }
   }, []);
 
   const resetMetrics = useCallback(() => {
@@ -179,7 +179,7 @@ const usePerformanceMonitoring = () => {
       apiCalls: 0,
       imageLoaded: 0,
       cacheHits: 0
-    });
+    })
   }, []);
 
   return {
@@ -188,7 +188,7 @@ const usePerformanceMonitoring = () => {
     startMonitoring,
     stopMonitoring,
     resetMetrics
-  };
+  }
 };
 
 // Memoized Heavy Component
@@ -199,7 +199,7 @@ const HeavyComponent = memo(({
 }: { 
   data: any[]; 
   onAction: (id: string) => void;
-  theme?: string;
+  theme?: string
 }) => {
   console.log('HeavyComponent render'); // For demo purposes
   
@@ -211,11 +211,11 @@ const HeavyComponent = memo(({
       processed: true,
       hash: Math.random().toString(36).substr(2, 9),
       timestamp: Date.now()
-    }));
+    })})
   }, [data]);
 
   const handleClick = useCallback((id: string) => {
-    onAction(id);
+    onAction(id)
   }, [onAction]);
 
   return (
@@ -248,7 +248,7 @@ const HeavyComponent = memo(({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 });
 
 HeavyComponent.displayName = 'HeavyComponent';
@@ -285,7 +285,7 @@ const VirtualScrollDemo = () => {
   const offsetY = visibleStart * itemHeight;
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    setScrollTop(e.currentTarget.scrollTop);
+    setScrollTop(e.currentTarget.scrollTop)
   };
 
   const renderVirtualized = () => (
@@ -428,7 +428,7 @@ const VirtualScrollDemo = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Lazy Loading Demo
@@ -458,8 +458,8 @@ const LazyLoadDemo = () => {
               </CardContent>
             </Card>
           )
-        });
-      }, 1000);
+        })
+      }, 1000)
     })
   );
 
@@ -480,8 +480,8 @@ const LazyLoadDemo = () => {
               </CardContent>
             </Card>
           )
-        });
-      }, 1500);
+        })
+      }, 1500)
     })
   );
 
@@ -492,8 +492,8 @@ const LazyLoadDemo = () => {
     
     setTimeout(() => {
       setLoadedComponents(prev => new Set([...prev, componentName]));
-      setIsLoading(prev => ({ ...prev, [componentName]: false }));
-    }, Math.random() * 1000 + 500);
+      setIsLoading(prev => ({ ...prev, [componentName]: false }))
+    }, Math.random() * 1000 + 500)
   };
 
   const mockUser = { name: 'Sarah Johnson', major: 'Computer Science' };
@@ -590,7 +590,7 @@ const LazyLoadDemo = () => {
         </Alert>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Core Web Vitals Monitor
@@ -609,14 +609,14 @@ const CoreWebVitalsMonitor = ({ metrics }: { metrics: any }) => {
 
     if (value <= threshold.good) return 'text-green-400';
     if (value <= threshold.poor) return 'text-yellow-400';
-    return 'text-red-400';
+    return 'text-red-400'
   };
 
   const formatMetric = (metric: string, value: number) => {
     if (metric === 'cls') return value.toFixed(3);
     if (metric.includes('memory')) return `${value.toFixed(1)}MB`;
     if (metric.includes('size')) return `${value.toFixed(0)}KB`;
-    return `${value.toFixed(0)}ms`;
+    return `${value.toFixed(0)}ms`
   };
 
   const webVitals = [
@@ -640,7 +640,7 @@ const CoreWebVitalsMonitor = ({ metrics }: { metrics: any }) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {webVitals.map(({ key, name, value, icon: Icon }) => (
+          {webVitals.map(({ key, name, value, icon: Icon })} => (
             <div key={key} className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Icon className="h-4 w-4 text-gray-400" />
@@ -667,7 +667,7 @@ const CoreWebVitalsMonitor = ({ metrics }: { metrics: any }) => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Performance Controls
@@ -680,7 +680,7 @@ const PerformanceControls = ({
   onStartMonitoring: () => void;
   onStopMonitoring: () => void;
   onReset: () => void;
-  isMonitoring: boolean;
+  isMonitoring: boolean
 }) => (
   <Card className="bg-gray-900 border-gray-800">
     <CardHeader>
@@ -793,7 +793,7 @@ const PerformanceOptimizationSystem = () => {
   );
 
   const handleAction = useCallback((id: string) => {
-    console.log('Action triggered for:', id);
+    console.log('Action triggered for:', id)
   }, []);
 
   const addTestData = () => {
@@ -804,7 +804,7 @@ const PerformanceOptimizationSystem = () => {
         name: `New Item ${prev.length + 1}`,
         description: `Dynamic item ${prev.length + 1}`
       }
-    ]);
+    ])
   };
 
   return (
@@ -898,7 +898,7 @@ const PerformanceOptimizationSystem = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Story Exports
@@ -949,14 +949,14 @@ export const CoreWebVitals: Story = {
     
     useEffect(() => {
       performance.startMonitoring();
-      return () => performance.stopMonitoring();
+      return () => performance.stopMonitoring()
     }, []);
     
     return (
       <div className="max-w-2xl mx-auto p-6">
         <CoreWebVitalsMonitor metrics={performance.metrics} />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

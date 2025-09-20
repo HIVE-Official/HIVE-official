@@ -312,7 +312,7 @@ const InputVariantsShowcase = () => {
   const [focusedInput, setFocusedInput] = useState<string | null>(null);
 
   const handleInputChange = (id: string, value: string) => {
-    setInputValues(prev => ({ ...prev, [id]: value }));
+    setInputValues(prev => ({ ...prev, [id]: value }))
   };
 
   return (
@@ -372,15 +372,15 @@ const InputVariantsShowcase = () => {
                         </div>
                       )}
                     </div>
-                  );
-                })}
+                  )
+                })
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const InputSizesShowcase = () => {
@@ -437,7 +437,7 @@ const InputSizesShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const ValidationShowcase = () => {
@@ -448,7 +448,7 @@ const ValidationShowcase = () => {
     if (!validator || !value) return null;
     
     const regex = new RegExp(validator.pattern);
-    return regex.test(value);
+    return regex.test(value)
   };
 
   return (
@@ -529,7 +529,7 @@ const ValidationShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const AccessibilityShowcase = () => {
@@ -664,7 +664,7 @@ const AccessibilityShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -791,7 +791,7 @@ const InputEnhancedShowcase = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

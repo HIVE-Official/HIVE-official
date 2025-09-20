@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { HiveLogo } from './hive-brand';
+import { HiveLogo } from '../../atomic/atoms/hive-brand';
 import { 
   User, 
   Grid3X3, 
@@ -18,14 +18,14 @@ import {
 
 export interface HiveIconProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  className?: string;
+  className?: string
 }
 
 export interface PlatformIconProps {
   icon: keyof typeof PlatformIcons;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
-  color?: string;
+  color?: string
 }
 
 // Map platform icon sizes to HiveLogo sizes
@@ -37,7 +37,7 @@ const mapSizeToHiveLogo = (size: string) => {
     lg: 'lg',
     xl: 'xl'
   } as const;
-  return sizeMap[size as keyof typeof sizeMap] || 'default';
+  return sizeMap[size as keyof typeof sizeMap] || 'default'
 };
 
 // HIVE Logo Component using the unified HiveLogo component
@@ -49,7 +49,7 @@ export const HiveIcon: React.FC<HiveIconProps> = ({ size = 'md', className }) =>
       variant="solid"
       className={className}
     />
-  );
+  )
 };
 
 // Platform icons using consistent Lucide icons
@@ -78,7 +78,7 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({
   const IconComponent = PlatformIcons[icon];
   
   if (icon === 'Hive') {
-    return <HiveIcon size={size} className={className} />;
+    return <HiveIcon size={size} className={className} />
   }
   
   const iconSizes = {
@@ -96,5 +96,5 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({
       color={color}
       {...props}
     />
-  );
+  )
 };

@@ -13,7 +13,7 @@ interface PlantNewToolButtonProps {
   variant?: 'default' | 'compact' | 'floating';
   className?: string;
   disabled?: boolean;
-  showLabel?: boolean;
+  showLabel?: boolean
 }
 
 export function PlantNewToolButton({ 
@@ -29,14 +29,14 @@ export function PlantNewToolButton({
 
   const handleClick = () => {
     if (!disabled) {
-      setShowLibrary(true);
+      setShowLibrary(true)
     }
   };
 
   const handleToolInstall = async (elementId: string, configuration?: any) => {
     try {
       await onToolInstall?.(elementId, configuration);
-      setShowLibrary(false);
+      setShowLibrary(false)
     } catch (error) {
       console.error('Failed to install tool:', error);
       // Keep modal open on error
@@ -107,7 +107,7 @@ export function PlantNewToolButton({
               <Sparkles className="w-3 h-3 opacity-70 group-hover:opacity-100 transition-opacity" />
             </div>
           </HiveButton>
-        );
+        )
     }
   };
 
@@ -123,7 +123,7 @@ export function PlantNewToolButton({
         triggerRef={buttonRef}
       />
     </>
-  );
+  )
 }
 
 export default PlantNewToolButton;

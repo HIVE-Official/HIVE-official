@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import { Text } from '../../components/ui/typography';
-import { PlatformIcons } from '../../components/ui/platform-icons';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Text } from '../../atomic/atoms/text';
+import { PlatformIcons } from '../../atomic/atoms/platform-icons';
 import { cn } from '../../lib/utils';
 import { 
   Plus,
@@ -36,7 +36,7 @@ export interface UBToolTemplate {
   complexity: 'simple' | 'medium' | 'advanced';
   campusUseCase: string;
   expectedUsers: number;
-  buildTime: string;
+  buildTime: string
 }
 
 export const UB_TOOL_TEMPLATES: UBToolTemplate[] = [
@@ -116,7 +116,7 @@ interface SimpleToolBuilderProps {
   selectedTemplate?: UBToolTemplate;
   onTemplateSelect?: (template: UBToolTemplate) => void;
   onBuildTool?: (template: UBToolTemplate, config: ToolBuildConfig) => void;
-  className?: string;
+  className?: string
 }
 
 export interface ToolBuildConfig {
@@ -124,7 +124,7 @@ export interface ToolBuildConfig {
   description: string;
   targetSpace?: string;
   isPublic: boolean;
-  settings: Record<string, any>;
+  settings: Record<string, any>
 }
 
 export function SimpleToolBuilder({ 
@@ -150,7 +150,7 @@ export function SimpleToolBuilder({
         toolName: selectedTemplate.name,
         description: selectedTemplate.description
       }));
-      setActiveStep('configure');
+      setActiveStep('configure')
     }
   }, [selectedTemplate]);
   
@@ -160,7 +160,7 @@ export function SimpleToolBuilder({
       <div className="text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Zap className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
-          <Text variant="h1" weight="bold">
+          <Text variant="display-lg" weight="bold">
             UB Campus Tool Builder
           </Text>
         </div>
@@ -202,7 +202,7 @@ export function SimpleToolBuilder({
           templates={UB_TOOL_TEMPLATES}
           onSelectTemplate={(template) => {
             onTemplateSelect?.(template);
-            setActiveStep('configure');
+            setActiveStep('configure')
           }}
         />
       )}
@@ -228,7 +228,7 @@ export function SimpleToolBuilder({
         />
       )}
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -237,20 +237,20 @@ export function SimpleToolBuilder({
 
 interface ToolTemplateSelectionProps {
   templates: UBToolTemplate[];
-  onSelectTemplate: (template: UBToolTemplate) => void;
+  onSelectTemplate: (template: UBToolTemplate) => void
 }
 
 export function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTemplateSelectionProps) {
   const categorizedTemplates = templates.reduce((acc, template) => {
     if (!acc[template.category]) acc[template.category] = [];
     acc[template.category].push(template);
-    return acc;
+    return acc
   }, {} as Record<string, UBToolTemplate[]>);
   
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <Text variant="h2" weight="semibold" className="mb-2">
+        <Text variant="heading-lg" weight="semibold" className="mb-2">
           Choose Your Tool Template
         </Text>
         <Text variant="body-md" color="secondary">
@@ -260,7 +260,7 @@ export function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTempl
       
       {Object.entries(categorizedTemplates).map(([category, categoryTemplates]) => (
         <div key={category}>
-          <Text variant="h3" weight="semibold" className="mb-4 capitalize">
+          <Text variant="heading-md" weight="semibold" className="mb-4 capitalize">
             {category.replace('-', ' ')} Tools
           </Text>
           
@@ -276,7 +276,7 @@ export function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTempl
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -285,7 +285,7 @@ export function ToolTemplateSelection({ templates, onSelectTemplate }: ToolTempl
 
 interface ToolTemplateCardProps {
   template: UBToolTemplate;
-  onSelect: () => void;
+  onSelect: () => void
 }
 
 function ToolTemplateCard({ template, onSelect }: ToolTemplateCardProps) {
@@ -344,7 +344,7 @@ function ToolTemplateCard({ template, onSelect }: ToolTemplateCardProps) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // =============================================================================
@@ -356,7 +356,7 @@ interface ToolConfigurationProps {
   config: ToolBuildConfig;
   onConfigChange: (config: ToolBuildConfig) => void;
   onNext: () => void;
-  onBack: () => void;
+  onBack: () => void
 }
 
 export function ToolConfiguration({ 
@@ -383,7 +383,7 @@ export function ToolConfiguration({
           <input
             type="text"
             value={config.toolName}
-            onChange={(e) => onConfigChange({ ...config, toolName: e.target.value })}
+            onChange={(e) => onConfigChange({ ...config, toolName: e.target.value }}
             placeholder="Enter a name for your tool..."
             className="w-full p-3 border border-[var(--hive-border-default)] rounded-lg bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)]"
           />
@@ -395,7 +395,7 @@ export function ToolConfiguration({
           </Text>
           <textarea
             value={config.description}
-            onChange={(e) => onConfigChange({ ...config, description: e.target.value })}
+            onChange={(e) => onConfigChange({ ...config, description: e.target.value }}
             placeholder="Describe how your UB community will use this tool..."
             className="w-full p-3 border border-[var(--hive-border-default)] rounded-lg bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)]"
             rows={3}
@@ -408,7 +408,7 @@ export function ToolConfiguration({
           </Text>
           <select
             value={config.targetSpace}
-            onChange={(e) => onConfigChange({ ...config, targetSpace: e.target.value })}
+            onChange={(e) => onConfigChange({ ...config, targetSpace: e.target.value }}
             className="w-full p-3 border border-[var(--hive-border-default)] rounded-lg bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)]"
           >
             <option value="">Available to all spaces</option>
@@ -424,7 +424,7 @@ export function ToolConfiguration({
             type="checkbox"
             id="isPublic"
             checked={config.isPublic}
-            onChange={(e) => onConfigChange({ ...config, isPublic: e.target.checked })}
+            onChange={(e) => onConfigChange({ ...config, isPublic: e.target.checked }}
             className="rounded border-[var(--hive-border-default)]"
           />
           <label htmlFor="isPublic">
@@ -448,7 +448,7 @@ export function ToolConfiguration({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // =============================================================================
@@ -459,7 +459,7 @@ interface ToolPreviewProps {
   template: UBToolTemplate;
   config: ToolBuildConfig;
   onBuild: () => void;
-  onBack: () => void;
+  onBack: () => void
 }
 
 export function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewProps) {
@@ -482,7 +482,7 @@ export function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewPr
                 <IconComponent className="h-6 w-6 text-[var(--hive-brand-secondary)]" />
               </div>
               <div>
-                <Text variant="h3" weight="semibold">
+                <Text variant="heading-md" weight="semibold">
                   {config.toolName}
                 </Text>
                 <Text variant="body-sm" color="secondary">
@@ -541,5 +541,5 @@ export function ToolPreview({ template, config, onBuild, onBack }: ToolPreviewPr
         </div>
       </div>
     </div>
-  );
+  )
 }

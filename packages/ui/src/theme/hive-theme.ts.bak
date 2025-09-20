@@ -1,0 +1,214 @@
+/**
+ * HIVE Design System Theme Configuration
+ * Single source of truth for all design tokens
+ * 
+ * Brand Colors: Gold (var(--hive-gold)), Black (var(--hive-black)), White (#FFFFFF)
+ */
+
+export const hiveTheme: Record<string, unknown> = {
+  // ===========================
+  // CORE BRAND IDENTITY
+  // =========================== brand: {
+    primary: 'var(--hive-gold)',    // Gold - Main brand color  black: 'var(--hive-black)',      // Pure Black white: '#FFFFFF',      // Pure White
+  }
+
+  // ===========================
+  // COLOR PALETTE
+  // =========================== colors: {
+    // Gold variations (derived from primary) gold: {
+      DEFAULT: 'var(--hive-gold)',
+      light: '#FFDF33',    // Hover states  dark: '#E6C200',     // Active/pressed states  muted: '#CCB000',    // Subtle elements
+  50: '#FFFEF5',
+      100: '#FFF9E6',
+      200: '#FFED99',
+      300: '#FFDF33',
+      400: 'var(--hive-gold)',     // Primary
+  500: '#E6C200',
+      600: '#CCB000',
+      700: '#B39900',
+      800: '#998300',
+      900: '#806D00',
+    }
+
+    // Grayscale (black to white) gray: {
+      950: 'var(--hive-background-primary)',      // Near black  900: '#141414',      // Very dark gray  800: '#1F1F1F',      // Dark gray  700: '#2E2E2E',      // Medium dark gray  600: '#404040',      // Medium gray  500: '#5C5C5C',      // True medium gray  400: '#787878',      // Medium light gray  300: '#A3A3A3',      // Light gray  200: '#D4D4D4',      // Very light gray  100: '#E5E5E5',      // Near white
+  50: '#F5F5F5',       // Off white
+    }
+
+    // Status colors (semantic) status: {
+      success: '#10B981',  // Emerald  warning: 'var(--hive-gold)',  // Use gold for warnings  error: '#EF4444',    // Red info: '#3B82F6',     // Blue
+    }
+  }
+
+  // ===========================
+  // SEMANTIC TOKENS
+  // =========================== semantic: {
+    // Backgrounds background: {
+      primary: 'var(--hive-black)',           // Main background  secondary: 'var(--hive-background-primary)',         // Slightly elevated  tertiary: '#141414',          // More elevated  elevated: '#1F1F1F',          // Cards, modals  overlay: 'rgba(0, 0, 0, 0.8)', // Overlays  interactive: '#1F1F1F',       // Interactive elements  hover: 'rgba(var(--hive-gold-rgb), 0.05)', // Hover state  active: 'rgba(var(--hive-gold-rgb), 0.1)',  // Active state  disabled: '#2E2E2E',          // Disabled elements inverse: '#FFFFFF',           // Inverted (light mode)
+    }
+
+    // Text text: {
+      primary: '#FFFFFF',           // Primary text  secondary: '#D4D4D4',         // Secondary text  tertiary: '#A3A3A3',          // Tertiary text  muted: '#787878',             // Muted text  placeholder: '#5C5C5C',       // Placeholders  disabled: '#404040',          // Disabled text  inverse: 'var(--hive-black)',           // Inverted text accent: 'var(--hive-gold)',            // Accent text (gold)
+      'accent-hover': '#FFDF33',    // Accent hover
+    }
+
+    // Borders border: {
+      default: 'rgba(255, 255, 255, 0.1)',
+      subtle: 'rgba(255, 255, 255, 0.05)',
+      strong: 'rgba(255, 255, 255, 0.2)',
+      hover: 'rgba(var(--hive-gold-rgb), 0.3)',
+      focus: 'var(--hive-gold)',
+      active: 'var(--hive-gold)',
+      disabled: '#2E2E2E',
+      error: '#EF4444',
+      success: '#10B981',
+      gold: 'rgba(var(--hive-gold-rgb), 0.3)',
+      'gold-strong': 'rgba(var(--hive-gold-rgb), 0.5)',
+      'gold-subtle': 'rgba(var(--hive-gold-rgb), 0.15)',
+    }
+
+    // Interactive states interactive: {
+      default: '#2E2E2E',
+      hover: 'rgba(var(--hive-gold-rgb), 0.1)',
+      focus: 'var(--hive-gold)',
+      active: 'rgba(var(--hive-gold-rgb), 0.15)',
+      disabled: '#404040',
+    }
+  }
+
+  // ===========================
+  // SHADOWS
+  // =========================== shadows: {
+    xs: '0 1px 2px rgba(0, 0, 0, 0.5)',
+    sm: '0 2px 4px rgba(0, 0, 0, 0.5)',
+    md: '0 4px 8px rgba(0, 0, 0, 0.5)',
+    lg: '0 8px 16px rgba(0, 0, 0, 0.5)',
+    xl: '0 12px 24px rgba(0, 0, 0, 0.6)',
+    '2xl': '0 24px 48px rgba(0, 0, 0, 0.7)',
+    gold: '0 0 20px rgba(var(--hive-gold-rgb), 0.3)',
+    'gold-strong': '0 0 40px rgba(var(--hive-gold-rgb), 0.4)',
+    focus: '0 0 0 2px var(--hive-gold)',
+    hover: '0 8px 24px rgba(0, 0, 0, 0.4)',
+    active: '0 4px 12px rgba(0, 0, 0, 0.5)',
+  }
+
+  // ===========================
+  // SPACING
+  // =========================== spacing: {
+    0: '0',
+    1: '0.25rem',    // 4px  2: '0.5rem',     // 8px  3: '0.75rem',    // 12px  4: '1rem',       // 16px  5: '1.25rem',    // 20px  6: '1.5rem',     // 24px  8: '2rem',       // 32px  10: '2.5rem',    // 40px  12: '3rem',      // 48px  16: '4rem',      // 64px  20: '5rem',      // 80px
+  24: '6rem',      // 96px
+  }
+
+  // ===========================
+  // TYPOGRAPHY
+  // =========================== typography: {
+    fonts: {
+      sans: '-apple-system, BlinkMacSystemFont, "Inter", "SF Pro Display", system-ui, sans-serif',
+      mono: '"SF Mono", "Monaco", "Inconsolata", "Fira Code", monospace',
+    }
+    sizes: {
+      xs: '0.75rem',   // 12px  sm: '0.875rem',  // 14px  base: '1rem',    // 16px  lg: '1.125rem',  // 18px xl: '1.25rem',   // 20px
+      '2xl': '1.5rem', // 24px
+      '3xl': '1.875rem', // 30px
+      '4xl': '2.25rem',  // 36px
+      '5xl': '3rem',     // 48px
+    }
+    weights: {
+      light: 300,
+      normal: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+      black: 900,
+    }
+    lineHeights: {
+      none: 1,
+      tight: 1.25,
+      snug: 1.375,
+      normal: 1.5,
+      relaxed: 1.625,
+      loose: 2,
+    }
+  }
+
+  // ===========================
+  // BORDERS & RADIUS
+  // =========================== borders: {
+    radius: {
+      none: '0',
+      sm: '0.125rem',    // 2px  default: '0.25rem', // 4px  md: '0.375rem',    // 6px  lg: '0.5rem',      // 8px xl: '0.75rem',     // 12px
+      '2xl': '1rem',     // 16px
+      '3xl': '1.5rem',   // 24px full: '9999px'    }
+  }
+
+  // ===========================
+  // ANIMATIONS
+  // =========================== animations: {
+    durations: {
+      instant: '0ms',
+      fast: '150ms',
+      normal: '250ms',
+      slow: '350ms',
+      slower: '500ms',
+    }
+    easings: {
+      default: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      in: 'cubic-bezier(0.4, 0, 1, 1)',
+      out: 'cubic-bezier(0, 0, 0.2, 1)',
+      inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    }
+  }
+
+  // ===========================
+  // Z-INDEX
+  // =========================== zIndex: {
+    base: 0,
+    dropdown: 10,
+    sticky: 20,
+    overlay: 30,
+    modal: 40,
+    popover: 50,
+    tooltip: 60,
+    notification: 70,
+    max: 9999,
+  }
+} as const;
+
+// Type exports for TypeScript
+export type HiveTheme = typeof hiveTheme;
+export type HiveColors = typeof hiveTheme.colors;
+export type HiveSemantic = typeof hiveTheme.semantic;
+export type HiveSpacing = typeof hiveTheme.spacing;
+export type HiveTypography = typeof hiveTheme.typography;
+export type HiveShadows = typeof hiveTheme.shadows;
+
+// Helper function to get CSS variables
+export function getCSSVariable(path: string): string {
+  return `var(--hive-${path.replace(/\./g, '-')})`;
+}
+
+// Helper function to apply theme to CSS variables
+export function applyThemeToRoot(theme: HiveTheme = hiveTheme): void {
+  const root = document.documentElement;
+  
+  // Apply brand colors
+  root.style.setProperty('--hive-gold', theme.brand.primary);
+  root.style.setProperty('--hive-black', theme.brand.black);
+  root.style.setProperty('--hive-white', theme.brand.white);
+  
+  // Apply all semantic tokens
+  Object.entries(theme.semantic).forEach(([category, values]) => {
+    Object.entries(values).forEach(([key, value]) => {
+      root.style.setProperty(`--hive-${category}-${key}`, value as string);
+    });
+  });
+  
+  // Apply shadows
+  Object.entries(theme.shadows).forEach(([key, value]) => {
+    root.style.setProperty(`--hive-shadow-${key}`, value);
+  });
+}
+
+// Export default theme
+export default hiveTheme;

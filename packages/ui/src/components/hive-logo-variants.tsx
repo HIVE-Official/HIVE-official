@@ -53,7 +53,7 @@ const hiveLogoVariants = cva(
 export interface HiveLogoVariantProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>,
     VariantProps<typeof hiveLogoVariants> {
-  animated?: boolean;
+  animated?: boolean
 }
 
 // Base hexagon path data from the official HIVE logo
@@ -71,7 +71,7 @@ export const HiveLogoAnimated = ({ variant = "primary", size = "md", className, 
         stiffness: 260,
         damping: 20,
         duration: 0.8 
-      }}
+          }}
       whileHover={{ scale: 1.1, rotate: 5 }}
       whileTap={{ scale: 0.95 }}
       {...getMotionProps(props)}
@@ -86,7 +86,7 @@ export const HiveLogoAnimated = ({ variant = "primary", size = "md", className, 
         />
       </svg>
     </motion.div>
-  );
+  )
 };
 
 // 2. LOADING SPINNER VARIANT
@@ -107,7 +107,7 @@ export const HiveLogoSpinner = ({ variant = "gold", size = "md", className, ...p
         />
       </svg>
     </motion.div>
-  );
+  )
 };
 
 // 3. PULSE BREATHING VARIANT
@@ -122,7 +122,7 @@ export const HiveLogoPulse = ({ variant = "neon", size = "lg", className, ...pro
           "drop-shadow(0 0 20px currentColor)",
           "drop-shadow(0 0 5px currentColor)"
         ]
-      }}
+          }}
       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       {...getMotionProps(props)}
     >
@@ -130,7 +130,7 @@ export const HiveLogoPulse = ({ variant = "neon", size = "lg", className, ...pro
         <path d={HIVE_PATH} fill="currentColor" />
       </svg>
     </motion.div>
-  );
+  )
 };
 
 // 4. SEGMENTED ASSEMBLY VARIANT
@@ -160,12 +160,12 @@ export const HiveLogoAssembly = ({ variant = "gradient", size = "xl", className,
               type: "spring",
               stiffness: 200,
               damping: 15
-            }}
+          }}
           />
         ))}
       </svg>
     </motion.div>
-  );
+  )
 };
 
 // 5. SIMPLIFIED ICON VARIANTS
@@ -187,7 +187,7 @@ export const HiveGlyphSimple = ({ variant = "primary", size = "md", className, .
         />
       </svg>
     </div>
-  );
+  )
 };
 
 // 6. OUTLINED VARIANT
@@ -205,7 +205,7 @@ export const HiveLogoOutlined = ({ variant = "primary", size = "md", className, 
         />
       </svg>
     </div>
-  );
+  )
 };
 
 // 7. MONOGRAM VARIANT (Just "H")
@@ -231,7 +231,7 @@ export const HiveMonogram = ({ variant = "gold", size = "md", className, ...prop
         </text>
       </svg>
     </div>
-  );
+  )
 };
 
 // 8. GLASS MORPHISM VARIANT
@@ -256,7 +256,7 @@ export const HiveLogoGlass = ({ size = "lg", className, ...props }: HiveLogoVari
       </svg>
       <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl" />
     </motion.div>
-  );
+  )
 };
 
 // 9. NEON VARIANT
@@ -270,7 +270,7 @@ export const HiveLogoNeon = ({ size = "xl", className, ...props }: HiveLogoVaria
           "drop-shadow(0 0 10px var(--hive-status-info)) drop-shadow(0 0 20px var(--hive-status-info)) drop-shadow(0 0 30px var(--hive-status-info))",
           "drop-shadow(0 0 5px var(--hive-status-info)) drop-shadow(0 0 10px var(--hive-status-info))"
         ]
-      }}
+          }}
       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       {...getMotionProps(props)}
     >
@@ -285,7 +285,7 @@ export const HiveLogoNeon = ({ size = "xl", className, ...props }: HiveLogoVaria
         />
       </svg>
     </motion.div>
-  );
+  )
 };
 
 // 10. HOLOGRAPHIC VARIANT
@@ -317,7 +317,7 @@ export const HiveLogoHolographic = ({ size = "2xl", className, ...props }: HiveL
         </svg>
       </motion.div>
     </motion.div>
-  );
+  )
 };
 
 // 11. PARTICLE FORMATION VARIANT
@@ -365,7 +365,7 @@ export const HiveLogoParticles = ({ variant = "gold", size = "xl", className, ..
         </svg>
       </motion.div>
     </div>
-  );
+  )
 };
 
 // 12. PROGRESS INDICATOR VARIANT
@@ -404,7 +404,7 @@ export const HiveLogoProgress = ({
         </span>
       </div>
     </div>
-  );
+  )
 };
 
 // 13. CONTEXTUAL VARIANTS
@@ -430,7 +430,7 @@ export const HiveLogoContextual = ({
         <path d={HIVE_PATH} fill="currentColor" />
       </svg>
     </div>
-  );
+  )
 };
 
 // Export all variants

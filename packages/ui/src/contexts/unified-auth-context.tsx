@@ -11,17 +11,17 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 // Simple logger for UI package
 const logger = {
   info: (message: string, context?: Record<string, unknown>) => {
-    console.info(`[HIVE UI] ${message}`, context);
+    console.info(`[HIVE UI] ${message}`, context)
   },
   warn: (message: string, context?: Record<string, unknown>) => {
-    console.warn(`[HIVE UI] ${message}`, context);
+    console.warn(`[HIVE UI] ${message}`, context)
   },
   error: (message: string, context?: Record<string, unknown>) => {
-    console.error(`[HIVE UI] ${message}`, context);
+    console.error(`[HIVE UI] ${message}`, context)
   },
   debug: (message: string, context?: Record<string, unknown>) => {
     if (process.env.NODE_ENV === 'development') {
-      console.debug(`[HIVE UI] ${message}`, context);
+      console.debug(`[HIVE UI] ${message}`, context)
     }
   }
 };
@@ -51,13 +51,13 @@ export interface HiveUser {
   preferences?: {
     theme?: 'light' | 'dark';
     notifications?: boolean;
-    privacy?: 'public' | 'private';
+    privacy?: 'public' | 'private'
   };
   
   // System flags
   isDeveloper?: boolean;
   isAdmin?: boolean;
-  developmentMode?: boolean;
+  developmentMode?: boolean
 }
 
 // Session Information
@@ -66,7 +66,7 @@ export interface HiveSession {
   issuedAt?: string;
   expiresAt?: string;
   developmentMode?: boolean;
-  lastActivity?: string;
+  lastActivity?: string
 }
 
 // Auth State
@@ -75,7 +75,7 @@ export interface UnifiedAuthState {
   session: HiveSession | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  error: string | null;
+  error: string | null
 }
 
 // Auth Context Interface
@@ -104,12 +104,12 @@ export interface UnifiedAuthContextType extends UnifiedAuthState {
     handle: string;
     avatarUrl?: string;
     builderRequestSpaces?: string[];
-    consentGiven: boolean;
+    consentGiven: boolean
   }) => Promise<{
     user: any;
     builderRequestsCreated: number;
     success: boolean;
-    message: string;
+    message: string
   }>;
   
   // Development Utilities
@@ -123,7 +123,7 @@ export interface UnifiedAuthContextType extends UnifiedAuthState {
   
   // Error Recovery
   clearError: () => void;
-  retryInitialization: () => Promise<void>;
+  retryInitialization: () => Promise<void>
 }
 
 // Create the context
@@ -133,9 +133,9 @@ const UnifiedAuthContext = createContext<UnifiedAuthContextType | null>(null);
 export const useUnifiedAuth = () => {
   const context = useContext(UnifiedAuthContext);
   if (!context) {
-    throw new Error('useUnifiedAuth must be used within a UnifiedAuthProvider');
+    throw new Error('useUnifiedAuth must be used within a UnifiedAuthProvider')
   }
-  return context;
+  return context
 };
 
 // SECURITY: Development mode detection removed for production safety
@@ -150,13 +150,13 @@ export interface FirebaseAuthIntegration {
   handleEmailLinkSignIn: (email?: string) => Promise<void>;
   getFirebaseToken: () => Promise<string | null>;
   signOut: () => Promise<void>;
-  isEmailLinkSignIn: () => boolean;
+  isEmailLinkSignIn: () => boolean
 }
 
 // Provider Component
 export const UnifiedAuthProvider: React.FC<{ 
   children: React.ReactNode;
-  firebaseIntegration?: FirebaseAuthIntegration;
+  firebaseIntegration?: FirebaseAuthIntegration
 }> = ({ children, firebaseIntegration }) => {
 
   // Core State
@@ -170,7 +170,7 @@ export const UnifiedAuthProvider: React.FC<{
 
   // Update auth state helper
   const updateAuthState = useCallback((updates: Partial<UnifiedAuthState>) => {
-    setAuthState(prev => ({ ...prev, ...updates }));
+    setAuthState(prev => ({ ...prev, ...updates }))
   }, []);
 
   // Get Auth Token - MOVED BEFORE validateSession to fix circular dependency
@@ -181,16 +181,16 @@ export const UnifiedAuthProvider: React.FC<{
     if (firebaseIntegration) {
       try {
         const firebaseToken = await firebaseIntegration.getFirebaseToken();
-        if (firebaseToken) return firebaseToken;
+        if (firebaseToken) return firebaseToken
       } catch (error) {
-        logger.error('Failed to get Firebase token', { error });
+        logger.error('Failed to get Firebase token', { error })
       }
     }
 
     // Fallback to stored token
     return window.localStorage.getItem('auth_token') || 
            window.localStorage.getItem('firebase_token') ||
-           null;
+           null
   }, [firebaseIntegration]);
 
   // Session Validation
@@ -210,14 +210,14 @@ export const UnifiedAuthProvider: React.FC<{
 
       if (!response.ok) {
         logger.warn(`Session validation failed: ${response.status}`);
-        return false;
+        return false
       }
 
       const data = await response.json();
-      return data.valid === true;
+      return data.valid === true
     } catch (error) {
       logger.error('Session validation failed', { error });
-      return false;
+      return false
     }
   }, [getAuthToken]);
 
@@ -246,9 +246,9 @@ export const UnifiedAuthProvider: React.FC<{
     if (AdvancedAuthSecurity) {
       try {
         const securityInstance = AdvancedAuthSecurity.getInstance();
-        sessionData = securityInstance.createSecureSession(user.id, sessionData);
+        sessionData = securityInstance.createSecureSession(user.id, sessionData)
       } catch (error) {
-        logger.warn('Advanced security features failed, using basic session');
+        logger.warn('Advanced security features failed, using basic session')
       }
     }
 
@@ -262,11 +262,11 @@ export const UnifiedAuthProvider: React.FC<{
         optimizer.setCachedUserData(user.id, user);
         
         if (session.developmentMode) {
-          await optimizer.setStorageAsync('dev_auth_mode', 'true');
+          await optimizer.setStorageAsync('dev_auth_mode', 'true')
         }
-        return;
+        return
       } catch (error) {
-        logger.warn('Performance optimizer failed, falling back to sync storage');
+        logger.warn('Performance optimizer failed, falling back to sync storage')
       }
     }
 
@@ -275,7 +275,7 @@ export const UnifiedAuthProvider: React.FC<{
     
     // Store auth token separately for API calls
     if (sessionData.token) {
-      window.localStorage.setItem('auth_token', sessionData.token);
+      window.localStorage.setItem('auth_token', sessionData.token)
     }
   }, []);
 
@@ -313,13 +313,13 @@ export const UnifiedAuthProvider: React.FC<{
       // SECURITY: Reject sessions without valid tokens
       if (!session.token) {
         logger.warn('Session has no valid token, rejecting');
-        return null;
+        return null
       }
       
-      return { user, session };
+      return { user, session }
     } catch (error) {
       logger.error('Failed to parse persisted session', { error });
-      return null;
+      return null
     }
   }, []);
 
@@ -335,20 +335,20 @@ export const UnifiedAuthProvider: React.FC<{
           try {
             await firebaseIntegration.handleEmailLinkSignIn();
             // Firebase auth state will trigger updates via listener
-            return;
+            return
           } catch (error) {
             logger.error('Email link sign-in failed', { error });
             updateAuthState({
               error: error instanceof Error ? error.message : 'Email link sign-in failed',
               isLoading: false,
             });
-            return;
+            return
           }
         }
 
         // Firebase will handle auth state via listener
         // Just wait for the auth state to resolve
-        return;
+        return
       }
 
       // Fallback to session-based auth
@@ -364,10 +364,10 @@ export const UnifiedAuthProvider: React.FC<{
             isAuthenticated: true,
             isLoading: false,
           });
-          return;
+          return
         } else {
           // Clear invalid session
-          clearPersistedSession();
+          clearPersistedSession()
         }
       }
 
@@ -377,7 +377,7 @@ export const UnifiedAuthProvider: React.FC<{
         session: null,
         isAuthenticated: false,
         isLoading: false,
-      });
+      })
 
     } catch (error) {
       logger.error('Auth initialization failed', { error });
@@ -387,7 +387,7 @@ export const UnifiedAuthProvider: React.FC<{
         isAuthenticated: false,
         isLoading: false,
         error: error instanceof Error ? error.message : 'Authentication failed',
-      });
+      })
     }
   }, [updateAuthState, loadPersistedSession, firebaseIntegration]);
 
@@ -405,8 +405,8 @@ export const UnifiedAuthProvider: React.FC<{
     ];
     
     keysToRemove.forEach(key => {
-      window.localStorage.removeItem(key);
-    });
+      window.localStorage.removeItem(key)
+    })}
   }, []);
 
   // Login Methods
@@ -417,24 +417,24 @@ export const UnifiedAuthProvider: React.FC<{
       if (isDevelopmentMode()) {
         // Dev login logic
         await devLogin(email);
-        return;
+        return
       }
 
       // Production login would integrate with Firebase or magic link
-      throw new Error('Production login not yet implemented');
+      throw new Error('Production login not yet implemented')
     } catch (error) {
       updateAuthState({
         isLoading: false,
         error: error instanceof Error ? error.message : 'Login failed',
       });
-      throw error;
+      throw error
     }
   }, [updateAuthState]);
 
   // Development Login - Re-enabled for development workflow
   const devLogin = useCallback(async (userId = 'dev_user_123') => {
     if (process.env.NODE_ENV !== 'development') {
-      throw new Error('Development login only available in development mode');
+      throw new Error('Development login only available in development mode')
     }
 
     try {
@@ -476,16 +476,16 @@ export const UnifiedAuthProvider: React.FC<{
       
       // Set dev auth mode flag
       if (typeof window !== 'undefined') {
-        window.localStorage.setItem('dev_auth_mode', 'true');
+        window.localStorage.setItem('dev_auth_mode', 'true')
       }
 
-      logger.info('Development login successful', { userId });
+      logger.info('Development login successful', { userId })
     } catch (error) {
       updateAuthState({
         isLoading: false,
         error: error instanceof Error ? error.message : 'Development login failed',
       });
-      throw error;
+      throw error
     }
   }, [updateAuthState, persistSession]);
 
@@ -497,9 +497,9 @@ export const UnifiedAuthProvider: React.FC<{
       // Use Firebase signout if integration is available
       if (firebaseIntegration) {
         try {
-          await firebaseIntegration.signOut();
+          await firebaseIntegration.signOut()
         } catch (error) {
-          logger.error('Firebase logout failed', { error });
+          logger.error('Firebase logout failed', { error })
         }
       }
 
@@ -511,9 +511,9 @@ export const UnifiedAuthProvider: React.FC<{
             headers: {
               'Authorization': `Bearer ${await getAuthToken()}`,
             },
-          });
+          })
         } catch (error) {
-          logger.error('Logout API call failed', { error });
+          logger.error('Logout API call failed', { error })
         }
       }
 
@@ -525,7 +525,7 @@ export const UnifiedAuthProvider: React.FC<{
         session: null,
         isAuthenticated: false,
         isLoading: false,
-      });
+      })
     } catch (error) {
       logger.error('Logout failed', { error });
       updateAuthState({
@@ -534,7 +534,7 @@ export const UnifiedAuthProvider: React.FC<{
         isAuthenticated: false,
         isLoading: false,
         error: error instanceof Error ? error.message : 'Logout failed',
-      });
+      })
     }
   }, [updateAuthState, getAuthToken, clearPersistedSession, firebaseIntegration]);
 
@@ -556,21 +556,21 @@ export const UnifiedAuthProvider: React.FC<{
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send magic link');
+        throw new Error(errorData.error || 'Failed to send magic link')
       }
 
       const data = await response.json();
       logger.info('Magic link sent successfully', { email });
       
       updateAuthState({ isLoading: false });
-      return data;
+      return data
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
       updateAuthState({
         isLoading: false,
         error: errorMessage,
       });
-      throw error;
+      throw error
     }
   }, [updateAuthState]);
 
@@ -592,7 +592,7 @@ export const UnifiedAuthProvider: React.FC<{
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to verify magic link');
+        throw new Error(errorData.error || 'Failed to verify magic link')
       }
 
       const data = await response.json();
@@ -624,29 +624,29 @@ export const UnifiedAuthProvider: React.FC<{
             isLoading: false,
           });
           
-          await persistSession(newUser, newSession);
+          await persistSession(newUser, newSession)
         } else {
           // Existing user, they can proceed to app
-          await initializeAuth();
+          await initializeAuth()
         }
         
         logger.info('Magic link verified successfully', { userId: data.userId });
-        return data;
+        return data
       }
       
-      throw new Error('Magic link verification failed');
+      throw new Error('Magic link verification failed')
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to verify magic link';
       updateAuthState({
         isLoading: false,
         error: errorMessage,
       });
-      throw error;
+      throw error
     }
   }, [updateAuthState, persistSession]);
 
   const refreshSession = useCallback(async () => {
-    await initializeAuth();
+    await initializeAuth()
   }, [initializeAuth]);
 
   const updateProfile = useCallback(async (updates: Partial<HiveUser>) => {
@@ -684,15 +684,15 @@ export const UnifiedAuthProvider: React.FC<{
       });
 
       if (profileResponse.ok) {
-        logger.info('Profile data hydrated successfully', { userId: user.id });
+        logger.info('Profile data hydrated successfully', { userId: user.id })
       } else {
         logger.warn('Profile hydration failed', { 
           userId: user.id, 
           status: profileResponse.status 
-        });
+        })
       }
     } catch (error) {
-      logger.error('Profile hydration error', { error, userId: user.id });
+      logger.error('Profile hydration error', { error, userId: user.id })
     }
   }, [getAuthToken]);
 
@@ -707,10 +707,10 @@ export const UnifiedAuthProvider: React.FC<{
     handle: string;
     avatarUrl?: string;
     builderRequestSpaces?: string[];
-    consentGiven: boolean;
+    consentGiven: boolean
   }) => {
     if (!authState.user) {
-      throw new Error('No authenticated user for onboarding completion');
+      throw new Error('No authenticated user for onboarding completion')
     }
     
     try {
@@ -718,7 +718,7 @@ export const UnifiedAuthProvider: React.FC<{
 
       const token = await getAuthToken();
       if (!token) {
-        throw new Error('No auth token available');
+        throw new Error('No auth token available')
       }
 
       // Call the complete onboarding API
@@ -733,7 +733,7 @@ export const UnifiedAuthProvider: React.FC<{
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to complete onboarding');
+        throw new Error(errorData.error || 'Failed to complete onboarding')
       }
 
       const result = await response.json();
@@ -770,13 +770,13 @@ export const UnifiedAuthProvider: React.FC<{
         builderRequestsCreated: result.builderRequestsCreated,
         success: result.success,
         message: result.message,
-      };
+      }
     } catch (error) {
       updateAuthState({
         isLoading: false,
         error: error instanceof Error ? error.message : 'Onboarding completion failed',
       });
-      throw error;
+      throw error
     }
   }, [authState.user, authState.session, updateAuthState, getAuthToken, hydrateProfileData, persistSession]);
 
@@ -787,16 +787,16 @@ export const UnifiedAuthProvider: React.FC<{
       session: null,
       isAuthenticated: false,
       isLoading: false,
-    });
+    })
   }, [updateAuthState, clearPersistedSession]);
 
   // State Queries
   const requiresOnboarding = useCallback(() => {
-    return authState.isAuthenticated && !authState.user?.onboardingCompleted;
+    return authState.isAuthenticated && !authState.user?.onboardingCompleted
   }, [authState.isAuthenticated, authState.user?.onboardingCompleted]);
 
   const hasValidSession = useCallback(() => {
-    return authState.isAuthenticated && !!authState.session?.token;
+    return authState.isAuthenticated && !!authState.session?.token
   }, [authState.isAuthenticated, authState.session?.token]);
 
   const canAccessFeature = useCallback((feature: string) => {
@@ -808,17 +808,17 @@ export const UnifiedAuthProvider: React.FC<{
       case 'admin':
         return authState.user?.isAdmin === true;
       default:
-        return true;
+        return true
     }
   }, [authState.isAuthenticated, authState.user]);
 
   // Error Recovery
   const clearError = useCallback(() => {
-    updateAuthState({ error: null });
+    updateAuthState({ error: null })
   }, [updateAuthState]);
 
   const retryInitialization = useCallback(async () => {
-    await initializeAuth();
+    await initializeAuth()
   }, [initializeAuth]);
 
   // Firebase auth state listener
@@ -833,7 +833,7 @@ export const UnifiedAuthProvider: React.FC<{
           const token = await firebaseIntegration.getFirebaseToken();
           if (!token) {
             logger.error('No Firebase token available');
-            return;
+            return
           }
 
           // Validate session with backend
@@ -874,7 +874,7 @@ export const UnifiedAuthProvider: React.FC<{
             });
 
             // Persist session
-            await persistSession(user, session);
+            await persistSession(user, session)
           } else {
             logger.error('Session validation failed', { status: response.status });
             updateAuthState({
@@ -882,7 +882,7 @@ export const UnifiedAuthProvider: React.FC<{
               session: null,
               isAuthenticated: false,
               isLoading: false,
-            });
+            })
           }
         } catch (error) {
           logger.error('Error processing Firebase auth state', { error });
@@ -892,7 +892,7 @@ export const UnifiedAuthProvider: React.FC<{
             isAuthenticated: false,
             isLoading: false,
             error: error instanceof Error ? error.message : 'Authentication failed',
-          });
+          })
         }
       } else {
         // User is signed out
@@ -902,18 +902,18 @@ export const UnifiedAuthProvider: React.FC<{
           isAuthenticated: false,
           isLoading: false,
         });
-        clearPersistedSession();
+        clearPersistedSession()
       }
     });
 
-    return unsubscribe;
+    return unsubscribe
   }, [firebaseIntegration, updateAuthState, persistSession, clearPersistedSession]);
 
   // Initialize auth on mount - SECURITY FIX: Properly await async operation
   useEffect(() => {
     initializeAuth().catch(error => {
-      logger.error('Auth initialization failed on mount', { error });
-    });
+      logger.error('Auth initialization failed on mount', { error })
+    })
   }, [initializeAuth]);
 
   // Listen for storage changes (multi-tab sync)
@@ -924,13 +924,13 @@ export const UnifiedAuthProvider: React.FC<{
       if (e.key === 'hive_session' || e.key === 'auth_token') {
         // SECURITY FIX: Properly await async operation
         initializeAuth().catch(error => {
-          logger.error('Auth initialization failed on storage change', { error });
-        });
+          logger.error('Auth initialization failed on storage change', { error })
+        })
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange)
   }, [initializeAuth]);
 
   // Auto-retry on network errors
@@ -938,10 +938,10 @@ export const UnifiedAuthProvider: React.FC<{
     if (authState.error && authState.error.includes('network')) {
       const retryTimer = setTimeout(() => {
         logger.info('Auto-retrying after network error');
-        retryInitialization();
+        retryInitialization()
       }, 5000);
 
-      return () => clearTimeout(retryTimer);
+      return () => clearTimeout(retryTimer)
     }
   }, [authState.error, retryInitialization]);
 
@@ -969,7 +969,7 @@ export const UnifiedAuthProvider: React.FC<{
     <UnifiedAuthContext.Provider value={contextValue}>
       {children}
     </UnifiedAuthContext.Provider>
-  );
+  )
 };
 
 // Export context for advanced usage

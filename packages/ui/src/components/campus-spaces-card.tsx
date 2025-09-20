@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
+import { motion, AnimatePresence } from './framer-motion-proxy';
+import { cn } from '../lib/utils';
 import { 
   Bell, 
   BellOff, 
@@ -32,8 +32,8 @@ export interface CampusSpace {
   recentActivity?: {
     type: 'message' | 'event' | 'announcement';
     preview: string;
-    timestamp: string;
-  };
+    timestamp: string
+  }
 }
 
 export interface CampusSpacesCardProps {
@@ -48,7 +48,7 @@ export interface CampusSpacesCardProps {
   onPinSpace?: (spaceId: string, pinned: boolean) => void;
   onLeaveSpace?: (spaceId: string) => void;
   onQuickPost?: (spaceId: string, message: string) => void;
-  className?: string;
+  className?: string
 }
 
 const spaceTypeIcons: Record<CampusSpace['type'], string> = {
@@ -93,7 +93,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
 
   const formatMemberCount = (count: number): string => {
     if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
-    return count.toString();
+    return count.toString()
   };
 
   const formatLastActivity = (timestamp: string): string => {
@@ -104,7 +104,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return `${Math.floor(diffInHours / 168)}w ago`;
+    return `${Math.floor(diffInHours / 168)}w ago`
   };
 
   const displayedSpaces = spaces.slice(0, 6); // Show max 6 spaces
@@ -115,13 +115,13 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
     if (quickPostMessage.trim() && onQuickPost) {
       onQuickPost(spaceId, quickPostMessage.trim());
       setQuickPostMessage('');
-      setShowQuickPostFor(null);
+      setShowQuickPostFor(null)
     }
   };
 
   const toggleQuickPost = (spaceId: string) => {
     setShowQuickPostFor(showQuickPostFor === spaceId ? null : spaceId);
-    setQuickPostMessage('');
+    setQuickPostMessage('')
   };
 
   if (isLoading) {
@@ -151,7 +151,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
           ))}
         </div>
       </motion.div>
-    );
+    )
   }
 
   return (
@@ -161,7 +161,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
       transition={{
         duration: 0.6,
         ease: [0.23, 1, 0.32, 1]
-      }}
+          }}
       className={cn(
         // BentoGrid-inspired card treatment
         'relative overflow-hidden rounded-2xl',
@@ -225,7 +225,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                 delay: index * 0.1,
                 duration: 0.4,
                 ease: [0.23, 1, 0.32, 1]
-              }}
+          }}
               onHoverStart={() => setHoveredSpace(space.id)}
               onHoverEnd={() => setHoveredSpace(null)}
               onClick={() => onSpaceClick?.(space.id)}
@@ -310,8 +310,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleQuickPost(space.id);
-                        }}
+                          toggleQuickPost(space.id)
+          }}
                         className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
                         title="Quick Post"
                       >
@@ -321,8 +321,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onPinSpace?.(space.id, !space.isPinned);
-                        }}
+                          onPinSpace?.(space.id, !space.isPinned)
+          }}
                         className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
                         title={space.isPinned ? "Unpin Space" : "Pin Space"}
                       >
@@ -336,8 +336,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onMuteSpace?.(space.id, !space.isMuted);
-                        }}
+                          onMuteSpace?.(space.id, !space.isMuted)
+          }}
                         className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-gold/30 hover:bg-gold/10 transition-all duration-200 group/btn"
                         title={space.isMuted ? "Unmute Space" : "Mute Space"}
                       >
@@ -352,8 +352,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onLeaveSpace?.(space.id);
-                          }}
+                            onLeaveSpace?.(space.id)
+          }}
                           className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 hover:border-red-400/30 hover:bg-red-400/10 transition-all duration-200 group/btn"
                           title="Leave Space"
                         >
@@ -393,12 +393,12 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                         onChange={(e) => setQuickPostMessage(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
-                            handleQuickPost(space.id);
+                            handleQuickPost(space.id)
                           } else if (e.key === 'Escape') {
                             setShowQuickPostFor(null);
-                            setQuickPostMessage('');
+                            setQuickPostMessage('')
                           }
-                        }}
+          })}
                         placeholder={`Post to ${space.name}...`}
                         className="flex-1 px-3 py-1.5 bg-charcoal/40 border border-steel/20 rounded-lg text-platinum text-sm placeholder-mercury/60 focus:border-gold/30 focus:outline-none transition-colors"
                         autoFocus
@@ -413,8 +413,8 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
                       <button
                         onClick={() => {
                           setShowQuickPostFor(null);
-                          setQuickPostMessage('');
-                        }}
+                          setQuickPostMessage('')
+          }}
                         className="p-1.5 rounded-lg bg-charcoal/60 border border-steel/20 text-mercury hover:text-red-400 hover:border-red-400/30 transition-all duration-200"
                       >
                         <X className="w-3 h-3" />
@@ -460,7 +460,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
             whileHover={{ 
               scale: 1.02,
               boxShadow: "0 2 32px color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)"
-            }}
+          }}
             whileTap={{ scale: 0.98 }}
             onClick={onJoinSpace}
             className={cn(
@@ -508,7 +508,7 @@ export const CampusSpacesCard: React.FC<CampusSpacesCardProps> = ({
         </motion.div>
       )}
     </motion.div>
-  );
+  )
 };
 
 export default CampusSpacesCard;

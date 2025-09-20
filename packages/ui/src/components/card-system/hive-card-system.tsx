@@ -196,7 +196,7 @@ export interface HiveCardBaseProps
   role?: string;
   'aria-label'?: string;
   'aria-selected'?: boolean;
-  'aria-disabled'?: boolean;
+  'aria-disabled'?: boolean
 }
 
 /**
@@ -208,7 +208,7 @@ export interface HiveStructuredCardProps extends Omit<HiveCardBaseProps, 'title'
   description?: React.ReactNode;
   content?: React.ReactNode;
   footer?: React.ReactNode;
-  actions?: React.ReactNode;
+  actions?: React.ReactNode
 }
 
 /**
@@ -222,7 +222,7 @@ export interface HiveEntityCardProps extends HiveCardBaseProps {
     description?: string;
     image?: string;
     status?: 'active' | 'inactive' | 'pending';
-    metadata?: Record<string, any>;
+    metadata?: Record<string, any>
   };
   
   // Entity-specific actions
@@ -231,13 +231,13 @@ export interface HiveEntityCardProps extends HiveCardBaseProps {
     id: string;
     label: string;
     icon?: React.ReactNode;
-    variant?: 'primary' | 'secondary' | 'danger';
+    variant?: 'primary' | 'secondary' | 'danger'
   }>;
   
   // Display configuration
   showStatus?: boolean;
   showMetadata?: boolean;
-  showActions?: boolean;
+  showActions?: boolean
 }
 
 // ============================================================================
@@ -255,7 +255,7 @@ export const createCardAnimation = (
   const motionProps = cardMotionConfig[motionType];
   
   if (!entrance) {
-    return motionProps;
+    return motionProps
   }
   
   const entranceProps = entrance === 'cascade' 
@@ -265,7 +265,7 @@ export const createCardAnimation = (
   return {
     ...motionProps,
     ...entranceProps,
-  };
+  }
 };
 
 /**
@@ -290,11 +290,11 @@ export const createCardVariant = (
       case 'project':
         return 'builder';
       default:
-        return baseVariant;
+        return baseVariant
     }
   }
   
-  return baseVariant;
+  return baseVariant
 };
 
 /**
@@ -316,7 +316,7 @@ export const createCardStyles = ({
     goldAccent && "ring-1 ring-[var(--hive-border-gold)]/30",
     glowEffect && "shadow-[var(--hive-shadow-gold-glow)]",
     className
-  );
+  )
 };
 
 // ============================================================================
@@ -400,7 +400,7 @@ const HiveCardBase = React.forwardRef<HTMLDivElement, HiveCardBaseProps>(
           children
         )}
       </motion.div>
-    );
+    )
   }
 );
 

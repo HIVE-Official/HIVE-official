@@ -30,7 +30,7 @@ interface SuspenseBoundaryProps {
   enablePreloading?: boolean;
   timeout?: number; // Fallback timeout in ms
   
-  className?: string;
+  className?: string
 }
 
 // Default loading resources for different strategies
@@ -145,7 +145,7 @@ function SmartLoadingFallback({
   resources?: LoadingResource[];
   campusContext?: CampusLoadingContext;
   context?: SuspenseBoundaryProps['context'];
-  className?: string;
+  className?: string
 }) {
   // Use provided resources or defaults based on strategy
   const loadingResources = resources || DEFAULT_LOADING_RESOURCES[strategy || 'minimal'];
@@ -167,13 +167,13 @@ function SmartLoadingFallback({
         currentPage: context?.pageType || 'profile',
         userPattern: 'explorer',
         timeSpent: 0,
-      }}
+          }}
       showProgress={strategy !== 'minimal'}
       showStudentFriendlyMessages={true}
       adaptToCampusNetwork={true}
       className={className}
     />
-  );
+  )
 }
 
 // Timeout wrapper for Suspense
@@ -186,17 +186,17 @@ function SuspenseWithTimeout({
   children: ReactNode;
   fallback: ReactNode;
   timeout?: number;
-  onTimeout?: () => void;
+  onTimeout?: () => void
 }) {
   const [timedOut, setTimedOut] = React.useState(false);
   
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setTimedOut(true);
-      onTimeout?.();
+      onTimeout?.()
     }, timeout);
     
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   }, [timeout, onTimeout]);
   
   if (timedOut) {
@@ -220,14 +220,14 @@ function SuspenseWithTimeout({
           </div>
         </div>
       </div>
-    );
+    )
   }
   
   return (
     <Suspense fallback={fallback}>
       {children}
     </Suspense>
-  );
+  )
 }
 
 export const SuspenseBoundary: React.FC<SuspenseBoundaryProps> = ({
@@ -260,7 +260,7 @@ export const SuspenseBoundary: React.FC<SuspenseBoundaryProps> = ({
       feature: context?.feature,
       pageType: context?.pageType,
       timeout,
-    });
+    })
   }, [context, timeout]);
   
   return (
@@ -278,13 +278,13 @@ export const SuspenseBoundary: React.FC<SuspenseBoundaryProps> = ({
         {children}
       </SuspenseWithTimeout>
     </HiveErrorBoundary>
-  );
+  )
 };
 
 // Specialized boundary for different page types
 export const ProfileSuspenseBoundary: React.FC<Omit<SuspenseBoundaryProps, 'context'> & {
   userId?: string;
-  userName?: string;
+  userName?: string
 }> = ({ userId, userName, ...props }) => (
   <SuspenseBoundary
     {...props}
@@ -292,7 +292,7 @@ export const ProfileSuspenseBoundary: React.FC<Omit<SuspenseBoundaryProps, 'cont
       user: userId ? { id: userId, name: userName } : undefined,
       pageType: 'profile',
       feature: 'profile-loading',
-    }}
+          }}
     loadingStrategy={props.loadingStrategy || 'branded'}
     loadingResources={props.loadingResources || [
       {
@@ -328,27 +328,27 @@ export const ProfileSuspenseBoundary: React.FC<Omit<SuspenseBoundaryProps, 'cont
 );
 
 export const SpacesSuspenseBoundary: React.FC<Omit<SuspenseBoundaryProps, 'context'> & {
-  spaceId?: string;
+  spaceId?: string
 }> = ({ spaceId, ...props }) => (
   <SuspenseBoundary
     {...props}
     context={{
       pageType: 'spaces',
       feature: spaceId ? 'space-details' : 'spaces-browse',
-    }}
+          }}
     loadingStrategy={props.loadingStrategy || 'progressive'}
   />
 );
 
 export const ToolsSuspenseBoundary: React.FC<Omit<SuspenseBoundaryProps, 'context'> & {
-  toolId?: string;
+  toolId?: string
 }> = ({ toolId, ...props }) => (
   <SuspenseBoundary
     {...props}
     context={{
       pageType: 'tools',
       feature: toolId ? 'tool-details' : 'tools-browse',
-    }}
+          }}
     loadingStrategy={props.loadingStrategy || 'detailed'}
   />
 );
@@ -359,7 +359,7 @@ export const FeedSuspenseBoundary: React.FC<Omit<SuspenseBoundaryProps, 'context
     context={{
       pageType: 'feed',
       feature: 'feed-loading',
-    }}
+          }}
     loadingStrategy={props.loadingStrategy || 'progressive'}
     loadingResources={props.loadingResources || [
       {
@@ -393,7 +393,7 @@ function getTimeOfDay(): CampusLoadingContext['timeOfDay'] {
   if (hour < 12) return 'morning';
   if (hour < 17) return 'afternoon';
   if (hour < 22) return 'evening';
-  return 'late-night';
+  return 'late-night'
 }
 
 function getCampusLoad(): CampusLoadingContext['campusLoad'] {
@@ -402,7 +402,7 @@ function getCampusLoad(): CampusLoadingContext['campusLoad'] {
   if ((hour >= 9 && hour <= 11) || (hour >= 13 && hour <= 15)) return 'peak';
   if ((hour >= 8 && hour <= 17)) return 'high';
   if ((hour >= 19 && hour <= 22)) return 'medium';
-  return 'low';
+  return 'low'
 }
 
 function getDeviceType(): CampusLoadingContext['deviceType'] {
@@ -414,7 +414,7 @@ function getDeviceType(): CampusLoadingContext['deviceType'] {
   if (/mobile|android|iphone/.test(userAgent) || width < 768) return 'mobile';
   if (width < 1024) return 'tablet';
   if (/library|kiosk|public/.test(userAgent)) return 'library-computer';
-  return 'desktop';
+  return 'desktop'
 }
 
 export default SuspenseBoundary;

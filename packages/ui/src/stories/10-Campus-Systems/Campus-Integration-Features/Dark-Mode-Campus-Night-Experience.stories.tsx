@@ -85,7 +85,7 @@ const DarkModeShowcase = () => {
   // Update time every second for realistic demo
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
+    return () => clearInterval(timer)
   }, []);
 
   // Dark Mode Color System
@@ -244,7 +244,7 @@ const DarkModeShowcase = () => {
       recommendedMode: isNight ? 'dark' : isEvening ? 'auto' : 'light',
       brightness: isNight ? 60 : isEvening ? 75 : 90,
       blueLight: isNight ? 20 : isEvening ? 40 : 80
-    };
+    }
   };
 
   const timeTheme = getTimeBasedTheme();
@@ -374,7 +374,7 @@ const DarkModeShowcase = () => {
           )}
         </div>
       </motion.div>
-    );
+    )
   };
 
   // Interface Preview Component
@@ -427,7 +427,7 @@ const DarkModeShowcase = () => {
               {darkMode ? '87%' : '76%'}
             </span>
             <span className="text-xs" style={{ color: currentTheme['text-secondary'] }}>
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }}
             </span>
           </div>
         </div>
@@ -530,7 +530,7 @@ const DarkModeShowcase = () => {
           ))}
         </div>
       </div>
-    );
+    )
   };
 
   return (
@@ -969,7 +969,7 @@ const DarkModeShowcase = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const DarkModeCampusExperience: Story = {

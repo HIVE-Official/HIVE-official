@@ -4,7 +4,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * Complete reviews and ratings for tools in the marketplace
  */
 import { useState, useCallback, useMemo } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { Avatar } from '../index';
 import { HiveBadge as Badge } from '../index';
 import { Star, MessageSquare, ThumbsUp, ThumbsDown, Flag, Edit3, Trash2, MoreHorizontal, Send, ChevronDown, TrendingUp, Award, CheckCircle, AlertTriangle, Search, X, Share } from 'lucide-react';

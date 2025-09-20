@@ -31,7 +31,7 @@ interface InteractivePlaygroundProps {
   element: ElementDefinition;
   onSave?: (configuration: ElementConfiguration) => void;
   onClose?: () => void;
-  className?: string;
+  className?: string
 }
 
 interface ElementConfiguration {
@@ -40,8 +40,8 @@ interface ElementConfiguration {
   metadata: {
     name: string;
     description: string;
-    tags: string[];
-  };
+    tags: string[]
+  }
 }
 
 const PropertyEditor = ({ 
@@ -51,7 +51,7 @@ const PropertyEditor = ({
 }: { 
   prop: ElementProp; 
   value: any; 
-  onChange: (value: any) => void;
+  onChange: (value: any) => void
 }) => {
   const renderInput = () => {
     switch (prop.type) {
@@ -151,9 +151,9 @@ const PropertyEditor = ({
                 const file = e.target.files?.[0];
                 if (file) {
                   // In a real implementation, you'd upload the file and get a URL
-                  onChange(`uploaded_file_${file.name}`);
+                  onChange(`uploaded_file_${file.name}`)
                 }
-              }}
+          })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
             />
             {value && (
@@ -169,15 +169,15 @@ const PropertyEditor = ({
             value={JSON.stringify(value) || ''}
             onChange={(e) => {
               try {
-                onChange(JSON.parse(e.target.value));
+                onChange(JSON.parse(e.target.value))
               } catch {
-                onChange(e.target.value);
+                onChange(e.target.value)
               }
-            }}
+          })}
             placeholder="JSON value"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
           />
-        );
+        )
     }
   };
 
@@ -189,7 +189,7 @@ const PropertyEditor = ({
       case 'select': return Settings;
       case 'color': return Palette;
       case 'file': return Upload;
-      default: return Sliders;
+      default: return Sliders
     }
   };
 
@@ -221,7 +221,7 @@ const PropertyEditor = ({
         <p className="text-xs text-gray-500">{prop.description}</p>
       )}
     </div>
-  );
+  )
 };
 
 const CodeViewer = ({ 
@@ -229,30 +229,30 @@ const CodeViewer = ({
   props 
 }: { 
   element: ElementDefinition; 
-  props: Record<string, any>;
+  props: Record<string, any>
 }) => {
   const generatedCode = useMemo(() => {
     const propsString = Object.entries(props)
       .filter(([_, value]) => value !== undefined && value !== '')
       .map(([key, value]) => {
         if (typeof value === 'string') {
-          return `  ${key}="${value}"`;
+          return `  ${key}="${value}"`
         } else if (typeof value === 'boolean') {
-          return value ? `  ${key}` : '';
+          return value ? `  ${key}` : ''
         } else {
-          return `  ${key}={${JSON.stringify(value)}}`;
+          return `  ${key}={${JSON.stringify(value)}}`
         }
       })
       .filter(Boolean)
       .join('\n');
 
-    return `<${element.name}${propsString ? '\n' + propsString + '\n' : ''}/>`;
+    return `<${element.name}${propsString ? '\n' + propsString + '\n' : ''}/>`
   }, [element, props]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(generatedCode);
     // Show toast notification in real implementation
-    alert('Code copied to clipboard!');
+    alert('Code copied to clipboard!')
   };
 
   return (
@@ -271,7 +271,7 @@ const CodeViewer = ({
         </pre>
       </div>
     </div>
-  );
+  )
 };
 
 export function InteractivePlayground({ 
@@ -290,11 +290,11 @@ export function InteractivePlayground({
     setCurrentProps(prev => ({
       ...prev,
       [propName]: value
-    }));
+    }))
   }, []);
 
   const resetProps = useCallback(() => {
-    setCurrentProps(element.defaultProps);
+    setCurrentProps(element.defaultProps)
   }, [element.defaultProps]);
 
   const handleSave = useCallback(() => {
@@ -308,7 +308,7 @@ export function InteractivePlayground({
       }
     };
     
-    onSave?.(configuration);
+    onSave?.(configuration)
   }, [element.id, element.tags, currentProps, configName, configDescription, onSave]);
 
   const handleExportCode = useCallback(() => {
@@ -316,11 +316,11 @@ export function InteractivePlayground({
       .filter(([_, value]) => value !== undefined && value !== '')
       .map(([key, value]) => {
         if (typeof value === 'string') {
-          return `${key}="${value}"`;
+          return `${key}="${value}"`
         } else if (typeof value === 'boolean') {
-          return value ? key : '';
+          return value ? key : ''
         } else {
-          return `${key}={${JSON.stringify(value)}}`;
+          return `${key}={${JSON.stringify(value)}}`
         }
       })
       .filter(Boolean)
@@ -328,7 +328,7 @@ export function InteractivePlayground({
     
     // In a real implementation, this would trigger a download
     navigator.clipboard.writeText(code);
-    alert('Code copied to clipboard!');
+    alert('Code copied to clipboard!')
   }, [element.name, currentProps]);
 
   const PreviewComponent = element.previewComponent;
@@ -405,8 +405,8 @@ export function InteractivePlayground({
                   <Icon className="w-4 h-4" />
                   {tab.label}
                 </button>
-              );
-            })}
+              )
+          })}
           </div>
 
           {/* Tab Content */}
@@ -477,7 +477,7 @@ export function InteractivePlayground({
                           <HiveButton
                             size="sm"
                             variant="outline"
-                            onClick={() => setCurrentProps({ ...element.defaultProps, ...example.props })}
+                            onClick={() => setCurrentProps({ ...element.defaultProps, ...example.props }}
                           >
                             <Play className="w-3 h-3 mr-1" />
                             Try
@@ -554,7 +554,7 @@ export function InteractivePlayground({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default InteractivePlayground;

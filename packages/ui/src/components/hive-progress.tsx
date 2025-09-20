@@ -83,7 +83,7 @@ export interface HiveProgressBarProps
   animated?: boolean;
   striped?: boolean;
   pulse?: boolean;
-  fillVariant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'gradient';
+  fillVariant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'gradient'
 }
 
 export const HiveProgressBar = React.forwardRef<HTMLDivElement, HiveProgressBarProps>(
@@ -142,7 +142,7 @@ export const HiveProgressBar = React.forwardRef<HTMLDivElement, HiveProgressBarP
             transition={{
               duration: animated ? motionDurations.smooth : 0,
               ease: liquidMetal.easing as any,
-            }}
+          }}
           >
             {/* Shimmer effect */}
             {animated && (
@@ -154,13 +154,13 @@ export const HiveProgressBar = React.forwardRef<HTMLDivElement, HiveProgressBarP
                   duration: 1.5,
                   repeat: Infinity,
                   ease: "linear",
-                }}
+          }}
               />
             )}
           </motion.div>
         </div>
       </div>
-    );
+    )
   }
 );
 
@@ -178,7 +178,7 @@ export interface HiveCircularProgressProps
   showValue?: boolean;
   showPercentage?: boolean;
   animated?: boolean;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export const HiveCircularProgress = React.forwardRef<HTMLDivElement, HiveCircularProgressProps>(
@@ -240,7 +240,7 @@ export const HiveCircularProgress = React.forwardRef<HTMLDivElement, HiveCircula
             transition={{
               duration: animated ? motionDurations.smooth : 0,
               ease: liquidMetal.easing as any,
-            }}
+          }}
           />
         </svg>
         
@@ -267,7 +267,7 @@ export const HiveCircularProgress = React.forwardRef<HTMLDivElement, HiveCircula
           )}
         </div>
       </div>
-    );
+    )
   }
 );
 
@@ -279,7 +279,7 @@ export interface StepProgressItem {
   label: string;
   description?: string;
   status: 'pending' | 'current' | 'completed' | 'error';
-  icon?: React.ReactNode;
+  icon?: React.ReactNode
 }
 
 export interface HiveStepProgressProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd'> {
@@ -287,7 +287,7 @@ export interface HiveStepProgressProps extends Omit<React.HTMLAttributes<HTMLDiv
   direction?: 'horizontal' | 'vertical';
   showConnectors?: boolean;
   clickable?: boolean;
-  onStepClick?: (step: StepProgressItem, index: number) => void;
+  onStepClick?: (step: StepProgressItem, index: number) => void
 }
 
 export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgressProps>(
@@ -312,7 +312,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
         case 'current':
           return <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse" />;
         default:
-          return <div className="w-6 h-6 rounded-full border-2 border-white/40 flex items-center justify-center text-xs font-medium text-[var(--hive-text-primary)]/60">{index + 1}</div>;
+          return <div className="w-6 h-6 rounded-full border-2 border-white/40 flex items-center justify-center text-xs font-medium text-[var(--hive-text-primary)]/60">{index + 1}</div>
       }
     };
     
@@ -325,7 +325,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
         case 'error':
           return 'text-red-400 border-red-400/30 bg-red-400/10';
         default:
-          return 'text-[var(--hive-text-primary)]/60 border-white/20 bg-[var(--hive-text-primary)]/5';
+          return 'text-[var(--hive-text-primary)]/60 border-white/20 bg-[var(--hive-text-primary)]/5'
       }
     };
     
@@ -361,7 +361,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
                 duration: motionDurations.smooth,
                 delay: index * 0.1,
                 ease: liquidMetal.easing as any 
-              }}
+          }}
             >
               {getStepIcon(step, index)}
             </motion.div>
@@ -384,7 +384,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
                 transition={{ 
                   duration: motionDurations.smooth,
                   delay: index * 0.1 + 0.1 
-                }}
+          }}
               >
                 {step.label}
               </motion.div>
@@ -397,7 +397,7 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
                   transition={{ 
                     duration: motionDurations.smooth,
                     delay: index * 0.1 + 0.2 
-                  }}
+          }}
                 >
                   {step.description}
                 </motion.div>
@@ -417,13 +417,13 @@ export const HiveStepProgress = React.forwardRef<HTMLDivElement, HiveStepProgres
                 transition={{ 
                   duration: motionDurations.smooth,
                   delay: index * 0.1 + 0.3 
-                }}
+          }}
               />
             )}
           </div>
         ))}
       </div>
-    );
+    )
   }
 );
 
@@ -435,7 +435,7 @@ export interface HiveSpinnerProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   color?: string;
   speed?: 'slow' | 'normal' | 'fast';
   variant?: 'spin' | 'pulse' | 'bounce' | 'dots' | 'bars';
-  label?: string;
+  label?: string
 }
 
 export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
@@ -475,7 +475,7 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
                 duration: speedDuration[speed],
                 repeat: Infinity,
                 ease: "easeInOut",
-              }}
+          }}
             />
           );
           
@@ -489,7 +489,7 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
                 duration: speedDuration[speed],
                 repeat: Infinity,
                 ease: "easeInOut",
-              }}
+          }}
             />
           );
           
@@ -506,7 +506,7 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
                     duration: speedDuration[speed],
                     repeat: Infinity,
                     delay: i * 0.2,
-                  }}
+          }}
                 />
               ))}
             </div>
@@ -525,7 +525,7 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
                     duration: speedDuration[speed],
                     repeat: Infinity,
                     delay: i * 0.1,
-                  }}
+          }}
                 />
               ))}
             </div>
@@ -541,9 +541,9 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
                 duration: speedDuration[speed],
                 repeat: Infinity,
                 ease: "linear",
-              }}
+          }}
             />
-          );
+          )
       }
     };
     
@@ -560,7 +560,7 @@ export const HiveSpinner = React.forwardRef<HTMLDivElement, HiveSpinnerProps>(
           )}
         </div>
       </div>
-    );
+    )
   }
 );
 
@@ -572,7 +572,7 @@ export interface HiveSkeletonProps extends Omit<React.HTMLAttributes<HTMLDivElem
   height?: string | number;
   variant?: 'text' | 'circular' | 'rectangular' | 'rounded';
   animated?: boolean;
-  lines?: number;
+  lines?: number
 }
 
 export const HiveSkeleton = React.forwardRef<HTMLDivElement, HiveSkeletonProps>(
@@ -595,7 +595,7 @@ export const HiveSkeleton = React.forwardRef<HTMLDivElement, HiveSkeletonProps>(
         case 'rounded':
           return 'rounded-xl';
         default:
-          return 'rounded';
+          return 'rounded'
       }
     };
     
@@ -618,13 +618,13 @@ export const HiveSkeleton = React.forwardRef<HTMLDivElement, HiveSkeletonProps>(
               style={{
                 ...skeletonStyle,
                 width: i === lines - 1 ? '75%' : '100%',
-              }}
+          }}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ 
                 duration: motionDurations.smooth,
                 delay: i * 0.1 
-              }}
+          }}
             >
               {animated && (
                 <motion.div
@@ -636,13 +636,13 @@ export const HiveSkeleton = React.forwardRef<HTMLDivElement, HiveSkeletonProps>(
                     repeat: Infinity,
                     ease: "linear",
                     delay: i * 0.2,
-                  }}
+          }}
                 />
               )}
             </motion.div>
           ))}
         </div>
-      );
+      )
     }
     
     return (
@@ -669,11 +669,11 @@ export const HiveSkeleton = React.forwardRef<HTMLDivElement, HiveSkeletonProps>(
               duration: 1.5,
               repeat: Infinity,
               ease: "linear",
-            }}
+          }}
           />
         )}
       </motion.div>
-    );
+    )
   }
 );
 
@@ -693,7 +693,7 @@ export interface HiveProgressProps {
   label?: string;
   steps?: StepProgressItem[];
   currentStep?: number;
-  className?: string;
+  className?: string
 }
 
 export const HiveProgress = React.forwardRef<HTMLDivElement, HiveProgressProps>(
@@ -733,7 +733,7 @@ export const HiveProgress = React.forwardRef<HTMLDivElement, HiveProgressProps>(
       case 'step':
         if (!steps) {
           console.warn('HiveProgress: steps prop is required for step variant');
-          return null;
+          return null
         }
         return (
           <HiveStepProgress
@@ -775,7 +775,7 @@ export const HiveProgress = React.forwardRef<HTMLDivElement, HiveProgressProps>(
             value={value}
             max={max}
             size={size === 'md' ? 'default' : size}
-            variant="default"
+            variant="secondary"
             fillVariant={status === 'error' ? 'danger' : status}
             showValue={showValue}
             showPercentage={showPercentage}
@@ -784,7 +784,7 @@ export const HiveProgress = React.forwardRef<HTMLDivElement, HiveProgressProps>(
             className={className}
             {...props}
           />
-        );
+        )
     }
   }
 );

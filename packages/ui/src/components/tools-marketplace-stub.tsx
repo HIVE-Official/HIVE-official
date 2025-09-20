@@ -8,7 +8,7 @@ import { HiveCard } from './hive-card';
 
 export interface ToolMarketplaceProps {
   className?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export const ToolMarketplace: React.FC<ToolMarketplaceProps> = ({ 
@@ -27,13 +27,13 @@ export const ToolMarketplace: React.FC<ToolMarketplaceProps> = ({
         {children}
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export interface LiveToolRuntimeProps {
   toolId?: string;
   className?: string;
-  onToolLoad?: (toolId: string) => void;
+  onToolLoad?: (toolId: string) => void
 }
 
 export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({ 
@@ -43,7 +43,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
 }) => {
   React.useEffect(() => {
     if (toolId && onToolLoad) {
-      onToolLoad(toolId);
+      onToolLoad(toolId)
     }
   }, [toolId, onToolLoad]);
 
@@ -58,5 +58,5 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
         </p>
       </div>
     </HiveCard>
-  );
+  )
 };

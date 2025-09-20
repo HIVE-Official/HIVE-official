@@ -6,11 +6,11 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  */
 import { useState, useCallback, useMemo } from 'react';
 import { HiveCard } from '../hive-card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Checkbox } from '../ui/checkbox';
-import { Badge } from '../ui/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Label } from '../../atomic/atoms/label';
+import { Checkbox } from '../../atomic/atoms/checkbox';
+import { Badge } from '../../atomic/atoms/badge';
 import { Users, Lock, Globe, Eye, Settings, Shield, AlertCircle, CheckCircle, Crown, Star, UserCheck, UserX, Clock, Plus, Trash2, Edit, Save, X } from 'lucide-react';
 export const ToolPermissionsManager = ({ tool, currentConfig, spaceMembers, onConfigChange, onSave, userRole, isLoading = false }) => {
     const [config, setConfig] = useState(currentConfig);
@@ -112,21 +112,30 @@ export const ToolPermissionsManager = ({ tool, currentConfig, spaceMembers, onCo
                         return (_jsxs("button", { onClick: () => setActiveTab(tab.id), className: `flex items-center space-x-2 py-4 px-2 border-b-2 transition-colors ${activeTab === tab.id
                                 ? 'border-[var(--hive-primary)] text-[var(--hive-primary)]'
                                 : 'border-transparent text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]'}`, children: [_jsx(Icon, { className: "w-4 h-4" }), _jsx("span", { className: "text-sm font-medium", children: tab.label })] }, tab.id));
-                    }) }) }), _jsxs("div", { className: "space-y-6", children: [activeTab === 'general' && (_jsxs("div", { className: "space-y-6", children: [_jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-4", children: "General Settings" }), _jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Public Tool" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Allow everyone in the space to discover this tool" })] }), _jsx(Checkbox, { checked: config.isPublic, onCheckedChange: (checked) => updateConfig({ isPublic: !!checked }), disabled: !canModifyPermissions })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Track Usage" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Collect analytics and usage statistics" })] }), _jsx(Checkbox, { checked: config.restrictions.trackUsage, onCheckedChange: (checked) => updateConfig({
-                                                            restrictions: { ...config.restrictions, trackUsage: !!checked }
-                                                        }), disabled: !canModifyPermissions })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Allow Sharing" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Members can share this tool with other spaces" })] }), _jsx(Checkbox, { checked: config.restrictions.allowSharing, onCheckedChange: (checked) => updateConfig({
-                                                            restrictions: { ...config.restrictions, allowSharing: !!checked }
-                                                        }), disabled: !canModifyPermissions })] })] })] }), _jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-4", children: "Default Permissions" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)] mb-4", children: "These permissions apply to all users unless overridden by role or user-specific permissions." }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: permissionActions.map(action => {
+                    }) }) }), _jsxs("div", { className: "space-y-6", children: [activeTab === 'general' && (_jsxs("div", { className: "space-y-6", children: [_jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-4", children: "General Settings" }), _jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Public Tool" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Allow everyone in the space to discover this tool" })] }), _jsx(Checkbox, { checked: config.isPublic, onChange: (e) => { const checked = e.target.checked; updateConfig({ isPublic: !!checked }); }, disabled: !canModifyPermissions })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Track Usage" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Collect analytics and usage statistics" })] }), _jsx(Checkbox, { checked: config.restrictions.trackUsage, onChange: (e) => {
+                                                            const checked = e.target.checked;
+                                                            updateConfig({
+                                                                restrictions: { ...config.restrictions, trackUsage: !!checked }
+                                                            });
+                                                        }, disabled: !canModifyPermissions })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Allow Sharing" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Members can share this tool with other spaces" })] }), _jsx(Checkbox, { checked: config.restrictions.allowSharing, onChange: (e) => {
+                                                            const checked = e.target.checked;
+                                                            updateConfig({
+                                                                restrictions: { ...config.restrictions, allowSharing: !!checked }
+                                                            });
+                                                        }, disabled: !canModifyPermissions })] })] })] }), _jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-4", children: "Default Permissions" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)] mb-4", children: "These permissions apply to all users unless overridden by role or user-specific permissions." }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: permissionActions.map(action => {
                                             const Icon = action.icon;
                                             const isGranted = config.defaultPermissions.includes(action.key);
                                             return (_jsx("div", { className: `p-4 rounded-lg border transition-all duration-200 ${isGranted
                                                     ? 'border-[var(--hive-primary)] bg-[var(--hive-primary)]/10'
-                                                    : 'border-[var(--hive-border-default)] hover:border-[var(--hive-border-hover)]'}`, children: _jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex items-start space-x-3", children: [_jsx(Icon, { className: `w-5 h-5 mt-0.5 ${isGranted ? 'text-[var(--hive-primary)]' : 'text-[var(--hive-text-secondary)]'}` }), _jsxs("div", { children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: action.label }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: action.description })] })] }), _jsx(Checkbox, { checked: isGranted, onCheckedChange: (checked) => {
-                                                                const newPermissions = checked
-                                                                    ? [...config.defaultPermissions, action.key]
-                                                                    : config.defaultPermissions.filter(p => p !== action.key);
-                                                                updateConfig({ defaultPermissions: newPermissions });
-                                                            }, disabled: !canModifyPermissions })] }) }, action.key));
+                                                    : 'border-[var(--hive-border-default)] hover:border-[var(--hive-border-hover)]'}`, children: _jsxs("div", { className: "flex items-start justify-between", children: [_jsxs("div", { className: "flex items-start space-x-3", children: [_jsx(Icon, { className: `w-5 h-5 mt-0.5 ${isGranted ? 'text-[var(--hive-primary)]' : 'text-[var(--hive-text-secondary)]'}` }), _jsxs("div", { children: [_jsx("h4", { className: "font-medium text-[var(--hive-text-primary)]", children: action.label }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: action.description })] })] }), _jsx(Checkbox, { checked: isGranted, onChange: (e) => {
+                                                                const checked = e.target.checked;
+                                                                {
+                                                                    const newPermissions = checked
+                                                                        ? [...config.defaultPermissions, action.key]
+                                                                        : config.defaultPermissions.filter(p => p !== action.key);
+                                                                    updateConfig({ defaultPermissions: newPermissions });
+                                                                }
+                                                            } }), ")} disabled=", !canModifyPermissions, "/>"] }) }, action.key));
                                         }) })] })] })), activeTab === 'roles' && (_jsx("div", { className: "space-y-6", children: roleDefinitions.map(role => {
                             const Icon = role.icon;
                             const permissions = getRolePermissions(role.key);
@@ -152,13 +161,22 @@ export const ToolPermissionsManager = ({ tool, currentConfig, spaceMembers, onCo
                                                         ...config.restrictions,
                                                         maxConcurrentUsers: e.target.value ? parseInt(e.target.value) : undefined
                                                     }
-                                                }), placeholder: "No limit", disabled: !canModifyPermissions, className: "mt-1" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)] mt-1", children: "Limit how many users can use the tool simultaneously" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Allow Anonymous Users" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Non-space members can use this tool if they have the link" })] }), _jsx(Checkbox, { checked: config.restrictions.allowAnonymous, onCheckedChange: (checked) => updateConfig({
-                                                    restrictions: { ...config.restrictions, allowAnonymous: !!checked }
-                                                }), disabled: !canModifyPermissions })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Require Approval" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Users must request permission before using this tool" })] }), _jsx(Checkbox, { checked: config.restrictions.requireApproval, onCheckedChange: (checked) => updateConfig({
-                                                    restrictions: { ...config.restrictions, requireApproval: !!checked }
-                                                }), disabled: !canModifyPermissions })] })] })] })), activeTab === 'schedule' && (_jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-4", children: "Access Schedule" }), _jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Enable Scheduled Access" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Restrict tool access to specific times and days" })] }), _jsx(Checkbox, { checked: config.schedule?.enabled || false, onCheckedChange: (checked) => updateConfig({
-                                                    schedule: { ...config.schedule, enabled: !!checked }
-                                                }), disabled: !canModifyPermissions })] }), config.schedule?.enabled && (_jsxs("div", { className: "space-y-4 pl-6 border-l-2 border-[var(--hive-border-default)]", children: [_jsxs("div", { className: "grid grid-cols-2 gap-4", children: [_jsxs("div", { children: [_jsx(Label, { htmlFor: "startTime", children: "Start Time" }), _jsx(Input, { id: "startTime", type: "time", value: config.schedule?.allowedHours?.start || '', onChange: (e) => updateConfig({
+                                                }), placeholder: "No limit", disabled: !canModifyPermissions, className: "mt-1" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)] mt-1", children: "Limit how many users can use the tool simultaneously" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Allow Anonymous Users" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Non-space members can use this tool if they have the link" })] }), _jsx(Checkbox, { checked: config.restrictions.allowAnonymous, onChange: (e) => {
+                                                    const checked = e.target.checked;
+                                                    updateConfig({
+                                                        restrictions: { ...config.restrictions, allowAnonymous: !!checked }
+                                                    });
+                                                }, disabled: !canModifyPermissions })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Require Approval" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Users must request permission before using this tool" })] }), _jsx(Checkbox, { checked: config.restrictions.requireApproval, onChange: (e) => {
+                                                    const checked = e.target.checked;
+                                                    updateConfig({
+                                                        restrictions: { ...config.restrictions, requireApproval: !!checked }
+                                                    });
+                                                }, disabled: !canModifyPermissions })] })] })] })), activeTab === 'schedule' && (_jsxs(HiveCard, { className: "p-6", children: [_jsx("h3", { className: "text-lg font-semibold text-[var(--hive-text-primary)] mb-4", children: "Access Schedule" }), _jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx(Label, { className: "font-medium", children: "Enable Scheduled Access" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Restrict tool access to specific times and days" })] }), _jsx(Checkbox, { checked: config.schedule?.enabled || false, onChange: (e) => {
+                                                    const checked = e.target.checked;
+                                                    updateConfig({
+                                                        schedule: { ...config.schedule, enabled: !!checked }
+                                                    });
+                                                }, disabled: !canModifyPermissions })] }), config.schedule?.enabled && (_jsxs("div", { className: "space-y-4 pl-6 border-l-2 border-[var(--hive-border-default)]", children: [_jsxs("div", { className: "grid grid-cols-2 gap-4", children: [_jsxs("div", { children: [_jsx(Label, { htmlFor: "startTime", children: "Start Time" }), _jsx(Input, { id: "startTime", type: "time", value: config.schedule?.allowedHours?.start || '', onChange: (e) => updateConfig({
                                                                     schedule: {
                                                                         ...config.schedule,
                                                                         allowedHours: {
@@ -176,22 +194,29 @@ export const ToolPermissionsManager = ({ tool, currentConfig, spaceMembers, onCo
                                                                             ...config.schedule?.allowedHours
                                                                         }
                                                                     }
-                                                                }), disabled: !canModifyPermissions, className: "mt-1" })] })] }), _jsxs("div", { children: [_jsx(Label, { children: "Allowed Days" }), _jsx("div", { className: "grid grid-cols-7 gap-2 mt-2", children: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => {
-                                                            const dayValue = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'][index];
-                                                            const isSelected = config.schedule?.allowedDays?.includes(dayValue) || false;
-                                                            return (_jsx("button", { onClick: () => {
-                                                                    if (!canModifyPermissions)
-                                                                        return;
-                                                                    const currentDays = config.schedule?.allowedDays || [];
-                                                                    const newDays = isSelected
-                                                                        ? currentDays.filter(d => d !== dayValue)
-                                                                        : [...currentDays, dayValue];
-                                                                    updateConfig({
-                                                                        schedule: { ...config.schedule, allowedDays: newDays }
-                                                                    });
-                                                                }, disabled: !canModifyPermissions, className: `p-2 text-sm rounded-lg border transition-colors ${isSelected
-                                                                    ? 'border-[var(--hive-primary)] bg-[var(--hive-primary)] text-white'
-                                                                    : 'border-[var(--hive-border-default)] hover:border-[var(--hive-border-hover)] text-[var(--hive-text-primary)]'} ${!canModifyPermissions ? 'opacity-50 cursor-not-allowed' : ''}`, children: day }, day));
-                                                        }) })] })] }))] })] }))] }), !canModifyPermissions && (_jsxs("div", { className: "flex items-center space-x-3 p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg", children: [_jsx(AlertCircle, { className: "w-5 h-5 text-orange-500" }), _jsxs("div", { children: [_jsx("p", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Limited Permissions" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "You need admin permissions to modify tool access control settings." })] })] }))] }));
+                                                                }), disabled: !canModifyPermissions, className: "mt-1" })] })] }), _jsxs("div", { children: [_jsx(Label, { children: "Allowed Days" }), _jsxs("div", { className: "grid grid-cols-7 gap-2 mt-2", children: [['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => {
+                                                                const dayValue = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'][index];
+                                                                const isSelected = config.schedule?.allowedDays?.includes(dayValue) || false;
+                                                                return (_jsx("button", { onClick: () => {
+                                                                        if (!canModifyPermissions)
+                                                                            return;
+                                                                        const currentDays = config.schedule?.allowedDays || [];
+                                                                        const newDays = isSelected
+                                                                            ? currentDays.filter(d => d !== dayValue)
+                                                                            : [...currentDays, dayValue];
+                                                                        updateConfig({
+                                                                            schedule: { ...config.schedule, allowedDays: newDays }
+                                                                        });
+                                                                    } }, day));
+                                                            }, disabled = {}, canModifyPermissions), "className=", `p-2 text-sm rounded-lg border transition-colors ${isSelected
+                                                                ? 'border-[var(--hive-primary)] bg-[var(--hive-primary)] text-white'
+                                                                : 'border-[var(--hive-border-default)] hover:border-[var(--hive-border-hover)] text-[var(--hive-text-primary)]'} ${!canModifyPermissions ? 'opacity-50 cursor-not-allowed' : ''}`, ">", day] }), ") })"] })] }))] }), ")}"] }))] }), ")}"] })) /* Insufficient Permissions Warning */;
+    { /* Insufficient Permissions Warning */ }
+    {
+        !canModifyPermissions && (_jsxs("div", { className: "flex items-center space-x-3 p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg", children: [_jsx(AlertCircle, { className: "w-5 h-5 text-orange-500" }), _jsxs("div", { children: [_jsx("p", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Limited Permissions" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "You need admin permissions to modify tool access control settings." })] })] }));
+    }
 };
+div >
+;
+;
 //# sourceMappingURL=tool-permissions-manager.js.map

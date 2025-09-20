@@ -4,7 +4,6 @@ import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 import { Camera, Crown, Shield, Eye, EyeOff, Upload } from 'lucide-react';
-import Image from 'next/image';
 
 const profileAvatarVariants = cva(
   "relative flex-shrink-0 bg-[var(--hive-background-secondary)] border-[var(--hive-border-primary)] overflow-hidden",
@@ -115,7 +114,7 @@ export interface ProfileAvatarProps
   editable?: boolean;
   onEdit?: () => void;
   onUpload?: (file: File) => void;
-  loading?: boolean;
+  loading?: boolean
 }
 
 export function ProfileAvatar({
@@ -146,14 +145,14 @@ export function ProfileAvatar({
     if (border !== "subtle") return border;
     if (isBuilder) return "builder";
     if (isVerified) return "verified";
-    return "subtle";
+    return "subtle"
   }, [border, isBuilder, isVerified]);
 
   // Auto-determine status from onlineStatus
   const determinedStatus = React.useMemo(() => {
     if (status !== "none") return status;
     if (!showStatus || !onlineStatus) return "none";
-    return onlineStatus;
+    return onlineStatus
   }, [status, showStatus, onlineStatus]);
 
   // Generate initials from name
@@ -163,7 +162,7 @@ export function ProfileAvatar({
       .map(n => n[0])
       .join('')
       .toUpperCase()
-      .slice(0, 2);
+      .slice(0, 2)
   }, [name]);
 
   // Icon sizes based on avatar size
@@ -176,7 +175,7 @@ export function ProfileAvatar({
       xl: "h-4 w-4",
       xxl: "h-5 w-5"
     };
-    return sizes[size];
+    return sizes[size]
   }, [size]);
 
   const textSize = React.useMemo(() => {
@@ -188,46 +187,34 @@ export function ProfileAvatar({
       xl: "text-xl",
       xxl: "text-2xl"
     };
-    return sizes[size];
+    return sizes[size]
   }, [size]);
 
   // Handle file upload
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && onUpload) {
-      onUpload(file);
+      onUpload(file)
     }
     // Reset input value so same file can be selected again
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = ''
     }
   };
 
   // Handle upload trigger
   const triggerUpload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    fileInputRef.current?.click();
+    fileInputRef.current?.click()
   };
 
   // Handle click
   const handleClick = () => {
     if (onEdit) {
-      onEdit();
+      onEdit()
     }
   };
 
-  // Get avatar size for Next.js Image
-  const getAvatarSize = () => {
-    const sizeMap = {
-      xs: 32,
-      sm: 48,
-      md: 64,
-      lg: 80,
-      xl: 96,
-      xxl: 128
-    };
-    return sizeMap[size];
-  };
 
   return (
     <div
@@ -244,16 +231,13 @@ export function ProfileAvatar({
       {loading ? (
         <div className="w-full h-full bg-[var(--hive-background-secondary)] animate-pulse" />
       ) : src ? (
-        <Image
+        <img
           src={src}
           alt={alt || `${name}'s profile`}
-          width={getAvatarSize()}
-          height={getAvatarSize()}
           className="w-full h-full object-cover"
           loading="lazy"
           onError={() => {
-            // Image loading error will be handled by Next.js
-            console.warn(`Failed to load avatar image: ${src}`);
+            console.warn(`Failed to load avatar image: ${src}`)
           }}
         />
       ) : (
@@ -347,7 +331,7 @@ export function ProfileAvatar({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // Export variants for external use

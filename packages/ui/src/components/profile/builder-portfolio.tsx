@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { cn } from '../../lib/utils';
 
 // Builder Portfolio Types
@@ -66,7 +66,7 @@ export interface Tool {
     likes: number;
     comments: number;
     rating: number;
-    ratingCount: number;
+    ratingCount: number
   };
   
   // Technical details
@@ -75,7 +75,7 @@ export interface Tool {
     buildTime: number; // hours
     dependencies: string[];
     platforms: ('web' | 'mobile' | 'desktop')[];
-    codeLines: number;
+    codeLines: number
   };
   
   // Collaboration
@@ -83,7 +83,7 @@ export interface Tool {
   isOpenSource: boolean;
   githubUrl?: string;
   demoUrl?: string;
-  docsUrl?: string;
+  docsUrl?: string
 }
 
 export type ToolCategory = 'productivity' | 'academic' | 'social' | 'utility' | 'ai' | 'design' | 'data' | 'game';
@@ -98,8 +98,8 @@ export interface Achievement {
   earnedAt: string;
   progress?: {
     current: number;
-    total: number;
-  };
+    total: number
+  }
 }
 
 export interface BuilderStats {
@@ -114,11 +114,11 @@ export interface BuilderStats {
   streak: {
     current: number;
     longest: number;
-    lastBuildDate: string;
+    lastBuildDate: string
   };
   specialties: ToolCategory[];
   collaborations: number;
-  contributions: number;
+  contributions: number
 }
 
 interface BuilderPortfolioProps {
@@ -130,7 +130,7 @@ interface BuilderPortfolioProps {
   onEditTool?: (tool: Tool) => void;
   onCreateTool?: () => void;
   onViewAnalytics?: (tool: Tool) => void;
-  className?: string;
+  className?: string
 }
 
 export const BuilderPortfolio: React.FC<BuilderPortfolioProps> = ({
@@ -154,7 +154,7 @@ export const BuilderPortfolio: React.FC<BuilderPortfolioProps> = ({
 
     // Filter by category
     if (filter !== 'all') {
-      filtered = filtered.filter(tool => tool.category === filter);
+      filtered = filtered.filter(tool => tool.category === filter)
     }
 
     // Filter by search query
@@ -163,7 +163,7 @@ export const BuilderPortfolio: React.FC<BuilderPortfolioProps> = ({
         tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+      )
     }
 
     // Sort
@@ -175,11 +175,11 @@ export const BuilderPortfolio: React.FC<BuilderPortfolioProps> = ({
           return b.stats.rating - a.stats.rating;
         case 'recent':
         default:
-          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       }
     });
 
-    return filtered;
+    return filtered
   }, [tools, filter, sortBy, searchQuery]);
 
   const categories: { id: ToolCategory | 'all'; label: string; icon: React.ReactNode }[] = [
@@ -203,7 +203,7 @@ export const BuilderPortfolio: React.FC<BuilderPortfolioProps> = ({
       case 'Developer':
         return 'text-yellow-400 bg-yellow-400/10';
       default:
-        return 'text-gray-400 bg-gray-400/10';
+        return 'text-gray-400 bg-gray-400/10'
     }
   };
 
@@ -218,7 +218,7 @@ export const BuilderPortfolio: React.FC<BuilderPortfolioProps> = ({
       case 'deprecated':
         return 'text-red-400 bg-red-400/10 border-red-400/20';
       default:
-        return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
+        return 'text-gray-400 bg-gray-400/10 border-gray-400/20'
     }
   };
 
@@ -468,7 +468,7 @@ export const BuilderPortfolio: React.FC<BuilderPortfolioProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };
 
 // Tool Card Component
@@ -478,7 +478,7 @@ interface ToolCardProps {
   isOwnProfile: boolean;
   onClick: () => void;
   onEdit: () => void;
-  onViewAnalytics: () => void;
+  onViewAnalytics: () => void
 }
 
 const ToolCard: React.FC<ToolCardProps> = ({
@@ -492,7 +492,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleCardClick = () => {
-    setIsExpanded(true);
+    setIsExpanded(true)
   };
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -505,7 +505,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
       case 'deprecated':
         return 'text-red-400 bg-red-400/10 border-red-400/20';
       default:
-        return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
+        return 'text-gray-400 bg-gray-400/10 border-gray-400/20'
     }
   };
 
@@ -522,16 +522,16 @@ const ToolCard: React.FC<ToolCardProps> = ({
             isOwnTool={isOwnProfile}
             onRun={(toolId) => {
               onClick();
-              setIsExpanded(false);
-            }}
+              setIsExpanded(false)
+          }}
             onEdit={(toolId) => {
               onEdit();
-              setIsExpanded(false);
-            }}
+              setIsExpanded(false)
+          }}
             onViewAnalytics={(toolId) => {
               onViewAnalytics();
-              setIsExpanded(false);
-            }}
+              setIsExpanded(false)
+          }}
           />
         }
       >
@@ -579,10 +579,10 @@ const ToolCard: React.FC<ToolCardProps> = ({
 
           {isOwnProfile && (
             <div className="flex items-center gap-2">
-              <HiveButton variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onViewAnalytics(); }}>
+              <HiveButton variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onViewAnalytics() }}>
                 <TrendingUp className="h-4 w-4" />
               </HiveButton>
-              <HiveButton variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(); }}>
+              <HiveButton variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); onEdit() }}>
                 <Edit3 className="h-4 w-4" />
               </HiveButton>
             </div>
@@ -590,7 +590,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
         </div>
       </HiveCard>
       </ExpandFocus>
-    );
+    )
   }
 
   return (
@@ -605,15 +605,15 @@ const ToolCard: React.FC<ToolCardProps> = ({
           isOwnTool={isOwnProfile}
           onRun={(toolId) => {
             onClick();
-            setIsExpanded(false);
+            setIsExpanded(false)
           }}
           onEdit={(toolId) => {
             onEdit();
-            setIsExpanded(false);
+            setIsExpanded(false)
           }}
           onViewAnalytics={(toolId) => {
             onViewAnalytics();
-            setIsExpanded(false);
+            setIsExpanded(false)
           }}
         />
       }
@@ -635,7 +635,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
             )}
             {isOwnProfile && (
               <button
-                onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                onClick={(e) => { e.stopPropagation(); onEdit() }}
                 className="p-1 rounded-md text-hive-text-secondary hover:text-hive-text-primary hover:bg-hive-background-primary"
               >
                 <Edit3 className="h-4 w-4" />
@@ -702,7 +702,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
             variant="outline" 
             size="sm" 
             className="w-full mt-4"
-            onClick={(e) => { e.stopPropagation(); onViewAnalytics(); }}
+            onClick={(e) => { e.stopPropagation(); onViewAnalytics() }}
           >
             <TrendingUp className="h-4 w-4 mr-2" />
             View Analytics
@@ -711,7 +711,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
       </div>
     </HiveCard>
     </ExpandFocus>
-  );
+  )
 };
 
 export default BuilderPortfolio;

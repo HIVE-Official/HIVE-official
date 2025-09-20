@@ -82,63 +82,65 @@ function useLoadingOrchestrator(resources, strategy, campusContext) {
         prioritizedResources.forEach(resource => {
             dependencyGraph.set(resource.id, resource.dependencies || []);
         });
-        // Process resources respecting dependencies
-        const processedResources = new Set();
-        for (const resource of prioritizedResources) {
-            // Check if dependencies are met
-            const canProcess = (resource.dependencies || []).every(dep => processedResources.has(dep));
-            if (!canProcess) {
-                // Skip for now, will be retried
-                continue;
-            }
-            try {
-                setLoadingState(prev => ({
-                    ...prev,
-                    currentResource: resource,
-                    phase: 'processing'
-                }));
-                // Simulate resource loading (replace with actual loading logic)
-                const loadingPromise = new Promise((resolve) => {
-                    setTimeout(resolve, resource.estimatedTime);
-                });
-                activeLoadingRef.current.set(resource.id, loadingPromise);
-                await loadingPromise;
-                processedResources.add(resource.id);
-                setLoadingState(prev => {
-                    const newCompleted = [...prev.completedResources, resource.id];
-                    const progress = Math.round((newCompleted.length / prioritizedResources.length) * 100);
-                    const elapsedTime = Date.now() - startTimeRef.current;
-                    const avgTimePerResource = elapsedTime / newCompleted.length;
-                    const remainingResources = prioritizedResources.length - newCompleted.length;
-                    const estimatedTimeRemaining = Math.max(0, avgTimePerResource * remainingResources);
-                    return {
-                        ...prev,
-                        completedResources: newCompleted,
-                        progress,
-                        estimatedTimeRemaining,
-                        phase: newCompleted.length === prioritizedResources.length ? 'finalizing' : 'processing'
-                    };
-                });
-            }
-            catch (error) {
-                console.error(`Failed to load resource ${resource.id}:`, error);
-                setLoadingState(prev => ({
-                    ...prev,
-                    failedResources: [...prev.failedResources, resource.id]
-                }));
-            }
+    });
+    // Process resources respecting dependencies
+    const processedResources = new Set();
+    for (const resource of prioritizedResources) {
+        // Check if dependencies are met
+        const canProcess = (resource.dependencies || []).every(dep => processedResources.has(dep));
+        if (!canProcess) {
+            // Skip for now, will be retried
+            continue;
         }
-        // Finalization phase
-        setLoadingState(prev => ({ ...prev, phase: 'finalizing' }));
-        await new Promise(resolve => setTimeout(resolve, 200)); // Allow UI to settle
-        setLoadingState(prev => ({ ...prev, phase: 'complete' }));
-    }, [prioritizedResources]);
-    // Start loading on mount
-    useEffect(() => {
-        loadResources();
-    }, [loadResources]);
-    return loadingState;
+        try {
+            setLoadingState(prev => ({
+                ...prev,
+                currentResource: resource,
+                phase: 'processing'
+            }));
+            // Simulate resource loading (replace with actual loading logic)
+            const loadingPromise = new Promise((resolve) => {
+                setTimeout(resolve, resource.estimatedTime);
+            });
+            activeLoadingRef.current.set(resource.id, loadingPromise);
+            await loadingPromise;
+            processedResources.add(resource.id);
+            setLoadingState(prev => {
+                const newCompleted = [...prev.completedResources, resource.id];
+                const progress = Math.round((newCompleted.length / prioritizedResources.length) * 100);
+                const elapsedTime = Date.now() - startTimeRef.current;
+                const avgTimePerResource = elapsedTime / newCompleted.length;
+                const remainingResources = prioritizedResources.length - newCompleted.length;
+                const estimatedTimeRemaining = Math.max(0, avgTimePerResource * remainingResources);
+                return {
+                    ...prev,
+                    completedResources: newCompleted,
+                    progress,
+                    estimatedTimeRemaining,
+                    phase: newCompleted.length === prioritizedResources.length ? 'finalizing' : 'processing'
+                };
+            });
+        }
+        catch (error) {
+            console.error(`Failed to load resource ${resource.id}:`, error);
+            setLoadingState(prev => ({
+                ...prev,
+                failedResources: [...prev.failedResources, resource.id]
+            }));
+        }
+    }
+    // Finalization phase
+    setLoadingState(prev => ({ ...prev, phase: 'finalizing' }));
+    await new Promise(resolve => setTimeout(resolve, 200)); // Allow UI to settle
+    setLoadingState(prev => ({ ...prev, phase: 'complete' }));
 }
+[prioritizedResources];
+;
+// Start loading on mount
+useEffect(() => {
+    loadResources();
+}, [loadResources]);
+return loadingState;
 // Generate contextual loading messages
 function generateLoadingMessage(phase, resource, campusContext, userJourney) {
     const studentFriendly = {

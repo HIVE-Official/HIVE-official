@@ -208,7 +208,7 @@ export interface HiveSelectProps extends VariantProps<typeof selectTriggerVarian
   onValueChange?: (value: string) => void;
   children: React.ReactNode;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 const HiveSelect = React.forwardRef<
@@ -284,10 +284,10 @@ const HiveSelect = React.forwardRef<
           </p>
         )}
       </div>
-    );
+    )
   }
   
-  return selectElement;
+  return selectElement
 });
 HiveSelect.displayName = "HiveSelect";
 

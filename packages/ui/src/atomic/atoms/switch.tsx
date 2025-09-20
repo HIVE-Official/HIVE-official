@@ -7,7 +7,7 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   label?: string;
   description?: string;
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'ghost';
+  variant?: 'default' | 'ghost'
 }
 
 const switchSizes = {
@@ -95,9 +95,9 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(({
           e.preventDefault();
           const input = e.currentTarget.querySelector('input') as HTMLInputElement;
           if (input && !disabled) {
-            input.click();
+            input.click()
           }
-        }}
+          }}
       >
         <input
           ref={ref}
@@ -135,7 +135,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(({
         </div>
       )}
     </label>
-  );
+  )
 });
 
 Switch.displayName = 'Switch';

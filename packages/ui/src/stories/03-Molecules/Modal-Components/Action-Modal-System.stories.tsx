@@ -102,7 +102,7 @@ export const CreateSpaceModal: Story = {
     const handleInputChange = (field: string, value: string | string[]) => {
       setFormData(prev => ({ ...prev, [field]: value }));
       if (errors[field]) {
-        setErrors(prev => ({ ...prev, [field]: '' }));
+        setErrors(prev => ({ ...prev, [field]: '' }))
       }
     };
 
@@ -112,22 +112,22 @@ export const CreateSpaceModal: Story = {
       if (step === 1) {
         if (!formData.name) newErrors.name = 'Space name is required';
         if (!formData.description) newErrors.description = 'Description is required';
-        if (!formData.type) newErrors.type = 'Please select a space type';
+        if (!formData.type) newErrors.type = 'Please select a space type'
       } else if (step === 2) {
         if (!formData.privacy) newErrors.privacy = 'Please select privacy level';
-        if (!formData.location) newErrors.location = 'Please select a location';
+        if (!formData.location) newErrors.location = 'Please select a location'
       }
       
       setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
+      return Object.keys(newErrors).length === 0
     };
 
     const handleNext = () => {
       if (validateStep(currentStep)) {
         if (currentStep < totalSteps) {
-          setCurrentStep(currentStep + 1);
+          setCurrentStep(currentStep + 1)
         } else {
-          handleSubmit();
+          handleSubmit()
         }
       }
     };
@@ -144,7 +144,7 @@ export const CreateSpaceModal: Story = {
         location: '',
         maxMembers: '',
         tags: []
-      });
+      })
     };
 
     return (
@@ -395,7 +395,7 @@ export const CreateSpaceModal: Story = {
           </div>
         )}
       </div>
-    );
+    )
   }
 };
 
@@ -496,7 +496,7 @@ export const ConfirmationModal: Story = {
                       variant={modal.confirmVariant}
                       onClick={() => {
                         console.log(`Confirmed: ${modal.id}`);
-                        setActiveModal(null);
+                        setActiveModal(null)
                       }}
                       className="flex-1"
                     >
@@ -506,10 +506,10 @@ export const ConfirmationModal: Story = {
                 </CardContent>
               </Card>
             </div>
-          ) : null;
-        })}
+          ) : null
+        })
       </div>
-    );
+    )
   }
 };
 
@@ -563,7 +563,7 @@ export const InteractiveModalDemo: Story = {
         eventDate: '',
         eventTime: '',
         eventLocation: ''
-      });
+      })
     };
 
     return (
@@ -586,8 +586,8 @@ export const InteractiveModalDemo: Story = {
                 <div className="font-semibold mb-2">{action.title}</div>
                 <div className="text-sm opacity-90">{action.description}</div>
               </button>
-            );
-          })}
+            )
+          })
         </div>
 
         {/* Create Event Modal */}
@@ -906,6 +906,6 @@ export const InteractiveModalDemo: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

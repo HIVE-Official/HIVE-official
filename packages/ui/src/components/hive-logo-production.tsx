@@ -14,13 +14,13 @@ interface LogoAnalytics {
   onLogoClick?: (variant: string, context: string) => void;
   onLogoHover?: (variant: string, context: string) => void;
   userId?: string;
-  sessionId?: string;
+  sessionId?: string
 }
 
 interface PerformanceMetrics {
   renderTime?: number;
   animationFrames?: number;
-  memoryUsage?: number;
+  memoryUsage?: number
 }
 
 interface AccessibilityOptions {
@@ -29,7 +29,7 @@ interface AccessibilityOptions {
   role?: string;
   tabIndex?: number;
   focusable?: boolean;
-  announceChanges?: boolean;
+  announceChanges?: boolean
 }
 
 interface ProductionLogoProps {
@@ -53,11 +53,11 @@ interface ProductionLogoProps {
   customColors?: {
     primary?: string;
     secondary?: string;
-    accent?: string;
+    accent?: string
   };
   brandingOverride?: {
     companyName?: string;
-    logoUrl?: string;
+    logoUrl?: string
   };
   
   // A/B Testing
@@ -68,7 +68,7 @@ interface ProductionLogoProps {
   gestures?: {
     enableSwipe?: boolean;
     enableLongPress?: boolean;
-    enableDoubleClick?: boolean;
+    enableDoubleClick?: boolean
   };
   
   // Context awareness
@@ -76,7 +76,7 @@ interface ProductionLogoProps {
   environment?: 'development' | 'staging' | 'production';
   
   className?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // Performance-optimized variants system
@@ -130,7 +130,7 @@ const OptimizedHiveSVG = memo(({
   variant: string;
   size: string;
   customColors?: { primary?: string; secondary?: string; accent?: string };
-  className?: string;
+  className?: string
 }) => {
   // Memoized color calculation
   const fillColor = useMemo(() => {
@@ -139,7 +139,7 @@ const OptimizedHiveSVG = memo(({
       case 'gold': return 'var(--hive-color-gold)';
       case 'inverted': return 'var(--hive-color-void)';
       case 'custom': return 'currentColor';
-      default: return 'var(--hive-text-primary)';
+      default: return 'var(--hive-text-primary)'
     }
   }, [variant, customColors]);
 
@@ -149,11 +149,11 @@ const OptimizedHiveSVG = memo(({
     
     if (isSmall) {
       // Simplified path for small sizes to improve performance
-      return "M50,10 L85,30 L85,70 L50,90 L15,70 L15,30 Z M50,25 L70,35 L70,65 L50,75 L30,65 L30,35 Z";
+      return "M50,10 L85,30 L85,70 L50,90 L15,70 L15,30 Z M50,25 L70,35 L70,65 L50,75 L30,65 L30,35 Z"
     }
     
     // Full detailed path for larger sizes
-    return "M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z";
+    return "M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z"
   }, [size]);
 
   const viewBox = ['xs', 'sm'].includes(size) ? "0 0 100 100" : "0 0 1500 1500";
@@ -166,17 +166,17 @@ const OptimizedHiveSVG = memo(({
       style={{
         fillRule: 'evenodd',
         clipRule: 'evenodd',
-      }}
+          }}
     >
       <path
         d={logoPath}
         fill={fillColor}
         style={{
           vectorEffect: 'non-scaling-stroke',
-        }}
+          }}
       />
     </svg>
-  );
+  )
 });
 
 OptimizedHiveSVG.displayName = 'OptimizedHiveSVG';
@@ -203,17 +203,17 @@ const usePerformanceMetrics = (enabled: boolean, variant: string) => {
 
         // Log performance data in development
         if (process.env.NODE_ENV === 'development') {
-          console.log(`[HIVE Logo] ${variant} render: ${renderTime.toFixed(2)}ms`);
+          console.log(`[HIVE Logo] ${variant} render: ${renderTime.toFixed(2)}ms`)
         }
       }
     };
 
     // Use RAF for accurate timing
     const rafId = requestAnimationFrame(measurePerformance);
-    return () => cancelAnimationFrame(rafId);
+    return () => cancelAnimationFrame(rafId)
   }, [enabled, variant]);
 
-  return metrics;
+  return metrics
 };
 
 // Advanced gesture detection hook
@@ -248,13 +248,13 @@ const useAdvancedGestures = (
         longPressTimeout = setTimeout(() => {
           analytics?.onLogoClick?.('longpress', 'gesture');
           // Trigger long press action
-        }, 500);
+        }, 500)
       }
     };
 
     const handleMouseUp = () => {
       setGestureState(prev => ({ ...prev, isPressed: false }));
-      clearTimeout(longPressTimeout);
+      clearTimeout(longPressTimeout)
     };
 
     const handleClick = () => {
@@ -269,16 +269,16 @@ const useAdvancedGestures = (
       clickTimeout = setTimeout(() => {
         if (gestureState.clickCount === 1) {
           // Single click
-          analytics?.onLogoClick?.('single', 'gesture');
+          analytics?.onLogoClick?.('single', 'gesture')
         }
-        setGestureState(prev => ({ ...prev, clickCount: 0 }));
+        setGestureState(prev => ({ ...prev, clickCount: 0 }))
       }, 300);
 
       if (gestureState.clickCount === 1) {
         // Double click detected
         analytics?.onLogoClick?.('double', 'gesture');
         setGestureState(prev => ({ ...prev, clickCount: 0 }));
-        clearTimeout(clickTimeout);
+        clearTimeout(clickTimeout)
       }
     };
 
@@ -291,11 +291,11 @@ const useAdvancedGestures = (
       element.removeEventListener('mouseup', handleMouseUp);
       element.removeEventListener('click', handleClick);
       clearTimeout(clickTimeout);
-      clearTimeout(longPressTimeout);
-    };
+      clearTimeout(longPressTimeout)
+    }
   }, [gestures, analytics, gestureState.clickCount]);
 
-  return gestureState;
+  return gestureState
 };
 
 // 1. PRODUCTION-READY ANIMATED LOGO
@@ -324,21 +324,21 @@ export const HiveLogoProductionAnimated = memo(({
   
   // Analytics tracking
   const trackView = useCallback(() => {
-    analytics?.onLogoView?.(variant, context);
+    analytics?.onLogoView?.(variant, context)
   }, [analytics, variant, context]);
   
   const trackClick = useCallback(() => {
-    analytics?.onLogoClick?.(variant, context);
+    analytics?.onLogoClick?.(variant, context)
   }, [analytics, variant, context]);
   
   const trackHover = useCallback(() => {
-    analytics?.onLogoHover?.(variant, context);
+    analytics?.onLogoHover?.(variant, context)
   }, [analytics, variant, context]);
 
   // Trigger view tracking when component comes into view
   useEffect(() => {
     if (isInView) {
-      trackView();
+      trackView()
     }
   }, [isInView, trackView]);
 
@@ -349,7 +349,7 @@ export const HiveLogoProductionAnimated = memo(({
         initial: { opacity: 1, scale: 1 },
         animate: { opacity: 1, scale: 1 },
         transition: { duration: 0 },
-      };
+      }
     }
 
     return {
@@ -360,7 +360,7 @@ export const HiveLogoProductionAnimated = memo(({
         stiffness: 200,
         damping: 20,
       },
-    };
+    }
   }, [shouldReduceMotion, optimizeForSpeed]);
 
   // Accessibility attributes
@@ -380,7 +380,7 @@ export const HiveLogoProductionAnimated = memo(({
         className={cn(productionLogoVariants({ variant, size, context, className }))}
         style={{ backgroundColor: 'transparent' }}
       />
-    );
+    )
   }
 
   return (
@@ -406,7 +406,7 @@ export const HiveLogoProductionAnimated = memo(({
         </div>
       )}
     </motion.div>
-  );
+  )
 });
 
 HiveLogoProductionAnimated.displayName = 'HiveLogoProductionAnimated';
@@ -432,9 +432,9 @@ export const HiveLogoEnterprise = memo(({
     if (abTestVariant && experimentId) {
       // Track A/B test participation
       analytics?.onLogoView?.(`ab_${abTestVariant}`, `experiment_${experimentId}`);
-      return abTestVariant;
+      return abTestVariant
     }
-    return variant;
+    return variant
   }, [variant, abTestVariant, experimentId, analytics]);
 
   // Custom branding override
@@ -451,7 +451,7 @@ export const HiveLogoEnterprise = memo(({
           loading="lazy"
         />
       </div>
-    );
+    )
   }
 
   return (
@@ -461,7 +461,7 @@ export const HiveLogoEnterprise = memo(({
       style={{
         color: customColors.primary || undefined,
         filter: customColors.accent ? `drop-shadow(0 0 4px ${customColors.accent})` : undefined,
-      }}
+          }}
       {...props}
     >
       <OptimizedHiveSVG
@@ -477,7 +477,7 @@ export const HiveLogoEnterprise = memo(({
         </span>
       )}
     </div>
-  );
+  )
 });
 
 HiveLogoEnterprise.displayName = 'HiveLogoEnterprise';
@@ -521,16 +521,16 @@ export const HiveLogoInteractiveAdvanced = memo(({
   }, [accessibility]);
 
   const handleBlur = useCallback(() => {
-    setInteractionState(prev => ({ ...prev, isFocused: false }));
+    setInteractionState(prev => ({ ...prev, isFocused: false }))
   }, []);
 
   const handleMouseEnter = useCallback(() => {
     setInteractionState(prev => ({ ...prev, isHovered: true }));
-    analytics?.onLogoHover?.(variant, context);
+    analytics?.onLogoHover?.(variant, context)
   }, [analytics, variant, context]);
 
   const handleMouseLeave = useCallback(() => {
-    setInteractionState(prev => ({ ...prev, isHovered: false }));
+    setInteractionState(prev => ({ ...prev, isHovered: false }))
   }, []);
 
   // Advanced animation based on interaction state
@@ -540,7 +540,7 @@ export const HiveLogoInteractiveAdvanced = memo(({
         whileHover: {},
         whileFocus: {},
         whileTap: {},
-      };
+      }
     }
 
     return {
@@ -559,7 +559,7 @@ export const HiveLogoInteractiveAdvanced = memo(({
         rotateY: -5,
         transition: { duration: 0.1 }
       },
-    };
+    }
   }, [shouldReduceMotion]);
 
   return (
@@ -601,7 +601,7 @@ export const HiveLogoInteractiveAdvanced = memo(({
         )}
       </AnimatePresence>
     </motion.div>
-  );
+  )
 });
 
 HiveLogoInteractiveAdvanced.displayName = 'HiveLogoInteractiveAdvanced';
@@ -641,9 +641,9 @@ export const HiveLogoAccessible = memo(({
       setTimeout(() => {
         liveRegion.textContent = accessibility.ariaLabel || 'HIVE logo loaded';
         setTimeout(() => {
-          document.body.removeChild(liveRegion);
-        }, 1000);
-      }, 100);
+          document.body.removeChild(liveRegion)
+        }, 1000)
+      }, 100)
     }
   }, [accessibility, isAnnounced]);
 
@@ -651,7 +651,7 @@ export const HiveLogoAccessible = memo(({
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       // Trigger click action
-      (e.target as HTMLElement).click();
+      (e.target as HTMLElement).click()
     }
   }, []);
 
@@ -678,12 +678,12 @@ export const HiveLogoAccessible = memo(({
       <style>{`
         @media (prefers-contrast: high) {
           .hive-logo {
-            filter: contrast(2) brightness(1.2);
+            filter: contrast(2) brightness(1.2)
           }
         }
       `}</style>
     </div>
-  );
+  )
 });
 
 HiveLogoAccessible.displayName = 'HiveLogoAccessible';
@@ -718,9 +718,9 @@ export const HiveLogoPerformanceMonitored = memo(({
           used: memory.usedJSHeapSize,
           total: memory.totalJSHeapSize,
           limit: memory.jsHeapSizeLimit,
-        };
+        }
       }
-      return null;
+      return null
     };
     
     // Frame rate monitoring
@@ -741,21 +741,21 @@ export const HiveLogoPerformanceMonitored = memo(({
         
         // Send analytics data
         if (analytics?.onLogoView) {
-          analytics.onLogoView(`perf_${variant}`, `render_${renderCount.current}`);
+          analytics.onLogoView(`perf_${variant}`, `render_${renderCount.current}`)
         }
         
         frameCount = 0;
-        lastTime = currentTime;
+        lastTime = currentTime
       }
       
-      requestAnimationFrame(countFrames);
+      requestAnimationFrame(countFrames)
     };
     
     const rafId = requestAnimationFrame(countFrames);
     
     return () => {
-      cancelAnimationFrame(rafId);
-    };
+      cancelAnimationFrame(rafId)
+    }
   }, [enablePerformanceMetrics, variant, analytics]);
   
   // Performance-optimized rendering
@@ -767,9 +767,9 @@ export const HiveLogoPerformanceMonitored = memo(({
           transform: 'translateZ(0)', // Force hardware acceleration
           backfaceVisibility: 'hidden' as const,
         }
-      };
+      }
     }
-    return {};
+    return {}
   }, [optimizeForSpeed]);
 
   return (
@@ -794,7 +794,7 @@ export const HiveLogoPerformanceMonitored = memo(({
         </div>
       )}
     </div>
-  );
+  )
 });
 
 HiveLogoPerformanceMonitored.displayName = 'HiveLogoPerformanceMonitored';

@@ -59,7 +59,7 @@ export interface ElementDefinition {
   
   // Documentation
   documentation?: string;
-  examples?: ElementExample[];
+  examples?: ElementExample[]
 }
 
 export type ElementCategory = 
@@ -102,8 +102,8 @@ export interface ElementProp {
     min?: number;
     max?: number;
     pattern?: string;
-    custom?: (value: any) => boolean | string;
-  };
+    custom?: (value: any) => boolean | string
+  }
 }
 
 export interface ElementExample {
@@ -111,7 +111,7 @@ export interface ElementExample {
   title: string;
   description: string;
   props: Record<string, any>;
-  code?: string;
+  code?: string
 }
 
 interface ElementBrowserProps {
@@ -119,7 +119,7 @@ interface ElementBrowserProps {
   onElementPreview?: (element: ElementDefinition) => void;
   onElementInstall?: (elementId: string) => void;
   selectedCategories?: ElementCategory[];
-  showInstalled?: boolean;
+  showInstalled?: boolean
 }
 
 // Mock Elements Data
@@ -430,7 +430,7 @@ const ElementCard = ({
   view?: 'grid' | 'list';
   onSelect?: (element: ElementDefinition) => void;
   onPreview?: (element: ElementDefinition) => void;
-  onInstall?: (elementId: string) => void;
+  onInstall?: (elementId: string) => void
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const IconComponent = element.icon;
@@ -492,8 +492,8 @@ const ElementCard = ({
               variant="outline" 
               onClick={(e) => {
                 e.stopPropagation();
-                onPreview?.(element);
-              }}
+                onPreview?.(element)
+          }}
             >
               <Eye className="w-3 h-3 mr-1" />
               Preview
@@ -502,8 +502,8 @@ const ElementCard = ({
               size="sm"
               onClick={(e) => {
                 e.stopPropagation();
-                onInstall?.(element.id);
-              }}
+                onInstall?.(element.id)
+          }}
             >
               <Download className="w-3 h-3 mr-1" />
               Use
@@ -511,7 +511,7 @@ const ElementCard = ({
           </div>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   return (
@@ -600,8 +600,8 @@ const ElementCard = ({
             className="flex-1"
             onClick={(e) => {
               e.stopPropagation();
-              onPreview?.(element);
-            }}
+              onPreview?.(element)
+          }}
           >
             <Eye className="w-3 h-3 mr-1" />
             Preview
@@ -611,8 +611,8 @@ const ElementCard = ({
             className="flex-1"
             onClick={(e) => {
               e.stopPropagation();
-              onInstall?.(element.id);
-            }}
+              onInstall?.(element.id)
+          }}
           >
             <Download className="w-3 h-3 mr-1" />
             Use
@@ -620,7 +620,7 @@ const ElementCard = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export function ElementBrowser({ 
@@ -656,26 +656,26 @@ export function ElementBrowser({
         if (!element.name.toLowerCase().includes(query) && 
             !element.description.toLowerCase().includes(query) &&
             !element.tags.some(tag => tag.toLowerCase().includes(query))) {
-          return false;
+          return false
         }
       }
 
       // Category filter
       if (categoryFilter !== 'all' && element.category !== categoryFilter) {
-        return false;
+        return false
       }
 
       // Selected categories filter
       if (selectedCategories.length > 0 && !selectedCategories.includes(element.category)) {
-        return false;
+        return false
       }
 
       // Complexity filter
       if (complexityFilter !== 'all' && element.complexity !== complexityFilter) {
-        return false;
+        return false
       }
 
-      return true;
+      return true
     });
 
     // Sort elements
@@ -691,22 +691,22 @@ export function ElementBrowser({
         break;
       case 'name':
         filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+        break
     }
 
-    return filtered;
+    return filtered
   }, [searchQuery, categoryFilter, selectedCategories, complexityFilter, sortBy]);
 
   const handleElementSelect = useCallback((element: ElementDefinition) => {
-    onElementSelect?.(element);
+    onElementSelect?.(element)
   }, [onElementSelect]);
 
   const handleElementPreview = useCallback((element: ElementDefinition) => {
-    onElementPreview?.(element);
+    onElementPreview?.(element)
   }, [onElementPreview]);
 
   const handleElementInstall = useCallback((elementId: string) => {
-    onElementInstall?.(elementId);
+    onElementInstall?.(elementId)
   }, [onElementInstall]);
 
   return (
@@ -822,7 +822,7 @@ export function ElementBrowser({
                 setSearchQuery('');
                 setCategoryFilter('all');
                 setComplexityFilter('all');
-                setSortBy('popularity');
+                setSortBy('popularity')
               }}>
                 Clear Filters
               </HiveButton>
@@ -852,8 +852,8 @@ export function ElementBrowser({
               {category.label}
               <span className="text-xs opacity-75">({category.count})</span>
             </button>
-          );
-        })}
+          )
+          })}
       </div>
 
       {/* Results Header */}
@@ -877,7 +877,7 @@ export function ElementBrowser({
           <HiveButton onClick={() => {
             setSearchQuery('');
             setCategoryFilter('all');
-            setComplexityFilter('all');
+            setComplexityFilter('all')
           }}>
             Clear All Filters
           </HiveButton>
@@ -923,7 +923,7 @@ export function ElementBrowser({
         </>
       )}
     </div>
-  );
+  )
 }
 
 export default ElementBrowser;

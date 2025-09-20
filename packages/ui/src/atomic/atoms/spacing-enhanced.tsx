@@ -189,7 +189,7 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(
         aria-hidden="true"
         {...props}
       />
-    );
+    )
   }
 );
 Spacer.displayName = "Spacer";
@@ -207,7 +207,7 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
         className={cn(containerVariants({ size, padding, center }), className)}
         {...props}
       />
-    );
+    )
   }
 );
 Container.displayName = "Container";
@@ -239,7 +239,7 @@ export const Stack = React.forwardRef<HTMLDivElement, StackProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 Stack.displayName = "Stack";
@@ -256,7 +256,7 @@ export const HStack = React.forwardRef<HTMLDivElement, HStackProps>(
         align={align}
         {...props}
       />
-    );
+    )
   }
 );
 HStack.displayName = "HStack";
@@ -272,7 +272,7 @@ export const VStack = React.forwardRef<HTMLDivElement, VStackProps>(
         direction="vertical"
         {...props}
       />
-    );
+    )
   }
 );
 VStack.displayName = "VStack";
@@ -281,7 +281,7 @@ VStack.displayName = "VStack";
 export interface SeparatorProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof separatorVariants> {
-  decorative?: boolean;
+  decorative?: boolean
 }
 
 export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
@@ -294,7 +294,7 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
         aria-orientation={orientation}
         {...props}
       />
-    );
+    )
   }
 );
 Separator.displayName = "Separator";
@@ -303,7 +303,7 @@ Separator.displayName = "Separator";
 export interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
   cols?: 1 | 2 | 3 | 4 | 5 | 6 | 12;
   gap?: "none" | "xs" | "sm" | "default" | "md" | "lg" | "xl";
-  responsive?: boolean;
+  responsive?: boolean
 }
 
 export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
@@ -349,7 +349,7 @@ export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
         )}
         {...props}
       />
-    );
+    )
   }
 );
 Grid.displayName = "Grid";
@@ -360,7 +360,7 @@ export interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
   wrap?: boolean;
   align?: "start" | "center" | "end" | "stretch" | "baseline";
   justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
-  gap?: "none" | "xs" | "sm" | "default" | "md" | "lg" | "xl";
+  gap?: "none" | "xs" | "sm" | "default" | "md" | "lg" | "xl"
 }
 
 export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
@@ -421,7 +421,7 @@ export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
         )}
         {...props}
       />
-    );
+    )
   }
 );
 Flex.displayName = "Flex";

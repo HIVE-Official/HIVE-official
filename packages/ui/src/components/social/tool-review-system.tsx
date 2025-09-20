@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { Avatar } from '../index';
 import { HiveBadge as Badge } from '../index';
 import { 
@@ -42,7 +42,7 @@ export interface ToolReview {
     avatar?: string;
     isVerified?: boolean;
     reviewsCount?: number;
-    helpfulVotes?: number;
+    helpfulVotes?: number
   };
   rating: number; // 1-5 stars
   title: string;
@@ -65,8 +65,8 @@ export interface ToolReview {
     id: string;
     type: 'image' | 'video';
     url: string;
-    caption?: string;
-  }[];
+    caption?: string
+  }[]
 }
 
 export interface ToolReviewReply {
@@ -79,11 +79,11 @@ export interface ToolReviewReply {
     handle: string;
     avatar?: string;
     isVerified?: boolean;
-    isDeveloper?: boolean;
+    isDeveloper?: boolean
   };
   content: string;
   timestamp: string;
-  isEdited?: boolean;
+  isEdited?: boolean
 }
 
 export interface ToolRatingsSummary {
@@ -94,7 +94,7 @@ export interface ToolRatingsSummary {
     4: number;
     3: number;
     2: number;
-    1: number;
+    1: number
   };
   recommendationRate: number;
   verifiedPurchaseRate: number;
@@ -103,8 +103,8 @@ export interface ToolRatingsSummary {
     performance: number;
     design: number;
     value: number;
-    support: number;
-  };
+    support: number
+  }
 }
 
 interface ToolReviewSystemProps {
@@ -121,18 +121,18 @@ interface ToolReviewSystemProps {
   onReportReview?: (reviewId: string, reason: string) => Promise<void>;
   canReview?: boolean;
   isLoading?: boolean;
-  enableFeatureFlag?: boolean;
+  enableFeatureFlag?: boolean
 }
 
 interface ReviewFormProps {
   toolId: string;
   existingReview?: ToolReview;
   onSubmit: (review: Omit<ToolReview, 'id' | 'timestamp' | 'author'>) => Promise<void>;
-  onCancel?: () => void;
+  onCancel?: () => void
 }
 
 interface RatingsSummaryProps {
-  summary: ToolRatingsSummary;
+  summary: ToolRatingsSummary
 }
 
 interface ReviewItemProps {
@@ -142,14 +142,14 @@ interface ReviewItemProps {
   onReply?: (reviewId: string, content: string) => Promise<void>;
   onEdit?: (reviewId: string) => void;
   onDelete?: (reviewId: string) => Promise<void>;
-  onReport?: (reviewId: string, reason: string) => Promise<void>;
+  onReport?: (reviewId: string, reason: string) => Promise<void>
 }
 
 const StarRating: React.FC<{
   rating: number;
   size?: 'sm' | 'md' | 'lg';
   interactive?: boolean;
-  onChange?: (rating: number) => void;
+  onChange?: (rating: number) => void
 }> = ({ rating, size = 'md', interactive = false, onChange }) => {
   const [hoverRating, setHoverRating] = useState(0);
   
@@ -182,7 +182,7 @@ const StarRating: React.FC<{
         </button>
       ))}
     </div>
-  );
+  )
 };
 
 const RatingsSummary: React.FC<RatingsSummaryProps> = ({ summary }) => {
@@ -234,7 +234,7 @@ const RatingsSummary: React.FC<RatingsSummaryProps> = ({ summary }) => {
                 className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
                 style={{
                   width: `${maxCount > 0 ? (summary.distribution[stars as keyof typeof summary.distribution] / maxCount) * 100 : 0}%`
-                }}
+          }}
               />
             </div>
             <span className="text-sm text-[var(--hive-text-muted)] w-8 text-right">
@@ -265,7 +265,7 @@ const RatingsSummary: React.FC<RatingsSummaryProps> = ({ summary }) => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 const ReviewForm: React.FC<ReviewFormProps> = ({
@@ -297,7 +297,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     if (formData.content.length < 50) newErrors.content = 'Review must be at least 50 characters';
     
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0
   };
 
   const handleSubmit = useCallback(async () => {
@@ -318,11 +318,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       };
       
       await onSubmit(reviewData);
-      onCancel?.();
+      onCancel?.()
     } catch (error) {
-      console.error('Failed to submit review:', error);
+      console.error('Failed to submit review:', error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
   }, [formData, toolId, onSubmit, onCancel, isSubmitting]);
 
@@ -567,7 +567,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 const ReviewItem: React.FC<ReviewItemProps> = ({
@@ -599,11 +599,11 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     if (diffDays === 1) return 'Yesterday';
     if (diffDays < 30) return `${diffDays} days ago`;
     if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-    return `${Math.floor(diffDays / 365)} years ago`;
+    return `${Math.floor(diffDays / 365)} years ago`
   };
 
   const handleVote = useCallback(async (vote: 'helpful' | 'unhelpful') => {
-    await onVote?.(review.id, vote);
+    await onVote?.(review.id, vote)
   }, [review.id, onVote]);
 
   const handleReply = useCallback(async () => {
@@ -614,9 +614,9 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
       await onReply?.(review.id, replyContent);
       setReplyContent('');
       setShowReplyForm(false);
-      setShowReplies(true);
+      setShowReplies(true)
     } finally {
-      setIsSubmittingReply(false);
+      setIsSubmittingReply(false)
     }
   }, [review.id, replyContent, onReply, isSubmittingReply]);
 
@@ -684,8 +684,8 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
                       <button
                         onClick={() => {
                           onEdit?.(review.id);
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                       >
                         <Edit3 className="w-3 h-3" />
@@ -694,8 +694,8 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
                       <button
                         onClick={() => {
                           onDelete?.(review.id);
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2 text-red-400"
                       >
                         <Trash2 className="w-3 h-3" />
@@ -707,8 +707,8 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
                       <button
                         onClick={() => {
                           // Handle share
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                       >
                         <Share className="w-3 h-3" />
@@ -717,8 +717,8 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
                       <button
                         onClick={() => {
                           onReport?.(review.id, 'inappropriate');
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2 text-orange-400"
                       >
                         <Flag className="w-3 h-3" />
@@ -937,7 +937,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
         )}
       </AnimatePresence>
     </motion.div>
-  );
+  )
 };
 
 export const ToolReviewSystem: React.FC<ToolReviewSystemProps> = ({
@@ -974,12 +974,12 @@ export const ToolReviewSystem: React.FC<ToolReviewSystemProps> = ({
         review.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         review.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
         review.author.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      )
     }
 
     // Apply filter
     if (filterBy !== 'all') {
-      filtered = filtered.filter(review => review.rating === parseInt(filterBy));
+      filtered = filtered.filter(review => review.rating === parseInt(filterBy))
     }
 
     // Apply sort
@@ -996,21 +996,21 @@ export const ToolReviewSystem: React.FC<ToolReviewSystemProps> = ({
         case 'helpful':
           return b.helpfulVotes - a.helpfulVotes;
         default:
-          return 0;
+          return 0
       }
     });
 
-    return sorted;
+    return sorted
   }, [reviews, searchQuery, filterBy, sortBy]);
 
   const handleSubmitReview = useCallback(async (reviewData: Omit<ToolReview, 'id' | 'timestamp' | 'author'>) => {
     await onSubmitReview?.(reviewData);
-    setShowReviewForm(false);
+    setShowReviewForm(false)
   }, [onSubmitReview]);
 
   const handleEditReview = useCallback((reviewId: string) => {
     setEditingReviewId(reviewId);
-    setShowReviewForm(true);
+    setShowReviewForm(true)
   }, []);
 
   return (
@@ -1096,8 +1096,8 @@ export const ToolReviewSystem: React.FC<ToolReviewSystemProps> = ({
               onSubmit={handleSubmitReview}
               onCancel={() => {
                 setShowReviewForm(false);
-                setEditingReviewId(null);
-              }}
+                setEditingReviewId(null)
+          }}
             />
           </motion.div>
         )}
@@ -1139,5 +1139,5 @@ export const ToolReviewSystem: React.FC<ToolReviewSystemProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };

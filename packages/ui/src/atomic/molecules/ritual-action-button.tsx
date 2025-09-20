@@ -24,7 +24,7 @@ export interface RitualActionButtonProps {
   estimatedTime?: number;
   participantCount?: number;
   onClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 const getRitualConfig = (ritualType: string) => {
@@ -59,7 +59,7 @@ const getRitualConfig = (ritualType: string) => {
     }
   };
   
-  return configs[ritualType as keyof typeof configs] || configs.initialize;
+  return configs[ritualType as keyof typeof configs] || configs.initialize
 };
 
 const getActionConfig = (actionType: string) => {
@@ -86,7 +86,7 @@ const getActionConfig = (actionType: string) => {
     }
   };
   
-  return configs[actionType as keyof typeof configs] || configs.start;
+  return configs[actionType as keyof typeof configs] || configs.start
 };
 
 export function RitualActionButton({
@@ -110,7 +110,7 @@ export function RitualActionButton({
   
   const handleClick = () => {
     if (!isDisabled && !isLoading) {
-      onClick?.();
+      onClick?.()
     }
   };
 
@@ -227,5 +227,5 @@ export function RitualActionButton({
         `} />
       )}
     </div>
-  );
+  )
 }

@@ -53,12 +53,12 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
         sourceProperty: z.ZodString;
         value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
     }, "strip", z.ZodTypeAny, {
-        type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         value?: string | number | boolean;
         sourceElementId?: string;
         sourceProperty?: string;
     }, {
-        type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         value?: string | number | boolean;
         sourceElementId?: string;
         sourceProperty?: string;
@@ -69,12 +69,12 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
         targetProperty: z.ZodOptional<z.ZodString>;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+        type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
         targetElementId?: string;
         targetProperty?: string;
     }, {
-        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+        type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
         targetElementId?: string;
         targetProperty?: string;
@@ -82,13 +82,13 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     id?: string;
     actions?: {
-        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+        type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
         targetElementId?: string;
         targetProperty?: string;
     }[];
     condition?: {
-        type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         value?: string | number | boolean;
         sourceElementId?: string;
         sourceProperty?: string;
@@ -96,13 +96,13 @@ export declare const ConditionalRuleSchema: z.ZodObject<{
 }, {
     id?: string;
     actions?: {
-        type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+        type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
         value?: unknown;
         targetElementId?: string;
         targetProperty?: string;
     }[];
     condition?: {
-        type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+        type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
         value?: string | number | boolean;
         sourceElementId?: string;
         sourceProperty?: string;
@@ -158,12 +158,12 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -174,12 +174,12 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -187,13 +187,13 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -201,13 +201,13 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -232,13 +232,13 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -263,13 +263,13 @@ export declare const TextBlockConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -328,12 +328,12 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -344,12 +344,12 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -357,13 +357,13 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -371,13 +371,13 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -404,13 +404,13 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -437,13 +437,13 @@ export declare const ImageBlockConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -463,12 +463,12 @@ export declare const DividerConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -479,12 +479,12 @@ export declare const DividerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -492,13 +492,13 @@ export declare const DividerConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -506,13 +506,13 @@ export declare const DividerConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -525,13 +525,13 @@ export declare const DividerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -545,13 +545,13 @@ export declare const DividerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -612,12 +612,12 @@ export declare const StackConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -628,12 +628,12 @@ export declare const StackConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -641,13 +641,13 @@ export declare const StackConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -655,13 +655,13 @@ export declare const StackConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -685,22 +685,22 @@ export declare const StackConfigSchema: z.ZodObject<{
     spacing?: number;
     direction?: "horizontal" | "vertical";
     wrap?: boolean;
-    alignment?: "center" | "end" | "start" | "stretch";
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         };
     }[];
+    alignment?: "center" | "end" | "start" | "stretch";
 }, {
     style?: {
         height?: number | "full" | "auto";
@@ -719,22 +719,22 @@ export declare const StackConfigSchema: z.ZodObject<{
     spacing?: number;
     direction?: "horizontal" | "vertical";
     wrap?: boolean;
-    alignment?: "center" | "end" | "start" | "stretch";
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         };
     }[];
+    alignment?: "center" | "end" | "start" | "stretch";
 }>;
 export declare const ButtonConfigSchema: z.ZodObject<{
     text: z.ZodString;
@@ -802,12 +802,12 @@ export declare const ButtonConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -818,12 +818,12 @@ export declare const ButtonConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -831,13 +831,13 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -845,13 +845,13 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -884,13 +884,13 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -923,13 +923,13 @@ export declare const ButtonConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1002,12 +1002,12 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1018,12 +1018,12 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1031,13 +1031,13 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1045,13 +1045,13 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1084,13 +1084,13 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1123,13 +1123,13 @@ export declare const ChoiceSelectConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1192,12 +1192,12 @@ export declare const TextInputConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1208,12 +1208,12 @@ export declare const TextInputConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1221,13 +1221,13 @@ export declare const TextInputConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1235,13 +1235,13 @@ export declare const TextInputConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1272,13 +1272,13 @@ export declare const TextInputConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1309,13 +1309,13 @@ export declare const TextInputConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1377,12 +1377,12 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1393,12 +1393,12 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1406,13 +1406,13 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1420,13 +1420,13 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1454,13 +1454,13 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1490,13 +1490,13 @@ export declare const RatingStarsConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1567,12 +1567,12 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1583,12 +1583,12 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1596,13 +1596,13 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1610,13 +1610,13 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1646,13 +1646,13 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1683,13 +1683,13 @@ export declare const CountdownTimerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1753,12 +1753,12 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1769,12 +1769,12 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1782,13 +1782,13 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1796,13 +1796,13 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1832,13 +1832,13 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1869,13 +1869,13 @@ export declare const ProgressBarConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1891,12 +1891,12 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>;
     }, "strip", z.ZodTypeAny, {
         value?: string | number | boolean;
-        operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+        operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
         sourceElementId?: string;
         sourceProperty?: string;
     }, {
         value?: string | number | boolean;
-        operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+        operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
         sourceElementId?: string;
         sourceProperty?: string;
     }>, "many">;
@@ -1906,11 +1906,11 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         targetElementId: z.ZodString;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "show" | "hide" | "trigger" | "setValue";
+        type?: "hide" | "show" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }, {
-        type?: "show" | "hide" | "trigger" | "setValue";
+        type?: "hide" | "show" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }>, "many">;
@@ -1919,11 +1919,11 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
         targetElementId: z.ZodString;
         value: z.ZodOptional<z.ZodUnknown>;
     }, "strip", z.ZodTypeAny, {
-        type?: "show" | "hide" | "trigger" | "setValue";
+        type?: "hide" | "show" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }, {
-        type?: "show" | "hide" | "trigger" | "setValue";
+        type?: "hide" | "show" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }>, "many">>;
@@ -1935,12 +1935,12 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1951,12 +1951,12 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -1964,13 +1964,13 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1978,13 +1978,13 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -1994,13 +1994,13 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -2008,18 +2008,18 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }[];
     conditions?: {
         value?: string | number | boolean;
-        operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+        operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
         sourceElementId?: string;
         sourceProperty?: string;
     }[];
     logic?: "and" | "or";
     onTrue?: {
-        type?: "show" | "hide" | "trigger" | "setValue";
+        type?: "hide" | "show" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }[];
     onFalse?: {
-        type?: "show" | "hide" | "trigger" | "setValue";
+        type?: "hide" | "show" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }[];
@@ -2027,13 +2027,13 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -2041,18 +2041,18 @@ export declare const ConditionGateConfigSchema: z.ZodObject<{
     }[];
     conditions?: {
         value?: string | number | boolean;
-        operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+        operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
         sourceElementId?: string;
         sourceProperty?: string;
     }[];
     logic?: "and" | "or";
     onTrue?: {
-        type?: "show" | "hide" | "trigger" | "setValue";
+        type?: "hide" | "show" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }[];
     onFalse?: {
-        type?: "show" | "hide" | "trigger" | "setValue";
+        type?: "hide" | "show" | "trigger" | "setValue";
         value?: unknown;
         targetElementId?: string;
     }[];
@@ -2128,12 +2128,12 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
             sourceProperty: z.ZodString;
             value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
         }, "strip", z.ZodTypeAny, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -2144,12 +2144,12 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
             targetProperty: z.ZodOptional<z.ZodString>;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
@@ -2157,13 +2157,13 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -2171,13 +2171,13 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     }, {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -2210,13 +2210,13 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -2250,13 +2250,13 @@ export declare const PingTriggerConfigSchema: z.ZodObject<{
     conditionalRules?: {
         id?: string;
         actions?: {
-            type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+            type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
             value?: unknown;
             targetElementId?: string;
             targetProperty?: string;
         }[];
         condition?: {
-            type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+            type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
             value?: string | number | boolean;
             sourceElementId?: string;
             sourceProperty?: string;
@@ -2316,12 +2316,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2332,12 +2332,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2345,13 +2345,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2359,13 +2359,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2390,13 +2390,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2421,13 +2421,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2455,13 +2455,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2489,13 +2489,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2556,12 +2556,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2572,12 +2572,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2585,13 +2585,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2599,13 +2599,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2632,13 +2632,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2665,13 +2665,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2701,13 +2701,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2737,13 +2737,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2765,12 +2765,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2781,12 +2781,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2794,13 +2794,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2808,13 +2808,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2827,13 +2827,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2847,13 +2847,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2870,13 +2870,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2893,13 +2893,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2962,12 +2962,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -2978,12 +2978,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -2991,13 +2991,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3005,13 +3005,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3035,22 +3035,22 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         spacing?: number;
         direction?: "horizontal" | "vertical";
         wrap?: boolean;
-        alignment?: "center" | "end" | "start" | "stretch";
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
         }[];
+        alignment?: "center" | "end" | "start" | "stretch";
     }, {
         style?: {
             height?: number | "full" | "auto";
@@ -3069,22 +3069,22 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         spacing?: number;
         direction?: "horizontal" | "vertical";
         wrap?: boolean;
-        alignment?: "center" | "end" | "start" | "stretch";
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
         }[];
+        alignment?: "center" | "end" | "start" | "stretch";
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: "stack";
@@ -3106,22 +3106,22 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         spacing?: number;
         direction?: "horizontal" | "vertical";
         wrap?: boolean;
-        alignment?: "center" | "end" | "start" | "stretch";
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
         }[];
+        alignment?: "center" | "end" | "start" | "stretch";
     };
 }, {
     type?: "stack";
@@ -3143,22 +3143,22 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         spacing?: number;
         direction?: "horizontal" | "vertical";
         wrap?: boolean;
-        alignment?: "center" | "end" | "start" | "stretch";
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             };
         }[];
+        alignment?: "center" | "end" | "start" | "stretch";
     };
 }>, z.ZodObject<{
     type: z.ZodLiteral<"button">;
@@ -3228,12 +3228,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3244,12 +3244,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3257,13 +3257,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3271,13 +3271,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3310,13 +3310,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3349,13 +3349,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3391,13 +3391,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3433,13 +3433,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3514,12 +3514,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3530,12 +3530,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3543,13 +3543,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3557,13 +3557,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3596,13 +3596,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3635,13 +3635,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3677,13 +3677,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3719,13 +3719,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3790,12 +3790,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3806,12 +3806,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -3819,13 +3819,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3833,13 +3833,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3870,13 +3870,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3907,13 +3907,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3947,13 +3947,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -3987,13 +3987,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4057,12 +4057,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4073,12 +4073,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4086,13 +4086,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4100,13 +4100,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4134,13 +4134,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4170,13 +4170,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4209,13 +4209,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4248,13 +4248,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4327,12 +4327,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4343,12 +4343,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4356,13 +4356,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4370,13 +4370,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4406,13 +4406,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4443,13 +4443,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4483,13 +4483,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4523,13 +4523,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4595,12 +4595,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4611,12 +4611,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4624,13 +4624,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4638,13 +4638,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4674,13 +4674,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4711,13 +4711,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4751,13 +4751,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4791,13 +4791,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4815,12 +4815,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             value: z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>;
         }, "strip", z.ZodTypeAny, {
             value?: string | number | boolean;
-            operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+            operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
             sourceElementId?: string;
             sourceProperty?: string;
         }, {
             value?: string | number | boolean;
-            operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+            operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
             sourceElementId?: string;
             sourceProperty?: string;
         }>, "many">;
@@ -4830,11 +4830,11 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             targetElementId: z.ZodString;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }>, "many">;
@@ -4843,11 +4843,11 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
             targetElementId: z.ZodString;
             value: z.ZodOptional<z.ZodUnknown>;
         }, "strip", z.ZodTypeAny, {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }, {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }>, "many">>;
@@ -4859,12 +4859,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4875,12 +4875,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -4888,13 +4888,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4902,13 +4902,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4918,13 +4918,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4932,18 +4932,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         conditions?: {
             value?: string | number | boolean;
-            operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+            operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
             sourceElementId?: string;
             sourceProperty?: string;
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
@@ -4951,13 +4951,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -4965,18 +4965,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         conditions?: {
             value?: string | number | boolean;
-            operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+            operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
             sourceElementId?: string;
             sourceProperty?: string;
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
@@ -4987,13 +4987,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -5001,18 +5001,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         conditions?: {
             value?: string | number | boolean;
-            operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+            operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
             sourceElementId?: string;
             sourceProperty?: string;
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
@@ -5023,13 +5023,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -5037,18 +5037,18 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }[];
         conditions?: {
             value?: string | number | boolean;
-            operator?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals";
+            operator?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan";
             sourceElementId?: string;
             sourceProperty?: string;
         }[];
         logic?: "and" | "or";
         onTrue?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
         onFalse?: {
-            type?: "show" | "hide" | "trigger" | "setValue";
+            type?: "hide" | "show" | "trigger" | "setValue";
             value?: unknown;
             targetElementId?: string;
         }[];
@@ -5126,12 +5126,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 sourceProperty: z.ZodString;
                 value: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean]>>;
             }, "strip", z.ZodTypeAny, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
             }, {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -5142,12 +5142,12 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
                 targetProperty: z.ZodOptional<z.ZodString>;
                 value: z.ZodOptional<z.ZodUnknown>;
             }, "strip", z.ZodTypeAny, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }, {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
@@ -5155,13 +5155,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, "strip", z.ZodTypeAny, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -5169,13 +5169,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         }, {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -5208,13 +5208,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -5248,13 +5248,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -5291,13 +5291,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;
@@ -5334,13 +5334,13 @@ export declare const ElementConfigSchema: z.ZodDiscriminatedUnion<"type", [z.Zod
         conditionalRules?: {
             id?: string;
             actions?: {
-                type?: "show" | "hide" | "trigger" | "setValue" | "setStyle";
+                type?: "hide" | "show" | "trigger" | "setValue" | "setStyle";
                 value?: unknown;
                 targetElementId?: string;
                 targetProperty?: string;
             }[];
             condition?: {
-                type?: "equals" | "contains" | "greaterThan" | "lessThan" | "notEquals" | "isEmpty" | "isNotEmpty";
+                type?: "equals" | "notEquals" | "contains" | "greaterThan" | "lessThan" | "isEmpty" | "isNotEmpty";
                 value?: string | number | boolean;
                 sourceElementId?: string;
                 sourceProperty?: string;

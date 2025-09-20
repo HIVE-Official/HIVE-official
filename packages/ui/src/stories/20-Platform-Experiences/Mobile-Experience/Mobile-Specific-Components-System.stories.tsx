@@ -98,12 +98,12 @@ const useSwipeGesture = (onSwipeLeft?: () => void, onSwipeRight?: () => void, on
 
     const handleTouchStart = (e: TouchEvent) => {
       startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
+      startY = e.touches[0].clientY
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       endX = e.touches[0].clientX;
-      endY = e.touches[0].clientY;
+      endY = e.touches[0].clientY
     };
 
     const handleTouchEnd = () => {
@@ -114,16 +114,16 @@ const useSwipeGesture = (onSwipeLeft?: () => void, onSwipeRight?: () => void, on
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         // Horizontal swipe
         if (deltaX > threshold) {
-          onSwipeRight?.();
+          onSwipeRight?.()
         } else if (deltaX < -threshold) {
-          onSwipeLeft?.();
+          onSwipeLeft?.()
         }
       } else {
         // Vertical swipe
         if (deltaY > threshold) {
-          onSwipeDown?.();
+          onSwipeDown?.()
         } else if (deltaY < -threshold) {
-          onSwipeUp?.();
+          onSwipeUp?.()
         }
       }
     };
@@ -135,11 +135,11 @@ const useSwipeGesture = (onSwipeLeft?: () => void, onSwipeRight?: () => void, on
     return () => {
       element.removeEventListener('touchstart', handleTouchStart);
       element.removeEventListener('touchmove', handleTouchMove);
-      element.removeEventListener('touchend', handleTouchEnd);
-    };
+      element.removeEventListener('touchend', handleTouchEnd)
+    }
   }, [onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown]);
 
-  return elementRef;
+  return elementRef
 };
 
 // Pull-to-Refresh Component
@@ -151,7 +151,7 @@ const PullToRefresh = ({ onRefresh, children }: { onRefresh: () => Promise<void>
 
   const handleTouchStart = (e: TouchEvent) => {
     if (containerRef.current?.scrollTop === 0) {
-      setStartY(e.touches[0].clientY);
+      setStartY(e.touches[0].clientY)
     }
   };
 
@@ -159,7 +159,7 @@ const PullToRefresh = ({ onRefresh, children }: { onRefresh: () => Promise<void>
     if (containerRef.current?.scrollTop === 0 && startY > 0) {
       const currentY = e.touches[0].clientY;
       const distance = Math.max(0, currentY - startY);
-      setPullDistance(Math.min(distance, 100));
+      setPullDistance(Math.min(distance, 100))
     }
   };
 
@@ -167,13 +167,13 @@ const PullToRefresh = ({ onRefresh, children }: { onRefresh: () => Promise<void>
     if (pullDistance > 60 && !isRefreshing) {
       setIsRefreshing(true);
       try {
-        await onRefresh();
+        await onRefresh()
       } finally {
-        setIsRefreshing(false);
+        setIsRefreshing(false)
       }
     }
     setPullDistance(0);
-    setStartY(0);
+    setStartY(0)
   };
 
   useEffect(() => {
@@ -187,8 +187,8 @@ const PullToRefresh = ({ onRefresh, children }: { onRefresh: () => Promise<void>
     return () => {
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
-      container.removeEventListener('touchend', handleTouchEnd);
-    };
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
   }, [pullDistance, startY, isRefreshing]);
 
   return (
@@ -217,7 +217,7 @@ const PullToRefresh = ({ onRefresh, children }: { onRefresh: () => Promise<void>
       )}
       {children}
     </div>
-  );
+  )
 };
 
 // Mobile Bottom Sheet Component
@@ -230,26 +230,26 @@ const MobileBottomSheet = ({
   isOpen: boolean; 
   onClose: () => void; 
   children: React.ReactNode;
-  title?: string;
+  title?: string
 }) => {
   const [dragY, setDragY] = useState(0);
   const startYRef = useRef(0);
 
   const handleTouchStart = (e: TouchEvent) => {
-    startYRef.current = e.touches[0].clientY;
+    startYRef.current = e.touches[0].clientY
   };
 
   const handleTouchMove = (e: TouchEvent) => {
     const currentY = e.touches[0].clientY;
     const deltaY = Math.max(0, currentY - startYRef.current);
-    setDragY(deltaY);
+    setDragY(deltaY)
   };
 
   const handleTouchEnd = () => {
     if (dragY > 100) {
-      onClose();
+      onClose()
     }
-    setDragY(0);
+    setDragY(0)
   };
 
   useEffect(() => {
@@ -265,8 +265,8 @@ const MobileBottomSheet = ({
     return () => {
       sheet.removeEventListener('touchstart', handleTouchStart);
       sheet.removeEventListener('touchmove', handleTouchMove);
-      sheet.removeEventListener('touchend', handleTouchEnd);
-    };
+      sheet.removeEventListener('touchend', handleTouchEnd)
+    }
   }, [isOpen, dragY]);
 
   if (!isOpen) return null;
@@ -298,7 +298,7 @@ const MobileBottomSheet = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Mobile Camera Component
@@ -311,21 +311,21 @@ const MobileCameraCapture = () => {
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-3">
         <Button 
-          onClick={() => { setIsOpen(true); setCameraMode('photo'); }}
+          onClick={() => { setIsOpen(true); setCameraMode('photo') }}
           className="bg-blue-600 hover:bg-blue-700 text-white p-4 h-auto flex-col"
         >
           <Camera className="h-6 w-6 mb-2" />
           <span className="text-xs">Take Photo</span>
         </Button>
         <Button 
-          onClick={() => { setIsOpen(true); setCameraMode('qr'); }}
+          onClick={() => { setIsOpen(true); setCameraMode('qr') }}
           className="bg-green-600 hover:bg-green-700 text-white p-4 h-auto flex-col"
         >
           <Search className="h-6 w-6 mb-2" />
           <span className="text-xs">Scan QR</span>
         </Button>
         <Button 
-          onClick={() => { setIsOpen(true); setCameraMode('checkin'); }}
+          onClick={() => { setIsOpen(true); setCameraMode('checkin') }}
           className="bg-yellow-500 hover:bg-yellow-600 text-black p-4 h-auto flex-col"
         >
           <MapPin className="h-6 w-6 mb-2" />
@@ -353,7 +353,7 @@ const MobileCameraCapture = () => {
               className="bg-white text-black rounded-full w-16 h-16 p-0"
               onClick={() => {
                 setCapturedImage('/api/placeholder/300/200');
-                setIsOpen(false);
+                setIsOpen(false)
               }}
             >
               <div className="w-12 h-12 rounded-full bg-white border-4 border-gray-300" />
@@ -404,7 +404,7 @@ const MobileCameraCapture = () => {
         </Card>
       )}
     </div>
-  );
+  )
 };
 
 // Mobile Push Notification Component
@@ -449,7 +449,7 @@ const MobilePushNotifications = () => {
         new Notification('HIVE Notifications Enabled!', {
           body: 'You\'ll now get campus updates and messages',
           icon: '/favicon.ico'
-        });
+        })
       }
     }
   };
@@ -544,7 +544,7 @@ const MobilePushNotifications = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // Mobile Offline Support Component
@@ -565,17 +565,17 @@ const MobileOfflineSupport = () => {
 
     return () => {
       window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
+      window.removeEventListener('offline', handleOffline)
+    }
   }, []);
 
   const simulateSync = async () => {
     setSyncProgress(0);
     for (let i = 0; i <= 100; i += 10) {
       await new Promise(resolve => setTimeout(resolve, 100));
-      setSyncProgress(i);
+      setSyncProgress(i)
     }
-    setOfflineQueue([]);
+    setOfflineQueue([])
   };
 
   return (
@@ -611,7 +611,7 @@ const MobileOfflineSupport = () => {
             <span className="text-white">Offline Mode</span>
             <Switch 
               checked={!isOnline} 
-              onCheckedChange={(checked) => setIsOnline(!checked)}
+              onChange={(e) => { const checked = e.target.checked; setIsOnline(!checked)}
               className="data-[state=checked]:bg-yellow-500"
             />
           </div>
@@ -674,7 +674,7 @@ const MobileOfflineSupport = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // Mobile Location Services Component
@@ -693,12 +693,12 @@ const MobileLocationServices = () => {
         (position) => {
           setLocationPermission('granted');
           // Simulate campus building detection
-          setCurrentLocation({ building: 'Lockwood Library', area: '3rd Floor Study Area' });
+          setCurrentLocation({ building: 'Lockwood Library', area: '3rd Floor Study Area' })
         },
         () => {
-          setLocationPermission('denied');
+          setLocationPermission('denied')
         }
-      );
+      )
     }
   };
 
@@ -773,7 +773,7 @@ const MobileLocationServices = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // Main Mobile System Demo
@@ -784,7 +784,7 @@ const MobileSystemDemo = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     await new Promise(resolve => setTimeout(resolve, 2000));
-    setRefreshing(false);
+    setRefreshing(false)
   };
 
   const swipeRef = useSwipeGesture(
@@ -818,7 +818,7 @@ const MobileSystemDemo = () => {
             { id: 'notifications', label: 'Notifications', icon: Bell },
             { id: 'offline', label: 'Offline', icon: WifiOff },
             { id: 'location', label: 'Location', icon: MapPin }
-          ].map(({ id, label, icon: Icon }) => (
+          ].map(({ id, label, icon: Icon })} => (
             <Button
               key={id}
               size="sm"
@@ -917,7 +917,7 @@ const MobileSystemDemo = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Story Exports
@@ -960,7 +960,7 @@ export const MobileTouchGestures: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     viewport: {

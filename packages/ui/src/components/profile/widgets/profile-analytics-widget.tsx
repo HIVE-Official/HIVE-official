@@ -35,7 +35,7 @@ export const ProfileAnalyticsWidget: React.FC = () => {
 
   const handleJoinWaitlist = () => {
     setJoinedWaitlist(true);
-    setTimeout(() => setJoinedWaitlist(false), 3000);
+    setTimeout(() => setJoinedWaitlist(false), 3000)
   };
 
   const getColorClasses = (color: string) => {
@@ -44,7 +44,7 @@ export const ProfileAnalyticsWidget: React.FC = () => {
       case 'blue': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
       case 'green': return 'bg-green-500/10 text-green-400 border-green-500/20';
       case 'yellow': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
-      default: return 'bg-hive-brand-secondary/10 text-hive-brand-secondary border-hive-brand-secondary/20';
+      default: return 'bg-hive-brand-secondary/10 text-hive-brand-secondary border-hive-brand-secondary/20'
     }
   };
 
@@ -89,8 +89,8 @@ export const ProfileAnalyticsWidget: React.FC = () => {
               <div className="text-lg font-bold text-hive-text-primary mb-1">{metric.value}</div>
               <div className="text-xs text-hive-text-secondary">{metric.label}</div>
             </motion.div>
-          );
-        })}
+          )
+          })}
       </div>
 
       {/* Feature Preview */}
@@ -165,7 +165,7 @@ export const ProfileAnalyticsWidget: React.FC = () => {
         </p>
       </div>
     </div>
-  );
+  )
 };
 
 export default ProfileAnalyticsWidget;

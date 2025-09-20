@@ -69,7 +69,7 @@ export const stackVariants = cva(
 export interface StackProps extends VariantProps<typeof stackVariants> {
   children: React.ReactNode;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof JSX.IntrinsicElements
 }
 
 export const Stack: React.FC<StackProps> = ({ 
@@ -98,7 +98,7 @@ export const Stack: React.FC<StackProps> = ({
     >
       {children}
     </Component>
-  );
+  )
 };
 
 // StackProps already exported inline above

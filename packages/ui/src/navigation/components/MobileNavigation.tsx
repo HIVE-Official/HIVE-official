@@ -21,13 +21,13 @@ interface MobileNavigationProps {
   items: ReadonlyArray<NavigationItem>;
   onNavigate: (href: string) => void;
   className?: string;
-  testId?: string;
+  testId?: string
 }
 
 interface MobileNavItemProps {
   item: NavigationItem;
   onNavigate: (href: string) => void;
-  isActive: boolean;
+  isActive: boolean
 }
 
 // ============================================================================
@@ -42,14 +42,14 @@ const MobileNavItem = memo<MobileNavItemProps>(({ item, onNavigate, isActive }) 
   const handleClick = () => {
     if (!item.isDisabled) {
       triggerHaptic('selection');
-      onNavigate(item.href);
+      onNavigate(item.href)
     }
   };
   
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if ((event.key === 'Enter' || event.key === ' ') && !item.isDisabled) {
       event.preventDefault();
-      onNavigate(item.href);
+      onNavigate(item.href)
     }
   };
   
@@ -160,7 +160,7 @@ const MobileNavItem = memo<MobileNavItemProps>(({ item, onNavigate, isActive }) 
         />
       ))}
     </motion.button>
-  );
+  )
 });
 
 MobileNavItem.displayName = 'MobileNavItem';
@@ -223,7 +223,7 @@ export const MobileNavigation = memo<MobileNavigationProps>(({
       {/* iOS safe area spacer */}
       <div className="h-safe-area-inset-bottom" />
     </motion.nav>
-  );
+  )
 });
 
 MobileNavigation.displayName = 'MobileNavigation';
@@ -279,13 +279,13 @@ export const mobileNavItemVariants = {
 export const useMobileNavigationAnalytics = () => {
   const trackNavigation = (from: string, to: string, section: string) => {
     // Analytics implementation
-    console.log('Mobile navigation:', { from, to, section, timestamp: Date.now() });
+    console.log('Mobile navigation:', { from, to, section, timestamp: Date.now() })
   };
   
   const trackInteraction = (action: string, section: string) => {
     // Analytics implementation  
-    console.log('Mobile nav interaction:', { action, section, timestamp: Date.now() });
+    console.log('Mobile nav interaction:', { action, section, timestamp: Date.now() })
   };
   
-  return { trackNavigation, trackInteraction };
+  return { trackNavigation, trackInteraction }
 };

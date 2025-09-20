@@ -462,7 +462,7 @@ export const UserDirectory: Story = {
           following: 567,
           spaces: 12,
           tools: 8,
-        }}
+          }}
         variant="minimal"
         relationship="mutual"
         showStats={false}
@@ -479,7 +479,7 @@ export const UserDirectory: Story = {
           following: 234,
           spaces: 8,
           tools: 3,
-        }}
+          }}
         variant="minimal"
         relationship="following"
         showStats={false}
@@ -496,7 +496,7 @@ export const UserDirectory: Story = {
           following: 156,
           spaces: 6,
           tools: 2,
-        }}
+          }}
         variant="minimal"
         relationship="none"
         showStats={false}
@@ -528,7 +528,7 @@ export const SuggestedConnections: Story = {
           following: 345,
           spaces: 18,
           tools: 22,
-        }}
+          }}
         variant="compact"
         relationship="none"
       />
@@ -545,7 +545,7 @@ export const SuggestedConnections: Story = {
           following: 567,
           spaces: 12,
           tools: 8,
-        }}
+          }}
         variant="compact"
         relationship="none"
       />

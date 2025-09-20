@@ -8,7 +8,7 @@ export interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'solid' | 'dashed' | 'dotted' | 'gradient';
   size?: 'sm' | 'md' | 'lg';
   spacing?: 'none' | 'sm' | 'md' | 'lg';
-  decorative?: boolean;
+  decorative?: boolean
 }
 
 const separatorSizes = {
@@ -84,7 +84,7 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(({
       aria-orientation={orientation}
       {...props}
     />
-  );
+  )
 });
 
 Separator.displayName = 'Separator';

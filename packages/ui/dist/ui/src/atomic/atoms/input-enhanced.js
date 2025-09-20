@@ -91,39 +91,39 @@ export const InputPresets = {
     // Currency Input
     Currency: (props) => (_jsx(Input, { type: "number", leftElement: _jsx("span", { className: "text-[var(--hive-text-tertiary)]", children: "$" }), placeholder: "0.00", ...props })),
 };
-const FloatingLabelInput = React.forwardRef(({ label, labelClassName, className, id, ...props }, ref) => {
+const FloatingLabelInput = React.forwardRef(({ label, labelClassName, className, id, variant, size, radius, error, success, helperText, leftIcon, rightIcon, leftElement, rightElement, required, ...htmlProps }, ref) => {
     const [isFocused, setIsFocused] = React.useState(false);
     const [hasValue, setHasValue] = React.useState(false);
     const inputId = id || React.useId();
-    const isFloated = isFocused || hasValue || props.value || props.defaultValue;
+    const isFloated = isFocused || hasValue || htmlProps.value || htmlProps.defaultValue;
     React.useEffect(() => {
-        setHasValue(Boolean(props.value || props.defaultValue));
-    }, [props.value, props.defaultValue]);
+        setHasValue(Boolean(htmlProps.value || htmlProps.defaultValue));
+    }, [htmlProps.value, htmlProps.defaultValue]);
     const handleFocus = (e) => {
         setIsFocused(true);
-        props.onFocus?.(e);
+        htmlProps.onFocus?.(e);
     };
     const handleBlur = (e) => {
         setIsFocused(false);
         setHasValue(Boolean(e.target.value));
-        props.onBlur?.(e);
+        htmlProps.onBlur?.(e);
     };
     const handleChange = (e) => {
         setHasValue(Boolean(e.target.value));
-        props.onChange?.(e);
+        htmlProps.onChange?.(e);
     };
     return (_jsxs("div", { className: "relative", children: [_jsx("input", { ref: ref, id: inputId, className: cn(inputVariants({
-                    variant: props.error ? "error" : props.success ? "success" : props.variant,
-                    size: props.size,
-                    radius: props.radius
-                }), "peer placeholder-transparent", className), onFocus: handleFocus, onBlur: handleBlur, onChange: handleChange, placeholder: label, ...props }), _jsxs("label", { htmlFor: inputId, className: cn("absolute left-3 transition-all duration-200 pointer-events-none font-sans", "peer-placeholder-shown:text-[var(--hive-text-tertiary)]", "peer-focus:text-[var(--hive-brand-secondary)]", props.error && "peer-focus:text-[var(--hive-status-error)]", props.success && "peer-focus:text-[var(--hive-status-success)]", isFloated ? [
+                    variant: error ? "error" : success ? "success" : variant,
+                    size: size,
+                    radius: radius
+                }), "peer placeholder-transparent", className), onFocus: handleFocus, onBlur: handleBlur, onChange: handleChange, placeholder: label, ...htmlProps }), _jsxs("label", { htmlFor: inputId, className: cn("absolute left-3 transition-all duration-200 pointer-events-none font-sans", "peer-placeholder-shown:text-[var(--hive-text-tertiary)]", "peer-focus:text-[var(--hive-brand-secondary)]", error && "peer-focus:text-[var(--hive-status-error)]", success && "peer-focus:text-[var(--hive-status-success)]", isFloated ? [
                     "-top-2 left-2 text-xs bg-[var(--hive-background-primary)] px-1 z-10",
                     "text-[var(--hive-brand-secondary)]",
-                    props.error && "text-[var(--hive-status-error)]",
-                    props.success && "text-[var(--hive-status-success)]"
+                    error && "text-[var(--hive-status-error)]",
+                    success && "text-[var(--hive-status-success)]"
                 ] : [
                     "top-1/2 -translate-y-1/2 text-sm text-[var(--hive-text-tertiary)]"
-                ], labelClassName), children: [label, props.required && (_jsx("span", { className: "ml-1 text-[var(--hive-status-error)]", children: "*" }))] }), (props.error || props.success || props.helperText) && (_jsx("p", { className: cn("text-xs mt-2", props.error && "text-[var(--hive-status-error)]", props.success && "text-[var(--hive-status-success)]", !props.error && !props.success && "text-[var(--hive-text-tertiary)]"), children: props.error || props.success || props.helperText }))] }));
+                ], labelClassName), children: [label, required && (_jsx("span", { className: "ml-1 text-[var(--hive-status-error)]", children: "*" }))] }), (error || success || helperText) && (_jsx("p", { className: cn("text-xs mt-2", error && "text-[var(--hive-status-error)]", success && "text-[var(--hive-status-success)]", !error && !success && "text-[var(--hive-text-tertiary)]"), children: error || success || helperText }))] }));
 });
 FloatingLabelInput.displayName = "FloatingLabelInput";
 // Simple icons using semantic approach

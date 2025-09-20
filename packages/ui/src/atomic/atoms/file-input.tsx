@@ -17,7 +17,7 @@ export interface FileInputProps extends Omit<React.InputHTMLAttributes<HTMLInput
   helperText?: string;
   onFileSelect?: (files: FileList | null) => void;
   onFileRemove?: (index: number) => void;
-  showFileList?: boolean;
+  showFileList?: boolean
 }
 
 const fileInputSizes = {
@@ -43,17 +43,17 @@ const formatFileSize = (bytes: number): string => {
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 };
 
 const getFileIcon = (file: File) => {
   if (file.type.startsWith('image/')) {
-    return <ImageIcon className="w-full h-full" />;
+    return <ImageIcon className="w-full h-full" />
   }
   if (file.type.includes('text/') || file.type.includes('document')) {
-    return <FileText className="w-full h-full" />;
+    return <FileText className="w-full h-full" />
   }
-  return <File className="w-full h-full" />;
+  return <File className="w-full h-full" />
 };
 
 export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
@@ -83,9 +83,9 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
 
   const validateFile = (file: File): string | null => {
     if (maxSize && file.size > maxSize) {
-      return `File size must be less than ${formatFileSize(maxSize)}`;
+      return `File size must be less than ${formatFileSize(maxSize)}`
     }
-    return null;
+    return null
   };
 
   const handleFileChange = (files: FileList | null) => {
@@ -98,15 +98,15 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
     fileArray.forEach(file => {
       const error = validateFile(file);
       if (error) {
-        errors.push(`${file.name}: ${error}`);
+        errors.push(`${file.name}: ${error}`)
       } else {
-        validFiles.push(file);
+        validFiles.push(file)
       }
     });
 
     if (maxFiles && selectedFiles.length + validFiles.length > maxFiles) {
       errors.push(`Maximum ${maxFiles} files allowed`);
-      return;
+      return
     }
 
     const newFiles = multiple ? [...selectedFiles, ...validFiles] : validFiles.slice(0, 1);
@@ -116,34 +116,34 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
     if (preview) {
       const newUrls = newFiles.map(file => {
         if (file.type.startsWith('image/')) {
-          return URL.createObjectURL(file);
+          return URL.createObjectURL(file)
         }
-        return '';
+        return ''
       });
-      setPreviewUrls(newUrls);
+      setPreviewUrls(newUrls)
     }
 
-    onFileSelect?.(files);
+    onFileSelect?.(files)
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragActive(false);
     if (!disabled) {
-      handleFileChange(e.dataTransfer.files);
+      handleFileChange(e.dataTransfer.files)
     }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     if (!disabled) {
-      setDragActive(true);
+      setDragActive(true)
     }
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    setDragActive(false);
+    setDragActive(false)
   };
 
   const removeFile = (index: number) => {
@@ -154,17 +154,17 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
       const newUrls = previewUrls.filter((_, i) => i !== index);
       // Clean up old URL
       if (previewUrls[index]) {
-        URL.revokeObjectURL(previewUrls[index]);
+        URL.revokeObjectURL(previewUrls[index])
       }
-      setPreviewUrls(newUrls);
+      setPreviewUrls(newUrls)
     }
     
-    onFileRemove?.(index);
+    onFileRemove?.(index)
   };
 
   const openFileDialog = () => {
     if (!disabled) {
-      inputRef.current?.click();
+      inputRef.current?.click()
     }
   };
 
@@ -353,7 +353,7 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
           ))}
         </div>
       </div>
-    );
+    )
   };
 
   return (
@@ -379,7 +379,7 @@ export const FileInput = React.forwardRef<HTMLInputElement, FileInputProps>(({
       
       {renderFileList()}
     </div>
-  );
+  )
 });
 
 FileInput.displayName = 'FileInput';

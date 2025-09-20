@@ -45,7 +45,7 @@ interface SpaceAnalytics {
     averageEngagement: number;
     topContentTypes: Array<{ type: string; count: number; engagement: number }>;
     contentGrowthRate: number;
-    moderationQueue: number;
+    moderationQueue: number
   };
   
   // Event Analytics
@@ -54,7 +54,7 @@ interface SpaceAnalytics {
     upcomingEvents: number;
     averageAttendance: number;
     eventCompletionRate: number;
-    topEventTypes: Array<{ type: string; count: number; avgAttendance: number }>;
+    topEventTypes: Array<{ type: string; count: number; avgAttendance: number }>
   };
   
   // Tool Analytics
@@ -62,7 +62,7 @@ interface SpaceAnalytics {
     totalTools: number;
     activeTools: number;
     toolUsage: number; // Total interactions
-    topTools: Array<{ name: string; usage: number; satisfaction: number }>;
+    topTools: Array<{ name: string; usage: number; satisfaction: number }>
   };
   
   // Health Metrics
@@ -70,17 +70,17 @@ interface SpaceAnalytics {
     overallHealth: number; // 0-100 score
     engagementTrend: 'up' | 'down' | 'stable';
     alerts: Array<{ type: 'warning' | 'critical' | 'info'; message: string }>;
-    recommendations: Array<{ priority: 'high' | 'medium' | 'low'; action: string }>;
+    recommendations: Array<{ priority: 'high' | 'medium' | 'low'; action: string }>
   };
   
   // Time-series data for charts
   timeSeriesData: {
     memberGrowth: Array<{ date: string; members: number; active: number }>;
     contentActivity: Array<{ date: string; posts: number; engagement: number }>;
-    eventAttendance: Array<{ date: string; events: number; attendance: number }>;
+    eventAttendance: Array<{ date: string; events: number; attendance: number }>
   };
   
-  lastUpdated: string;
+  lastUpdated: string
 }
 
 interface SpaceAnalyticsDashboardProps {
@@ -88,7 +88,7 @@ interface SpaceAnalyticsDashboardProps {
   isLeader?: boolean;
   onRefresh?: () => void;
   onExportData?: () => void;
-  onUpdateSettings?: () => void;
+  onUpdateSettings?: () => void
 }
 
 export const SpaceAnalyticsDashboard: React.FC<SpaceAnalyticsDashboardProps> = ({
@@ -104,19 +104,19 @@ export const SpaceAnalyticsDashboard: React.FC<SpaceAnalyticsDashboardProps> = (
   const getHealthColor = (score: number) => {
     if (score >= 80) return 'text-green-400';
     if (score >= 60) return 'text-yellow-400';
-    return 'text-red-400';
+    return 'text-red-400'
   };
 
   const getHealthBgColor = (score: number) => {
     if (score >= 80) return 'bg-green-500/10';
     if (score >= 60) return 'bg-yellow-500/10';
-    return 'bg-red-500/10';
+    return 'bg-red-500/10'
   };
 
   const getTrendIcon = (trend: string, isUp: boolean = false) => {
     if (trend === 'up' || isUp) return <TrendingUp className="h-4 w-4 text-green-400" />;
     if (trend === 'down' || (!isUp && trend !== 'stable')) return <TrendingDown className="h-4 w-4 text-red-400" />;
-    return <Activity className="h-4 w-4 text-gray-400" />;
+    return <Activity className="h-4 w-4 text-gray-400" />
   };
 
   if (!isLeader) {
@@ -128,7 +128,7 @@ export const SpaceAnalyticsDashboard: React.FC<SpaceAnalyticsDashboardProps> = (
         <h3 className="text-lg font-semibold text-white mb-2">Analytics Dashboard</h3>
         <p className="text-gray-400">Space analytics are available to space leaders and moderators.</p>
       </HiveCard>
-    );
+    )
   }
 
   return (
@@ -218,7 +218,7 @@ export const SpaceAnalyticsDashboard: React.FC<SpaceAnalyticsDashboardProps> = (
           { key: 'content', label: 'Content', icon: MessageSquare },
           { key: 'events', label: 'Events', icon: Calendar },
           { key: 'tools', label: 'Tools', icon: Zap }
-        ] as const).map(({ key, label, icon: Icon }) => (
+        ] as const).map(({ key, label, icon: Icon })} => (
           <button
             key={key}
             onClick={() => setActiveTab(key)}
@@ -510,5 +510,5 @@ export const SpaceAnalyticsDashboard: React.FC<SpaceAnalyticsDashboardProps> = (
         </HiveCard>
       )}
     </div>
-  );
+  )
 };

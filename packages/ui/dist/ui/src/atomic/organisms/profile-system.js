@@ -5,8 +5,8 @@ import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 import { ProfileHeader } from '../molecules/profile-header';
 import { ProfileStats } from '../molecules/profile-stats';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { LayoutGrid, List, Filter, Users, Zap, Activity } from 'lucide-react';
 const profileSystemVariants = cva("min-h-screen bg-hive-background-primary", {
     variants: {

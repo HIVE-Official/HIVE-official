@@ -15,12 +15,12 @@ export type ValidationRule = {
   type: 'required' | 'min' | 'max' | 'pattern' | 'email' | 'custom';
   value?: any;
   message: string;
-  validator?: (value: any) => boolean | Promise<boolean>;
+  validator?: (value: any) => boolean | Promise<boolean>
 };
 
 export type FieldError = {
   type: string;
-  message: string;
+  message: string
 };
 
 export type FormFieldState = {
@@ -28,7 +28,7 @@ export type FormFieldState = {
   errors: FieldError[];
   touched: boolean;
   validating: boolean;
-  valid: boolean;
+  valid: boolean
 };
 
 export type FormState = {
@@ -37,7 +37,7 @@ export type FormState = {
   touched: Record<string, boolean>;
   validating: Record<string, boolean>;
   valid: boolean;
-  submitting: boolean;
+  submitting: boolean
 };
 
 // Form context
@@ -50,7 +50,7 @@ interface FormContextType {
   validateField: (name: string, value: any, rules: ValidationRule[]) => Promise<void>;
   resetForm: () => void;
   submitForm: () => Promise<void>;
-  getFieldState: (name: string) => FormFieldState;
+  getFieldState: (name: string) => FormFieldState
 }
 
 const FormContext = createContext<FormContextType | null>(null);
@@ -159,20 +159,20 @@ const validateField = async (value: any, rules: ValidationRule[]): Promise<Field
         break;
       case 'custom':
         if (rule.validator) {
-          isValid = await rule.validator(value);
+          isValid = await rule.validator(value)
         }
-        break;
+        break
     }
     
     if (!isValid) {
       errors.push({
         type: rule.type,
         message: rule.message,
-      });
+      })
     }
   }
   
-  return errors;
+  return errors
 };
 
 // Form Provider Component
@@ -181,7 +181,7 @@ export interface HiveFormProps {
   initialValues?: Record<string, any>;
   onSubmit?: (values: Record<string, any>) => Promise<void> | void;
   validationMode?: 'onChange' | 'onBlur' | 'onSubmit';
-  className?: string;
+  className?: string
 }
 
 export const HiveForm: React.FC<HiveFormProps> = ({
@@ -204,7 +204,7 @@ export const HiveForm: React.FC<HiveFormProps> = ({
     setState(prev => ({
       ...prev,
       values: { ...prev.values, [name]: value },
-    }));
+    }))
   }, []);
   
   const setError = useCallback((name: string, error: FieldError | null) => {
@@ -214,21 +214,21 @@ export const HiveForm: React.FC<HiveFormProps> = ({
         ...prev.errors,
         [name]: error ? [error] : [],
       },
-    }));
+    }))
   }, []);
   
   const setTouched = useCallback((name: string, touched: boolean) => {
     setState(prev => ({
       ...prev,
       touched: { ...prev.touched, [name]: touched },
-    }));
+    }))
   }, []);
   
   const setValidating = useCallback((name: string, validating: boolean) => {
     setState(prev => ({
       ...prev,
       validating: { ...prev.validating, [name]: validating },
-    }));
+    }))
   }, []);
   
   const validateFormField = useCallback(async (name: string, value: any, rules: ValidationRule[]) => {
@@ -240,7 +240,7 @@ export const HiveForm: React.FC<HiveFormProps> = ({
         ...prev,
         errors: { ...prev.errors, [name]: errors },
         validating: { ...prev.validating, [name]: false },
-      }));
+      }))
     } catch (error) {
       setState(prev => ({
         ...prev,
@@ -249,7 +249,7 @@ export const HiveForm: React.FC<HiveFormProps> = ({
           [name]: [{ type: 'validation', message: 'Validation error occurred' }] 
         },
         validating: { ...prev.validating, [name]: false },
-      }));
+      }))
     }
   }, []);
   
@@ -261,7 +261,7 @@ export const HiveForm: React.FC<HiveFormProps> = ({
       validating: {},
       valid: true,
       submitting: false,
-    });
+    })
   }, [initialValues]);
   
   const submitForm = useCallback(async () => {
@@ -269,12 +269,12 @@ export const HiveForm: React.FC<HiveFormProps> = ({
     
     try {
       if (onSubmit) {
-        await onSubmit(state.values);
+        await onSubmit(state.values)
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error('Form submission error:', error)
     } finally {
-      setState(prev => ({ ...prev, submitting: false }));
+      setState(prev => ({ ...prev, submitting: false }))
     }
   }, [onSubmit, state.values]);
   
@@ -285,7 +285,7 @@ export const HiveForm: React.FC<HiveFormProps> = ({
       touched: state.touched[name] || false,
       validating: state.validating[name] || false,
       valid: !state.errors[name] || state.errors[name].length === 0,
-    };
+    }
   }, [state]);
   
   // Update form validity
@@ -296,7 +296,7 @@ export const HiveForm: React.FC<HiveFormProps> = ({
     setState(prev => ({
       ...prev,
       valid: !hasErrors && !isValidating,
-    }));
+    }))
   }, [state.errors, state.validating]);
   
   const contextValue: FormContextType = {
@@ -315,19 +315,19 @@ export const HiveForm: React.FC<HiveFormProps> = ({
     <FormContext.Provider value={contextValue}>
       <form className={cn("space-y-6", className)} onSubmit={(e) => {
         e.preventDefault();
-        submitForm();
+        submitForm()
       }}>
         {children}
       </form>
     </FormContext.Provider>
-  );
+  )
 };
 
 // Form Field Hook
 export function useFormField(name: string) {
   const context = useContext(FormContext);
   if (!context) {
-    throw new Error('useFormField must be used within a HiveForm');
+    throw new Error('useFormField must be used within a HiveForm')
   }
   
   return {
@@ -336,7 +336,7 @@ export function useFormField(name: string) {
     setError: (error: FieldError | null) => context.setError(name, error),
     setTouched: (touched: boolean) => context.setTouched(name, touched),
     validate: (rules: ValidationRule[]) => context.validateField(name, context.getFieldState(name).value, rules),
-  };
+  }
 }
 
 // Form Input Component
@@ -347,7 +347,7 @@ export interface HiveFormInputProps
   label?: string;
   description?: string;
   rules?: ValidationRule[];
-  showPasswordToggle?: boolean;
+  showPasswordToggle?: boolean
 }
 
 export const HiveFormInput = React.forwardRef<HTMLInputElement, HiveFormInputProps>(
@@ -369,7 +369,7 @@ export const HiveFormInput = React.forwardRef<HTMLInputElement, HiveFormInputPro
     const context = useContext(FormContext);
     
     if (!context) {
-      throw new Error('HiveFormInput must be used within a HiveForm');
+      throw new Error('HiveFormInput must be used within a HiveForm')
     }
     
     const fieldState = field.errors.length > 0 ? 'error' : 
@@ -384,14 +384,14 @@ export const HiveFormInput = React.forwardRef<HTMLInputElement, HiveFormInputPro
       field.setValue(value);
       
       if (context.state.touched[name] && rules.length > 0) {
-        field.validate(rules);
+        field.validate(rules)
       }
     };
     
     const handleBlur = () => {
       field.setTouched(true);
       if (rules.length > 0) {
-        field.validate(rules);
+        field.validate(rules)
       }
     };
     
@@ -489,7 +489,7 @@ export const HiveFormInput = React.forwardRef<HTMLInputElement, HiveFormInputPro
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 
@@ -502,7 +502,7 @@ export interface HiveFormTextareaProps
   label?: string;
   description?: string;
   rules?: ValidationRule[];
-  variant?: 'default' | 'premium' | 'minimal';
+  variant?: 'default' | 'premium' | 'minimal'
 }
 
 export const HiveFormTextarea = React.forwardRef<HTMLTextAreaElement, HiveFormTextareaProps>(
@@ -520,7 +520,7 @@ export const HiveFormTextarea = React.forwardRef<HTMLTextAreaElement, HiveFormTe
     const context = useContext(FormContext);
     
     if (!context) {
-      throw new Error('HiveFormTextarea must be used within a HiveForm');
+      throw new Error('HiveFormTextarea must be used within a HiveForm')
     }
     
     const fieldState = field.errors.length > 0 ? 'error' : 
@@ -532,14 +532,14 @@ export const HiveFormTextarea = React.forwardRef<HTMLTextAreaElement, HiveFormTe
       field.setValue(value);
       
       if (context.state.touched[name] && rules.length > 0) {
-        field.validate(rules);
+        field.validate(rules)
       }
     };
     
     const handleBlur = () => {
       field.setTouched(true);
       if (rules.length > 0) {
-        field.validate(rules);
+        field.validate(rules)
       }
     };
     
@@ -616,7 +616,7 @@ export const HiveFormTextarea = React.forwardRef<HTMLTextAreaElement, HiveFormTe
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 

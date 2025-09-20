@@ -158,20 +158,20 @@ interface Language {
   currency: {
     code: string;
     symbol: string;
-    position: 'before' | 'after';
+    position: 'before' | 'after'
   };
   numberFormat: {
     decimal: string;
-    thousands: string;
-  };
+    thousands: string
+  }
 }
 
 interface TranslationKey {
-  [key: string]: string | TranslationKey;
+  [key: string]: string | TranslationKey
 }
 
 interface Translations {
-  [languageCode: string]: TranslationKey;
+  [languageCode: string]: TranslationKey
 }
 
 // Language Configuration
@@ -714,7 +714,7 @@ interface LocalizationContextType {
   formatNumber: (num: number) => string;
   formatCurrency: (amount: number) => string;
   changeLanguage: (languageCode: string) => void;
-  direction: 'ltr' | 'rtl';
+  direction: 'ltr' | 'rtl'
 }
 
 const LocalizationContext = createContext<LocalizationContextType | null>(null);
@@ -723,9 +723,9 @@ const LocalizationContext = createContext<LocalizationContextType | null>(null);
 const useLocalization = () => {
   const context = useContext(LocalizationContext);
   if (!context) {
-    throw new Error('useLocalization must be used within LocalizationProvider');
+    throw new Error('useLocalization must be used within LocalizationProvider')
   }
-  return context;
+  return context
 };
 
 // Localization Provider
@@ -742,18 +742,18 @@ const LocalizationProvider = ({ children }: { children: React.ReactNode }) => {
     
     for (const k of keys) {
       if (translation && typeof translation === 'object' && k in translation) {
-        translation = translation[k];
+        translation = translation[k]
       } else {
         // Fallback to English
         translation = TRANSLATIONS['en-US'];
         for (const fallbackKey of keys) {
           if (translation && typeof translation === 'object' && fallbackKey in translation) {
-            translation = translation[fallbackKey];
+            translation = translation[fallbackKey]
           } else {
             return key; // Return key if translation not found
           }
         }
-        break;
+        break
       }
     }
     
@@ -761,13 +761,13 @@ const LocalizationProvider = ({ children }: { children: React.ReactNode }) => {
       // Simple parameter replacement
       if (params) {
         return translation.replace(/\{(\w+)\}/g, (match, paramKey) => {
-          return params[paramKey]?.toString() || match;
-        });
+          return params[paramKey]?.toString() || match
+        })
       }
-      return translation;
+      return translation
     }
     
-    return key;
+    return key
   }, [currentLocale]);
 
   const formatDate = useCallback((date: Date) => {
@@ -777,7 +777,7 @@ const LocalizationProvider = ({ children }: { children: React.ReactNode }) => {
       day: '2-digit'
     };
     
-    return new Intl.DateTimeFormat(currentLocale, options).format(date);
+    return new Intl.DateTimeFormat(currentLocale, options).format(date)
   }, [currentLocale]);
 
   const formatTime = useCallback((date: Date) => {
@@ -787,18 +787,18 @@ const LocalizationProvider = ({ children }: { children: React.ReactNode }) => {
       hour12: currentLanguage.timeFormat === '12h'
     };
     
-    return new Intl.DateTimeFormat(currentLocale, options).format(date);
+    return new Intl.DateTimeFormat(currentLocale, options).format(date)
   }, [currentLocale, currentLanguage]);
 
   const formatNumber = useCallback((num: number) => {
-    return new Intl.NumberFormat(currentLocale).format(num);
+    return new Intl.NumberFormat(currentLocale).format(num)
   }, [currentLocale]);
 
   const formatCurrency = useCallback((amount: number) => {
     return new Intl.NumberFormat(currentLocale, {
       style: 'currency',
       currency: currentLanguage.currency.code
-    }).format(amount);
+    }).format(amount)
   }, [currentLocale, currentLanguage]);
 
   const changeLanguage = useCallback((languageCode: string) => {
@@ -808,7 +808,7 @@ const LocalizationProvider = ({ children }: { children: React.ReactNode }) => {
     const newLanguage = SUPPORTED_LANGUAGES.find(lang => lang.code === languageCode);
     if (newLanguage) {
       document.documentElement.dir = newLanguage.direction;
-      document.documentElement.lang = languageCode.split('-')[0];
+      document.documentElement.lang = languageCode.split('-')[0]
     }
   }, []);
 
@@ -830,7 +830,7 @@ const LocalizationProvider = ({ children }: { children: React.ReactNode }) => {
         {children}
       </div>
     </LocalizationContext.Provider>
-  );
+  )
 };
 
 // Language Selector Component
@@ -903,7 +903,7 @@ const LanguageSelector = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Localized Campus Feed Component
@@ -944,7 +944,7 @@ const LocalizedCampusFeed = () => {
     if (diffMins < 60) return `${diffMins} ${t('time.minutes')}`;
     if (diffHours < 24) return `${diffHours} ${t('time.hours')}`;
     if (diffDays === 1) return t('time.yesterday');
-    return formatDate(date);
+    return formatDate(date)
   };
 
   return (
@@ -1004,7 +1004,7 @@ const LocalizedCampusFeed = () => {
         ))}
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Localized Campus Services
@@ -1051,7 +1051,7 @@ const LocalizedCampusServices = () => {
       case 'open': case 'active': case 'available': return 'text-green-400';
       case 'busy': case 'limited': return 'text-yellow-400';
       case 'closed': case 'offline': case 'full': return 'text-red-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -1084,12 +1084,12 @@ const LocalizedCampusServices = () => {
                   </div>
                 </div>
               </div>
-            );
-          })}
+            )
+          }}
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // RTL Layout Demonstration
@@ -1163,7 +1163,7 @@ const RTLLayoutDemo = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Cultural Adaptation Examples
@@ -1213,7 +1213,7 @@ const CulturalAdaptations = () => {
           academicTerm: 'Semester',
           studyTime: 'Study Time',
           culturalNote: 'Interface designed for American campus culture'
-        };
+        }
     }
   };
 
@@ -1279,7 +1279,7 @@ const CulturalAdaptations = () => {
         </Alert>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Main Internationalization System
@@ -1321,7 +1321,7 @@ const InternationalizationSystem = () => {
         </div>
       </div>
     </LocalizationProvider>
-  );
+  )
 };
 
 // Story Exports

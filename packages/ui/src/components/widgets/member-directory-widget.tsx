@@ -23,8 +23,8 @@ import {
   Eye
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Badge } from '../../atomic/atoms/badge';
 import { MemberDirectoryTool } from '../tools/member-directory-tool';
 import { type Space } from '@hive/core';
 
@@ -37,7 +37,7 @@ export interface MemberDirectoryWidgetProps {
   maxMembers?: number;
   onMemberAction?: (memberId: string, action: string, data?: any) => void;
   authenticatedFetch?: (url: string, options?: RequestInit) => Promise<Response>;
-  className?: string;
+  className?: string
 }
 
 export function MemberDirectoryWidget({
@@ -69,7 +69,7 @@ export function MemberDirectoryWidget({
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch members: ${response.status}`);
+          throw new Error(`Failed to fetch members: ${response.status}`)
         }
 
         const data = await response.json();
@@ -86,19 +86,19 @@ export function MemberDirectoryWidget({
           contributionScore: member.stats?.contributionScore || 0,
           lastActive: new Date(member.lastActive || Date.now()),
           isVerified: member.isVerified || false
-        }));
+        })});
 
-        setPreviewMembers(transformedMembers);
+        setPreviewMembers(transformedMembers)
       } catch (error) {
         console.error('Error fetching preview members:', error);
         // Fallback to empty array on error
-        setPreviewMembers([]);
+        setPreviewMembers([])
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
     }
 
-    fetchPreviewMembers();
+    fetchPreviewMembers()
   }, [space.id, authenticatedFetch]);
 
   const getStatusColor = (status: string) => {
@@ -106,7 +106,7 @@ export function MemberDirectoryWidget({
       case 'online': return 'bg-green-400';
       case 'away': return 'bg-yellow-400';
       case 'busy': return 'bg-red-400';
-      default: return 'bg-gray-400';
+      default: return 'bg-gray-400'
     }
   };
 
@@ -115,7 +115,7 @@ export function MemberDirectoryWidget({
       case 'owner': return Crown;
       case 'admin': return Shield;
       case 'moderator': return Star;
-      default: return Users;
+      default: return Users
     }
   };
 
@@ -124,7 +124,7 @@ export function MemberDirectoryWidget({
       case 'owner': return 'text-yellow-400';
       case 'admin': return 'text-purple-400';
       case 'moderator': return 'text-blue-400';
-      default: return 'text-neutral-400';
+      default: return 'text-neutral-400'
     }
   };
 
@@ -138,7 +138,7 @@ export function MemberDirectoryWidget({
         case 'recent':
           return member.lastActive > new Date(Date.now() - 24 * 60 * 60 * 1000);
         default:
-          return true;
+          return true
       }
     })
     .slice(0, maxMembers);
@@ -231,14 +231,14 @@ export function MemberDirectoryWidget({
                     size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onMemberAction?.(member.id, 'manage');
-                    }}
+                      onMemberAction?.(member.id, 'manage')
+          }}
                   >
                     <UserCog className="h-3 w-3" />
                   </Button>
                 )}
               </div>
-            );
+            )
           })}
         </div>
 
@@ -248,7 +248,7 @@ export function MemberDirectoryWidget({
           </div>
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -422,8 +422,8 @@ export function MemberDirectoryWidget({
                     className="w-full text-xs"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onMemberAction?.(member.id, 'manage');
-                    }}
+                      onMemberAction?.(member.id, 'manage')
+          }}
                   >
                     <UserCog className="h-3 w-3 mr-1" />
                     Manage
@@ -431,8 +431,8 @@ export function MemberDirectoryWidget({
                 </div>
               )}
             </motion.div>
-          );
-        })}
+          )
+          })}
       </div>
 
       {/* Full Directory Modal */}
@@ -488,5 +488,5 @@ export function MemberDirectoryWidget({
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }

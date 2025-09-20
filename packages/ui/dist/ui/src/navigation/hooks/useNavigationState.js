@@ -7,7 +7,22 @@
  * It's optimized for performance, accessibility, and developer experience.
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+// Optional Next.js navigation - only works when Next.js is available
+let usePathname;
+let useRouter;
+try {
+    const nextNavigation = require('next/navigation');
+    usePathname = nextNavigation.usePathname;
+    useRouter = nextNavigation.useRouter;
+}
+catch {
+    // Fallback when Next.js is not available
+    usePathname = () => '/';
+    useRouter = () => ({
+        push: async () => false,
+        back: () => { }
+    });
+}
 import { calculateNavigationLayout, createResizeHandler, createNavigationStateMemo, safeCalculateNavigationState, debugNavigationState } from '../core/engine';
 import { getNavigationItemsWithActiveState } from '../core/data';
 /**

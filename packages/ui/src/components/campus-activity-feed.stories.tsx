@@ -247,7 +247,7 @@ export const WithUnread: Story = {
     activities: mockActivities.map((activity, index) => ({
       ...activity,
       isUnread: index < 3
-    })),
+    })}),
     maxItems: 6,
   },
 };

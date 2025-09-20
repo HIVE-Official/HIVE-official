@@ -73,7 +73,7 @@ export function FirebaseProvider({ children, enableMockAuth = true }) {
             //       loading: false
             //     }));
             //   }
-            // });
+            // })
         }
         return () => {
             if (unsubscribe) {

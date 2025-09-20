@@ -48,7 +48,7 @@ const createMockItems = (activeSection?: string) => {
     badge: item.id === 'spaces' ? { type: 'notification' as const, count: 7 } : 
            item.id === 'feed' ? { type: 'status' as const, count: 23 } :
            item.id === 'hivelab' && activeSection !== 'hivelab' ? { type: 'feature' as const, label: 'NEW' } : undefined
-  }));
+  }))
 };
 
 // ============================================================================
@@ -149,7 +149,7 @@ const InteractiveSidebarDemo = ({
         onNavigate={action('navigate')}
         onToggleCollapse={() => {
           setCollapsed(!collapsed);
-          action('toggle-collapse')(!collapsed);
+          action('toggle-collapse')(!collapsed)
         }}
         {...props}
       />
@@ -217,7 +217,7 @@ const InteractiveSidebarDemo = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // ============================================================================

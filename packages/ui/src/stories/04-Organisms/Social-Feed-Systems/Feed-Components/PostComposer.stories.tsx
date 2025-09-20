@@ -65,18 +65,18 @@ const PostComposer = ({
 
   const handleContentChange = (value: string) => {
     setContent(value);
-    setError(null);
+    setError(null)
   };
 
   const handlePost = async () => {
     if (!content.trim() && attachments.length === 0) {
       setError('Post cannot be empty');
-      return;
+      return
     }
 
     if (content.length > maxLength) {
       setError(`Post is too long (${content.length}/${maxLength} characters)`);
-      return;
+      return
     }
 
     setIsPosting(true);
@@ -97,11 +97,11 @@ const PostComposer = ({
       setPoll({ question: '', options: ['', ''], allowMultiple: false });
       setEvent({ title: '', description: '', startTime: '', endTime: '' });
       setPostType('text');
-      setShowAdvanced(false);
+      setShowAdvanced(false)
     } catch (err) {
-      setError('Failed to create post');
+      setError('Failed to create post')
     } finally {
-      setIsPosting(false);
+      setIsPosting(false)
     }
   };
 
@@ -109,14 +109,14 @@ const PostComposer = ({
     setPoll(prev => ({
       ...prev,
       options: [...prev.options, '']
-    }));
+    }))
   };
 
   const updatePollOption = (index: number, value: string) => {
     setPoll(prev => ({
       ...prev,
       options: prev.options.map((opt, i) => i === index ? value : opt)
-    }));
+    }))
   };
 
   const removePollOption = (index: number) => {
@@ -124,7 +124,7 @@ const PostComposer = ({
       setPoll(prev => ({
         ...prev,
         options: prev.options.filter((_, i) => i !== index)
-      }));
+      }))
     }
   };
 
@@ -132,7 +132,7 @@ const PostComposer = ({
     switch (visibility) {
       case 'public': return <Globe className="h-4 w-4" />;
       case 'space': return <Users className="h-4 w-4" />;
-      case 'private': return <Lock className="h-4 w-4" />;
+      case 'private': return <Lock className="h-4 w-4" />
     }
   };
 
@@ -140,7 +140,7 @@ const PostComposer = ({
     switch (visibility) {
       case 'public': return 'Everyone on HIVE';
       case 'space': return spaceId ? 'Space members only' : 'Space members';
-      case 'private': return 'Only you';
+      case 'private': return 'Only you'
     }
   };
 
@@ -402,7 +402,7 @@ const PostComposer = ({
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const meta = {
@@ -431,7 +431,7 @@ export const Default: Story = {
     user: mockUser,
     onPost: (post: any) => {
       console.log('Creating post:', post);
-      return Promise.resolve();
+      return Promise.resolve()
     },
     placeholder: "What's happening on campus?",
     maxLength: 500,
@@ -445,7 +445,7 @@ export const WithSpaceContext: Story = {
     spaceId: 'cs101_study',
     onPost: (post: any) => {
       console.log('Creating post in space:', post);
-      return Promise.resolve();
+      return Promise.resolve()
     },
     placeholder: "Share with your study group...",
     maxLength: 500,
@@ -458,7 +458,7 @@ export const PollComposer: Story = {
     user: mockUser,
     onPost: (post: any) => {
       console.log('Creating poll:', post);
-      return Promise.resolve();
+      return Promise.resolve()
     },
     placeholder: "Ask your community a question...",
     maxLength: 300,
@@ -468,7 +468,7 @@ export const PollComposer: Story = {
     const canvas = canvasElement;
     const pollButton = canvas.querySelector('button[title="Create poll post"]');
     if (pollButton) {
-      (pollButton as HTMLElement).click();
+      (pollButton as HTMLElement).click()
     }
   }
 };
@@ -478,7 +478,7 @@ export const EventComposer: Story = {
     user: mockUser,
     onPost: (post: any) => {
       console.log('Creating event:', post);
-      return Promise.resolve();
+      return Promise.resolve()
     },
     placeholder: "Create an event for your community...",
     maxLength: 500,
@@ -488,7 +488,7 @@ export const EventComposer: Story = {
     const canvas = canvasElement;
     const eventButton = canvas.querySelector('button[title="Create event post"]');
     if (eventButton) {
-      (eventButton as HTMLElement).click();
+      (eventButton as HTMLElement).click()
     }
   }
 };
@@ -498,7 +498,7 @@ export const LimitedComposer: Story = {
     user: mockUser,
     onPost: (post: any) => {
       console.log('Creating limited post:', post);
-      return Promise.resolve();
+      return Promise.resolve()
     },
     placeholder: "Quick update...",
     maxLength: 140,
@@ -511,10 +511,10 @@ export const WithCancelButton: Story = {
     user: mockUser,
     onPost: (post: any) => {
       console.log('Creating post:', post);
-      return Promise.resolve();
+      return Promise.resolve()
     },
     onCancel: () => {
-      console.log('Cancelled post creation');
+      console.log('Cancelled post creation')
     },
     placeholder: "What's on your mind?",
     maxLength: 500,
@@ -527,7 +527,7 @@ export const AllPostTypes: Story = {
     user: mockUser,
     onPost: (post: any) => {
       console.log('Creating post:', post);
-      return Promise.resolve();
+      return Promise.resolve()
     },
     placeholder: "Create any type of content...",
     maxLength: 500,

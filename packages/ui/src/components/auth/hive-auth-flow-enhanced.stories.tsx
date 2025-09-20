@@ -104,7 +104,7 @@ export const EnhancedDefault: Story = {
     mockMode: true,
     onAuthSuccess: (user) => {
       console.log('Enhanced auth success:', user);
-      alert(`🎉 Welcome to HIVE, ${user.name}! Enhanced experience activated.`);
+      alert(`🎉 Welcome to HIVE, ${user.name}! Enhanced experience activated.`)
     }
   },
   parameters: {
@@ -154,7 +154,7 @@ export const EnhancedSignUpFlow: Story = {
     initialStep: 'sign-up',
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Enhanced sign up success:', user);
+      console.log('Enhanced sign up success:', user)
     }
   },
   parameters: {
@@ -204,7 +204,7 @@ export const EnhancedSignInFlow: Story = {
     initialStep: 'sign-in',
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Enhanced sign in success:', user);
+      console.log('Enhanced sign in success:', user)
     }
   },
   parameters: {
@@ -254,7 +254,7 @@ export const EnhancedMagicLinkFlow: Story = {
     initialStep: 'magic-link-sent',
     mockMode: true,
     onAuthSuccess: (user) => {
-      console.log('Enhanced magic link success:', user);
+      console.log('Enhanced magic link success:', user)
     }
   },
   parameters: {
@@ -311,7 +311,7 @@ export const EnhancedInteractiveDemo: Story = {
     const handleAuthSuccess = (user: any) => {
       setAuthResult(user);
       setIsShowcasing(true);
-      console.log('Enhanced demo auth success:', user);
+      console.log('Enhanced demo auth success:', user)
     };
 
     return (
@@ -346,7 +346,7 @@ export const EnhancedInteractiveDemo: Story = {
           </div>
         )}
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -466,11 +466,11 @@ export const EnhancedBrandShowcase: Story = {
           initialStep={brandFeatures[currentFeature as keyof typeof brandFeatures].step}
           mockMode={true}
           onAuthSuccess={(user) => {
-            alert(`🎉 Enhanced ${brandFeatures[currentFeature as keyof typeof brandFeatures].title} - Welcome ${user.name}!`);
-          }}
+            alert(`🎉 Enhanced ${brandFeatures[currentFeature as keyof typeof brandFeatures].title} - Welcome ${user.name}!`)
+          })}
         />
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',
@@ -594,11 +594,11 @@ export const EnhancedUniversityOfBuffaloScenarios: Story = {
           initialStep={ubScenarios[currentScenario as keyof typeof ubScenarios].step}
           mockMode={true}
           onAuthSuccess={(user) => {
-            alert(`🎉 ${ubScenarios[currentScenario as keyof typeof ubScenarios].title} - Enhanced Welcome to HIVE, ${user.name}!`);
-          }}
+            alert(`🎉 ${ubScenarios[currentScenario as keyof typeof ubScenarios].title} - Enhanced Welcome to HIVE, ${user.name}!`)
+          })}
         />
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',

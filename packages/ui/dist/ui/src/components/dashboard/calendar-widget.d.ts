@@ -44,7 +44,7 @@ interface CalendarWidgetProps {
     className?: string;
     viewMode?: 'month' | 'week' | 'agenda';
 }
-export declare function CalendarWidget({ data, isLoading, onEventClick, onDateSelect, onAddEvent, className, viewMode }: CalendarWidgetProps): import("react/jsx-runtime").JSX.Element;
+export declare function CalendarWidget({ data, isLoading, onEventClick, onDateSelect, onAddEvent, className, viewMode }: CalendarWidgetProps): void;
 export declare const mockCalendarData: CalendarWidgetData;
 export default CalendarWidget;
 //# sourceMappingURL=calendar-widget.d.ts.map

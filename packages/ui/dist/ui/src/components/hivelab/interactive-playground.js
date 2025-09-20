@@ -28,7 +28,7 @@ const PropertyEditor = ({ prop, value, onChange }) => {
                                     // In a real implementation, you'd upload the file and get a URL
                                     onChange(`uploaded_file_${file.name}`);
                                 }
-                            }, className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" }), value && (_jsxs("p", { className: "text-sm text-gray-600", children: ["Current: ", value] }))] }));
+                            } }), ")} className=\"w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500\" />", value && (_jsxs("p", { className: "text-sm text-gray-600", children: ["Current: ", value] }))] }));
             default:
                 return (_jsx("input", { type: "text", value: JSON.stringify(value) || '', onChange: (e) => {
                         try {
@@ -37,23 +37,29 @@ const PropertyEditor = ({ prop, value, onChange }) => {
                         catch {
                             onChange(e.target.value);
                         }
-                    }, placeholder: "JSON value", className: "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500" }));
+                    } }));
         }
+        placeholder = "JSON value";
+        className = "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+            /  >
+        ;
     };
-    const getIcon = () => {
-        switch (prop.type) {
-            case 'string': return Type;
-            case 'number': return Hash;
-            case 'boolean': return value ? ToggleRight : ToggleLeft;
-            case 'select': return Settings;
-            case 'color': return Palette;
-            case 'file': return Upload;
-            default: return Sliders;
-        }
-    };
-    const Icon = getIcon();
-    return (_jsxs("div", { className: "space-y-2", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("label", { className: "flex items-center gap-2 text-sm font-medium text-gray-700", children: [_jsx(Icon, { className: "w-4 h-4 text-gray-400" }), prop.label, prop.required && _jsx("span", { className: "text-red-500", children: "*" })] }), prop.type !== 'boolean' && (_jsx(HiveButton, { size: "sm", variant: "ghost", onClick: () => onChange(prop.defaultValue), className: "text-xs", children: "Reset" }))] }), renderInput(), prop.description && (_jsx("p", { className: "text-xs text-gray-500", children: prop.description }))] }));
 };
+;
+const getIcon = () => {
+    switch (prop.type) {
+        case 'string': return Type;
+        case 'number': return Hash;
+        case 'boolean': return value ? ToggleRight : ToggleLeft;
+        case 'select': return Settings;
+        case 'color': return Palette;
+        case 'file': return Upload;
+        default: return Sliders;
+    }
+};
+const Icon = getIcon();
+return (_jsxs("div", { className: "space-y-2", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("label", { className: "flex items-center gap-2 text-sm font-medium text-gray-700", children: [_jsx(Icon, { className: "w-4 h-4 text-gray-400" }), prop.label, prop.required && _jsx("span", { className: "text-red-500", children: "*" })] }), prop.type !== 'boolean' && (_jsx(HiveButton, { size: "sm", variant: "ghost", onClick: () => onChange(prop.defaultValue), className: "text-xs", children: "Reset" }))] }), renderInput(), prop.description && (_jsx("p", { className: "text-xs text-gray-500", children: prop.description }))] }));
+;
 const CodeViewer = ({ element, props }) => {
     const generatedCode = useMemo(() => {
         const propsString = Object.entries(props)

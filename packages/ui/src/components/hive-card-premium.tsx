@@ -119,7 +119,7 @@ export interface HivePremiumCardProps
   glassMorphism?: boolean;
   interactive?: boolean;
   selected?: boolean;
-  goldAccent?: boolean;
+  goldAccent?: boolean
 }
 
 const HivePremiumCard = React.forwardRef<HTMLDivElement, HivePremiumCardProps>(
@@ -170,11 +170,11 @@ const HivePremiumCard = React.forwardRef<HTMLDivElement, HivePremiumCardProps>(
         
         // Remove ripple after animation
         setTimeout(() => {
-          setRipples(prev => prev.filter(r => r.id !== newRipple.id));
-        }, 600);
+          setRipples(prev => prev.filter(r => r.id !== newRipple.id))
+        }, 600)
       }
       
-      onClick?.(e);
+      onClick?.(e)
     };
     
     // Motion configuration based on props
@@ -226,7 +226,7 @@ const HivePremiumCard = React.forwardRef<HTMLDivElement, HivePremiumCardProps>(
               repeat: Infinity, 
               ease: "linear",
               repeatDelay: 2 
-            }}
+          }}
           />
         )}
         
@@ -235,7 +235,7 @@ const HivePremiumCard = React.forwardRef<HTMLDivElement, HivePremiumCardProps>(
           {children}
         </div>
       </motion.div>
-    );
+    )
   }
 );
 

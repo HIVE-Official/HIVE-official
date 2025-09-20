@@ -6,16 +6,16 @@
 
 import React from 'react';
 import { ElementInstance } from '@hive/core';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Label } from '../../components/ui/label';
-import { Checkbox } from '../../components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '../../components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atomic/atoms/select-radix';
+import { Label } from '../../atomic/atoms/label';
+import { Checkbox } from '../../atomic/atoms/checkbox';
+import { RadioGroup, Radio as RadioGroupItem } from '../../atomic/atoms/radio-enhanced';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 
 interface ChoiceOption {
   value: string;
   label: string;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 interface ChoiceSelectConfig {
@@ -40,8 +40,8 @@ interface ChoiceSelectRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 export const ChoiceSelectRenderer: React.FC<ChoiceSelectRendererProps> = ({
@@ -63,7 +63,7 @@ export const ChoiceSelectRenderer: React.FC<ChoiceSelectRendererProps> = ({
   // Handle single select (dropdown or radio)
   const handleSingleSelect = (newValue: string) => {
     if (behavior.isReadOnly || !onChange) return;
-    onChange(newValue);
+    onChange(newValue)
   };
 
   // Handle multiple select (checkboxes)
@@ -74,12 +74,12 @@ export const ChoiceSelectRenderer: React.FC<ChoiceSelectRendererProps> = ({
     let newValues: string[];
     
     if (checked) {
-      newValues = [...currentValues, optionValue];
+      newValues = [...currentValues, optionValue]
     } else {
-      newValues = currentValues.filter(v => v !== optionValue);
+      newValues = currentValues.filter(v => v !== optionValue)
     }
     
-    onChange(newValues);
+    onChange(newValues)
   };
 
   // Render multiple choice (checkboxes)
@@ -101,8 +101,8 @@ export const ChoiceSelectRenderer: React.FC<ChoiceSelectRendererProps> = ({
               <Checkbox
                 id={`${element.id}-${option.value}`}
                 checked={selectedValues.includes(option.value)}
-                onCheckedChange={(checked) => 
-                  handleMultipleSelect(option.value, checked as boolean)
+                onChange={(e) => { const checked = e.target.checked; 
+                  handleMultipleSelect(option.value, checked as boolean) }
                 }
                 disabled={behavior.isDisabled || option.disabled}
                 className="border-[var(--hive-border)]"
@@ -119,7 +119,7 @@ export const ChoiceSelectRenderer: React.FC<ChoiceSelectRendererProps> = ({
           ))}
         </div>
       </div>
-    );
+    )
   }
 
   // Render single choice (dropdown for many options, radio for few)
@@ -162,7 +162,7 @@ export const ChoiceSelectRenderer: React.FC<ChoiceSelectRendererProps> = ({
           ))}
         </RadioGroup>
       </div>
-    );
+    )
   }
 
   // Render dropdown select
@@ -201,5 +201,5 @@ export const ChoiceSelectRenderer: React.FC<ChoiceSelectRendererProps> = ({
         </SelectContent>
       </Select>
     </div>
-  );
+  )
 };

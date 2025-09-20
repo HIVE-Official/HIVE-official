@@ -154,11 +154,11 @@ const HiveOverview = () => {
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
-                    e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+                    e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
-                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.boxShadow = 'none'
                   }}>
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -234,10 +234,10 @@ const HiveOverview = () => {
                 willChange: 'transform, border-color'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
+                e.currentTarget.style.borderColor = 'var(--hive-border-gold)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--hive-border-subtle)';
+                e.currentTarget.style.borderColor = 'var(--hive-border-subtle)'
               }}>
               <div className="text-3xl font-bold mb-2" style={{ color: 'var(--hive-brand-primary)' }}>
                 {stat.value}
@@ -267,10 +267,10 @@ const HiveOverview = () => {
                       color: 'var(--hive-text-inverse)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow-strong)';
+                      e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow-strong)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.boxShadow = 'none'
                     }}>
               Start Exploring
             </Button>
@@ -282,10 +282,10 @@ const HiveOverview = () => {
                       color: 'var(--hive-brand-primary)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--hive-overlay-gold-subtle)';
+                      e.currentTarget.style.backgroundColor = 'var(--hive-overlay-gold-subtle)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.backgroundColor = 'transparent'
                     }}>
               View Live Platform
             </Button>
@@ -293,7 +293,7 @@ const HiveOverview = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const Overview: Story = {

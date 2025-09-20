@@ -60,8 +60,8 @@ export interface OnboardingState {
     builderGoals: string[];
     agreedToTerms: boolean;
     agreedToPrivacy: boolean;
-    agreedToCommunity: boolean;
-  };
+    agreedToCommunity: boolean
+  }
 }
 
 export interface OnboardingContextType {
@@ -73,7 +73,7 @@ export interface OnboardingContextType {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   canProceed: () => boolean;
-  completeOnboarding: () => Promise<void>;
+  completeOnboarding: () => Promise<void>
 }
 
 const OnboardingContext = createContext<OnboardingContextType | null>(null);
@@ -81,9 +81,9 @@ const OnboardingContext = createContext<OnboardingContextType | null>(null);
 export function useOnboarding() {
   const context = useContext(OnboardingContext);
   if (!context) {
-    throw new Error('useOnboarding must be used within OnboardingProvider');
+    throw new Error('useOnboarding must be used within OnboardingProvider')
   }
-  return context;
+  return context
 }
 
 // =============================================================================
@@ -98,7 +98,7 @@ interface OnboardingProviderProps {
   children: React.ReactNode;
   onComplete?: (userData: OnboardingState['data']) => void;
   initialStep?: OnboardingStep;
-  mockMode?: boolean;
+  mockMode?: boolean
 }
 
 export function OnboardingProvider({ 
@@ -134,7 +134,7 @@ export function OnboardingProvider({
       step: STEP_ORDER[nextIndex],
       currentStepIndex: nextIndex,
       error: null,
-    }));
+    }))
   };
 
   const prevStep = () => {
@@ -144,7 +144,7 @@ export function OnboardingProvider({
       step: STEP_ORDER[prevIndex],
       currentStepIndex: prevIndex,
       error: null,
-    }));
+    }))
   };
 
   const setStep = (step: OnboardingStep) => {
@@ -154,22 +154,22 @@ export function OnboardingProvider({
       step,
       currentStepIndex: stepIndex,
       error: null,
-    }));
+    }))
   };
 
   const updateData = (updates: Partial<OnboardingState['data']>) => {
     setState(prev => ({
       ...prev,
       data: { ...prev.data, ...updates },
-    }));
+    }))
   };
 
   const setLoading = (loading: boolean) => {
-    setState(prev => ({ ...prev, loading }));
+    setState(prev => ({ ...prev, loading }))
   };
 
   const setError = (error: string | null) => {
-    setState(prev => ({ ...prev, error }));
+    setState(prev => ({ ...prev, error }))
   };
 
   const canProceed = (): boolean => {
@@ -193,7 +193,7 @@ export function OnboardingProvider({
       case 'complete':
         return true;
       default:
-        return false;
+        return false
     }
   };
 
@@ -204,15 +204,15 @@ export function OnboardingProvider({
     try {
       if (mockMode) {
         await new Promise(resolve => setTimeout(resolve, 2000));
-        onComplete?.(state.data);
+        onComplete?.(state.data)
       } else {
         console.log('Complete onboarding:', state.data);
-        onComplete?.(state.data);
+        onComplete?.(state.data)
       }
     } catch (error) {
-      setError('Failed to complete onboarding. Please try again.');
+      setError('Failed to complete onboarding. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -232,7 +232,7 @@ export function OnboardingProvider({
     <OnboardingContext.Provider value={contextValue}>
       {children}
     </OnboardingContext.Provider>
-  );
+  )
 }
 
 // =============================================================================
@@ -243,7 +243,7 @@ interface HiveOnboardingWizardEnhancedProps {
   className?: string;
   onComplete?: (userData: OnboardingState['data']) => void;
   initialStep?: OnboardingStep;
-  mockMode?: boolean;
+  mockMode?: boolean
 }
 
 export function HiveOnboardingWizardEnhanced({ 
@@ -298,7 +298,7 @@ export function HiveOnboardingWizardEnhanced({
                   top: `${Math.random() * 100}%`,
                   animation: `float-brand ${4 + Math.random() * 6}s ease-in-out infinite`,
                   animationDelay: `${Math.random() * 3}s`
-                }}
+          }}
               />
             ))}
           </div>
@@ -329,19 +329,19 @@ export function HiveOnboardingWizardEnhanced({
 
         <style>{`
           @keyframes grid-pulse {
-            0%, 100% { opacity: 0.05; transform: scale(1); }
-            50% { opacity: 0.1; transform: scale(1.05); }
+            0%, 100% { opacity: 0.05; transform: scale(1) }
+            50% { opacity: 0.1; transform: scale(1.05) }
           }
           
           @keyframes float-brand {
-            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-            33% { transform: translateY(-30px) rotate(120deg) scale(1.1); }
-            66% { transform: translateY(-15px) rotate(240deg) scale(0.9); }
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1) }
+            33% { transform: translateY(-30px) rotate(120deg) scale(1.1) }
+            66% { transform: translateY(-15px) rotate(240deg) scale(0.9) }
           }
         `}</style>
       </div>
     </OnboardingProvider>
-  );
+  )
 }
 
 // =============================================================================
@@ -369,7 +369,7 @@ function OnboardingStepRenderer() {
     case 'complete':
       return <EnhancedCompleteStep />;
     default:
-      return <EnhancedWelcomeStep />;
+      return <EnhancedWelcomeStep />
   }
 }
 
@@ -410,15 +410,15 @@ function EnhancedProgressBar() {
 
       <style>{`
         @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+          0% { transform: translateX(-100%) }
+          100% { transform: translateX(100%) }
         }
         .animate-shimmer {
-          animation: shimmer 2s infinite;
+          animation: shimmer 2s infinite
         }
       `}</style>
     </div>
-  );
+  )
 }
 
 function EnhancedStepNavigation({ canGoBack = true, nextLabel = "Continue" }) {
@@ -456,7 +456,7 @@ function EnhancedStepNavigation({ canGoBack = true, nextLabel = "Continue" }) {
         <ArrowRight className="h-4 w-4" />
       </Button>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -467,7 +467,7 @@ function EnhancedWelcomeStep() {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleGetStarted = () => {
-    setIsAnimating(true);
+    setIsAnimating(true)
   };
 
   return (
@@ -554,7 +554,7 @@ function EnhancedWelcomeStep() {
         <EnhancedStepNavigation canGoBack={false} nextLabel="Get Started" />
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -568,9 +568,9 @@ function EnhancedNameStep() {
   const handleNameChange = (name: string) => {
     updateData({ name });
     if (name.trim().length < 2) {
-      setError('Name must be at least 2 characters');
+      setError('Name must be at least 2 characters')
     } else {
-      setError(null);
+      setError(null)
     }
   };
 
@@ -671,7 +671,7 @@ function EnhancedNameStep() {
         <EnhancedStepNavigation />
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -689,12 +689,12 @@ function EnhancedHandleStep() {
     
     if (cleanHandle.length < 3) {
       setError('Username must be at least 3 characters');
-      return;
+      return
     }
     
     if (!/^[a-zA-Z0-9_]+$/.test(cleanHandle)) {
       setError('Username can only contain letters, numbers, and underscores');
-      return;
+      return
     }
 
     // Simulate availability checking
@@ -704,7 +704,7 @@ function EnhancedHandleStep() {
     setTimeout(() => {
       setIsChecking(false);
       // Mock availability check - always available for demo
-    }, 800);
+    }, 800)
   };
 
   const isAvailable = state.data.handle.length >= 3 && !state.error && !isChecking;
@@ -821,7 +821,7 @@ function EnhancedHandleStep() {
         <EnhancedStepNavigation />
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -837,9 +837,9 @@ function EnhancedPhotoStep() {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
+      setDragActive(true)
     } else if (e.type === "dragleave") {
-      setDragActive(false);
+      setDragActive(false)
     }
   };
 
@@ -851,7 +851,7 @@ function EnhancedPhotoStep() {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       const photoUrl = URL.createObjectURL(file);
-      updateData({ photoUrl });
+      updateData({ photoUrl })
     }
   };
 
@@ -883,7 +883,7 @@ function EnhancedPhotoStep() {
               className="w-40 h-40 rounded-full object-cover border-4 border-[var(--hive-brand-primary)] shadow-[var(--hive-shadow-gold-glow)]"
             />
             <button
-              onClick={() => updateData({ photoUrl: undefined })}
+              onClick={() => updateData({ photoUrl: undefined }}
               className="absolute -top-2 -right-2 w-8 h-8 bg-[var(--hive-status-error)] rounded-full flex items-center justify-center text-[var(--hive-text-primary)] hover:bg-[var(--hive-status-error)]/80 transition-colors shadow-lg"
             >
               ×
@@ -919,7 +919,7 @@ function EnhancedPhotoStep() {
 
       <EnhancedStepNavigation nextLabel={state.data.photoUrl ? "Continue" : "Skip for now"} />
     </div>
-  );
+  )
 }
 
 function EnhancedAcademicsStep() {
@@ -961,7 +961,7 @@ function EnhancedAcademicsStep() {
             <input
               type="text"
               value={state.data.university}
-              onChange={(e) => updateData({ university: e.target.value })}
+              onChange={(e) => updateData({ university: e.target.value }}
               placeholder="University at Buffalo"
               className="w-full h-14 pl-12 pr-4 bg-[var(--hive-background-secondary)]/50 backdrop-blur-sm border border-[var(--hive-border-glass)] rounded-xl text-[var(--hive-text-primary)] placeholder-[var(--hive-text-placeholder)] focus:outline-none focus:border-[var(--hive-brand-primary)] focus:ring-2 focus:ring-[var(--hive-brand-primary)]/30 transition-all hive-interactive"
             />
@@ -975,7 +975,7 @@ function EnhancedAcademicsStep() {
           <input
             type="text"
             value={state.data.major}
-            onChange={(e) => updateData({ major: e.target.value })}
+            onChange={(e) => updateData({ major: e.target.value }}
             placeholder="Computer Science, Business, Engineering..."
             className="w-full h-14 px-4 bg-[var(--hive-background-secondary)]/50 backdrop-blur-sm border border-[var(--hive-border-glass)] rounded-xl text-[var(--hive-text-primary)] placeholder-[var(--hive-text-placeholder)] focus:outline-none focus:border-[var(--hive-brand-primary)] focus:ring-2 focus:ring-[var(--hive-brand-primary)]/30 transition-all hive-interactive"
           />
@@ -987,7 +987,7 @@ function EnhancedAcademicsStep() {
           </label>
           <select
             value={state.data.graduationYear}
-            onChange={(e) => updateData({ graduationYear: e.target.value })}
+            onChange={(e) => updateData({ graduationYear: e.target.value }}
             className="w-full h-14 px-4 bg-[var(--hive-background-secondary)]/50 backdrop-blur-sm border border-[var(--hive-border-glass)] rounded-xl text-[var(--hive-text-primary)] focus:outline-none focus:border-[var(--hive-brand-primary)] focus:ring-2 focus:ring-[var(--hive-brand-primary)]/30 transition-all hive-interactive"
           >
             <option value="">Select graduation year</option>
@@ -1000,7 +1000,7 @@ function EnhancedAcademicsStep() {
 
       <EnhancedStepNavigation />
     </div>
-  );
+  )
 }
 
 function EnhancedBuilderStep() {
@@ -1025,7 +1025,7 @@ function EnhancedBuilderStep() {
     const newGoals = currentGoals.includes(goalId)
       ? currentGoals.filter(g => g !== goalId)
       : [...currentGoals, goalId];
-    updateData({ builderGoals: newGoals });
+    updateData({ builderGoals: newGoals })
   };
 
   return (
@@ -1090,15 +1090,15 @@ function EnhancedBuilderStep() {
                     name="experience"
                     value={exp.value}
                     checked={state.data.builderExperience === exp.value}
-                    onChange={(e) => updateData({ builderExperience: e.target.value as any })}
+                    onChange={(e) => updateData({ builderExperience: e.target.value as any }}
                     className="sr-only"
                   />
                   {state.data.builderExperience === exp.value && (
                     <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                   )}
                 </label>
-              );
-            })}
+              )
+          })}
           </div>
         </div>
 
@@ -1147,15 +1147,15 @@ function EnhancedBuilderStep() {
                     {goal.label}
                   </div>
                 </button>
-              );
-            })}
+              )
+          })}
           </div>
         </div>
       </div>
 
       <EnhancedStepNavigation />
     </div>
-  );
+  )
 }
 
 function EnhancedLegalStep() {
@@ -1214,7 +1214,7 @@ function EnhancedLegalStep() {
                 <input
                   type="checkbox"
                   checked={state.data[agreement.key]}
-                  onChange={(e) => updateData({ [agreement.key]: e.target.checked })}
+                  onChange={(e) => updateData({ [agreement.key]: e.target.checked }}
                   className="w-5 h-5 rounded border-[var(--hive-border-glass)] text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/30"
                 />
                 <div className="w-10 h-10 rounded-lg bg-[var(--hive-background-secondary)] flex items-center justify-center">
@@ -1230,8 +1230,8 @@ function EnhancedLegalStep() {
                 </div>
               </div>
             </label>
-          );
-        })}
+          )
+          })}
       </div>
 
       <div className="text-center text-sm text-[var(--hive-text-muted)] p-4 glass rounded-xl border border-[var(--hive-border-glass)]">
@@ -1240,7 +1240,7 @@ function EnhancedLegalStep() {
 
       <EnhancedStepNavigation nextLabel="Complete Registration" />
     </div>
-  );
+  )
 }
 
 function EnhancedCompleteStep() {
@@ -1248,10 +1248,10 @@ function EnhancedCompleteStep() {
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      completeOnboarding();
+      completeOnboarding()
     }, 2000);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   }, [completeOnboarding]);
 
   return (
@@ -1322,5 +1322,5 @@ function EnhancedCompleteStep() {
         )}
       </div>
     </div>
-  );
+  )
 }

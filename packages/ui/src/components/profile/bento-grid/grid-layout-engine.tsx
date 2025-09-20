@@ -40,13 +40,13 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
     const updateGridDimensions = () => {
       if (gridRef.current) {
         const rect = gridRef.current.getBoundingClientRect();
-        setGridDimensions({ width: rect.width, height: rect.height });
+        setGridDimensions({ width: rect.width, height: rect.height })
       }
     };
 
     updateGridDimensions();
     window.addEventListener('resize', updateGridDimensions);
-    return () => window.removeEventListener('resize', updateGridDimensions);
+    return () => window.removeEventListener('resize', updateGridDimensions)
   }, []);
 
   // Generate drop zones for drag and drop
@@ -60,7 +60,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
       .forEach(widget => {
         for (let x = widget.position.x; x < widget.position.x + widget.size.width; x++) {
           for (let y = widget.position.y; y < widget.position.y + widget.size.height; y++) {
-            occupiedPositions.add(`${x},${y}`);
+            occupiedPositions.add(`${x},${y}`)
           }
         }
       });
@@ -76,7 +76,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
             size: { width: 1, height: 1 },
             isOccupied: false,
             isValid: true
-          });
+          })
         }
 
         // Check 2x1 zones (if not mobile)
@@ -88,7 +88,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
               size: { width: 2, height: 1 },
               isOccupied: false,
               isValid: true
-            });
+            })
           }
         }
 
@@ -100,7 +100,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
             size: { width: 1, height: 2 },
             isOccupied: false,
             isValid: true
-          });
+          })
         }
 
         // Check 2x2 zones (if not mobile)
@@ -112,13 +112,13 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
               size: { width: 2, height: 2 },
               isOccupied: false,
               isValid: true
-            });
+            })
           }
         }
       }
     }
 
-    return zones;
+    return zones
   }, [widgets, gridConfig.columns, isMobile]);
 
   const handleDragStart = useCallback((widgetId: string, event: React.MouseEvent) => {
@@ -136,7 +136,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
       dragOffset: offset,
       dropZones: generateDropZones(widgetId),
       isValidDrop: false
-    });
+    })
   }, [widgets, generateDropZones]);
 
   const handleDragMove = useCallback((event: MouseEvent) => {
@@ -159,7 +159,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
     setDragState(prev => ({
       ...prev,
       isValidDrop: !!validZone
-    }));
+    }))
   }, [dragState, gridConfig]);
 
   const handleDragEnd = useCallback((event: MouseEvent) => {
@@ -181,7 +181,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
           ? { ...widget, position: { x: gridX, y: gridY } }
           : widget
       );
-      onLayoutChange(updatedWidgets);
+      onLayoutChange(updatedWidgets)
     }
 
     setDragState({
@@ -189,7 +189,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
       dragOffset: { x: 0, y: 0 },
       dropZones: [],
       isValidDrop: false
-    });
+    })
   }, [dragState, widgets, onLayoutChange, gridConfig]);
 
   // Set up drag event listeners
@@ -200,8 +200,8 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
       
       return () => {
         document.removeEventListener('mousemove', handleDragMove);
-        document.removeEventListener('mouseup', handleDragEnd);
-      };
+        document.removeEventListener('mouseup', handleDragEnd)
+      }
     }
   }, [dragState.draggedWidget, handleDragMove, handleDragEnd]);
 
@@ -209,14 +209,14 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
     const updatedWidgets = widgets.map(widget => 
       widget.id === widgetId ? { ...widget, position } : widget
     );
-    onLayoutChange(updatedWidgets);
+    onLayoutChange(updatedWidgets)
   };
 
   const handleWidgetSizeChange = (widgetId: string, size: { width: 1 | 2; height: 1 | 2 }) => {
     const updatedWidgets = widgets.map(widget => 
       widget.id === widgetId ? { ...widget, size } : widget
     );
-    onLayoutChange(updatedWidgets);
+    onLayoutChange(updatedWidgets)
   };
 
   const renderWidget = (widget: WidgetConfiguration) => {
@@ -240,7 +240,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
       >
         <WidgetContent widget={widget} />
       </BaseWidget>
-    );
+    )
   };
 
   const gridStyle = {
@@ -313,7 +313,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
                     top: `${zone.position.y * (gridConfig.minRowHeight + gridConfig.gap)}px`,
                     width: `${zone.size.width * (100 / gridConfig.columns)}%`,
                     height: `${zone.size.height * gridConfig.minRowHeight + (zone.size.height - 1) * gridConfig.gap}px`
-                  }}
+          }}
                 />
               ))}
             </>
@@ -349,7 +349,7 @@ export const GridLayoutEngine: React.FC<GridLayoutProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };
 
 // Placeholder widget content - will be replaced with actual widget implementations
@@ -369,5 +369,5 @@ const WidgetContent: React.FC<{ widget: WidgetConfiguration }> = ({ widget }) =>
     <div className="h-full flex items-center justify-center">
       {contentMap[widget.type] || <div className="text-hive-text-secondary">Unknown Widget</div>}
     </div>
-  );
+  )
 };

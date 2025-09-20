@@ -99,7 +99,7 @@ export interface PinnedContent {
   updatedAt: Date;
   createdBy: string;
   priority: 'high' | 'medium' | 'low';
-  expiresAt?: Date;
+  expiresAt?: Date
 }
 
 export interface HivePinnedSurfaceProps
@@ -114,7 +114,7 @@ export interface HivePinnedSurfaceProps
   onDeleteContent?: (contentId: string) => void;
   onReorderContent?: (contentIds: string[]) => void;
   showWelcomePrompt?: boolean;
-  maxItems?: number;
+  maxItems?: number
 }
 
 export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurfaceProps>(
@@ -142,15 +142,15 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
       .sort((a, b) => {
         const priorityOrder = { high: 3, medium: 2, low: 1 };
         if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
-          return priorityOrder[b.priority] - priorityOrder[a.priority];
+          return priorityOrder[b.priority] - priorityOrder[a.priority]
         }
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       })
       .slice(0, maxItems);
     
     const handleAddContent = useCallback((type: keyof typeof pinnedContentTypes) => {
       onAddContent?.(type);
-      setShowAddMenu(false);
+      setShowAddMenu(false)
     }, [onAddContent]);
     
     // Empty state for new Spaces
@@ -193,7 +193,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
             )}
           </motion.div>
         </div>
-      );
+      )
     }
     
     return (
@@ -339,8 +339,8 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
                   )}
                 </div>
               </motion.article>
-            );
-          })}
+            )
+          })
         </div>
         
         {/* Add Content Button */}
@@ -388,8 +388,8 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
                               <div className="text-xs text-gray-400">{config.description}</div>
                             </div>
                           </motion.button>
-                        );
-                      })}
+                        )
+          })
                     </div>
                   </motion.div>
                 )}
@@ -418,7 +418,7 @@ export const HivePinnedSurface = React.forwardRef<HTMLDivElement, HivePinnedSurf
           </motion.div>
         )}
       </div>
-    );
+    )
   }
 );
 

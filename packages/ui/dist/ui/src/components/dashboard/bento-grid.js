@@ -2,10 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useDragControls, Reorder } from 'framer-motion';
-import { GripVertical, Maximize2, Settings, X, Plus } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Plus } from 'lucide-react';
 import { Button } from '../hive-button';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 // Grid size mappings
 const gridSizeMap = {
     small: { cols: 1, rows: 1, minCols: 1, minRows: 1 },
@@ -131,12 +130,14 @@ function BentoGridItemComponent({ item, isEditable, isDragging, isResizing, onRe
             return false;
         return true;
     });
-    return (_jsx(motion.div, { className: "h-full", variants: itemVariants, onHoverStart: () => setIsHovered(true), onHoverEnd: () => setIsHovered(false), layout: true, children: _jsxs(Card, { className: `
+}
+;
+return (_jsx(motion.div, { className: "h-full", variants: itemVariants, onHoverStart: () => setIsHovered(true), onHoverEnd: () => setIsHovered(false), layout: true, children: _jsxs(Card, { className: `
         h-full overflow-hidden transition-all duration-200
         ${isDragging ? 'ring-2 ring-blue-500 shadow-lg' : ''}
         ${isResizing ? 'ring-2 ring-purple-500' : ''}
         ${isHovered ? 'shadow-md' : ''}
-      `, children: [_jsxs(CardHeader, { className: "pb-2 relative", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs(CardTitle, { className: "text-sm font-medium flex items-center space-x-2", children: [item.icon, _jsx("span", { children: item.title }), item.category && (_jsx(Badge, { variant: "outline", className: "text-xs", children: item.category }))] }), isEditable && (isHovered || isDragging || isResizing) && (_jsxs("div", { className: "flex items-center space-x-1", children: [item.resizable && (_jsxs("div", { className: "relative", children: [_jsx(Button, { variant: "ghost", size: "sm", onClick: () => setShowSizeMenu(!showSizeMenu), onMouseDown: onResizeStart, onMouseUp: onResizeEnd, children: _jsx(Maximize2, { className: "h-3 w-3" }) }), showSizeMenu && (_jsx(motion.div, { className: "absolute top-8 right-0 bg-[var(--hive-text-primary)] rounded-lg shadow-lg border border-gray-200 p-2 z-50 min-w-[150px]", initial: { opacity: 0, y: -10 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -10 }, children: sizeOptions.map(({ size, label, disabled }) => (_jsx("button", { className: `
+      `, children: [_jsxs(CardHeader, { className: "pb-2 relative", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs(CardTitle, { className: "text-sm font-medium flex items-center space-x-2", children: [item.icon, _jsx("span", { children: item.title }), item.category && (_jsx(Badge, { variant: "outline", className: "text-xs", children: item.category }))] }), isEditable && (isHovered || isDragging || isResizing) && (_jsxs("div", { className: "flex items-center space-x-1", children: [item.resizable && (_jsxs("div", { className: "relative", children: [_jsx(Button, { variant: "ghost", size: "sm", onClick: () => setShowSizeMenu(!showSizeMenu), onMouseDown: onResizeStart, onMouseUp: onResizeEnd, children: _jsx(Maximize2, { className: "h-3 w-3" }) }), showSizeMenu && (_jsxs(motion.div, { className: "absolute top-8 right-0 bg-[var(--hive-text-primary)] rounded-lg shadow-lg border border-gray-200 p-2 z-50 min-w-[150px]", initial: { opacity: 0, y: -10 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -10 }, children: [sizeOptions.map(({ size, label, disabled })), " => (", _jsx("button", { className: `
                               w-full text-left px-3 py-2 text-xs rounded hover:bg-gray-50 transition-colors
                               ${item.size === size ? 'bg-blue-50 text-blue-700' : ''}
                               ${disabled ? 'text-gray-400 cursor-not-allowed' : ''}
@@ -145,8 +146,7 @@ function BentoGridItemComponent({ item, isEditable, isDragging, isResizing, onRe
                                                                 onResize(size);
                                                                 setShowSizeMenu(false);
                                                             }
-                                                        }, disabled: disabled, children: label }, size))) }))] })), item.configurable && (_jsx(Button, { variant: "ghost", size: "sm", onClick: onConfigure, children: _jsx(Settings, { className: "h-3 w-3" }) })), item.removable && (_jsx(Button, { variant: "ghost", size: "sm", onClick: onRemove, className: "text-red-600 hover:text-red-700 hover:bg-red-50", children: _jsx(X, { className: "h-3 w-3" }) })), _jsx(Button, { variant: "ghost", size: "sm", onPointerDown: (e) => dragControls.start(e), className: "cursor-grab active:cursor-grabbing", children: _jsx(GripVertical, { className: "h-3 w-3" }) })] }))] }), item.description && (_jsx("p", { className: "text-xs text-gray-600 mt-1", children: item.description }))] }), _jsx(CardContent, { className: "pt-0 h-full", children: _jsx("div", { className: "h-full overflow-auto", children: item.component }) })] }) }));
-}
+                                                        }, disabled: disabled, children: label }, size), "))}"] }))] })), item.configurable && (_jsx(Button, { variant: "ghost", size: "sm", onClick: onConfigure, children: _jsx(Settings, { className: "h-3 w-3" }) })), item.removable && (_jsx(Button, { variant: "ghost", size: "sm", onClick: onRemove, className: "text-red-600 hover:text-red-700 hover:bg-red-50", children: _jsx(X, { className: "h-3 w-3" }) })), _jsx(Button, { variant: "ghost", size: "sm", onPointerDown: (e) => dragControls.start(e), className: "cursor-grab active:cursor-grabbing", children: _jsx(GripVertical, { className: "h-3 w-3" }) })] }))] }), item.description && (_jsx("p", { className: "text-xs text-gray-600 mt-1", children: item.description }))] }), _jsx(CardContent, { className: "pt-0 h-full", children: _jsx("div", { className: "h-full overflow-auto", children: item.component }) })] }) }));
 // Predefined layouts
 export const defaultLayouts = {
     academic: {

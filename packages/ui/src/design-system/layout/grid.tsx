@@ -52,7 +52,7 @@ export const gridVariants = cva(
 
 export interface GridProps extends VariantProps<typeof gridVariants> {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 export const Grid: React.FC<GridProps> = ({ 
@@ -71,7 +71,7 @@ export const Grid: React.FC<GridProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };
 
 // GridProps already exported inline above

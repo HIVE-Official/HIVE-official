@@ -182,13 +182,13 @@ const cardActionsVariants = cva(
 interface HiveCardHeaderProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardHeaderVariants> {
-  actions?: React.ReactNode;
+  actions?: React.ReactNode
 }
 
 interface HiveCardTitleProps
   extends React.HTMLAttributes<HTMLHeadingElement>,
     VariantProps<typeof cardTitleVariants> {
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  level?: 1 | 2 | 3 | 4 | 5 | 6
 }
 
 interface HiveCardDescriptionProps
@@ -231,7 +231,7 @@ const HiveCardHeader = React.forwardRef<HTMLDivElement, HiveCardHeaderProps>(
           </div>
         )}
       </div>
-    );
+    )
   }
 );
 
@@ -252,7 +252,7 @@ const HiveCardTitle = React.forwardRef<HTMLHeadingElement, HiveCardTitleProps>(
         ...props
       },
       children
-    );
+    )
   }
 );
 
@@ -271,7 +271,7 @@ const HiveCardDescription = React.forwardRef<HTMLParagraphElement, HiveCardDescr
       >
         {children}
       </p>
-    );
+    )
   }
 );
 
@@ -290,7 +290,7 @@ const HiveCardContent = React.forwardRef<HTMLDivElement, HiveCardContentProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 
@@ -309,7 +309,7 @@ const HiveCardFooter = React.forwardRef<HTMLDivElement, HiveCardFooterProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 
@@ -328,7 +328,7 @@ const HiveCardActions = React.forwardRef<HTMLDivElement, HiveCardActionsProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 
@@ -365,7 +365,7 @@ interface HiveCompositionCardProps extends Omit<HiveCardBaseProps, 'title' | 'co
   
   // Actions props
   actions?: React.ReactNode;
-  actionsLayout?: 'horizontal' | 'vertical' | 'grid';
+  actionsLayout?: 'horizontal' | 'vertical' | 'grid'
 }
 
 /**
@@ -475,7 +475,7 @@ const HiveStructuredCard = React.forwardRef<HTMLDivElement, HiveCompositionCardP
           </HiveCardFooter>
         )}
       </HiveCardBase>
-    );
+    )
   }
 );
 

@@ -62,7 +62,7 @@ export interface CompleteHIVEToolsSystemProps {
   personalTools?: any[];
   loading?: boolean;
   error?: string | null;
-  showDebugLabels?: boolean;
+  showDebugLabels?: boolean
 }
 
 export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = ({
@@ -96,22 +96,22 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
 
   const handleTabChange = (tab: 'marketplace' | 'personal' | 'hivelab') => {
     setInternalActiveTab(tab);
-    onTabChange?.(tab);
+    onTabChange?.(tab)
   };
 
   const handleSearchChange = (query: string) => {
     setInternalSearchQuery(query);
-    onSearchChange?.(query);
+    onSearchChange?.(query)
   };
 
   const handleCategoryChange = (category: string) => {
     setInternalCategory(category);
-    onCategoryChange?.(category);
+    onCategoryChange?.(category)
   };
 
   const handleViewModeChange = (mode: 'grid' | 'list') => {
     setInternalViewMode(mode);
-    onViewModeChange?.(mode);
+    onViewModeChange?.(mode)
   };
 
   const handleFavoriteToggle = (toolId: string) => {
@@ -120,7 +120,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
         ? prev.filter(id => id !== toolId)
         : [...prev, toolId]
     );
-    onToolFavorite?.(toolId);
+    onToolFavorite?.(toolId)
   };
 
   const toolCategories = [
@@ -264,8 +264,8 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                          tool.description.toLowerCase().includes(internalSearchQuery.toLowerCase()) ||
                          tool.tags?.some(tag => tag.toLowerCase().includes(internalSearchQuery.toLowerCase()));
     const matchesCategory = internalCategory === 'all' || tool.category === internalCategory;
-    return matchesSearch && matchesCategory;
-  });
+    return matchesSearch && matchesCategory
+  })};
   
   const featuredTools = tools.filter(tool => tool.isFeatured);
   const trendingTools = tools.sort((a, b) => b.downloads - a.downloads).slice(0, 4);
@@ -288,7 +288,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Error state
@@ -308,7 +308,7 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -643,8 +643,8 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                             </HiveButton>
                           </div>
                         </div>
-                      );
-                    })}
+                      )
+          })
                   </div>
                 </HiveCard>
               </motion.div>
@@ -761,8 +761,8 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                             </HiveButton>
                           </div>
                         </div>
-                      );
-                    })}
+                      )
+          })
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -837,8 +837,8 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                             </div>
                           </div>
                         </div>
-                      );
-                    })}
+                      )
+          })
                   </div>
                 )}
               </HiveCard>
@@ -925,8 +925,8 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                             <h3 className="font-medium text-white text-sm mb-1">{tool.name}</h3>
                             <p className="text-xs text-gray-400">Last used recently</p>
                           </button>
-                        );
-                      })}
+                        )
+          })
                     </div>
                   </HiveCard>
                 </motion.div>
@@ -1004,8 +1004,8 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
                               </div>
                             </div>
                           </div>
-                        );
-                      })}
+                        )
+          })
                     </div>
                   </HiveCard>
                 </motion.div>
@@ -1376,5 +1376,5 @@ export const CompleteHIVEToolsSystem: React.FC<CompleteHIVEToolsSystemProps> = (
         )}
       </div>
     </div>
-  );
+  )
 };

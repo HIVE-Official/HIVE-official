@@ -54,7 +54,7 @@ const InteractiveField = ({ Component, initialData = {}, ...props }: any) => {
   const [data, setData] = useState(initialData);
   
   const updateData = (key: string, value: any) => {
-    setData((prev: any) => ({ ...prev, [key]: value }));
+    setData((prev: any) => ({ ...prev, [key]: value }))
   };
   
   return (
@@ -64,12 +64,12 @@ const InteractiveField = ({ Component, initialData = {}, ...props }: any) => {
         {...Object.keys(initialData).reduce((acc, key) => {
           const changeHandler = `on${key.charAt(0).toUpperCase() + key.slice(1)}Change`;
           acc[changeHandler] = (value: any) => updateData(key, value);
-          return acc;
+          return acc
         }, {} as any)}
         {...props}
       />
     </div>
-  );
+  )
 };
 
 // 1. University Email Field
@@ -341,7 +341,7 @@ export const BuilderVerificationWithValues: Story = {
         portfolioUrl: 'https://sarahchen.dev',
         githubUrl: 'github.com/sarahc',
         experience: 'intermediate'
-      }}
+          }}
       {...args}
     />
   ),
@@ -385,7 +385,7 @@ export const SpaceActivationWithValues: Story = {
         spaceType: 'academic',
         description: 'A collaborative study group for Computer Science students focusing on data structures and algorithms.',
         expectedMembers: '25'
-      }}
+          }}
       {...args}
     />
   ),
@@ -431,7 +431,7 @@ export const ToolPublishingWithValues: Story = {
         toolDescription: 'A comprehensive GPA calculator that helps students track their academic progress, calculate semester and cumulative GPAs, and set grade goals for future courses.',
         toolCategory: 'academic',
         repositoryUrl: 'https://github.com/sarahc/gpa-calculator'
-      }}
+          }}
       {...args}
     />
   ),

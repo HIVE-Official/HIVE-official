@@ -154,7 +154,7 @@ export interface HiveSliderProps
   description?: string;
   showValue?: boolean;
   valueFormatter?: (value: number) => string;
-  liquidMotion?: boolean;
+  liquidMotion?: boolean
 }
 
 const HiveSlider = React.forwardRef<
@@ -181,12 +181,12 @@ const HiveSlider = React.forwardRef<
   const [currentValue, setCurrentValue] = React.useState(value);
   
   React.useEffect(() => {
-    setCurrentValue(value);
+    setCurrentValue(value)
   }, [value]);
   
   const handleValueChange = (newValue: number[]) => {
     setCurrentValue(newValue);
-    onValueChange?.(newValue);
+    onValueChange?.(newValue)
   };
   
   const displayValue = Array.isArray(currentValue) ? currentValue[0] : currentValue;
@@ -255,7 +255,7 @@ const HiveSlider = React.forwardRef<
         </p>
       )}
     </div>
-  );
+  )
 });
 
 HiveSlider.displayName = "HiveSlider";
@@ -272,7 +272,7 @@ const HiveVolumeSlider = React.forwardRef<
     max={100}
     showValue
     valueFormatter={(value) => `${value}%`}
-    variant="default"
+    variant="secondary"
     {...props}
   />
 ));
@@ -337,7 +337,7 @@ const HiveTemperatureSlider = React.forwardRef<
     max={80}
     showValue
     valueFormatter={(value) => `${value}°F`}
-    variant="default"
+    variant="secondary"
     {...props}
   />
 ));

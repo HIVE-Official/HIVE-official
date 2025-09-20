@@ -89,8 +89,13 @@ const ElementRenderer = ({ instance, element, isPreview = true }) => {
             opacity: instance.style.opacity,
             transform: instance.style.transform,
             boxShadow: instance.style.boxShadow
-        }, children: renderElementContent() }));
+        } }));
 };
+    >
+        {};
+div >
+;
+;
 // Main Tool Preview component
 export const ToolPreview = ({ tool, mode = 'desktop', onClose }) => {
     const [currentMode, setCurrentMode] = useState(mode);

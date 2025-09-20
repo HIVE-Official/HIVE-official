@@ -21,13 +21,13 @@ export interface NavigationSidebarProps {
     name: string;
     handle?: string;
     avatar?: string;
-    builderStatus?: 'none' | 'active' | 'pending';
+    builderStatus?: 'none' | 'active' | 'pending'
   };
   currentSection?: 'profile' | 'spaces' | 'feed' | 'hivelab' | 'rituals' | 'calendar' | 'settings';
   currentPath?: any; // For compatibility with app-shell
   onToggleCollapse?: () => void;
   onSectionChange?: (section: string) => void;
-  className?: string;
+  className?: string
 }
 
 const navigationItems = [
@@ -132,8 +132,8 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
                 <span className="flex-1 text-left">{item.label}</span>
               )}
             </button>
-          );
-        })}
+          )
+          })
       </nav>
 
       {/* User Section */}
@@ -199,7 +199,7 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 export default NavigationSidebar;

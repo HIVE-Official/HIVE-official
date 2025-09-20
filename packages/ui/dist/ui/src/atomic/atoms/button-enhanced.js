@@ -85,6 +85,35 @@ const buttonVariants = cva(
                 "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
                 "shadow-sm hover:shadow-md",
             ],
+            // Default variant (alias for primary)
+            default: [
+                "border-2 border-[var(--hive-brand-secondary)]",
+                "bg-transparent",
+                "text-[var(--hive-brand-secondary)]",
+                "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]",
+                "hover:border-[var(--hive-brand-secondary)]",
+                "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]",
+                "shadow-sm hover:shadow-md",
+            ],
+            // Outline variant (alias for secondary)
+            outline: [
+                "border border-[var(--hive-border-default)]",
+                "bg-[var(--hive-background-secondary)]",
+                "text-[var(--hive-text-primary)]",
+                "hover:bg-[var(--hive-interactive-hover)]",
+                "hover:border-[var(--hive-border-hover)]",
+                "active:bg-[var(--hive-interactive-active)]",
+            ],
+            // Premium variant (alias for accent)
+            premium: [
+                "border-2 border-[var(--hive-brand-secondary)]",
+                "bg-[color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent)]",
+                "text-[var(--hive-brand-secondary)]",
+                "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)]",
+                "hover:border-[var(--hive-brand-secondary)]",
+                "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
+                "shadow-sm hover:shadow-md",
+            ],
         },
         size: {
             xs: "h-8 px-3 text-xs",

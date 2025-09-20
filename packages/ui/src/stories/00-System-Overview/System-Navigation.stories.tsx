@@ -299,7 +299,7 @@ const SystemNavigation = () => {
       gray: 'from-gray-500/20 to-gray-600/10 border-gray-500/20',
       indigo: 'from-indigo-500/20 to-indigo-600/10 border-indigo-500/20'
     };
-    return colors[color as keyof typeof colors] || colors.gray;
+    return colors[color as keyof typeof colors] || colors.gray
   };
 
   const getIconColor = (color: string) => {
@@ -312,7 +312,7 @@ const SystemNavigation = () => {
       gray: 'text-gray-400',
       indigo: 'text-indigo-400'
     };
-    return colors[color as keyof typeof colors] || colors.gray;
+    return colors[color as keyof typeof colors] || colors.gray
   };
 
   return (
@@ -492,7 +492,7 @@ const SystemNavigation = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

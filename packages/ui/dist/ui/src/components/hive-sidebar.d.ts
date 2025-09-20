@@ -1,7 +1,7 @@
 import React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 declare const hiveSidebarVariants: (props?: {
-    variant?: "default" | "minimal" | "premium";
+    variant?: "default" | "premium" | "minimal";
     size?: "default" | "sm" | "lg" | "xl";
     position?: "right" | "left";
 } & import("class-variance-authority/types").ClassProp) => string;

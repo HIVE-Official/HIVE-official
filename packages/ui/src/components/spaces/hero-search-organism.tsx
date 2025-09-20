@@ -15,7 +15,7 @@ export interface CampusVisualizationProps {
   /** Interactive hover effects */
   interactive?: boolean;
   /** Custom className */
-  className?: string;
+  className?: string
 }
 
 function CampusVisualization({ 
@@ -29,7 +29,7 @@ function CampusVisualization({
     switch (animationSpeed) {
       case "slow": return "duration-1000";
       case "fast": return "duration-300";
-      default: return "duration-700";
+      default: return "duration-700"
     }
   };
 
@@ -159,7 +159,7 @@ function CampusVisualization({
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--hive-brand-secondary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       )}
     </div>
-  );
+  )
 }
 
 export interface EnhancedSearchBarProps {
@@ -182,7 +182,7 @@ export interface EnhancedSearchBarProps {
   /** Loading state */
   isLoading?: boolean;
   /** Custom className */
-  className?: string;
+  className?: string
 }
 
 function EnhancedSearchBar({
@@ -202,23 +202,23 @@ function EnhancedSearchBar({
 
   const handleQueryChange = useCallback((newQuery: string) => {
     setQuery(newQuery);
-    onChange?.(newQuery);
+    onChange?.(newQuery)
   }, [onChange]);
 
   const handleSubmit = useCallback((e?: React.FormEvent) => {
     e?.preventDefault();
-    onSearch?.(query);
+    onSearch?.(query)
   }, [query, onSearch]);
 
   const handleFilterToggle = useCallback(() => {
     const newState = !filtersVisible;
     setFiltersVisible(newState);
-    onFilterToggle?.();
+    onFilterToggle?.()
   }, [filtersVisible, onFilterToggle]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSubmit();
+      handleSubmit()
     }
   }, [handleSubmit]);
 
@@ -271,7 +271,7 @@ function EnhancedSearchBar({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export interface QuickActionButtonsProps {
@@ -287,14 +287,14 @@ export interface QuickActionButtonsProps {
     icon?: React.ComponentType<{ className?: string }>;
     onClick: () => void;
     variant?: "default" | "primary" | "outline";
-    className?: string;
+    className?: string
   }>;
   /** Loading state */
   isLoading?: boolean;
   /** Layout variant */
   layout?: "horizontal" | "vertical";
   /** Custom className */
-  className?: string;
+  className?: string
 }
 
 function QuickActionButtons({
@@ -356,10 +356,10 @@ function QuickActionButtons({
             )}
             {action.label}
           </HiveButton>
-        );
-      })}
+        )
+          })
     </div>
-  );
+  )
 }
 
 export interface HeroSearchOrganismProps {
@@ -382,25 +382,25 @@ export interface HeroSearchOrganismProps {
     label: string;
     icon?: React.ComponentType<{ className?: string }>;
     onClick: () => void;
-    variant?: "default" | "primary" | "outline";
+    variant?: "default" | "primary" | "outline"
   }>;
   /** Campus visualization props */
   campusVisualization?: {
     animationSpeed?: "slow" | "normal" | "fast";
-    interactive?: boolean;
+    interactive?: boolean
   };
   /** Search configuration */
   searchConfig?: {
     placeholder?: string;
     showFilters?: boolean;
-    filterTags?: string[];
+    filterTags?: string[]
   };
   /** Layout variant */
   variant?: "default" | "compact" | "minimal";
   /** Loading state */
   isLoading?: boolean;
   /** Custom className */
-  className?: string;
+  className?: string
 }
 
 export function HeroSearchOrganism({
@@ -421,7 +421,7 @@ export function HeroSearchOrganism({
 }: HeroSearchOrganismProps) {
   const getDefaultSubtitle = () => {
     if (subtitle) return subtitle;
-    return `Discover and connect with ${totalSpaces} pre-seeded communities across your campus ecosystem`;
+    return `Discover and connect with ${totalSpaces} pre-seeded communities across your campus ecosystem`
   };
 
   const getSpacing = () => {
@@ -431,7 +431,7 @@ export function HeroSearchOrganism({
       case "minimal":
         return "pt-6 pb-12";
       default:
-        return "pt-8 pb-16";
+        return "pt-8 pb-16"
     }
   };
 
@@ -504,5 +504,5 @@ export function HeroSearchOrganism({
         </div>
       </div>
     </div>
-  );
+  )
 }

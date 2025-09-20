@@ -7,7 +7,7 @@ import { darkLuxury } from '../theme/dark-luxury';
 
 interface PageTransitionProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 export function PageTransition({ children, className }: PageTransitionProps) {
@@ -22,10 +22,10 @@ export function PageTransition({ children, className }: PageTransitionProps) {
     // Small delay to show transition effect
     const timer = setTimeout(() => {
       setDisplayChildren(children);
-      setIsTransitioning(false);
+      setIsTransitioning(false)
     }, 150);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   }, [pathname, children]);
 
   return (
@@ -47,7 +47,7 @@ export function PageTransition({ children, className }: PageTransitionProps) {
           transitionProperty: 'opacity, transform',
           transitionDuration: '300ms',
           transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-        }}
+          }}
       >
         {displayChildren}
       </div>
@@ -67,7 +67,7 @@ export function PageTransition({ children, className }: PageTransitionProps) {
               style={{ 
                 color: darkLuxury.gold,
                 borderTopColor: 'transparent'
-              }}
+          }}
             />
             <span 
               className="text-sm font-medium"
@@ -79,7 +79,7 @@ export function PageTransition({ children, className }: PageTransitionProps) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export default PageTransition;

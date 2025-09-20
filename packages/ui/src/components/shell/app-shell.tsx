@@ -26,7 +26,7 @@ interface AppShellProps {
     name: string;
     handle: string;
     avatar?: string;
-    builderStatus?: 'none' | 'pending' | 'active';
+    builderStatus?: 'none' | 'pending' | 'active'
   } | null;
   currentSection?: HivePlatformSection;
   layoutType?: HiveLayoutType;
@@ -39,7 +39,7 @@ interface AppShellProps {
   onOpenNotifications?: () => void;
   // Layout customization
   sidebarWidth?: 'compact' | 'standard' | 'wide';
-  headerHeight?: 'compact' | 'standard' | 'tall';
+  headerHeight?: 'compact' | 'standard' | 'tall'
 }
 
 export function AppShell({ 
@@ -84,7 +84,7 @@ export function AppShell({
       )}
       style={{
         background: 'linear-gradient(135deg, var(--hive-background-primary) 0%, var(--hive-background-secondary) 100%)',
-      }}
+          }}
     >
       {/* Navigation Header */}
       <NavigationHeader 
@@ -144,5 +144,5 @@ export function AppShell({
       {/* Platform-wide overlays (command palette, notifications, etc.) */}
       <div id="hive-portal-root" className="relative z-[100]" />
     </div>
-  );
+  )
 }

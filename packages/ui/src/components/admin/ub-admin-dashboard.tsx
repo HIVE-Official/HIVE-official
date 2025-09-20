@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
 import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
 import { Text } from '../../atomic/atoms/text';
-import { Icon } from '../../components/ui/icon';
+import { Icon } from '../../atomic/atoms/icon';
 import { cn } from '../../lib/utils';
 import { 
   Shield,
@@ -48,7 +48,7 @@ export interface UBCampusMetrics {
     version: string;
     environment: 'development' | 'staging' | 'production';
     university: 'University at Buffalo';
-    campus: 'North Campus' | 'South Campus' | 'Downtown' | 'All Campuses';
+    campus: 'North Campus' | 'South Campus' | 'Downtown' | 'All Campuses'
   };
   students: {
     total: number;
@@ -58,7 +58,7 @@ export interface UBCampusMetrics {
     byMajor: Record<string, number>;
     byDorm: Record<string, number>;
     verified: number;
-    pendingVerification: number;
+    pendingVerification: number
   };
   spaces: {
     total: number;
@@ -67,7 +67,7 @@ export interface UBCampusMetrics {
     needsModeration: number;
     byCategory: Record<string, { count: number; members: number }>;
     totalMembers: number;
-    averageEngagement: number;
+    averageEngagement: number
   };
   tools: {
     total: number;
@@ -78,8 +78,8 @@ export interface UBCampusMetrics {
     usage: {
       dailyActive: number;
       weeklyActive: number;
-      monthlyActive: number;
-    };
+      monthlyActive: number
+    }
   };
   rituals: {
     total: number;
@@ -88,9 +88,9 @@ export interface UBCampusMetrics {
     participation: {
       current: number;
       total: number;
-      rate: number;
+      rate: number
     };
-    campusImpact: number;
+    campusImpact: number
   };
   content: {
     posts: number;
@@ -98,7 +98,7 @@ export interface UBCampusMetrics {
     reported: number;
     moderated: number;
     flagged: number;
-    approved: number;
+    approved: number
   };
   system: {
     status: 'healthy' | 'warning' | 'critical';
@@ -106,19 +106,19 @@ export interface UBCampusMetrics {
     performance: {
       responseTime: number;
       errorRate: number;
-      throughput: number;
+      throughput: number
     };
     storage: {
       used: number;
       total: number;
-      percentage: number;
+      percentage: number
     };
     costs: {
       monthly: number;
       daily: number;
-      trend: 'up' | 'down' | 'stable';
-    };
-  };
+      trend: 'up' | 'down' | 'stable'
+    }
+  }
 }
 
 export interface UBModerationItem {
@@ -130,12 +130,12 @@ export interface UBModerationItem {
     id: string;
     name: string;
     handle: string;
-    email: string;
+    email: string
   };
   reportedBy?: {
     id: string;
     name: string;
-    handle: string;
+    handle: string
   };
   reason: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
@@ -147,8 +147,8 @@ export interface UBModerationItem {
     building?: string;
     dorm?: string;
     department?: string;
-    course?: string;
-  };
+    course?: string
+  }
 }
 
 export interface UBAdminAction {
@@ -162,7 +162,7 @@ export interface UBAdminAction {
   targetType: string;
   timestamp: string;
   impact: 'low' | 'medium' | 'high';
-  reversible: boolean;
+  reversible: boolean
 }
 
 // =============================================================================
@@ -171,7 +171,7 @@ export interface UBAdminAction {
 
 interface UBAdminMetricsOverviewProps {
   metrics: UBCampusMetrics;
-  className?: string;
+  className?: string
 }
 
 export function UBAdminMetricsOverview({ metrics, className }: UBAdminMetricsOverviewProps) {
@@ -184,7 +184,7 @@ export function UBAdminMetricsOverview({ metrics, className }: UBAdminMetricsOve
     
     if (days > 0) return `${days}d ${hours}h ${minutes}m`;
     if (hours > 0) return `${hours}h ${minutes}m`;
-    return `${minutes}m`;
+    return `${minutes}m`
   };
 
   const formatCurrency = (amount: number): string => {
@@ -193,7 +193,7 @@ export function UBAdminMetricsOverview({ metrics, className }: UBAdminMetricsOve
       currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
-    }).format(amount);
+    }).format(amount)
   };
 
   return (
@@ -205,7 +205,7 @@ export function UBAdminMetricsOverview({ metrics, className }: UBAdminMetricsOve
             <Shield className="h-6 w-6 text-blue-400" />
           </div>
           <div>
-            <Text variant="h2" weight="bold">
+            <Text variant="heading-lg" weight="bold">
               {metrics.platform.name} Admin Dashboard
             </Text>
             <Text variant="body-sm" color="secondary">
@@ -454,7 +454,7 @@ export function UBAdminMetricsOverview({ metrics, className }: UBAdminMetricsOve
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -467,7 +467,7 @@ interface UBModerationQueueProps {
   onReject?: (itemId: string) => void;
   onEscalate?: (itemId: string) => void;
   onView?: (itemId: string) => void;
-  className?: string;
+  className?: string
 }
 
 export function UBModerationQueue({ 
@@ -487,7 +487,7 @@ export function UBModerationQueue({
     
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
-    return 'Just now';
+    return 'Just now'
   };
 
   const getSeverityColor = (severity: string) => {
@@ -496,7 +496,7 @@ export function UBModerationQueue({
       case 'high': return 'text-orange-400 bg-orange-900/20';
       case 'medium': return 'text-yellow-400 bg-yellow-900/20';
       case 'low': return 'text-green-400 bg-green-900/20';
-      default: return 'text-gray-400 bg-gray-900/20';
+      default: return 'text-gray-400 bg-gray-900/20'
     }
   };
 
@@ -508,7 +508,7 @@ export function UBModerationQueue({
       case 'comment': return MessageSquare;
       case 'user': return Users;
       case 'ritual': return Calendar;
-      default: return FileText;
+      default: return FileText
     }
   };
 
@@ -517,7 +517,7 @@ export function UBModerationQueue({
       <Card className={cn("border-[var(--hive-border-default)]", className)}>
         <CardContent className="text-center py-12">
           <CheckCircle className="h-12 w-12 text-green-400 mx-auto mb-4" />
-          <Text variant="h3" weight="semibold" className="mb-2">
+          <Text variant="heading-md" weight="semibold" className="mb-2">
             All Clear!
           </Text>
           <Text variant="body-sm" color="secondary">
@@ -525,7 +525,7 @@ export function UBModerationQueue({
           </Text>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
@@ -643,11 +643,11 @@ export function UBModerationQueue({
                 </div>
               </CardContent>
             </Card>
-          );
-        })}
+          )
+          })}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // =============================================================================
@@ -660,7 +660,7 @@ interface UBAdminQuickActionsProps {
   onGenerateReport?: (type: string) => void;
   onSystemMaintenance?: () => void;
   onBackupData?: () => void;
-  className?: string;
+  className?: string
 }
 
 export function UBAdminQuickActions({ 
@@ -737,5 +737,5 @@ export function UBAdminQuickActions({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

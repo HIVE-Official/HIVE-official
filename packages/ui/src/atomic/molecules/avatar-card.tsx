@@ -24,7 +24,7 @@ export interface AvatarCardProps {
   interactive?: boolean;
   layout?: 'horizontal' | 'vertical';
   className?: string;
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 const cardSizes = {
@@ -169,5 +169,5 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };

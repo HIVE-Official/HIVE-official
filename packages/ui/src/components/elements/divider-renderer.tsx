@@ -27,8 +27,8 @@ interface DividerRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 export const DividerRenderer: React.FC<DividerRendererProps> = ({
@@ -51,12 +51,12 @@ export const DividerRenderer: React.FC<DividerRendererProps> = ({
   if (config.dividerStyle === 'dashed' || config.dividerStyle === 'dotted') {
     dividerStyles.backgroundColor = 'transparent';
     dividerStyles.borderTop = `${config.thickness || 1}px ${config.dividerStyle} ${config.color || 'var(--hive-border)'}`;
-    dividerStyles.height = '0';
+    dividerStyles.height = '0'
   }
 
   return (
     <div className={`w-full ${classes.container} ${classes.spacing}`}>
       <hr style={dividerStyles} className={`w-full ${classes.element}`} />
     </div>
-  );
+  )
 };

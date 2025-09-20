@@ -26,7 +26,7 @@ interface HiveLabIntegrationProps {
   userId: string;
   spaceId?: string;
   userRole?: 'admin' | 'moderator' | 'member';
-  className?: string;
+  className?: string
 }
 
 type LabView = 'dashboard' | 'tools' | 'marketplace' | 'events' | 'analytics';
@@ -36,7 +36,7 @@ interface LabStats {
   activeTools: number;
   totalSpaces: number;
   weeklyUsage: number;
-  systemHealth: 'excellent' | 'good' | 'fair' | 'poor';
+  systemHealth: 'excellent' | 'good' | 'fair' | 'poor'
 }
 
 export function HiveLabIntegration({ 
@@ -54,7 +54,7 @@ export function HiveLabIntegration({
     async () => {
       const response = await fetch(`/api/tools/lab/stats?userId=${userId}`);
       if (response.ok) {
-        return response.json();
+        return response.json()
       }
       // Fallback data
       return {
@@ -63,7 +63,7 @@ export function HiveLabIntegration({
         totalSpaces: 4,
         weeklyUsage: 47,
         systemHealth: 'excellent' as const
-      };
+      }
     }
   );
 
@@ -72,9 +72,9 @@ export function HiveLabIntegration({
     async () => {
       const response = await fetch(`/api/tools/lab/activity?userId=${userId}&limit=10`);
       if (response.ok) {
-        return response.json();
+        return response.json()
       }
-      return [];
+      return []
     }
   );
 
@@ -91,9 +91,9 @@ export function HiveLabIntegration({
           metadata,
           timestamp: new Date().toISOString()
         })
-      });
+      })
     } catch (error) {
-      console.error('Failed to track lab action:', error);
+      console.error('Failed to track lab action:', error)
     }
   }, [userId, spaceId]);
 
@@ -101,7 +101,7 @@ export function HiveLabIntegration({
   const handleLaunchTool = useCallback((tool: ToolDefinition) => {
     setSelectedTool(tool);
     setCurrentView('tools');
-    trackLabAction('tool_launched', { toolId: tool.id, toolName: tool.name });
+    trackLabAction('tool_launched', { toolId: tool.id, toolName: tool.name })
   }, [trackLabAction]);
 
   // Running tool view
@@ -116,8 +116,8 @@ export function HiveLabIntegration({
                 size="sm"
                 onClick={() => {
                   setSelectedTool(null);
-                  setCurrentView('dashboard');
-                }}
+                  setCurrentView('dashboard')
+          }}
               >
                 ← Back to HIVE Lab
               </HiveButton>
@@ -138,8 +138,8 @@ export function HiveLabIntegration({
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, spaceId, data })
-              });
-            }}
+              })
+          })}
             onSubmit={async (data) => {
               await fetch(`/api/tools/${selectedTool.id}/submit`, {
                 method: 'POST',
@@ -148,12 +148,12 @@ export function HiveLabIntegration({
               });
               trackLabAction('tool_submitted', { toolId: selectedTool.id, dataSize: JSON.stringify(data).length });
               setSelectedTool(null);
-              setCurrentView('dashboard');
-            }}
+              setCurrentView('dashboard')
+          })}
           />
         </div>
       </PerformanceMonitor>
-    );
+    )
   }
 
   return (
@@ -205,7 +205,7 @@ export function HiveLabIntegration({
                 <Icon className="w-4 h-4" />
                 {tab.label}
               </button>
-            );
+            )
           })}
         </div>
 
@@ -397,11 +397,11 @@ export function HiveLabIntegration({
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ toolId, spaceId, userId })
               });
-              trackLabAction('tool_installed', { toolId });
-            }}
+              trackLabAction('tool_installed', { toolId })
+          })}
             onViewTool={(toolId) => {
-              trackLabAction('tool_viewed', { toolId });
-            }}
+              trackLabAction('tool_viewed', { toolId })
+          })}
           />
         )}
 
@@ -442,7 +442,7 @@ export function HiveLabIntegration({
         )}
       </div>
     </PerformanceMonitor>
-  );
+  )
 }
 
 export default HiveLabIntegration;

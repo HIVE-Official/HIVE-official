@@ -154,7 +154,7 @@ function MockCard({ item }: { item: GridItem }) {
         </p>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Device Preview Controls
@@ -167,7 +167,7 @@ function DeviceControls({
   device: 'desktop' | 'tablet' | 'mobile';
   onDeviceChange: (device: 'desktop' | 'tablet' | 'mobile') => void;
   isEditMode: boolean;
-  onEditModeToggle: () => void;
+  onEditModeToggle: () => void
 }) {
   const devices = [
     { key: 'desktop', label: 'Desktop', icon: Monitor, columns: 4 },
@@ -180,7 +180,7 @@ function DeviceControls({
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-[var(--hive-text-primary)]">Device Preview:</span>
         <div className="flex gap-1">
-          {devices.map(({ key, label, icon: Icon, columns }) => (
+          {devices.map(({ key, label, icon: Icon, columns })} => (
             <Button
               key={key}
               size="sm"
@@ -204,7 +204,7 @@ function DeviceControls({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Grid Analytics Component
@@ -214,12 +214,12 @@ function GridAnalytics({ items }: { items: GridItem[] }) {
     if (!item.isVisible) return acc;
     const size = `${item.size.width}x${item.size.height}`;
     acc[size] = (acc[size] || 0) + 1;
-    return acc;
+    return acc
   }, {} as Record<string, number>);
 
   const gridUtilization = items.reduce((acc, item) => {
     if (!item.isVisible) return acc;
-    return acc + (item.size.width * item.size.height);
+    return acc + (item.size.width * item.size.height)
   }, 0);
 
   return (
@@ -265,7 +265,7 @@ function GridAnalytics({ items }: { items: GridItem[] }) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Basic Grid Demo
@@ -324,7 +324,7 @@ export const BasicGridDemo: StoryObj = {
           <GridAnalytics items={items} />
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -466,7 +466,7 @@ export const ResponsiveBehaviorDemo: StoryObj = {
           </div>
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -483,14 +483,14 @@ export const EditModeFeaturesDemo: StoryObj = {
     const [showInstructions, setShowInstructions] = useState(true);
 
     const handleResetLayout = useCallback(() => {
-      updateItems(createMockGridItems());
+      updateItems(createMockGridItems())
     }, [updateItems]);
 
     const toggleCardVisibility = useCallback((cardId: string) => {
       const updatedItems = items.map(item =>
         item.id === cardId ? { ...item, isVisible: !item.isVisible } : item
       );
-      updateItems(updatedItems);
+      updateItems(updatedItems)
     }, [items, updateItems]);
 
     const features = [
@@ -530,8 +530,8 @@ export const EditModeFeaturesDemo: StoryObj = {
                               <span className="text-blue-800">{feature.description}</span>
                             </span>
                           </div>
-                        );
-                      })}
+                        )
+                      })
                     </div>
                   </div>
                   <Button
@@ -606,8 +606,8 @@ export const EditModeFeaturesDemo: StoryObj = {
                         onCheckedChange={() => toggleCardVisibility(item.id)}
                       />
                     </div>
-                  );
-                })}
+                  )
+                })
               </div>
             </CardContent>
           </Card>
@@ -647,6 +647,6 @@ export const EditModeFeaturesDemo: StoryObj = {
           </Card>
         </div>
       </div>
-    );
+    )
   }
 };

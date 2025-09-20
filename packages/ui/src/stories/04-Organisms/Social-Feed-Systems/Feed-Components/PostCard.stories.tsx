@@ -45,7 +45,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
       case 'event': return <Badge className="text-xs bg-purple-500/20 text-purple-400">Event</Badge>;
       case 'tool': return <Badge className="text-xs bg-green-500/20 text-green-400">Tool</Badge>;
       case 'ritual': return <Badge className="text-xs bg-orange-500/20 text-orange-400">Ritual</Badge>;
-      default: return null;
+      default: return null
     }
   };
 
@@ -53,7 +53,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
     switch (post.visibility) {
       case 'space': return <Users className="h-3 w-3 text-hive-text-mutedLight" />;
       case 'private': return <Users className="h-3 w-3 text-gray-400" />;
-      default: return null;
+      default: return null
     }
   };
 
@@ -101,7 +101,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
           )}
         </div>
       </div>
-    );
+    )
   };
 
   const renderEvent = () => {
@@ -129,7 +129,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
           </span>
         </div>
       </div>
-    );
+    )
   };
 
   const renderTool = () => {
@@ -156,7 +156,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
           </Button>
         </div>
       </div>
-    );
+    )
   };
 
   const renderRitual = () => {
@@ -185,7 +185,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
           </Button>
         </div>
       </div>
-    );
+    )
   };
 
   return (
@@ -272,7 +272,7 @@ const PostCard = ({ post, currentUserId, onLike, onComment, onShare, onVote, sho
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 const meta = {

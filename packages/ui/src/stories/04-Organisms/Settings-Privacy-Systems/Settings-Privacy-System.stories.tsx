@@ -162,20 +162,20 @@ const useSettings = () => {
       
       for (let i = 0; i < keys.length - 1; i++) {
         current[keys[i]] = { ...current[keys[i]] };
-        current = current[keys[i]];
+        current = current[keys[i]]
       }
       
       current[keys[keys.length - 1]] = value;
-      return updated;
-    });
+      return updated
+    })
   };
 
   const saveSettings = async () => {
     setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+      setIsLoading(false)
+    }, 1500)
   };
 
   return {
@@ -185,7 +185,7 @@ const useSettings = () => {
     settings,
     updateSetting,
     saveSettings
-  };
+  }
 };
 
 // Settings Layout Component
@@ -198,7 +198,7 @@ const SettingsLayout = ({
   children: React.ReactNode;
   title: string;
   subtitle?: string;
-  actions?: React.ReactNode;
+  actions?: React.ReactNode
 }) => (
   <div className="min-h-screen bg-black text-white">
     <div className="max-w-4xl mx-auto p-6">
@@ -228,7 +228,7 @@ const ProfileSettingsTab = ({
   updateSetting 
 }: { 
   settings: ReturnType<typeof useSettings>['settings'];
-  updateSetting: (path: string, value: any) => void;
+  updateSetting: (path: string, value: any) => void
 }) => (
   <div className="space-y-6">
     {/* Profile Photo Section */}
@@ -451,7 +451,7 @@ const PrivacySettingsTab = ({
   updateSetting 
 }: { 
   settings: ReturnType<typeof useSettings>['settings'];
-  updateSetting: (path: string, value: any) => void;
+  updateSetting: (path: string, value: any) => void
 }) => (
   <div className="space-y-6">
     {/* Profile Visibility */}
@@ -496,7 +496,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showMajor}
-                onCheckedChange={(checked) => updateSetting('privacy.showMajor', checked)}
+                onChange={(e) => { const checked = e.target.checked; updateSetting('privacy.showMajor', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -508,7 +508,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showGraduationYear}
-                onCheckedChange={(checked) => updateSetting('privacy.showGraduationYear', checked)}
+                onChange={(e) => { const checked = e.target.checked; updateSetting('privacy.showGraduationYear', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -520,7 +520,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showDorm}
-                onCheckedChange={(checked) => updateSetting('privacy.showDorm', checked)}
+                onChange={(e) => { const checked = e.target.checked; updateSetting('privacy.showDorm', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -532,7 +532,7 @@ const PrivacySettingsTab = ({
               </div>
               <Switch
                 checked={settings.privacy.showActivity}
-                onCheckedChange={(checked) => updateSetting('privacy.showActivity', checked)}
+                onChange={(e) => { const checked = e.target.checked; updateSetting('privacy.showActivity', checked)}
                 className="data-[state=checked]:bg-yellow-500"
               />
             </div>
@@ -560,7 +560,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.allowMessages}
-            onCheckedChange={(checked) => updateSetting('privacy.allowMessages', checked)}
+            onChange={(e) => { const checked = e.target.checked; updateSetting('privacy.allowMessages', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -574,7 +574,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.allowSpaceInvites}
-            onCheckedChange={(checked) => updateSetting('privacy.allowSpaceInvites', checked)}
+            onChange={(e) => { const checked = e.target.checked; updateSetting('privacy.allowSpaceInvites', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -588,7 +588,7 @@ const PrivacySettingsTab = ({
           </div>
           <Switch
             checked={settings.privacy.searchable}
-            onCheckedChange={(checked) => updateSetting('privacy.searchable', checked)}
+            onChange={(e) => { const checked = e.target.checked; updateSetting('privacy.searchable', checked)}
             className="data-[state=checked]:bg-yellow-500"
           />
         </div>
@@ -698,7 +698,7 @@ const SettingsSystem = () => {
                     </div>
                     <Switch
                       checked={settingsState.settings.preferences.theme === 'dark'}
-                      onCheckedChange={(checked) => settingsState.updateSetting('preferences.theme', checked ? 'dark' : 'light')}
+                      onChange={(e) => { const checked = e.target.checked; settingsState.updateSetting('preferences.theme', checked ? 'dark' : 'light')}
                       className="data-[state=checked]:bg-yellow-500"
                     />
                   </div>
@@ -710,7 +710,7 @@ const SettingsSystem = () => {
                     </div>
                     <Switch
                       checked={settingsState.settings.preferences.reduceMotion}
-                      onCheckedChange={(checked) => settingsState.updateSetting('preferences.reduceMotion', checked)}
+                      onChange={(e) => { const checked = e.target.checked; settingsState.updateSetting('preferences.reduceMotion', checked)}
                       className="data-[state=checked]:bg-yellow-500"
                     />
                   </div>
@@ -721,7 +721,7 @@ const SettingsSystem = () => {
         </div>
       </Tabs>
     </SettingsLayout>
-  );
+  )
 };
 
 // Story Exports
@@ -747,7 +747,7 @@ export const ProfileSettings: Story = {
           </CardContent>
         </Card>
       </SettingsLayout>
-    );
+    )
   }
 };
 
@@ -762,7 +762,7 @@ export const PrivacySettings: Story = {
           </CardContent>
         </Card>
       </SettingsLayout>
-    );
+    )
   }
 };
 

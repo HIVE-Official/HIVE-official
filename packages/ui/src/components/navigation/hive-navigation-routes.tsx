@@ -320,7 +320,7 @@ export function createHiveNavigationSections(currentUser?: { handle: string; nam
         }
       ]
     }
-  ];
+  ]
 }
 
 // ============================================================================
@@ -336,7 +336,7 @@ export interface MobileTabItem {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   href: string;
-  badge?: number;
+  badge?: number
 }
 
 export const mobileBottomTabs: MobileTabItem[] = [
@@ -416,7 +416,7 @@ export const quickActions: NavigationItem[] = [
  * Check if a route is shareable (generates preview cards)
  */
 export function isShareableRoute(path: string): boolean {
-  return hiveRoutes.shareableRoutes.some(route => path.startsWith(route));
+  return hiveRoutes.shareableRoutes.some(route => path.startsWith(route))
 }
 
 /**
@@ -430,7 +430,7 @@ export function createShareableUrl(path: string, baseUrl: string = ''): string {
   urlObj.searchParams.set('ref', 'share');
   urlObj.searchParams.set('utm_source', 'hive_share');
   
-  return urlObj.toString();
+  return urlObj.toString()
 }
 
 /**
@@ -447,11 +447,11 @@ export function parseRouteEntity(path: string): { type: string; id: string } | n
   for (const pattern of patterns) {
     const match = path.match(pattern.regex);
     if (match) {
-      return { type: pattern.type, id: match[1] };
+      return { type: pattern.type, id: match[1] }
     }
   }
   
-  return null;
+  return null
 }
 
 /**
@@ -464,20 +464,20 @@ export function getRouteBreadcrumbs(path: string): Array<{ label: string; href: 
   const segments = path.split('/').filter(Boolean);
   
   if (segments.length === 0) {
-    return breadcrumbs;
+    return breadcrumbs
   }
   
   switch (segments[0]) {
     case 's':
       breadcrumbs.push({ label: 'Spaces', href: hiveRoutes.routes.spaces });
       if (segments[1]) {
-        breadcrumbs.push({ label: segments[1], href: `/s/${segments[1]}` });
+        breadcrumbs.push({ label: segments[1], href: `/s/${segments[1]}` })
       }
       break;
       
     case 'u': 
       if (segments[1]) {
-        breadcrumbs.push({ label: segments[1], href: `/u/${segments[1]}` });
+        breadcrumbs.push({ label: segments[1], href: `/u/${segments[1]}` })
       }
       break;
       
@@ -491,10 +491,10 @@ export function getRouteBreadcrumbs(path: string): Array<{ label: string; href: 
       
     case 'profile':
       breadcrumbs.push({ label: 'Profile', href: hiveRoutes.routes.profile });
-      break;
+      break
   }
   
-  return breadcrumbs;
+  return breadcrumbs
 }
 
 // ============================================================================

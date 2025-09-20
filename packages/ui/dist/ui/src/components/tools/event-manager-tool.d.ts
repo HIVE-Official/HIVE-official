@@ -8,5 +8,5 @@ export interface EventManagerToolProps {
     authenticatedFetch?: (url: string, options?: RequestInit) => Promise<Response>;
     className?: string;
 }
-export declare function EventManagerTool({ spaceId, spaceName, isLeader, currentUserRole, leaderMode, onEventAction, authenticatedFetch, className }: EventManagerToolProps): import("react/jsx-runtime").JSX.Element;
+export declare function EventManagerTool({ spaceId, spaceName, isLeader, currentUserRole, leaderMode, onEventAction, authenticatedFetch, className }: EventManagerToolProps): void;
 //# sourceMappingURL=event-manager-tool.d.ts.map

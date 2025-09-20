@@ -370,7 +370,7 @@ const InteractiveShowcase = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -388,7 +388,7 @@ const AtomicComponentsLibrary = () => {
       purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
       gold: 'from-yellow-400/20 to-amber-500/10 border-yellow-400/20 text-yellow-400'
     };
-    return colors[color as keyof typeof colors] || colors.blue;
+    return colors[color as keyof typeof colors] || colors.blue
   };
 
   const filteredCategories = atomicCategories.filter(category =>
@@ -565,7 +565,7 @@ const AtomicComponentsLibrary = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

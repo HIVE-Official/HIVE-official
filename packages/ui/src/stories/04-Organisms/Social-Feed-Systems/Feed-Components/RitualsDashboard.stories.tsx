@@ -166,7 +166,7 @@ const RitualsDashboard = () => {
       case 1: return <Crown className="w-5 h-5 text-yellow-400" />;
       case 2: return <Medal className="w-5 h-5 text-gray-400" />;
       case 3: return <Trophy className="w-5 h-5 text-orange-400" />;
-      default: return <span className="text-gray-400 font-bold">#{rank}</span>;
+      default: return <span className="text-gray-400 font-bold">#{rank}</span>
     }
   };
 
@@ -205,7 +205,7 @@ const RitualsDashboard = () => {
               { id: 'my-rituals', label: 'My Rituals', icon: Target },
               { id: 'discover', label: 'Discover', icon: Search },
               { id: 'leaderboard', label: 'Leaderboard', icon: Award },
-            ].map(({ id, label, icon: Icon }) => (
+            ].map(({ id, label, icon: Icon })} => (
               <button
                 key={id}
                 onClick={() => setViewMode(id)}
@@ -228,7 +228,7 @@ const RitualsDashboard = () => {
           {/* Category Filters */}
           {viewMode !== 'leaderboard' && (
             <div className="flex items-center space-x-2">
-              {categories.map(({ id, label, count }) => (
+              {categories.map(({ id, label, count })} => (
                 <Button
                   key={id}
                   size="sm"
@@ -523,7 +523,7 @@ const RitualsDashboard = () => {
         )}
       </div>
     </div>
-  );
+  )
 };
 
 const meta = {

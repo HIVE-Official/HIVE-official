@@ -1,1 +1,1 @@
-{"version":3,"file":"hive-navigation-variants.d.ts","sourceRoot":"","sources":["../../../../../src/components/navigation/hive-navigation-variants.tsx"],"names":[],"mappings":"AA8BA,wBAAgB,iBAAiB,4CAqFhC;AAMD,wBAAgB,gBAAgB,4CA0K/B;AAMD,wBAAgB,iBAAiB,4CA8LhC;AAMD,wBAAgB,iBAAiB,4CA8ChC"}
+{"version":3,"file":"hive-navigation-variants.d.ts","sourceRoot":"","sources":["../../../../../src/components/navigation/hive-navigation-variants.tsx"],"names":[],"mappings":"AA8BA,wBAAgB,iBAAiB,4CAqFhC;AAMD,wBAAgB,gBAAgB,4CA0K/B;AAMD,wBAAgB,iBAAiB,SAW1B;AAyLP,wBAAgB,iBAAiB,4CA8ChC"}

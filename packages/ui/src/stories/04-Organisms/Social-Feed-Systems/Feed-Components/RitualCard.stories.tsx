@@ -29,9 +29,9 @@ const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {
   const handleComplete = async () => {
     setIsCompleting(true);
     try {
-      await onComplete?.(ritual.id);
+      await onComplete?.(ritual.id)
     } finally {
-      setIsCompleting(false);
+      setIsCompleting(false)
     }
   };
 
@@ -188,7 +188,7 @@ const RitualCard = ({ ritual, onComplete, onStart, onToggleFavorite }: any) => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 const meta = {
@@ -237,7 +237,7 @@ export const ActiveRitual: Story = {
     },
     onComplete: (id: string) => {
       console.log('Completing ritual:', id);
-      return Promise.resolve();
+      return Promise.resolve()
     },
     onStart: (id: string) => console.log('Starting ritual:', id),
     onToggleFavorite: (id: string) => console.log('Toggling favorite:', id)

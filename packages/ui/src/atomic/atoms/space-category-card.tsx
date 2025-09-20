@@ -15,14 +15,14 @@ export interface SpaceCategoryData {
   count: number;
   gradient: string;
   accentColor: string;
-  examples: string[];
+  examples: string[]
 }
 
 export interface SpaceCategoryCardProps {
   category: SpaceCategoryData;
   onClick?: (type: SpaceCategoryType) => void;
   variant?: 'default' | 'featured';
-  className?: string;
+  className?: string
 }
 
 // Default category configurations
@@ -72,7 +72,7 @@ export const SpaceCategoryCard: React.FC<SpaceCategoryCardProps> = ({
   className
 }) => {
   const handleClick = () => {
-    onClick?.(category.type);
+    onClick?.(category.type)
   };
 
   return (
@@ -82,7 +82,7 @@ export const SpaceCategoryCard: React.FC<SpaceCategoryCardProps> = ({
       whileHover={{ 
         y: -4,
         transition: { duration: 0.3, ease: [0.23, 1, 0.32, 1] }
-      }}
+          }}
       whileTap={{ scale: 0.98 }}
       onClick={handleClick}
       className={cn(
@@ -182,7 +182,7 @@ export const SpaceCategoryCard: React.FC<SpaceCategoryCardProps> = ({
       {/* Luxury Glow Effect */}
       <div className="absolute inset-0 bg-gradient-radial from-[var(--hive-brand-primary)]/2 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />
     </motion.div>
-  );
+  )
 };
 
 export default SpaceCategoryCard;

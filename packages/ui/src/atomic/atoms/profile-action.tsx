@@ -181,7 +181,7 @@ export interface ProfileActionProps
   badge?: string | number;
   tooltip?: string;
   href?: string;
-  external?: boolean;
+  external?: boolean
 }
 
 export function ProfileAction({
@@ -221,13 +221,13 @@ export function ProfileAction({
     if (loading || disabled) return;
     if (href) {
       if (external) {
-        window.open(href, '_blank', 'noopener,noreferrer');
+        window.open(href, '_blank', 'noopener,noreferrer')
       } else {
-        window.location.href = href;
+        window.location.href = href
       }
-      return;
+      return
     }
-    onClick?.(e);
+    onClick?.(e)
   }, [loading, disabled, href, external, onClick]);
 
   const content = (
@@ -282,7 +282,7 @@ export function ProfileAction({
       >
         {content}
       </a>
-    );
+    )
   }
 
   return (
@@ -305,36 +305,36 @@ export function ProfileAction({
     >
       {content}
     </button>
-  );
+  )
 }
 
 // Preset action components for common use cases
 export function EditAction({ ...props }: Omit<ProfileActionProps, 'actionType'>) {
-  return <ProfileAction actionType="edit" {...props} />;
+  return <ProfileAction actionType="edit" {...props} />
 }
 
 export function ShareAction({ ...props }: Omit<ProfileActionProps, 'actionType'>) {
-  return <ProfileAction actionType="share" {...props} />;
+  return <ProfileAction actionType="share" {...props} />
 }
 
 export function MessageAction({ ...props }: Omit<ProfileActionProps, 'actionType'>) {
-  return <ProfileAction actionType="message" {...props} />;
+  return <ProfileAction actionType="message" {...props} />
 }
 
 export function ConnectAction({ ...props }: Omit<ProfileActionProps, 'actionType'>) {
-  return <ProfileAction actionType="connect" {...props} />;
+  return <ProfileAction actionType="connect" {...props} />
 }
 
 export function SettingsAction({ ...props }: Omit<ProfileActionProps, 'actionType'>) {
-  return <ProfileAction actionType="settings" {...props} />;
+  return <ProfileAction actionType="settings" {...props} />
 }
 
 export function CameraAction({ ...props }: Omit<ProfileActionProps, 'actionType'>) {
-  return <ProfileAction actionType="camera" {...props} />;
+  return <ProfileAction actionType="camera" {...props} />
 }
 
 export function MoreAction({ ...props }: Omit<ProfileActionProps, 'actionType'>) {
-  return <ProfileAction actionType="more" {...props} />;
+  return <ProfileAction actionType="more" {...props} />
 }
 
 // Export variants for external use

@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { ScrollArea } from '../../components/ui/scroll-area';
-import { Input } from '../../components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Card, CardContent, CardHeader } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { ScrollArea } from '../../ui/scroll-area';
+import { Input } from '../../ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { 
   Users,
   Plus,
@@ -70,7 +70,7 @@ export interface Space {
     type: 'post' | 'event' | 'tool' | 'member';
     title: string;
     timestamp: Date;
-    actor?: { name: string; avatar?: string };
+    actor?: { name: string; avatar?: string }
   };
   
   // Space stats
@@ -78,7 +78,7 @@ export interface Space {
     postsThisWeek: number;
     eventsThisWeek: number;
     activeMembers: number;
-    newMembersThisWeek: number;
+    newMembersThisWeek: number
   };
   
   // Tags and features
@@ -89,7 +89,7 @@ export interface Space {
   building?: string;
   course?: string;
   semester?: string;
-  isOfficial?: boolean;
+  isOfficial?: boolean
 }
 
 export interface SpacesCardProps {
@@ -102,7 +102,7 @@ export interface SpacesCardProps {
   onCreateSpace?: () => void;
   onSearchSpaces?: (query: string) => void;
   onSettingsClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 // Space Type Configuration
@@ -177,7 +177,7 @@ function formatLastActivity(date: Date): string {
   if (diffMins < 60) return `${diffMins}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;
   if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 // Space Item Component
@@ -192,7 +192,7 @@ function SpaceItem({
   onClick?: (spaceId: string) => void;
   onJoin?: (spaceId: string) => void;
   onLeave?: (spaceId: string) => void;
-  variant?: 'default' | 'compact' | 'recommended';
+  variant?: 'default' | 'compact' | 'recommended'
 }) {
   const config = spaceTypeConfig[space.type];
   const TypeIcon = config.icon;
@@ -210,7 +210,7 @@ function SpaceItem({
         break;
       case 'view':
         onClick?.(space.id);
-        break;
+        break
     }
   }, [space.id, onClick, onJoin, onLeave]);
 
@@ -291,7 +291,7 @@ function SpaceItem({
                   <Badge variant="outline" className="text-xs">
                     {React.createElement(roleConfig[space.role].icon, { 
                       className: `w-3 h-3 mr-1 ${roleConfig[space.role].color}` 
-                    })}
+          })}
                     {roleConfig[space.role].label}
                   </Badge>
                 )}
@@ -409,7 +409,7 @@ function SpaceItem({
         </div>
       )}
     </motion.div>
-  );
+  )
 }
 
 // Space Search Component
@@ -418,13 +418,13 @@ function SpaceSearch({
   onCreateSpace 
 }: { 
   onSearch?: (query: string) => void;
-  onCreateSpace?: () => void;
+  onCreateSpace?: () => void
 }) {
   const [query, setQuery] = useState('');
 
   const handleSearch = useCallback((value: string) => {
     setQuery(value);
-    onSearch?.(value);
+    onSearch?.(value)
   }, [onSearch]);
 
   return (
@@ -449,7 +449,7 @@ function SpaceSearch({
         Create New Space
       </Button>
     </div>
-  );
+  )
 }
 
 // Space Stats Component
@@ -467,7 +467,7 @@ function SpaceStats({ spaces }: { spaces: Space[] }) {
       adminSpaces: adminSpaces.length,
       totalMembers,
       activeThisWeek
-    };
+    }
   }, [spaces]);
 
   return (
@@ -486,7 +486,7 @@ function SpaceStats({ spaces }: { spaces: Space[] }) {
         <div className="text-xs text-[var(--hive-text-muted)]">Leading</div>
       </div>
     </div>
-  );
+  )
 }
 
 // Main Spaces Card Component
@@ -521,11 +521,11 @@ export function SpacesCard({
         const bRole = b.role || 'member';
         
         if (roleOrder[aRole] !== roleOrder[bRole]) {
-          return roleOrder[aRole] - roleOrder[bRole];
+          return roleOrder[aRole] - roleOrder[bRole]
         }
         
-        return b.lastActivity.getTime() - a.lastActivity.getTime();
-      });
+        return b.lastActivity.getTime() - a.lastActivity.getTime()
+      })
   }, [spaces]);
 
   const displayedSpaces = showAllSpaces ? mySpaces : mySpaces.slice(0, 4);
@@ -544,7 +544,7 @@ export function SpacesCard({
             <Users className="w-5 h-5 text-[var(--hive-brand-primary)]" />
             <h3 className="font-semibold text-[var(--hive-text-primary)]">Spaces</h3>
             {pendingInvites.length > 0 && (
-              <Badge variant="destructive" className="text-xs">
+              <Badge variant="error" className="text-xs">
                 {pendingInvites.length} invite{pendingInvites.length > 1 ? 's' : ''}
               </Badge>
             )}
@@ -568,7 +568,7 @@ export function SpacesCard({
             { key: 'my', label: 'My Spaces', count: mySpaces.length },
             { key: 'recommended', label: 'Discover', count: recommendedSpaces.length },
             { key: 'search', label: 'Search' }
-          ].map(({ key, label, count }) => (
+          ].map(({ key, label, count })} => (
             <Button
               key={key}
               size="sm"
@@ -738,7 +738,7 @@ export function SpacesCard({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Default props for development

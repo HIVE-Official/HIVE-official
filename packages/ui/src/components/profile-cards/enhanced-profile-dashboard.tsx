@@ -30,8 +30,8 @@ export interface EnhancedProfileUser {
     toolsUsed: number;
     connectionsCount: number;
     toolsCreated?: number;
-    spacesLed?: number;
-  };
+    spacesLed?: number
+  }
 }
 
 export interface PersonalTool {
@@ -42,7 +42,7 @@ export interface PersonalTool {
   lastUsed?: string;
   usageCount: number;
   isForked: boolean;
-  originalCreator?: string;
+  originalCreator?: string
 }
 
 export interface ActivityLogItem {
@@ -51,7 +51,7 @@ export interface ActivityLogItem {
   title: string;
   description: string;
   timestamp: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, any>
 }
 
 export interface EnhancedProfileDashboardProps {
@@ -74,7 +74,7 @@ export interface EnhancedProfileDashboardProps {
   onEventClick?: (eventId: string) => void;
   onToolClick?: (toolId: string) => void;
   onCreateTool?: () => void;
-  className?: string;
+  className?: string
 }
 
 // Coming Soon Card Component
@@ -99,7 +99,7 @@ const ComingSoonCard: React.FC<{ title: string; description: string; icon: React
 // Personal Tools Card
 const PersonalToolsCard: React.FC<{ 
   tools: PersonalTool[];
-  onToolClick?: (toolId: string) => void;
+  onToolClick?: (toolId: string) => void
 }> = ({ tools, onToolClick }) => (
   <HiveCard className="h-full p-6">
     <div className="flex items-center justify-between mb-4">
@@ -145,7 +145,7 @@ const PersonalToolsCard: React.FC<{
 
 // Activity Log Card
 const ActivityLogCard: React.FC<{ 
-  activities: ActivityLogItem[];
+  activities: ActivityLogItem[]
 }> = ({ activities }) => (
   <HiveCard className="h-full p-6">
     <div className="flex items-center justify-between mb-4">
@@ -236,14 +236,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         ),
         onResize: (newSize) => {
           const newLayout = { ...currentLayout, avatar: { ...currentLayout.avatar, size: newSize } };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         },
         onToggleVisibility: () => {
           const newLayout = { 
             ...currentLayout, 
             avatar: { ...currentLayout.avatar, isVisible: !currentLayout.avatar.isVisible } 
           };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         }
       },
       {
@@ -266,14 +266,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         ),
         onResize: (newSize) => {
           const newLayout = { ...currentLayout, calendar: { ...currentLayout.calendar, size: newSize } };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         },
         onToggleVisibility: () => {
           const newLayout = { 
             ...currentLayout, 
             calendar: { ...currentLayout.calendar, isVisible: !currentLayout.calendar.isVisible } 
           };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         }
       },
       {
@@ -290,14 +290,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         ),
         onResize: (newSize) => {
           const newLayout = { ...currentLayout, tools: { ...currentLayout.tools, size: newSize } };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         },
         onToggleVisibility: () => {
           const newLayout = { 
             ...currentLayout, 
             tools: { ...currentLayout.tools, isVisible: !currentLayout.tools.isVisible } 
           };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         }
       },
       {
@@ -315,14 +315,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         ),
         onResize: (newSize) => {
           const newLayout = { ...currentLayout, spaces: { ...currentLayout.spaces, size: newSize } };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         },
         onToggleVisibility: () => {
           const newLayout = { 
             ...currentLayout, 
             spaces: { ...currentLayout.spaces, isVisible: !currentLayout.spaces.isVisible } 
           };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         }
       },
       {
@@ -336,14 +336,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         ),
         onResize: (newSize) => {
           const newLayout = { ...currentLayout, activity: { ...currentLayout.activity, size: newSize } };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         },
         onToggleVisibility: () => {
           const newLayout = { 
             ...currentLayout, 
             activity: { ...currentLayout.activity, isVisible: !currentLayout.activity.isVisible } 
           };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         }
       },
       {
@@ -360,21 +360,21 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
             onToggle={async (enabled, level) => {
               // TODO: Implement actual privacy toggle
               console.log('Toggle ghost mode:', enabled, level);
-              return true;
-            }}
+              return true
+          }}
             onSettings={onPrivacySettings}
           />
         ),
         onResize: (newSize) => {
           const newLayout = { ...currentLayout, ghostmode: { ...currentLayout.ghostmode, size: newSize } };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         },
         onToggleVisibility: () => {
           const newLayout = { 
             ...currentLayout, 
             ghostmode: { ...currentLayout.ghostmode, isVisible: !currentLayout.ghostmode.isVisible } 
           };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         }
       },
       {
@@ -393,14 +393,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         ),
         onResize: (newSize) => {
           const newLayout = { ...currentLayout, social: { ...currentLayout.social, size: newSize } };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         },
         onToggleVisibility: () => {
           const newLayout = { 
             ...currentLayout, 
             social: { ...currentLayout.social, isVisible: !currentLayout.social.isVisible } 
           };
-          onCardLayoutChange?.(newLayout);
+          onCardLayoutChange?.(newLayout)
         }
       }
     ];
@@ -430,14 +430,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
           ),
           onResize: (newSize) => {
             const newLayout = { ...currentLayout, hivelab: { ...currentLayout.hivelab, size: newSize } };
-            onCardLayoutChange?.(newLayout);
+            onCardLayoutChange?.(newLayout)
           },
           onToggleVisibility: () => {
             const newLayout = { 
               ...currentLayout, 
               hivelab: { ...currentLayout.hivelab, isVisible: !currentLayout.hivelab.isVisible } 
             };
-            onCardLayoutChange?.(newLayout);
+            onCardLayoutChange?.(newLayout)
           }
         },
         {
@@ -456,14 +456,14 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
           ),
           onResize: (newSize) => {
             const newLayout = { ...currentLayout, analytics: { ...currentLayout.analytics, size: newSize } };
-            onCardLayoutChange?.(newLayout);
+            onCardLayoutChange?.(newLayout)
           },
           onToggleVisibility: () => {
             const newLayout = { 
               ...currentLayout, 
               analytics: { ...currentLayout.analytics, isVisible: !currentLayout.analytics.isVisible } 
             };
-            onCardLayoutChange?.(newLayout);
+            onCardLayoutChange?.(newLayout)
           }
         },
         {
@@ -482,30 +482,30 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
           ),
           onResize: (newSize) => {
             const newLayout = { ...currentLayout, leadership: { ...currentLayout.leadership, size: newSize } };
-            onCardLayoutChange?.(newLayout);
+            onCardLayoutChange?.(newLayout)
           },
           onToggleVisibility: () => {
             const newLayout = { 
               ...currentLayout, 
               leadership: { ...currentLayout.leadership, isVisible: !currentLayout.leadership.isVisible } 
             };
-            onCardLayoutChange?.(newLayout);
+            onCardLayoutChange?.(newLayout)
           }
         }
-      );
+      )
     }
 
-    return cards.sort((a, b) => currentLayout[a.id]?.order - currentLayout[b.id]?.order);
+    return cards.sort((a, b) => currentLayout[a.id]?.order - currentLayout[b.id]?.order)
   }, [user, spaces, events, personalTools, activityLog, hiveLab, completionStatus, currentLayout, isEditMode, isLoading]);
 
   const handleCardReorder = (reorderedCards: BentoCard[]) => {
     const newLayout = { ...currentLayout };
     reorderedCards.forEach((card, index) => {
       if (newLayout[card.id]) {
-        newLayout[card.id].order = index;
+        newLayout[card.id].order = index
       }
     });
-    onCardLayoutChange?.(newLayout);
+    onCardLayoutChange?.(newLayout)
   };
 
   if (isLoading) {
@@ -520,7 +520,7 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
           <p className="text-gray-300">Loading your HIVE profile...</p>
         </motion.div>
       </div>
-    );
+    )
   }
 
   return (
@@ -554,7 +554,7 @@ export const EnhancedProfileDashboard: React.FC<EnhancedProfileDashboardProps> =
         />
       </div>
     </div>
-  );
+  )
 };
 
 export default EnhancedProfileDashboard;

@@ -186,11 +186,11 @@ export const ActivationRequestModal: StoryObj<typeof SpaceActivationModal> = {
           onClose={() => setIsOpen(false)}
           onSubmit={(data) => {
             action('submit-activation')(data);
-            setIsOpen(false);
+            setIsOpen(false)
           }}
         />
       </>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -366,7 +366,7 @@ export const HighVolumeDirectory: StoryObj<typeof UBSpacesDirectory> = {
         onRequestActivation={action('high-volume-request-activation')}
         onViewDetails={action('high-volume-view-details')}
       />
-    );
+    )
   },
   parameters: {
     docs: {
@@ -389,7 +389,7 @@ export const InteractiveActivationFlow: Story = {
     const handleActivationRequest = (spaceId: string) => {
       const space = UB_SPACE_TEMPLATES.find(s => s.id === spaceId);
       setSelectedSpace(space?.name || '');
-      setModalOpen(true);
+      setModalOpen(true)
     };
     
     return (
@@ -407,11 +407,11 @@ export const InteractiveActivationFlow: Story = {
           onClose={() => setModalOpen(false)}
           onSubmit={(data) => {
             action('activation-submitted')(data);
-            setModalOpen(false);
+            setModalOpen(false)
           }}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

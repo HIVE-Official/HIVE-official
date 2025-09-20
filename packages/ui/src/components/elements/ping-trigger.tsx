@@ -14,7 +14,7 @@ interface PingTriggerProps {
   config: PingTriggerConfig;
   onTrigger?: (data: TriggerData) => Promise<void>;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 interface TriggerData {
@@ -23,13 +23,13 @@ interface TriggerData {
   elementId?: string;
   url?: string;
   event?: string;
-  data?: Record<string, unknown>;
+  data?: Record<string, unknown>
 }
 
 interface TriggerStatus {
   status: 'idle' | 'pending' | 'success' | 'error';
   message?: string;
-  timestamp?: Date;
+  timestamp?: Date
 }
 
 export const PingTrigger: React.FC<PingTriggerProps> = ({
@@ -73,7 +73,7 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
         case 'element':
           // Trigger action on another element
           if (target.elementId) {
-            console.log('Triggering element action:', target.elementId, target.data);
+            console.log('Triggering element action:', target.elementId, target.data)
           }
           break;
 
@@ -89,7 +89,7 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
             });
 
             if (!response.ok) {
-              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`)
             }
           }
           break;
@@ -98,17 +98,17 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
           // Send analytics event
           if (target.event) {
             // Integrate with your analytics service
-            console.log('Analytics event:', target.event, target.data);
+            console.log('Analytics event:', target.event, target.data)
           }
           break;
 
         default:
-          throw new Error(`Unknown target type: ${target.type}`);
+          throw new Error(`Unknown target type: ${target.type}`)
       }
 
       // Call the onTrigger callback
       if (onTrigger) {
-        await onTrigger(triggerData);
+        await onTrigger(triggerData)
       }
 
       setTriggerStatus({
@@ -119,8 +119,8 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
 
       // Reset status after 2 seconds
       setTimeout(() => {
-        setTriggerStatus({ status: 'idle' });
-      }, 2000);
+        setTriggerStatus({ status: 'idle' })
+      }, 2000)
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -132,45 +132,45 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
 
       // Reset status after 3 seconds
       setTimeout(() => {
-        setTriggerStatus({ status: 'idle' });
-      }, 3000);
+        setTriggerStatus({ status: 'idle' })
+      }, 3000)
     }
   }, [disabled, triggerStatus.status, triggerOn, target, onTrigger]);
 
   // Handle delayed execution
   const scheduleExecution = useCallback(() => {
     if (timerRef.current) {
-      clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current)
     }
 
     if (delay > 0) {
-      timerRef.current = setTimeout(executeTrigger, delay);
+      timerRef.current = setTimeout(executeTrigger, delay)
     } else {
-      executeTrigger();
+      executeTrigger()
     }
   }, [delay, executeTrigger]);
 
   // Event handlers for different trigger types
   const handleClick = useCallback(() => {
     if (triggerOn === 'click') {
-      scheduleExecution();
+      scheduleExecution()
     }
   }, [triggerOn, scheduleExecution]);
 
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
     if (triggerOn === 'hover') {
-      scheduleExecution();
+      scheduleExecution()
     }
   }, [triggerOn, scheduleExecution]);
 
   const handleMouseLeave = useCallback(() => {
-    setIsHovered(false);
+    setIsHovered(false)
   }, []);
 
   const handleFocus = useCallback(() => {
     if (triggerOn === 'focus') {
-      scheduleExecution();
+      scheduleExecution()
     }
   }, [triggerOn, scheduleExecution]);
 
@@ -178,10 +178,10 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
   useEffect(() => {
     if (triggerOn === 'timer' && !disabled) {
       const interval = setInterval(() => {
-        scheduleExecution();
+        scheduleExecution()
       }, delay || 5000); // Default to 5 seconds if no delay specified
 
-      return () => clearInterval(interval);
+      return () => clearInterval(interval)
     }
   }, [triggerOn, disabled, scheduleExecution, delay]);
 
@@ -189,9 +189,9 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
   useEffect(() => {
     return () => {
       if (timerRef.current) {
-        clearTimeout(timerRef.current);
+        clearTimeout(timerRef.current)
       }
-    };
+    }
   }, []);
 
   // Status icon and color based on trigger status
@@ -220,7 +220,7 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
           icon: Zap,
           color: 'text-[var(--hive-brand-primary)]',
           bgColor: 'bg-[var(--hive-brand-primary)]/10'
-        };
+        }
     }
   };
 
@@ -239,7 +239,7 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
       case 'timer':
         return { label: 'Auto-triggered', cursor: 'cursor-default' };
       default:
-        return { label: 'Trigger', cursor: 'cursor-pointer' };
+        return { label: 'Trigger', cursor: 'cursor-pointer' }
     }
   };
 
@@ -401,7 +401,7 @@ export const PingTrigger: React.FC<PingTriggerProps> = ({
         </motion.div>
       )}
     </motion.div>
-  );
+  )
 };
 
 // Hook for managing multiple ping triggers
@@ -409,19 +409,19 @@ export const usePingTriggerManager = () => {
   const [triggers, setTriggers] = useState<Map<string, TriggerStatus>>(new Map());
 
   const registerTrigger = useCallback((id: string) => {
-    setTriggers(prev => new Map(prev.set(id, { status: 'idle' })));
+    setTriggers(prev => new Map(prev.set(id, { status: 'idle' })))
   }, []);
 
   const updateTriggerStatus = useCallback((id: string, status: TriggerStatus) => {
-    setTriggers(prev => new Map(prev.set(id, status)));
+    setTriggers(prev => new Map(prev.set(id, status)))
   }, []);
 
   const getTriggerStatus = useCallback((id: string): TriggerStatus => {
-    return triggers.get(id) || { status: 'idle' };
+    return triggers.get(id) || { status: 'idle' }
   }, [triggers]);
 
   const getAllTriggers = useCallback(() => {
-    return Array.from(triggers.entries()).map(([id, status]) => ({ id, ...status }));
+    return Array.from(triggers.entries()).map(([id, status]) => ({ id, ...status })})
   }, [triggers]);
 
   return {
@@ -429,7 +429,7 @@ export const usePingTriggerManager = () => {
     updateTriggerStatus,
     getTriggerStatus,
     getAllTriggers
-  };
+  }
 };
 
 export default PingTrigger;

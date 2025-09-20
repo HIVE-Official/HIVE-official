@@ -61,39 +61,40 @@ export function CommandNavigation() {
         category: section.label,
         keywords: item.keywords || []
     })));
-    const filteredItems = searchQuery.length > 0
-        ? allItems.filter(item => item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase())))
-        : allItems;
-    return (_jsxs(NavigationContainer, { className: "min-h-screen", style: { backgroundColor: semantic.background.primary }, children: [_jsx("div", { className: "border-b", style: { borderColor: semantic.border.primary }, children: _jsx("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: _jsxs("div", { className: "flex justify-between items-center h-12", children: [config.showBranding && (_jsx(NavigationBrand, { logo: _jsx(HiveLogo, { size: "sm", variant: "gold" }), href: "/" })), _jsxs(Button, { onClick: () => setSearchOpen(true), className: "flex items-center space-x-2 px-4 py-2 border transition-colors", style: {
-                                    backgroundColor: semantic.background.secondary,
-                                    borderColor: semantic.border.primary,
-                                    color: semantic.text.muted,
-                                }, children: [_jsx(Search, { className: "w-4 h-4" }), _jsx("span", { className: "hidden sm:block", children: "Search or jump to..." }), _jsxs("kbd", { className: "hidden sm:inline-flex items-center px-2 py-1 border rounded text-xs", children: [_jsx(Command, { className: "w-3 h-3 mr-1" }), "K"] })] }), _jsxs("div", { className: "flex items-center space-x-3", children: [config.showNotifications && (_jsxs(Button, { variant: "ghost", size: "sm", className: "relative", children: [_jsx(Bell, { className: "w-4 h-4" }), _jsx("span", { className: "absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" })] })), user && (_jsx(Button, { variant: "ghost", size: "sm", className: "w-6 h-6 p-0", children: user.avatar ? (_jsx("img", { src: user.avatar, alt: user.name, className: "w-6 h-6 rounded-full" })) : (_jsx(User, { className: "w-3 h-3" })) }))] })] }) }) }), searchOpen && (_jsx("div", { className: "fixed inset-0 z-50 overflow-y-auto", children: _jsxs("div", { className: "flex min-h-full items-start justify-center p-4 pt-16", children: [_jsx("div", { className: "fixed inset-0 backdrop-blur-sm", style: { backgroundColor: 'color-mix(in_srgb,var(--hive-background-primary)_50%,transparent)' }, onClick: () => setSearchOpen(false) }), _jsxs("div", { className: "relative w-full max-w-2xl rounded-lg border shadow-xl", style: {
-                                backgroundColor: semantic.background.primary,
-                                borderColor: semantic.border.primary,
-                            }, children: [_jsxs("div", { className: "flex items-center border-b px-4", style: { borderColor: semantic.border.primary }, children: [_jsx(Search, { className: "w-5 h-5 mr-3", style: { color: semantic.text.muted } }), _jsx("input", { type: "text", placeholder: "Search commands, tools, spaces...", value: searchQuery, onChange: (e) => {
-                                                setSearchQuery(e.target.value);
-                                                setSelectedIndex(0);
-                                            }, className: "w-full py-4 bg-transparent focus:outline-none", style: { color: semantic.text.primary }, autoFocus: true })] }), _jsx("div", { className: "max-h-96 overflow-y-auto p-2", children: filteredItems.length > 0 ? (filteredItems.map((item, index) => {
-                                        const Icon = item.icon;
-                                        const isSelected = index === selectedIndex;
-                                        return (_jsxs(Button, { variant: "ghost", onClick: () => {
-                                                navigate(item);
-                                                setSearchOpen(false);
-                                                setSearchQuery('');
-                                            }, className: cn("w-full justify-start p-3 h-auto", isSelected && "bg-[var(--hive-brand-primary)] text-[var(--hive-background-primary)]"), style: {
-                                                backgroundColor: isSelected ? semantic.brand.primary : undefined,
-                                                color: isSelected ? semantic.text.inverse : semantic.text.primary,
-                                            }, children: [Icon && _jsx(Icon, { className: "w-4 h-4 mr-3 flex-shrink-0" }), _jsxs("div", { className: "flex-1 min-w-0 text-left", children: [_jsx("div", { className: "font-medium truncate", children: item.label }), item.description && (_jsx("div", { className: "text-xs truncate mt-1", style: {
-                                                                color: isSelected ? semantic.text.inverse : semantic.text.muted,
-                                                                opacity: isSelected ? 0.8 : 1
-                                                            }, children: item.description }))] })] }, item.id));
-                                    })) : (_jsxs("div", { className: "px-3 py-8 text-center", style: { color: semantic.text.muted }, children: [_jsx(Search, { className: "w-8 h-8 mx-auto mb-3" }), _jsx("p", { children: "No results found" }), _jsx("p", { className: "text-sm mt-1", children: "Try searching for something else" })] })) }), _jsxs("div", { className: "border-t px-4 py-3 text-xs flex items-center justify-between", style: {
-                                        borderColor: semantic.border.primary,
-                                        color: semantic.text.muted
-                                    }, children: [_jsxs("div", { className: "flex items-center space-x-4", children: [_jsx("span", { children: "\u2191\u2193 Navigate" }), _jsx("span", { children: "\u21B5 Select" }), _jsx("span", { children: "ESC Close" })] }), _jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("kbd", { className: "px-2 py-1 border rounded text-xs", children: "\u2318" }), _jsx("kbd", { className: "px-2 py-1 border rounded text-xs", children: "K" })] })] })] })] }) }))] }));
 }
+;
+const filteredItems = searchQuery.length > 0
+    ? allItems.filter(item => item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase())))
+    : allItems;
+return (_jsxs(NavigationContainer, { className: "min-h-screen", style: { backgroundColor: semantic.background.primary }, children: [_jsx("div", { className: "border-b", style: { borderColor: semantic.border.primary }, children: _jsx("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: _jsxs("div", { className: "flex justify-between items-center h-12", children: [config.showBranding && (_jsx(NavigationBrand, { logo: _jsx(HiveLogo, { size: "sm", variant: "gold" }), href: "/" })), _jsxs(Button, { onClick: () => setSearchOpen(true), className: "flex items-center space-x-2 px-4 py-2 border transition-colors", style: {
+                                backgroundColor: semantic.background.secondary,
+                                borderColor: semantic.border.primary,
+                                color: semantic.text.muted,
+                            }, children: [_jsx(Search, { className: "w-4 h-4" }), _jsx("span", { className: "hidden sm:block", children: "Search or jump to..." }), _jsxs("kbd", { className: "hidden sm:inline-flex items-center px-2 py-1 border rounded text-xs", children: [_jsx(Command, { className: "w-3 h-3 mr-1" }), "K"] })] }), _jsxs("div", { className: "flex items-center space-x-3", children: [config.showNotifications && (_jsxs(Button, { variant: "ghost", size: "sm", className: "relative", children: [_jsx(Bell, { className: "w-4 h-4" }), _jsx("span", { className: "absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" })] })), user && (_jsx(Button, { variant: "ghost", size: "sm", className: "w-6 h-6 p-0", children: user.avatar ? (_jsx("img", { src: user.avatar, alt: user.name, className: "w-6 h-6 rounded-full" })) : (_jsx(User, { className: "w-3 h-3" })) }))] })] }) }) }), searchOpen && (_jsx("div", { className: "fixed inset-0 z-50 overflow-y-auto", children: _jsxs("div", { className: "flex min-h-full items-start justify-center p-4 pt-16", children: [_jsx("div", { className: "fixed inset-0 backdrop-blur-sm", style: { backgroundColor: 'color-mix(in_srgb,var(--hive-background-primary)_50%,transparent)' }, onClick: () => setSearchOpen(false) }), _jsxs("div", { className: "relative w-full max-w-2xl rounded-lg border shadow-xl", style: {
+                            backgroundColor: semantic.background.primary,
+                            borderColor: semantic.border.primary,
+                        }, children: [_jsxs("div", { className: "flex items-center border-b px-4", style: { borderColor: semantic.border.primary }, children: [_jsx(Search, { className: "w-5 h-5 mr-3", style: { color: semantic.text.muted } }), _jsx("input", { type: "text", placeholder: "Search commands, tools, spaces...", value: searchQuery, onChange: (e) => {
+                                            setSearchQuery(e.target.value);
+                                            setSelectedIndex(0);
+                                        }, className: "w-full py-4 bg-transparent focus:outline-none", style: { color: semantic.text.primary }, autoFocus: true })] }), _jsx("div", { className: "max-h-96 overflow-y-auto p-2", children: filteredItems.length > 0 ? (filteredItems.map((item, index) => {
+                                    const Icon = item.icon;
+                                    const isSelected = index === selectedIndex;
+                                    return (_jsxs(Button, { variant: "ghost", onClick: () => {
+                                            navigate(item);
+                                            setSearchOpen(false);
+                                            setSearchQuery('');
+                                        }, className: cn("w-full justify-start p-3 h-auto", isSelected && "bg-[var(--hive-brand-primary)] text-[var(--hive-background-primary)]"), style: {
+                                            backgroundColor: isSelected ? semantic.brand.primary : undefined,
+                                            color: isSelected ? semantic.text.inverse : semantic.text.primary,
+                                        }, children: [Icon && _jsx(Icon, { className: "w-4 h-4 mr-3 flex-shrink-0" }), _jsxs("div", { className: "flex-1 min-w-0 text-left", children: [_jsx("div", { className: "font-medium truncate", children: item.label }), item.description && (_jsx("div", { className: "text-xs truncate mt-1", style: {
+                                                            color: isSelected ? semantic.text.inverse : semantic.text.muted,
+                                                            opacity: isSelected ? 0.8 : 1
+                                                        }, children: item.description }))] })] }, item.id));
+                                })) : (_jsxs("div", { className: "px-3 py-8 text-center", style: { color: semantic.text.muted }, children: [_jsx(Search, { className: "w-8 h-8 mx-auto mb-3" }), _jsx("p", { children: "No results found" }), _jsx("p", { className: "text-sm mt-1", children: "Try searching for something else" })] })) }), _jsxs("div", { className: "border-t px-4 py-3 text-xs flex items-center justify-between", style: {
+                                    borderColor: semantic.border.primary,
+                                    color: semantic.text.muted
+                                }, children: [_jsxs("div", { className: "flex items-center space-x-4", children: [_jsx("span", { children: "\u2191\u2193 Navigate" }), _jsx("span", { children: "\u21B5 Select" }), _jsx("span", { children: "ESC Close" })] }), _jsxs("div", { className: "flex items-center space-x-1", children: [_jsx("kbd", { className: "px-2 py-1 border rounded text-xs", children: "\u2318" }), _jsx("kbd", { className: "px-2 py-1 border rounded text-xs", children: "K" })] })] })] })] }) }))] }));
 // ============================================================================
 // MINIMAL NAVIGATION VARIANT
 // ============================================================================

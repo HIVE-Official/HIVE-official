@@ -26,7 +26,7 @@ interface GhostModeCardProps {
   level?: 'invisible' | 'minimal' | 'selective' | 'normal';
   onToggle?: (enabled: boolean, level?: 'invisible' | 'minimal' | 'selective' | 'normal') => Promise<boolean>;
   onSettings?: () => void;
-  className?: string;
+  className?: string
 }
 
 const levelConfig = {
@@ -82,15 +82,15 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
         if (status) {
           setCurrentLevel(status.level as typeof level);
           if (status.duration) {
-            setScheduledEnd(new Date(Date.now() + status.duration * 1000));
+            setScheduledEnd(new Date(Date.now() + status.duration * 1000))
           }
         }
       } catch (error) {
-        console.warn('Failed to load ghost mode status:', error);
+        console.warn('Failed to load ghost mode status:', error)
       }
     };
 
-    loadGhostModeStatus();
+    loadGhostModeStatus()
   }, [userId, privacyUtils]);
 
   const handleToggle = async () => {
@@ -104,13 +104,13 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
       ) ?? privacyUtils.toggleGhostMode(!isActive, currentLevel));
       
       if (!success) {
-        throw new Error('Failed to toggle ghost mode');
+        throw new Error('Failed to toggle ghost mode')
       }
     } catch (error) {
       console.error('Ghost mode toggle failed:', error);
       // TODO: Show error toast
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -123,15 +123,15 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
       
       if (success) {
         setCurrentLevel(newLevel);
-        setShowLevelSelector(false);
+        setShowLevelSelector(false)
       } else {
-        throw new Error('Failed to change ghost mode level');
+        throw new Error('Failed to change ghost mode level')
       }
     } catch (error) {
       console.error('Ghost mode level change failed:', error);
       // TODO: Show error toast
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -302,8 +302,8 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
                     )}
                   </div>
                 </motion.button>
-              );
-            })}
+              )
+          })}
           </motion.div>
         )}
       </AnimatePresence>
@@ -328,7 +328,7 @@ export const GhostModeCard: React.FC<GhostModeCardProps> = ({
       )}
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export default GhostModeCard;

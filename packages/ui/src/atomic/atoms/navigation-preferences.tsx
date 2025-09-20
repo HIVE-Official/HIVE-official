@@ -8,7 +8,7 @@ export type NavigationStyle = 'auto' | 'sidebar' | 'tabs';
 interface NavigationPreferencesProps {
   value: NavigationStyle;
   onChange: (value: NavigationStyle) => void;
-  className?: string;
+  className?: string
 }
 
 const options: { value: NavigationStyle; label: string; description: string }[] = [
@@ -70,5 +70,5 @@ export function NavigationPreferences({ value, onChange, className }: Navigation
         ))}
       </div>
     </div>
-  );
+  )
 }

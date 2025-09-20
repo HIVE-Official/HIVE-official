@@ -347,7 +347,7 @@ const ContentStrategyShowcase = () => {
     return criteria.map(criterion => ({
       ...criterion,
       passed: criterion.check(text)
-    }));
+    })})
   };
 
   const ContentExample = ({ example, type }: { example: any; type: 'good' | 'avoid' }) => (
@@ -458,8 +458,8 @@ const ContentStrategyShowcase = () => {
                   <IconComponent className="w-5 h-5 mr-2" />
                   {section.title}
                 </Button>
-              );
-            })}
+              )
+            })
             <Button
               variant={activeSection === 'templates' ? "default" : "outline"}
               size="lg"
@@ -511,7 +511,7 @@ const ContentStrategyShowcase = () => {
               <Card className="hive-glass border border-gray-700">
                 <CardHeader>
                   <CardTitle className="flex items-center" style={{ color: 'var(--hive-brand-primary)' }}>
-                    {React.createElement(voiceGuidelines[activeSection as keyof typeof voiceGuidelines].icon, { className: "w-6 h-6 mr-2" })}
+                    {React.createElement(voiceGuidelines[activeSection as keyof typeof voiceGuidelines].icon, { className: "w-6 h-6 mr-2" }}
                     {voiceGuidelines[activeSection as keyof typeof voiceGuidelines].title}
                   </CardTitle>
                   <p style={{ color: 'var(--hive-text-muted)' }}>
@@ -744,7 +744,7 @@ const ContentStrategyShowcase = () => {
                                       </span>
                                     </div>
                                   </>
-                                );
+                                )
                               })()}
                             </div>
                           </div>
@@ -965,7 +965,7 @@ const ContentStrategyShowcase = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const ContentStrategyGuidelines: Story = {

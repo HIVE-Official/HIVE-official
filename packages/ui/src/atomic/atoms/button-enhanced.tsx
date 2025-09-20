@@ -96,6 +96,38 @@ const buttonVariants = cva(
           "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
           "shadow-sm hover:shadow-md",
         ],
+
+        // Default variant (alias for primary)
+        default: [
+          "border-2 border-[var(--hive-brand-secondary)]",
+          "bg-transparent",
+          "text-[var(--hive-brand-secondary)]",
+          "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_10%,transparent)]",
+          "hover:border-[var(--hive-brand-secondary)]",
+          "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_20%,transparent)]",
+          "shadow-sm hover:shadow-md",
+        ],
+
+        // Outline variant (alias for secondary)
+        outline: [
+          "border border-[var(--hive-border-default)]",
+          "bg-[var(--hive-background-secondary)]",
+          "text-[var(--hive-text-primary)]",
+          "hover:bg-[var(--hive-interactive-hover)]",
+          "hover:border-[var(--hive-border-hover)]",
+          "active:bg-[var(--hive-interactive-active)]",
+        ],
+
+        // Premium variant (alias for accent)
+        premium: [
+          "border-2 border-[var(--hive-brand-secondary)]",
+          "bg-[color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent)]",
+          "text-[var(--hive-brand-secondary)]",
+          "hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)]",
+          "hover:border-[var(--hive-brand-secondary)]",
+          "active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]",
+          "shadow-sm hover:shadow-md",
+        ],
       },
       
       size: {
@@ -136,7 +168,7 @@ export interface ButtonProps
   asChild?: boolean;
   loading?: boolean;
   leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -175,14 +207,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </>
         )}
       </Comp>
-    );
+    )
   }
 );
 Button.displayName = "Button";
 
 // Loading Spinner Component
 interface LoadingSpinnerProps {
-  size?: VariantProps<typeof buttonVariants>["size"];
+  size?: VariantProps<typeof buttonVariants>["size"]
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = "default" }) => {
@@ -216,13 +248,13 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = "default" }) => 
         d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
       />
     </svg>
-  );
+  )
 };
 
 // Button Group Component
 export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   orientation?: "horizontal" | "vertical";
-  spacing?: "none" | "sm" | "md";
+  spacing?: "none" | "sm" | "md"
 }
 
 const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
@@ -247,7 +279,7 @@ const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 ButtonGroup.displayName = "ButtonGroup";
@@ -256,7 +288,7 @@ ButtonGroup.displayName = "ButtonGroup";
 export interface IconButtonProps
   extends Omit<ButtonProps, "leftIcon" | "rightIcon" | "children"> {
   icon: React.ReactNode;
-  "aria-label": string;
+  "aria-label": string
 }
 
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
@@ -270,7 +302,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       >
         {icon}
       </Button>
-    );
+    )
   }
 );
 IconButton.displayName = "IconButton";

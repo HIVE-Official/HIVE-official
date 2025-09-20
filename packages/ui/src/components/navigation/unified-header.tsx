@@ -11,7 +11,7 @@ interface UnifiedHeaderProps {
   showBackButton?: boolean;
   backHref?: string;
   rightAction?: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 export function UnifiedHeader({ 
@@ -59,12 +59,12 @@ export function UnifiedHeader({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Pre-built header variants for common use cases
 export function LandingPageHeader() {
-  return <UnifiedHeader variant="landing" />;
+  return <UnifiedHeader variant="landing" />
 }
 
 export function SchoolsPageHeader({ onComingSoonClick }: { onComingSoonClick?: () => void }) {
@@ -81,13 +81,13 @@ export function SchoolsPageHeader({ onComingSoonClick }: { onComingSoonClick?: (
         </HiveButton>
       }
     />
-  );
+  )
 }
 
 export function AuthPageHeader() {
-  return <UnifiedHeader variant="auth" />;
+  return <UnifiedHeader variant="auth" />
 }
 
 export function DashboardPageHeader() {
-  return <UnifiedHeader variant="dashboard" />;
+  return <UnifiedHeader variant="dashboard" />
 }

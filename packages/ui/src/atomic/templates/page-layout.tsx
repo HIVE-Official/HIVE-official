@@ -27,7 +27,7 @@ export interface PageLayoutProps {
   
   // Content
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 const maxWidthClasses = {
@@ -83,7 +83,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
           </Text>
         </div>
       </div>
-    );
+    )
   }
 
   // Error State  
@@ -114,7 +114,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
           </Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -187,5 +187,5 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         {children}
       </main>
     </div>
-  );
+  )
 };

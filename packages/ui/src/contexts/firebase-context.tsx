@@ -15,7 +15,7 @@ interface FirebaseUser {
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
-  emailVerified: boolean;
+  emailVerified: boolean
 }
 
 // Authentication State
@@ -23,7 +23,7 @@ interface AuthState {
   user: FirebaseUser | null;
   profile: UserProfileDocument | null;
   loading: boolean;
-  error: string | null;
+  error: string | null
 }
 
 // Firebase Context Interface
@@ -44,7 +44,7 @@ interface FirebaseContextValue {
   
   // Connection Status
   isOnline: boolean;
-  isConnected: boolean;
+  isConnected: boolean
 }
 
 // Create Context
@@ -102,8 +102,8 @@ export function FirebaseProvider({
           ...prev,
           user: mockUser,
           loading: false
-        }));
-      }, 1000);
+        }))
+      }, 1000)
     } else {
       // Real Firebase Auth integration
       console.log('Initializing Firebase Auth');
@@ -130,14 +130,14 @@ export function FirebaseProvider({
       //       loading: false
       //     }));
       //   }
-      // });
+      // })
     }
 
     return () => {
       if (unsubscribe) {
-        unsubscribe();
+        unsubscribe()
       }
-    };
+    }
   }, [enableMockAuth]);
 
   // Update profile in auth state when profile data changes
@@ -146,7 +146,7 @@ export function FirebaseProvider({
       setAuth(prev => ({
         ...prev,
         profile: profileData.profile
-      }));
+      }))
     }
   }, [profileData?.profile]);
 
@@ -160,14 +160,14 @@ export function FirebaseProvider({
 
     return () => {
       window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
+      window.removeEventListener('offline', handleOffline)
+    }
   }, []);
 
   // Authentication Methods
   const signInWithEmail = useCallback(async (email: string, password: string) => {
     if (!email.endsWith('@buffalo.edu')) {
-      throw new Error('Only University at Buffalo email addresses are allowed');
+      throw new Error('Only University at Buffalo email addresses are allowed')
     }
 
     try {
@@ -184,8 +184,8 @@ export function FirebaseProvider({
             photoURL: null,
             emailVerified: true
           };
-          setAuth(prev => ({ ...prev, user: mockUser, loading: false }));
-        }, 1000);
+          setAuth(prev => ({ ...prev, user: mockUser, loading: false }))
+        }, 1000)
       } else {
         // Real Firebase Auth
         // const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -197,13 +197,13 @@ export function FirebaseProvider({
         loading: false, 
         error: error.message || 'Sign in failed' 
       }));
-      throw error;
+      throw error
     }
   }, [enableMockAuth]);
 
   const signUpWithEmail = useCallback(async (email: string, password: string, displayName: string) => {
     if (!email.endsWith('@buffalo.edu')) {
-      throw new Error('Only University at Buffalo email addresses are allowed');
+      throw new Error('Only University at Buffalo email addresses are allowed')
     }
 
     try {
@@ -220,8 +220,8 @@ export function FirebaseProvider({
             photoURL: null,
             emailVerified: false
           };
-          setAuth(prev => ({ ...prev, user: mockUser, loading: false }));
-        }, 1000);
+          setAuth(prev => ({ ...prev, user: mockUser, loading: false }))
+        }, 1000)
       } else {
         // Real Firebase Auth
         // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -234,13 +234,13 @@ export function FirebaseProvider({
         loading: false, 
         error: error.message || 'Sign up failed' 
       }));
-      throw error;
+      throw error
     }
   }, [enableMockAuth]);
 
   const signInWithMagicLink = useCallback(async (email: string) => {
     if (!email.endsWith('@buffalo.edu')) {
-      throw new Error('Only University at Buffalo email addresses are allowed');
+      throw new Error('Only University at Buffalo email addresses are allowed')
     }
 
     try {
@@ -249,7 +249,7 @@ export function FirebaseProvider({
       if (enableMockAuth) {
         // Mock magic link
         console.log('Mock magic link sent to:', email);
-        setAuth(prev => ({ ...prev, loading: false }));
+        setAuth(prev => ({ ...prev, loading: false }))
       } else {
         // Real Firebase Auth
         // const actionCodeSettings = {
@@ -257,7 +257,7 @@ export function FirebaseProvider({
         //   handleCodeInApp: true
         // };
         // await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        setAuth(prev => ({ ...prev, loading: false }));
+        setAuth(prev => ({ ...prev, loading: false }))
       }
     } catch (error: any) {
       setAuth(prev => ({ 
@@ -265,7 +265,7 @@ export function FirebaseProvider({
         loading: false, 
         error: error.message || 'Magic link failed' 
       }));
-      throw error;
+      throw error
     }
   }, [enableMockAuth]);
 
@@ -281,7 +281,7 @@ export function FirebaseProvider({
           profile: null,
           loading: false,
           error: null
-        });
+        })
       } else {
         // Real Firebase Auth
         // await firebaseSignOut(auth);
@@ -289,14 +289,14 @@ export function FirebaseProvider({
       }
       
       // Clean up Firebase services
-      profileFirebaseService.cleanup();
+      profileFirebaseService.cleanup()
     } catch (error: any) {
       setAuth(prev => ({ 
         ...prev, 
         loading: false, 
         error: error.message || 'Sign out failed' 
       }));
-      throw error;
+      throw error
     }
   }, [enableMockAuth]);
 
@@ -318,16 +318,16 @@ export function FirebaseProvider({
     <FirebaseContext.Provider value={contextValue}>
       {children}
     </FirebaseContext.Provider>
-  );
+  )
 }
 
 // Custom Hook to use Firebase Context
 export function useFirebase(): FirebaseContextValue {
   const context = useContext(FirebaseContext);
   if (context === undefined) {
-    throw new Error('useFirebase must be used within a FirebaseProvider');
+    throw new Error('useFirebase must be used within a FirebaseProvider')
   }
-  return context;
+  return context
 }
 
 // Auth Guard Hook
@@ -337,7 +337,7 @@ export function useAuthGuard(redirectTo: string = '/auth/login') {
   useEffect(() => {
     if (!auth.loading && !auth.user) {
       // In a real app, this would handle navigation
-      console.log(`Redirecting to ${redirectTo} - user not authenticated`);
+      console.log(`Redirecting to ${redirectTo} - user not authenticated`)
     }
   }, [auth.loading, auth.user, redirectTo]);
 
@@ -346,7 +346,7 @@ export function useAuthGuard(redirectTo: string = '/auth/login') {
     isLoading: auth.loading,
     user: auth.user,
     profile: auth.profile
-  };
+  }
 }
 
 // UB Student Guard Hook
@@ -364,7 +364,7 @@ export function useUBStudentGuard() {
     isUBStudent,
     isLoading: auth.loading,
     hasAccess: isUBStudent
-  };
+  }
 }
 
 // Connection Status Hook
@@ -376,7 +376,7 @@ export function useConnectionStatus() {
     isConnected,
     canSync: isOnline && isConnected,
     status: isOnline && isConnected ? 'connected' : isOnline ? 'online' : 'offline'
-  };
+  }
 }
 
 // Profile Completion Hook
@@ -396,7 +396,7 @@ export function useProfileCompletion() {
     isComplete,
     missingFields,
     canUseAdvancedFeatures: isComplete
-  };
+  }
 }
 
 // Export types for external use

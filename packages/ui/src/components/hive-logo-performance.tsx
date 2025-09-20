@@ -17,7 +17,7 @@ interface PerformanceMetrics {
   frameRate: number;
   cacheHitRate: number;
   bundleSize: number;
-  timeToInteractive: number;
+  timeToInteractive: number
 }
 
 interface PerformanceConfig {
@@ -27,7 +27,7 @@ interface PerformanceConfig {
   enableOptimizations: boolean;
   targetFrameRate: number;
   maxMemoryUsage: number;
-  lazyLoadThreshold: number;
+  lazyLoadThreshold: number
 }
 
 interface OptimizationStrategy {
@@ -37,7 +37,7 @@ interface OptimizationStrategy {
   useWebWorkers: boolean;
   preloadAssets: boolean;
   cacheResults: boolean;
-  minifyOutput: boolean;
+  minifyOutput: boolean
 }
 
 // Performance-optimized logo props
@@ -68,7 +68,7 @@ interface PerformanceLogoProps {
   enableProfiler?: boolean;
   
   className?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // Performance monitoring hook
@@ -105,14 +105,14 @@ const usePerformanceMonitor = (
             ...prev,
             renderTime: entry.duration,
             paintTime: entry.startTime,
-          }));
+          })})
         }
-      });
+      })
     });
     
     observer.observe({ entryTypes: ['measure', 'paint'] });
     
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   }, [componentName, config.enableMetrics]);
   
   // Memory usage monitoring
@@ -131,13 +131,13 @@ const usePerformanceMonitor = (
         
         // Alert if memory usage exceeds threshold
         if (config.maxMemoryUsage && memoryUsage > config.maxMemoryUsage) {
-          console.warn(`[${componentName}] Memory usage exceeded threshold: ${memoryUsage}MB`);
+          console.warn(`[${componentName}] Memory usage exceeded threshold: ${memoryUsage}MB`)
         }
       }
     };
     
     const interval = setInterval(measureMemory, 1000);
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, [componentName, config]);
   
   // Frame rate monitoring
@@ -160,28 +160,28 @@ const usePerformanceMonitor = (
         
         // Alert if frame rate drops below target
         if (fps < config.targetFrameRate) {
-          console.warn(`[${componentName}] Frame rate below target: ${fps}fps`);
+          console.warn(`[${componentName}] Frame rate below target: ${fps}fps`)
         }
       }
       
-      requestAnimationFrame(measureFrameRate);
+      requestAnimationFrame(measureFrameRate)
     };
     
     const rafId = requestAnimationFrame(measureFrameRate);
-    return () => cancelAnimationFrame(rafId);
+    return () => cancelAnimationFrame(rafId)
   }, [componentName, config]);
   
   // Report metrics to callback
   useEffect(() => {
     if (onMetrics && config.enableMetrics) {
-      onMetrics(metrics);
+      onMetrics(metrics)
     }
   }, [metrics, onMetrics, config.enableMetrics]);
   
   const startRender = useCallback(() => {
     if (config.enableProfiling) {
       renderStartTime.current = performance.now();
-      performance.mark(`${componentName}-render-start`);
+      performance.mark(`${componentName}-render-start`)
     }
   }, [componentName, config.enableProfiling]);
   
@@ -198,11 +198,11 @@ const usePerformanceMonitor = (
       setMetrics(prev => ({
         ...prev,
         renderTime,
-      }));
+      }))
     }
   }, [componentName, config.enableProfiling]);
   
-  return { metrics, startRender, endRender };
+  return { metrics, startRender, endRender }
 };
 
 // SVG optimization hook
@@ -222,7 +222,7 @@ const useOptimizedSVG = (
         viewBox: "0 0 100 100",
         path: "M50,10 L85,30 L85,70 L50,90 L15,70 L15,30 Z M50,25 L70,35 L70,65 L50,75 L30,65 L30,35 Z",
         simplified: true,
-      };
+      }
     }
     
     // Full detailed path
@@ -230,8 +230,8 @@ const useOptimizedSVG = (
       viewBox: "0 0 1500 1500",
       path: "M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z",
       simplified: false,
-    };
-  }, [variant, size, quality, optimization.minifyOutput]);
+    }
+  }, [variant, size, quality, optimization.minifyOutput])
 };
 
 // Resource caching system
@@ -241,9 +241,9 @@ class LogoCache {
   
   static getInstance(): LogoCache {
     if (!LogoCache.instance) {
-      LogoCache.instance = new LogoCache();
+      LogoCache.instance = new LogoCache()
     }
-    return LogoCache.instance;
+    return LogoCache.instance
   }
   
   set(key: string, data: any, ttl: number = 300000): void { // 5 minutes default
@@ -251,7 +251,7 @@ class LogoCache {
       data,
       timestamp: Date.now(),
       ttl,
-    });
+    })
   }
   
   get(key: string): any | null {
@@ -261,18 +261,18 @@ class LogoCache {
     const isExpired = Date.now() - item.timestamp > item.ttl;
     if (isExpired) {
       this.cache.delete(key);
-      return null;
+      return null
     }
     
-    return item.data;
+    return item.data
   }
   
   clear(): void {
-    this.cache.clear();
+    this.cache.clear()
   }
   
   size(): number {
-    return this.cache.size;
+    return this.cache.size
   }
   
   getHitRate(): number {
@@ -295,14 +295,14 @@ const useVirtualization = (enabled: boolean, itemCount: number, containerHeight:
       const start = Math.floor(scrollTop / itemHeight);
       const end = Math.min(itemCount, start + Math.ceil(containerHeight / itemHeight) + 5);
       
-      setVisibleRange({ start, end });
+      setVisibleRange({ start, end })
     };
     
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [enabled, itemCount, containerHeight]);
   
-  return visibleRange;
+  return visibleRange
 };
 
 // Performance variants system
@@ -393,7 +393,7 @@ export const HiveLogoHighPerformance = memo(({
   // Cache key generation
   const finalCacheKey = useMemo(() => {
     if (cacheKey) return cacheKey;
-    return `hive-logo-${variant}-${size}-${quality}-${JSON.stringify(optimization)}`;
+    return `hive-logo-${variant}-${size}-${quality}-${JSON.stringify(optimization)}`
   }, [cacheKey, variant, size, quality, optimization]);
   
   // Cached rendering
@@ -403,20 +403,20 @@ export const HiveLogoHighPerformance = memo(({
     const cached = cache.get(finalCacheKey);
     if (cached) return cached;
     
-    return null;
+    return null
   }, [optimization.cacheResults, finalCacheKey, cache]);
   
   // Optimized rendering strategy
   const optimizationLevel = useMemo(() => {
     if (optimizeForSpeed) return 'speed';
     if (optimizeForSize) return 'size';
-    return 'balanced';
+    return 'balanced'
   }, [optimizeForSpeed, optimizeForSize]);
   
   // Render timing
   useEffect(() => {
     startRender();
-    return () => endRender();
+    return () => endRender()
   }, [startRender, endRender]);
   
   // Preloading
@@ -432,9 +432,9 @@ export const HiveLogoHighPerformance = memo(({
       
       return () => {
         if (document.head.contains(link)) {
-          document.head.removeChild(link);
+          document.head.removeChild(link)
         }
-      };
+      }
     }
   }, [preload, priority, svgData]);
   
@@ -446,7 +446,7 @@ export const HiveLogoHighPerformance = memo(({
         metrics,
         timestamp: Date.now(),
       };
-      cache.set(finalCacheKey, renderData, cacheDuration);
+      cache.set(finalCacheKey, renderData, cacheDuration)
     }
   }, [optimization.cacheResults, cachedRender, svgData, metrics, finalCacheKey, cache, cacheDuration]);
   
@@ -458,7 +458,7 @@ export const HiveLogoHighPerformance = memo(({
         className={cn(performanceVariants({ variant, size, optimization: optimizationLevel, className }))}
         style={{ backgroundColor: 'transparent' }}
       />
-    );
+    )
   }
   
   // Use cached render if available
@@ -473,7 +473,7 @@ export const HiveLogoHighPerformance = memo(({
           <path d={cachedRender.svgData.path} fill="currentColor" />
         </svg>
       </div>
-    );
+    )
   }
   
   return (
@@ -492,7 +492,7 @@ export const HiveLogoHighPerformance = memo(({
         style={{
           vectorEffect: 'non-scaling-stroke',
           shapeRendering: optimizeForSpeed ? 'optimizeSpeed' : 'auto',
-        }}
+          }}
       >
         <path
           d={svgData.path}
@@ -514,7 +514,7 @@ export const HiveLogoHighPerformance = memo(({
         </div>
       )}
     </motion.div>
-  );
+  )
 });
 
 HiveLogoHighPerformance.displayName = 'HiveLogoHighPerformance';
@@ -522,7 +522,7 @@ HiveLogoHighPerformance.displayName = 'HiveLogoHighPerformance';
 // Performance dashboard component
 export const HiveLogoPerformanceDashboard: React.FC<{
   metrics: PerformanceMetrics[];
-  className?: string;
+  className?: string
 }> = ({ metrics = [], className }) => {
   const averageMetrics = useMemo(() => {
     if (metrics.length === 0) return null;
@@ -532,7 +532,7 @@ export const HiveLogoPerformanceDashboard: React.FC<{
       frameRate: metrics.reduce((sum, m) => sum + m.frameRate, 0) / metrics.length,
       memoryUsage: metrics.reduce((sum, m) => sum + m.memoryUsage, 0) / metrics.length,
       cacheHitRate: metrics.reduce((sum, m) => sum + m.cacheHitRate, 0) / metrics.length,
-    };
+    }
   }, [metrics]);
   
   if (!averageMetrics) {
@@ -540,7 +540,7 @@ export const HiveLogoPerformanceDashboard: React.FC<{
       <div className={cn("p-6 bg-[var(--hive-background-primary)]/20 rounded-xl", className)}>
         <div className="text-[var(--hive-text-primary)]/60">No performance data available</div>
       </div>
-    );
+    )
   }
   
   return (
@@ -618,7 +618,7 @@ export const HiveLogoPerformanceDashboard: React.FC<{
         )}
       </div>
     </div>
-  );
+  )
 };
 
 // Web Worker for heavy computations
@@ -640,23 +640,23 @@ export const createLogoWorker = (): Worker | null => {
           // Performance metrics calculation
           const metrics = calculateMetrics(data);
           self.postMessage({ type: 'METRICS_CALCULATED', data: metrics });
-          break;
+          break
       }
     };
     
     function optimizeSVG(svgData) {
       // Implement SVG optimization
-      return svgData;
+      return svgData
     }
     
     function calculateMetrics(data) {
       // Implement metrics calculation
-      return {};
+      return {}
     }
   `;
   
   const blob = new Blob([workerScript], { type: 'application/javascript' });
-  return new Worker(URL.createObjectURL(blob));
+  return new Worker(URL.createObjectURL(blob))
 };
 
 // Export performance components (already exported with const declarations above)

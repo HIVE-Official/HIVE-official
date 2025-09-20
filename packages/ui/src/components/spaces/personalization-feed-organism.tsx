@@ -14,7 +14,7 @@ export interface UserSpace {
   type?: string;
   role?: "member" | "admin" | "owner";
   isActive?: boolean;
-  lastActivity?: Date;
+  lastActivity?: Date
 }
 
 export interface RecommendedSpace {
@@ -24,7 +24,7 @@ export interface RecommendedSpace {
   memberCount?: number;
   type?: string;
   reason?: string;
-  confidence?: number;
+  confidence?: number
 }
 
 export interface ActivityStats {
@@ -32,7 +32,7 @@ export interface ActivityStats {
   weeklyGrowth: number;
   activeNow: number;
   totalInteractions?: number;
-  favoriteSpaces?: number;
+  favoriteSpaces?: number
 }
 
 export interface PersonalizationFeedOrganismProps {
@@ -57,16 +57,16 @@ export interface PersonalizationFeedOrganismProps {
   showSections?: {
     mySpaces?: boolean;
     recommendations?: boolean;
-    activity?: boolean;
+    activity?: boolean
   };
   /** Loading states */
   isLoading?: {
     mySpaces?: boolean;
     recommendations?: boolean;
-    activity?: boolean;
+    activity?: boolean
   };
   /** Custom className */
-  className?: string;
+  className?: string
 }
 
 function MySpacesSection({ 
@@ -80,7 +80,7 @@ function MySpacesSection({
   onSpaceClick?: (spaceId: string) => void;
   onBrowseSpaces?: () => void;
   isLoading?: boolean;
-  layout?: "default" | "compact" | "expanded";
+  layout?: "default" | "compact" | "expanded"
 }) {
   const getRoleBadge = (role?: string) => {
     if (role === "owner") {
@@ -89,7 +89,7 @@ function MySpacesSection({
           <Crown className="h-3 w-3" />
           Owner
         </div>
-      );
+      )
     }
     
     if (role === "admin") {
@@ -98,14 +98,14 @@ function MySpacesSection({
           <Star className="h-3 w-3" />
           Admin
         </div>
-      );
+      )
     }
     
-    return null;
+    return null
   };
 
   const getInitials = (name: string) => {
-    return name.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase();
+    return name.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase()
   };
 
   if (isLoading) {
@@ -121,7 +121,7 @@ function MySpacesSection({
           ))}
         </div>
       </HiveCard>
-    );
+    )
   }
 
   return (
@@ -192,7 +192,7 @@ function MySpacesSection({
         </div>
       )}
     </HiveCard>
-  );
+  )
 }
 
 function RecommendationsSection({ 
@@ -206,17 +206,17 @@ function RecommendationsSection({
   onRecommendationClick?: (spaceId: string) => void;
   onJoinSpace?: (spaceId: string) => void;
   isLoading?: boolean;
-  layout?: "default" | "compact" | "expanded";
+  layout?: "default" | "compact" | "expanded"
 }) {
   const getInitials = (name: string) => {
-    return name.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase();
+    return name.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase()
   };
 
   const getConfidenceColor = (confidence?: number) => {
     if (!confidence) return "text-[var(--hive-text-tertiary)]";
     if (confidence >= 0.8) return "text-green-400";
     if (confidence >= 0.6) return "text-yellow-400";
-    return "text-blue-400";
+    return "text-blue-400"
   };
 
   if (isLoading) {
@@ -232,7 +232,7 @@ function RecommendationsSection({
           ))}
         </div>
       </HiveCard>
-    );
+    )
   }
 
   return (
@@ -269,8 +269,8 @@ function RecommendationsSection({
                 variant="ghost"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onJoinSpace?.(space.id);
-                }}
+                  onJoinSpace?.(space.id)
+          }}
                 className="p-2 hover:bg-[var(--hive-brand-secondary)]/20 group-hover:bg-[var(--hive-brand-secondary)]/20"
               >
                 <Plus className="h-4 w-4 text-[var(--hive-brand-secondary)] group-hover:scale-110 transition-transform" />
@@ -284,7 +284,7 @@ function RecommendationsSection({
         </div>
       )}
     </HiveCard>
-  );
+  )
 }
 
 function ActivityStatsSection({ 
@@ -292,7 +292,7 @@ function ActivityStatsSection({
   isLoading = false 
 }: {
   stats?: ActivityStats;
-  isLoading?: boolean;
+  isLoading?: boolean
 }) {
   if (isLoading) {
     return (
@@ -310,7 +310,7 @@ function ActivityStatsSection({
           ))}
         </div>
       </HiveCard>
-    );
+    )
   }
 
   const defaultStats: ActivityStats = {
@@ -352,7 +352,7 @@ function ActivityStatsSection({
         )}
       </div>
     </HiveCard>
-  );
+  )
 }
 
 export function PersonalizationFeedOrganism({
@@ -381,7 +381,7 @@ export function PersonalizationFeedOrganism({
       case "expanded":
         return 4;
       default:
-        return 3;
+        return 3
     }
   };
 
@@ -392,7 +392,7 @@ export function PersonalizationFeedOrganism({
       case "expanded":
         return "p-10";
       default:
-        return "p-8";
+        return "p-8"
     }
   };
 
@@ -444,5 +444,5 @@ export function PersonalizationFeedOrganism({
         </Grid>
       </div>
     </HiveCard>
-  );
+  )
 }

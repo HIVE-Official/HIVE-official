@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { cn } from '../../lib/utils';
 import { Text } from '../../atomic/atoms/text';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 
 // Network condition types
@@ -15,7 +15,7 @@ type CampusNetworkContext = {
   name?: string;
   knownIssues?: string[];
   estimatedFixTime?: string;
-  alternativeSuggestions?: string[];
+  alternativeSuggestions?: string[]
 };
 
 // Error types specific to network issues
@@ -54,7 +54,7 @@ interface NetworkErrorProps {
   className?: string;
   
   // Analytics
-  onErrorReport?: (errorDetails: any) => void;
+  onErrorReport?: (errorDetails: any) => void
 }
 
 // Custom hook for network monitoring
@@ -66,7 +66,7 @@ function useNetworkMonitoring() {
   
   useEffect(() => {
     const updateOnlineStatus = () => {
-      setIsOnline(navigator.onLine);
+      setIsOnline(navigator.onLine)
     };
     
     const updateNetworkInfo = () => {
@@ -79,15 +79,15 @@ function useNetworkMonitoring() {
         
         // Estimate network condition based on effective type and downlink
         if (connection.effectiveType === '4g' && connection.downlink > 10) {
-          setNetworkCondition('excellent');
+          setNetworkCondition('excellent')
         } else if (connection.effectiveType === '4g' || connection.downlink > 5) {
-          setNetworkCondition('good');
+          setNetworkCondition('good')
         } else if (connection.effectiveType === '3g' || connection.downlink > 1) {
-          setNetworkCondition('fair');
+          setNetworkCondition('fair')
         } else if (connection.effectiveType === '2g' || connection.downlink > 0.1) {
-          setNetworkCondition('poor');
+          setNetworkCondition('poor')
         } else {
-          setNetworkCondition('offline');
+          setNetworkCondition('offline')
         }
       }
     };
@@ -103,19 +103,19 @@ function useNetworkMonitoring() {
     // @ts-ignore
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     if (connection) {
-      connection.addEventListener('change', updateNetworkInfo);
+      connection.addEventListener('change', updateNetworkInfo)
     }
     
     return () => {
       window.removeEventListener('online', updateOnlineStatus);
       window.removeEventListener('offline', updateOnlineStatus);
       if (connection) {
-        connection.removeEventListener('change', updateNetworkInfo);
+        connection.removeEventListener('change', updateNetworkInfo)
       }
-    };
+    }
   }, []);
   
-  return { isOnline, networkCondition, connectionType, downlink };
+  return { isOnline, networkCondition, connectionType, downlink }
 }
 
 // Campus network intelligence
@@ -124,7 +124,7 @@ function detectCampusNetwork(): CampusNetworkContext {
   // For now, we'll use some heuristics
   
   if (typeof navigator === 'undefined') {
-    return { type: 'unknown' };
+    return { type: 'unknown' }
   }
   
   // Check for common campus network SSIDs or domains
@@ -146,10 +146,10 @@ function detectCampusNetwork(): CampusNetworkContext {
         'Mobile hotspot as backup',
         'Ethernet in your dorm room if available'
       ]
-    };
+    }
   }
   
-  return { type: 'unknown' };
+  return { type: 'unknown' }
 }
 
 // Generate campus-specific error messages
@@ -161,7 +161,7 @@ function generateCampusMessage(
   title: string;
   description: string;
   encouragement: string;
-  tips: string[];
+  tips: string[]
 } {
   const baseMessages = {
     'connection-lost': {
@@ -217,19 +217,19 @@ function generateCampusMessage(
       'Move closer to a Wi-Fi access point',
       'Try a different location on campus',
       ...tips
-    ];
+    ]
   } else if (networkCondition === 'offline') {
     tips = [
       'Check if Wi-Fi is enabled on your device',
       'Try connecting to a different network',
       'Use mobile data if available'
-    ];
+    ]
   }
   
   return {
     ...base,
     tips: tips.slice(0, 4) // Limit to 4 tips
-  };
+  }
 }
 
 export const NetworkError: React.FC<NetworkErrorProps> = ({
@@ -267,17 +267,17 @@ export const NetworkError: React.FC<NetworkErrorProps> = ({
     setRetryCount(prev => prev + 1);
     
     try {
-      await onRetry();
+      await onRetry()
     } catch (error) {
-      console.error('Retry failed:', error);
+      console.error('Retry failed:', error)
     } finally {
-      setIsRetrying(false);
+      setIsRetrying(false)
     }
   }, [onRetry]);
   
   const handleOfflineMode = useCallback(() => {
     if (onOfflineMode) {
-      onOfflineMode();
+      onOfflineMode()
     }
   }, [onOfflineMode]);
   
@@ -291,7 +291,7 @@ export const NetworkError: React.FC<NetworkErrorProps> = ({
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
         retryCount
-      });
+      })
     }
   }, [errorType, networkCondition, campusContext, retryCount, onErrorReport]);
   
@@ -304,7 +304,7 @@ export const NetworkError: React.FC<NetworkErrorProps> = ({
       offline: '🚫',
       unknown: '🤔'
     };
-    return icons[condition];
+    return icons[condition]
   };
   
   const getConditionColor = (condition: NetworkCondition) => {
@@ -316,7 +316,7 @@ export const NetworkError: React.FC<NetworkErrorProps> = ({
       offline: 'text-red-500',
       unknown: 'text-hive-text-secondary'
     };
-    return colors[condition];
+    return colors[condition]
   };
   
   return (
@@ -502,7 +502,7 @@ export const NetworkError: React.FC<NetworkErrorProps> = ({
         </details>
       )}
     </div>
-  );
+  )
 };
 
 export { useNetworkMonitoring, detectCampusNetwork, generateCampusMessage };

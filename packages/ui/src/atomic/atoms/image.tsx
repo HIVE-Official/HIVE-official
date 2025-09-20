@@ -16,7 +16,7 @@ export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElemen
   rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
   bordered?: boolean;
   grayscale?: boolean;
-  blur?: boolean;
+  blur?: boolean
 }
 
 const aspectRatios = {
@@ -71,18 +71,18 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
   React.useEffect(() => {
     setIsLoading(true);
     setHasError(false);
-    setImageSrc(src);
+    setImageSrc(src)
   }, [src]);
 
   const handleLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     setIsLoading(false);
-    onLoad?.(event);
+    onLoad?.(event)
   };
 
   const handleError = (event: React.SyntheticEvent<HTMLImageElement>) => {
     setIsLoading(false);
     setHasError(true);
-    onError?.(event);
+    onError?.(event)
   };
 
   const containerClasses = [
@@ -122,10 +122,10 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
     const computedStyle: React.CSSProperties = { ...style };
     
     if (typeof aspectRatio === 'number') {
-      computedStyle.aspectRatio = aspectRatio.toString();
+      computedStyle.aspectRatio = aspectRatio.toString()
     }
     
-    return computedStyle;
+    return computedStyle
   }, [style, aspectRatio]);
 
   // Show fallback if error and fallback provided
@@ -140,7 +140,7 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
           fallback
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -180,7 +180,7 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(({
         </div>
       )}
     </div>
-  );
+  )
 });
 
 Image.displayName = 'Image';

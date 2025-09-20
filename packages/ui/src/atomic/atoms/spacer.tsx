@@ -8,7 +8,7 @@ export interface SpacerProps extends React.HTMLAttributes<HTMLDivElement> {
   direction?: 'horizontal' | 'vertical' | 'both';
   responsive?: boolean;
   flexible?: boolean;
-  debug?: boolean;
+  debug?: boolean
 }
 
 // Base spacing scale based on HIVE design tokens
@@ -90,12 +90,12 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
     
     if (flexible) {
       if (direction === 'horizontal' || direction === 'both') {
-        baseStyle.flexGrow = 1;
+        baseStyle.flexGrow = 1
       }
       if (direction === 'vertical' || direction === 'both') {
-        baseStyle.flexGrow = 1;
+        baseStyle.flexGrow = 1
       }
-      return baseStyle;
+      return baseStyle
     }
 
     // Fixed spacing
@@ -115,10 +115,10 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
         baseStyle.height = spacing;
         baseStyle.minWidth = spacing;
         baseStyle.minHeight = spacing;
-        break;
+        break
     }
 
-    return baseStyle;
+    return baseStyle
   };
 
   const getResponsiveClasses = () => {
@@ -133,7 +133,7 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
         `sm:h-[${spacingSizes[responsiveSize.sm]}]`,
         `md:h-[${spacingSizes[responsiveSize.md]}]`,
         `lg:h-[${spacingSizes[responsiveSize.lg]}]`
-      );
+      )
     }
     
     if (direction === 'horizontal' || direction === 'both') {
@@ -142,10 +142,10 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
         `sm:w-[${spacingSizes[responsiveSize.sm]}]`,
         `md:w-[${spacingSizes[responsiveSize.md]}]`,
         `lg:w-[${spacingSizes[responsiveSize.lg]}]`
-      );
+      )
     }
     
-    return classes.join(' ');
+    return classes.join(' ')
   };
 
   const baseClasses = [
@@ -187,7 +187,7 @@ export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(({
         </div>
       )}
     </div>
-  );
+  )
 });
 
 Spacer.displayName = 'Spacer';

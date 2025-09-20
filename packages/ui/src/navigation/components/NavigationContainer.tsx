@@ -29,12 +29,12 @@ interface NavigationContainerProps {
   unreadNotificationCount?: number;
   children?: React.ReactNode;
   className?: string;
-  testId?: string;
+  testId?: string
 }
 
 interface NavigationLayoutProps {
   children: React.ReactNode;
-  navigationState: ReturnType<typeof useNavigationState>['state'];
+  navigationState: ReturnType<typeof useNavigationState>['state']
 }
 
 // ============================================================================
@@ -81,7 +81,7 @@ const NavigationLayout = memo<NavigationLayoutProps>(({
         {children}
       </main>
     </div>
-  );
+  )
 });
 
 NavigationLayout.displayName = 'NavigationLayout';
@@ -123,20 +123,20 @@ export const NavigationContainer = memo<NavigationContainerProps>(({
     
     // Close tablet drawer on navigation
     if (tabletDrawerOpen) {
-      setTabletDrawerOpen(false);
+      setTabletDrawerOpen(false)
     }
   }, [actions, tabletDrawerOpen]);
   
   const handleToggleSidebar = useCallback(() => {
-    actions.toggleSidebar();
+    actions.toggleSidebar()
   }, [actions]);
   
   const handleOpenTabletDrawer = useCallback(() => {
-    setTabletDrawerOpen(true);
+    setTabletDrawerOpen(true)
   }, []);
   
   const handleCloseTabletDrawer = useCallback(() => {
-    setTabletDrawerOpen(false);
+    setTabletDrawerOpen(false)
   }, []);
   
   // ============================================================================
@@ -215,7 +215,7 @@ export const NavigationContainer = memo<NavigationContainerProps>(({
             onNavigate={handleNavigate}
             testId="fallback-navigation"
           />
-        );
+        )
     }
   };
   
@@ -242,7 +242,7 @@ export const NavigationContainer = memo<NavigationContainerProps>(({
         {children}
       </div>
     </NavigationLayout>
-  );
+  )
 });
 
 NavigationContainer.displayName = 'NavigationContainer';
@@ -256,7 +256,7 @@ interface WithNavigationProps {
   onOpenCommandPalette?: () => void;
   onOpenNotifications?: () => void;
   unreadNotificationCount?: number;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 /**
@@ -295,12 +295,12 @@ export const withNavigation = <P extends object>(
           {children}
         </Component>
       </NavigationLayout>
-    );
+    )
   });
   
   WithNavigationComponent.displayName = `withNavigation(${Component.displayName || Component.name})`;
   
-  return WithNavigationComponent;
+  return WithNavigationComponent
 };
 
 // ============================================================================

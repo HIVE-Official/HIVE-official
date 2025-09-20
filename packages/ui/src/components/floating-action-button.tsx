@@ -10,7 +10,7 @@ interface FloatingAction {
   title: string;
   icon: React.ReactNode;
   action: () => void;
-  color?: string;
+  color?: string
 }
 
 interface FloatingActionButtonProps {
@@ -19,7 +19,7 @@ interface FloatingActionButtonProps {
   mainIcon?: React.ReactNode;
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 const defaultActions: FloatingAction[] = [
@@ -78,12 +78,12 @@ export function FloatingActionButton({
 
   const handleMainClick = () => {
     if (disabled) return;
-    setIsExpanded(!isExpanded);
+    setIsExpanded(!isExpanded)
   };
 
   const handleActionClick = (action: FloatingAction) => {
     action.action();
-    setIsExpanded(false);
+    setIsExpanded(false)
   };
 
   const isBottomPosition = position.includes('bottom');
@@ -221,7 +221,7 @@ export function FloatingActionButton({
         </motion.button>
       </div>
     </>
-  );
+  )
 }
 
 // Context Menu FAB - appears on right-click or long press
@@ -234,7 +234,7 @@ export function ContextFloatingActionButton({
   isVisible: boolean;
   position: { x: number; y: number };
   onClose: () => void;
-  actions?: FloatingAction[];
+  actions?: FloatingAction[]
 }) {
   if (!isVisible) return null;
 
@@ -252,7 +252,7 @@ export function ContextFloatingActionButton({
         style={{
           left: Math.min(position.x - 30, window.innerWidth - 80),
           top: Math.max(position.y - 120, 20)
-        }}
+          }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
@@ -279,8 +279,8 @@ export function ContextFloatingActionButton({
               )}
               onClick={() => {
                 action.action();
-                onClose();
-              }}
+                onClose()
+          }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -290,7 +290,7 @@ export function ContextFloatingActionButton({
         ))}
       </motion.div>
     </>
-  );
+  )
 }
 
 export type { FloatingAction };

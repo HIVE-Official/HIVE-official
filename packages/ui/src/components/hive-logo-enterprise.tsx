@@ -14,19 +14,19 @@ interface HiveLogoConfig {
   analytics?: {
     provider: 'google-analytics' | 'mixpanel' | 'amplitude' | 'custom';
     trackingId?: string;
-    customTracker?: (event: string, properties: Record<string, any>) => void;
+    customTracker?: (event: string, properties: Record<string, any>) => void
   };
   
   // A/B testing framework
   abTesting?: {
     provider: 'optimizely' | 'launchdarkly' | 'split' | 'custom';
-    getUserVariant?: (experimentId: string, userId?: string) => string;
+    getUserVariant?: (experimentId: string, userId?: string) => string
   };
   
   // Feature flags
   featureFlags?: {
     provider: 'launchdarkly' | 'split' | 'unleash' | 'custom';
-    isEnabled?: (flagName: string) => boolean;
+    isEnabled?: (flagName: string) => boolean
   };
   
   // Brand customization
@@ -34,7 +34,7 @@ interface HiveLogoConfig {
     allowCustomColors?: boolean;
     allowCustomSizes?: boolean;
     allowLogoReplacement?: boolean;
-    whitelabelMode?: boolean;
+    whitelabelMode?: boolean
   };
   
   // Performance settings
@@ -42,15 +42,15 @@ interface HiveLogoConfig {
     enableMetrics?: boolean;
     enableLazyLoading?: boolean;
     enablePreloading?: boolean;
-    optimizeForLowEnd?: boolean;
+    optimizeForLowEnd?: boolean
   };
   
   // Security
   security?: {
     enableCSP?: boolean;
     allowedOrigins?: string[];
-    requireIntegrity?: boolean;
-  };
+    requireIntegrity?: boolean
+  }
 }
 
 const HiveLogoConfigContext = createContext<HiveLogoConfig>({});
@@ -58,18 +58,18 @@ const HiveLogoConfigContext = createContext<HiveLogoConfig>({});
 // Provider component for enterprise configuration
 export const HiveLogoProvider: React.FC<{
   config: HiveLogoConfig;
-  children: React.ReactNode;
+  children: React.ReactNode
 }> = ({ config, children }) => {
   return (
     <HiveLogoConfigContext.Provider value={config}>
       {children}
     </HiveLogoConfigContext.Provider>
-  );
+  )
 };
 
 // Hook to access enterprise configuration
 export const useHiveLogoConfig = () => {
-  return useContext(HiveLogoConfigContext);
+  return useContext(HiveLogoConfigContext)
 };
 
 // Advanced analytics tracking
@@ -82,7 +82,7 @@ interface AnalyticsEvent {
   sessionId?: string;
   experimentId?: string;
   abVariant?: string;
-  customProperties?: Record<string, any>;
+  customProperties?: Record<string, any>
 }
 
 const useAnalytics = () => {
@@ -102,19 +102,19 @@ const useAnalytics = () => {
             event_category: 'hive_logo',
             event_label: `${event.variant}_${event.context}`,
             custom_map: event.customProperties,
-          });
+          })
         }
         break;
         
       case 'mixpanel':
         if (typeof window !== 'undefined' && (window as any).mixpanel) {
-          (window as any).mixpanel.track(`Logo ${event.action}`, fullEvent);
+          (window as any).mixpanel.track(`Logo ${event.action}`, fullEvent)
         }
         break;
         
       case 'amplitude':
         if (typeof window !== 'undefined' && (window as any).amplitude) {
-          (window as any).amplitude.getInstance().logEvent(`Logo ${event.action}`, fullEvent);
+          (window as any).amplitude.getInstance().logEvent(`Logo ${event.action}`, fullEvent)
         }
         break;
         
@@ -125,12 +125,12 @@ const useAnalytics = () => {
       default:
         // Fallback to console in development
         if (process.env.NODE_ENV === 'development') {
-          console.log('[HIVE Analytics]', fullEvent);
+          console.log('[HIVE Analytics]', fullEvent)
         }
     }
   }, [config.analytics]);
   
-  return { track };
+  return { track }
 };
 
 // A/B testing hook
@@ -141,7 +141,7 @@ const useABTesting = (experimentId: string, variants: string[], userId?: string)
   useEffect(() => {
     if (!experimentId || variants.length === 0) {
       setSelectedVariant(variants[0] || '');
-      return;
+      return
     }
     
     let variant = '';
@@ -150,7 +150,7 @@ const useABTesting = (experimentId: string, variants: string[], userId?: string)
       case 'optimizely':
         // Optimizely integration
         if (typeof window !== 'undefined' && (window as any).optimizely) {
-          variant = (window as any).optimizely.get('state').getVariationMap()[experimentId] || variants[0];
+          variant = (window as any).optimizely.get('state').getVariationMap()[experimentId] || variants[0]
         }
         break;
         
@@ -163,7 +163,7 @@ const useABTesting = (experimentId: string, variants: string[], userId?: string)
         // Split.io integration
         if (typeof window !== 'undefined' && (window as any).splitio) {
           const client = (window as any).splitio.client;
-          variant = client?.getTreatment(experimentId) || variants[0];
+          variant = client?.getTreatment(experimentId) || variants[0]
         }
         break;
         
@@ -176,18 +176,18 @@ const useABTesting = (experimentId: string, variants: string[], userId?: string)
         if (userId) {
           const hash = userId.split('').reduce((a, b) => {
             a = ((a << 5) - a) + b.charCodeAt(0);
-            return a & a;
+            return a & a
           }, 0);
-          variant = variants[Math.abs(hash) % variants.length];
+          variant = variants[Math.abs(hash) % variants.length]
         } else {
-          variant = variants[0];
+          variant = variants[0]
         }
     }
     
-    setSelectedVariant(variant);
+    setSelectedVariant(variant)
   }, [experimentId, variants, userId, config.abTesting]);
   
-  return selectedVariant;
+  return selectedVariant
 };
 
 // Feature flags hook
@@ -198,14 +198,14 @@ const useFeatureFlag = (flagName: string, defaultValue = false) => {
   useEffect(() => {
     if (!config.featureFlags?.isEnabled) {
       setIsEnabled(defaultValue);
-      return;
+      return
     }
     
     const enabled = config.featureFlags.isEnabled(flagName);
-    setIsEnabled(enabled);
+    setIsEnabled(enabled)
   }, [flagName, defaultValue, config.featureFlags]);
   
-  return isEnabled;
+  return isEnabled
 };
 
 // Performance monitoring hook
@@ -226,17 +226,17 @@ const usePerformanceMonitoring = (componentName: string) => {
           setMetrics(prev => ({
             ...prev,
             renderTime: entry.duration,
-          }));
+          }))
         }
       }
     });
     
     observer.observe({ entryTypes: ['measure'] });
     
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   }, [componentName, config.performance]);
   
-  return metrics;
+  return metrics
 };
 
 // Enterprise logo component with all advanced features
@@ -255,14 +255,14 @@ interface EnterpriseLogoProps {
     primaryColor?: string;
     secondaryColor?: string;
     accentColor?: string;
-    fontFamily?: string;
+    fontFamily?: string
   };
   
   // White-label options
   whiteLabel?: {
     companyName?: string;
     logoUrl?: string;
-    hideHiveBranding?: boolean;
+    hideHiveBranding?: boolean
   };
   
   // Analytics context
@@ -273,11 +273,11 @@ interface EnterpriseLogoProps {
   accessibility?: {
     ariaLabel?: string;
     announceChanges?: boolean;
-    highContrast?: boolean;
+    highContrast?: boolean
   };
   
   className?: string;
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 export const HiveLogoEnterprise = memo(({
@@ -325,7 +325,7 @@ export const HiveLogoEnterprise = memo(({
       color: customTheme.primaryColor,
       fontFamily: customTheme.fontFamily,
       filter: customTheme.accentColor ? `drop-shadow(0 0 4px ${customTheme.accentColor})` : undefined,
-    };
+    }
   }, [enableCustomization, customTheme]);
   
   // Analytics tracking
@@ -346,7 +346,7 @@ export const HiveLogoEnterprise = memo(({
         customized: !!customTheme,
         whiteLabeled: !!whiteLabel,
       },
-    });
+    })
   }, [
     enableAnalytics, track, finalVariant, context, userId, sessionId,
     experimentId, abVariant, trackingProperties, performanceMetrics, customTheme, whiteLabel
@@ -366,7 +366,7 @@ export const HiveLogoEnterprise = memo(({
       customProperties: trackingProperties,
     });
     
-    onClick?.();
+    onClick?.()
   }, [
     enableAnalytics, track, finalVariant, context, userId, sessionId,
     experimentId, abVariant, trackingProperties, onClick
@@ -374,7 +374,7 @@ export const HiveLogoEnterprise = memo(({
   
   // Track view on mount
   useEffect(() => {
-    handleView();
+    handleView()
   }, [handleView]);
   
   // White-label rendering
@@ -407,13 +407,13 @@ export const HiveLogoEnterprise = memo(({
           </span>
         )}
       </div>
-    );
+    )
   }
   
   // Animation configuration
   const animationProps = useMemo(() => {
     if (!enableAnimations || shouldReduceMotion) {
-      return {};
+      return {}
     }
     
     switch (finalVariant) {
@@ -429,7 +429,7 @@ export const HiveLogoEnterprise = memo(({
         return {
           whileHover: { scale: 1.02 },
           whileTap: { scale: 0.98 },
-        };
+        }
     }
   }, [enableAnimations, shouldReduceMotion, finalVariant]);
   
@@ -526,7 +526,7 @@ export const HiveLogoEnterprise = memo(({
         </div>
       )}
     </motion.div>
-  );
+  )
 });
 
 HiveLogoEnterprise.displayName = 'HiveLogoEnterprise';
@@ -534,7 +534,7 @@ HiveLogoEnterprise.displayName = 'HiveLogoEnterprise';
 // Advanced logo analytics dashboard component
 export const HiveLogoAnalyticsDashboard: React.FC<{
   dateRange?: { start: Date; end: Date };
-  className?: string;
+  className?: string
 }> = ({ dateRange, className }) => {
   const [analyticsData, setAnalyticsData] = useState({
     totalViews: 0,
@@ -556,7 +556,7 @@ export const HiveLogoAnalyticsDashboard: React.FC<{
       // Example structure for the data you'd want to show
     };
     
-    fetchAnalyticsData();
+    fetchAnalyticsData()
   }, [dateRange]);
   
   return (
@@ -620,7 +620,7 @@ export const HiveLogoAnalyticsDashboard: React.FC<{
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Export enterprise components (already exported with const declarations above)

@@ -56,7 +56,7 @@ const createMockItems = (activeSection?: string) => {
     badge: item.id === 'spaces' ? { type: 'notification' as const, count: 4 } : 
            item.id === 'feed' ? { type: 'status' as const, count: 18 } :
            item.id === 'hivelab' && activeSection !== 'hivelab' ? { type: 'feature' as const, label: 'BETA' } : undefined
-  }));
+  }))
 };
 
 // ============================================================================
@@ -163,11 +163,11 @@ const InteractiveTopbarDemo = ({
         onNavigate={action('navigate')}
         onOpenCommandPalette={() => {
           setCommandPaletteOpen(true);
-          action('open-command-palette')();
+          action('open-command-palette')()
         }}
         onOpenNotifications={() => {
           setNotificationCenterOpen(true);
-          action('open-notifications')();
+          action('open-notifications')()
         }}
         {...props}
       />
@@ -299,7 +299,7 @@ const InteractiveTopbarDemo = ({
         />
       )}
     </div>
-  );
+  )
 };
 
 // ============================================================================
@@ -400,7 +400,7 @@ export const CleanState: Story = {
     items: createMockItems('profile').map(item => ({
       ...item,
       badge: undefined
-    })),
+    })}),
     user: mockUser,
     unreadNotificationCount: 0
   },

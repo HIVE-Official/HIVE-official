@@ -1,6 +1,6 @@
 import React from 'react';
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-    variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost' | 'builder' | 'verified' | 'leader' | 'ghost-mode' | 'achievement' | 'streak' | 'scholar' | 'connector' | 'dean' | 'developer' | 'organizer' | 'helper';
+    variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'ghost' | 'outline' | 'builder' | 'verified' | 'leader' | 'ghost-mode' | 'achievement' | 'streak' | 'scholar' | 'connector' | 'dean' | 'developer' | 'organizer' | 'helper';
     size?: 'sm' | 'md' | 'lg';
     dot?: boolean;
     count?: number;

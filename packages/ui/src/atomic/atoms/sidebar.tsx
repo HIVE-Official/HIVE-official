@@ -11,7 +11,7 @@ export interface SidebarProps {
     id: string;
     name: string;
     handle: string;
-    avatar?: string;
+    avatar?: string
   } | null;
   currentPath?: string;
   collapsed?: boolean;
@@ -19,7 +19,7 @@ export interface SidebarProps {
   onToggle?: () => void;
   breadcrumbs?: { label: string; href?: string }[];
   currentSection?: string;
-  className?: string;
+  className?: string
 }
 
 interface NavigationItem {
@@ -28,7 +28,7 @@ interface NavigationItem {
   label: string;
   href: string;
   matchPaths?: string[];
-  children?: NavigationItem[];
+  children?: NavigationItem[]
 }
 
 const navigationItems: NavigationItem[] = [
@@ -107,9 +107,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (item.matchPaths) {
       return item.matchPaths.some(path => 
         currentPath === path || currentPath.startsWith(path + '/')
-      );
+      )
     }
-    return false;
+    return false
   };
 
   const handleItemClick = (item: NavigationItem) => {
@@ -119,9 +119,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         prev.includes(item.id) 
           ? prev.filter(id => id !== item.id)
           : [...prev, item.id]
-      );
+      )
     } else {
-      onItemClick?.(item.href);
+      onItemClick?.(item.href)
     }
   };
 
@@ -293,12 +293,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             <div className="absolute right-3 w-1 h-4 bg-[var(--hive-brand-secondary)] rounded-full" />
                           )}
                         </Button>
-                      );
+                      )
                     })}
                   </div>
                 )}
               </div>
-            );
+            )
           })}
         </div>
       </nav>
@@ -351,10 +351,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </span>
                 )}
               </Button>
-            );
+            )
           })}
         </div>
       </div>
     </aside>
-  );
+  )
 };

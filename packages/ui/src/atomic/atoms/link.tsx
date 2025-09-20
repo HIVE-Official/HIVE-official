@@ -9,7 +9,7 @@ export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>
   color?: 'primary' | 'secondary' | 'gold' | 'muted';
   external?: boolean;
   disabled?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const linkVariants = {
@@ -101,7 +101,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(({
       >
         {children}
       </span>
-    );
+    )
   }
 
   return (
@@ -132,7 +132,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(({
         </svg>
       )}
     </a>
-  );
+  )
 });
 
 Link.displayName = 'Link';

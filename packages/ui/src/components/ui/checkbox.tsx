@@ -78,7 +78,7 @@ export interface CheckboxProps
   required?: boolean;
   indeterminate?: boolean;
   labelProps?: React.LabelHTMLAttributes<HTMLLabelElement> & 
-    VariantProps<typeof checkboxLabelVariants>;
+    VariantProps<typeof checkboxLabelVariants>
 }
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
@@ -103,7 +103,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     // Handle indeterminate state
     React.useEffect(() => {
       if (inputRef.current) {
-        inputRef.current.indeterminate = indeterminate || false;
+        inputRef.current.indeterminate = indeterminate || false
       }
     }, [indeterminate]);
     
@@ -111,12 +111,12 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const setRefs = React.useCallback(
       (node: HTMLInputElement | null) => {
         if (inputRef.current !== node) {
-          (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+          (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node
         }
         if (typeof ref === 'function') {
-          ref(node);
+          ref(node)
         } else if (ref) {
-          ref.current = node;
+          ref.current = node
         }
       },
       [ref]
@@ -196,10 +196,10 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             </p>
           )}
         </div>
-      );
+      )
     }
     
-    return checkboxElement;
+    return checkboxElement
   }
 );
 Checkbox.displayName = "Checkbox";
@@ -211,7 +211,7 @@ export interface CheckboxGroupProps extends React.HTMLAttributes<HTMLDivElement>
   label?: string;
   description?: string;
   error?: string;
-  required?: boolean;
+  required?: boolean
 }
 
 const CheckboxGroup = React.forwardRef<HTMLDivElement, CheckboxGroupProps>(
@@ -281,7 +281,7 @@ const CheckboxGroup = React.forwardRef<HTMLDivElement, CheckboxGroupProps>(
           </p>
         )}
       </div>
-    );
+    )
   }
 );
 CheckboxGroup.displayName = "CheckboxGroup";
@@ -289,7 +289,7 @@ CheckboxGroup.displayName = "CheckboxGroup";
 // Checkbox Card Component - for enhanced selection experience
 export interface CheckboxCardProps extends CheckboxProps {
   icon?: React.ReactNode;
-  badge?: React.ReactNode;
+  badge?: React.ReactNode
 }
 
 const CheckboxCard = React.forwardRef<HTMLInputElement, CheckboxCardProps>(
@@ -329,7 +329,7 @@ const CheckboxCard = React.forwardRef<HTMLInputElement, CheckboxCardProps>(
           )}
         </div>
       </label>
-    );
+    )
   }
 );
 CheckboxCard.displayName = "CheckboxCard";
@@ -374,7 +374,7 @@ export const CheckboxPresets = {
 
 // Icons using semantic approach
 interface IconProps {
-  size?: VariantProps<typeof checkboxVariants>["size"];
+  size?: VariantProps<typeof checkboxVariants>["size"]
 }
 
 const CheckIcon: React.FC<IconProps> = ({ size = "default" }) => {
@@ -397,7 +397,7 @@ const CheckIcon: React.FC<IconProps> = ({ size = "default" }) => {
     >
       <path d="M20 6L9 17l-5-5" />
     </svg>
-  );
+  )
 };
 
 const IndeterminateIcon: React.FC<IconProps> = ({ size = "default" }) => {
@@ -416,7 +416,7 @@ const IndeterminateIcon: React.FC<IconProps> = ({ size = "default" }) => {
         "h-0.5"
       )}
     />
-  );
+  )
 };
 
 export { 

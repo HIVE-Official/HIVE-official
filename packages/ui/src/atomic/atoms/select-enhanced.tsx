@@ -47,7 +47,7 @@ export interface SelectOption {
   value: string;
   label: string;
   disabled?: boolean;
-  description?: string;
+  description?: string
 }
 
 export interface SelectProps
@@ -62,7 +62,7 @@ export interface SelectProps
   required?: boolean;
   allowClear?: boolean;
   onClear?: () => void;
-  searchable?: boolean;
+  searchable?: boolean
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
@@ -169,10 +169,10 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             </p>
           )}
         </div>
-      );
+      )
     }
     
-    return selectElement;
+    return selectElement
   }
 );
 Select.displayName = "Select";
@@ -181,7 +181,7 @@ Select.displayName = "Select";
 export interface MultiSelectProps extends Omit<SelectProps, 'value' | 'onChange'> {
   value?: string[];
   onChange?: (value: string[]) => void;
-  maxSelected?: number;
+  maxSelected?: number
 }
 
 const MultiSelect = React.forwardRef<HTMLSelectElement, MultiSelectProps>(
@@ -193,7 +193,7 @@ const MultiSelect = React.forwardRef<HTMLSelectElement, MultiSelectProps>(
         return; // Don't allow selection beyond max
       }
       
-      onChange?.(selectedOptions);
+      onChange?.(selectedOptions)
     };
     
     return (
@@ -205,7 +205,7 @@ const MultiSelect = React.forwardRef<HTMLSelectElement, MultiSelectProps>(
         className="min-h-20"
         {...props}
       />
-    );
+    )
   }
 );
 MultiSelect.displayName = "MultiSelect";
@@ -213,7 +213,7 @@ MultiSelect.displayName = "MultiSelect";
 // Native Select Group Component
 export interface SelectGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   orientation?: "horizontal" | "vertical";
-  spacing?: "none" | "sm" | "md";
+  spacing?: "none" | "sm" | "md"
 }
 
 const SelectGroup = React.forwardRef<HTMLDivElement, SelectGroupProps>(
@@ -237,7 +237,7 @@ const SelectGroup = React.forwardRef<HTMLDivElement, SelectGroupProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 SelectGroup.displayName = "SelectGroup";

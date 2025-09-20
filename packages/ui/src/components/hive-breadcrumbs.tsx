@@ -89,7 +89,7 @@ export interface BreadcrumbItem {
   href?: string;
   icon?: React.ReactNode;
   onClick?: () => void;
-  isClickable?: boolean;
+  isClickable?: boolean
 }
 
 export interface HiveBreadcrumbsProps
@@ -100,7 +100,7 @@ export interface HiveBreadcrumbsProps
   homeIcon?: React.ReactNode;
   onHomeClick?: () => void;
   maxItems?: number;
-  showOverflow?: boolean;
+  showOverflow?: boolean
 }
 
 const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
@@ -120,7 +120,7 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
     // Prepare items with overflow handling
     const displayItems = React.useMemo(() => {
       if (!showOverflow || items.length <= maxItems) {
-        return items;
+        return items
       }
       
       const firstItem = items[0];
@@ -130,7 +130,7 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
         firstItem,
         { id: 'overflow', label: '...', isClickable: false },
         ...lastItems
-      ];
+      ]
     }, [items, maxItems, showOverflow]);
     
     const getSeparatorIcon = () => {
@@ -143,13 +143,13 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
           return <span className="text-[var(--hive-text-primary)]/40">•</span>;
         case 'chevron':
         default:
-          return <ChevronRight size={14} />;
+          return <ChevronRight size={14} />
       }
     };
     
     const handleItemClick = (item: BreadcrumbItem) => {
       if (item.isClickable !== false && (item.onClick || item.href)) {
-        item.onClick?.();
+        item.onClick?.()
       }
     };
     
@@ -233,10 +233,10 @@ const HiveBreadcrumbs = React.forwardRef<HTMLDivElement, HiveBreadcrumbsProps>(
                 </motion.div>
               )}
             </React.Fragment>
-          );
-        })}
+          )
+          })}
       </nav>
-    );
+    )
   }
 );
 
@@ -247,19 +247,19 @@ export function useHiveBreadcrumbs(initialItems: BreadcrumbItem[] = []) {
   const [items, setItems] = React.useState<BreadcrumbItem[]>(initialItems);
   
   const pushItem = (item: BreadcrumbItem) => {
-    setItems(prev => [...prev, item]);
+    setItems(prev => [...prev, item])
   };
   
   const popItem = () => {
-    setItems(prev => prev.slice(0, -1));
+    setItems(prev => prev.slice(0, -1))
   };
   
   const replaceItems = (newItems: BreadcrumbItem[]) => {
-    setItems(newItems);
+    setItems(newItems)
   };
   
   const navigateToIndex = (index: number) => {
-    setItems(prev => prev.slice(0, index + 1));
+    setItems(prev => prev.slice(0, index + 1))
   };
   
   return {
@@ -269,7 +269,7 @@ export function useHiveBreadcrumbs(initialItems: BreadcrumbItem[] = []) {
     replaceItems,
     navigateToIndex,
     setItems,
-  };
+  }
 }
 
 export { 

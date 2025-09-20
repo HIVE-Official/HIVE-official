@@ -67,12 +67,12 @@ const radioLabelVariants = cva(
 
 export interface RadioProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>,
-    VariantProps<typeof radioVariants> {
+    VariantProps<typeof radioIndicatorVariants> {
   label?: string;
   description?: string;
   error?: string;
   labelProps?: React.LabelHTMLAttributes<HTMLLabelElement> & 
-    VariantProps<typeof radioLabelVariants>;
+    VariantProps<typeof radioLabelVariants>
 }
 
 const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
@@ -166,10 +166,10 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
             </p>
           )}
         </div>
-      );
+      )
     }
     
-    return radioElement;
+    return radioElement
   }
 );
 Radio.displayName = "Radio";
@@ -185,7 +185,7 @@ export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   description?: string;
   error?: string;
   required?: boolean;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
@@ -215,7 +215,7 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
     
     // Handle radio change
     const handleRadioChange = (radioValue: string) => {
-      onChange?.(radioValue);
+      onChange?.(radioValue)
     };
     
     // Clone children and add necessary props
@@ -226,9 +226,9 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
           checked: child.props.value === value,
           onChange: () => handleRadioChange(child.props.value),
           disabled: disabled || child.props.disabled,
-        });
+        })}}}
       }
-      return child;
+      return child
     });
     
     return (
@@ -278,7 +278,7 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
           </p>
         )}
       </div>
-    );
+    )
   }
 );
 RadioGroup.displayName = "RadioGroup";
@@ -287,7 +287,7 @@ RadioGroup.displayName = "RadioGroup";
 export interface RadioCardProps extends RadioProps {
   icon?: React.ReactNode;
   badge?: React.ReactNode;
-  value: string;
+  value: string
 }
 
 const RadioCard = React.forwardRef<HTMLInputElement, RadioCardProps>(
@@ -337,7 +337,7 @@ const RadioCard = React.forwardRef<HTMLInputElement, RadioCardProps>(
           )}
         </div>
       </label>
-    );
+    )
   }
 );
 RadioCard.displayName = "RadioCard";

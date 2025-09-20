@@ -70,7 +70,7 @@ const NavigationPreferencesWrapper = ({ initialValue = 'auto' }: { initialValue?
       value={value} 
       onChange={setValue}
     />
-  );
+  )
 };
 
 // Default navigation preferences showcase

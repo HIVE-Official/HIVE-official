@@ -48,6 +48,17 @@ const buttonVariants = {
             'border border-[var(--hive-brand-secondary)]',
             'hover:bg-[var(--hive-interactive-hover)]',
             'disabled:text-[var(--hive-text-disabled)] disabled:border-[var(--hive-border-default)]'
+        ].join(' '),
+        // Premium variant: Enhanced gold styling
+        premium: [
+            'border-2 border-[var(--hive-brand-secondary)]',
+            'bg-[color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent)]',
+            'text-[var(--hive-brand-secondary)]',
+            'hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)]',
+            'hover:border-[var(--hive-brand-secondary)]',
+            'active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]',
+            'shadow-sm hover:shadow-md',
+            'disabled:text-[var(--hive-text-disabled)] disabled:border-[var(--hive-border-default)]'
         ].join(' ')
     },
     size: {

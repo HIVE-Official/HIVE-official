@@ -18,13 +18,13 @@ interface ChoiceSelectProps {
   onFocus?: () => void;
   disabled?: boolean;
   error?: string;
-  className?: string;
+  className?: string
 }
 
 interface Option {
   value: string;
   label: string;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
@@ -63,16 +63,16 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
     if (multiple) {
       const currentValues = Array.isArray(value) ? value : [];
       if (currentValues.includes(option.value)) {
-        newValue = currentValues.filter(v => v !== option.value);
+        newValue = currentValues.filter(v => v !== option.value)
       } else {
-        newValue = [...currentValues, option.value];
+        newValue = [...currentValues, option.value]
       }
     } else {
       newValue = option.value;
-      setIsOpen(false);
+      setIsOpen(false)
     }
 
-    onChange?.(newValue);
+    onChange?.(newValue)
   };
 
   // Handle keyboard navigation
@@ -83,19 +83,19 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
       case 'Enter':
         e.preventDefault();
         if (!isOpen) {
-          setIsOpen(true);
+          setIsOpen(true)
         } else if (focusedIndex >= 0 && focusedIndex < filteredOptions.length) {
-          handleOptionSelect(filteredOptions[focusedIndex] as Option);
+          handleOptionSelect(filteredOptions[focusedIndex] as Option)
         }
         break;
       case 'ArrowDown':
         e.preventDefault();
         if (!isOpen) {
-          setIsOpen(true);
+          setIsOpen(true)
         } else {
           setFocusedIndex(prev => 
             prev < filteredOptions.length - 1 ? prev + 1 : 0
-          );
+          )
         }
         break;
       case 'ArrowUp':
@@ -110,7 +110,7 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
         break;
       case 'Tab':
         setIsOpen(false);
-        break;
+        break
     }
   };
 
@@ -120,12 +120,12 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
         setSearchQuery('');
-        setFocusedIndex(-1);
+        setFocusedIndex(-1)
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, []);
 
   // Reset search and focus when opening
@@ -135,7 +135,7 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
       setFocusedIndex(-1);
       // Focus search input if dropdown opens and has many options
       if (options.length > 5) {
-        setTimeout(() => searchInputRef.current?.focus(), 100);
+        setTimeout(() => searchInputRef.current?.focus(), 100)
       }
     }
   }, [isOpen, options.length]);
@@ -145,7 +145,7 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
     e.stopPropagation();
     if (multiple && Array.isArray(value)) {
       const newValue = value.filter(v => v !== optionValue);
-      onChange?.(newValue);
+      onChange?.(newValue)
     }
   };
 
@@ -362,7 +362,7 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
                           </motion.div>
                         )}
                       </motion.button>
-                    );
+                    )
                   })
                 )}
               </div>
@@ -389,7 +389,7 @@ export const ChoiceSelect: React.FC<ChoiceSelectProps> = ({
         </p>
       )}
     </div>
-  );
+  )
 };
 
 export default ChoiceSelect;

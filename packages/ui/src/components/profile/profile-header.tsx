@@ -188,7 +188,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export default ProfileHeader;

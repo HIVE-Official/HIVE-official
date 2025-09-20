@@ -230,7 +230,7 @@ export const ContentArea = ({ children, strategy = 'static', maxHeight, enableVi
     enableVirtualization && 'contain-strict', 
     // Loading state
     loading && 'opacity-75 transition-opacity');
-    return (_jsxs("div", { ref: containerRef, className: containerClasses, id: contentId, role: "main", "aria-label": ariaLabel || 'Content area', "aria-live": ariaLive, tabIndex: enableKeyboardNavigation ? 0 : -1, style: {
+    return (_jsx("div", { ref: containerRef, className: containerClasses, id: contentId, role: "main", "aria-label": ariaLabel || 'Content area', "aria-live": ariaLive, tabIndex: enableKeyboardNavigation ? 0 : -1, style: {
             maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight,
             scrollBehavior: scrollBehavior === 'disabled' ? 'auto' : scrollBehavior,
             // Performance hints
@@ -241,8 +241,27 @@ export const ContentArea = ({ children, strategy = 'static', maxHeight, enableVi
             ...(optimizeForCampusWifi && {
                 contain: 'layout style paint'
             })
-        }, onFocus: manageFocus, onBlur: preserveFocus, children: [_jsx("div", { className: contentClasses, children: children }), strategy === 'infinite-scroll' && loading && (_jsx("div", { className: "flex justify-center py-6", children: _jsxs("div", { className: "flex items-center space-x-2 text-hive-text-secondary", children: [_jsx("div", { className: "w-4 h-4 border-2 border-hive-gold border-t-transparent rounded-full animate-spin" }), _jsx("span", { className: "text-sm", children: "Loading more content..." })] }) })), strategy === 'infinite-scroll' && !hasMore && !loading && (_jsx("div", { className: "text-center py-6 text-hive-text-tertiary text-sm", children: "You've reached the end! \uD83C\uDF86" })), process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-16 right-4 bg-black/80 text-white text-xs p-2 rounded font-mono z-40", children: [_jsxs("div", { children: ["Scroll: ", Math.round(scrollState.scrollPosition), "px"] }), _jsxs("div", { children: ["Near bottom: ", scrollState.isNearBottom ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Scrolling: ", scrollState.isScrolling ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Visible: ", isVisible ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Strategy: ", strategy] })] }))] }));
+        } }));
 };
+onFocus = { manageFocus };
+onBlur = { preserveFocus }
+    >
+        _jsx("div", { className: contentClasses, children: children });
+{ /* Infinite scroll loading indicator */ }
+{
+    strategy === 'infinite-scroll' && loading && (_jsx("div", { className: "flex justify-center py-6", children: _jsxs("div", { className: "flex items-center space-x-2 text-hive-text-secondary", children: [_jsx("div", { className: "w-4 h-4 border-2 border-hive-gold border-t-transparent rounded-full animate-spin" }), _jsx("span", { className: "text-sm", children: "Loading more content..." })] }) }));
+}
+{ /* End of content indicator */ }
+{
+    strategy === 'infinite-scroll' && !hasMore && !loading && (_jsx("div", { className: "text-center py-6 text-hive-text-tertiary text-sm", children: "You've reached the end! \uD83C\uDF86" }));
+}
+{ /* Scroll position indicator for development */ }
+{
+    process.env.NODE_ENV === 'development' && (_jsxs("div", { className: "fixed bottom-16 right-4 bg-black/80 text-white text-xs p-2 rounded font-mono z-40", children: [_jsxs("div", { children: ["Scroll: ", Math.round(scrollState.scrollPosition), "px"] }), _jsxs("div", { children: ["Near bottom: ", scrollState.isNearBottom ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Scrolling: ", scrollState.isScrolling ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Visible: ", isVisible ? 'Yes' : 'No'] }), _jsxs("div", { children: ["Strategy: ", strategy] })] }));
+}
+div >
+;
+;
 // Export utilities
 export { useSmartScroll, useFocusManagement, getPerformanceConfig };
 //# sourceMappingURL=ContentArea.js.map

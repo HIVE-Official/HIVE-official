@@ -10,10 +10,10 @@ import { Plus, Users, TrendingUp, Zap } from 'lucide-react';
 export interface DashboardPageProps {
   user?: {
     name: string;
-    firstName?: string;
+    firstName?: string
   };
   loading?: boolean;
-  error?: string;
+  error?: string
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({
@@ -179,5 +179,5 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </CardContent>
       </Card>
     </PageLayout>
-  );
+  )
 };

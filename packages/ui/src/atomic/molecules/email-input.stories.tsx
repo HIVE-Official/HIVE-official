@@ -66,7 +66,7 @@ const InteractiveEmailInput = ({ value: initialValue = '', ...props }: any) => {
       onChange={setValue}
       {...props}
     />
-  );
+  )
 };
 
 // Basic Examples

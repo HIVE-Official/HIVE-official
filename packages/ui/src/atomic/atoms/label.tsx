@@ -9,7 +9,7 @@ export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> 
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'inline' | 'floating';
   disabled?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const labelSizes = {
@@ -69,7 +69,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
         </span>
       )}
     </label>
-  );
+  )
 });
 
 Label.displayName = 'Label';

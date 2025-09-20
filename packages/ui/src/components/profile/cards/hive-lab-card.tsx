@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Progress } from '../../components/ui/progress';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Card, CardContent, CardHeader } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { Progress } from '../../ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { 
   Zap,
   Plus,
@@ -46,7 +46,8 @@ import {
   Coffee,
   CheckCircle,
   AlertCircle,
-  Info
+  Info,
+  Archive
 } from 'lucide-react';
 
 // HiveLAB Types
@@ -66,7 +67,7 @@ export interface Tool {
     uniqueUsers: number;
     thisWeek: number;
     rating: number;
-    reviews: number;
+    reviews: number
   };
   
   // Development Status
@@ -76,13 +77,14 @@ export interface Tool {
   spaceId?: string;
   spaceName?: string;
   
-  // Builder Info
+  // Builder Info,
+  Archive
   collaborators?: {
     id: string;
     name: string;
     avatar?: string;
-    role: 'owner' | 'editor' | 'viewer';
-  }[];
+    role: 'owner' | 'editor' | 'viewer'
+  }[]
 }
 
 export interface BuilderStats {
@@ -98,15 +100,15 @@ export interface BuilderStats {
     name: string;
     icon: string;
     earnedAt: Date;
-    description: string;
+    description: string
   }[];
   achievements: {
     id: string;
     title: string;
     progress: number;
     total: number;
-    completed: boolean;
-  }[];
+    completed: boolean
+  }[]
 }
 
 export interface HiveLabCardProps {
@@ -117,7 +119,7 @@ export interface HiveLabCardProps {
   onCreateTool?: () => void;
   onToolClick?: (toolId: string) => void;
   onSettingsClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 // Tool Type Configuration
@@ -219,7 +221,7 @@ function ToolItem({
 }: { 
   tool: Tool;
   onClick?: (toolId: string) => void;
-  variant?: 'compact' | 'minimal';
+  variant?: 'compact' | 'minimal'
 }) {
   const config = toolTypeConfig[tool.type];
   const statusConfig_ = statusConfig[tool.status];
@@ -286,7 +288,7 @@ function ToolItem({
         </div>
       )}
     </motion.div>
-  );
+  )
 }
 
 // Builder Stats Component
@@ -354,7 +356,7 @@ function BuilderStatsDisplay({ stats }: { stats: BuilderStats }) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // Non-Builder Welcome Component
@@ -387,7 +389,7 @@ function NonBuilderWelcome({ onBecomeBuilder }: { onBecomeBuilder?: () => void }
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 // Quick Actions Component
@@ -396,7 +398,7 @@ function QuickActions({
   hasTools 
 }: { 
   onCreateTool?: () => void;
-  hasTools: boolean;
+  hasTools: boolean
 }) {
   const quickTemplates = [
     { type: 'form', label: 'Form', icon: Layout },
@@ -411,7 +413,7 @@ function QuickActions({
       </div>
       
       <div className="grid grid-cols-3 gap-1">
-        {quickTemplates.map(({ type, label, icon: Icon }) => (
+        {quickTemplates.map(({ type, label, icon: Icon })} => (
           <Button
             key={type}
             size="sm"
@@ -436,7 +438,7 @@ function QuickActions({
         </Button>
       )}
     </div>
-  );
+  )
 }
 
 // Main HiveLAB Card Component
@@ -479,7 +481,7 @@ export function HiveLabCard({
               HiveLAB
             </h3>
             {isBuilder && (
-              <Badge variant="default" className="text-xs bg-[var(--hive-brand-gold)]">
+              <Badge variant="secondary" className="text-xs bg-[var(--hive-brand-gold)]">
                 <Crown className="w-3 h-3 mr-1" />
                 Builder
               </Badge>
@@ -582,7 +584,7 @@ export function HiveLabCard({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Default props for development

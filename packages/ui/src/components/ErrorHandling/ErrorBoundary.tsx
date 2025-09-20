@@ -3,7 +3,7 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import { cn } from '../../lib/utils';
 import { Text } from '../../atomic/atoms/text';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 
 // Enhanced error types with HIVE context
 interface HiveError {
@@ -16,20 +16,20 @@ interface HiveError {
     campusId?: string;
     pageType?: 'profile' | 'spaces' | 'tools' | 'feed';
     userAgent?: string;
-    timestamp?: Date;
+    timestamp?: Date
   };
   recovery: {
     isRetryable: boolean;
     action?: 'retry' | 'refresh' | 'navigate' | 'contact-support' | 'sign-in' | 'join-waitlist';
     actionUrl?: string;
-    customMessage?: string;
+    customMessage?: string
   };
   studentFriendly: {
     title: string;
     description: string;
     encouragement?: string;
-    nextSteps?: string[];
-  };
+    nextSteps?: string[]
+  }
 }
 
 // Campus-aware error handler with empathetic messaging
@@ -82,7 +82,7 @@ class HiveErrorHandler {
         isRetryable: true,
         action: 'retry',
         customMessage: "Retry connection"
-      };
+      }
     } else if (isAuthError) {
       category = 'auth';
       severity = 'warning';
@@ -95,7 +95,7 @@ class HiveErrorHandler {
         isRetryable: true,
         action: 'sign-in',
         actionUrl: '/auth/login'
-      };
+      }
     } else {
       // Generic error with encouraging tone
       studentFriendly = {
@@ -111,7 +111,7 @@ class HiveErrorHandler {
       recovery = {
         isRetryable: true,
         action: 'retry'
-      };
+      }
     }
     
     return {
@@ -128,12 +128,12 @@ class HiveErrorHandler {
       },
       recovery,
       studentFriendly
-    };
+    }
   }
 
   static getErrorIcon(category: HiveError['category'], severity: HiveError['severity']): {
     emoji: string;
-    color: string;
+    color: string
   } {
     const iconMap = {
       network: { emoji: '📶', color: 'text-hive-gold' },
@@ -145,7 +145,7 @@ class HiveErrorHandler {
       unknown: { emoji: '🤔', color: 'text-hive-text-secondary' }
     };
     
-    return iconMap[category] || iconMap.unknown;
+    return iconMap[category] || iconMap.unknown
   }
 }
 
@@ -156,10 +156,10 @@ interface Props {
   context?: {
     user?: { id: string; name?: string; email?: string };
     campus?: { id: string; name?: string };
-    pageType?: 'profile' | 'spaces' | 'tools' | 'feed';
+    pageType?: 'profile' | 'spaces' | 'tools' | 'feed'
   };
   enableErrorReporting?: boolean;
-  showDebugInfo?: boolean;
+  showDebugInfo?: boolean
 }
 
 interface State {
@@ -167,7 +167,7 @@ interface State {
   error: Error | null;
   hiveError: HiveError | null;
   errorId: string;
-  retryCount: number;
+  retryCount: number
 }
 
 export class HiveErrorBoundary extends Component<Props, State> {
@@ -179,7 +179,7 @@ export class HiveErrorBoundary extends Component<Props, State> {
       hiveError: null,
       errorId: '',
       retryCount: 0
-    };
+    }
   }
 
   static getDerivedStateFromError(error: Error): Partial<State> {
@@ -187,7 +187,7 @@ export class HiveErrorBoundary extends Component<Props, State> {
       hasError: true,
       error,
       errorId: `hive-error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    };
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -208,7 +208,7 @@ export class HiveErrorBoundary extends Component<Props, State> {
     
     // Report to error tracking service (if enabled)
     if (this.props.enableErrorReporting) {
-      this.reportError(error, errorInfo, hiveError);
+      this.reportError(error, errorInfo, hiveError)
     }
   }
 
@@ -223,9 +223,9 @@ export class HiveErrorBoundary extends Component<Props, State> {
       //   context: this.props.context
       // });
       
-      console.log('Error reported to tracking service');
+      console.log('Error reported to tracking service')
     } catch (reportingError) {
-      console.warn('Failed to report error:', reportingError);
+      console.warn('Failed to report error:', reportingError)
     }
   };
 
@@ -236,7 +236,7 @@ export class HiveErrorBoundary extends Component<Props, State> {
       hiveError: null,
       errorId: '',
       retryCount: prevState.retryCount + 1
-    }));
+    }))
   };
 
   handleAction = (action: HiveError['recovery']['action'], actionUrl?: string) => {
@@ -249,7 +249,7 @@ export class HiveErrorBoundary extends Component<Props, State> {
         break;
       case 'navigate':
         if (actionUrl) {
-          window.location.href = actionUrl;
+          window.location.href = actionUrl
         }
         break;
       case 'sign-in':
@@ -261,7 +261,7 @@ export class HiveErrorBoundary extends Component<Props, State> {
       case 'contact-support':
         // Could open a modal or navigate to support page
         console.log('Contact support requested', { errorId: this.state.errorId });
-        break;
+        break
     }
   };
 
@@ -272,7 +272,7 @@ export class HiveErrorBoundary extends Component<Props, State> {
           this.state.hiveError, 
           this.handleRetry,
           this.props.context
-        );
+        )
       }
 
       return (
@@ -284,10 +284,10 @@ export class HiveErrorBoundary extends Component<Props, State> {
           showDebugInfo={this.props.showDebugInfo || process.env.NODE_ENV === 'development'}
           context={this.props.context}
         />
-      );
+      )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 
@@ -297,7 +297,7 @@ interface HiveErrorFallbackProps {
   retryCount: number;
   onAction: (action: HiveError['recovery']['action'], actionUrl?: string) => void;
   showDebugInfo?: boolean;
-  context?: Props['context'];
+  context?: Props['context']
 }
 
 function HiveErrorFallback({
@@ -451,7 +451,7 @@ function HiveErrorFallback({
         )}
       </div>
     </div>
-  );
+  )
 }
 
 // Hook for using error boundary in functional components
@@ -459,9 +459,9 @@ export function useHiveErrorBoundary() {
   return {
     ErrorBoundary: HiveErrorBoundary,
     throwError: (error: Error) => {
-      throw error;
+      throw error
     }
-  };
+  }
 }
 
 // Utility for manual error reporting

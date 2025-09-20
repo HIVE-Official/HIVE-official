@@ -221,7 +221,7 @@ export const HiveProgress = React.forwardRef(({ variant = 'bar', value = 0, max 
         case 'skeleton':
             return (_jsx(HiveSkeleton, { ref: ref, variant: "rectangular", animated: animated, className: className, ...props }));
         default: // bar
-            return (_jsx(HiveProgressBar, { ref: ref, value: value, max: max, size: size === 'md' ? 'default' : size, variant: "default", fillVariant: status === 'error' ? 'danger' : status, showValue: showValue, showPercentage: showPercentage, animated: animated, label: label, className: className, ...props }));
+            return (_jsx(HiveProgressBar, { ref: ref, value: value, max: max, size: size === 'md' ? 'default' : size, variant: "secondary", fillVariant: status === 'error' ? 'danger' : status, showValue: showValue, showPercentage: showPercentage, animated: animated, label: label, className: className, ...props }));
     }
 });
 HiveProgress.displayName = "HiveProgress";

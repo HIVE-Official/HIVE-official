@@ -416,8 +416,8 @@ export const SocialPrivacySelections: Story = {
                         </div>
                       </div>
                     </SelectItem>
-                  );
-                })}
+                  )
+                })
               </SelectContent>
             </Select>
             <p className="text-xs text-gray-500">
@@ -523,7 +523,7 @@ export const InteractiveSelectDemo: Story = {
     });
 
     const handleSelectionChange = (key: string, value: string) => {
-      setSelectedValues(prev => ({ ...prev, [key]: value }));
+      setSelectedValues(prev => ({ ...prev, [key]: value }))
     };
 
     return (
@@ -656,6 +656,6 @@ export const InteractiveSelectDemo: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

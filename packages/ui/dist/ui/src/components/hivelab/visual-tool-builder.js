@@ -8,7 +8,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { createToolDefaults } from '@hive/core';
-import { Button } from '../ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { LiveToolRuntime } from '../live-tool-runtime';
 import { ElementConfigPanel } from './element-config-panel';
 import { SpaceToolDeployment } from '../community/space-tool-deployment';
@@ -380,7 +380,7 @@ export const VisualToolBuilder = ({ onSave, onPreview, onDeploy, initialTool, av
                                     if (selectedElementId) {
                                         handleElementConfigChange(selectedElementId, newConfig);
                                     }
-                                }, onClose: () => setSelectedElementId(null) })] })) : (
+                                } }), ")} onClose=", () => setSelectedElementId(null), "/>"] })) : (
                     /* Preview Mode */
                     _jsx("div", { className: "flex-1 p-6 overflow-y-auto", children: _jsx("div", { className: "max-w-2xl mx-auto", children: _jsx(LiveToolRuntime, { tool: currentTool, readOnly: false, showDebugInfo: true, onDataSubmit: (data) => {
                                     console.log('Tool submitted:', data);

@@ -387,10 +387,10 @@ const HiveLABShowcase = () => {
           setBuildStep(stepData.step);
           setBuildProgress(stepData.progress);
           if (stepData.step === 5) {
-            setTimeout(() => setIsBuilding(false), 1000);
+            setTimeout(() => setIsBuilding(false), 1000)
           }
-        }, index * 1500);
-      });
+        }, index * 1500)
+      })
     };
 
     return (
@@ -555,7 +555,7 @@ const HiveLABShowcase = () => {
           </div>
         </div>
       </div>
-    );
+    )
   };
 
   // Element Detail Component
@@ -677,7 +677,7 @@ const HiveLABShowcase = () => {
               { key: 'elements-library', label: 'Elements Library', icon: Layers },
               { key: 'tool-builder', label: 'Tool Builder Demo', icon: Wrench },
               { key: 'creation-workflow', label: 'Creation Workflow', icon: ArrowRight }
-            ].map(({ key, label, icon: IconComponent }) => {
+            ].map(({ key, label, icon: IconComponent })} => {
               const isActive = activeDemo === key;
               return (
                 <Button
@@ -698,8 +698,8 @@ const HiveLABShowcase = () => {
                   <IconComponent className="w-5 h-5 mr-2" />
                   {label}
                 </Button>
-              );
-            })}
+              )
+            })
           </div>
         </motion.div>
 
@@ -750,13 +750,13 @@ const HiveLABShowcase = () => {
                             onClick={() => setSelectedElement(element)}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.borderColor = category.color;
-                              e.currentTarget.style.backgroundColor = 'var(--hive-background-interactive)';
+                              e.currentTarget.style.backgroundColor = 'var(--hive-background-interactive)'
                             }}
                             onMouseLeave={(e) => {
                               if (selectedElement?.name !== element.name) {
-                                e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
+                                e.currentTarget.style.borderColor = 'var(--hive-border-primary)'
                               }
-                              e.currentTarget.style.backgroundColor = 'var(--hive-background-secondary)';
+                              e.currentTarget.style.backgroundColor = 'var(--hive-background-secondary)'
                             }}
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.98 }}
@@ -1080,7 +1080,7 @@ const HiveLABShowcase = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const HiveLABElementToToolCreation: Story = {

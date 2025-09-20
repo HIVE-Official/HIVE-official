@@ -4,39 +4,39 @@ import React, { useState } from "react";
 import { cn } from "../../lib/utils";
 
 interface DropdownMenuProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 interface DropdownMenuTriggerProps {
   children: React.ReactNode;
   asChild?: boolean;
-  className?: string;
+  className?: string
 }
 
 interface DropdownMenuContentProps {
   children: React.ReactNode;
   className?: string;
-  align?: "start" | "center" | "end";
+  align?: "start" | "center" | "end"
 }
 
 interface DropdownMenuItemProps {
   children: React.ReactNode;
   onClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 interface DropdownMenuSeparatorProps {
-  className?: string;
+  className?: string
 }
 
 interface DropdownMenuLabelProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 const DropdownMenuContext = React.createContext<{
   isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  setIsOpen: (open: boolean) => void
 }>({
   isOpen: false,
   setIsOpen: () => {},
@@ -49,7 +49,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
     <DropdownMenuContext.Provider value={{ isOpen, setIsOpen }}>
       <div className="relative inline-block text-left">{children}</div>
     </DropdownMenuContext.Provider>
-  );
+  )
 };
 
 export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({
@@ -62,7 +62,7 @@ export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({
   if (asChild) {
     return React.cloneElement(children as React.ReactElement, {
       onClick: () => setIsOpen(true),
-    });
+    })
   }
 
   return (
@@ -72,7 +72,7 @@ export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({
     >
       {children}
     </button>
-  );
+  )
 };
 
 export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
@@ -99,7 +99,7 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
         {children}
       </div>
     </>
-  );
+  )
 };
 
 export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
@@ -111,7 +111,7 @@ export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
 
   const handleClick = () => {
     onClick?.();
-    setIsOpen(false);
+    setIsOpen(false)
   };
 
   return (
@@ -124,13 +124,13 @@ export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
     >
       {children}
     </button>
-  );
+  )
 };
 
 export const DropdownMenuSeparator: React.FC<DropdownMenuSeparatorProps> = ({
   className,
 }) => {
-  return <div className={cn("-mx-1 my-1 h-px bg-muted", className)} />;
+  return <div className={cn("-mx-1 my-1 h-px bg-muted", className)} />
 };
 
 export const DropdownMenuLabel: React.FC<DropdownMenuLabelProps> = ({
@@ -141,7 +141,7 @@ export const DropdownMenuLabel: React.FC<DropdownMenuLabelProps> = ({
     <div className={cn("px-2 py-1.5 text-sm font-semibold", className)}>
       {children}
     </div>
-  );
+  )
 };
 
 // Additional components for full functionality
@@ -153,14 +153,14 @@ export const DropdownMenuShortcut: React.FC<{ className?: string; children: Reac
     <span className={cn("ml-auto text-xs tracking-widest opacity-60", className)}>
       {children}
     </span>
-  );
+  )
 };
 
 export const DropdownMenuCheckboxItem: React.FC<{
   children: React.ReactNode;
   checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
-  className?: string;
+  className?: string
 }> = ({ children, checked, onCheckedChange, className }) => {
   return (
     <div
@@ -175,22 +175,22 @@ export const DropdownMenuCheckboxItem: React.FC<{
       </span>
       {children}
     </div>
-  );
+  )
 };
 
 export const DropdownMenuRadioGroup: React.FC<{
   children: React.ReactNode;
   value?: string;
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: string) => void
 }> = ({ children, value, onValueChange }) => {
   const RadioContext = React.createContext({ value, onValueChange });
-  return <RadioContext.Provider value={{ value, onValueChange }}>{children}</RadioContext.Provider>;
+  return <RadioContext.Provider value={{ value, onValueChange }}>{children}</RadioContext.Provider>
 };
 
 export const DropdownMenuRadioItem: React.FC<{
   children: React.ReactNode;
   value: string;
-  className?: string;
+  className?: string
 }> = ({ children, value, className }) => {
   return (
     <div
@@ -204,16 +204,16 @@ export const DropdownMenuRadioItem: React.FC<{
       </span>
       {children}
     </div>
-  );
+  )
 };
 
 export const DropdownMenuSub: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div className="relative">{children}</div>;
+  return <div className="relative">{children}</div>
 };
 
 export const DropdownMenuSubTrigger: React.FC<{
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }> = ({ children, className }) => {
   return (
     <div
@@ -224,12 +224,12 @@ export const DropdownMenuSubTrigger: React.FC<{
     >
       {children}
     </div>
-  );
+  )
 };
 
 export const DropdownMenuSubContent: React.FC<{
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }> = ({ children, className }) => {
   return (
     <div
@@ -240,7 +240,7 @@ export const DropdownMenuSubContent: React.FC<{
     >
       {children}
     </div>
-  );
+  )
 };
 
 export const DropdownMenuGroup: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
@@ -251,6 +251,6 @@ export const DropdownMenuGroup: React.FC<{ children: React.ReactNode; className?
     <div className={cn("", className)}>
       {children}
     </div>
-  );
+  )
 };
 

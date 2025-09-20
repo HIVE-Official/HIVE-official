@@ -54,7 +54,7 @@ declare const surfaceConfig: {
     };
 };
 declare const hiveSpaceLayoutVariants: (props?: {
-    mode?: "view" | "builder" | "edit";
+    mode?: "builder" | "view" | "edit";
     layout?: "expanded" | "compact" | "standard";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface SpaceSurface {
@@ -103,6 +103,6 @@ export interface HiveSpaceLayoutProps extends React.HTMLAttributes<HTMLDivElemen
         }>;
     };
 }
-export declare const HiveSpaceLayout: React.ForwardRefExoticComponent<HiveSpaceLayoutProps & React.RefAttributes<HTMLDivElement>>;
+export declare const HiveSpaceLayout: any, surfaces: any;
 export { hiveSpaceLayoutVariants, surfaceConfig };
 //# sourceMappingURL=hive-space-layout.d.ts.map

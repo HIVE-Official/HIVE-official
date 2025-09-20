@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { Avatar } from './ui/avatar';
+import { cn } from '../lib/utils';
+import { Avatar } from '../atomic/atoms/avatar';
 import { Check, Star, Crown, GraduationCap } from 'lucide-react';
 
 const roleBadges = {
@@ -24,7 +24,7 @@ export interface AvatarCardProps {
   interactive?: boolean;
   layout?: 'horizontal' | 'vertical';
   className?: string;
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 const cardSizes = {
@@ -127,7 +127,7 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
                   {React.createElement(roleBadges[role].icon, {
                     size: 12,
                     className: roleBadges[role].color
-                  })}
+          })}
                   <span className={cn(
                     'text-xs font-medium',
                     role === 'verified' && 'text-[var(--hive-status-success)]',
@@ -169,5 +169,5 @@ export const AvatarCard: React.FC<AvatarCardProps> = ({
         </div>
       </div>
     </div>
-  );
+  )
 };

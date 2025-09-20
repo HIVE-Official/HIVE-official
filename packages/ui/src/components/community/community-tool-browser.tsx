@@ -8,10 +8,10 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Tool } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Label } from '../../atomic/atoms/label';
+import { Badge } from '../../atomic/atoms/badge';
 import { LiveToolRuntime } from '../live-tool-runtime';
 import { 
   Search,
@@ -41,14 +41,14 @@ interface CommunityTool {
     name: string;
     handle: string;
     avatar?: string;
-    isVerified?: boolean;
+    isVerified?: boolean
   };
   stats: {
     downloads: number;
     rating: number;
     ratingCount: number;
     installs: number;
-    likes: number;
+    likes: number
   };
   metadata: {
     publishedAt: string;
@@ -57,13 +57,13 @@ interface CommunityTool {
     category: 'productivity' | 'collaboration' | 'communication' | 'organization' | 'engagement' | 'academic';
     compatibility: string[];
     featured: boolean;
-    verified: boolean;
+    verified: boolean
   };
   preview?: {
     images: string[];
     videoUrl?: string;
-    demoUrl?: string;
-  };
+    demoUrl?: string
+  }
 }
 
 interface CommunityToolBrowserProps {
@@ -74,7 +74,7 @@ interface CommunityToolBrowserProps {
   onShare: (toolId: string) => void;
   installedToolIds: string[];
   currentSpaceId?: string;
-  isLoading?: boolean;
+  isLoading?: boolean
 }
 
 export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
@@ -105,8 +105,8 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
       const matchesCategory = categoryFilter === 'all' || communityTool.metadata.category === categoryFilter;
       const matchesFeatured = !showFeaturedOnly || communityTool.metadata.featured;
       
-      return matchesSearch && matchesCategory && matchesFeatured;
-    });
+      return matchesSearch && matchesCategory && matchesFeatured
+    })};
 
     // Sort tools
     filtered.sort((a, b) => {
@@ -120,22 +120,22 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
         case 'rating':
           return b.stats.rating - a.stats.rating;
         default:
-          return 0;
+          return 0
       }
     });
 
-    return filtered;
+    return filtered
   }, [communityTools, searchQuery, categoryFilter, sortBy, showFeaturedOnly]);
 
   // Handle tool installation
   const handleInstall = useCallback(async (toolId: string) => {
     setInstallingTool(toolId);
     try {
-      await onInstall(toolId);
+      await onInstall(toolId)
     } catch (error) {
-      console.error('Installation failed:', error);
+      console.error('Installation failed:', error)
     } finally {
-      setInstallingTool(null);
+      setInstallingTool(null)
     }
   }, [onInstall]);
 
@@ -150,7 +150,7 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
     if (diffHours < 1) return 'Just now';
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    return `${Math.floor(diffDays / 7)}w ago`;
+    return `${Math.floor(diffDays / 7)}w ago`
   };
 
   // Get category color
@@ -162,7 +162,7 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
       case 'organization': return 'bg-purple-500';
       case 'engagement': return 'bg-pink-500';
       case 'academic': return 'bg-indigo-500';
-      default: return 'bg-gray-500';
+      default: return 'bg-gray-500'
     }
   };
 
@@ -173,19 +173,19 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
     const hasHalfStar = rating % 1 !== 0;
     
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />);
+      stars.push(<Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />)
     }
     
     if (hasHalfStar) {
-      stars.push(<Star key="half" className="w-3 h-3 fill-yellow-400/50 text-yellow-400" />);
+      stars.push(<Star key="half" className="w-3 h-3 fill-yellow-400/50 text-yellow-400" />)
     }
     
     const emptyStars = 5 - Math.ceil(rating);
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="w-3 h-3 text-gray-400" />);
+      stars.push(<Star key={`empty-${i}`} className="w-3 h-3 text-gray-400" />)
     }
     
-    return stars;
+    return stars
   };
 
   if (isLoading) {
@@ -196,7 +196,7 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
           <p className="text-[var(--hive-text-secondary)]">Loading community tools...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -395,8 +395,8 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
                     size="sm"
                     onClick={() => {
                       setPreviewTool(communityTool.tool);
-                      onPreview(communityTool.tool);
-                    }}
+                      onPreview(communityTool.tool)
+          }}
                   >
                     <Eye className="w-4 h-4" />
                   </Button>
@@ -417,8 +417,8 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
                 </div>
               </div>
             </HiveCard>
-          );
-        })}
+          )
+          })
       </div>
 
       {/* Empty State */}
@@ -462,5 +462,5 @@ export const CommunityToolBrowser: React.FC<CommunityToolBrowserProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };

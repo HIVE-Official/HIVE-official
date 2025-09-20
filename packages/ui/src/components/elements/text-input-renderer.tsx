@@ -6,8 +6,8 @@
 
 import React from 'react';
 import { ElementInstance } from '@hive/core';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Label } from '../../atomic/atoms/label';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 
 interface TextInputConfig {
@@ -34,8 +34,8 @@ interface TextInputRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 export const TextInputRenderer: React.FC<TextInputRendererProps> = ({
@@ -61,7 +61,7 @@ export const TextInputRenderer: React.FC<TextInputRendererProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (behavior.isReadOnly || !onChange) return;
-    onChange(e.target.value);
+    onChange(e.target.value)
   };
 
   return (
@@ -99,5 +99,5 @@ export const TextInputRenderer: React.FC<TextInputRendererProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };

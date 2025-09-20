@@ -465,7 +465,7 @@ const IconCategoriesShowcase = () => {
       red: 'from-red-500/20 to-red-600/10 border-red-500/20',
       indigo: 'from-indigo-500/20 to-indigo-600/10 border-indigo-500/20'
     };
-    return colors[color as keyof typeof colors] || colors.blue;
+    return colors[color as keyof typeof colors] || colors.blue
   };
 
   const filteredCategories = iconCategories.map(category => ({
@@ -475,7 +475,7 @@ const IconCategoriesShowcase = () => {
       icon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       icon.usage.toLowerCase().includes(searchTerm.toLowerCase())
     )
-  })).filter(category => category.icons.length > 0);
+  })}).filter(category => category.icons.length > 0);
 
   return (
     <div className="space-y-6">
@@ -551,7 +551,7 @@ const IconCategoriesShowcase = () => {
           ))}
       </div>
     </div>
-  );
+  )
 };
 
 const IconSizesShowcase = () => {
@@ -606,7 +606,7 @@ const IconSizesShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const CampusContextShowcase = () => {
@@ -691,7 +691,7 @@ const CampusContextShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const AccessibilityShowcase = () => {
@@ -780,7 +780,7 @@ const AccessibilityShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -897,7 +897,7 @@ const IconLibraryShowcase = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

@@ -16,7 +16,7 @@ interface CampusContext {
   networkQuality: 'excellent' | 'good' | 'fair' | 'poor';
   timeOfDay: 'morning' | 'afternoon' | 'evening' | 'late-night';
   deviceType: 'mobile' | 'tablet' | 'desktop' | 'library-computer';
-  campusLoad: 'low' | 'medium' | 'high' | 'peak';
+  campusLoad: 'low' | 'medium' | 'high' | 'peak'
 }
 
 // Route definition with intelligent loading metadata
@@ -47,7 +47,7 @@ interface LazyRoute {
   // Metadata
   title?: string;
   description?: string;
-  category?: 'core' | 'social' | 'creation' | 'analytics' | 'admin';
+  category?: 'core' | 'social' | 'creation' | 'analytics' | 'admin'
 }
 
 // Navigation analytics for pattern recognition
@@ -56,10 +56,10 @@ interface NavigationAnalytics {
   currentSession: {
     startTime: number;
     routeSequence: string[];
-    timeSpentPerRoute: Record<string, number>;
+    timeSpentPerRoute: Record<string, number>
   };
   userPattern?: UserPattern;
-  predictedNextRoutes: string[];
+  predictedNextRoutes: string[]
 }
 
 interface LazyRoutesProps {
@@ -78,7 +78,7 @@ interface LazyRoutesProps {
   preloadBudget?: number; // KB to spend on preloading
   
   className?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // Custom hook for navigation analytics and pattern recognition
@@ -120,7 +120,7 @@ function useNavigationAnalytics(routes: LazyRoute[]): NavigationAnalytics {
           }
         }));
         
-        currentRouteStartTime.current = now;
+        currentRouteStartTime.current = now
       }
     };
     
@@ -128,7 +128,7 @@ function useNavigationAnalytics(routes: LazyRoute[]): NavigationAnalytics {
     window.addEventListener('popstate', handleRouteChange);
     handleRouteChange(); // Initial call
     
-    return () => window.removeEventListener('popstate', handleRouteChange);
+    return () => window.removeEventListener('popstate', handleRouteChange)
   }, [routes]);
   
   // Analyze user patterns and predict next routes
@@ -145,13 +145,13 @@ function useNavigationAnalytics(routes: LazyRoute[]): NavigationAnalytics {
       const feedTime = timeSpentPerRoute['feed'] || 0;
       
       if (toolsTime > profileTime + spacesTime + feedTime) {
-        userPattern = 'creator';
+        userPattern = 'creator'
       } else if (spacesTime > profileTime + toolsTime + feedTime) {
-        userPattern = 'social';
+        userPattern = 'social'
       } else if (routeSequence.length < 3 && timeSpentPerRoute[routeSequence[0]] > 30000) {
-        userPattern = 'focused';
+        userPattern = 'focused'
       } else if (Object.keys(timeSpentPerRoute).length > 5) {
-        userPattern = 'power-user';
+        userPattern = 'power-user'
       }
       
       // Predict next routes based on current route and user pattern
@@ -168,14 +168,14 @@ function useNavigationAnalytics(routes: LazyRoute[]): NavigationAnalytics {
         ...prev,
         userPattern,
         predictedNextRoutes: [...new Set([...predictedRoutes, ...patternRoutes])]
-      }));
+      })})
     };
     
     const timer = setTimeout(analyzePatterns, 2000); // Analyze after 2 seconds
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   }, [analytics.currentSession, routes]);
   
-  return analytics;
+  return analytics
 }
 
 // Smart preloading manager
@@ -187,14 +187,14 @@ class SmartPreloader {
   private maxBudget: number;
   
   constructor(maxBudget = 1024) { // 1MB default budget
-    this.maxBudget = maxBudget;
+    this.maxBudget = maxBudget
   }
   
   static getInstance(maxBudget?: number): SmartPreloader {
     if (!SmartPreloader.instance) {
-      SmartPreloader.instance = new SmartPreloader(maxBudget);
+      SmartPreloader.instance = new SmartPreloader(maxBudget)
     }
-    return SmartPreloader.instance;
+    return SmartPreloader.instance
   }
   
   async preloadRoute(
@@ -204,19 +204,19 @@ class SmartPreloader {
   ): Promise<boolean> {
     // Skip if already loaded or loading
     if (this.loadedChunks.has(route.id) || this.loadingChunks.has(route.id)) {
-      return true;
+      return true
     }
     
     // Skip if over budget
     if (route.estimatedSize && this.preloadBudgetUsed + route.estimatedSize > this.maxBudget) {
       console.log(`Skipping preload of ${route.id} - over budget`);
-      return false;
+      return false
     }
     
     // Skip on slow networks for non-critical routes
     if (campusContext?.networkQuality === 'poor' && route.skipOnSlowNetwork) {
       console.log(`Skipping preload of ${route.id} - slow network`);
-      return false;
+      return false
     }
     
     try {
@@ -225,40 +225,40 @@ class SmartPreloader {
       // Use different strategies based on priority
       if (priority === 'high') {
         // Immediate preload
-        await route.component();
+        await route.component()
       } else if (priority === 'medium') {
         // Preload on idle
         await new Promise(resolve => {
           if ('requestIdleCallback' in window) {
             requestIdleCallback(() => {
-              route.component().then(resolve);
-            });
+              route.component().then(resolve)
+            })
           } else {
             setTimeout(() => {
-              route.component().then(resolve);
-            }, 100);
+              route.component().then(resolve)
+            }, 100)
           }
-        });
+        })
       } else {
         // Low priority - preload with delay
         await new Promise(resolve => {
           setTimeout(() => {
-            route.component().then(resolve);
-          }, 1000);
-        });
+            route.component().then(resolve)
+          }, 1000)
+        })
       }
       
       this.loadedChunks.add(route.id);
       this.preloadBudgetUsed += route.estimatedSize || 50; // Default 50KB estimate
       
       console.log(`Preloaded route: ${route.id}`);
-      return true;
+      return true
       
     } catch (error) {
       console.error(`Failed to preload route ${route.id}:`, error);
-      return false;
+      return false
     } finally {
-      this.loadingChunks.delete(route.id);
+      this.loadingChunks.delete(route.id)
     }
   }
   
@@ -268,7 +268,7 @@ class SmartPreloader {
       budgetUsed: this.preloadBudgetUsed,
       maxBudget: this.maxBudget,
       budgetRemaining: this.maxBudget - this.preloadBudgetUsed
-    };
+    }
   }
 }
 
@@ -298,20 +298,20 @@ export const LazyRoutes: React.FC<LazyRoutesProps> = ({
       const routesToPreload = analytics.predictedNextRoutes
         .map(routeId => routes.find(r => r.id === routeId))
         .filter((route): route is LazyRoute => {
-          return route !== undefined && !preloadedRoutes.has(route.id);
-        })
+          return route !== undefined && !preloadedRoutes.has(route.id)
+        })}}}
         .slice(0, maxConcurrentLoads);
       
       for (const route of routesToPreload) {
         const success = await preloader.preloadRoute(route, 'medium', campusContext);
         if (success) {
-          setPreloadedRoutes(prev => new Set([...prev, route.id]));
+          setPreloadedRoutes(prev => new Set([...prev, route.id]))
         }
       }
     };
     
     const timer = setTimeout(preloadPredictedRoutes, 1000);
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   }, [analytics.predictedNextRoutes, enablePredictiveLoading, routes, campusContext, maxConcurrentLoads]);
   
   // Campus-aware preloading strategy
@@ -328,7 +328,7 @@ export const LazyRoutes: React.FC<LazyRoutesProps> = ({
         for (const route of highPriorityRoutes) {
           const success = await preloader.preloadRoute(route, 'high', campusContext);
           if (success) {
-            setPreloadedRoutes(prev => new Set([...prev, route.id]));
+            setPreloadedRoutes(prev => new Set([...prev, route.id]))
           }
         }
       }
@@ -343,12 +343,12 @@ export const LazyRoutes: React.FC<LazyRoutesProps> = ({
         .slice(0, 1);
       
       for (const route of timeBasedRoutes) {
-        await preloader.preloadRoute(route, 'low', campusContext);
+        await preloader.preloadRoute(route, 'low', campusContext)
       }
     };
     
     const timer = setTimeout(strategicPreload, 2000);
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   }, [campusContext, routes]);
   
   // Create lazy components with enhanced loading states
@@ -377,8 +377,8 @@ export const LazyRoutes: React.FC<LazyRoutesProps> = ({
         <Suspense fallback={<CustomLoading />}>
           <LazyComponent ref={ref} {...props} />
         </Suspense>
-      );
-    });
+      )
+    })
   };
   
   // Hover preloading handler
@@ -387,7 +387,7 @@ export const LazyRoutes: React.FC<LazyRoutesProps> = ({
     
     const success = await preloader.preloadRoute(route, 'high', campusContext);
     if (success) {
-      setPreloadedRoutes(prev => new Set([...prev, route.id]));
+      setPreloadedRoutes(prev => new Set([...prev, route.id]))
     }
   }, [enableHoverPreloading, campusContext]);
   
@@ -408,7 +408,7 @@ export const LazyRoutes: React.FC<LazyRoutesProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Utility function to create route configurations
@@ -429,7 +429,7 @@ export function createLazyRoute(
       onUserPattern: true
     },
     ...options
-  };
+  }
 }
 
 // Export utilities and types

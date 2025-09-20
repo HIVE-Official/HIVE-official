@@ -26,8 +26,8 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Badge } from '../../components/ui/badge';
-import { Separator } from '../../components/ui/separator';
+import { Badge } from '../../atomic/atoms/badge';
+import { Separator } from '../../atomic/atoms/separator';
 import { cn } from '../../lib/utils';
 
 interface NavigationItem {
@@ -37,7 +37,7 @@ interface NavigationItem {
   href: string;
   badge?: number;
   isNew?: boolean;
-  requiresBuilder?: boolean;
+  requiresBuilder?: boolean
 }
 
 interface User {
@@ -46,7 +46,7 @@ interface User {
   handle: string;
   avatar?: string;
   builderStatus?: 'none' | 'pending' | 'active';
-  role?: 'student' | 'faculty' | 'admin';
+  role?: 'student' | 'faculty' | 'admin'
 }
 
 interface MobileNavigationMenuProps {
@@ -54,7 +54,7 @@ interface MobileNavigationMenuProps {
   isOpen: boolean;
   onClose: () => void;
   unreadNotifications?: number;
-  className?: string;
+  className?: string
 }
 
 const primaryNavItems: NavigationItem[] = [
@@ -95,24 +95,24 @@ export function MobileNavigationMenu({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true)
   }, []);
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'unset'
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
-    };
+      document.body.style.overflow = 'unset'
+    }
   }, [isOpen]);
 
   const handleNavigation = (href: string) => {
     router.push(href);
-    onClose();
+    onClose()
   };
 
   const handleAction = (action: string) => {
@@ -127,14 +127,14 @@ export function MobileNavigationMenu({
         break;
       case 'openCreate':
         router.push('/build');
-        break;
+        break
     }
-    onClose();
+    onClose()
   };
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
-    return pathname.startsWith(href);
+    return pathname.startsWith(href)
   };
 
   const canAccessBuilder = user?.builderStatus === 'active' || user?.role === 'faculty' || user?.role === 'admin';
@@ -237,8 +237,8 @@ export function MobileNavigationMenu({
                           </Badge>
                         )}
                       </Button>
-                    );
-                  })}
+                    )
+          })}
                 </div>
               </div>
 
@@ -274,8 +274,8 @@ export function MobileNavigationMenu({
                           <Badge variant="secondary" className="ml-auto text-xs">New</Badge>
                         )}
                       </Button>
-                    );
-                  })}
+                    )
+          })}
 
                   <Separator className="my-4" />
 
@@ -300,8 +300,8 @@ export function MobileNavigationMenu({
                         <Icon className="h-5 w-5" />
                         <span>{item.label}</span>
                       </Button>
-                    );
-                  })}
+                    )
+          })}
 
                   {/* Builder Section */}
                   {canAccessBuilder && (
@@ -331,8 +331,8 @@ export function MobileNavigationMenu({
                               <Badge variant="secondary" className="ml-auto text-xs">New</Badge>
                             )}
                           </Button>
-                        );
-                      })}
+                        )
+          })}
                     </>
                   )}
                 </nav>
@@ -364,8 +364,8 @@ export function MobileNavigationMenu({
                     size="sm"
                     onClick={() => {
                       // Handle logout
-                      window.location.href = '/auth/logout';
-                    }}
+                      window.location.href = '/auth/logout'
+          }}
                     className="w-full justify-start gap-3 h-10 text-red-400 hover:text-red-300 hover:bg-red-500/10"
                   >
                     <LogOut className="h-5 w-5" />
@@ -378,5 +378,5 @@ export function MobileNavigationMenu({
         </>
       )}
     </AnimatePresence>
-  );
+  )
 }

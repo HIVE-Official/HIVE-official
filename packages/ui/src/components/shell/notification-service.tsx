@@ -13,8 +13,8 @@ export interface Notification {
   actor?: {
     name: string;
     handle: string;
-    avatar?: string;
-  };
+    avatar?: string
+  }
 }
 
 interface NotificationContextType {
@@ -23,7 +23,7 @@ interface NotificationContextType {
   addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => void;
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
-  removeNotification: (id: string) => void;
+  removeNotification: (id: string) => void
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -31,13 +31,13 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function useNotifications() {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error('useNotifications must be used within a NotificationProvider');
+    throw new Error('useNotifications must be used within a NotificationProvider')
   }
-  return context;
+  return context
 }
 
 interface NotificationProviderProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 // Mock initial notifications
@@ -82,23 +82,23 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
       id: Date.now().toString(),
       timestamp: new Date(),
     };
-    setNotifications(prev => [newNotification, ...prev]);
+    setNotifications(prev => [newNotification, ...prev])
   };
 
   const markAsRead = (id: string) => {
     setNotifications(prev => 
       prev.map(n => n.id === id ? { ...n, read: true } : n)
-    );
+    )
   };
 
   const markAllAsRead = () => {
     setNotifications(prev => 
-      prev.map(n => ({ ...n, read: true }))
-    );
+      prev.map(n => ({ ...n, read: true })})
+    )
   };
 
   const removeNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications(prev => prev.filter(n => n.id !== id))
   };
 
   // Simulate receiving new notifications
@@ -130,11 +130,11 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
         ];
         
         const randomNotification = randomNotifications[Math.floor(Math.random() * randomNotifications.length)];
-        addNotification(randomNotification);
+        addNotification(randomNotification)
       }
     }, 30000); // Check every 30 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, []);
 
   const value: NotificationContextType = {
@@ -150,5 +150,5 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
     <NotificationContext.Provider value={value}>
       {children}
     </NotificationContext.Provider>
-  );
+  )
 }

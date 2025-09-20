@@ -12,9 +12,9 @@ export interface HiveNavigationProps {
     id: string;
     name: string;
     handle: string;
-    avatar?: string;
+    avatar?: string
   } | null;
-  className?: string;
+  className?: string
 }
 
 const coreItems = [
@@ -34,7 +34,7 @@ export const HiveNavigation: React.FC<HiveNavigationProps> = ({
   const initials = user?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '';
 
   const isItemActive = (href: string) => {
-    return currentPath === href || (href !== '/' && currentPath.startsWith(href + '/'));
+    return currentPath === href || (href !== '/' && currentPath.startsWith(href + '/'))
   };
 
   if (variant === 'compact') {
@@ -91,11 +91,11 @@ export const HiveNavigation: React.FC<HiveNavigationProps> = ({
                   {item.label}
                 </div>
               </button>
-            );
+            )
           })}
         </nav>
       </aside>
-    );
+    )
   }
 
   // Full variant
@@ -177,11 +177,11 @@ export const HiveNavigation: React.FC<HiveNavigationProps> = ({
                     <div className="w-2 h-8 bg-[var(--hive-brand-secondary)] rounded-full opacity-80" />
                   )}
                 </button>
-              );
-            })}
+              )
+          })}
           </div>
         </nav>
       </div>
     </aside>
-  );
+  )
 };

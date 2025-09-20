@@ -233,7 +233,7 @@ const HivePlatformOverview = () => {
         </CardContent>
       </Card>
     </Container>
-  );
+  )
 };
 
 const meta: Meta<typeof HivePlatformOverview> = {

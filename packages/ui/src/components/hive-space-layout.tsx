@@ -137,7 +137,7 @@ export interface SpaceSurface {
   hasContent: boolean;
   toolCount?: number;
   lastActivity?: Date;
-  customTitle?: string;
+  customTitle?: string
 }
 
 export interface HiveSpaceLayoutProps
@@ -181,8 +181,8 @@ export interface HiveSpaceLayoutProps
   builderOnboarding?: {
     step: number;
     total: number;
-    checklist: Array<{ completed: boolean; label: string; }>;
-  };
+    checklist: Array<{ completed: boolean; label: string }>
+  }
 }
 
 export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutProps>(
@@ -233,7 +233,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
         .map(surface => ({
           ...surface,
           config: surfaceConfig[surface.type]
-        }))
+        })})
         .sort((a, b) => a.config.order - b.config.order)
         .filter(surface => surface.visible)
     , [surfaces]);
@@ -243,12 +243,12 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
       setCollapsedSurfaces(prev => {
         const newSet = new Set(prev);
         if (newSet.has(surfaceType)) {
-          newSet.delete(surfaceType);
+          newSet.delete(surfaceType)
         } else {
-          newSet.add(surfaceType);
+          newSet.add(surfaceType)
         }
-        return newSet;
-      });
+        return newSet
+      })
     }, []);
     
     // Render surface content based on type
@@ -322,7 +322,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
             />
           );
         default:
-          return null;
+          return null
       }
     }, [
       space, 
@@ -425,8 +425,8 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
                           </span>
                         )}
                       </motion.button>
-                    );
-                  })}
+                    )
+          })
                 </div>
                 
                 {/* Builder Mode Toggle */}
@@ -587,7 +587,7 @@ export const HiveSpaceLayout = React.forwardRef<HTMLDivElement, HiveSpaceLayoutP
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 
@@ -603,7 +603,7 @@ interface SurfaceContainerProps {
   builderMode: boolean;
   index: number;
   compact?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const SurfaceContainer: React.FC<SurfaceContainerProps> = ({
@@ -687,7 +687,7 @@ const SurfaceContainer: React.FC<SurfaceContainerProps> = ({
         )}
       </AnimatePresence>
     </motion.section>
-  );
+  )
 };
 
 // Individual surface components are imported from ./surfaces/

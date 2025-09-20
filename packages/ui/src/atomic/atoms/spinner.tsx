@@ -6,7 +6,7 @@ import { cn } from '../../lib/utils';
 export interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   color?: 'primary' | 'secondary' | 'gold' | 'white';
-  variant?: 'spin' | 'pulse' | 'bounce';
+  variant?: 'spin' | 'pulse' | 'bounce'
 }
 
 const spinnerSizes = {
@@ -48,7 +48,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
           'h-full w-full'
         )} />
       </div>
-    );
+    )
   }
 
   if (variant === 'bounce') {
@@ -79,7 +79,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
           />
         ))}
       </div>
-    );
+    )
   }
 
   // Default spin variant
@@ -94,5 +94,5 @@ export const Spinner: React.FC<SpinnerProps> = ({
       )} 
       {...props}
     />
-  );
+  )
 };

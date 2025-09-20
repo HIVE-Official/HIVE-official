@@ -63,7 +63,7 @@ export interface TextareaProps
   maxLength?: number;
   autoResize?: boolean;
   minRows?: number;
-  maxRows?: number;
+  maxRows?: number
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -101,7 +101,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         case 'sm': return 20;
         case 'lg': return 28; 
         case 'xl': return 32;
-        default: return 24;
+        default: return 24
       }
     };
     
@@ -120,7 +120,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
         
         textareaRef.current.style.height = `${newHeight}px`;
-        textareaRef.current.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
+        textareaRef.current.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden'
       }
     }, [autoResize, minRows, maxRows, size]);
     
@@ -134,7 +134,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       }
       
       onChange?.(e);
-      handleAutoResize();
+      handleAutoResize()
     };
     
     // Set ref function to handle both forwarded ref and internal ref
@@ -142,9 +142,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       (node: HTMLTextAreaElement | null) => {
         textareaRef.current = node;
         if (typeof ref === 'function') {
-          ref(node);
+          ref(node)
         } else if (ref) {
-          ref.current = node;
+          ref.current = node
         }
       },
       [ref]
@@ -153,9 +153,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     // Initialize character count and auto-resize
     React.useEffect(() => {
       if (value) {
-        setCharCount(String(value).length);
+        setCharCount(String(value).length)
       }
-      handleAutoResize();
+      handleAutoResize()
     }, [value, handleAutoResize]);
     
     const textareaElement = (
@@ -214,10 +214,10 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             </p>
           )}
         </div>
-      );
+      )
     }
     
-    return textareaElement;
+    return textareaElement
   }
 );
 Textarea.displayName = "Textarea";
@@ -225,7 +225,7 @@ Textarea.displayName = "Textarea";
 // Code Textarea Component
 export interface CodeTextareaProps extends Omit<TextareaProps, 'className'> {
   language?: string;
-  showLineNumbers?: boolean;
+  showLineNumbers?: boolean
 }
 
 const CodeTextarea = React.forwardRef<HTMLTextAreaElement, CodeTextareaProps>(
@@ -237,7 +237,7 @@ const CodeTextarea = React.forwardRef<HTMLTextAreaElement, CodeTextareaProps>(
         placeholder={language ? `Enter ${language} code...` : "Enter code..."}
         {...props}
       />
-    );
+    )
   }
 );
 CodeTextarea.displayName = "CodeTextarea";
@@ -245,7 +245,7 @@ CodeTextarea.displayName = "CodeTextarea";
 // Textarea Group Component
 export interface TextareaGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   orientation?: "horizontal" | "vertical";
-  spacing?: "none" | "sm" | "md";
+  spacing?: "none" | "sm" | "md"
 }
 
 const TextareaGroup = React.forwardRef<HTMLDivElement, TextareaGroupProps>(
@@ -269,7 +269,7 @@ const TextareaGroup = React.forwardRef<HTMLDivElement, TextareaGroupProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 TextareaGroup.displayName = "TextareaGroup";

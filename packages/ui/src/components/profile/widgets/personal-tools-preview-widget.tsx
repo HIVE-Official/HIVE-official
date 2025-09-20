@@ -16,7 +16,7 @@ import { cn } from '../../../lib/utils';
 interface PersonalToolsPreviewWidgetProps extends BaseWidgetProps {
   isV1Unlocked?: boolean;
   onJoinWaitlist: () => void;
-  onViewToolCategory: (category: string) => void;
+  onViewToolCategory: (category: string) => void
 }
 
 const PREVIEW_TOOLS = [
@@ -217,8 +217,8 @@ export const PersonalToolsPreviewWidget: React.FC<PersonalToolsPreviewWidgetProp
                       variant="outline"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onViewToolCategory(tool.category);
-                      }}
+                        onViewToolCategory(tool.category)
+          }}
                       className="text-xs"
                     >
                       Explore
@@ -322,8 +322,8 @@ export const PersonalToolsPreviewWidget: React.FC<PersonalToolsPreviewWidgetProp
                 />
               )}
             </button>
-          );
-        })}
+          )
+          })}
       </div>
 
       {/* Tab Content */}
@@ -374,5 +374,5 @@ export const PersonalToolsPreviewWidget: React.FC<PersonalToolsPreviewWidgetProp
     <BaseWidget {...baseProps}>
       {widgetContent}
     </BaseWidget>
-  );
+  )
 };

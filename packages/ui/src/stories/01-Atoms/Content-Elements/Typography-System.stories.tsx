@@ -397,7 +397,7 @@ const HeadingHierarchyShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const TextSizeShowcase = () => {
@@ -434,7 +434,7 @@ const TextSizeShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const FontWeightShowcase = () => {
@@ -469,7 +469,7 @@ const FontWeightShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 const CampusContentShowcase = () => {
@@ -523,7 +523,7 @@ const CampusContentShowcase = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 const AccessibilityShowcase = () => {
@@ -618,7 +618,7 @@ const AccessibilityShowcase = () => {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 };
 
 // =============================================================================
@@ -747,7 +747,7 @@ const TypographySystemShowcase = () => {
         </Card>
       </div>
     </div>
-  );
+  )
 };
 
 // =============================================================================

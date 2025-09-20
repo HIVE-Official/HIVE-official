@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { Avatar } from '../index';
 import { HiveBadge as Badge } from '../index';
 import { 
@@ -39,20 +39,20 @@ export interface Notification {
     id: string;
     name: string;
     avatar?: string;
-    handle?: string;
+    handle?: string
   };
   target?: {
     type: 'post' | 'comment' | 'space' | 'tool' | 'event';
     id: string;
-    title?: string;
+    title?: string
   };
   actions?: Array<{
     id: string;
     label: string;
     type: 'primary' | 'secondary';
-    action: () => void;
+    action: () => void
   }>;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, any>
 }
 
 interface NotificationCenterProps {
@@ -67,7 +67,7 @@ interface NotificationCenterProps {
   onNotificationClick?: (notification: Notification) => void;
   onSettingsClick?: () => void;
   isLoading?: boolean;
-  enableFeatureFlag?: boolean;
+  enableFeatureFlag?: boolean
 }
 
 const NotificationItem: React.FC<{
@@ -75,7 +75,7 @@ const NotificationItem: React.FC<{
   onMarkAsRead?: (id: string) => Promise<void>;
   onArchive?: (id: string) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
-  onClick?: (notification: Notification) => void;
+  onClick?: (notification: Notification) => void
 }> = ({
   notification,
   onMarkAsRead,
@@ -95,7 +95,7 @@ const NotificationItem: React.FC<{
       case 'event': return <Calendar className="w-4 h-4 text-orange-500" />;
       case 'mention': return <MessageCircle className="w-4 h-4 text-pink-500" />;
       case 'system': return <Bell className="w-4 h-4 text-gray-500" />;
-      default: return <Bell className="w-4 h-4 text-gray-500" />;
+      default: return <Bell className="w-4 h-4 text-gray-500" />
     }
   };
 
@@ -105,7 +105,7 @@ const NotificationItem: React.FC<{
       case 'high': return 'bg-orange-500';
       case 'normal': return 'bg-blue-500';
       case 'low': return 'bg-gray-500';
-      default: return 'bg-gray-500';
+      default: return 'bg-gray-500'
     }
   };
 
@@ -120,7 +120,7 @@ const NotificationItem: React.FC<{
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
     if (minutes > 0) return `${minutes}m ago`;
-    return 'Just now';
+    return 'Just now'
   };
 
   return (
@@ -189,8 +189,8 @@ const NotificationItem: React.FC<{
                 size="xs"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setShowActions(!showActions);
-                }}
+                  setShowActions(!showActions)
+          }}
                 className="opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <MoreHorizontal className="w-3 h-3" />
@@ -209,8 +209,8 @@ const NotificationItem: React.FC<{
                         onClick={(e) => {
                           e.stopPropagation();
                           onMarkAsRead?.(notification.id);
-                          setShowActions(false);
-                        }}
+                          setShowActions(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                       >
                         <Check className="w-3 h-3" />
@@ -221,8 +221,8 @@ const NotificationItem: React.FC<{
                       onClick={(e) => {
                         e.stopPropagation();
                         onArchive?.(notification.id);
-                        setShowActions(false);
-                      }}
+                        setShowActions(false)
+          }}
                       className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                     >
                       <Archive className="w-3 h-3" />
@@ -232,8 +232,8 @@ const NotificationItem: React.FC<{
                       onClick={(e) => {
                         e.stopPropagation();
                         onDelete?.(notification.id);
-                        setShowActions(false);
-                      }}
+                        setShowActions(false)
+          }}
                       className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2 text-[var(--hive-status-error)]"
                     >
                       <Trash2 className="w-3 h-3" />
@@ -255,8 +255,8 @@ const NotificationItem: React.FC<{
                   variant={action.type === 'primary' ? 'default' : 'outline'}
                   onClick={(e) => {
                     e.stopPropagation();
-                    action.action();
-                  }}
+                    action.action()
+          }}
                 >
                   {action.label}
                 </Button>
@@ -266,7 +266,7 @@ const NotificationItem: React.FC<{
         </div>
       </div>
     </motion.div>
-  );
+  )
 };
 
 export const NotificationCenter: React.FC<NotificationCenterProps> = ({
@@ -299,15 +299,15 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         case 'social':
           return ['like', 'comment', 'follow'].includes(notification.type);
         default:
-          return !notification.isArchived;
+          return !notification.isArchived
       }
-    });
+    })
   }, [notifications, filter]);
 
   const handleNotificationClick = useCallback((notification: Notification) => {
     // Mark as read when clicked
     if (!notification.isRead) {
-      onMarkAsRead?.(notification.id);
+      onMarkAsRead?.(notification.id)
     }
     
     // Handle navigation
@@ -315,7 +315,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
     
     // Close on mobile
     if (window.innerWidth < 768) {
-      onClose();
+      onClose()
     }
   }, [onMarkAsRead, onNotificationClick, onClose]);
 
@@ -387,7 +387,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 { key: 'unread', label: 'Unread' },
                 { key: 'mentions', label: 'Mentions' },
                 { key: 'social', label: 'Social' }
-              ].map(({ key, label }) => (
+              ].map(({ key, label })} => (
                 <Button
                   key={key}
                   variant={filter === key ? 'default' : 'outline'}
@@ -453,5 +453,5 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         </Button>
       </div>
     </motion.div>
-  );
+  )
 };

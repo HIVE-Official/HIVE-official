@@ -54,7 +54,7 @@ const Stack = React.forwardRef<HTMLDivElement, StackProps>(
         className={cn(stackVariants({ direction, align, justify, gap }), className)}
         {...props}
       />
-    );
+    )
   }
 );
 Stack.displayName = 'Stack';

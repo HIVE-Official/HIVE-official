@@ -252,8 +252,8 @@ export const CampusFeedInterface: Story = {
       if (filter === 'tools') return post.type === 'tool-generated';
       if (filter === 'rituals') return post.type === 'ritual';
       if (filter === 'coordination') return post.type === 'coordination';
-      return true;
-    });
+      return true
+    })};
 
     return (
       <div className="w-full max-w-6xl mx-auto p-8 bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -317,8 +317,8 @@ export const CampusFeedInterface: Story = {
                         {category.count}
                       </Badge>
                     </div>
-                  );
-                })}
+                  )
+                })
               </CardContent>
             </Card>
           </div>
@@ -501,7 +501,7 @@ export const CampusFeedInterface: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -591,8 +591,8 @@ export const RitualCreationInterface: Story = {
                         </p>
                       </div>
                     </button>
-                  );
-                })}
+                  )
+                })
               </CardContent>
             </Card>
           </div>
@@ -776,7 +776,7 @@ export const RitualCreationInterface: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -1057,6 +1057,6 @@ export const RitualParticipationDashboard: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

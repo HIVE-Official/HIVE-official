@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Card, CardContent } from "../ui/card";
-import { Button } from "../../ui/button-enhanced";
+import { Button } from "../../atomic/atoms/button-enhanced";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import {
@@ -47,12 +47,12 @@ interface PostCardProps {
       fullName: string;
       handle: string;
       photoURL?: string;
-      role?: "member" | "builder" | "admin";
-    };
+      role?: "member" | "builder" | "admin"
+    }
   };
   currentUser: {
     id: string;
-    role?: "member" | "builder" | "admin";
+    role?: "member" | "builder" | "admin"
   };
   onReact: (
     postId: string,
@@ -63,7 +63,7 @@ interface PostCardProps {
   onDelete: (postId: string) => Promise<void>;
   onPin?: (postId: string, pin: boolean) => Promise<void>;
   onFlag?: (postId: string, reason?: string) => Promise<void>;
-  className?: string;
+  className?: string
 }
 
 const POST_TYPE_ICONS = {
@@ -122,11 +122,11 @@ export const PostCard: React.FC<PostCardProps> = ({
     setIsReacting(true);
     try {
       const action = userHasReacted ? "remove" : "add";
-      await onReact(post.id, "heart", action);
+      await onReact(post.id, "heart", action)
     } catch (error) {
-      console.error("Error reacting to post:", error);
+      console.error("Error reacting to post:", error)
     } finally {
-      setIsReacting(false);
+      setIsReacting(false)
     }
   };
 
@@ -134,29 +134,29 @@ export const PostCard: React.FC<PostCardProps> = ({
     setIsDeleting(true);
     try {
       await onDelete(post.id);
-      setShowDeleteDialog(false);
+      setShowDeleteDialog(false)
     } catch (error) {
-      console.error("Error deleting post:", error);
+      console.error("Error deleting post:", error)
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
   };
 
   const handlePin = async () => {
     if (!onPin) return;
     try {
-      await onPin(post.id, !post.isPinned);
+      await onPin(post.id, !post.isPinned)
     } catch (error) {
-      console.error("Error pinning post:", error);
+      console.error("Error pinning post:", error)
     }
   };
 
   const handleFlag = async () => {
     if (!onFlag) return;
     try {
-      await onFlag(post.id, "Inappropriate content");
+      await onFlag(post.id, "Inappropriate content")
     } catch (error) {
-      console.error("Error flagging post:", error);
+      console.error("Error flagging post:", error)
     }
   };
 
@@ -165,12 +165,12 @@ export const PostCard: React.FC<PostCardProps> = ({
     return content.replace(
       /@(\w+)/g,
       '<span class="text-primary font-medium">@$1</span>'
-    );
+    )
   };
 
   const TypeIcon =
     (POST_TYPE_ICONS[post.type] as React.ComponentType<{
-      className?: string;
+      className?: string
     }>) || null;
 
   return (
@@ -247,7 +247,7 @@ export const PostCard: React.FC<PostCardProps> = ({
 
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                   <time dateTime={post.createdAt.toString()}>
-                    {formatDistanceToNow(createdAt, { addSuffix: true })}
+                    {formatDistanceToNow(createdAt, { addSuffix: true }}
                   </time>
 
                   {post.isEdited && (
@@ -319,7 +319,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                 className="text-sm leading-relaxed whitespace-pre-wrap break-words"
                 dangerouslySetInnerHTML={{
                   __html: formatContent(post.content),
-                }}
+          }}
               />
             )}
           </div>
@@ -424,5 +424,5 @@ export const PostCard: React.FC<PostCardProps> = ({
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
+  )
 };

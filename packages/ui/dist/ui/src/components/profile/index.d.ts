@@ -8,6 +8,8 @@ export { HiveLabSection } from './hive-lab-section';
 export { ProfileStats } from './profile-stats';
 export { adaptSmartCalendarProps } from './calendar-data-adapter';
 export { EnhancedProfileDashboard } from './enhanced-profile-dashboard';
+export { CompleteHIVEProfileSystem } from './complete-hive-profile-system';
+export type { CompleteHIVEProfileSystemProps } from './complete-hive-profile-system';
 export * from './bento-grid';
 export { PriorityCoordinationWidget } from './widgets/priority-coordination-widget';
 export { PrivacyControlWidget } from './widgets/privacy-control-widget';

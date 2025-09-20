@@ -1,4 +1,3 @@
-import React from 'react';
 export interface Notification {
     id: string;
     type: 'social' | 'system' | 'space' | 'tool' | 'calendar' | 'achievement';
@@ -41,16 +40,6 @@ interface NotificationBellProps {
     className?: string;
 }
 export declare function NotificationBell({ unreadCount, onClick, className }: NotificationBellProps): import("react/jsx-runtime").JSX.Element;
-export declare function useNotifications(): {
-    notifications: Notification[];
-    unreadCount: number;
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    markAsRead: (id: string) => void;
-    markAllAsRead: () => void;
-    archive: (id: string) => void;
-    deleteNotification: (id: string) => void;
-    addNotification: (notification: Omit<Notification, "id" | "timestamp" | "isRead" | "isArchived">) => void;
-};
+export declare function useNotifications(): void;
 export {};
 //# sourceMappingURL=notification-system.d.ts.map

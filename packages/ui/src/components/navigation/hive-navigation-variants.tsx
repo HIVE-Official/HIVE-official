@@ -49,7 +49,7 @@ export function SidebarNavigation() {
         backgroundColor: 'var(--hive-background-primary)',
         backdropFilter: 'blur(3) saturate(180%)',
         borderRight: `1px solid var(--hive-border-primary)`,
-      }}
+          }}
     >
       {/* Header */}
       <div 
@@ -108,11 +108,11 @@ export function SidebarNavigation() {
       >
         <HiveNavigationCreateButton 
           collapsed={isCollapsed} 
-          onClick={() => navigate({ id: 'create', label: 'Create' })}
+          onClick={() => navigate({ id: 'create', label: 'Create' }}
         />
       </div>
     </NavigationContainer>
-  );
+  )
 }
 
 // ============================================================================
@@ -138,7 +138,7 @@ export function TopbarNavigation() {
         backgroundColor: 'var(--hive-background-primary)',
         backdropFilter: 'blur(3) saturate(180%)',
         borderBottom: `1px solid var(--hive-border-primary)`,
-      }}
+          }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -195,7 +195,7 @@ export function TopbarNavigation() {
                     backgroundColor: 'var(--hive-background-secondary)',
                     borderColor: 'var(--hive-border-primary)',
                     color: 'var(--hive-text-primary)',
-                  }}
+          }}
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                   <kbd 
@@ -204,7 +204,7 @@ export function TopbarNavigation() {
                       backgroundColor: 'var(--hive-background-primary)',
                       borderColor: 'var(--hive-border-subtle)',
                       color: 'var(--hive-text-muted)'
-                    }}
+          }}
                   >
                     <Command className="w-3 h-3 mr-1" />
                     K
@@ -278,8 +278,8 @@ export function TopbarNavigation() {
                 isActive={item.isActive}
                 onNavigate={(navItem) => {
                   navigate(navItem);
-                  setMobileMenuOpen(false);
-                }}
+                  setMobileMenuOpen(false)
+          }}
                 size="sm"
                 className="w-full justify-start"
               />
@@ -288,7 +288,7 @@ export function TopbarNavigation() {
         </div>
       )}
     </NavigationContainer>
-  );
+  )
 }
 
 // ============================================================================
@@ -306,7 +306,7 @@ export function CommandNavigation() {
       ...item,
       category: section.label,
       keywords: item.keywords || []
-    }))
+    })})
   );
 
   const filteredItems = searchQuery.length > 0
@@ -342,7 +342,7 @@ export function CommandNavigation() {
                 backgroundColor: semantic.background.secondary,
                 borderColor: semantic.border.primary,
                 color: semantic.text.muted,
-              }}
+          }}
             >
               <Search className="w-4 h-4" />
               <span className="hidden sm:block">Search or jump to...</span>
@@ -390,7 +390,7 @@ export function CommandNavigation() {
               style={{
                 backgroundColor: semantic.background.primary,
                 borderColor: semantic.border.primary,
-              }}
+          }}
             >
               {/* Search Input */}
               <div className="flex items-center border-b px-4" style={{ borderColor: semantic.border.primary }}>
@@ -401,8 +401,8 @@ export function CommandNavigation() {
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    setSelectedIndex(0);
-                  }}
+                    setSelectedIndex(0)
+          }}
                   className="w-full py-4 bg-transparent focus:outline-none"
                   style={{ color: semantic.text.primary }}
                   autoFocus
@@ -423,8 +423,8 @@ export function CommandNavigation() {
                         onClick={() => {
                           navigate(item);
                           setSearchOpen(false);
-                          setSearchQuery('');
-                        }}
+                          setSearchQuery('')
+          }}
                         className={cn(
                           "w-full justify-start p-3 h-auto",
                           isSelected && "bg-[var(--hive-brand-primary)] text-[var(--hive-background-primary)]"
@@ -432,7 +432,7 @@ export function CommandNavigation() {
                         style={{
                           backgroundColor: isSelected ? semantic.brand.primary : undefined,
                           color: isSelected ? semantic.text.inverse : semantic.text.primary,
-                        }}
+          }}
                       >
                         {Icon && <Icon className="w-4 h-4 mr-3 flex-shrink-0" />}
                         <div className="flex-1 min-w-0 text-left">
@@ -443,14 +443,14 @@ export function CommandNavigation() {
                               style={{ 
                                 color: isSelected ? semantic.text.inverse : semantic.text.muted,
                                 opacity: isSelected ? 0.8 : 1
-                              }}
+          }}
                             >
                               {item.description}
                             </div>
                           )}
                         </div>
                       </Button>
-                    );
+                    )
                   })
                 ) : (
                   <div className="px-3 py-8 text-center" style={{ color: semantic.text.muted }}>
@@ -467,7 +467,7 @@ export function CommandNavigation() {
                 style={{ 
                   borderColor: semantic.border.primary,
                   color: semantic.text.muted 
-                }}
+          }}
               >
                 <div className="flex items-center space-x-4">
                   <span>↑↓ Navigate</span>
@@ -484,7 +484,7 @@ export function CommandNavigation() {
         </div>
       )}
     </NavigationContainer>
-  );
+  )
 }
 
 // ============================================================================
@@ -500,7 +500,7 @@ export function MinimalNavigation() {
       style={{
         backgroundColor: `${semantic.background.primary}CC`,
         borderColor: semantic.border.primary,
-      }}
+          }}
     >
       <div className="flex items-center justify-between px-6 py-3">
         {config.showBranding && (
@@ -536,5 +536,5 @@ export function MinimalNavigation() {
         </div>
       </div>
     </NavigationContainer>
-  );
+  )
 }

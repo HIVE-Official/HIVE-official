@@ -27,17 +27,17 @@ interface DesktopTopbarProps {
   onOpenNotifications?: () => void;
   unreadNotificationCount?: number;
   className?: string;
-  testId?: string;
+  testId?: string
 }
 
 interface TopbarItemProps {
   item: NavigationItem;
-  onNavigate: (href: string) => void;
+  onNavigate: (href: string) => void
 }
 
 interface UserMenuProps {
   user: NavigationUser;
-  onNavigate: (href: string) => void;
+  onNavigate: (href: string) => void
 }
 
 // ============================================================================
@@ -50,14 +50,14 @@ const TopbarItem = memo<TopbarItemProps>(({ item, onNavigate }) => {
   
   const handleClick = () => {
     if (!item.isDisabled) {
-      onNavigate(item.href);
+      onNavigate(item.href)
     }
   };
   
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if ((event.key === 'Enter' || event.key === ' ') && !item.isDisabled) {
       event.preventDefault();
-      onNavigate(item.href);
+      onNavigate(item.href)
     }
   };
   
@@ -132,7 +132,7 @@ const TopbarItem = memo<TopbarItemProps>(({ item, onNavigate }) => {
         />
       )}
     </motion.button>
-  );
+  )
 });
 
 TopbarItem.displayName = 'TopbarItem';
@@ -223,7 +223,7 @@ const UserMenu = memo<UserMenuProps>(({ user, onNavigate }) => {
                     key={item.href}
                     onClick={() => {
                       onNavigate(item.href);
-                      setIsOpen(false);
+                      setIsOpen(false)
                     }}
                     className={cn(
                       'w-full flex items-center px-3 py-2 text-left text-sm',
@@ -241,7 +241,7 @@ const UserMenu = memo<UserMenuProps>(({ user, onNavigate }) => {
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 });
 
 UserMenu.displayName = 'UserMenu';
@@ -278,7 +278,7 @@ const SearchBar = memo<{ onOpenCommandPalette?: () => void }>(({ onOpenCommandPa
         </kbd>
       </div>
     </button>
-  );
+  )
 });
 
 SearchBar.displayName = 'SearchBar';
@@ -414,7 +414,7 @@ export const DesktopTopbar = memo<DesktopTopbarProps>(({
         <UserMenu user={user} onNavigate={onNavigate} />
       </div>
     </motion.header>
-  );
+  )
 });
 
 DesktopTopbar.displayName = 'DesktopTopbar';

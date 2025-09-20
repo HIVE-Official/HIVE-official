@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { SelectEnhanced as Select, SelectOptionEnhanced as SelectOption } from '../atoms/select-enhanced';
+import { cn } from '../lib/utils';
+import { InputEnhanced as Input } from '../atomic/atoms/input-enhanced';
+import { SelectEnhanced as Select, SelectOptionEnhanced as SelectOption } from '../atomic/atoms/select-radix-enhanced';
 import { FormField } from './form-field';
 import { 
   Mail, 
@@ -34,7 +34,7 @@ export interface UniversityEmailFieldProps {
   required?: boolean;
   disabled?: boolean;
   university?: string;
-  className?: string;
+  className?: string
 }
 
 export const UniversityEmailFieldMolecule: React.FC<UniversityEmailFieldProps> = ({
@@ -61,19 +61,19 @@ export const UniversityEmailFieldMolecule: React.FC<UniversityEmailFieldProps> =
       /alumni\./          // Alumni subdomains
     ];
     
-    return universityPatterns.some(pattern => pattern.test(email.toLowerCase()));
+    return universityPatterns.some(pattern => pattern.test(email.toLowerCase()))
   };
 
   React.useEffect(() => {
     if (value) {
-      setIsValidUniversityEmail(validateUniversityEmail(value));
+      setIsValidUniversityEmail(validateUniversityEmail(value))
     } else {
-      setIsValidUniversityEmail(null);
+      setIsValidUniversityEmail(null)
     }
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(e.target.value);
+    onChange?.(e.target.value)
   };
 
   const displayError = error || (isValidUniversityEmail === false ? 'Please use your university email address' : undefined);
@@ -103,7 +103,7 @@ export const UniversityEmailFieldMolecule: React.FC<UniversityEmailFieldProps> =
         }
       />
     </FormField>
-  );
+  )
 };
 
 // Student ID Field with Format Validation
@@ -114,7 +114,7 @@ export interface StudentIDFieldProps {
   error?: string;
   required?: boolean;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 export const StudentIDFieldMolecule: React.FC<StudentIDFieldProps> = ({
@@ -129,7 +129,7 @@ export const StudentIDFieldMolecule: React.FC<StudentIDFieldProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Allow only alphanumeric characters and common separators
     const sanitized = e.target.value.replace(/[^a-zA-Z0-9\-_]/g, '');
-    onChange?.(sanitized);
+    onChange?.(sanitized)
   };
 
   return (
@@ -151,7 +151,7 @@ export const StudentIDFieldMolecule: React.FC<StudentIDFieldProps> = ({
         maxLength={20}
       />
     </FormField>
-  );
+  )
 };
 
 // Academic Major Selection with Year
@@ -164,7 +164,7 @@ export interface MajorSelectionFieldProps {
   yearError?: string;
   required?: boolean;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 const ACADEMIC_MAJORS: SelectOption[] = [
@@ -242,7 +242,7 @@ export const MajorSelectionFieldMolecule: React.FC<MajorSelectionFieldProps> = (
         />
       </FormField>
     </div>
-  );
+  )
 };
 
 // Dorm Selection Field
@@ -255,7 +255,7 @@ export interface DormSelectionFieldProps {
   roomError?: string;
   required?: boolean;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 export const DormSelectionFieldMolecule: React.FC<DormSelectionFieldProps> = ({
@@ -272,7 +272,7 @@ export const DormSelectionFieldMolecule: React.FC<DormSelectionFieldProps> = ({
   const handleRoomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Allow alphanumeric room numbers
     const sanitized = e.target.value.replace(/[^a-zA-Z0-9\-]/g, '');
-    onRoomChange?.(sanitized);
+    onRoomChange?.(sanitized)
   };
 
   return (
@@ -309,7 +309,7 @@ export const DormSelectionFieldMolecule: React.FC<DormSelectionFieldProps> = ({
         />
       </FormField>
     </div>
-  );
+  )
 };
 
 // Greek Affiliation Field
@@ -321,7 +321,7 @@ export interface GreekAffiliationFieldProps {
   organizationError?: string;
   positionError?: string;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 const GREEK_POSITIONS: SelectOption[] = [
@@ -380,7 +380,7 @@ export const GreekAffiliationFieldMolecule: React.FC<GreekAffiliationFieldProps>
         </FormField>
       )}
     </div>
-  );
+  )
 };
 
 // Calendar Connection Field
@@ -393,7 +393,7 @@ export interface CalendarConnectionFieldProps {
   onAppleChange?: (enabled: boolean) => void;
   error?: string;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 export const CalendarConnectionFieldMolecule: React.FC<CalendarConnectionFieldProps> = ({
@@ -482,7 +482,7 @@ export const CalendarConnectionFieldMolecule: React.FC<CalendarConnectionFieldPr
         </div>
       </div>
     </FormField>
-  );
+  )
 };
 
 // Privacy Level Field (Ghost Mode)
@@ -491,7 +491,7 @@ export interface PrivacyLevelFieldProps {
   onChange?: (value: 'public' | 'friends' | 'ghost') => void;
   error?: string;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 const PRIVACY_LEVELS: SelectOption[] = [
@@ -516,7 +516,7 @@ export const PrivacyLevelFieldMolecule: React.FC<PrivacyLevelFieldProps> = ({
       case 'ghost':
         return 'Your profile is completely private and invisible to others';
       default:
-        return 'Choose your privacy level';
+        return 'Choose your privacy level'
     }
   };
 
@@ -545,7 +545,7 @@ export const PrivacyLevelFieldMolecule: React.FC<PrivacyLevelFieldProps> = ({
         )}
       </div>
     </FormField>
-  );
+  )
 };
 
 // Builder Verification Field
@@ -560,7 +560,7 @@ export interface BuilderVerificationFieldProps {
   githubError?: string;
   experienceError?: string;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 const EXPERIENCE_LEVELS: SelectOption[] = [
@@ -630,7 +630,7 @@ export const BuilderVerificationFieldMolecule: React.FC<BuilderVerificationField
         />
       </FormField>
     </div>
-  );
+  )
 };
 
 // Space Activation Request Field
@@ -647,7 +647,7 @@ export interface SpaceActivationFieldProps {
   spaceTypeError?: string;
   descriptionError?: string;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 const SPACE_TYPES: SelectOption[] = [
@@ -747,7 +747,7 @@ export const SpaceActivationFieldMolecule: React.FC<SpaceActivationFieldProps> =
         />
       </FormField>
     </div>
-  );
+  )
 };
 
 // Tool Publishing Field
@@ -765,7 +765,7 @@ export interface ToolPublishingFieldProps {
   toolCategoryError?: string;
   repositoryError?: string;
   disabled?: boolean;
-  className?: string;
+  className?: string
 }
 
 const TOOL_CATEGORIES: SelectOption[] = [
@@ -867,5 +867,5 @@ export const ToolPublishingFieldMolecule: React.FC<ToolPublishingFieldProps> = (
         />
       </FormField>
     </div>
-  );
+  )
 };

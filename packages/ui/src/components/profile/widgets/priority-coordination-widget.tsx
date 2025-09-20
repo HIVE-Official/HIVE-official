@@ -18,7 +18,7 @@ interface PriorityCoordinationWidgetProps extends BaseWidgetProps {
   isLoading?: boolean;
   onActionTaken: (priorityId: string, actionId: string) => void;
   onPriorityClick: (priorityId: string) => void;
-  onViewAll: () => void;
+  onViewAll: () => void
 }
 
 export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProps> = ({
@@ -38,19 +38,19 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
     const today = priorities.filter(p => p.type === 'today').sort((a, b) => b.priority - a.priority);
     const thisWeek = priorities.filter(p => p.type === 'this_week').sort((a, b) => b.priority - a.priority);
     
-    return { urgent, today, thisWeek };
+    return { urgent, today, thisWeek }
   }, [priorities]);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => {
       const newSet = new Set(prev);
       if (newSet.has(section)) {
-        newSet.delete(section);
+        newSet.delete(section)
       } else {
-        newSet.add(section);
+        newSet.add(section)
       }
-      return newSet;
-    });
+      return newSet
+    })
   };
 
   const getSourceIcon = (source: CoordinationOpportunity['source']) => {
@@ -60,7 +60,7 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
       social: <MessageSquare className="h-4 w-4" />,
       personal: <BookOpen className="h-4 w-4" />
     };
-    return iconMap[source] || <AlertCircle className="h-4 w-4" />;
+    return iconMap[source] || <AlertCircle className="h-4 w-4" />
   };
 
   const getSourceColor = (source: CoordinationOpportunity['source']) => {
@@ -70,7 +70,7 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
       social: 'text-green-400 bg-green-400/10',
       personal: 'text-[var(--hive-brand-secondary)] bg-[var(--hive-brand-secondary)]/10'
     };
-    return colorMap[source] || 'text-gray-400 bg-gray-400/10';
+    return colorMap[source] || 'text-gray-400 bg-gray-400/10'
   };
 
   const getUrgencyColor = (type: CoordinationOpportunity['type']) => {
@@ -79,7 +79,7 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
       today: 'text-orange-400',
       this_week: 'text-green-400'
     };
-    return colorMap[type] || 'text-gray-400';
+    return colorMap[type] || 'text-gray-400'
   };
 
   const getUrgencyEmoji = (type: CoordinationOpportunity['type']) => {
@@ -88,7 +88,7 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
       today: '🟡',
       this_week: '🟢'
     };
-    return emojiMap[type] || '⚪';
+    return emojiMap[type] || '⚪'
   };
 
   const renderPriorityItem = (priority: CoordinationOpportunity, index: number) => (
@@ -154,8 +154,8 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
                   variant={action.type === 'primary' ? 'primary' : 'outline'}
                   onClick={(e) => {
                     e.stopPropagation();
-                    onActionTaken(priority.id, action.id);
-                  }}
+                    onActionTaken(priority.id, action.id)
+          }}
                   className="text-xs px-3 py-1"
                 >
                   {action.label}
@@ -167,8 +167,8 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
                   variant="ghost"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onPriorityClick(priority.id);
-                  }}
+                    onPriorityClick(priority.id)
+          }}
                   className="h-7 w-7 p-0"
                 >
                   <MoreHorizontal className="h-4 w-4" />
@@ -244,7 +244,7 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   };
 
   const widgetContent = (
@@ -293,5 +293,5 @@ export const PriorityCoordinationWidget: React.FC<PriorityCoordinationWidgetProp
     <BaseWidget {...baseProps}>
       {widgetContent}
     </BaseWidget>
-  );
+  )
 };

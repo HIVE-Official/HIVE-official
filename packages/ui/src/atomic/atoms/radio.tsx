@@ -7,7 +7,7 @@ export interface RadioOption {
   value: string;
   label: string;
   description?: string;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 export interface RadioProps {
@@ -19,7 +19,7 @@ export interface RadioProps {
   orientation?: 'vertical' | 'horizontal';
   error?: string;
   disabled?: boolean;
-  onChange?: (value: string) => void;
+  onChange?: (value: string) => void
 }
 
 export interface SingleRadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -27,7 +27,7 @@ export interface SingleRadioProps extends Omit<React.InputHTMLAttributes<HTMLInp
   description?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'card';
-  error?: string;
+  error?: string
 }
 
 const radioSizes = {
@@ -147,7 +147,7 @@ export const SingleRadio = React.forwardRef<HTMLInputElement, SingleRadioProps>(
         </div>
       )}
     </label>
-  );
+  )
 });
 
 SingleRadio.displayName = 'SingleRadio';
@@ -166,7 +166,7 @@ export const Radio: React.FC<RadioProps> = ({
 }) => {
   const handleChange = (optionValue: string) => {
     if (!disabled) {
-      onChange?.(optionValue);
+      onChange?.(optionValue)
     }
   };
 
@@ -201,5 +201,5 @@ export const Radio: React.FC<RadioProps> = ({
         </p>
       )}
     </div>
-  );
+  )
 };

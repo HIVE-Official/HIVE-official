@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '../../atomic/atoms/badge';
 import { cn } from '../../lib/utils';
 
 // Types for analytics data
@@ -44,20 +44,20 @@ export interface AnalyticsMetric {
   unit?: string;
   format?: 'number' | 'percentage' | 'currency' | 'time';
   icon?: React.ReactNode;
-  color?: string;
+  color?: string
 }
 
 export interface AnalyticsTimeframe {
   id: string;
   label: string;
-  value: string;
+  value: string
 }
 
 export interface AnalyticsData {
   timeframe: string;
   metrics: AnalyticsMetric[];
   chartData: any[];
-  lastUpdated: string;
+  lastUpdated: string
 }
 
 interface AnalyticsDashboardProps {
@@ -66,7 +66,7 @@ interface AnalyticsDashboardProps {
   onTimeframeChange?: (timeframe: string) => void;
   onRefresh?: () => void;
   onExport?: () => void;
-  className?: string;
+  className?: string
 }
 
 export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
@@ -98,7 +98,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       case 'time':
         return `${Math.floor(value / 60)}h ${value % 60}m`;
       default:
-        return unit ? `${value.toLocaleString()} ${unit}` : value.toLocaleString();
+        return unit ? `${value.toLocaleString()} ${unit}` : value.toLocaleString()
     }
   };
 
@@ -109,7 +109,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       case 'decrease':
         return <ArrowDownRight className="h-4 w-4 text-red-500" />;
       default:
-        return null;
+        return null
     }
   };
 
@@ -120,16 +120,16 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       case 'decrease':
         return 'text-red-500';
       default:
-        return 'text-hive-text-secondary';
+        return 'text-hive-text-secondary'
     }
   };
 
   const topMetrics = useMemo(() => {
-    return data.metrics.slice(0, 4);
+    return data.metrics.slice(0, 4)
   }, [data.metrics]);
 
   const additionalMetrics = useMemo(() => {
-    return data.metrics.slice(4);
+    return data.metrics.slice(4)
   }, [data.metrics]);
 
   if (isLoading) {
@@ -145,7 +145,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <div className="h-64 bg-hive-surface-elevated rounded-xl" />
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -326,14 +326,14 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </p>
       </div>
     </div>
-  );
+  )
 };
 
 // Individual Metric Card Component
 interface MetricCardProps {
   metric: AnalyticsMetric;
   isSelected?: boolean;
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({ metric, isSelected, onClick }) => {
@@ -392,7 +392,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ metric, isSelected, onClick }) 
         </div>
       )}
     </HiveCard>
-  );
+  )
 };
 
 // Sample Analytics Data Generator
@@ -482,7 +482,7 @@ export const generateSampleAnalyticsData = (): AnalyticsData => {
       }
     ],
     chartData: [] // Chart data would be populated by actual chart library
-  };
+  }
 };
 
 export default AnalyticsDashboard;

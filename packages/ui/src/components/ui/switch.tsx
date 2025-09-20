@@ -89,7 +89,7 @@ export interface SwitchProps
   uncheckedIcon?: React.ReactNode;
   labelProps?: React.LabelHTMLAttributes<HTMLLabelElement> & 
     VariantProps<typeof switchLabelVariants>;
-  onCheckedChange?: (checked: boolean) => void;
+  onCheckedChange?: (checked: boolean) => void
 }
 
 const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
@@ -127,7 +127,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           checked={checked}
           onChange={(e) => {
             onChange?.(e);
-            onCheckedChange?.(e.target.checked);
+            onCheckedChange?.(e.target.checked)
           }}
           {...props}
         />
@@ -209,10 +209,10 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
             </p>
           )}
         </div>
-      );
+      )
     }
     
-    return switchElement;
+    return switchElement
   }
 );
 Switch.displayName = "Switch";
@@ -223,7 +223,7 @@ export interface SwitchGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   spacing?: "none" | "sm" | "md" | "lg";
   label?: string;
   description?: string;
-  error?: string;
+  error?: string
 }
 
 const SwitchGroup = React.forwardRef<HTMLDivElement, SwitchGroupProps>(
@@ -289,7 +289,7 @@ const SwitchGroup = React.forwardRef<HTMLDivElement, SwitchGroupProps>(
           </p>
         )}
       </div>
-    );
+    )
   }
 );
 SwitchGroup.displayName = "SwitchGroup";
@@ -297,7 +297,7 @@ SwitchGroup.displayName = "SwitchGroup";
 // Switch Card Component - for enhanced toggle experience
 export interface SwitchCardProps extends SwitchProps {
   icon?: React.ReactNode;
-  badge?: React.ReactNode;
+  badge?: React.ReactNode
 }
 
 const SwitchCard = React.forwardRef<HTMLInputElement, SwitchCardProps>(
@@ -342,7 +342,7 @@ const SwitchCard = React.forwardRef<HTMLInputElement, SwitchCardProps>(
           {...props} 
         />
       </div>
-    );
+    )
   }
 );
 SwitchCard.displayName = "SwitchCard";

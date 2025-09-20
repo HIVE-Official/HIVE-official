@@ -26,9 +26,9 @@ export const AnimatePresence: React.FC<{
   mode?: string;
   initial?: boolean;
   exitBeforeEnter?: boolean;
-  onExitComplete?: () => void;
+  onExitComplete?: () => void
 }> = ({ children }) => {
-  return <>{children}</>;
+  return <>{children}</>
 };
 
 // Export individual motion components for convenience

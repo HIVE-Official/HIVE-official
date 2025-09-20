@@ -11,7 +11,7 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   breakout?: boolean;
   variant?: 'default' | 'card' | 'panel' | 'section';
   gutter?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 // Max width variants based on Tailwind responsive breakpoints
@@ -124,7 +124,7 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(({
     >
       {children}
     </div>
-  );
+  )
 });
 
 Container.displayName = 'Container';

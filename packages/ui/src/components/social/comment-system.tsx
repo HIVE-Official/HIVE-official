@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { Avatar, HiveBadge as Badge } from '../index'; // Use atomic components
 import { 
   MessageCircle, 
@@ -29,19 +29,19 @@ export interface Comment {
     handle: string;
     avatar?: string;
     role?: string;
-    isVerified?: boolean;
+    isVerified?: boolean
   };
   timestamp: string;
   engagement: {
     likes: number;
-    replies: number;
+    replies: number
   };
   isLiked?: boolean;
   isEdited?: boolean;
   parentId?: string;
   replies?: Comment[];
   canEdit?: boolean;
-  canDelete?: boolean;
+  canDelete?: boolean
 }
 
 interface CommentSystemProps {
@@ -56,7 +56,7 @@ interface CommentSystemProps {
   isLoading?: boolean;
   maxDepth?: number;
   showCount?: boolean;
-  enableFeatureFlag?: boolean;
+  enableFeatureFlag?: boolean
 }
 
 interface CommentItemProps {
@@ -68,7 +68,7 @@ interface CommentItemProps {
   onReply?: (content: string, parentId: string) => Promise<void>;
   onEdit?: (commentId: string, content: string) => Promise<void>;
   onDelete?: (commentId: string) => Promise<void>;
-  onReport?: (commentId: string, reason: string) => Promise<void>;
+  onReport?: (commentId: string, reason: string) => Promise<void>
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({
@@ -94,7 +94,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const canReply = depth < maxDepth;
 
   const handleLike = useCallback(async () => {
-    await onLike?.(comment.id);
+    await onLike?.(comment.id)
   }, [comment.id, onLike]);
 
   const handleReply = useCallback(async () => {
@@ -102,16 +102,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
     await onReply?.(replyContent, comment.id);
     setReplyContent('');
     setIsReplying(false);
-    setShowReplies(true);
+    setShowReplies(true)
   }, [replyContent, comment.id, onReply]);
 
   const handleEdit = useCallback(async () => {
     if (!editContent.trim() || editContent === comment.content) {
       setIsEditing(false);
-      return;
+      return
     }
     await onEdit?.(comment.id, editContent);
-    setIsEditing(false);
+    setIsEditing(false)
   }, [editContent, comment.id, comment.content, onEdit]);
 
   const formatTimeAgo = useCallback((timestamp: string) => {
@@ -125,7 +125,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
     if (days > 0) return `${days}d`;
     if (hours > 0) return `${hours}h`;
     if (minutes > 0) return `${minutes}m`;
-    return 'now';
+    return 'now'
   }, []);
 
   return (
@@ -258,8 +258,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
                       <button
                         onClick={() => {
                           setIsEditing(true);
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2"
                       >
                         <Edit3 className="w-3 h-3" />
@@ -270,8 +270,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
                       <button
                         onClick={() => {
                           onDelete?.(comment.id);
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2 text-[var(--hive-status-error)]"
                       >
                         <Trash2 className="w-3 h-3" />
@@ -282,8 +282,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
                       <button
                         onClick={() => {
                           onReport?.(comment.id, 'inappropriate');
-                          setShowMenu(false);
-                        }}
+                          setShowMenu(false)
+          }}
                         className="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--hive-background-secondary)] flex items-center gap-2 text-[var(--hive-status-warning)]"
                       >
                         <Flag className="w-3 h-3" />
@@ -356,7 +356,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
         </div>
       </div>
     </motion.div>
-  );
+  )
 };
 
 export const CommentSystem: React.FC<CommentSystemProps> = ({
@@ -382,10 +382,10 @@ export const CommentSystem: React.FC<CommentSystemProps> = ({
   const totalComments = useMemo(() => {
     const countComments = (commentList: Comment[]): number => {
       return commentList.reduce((count, comment) => {
-        return count + 1 + (comment.replies ? countComments(comment.replies) : 0);
-      }, 0);
+        return count + 1 + (comment.replies ? countComments(comment.replies) : 0)
+      }, 0)
     };
-    return countComments(comments);
+    return countComments(comments)
   }, [comments]);
 
   const handleSubmit = useCallback(async () => {
@@ -394,9 +394,9 @@ export const CommentSystem: React.FC<CommentSystemProps> = ({
     setIsSubmitting(true);
     try {
       await onAddComment?.(newComment);
-      setNewComment('');
+      setNewComment('')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
   }, [newComment, isSubmitting, onAddComment]);
 
@@ -469,5 +469,5 @@ export const CommentSystem: React.FC<CommentSystemProps> = ({
         )}
       </div>
     </div>
-  );
+  )
 };

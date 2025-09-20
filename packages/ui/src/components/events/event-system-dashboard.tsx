@@ -19,7 +19,7 @@ interface EventSystemDashboardProps {
   spaceId: string;
   userId: string;
   userRole: 'admin' | 'moderator' | 'member';
-  className?: string;
+  className?: string
 }
 
 type EventSystemView = 'dashboard' | 'create' | 'manage' | 'calendar' | 'analytics' | 'tool';
@@ -30,7 +30,7 @@ interface EventSystemTool {
   description: string;
   icon: React.ComponentType<{ className?: string }>;
   toolDefinition: ToolDefinition;
-  category: 'creation' | 'management' | 'engagement' | 'analysis';
+  category: 'creation' | 'management' | 'engagement' | 'analysis'
 }
 
 export function EventSystemDashboard({ spaceId, userId, userRole, className }: EventSystemDashboardProps) {
@@ -98,27 +98,27 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
         setEvents(data.events || []);
         setUpcomingEvents((data.events || []).filter((event: EventDefinition) => 
           new Date(event.startDate) > new Date()
-        ).slice(0, 5));
+        ).slice(0, 5))
       } else {
         // Fallback to sample events
         const sampleEvents = getSampleEvents();
         setEvents(sampleEvents);
-        setUpcomingEvents(sampleEvents.slice(0, 5));
+        setUpcomingEvents(sampleEvents.slice(0, 5))
       }
     } catch (error) {
       console.error('Failed to fetch events:', error);
       const sampleEvents = getSampleEvents();
       setEvents(sampleEvents);
-      setUpcomingEvents(sampleEvents.slice(0, 5));
+      setUpcomingEvents(sampleEvents.slice(0, 5))
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }, [spaceId, userId]);
 
   // Launch tool
   const handleLaunchTool = (tool: EventSystemTool) => {
     setSelectedTool(tool);
-    setCurrentView('tool');
+    setCurrentView('tool')
   };
 
   // Handle tool actions
@@ -133,9 +133,9 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
           'Authorization': `Bearer ${userId}`
         },
         body: JSON.stringify({ spaceId, data })
-      });
+      })
     } catch (error) {
-      console.error('Failed to save tool data:', error);
+      console.error('Failed to save tool data:', error)
     }
   };
 
@@ -157,15 +157,15 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
       
       // Return to dashboard
       setSelectedTool(null);
-      setCurrentView('dashboard');
+      setCurrentView('dashboard')
     } catch (error) {
-      console.error('Failed to submit tool data:', error);
+      console.error('Failed to submit tool data:', error)
     }
   };
 
   // Load events on mount
   useEffect(() => {
-    fetchEvents();
+    fetchEvents()
   }, [fetchEvents]);
 
   // Tool Runtime View
@@ -180,8 +180,8 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
               size="sm"
               onClick={() => {
                 setSelectedTool(null);
-                setCurrentView('dashboard');
-              }}
+                setCurrentView('dashboard')
+          }}
             >
               ← Back to Event System
             </HiveButton>
@@ -202,7 +202,7 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
           onSubmit={handleToolSubmit}
         />
       </div>
-    );
+    )
   }
 
   // Event Creator View
@@ -213,12 +213,12 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
           spaceId={spaceId}
           onEventCreated={async (event) => {
             await fetchEvents();
-            setCurrentView('dashboard');
+            setCurrentView('dashboard')
           }}
           onCancel={() => setCurrentView('dashboard')}
         />
       </div>
-    );
+    )
   }
 
   // Main Dashboard View
@@ -362,13 +362,13 @@ export function EventSystemDashboard({ spaceId, userId, userRole, className }: E
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Individual Event Tool Card
 interface EventToolCardProps {
   tool: EventSystemTool;
-  onLaunch: () => void;
+  onLaunch: () => void
 }
 
 function EventToolCard({ tool, onLaunch }: EventToolCardProps) {
@@ -407,12 +407,12 @@ function EventToolCard({ tool, onLaunch }: EventToolCardProps) {
         </div>
       </div>
     </HiveCard>
-  );
+  )
 }
 
 // Individual Event Card
 interface EventCardProps {
-  event: EventDefinition;
+  event: EventDefinition
 }
 
 function EventCard({ event }: EventCardProps) {
@@ -423,7 +423,7 @@ function EventCard({ event }: EventCardProps) {
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
-    });
+    })
   };
 
   return (
@@ -456,7 +456,7 @@ function EventCard({ event }: EventCardProps) {
         </div>
       </div>
     </HiveCard>
-  );
+  )
 }
 
 // Tool Definition Creators (these would create the actual tool definitions)
@@ -492,7 +492,7 @@ function createEventCreatorTool(): ToolDefinition {
       category: 'event',
       tags: ['event', 'creation']
     }
-  };
+  }
 }
 
 function createRSVPManagerTool(): ToolDefinition {
@@ -510,7 +510,7 @@ function createRSVPManagerTool(): ToolDefinition {
       category: 'event',
       tags: ['rsvp', 'management']
     }
-  };
+  }
 }
 
 function createCheckInTool(): ToolDefinition {
@@ -527,7 +527,7 @@ function createCheckInTool(): ToolDefinition {
       category: 'event',
       tags: ['checkin', 'qr-code']
     }
-  };
+  }
 }
 
 function createEventCalendarTool(): ToolDefinition {
@@ -544,7 +544,7 @@ function createEventCalendarTool(): ToolDefinition {
       category: 'event',
       tags: ['calendar', 'scheduling']
     }
-  };
+  }
 }
 
 function createFeedbackTool(): ToolDefinition {
@@ -561,7 +561,7 @@ function createFeedbackTool(): ToolDefinition {
       category: 'event',
       tags: ['feedback', 'analysis']
     }
-  };
+  }
 }
 
 // Sample events for development
@@ -595,7 +595,7 @@ function getSampleEvents(): EventDefinition[] {
       tags: ['study', 'algorithms', 'cs']
     },
     // More sample events...
-  ];
+  ]
 }
 
 export default EventSystemDashboard;

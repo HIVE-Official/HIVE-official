@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '../../lib/utils';
 import { Text } from '../../atomic/atoms/text';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { useAdvancedViewport } from '../Layout/ResponsiveLayout';
 
 // Fallback strategies for different failure scenarios
@@ -30,10 +30,10 @@ type FallbackContext = {
   user?: {
     isBuilder?: boolean;
     hasCreatedTools?: boolean;
-    campusRole?: 'student' | 'faculty' | 'admin';
+    campusRole?: 'student' | 'faculty' | 'admin'
   };
   criticalFeatures: FeatureCategory[];
-  availableOffline?: string[];
+  availableOffline?: string[]
 };
 
 interface FallbackUIProps {
@@ -63,7 +63,7 @@ interface FallbackUIProps {
   showFeatureStatus?: boolean;
   
   className?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // Intelligent feature prioritization based on user context
@@ -73,7 +73,7 @@ function prioritizeFeatures(
 ): {
   stillWorking: FeatureCategory[];
   degraded: FeatureCategory[];
-  unavailable: FeatureCategory[];
+  unavailable: FeatureCategory[]
 } {
   const allFeatures: FeatureCategory[] = ['core', 'social', 'creation', 'analytics', 'advanced', 'experimental'];
   
@@ -89,7 +89,7 @@ function prioritizeFeatures(
   
   const unavailable = failedFeatures;
   
-  return { stillWorking, degraded, unavailable };
+  return { stillWorking, degraded, unavailable }
 }
 
 // Generate contextual messaging based on what's affected
@@ -101,7 +101,7 @@ function generateFallbackMessage(
   title: string;
   description: string;
   encouragement: string;
-  alternatives: string[];
+  alternatives: string[]
 } {
   const { area, user } = context;
   
@@ -148,17 +148,17 @@ function generateFallbackMessage(
   ];
   
   if (area === 'tools' && !failedFeatures.includes('core')) {
-    alternatives.unshift("Your existing tools still work perfectly");
+    alternatives.unshift("Your existing tools still work perfectly")
   }
   
   if (area === 'spaces' && !failedFeatures.includes('social')) {
-    alternatives.unshift("Basic community features are still available");
+    alternatives.unshift("Basic community features are still available")
   }
   
   return {
     ...base,
     alternatives: alternatives.slice(0, 3)
-  };
+  }
 }
 
 // Feature status indicator component
@@ -167,7 +167,7 @@ function FeatureStatus({
   status 
 }: { 
   category: FeatureCategory; 
-  status: 'working' | 'degraded' | 'unavailable';
+  status: 'working' | 'degraded' | 'unavailable'
 }) {
   const statusConfig = {
     working: {
@@ -222,7 +222,7 @@ function FeatureStatus({
         {config.label}
       </span>
     </div>
-  );
+  )
 }
 
 export const FallbackUI: React.FC<FallbackUIProps> = ({
@@ -259,7 +259,7 @@ export const FallbackUI: React.FC<FallbackUIProps> = ({
   const handleModeSwitch = (mode: 'simplified' | 'offline' | 'essential') => {
     setCurrentMode(mode);
     if (onSwitchMode) {
-      onSwitchMode(mode);
+      onSwitchMode(mode)
     }
   };
   
@@ -268,11 +268,11 @@ export const FallbackUI: React.FC<FallbackUIProps> = ({
     
     setIsRetrying(true);
     try {
-      await onRetry();
+      await onRetry()
     } catch (error) {
-      console.error('Retry failed:', error);
+      console.error('Retry failed:', error)
     } finally {
-      setIsRetrying(false);
+      setIsRetrying(false)
     }
   };
   
@@ -517,7 +517,7 @@ export const FallbackUI: React.FC<FallbackUIProps> = ({
         </details>
       )}
     </div>
-  );
+  )
 };
 
 // Export utilities

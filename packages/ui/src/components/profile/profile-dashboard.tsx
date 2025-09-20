@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../framer-motion-proxy';
 import { cn } from '../../lib/utils';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Switch } from '../../components/ui/switch';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Button } from '../../atomic/atoms/button';
+import { Card, CardContent, CardHeader } from '../../atomic/ui/card';
+import { Badge } from '../../atomic/atoms/badge';
+import { Switch } from '../../atomic/atoms/switch';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../atomic/atoms/dialog';
 
 // Import all card components
 import { AvatarCard, mockUserProfile, type UserProfile } from './cards/avatar-card';
@@ -52,7 +52,7 @@ import {
 export interface ProfileDashboardProps {
   userId: string;
   isOwnProfile: boolean;
-  className?: string;
+  className?: string
 }
 
 export interface ProfileData {
@@ -64,7 +64,7 @@ export interface ProfileData {
   ghostModeSettings: GhostModeSettings;
   tools: Tool[];
   builderStats: BuilderStats;
-  isBuilder: boolean;
+  isBuilder: boolean
 }
 
 // Default grid layout configuration
@@ -125,7 +125,7 @@ function DevicePreview({
   onDeviceChange 
 }: { 
   device: 'mobile' | 'tablet' | 'desktop';
-  onDeviceChange: (device: 'mobile' | 'tablet' | 'desktop') => void;
+  onDeviceChange: (device: 'mobile' | 'tablet' | 'desktop') => void
 }) {
   const devices = [
     { key: 'mobile', label: 'Mobile', icon: Smartphone },
@@ -135,7 +135,7 @@ function DevicePreview({
 
   return (
     <div className="flex gap-1">
-      {devices.map(({ key, label, icon: Icon }) => (
+      {devices.map(({ key, label, icon: Icon })} => (
         <Button
           key={key}
           size="sm"
@@ -148,7 +148,7 @@ function DevicePreview({
         </Button>
       ))}
     </div>
-  );
+  )
 }
 
 // Card Visibility Settings
@@ -157,7 +157,7 @@ function CardVisibilitySettings({
   onItemToggle
 }: {
   items: GridItem[];
-  onItemToggle: (id: string, visible: boolean) => void;
+  onItemToggle: (id: string, visible: boolean) => void
 }) {
   const cardLabels = {
     avatar: 'Avatar & Identity',
@@ -179,13 +179,13 @@ function CardVisibilitySettings({
             </span>
             <Switch
               checked={item.isVisible}
-              onCheckedChange={(checked) => onItemToggle(item.id, checked)}
+              onChange={(e) => { const checked = e.target.checked; onItemToggle(item.id, checked)}
             />
           </div>
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // Profile Settings Dialog
@@ -200,7 +200,7 @@ function ProfileSettingsDialog({
   onOpenChange: (open: boolean) => void;
   items: GridItem[];
   onItemToggle: (id: string, visible: boolean) => void;
-  onResetLayout: () => void;
+  onResetLayout: () => void
 }) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -276,7 +276,7 @@ function ProfileSettingsDialog({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 // Main Profile Dashboard Component
@@ -313,7 +313,7 @@ export function ProfileDashboard({
     setProfileData(prev => ({
       ...prev,
       user: { ...prev.user, ...updates }
-    }));
+    }))
   }, []);
 
   const handlePhotoUpload = useCallback(async (file: File): Promise<string> => {
@@ -322,9 +322,9 @@ export function ProfileDashboard({
       setTimeout(() => {
         const mockUrl = URL.createObjectURL(file);
         handleProfileUpdate({ profilePhotoURL: mockUrl });
-        resolve(mockUrl);
-      }, 1000);
-    });
+        resolve(mockUrl)
+      }, 1000)
+    })
   }, [handleProfileUpdate]);
 
   // Handle ghost mode changes
@@ -332,17 +332,17 @@ export function ProfileDashboard({
     setProfileData(prev => ({
       ...prev,
       ghostModeSettings: { ...prev.ghostModeSettings, ...settings }
-    }));
+    }))
   }, []);
 
   const handleToggleGhostMode = useCallback((enabled: boolean) => {
-    handleGhostModeChange({ isEnabled: enabled });
+    handleGhostModeChange({ isEnabled: enabled })
   }, [handleGhostModeChange]);
 
   const handleGhostModePreset = useCallback((preset: keyof GhostModeSettings['presets']) => {
     const newPresets = { ...profileData.ghostModeSettings.presets };
     newPresets[preset] = !newPresets[preset];
-    handleGhostModeChange({ presets: newPresets });
+    handleGhostModeChange({ presets: newPresets })
   }, [profileData.ghostModeSettings.presets, handleGhostModeChange]);
 
   // Handle card visibility
@@ -350,13 +350,13 @@ export function ProfileDashboard({
     const updatedItems = items.map(item => 
       item.id === id ? { ...item, isVisible: visible } : item
     );
-    updateItems(updatedItems);
+    updateItems(updatedItems)
   }, [items, updateItems]);
 
   // Handle layout reset
   const handleResetLayout = useCallback(() => {
     updateItems(defaultGridItems);
-    setSettingsOpen(false);
+    setSettingsOpen(false)
   }, [updateItems]);
 
   // Get responsive columns based on device
@@ -365,7 +365,7 @@ export function ProfileDashboard({
       case 'mobile': return 1;
       case 'tablet': return 2;
       case 'desktop': return 4;
-      default: return 4;
+      default: return 4
     }
   }, [device]);
 
@@ -455,7 +455,7 @@ export function ProfileDashboard({
           <Card className="h-full flex items-center justify-center">
             <p className="text-[var(--hive-text-muted)]">Unknown card type</p>
           </Card>
-        );
+        )
     }
   }, [
     profileData,
@@ -483,7 +483,7 @@ export function ProfileDashboard({
               </h1>
               
               {profileData.user.builderStatus && (
-                <Badge variant="default" className="bg-[var(--hive-brand-gold)]">
+                <Badge variant="secondary" className="bg-[var(--hive-brand-gold)]">
                   <Crown className="w-4 h-4 mr-1" />
                   Builder
                 </Badge>
@@ -628,7 +628,7 @@ export function ProfileDashboard({
         onResetLayout={handleResetLayout}
       />
     </>
-  );
+  )
 }
 
 // Export default props for Storybook

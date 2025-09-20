@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { Card, CardContent } from "../ui/card";
-import { Button } from "../../ui/button-enhanced";
+import { Button } from "../../atomic/atoms/button-enhanced";
 import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { FeedComposer } from "./feed-composer";
 import { PostCard } from "./post-card";
@@ -20,44 +20,44 @@ interface FeedUser {
   fullName: string;
   handle: string;
   photoURL?: string;
-  role?: "member" | "builder" | "admin";
+  role?: "member" | "builder" | "admin"
 }
 
 interface FeedPost extends Post {
-  author: FeedUser;
+  author: FeedUser
 }
 
 interface SpaceFeedProps {
   spaceId: string;
   currentUser: FeedUser;
   className?: string;
-  posts?: FeedPost[];
+  posts?: FeedPost[]
 }
 
 interface FeedResponse {
   posts: FeedPost[];
   hasMore: boolean;
-  lastPostId: string | null;
+  lastPostId: string | null
 }
 
 interface InfiniteQueryData {
   pages: FeedResponse[];
-  pageParams: (string | undefined)[];
+  pageParams: (string | undefined)[]
 }
 
 interface ReactResponse {
   success: boolean;
   reactions?: {
-    heart: number;
-  };
+    heart: number
+  }
 }
 
 interface DeleteResponse {
-  success: boolean;
+  success: boolean
 }
 
 interface ModerateResponse {
-  success: boolean;
+  success: boolean
 }
 
 export const SpaceFeed: React.FC<SpaceFeedProps> = ({
@@ -82,14 +82,14 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
         });
 
         if (pageParam) {
-          params.append("lastPostId", pageParam);
+          params.append("lastPostId", pageParam)
         }
 
         const response = await fetch(`/api/spaces/${spaceId}/feed?${params}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch posts");
+          throw new Error("Failed to fetch posts")
         }
-        return response.json() as Promise<FeedResponse>;
+        return response.json() as Promise<FeedResponse>
       },
       getNextPageParam: (lastPage: FeedResponse) =>
         lastPage.hasMore ? lastPage.lastPostId : undefined,
@@ -106,11 +106,11 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
 
       observerRef.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
-          void fetchNextPage();
+          void fetchNextPage()
         }
       });
 
-      if (node) observerRef.current.observe(node);
+      if (node) observerRef.current.observe(node)
     },
     [isFetchingNextPage, fetchNextPage, hasNextPage]
   );
@@ -124,7 +124,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
     }: {
       postId: string;
       reaction: "heart";
-      action: "add" | "remove";
+      action: "add" | "remove"
     }) => {
       const response = await fetch(
         `/api/spaces/${spaceId}/posts/${postId}/react`,
@@ -138,10 +138,10 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
       );
 
       if (!response.ok) {
-        throw new Error("Failed to react to post");
+        throw new Error("Failed to react to post")
       }
 
-      return response.json() as Promise<ReactResponse>;
+      return response.json() as Promise<ReactResponse>
     },
     onSuccess: (data, variables) => {
       // Optimistically update the cache
@@ -162,10 +162,10 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                     variables.action === "add" &&
                     !newReactedUsers.includes(currentUser.id)
                   ) {
-                    newReactedUsers.push(currentUser.id);
+                    newReactedUsers.push(currentUser.id)
                   } else if (variables.action === "remove") {
                     const index = newReactedUsers.indexOf(currentUser.id);
-                    if (index > -1) newReactedUsers.splice(index, 1);
+                    if (index > -1) newReactedUsers.splice(index, 1)
                   }
 
                   return {
@@ -178,14 +178,14 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                       ...post.reactedUsers,
                       heart: newReactedUsers,
                     },
-                  };
+                  }
                 }
-                return post;
+                return post
               }),
             })),
-          };
+          }
         }
-      );
+      )
     },
   });
 
@@ -197,10 +197,10 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete post");
+        throw new Error("Failed to delete post")
       }
 
-      return response.json() as Promise<DeleteResponse>;
+      return response.json() as Promise<DeleteResponse>
     },
     onSuccess: (data, postId) => {
       // Update the cache to mark post as deleted
@@ -219,14 +219,14 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                     ...post,
                     isDeleted: true,
                     content: `Post removed by ${currentUser.fullName}`,
-                  };
+                  }
                 }
-                return post;
+                return post
               }),
             })),
-          };
+          }
         }
-      );
+      )
     },
   });
 
@@ -247,14 +247,14 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
       );
 
       if (!response.ok) {
-        throw new Error("Failed to pin post");
+        throw new Error("Failed to pin post")
       }
 
-      return response.json() as Promise<ModerateResponse>;
+      return response.json() as Promise<ModerateResponse>
     },
     onSuccess: () => {
       // Refetch to get updated order (pinned posts go to top)
-      void refetch();
+      void refetch()
     },
   });
 
@@ -265,7 +265,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
       reason,
     }: {
       postId: string;
-      reason: string;
+      reason: string
     }) => {
       const response = await fetch(
         `/api/spaces/${spaceId}/posts/${postId}/moderate`,
@@ -282,13 +282,13 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
       );
 
       if (!response.ok) {
-        throw new Error("Failed to flag post");
+        throw new Error("Failed to flag post")
       }
 
-      return response.json() as Promise<ModerateResponse>;
+      return response.json() as Promise<ModerateResponse>
     },
     onSuccess: () => {
-      void refetch();
+      void refetch()
     },
   });
 
@@ -313,17 +313,17 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
             },
             ...oldData.pages.slice(1),
           ],
-        };
+        }
       }
-    );
+    )
   };
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      await refetch();
+      await refetch()
     } finally {
-      setIsRefreshing(false);
+      setIsRefreshing(false)
     }
   };
 
@@ -332,7 +332,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
 
   const fetchMorePosts = useCallback(async (): Promise<{
     hasMore: boolean;
-    lastPostId: string;
+    lastPostId: string
   }> => {
     try {
       // Fetch logic with proper typing
@@ -342,22 +342,22 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
       return {
         hasMore: data.hasMore || false,
         lastPostId: data.lastPostId || "",
-      };
+      }
     } catch (error) {
       console.error("Error fetching posts:", error);
-      return { hasMore: false, lastPostId: "" };
+      return { hasMore: false, lastPostId: "" }
     }
   }, [spaceId]);
 
   const handleLoadMore = useCallback(async () => {
     setIsLoading(true);
     try {
-      await fetchMorePosts();
+      await fetchMorePosts()
     } catch (error) {
       console.error("Error loading more posts:", error);
-      setError("Failed to load more posts");
+      setError("Failed to load more posts")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }, [fetchMorePosts]);
 
@@ -375,7 +375,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
           <Loader2 className="h-6 w-6 animate-spin" />
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -412,7 +412,7 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
           </CardContent>
         </Card>
       </div>
-    );
+    )
   }
 
   return (
@@ -468,17 +468,17 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                         onSuccess: () => resolve(),
                         onError: (error) => reject(error),
                       }
-                    );
-                  });
-                }}
+                    )
+                  })
+          })}
                 onDelete={async (postId) => {
                   return new Promise<void>((resolve, reject) => {
                     deleteMutation.mutate(postId, {
                       onSuccess: () => resolve(),
                       onError: (error) => reject(error),
-                    });
-                  });
-                }}
+                    })
+                  })
+          })}
                 onPin={async (postId, pin) => {
                   return new Promise<void>((resolve, reject) => {
                     pinMutation.mutate(
@@ -487,9 +487,9 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                         onSuccess: () => resolve(),
                         onError: (error) => reject(error),
                       }
-                    );
-                  });
-                }}
+                    )
+                  })
+          })}
                 onFlag={async (postId, reason) => {
                   return new Promise<void>((resolve, reject) => {
                     flagMutation.mutate(
@@ -498,9 +498,9 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
                         onSuccess: () => resolve(),
                         onError: (error) => reject(error),
                       }
-                    );
-                  });
-                }}
+                    )
+                  })
+          })}
               />
             </div>
           ))}
@@ -529,5 +529,5 @@ export const SpaceFeed: React.FC<SpaceFeedProps> = ({
         Load More Posts
       </Button>
     </div>
-  );
+  )
 };

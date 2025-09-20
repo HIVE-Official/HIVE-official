@@ -8,6 +8,6 @@ interface MemberDirectoryToolProps {
     authenticatedFetch?: (url: string, options?: RequestInit) => Promise<Response>;
     className?: string;
 }
-export declare function MemberDirectoryTool({ spaceId, spaceName, isLeader, currentUserRole, leaderMode, onMemberAction, authenticatedFetch, className }: MemberDirectoryToolProps): import("react/jsx-runtime").JSX.Element;
+export declare function MemberDirectoryTool({ spaceId, spaceName, isLeader, currentUserRole, leaderMode, onMemberAction, authenticatedFetch, className }: MemberDirectoryToolProps): void;
 export {};
 //# sourceMappingURL=member-directory-tool.d.ts.map

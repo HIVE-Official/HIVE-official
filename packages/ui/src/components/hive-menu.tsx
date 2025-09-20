@@ -129,7 +129,7 @@ export interface MenuItem {
   separator?: boolean;
   children?: MenuItem[];
   selected?: boolean;
-  description?: string;
+  description?: string
 }
 
 export interface HiveMenuProps
@@ -140,7 +140,7 @@ export interface HiveMenuProps
   position?: 'bottom' | 'top' | 'left' | 'right';
   size?: 'sm' | 'default' | 'lg' | 'xl';
   closeOnSelect?: boolean;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
@@ -165,12 +165,12 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
       const handleClickOutside = (event: MouseEvent) => {
         if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
           setIsOpen(false);
-          setExpandedSubmenus(new Set());
+          setExpandedSubmenus(new Set())
         }
       };
       
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside)
     }, []);
     
     // Close on escape
@@ -178,13 +178,13 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
       const handleEscape = (event: KeyboardEvent) => {
         if (event.key === 'Escape') {
           setIsOpen(false);
-          setExpandedSubmenus(new Set());
+          setExpandedSubmenus(new Set())
         }
       };
       
       if (isOpen) {
         document.addEventListener('keydown', handleEscape);
-        return () => document.removeEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape)
       }
     }, [isOpen]);
     
@@ -192,7 +192,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
       if (!disabled) {
         setIsOpen(!isOpen);
         if (!isOpen) {
-          setExpandedSubmenus(new Set());
+          setExpandedSubmenus(new Set())
         }
       }
     };
@@ -200,24 +200,24 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
     const toggleSubmenu = (itemId: string) => {
       const newExpanded = new Set(expandedSubmenus);
       if (newExpanded.has(itemId)) {
-        newExpanded.delete(itemId);
+        newExpanded.delete(itemId)
       } else {
-        newExpanded.add(itemId);
+        newExpanded.add(itemId)
       }
-      setExpandedSubmenus(newExpanded);
+      setExpandedSubmenus(newExpanded)
     };
     
     const handleItemClick = (item: MenuItem) => {
       if (item.disabled) return;
       
       if (item.children && item.children.length > 0) {
-        toggleSubmenu(item.id);
+        toggleSubmenu(item.id)
       } else {
         if (closeOnSelect) {
           setIsOpen(false);
-          setExpandedSubmenus(new Set());
+          setExpandedSubmenus(new Set())
         }
-        item.onClick?.();
+        item.onClick?.()
       }
     };
     
@@ -225,7 +225,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
       if (item.separator) {
         return (
           <div key={`separator-${item.id}`} className="border-t border-white/10 my-1" />
-        );
+        )
       }
       
       const hasChildren = item.children && item.children.length > 0;
@@ -302,7 +302,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
                 transition={{
                   duration: motionDurations.smooth,
                   ease: liquidMetal.easing as any,
-                }}
+          }}
                 className="overflow-hidden border-l border-white/10 ml-6"
               >
                 {item.children?.map(child => renderMenuItem(child, level + 1))}
@@ -310,7 +310,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
             )}
           </AnimatePresence>
         </div>
-      );
+      )
     };
     
     return (
@@ -356,7 +356,7 @@ const HiveMenu = React.forwardRef<HTMLDivElement, HiveMenuProps>(
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 
@@ -367,7 +367,7 @@ interface HiveMenuButtonProps extends Omit<HiveMenuProps, 'trigger'> {
   label: string;
   icon?: React.ReactNode;
   showChevron?: boolean;
-  buttonVariant?: 'default' | 'ghost' | 'outline';
+  buttonVariant?: 'default' | 'ghost' | 'outline'
 }
 
 const HiveMenuButton = React.forwardRef<HTMLDivElement, HiveMenuButtonProps>(
@@ -404,7 +404,7 @@ const HiveMenuButton = React.forwardRef<HTMLDivElement, HiveMenuButtonProps>(
         trigger={trigger}
         {...props}
       />
-    );
+    )
   }
 );
 
@@ -418,11 +418,11 @@ export function useHiveContextMenu(items: MenuItem[]) {
   const openContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     setPosition({ x: event.clientX, y: event.clientY });
-    setIsOpen(true);
+    setIsOpen(true)
   };
   
   const closeContextMenu = () => {
-    setIsOpen(false);
+    setIsOpen(false)
   };
   
   return {
@@ -434,7 +434,7 @@ export function useHiveContextMenu(items: MenuItem[]) {
     contextMenuProps: {
       onContextMenu: openContextMenu,
     },
-  };
+  }
 }
 
 export { 

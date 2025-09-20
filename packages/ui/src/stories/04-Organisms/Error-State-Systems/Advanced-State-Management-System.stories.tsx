@@ -105,7 +105,7 @@ interface AppState {
   feed: FeedState;
   notifications: NotificationState;
   sync: SyncState;
-  ui: UIState;
+  ui: UIState
 }
 
 interface UserState {
@@ -115,7 +115,7 @@ interface UserState {
   connections: Connection[];
   status: 'idle' | 'loading' | 'error' | 'syncing';
   error: string | null;
-  lastSync: number | null;
+  lastSync: number | null
 }
 
 interface SpacesState {
@@ -125,7 +125,7 @@ interface SpacesState {
   posts: Record<string, Post[]>;
   status: 'idle' | 'loading' | 'error';
   pagination: Record<string, PaginationInfo>;
-  filters: SpaceFilters;
+  filters: SpaceFilters
 }
 
 interface FeedState {
@@ -133,14 +133,14 @@ interface FeedState {
   status: 'idle' | 'loading' | 'refreshing' | 'error';
   hasMore: boolean;
   optimisticUpdates: OptimisticUpdate[];
-  lastRefresh: number | null;
+  lastRefresh: number | null
 }
 
 interface NotificationState {
   notifications: Notification[];
   unreadCount: number;
   realTimeConnection: 'connected' | 'disconnected' | 'connecting';
-  preferences: NotificationPreferences;
+  preferences: NotificationPreferences
 }
 
 interface SyncState {
@@ -149,7 +149,7 @@ interface SyncState {
   queuedOperations: QueuedOperation[];
   conflictedItems: ConflictedItem[];
   lastSyncAttempt: number | null;
-  retryCount: number;
+  retryCount: number
 }
 
 interface UIState {
@@ -159,7 +159,7 @@ interface UIState {
   toasts: Toast[];
   loading: Record<string, boolean>;
   theme: 'dark' | 'light' | 'auto';
-  viewport: 'mobile' | 'tablet' | 'desktop';
+  viewport: 'mobile' | 'tablet' | 'desktop'
 }
 
 // Mock Data Types
@@ -178,8 +178,8 @@ interface UserProfile {
     spacesJoined: number;
     toolsCreated: number;
     connectionsCount: number;
-    postsShared: number;
-  };
+    postsShared: number
+  }
 }
 
 interface Space {
@@ -192,7 +192,7 @@ interface Space {
   avatar: string;
   createdAt: string;
   lastActivity: string;
-  tags: string[];
+  tags: string[]
 }
 
 interface Post {
@@ -210,16 +210,16 @@ interface Post {
     likes: number;
     comments: number;
     shares: number;
-    bookmarks: number;
+    bookmarks: number
   };
   userInteracted: {
     liked: boolean;
     commented: boolean;
     shared: boolean;
-    bookmarked: boolean;
+    bookmarked: boolean
   };
   status: 'published' | 'draft' | 'pending' | 'failed';
-  isOptimistic?: boolean;
+  isOptimistic?: boolean
 }
 
 interface Notification {
@@ -230,7 +230,7 @@ interface Notification {
   actionUrl?: string;
   isRead: boolean;
   createdAt: string;
-  data?: Record<string, any>;
+  data?: Record<string, any>
 }
 
 interface OptimisticUpdate {
@@ -239,7 +239,7 @@ interface OptimisticUpdate {
   entity: 'post' | 'comment' | 'like' | 'follow';
   data: any;
   timestamp: number;
-  status: 'pending' | 'confirmed' | 'failed';
+  status: 'pending' | 'confirmed' | 'failed'
 }
 
 interface QueuedOperation {
@@ -248,7 +248,7 @@ interface QueuedOperation {
   payload: any;
   timestamp: number;
   retryCount: number;
-  maxRetries: number;
+  maxRetries: number
 }
 
 interface ConflictedItem {
@@ -257,7 +257,7 @@ interface ConflictedItem {
   localVersion: any;
   serverVersion: any;
   conflictType: 'update' | 'delete' | 'concurrent';
-  timestamp: number;
+  timestamp: number
 }
 
 interface Toast {
@@ -266,13 +266,13 @@ interface Toast {
   title: string;
   message: string;
   duration?: number;
-  actions?: ToastAction[];
+  actions?: ToastAction[]
 }
 
 interface ToastAction {
   label: string;
   action: () => void;
-  variant?: 'default' | 'destructive';
+  variant?: 'default' | 'destructive'
 }
 
 // State Management Reducer
@@ -613,23 +613,23 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
 
     default:
-      return state;
+      return state
   }
 }
 
 // Context for Global State
 const AppStateContext = createContext<{
   state: AppState;
-  dispatch: React.Dispatch<AppAction>;
+  dispatch: React.Dispatch<AppAction>
 } | null>(null);
 
 // Custom Hooks for State Management
 const useAppState = () => {
   const context = useContext(AppStateContext);
   if (!context) {
-    throw new Error('useAppState must be used within AppStateProvider');
+    throw new Error('useAppState must be used within AppStateProvider')
   }
-  return context;
+  return context
 };
 
 const useOptimisticUpdates = () => {
@@ -657,7 +657,7 @@ const useOptimisticUpdates = () => {
       
       // Simulate random failure for demo
       if (Math.random() < 0.1) {
-        throw new Error('Network error');
+        throw new Error('Network error')
       }
 
       const confirmedPost: Post = {
@@ -668,7 +668,7 @@ const useOptimisticUpdates = () => {
       };
 
       dispatch({ type: 'CONFIRM_POST', payload: { tempId, confirmedPost } });
-      dispatch({ type: 'ADD_TOAST', payload: { type: 'success', title: 'Posted!', message: 'Your post has been shared.' } });
+      dispatch({ type: 'ADD_TOAST', payload: { type: 'success', title: 'Posted!', message: 'Your post has been shared.' } })
     } catch (error) {
       dispatch({ type: 'ROLLBACK_OPTIMISTIC', payload: tempId });
       dispatch({ type: 'ADD_TOAST', payload: { 
@@ -681,11 +681,11 @@ const useOptimisticUpdates = () => {
             action: () => createPostOptimistic(postData)
           }
         ]
-      }});
+      }})
     }
   }, [dispatch]);
 
-  return { createPostOptimistic };
+  return { createPostOptimistic }
 };
 
 const useRealTimeSync = () => {
@@ -704,11 +704,11 @@ const useRealTimeSync = () => {
           isRead: false,
           createdAt: new Date().toISOString()
         };
-        dispatch({ type: 'ADD_NOTIFICATION', payload: notification });
+        dispatch({ type: 'ADD_NOTIFICATION', payload: notification })
       }
     }, 5000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, [dispatch]);
 
   const syncData = useCallback(async () => {
@@ -720,19 +720,19 @@ const useRealTimeSync = () => {
       // Process queued operations
       for (const operation of state.sync.queuedOperations) {
         // Simulate processing each queued operation
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500))
       }
 
       // Simulate successful sync
       dispatch({ type: 'SET_SYNC_STATUS', payload: 'idle' });
-      dispatch({ type: 'ADD_TOAST', payload: { type: 'success', title: 'Synced', message: 'All data is up to date.' } });
+      dispatch({ type: 'ADD_TOAST', payload: { type: 'success', title: 'Synced', message: 'All data is up to date.' } })
     } catch (error) {
       dispatch({ type: 'SET_SYNC_STATUS', payload: 'error' });
-      dispatch({ type: 'ADD_TOAST', payload: { type: 'error', title: 'Sync failed', message: 'Will retry automatically.' } });
+      dispatch({ type: 'ADD_TOAST', payload: { type: 'error', title: 'Sync failed', message: 'Will retry automatically.' } })
     }
   }, [state.sync.isOnline, state.sync.queuedOperations, dispatch]);
 
-  return { syncData };
+  return { syncData }
 };
 
 // Mock Data
@@ -929,7 +929,7 @@ const RealTimeFeed = () => {
       type: 'text'
     });
 
-    setNewPostContent('');
+    setNewPostContent('')
   };
 
   return (
@@ -1049,7 +1049,7 @@ const RealTimeFeed = () => {
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 // Sync Controls Component
@@ -1058,7 +1058,7 @@ const SyncControls = () => {
   const { syncData } = useRealTimeSync();
 
   const toggleOnlineStatus = () => {
-    dispatch({ type: 'SET_ONLINE_STATUS', payload: !state.sync.isOnline });
+    dispatch({ type: 'SET_ONLINE_STATUS', payload: !state.sync.isOnline })
   };
 
   const simulateConflict = () => {
@@ -1070,7 +1070,7 @@ const SyncControls = () => {
       conflictType: 'update',
       timestamp: Date.now()
     };
-    dispatch({ type: 'ADD_CONFLICT', payload: conflict });
+    dispatch({ type: 'ADD_CONFLICT', payload: conflict })
   };
 
   return (
@@ -1140,7 +1140,7 @@ const SyncControls = () => {
         )}
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Main State Management Demo
@@ -1192,7 +1192,7 @@ const StateManagementSystem = () => {
         </div>
       </div>
     </AppStateContext.Provider>
-  );
+  )
 };
 
 // Story Exports

@@ -12,7 +12,7 @@ import { type VariantProps } from 'class-variance-authority';
  * All cards inherit from this foundation
  */
 declare const hiveCardBaseVariants: (props?: {
-    variant?: "default" | "warning" | "error" | "selected" | "interactive" | "builder" | "minimal" | "active" | "academic" | "social" | "elevated" | "premium";
+    variant?: "default" | "warning" | "error" | "builder" | "premium" | "selected" | "interactive" | "minimal" | "active" | "academic" | "social" | "elevated";
     size?: "default" | "sm" | "lg" | "xl";
     shadow?: "glow" | "none" | "strong" | "medium" | "subtle" | "dramatic";
     border?: "default" | "gold" | "none" | "strong" | "subtle" | "gold-strong";

@@ -74,10 +74,10 @@ const useAuth = (initialState = 'login') => {
     // Simulate API call
     setTimeout(() => {
       if (email.endsWith('@buffalo.edu')) {
-        setAuthState('verify');
+        setAuthState('verify')
       }
-      setIsLoading(false);
-    }, 1500);
+      setIsLoading(false)
+    }, 1500)
   };
 
   return {
@@ -92,7 +92,7 @@ const useAuth = (initialState = 'login') => {
     showPassword,
     setShowPassword,
     handleEmailSubmit
-  };
+  }
 };
 
 // Onboarding State Management
@@ -121,13 +121,13 @@ const useOnboarding = () => {
 
   const nextStep = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep(currentStep + 1)
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+      setCurrentStep(currentStep - 1)
     }
   };
 
@@ -135,7 +135,7 @@ const useOnboarding = () => {
     setUserData(prev => ({
       ...prev,
       [field]: value
-    }));
+    }))
   };
 
   return {
@@ -147,7 +147,7 @@ const useOnboarding = () => {
     progress,
     nextStep,
     prevStep
-  };
+  }
 };
 
 // Mock UB Data
@@ -382,7 +382,7 @@ const Step1UserType = ({ onboarding }: { onboarding: ReturnType<typeof useOnboar
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 // Onboarding Step 2: Basic Info
@@ -471,7 +471,7 @@ const Step3ProfilePhoto = ({ onboarding }: { onboarding: ReturnType<typeof useOn
           className="absolute -bottom-2 -right-2 rounded-full w-10 h-10 bg-yellow-500 hover:bg-yellow-600 text-black"
           onClick={() => {
             // Mock photo upload
-            onboarding.updateUserData('profilePhoto', '/api/placeholder/150/150');
+            onboarding.updateUserData('profilePhoto', '/api/placeholder/150/150')
           }}
         >
           <Camera className="w-4 h-4" />
@@ -604,13 +604,13 @@ const Step5CampusLife = ({ onboarding }: { onboarding: ReturnType<typeof useOnbo
               <Checkbox
                 id={interest}
                 checked={onboarding.userData.interests.includes(interest)}
-                onCheckedChange={(checked) => {
+                onChange={(e) => { const checked = e.target.checked; {
                   if (checked && onboarding.userData.interests.length < 5) {
-                    onboarding.updateUserData('interests', [...onboarding.userData.interests, interest]);
+                    onboarding.updateUserData('interests', [...onboarding.userData.interests, interest])
                   } else if (!checked) {
                     onboarding.updateUserData('interests', 
                       onboarding.userData.interests.filter(i => i !== interest)
-                    );
+                    )
                   }
                 }}
                 disabled={
@@ -650,7 +650,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
           </div>
           <Checkbox
             checked={onboarding.userData.privacy.profileVisible}
-            onCheckedChange={(checked) => 
+            onChange={(e) => { const checked = e.target.checked; 
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 profileVisible: checked
@@ -669,7 +669,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
           </div>
           <Checkbox
             checked={onboarding.userData.privacy.allowMessages}
-            onCheckedChange={(checked) => 
+            onChange={(e) => { const checked = e.target.checked; 
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 allowMessages: checked
@@ -688,7 +688,7 @@ const Step6PrivacySettings = ({ onboarding }: { onboarding: ReturnType<typeof us
           </div>
           <Checkbox
             checked={onboarding.userData.privacy.showActivity}
-            onCheckedChange={(checked) => 
+            onChange={(e) => { const checked = e.target.checked; 
               onboarding.updateUserData('privacy', {
                 ...onboarding.userData.privacy,
                 showActivity: checked
@@ -799,7 +799,7 @@ const OnboardingWizard = ({ onboarding }: { onboarding: ReturnType<typeof useOnb
       case 5: return <Step5CampusLife onboarding={onboarding} />;
       case 6: return <Step6PrivacySettings onboarding={onboarding} />;
       case 7: return <Step7Complete onboarding={onboarding} />;
-      default: return <Step1UserType onboarding={onboarding} />;
+      default: return <Step1UserType onboarding={onboarding} />
     }
   };
 
@@ -811,7 +811,7 @@ const OnboardingWizard = ({ onboarding }: { onboarding: ReturnType<typeof useOnb
       case 4: return onboarding.userData.graduationYear && onboarding.userData.major;
       case 5: return onboarding.userData.dorm && onboarding.userData.interests.length > 0;
       case 6: return true; // Privacy settings have defaults
-      default: return true;
+      default: return true
     }
   };
 
@@ -864,7 +864,7 @@ const OnboardingWizard = ({ onboarding }: { onboarding: ReturnType<typeof useOnb
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Demo Authentication Flow
@@ -873,18 +873,18 @@ const AuthenticationDemo = () => {
   const onboarding = useOnboarding();
 
   if (auth.authState === 'login') {
-    return <LoginScreen auth={auth} />;
+    return <LoginScreen auth={auth} />
   }
 
   if (auth.authState === 'verify') {
-    return <VerificationScreen auth={auth} />;
+    return <VerificationScreen auth={auth} />
   }
 
   if (auth.authState === 'onboarding') {
-    return <OnboardingWizard onboarding={onboarding} />;
+    return <OnboardingWizard onboarding={onboarding} />
   }
 
-  return <LoginScreen auth={auth} />;
+  return <LoginScreen auth={auth} />
 };
 
 export const AuthenticationFlow: Story = {
@@ -901,7 +901,7 @@ export const AuthenticationFlow: Story = {
 export const LoginOnly: Story = {
   render: () => {
     const auth = useAuth('login');
-    return <LoginScreen auth={auth} />;
+    return <LoginScreen auth={auth} />
   },
   parameters: {
     docs: {
@@ -915,7 +915,7 @@ export const LoginOnly: Story = {
 export const OnboardingOnly: Story = {
   render: () => {
     const onboarding = useOnboarding();
-    return <OnboardingWizard onboarding={onboarding} />;
+    return <OnboardingWizard onboarding={onboarding} />
   },
   parameters: {
     docs: {

@@ -31,7 +31,7 @@ interface Space {
   coverImage?: string;
   tags?: string[];
   createdAt: string;
-  lastActivity: string;
+  lastActivity: string
 }
 
 interface SpaceDetailsWidgetProps {
@@ -40,7 +40,7 @@ interface SpaceDetailsWidgetProps {
   onJoin?: (spaceId: string) => void;
   onLeave?: (spaceId: string) => void;
   onMessage?: (spaceId: string) => void;
-  onSettings?: (spaceId: string) => void;
+  onSettings?: (spaceId: string) => void
 }
 
 export const SpaceDetailsWidget: React.FC<SpaceDetailsWidgetProps> = ({
@@ -58,7 +58,7 @@ export const SpaceDetailsWidget: React.FC<SpaceDetailsWidgetProps> = ({
       case 'active': return 'bg-green-500/10 text-green-400 border-green-500/20';
       case 'dormant': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
       case 'frozen': return 'bg-red-500/10 text-red-400 border-red-500/20';
-      default: return 'bg-hive-text-tertiary/10 text-hive-text-tertiary border-hive-border-default';
+      default: return 'bg-hive-text-tertiary/10 text-hive-text-tertiary border-hive-border-default'
     }
   };
 
@@ -79,7 +79,7 @@ export const SpaceDetailsWidget: React.FC<SpaceDetailsWidgetProps> = ({
         <IconComponent size={14} />
         <span>{config.label}</span>
       </div>
-    );
+    )
   };
 
   const formatDate = (dateString: string) => {
@@ -88,7 +88,7 @@ export const SpaceDetailsWidget: React.FC<SpaceDetailsWidgetProps> = ({
       month: 'short', 
       day: 'numeric',
       year: 'numeric'
-    });
+    })
   };
 
   return (
@@ -280,7 +280,7 @@ export const SpaceDetailsWidget: React.FC<SpaceDetailsWidgetProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 export default SpaceDetailsWidget;

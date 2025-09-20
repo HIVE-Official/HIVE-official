@@ -8,11 +8,11 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { ElementInstance, Element } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Checkbox } from '../../components/ui/checkbox';
+import { Button } from '../../atomic/atoms/button';
+import { Input } from '../../atomic/atoms/input-enhanced';
+import { Label } from '../../atomic/atoms/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atomic/atoms/select-radix';
+import { Checkbox } from '../../atomic/atoms/checkbox';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Settings, 
@@ -49,7 +49,7 @@ interface ElementConfigPanelProps {
   element: ElementInstance | null;
   elementDefinition: Element | null;
   onChange: (config: any) => void;
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 // Progressive disclosure modes
@@ -61,14 +61,14 @@ interface PropertyGroup {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   priority: 'essential' | 'common' | 'advanced';
-  description?: string;
+  description?: string
 }
 
 // Color picker component
 const ColorPicker: React.FC<{
   value: string;
   onChange: (color: string) => void;
-  label: string;
+  label: string
 }> = ({ value, onChange, label }) => {
   const predefinedColors = [
     '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6',
@@ -105,7 +105,7 @@ const ColorPicker: React.FC<{
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 // Enhanced collapsible section with progressive disclosure
@@ -117,7 +117,7 @@ const ConfigSection: React.FC<{
   priority?: 'essential' | 'common' | 'advanced';
   description?: string;
   mode?: ConfigMode;
-  hasAdvancedProperties?: boolean;
+  hasAdvancedProperties?: boolean
 }> = ({ 
   title, 
   icon: Icon, 
@@ -197,7 +197,7 @@ const ConfigSection: React.FC<{
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 };
 
 // Property field with help text and validation
@@ -205,7 +205,7 @@ const PropertyField: React.FC<{
   label: string;
   help?: string;
   required?: boolean;
-  children: React.ReactNode;
+  children: React.ReactNode
 }> = ({ label, help, required, children }) => {
   return (
     <div className="space-y-2">
@@ -225,26 +225,26 @@ const PropertyField: React.FC<{
       </div>
       {children}
     </div>
-  );
+  )
 };
 
 // Option editor for choice select
 const OptionEditor: React.FC<{
   options: Array<{ value: string; label: string; disabled?: boolean }>;
-  onChange: (options: Array<{ value: string; label: string; disabled?: boolean }>) => void;
+  onChange: (options: Array<{ value: string; label: string; disabled?: boolean }>) => void
 }> = ({ options, onChange }) => {
   const addOption = () => {
-    onChange([...options, { value: `option${options.length + 1}`, label: `Option ${options.length + 1}` }]);
+    onChange([...options, { value: `option${options.length + 1}`, label: `Option ${options.length + 1}` }])
   };
 
   const removeOption = (index: number) => {
-    onChange(options.filter((_, i) => i !== index));
+    onChange(options.filter((_, i) => i !== index))
   };
 
   const updateOption = (index: number, field: string, value: any) => {
     const newOptions = [...options];
     newOptions[index] = { ...newOptions[index], [field]: value };
-    onChange(newOptions);
+    onChange(newOptions)
   };
 
   return (
@@ -278,7 +278,7 @@ const OptionEditor: React.FC<{
           />
           <Checkbox
             checked={option.disabled || false}
-            onCheckedChange={(checked) => updateOption(index, 'disabled', checked)}
+            onChange={(e) => { const checked = e.target.checked; updateOption(index, 'disabled', checked)}
           />
           <button
             onClick={() => removeOption(index)}
@@ -290,7 +290,7 @@ const OptionEditor: React.FC<{
         </div>
       ))}
     </div>
-  );
+  )
 };
 
 export const ElementConfigPanel: React.FC<ElementConfigPanelProps> = ({
@@ -313,7 +313,7 @@ export const ElementConfigPanel: React.FC<ElementConfigPanelProps> = ({
           </p>
         </div>
       </div>
-    );
+    )
   }
 
   const config = element.config as any;
@@ -325,13 +325,13 @@ export const ElementConfigPanel: React.FC<ElementConfigPanelProps> = ({
     let current = newConfig;
     for (let i = 0; i < keys.length - 1; i++) {
       if (!current[keys[i]]) {
-        current[keys[i]] = {};
+        current[keys[i]] = {}
       }
-      current = current[keys[i]];
+      current = current[keys[i]]
     }
     
     current[keys[keys.length - 1]] = value;
-    onChange(newConfig);
+    onChange(newConfig)
   }, [config, onChange]);
 
   return (
@@ -461,7 +461,7 @@ export const ElementConfigPanel: React.FC<ElementConfigPanelProps> = ({
                 <Checkbox
                   id="required"
                   checked={config.required || false}
-                  onCheckedChange={(checked) => updateConfig('required', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateConfig('required', checked)}
                 />
                 <Label htmlFor="required">Required</Label>
               </div>
@@ -566,7 +566,7 @@ export const ElementConfigPanel: React.FC<ElementConfigPanelProps> = ({
                 <Checkbox
                   id="multiple"
                   checked={config.multiple || false}
-                  onCheckedChange={(checked) => updateConfig('multiple', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateConfig('multiple', checked)}
                 />
                 <Label htmlFor="multiple">Allow Multiple Selection</Label>
               </div>
@@ -574,7 +574,7 @@ export const ElementConfigPanel: React.FC<ElementConfigPanelProps> = ({
                 <Checkbox
                   id="required"
                   checked={config.required || false}
-                  onCheckedChange={(checked) => updateConfig('required', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateConfig('required', checked)}
                 />
                 <Label htmlFor="required">Required</Label>
               </div>
@@ -634,7 +634,7 @@ export const ElementConfigPanel: React.FC<ElementConfigPanelProps> = ({
                 <Checkbox
                   id="allowHalf"
                   checked={config.allowHalf || false}
-                  onCheckedChange={(checked) => updateConfig('allowHalf', checked)}
+                  onChange={(e) => { const checked = e.target.checked; updateConfig('allowHalf', checked)}
                 />
                 <Label htmlFor="allowHalf">Allow Half Stars</Label>
               </div>
@@ -836,5 +836,5 @@ export const ElementConfigPanel: React.FC<ElementConfigPanelProps> = ({
         </ConfigSection>
       </div>
     </div>
-  );
+  )
 };

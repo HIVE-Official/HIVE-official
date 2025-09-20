@@ -1,5 +1,5 @@
 import React from 'react';
-import { type ProfileDashboardProps } from '../../atomic/organisms/profile-dashboard';
+import { type ProfileDashboardProps } from '../profile/profile-dashboard';
 interface EnhancedProfileDashboardProps extends ProfileDashboardProps {
     enableExpandFocus?: boolean;
 }

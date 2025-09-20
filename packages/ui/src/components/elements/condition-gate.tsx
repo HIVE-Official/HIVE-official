@@ -14,17 +14,17 @@ interface ConditionGateProps {
   children: React.ReactNode;
   toolState: Record<string, any>;
   onAction?: (action: ConditionAction) => void;
-  className?: string;
+  className?: string
 }
 
 interface ConditionAction {
   type: 'show' | 'hide' | 'setValue' | 'trigger';
   targetElementId: string;
-  value?: unknown;
+  value?: unknown
 }
 
 interface ToolState {
-  [elementId: string]: any;
+  [elementId: string]: any
 }
 
 export const ConditionGate: React.FC<ConditionGateProps> = ({
@@ -38,7 +38,7 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
   const [debugInfo, setDebugInfo] = useState<{
     conditionResults: boolean[];
     finalResult: boolean;
-    evaluationTime: number;
+    evaluationTime: number
   } | null>(null);
 
   const { conditions, logic = 'and', onTrue, onFalse } = config;
@@ -60,10 +60,10 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
       
       case 'contains':
         if (typeof currentValue === 'string' && typeof expectedValue === 'string') {
-          return currentValue.toLowerCase().includes(expectedValue.toLowerCase());
+          return currentValue.toLowerCase().includes(expectedValue.toLowerCase())
         }
         if (Array.isArray(currentValue)) {
-          return currentValue.includes(expectedValue);
+          return currentValue.includes(expectedValue)
         }
         return false;
       
@@ -74,7 +74,7 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
         return Number(currentValue) < Number(expectedValue);
       
       default:
-        return false;
+        return false
     }
   }, [toolState]);
 
@@ -86,9 +86,9 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
     
     let finalResult: boolean;
     if (logic === 'and') {
-      finalResult = conditionResults.every(Boolean);
+      finalResult = conditionResults.every(Boolean)
     } else { // 'or'
-      finalResult = conditionResults.some(Boolean);
+      finalResult = conditionResults.some(Boolean)
     }
 
     const evaluationTime = performance.now() - startTime;
@@ -99,10 +99,10 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
         conditionResults,
         finalResult,
         evaluationTime
-      });
+      })
     }
 
-    return { result: finalResult, details: conditionResults };
+    return { result: finalResult, details: conditionResults }
   }, [conditions, logic, evaluateCondition]);
 
   // Execute actions based on condition result
@@ -114,9 +114,9 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
       // For demonstration, we can also handle some actions directly
       if (action.type === 'trigger') {
         // Trigger custom events or analytics
-        console.log('ConditionGate triggered action:', action);
+        console.log('ConditionGate triggered action:', action)
       }
-    });
+    })
   }, [onAction]);
 
   // Main condition evaluation effect
@@ -129,9 +129,9 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
       
       // Execute appropriate actions
       if (result) {
-        executeActions(onTrue, true);
+        executeActions(onTrue, true)
       } else if (onFalse) {
-        executeActions(onFalse, false);
+        executeActions(onFalse, false)
       }
     }
   }, [toolState, evaluateConditions, isConditionMet, onTrue, onFalse, executeActions]);
@@ -248,7 +248,7 @@ export const ConditionGate: React.FC<ConditionGateProps> = ({
         </motion.div>
       )}
     </>
-  );
+  )
 };
 
 // Hook for managing condition gates in tools
@@ -266,7 +266,7 @@ export const useConditionGate = (
     // Here you would typically dispatch actions to your tool state manager
     // For example, updating element visibility, values, etc.
     
-    setLastEvaluation(new Date());
+    setLastEvaluation(new Date())
   }, [gateId]);
 
   const evaluateGate = useCallback(() => {
@@ -288,7 +288,7 @@ export const useConditionGate = (
         case 'lessThan':
           return Number(currentValue) < Number(value);
         default:
-          return false;
+          return false
       }
     });
 
@@ -297,11 +297,11 @@ export const useConditionGate = (
       : results.some(Boolean);
     
     setIsActive(isConditionMet);
-    return isConditionMet;
+    return isConditionMet
   }, [config, toolState]);
 
   useEffect(() => {
-    evaluateGate();
+    evaluateGate()
   }, [evaluateGate]);
 
   return {
@@ -309,7 +309,7 @@ export const useConditionGate = (
     lastEvaluation,
     handleAction,
     evaluateGate
-  };
+  }
 };
 
 export default ConditionGate;

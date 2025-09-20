@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { ScrollArea } from '../../components/ui/scroll-area';
-import { Switch } from '../../components/ui/switch';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Card, CardContent, CardHeader } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { ScrollArea } from '../../ui/scroll-area';
+import { Switch } from '../../ui/switch';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { 
   Bell,
   BellRing,
@@ -59,12 +59,12 @@ export interface Notification {
     id: string;
     name: string;
     type: 'user' | 'space' | 'tool' | 'system';
-    avatar?: string;
+    avatar?: string
   };
   actionable: boolean;
   actions?: {
     primary?: { label: string; action: string; data?: any };
-    secondary?: { label: string; action: string; data?: any };
+    secondary?: { label: string; action: string; data?: any }
   };
   metadata?: {
     spaceId?: string;
@@ -72,9 +72,9 @@ export interface Notification {
     postId?: string;
     eventId?: string;
     userId?: string;
-    url?: string;
+    url?: string
   };
-  expiresAt?: Date;
+  expiresAt?: Date
 }
 
 export interface NotificationsCardProps {
@@ -86,7 +86,7 @@ export interface NotificationsCardProps {
   onNotificationAction?: (id: string, action: string, data?: any) => void;
   onMarkAllRead?: () => void;
   onSettingsClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 // Notification Type Configuration
@@ -175,7 +175,7 @@ function formatTimeAgo(date: Date): string {
   if (diffMins < 60) return `${diffMins}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;
   if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 // Notification Item Component
@@ -188,7 +188,7 @@ function NotificationItem({
   notification: Notification;
   onRead?: (id: string) => void;
   onArchive?: (id: string) => void;
-  onAction?: (id: string, action: string, data?: any) => void;
+  onAction?: (id: string, action: string, data?: any) => void
 }) {
   const config = notificationTypeConfig[notification.type];
   const TypeIcon = config.icon;
@@ -197,14 +197,14 @@ function NotificationItem({
 
   const handleRead = useCallback(() => {
     if (!notification.isRead) {
-      onRead?.(notification.id);
+      onRead?.(notification.id)
     }
   }, [notification.id, notification.isRead, onRead]);
 
   const handleAction = useCallback((action: string, data?: any) => {
     onAction?.(notification.id, action, data);
     if (!notification.isRead) {
-      onRead?.(notification.id);
+      onRead?.(notification.id)
     }
   }, [notification.id, notification.isRead, onAction, onRead]);
 
@@ -293,7 +293,7 @@ function NotificationItem({
 
             {/* Expires Soon */}
             {notification.expiresAt && notification.expiresAt.getTime() - Date.now() < 24 * 60 * 60 * 1000 && (
-              <Badge variant="destructive" className="text-xs px-1.5 py-0.5">
+              <Badge variant="error" className="text-xs px-1.5 py-0.5">
                 <Clock className="w-3 h-3 mr-1" />
                 Expires Soon
               </Badge>
@@ -309,8 +309,8 @@ function NotificationItem({
                   className="h-7 px-3 text-xs"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleAction(notification.actions!.primary!.action, notification.actions!.primary!.data);
-                  }}
+                    handleAction(notification.actions!.primary!.action, notification.actions!.primary!.data)
+          }}
                 >
                   {notification.actions.primary.label}
                 </Button>
@@ -322,8 +322,8 @@ function NotificationItem({
                   className="h-7 px-3 text-xs"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleAction(notification.actions!.secondary!.action, notification.actions!.secondary!.data);
-                  }}
+                    handleAction(notification.actions!.secondary!.action, notification.actions!.secondary!.data)
+          }}
                 >
                   {notification.actions.secondary.label}
                 </Button>
@@ -342,8 +342,8 @@ function NotificationItem({
                 className="h-6 w-6 p-0"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleRead();
-                }}
+                  handleRead()
+          }}
                 title="Mark as read"
               >
                 <Check className="w-3 h-3" />
@@ -355,8 +355,8 @@ function NotificationItem({
               className="h-6 w-6 p-0"
               onClick={(e) => {
                 e.stopPropagation();
-                onArchive?.(notification.id);
-              }}
+                onArchive?.(notification.id)
+          }}
               title="Archive"
             >
               <Archive className="w-3 h-3" />
@@ -370,7 +370,7 @@ function NotificationItem({
         <div className="absolute top-3 left-1 w-1.5 h-1.5 bg-[var(--hive-brand-primary)] rounded-full" />
       )}
     </motion.div>
-  );
+  )
 }
 
 // Notification Filter Component
@@ -381,7 +381,7 @@ function NotificationFilters({
 }: { 
   activeFilter: string;
   onFilterChange: (filter: string) => void;
-  counts: Record<string, number>;
+  counts: Record<string, number>
 }) {
   const filters = [
     { key: 'all', label: 'All', count: counts.all },
@@ -393,7 +393,7 @@ function NotificationFilters({
 
   return (
     <div className="flex gap-1 overflow-x-auto">
-      {filters.map(({ key, label, count }) => (
+      {filters.map(({ key, label, count })} => (
         <Button
           key={key}
           size="sm"
@@ -410,7 +410,7 @@ function NotificationFilters({
         </Button>
       ))}
     </div>
-  );
+  )
 }
 
 // Notification Settings Dialog
@@ -419,7 +419,7 @@ function NotificationSettingsDialog({
   onOpenChange
 }: {
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: (open: boolean) => void
 }) {
   const [settings, setSettings] = useState({
     email: true,
@@ -432,7 +432,7 @@ function NotificationSettingsDialog({
   });
 
   const handleSettingChange = useCallback((key: string, value: boolean) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings(prev => ({ ...prev, [key]: value }))
   }, []);
 
   return (
@@ -454,7 +454,7 @@ function NotificationSettingsDialog({
                 </div>
                 <Switch 
                   checked={settings.push}
-                  onCheckedChange={(checked) => handleSettingChange('push', checked)}
+                  onChange={(e) => { const checked = e.target.checked; handleSettingChange('push', checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -464,7 +464,7 @@ function NotificationSettingsDialog({
                 </div>
                 <Switch 
                   checked={settings.email}
-                  onCheckedChange={(checked) => handleSettingChange('email', checked)}
+                  onChange={(e) => { const checked = e.target.checked; handleSettingChange('email', checked)}
                 />
               </div>
             </div>
@@ -481,7 +481,7 @@ function NotificationSettingsDialog({
                 </div>
                 <Switch 
                   checked={settings.spaces}
-                  onCheckedChange={(checked) => handleSettingChange('spaces', checked)}
+                  onChange={(e) => { const checked = e.target.checked; handleSettingChange('spaces', checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -491,7 +491,7 @@ function NotificationSettingsDialog({
                 </div>
                 <Switch 
                   checked={settings.social}
-                  onCheckedChange={(checked) => handleSettingChange('social', checked)}
+                  onChange={(e) => { const checked = e.target.checked; handleSettingChange('social', checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -501,7 +501,7 @@ function NotificationSettingsDialog({
                 </div>
                 <Switch 
                   checked={settings.academic}
-                  onCheckedChange={(checked) => handleSettingChange('academic', checked)}
+                  onChange={(e) => { const checked = e.target.checked; handleSettingChange('academic', checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -511,7 +511,7 @@ function NotificationSettingsDialog({
                 </div>
                 <Switch 
                   checked={settings.system}
-                  onCheckedChange={(checked) => handleSettingChange('system', checked)}
+                  onChange={(e) => { const checked = e.target.checked; handleSettingChange('system', checked)}
                 />
               </div>
             </div>
@@ -530,14 +530,14 @@ function NotificationSettingsDialog({
               </div>
               <Switch 
                 checked={settings.quiet_hours}
-                onCheckedChange={(checked) => handleSettingChange('quiet_hours', checked)}
+                onChange={(e) => { const checked = e.target.checked; handleSettingChange('quiet_hours', checked)}
               />
             </div>
           </div>
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 // Main Notifications Card Component
@@ -573,7 +573,7 @@ export function NotificationsCard({
         filtered = notifications.filter(n => n.type === 'academic');
         break;
       default:
-        filtered = notifications;
+        filtered = notifications
     }
 
     return filtered.sort((a, b) => {
@@ -582,8 +582,8 @@ export function NotificationsCard({
       const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
       if (priorityDiff !== 0) return priorityDiff;
       
-      return b.timestamp.getTime() - a.timestamp.getTime();
-    });
+      return b.timestamp.getTime() - a.timestamp.getTime()
+    })
   }, [notifications, filter]);
 
   // Count notifications by type
@@ -594,7 +594,7 @@ export function NotificationsCard({
       space: notifications.filter(n => n.type === 'space').length,
       social: notifications.filter(n => n.type === 'social').length,
       academic: notifications.filter(n => n.type === 'academic').length
-    };
+    }
   }, [notifications]);
 
   const urgentCount = useMemo(() => 
@@ -622,7 +622,7 @@ export function NotificationsCard({
               </div>
               <h3 className="font-semibold text-[var(--hive-text-primary)]">Notifications</h3>
               {urgentCount > 0 && (
-                <Badge variant="destructive" className="text-xs">
+                <Badge variant="error" className="text-xs">
                   {urgentCount} urgent
                 </Badge>
               )}
@@ -703,7 +703,7 @@ export function NotificationsCard({
         onOpenChange={setSettingsOpen}
       />
     </>
-  );
+  )
 }
 
 // Default props for development

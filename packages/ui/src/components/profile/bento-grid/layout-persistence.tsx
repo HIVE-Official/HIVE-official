@@ -13,7 +13,7 @@ interface LayoutPersistenceProps {
   deviceType: 'desktop' | 'tablet' | 'mobile';
   onLayoutLoad: (widgets: WidgetConfiguration[]) => void;
   onLayoutSave?: (layout: LayoutConfiguration) => Promise<void>;
-  onLayoutConflict?: (localLayout: LayoutConfiguration, remoteLayout: LayoutConfiguration) => LayoutConfiguration;
+  onLayoutConflict?: (localLayout: LayoutConfiguration, remoteLayout: LayoutConfiguration) => LayoutConfiguration
 }
 
 export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
@@ -33,7 +33,7 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
   const [showConflictModal, setShowConflictModal] = useState(false);
   const [conflictData, setConflictData] = useState<{
     local: LayoutConfiguration;
-    remote: LayoutConfiguration;
+    remote: LayoutConfiguration
   } | null>(null);
 
   // Generate layout key for storage
@@ -59,9 +59,9 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
         layouts: { ...prev.layouts, [layout.deviceType]: layout },
         unsavedChanges: false,
         lastSync: new Date()
-      }));
+      }))
     } catch (error) {
-      console.error('Failed to save layout locally:', error);
+      console.error('Failed to save layout locally:', error)
     }
   }, []);
 
@@ -72,12 +72,12 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
       const stored = localStorage.getItem(key);
       if (stored) {
         const layout = JSON.parse(stored) as LayoutConfiguration;
-        return layout;
+        return layout
       }
     } catch (error) {
-      console.error('Failed to load layout locally:', error);
+      console.error('Failed to load layout locally:', error)
     }
-    return null;
+    return null
   }, []);
 
   // Sync with remote server
@@ -98,11 +98,11 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
       setTimeout(() => {
         setPersistenceState(prev => 
           prev.syncStatus === 'success' ? { ...prev, syncStatus: 'idle' } : prev
-        );
-      }, 3000);
+        )
+      }, 3000)
     } catch (error) {
       console.error('Failed to sync layout with remote:', error);
-      setPersistenceState(prev => ({ ...prev, syncStatus: 'error' }));
+      setPersistenceState(prev => ({ ...prev, syncStatus: 'error' }))
     }
   }, [onLayoutSave]);
 
@@ -124,10 +124,10 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
         
         // Debounced remote sync
         const timeoutId = setTimeout(() => {
-          syncWithRemote(newLayout);
+          syncWithRemote(newLayout)
         }, 2000);
 
-        return () => clearTimeout(timeoutId);
+        return () => clearTimeout(timeoutId)
       }
     }
   }, [currentLayout, deviceType, createLayoutConfig, saveLayoutLocally, syncWithRemote, persistenceState.layouts]);
@@ -141,10 +141,10 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
         ...prev,
         layouts: { ...prev.layouts, [deviceType]: savedLayout },
         lastSync: savedLayout.lastModified
-      }));
+      }))
     } else {
       // Load default layout for device type
-      loadDefaultLayout();
+      loadDefaultLayout()
     }
   }, [deviceType, loadLayoutLocally, onLayoutLoad]);
 
@@ -260,10 +260,10 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
           },
           isVisible: true
         }
-      );
+      )
     }
 
-    onLayoutLoad(defaultWidgets);
+    onLayoutLoad(defaultWidgets)
   };
 
   const handleConflictResolution = (useLocal: boolean) => {
@@ -274,14 +274,14 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
     if (onLayoutConflict) {
       const finalLayout = onLayoutConflict(conflictData.local, conflictData.remote);
       onLayoutLoad(finalLayout.widgets);
-      saveLayoutLocally(finalLayout);
+      saveLayoutLocally(finalLayout)
     } else {
       onLayoutLoad(resolvedLayout.widgets);
-      saveLayoutLocally(resolvedLayout);
+      saveLayoutLocally(resolvedLayout)
     }
 
     setConflictData(null);
-    setShowConflictModal(false);
+    setShowConflictModal(false)
   };
 
   const getSyncStatusIcon = () => {
@@ -293,7 +293,7 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
       case 'error':
         return <CloudOff className="h-4 w-4 text-red-400" />;
       default:
-        return <Cloud className="h-4 w-4 text-hive-text-secondary" />;
+        return <Cloud className="h-4 w-4 text-hive-text-secondary" />
     }
   };
 
@@ -308,7 +308,7 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
       default:
         return persistenceState.lastSync ? 
           `Synced ${persistenceState.lastSync.toLocaleTimeString()}` : 
-          'Not synced';
+          'Not synced'
     }
   };
 
@@ -390,5 +390,5 @@ export const LayoutPersistence: React.FC<LayoutPersistenceProps> = ({
         )}
       </AnimatePresence>
     </>
-  );
+  )
 };

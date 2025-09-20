@@ -40,7 +40,7 @@ export interface PostCreationData {
     location?: string;
     description?: string;
     capacity?: number;
-    requireRsvp: boolean;
+    requireRsvp: boolean
   };
   
   // Poll data
@@ -49,14 +49,14 @@ export interface PostCreationData {
     options: string[];
     allowMultiple: boolean;
     expiresIn?: number; // days
-    anonymous: boolean;
+    anonymous: boolean
   };
   
   // Announcement data
   announcement?: {
     priority: 'low' | 'medium' | 'high' | 'urgent';
     pinned: boolean;
-    expiresAt?: string;
+    expiresAt?: string
   };
   
   // Attachments
@@ -64,7 +64,7 @@ export interface PostCreationData {
   
   // Mentions and tags
   mentions?: string[];
-  tags?: string[];
+  tags?: string[]
 }
 
 export interface PostCreationModalProps {
@@ -75,7 +75,7 @@ export interface PostCreationModalProps {
   userRole?: 'leader' | 'co_leader' | 'member';
   initialType?: PostType;
   isSubmitting?: boolean;
-  className?: string;
+  className?: string
 }
 
 const POST_TYPES: Array<{
@@ -86,7 +86,7 @@ const POST_TYPES: Array<{
   color: string;
   bgColor: string;
   borderColor: string;
-  requiredRole?: 'leader' | 'co_leader';
+  requiredRole?: 'leader' | 'co_leader'
 }> = [
   {
     type: 'text',
@@ -178,23 +178,23 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
     if (!typeConfig?.requiredRole) return true;
     
     if (typeConfig.requiredRole === 'co_leader') {
-      return userRole === 'leader' || userRole === 'co_leader';
+      return userRole === 'leader' || userRole === 'co_leader'
     }
     
-    return userRole === typeConfig.requiredRole;
+    return userRole === typeConfig.requiredRole
   };
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
     if (!content.trim()) {
-      newErrors.content = 'Content is required';
+      newErrors.content = 'Content is required'
     }
 
     if (selectedType === 'event') {
       if (!eventTitle.trim()) newErrors.eventTitle = 'Event title is required';
       if (!eventDate) newErrors.eventDate = 'Event date is required';
-      if (!eventTime) newErrors.eventTime = 'Event time is required';
+      if (!eventTime) newErrors.eventTime = 'Event time is required'
     }
 
     if (selectedType === 'poll') {
@@ -202,12 +202,12 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
       
       const validOptions = pollOptions.filter(opt => opt.trim());
       if (validOptions.length < 2) {
-        newErrors.pollOptions = 'At least 2 poll options are required';
+        newErrors.pollOptions = 'At least 2 poll options are required'
       }
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0
   };
 
   const handleSubmit = async () => {
@@ -227,7 +227,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
         description: eventDescription.trim() || undefined,
         capacity: eventCapacity,
         requireRsvp,
-      };
+      }
     }
 
     if (selectedType === 'poll') {
@@ -237,7 +237,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
         allowMultiple,
         expiresIn: pollExpiresIn,
         anonymous: anonymousPoll,
-      };
+      }
     }
 
     if (selectedType === 'announcement') {
@@ -245,14 +245,14 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
         priority: announcementPriority,
         pinned: pinnedAnnouncement,
         expiresAt: announcementExpires || undefined,
-      };
+      }
     }
 
     try {
       await onSubmit(data);
-      handleClose();
+      handleClose()
     } catch (error) {
-      console.error('Failed to create post:', error);
+      console.error('Failed to create post:', error)
     }
   };
 
@@ -267,25 +267,25 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
     setPollQuestion('');
     setPollOptions(['', '']);
     setErrors({});
-    onClose();
+    onClose()
   };
 
   const addPollOption = () => {
     if (pollOptions.length < 6) {
-      setPollOptions([...pollOptions, '']);
+      setPollOptions([...pollOptions, ''])
     }
   };
 
   const removePollOption = (index: number) => {
     if (pollOptions.length > 2) {
-      setPollOptions(pollOptions.filter((_, i) => i !== index));
+      setPollOptions(pollOptions.filter((_, i) => i !== index))
     }
   };
 
   const updatePollOption = (index: number, value: string) => {
     const newOptions = [...pollOptions];
     newOptions[index] = value;
-    setPollOptions(newOptions);
+    setPollOptions(newOptions)
   };
 
   if (!isOpen) return null;
@@ -389,8 +389,8 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
                       </div>
                       <p className="text-xs opacity-80">{type.description}</p>
                     </motion.button>
-                  );
-                })}
+                  )
+          })}
               </div>
             </div>
 
@@ -746,7 +746,7 @@ export const PostCreationModal: React.FC<PostCreationModalProps> = ({
         </motion.div>
       </motion.div>
     </AnimatePresence>
-  );
+  )
 };
 
 export default PostCreationModal;

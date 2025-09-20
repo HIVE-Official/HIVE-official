@@ -32,7 +32,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
           className={cn(headingVariants({ level }), className)}
           {...props}
         />
-      );
+      )
     }
     if (Component === "h2") {
       return (
@@ -41,7 +41,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
           className={cn(headingVariants({ level }), className)}
           {...props}
         />
-      );
+      )
     }
     if (Component === "h3") {
       return (
@@ -50,7 +50,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
           className={cn(headingVariants({ level }), className)}
           {...props}
         />
-      );
+      )
     }
     return (
       <h4
@@ -58,7 +58,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
         className={cn(headingVariants({ level }), className)}
         {...props}
       />
-    );
+    )
   }
 );
 Heading.displayName = "Heading";
@@ -67,7 +67,7 @@ const Text = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
-  return <p ref={ref} className={cn("text-body", className)} {...props} />;
+  return <p ref={ref} className={cn("text-body", className)} {...props} />
 });
 Text.displayName = "Text";
 
@@ -81,7 +81,7 @@ const Muted = React.forwardRef<
       className={cn("text-sm text-text-muted", className)}
       {...props}
     />
-  );
+  )
 });
 Muted.displayName = "Muted";
 

@@ -7,7 +7,7 @@ import { HiveCard } from '../hive-card';
 import { HiveButton } from '../hive-button';
 import { HiveBadge } from '../hive-badge';
 import { HiveProgressBar } from '../hive-progress';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '../../atomic/atoms/avatar';
 import { Camera, Upload, Sparkles, Trophy, Shield, Lock, Plus } from 'lucide-react';
 const badgeVariants = {
     builder: {

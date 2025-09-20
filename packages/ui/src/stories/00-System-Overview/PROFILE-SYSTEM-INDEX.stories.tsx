@@ -315,12 +315,12 @@ function QuickStartGuide() {
                   {step.action}
                 </Button>
               </div>
-            );
-          })}
+            )
+          })
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // System Status Component
@@ -345,12 +345,12 @@ function SystemStatus() {
                   <span className="text-xs text-green-600 capitalize">{component.status}</span>
                 </div>
               </div>
-            );
-          })}
+            )
+          })
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Main Index Story
@@ -417,8 +417,8 @@ export const ProfileSystemIndex: StoryObj = {
                     {feature.stats}
                   </Badge>
                 </Card>
-              );
-            })}
+              )
+            })
           </div>
 
           {/* Main Content */}
@@ -440,8 +440,8 @@ export const ProfileSystemIndex: StoryObj = {
                         <Icon className="w-4 h-4 mr-1" />
                         {section.title.split(' ')[0]}
                       </TabsTrigger>
-                    );
-                  })}
+                    )
+                  })
                 </TabsList>
 
                 {sections.map((section) => {
@@ -485,8 +485,8 @@ export const ProfileSystemIndex: StoryObj = {
                         </CardContent>
                       </Card>
                     </TabsContent>
-                  );
-                })}
+                  )
+                })
               </Tabs>
 
               {/* Live Preview */}
@@ -543,7 +543,7 @@ export const ProfileSystemIndex: StoryObj = {
           </Card>
         </div>
       </div>
-    );
+    )
   }
 };
 

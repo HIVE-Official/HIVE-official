@@ -29,8 +29,8 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '../../atomic/atoms/button';
+import { Badge } from '../../atomic/atoms/badge';
 
 // Enhanced Member interface for directory
 interface DirectoryMember {
@@ -78,7 +78,7 @@ interface DirectoryMember {
   // Privacy settings
   profileVisibility: 'public' | 'members-only' | 'leaders-only';
   contactVisible: boolean;
-  academicInfoVisible: boolean;
+  academicInfoVisible: boolean
 }
 
 interface MemberDirectoryToolProps {
@@ -89,7 +89,7 @@ interface MemberDirectoryToolProps {
   leaderMode?: 'moderate' | 'manage' | 'configure' | 'insights' | null;
   onMemberAction?: (memberId: string, action: string, data?: any) => void;
   authenticatedFetch?: (url: string, options?: RequestInit) => Promise<Response>;
-  className?: string;
+  className?: string
 }
 
 type ViewMode = 'grid' | 'list' | 'skills' | 'analytics';
@@ -101,7 +101,7 @@ const getStatusColor = (status: DirectoryMember['status']) => {
     case 'online': return 'bg-green-400';
     case 'away': return 'bg-yellow-400';
     case 'busy': return 'bg-red-400';
-    default: return 'bg-gray-400';
+    default: return 'bg-gray-400'
   }
 };
 
@@ -110,7 +110,7 @@ const getRoleIcon = (role: DirectoryMember['role']) => {
     case 'owner': return Crown;
     case 'admin': return Shield;
     case 'moderator': return Star;
-    default: return Users;
+    default: return Users
   }
 };
 
@@ -119,7 +119,7 @@ const getRoleBadgeColor = (role: DirectoryMember['role']) => {
     case 'owner': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
     case 'admin': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
     case 'moderator': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-    default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
   }
 };
 type SortType = 'name' | 'role' | 'activity' | 'contribution' | 'joined';
@@ -146,7 +146,7 @@ export function MemberDirectoryTool({
 
   // Fetch members data
   useEffect(() => {
-    fetchMembers();
+    fetchMembers()
   }, [spaceId]);
 
   // Filter and sort members
@@ -160,7 +160,7 @@ export function MemberDirectoryTool({
         member.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
         member.major?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         member.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+      )
     }
 
     // Apply category filter
@@ -180,7 +180,7 @@ export function MemberDirectoryTool({
       case 'recent':
         const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
         filtered = filtered.filter(member => member.joinedAt > weekAgo);
-        break;
+        break
     }
 
     // Apply sorting
@@ -198,11 +198,11 @@ export function MemberDirectoryTool({
         case 'joined':
           return new Date(b.joinedAt).getTime() - new Date(a.joinedAt).getTime();
         default:
-          return 0;
+          return 0
       }
     });
 
-    setFilteredMembers(filtered);
+    setFilteredMembers(filtered)
   }, [members, searchQuery, activeFilter, sortBy]);
 
   const fetchMembers = async () => {
@@ -219,7 +219,7 @@ export function MemberDirectoryTool({
       });
       
       if (!response.ok) {
-        throw new Error(`Failed to fetch members: ${response.status}`);
+        throw new Error(`Failed to fetch members: ${response.status}`)
       }
       
       const data = await response.json();
@@ -266,7 +266,7 @@ export function MemberDirectoryTool({
         profileVisibility: member.profile?.visibility || 'members-only',
         contactVisible: member.profile?.contactVisible !== false, // Default to visible
         academicInfoVisible: member.profile?.academicInfoVisible !== false, // Default to visible
-      }));
+      })});
       
       setMembers(transformedMembers);
       
@@ -368,19 +368,19 @@ export function MemberDirectoryTool({
         }
       ];
 
-        setMembers(exampleMembers);
+        setMembers(exampleMembers)
       } else {
-        setMembers(transformedMembers);
+        setMembers(transformedMembers)
       }
     } catch (error) {
-      console.error('Failed to fetch members:', error);
+      console.error('Failed to fetch members:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
   const handleMemberClick = (member: DirectoryMember) => {
-    setSelectedMember(member);
+    setSelectedMember(member)
   };
 
   const handleMemberAction = async (memberId: string, action: string, data?: any) => {
@@ -418,10 +418,10 @@ export function MemberDirectoryTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to promote member: ${response.status}`);
+            throw new Error(`Failed to promote member: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'demote': {
@@ -454,10 +454,10 @@ export function MemberDirectoryTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to demote member: ${response.status}`);
+            throw new Error(`Failed to demote member: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'suspend': {
@@ -474,10 +474,10 @@ export function MemberDirectoryTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to suspend member: ${response.status}`);
+            throw new Error(`Failed to suspend member: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'unsuspend': {
@@ -494,10 +494,10 @@ export function MemberDirectoryTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to unsuspend member: ${response.status}`);
+            throw new Error(`Failed to unsuspend member: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'remove': {
@@ -509,34 +509,34 @@ export function MemberDirectoryTool({
           });
           
           if (!response.ok) {
-            throw new Error(`Failed to remove member: ${response.status}`);
+            throw new Error(`Failed to remove member: ${response.status}`)
           }
           
-          break;
+          break
         }
         
         case 'message': {
           // This would integrate with a messaging system
           // For now, just trigger the callback
           if (onMemberAction) {
-            onMemberAction(memberId, action, data);
+            onMemberAction(memberId, action, data)
           }
-          return;
+          return
         }
         
         case 'view_profile': {
           // This would navigate to the member's profile
           if (onMemberAction) {
-            onMemberAction(memberId, action, data);
+            onMemberAction(memberId, action, data)
           }
-          return;
+          return
         }
         
         default:
           if (onMemberAction) {
-            onMemberAction(memberId, action, data);
+            onMemberAction(memberId, action, data)
           }
-          return;
+          return
       }
       
       // Refresh member data after successful action
@@ -544,13 +544,13 @@ export function MemberDirectoryTool({
       
       // Also trigger callback for any additional handling
       if (onMemberAction) {
-        onMemberAction(memberId, action, data);
+        onMemberAction(memberId, action, data)
       }
       
     } catch (error) {
       console.error(`Error performing member action ${action}:`, error);
       // You might want to show a toast notification here
-      throw error;
+      throw error
     }
   };
 
@@ -560,7 +560,7 @@ export function MemberDirectoryTool({
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFD700]"></div>
         <span className="ml-3 text-neutral-400">Loading member directory...</span>
       </div>
-    );
+    )
   }
 
   return (
@@ -729,13 +729,13 @@ export function MemberDirectoryTool({
             onClose={() => setSelectedMember(null)}
             onAction={(action, data) => {
               handleMemberAction(selectedMember.id, action, data);
-              if (action === 'remove') setSelectedMember(null);
-            }}
+              if (action === 'remove') setSelectedMember(null)
+          }}
           />
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }
 
 // Member Card Component
@@ -746,7 +746,7 @@ interface MemberCardProps {
   currentUserRole: string;
   leaderMode?: string | null;
   onClick: () => void;
-  onAction: (action: string, data?: any) => void;
+  onAction: (action: string, data?: any) => void
 }
 
 function MemberCard({ member, viewMode, isLeader, currentUserRole, leaderMode, onClick, onAction }: MemberCardProps) {
@@ -799,7 +799,7 @@ function MemberCard({ member, viewMode, isLeader, currentUserRole, leaderMode, o
           )}
         </div>
       </motion.div>
-    );
+    )
   }
 
   if (viewMode === 'skills') {
@@ -858,7 +858,7 @@ function MemberCard({ member, viewMode, isLeader, currentUserRole, leaderMode, o
           )}
         </div>
       </motion.div>
-    );
+    )
   }
 
   // Grid view (default)
@@ -927,7 +927,7 @@ function MemberCard({ member, viewMode, isLeader, currentUserRole, leaderMode, o
         </div>
       )}
     </motion.div>
-  );
+  )
 }
 
 // Member Detail Modal Component
@@ -936,7 +936,7 @@ interface MemberDetailModalProps {
   isLeader: boolean;
   currentUserRole: string;
   onClose: () => void;
-  onAction: (action: string, data?: any) => void;
+  onAction: (action: string, data?: any) => void
 }
 
 function MemberDetailModal({ member, isLeader, currentUserRole, onClose, onAction }: MemberDetailModalProps) {
@@ -1194,5 +1194,5 @@ function MemberDetailModal({ member, isLeader, currentUserRole, onClose, onActio
         </div>
       </motion.div>
     </motion.div>
-  );
+  )
 }

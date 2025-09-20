@@ -20,7 +20,7 @@ export const CampusConnections: React.FC<CampusConnectionsProps> = ({
           <Loader2 className="h-6 w-6 animate-spin text-[var(--hive-brand-secondary)]" />
         </div>
       </HiveCard>
-    );
+    )
   }
 
   if (error) {
@@ -34,7 +34,7 @@ export const CampusConnections: React.FC<CampusConnectionsProps> = ({
           </div>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   const getConnectionIcon = (type: string) => {
@@ -54,7 +54,7 @@ export const CampusConnections: React.FC<CampusConnectionsProps> = ({
       case 'alumni_network':
         return <Users className="h-4 w-4" />;
       default:
-        return <UserPlus className="h-4 w-4" />;
+        return <UserPlus className="h-4 w-4" />
     }
   };
 
@@ -75,7 +75,7 @@ export const CampusConnections: React.FC<CampusConnectionsProps> = ({
       case 'alumni_network':
         return 'from-emerald-500/20 to-emerald-600/20 border-emerald-500/30';
       default:
-        return 'from-gray-500/20 to-gray-600/20 border-gray-500/30';
+        return 'from-gray-500/20 to-gray-600/20 border-gray-500/30'
     }
   };
 
@@ -90,7 +90,7 @@ export const CampusConnections: React.FC<CampusConnectionsProps> = ({
       case 'mentorship':
         return 'High';
       default:
-        return 'Medium';
+        return 'Medium'
     }
   };
 
@@ -153,8 +153,8 @@ export const CampusConnections: React.FC<CampusConnectionsProps> = ({
                         className="text-xs h-6 px-2"
                         onClick={(e) => {
                           e.stopPropagation();
-                          onConnectionClick?.(connection.id);
-                        }}
+                          onConnectionClick?.(connection.id)
+          }}
                       >
                         {connection.action}
                       </HiveButton>
@@ -192,7 +192,7 @@ export const CampusConnections: React.FC<CampusConnectionsProps> = ({
         </p>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export default CampusConnections;

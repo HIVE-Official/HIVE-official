@@ -30,6 +30,6 @@ export interface CalendarCardProps {
     onSettingsClick?: () => void;
     className?: string;
 }
-export declare function CalendarCard({ events, isEditMode, onEventCreate, onEventUpdate, onRSVP, onSettingsClick, className }: CalendarCardProps): import("react/jsx-runtime").JSX.Element;
+export declare function CalendarCard({ events, isEditMode, onEventCreate, onEventUpdate, onRSVP, onSettingsClick, className }: CalendarCardProps): CalendarEvent[];
 export declare const mockCalendarEvents: CalendarEvent[];
 //# sourceMappingURL=calendar-card.d.ts.map

@@ -26,7 +26,7 @@ interface RSVPManagerProps {
   event: EventDefinition;
   onUpdateEvent?: (updates: Partial<EventDefinition>) => void;
   onMessageAttendees?: (recipients: string[], message: string) => void;
-  onExportRSVPs?: (format: 'csv' | 'excel') => void;
+  onExportRSVPs?: (format: 'csv' | 'excel') => void
 }
 
 interface RSVPStats {
@@ -37,7 +37,7 @@ interface RSVPStats {
   pending: number;
   checkedIn: number;
   noShow: number;
-  waitlist: number;
+  waitlist: number
 }
 
 const RSVPStatusBadge = ({ status }: { status: RSVPResponse['status'] }) => {
@@ -53,7 +53,7 @@ const RSVPStatusBadge = ({ status }: { status: RSVPResponse['status'] }) => {
     <HiveBadge className={className}>
       {label}
     </HiveBadge>
-  );
+  )
 };
 
 const AttendeeRow = ({ 
@@ -67,7 +67,7 @@ const AttendeeRow = ({
   onUpdateStatus: (rsvpId: string, status: RSVPResponse['status']) => void;
   onToggleCheckin: (rsvpId: string) => void;
   onMessage: (userId: string) => void;
-  showActions?: boolean;
+  showActions?: boolean
 }) => {
   const [showDetails, setShowDetails] = useState(false);
 
@@ -204,7 +204,7 @@ const AttendeeRow = ({
         </div>
       )}
     </>
-  );
+  )
 };
 
 export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onExportRSVPs }: RSVPManagerProps) {
@@ -290,15 +290,15 @@ export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onEx
           }
         ];
         
-        setRSVPs(mockRSVPs);
+        setRSVPs(mockRSVPs)
       } catch (error) {
-        console.error('Failed to fetch RSVPs:', error);
+        console.error('Failed to fetch RSVPs:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     };
 
-    fetchRSVPs();
+    fetchRSVPs()
   }, [event.id]);
 
   // Calculate statistics
@@ -319,7 +319,7 @@ export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onEx
       checkedIn,
       noShow,
       waitlist: event.capacity ? Math.max(0, yes - event.capacity) : 0
-    };
+    }
   }, [rsvps, event.capacity]);
 
   // Filter RSVPs
@@ -330,31 +330,31 @@ export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onEx
         const query = searchQuery.toLowerCase();
         if (!rsvp.userName.toLowerCase().includes(query) && 
             !rsvp.userEmail.toLowerCase().includes(query)) {
-          return false;
+          return false
         }
       }
 
       // Status filter
       if (statusFilter !== 'all' && rsvp.status !== statusFilter) {
-        return false;
+        return false
       }
 
       // Check-in filter
       if (checkinFilter === 'checked_in' && !rsvp.checkedIn) {
-        return false;
+        return false
       }
       if (checkinFilter === 'not_checked_in' && rsvp.checkedIn) {
-        return false;
+        return false
       }
 
-      return true;
-    });
+      return true
+    })
   }, [rsvps, searchQuery, statusFilter, checkinFilter]);
 
   const handleUpdateRSVPStatus = useCallback((rsvpId: string, status: RSVPResponse['status']) => {
     setRSVPs(prev => prev.map(rsvp => 
       rsvp.id === rsvpId ? { ...rsvp, status, respondedAt: new Date() } : rsvp
-    ));
+    ))
   }, []);
 
   const handleToggleCheckin = useCallback((rsvpId: string) => {
@@ -364,21 +364,21 @@ export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onEx
         checkedIn: !rsvp.checkedIn,
         checkedInAt: !rsvp.checkedIn ? new Date() : undefined
       } : rsvp
-    ));
+    ))
   }, []);
 
   const handleMessageAttendee = useCallback((userId: string) => {
     // Open messaging interface for specific user
-    console.log('Message user:', userId);
+    console.log('Message user:', userId)
   }, []);
 
   const handleBulkMessage = useCallback(() => {
     if (selectedRSVPs.length === 0) return;
-    setShowMessageModal(true);
+    setShowMessageModal(true)
   }, [selectedRSVPs]);
 
   const handleExport = useCallback((format: 'csv' | 'excel') => {
-    onExportRSVPs?.(format);
+    onExportRSVPs?.(format)
   }, [onExportRSVPs]);
 
   if (loading) {
@@ -387,7 +387,7 @@ export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onEx
         <div className="w-8 h-8 bg-amber-500 rounded-lg animate-pulse mx-auto mb-4" />
         <p className="text-gray-600">Loading RSVPs...</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -566,7 +566,7 @@ export function RSVPManagerTool({ event, onUpdateEvent, onMessageAttendees, onEx
         )}
       </div>
     </div>
-  );
+  )
 }
 
 export default RSVPManagerTool;

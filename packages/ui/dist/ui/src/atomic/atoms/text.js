@@ -30,7 +30,9 @@ const textVariants = {
         subtle: 'text-[var(--hive-text-tertiary)]',
         gold: 'text-[var(--hive-brand-secondary)]',
         ruby: 'text-[var(--hive-status-error)]',
-        emerald: 'text-[var(--hive-status-success)]'
+        emerald: 'text-[var(--hive-status-success)]',
+        success: 'text-[var(--hive-status-success)]',
+        warning: 'text-[var(--hive-status-warning)]'
     },
     weight: {
         light: 'font-light',

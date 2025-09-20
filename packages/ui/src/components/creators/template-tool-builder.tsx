@@ -286,7 +286,7 @@ interface TemplateCardProps {
   onSelect: (template: ToolTemplate) => void;
   onPreview: (template: ToolTemplate) => void;
   isSelected: boolean;
-  viewMode: 'grid' | 'list';
+  viewMode: 'grid' | 'list'
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({
@@ -406,8 +406,8 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onPreview(template);
-                }}
+                  onPreview(template)
+          }}
                 className="flex-1"
               >
                 <Eye size={14} />
@@ -418,8 +418,8 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onSelect(template);
-                }}
+                  onSelect(template)
+          }}
                 className="flex-1"
               >
                 Use Template
@@ -429,7 +429,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
         </HiveCardContent>
       </HiveCard>
     </HiveMotionWrapper>
-  );
+  )
 };
 
 // Main Template Tool Builder component
@@ -455,7 +455,7 @@ export const TemplateToolBuilder: React.FC<TemplateBuilderProps> = ({
 
     // Filter by category
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(template => template.category === selectedCategory);
+      filtered = filtered.filter(template => template.category === selectedCategory)
     }
 
     // Filter by search term
@@ -465,7 +465,7 @@ export const TemplateToolBuilder: React.FC<TemplateBuilderProps> = ({
         template.name.toLowerCase().includes(query) ||
         template.description.toLowerCase().includes(query) ||
         template.tags.some(tag => tag.toLowerCase().includes(query))
-      );
+      )
     }
 
     // Sort templates
@@ -478,9 +478,9 @@ export const TemplateToolBuilder: React.FC<TemplateBuilderProps> = ({
         case 'newest':
           return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
         default:
-          return 0;
+          return 0
       }
-    });
+    })
   }, [templates, selectedCategory, searchTerm, sortBy]);
 
   // Handle template selection
@@ -502,13 +502,13 @@ export const TemplateToolBuilder: React.FC<TemplateBuilderProps> = ({
       updatedAt: new Date()
     };
 
-    onChange(newTool);
+    onChange(newTool)
   };
 
   // Handle template preview
   const handleTemplatePreview = (template: ToolTemplate) => {
     setPreviewTemplate(template);
-    setShowPreview(true);
+    setShowPreview(true)
   };
 
   return (
@@ -569,7 +569,7 @@ export const TemplateToolBuilder: React.FC<TemplateBuilderProps> = ({
               ...TEMPLATE_CATEGORIES.map((category) => ({
                 value: category.id,
                 label: category.name
-              }))
+              })})
             ]}
           />
 
@@ -674,12 +674,12 @@ export const TemplateToolBuilder: React.FC<TemplateBuilderProps> = ({
           }}
           onClose={() => {
             setShowPreview(false);
-            setPreviewTemplate(null);
+            setPreviewTemplate(null)
           }}
         />
       )}
     </div>
-  );
+  )
 };
 
 export default TemplateToolBuilder;

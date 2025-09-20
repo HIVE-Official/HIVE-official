@@ -10,7 +10,7 @@ import { ProfileSettingsWidget } from './widgets/profile-settings-widget';
 import { ProfileAnalyticsWidget } from './widgets/profile-analytics-widget';
 import { PrivacyControlWidget } from './widgets/privacy-control-widget';
 // Import existing profile components
-import { ProfileDashboard } from '../../atomic/organisms/profile-dashboard';
+import { ProfileDashboard } from '../profile/profile-dashboard';
 export const EnhancedProfileDashboard = ({ enableExpandFocus = true, ...profileDashboardProps }) => {
     // Expand-focus states for different widgets
     const settingsModal = useExpandFocus();

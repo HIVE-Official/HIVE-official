@@ -5,7 +5,7 @@ import { cn } from '../../lib/utils';
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 export const Label: React.FC<LabelProps> = ({ 
@@ -23,5 +23,5 @@ export const Label: React.FC<LabelProps> = ({
     >
       {children}
     </label>
-  );
+  )
 };

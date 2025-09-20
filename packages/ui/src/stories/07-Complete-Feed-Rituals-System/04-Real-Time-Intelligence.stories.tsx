@@ -229,10 +229,10 @@ const RealTimeIntelligenceDemo = () => {
         engagement: { saves: Math.floor(Math.random() * 50), shares: Math.floor(Math.random() * 20) }
       };
 
-      setRealtimeActivities(prev => [newActivity, ...prev.slice(0, 9)]);
+      setRealtimeActivities(prev => [newActivity, ...prev.slice(0, 9)])
     }, 5000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, [liveUpdates]);
 
   return (
@@ -583,7 +583,7 @@ const RealTimeIntelligenceDemo = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export const RealTimeIntelligence: Story = {
@@ -718,8 +718,8 @@ export const AlgorithmVisualization: Story = {
                             mask: 'radial-gradient(circle at center, transparent 30%, black 30%)'
                           }}
                         />
-                      );
-                    })}
+                      )
+                    })
                   </div>
                   
                   {/* Center Label */}
@@ -749,7 +749,7 @@ export const AlgorithmVisualization: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',

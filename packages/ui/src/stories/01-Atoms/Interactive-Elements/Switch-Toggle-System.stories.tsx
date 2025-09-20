@@ -187,7 +187,7 @@ export const PrivacyControls: Story = {
       setPrivacySettings(prev => ({
         ...prev,
         [settingId]: !prev[settingId as keyof typeof prev]
-      }));
+      }))
     };
 
     return (
@@ -256,11 +256,11 @@ export const PrivacyControls: Story = {
                   )}
                 </div>
               </div>
-            );
-          })}
+            )
+          })
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -278,15 +278,15 @@ export const NotificationSettings: Story = {
       setNotificationSettings(prev => ({
         ...prev,
         [settingId]: !prev[settingId as keyof typeof prev]
-      }));
+      }))
     };
 
     const groupedSettings = campusToggleSettings.notifications.reduce((acc, setting) => {
       if (!acc[setting.category]) {
-        acc[setting.category] = [];
+        acc[setting.category] = []
       }
       acc[setting.category].push(setting);
-      return acc;
+      return acc
     }, {} as Record<string, typeof campusToggleSettings.notifications>);
 
     return (
@@ -333,8 +333,8 @@ export const NotificationSettings: Story = {
                         onCheckedChange={() => handleToggle(setting.id)}
                       />
                     </div>
-                  );
-                })}
+                  )
+                })
               </div>
             </div>
           ))}
@@ -359,7 +359,7 @@ export const NotificationSettings: Story = {
           </div>
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -377,7 +377,7 @@ export const FeatureToggles: Story = {
       setFeatureSettings(prev => ({
         ...prev,
         [settingId]: !prev[settingId as keyof typeof prev]
-      }));
+      }))
     };
 
     return (
@@ -450,11 +450,11 @@ export const FeatureToggles: Story = {
                   </div>
                 )}
               </div>
-            );
-          })}
+            )
+          })
         </div>
       </div>
-    );
+    )
   }
 };
 
@@ -536,7 +536,7 @@ export const SwitchStatesShowcase: Story = {
                   <Switch
                     id="demo-enabled"
                     checked={interactiveStates.enabled}
-                    onCheckedChange={(checked) => setInteractiveStates(prev => ({ ...prev, enabled: checked }))}
+                    onChange={(e) => { const checked = e.target.checked; setInteractiveStates(prev => ({ ...prev, enabled: checked }))}
                   />
                 </div>
                 <p className="text-sm text-gray-600">
@@ -600,6 +600,6 @@ export const SwitchStatesShowcase: Story = {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 };

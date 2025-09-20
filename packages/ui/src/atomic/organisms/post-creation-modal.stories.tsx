@@ -38,7 +38,7 @@ type Story = StoryObj<typeof PostCreationModal>;
 const mockSubmit = async (data: PostCreationData) => {
   action('submit')(data);
   // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 2000))
 };
 
 export const Default: Story = {
@@ -189,17 +189,17 @@ export const InteractiveDemo: Story = {
         action('submit')(data);
         console.log('Post created:', data);
         
-        setIsOpen(false);
+        setIsOpen(false)
       } catch (error) {
-        console.error('Failed to create post:', error);
+        console.error('Failed to create post:', error)
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(false)
       }
     };
 
     const handleClose = () => {
       setIsOpen(false);
-      action('close')();
+      action('close')()
     };
 
     return (
@@ -224,7 +224,7 @@ export const InteractiveDemo: Story = {
           isSubmitting={isSubmitting}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -241,7 +241,7 @@ export const FormValidation: Story = {
 
     const handleSubmit = async (data: PostCreationData) => {
       // This will trigger validation since we're not providing required fields
-      action('submit')(data);
+      action('submit')(data)
     };
 
     return (
@@ -269,7 +269,7 @@ export const FormValidation: Story = {
           </div>
         )}
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -295,7 +295,7 @@ export const AllPostTypes: Story = {
     const handleSubmit = async (data: PostCreationData) => {
       action('submit')(data);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      setIsOpen(false);
+      setIsOpen(false)
     };
 
     return (
@@ -311,8 +311,8 @@ export const AllPostTypes: Story = {
                   key={type.type}
                   onClick={() => {
                     setCurrentType(type.type);
-                    setIsOpen(true);
-                  }}
+                    setIsOpen(true)
+          }}
                   className="px-4 py-2 bg-[var(--hive-background-secondary)]/60 text-[var(--hive-text-primary)] border border-[var(--hive-border-primary)]/30 rounded-xl hover:bg-[var(--hive-brand-primary)]/10 hover:border-[var(--hive-brand-primary)]/30 transition-all duration-300"
                 >
                   Create {type.label}
@@ -331,7 +331,7 @@ export const AllPostTypes: Story = {
           initialType={currentType}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

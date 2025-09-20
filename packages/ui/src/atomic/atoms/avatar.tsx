@@ -10,13 +10,14 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   status?: 'online' | 'offline' | 'away' | 'busy' | 'ghost';
   initials?: string;
+  fallback?: string; // Added fallback property
   placeholder?: React.ReactNode;
   interactive?: boolean;
   // Social platform roles & indicators
   role?: 'student' | 'builder' | 'leader' | 'verified';
   affiliation?: 'university' | 'residential' | 'greek';
   privacy?: 'public' | 'ghost' | 'anonymous';
-  showBadge?: boolean;
+  showBadge?: boolean
 }
 
 const avatarSizes = {
@@ -93,7 +94,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           className="h-full w-full object-cover"
           onError={() => setImageError(true)}
         />
-      );
+      )
     }
     
     // Try initials
@@ -102,12 +103,12 @@ export const Avatar: React.FC<AvatarProps> = ({
         <span className="font-medium text-[var(--hive-text-primary)]">
           {initials.slice(0, 2).toUpperCase()}
         </span>
-      );
+      )
     }
     
     // Try custom placeholder
     if (placeholder) {
-      return placeholder;
+      return placeholder
     }
     
     // Default fallback
@@ -121,7 +122,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         size === 'xl' && 'h-8 w-8',
         size === '2xl' && 'h-10 w-10'
       )} />
-    );
+    )
   };
 
   return (
@@ -140,16 +141,16 @@ export const Avatar: React.FC<AvatarProps> = ({
       )}
       
     </div>
-  );
+  )
 };
 
 // Compound component for Avatar Image
 export const AvatarImage: React.FC<{ src?: string; alt?: string }> = ({ src, alt }) => {
   if (!src) return null;
-  return <img src={src} alt={alt} className="w-full h-full object-cover" />;
+  return <img src={src} alt={alt} className="w-full h-full object-cover" />
 };
 
 // Compound component for Avatar Fallback
 export const AvatarFallback: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div className="flex items-center justify-center w-full h-full">{children}</div>;
+  return <div className="flex items-center justify-center w-full h-full">{children}</div>
 };

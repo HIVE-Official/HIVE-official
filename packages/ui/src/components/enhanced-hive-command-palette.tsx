@@ -149,8 +149,8 @@ export interface SearchableItem {
     rating?: number;
     creator?: string;
     date?: string;
-    status?: string;
-  };
+    status?: string
+  }
 }
 
 export interface SearchCategory {
@@ -174,7 +174,7 @@ export interface EnhancedCommandPaletteProps
   hotkey?: string;
   recentItems?: SearchableItem[];
   maxResults?: number;
-  enableLiveSearch?: boolean;
+  enableLiveSearch?: boolean
 }
 
 const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedCommandPaletteProps>(
@@ -205,20 +205,20 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
     
     // Combined items from static and search results
     const allItems = useMemo(() => {
-      return [...staticItems, ...searchResults];
+      return [...staticItems, ...searchResults]
     }, [staticItems, searchResults]);
     
     // Filter and search logic
     const filteredItems = useMemo(() => {
       if (!query && !selectedCategory) {
-        return recentItems.slice(0, maxResults);
+        return recentItems.slice(0, maxResults)
       }
       
       let filtered = allItems;
       
       // Filter by category if selected
       if (selectedCategory) {
-        filtered = filtered.filter(item => item.category === selectedCategory);
+        filtered = filtered.filter(item => item.category === selectedCategory)
       }
       
       // Filter by search query
@@ -228,7 +228,7 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
           item.title.toLowerCase().includes(lowercaseQuery) ||
           item.description?.toLowerCase().includes(lowercaseQuery) ||
           item.keywords.some(keyword => keyword.toLowerCase().includes(lowercaseQuery))
-        );
+        )
       }
       
       // Sort by relevance and type priority
@@ -242,10 +242,10 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
           event: 5,
           post: 6
         };
-        return (typeOrder[a.type] || 10) - (typeOrder[b.type] || 10);
+        return (typeOrder[a.type] || 10) - (typeOrder[b.type] || 10)
       });
       
-      return filtered.slice(0, maxResults);
+      return filtered.slice(0, maxResults)
     }, [query, selectedCategory, allItems, recentItems, maxResults]);
     
     // Group filtered items by category
@@ -253,23 +253,23 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
       const groups: Record<string, SearchableItem[]> = {};
       filteredItems.forEach(item => {
         if (!groups[item.category]) {
-          groups[item.category] = [];
+          groups[item.category] = []
         }
-        groups[item.category].push(item);
+        groups[item.category].push(item)
       });
-      return groups;
+      return groups
     }, [filteredItems]);
     
     // Live search with debouncing
     useEffect(() => {
       if (!enableLiveSearch || !onSearch || !query) {
         setSearchResults([]);
-        return;
+        return
       }
       
       // Clear previous timeout
       if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
+        clearTimeout(searchTimeoutRef.current)
       }
       
       // Debounce search
@@ -277,20 +277,20 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
         setIsSearching(true);
         try {
           const results = await onSearch(query, selectedCategory || undefined);
-          setSearchResults(results);
+          setSearchResults(results)
         } catch (error) {
           console.warn('Search failed:', error);
-          setSearchResults([]);
+          setSearchResults([])
         } finally {
-          setIsSearching(false);
+          setIsSearching(false)
         }
       }, 300);
       
       return () => {
         if (searchTimeoutRef.current) {
-          clearTimeout(searchTimeoutRef.current);
+          clearTimeout(searchTimeoutRef.current)
         }
-      };
+      }
     }, [query, selectedCategory, onSearch, enableLiveSearch]);
     
     // Handle keyboard navigation
@@ -313,7 +313,7 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
           case 'Enter':
             e.preventDefault();
             if (filteredItems[selectedIndex]) {
-              handleSelect(filteredItems[selectedIndex]);
+              handleSelect(filteredItems[selectedIndex])
             }
             break;
           case 'Tab':
@@ -322,12 +322,12 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
             const currentIndex = categories.findIndex(c => c.id === selectedCategory);
             const nextIndex = (currentIndex + 1) % (categories.length + 1);
             setSelectedCategory(nextIndex === 0 ? null : categories[nextIndex - 1].id);
-            break;
+            break
         }
       };
       
       document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown)
     }, [isOpen, selectedIndex, filteredItems, selectedCategory, categories, onClose]);
     
     // Reset state when opening
@@ -337,33 +337,33 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
         setSelectedIndex(0);
         setSelectedCategory(null);
         setSearchResults([]);
-        setTimeout(() => inputRef.current?.focus(), 100);
+        setTimeout(() => inputRef.current?.focus(), 100)
       }
     }, [isOpen]);
     
     // Update selected index when filtered items change
     useEffect(() => {
-      setSelectedIndex(0);
+      setSelectedIndex(0)
     }, [filteredItems]);
     
     const handleSelect = (item: SearchableItem) => {
       onSelect?.(item);
       item.action();
-      onClose();
+      onClose()
     };
     
     const handleCategorySelect = (categoryId: string) => {
       if (selectedCategory === categoryId) {
-        setSelectedCategory(null);
+        setSelectedCategory(null)
       } else {
         setSelectedCategory(categoryId);
-        setQuery('');
+        setQuery('')
       }
     };
     
     const handleBackdropClick = (e: React.MouseEvent) => {
       if (e.target === e.currentTarget) {
-        onClose();
+        onClose()
       }
     };
     
@@ -375,7 +375,7 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
         )}>
           {item.icon}
         </div>
-      );
+      )
     };
     
     const renderItemMetadata = (item: SearchableItem) => {
@@ -383,23 +383,23 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
       
       const metadata = [];
       if (item.metadata.memberCount) {
-        metadata.push(`${item.metadata.memberCount} members`);
+        metadata.push(`${item.metadata.memberCount} members`)
       }
       if (item.metadata.rating) {
-        metadata.push(`${item.metadata.rating}★`);
+        metadata.push(`${item.metadata.rating}★`)
       }
       if (item.metadata.creator) {
-        metadata.push(`by ${item.metadata.creator}`);
+        metadata.push(`by ${item.metadata.creator}`)
       }
       if (item.metadata.date) {
-        metadata.push(item.metadata.date);
+        metadata.push(item.metadata.date)
       }
       
       return metadata.length > 0 ? (
         <div className="text-xs text-[var(--hive-text-primary)]/40 mt-0.5">
           {metadata.join(' • ')}
         </div>
-      ) : null;
+      ) : null
     };
     
     return (
@@ -560,11 +560,11 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
                                   />
                                 </div>
                               </motion.button>
-                            );
-                          })}
+                            )
+          })
                         </div>
-                      );
-                    })}
+                      )
+          }}
                   </motion.div>
                 ) : (
                   <div className="px-6 py-12 text-center">
@@ -612,7 +612,7 @@ const EnhancedHiveCommandPalette = React.forwardRef<HTMLDivElement, EnhancedComm
           </motion.div>
         )}
       </AnimatePresence>
-    );
+    )
   }
 );
 

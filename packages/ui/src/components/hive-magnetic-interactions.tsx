@@ -20,7 +20,7 @@ interface MagneticHoverProps {
   disabled?: boolean;
   onMagneticEnter?: () => void;
   onMagneticLeave?: () => void;
-  magneticId?: string;
+  magneticId?: string
 }
 
 export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
@@ -57,7 +57,7 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
   useEffect(() => {
     if (magneticId) {
       liquidMetalOrchestrator.register(magneticId, controls);
-      return () => liquidMetalOrchestrator.unregister(magneticId);
+      return () => liquidMetalOrchestrator.unregister(magneticId)
     }
   }, [magneticId, controls]);
   
@@ -83,14 +83,14 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
     // Enter magnetic field
     if (!isInMagneticField && magneticStrength > 0.7) {
       setIsInMagneticField(true);
-      onMagneticEnter?.();
+      onMagneticEnter?.()
     }
   };
   
   const handleMouseEnter = () => {
     if (disabled) return;
     
-    controls.start();
+    controls.start()
   };
   
   const handleMouseLeave = () => {
@@ -102,18 +102,18 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
     
     if (isInMagneticField) {
       setIsInMagneticField(false);
-      onMagneticLeave?.();
+      onMagneticLeave?.()
     }
   };
   
   const handleMouseDown = () => {
     if (disabled) return;
-    controls.start();
+    controls.start()
   };
   
   const handleMouseUp = () => {
     if (disabled) return;
-    controls.start();
+    controls.start()
   };
   
   return (
@@ -125,7 +125,7 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
         ...liquidMetalPerformance.gpuLayer,
         rotateX: disabled ? 0 : rotateX,
         rotateY: disabled ? 0 : rotateY,
-      }}
+          }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -135,7 +135,7 @@ export const HiveMagneticHover: React.FC<MagneticHoverProps> = ({
     >
       {children}
     </motion.div>
-  );
+  )
 };
 
 // 🔗 Magnetic Snap Component for Tool Assembly
@@ -146,7 +146,7 @@ interface MagneticSnapProps {
   snapId: string;
   onSnap?: (targetId: string) => void;
   onRelease?: () => void;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 export const HiveMagneticSnap: React.FC<MagneticSnapProps> = ({
@@ -165,7 +165,7 @@ export const HiveMagneticSnap: React.FC<MagneticSnapProps> = ({
   
   useEffect(() => {
     liquidMetalOrchestrator.register(snapId, controls);
-    return () => liquidMetalOrchestrator.unregister(snapId);
+    return () => liquidMetalOrchestrator.unregister(snapId)
   }, [snapId, controls]);
   
   // Check distance to snap targets
@@ -189,15 +189,15 @@ export const HiveMagneticSnap: React.FC<MagneticSnapProps> = ({
     if (liquidMetalUtils.isInMagneticZone(distance, 'snap') && !isSnapped) {
       setIsSnapped(true);
       controls.start();
-      onSnap?.(snapTarget);
+      onSnap?.(snapTarget)
     } else if (liquidMetalUtils.isInMagneticZone(distance, 'attraction') && !isApproaching) {
       setIsApproaching(true);
-      controls.start();
+      controls.start()
     } else if (liquidMetalUtils.isInMagneticZone(distance, 'release') && isSnapped) {
       setIsSnapped(false);
       setIsApproaching(false);
       controls.start();
-      onRelease?.();
+      onRelease?.()
     }
   };
   
@@ -205,7 +205,7 @@ export const HiveMagneticSnap: React.FC<MagneticSnapProps> = ({
     if (disabled) return;
     
     document.addEventListener('mousemove', checkSnapDistance);
-    return () => document.removeEventListener('mousemove', checkSnapDistance);
+    return () => document.removeEventListener('mousemove', checkSnapDistance)
   }, [disabled, snapTarget, isSnapped, isApproaching]);
   
   return (
@@ -227,7 +227,7 @@ export const HiveMagneticSnap: React.FC<MagneticSnapProps> = ({
           stiffness: 400,
           damping: 25,
         }
-      }}
+          })}
     >
       {children}
       
@@ -248,7 +248,7 @@ export const HiveMagneticSnap: React.FC<MagneticSnapProps> = ({
         />
       )}
     </motion.div>
-  );
+  )
 };
 
 // 🌊 Liquid Ripple Component for Space Activation
@@ -258,7 +258,7 @@ interface LiquidRippleProps {
   rippleColor?: string;
   intensity?: 'subtle' | 'medium' | 'strong';
   disabled?: boolean;
-  onRippleComplete?: () => void;
+  onRippleComplete?: () => void
 }
 
 export const HiveLiquidRipple: React.FC<LiquidRippleProps> = ({
@@ -273,7 +273,7 @@ export const HiveLiquidRipple: React.FC<LiquidRippleProps> = ({
     id: number;
     x: number;
     y: number;
-    timestamp: number;
+    timestamp: number
   }>>([]);
   
   const intensityMap = {
@@ -303,8 +303,8 @@ export const HiveLiquidRipple: React.FC<LiquidRippleProps> = ({
     // Clean up ripple after animation
     setTimeout(() => {
       setRipples(prev => prev.filter(r => r.id !== newRipple.id));
-      onRippleComplete?.();
-    }, config.duration * 1000);
+      onRippleComplete?.()
+    }, config.duration * 1000)
   };
   
   return (
@@ -342,7 +342,7 @@ export const HiveLiquidRipple: React.FC<LiquidRippleProps> = ({
         />
       ))}
     </div>
-  );
+  )
 };
 
 // 🔄 Liquid Transform Component for Layout Changes
@@ -350,7 +350,7 @@ interface LiquidTransformProps {
   children: ReactNode;
   className?: string;
   transformKey: string | number;
-  direction?: 'up' | 'down' | 'left' | 'right' | 'scale';
+  direction?: 'up' | 'down' | 'left' | 'right' | 'scale'
 }
 
 export const HiveLiquidTransform: React.FC<LiquidTransformProps> = ({
@@ -380,7 +380,7 @@ export const HiveLiquidTransform: React.FC<LiquidTransformProps> = ({
     >
       {children}
     </motion.div>
-  );
+  )
 };
 
 // 🎯 Magnetic Target Zone Component
@@ -390,7 +390,7 @@ interface MagneticTargetProps {
   targetId: string;
   onElementEnterZone?: (elementId: string) => void;
   onElementLeaveZone?: (elementId: string) => void;
-  visualizeZone?: boolean;
+  visualizeZone?: boolean
 }
 
 export const HiveMagneticTarget: React.FC<MagneticTargetProps> = ({
@@ -448,5 +448,5 @@ export const HiveMagneticTarget: React.FC<MagneticTargetProps> = ({
         />
       )}
     </div>
-  );
+  )
 };

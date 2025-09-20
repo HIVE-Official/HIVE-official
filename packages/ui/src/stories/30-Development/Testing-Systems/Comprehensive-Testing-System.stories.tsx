@@ -149,7 +149,7 @@ interface TestCase {
   duration?: number;
   error?: string;
   metrics?: Record<string, number>;
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  priority: 'low' | 'medium' | 'high' | 'critical'
 }
 
 interface TestSuite {
@@ -159,7 +159,7 @@ interface TestSuite {
   tests: TestCase[];
   environment: 'development' | 'staging' | 'production' | 'local';
   device: 'mobile' | 'tablet' | 'desktop' | 'all';
-  browser: 'chrome' | 'firefox' | 'safari' | 'edge' | 'all';
+  browser: 'chrome' | 'firefox' | 'safari' | 'edge' | 'all'
 }
 
 interface TestMetrics {
@@ -171,13 +171,13 @@ interface TestMetrics {
   performance: {
     averageResponseTime: number;
     memoryUsage: number;
-    bundleSize: number;
+    bundleSize: number
   };
   accessibility: {
     wcagAA: number;
     wcagAAA: number;
-    issues: number;
-  };
+    issues: number
+  }
 }
 
 // Advanced Testing Hook
@@ -389,7 +389,7 @@ const useTesting = () => {
       metrics.performance.averageResponseTime = performanceTests.reduce((acc, t) => 
         acc + (t.metrics?.responseTime || 0), 0) / performanceTests.length;
       metrics.performance.memoryUsage = Math.max(...performanceTests.map(t => t.metrics?.memoryUsage || 0));
-      metrics.performance.bundleSize = Math.max(...performanceTests.map(t => t.metrics?.bundleSize || 0));
+      metrics.performance.bundleSize = Math.max(...performanceTests.map(t => t.metrics?.bundleSize || 0))
     }
 
     // Calculate accessibility metrics
@@ -398,7 +398,7 @@ const useTesting = () => {
     metrics.accessibility.wcagAAA = Math.min(88, accessibilityTests.length * 20);
     metrics.accessibility.issues = allTests.filter(t => t.category === 'accessibility' && t.status === 'failed').length;
 
-    setTestMetrics(metrics);
+    setTestMetrics(metrics)
   }, [testSuites]);
 
   const runTest = useCallback(async (suiteId: string, testId: string) => {
@@ -446,7 +446,7 @@ const useTesting = () => {
       )
     })));
 
-    setCurrentTest(null);
+    setCurrentTest(null)
   }, []);
 
   const runAllTests = useCallback(async () => {
@@ -455,12 +455,12 @@ const useTesting = () => {
     for (const suite of testSuites) {
       for (const test of suite.tests) {
         if (test.status === 'pending') {
-          await runTest(suite.id, test.id);
+          await runTest(suite.id, test.id)
         }
       }
     }
     
-    setIsRunning(false);
+    setIsRunning(false)
   }, [testSuites, runTest]);
 
   const runSuite = useCallback(async (suiteId: string) => {
@@ -470,12 +470,12 @@ const useTesting = () => {
     if (suite) {
       for (const test of suite.tests) {
         if (test.status === 'pending' || test.status === 'failed') {
-          await runTest(suiteId, test.id);
+          await runTest(suiteId, test.id)
         }
       }
     }
     
-    setIsRunning(false);
+    setIsRunning(false)
   }, [testSuites, runTest]);
 
   const resetTests = useCallback(() => {
@@ -487,9 +487,9 @@ const useTesting = () => {
         duration: undefined,
         error: undefined,
         metrics: undefined
-      }))
+      })})
     })));
-    setCurrentTest(null);
+    setCurrentTest(null)
   }, []);
 
   return {
@@ -501,7 +501,7 @@ const useTesting = () => {
     runAllTests,
     runSuite,
     resetTests
-  };
+  }
 };
 
 // Test Status Icon Component
@@ -516,7 +516,7 @@ const TestStatusIcon = ({ status }: { status: TestCase['status'] }) => {
     case 'skipped':
       return <Clock className="h-4 w-4 text-gray-400" />;
     default:
-      return <Clock className="h-4 w-4 text-gray-500" />;
+      return <Clock className="h-4 w-4 text-gray-500" />
   }
 };
 
@@ -537,7 +537,7 @@ const TestCategoryBadge = ({ category }: { category: TestCase['category'] }) => 
     <Badge className={`${config.color} text-white text-xs`}>
       {config.label}
     </Badge>
-  );
+  )
 };
 
 // Test Priority Badge
@@ -555,7 +555,7 @@ const TestPriorityBadge = ({ priority }: { priority: TestCase['priority'] }) => 
     <Badge className={`${config.color} text-white text-xs`}>
       {config.label}
     </Badge>
-  );
+  )
 };
 
 // Test Metrics Dashboard
@@ -623,7 +623,7 @@ const TestSuiteCard = ({
   currentTest: string | null;
   onRunSuite: (suiteId: string) => void;
   onRunTest: (suiteId: string, testId: string) => void;
-  isRunning: boolean;
+  isRunning: boolean
 }) => {
   const passedTests = suite.tests.filter(t => t.status === 'passed').length;
   const failedTests = suite.tests.filter(t => t.status === 'failed').length;
@@ -735,7 +735,7 @@ const TestSuiteCard = ({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Performance Metrics Component
@@ -1001,7 +1001,7 @@ const ComprehensiveTestingSystem = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Story Exports
@@ -1027,7 +1027,7 @@ export const TestMetrics: Story = {
           <AccessibilityMetrics metrics={testing.testMetrics} />
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -1070,7 +1070,7 @@ export const TestSuiteDemo: Story = {
           isRunning={testing.isRunning}
         />
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

@@ -131,7 +131,7 @@ interface ErrorState {
   timestamp: number;
   retryable: boolean;
   actionSuggestion?: string;
-  technicalDetails?: string;
+  technicalDetails?: string
 }
 
 interface ErrorRecovery {
@@ -140,7 +140,7 @@ interface ErrorRecovery {
   backoffMs: number;
   lastAttemptAt?: number;
   isRetrying: boolean;
-  autoRetry: boolean;
+  autoRetry: boolean
 }
 
 // Error Management Hook
@@ -171,19 +171,19 @@ const useErrorHandling = () => {
           isRetrying: false,
           autoRetry: true
         }
-      }));
+      }))
     }
   }, []);
 
   const clearError = useCallback((id: string) => {
     setErrors(prev => {
       const { [id]: removed, ...rest } = prev;
-      return rest;
+      return rest
     });
     setRecoveryStates(prev => {
       const { [id]: removed, ...rest } = prev;
-      return rest;
-    });
+      return rest
+    })
   }, []);
 
   const retryOperation = useCallback(async (id: string, operation: () => Promise<void>) => {
@@ -205,7 +205,7 @@ const useErrorHandling = () => {
       await operation();
       
       // Success - clear error
-      clearError(id);
+      clearError(id)
     } catch (error) {
       const updatedRecovery = recoveryStates[id];
       
@@ -214,7 +214,7 @@ const useErrorHandling = () => {
         setRecoveryStates(prev => ({
           ...prev,
           [id]: { ...updatedRecovery, isRetrying: false, autoRetry: false }
-        }));
+        }))
       } else {
         // Increase backoff for next attempt
         setRecoveryStates(prev => ({
@@ -224,7 +224,7 @@ const useErrorHandling = () => {
             isRetrying: false,
             backoffMs: Math.min(updatedRecovery.backoffMs * 2, 10000)
           }
-        }));
+        }))
       }
     }
   }, [recoveryStates, clearError]);
@@ -238,7 +238,7 @@ const useErrorHandling = () => {
       details: 'Please check your internet connection and try again.',
       actionSuggestion: 'Check campus WiFi connection',
       technicalDetails: 'Timeout after 30s - server may be temporarily unavailable'
-    });
+    })
   };
 
   const simulateAPIError = () => {
@@ -263,7 +263,7 @@ const useErrorHandling = () => {
       details: randomCode >= 500 ? 'Our team has been notified and is working on a fix.' : undefined,
       retryable: randomCode >= 500 || randomCode === 429,
       actionSuggestion: randomCode === 401 ? 'Sign in again' : randomCode === 403 ? 'Contact space administrator' : 'Try again in a few moments'
-    });
+    })
   };
 
   const simulateValidationError = () => {
@@ -274,7 +274,7 @@ const useErrorHandling = () => {
       details: 'Only @buffalo.edu email addresses are allowed on HIVE.',
       retryable: false,
       actionSuggestion: 'Enter your @buffalo.edu email address'
-    });
+    })
   };
 
   const simulateCampusError = () => {
@@ -308,7 +308,7 @@ const useErrorHandling = () => {
       details: randomError.details,
       retryable: false,
       actionSuggestion: randomError.suggestion
-    });
+    })
   };
 
   const simulateDataError = () => {
@@ -320,7 +320,7 @@ const useErrorHandling = () => {
       retryable: true,
       actionSuggestion: 'Refresh the page or try again',
       technicalDetails: 'JSON parsing failed - expected object but received array'
-    });
+    })
   };
 
   return {
@@ -336,7 +336,7 @@ const useErrorHandling = () => {
     simulateValidationError,
     simulateCampusError,
     simulateDataError
-  };
+  }
 };
 
 // Error Display Component
@@ -351,7 +351,7 @@ const ErrorDisplay = ({
   recovery?: ErrorRecovery;
   onRetry?: () => void;
   onDismiss: () => void;
-  showTechnical?: boolean;
+  showTechnical?: boolean
 }) => {
   const getErrorIcon = () => {
     switch (error.type) {
@@ -361,7 +361,7 @@ const ErrorDisplay = ({
       case 'permission': return <Shield className="h-5 w-5" />;
       case 'data': return <Database className="h-5 w-5" />;
       case 'campus': return <Home className="h-5 w-5" />;
-      default: return <XCircle className="h-5 w-5" />;
+      default: return <XCircle className="h-5 w-5" />
     }
   };
 
@@ -373,7 +373,7 @@ const ErrorDisplay = ({
       case 'permission': return 'border-purple-600 bg-purple-900/20';
       case 'data': return 'border-blue-600 bg-blue-900/20';
       case 'campus': return 'border-green-600 bg-green-900/20';
-      default: return 'border-gray-600 bg-gray-900/20';
+      default: return 'border-gray-600 bg-gray-900/20'
     }
   };
 
@@ -385,7 +385,7 @@ const ErrorDisplay = ({
       case 'permission': return 'text-purple-400';
       case 'data': return 'text-blue-400';
       case 'campus': return 'text-green-400';
-      default: return 'text-gray-400';
+      default: return 'text-gray-400'
     }
   };
 
@@ -484,7 +484,7 @@ const ErrorDisplay = ({
         </div>
       )}
     </Alert>
-  );
+  )
 };
 
 // Error Boundary Component
@@ -494,12 +494,12 @@ const ErrorBoundaryDemo = ({ children }: { children: React.ReactNode }) => {
 
   const triggerError = () => {
     setHasError(true);
-    setErrorInfo('Simulated component error - this would normally be caught by error boundary');
+    setErrorInfo('Simulated component error - this would normally be caught by error boundary')
   };
 
   const resetError = () => {
     setHasError(false);
-    setErrorInfo('');
+    setErrorInfo('')
   };
 
   if (hasError) {
@@ -544,7 +544,7 @@ const ErrorBoundaryDemo = ({ children }: { children: React.ReactNode }) => {
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
@@ -560,13 +560,13 @@ const ErrorBoundaryDemo = ({ children }: { children: React.ReactNode }) => {
         Simulate Component Error
       </Button>
     </div>
-  );
+  )
 };
 
 // Network Status Component
 const NetworkStatusDemo = ({ globalErrorMode, onModeChange }: {
   globalErrorMode: 'normal' | 'degraded' | 'offline';
-  onModeChange: (mode: 'normal' | 'degraded' | 'offline') => void;
+  onModeChange: (mode: 'normal' | 'degraded' | 'offline') => void
 }) => {
   const getStatusInfo = () => {
     switch (globalErrorMode) {
@@ -590,7 +590,7 @@ const NetworkStatusDemo = ({ globalErrorMode, onModeChange }: {
           title: 'Offline Mode',
           description: 'You\'re currently offline. Some content may be cached and available.',
           color: 'border-red-600 bg-red-900/20'
-        };
+        }
     }
   };
 
@@ -637,14 +637,14 @@ const NetworkStatusDemo = ({ globalErrorMode, onModeChange }: {
         )}
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Error Simulation Controls
 const ErrorSimulationControls = ({ 
   onSimulateError 
 }: {
-  onSimulateError: (type: string) => void;
+  onSimulateError: (type: string) => void
 }) => (
   <Card className="bg-gray-900 border-gray-800">
     <CardHeader>
@@ -783,7 +783,7 @@ const EdgeCaseDemo = () => {
               Received invalid data from server. Please refresh or try again.
             </AlertDescription>
           </Alert>
-        );
+        )
     }
   };
 
@@ -832,7 +832,7 @@ const EdgeCaseDemo = () => {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 };
 
 // Main Error Handling System
@@ -856,7 +856,7 @@ const ErrorHandlingSystem = () => {
           retryable: false,
           actionSuggestion: 'Contact your space administrator for access'
         });
-        break;
+        break
     }
   };
 
@@ -864,11 +864,11 @@ const ErrorHandlingSystem = () => {
     await errorHandling.retryOperation(errorId, async () => {
       // Simulate operation with 70% success rate
       if (Math.random() < 0.7) {
-        return Promise.resolve();
+        return Promise.resolve()
       } else {
-        throw new Error('Retry failed');
+        throw new Error('Retry failed')
       }
-    });
+    })
   };
 
   return (
@@ -968,7 +968,7 @@ const ErrorHandlingSystem = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Story Exports
@@ -988,7 +988,7 @@ export const NetworkErrors: Story = {
     const errorHandling = useErrorHandling();
     
     useEffect(() => {
-      errorHandling.simulateNetworkError();
+      errorHandling.simulateNetworkError()
     }, []);
     
     return (
@@ -1003,7 +1003,7 @@ export const NetworkErrors: Story = {
           />
         ))}
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -1019,7 +1019,7 @@ export const ValidationErrors: Story = {
     const errorHandling = useErrorHandling();
     
     useEffect(() => {
-      errorHandling.simulateValidationError();
+      errorHandling.simulateValidationError()
     }, []);
     
     return (
@@ -1034,7 +1034,7 @@ export const ValidationErrors: Story = {
           />
         ))}
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

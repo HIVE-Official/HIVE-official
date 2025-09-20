@@ -479,7 +479,7 @@ export const OrientationWeekDashboard: Story = {
             posts: 15678,
             reported: 34
           }
-        }}
+          })}
       />
     </div>
   ),
@@ -533,7 +533,7 @@ export const FinalsWeekDashboard: Story = {
               throughput: 2345
             }
           }
-        }}
+          })}
       />
     </div>
   ),
@@ -574,7 +574,7 @@ export const SystemMaintenanceMode: Story = {
             ...mockUBCampusMetrics.students,
             active: 3456
           }
-        }}
+          })}
       />
     </div>
   ),
@@ -606,7 +606,7 @@ export const CompleteAdminWorkflow: Story = {
           reported: Math.max(0, prev.content.reported - 1)
         }
       }));
-      action('workflow-approve')(itemId);
+      action('workflow-approve')(itemId)
     };
     
     const handleRejection = (itemId: string) => {
@@ -619,7 +619,7 @@ export const CompleteAdminWorkflow: Story = {
           reported: Math.max(0, prev.content.reported - 1)
         }
       }));
-      action('workflow-reject')(itemId);
+      action('workflow-reject')(itemId)
     };
     
     return (
@@ -653,7 +653,7 @@ export const CompleteAdminWorkflow: Story = {
           />
         </div>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {

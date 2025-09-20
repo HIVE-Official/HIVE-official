@@ -25,6 +25,6 @@ export declare function useNotifications(): NotificationContextType;
 interface NotificationProviderProps {
     children: React.ReactNode;
 }
-export declare function NotificationProvider({ children }: NotificationProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function NotificationProvider({ children }: NotificationProviderProps): void;
 export {};
 //# sourceMappingURL=notification-service.d.ts.map

@@ -51,8 +51,8 @@ export interface OnboardingState {
     builderGoals: string[];
     agreedToTerms: boolean;
     agreedToPrivacy: boolean;
-    agreedToCommunity: boolean;
-  };
+    agreedToCommunity: boolean
+  }
 }
 
 export interface OnboardingContextType {
@@ -64,7 +64,7 @@ export interface OnboardingContextType {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   canProceed: () => boolean;
-  completeOnboarding: () => Promise<void>;
+  completeOnboarding: () => Promise<void>
 }
 
 const OnboardingContext = createContext<OnboardingContextType | null>(null);
@@ -72,9 +72,9 @@ const OnboardingContext = createContext<OnboardingContextType | null>(null);
 export function useOnboarding() {
   const context = useContext(OnboardingContext);
   if (!context) {
-    throw new Error('useOnboarding must be used within OnboardingProvider');
+    throw new Error('useOnboarding must be used within OnboardingProvider')
   }
-  return context;
+  return context
 }
 
 // =============================================================================
@@ -89,7 +89,7 @@ interface OnboardingProviderProps {
   children: React.ReactNode;
   onComplete?: (userData: OnboardingState['data']) => void;
   initialStep?: OnboardingStep;
-  mockMode?: boolean;
+  mockMode?: boolean
 }
 
 export function OnboardingProvider({ 
@@ -125,7 +125,7 @@ export function OnboardingProvider({
       step: STEP_ORDER[nextIndex],
       currentStepIndex: nextIndex,
       error: null,
-    }));
+    }))
   };
 
   const prevStep = () => {
@@ -135,7 +135,7 @@ export function OnboardingProvider({
       step: STEP_ORDER[prevIndex],
       currentStepIndex: prevIndex,
       error: null,
-    }));
+    }))
   };
 
   const setStep = (step: OnboardingStep) => {
@@ -145,22 +145,22 @@ export function OnboardingProvider({
       step,
       currentStepIndex: stepIndex,
       error: null,
-    }));
+    }))
   };
 
   const updateData = (updates: Partial<OnboardingState['data']>) => {
     setState(prev => ({
       ...prev,
       data: { ...prev.data, ...updates },
-    }));
+    }))
   };
 
   const setLoading = (loading: boolean) => {
-    setState(prev => ({ ...prev, loading }));
+    setState(prev => ({ ...prev, loading }))
   };
 
   const setError = (error: string | null) => {
-    setState(prev => ({ ...prev, error }));
+    setState(prev => ({ ...prev, error }))
   };
 
   const canProceed = (): boolean => {
@@ -184,7 +184,7 @@ export function OnboardingProvider({
       case 'complete':
         return true;
       default:
-        return false;
+        return false
     }
   };
 
@@ -196,16 +196,16 @@ export function OnboardingProvider({
       if (mockMode) {
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000));
-        onComplete?.(state.data);
+        onComplete?.(state.data)
       } else {
         // Real implementation would go here
         console.log('Complete onboarding:', state.data);
-        onComplete?.(state.data);
+        onComplete?.(state.data)
       }
     } catch (error) {
-      setError('Failed to complete onboarding. Please try again.');
+      setError('Failed to complete onboarding. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -225,7 +225,7 @@ export function OnboardingProvider({
     <OnboardingContext.Provider value={contextValue}>
       {children}
     </OnboardingContext.Provider>
-  );
+  )
 }
 
 // =============================================================================
@@ -236,7 +236,7 @@ interface HiveOnboardingWizardProps {
   className?: string;
   onComplete?: (userData: OnboardingState['data']) => void;
   initialStep?: OnboardingStep;
-  mockMode?: boolean;
+  mockMode?: boolean
 }
 
 export function HiveOnboardingWizard({ 
@@ -261,7 +261,7 @@ export function HiveOnboardingWizard({
         </div>
       </div>
     </OnboardingProvider>
-  );
+  )
 }
 
 // =============================================================================
@@ -289,7 +289,7 @@ function OnboardingStepRenderer() {
     case 'complete':
       return <CompleteStep />;
     default:
-      return <WelcomeStep />;
+      return <WelcomeStep />
   }
 }
 
@@ -308,7 +308,7 @@ function ProgressBar() {
         style={{ width: `${progress}%` }}
       />
     </div>
-  );
+  )
 }
 
 function StepNavigation({ canGoBack = true, nextLabel = "Continue" }) {
@@ -341,7 +341,7 @@ function StepNavigation({ canGoBack = true, nextLabel = "Continue" }) {
         <ArrowRight className="h-4 w-4" />
       </HiveButton>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -393,7 +393,7 @@ function WelcomeStep() {
 
       <StepNavigation canGoBack={false} nextLabel="Get Started" />
     </div>
-  );
+  )
 }
 
 function NameStep() {
@@ -402,9 +402,9 @@ function NameStep() {
   const handleNameChange = (name: string) => {
     updateData({ name });
     if (name.trim().length < 2) {
-      setError('Name must be at least 2 characters');
+      setError('Name must be at least 2 characters')
     } else {
-      setError(null);
+      setError(null)
     }
   };
 
@@ -445,7 +445,7 @@ function NameStep() {
 
       <StepNavigation />
     </div>
-  );
+  )
 }
 
 function HandleStep() {
@@ -457,11 +457,11 @@ function HandleStep() {
     updateData({ handle: cleanHandle });
     
     if (cleanHandle.length < 3) {
-      setError('Username must be at least 3 characters');
+      setError('Username must be at least 3 characters')
     } else if (!/^[a-zA-Z0-9_]+$/.test(cleanHandle)) {
-      setError('Username can only contain letters, numbers, and underscores');
+      setError('Username can only contain letters, numbers, and underscores')
     } else {
-      setError(null);
+      setError(null)
     }
   };
 
@@ -519,7 +519,7 @@ function HandleStep() {
 
       <StepNavigation />
     </div>
-  );
+  )
 }
 
 function PhotoStep() {
@@ -530,9 +530,9 @@ function PhotoStep() {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
+      setDragActive(true)
     } else if (e.type === "dragleave") {
-      setDragActive(false);
+      setDragActive(false)
     }
   };
 
@@ -544,7 +544,7 @@ function PhotoStep() {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       const photoUrl = URL.createObjectURL(file);
-      updateData({ photoUrl });
+      updateData({ photoUrl })
     }
   };
 
@@ -552,7 +552,7 @@ function PhotoStep() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const photoUrl = URL.createObjectURL(file);
-      updateData({ photoUrl });
+      updateData({ photoUrl })
     }
   };
 
@@ -580,7 +580,7 @@ function PhotoStep() {
                 className="w-32 h-32 rounded-full object-cover border-4 border-[var(--hive-brand-primary)]"
               />
               <button
-                onClick={() => updateData({ photoUrl: undefined })}
+                onClick={() => updateData({ photoUrl: undefined }}
                 className="absolute -top-2 -right-2 w-8 h-8 bg-[var(--hive-status-error)] rounded-full flex items-center justify-center text-[var(--hive-text-primary)] text-sm font-bold hover:bg-[var(--hive-status-error)]/80 transition-colors"
               >
                 ×
@@ -624,7 +624,7 @@ function PhotoStep() {
 
       <StepNavigation nextLabel={state.data.photoUrl ? "Continue" : "Skip for now"} />
     </div>
-  );
+  )
 }
 
 function AcademicsStep() {
@@ -661,7 +661,7 @@ function AcademicsStep() {
               <input
                 type="text"
                 value={state.data.university}
-                onChange={(e) => updateData({ university: e.target.value })}
+                onChange={(e) => updateData({ university: e.target.value }}
                 placeholder="Search for your university..."
                 className="w-full h-12 pl-10 pr-4 bg-[var(--hive-background-secondary)] border border-[var(--hive-border-primary)] rounded-xl text-[var(--hive-text-primary)] placeholder-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-primary)] focus:ring-2 focus:ring-[var(--hive-brand-primary)]/30 transition-all"
                 disabled={state.loading}
@@ -676,7 +676,7 @@ function AcademicsStep() {
             <input
               type="text"
               value={state.data.major}
-              onChange={(e) => updateData({ major: e.target.value })}
+              onChange={(e) => updateData({ major: e.target.value }}
               placeholder="Computer Science, Business, etc."
               className="w-full h-12 px-4 bg-[var(--hive-background-secondary)] border border-[var(--hive-border-primary)] rounded-xl text-[var(--hive-text-primary)] placeholder-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-primary)] focus:ring-2 focus:ring-[var(--hive-brand-primary)]/30 transition-all"
               disabled={state.loading}
@@ -689,7 +689,7 @@ function AcademicsStep() {
             </label>
             <select
               value={state.data.graduationYear}
-              onChange={(e) => updateData({ graduationYear: e.target.value })}
+              onChange={(e) => updateData({ graduationYear: e.target.value }}
               className="w-full h-12 px-4 bg-[var(--hive-background-secondary)] border border-[var(--hive-border-primary)] rounded-xl text-[var(--hive-text-primary)] focus:outline-none focus:border-[var(--hive-brand-primary)] focus:ring-2 focus:ring-[var(--hive-brand-primary)]/30 transition-all"
               disabled={state.loading}
             >
@@ -704,7 +704,7 @@ function AcademicsStep() {
 
       <StepNavigation />
     </div>
-  );
+  )
 }
 
 function BuilderStep() {
@@ -729,7 +729,7 @@ function BuilderStep() {
     const newGoals = currentGoals.includes(goalId)
       ? currentGoals.filter(g => g !== goalId)
       : [...currentGoals, goalId];
-    updateData({ builderGoals: newGoals });
+    updateData({ builderGoals: newGoals })
   };
 
   return (
@@ -769,7 +769,7 @@ function BuilderStep() {
                     name="experience"
                     value={exp.value}
                     checked={state.data.builderExperience === exp.value}
-                    onChange={(e) => updateData({ builderExperience: e.target.value as any })}
+                    onChange={(e) => updateData({ builderExperience: e.target.value as any }}
                     className="sr-only"
                   />
                   <div className={cn(
@@ -823,8 +823,8 @@ function BuilderStep() {
                       <Check className="h-4 w-4 text-[var(--hive-brand-primary)] mt-1" />
                     )}
                   </button>
-                );
-              })}
+                )
+          })}
             </div>
           </div>
         </div>
@@ -832,7 +832,7 @@ function BuilderStep() {
 
       <StepNavigation />
     </div>
-  );
+  )
 }
 
 function LegalStep() {
@@ -880,7 +880,7 @@ function LegalStep() {
               <input
                 type="checkbox"
                 checked={state.data[agreement.key]}
-                onChange={(e) => updateData({ [agreement.key]: e.target.checked })}
+                onChange={(e) => updateData({ [agreement.key]: e.target.checked }}
                 className="mt-1 w-4 h-4 rounded border-[var(--hive-border-primary)] text-[var(--hive-brand-primary)] focus:ring-[var(--hive-brand-primary)]/30"
               />
               <div>
@@ -902,7 +902,7 @@ function LegalStep() {
 
       <StepNavigation nextLabel="Complete Registration" />
     </div>
-  );
+  )
 }
 
 function CompleteStep() {
@@ -911,10 +911,10 @@ function CompleteStep() {
   React.useEffect(() => {
     // Auto-complete onboarding after a delay
     const timer = setTimeout(() => {
-      completeOnboarding();
+      completeOnboarding()
     }, 2000);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   }, [completeOnboarding]);
 
   return (
@@ -955,5 +955,5 @@ function CompleteStep() {
         )}
       </div>
     </div>
-  );
+  )
 }

@@ -17,7 +17,7 @@ import {
   CreateTool
 } from '@hive/core';
 import { HiveCard } from '../hive-card';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { LiveToolRuntime } from '../live-tool-runtime';
 import { ElementConfigPanel } from './element-config-panel';
 import { SpaceToolDeployment } from '../community/space-tool-deployment';
@@ -213,7 +213,7 @@ const getElementIcon = (iconName: string) => {
     case 'Star': return Star;
     case 'Timer': return Timer;
     case 'BarChart3': return BarChart3;
-    default: return Layout;
+    default: return Layout
   }
 };
 
@@ -249,7 +249,7 @@ const DraggableElement: React.FC<{ element: Element }> = ({ element }) => {
         {element.description}
       </p>
     </div>
-  );
+  )
 };
 
 // Canvas element instance
@@ -257,7 +257,7 @@ const CanvasElement: React.FC<{
   element: ElementInstance;
   isSelected: boolean;
   onSelect: () => void;
-  onDelete: () => void;
+  onDelete: () => void
 }> = ({ element, isSelected, onSelect, onDelete }) => {
   const elementDef = ELEMENT_LIBRARY.find(el => el.id === element.elementId);
   const IconComponent = elementDef ? getElementIcon(elementDef.icon) : Layout;
@@ -283,7 +283,7 @@ const CanvasElement: React.FC<{
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onDelete();
+            onDelete()
           }}
           className="text-[var(--hive-text-tertiary)] hover:text-red-500 transition-colors"
         >
@@ -316,7 +316,7 @@ const CanvasElement: React.FC<{
         )}
       </div>
     </div>
-  );
+  )
 };
 
 // Drop zone canvas
@@ -325,12 +325,12 @@ const ToolCanvas: React.FC<{
   selectedElementId: string | null;
   onElementSelect: (id: string) => void;
   onElementAdd: (elementId: string) => void;
-  onElementDelete: (id: string) => void;
+  onElementDelete: (id: string) => void
 }> = ({ elements, selectedElementId, onElementSelect, onElementAdd, onElementDelete }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'element',
     drop: (item: { elementId: string }) => {
-      onElementAdd(item.elementId);
+      onElementAdd(item.elementId)
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -374,7 +374,7 @@ const ToolCanvas: React.FC<{
         </div>
       )}
     </div>
-  );
+  )
 };
 
 // Mock space data for deployment
@@ -385,7 +385,7 @@ interface Space {
   memberCount: number;
   type: 'public' | 'private' | 'restricted';
   category: string;
-  userRole: 'admin' | 'moderator' | 'member';
+  userRole: 'admin' | 'moderator' | 'member'
 }
 
 export interface VisualToolBuilderProps {
@@ -393,7 +393,7 @@ export interface VisualToolBuilderProps {
   onPreview?: (tool: Tool) => void;
   onDeploy?: (tool: Tool, deploymentConfig: any) => void;
   initialTool?: Tool;
-  availableSpaces?: Space[];
+  availableSpaces?: Space[]
 }
 
 export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
@@ -415,11 +415,11 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
   const elementsByCategory = useMemo(() => {
     return ELEMENT_LIBRARY.reduce((acc, element) => {
       if (!acc[element.category]) {
-        acc[element.category] = [];
+        acc[element.category] = []
       }
       acc[element.category].push(element);
-      return acc;
-    }, {} as Record<string, Element[]>);
+      return acc
+    }, {} as Record<string, Element[]>)
   }, []);
 
   // Add element to canvas
@@ -438,20 +438,20 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
     };
 
     setElements(prev => [...prev, newElement]);
-    setSelectedElementId(newElement.id);
+    setSelectedElementId(newElement.id)
   }, [elements.length]);
 
   // Delete element
   const handleElementDelete = useCallback((elementId: string) => {
     setElements(prev => prev.filter(el => el.id !== elementId));
-    setSelectedElementId(null);
+    setSelectedElementId(null)
   }, []);
 
   // Update element config
   const handleElementConfigChange = useCallback((elementId: string, newConfig: any) => {
     setElements(prev => prev.map(el => 
       el.id === elementId ? { ...el, config: newConfig } : el
-    ));
+    ))
   }, []);
 
   // Create tool object
@@ -469,14 +469,14 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
       elements,
       createdAt: initialTool?.createdAt || new Date(),
       updatedAt: new Date()
-    };
+    }
   }, [toolName, toolDescription, elements, initialTool]);
 
   // Handle save
   const handleSave = useCallback(() => {
     const tool = createTool();
     if (onSave) {
-      onSave(tool);
+      onSave(tool)
     }
   }, [createTool, onSave]);
 
@@ -484,9 +484,9 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
   const handlePreview = useCallback(() => {
     const tool = createTool();
     if (onPreview) {
-      onPreview(tool);
+      onPreview(tool)
     }
-    setActiveTab('preview');
+    setActiveTab('preview')
   }, [createTool, onPreview]);
 
   // Handle deployment
@@ -507,7 +507,7 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
               spaceId: deploymentConfig.spaceId,
             });
         
-        savedTool = saveResult.tool;
+        savedTool = saveResult.tool
       }
 
       // Deploy the saved tool to the space using real API
@@ -540,15 +540,15 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
 
       // Call original onDeploy callback if provided
       if (onDeploy) {
-        await onDeploy(savedTool, deploymentConfig);
+        await onDeploy(savedTool, deploymentConfig)
       }
       
-      setShowDeployment(false);
+      setShowDeployment(false)
     } catch (error) {
       console.error('Deployment failed:', error);
       throw error; // Let the deployment component handle the error display
     } finally {
-      setIsDeploying(false);
+      setIsDeploying(false)
     }
   }, [createTool, elements, initialTool, onDeploy]);
 
@@ -667,9 +667,9 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
                 }
                 onChange={(newConfig) => {
                   if (selectedElementId) {
-                    handleElementConfigChange(selectedElementId, newConfig);
+                    handleElementConfigChange(selectedElementId, newConfig)
                   }
-                }}
+          })}
                 onClose={() => setSelectedElementId(null)}
               />
             </>
@@ -683,8 +683,8 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
                   showDebugInfo={true}
                   onDataSubmit={(data) => {
                     console.log('Tool submitted:', data);
-                    alert('Tool test completed! Check console for submission data.');
-                  }}
+                    alert('Tool test completed! Check console for submission data.')
+          }}
                 />
               </div>
             </div>
@@ -707,5 +707,5 @@ export const VisualToolBuilder: React.FC<VisualToolBuilderProps> = ({
         )}
       </div>
     </DndProvider>
-  );
+  )
 };

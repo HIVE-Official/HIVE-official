@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '../atoms';
+import { Button } from '../atomic/atoms';
 import { Card } from '.';
 import { 
   Trophy, 
@@ -28,13 +28,13 @@ export interface MilestoneCelebrationProps {
     unlockedFeatures?: string[];
     communityStats?: {
       totalAchievers: number;
-      percentageComplete: number;
-    };
+      percentageComplete: number
+    }
   };
   isVisible: boolean;
   onClose?: () => void;
   onShare?: () => void;
-  className?: string;
+  className?: string
 }
 
 const getRarityConfig = (rarity: string) => {
@@ -71,7 +71,7 @@ const getRarityConfig = (rarity: string) => {
     }
   };
   
-  return configs[rarity as keyof typeof configs] || configs.common;
+  return configs[rarity as keyof typeof configs] || configs.common
 };
 
 const getMilestoneIcon = (type: string, iconName?: string) => {
@@ -86,14 +86,14 @@ const getMilestoneIcon = (type: string, iconName?: string) => {
       award: Award,
       zap: Zap
     };
-    return iconMap[iconName] || Trophy;
+    return iconMap[iconName] || Trophy
   }
   
   switch (type) {
     case 'personal': return Target;
     case 'community': return Users;
     case 'ritual_complete': return Trophy;
-    default: return CheckCircle;
+    default: return CheckCircle
   }
 };
 
@@ -117,18 +117,18 @@ export function MilestoneCelebration({
       
       // Trigger celebration animation after entry
       const celebrateTimer = setTimeout(() => {
-        setAnimationPhase('celebrate');
+        setAnimationPhase('celebrate')
       }, 500);
       
       // Settle into final state
       const settleTimer = setTimeout(() => {
-        setAnimationPhase('settle');
+        setAnimationPhase('settle')
       }, 2000);
       
       return () => {
         clearTimeout(celebrateTimer);
-        clearTimeout(settleTimer);
-      };
+        clearTimeout(settleTimer)
+      }
     }
   }, [isVisible]);
 
@@ -167,7 +167,7 @@ export function MilestoneCelebration({
                   top: `${Math.random() * 100}%`,
                   animationDelay: `${Math.random() * 2}s`,
                   animationDuration: `${1 + Math.random()}s`
-                }}
+          }}
               />
             ))}
           </div>
@@ -282,5 +282,5 @@ export function MilestoneCelebration({
         )}
       </Card>
     </div>
-  );
+  )
 }

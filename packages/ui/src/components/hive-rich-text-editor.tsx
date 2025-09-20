@@ -105,7 +105,7 @@ export interface CampusLink {
   type: 'space' | 'student' | 'course' | 'tool';
   id: string;
   name: string;
-  url?: string;
+  url?: string
 }
 
 export interface CollaborativeUser {
@@ -113,7 +113,7 @@ export interface CollaborativeUser {
   name: string;
   avatar?: string;
   cursor?: { line: number; column: number };
-  selection?: { start: { line: number; column: number }; end: { line: number; column: number } };
+  selection?: { start: { line: number; column: number }; end: { line: number; column: number } }
 }
 
 export interface HiveRichTextEditorProps
@@ -140,7 +140,7 @@ export interface HiveRichTextEditorProps
   spellCheck?: boolean;
   autoFocus?: boolean;
   error?: string;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorProps>(
@@ -198,7 +198,7 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
     // Word count calculation
     const wordCount = useMemo(() => {
       if (!currentValue) return 0;
-      return currentValue.trim().split(/\s+/).filter(word => word.length > 0).length;
+      return currentValue.trim().split(/\s+/).filter(word => word.length > 0).length
     }, [currentValue]);
     
     // Character count
@@ -209,35 +209,35 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
       if (autosave && onSave && !readOnly) {
         autosaveTimerRef.current = setInterval(() => {
           if (currentValue) {
-            onSave(currentValue);
+            onSave(currentValue)
           }
         }, autosaveInterval);
         
         return () => {
           if (autosaveTimerRef.current) {
-            clearInterval(autosaveTimerRef.current);
+            clearInterval(autosaveTimerRef.current)
           }
-        };
+        }
       }
     }, [autosave, onSave, currentValue, autosaveInterval, readOnly]);
     
     // Auto-focus
     useEffect(() => {
       if (autoFocus && editorRef.current) {
-        editorRef.current.focus();
+        editorRef.current.focus()
       }
     }, [autoFocus]);
     
     // Handle value changes
     const handleValueChange = useCallback((newValue: string) => {
       if (maxLength && newValue.length > maxLength) {
-        return;
+        return
       }
       
       if (value === undefined) {
-        setInternalValue(newValue);
+        setInternalValue(newValue)
       }
-      onChange?.(newValue);
+      onChange?.(newValue)
     }, [value, onChange, maxLength]);
     
     // Toolbar actions
@@ -260,12 +260,12 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
       // Update cursor position
       setTimeout(() => {
         if (selectedText) {
-          textarea.setSelectionRange(start + before.length, start + before.length + textToInsert.length);
+          textarea.setSelectionRange(start + before.length, start + before.length + textToInsert.length)
         } else {
-          textarea.setSelectionRange(start + before.length, start + before.length + textToInsert.length);
+          textarea.setSelectionRange(start + before.length, start + before.length + textToInsert.length)
         }
-        textarea.focus();
-      }, 0);
+        textarea.focus()
+      }, 0)
     }, [currentValue, handleValueChange]);
     
     const insertAtCursor = useCallback((text: string) => {
@@ -285,8 +285,8 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
       // Update cursor position
       setTimeout(() => {
         textarea.setSelectionRange(start + text.length, start + text.length);
-        textarea.focus();
-      }, 0);
+        textarea.focus()
+      }, 0)
     }, [currentValue, handleValueChange]);
     
     // Toolbar button handlers
@@ -311,21 +311,21 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
         
         setLinkText(selectedText);
         setLinkUrl('');
-        setShowLinkDialog(true);
+        setShowLinkDialog(true)
       }
     };
     
     const handleImage = () => {
-      setShowImageDialog(true);
+      setShowImageDialog(true)
     };
     
     const insertLink = () => {
       if (linkUrl && linkText) {
-        insertAtCursor(`[${linkText}](${linkUrl})`);
+        insertAtCursor(`[${linkText}](${linkUrl})`)
       }
       setShowLinkDialog(false);
       setLinkUrl('');
-      setLinkText('');
+      setLinkText('')
     };
     
     const handleImageUpload = async (file: File) => {
@@ -337,7 +337,7 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
       try {
         // Simulate upload progress
         const progressInterval = setInterval(() => {
-          setUploadProgress(prev => Math.min(prev + 10, 90));
+          setUploadProgress(prev => Math.min(prev + 10, 90))
         }, 100);
         
         const imageUrl = await onImageUpload(file);
@@ -351,12 +351,12 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
         setTimeout(() => {
           setIsUploading(false);
           setUploadProgress(0);
-          setShowImageDialog(false);
-        }, 500);
+          setShowImageDialog(false)
+        }, 500)
       } catch (error) {
         console.error('Image upload failed:', error);
         setIsUploading(false);
-        setUploadProgress(0);
+        setUploadProgress(0)
       }
     };
     
@@ -367,9 +367,9 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
       try {
         const results = await onCampusLinkSearch(query, type);
         setCampusLinkSuggestions(results);
-        setShowCampusLinkSuggestions(true);
+        setShowCampusLinkSuggestions(true)
       } catch (error) {
-        console.error('Campus link search failed:', error);
+        console.error('Campus link search failed:', error)
       }
     };
     
@@ -379,7 +379,7 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
         ? `[#${link.name}](${link.url || '#'})` 
         : `[@${link.name}](${link.url || '#'})`;
       insertAtCursor(linkMarkdown);
-      setShowCampusLinkSuggestions(false);
+      setShowCampusLinkSuggestions(false)
     };
     
     // Enhanced markdown to HTML conversion with syntax highlighting
@@ -420,7 +420,7 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
         // Line breaks
         .replace(/\n/gm, '<br />');
       
-      return html;
+      return html
     };
     
     const toolbarButtons = [
@@ -733,9 +733,9 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
                       e.preventDefault();
                       const file = e.dataTransfer.files[0];
                       if (file && file.type.startsWith('image/')) {
-                        handleImageUpload(file);
+                        handleImageUpload(file)
                       }
-                    }}
+          })}
                   >
                     {isUploading ? (
                       <div className="space-y-3">
@@ -763,9 +763,9 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        handleImageUpload(file);
+                        handleImageUpload(file)
                       }
-                    }}
+          })}
                     className="hidden"
                     id="image-upload"
                   />
@@ -828,7 +828,7 @@ const HiveRichTextEditor = React.forwardRef<HTMLDivElement, HiveRichTextEditorPr
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 

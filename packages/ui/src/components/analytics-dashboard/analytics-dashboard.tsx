@@ -30,41 +30,41 @@ export interface HiveAnalyticsData {
     spacesCreated: number;
     toolsBuilt: number;
     engagementRate: number;
-    retentionRate: number;
+    retentionRate: number
   };
   performance: {
     pageLoadTime: number;
     apiResponseTime: number;
     errorRate: number;
     uptime: number;
-    successRate: number;
+    successRate: number
   };
   usage: {
     dailyActiveUsers: number;
     monthlyActiveUsers: number;
     sessionDuration: number;
-    pageViews: number;
+    pageViews: number
   };
   growth: {
     userGrowth: number;
     spaceGrowth: number;
     toolGrowth: number;
-    engagementGrowth: number;
+    engagementGrowth: number
   };
   trends: {
     userGrowth: number;
     spaceGrowth: number;
     toolAdoption: number;
-    platformHealth: number;
+    platformHealth: number
   };
   engagement: {
     dailyActiveUsers: number;
     averageSessionTime: number;
-    toolUsageRate: number;
+    toolUsageRate: number
   };
   realTimeMetrics: {
-    toolsInUse: number;
-  };
+    toolsInUse: number
+  }
 }
 
 interface MetricCardProps {
@@ -73,7 +73,7 @@ interface MetricCardProps {
   change?: string;
   trend?: "up" | "down" | "neutral";
   icon: React.ReactNode;
-  description?: string;
+  description?: string
 }
 
 function MetricCard({
@@ -91,7 +91,7 @@ function MetricCard({
       case "down":
         return "text-red-400";
       default:
-        return "text-gray-400";
+        return "text-gray-400"
     }
   };
 
@@ -102,7 +102,7 @@ function MetricCard({
       case "down":
         return "↘";
       default:
-        return "→";
+        return "→"
     }
   };
 
@@ -124,14 +124,14 @@ function MetricCard({
         <p className="text-xs text-gray-500">{description}</p>
       )}
     </Card>
-  );
+  )
 }
 
 interface AlertItemProps {
   severity: "low" | "medium" | "high" | "critical";
   message: string;
   timestamp: string;
-  component?: string;
+  component?: string
 }
 
 function AlertItem({
@@ -149,7 +149,7 @@ function AlertItem({
       case "medium":
         return "bg-yellow-500";
       default:
-        return "bg-blue-500";
+        return "bg-blue-500"
     }
   };
 
@@ -159,7 +159,7 @@ function AlertItem({
       case "high":
         return <AlertTriangle className="h-4 w-4" />;
       default:
-        return <CheckCircle className="h-4 w-4" />;
+        return <CheckCircle className="h-4 w-4" />
     }
   };
 
@@ -186,13 +186,13 @@ function AlertItem({
         </p>
       </div>
     </div>
-  );
+  )
 }
 
 interface PerformanceChartProps {
   data: Array<{ time: string; value: number }>;
   title: string;
-  unit?: string;
+  unit?: string
 }
 
 function PerformanceChart({ data, title, unit = "ms" }: PerformanceChartProps) {
@@ -209,7 +209,7 @@ function PerformanceChart({ data, title, unit = "ms" }: PerformanceChartProps) {
             style={{
               height: `${(point.value / maxValue) * 100}%`,
               minHeight: "0.5",
-            }}
+          }}
           >
             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--hive-background-primary)] border border-[var(--hive-border-default)] rounded text-xs text-[var(--hive-text-primary)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
               {point.value}
@@ -223,7 +223,7 @@ function PerformanceChart({ data, title, unit = "ms" }: PerformanceChartProps) {
         <span>{data[data.length - 1]?.time}</span>
       </div>
     </div>
-  );
+  )
 }
 
 export function AnalyticsDashboard() {
@@ -248,10 +248,10 @@ export function AnalyticsDashboard() {
         pageViews: prev.pageViews + Math.floor(Math.random() * 50),
         avgResponseTime:
           prev.avgResponseTime + Math.floor(Math.random() * 20 - 10),
-      }));
+      }))
     }, 5000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, []);
 
   const mockAlerts: AlertItemProps[] = [
@@ -303,7 +303,7 @@ export function AnalyticsDashboard() {
       case "poor":
         return "text-red-400";
       default:
-        return "text-gray-400";
+        return "text-gray-400"
     }
   };
 
@@ -332,9 +332,9 @@ export function AnalyticsDashboard() {
               onChange={(e) => {
                 const value = e.target.value as "1h" | "24h" | "7d" | "30d";
                 if (["1h", "24h", "7d", "30d"].includes(value)) {
-                  setTimeRange(value);
+                  setTimeRange(value)
                 }
-              }}
+          })}
               className="bg-gray-900 border border-[var(--hive-border-default)] rounded px-3 py-1 text-sm text-[var(--hive-text-primary)]"
             >
               <option value="1h">Last Hour</option>
@@ -534,14 +534,14 @@ export function AnalyticsDashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // HIVE Overview Analytics Component
 interface HiveOverviewAnalyticsProps {
   data: HiveAnalyticsData;
   formatNumber: (num: number) => string;
-  getTrendIndicator: (value: number, isPositive?: boolean) => { color: string; arrow: string };
+  getTrendIndicator: (value: number, isPositive?: boolean) => { color: string; arrow: string }
 }
 
 function HiveOverviewAnalytics({ data, formatNumber, getTrendIndicator }: HiveOverviewAnalyticsProps) {
@@ -704,7 +704,7 @@ function HiveOverviewAnalytics({ data, formatNumber, getTrendIndicator }: HiveOv
         </Card>
       </div>
     </div>
-  );
+  )
 }
 
 // HIVE Performance Analytics Component
@@ -734,7 +734,7 @@ function HivePerformanceAnalytics({ data }: { data: HiveAnalyticsData; formatNum
         </Card>
       </div>
     </div>
-  );
+  )
 }
 
 // HIVE Engagement Analytics Component
@@ -779,7 +779,7 @@ function HiveEngagementAnalytics({ data, formatNumber, getTrendIndicator }: Hive
         </Card>
       </div>
     </div>
-  );
+  )
 }
 
 // HIVE Tools Analytics Component
@@ -847,5 +847,5 @@ function HiveToolsAnalytics({ data, formatNumber }: { data: HiveAnalyticsData; f
         </Card>
       </div>
     </div>
-  );
+  )
 }

@@ -14,13 +14,13 @@ export interface CampusIdentityHeaderProps {
     dorm?: string;
     isOnline?: boolean;
     isBuilder?: boolean;
-    completionPercentage?: number;
+    completionPercentage?: number
   };
   variant?: 'default' | 'compact' | 'detailed';
   showStatus?: boolean;
   onAvatarClick?: () => void;
   onEditClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
@@ -50,12 +50,12 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
       .map(n => n[0])
       .join('')
       .toUpperCase()
-      .slice(0, 2);
+      .slice(0, 2)
   };
 
   const formatHandle = (handle?: string) => {
     if (!handle) return '@user';
-    return handle.startsWith('@') ? handle : `@${handle}`;
+    return handle.startsWith('@') ? handle : `@${handle}`
   };
 
   return (
@@ -65,7 +65,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
       transition={{
         duration: 0.6,
         ease: [0.23, 1, 0.32, 1] // HIVE liquid metal easing
-      }}
+          }}
       className={cn(
         // BentoGrid-inspired card treatment
         'relative overflow-hidden rounded-2xl',
@@ -96,7 +96,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
         whileHover={{ 
           scale: 1.05,
           transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] }
-        }}
+          }}
         whileTap={{ scale: 0.98 }}
         onClick={onAvatarClick}
         className="relative cursor-pointer group flex-shrink-0"
@@ -157,12 +157,12 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
                   animate={{
                     scale: [1, 1.2, 1],
                     opacity: [1, 0.7, 1]
-                  }}
+          }}
                   transition={{
                     repeat: Infinity,
                     duration: 2,
                     ease: "easeInOut"
-                  }}
+          }}
                   className="w-full h-full bg-emerald rounded-full shadow-[0_0_8px_color-mix(in_srgb,var(--hive-status-success)_60%,transparent)]"
                 />
               )}
@@ -191,7 +191,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
                     type: "spring", 
                     stiffness: 300,
                     damping: 20
-                  }}
+          }}
                   className="relative"
                 >
                   <div className="px-3 py-1 bg-gradient-to-r from-gold/20 to-champagne/20 border border-gold/30 rounded-full backdrop-blur-sm">
@@ -305,7 +305,7 @@ export const CampusIdentityHeader: React.FC<CampusIdentityHeaderProps> = ({
         </motion.button>
       )}
     </motion.div>
-  );
+  )
 };
 
 // Compact variant for use in navigation or cards

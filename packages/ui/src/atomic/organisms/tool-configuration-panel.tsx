@@ -73,7 +73,7 @@ export interface ConfigField {
     min?: number;
     max?: number;
     pattern?: string;
-    message?: string;
+    message?: string
   };
   sensitive?: boolean; // For passwords, API keys
   group?: string; // For organizing fields
@@ -96,7 +96,7 @@ export interface ToolConfigurationData {
     canConfigure: boolean;
     canView: boolean;
     canActivate: boolean;
-    canRemove: boolean;
+    canRemove: boolean
   };
   
   // Status
@@ -111,7 +111,7 @@ export interface ToolConfigurationData {
   
   // Documentation
   documentationUrl?: string;
-  supportUrl?: string;
+  supportUrl?: string
 }
 
 export interface ToolConfigurationPanelProps {
@@ -125,7 +125,7 @@ export interface ToolConfigurationPanelProps {
   onRemove?: (toolId: string) => Promise<void>;
   onTestConfiguration?: (toolId: string, values: Record<string, any>) => Promise<{ success: boolean; message: string }>;
   isSaving?: boolean;
-  className?: string;
+  className?: string
 }
 
 const FIELD_ICONS = {
@@ -178,14 +178,14 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors[fieldId];
-        return newErrors;
-      });
+        return newErrors
+      })
     }
   };
 
   const validateField = (field: ConfigField, value: any): string | null => {
     if (field.required && (!value || (typeof value === 'string' && !value.trim()))) {
-      return `${field.name} is required`;
+      return `${field.name} is required`
     }
 
     if (field.validation) {
@@ -194,21 +194,21 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
       if (typeof value === 'string' && pattern) {
         const regex = new RegExp(pattern);
         if (!regex.test(value)) {
-          return message || `${field.name} format is invalid`;
+          return message || `${field.name} format is invalid`
         }
       }
       
       if (typeof value === 'number') {
         if (min !== undefined && value < min) {
-          return `${field.name} must be at least ${min}`;
+          return `${field.name} must be at least ${min}`
         }
         if (max !== undefined && value > max) {
-          return `${field.name} must be at most ${max}`;
+          return `${field.name} must be at most ${max}`
         }
       }
     }
 
-    return null;
+    return null
   };
 
   const validateForm = (): boolean => {
@@ -217,12 +217,12 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
     tool.fields.forEach(field => {
       const error = validateField(field, values[field.id]);
       if (error) {
-        newErrors[field.id] = error;
+        newErrors[field.id] = error
       }
     });
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0
   };
 
   const handleSave = async () => {
@@ -230,9 +230,9 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
 
     try {
       await onSave(tool.toolId, values);
-      setIsDirty(false);
+      setIsDirty(false)
     } catch (error) {
-      console.error('Failed to save configuration:', error);
+      console.error('Failed to save configuration:', error)
     }
   };
 
@@ -242,11 +242,11 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
     setIsTestingConfig(true);
     try {
       const result = await onTestConfiguration(tool.toolId, values);
-      setTestResult(result);
+      setTestResult(result)
     } catch (error) {
-      setTestResult({ success: false, message: 'Test failed with an error' });
+      setTestResult({ success: false, message: 'Test failed with an error' })
     } finally {
-      setIsTestingConfig(false);
+      setIsTestingConfig(false)
     }
   };
 
@@ -257,9 +257,9 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
       await onReset(tool.toolId);
       setValues(tool.currentValues);
       setIsDirty(false);
-      setErrors({});
+      setErrors({})
     } catch (error) {
-      console.error('Failed to reset configuration:', error);
+      console.error('Failed to reset configuration:', error)
     }
   };
 
@@ -342,14 +342,14 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
           ) : field.type === 'file' ? (
             <div>
               <input
-                ref={(el) => { fileInputRefs.current[field.id] = el; }}
+                ref={(el) => { fileInputRefs.current[field.id] = el }}
                 type="file"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    handleValueChange(field.id, file);
+                    handleValueChange(field.id, file)
                   }
-                }}
+          })}
                 className="hidden"
               />
               <button
@@ -388,14 +388,14 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
           </p>
         )}
       </div>
-    );
+    )
   };
 
   const groupedFields = tool.fields.reduce((groups, field) => {
     const group = field.group || 'General';
     if (!groups[group]) groups[group] = [];
     groups[group].push(field);
-    return groups;
+    return groups
   }, {} as Record<string, ConfigField[]>);
 
   if (!isOpen) return null;
@@ -697,7 +697,7 @@ export const ToolConfigurationPanel: React.FC<ToolConfigurationPanelProps> = ({
         </motion.div>
       </motion.div>
     </AnimatePresence>
-  );
+  )
 };
 
 export default ToolConfigurationPanel;

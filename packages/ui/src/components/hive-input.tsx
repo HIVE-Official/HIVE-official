@@ -127,7 +127,7 @@ export interface HiveInputProps
   'aria-describedby'?: string;
   'data-testid'?: string;
   // Enhanced validation
-  required?: boolean;
+  required?: boolean
 }
 
 const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
@@ -198,19 +198,19 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value;
       setInternalValue(newValue);
-      props.onChange?.(e);
+      props.onChange?.(e)
     };
     
     // Sync internal value with external value prop changes
     React.useEffect(() => {
       if (value !== undefined) {
-        setInternalValue(value);
+        setInternalValue(value)
       }
     }, [value]);
     
     // Handle password toggle
     const togglePassword = () => {
-      setShowPassword(!showPassword);
+      setShowPassword(!showPassword)
     };
     
     // Determine input type
@@ -252,11 +252,11 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
                 animate={{
                   scale: shouldFloat ? 0.9 : 1,
                   y: shouldFloat ? 0 : 0,
-                }}
+          }}
                 transition={{
                   duration: 0.2,
                   ease: "easeOut",
-                }}
+          }}
               >
                 {label}
               </motion.label>
@@ -289,12 +289,12 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
               )}
               onFocus={(e) => {
                 setIsFocused(true);
-                props.onFocus?.(e);
-              }}
+                props.onFocus?.(e)
+          }}
               onBlur={(e) => {
                 setIsFocused(false);
-                props.onBlur?.(e);
-              }}
+                props.onBlur?.(e)
+          }}
               onChange={handleChange}
               {...a11yProps}
               {...testingProps}
@@ -386,7 +386,7 @@ const HiveInput = React.forwardRef<HTMLInputElement, HiveInputProps>(
           )}
         </AnimatePresence>
       </div>
-    );
+    )
   }
 );
 

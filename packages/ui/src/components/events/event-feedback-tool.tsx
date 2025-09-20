@@ -27,7 +27,7 @@ interface EventFeedbackToolProps {
   event: EventDefinition;
   isBuilder?: boolean;
   onSendFeedbackRequest?: (recipients: string[]) => Promise<void>;
-  onExportFeedback?: (format: 'csv' | 'pdf') => void;
+  onExportFeedback?: (format: 'csv' | 'pdf') => void
 }
 
 interface FeedbackQuestion {
@@ -36,7 +36,7 @@ interface FeedbackQuestion {
   question: string;
   required: boolean;
   options?: string[];
-  category: 'overall' | 'organization' | 'content' | 'venue' | 'custom';
+  category: 'overall' | 'organization' | 'content' | 'venue' | 'custom'
 }
 
 interface FeedbackSurvey {
@@ -48,7 +48,7 @@ interface FeedbackSurvey {
   isActive: boolean;
   createdAt: Date;
   responseCount: number;
-  averageRating: number;
+  averageRating: number
 }
 
 interface FeedbackResponse {
@@ -58,7 +58,7 @@ interface FeedbackResponse {
   userName: string;
   responses: Record<string, any>;
   submittedAt: Date;
-  isAnonymous: boolean;
+  isAnonymous: boolean
 }
 
 const StarRating = ({ 
@@ -70,7 +70,7 @@ const StarRating = ({
   rating: number; 
   maxRating?: number; 
   size?: 'sm' | 'md' | 'lg';
-  onChange?: (rating: number) => void;
+  onChange?: (rating: number) => void
 }) => {
   const sizeClasses = {
     sm: 'w-4 h-4',
@@ -101,7 +101,7 @@ const StarRating = ({
         </button>
       ))}
     </div>
-  );
+  )
 };
 
 const FeedbackSurveyBuilder = ({ 
@@ -109,7 +109,7 @@ const FeedbackSurveyBuilder = ({
   onSave 
 }: { 
   event: EventDefinition; 
-  onSave: (survey: Omit<FeedbackSurvey, 'id' | 'createdAt' | 'responseCount' | 'averageRating'>) => void;
+  onSave: (survey: Omit<FeedbackSurvey, 'id' | 'createdAt' | 'responseCount' | 'averageRating'>) => void
 }) => {
   const [survey, setSurvey] = useState<Partial<FeedbackSurvey>>({
     eventId: event.id,
@@ -177,7 +177,7 @@ const FeedbackSurveyBuilder = ({
         description: survey.description || '',
         questions: survey.questions,
         isActive: survey.isActive || false
-      });
+      })
     }
   };
 
@@ -193,7 +193,7 @@ const FeedbackSurveyBuilder = ({
     setSurvey(prev => ({
       ...prev,
       questions: [...(prev.questions || []), newQuestion]
-    }));
+    }))
   };
 
   const updateQuestion = (questionId: string, updates: Partial<FeedbackQuestion>) => {
@@ -202,14 +202,14 @@ const FeedbackSurveyBuilder = ({
       questions: prev.questions?.map(q => 
         q.id === questionId ? { ...q, ...updates } : q
       )
-    }));
+    }))
   };
 
   const removeQuestion = (questionId: string) => {
     setSurvey(prev => ({
       ...prev,
       questions: prev.questions?.filter(q => q.id !== questionId)
-    }));
+    }))
   };
 
   return (
@@ -261,7 +261,7 @@ const FeedbackSurveyBuilder = ({
                       <input
                         type="text"
                         value={question.question}
-                        onChange={(e) => updateQuestion(question.id, { question: e.target.value })}
+                        onChange={(e) => updateQuestion(question.id, { question: e.target.value }}
                         placeholder="Enter your question..."
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                       />
@@ -276,7 +276,7 @@ const FeedbackSurveyBuilder = ({
                           value={question.type}
                           onChange={(e) => updateQuestion(question.id, { 
                             type: e.target.value as FeedbackQuestion['type'] 
-                          })}
+          }}
                           className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                         >
                           <option value="rating">Star Rating</option>
@@ -291,7 +291,7 @@ const FeedbackSurveyBuilder = ({
                           <input
                             type="checkbox"
                             checked={question.required}
-                            onChange={(e) => updateQuestion(question.id, { required: e.target.checked })}
+                            onChange={(e) => updateQuestion(question.id, { required: e.target.checked }}
                             className="rounded border-gray-300 focus:ring-amber-500"
                           />
                           Required
@@ -319,7 +319,7 @@ const FeedbackSurveyBuilder = ({
                       value={question.options?.join('\n') || ''}
                       onChange={(e) => updateQuestion(question.id, { 
                         options: e.target.value.split('\n').filter(opt => opt.trim()) 
-                      })}
+          }}
                       rows={3}
                       placeholder="Option 1&#10;Option 2&#10;Option 3"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
@@ -349,7 +349,7 @@ const FeedbackSurveyBuilder = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 const FeedbackAnalytics = ({ 
@@ -357,7 +357,7 @@ const FeedbackAnalytics = ({
   responses 
 }: { 
   survey: FeedbackSurvey; 
-  responses: FeedbackResponse[];
+  responses: FeedbackResponse[]
 }) => {
   const analytics = useMemo(() => {
     const totalResponses = responses.length;
@@ -378,7 +378,7 @@ const FeedbackAnalytics = ({
         question: question.question,
         average: Math.round(average * 10) / 10,
         count: ratings.length
-      };
+      }
     });
 
     // Calculate yes/no percentages
@@ -393,7 +393,7 @@ const FeedbackAnalytics = ({
         yesPercentage: totalResponses > 0 ? Math.round((yesResponses / totalResponses) * 100) : 0,
         yesCount: yesResponses,
         totalCount: totalResponses
-      };
+      }
     });
 
     // Get text responses
@@ -404,7 +404,7 @@ const FeedbackAnalytics = ({
       responses: responses
         .map(r => r.responses[question.id])
         .filter(response => response && typeof response === 'string' && response.trim())
-    }));
+    })});
 
     return {
       totalResponses,
@@ -412,7 +412,7 @@ const FeedbackAnalytics = ({
       yesNoStats,
       textResponses,
       responseRate: survey.responseCount > 0 ? Math.round((totalResponses / survey.responseCount) * 100) : 0
-    };
+    }
   }, [survey, responses]);
 
   return (
@@ -524,7 +524,7 @@ const FeedbackAnalytics = ({
         </HiveCard>
       )}
     </div>
-  );
+  )
 };
 
 export function EventFeedbackTool({ 
@@ -619,15 +619,15 @@ export function EventFeedbackTool({
         ];
         
         setSurveys([mockSurvey]);
-        setResponses(mockResponses);
+        setResponses(mockResponses)
       } catch (error) {
-        console.error('Failed to fetch feedback data:', error);
+        console.error('Failed to fetch feedback data:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     };
 
-    fetchData();
+    fetchData()
   }, [event.id]);
 
   const handleSaveSurvey = useCallback((newSurvey: Omit<FeedbackSurvey, 'id' | 'createdAt' | 'responseCount' | 'averageRating'>) => {
@@ -640,7 +640,7 @@ export function EventFeedbackTool({
     };
     
     setSurveys(prev => [...prev, survey]);
-    setView('overview');
+    setView('overview')
   }, []);
 
   const handleSendFeedbackRequest = useCallback(async () => {
@@ -651,11 +651,11 @@ export function EventFeedbackTool({
         await onSendFeedbackRequest(recipients);
         
         // Show success feedback
-        alert('Feedback requests sent successfully!');
+        alert('Feedback requests sent successfully!')
       }
     } catch (error) {
       console.error('Failed to send feedback requests:', error);
-      alert('Failed to send feedback requests');
+      alert('Failed to send feedback requests')
     }
   }, [onSendFeedbackRequest]);
 
@@ -665,7 +665,7 @@ export function EventFeedbackTool({
         <div className="w-8 h-8 bg-amber-500 rounded-lg animate-pulse mx-auto mb-4" />
         <p className="text-gray-600">Loading feedback data...</p>
       </div>
-    );
+    )
   }
 
   const activeSurvey = surveys.find(s => s.isActive);
@@ -685,7 +685,7 @@ export function EventFeedbackTool({
 
         <FeedbackSurveyBuilder event={event} onSave={handleSaveSurvey} />
       </div>
-    );
+    )
   }
 
   if (view === 'analytics' && activeSurvey) {
@@ -709,7 +709,7 @@ export function EventFeedbackTool({
 
         <FeedbackAnalytics survey={activeSurvey} responses={responses} />
       </div>
-    );
+    )
   }
 
   return (
@@ -866,7 +866,7 @@ export function EventFeedbackTool({
         </HiveCard>
       )}
     </div>
-  );
+  )
 }
 
 export default EventFeedbackTool;

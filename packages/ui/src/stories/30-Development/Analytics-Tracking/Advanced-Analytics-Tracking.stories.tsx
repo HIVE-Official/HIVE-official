@@ -95,14 +95,14 @@ interface AnalyticsState {
     sessionId: string;
     userId?: string;
     duration: number;
-    referrer?: string;
+    referrer?: string
   }>;
   interactions: Array<{
     type: 'click' | 'hover' | 'scroll' | 'form_submit' | 'share' | 'like';
     element: string;
     timestamp: number;
     userId?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, any>
   }>;
   userJourneys: Array<{
     userId: string;
@@ -110,29 +110,29 @@ interface AnalyticsState {
     path: string[];
     startTime: number;
     endTime?: number;
-    conversions: string[];
+    conversions: string[]
   }>;
   performanceMetrics: {
     avgPageLoad: number;
     coreWebVitals: {
       lcp: number;
       fid: number;
-      cls: number;
+      cls: number
     };
     apiResponseTimes: Record<string, number>;
-    errorRates: Record<string, number>;
+    errorRates: Record<string, number>
   };
   privacySettings: {
     trackingEnabled: boolean;
     personalDataEnabled: boolean;
     performanceMonitoring: boolean;
-    marketingInsights: boolean;
-  };
+    marketingInsights: boolean
+  }
 }
 
 interface AnalyticsAction {
   type: 'TRACK_PAGE_VIEW' | 'TRACK_INTERACTION' | 'UPDATE_PERFORMANCE' | 'UPDATE_PRIVACY' | 'GENERATE_REPORT';
-  payload: any;
+  payload: any
 }
 
 const initialAnalyticsState: AnalyticsState = {
@@ -189,7 +189,7 @@ function analyticsReducer(state: AnalyticsState, action: AnalyticsAction): Analy
         privacySettings: { ...state.privacySettings, ...action.payload }
       };
     default:
-      return state;
+      return state
   }
 }
 
@@ -197,7 +197,7 @@ const AnalyticsContext = createContext<{
   state: AnalyticsState;
   dispatch: React.Dispatch<AnalyticsAction>;
   trackPageView: (page: string) => void;
-  trackInteraction: (type: string, element: string, metadata?: any) => void;
+  trackInteraction: (type: string, element: string, metadata?: any) => void
 } | null>(null);
 
 // UB Campus Analytics Data
@@ -240,10 +240,10 @@ function RealTimeMetrics() {
         activeSessions: prev.activeSessions + Math.floor(Math.random() * 15) - 7,
         pageViews: prev.pageViews + Math.floor(Math.random() * 50),
         interactions: prev.interactions + Math.floor(Math.random() * 30)
-      }));
+      }))
     }, 2000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   }, []);
 
   return (
@@ -300,7 +300,7 @@ function RealTimeMetrics() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 function UserBehaviorHeatmap() {
@@ -411,7 +411,7 @@ function UserBehaviorHeatmap() {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function CampusEngagementAnalytics() {
@@ -471,7 +471,7 @@ function CampusEngagementAnalytics() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 function PerformanceMonitoring() {
@@ -601,7 +601,7 @@ function PerformanceMonitoring() {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function PrivacyComplianceCenter() {
@@ -644,7 +644,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.functional}
-              onCheckedChange={(checked) => 
+              onChange={(e) => { const checked = e.target.checked; 
                 setPrivacySettings(prev => ({...prev, functional: checked}))
               }
             />
@@ -657,7 +657,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.analytics}
-              onCheckedChange={(checked) => 
+              onChange={(e) => { const checked = e.target.checked; 
                 setPrivacySettings(prev => ({...prev, analytics: checked}))
               }
             />
@@ -670,7 +670,7 @@ function PrivacyComplianceCenter() {
             </div>
             <Switch 
               checked={privacySettings.marketing}
-              onCheckedChange={(checked) => 
+              onChange={(e) => { const checked = e.target.checked; 
                 setPrivacySettings(prev => ({...prev, marketing: checked}))
               }
             />
@@ -719,7 +719,7 @@ function PrivacyComplianceCenter() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 function AnalyticsProvider({ children }: { children: React.ReactNode }) {
@@ -736,7 +736,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
           duration: Math.floor(Math.random() * 300) + 30,
           referrer: document.referrer || 'direct'
         }
-      });
+      })
     }
   };
 
@@ -750,7 +750,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
           timestamp: Date.now(),
           metadata
         }
-      });
+      })
     }
   };
 
@@ -758,7 +758,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     <AnalyticsContext.Provider value={{ state, dispatch, trackPageView, trackInteraction }}>
       {children}
     </AnalyticsContext.Provider>
-  );
+  )
 }
 
 // Main Story Component
@@ -948,7 +948,7 @@ function AdvancedAnalyticsSystem() {
         </div>
       </div>
     </AnalyticsProvider>
-  );
+  )
 }
 
 // Story Exports

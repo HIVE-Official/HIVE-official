@@ -316,7 +316,7 @@ function TemporalRitualsSystem() {
       case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30';
       case 'in_progress': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
       case 'upcoming': return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
     }
   };
 
@@ -326,7 +326,7 @@ function TemporalRitualsSystem() {
       case 'exploration': return <Compass className="w-5 h-5" />;
       case 'networking': return <Network className="w-5 h-5" />;
       case 'preparation': return <Target className="w-5 h-5" />;
-      default: return <Activity className="w-5 h-5" />;
+      default: return <Activity className="w-5 h-5" />
     }
   };
 
@@ -408,8 +408,8 @@ function TemporalRitualsSystem() {
                     </Badge>
                   </CardContent>
                 </Card>
-              );
-            })}
+              )
+            })
           </div>
 
           {/* View Mode Tabs */}
@@ -944,7 +944,7 @@ function TemporalRitualsSystem() {
         </TabsContent>
       </div>
     </div>
-  );
+  )
 }
 
 export const WeeklyRitualProgression: Story = {
@@ -958,7 +958,7 @@ export const WeeklyRitualProgression: Story = {
 export const CommunityFormationView: Story = {
   render: () => {
     const [viewMode, setViewMode] = useState('community');
-    return <TemporalRitualsSystem />;
+    return <TemporalRitualsSystem />
   },
   parameters: {
     layout: 'fullscreen',
@@ -969,7 +969,7 @@ export const CommunityFormationView: Story = {
 export const NetworkBuildingView: Story = {
   render: () => {
     const [viewMode, setViewMode] = useState('network');
-    return <TemporalRitualsSystem />;
+    return <TemporalRitualsSystem />
   },
   parameters: {
     layout: 'fullscreen',

@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { motion, AnimatePresence } from '../../framer-motion-proxy';
 import { cn } from '../../../lib/utils';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Input } from '../../components/ui/input';
-import { Textarea } from '../../components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Card, CardContent, CardHeader } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { Input } from '../../ui/input';
+import { Textarea } from '../../ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { 
   Camera, 
   Upload, 
@@ -42,13 +42,13 @@ export interface UserProfile {
     year: string;
     major: string;
     school: string;
-    housing?: string;
+    housing?: string
   };
   builderStatus: boolean;
   isVerified: boolean;
   ghostMode: boolean;
   lastSeen: string;
-  isOnline: boolean;
+  isOnline: boolean
 }
 
 export interface AvatarCardProps {
@@ -58,7 +58,7 @@ export interface AvatarCardProps {
   onPhotoUpload: (file: File) => Promise<string>;
   onEditClick?: () => void;
   onSettingsClick?: () => void;
-  className?: string;
+  className?: string
 }
 
 // Photo Upload Component
@@ -71,7 +71,7 @@ function PhotoUploadDialog({
   currentPhoto?: string;
   onUpload: (file: File) => Promise<string>;
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: (open: boolean) => void
 }) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
@@ -84,18 +84,18 @@ function PhotoUploadDialog({
     // Validate file
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file');
-      return;
+      return
     }
 
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
       alert('File size must be less than 5MB');
-      return;
+      return
     }
 
     // Create preview
     const reader = new FileReader();
     reader.onload = () => setPreview(reader.result as string);
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file)
   }, []);
 
   const handleUpload = useCallback(async () => {
@@ -106,12 +106,12 @@ function PhotoUploadDialog({
     try {
       await onUpload(file);
       onOpenChange(false);
-      setPreview(null);
+      setPreview(null)
     } catch (error) {
       console.error('Upload failed:', error);
-      alert('Failed to upload photo');
+      alert('Failed to upload photo')
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
   }, [onUpload, onOpenChange]);
 
@@ -184,7 +184,7 @@ function PhotoUploadDialog({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 // Profile Editing Form
@@ -195,7 +195,7 @@ function ProfileEditForm({
 }: {
   profile: UserProfile;
   onSave: (updates: Partial<UserProfile>) => void;
-  onCancel: () => void;
+  onCancel: () => void
 }) {
   const [formData, setFormData] = useState({
     displayName: profile.displayName,
@@ -213,18 +213,18 @@ function ProfileEditForm({
         updated[parent as keyof typeof updated] = {
           ...(updated[parent as keyof typeof updated] as any),
           [child]: value
-        };
+        }
       } else {
-        (updated as any)[field] = value;
+        (updated as any)[field] = value
       }
-      return updated;
+      return updated
     });
-    setHasChanges(true);
+    setHasChanges(true)
   }, []);
 
   const handleSave = useCallback(() => {
     onSave(formData);
-    setHasChanges(false);
+    setHasChanges(false)
   }, [formData, onSave]);
 
   return (
@@ -294,7 +294,7 @@ function ProfileEditForm({
         </div>
       </div>
     </motion.div>
-  );
+  )
 }
 
 // Main Avatar Card Component
@@ -313,21 +313,21 @@ export function AvatarCard({
 
   const handlePhotoClick = useCallback(() => {
     if (isEditMode) return;
-    setPhotoDialogOpen(true);
+    setPhotoDialogOpen(true)
   }, [isEditMode]);
 
   const handleEditProfile = useCallback(() => {
     setIsEditing(true);
-    onEditClick?.();
+    onEditClick?.()
   }, [onEditClick]);
 
   const handleSaveProfile = useCallback((updates: Partial<UserProfile>) => {
     onProfileUpdate(updates);
-    setIsEditing(false);
+    setIsEditing(false)
   }, [onProfileUpdate]);
 
   const handleCancelEdit = useCallback(() => {
-    setIsEditing(false);
+    setIsEditing(false)
   }, []);
 
   // Bio truncation for compact display
@@ -431,7 +431,7 @@ export function AvatarCard({
               {/* Status Badges */}
               <div className="flex flex-wrap gap-1">
                 {profile.builderStatus && (
-                  <Badge variant="default" className="bg-[var(--hive-brand-gold)] text-white text-xs">
+                  <Badge variant="secondary" className="bg-[var(--hive-brand-gold)] text-white text-xs">
                     <Crown className="w-3 h-3 mr-1" />
                     Builder
                   </Badge>
@@ -523,7 +523,7 @@ export function AvatarCard({
         onOpenChange={setPhotoDialogOpen}
       />
     </>
-  );
+  )
 }
 
 // Default props for development

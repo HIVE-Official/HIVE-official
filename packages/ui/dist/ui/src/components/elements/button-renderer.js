@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { Button } from '../ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 export const ButtonRenderer = ({ element, config, onChange, onStateChange, readOnly = false, runtimeContext }) => {
     // Use standard style system (flexible input, consistent output)

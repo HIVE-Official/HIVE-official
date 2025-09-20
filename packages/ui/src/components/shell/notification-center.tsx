@@ -13,7 +13,7 @@ import {
   Settings
 } from 'lucide-react';
 import { Button } from '../../atomic/atoms/button-enhanced';
-import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '../../atomic/atoms/avatar';
 import { cn } from '../../lib/utils';
 
 interface Notification {
@@ -27,14 +27,14 @@ interface Notification {
   actor?: {
     name: string;
     handle: string;
-    avatar?: string;
-  };
+    avatar?: string
+  }
 }
 
 interface NotificationCenterProps {
   isOpen: boolean;
   onClose: () => void;
-  notifications?: Notification[];
+  notifications?: Notification[]
 }
 
 // Mock notifications for demo
@@ -102,7 +102,7 @@ const getNotificationIcon = (type: Notification['type']) => {
     case 'system':
       return Settings;
     default:
-      return Bell;
+      return Bell
   }
 };
 
@@ -116,7 +116,7 @@ const formatRelativeTime = (date: Date) => {
   if (minutes < 1) return 'Just now';
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
-  return `${days}d ago`;
+  return `${days}d ago`
 };
 
 export function NotificationCenter({ 
@@ -131,13 +131,13 @@ export function NotificationCenter({
   const markAsRead = (id: string) => {
     setLocalNotifications(prev => 
       prev.map(n => n.id === id ? { ...n, read: true } : n)
-    );
+    )
   };
 
   const markAllAsRead = () => {
     setLocalNotifications(prev => 
-      prev.map(n => ({ ...n, read: true }))
-    );
+      prev.map(n => ({ ...n, read: true })})
+    )
   };
 
   if (!isOpen) return null;
@@ -243,8 +243,8 @@ export function NotificationCenter({
                         </div>
                       </div>
                     </div>
-                  );
-                })}
+                  )
+          })}
               </div>
             )}
           </div>
@@ -262,5 +262,5 @@ export function NotificationCenter({
         </div>
       </div>
     </div>
-  );
+  )
 }

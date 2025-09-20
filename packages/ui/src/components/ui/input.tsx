@@ -57,7 +57,7 @@ export interface InputProps
   success?: string;
   helperText?: string;
   label?: string;
-  required?: boolean;
+  required?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -162,10 +162,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </p>
           )}
         </div>
-      );
+      )
     }
     
-    return wrapperElement;
+    return wrapperElement
   }
 );
 Input.displayName = "Input";
@@ -173,7 +173,7 @@ Input.displayName = "Input";
 // Search Input Component
 export interface SearchInputProps extends Omit<InputProps, 'leftIcon' | 'type'> {
   onClear?: () => void;
-  showClearButton?: boolean;
+  showClearButton?: boolean
 }
 
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
@@ -200,7 +200,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
         }
         {...props}
       />
-    );
+    )
   }
 );
 SearchInput.displayName = "SearchInput";
@@ -228,7 +228,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         }
         {...props}
       />
-    );
+    )
   }
 );
 PasswordInput.displayName = "PasswordInput";
@@ -240,7 +240,7 @@ export interface NumberInputProps extends Omit<InputProps, 'type'> {
   step?: number;
   onIncrement?: () => void;
   onDecrement?: () => void;
-  showControls?: boolean;
+  showControls?: boolean
 }
 
 const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
@@ -284,7 +284,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         }
         {...props}
       />
-    );
+    )
   }
 );
 NumberInput.displayName = "NumberInput";
@@ -292,7 +292,7 @@ NumberInput.displayName = "NumberInput";
 // Input Group Component
 export interface InputGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   orientation?: "horizontal" | "vertical";
-  spacing?: "none" | "sm" | "md";
+  spacing?: "none" | "sm" | "md"
 }
 
 const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
@@ -316,7 +316,7 @@ const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
       >
         {children}
       </div>
-    );
+    )
   }
 );
 InputGroup.displayName = "InputGroup";
@@ -377,7 +377,7 @@ export const InputPresets = {
 // Floating Label Input Component
 export interface FloatingLabelInputProps extends Omit<InputProps, 'label'> {
   label: string;
-  labelClassName?: string;
+  labelClassName?: string
 }
 
 const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInputProps>(
@@ -389,23 +389,23 @@ const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInput
     const isFloated = isFocused || hasValue || props.value || props.defaultValue;
     
     React.useEffect(() => {
-      setHasValue(Boolean(props.value || props.defaultValue));
+      setHasValue(Boolean(props.value || props.defaultValue))
     }, [props.value, props.defaultValue]);
     
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true);
-      props.onFocus?.(e);
+      props.onFocus?.(e)
     };
     
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(false);
       setHasValue(Boolean(e.target.value));
-      props.onBlur?.(e);
+      props.onBlur?.(e)
     };
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setHasValue(Boolean(e.target.value));
-      props.onChange?.(e);
+      props.onChange?.(e)
     };
     
     return (
@@ -465,7 +465,7 @@ const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInput
           </p>
         )}
       </div>
-    );
+    )
   }
 );
 FloatingLabelInput.displayName = "FloatingLabelInput";

@@ -39,7 +39,7 @@ function NavigationRenderer() {
     case 'minimal':
       return <MinimalNavigation />;
     default:
-      return <SidebarNavigation />;
+      return <SidebarNavigation />
   }
 }
 
@@ -49,7 +49,7 @@ function NavigationRenderer() {
 
 interface MainContentProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 function MainContent({ children, className }: MainContentProps) {
@@ -61,7 +61,7 @@ function MainContent({ children, className }: MainContentProps) {
       return {
         marginTop: config.variant === 'minimal' ? '88px' : '64px',
         marginLeft: '0px',
-      };
+      }
     }
     
     switch (config.variant) {
@@ -74,7 +74,7 @@ function MainContent({ children, className }: MainContentProps) {
         return {
           marginTop: '0px',
           marginLeft: widths[config.size],
-        };
+        }
       }
       case 'topbar':
         return {
@@ -95,7 +95,7 @@ function MainContent({ children, className }: MainContentProps) {
         return {
           marginTop: '0px',
           marginLeft: '0px',
-        };
+        }
     }
   }, [config.variant, config.size, isCollapsed, isMobile]);
 
@@ -110,13 +110,13 @@ function MainContent({ children, className }: MainContentProps) {
         marginLeft: contentMargins.marginLeft,
         backgroundColor: semantic.background.primary,
         color: semantic.text.primary,
-      }}
+          }}
     >
       <div className="min-h-full">
         {children}
       </div>
     </main>
-  );
+  )
 }
 
 // ============================================================================
@@ -147,8 +147,8 @@ interface HiveNavigationShellProps {
   accessibility?: {
     skipLinks?: boolean;
     announcements?: boolean;
-    reducedMotion?: boolean;
-  };
+    reducedMotion?: boolean
+  }
 }
 
 export function HiveNavigationShell({
@@ -193,13 +193,13 @@ export function HiveNavigationShell({
   const handleNavigate = (item: NavigationItem) => {
     // Handle navigation
     if (item.onClick) {
-      item.onClick();
+      item.onClick()
     } else if (item.href) {
-      window.location.href = item.href;
+      window.location.href = item.href
     }
     
     // Call custom handler
-    onNavigate?.(item);
+    onNavigate?.(item)
   };
 
   return (
@@ -239,7 +239,7 @@ export function HiveNavigationShell({
         <MobileSidebarOverlay />
       </div>
     </NavigationProvider>
-  );
+  )
 }
 
 // ============================================================================
@@ -250,7 +250,7 @@ function MobileSidebarOverlay() {
   const { config, isCollapsed, isMobile, setCollapsed } = useNavigation();
   
   if (!isMobile || config.variant !== 'sidebar' || isCollapsed) {
-    return null;
+    return null
   }
   
   return (
@@ -258,7 +258,7 @@ function MobileSidebarOverlay() {
       className="fixed inset-0 z-30 bg-[var(--hive-background-primary)]/50 backdrop-blur-sm md:hidden"
       onClick={() => setCollapsed(true)}
     />
-  );
+  )
 }
 
 // ============================================================================
@@ -266,7 +266,7 @@ function MobileSidebarOverlay() {
 // ============================================================================
 
 export function useHiveNavigation(): ReturnType<typeof useNavigation> {
-  return useNavigation();
+  return useNavigation()
 }
 
 // ============================================================================

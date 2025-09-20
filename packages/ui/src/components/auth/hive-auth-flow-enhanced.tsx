@@ -2,7 +2,7 @@
 
 import React, { useState, createContext, useContext } from 'react';
 import { cn } from '../../lib/utils';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../atomic/atoms/button';
 import { Check, Mail, ArrowLeft, ArrowRight, Loader2, AlertCircle, Sparkles, Zap, Users, Shield } from 'lucide-react';
 
 // =============================================================================
@@ -23,7 +23,7 @@ export interface AuthState {
   email: string;
   loading: boolean;
   error: string | null;
-  isNewUser: boolean;
+  isNewUser: boolean
 }
 
 export interface AuthContextType {
@@ -37,7 +37,7 @@ export interface AuthContextType {
   handleSignIn: (email: string, password?: string) => Promise<void>;
   handleSignUp: (email: string, password: string, name: string) => Promise<void>;
   handleMagicLink: (email: string) => Promise<void>;
-  handleForgotPassword: (email: string) => Promise<void>;
+  handleForgotPassword: (email: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -45,9 +45,9 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error('useAuth must be used within AuthProvider')
   }
-  return context;
+  return context
 }
 
 // =============================================================================
@@ -58,7 +58,7 @@ interface AuthProviderProps {
   children: React.ReactNode;
   onAuthSuccess?: (user: { id: string; email: string; name: string; isNewUser: boolean }) => void;
   initialStep?: AuthStep;
-  mockMode?: boolean;
+  mockMode?: boolean
 }
 
 export function AuthProvider({ 
@@ -92,7 +92,7 @@ export function AuthProvider({
       'onboarding': 'welcome',
     };
     setStep(stepFlow[state.step]);
-    setError(null);
+    setError(null)
   };
 
   const handleSignIn = async (email: string, password?: string) => {
@@ -105,7 +105,7 @@ export function AuthProvider({
         const isNewUser = email.includes('new');
         
         if (isNewUser) {
-          setStep('onboarding');
+          setStep('onboarding')
         }
         
         onAuthSuccess?.({
@@ -113,12 +113,12 @@ export function AuthProvider({
           email,
           name: email.split('@')[0],
           isNewUser
-        });
+        })
       }
     } catch (error) {
-      setError('Sign in failed. Please try again.');
+      setError('Sign in failed. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -129,12 +129,12 @@ export function AuthProvider({
     try {
       if (mockMode) {
         await new Promise(resolve => setTimeout(resolve, 1500));
-        setStep('verify-email');
+        setStep('verify-email')
       }
     } catch (error) {
-      setError('Sign up failed. Please try again.');
+      setError('Sign up failed. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -145,12 +145,12 @@ export function AuthProvider({
     try {
       if (mockMode) {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        setStep('magic-link-sent');
+        setStep('magic-link-sent')
       }
     } catch (error) {
-      setError('Failed to send magic link. Please try again.');
+      setError('Failed to send magic link. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -161,12 +161,12 @@ export function AuthProvider({
     try {
       if (mockMode) {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        setStep('magic-link-sent');
+        setStep('magic-link-sent')
       }
     } catch (error) {
-      setError('Failed to send reset email. Please try again.');
+      setError('Failed to send reset email. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -188,7 +188,7 @@ export function AuthProvider({
     <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
-  );
+  )
 }
 
 // =============================================================================
@@ -199,7 +199,7 @@ interface HiveAuthFlowEnhancedProps {
   className?: string;
   onAuthSuccess?: (user: { id: string; email: string; name: string; isNewUser: boolean }) => void;
   initialStep?: AuthStep;
-  mockMode?: boolean;
+  mockMode?: boolean
 }
 
 export function HiveAuthFlowEnhanced({ 
@@ -245,7 +245,7 @@ export function HiveAuthFlowEnhanced({
                   top: `${Math.random() * 100}%`,
                   animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
                   animationDelay: `${Math.random() * 2}s`
-                }}
+          }}
               />
             ))}
           </div>
@@ -257,18 +257,18 @@ export function HiveAuthFlowEnhanced({
 
         <style>{`
           @keyframes grid-flow {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
+            0% { transform: translate(0, 0) }
+            100% { transform: translate(50px, 50px) }
           }
           
           @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            0%, 100% { transform: translateY(0px) rotate(0deg) }
+            50% { transform: translateY(-20px) rotate(180deg) }
           }
         `}</style>
       </div>
     </AuthProvider>
-  );
+  )
 }
 
 // =============================================================================
@@ -294,7 +294,7 @@ function AuthStepRenderer() {
     case 'onboarding':
       return <EnhancedOnboardingRedirectStep />;
     default:
-      return <EnhancedWelcomeStep />;
+      return <EnhancedWelcomeStep />
   }
 }
 
@@ -308,7 +308,7 @@ function EnhancedWelcomeStep() {
 
   const handleGetStarted = () => {
     setIsAnimating(true);
-    setTimeout(() => setStep('sign-up'), 300);
+    setTimeout(() => setStep('sign-up'), 300)
   };
 
   return (
@@ -416,7 +416,7 @@ function EnhancedWelcomeStep() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -434,20 +434,20 @@ function EnhancedSignInStep() {
     e.preventDefault();
     if (!email.trim()) {
       setError('Email is required');
-      return;
+      return
     }
 
     setIsSubmitting(true);
     if (usePassword) {
       if (!password.trim()) {
         setError('Password is required');
-        return;
+        return
       }
-      await handleSignIn(email, password);
+      await handleSignIn(email, password)
     } else {
-      await handleMagicLink(email);
+      await handleMagicLink(email)
     }
-    setIsSubmitting(false);
+    setIsSubmitting(false)
   };
 
   return (
@@ -598,7 +598,7 @@ function EnhancedSignInStep() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -621,36 +621,36 @@ function EnhancedSignUpStep() {
     // Enhanced Validation
     if (!formData.name.trim()) {
       setError('Name is required');
-      return;
+      return
     }
     if (!formData.email.trim()) {
       setError('University email is required');
-      return;
+      return
     }
     if (!formData.email.includes('.edu')) {
       setError('Please use your university (.edu) email address');
-      return;
+      return
     }
     if (!formData.password) {
       setError('Password is required');
-      return;
+      return
     }
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
-      return;
+      return
     }
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters');
-      return;
+      return
     }
 
     setIsSubmitting(true);
     await handleSignUp(formData.email, formData.password, formData.name);
-    setIsSubmitting(false);
+    setIsSubmitting(false)
   };
 
   const updateFormData = (field: keyof typeof formData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ ...prev, [field]: value }))
   };
 
   return (
@@ -775,7 +775,7 @@ function EnhancedSignUpStep() {
         </button>
       </div>
     </div>
-  );
+  )
 }
 
 // =============================================================================
@@ -790,9 +790,9 @@ function EnhancedForgotPasswordStep() {
     e.preventDefault();
     if (!email.trim()) {
       setError('Email is required');
-      return;
+      return
     }
-    await handleForgotPassword(email);
+    await handleForgotPassword(email)
   };
 
   return (
@@ -852,7 +852,7 @@ function EnhancedForgotPasswordStep() {
         </Button>
       </form>
     </div>
-  );
+  )
 }
 
 function EnhancedVerifyEmailStep() {
@@ -892,7 +892,7 @@ function EnhancedVerifyEmailStep() {
         Back to Sign Up
       </Button>
     </div>
-  );
+  )
 }
 
 function EnhancedMagicLinkSentStep() {
@@ -933,7 +933,7 @@ function EnhancedMagicLinkSentStep() {
         Back to Sign In
       </Button>
     </div>
-  );
+  )
 }
 
 function EnhancedOnboardingRedirectStep() {
@@ -966,5 +966,5 @@ function EnhancedOnboardingRedirectStep() {
         </p>
       </div>
     </div>
-  );
+  )
 }

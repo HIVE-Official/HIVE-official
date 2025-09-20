@@ -26,7 +26,7 @@ const mockEvents: Event[] = [
 
 export const CalendarIntegrationTest: React.FC = () => {
   const handleEventClick = (eventId: string) => {
-    console.log('Event clicked:', eventId);
+    console.log('Event clicked:', eventId)
   };
 
   return (
@@ -108,7 +108,7 @@ export const CalendarIntegrationTest: React.FC = () => {
         />
       </div>
     </div>
-  );
+  )
 };
 
 export default CalendarIntegrationTest;

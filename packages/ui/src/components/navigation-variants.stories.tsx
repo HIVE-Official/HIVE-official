@@ -87,7 +87,7 @@ const InteractiveDemo = ({ Component, initialPath = '/', ...props }: any) => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // 1. Minimal Floating Sidebar

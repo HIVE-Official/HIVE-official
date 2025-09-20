@@ -1,15 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { darkLuxury, luxuryShadows, luxuryRadius, luxurySpacing } from '../theme/dark-luxury';
-import { HiveMagneticHover, HiveCascade } from '../../components/hive-motion-wrapper';
+import { HiveMagneticHover, HiveCascade } from '../components/hive-motion-wrapper';
 
 // HIVE Layout System - Soft Brutalism
 // Strong geometric shapes with approachable rounded corners
 
 interface LayoutProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string
 }
 
 // Main Layout Container - Refined Density
@@ -24,14 +24,14 @@ export const HiveLayout: React.FC<LayoutProps> = ({ children, className }) => {
     >
       {children}
     </div>
-  );
+  )
 };
 
 // Bento Grid System - Flexible card layouts
 interface BentoGridProps extends LayoutProps {
   cols?: number;
   gap?: keyof typeof luxurySpacing;
-  cascade?: boolean;
+  cascade?: boolean
 }
 
 export const HiveBentoGrid: React.FC<BentoGridProps> = ({ 
@@ -65,7 +65,7 @@ export const HiveBentoGrid: React.FC<BentoGridProps> = ({
     <HiveCascade>{gridContent}</HiveCascade>
   ) : (
     gridContent
-  );
+  )
 };
 
 // Bento Card - Individual grid items with soft brutalism
@@ -74,7 +74,7 @@ interface BentoCardProps extends LayoutProps {
   aspect?: 'square' | 'wide' | 'tall' | 'auto';
   elevated?: boolean;
   interactive?: boolean;
-  glow?: boolean;
+  glow?: boolean
 }
 
 export const HiveBentoCard: React.FC<BentoCardProps> = ({
@@ -121,14 +121,14 @@ export const HiveBentoCard: React.FC<BentoCardProps> = ({
     <HiveMagneticHover intensity="medium">{card}</HiveMagneticHover>
   ) : (
     card
-  );
+  )
 };
 
 // Sidebar Layout - Discord-style navigation
 interface SidebarLayoutProps extends LayoutProps {
   sidebar: React.ReactNode;
   sidebarWidth?: string;
-  collapsible?: boolean;
+  collapsible?: boolean
 }
 
 export const HiveSidebarLayout: React.FC<SidebarLayoutProps> = ({
@@ -171,7 +171,7 @@ export const HiveSidebarLayout: React.FC<SidebarLayoutProps> = ({
         {children}
       </main>
     </div>
-  );
+  )
 };
 
 // Split Panel Layout - GitHub-style panels
@@ -179,7 +179,7 @@ interface SplitPanelProps extends LayoutProps {
   leftPanel: React.ReactNode;
   rightPanel: React.ReactNode;
   leftWidth?: string;
-  resizable?: boolean;
+  resizable?: boolean
 }
 
 export const HiveSplitPanel: React.FC<SplitPanelProps> = ({
@@ -208,14 +208,14 @@ export const HiveSplitPanel: React.FC<SplitPanelProps> = ({
         {rightPanel}
       </div>
     </div>
-  );
+  )
 };
 
 // Stack Layout - Vertical composition
 interface StackProps extends LayoutProps {
   spacing?: keyof typeof luxurySpacing;
   align?: 'start' | 'center' | 'end' | 'stretch';
-  cascade?: boolean;
+  cascade?: boolean
 }
 
 export const HiveStack: React.FC<StackProps> = ({
@@ -245,14 +245,14 @@ export const HiveStack: React.FC<StackProps> = ({
     <HiveCascade>{stackContent}</HiveCascade>
   ) : (
     stackContent
-  );
+  )
 };
 
 // Cluster Layout - Horizontal grouping
 interface ClusterProps extends LayoutProps {
   spacing?: keyof typeof luxurySpacing;
   align?: 'start' | 'center' | 'end' | 'baseline';
-  wrap?: boolean;
+  wrap?: boolean
 }
 
 export const HiveCluster: React.FC<ClusterProps> = ({
@@ -281,14 +281,14 @@ export const HiveCluster: React.FC<ClusterProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };
 
 // Cover Layout - Hero sections
 interface CoverProps extends LayoutProps {
   minHeight?: string;
   centered?: boolean;
-  overlay?: boolean;
+  overlay?: boolean
 }
 
 export const HiveCover: React.FC<CoverProps> = ({
@@ -315,14 +315,14 @@ export const HiveCover: React.FC<CoverProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };
 
 // Frame Layout - Consistent padding wrapper
 interface FrameProps extends LayoutProps {
   padding?: keyof typeof luxurySpacing;
   maxWidth?: string;
-  centered?: boolean;
+  centered?: boolean
 }
 
 export const HiveFrame: React.FC<FrameProps> = ({
@@ -342,13 +342,13 @@ export const HiveFrame: React.FC<FrameProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };
 
 // Glass Panel - Translucent overlays
 interface GlassPanelProps extends LayoutProps {
   blur?: boolean;
-  intensity?: 'light' | 'medium' | 'heavy';
+  intensity?: 'light' | 'medium' | 'heavy'
 }
 
 export const HiveGlassPanel: React.FC<GlassPanelProps> = ({
@@ -385,5 +385,5 @@ export const HiveGlassPanel: React.FC<GlassPanelProps> = ({
     >
       {children}
     </div>
-  );
+  )
 };

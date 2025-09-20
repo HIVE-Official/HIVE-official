@@ -13,7 +13,7 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   resize?: 'none' | 'vertical' | 'horizontal' | 'both';
   maxLength?: number;
   showCount?: boolean;
-  fullWidth?: boolean;
+  fullWidth?: boolean
 }
 
 const textareaVariants = {
@@ -74,7 +74,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
 
   React.useEffect(() => {
     if (typeof value === 'string') {
-      setInternalValue(value);
+      setInternalValue(value)
     }
   }, [value]);
 
@@ -122,7 +122,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
           className={cn(baseClasses, className)}
           onChange={(e) => {
             setInternalValue(e.target.value);
-            props.onChange?.(e);
+            props.onChange?.(e)
           }}
           {...props}
         />
@@ -159,7 +159,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
         )}
       </div>
     </div>
-  );
+  )
 });
 
 Textarea.displayName = 'Textarea';

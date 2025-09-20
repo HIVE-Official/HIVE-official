@@ -111,38 +111,38 @@ const useUserFlows = () => {
   const playFlow = () => {
     setIsPlaying(true);
     setCurrentStep(0);
-    setCompletedSteps([]);
+    setCompletedSteps([])
   };
 
   const pauseFlow = () => {
-    setIsPlaying(false);
+    setIsPlaying(false)
   };
 
   const resetFlow = () => {
     setIsPlaying(false);
     setCurrentStep(0);
-    setCompletedSteps([]);
+    setCompletedSteps([])
   };
 
   const nextStep = (flowSteps: any[]) => {
     if (currentStep < flowSteps.length - 1) {
       setCompletedSteps(prev => [...prev, currentStep]);
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep(prev => prev + 1)
     } else {
-      setIsPlaying(false);
+      setIsPlaying(false)
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
       setCurrentStep(prev => prev - 1);
-      setCompletedSteps(prev => prev.slice(0, -1));
+      setCompletedSteps(prev => prev.slice(0, -1))
     }
   };
 
   const goToStep = (step: number) => {
     setCurrentStep(step);
-    setCompletedSteps(Array.from({ length: step }, (_, i) => i));
+    setCompletedSteps(Array.from({ length: step }, (_, i) => i))
   };
 
   return {
@@ -161,7 +161,7 @@ const useUserFlows = () => {
     nextStep,
     prevStep,
     goToStep
-  };
+  }
 };
 
 // User Flow Data
@@ -502,7 +502,7 @@ const FlowVisualization = ({
   flow: any; 
   currentStep: number; 
   completedSteps: number[]; 
-  onStepClick: (step: number) => void;
+  onStepClick: (step: number) => void
 }) => (
   <div className="space-y-6">
     {/* Flow Header */}
@@ -669,7 +669,7 @@ const FlowControls = ({
   onNext: () => void;
   onPrev: () => void;
   currentStep: number;
-  totalSteps: number;
+  totalSteps: number
 }) => (
   <div className="space-y-4">
     {/* Flow Selection */}
@@ -812,10 +812,10 @@ const UserFlowsSystem = () => {
   useEffect(() => {
     if (flows.isPlaying && currentFlow) {
       const timer = setTimeout(() => {
-        flows.nextStep(currentFlow.steps);
+        flows.nextStep(currentFlow.steps)
       }, (3000 / flows.speed));
       
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer)
     }
   }, [flows.isPlaying, flows.currentStep, flows.speed, currentFlow]);
 
@@ -868,7 +868,7 @@ const UserFlowsSystem = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 // Story Exports
@@ -887,7 +887,7 @@ export const NewStudentJourney: Story = {
   render: () => {
     const flows = useUserFlows();
     flows.setActiveFlow('new-student');
-    return <UserFlowsSystem />;
+    return <UserFlowsSystem />
   },
   parameters: {
     docs: {
@@ -902,7 +902,7 @@ export const DailyUsagePattern: Story = {
   render: () => {
     const flows = useUserFlows();
     flows.setActiveFlow('daily-usage');
-    return <UserFlowsSystem />;
+    return <UserFlowsSystem />
   },
   parameters: {
     docs: {
@@ -917,7 +917,7 @@ export const SocialEngagementFlow: Story = {
   render: () => {
     const flows = useUserFlows();
     flows.setActiveFlow('social-engagement');
-    return <UserFlowsSystem />;
+    return <UserFlowsSystem />
   },
   parameters: {
     docs: {
@@ -932,7 +932,7 @@ export const AcademicIntegration: Story = {
   render: () => {
     const flows = useUserFlows();
     flows.setActiveFlow('academic-integration');
-    return <UserFlowsSystem />;
+    return <UserFlowsSystem />
   },
   parameters: {
     docs: {
@@ -947,7 +947,7 @@ export const CampusEventCoordination: Story = {
   render: () => {
     const flows = useUserFlows();
     flows.setActiveFlow('campus-event');
-    return <UserFlowsSystem />;
+    return <UserFlowsSystem />
   },
   parameters: {
     docs: {
@@ -962,7 +962,7 @@ export const ToolCreationSharing: Story = {
   render: () => {
     const flows = useUserFlows();
     flows.setActiveFlow('tool-creation');
-    return <UserFlowsSystem />;
+    return <UserFlowsSystem />
   },
   parameters: {
     docs: {

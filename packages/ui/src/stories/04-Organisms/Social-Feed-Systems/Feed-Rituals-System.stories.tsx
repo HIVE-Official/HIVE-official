@@ -336,7 +336,7 @@ const CampusFeedSystem = () => {
               { id: 'feed', label: 'Feed', icon: Home },
               { id: 'trending', label: 'Trending', icon: TrendingUp },
               { id: 'spaces', label: 'My Spaces', icon: Users },
-            ].map(({ id, label, icon: Icon }) => (
+            ].map(({ id, label, icon: Icon })}} => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
@@ -364,7 +364,7 @@ const CampusFeedSystem = () => {
                 { id: 'events', label: 'Events' },
                 { id: 'tools', label: 'Tools' },
                 { id: 'rituals', label: 'Rituals' },
-              ].map(({ id, label }) => (
+              ].map(({ id, label })} => (
                 <Button
                   key={id}
                   size="sm"
@@ -571,8 +571,8 @@ const CampusFeedSystem = () => {
                               <span className="text-gray-300">{option.votes} ({Math.round(percentage)}%)</span>
                             </div>
                           </div>
-                        );
-                      })}
+                        )
+                      })
                     </div>
                     <p className="text-gray-400 text-sm">{post.content.poll.totalVotes} total votes</p>
                   </div>
@@ -632,7 +632,7 @@ const CampusFeedSystem = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 const CampusRitualsSystem = () => {
@@ -649,8 +649,8 @@ const CampusRitualsSystem = () => {
   const filteredRituals = mockRituals.filter(ritual => {
     if (activeCategory !== 'all' && !ritual.category.toLowerCase().includes(activeCategory)) return false;
     if (viewMode === 'my-rituals' && !ritual.isActive) return false;
-    return true;
-  });
+    return true
+  })};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
@@ -705,7 +705,7 @@ const CampusRitualsSystem = () => {
 
           {/* Category Filters */}
           <div className="flex items-center space-x-2">
-            {categories.map(({ id, label, count }) => (
+            {categories.map(({ id, label, count })} => (
               <Button
                 key={id}
                 size="sm"
@@ -912,7 +912,7 @@ const CampusRitualsSystem = () => {
         )}
       </div>
     </div>
-  );
+  )
 };
 
 export const CampusFeedDashboard: Story = {

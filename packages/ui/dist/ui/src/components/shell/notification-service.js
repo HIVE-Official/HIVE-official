@@ -56,50 +56,51 @@ export function NotificationProvider({ children }) {
     const markAllAsRead = () => {
         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     };
-    const removeNotification = (id) => {
-        setNotifications(prev => prev.filter(n => n.id !== id));
-    };
-    // Simulate receiving new notifications
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // Randomly add a notification every 2-5 minutes
-            if (Math.random() < 0.1) { // 10% chance every interval
-                const randomNotifications = [
-                    {
-                        type: 'like',
-                        title: 'New like on your tool',
-                        message: 'Someone liked your latest tool',
-                        read: false,
-                        actor: { name: 'Anonymous User', handle: 'anon' }
-                    },
-                    {
-                        type: 'comment',
-                        title: 'New comment',
-                        message: 'Someone commented on your post',
-                        read: false,
-                        actor: { name: 'Anonymous User', handle: 'anon' }
-                    },
-                    {
-                        type: 'system',
-                        title: 'System update',
-                        message: 'HIVE has been updated with new features',
-                        read: false
-                    }
-                ];
-                const randomNotification = randomNotifications[Math.floor(Math.random() * randomNotifications.length)];
-                addNotification(randomNotification);
-            }
-        }, 30000); // Check every 30 seconds
-        return () => clearInterval(interval);
-    }, []);
-    const value = {
-        notifications,
-        unreadCount,
-        addNotification,
-        markAsRead,
-        markAllAsRead,
-        removeNotification,
-    };
-    return (_jsx(NotificationContext.Provider, { value: value, children: children }));
 }
+;
+const removeNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+};
+// Simulate receiving new notifications
+useEffect(() => {
+    const interval = setInterval(() => {
+        // Randomly add a notification every 2-5 minutes
+        if (Math.random() < 0.1) { // 10% chance every interval
+            const randomNotifications = [
+                {
+                    type: 'like',
+                    title: 'New like on your tool',
+                    message: 'Someone liked your latest tool',
+                    read: false,
+                    actor: { name: 'Anonymous User', handle: 'anon' }
+                },
+                {
+                    type: 'comment',
+                    title: 'New comment',
+                    message: 'Someone commented on your post',
+                    read: false,
+                    actor: { name: 'Anonymous User', handle: 'anon' }
+                },
+                {
+                    type: 'system',
+                    title: 'System update',
+                    message: 'HIVE has been updated with new features',
+                    read: false
+                }
+            ];
+            const randomNotification = randomNotifications[Math.floor(Math.random() * randomNotifications.length)];
+            addNotification(randomNotification);
+        }
+    }, 30000); // Check every 30 seconds
+    return () => clearInterval(interval);
+}, []);
+const value = {
+    notifications,
+    unreadCount,
+    addNotification,
+    markAsRead,
+    markAllAsRead,
+    removeNotification,
+};
+return (_jsx(NotificationContext.Provider, { value: value, children: children }));
 //# sourceMappingURL=notification-service.js.map

@@ -46,17 +46,32 @@ export const HiveMagneticHover = ({ children, className, intensity = 'medium', d
                 duration: 0.25,
                 ease: [0.16, 1, 0.3, 1], // silk easing
             }
-        }, whileTap: disabled ? {} : {
-            scale: 0.98,
-            transition: {
-                duration: 0.1,
-                ease: [0.25, 0.1, 0.25, 1], // snap easing
-            }
-        }, style: {
-            willChange: 'transform',
-            filter: disabled ? undefined : 'drop-shadow(0 4px 8px color-mix(in_srgb,var(--hive-background-primary)_20%,transparent))',
-        }, children: children }));
+        } }));
 };
+whileTap = { disabled };
+{ }
+{
+    scale: 0.98,
+        transition;
+    {
+        duration: 0.1,
+            ease;
+        [0.25, 0.1, 0.25, 1],
+        ; // snap easing
+    }
+}
+style = {};
+{
+    willChange: 'transform',
+        filter;
+    disabled ? undefined : 'drop-shadow(0 4px 8px color-mix(in_srgb,var(--hive-background-primary)_20%,transparent))',
+    ;
+}
+    >
+        { children };
+motion.div >
+;
+;
 export const HiveCascade = ({ children, className, staggerDelay = 0.1, direction = 'up' }) => {
     const directionMap = {
         up: { y: 20 },
@@ -65,29 +80,32 @@ export const HiveCascade = ({ children, className, staggerDelay = 0.1, direction
         right: { x: -20 },
     };
     const offset = directionMap[direction];
-    return (_jsx(motion.div, { className: className, initial: "hidden", animate: "visible", variants: {
+    return (_jsxs(motion.div, { className: className, initial: "hidden", animate: "visible", variants: {
             hidden: {},
             visible: {
                 transition: {
                     staggerChildren: staggerDelay,
                 }
             }
-        }, children: React.Children.map(children, (child, index) => (_jsx(motion.div, { variants: {
-                hidden: {
-                    opacity: 0,
-                    ...offset,
-                },
-                visible: {
-                    opacity: 1,
-                    x: 0,
-                    y: 0,
-                    transition: {
-                        duration: 0.35,
-                        ease: [0.19, 1, 0.22, 1], // molten easing
+        }, children: [React.Children.map(children, (child, index) => (_jsx(motion.div, { variants: {
+                    hidden: {
+                        opacity: 0,
+                        ...offset,
+                    },
+                    visible: {
+                        opacity: 1,
+                        x: 0,
+                        y: 0,
+                        transition: {
+                            duration: 0.35,
+                            ease: [0.19, 1, 0.22, 1], // molten easing
+                        }
                     }
-                }
-            }, children: child }))) }));
+                } }))), ">", child] }));
 };
+motion.div >
+;
+;
 export const HiveFloat = ({ children, className, intensity = 'medium', duration = 3 }) => {
     const intensityMap = {
         subtle: 3,

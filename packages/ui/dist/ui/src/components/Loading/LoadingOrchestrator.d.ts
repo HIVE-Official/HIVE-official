@@ -58,7 +58,7 @@ interface LoadingState {
         preloadingInBackground: string[];
     };
 }
-declare function useLoadingOrchestrator(resources: LoadingResource[], strategy: LoadingStrategy, campusContext?: CampusLoadingContext): LoadingState;
+declare function useLoadingOrchestrator(resources: LoadingResource[], strategy: LoadingStrategy, campusContext?: CampusLoadingContext): void;
 declare function generateLoadingMessage(phase: LoadingPhase, resource?: LoadingResource, campusContext?: CampusLoadingContext, userJourney?: UserJourneyContext): string;
 export declare const LoadingOrchestrator: React.FC<LoadingOrchestratorProps>;
 export { useLoadingOrchestrator, generateLoadingMessage };

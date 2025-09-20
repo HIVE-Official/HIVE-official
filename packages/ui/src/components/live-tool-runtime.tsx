@@ -38,7 +38,7 @@ export interface LiveToolRuntimeProps {
   readOnly?: boolean;
   showDebugInfo?: boolean;
   enableRealtime?: boolean;
-  collectUsageData?: boolean;
+  collectUsageData?: boolean
 }
 
 interface RuntimeState {
@@ -46,7 +46,7 @@ interface RuntimeState {
   elementStates: Map<string, any>;
   isSubmitting: boolean;
   submitResult: 'success' | 'error' | null;
-  errors: string[];
+  errors: string[]
 }
 
 export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
@@ -87,17 +87,17 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
       setRuntimeState(prev => ({
         ...prev,
         formData: { ...prev.formData, ...newState },
-      }));
+      }))
     },
     onUpdate: (update) => {
       if (showDebugInfo) {
-        console.log('Real-time tool update:', update);
+        console.log('Real-time tool update:', update)
       }
     },
     onError: (error) => {
       console.error('Real-time error:', error);
       if (onError) {
-        onError(new Error(error));
+        onError(new Error(error))
       }
     },
   }) : [null, null];
@@ -106,12 +106,12 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
   useEffect(() => {
     if (toolId && !tool && onToolLoad) {
       setLoading(true);
-      onToolLoad(toolId);
+      onToolLoad(toolId)
     }
 
     if (tool) {
       setLoadedTool(tool);
-      setLoading(false);
+      setLoading(false)
     }
   }, [toolId, tool, onToolLoad]);
 
@@ -134,8 +134,8 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
       };
 
       apiClient.collectCommunityData(trackingData).catch(error => {
-        console.warn('Failed to track session start:', error);
-      });
+        console.warn('Failed to track session start:', error)
+      })
     }
   }, [toolId, tool?.id, spaceId, deploymentId, collectUsageData, sessionStartTime]);
 
@@ -176,8 +176,8 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
         { [elementId]: value },
         true // optimistic update
       ).catch(error => {
-        console.warn('Failed to sync real-time state:', error);
-      });
+        console.warn('Failed to sync real-time state:', error)
+      })
     }
 
     // Track user interaction
@@ -198,8 +198,8 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
           interactionCount: interactionCount + 1,
         },
       }).catch(error => {
-        console.warn('Failed to track interaction:', error);
-      });
+        console.warn('Failed to track interaction:', error)
+      })
     }
   }, [enableRealtime, realtimeActions, collectUsageData, toolId, tool?.id, spaceId, deploymentId, interactionCount]);
 
@@ -211,8 +211,8 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
       return {
         ...prev,
         elementStates: newElementStates
-      };
-    });
+      }
+    })
   }, []);
 
   // Process conditional rules
@@ -221,7 +221,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
     
     const config = element.config as any;
     if (!config.conditionalRules || !Array.isArray(config.conditionalRules)) {
-      return {};
+      return {}
     }
 
     const modifications: Record<string, any> = {};
@@ -254,7 +254,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
           break;
         case 'isNotEmpty':
           conditionMet = !!sourceValue && sourceValue !== '';
-          break;
+          break
       }
 
       if (conditionMet) {
@@ -268,18 +268,18 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
               break;
             case 'setValue':
               if (action.targetElementId === element.id) {
-                modifications.value = action.value;
+                modifications.value = action.value
               }
               break;
             case 'setStyle':
               modifications.style = { ...modifications.style, ...action.value };
-              break;
+              break
           }
-        });
+        })
       }
     });
 
-    return modifications;
+    return modifications
   }, [runtimeState.formData]);
 
   // Handle form submission
@@ -298,7 +298,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
       loadedTool.elements.forEach(element => {
         const config = element.config as any;
         if (config?.required && !runtimeState.formData[element.id]) {
-          errors.push(`${config.label || element.id} is required`);
+          errors.push(`${config.label || element.id} is required`)
         }
       });
 
@@ -309,7 +309,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
           errors,
           submitResult: 'error'
         }));
-        return;
+        return
       }
 
       // Create submission data
@@ -330,8 +330,8 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
           interactionCount,
           timestamp: sessionEndTime.toISOString(),
         }).catch(error => {
-          console.warn('Failed to send completion update:', error);
-        });
+          console.warn('Failed to send completion update:', error)
+        })
       }
 
       // Track successful completion
@@ -353,20 +353,20 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
             toolName: loadedTool.name,
           },
         }).catch(error => {
-          console.warn('Failed to track completion:', error);
-        });
+          console.warn('Failed to track completion:', error)
+        })
       }
 
       // Call onDataSubmit callback
       if (onDataSubmit) {
-        await onDataSubmit(runtimeState.formData);
+        await onDataSubmit(runtimeState.formData)
       }
 
       setRuntimeState(prev => ({ 
         ...prev, 
         isSubmitting: false,
         submitResult: 'success'
-      }));
+      }))
 
     } catch (error) {
       console.error('Tool submission error:', error);
@@ -391,8 +391,8 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
             toolName: loadedTool?.name || 'Unknown Tool',
           },
         }).catch(trackError => {
-          console.warn('Failed to track error:', trackError);
-        });
+          console.warn('Failed to track error:', trackError)
+        })
       }
 
       // Send real-time error update
@@ -403,8 +403,8 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
           sessionDuration,
           interactionCount,
         }).catch(rtError => {
-          console.warn('Failed to send error update:', rtError);
-        });
+          console.warn('Failed to send error update:', rtError)
+        })
       }
       
       setRuntimeState(prev => ({ 
@@ -415,7 +415,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
       }));
 
       if (onError) {
-        onError(error instanceof Error ? error : new Error(errorMessage));
+        onError(error instanceof Error ? error : new Error(errorMessage))
       }
     }
   }, [loadedTool, readOnly, runtimeState.formData, onDataSubmit, onError, sessionStartTime, enableRealtime, realtimeActions, collectUsageData, toolId, spaceId, deploymentId, interactionCount]);
@@ -434,9 +434,9 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
               Unsupported element: {elementType}
             </span>
           </div>
-        );
+        )
       }
-      return null;
+      return null
     }
 
     // Apply conditional modifications
@@ -448,7 +448,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
 
     // Don't render if conditionally hidden
     if (modifications.isVisible === false) {
-      return null;
+      return null
     }
 
     return (
@@ -463,9 +463,9 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
         runtimeContext={{
           formData: runtimeState.formData,
           elementStates: runtimeState.elementStates,
-        }}
+          }}
       />
-    );
+    )
   }, [
     elementRenderers,
     processConditionalRules,
@@ -488,7 +488,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
           </p>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   // No tool state
@@ -502,7 +502,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
           </p>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   // Sort elements by order and filter root elements (no parent)
@@ -527,7 +527,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
 
         {/* Error messages */}
         {runtimeState.errors.length > 0 && (
-          <Alert className="mb-4" variant="destructive">
+          <Alert className="mb-4" variant="error">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
               <ul className="list-disc list-inside">
@@ -541,7 +541,7 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
 
         {/* Success message */}
         {runtimeState.submitResult === 'success' && (
-          <Alert className="mb-4" variant="default">
+          <Alert className="mb-4" variant="secondary">
             <CheckCircle className="h-4 w-4" />
             <AlertDescription>
               Tool submitted successfully!
@@ -594,5 +594,5 @@ export const LiveToolRuntime: React.FC<LiveToolRuntimeProps> = ({
         )}
       </div>
     </HiveCard>
-  );
+  )
 };

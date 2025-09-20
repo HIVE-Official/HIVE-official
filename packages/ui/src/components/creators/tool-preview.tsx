@@ -50,7 +50,7 @@ const DEVICE_VIEWPORTS = {
 interface ElementRendererProps {
   instance: ElementInstance;
   element?: Element;
-  isPreview?: boolean;
+  isPreview?: boolean
 }
 
 const ElementRenderer: React.FC<ElementRendererProps> = ({ 
@@ -63,7 +63,7 @@ const ElementRenderer: React.FC<ElementRendererProps> = ({
       <div className="w-full h-12 bg-red-100 border border-red-300 rounded flex items-center justify-center text-red-600 text-sm">
         Element not found: {instance.elementId}
       </div>
-    );
+    )
   }
 
   const IconComponent = element.icon;
@@ -80,7 +80,7 @@ const ElementRenderer: React.FC<ElementRendererProps> = ({
               color: instance.config.color || 'var(--hive-text-primary)',
               fontWeight: instance.config.fontWeight || 'normal',
               textAlign: instance.config.textAlign || 'left'
-            }}
+          }}
           >
             {instance.config.content || 'Sample text'}
           </div>
@@ -124,7 +124,7 @@ const ElementRenderer: React.FC<ElementRendererProps> = ({
               width: instance.config.width || '200px',
               height: instance.config.height || '150px',
               borderRadius: instance.config.borderRadius || '0px'
-            }}
+          }}
           >
             {instance.config.src ? (
               <img
@@ -150,7 +150,7 @@ const ElementRenderer: React.FC<ElementRendererProps> = ({
               borderRadius: instance.config.borderRadius || '0px',
               border: instance.config.border || '1px solid var(--hive-border-default)',
               padding: instance.config.padding || '16px'
-            }}
+          }}
           >
             {instance.config.title && (
               <h3 className="font-medium text-[var(--hive-text-primary)] mb-2">
@@ -234,7 +234,7 @@ const ElementRenderer: React.FC<ElementRendererProps> = ({
               {element.description}
             </div>
           </div>
-        );
+        )
     }
   };
 
@@ -262,11 +262,11 @@ const ElementRenderer: React.FC<ElementRendererProps> = ({
         opacity: instance.style.opacity,
         transform: instance.style.transform,
         boxShadow: instance.style.boxShadow
-      }}
+          })}
     >
       {renderElementContent()}
     </div>
-  );
+  )
 };
 
 // Main Tool Preview component
@@ -286,22 +286,22 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
   // Handle refresh
   const handleRefresh = () => {
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1000);
+    setTimeout(() => setIsLoading(false), 1000)
   };
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onClose()
       } else if (e.key === 'r' && e.metaKey) {
         e.preventDefault();
-        handleRefresh();
+        handleRefresh()
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onClose]);
 
   return (
@@ -341,15 +341,15 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
                         size="sm"
                         onClick={() => {
                           setCurrentMode(key as keyof typeof DEVICE_VIEWPORTS);
-                          setIsRotated(false);
-                        }}
+                          setIsRotated(false)
+          }}
                         className="px-3"
                       >
                         <IconComponent size={16} />
                         <span className="hidden sm:inline ml-1">{device.name}</span>
                       </HiveButton>
-                    );
-                  })}
+                    )
+          })}
                 </div>
 
                 {/* Controls */}
@@ -398,7 +398,7 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
                   height: actualHeight,
                   maxWidth: '100%',
                   maxHeight: '100%'
-                }}
+          }}
               >
                 {/* Mobile notch/status bar */}
                 {currentMode === 'mobile' && !isRotated && (
@@ -412,7 +412,7 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
                   className="relative w-full h-full overflow-auto bg-[var(--hive-background-primary)] rounded-lg"
                   style={{ 
                     height: currentMode === 'mobile' && !isRotated ? 'calc(100% - 24px)' : '100%'
-                  }}
+          }}
                 >
                   {/* Loading overlay */}
                   {isLoading && (
@@ -485,7 +485,7 @@ export const ToolPreview: React.FC<ToolPreviewProps> = ({
         </div>
       </div>
     </HiveMotionWrapper>
-  );
+  )
 };
 
 export default ToolPreview;

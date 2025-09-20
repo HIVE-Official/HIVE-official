@@ -28,7 +28,7 @@ export interface QuickAction {
   action: () => void;
   category: 'create' | 'navigate' | 'social' | 'system';
   shortcut?: string;
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 interface QuickActionsMenuProps {
@@ -36,7 +36,7 @@ interface QuickActionsMenuProps {
   onClose: () => void;
   onAction?: (action: QuickAction) => void;
   position?: { x: number; y: number } | null;
-  className?: string;
+  className?: string
 }
 
 // Default quick actions
@@ -129,7 +129,7 @@ const defaultQuickActions: QuickAction[] = [
         metaKey: true,
         ctrlKey: true
       });
-      document.dispatchEvent(event);
+      document.dispatchEvent(event)
     },
     category: 'system',
     shortcut: '⌘K'
@@ -171,23 +171,23 @@ export function QuickActionsMenu({
     if (!action.disabled) {
       onAction?.(action);
       action.action();
-      onClose();
+      onClose()
     }
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      onClose();
+      onClose()
     }
   };
 
   // Group actions by category
   const groupedActions = defaultQuickActions.reduce((groups, action) => {
     if (!groups[action.category]) {
-      groups[action.category] = [];
+      groups[action.category] = []
     }
     groups[action.category].push(action);
-    return groups;
+    return groups
   }, {} as Record<string, QuickAction[]>);
 
   const menuVariants = {
@@ -337,7 +337,7 @@ export function QuickActionsMenu({
         </>
       )}
     </AnimatePresence>
-  );
+  )
 }
 
 // Hook for managing quick actions menu
@@ -347,23 +347,23 @@ export function useQuickActionsMenu() {
 
   const open = (pos?: { x: number; y: number }) => {
     if (pos) {
-      setPosition(pos);
+      setPosition(pos)
     } else {
-      setPosition(null);
+      setPosition(null)
     }
-    setIsOpen(true);
+    setIsOpen(true)
   };
 
   const close = () => {
     setIsOpen(false);
-    setPosition(null);
+    setPosition(null)
   };
 
   const toggle = (pos?: { x: number; y: number }) => {
     if (isOpen) {
-      close();
+      close()
     } else {
-      open(pos);
+      open(pos)
     }
   };
 
@@ -373,6 +373,6 @@ export function useQuickActionsMenu() {
     open,
     close,
     toggle
-  };
+  }
 }
 

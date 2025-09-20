@@ -15,13 +15,13 @@ interface User {
   handle: string;
   avatar?: string;
   builderStatus?: 'none' | 'pending' | 'active';
-  role?: 'student' | 'faculty' | 'admin';
+  role?: 'student' | 'faculty' | 'admin'
 }
 
 interface EnhancedAppShellProps {
   children: React.ReactNode;
   user?: User | null;
-  className?: string;
+  className?: string
 }
 
 function AppShellContent({ 
@@ -31,7 +31,7 @@ function AppShellContent({
 }: {
   children: React.ReactNode;
   user?: User | null;
-  className?: string;
+  className?: string
 }) {
   const { notifications, unreadCount } = useNotifications();
   const [commandPaletteOpen, setCommandPaletteOpen] = React.useState(false);
@@ -74,12 +74,12 @@ function AppShellContent({
       if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
         event.preventDefault();
         setCommandPaletteOpen(true);
-        return;
+        return
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, []);
 
   return (
@@ -88,7 +88,7 @@ function AppShellContent({
       style={{
         backgroundColor: 'var(--hive-background-primary)',
         color: 'var(--hive-text-primary)',
-      }}
+          }}
     >
       {/* New Navigation System with Content */}
       <NavigationContainer
@@ -117,8 +117,8 @@ function AppShellContent({
             (item.title.toLowerCase().includes(query.toLowerCase()) ||
              item.description?.toLowerCase().includes(query.toLowerCase()) ||
              item.keywords.some(keyword => keyword.toLowerCase().includes(query.toLowerCase())))
-          );
-        }}
+          )
+          }}
         recentItems={[]}
         maxResults={8}
         enableLiveSearch={true}
@@ -131,7 +131,7 @@ function AppShellContent({
         notifications={notifications}
       />
     </div>
-  );
+  )
 }
 
 export function EnhancedAppShell({
@@ -145,5 +145,5 @@ export function EnhancedAppShell({
         {children}
       </AppShellContent>
     </NotificationProvider>
-  );
+  )
 }

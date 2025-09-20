@@ -28,7 +28,7 @@ interface EventCheckinProps {
   rsvps: (RSVPResponse & { userName: string; userEmail: string })[];
   onCheckin: (userId: string, guestCount?: number) => Promise<void>;
   onGenerateQR?: () => Promise<string>;
-  onExportAttendance?: (format: 'csv' | 'excel') => void;
+  onExportAttendance?: (format: 'csv' | 'excel') => void
 }
 
 interface CheckinStats {
@@ -38,7 +38,7 @@ interface CheckinStats {
   onTime: number;
   late: number;
   noShow: number;
-  walkIns: number;
+  walkIns: number
 }
 
 interface CheckinEntry {
@@ -49,7 +49,7 @@ interface CheckinEntry {
   checkedInAt: Date;
   method: 'qr' | 'manual' | 'walk_in';
   guestCount: number;
-  wasLate: boolean;
+  wasLate: boolean
 }
 
 const CheckinMethodBadge = ({ method }: { method: CheckinEntry['method'] }) => {
@@ -63,7 +63,7 @@ const CheckinMethodBadge = ({ method }: { method: CheckinEntry['method'] }) => {
     <HiveBadge className={config[method].className}>
       {config[method].label}
     </HiveBadge>
-  );
+  )
 };
 
 const QRCodeDisplay = ({ qrCode, onRefresh }: { qrCode: string; onRefresh: () => void }) => (
@@ -102,7 +102,7 @@ const QRScanner = ({
 }: { 
   isActive: boolean; 
   onScan: (code: string) => void; 
-  onClose: () => void;
+  onClose: () => void
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCamera, setHasCamera] = useState(false);
@@ -119,11 +119,11 @@ const QRScanner = ({
         
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          setHasCamera(true);
+          setHasCamera(true)
         }
       } catch (err) {
         setError('Camera access denied or not available');
-        setHasCamera(false);
+        setHasCamera(false)
       }
     };
 
@@ -132,9 +132,9 @@ const QRScanner = ({
     return () => {
       if (videoRef.current?.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach(track => track.stop())
       }
-    };
+    }
   }, [isActive]);
 
   if (!isActive) return null;
@@ -181,8 +181,8 @@ const QRScanner = ({
               className="w-full" 
               onClick={() => {
                 onScan('mock_qr_code_user_123');
-                onClose();
-              }}
+                onClose()
+          }}
             >
               Simulate Successful Scan
             </HiveButton>
@@ -195,7 +195,7 @@ const QRScanner = ({
         )}
       </div>
     </div>
-  );
+  )
 };
 
 const ManualCheckinModal = ({ 
@@ -207,7 +207,7 @@ const ManualCheckinModal = ({
   isOpen: boolean;
   rsvps: (RSVPResponse & { userName: string; userEmail: string })[];
   onCheckin: (userId: string, guestCount?: number) => void;
-  onClose: () => void;
+  onClose: () => void
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
@@ -225,7 +225,7 @@ const ManualCheckinModal = ({
       setSelectedUser(null);
       setGuestCount(0);
       setSearchQuery('');
-      onClose();
+      onClose()
     }
   };
 
@@ -268,8 +268,8 @@ const ManualCheckinModal = ({
                     key={rsvp.id}
                     onClick={() => {
                       setSelectedUser(rsvp.userId);
-                      setGuestCount(rsvp.guestCount);
-                    }}
+                      setGuestCount(rsvp.guestCount)
+          }}
                     className={cn(
                       "w-full p-3 text-left rounded-lg border transition-colors",
                       selectedUser === rsvp.userId
@@ -324,7 +324,7 @@ const ManualCheckinModal = ({
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export function EventCheckinTool({ 
@@ -359,7 +359,7 @@ export function EventCheckinTool({
       late,
       noShow: yesRSVPs.length - checkedInCount,
       walkIns
-    };
+    }
   }, [rsvps, checkinEntries, event.startDate]);
 
   // Mock checkin entries
@@ -377,15 +377,15 @@ export function EventCheckinTool({
         wasLate: rsvp.checkedInAt ? rsvp.checkedInAt > event.startDate : false
       }));
     
-    setCheckinEntries(mockEntries);
+    setCheckinEntries(mockEntries)
   }, [rsvps, event.startDate]);
 
   const handleGenerateQR = useCallback(async () => {
     try {
       const code = onGenerateQR ? await onGenerateQR() : `checkin_qr_${event.id}_${Date.now()}`;
-      setQRCode(code);
+      setQRCode(code)
     } catch (error) {
-      console.error('Failed to generate QR code:', error);
+      console.error('Failed to generate QR code:', error)
     }
   }, [event.id, onGenerateQR]);
 
@@ -407,9 +407,9 @@ export function EventCheckinTool({
         wasLate: new Date() > event.startDate
       };
       
-      setCheckinEntries(prev => [newEntry, ...prev]);
+      setCheckinEntries(prev => [newEntry, ...prev])
     } catch (error) {
-      console.error('Failed to process QR scan:', error);
+      console.error('Failed to process QR scan:', error)
     }
   }, [onCheckin, event.startDate]);
 
@@ -430,10 +430,10 @@ export function EventCheckinTool({
           wasLate: new Date() > event.startDate
         };
         
-        setCheckinEntries(prev => [newEntry, ...prev]);
+        setCheckinEntries(prev => [newEntry, ...prev])
       }
     } catch (error) {
-      console.error('Failed to check in attendee:', error);
+      console.error('Failed to check in attendee:', error)
     }
   }, [onCheckin, rsvps, event.startDate]);
 
@@ -446,7 +446,7 @@ export function EventCheckinTool({
   // Initialize QR code on mount
   useEffect(() => {
     if (viewMode === 'qr' && !qrCode) {
-      handleGenerateQR();
+      handleGenerateQR()
     }
   }, [viewMode, qrCode, handleGenerateQR]);
 
@@ -505,7 +505,7 @@ export function EventCheckinTool({
           </HiveCard>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -659,7 +659,7 @@ export function EventCheckinTool({
                       {entry.checkedInAt.toLocaleTimeString([], { 
                         hour: '2-digit', 
                         minute: '2-digit' 
-                      })}
+          })}
                     </span>
                   </div>
                 </div>
@@ -691,7 +691,7 @@ export function EventCheckinTool({
         onClose={() => setShowManualModal(false)}
       />
     </div>
-  );
+  )
 }
 
 export default EventCheckinTool;

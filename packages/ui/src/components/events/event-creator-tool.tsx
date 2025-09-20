@@ -10,7 +10,7 @@ interface EventCreatorProps {
   spaceId: string;
   onEventCreated?: (event: EventDefinition) => void;
   onCancel?: () => void;
-  initialEvent?: Partial<EventDefinition>;
+  initialEvent?: Partial<EventDefinition>
 }
 
 const EVENT_CATEGORIES: { value: EventCategory; label: string; description: string }[] = [
@@ -70,21 +70,21 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
     setEventData(prev => ({ ...prev, ...updates }));
     // Clear errors when user makes changes
     if (errors.length > 0) {
-      setErrors([]);
+      setErrors([])
     }
   }, [errors.length]);
 
   const validateCurrentStep = (): boolean => {
     const validationErrors = validateEventDefinition(eventData);
     setErrors(validationErrors);
-    return validationErrors.length === 0;
+    return validationErrors.length === 0
   };
 
   const handleStepChange = (step: typeof currentStep) => {
     if (step === 'preview' && !validateCurrentStep()) {
-      return;
+      return
     }
-    setCurrentStep(step);
+    setCurrentStep(step)
   };
 
   const formatDateTime = (date: Date) => {
@@ -95,12 +95,12 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
-    });
+    })
   };
 
   const handleSaveEvent = async (publish: boolean = false) => {
     if (!validateCurrentStep()) {
-      return;
+      return
     }
 
     setIsLoading(true);
@@ -132,12 +132,12 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
       // TODO: API call to save event
       console.log('Saving event:', newEvent);
       
-      onEventCreated?.(newEvent);
+      onEventCreated?.(newEvent)
     } catch (error) {
       console.error('Error saving event:', error);
-      setErrors(['Failed to save event. Please try again.']);
+      setErrors(['Failed to save event. Please try again.'])
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   };
 
@@ -149,7 +149,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
         </label>
         <HiveInput
           value={eventData.title || ''}
-          onChange={(e) => updateEventData({ title: e.target.value })}
+          onChange={(e) => updateEventData({ title: e.target.value }}
           placeholder="Enter event title..."
           className="text-lg font-semibold"
         />
@@ -161,7 +161,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
         </label>
         <HiveTextarea
           value={eventData.description || ''}
-          onChange={(e) => updateEventData({ description: e.target.value })}
+          onChange={(e) => updateEventData({ description: e.target.value }}
           placeholder="Describe your event..."
           rows={4}
         />
@@ -174,7 +174,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
           </label>
           <select
             value={eventData.category}
-            onChange={(e) => updateEventData({ category: e.target.value as EventCategory })}
+            onChange={(e) => updateEventData({ category: e.target.value as EventCategory }}
             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
           >
             {EVENT_CATEGORIES.map(cat => (
@@ -194,7 +194,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
           </label>
           <select
             value={eventData.type}
-            onChange={(e) => updateEventData({ type: e.target.value as EventType })}
+            onChange={(e) => updateEventData({ type: e.target.value as EventType }}
             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
           >
             {EVENT_TYPES.map(type => (
@@ -218,7 +218,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
           <input
             type="datetime-local"
             value={eventData.startDate?.toISOString().slice(0, 16) || ''}
-            onChange={(e) => updateEventData({ startDate: new Date(e.target.value) })}
+            onChange={(e) => updateEventData({ startDate: new Date(e.target.value) }}
             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
           />
         </div>
@@ -230,7 +230,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
           <input
             type="datetime-local"
             value={eventData.endDate?.toISOString().slice(0, 16) || ''}
-            onChange={(e) => updateEventData({ endDate: new Date(e.target.value) })}
+            onChange={(e) => updateEventData({ endDate: new Date(e.target.value) }}
             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
           />
         </div>
@@ -241,7 +241,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
           <input
             type="checkbox"
             checked={eventData.isAllDay}
-            onChange={(e) => updateEventData({ isAllDay: e.target.checked })}
+            onChange={(e) => updateEventData({ isAllDay: e.target.checked }}
             className="rounded border-gray-300 focus:ring-amber-500"
           />
           <span className="text-sm font-medium text-gray-900">All-day event</span>
@@ -257,7 +257,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
             value={eventData.location?.type || 'on_campus'}
             onChange={(e) => updateEventData({
               location: { ...eventData.location, type: e.target.value as EventLocation['type'] }
-            })}
+          })}
             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
           >
             <option value="on_campus">On Campus</option>
@@ -271,14 +271,14 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
               value={eventData.location?.venue || ''}
               onChange={(e) => updateEventData({
                 location: { ...eventData.location, venue: e.target.value }
-              })}
+          })}
               placeholder="Venue name..."
             />
             <HiveInput
               value={eventData.location?.room || ''}
               onChange={(e) => updateEventData({
                 location: { ...eventData.location, room: e.target.value }
-              })}
+          })}
               placeholder="Room/Address..."
             />
           </div>
@@ -297,7 +297,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
             <input
               type="checkbox"
               checked={eventData.requiresRSVP}
-              onChange={(e) => updateEventData({ requiresRSVP: e.target.checked })}
+              onChange={(e) => updateEventData({ requiresRSVP: e.target.checked }}
               className="rounded border-gray-300 focus:ring-amber-500"
             />
             <span className="text-sm font-medium text-gray-900">Require RSVP</span>
@@ -312,7 +312,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
                 <HiveInput
                   type="number"
                   value={eventData.capacity || ''}
-                  onChange={(e) => updateEventData({ capacity: parseInt(e.target.value) || undefined })}
+                  onChange={(e) => updateEventData({ capacity: parseInt(e.target.value) || undefined }}
                   placeholder="Maximum attendees..."
                   min="1"
                 />
@@ -322,7 +322,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
                 <input
                   type="checkbox"
                   checked={eventData.allowGuests}
-                  onChange={(e) => updateEventData({ allowGuests: e.target.checked })}
+                  onChange={(e) => updateEventData({ allowGuests: e.target.checked }}
                   className="rounded border-gray-300 focus:ring-amber-500"
                 />
                 <span className="text-sm font-medium text-gray-900">Allow guests</span>
@@ -336,7 +336,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
                   <HiveInput
                     type="number"
                     value={eventData.guestLimit || 1}
-                    onChange={(e) => updateEventData({ guestLimit: parseInt(e.target.value) || 1 })}
+                    onChange={(e) => updateEventData({ guestLimit: parseInt(e.target.value) || 1 }}
                     min="1"
                     max="10"
                   />
@@ -352,7 +352,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
         
         <select
           value={eventData.visibility}
-          onChange={(e) => updateEventData({ visibility: e.target.value as EventDefinition['visibility'] })}
+          onChange={(e) => updateEventData({ visibility: e.target.value as EventDefinition['visibility'] }}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
         >
           <option value="space_only">Space Members Only</option>
@@ -480,8 +480,8 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
                   )} />
                 )}
               </React.Fragment>
-            );
-          })}
+            )
+          })
         </div>
       </div>
 
@@ -527,9 +527,9 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
               onClick={() => {
                 const currentIndex = steps.findIndex(s => s.id === currentStep);
                 if (currentIndex > 0) {
-                  setCurrentStep(steps[currentIndex - 1].id);
+                  setCurrentStep(steps[currentIndex - 1].id)
                 }
-              }}
+          })}
             >
               Back
             </HiveButton>
@@ -558,9 +558,9 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
               onClick={() => {
                 const currentIndex = steps.findIndex(s => s.id === currentStep);
                 if (currentIndex < steps.length - 1) {
-                  handleStepChange(steps[currentIndex + 1].id);
+                  handleStepChange(steps[currentIndex + 1].id)
                 }
-              }}
+          })}
             >
               Next
             </HiveButton>
@@ -568,7 +568,7 @@ export function EventCreatorTool({ spaceId, onEventCreated, onCancel, initialEve
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default EventCreatorTool;

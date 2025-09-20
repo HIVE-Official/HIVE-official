@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { ElementInstance } from '@hive/core';
-import { Label } from '../../components/ui/label';
+import { Label } from '../../atomic/atoms/label';
 import { Star } from 'lucide-react';
 import { useStandardElementStyles, useStandardElementBehavior } from '../../hooks/use-standard-element-styles';
 
@@ -35,8 +35,8 @@ interface RatingStarsRendererProps {
   readOnly?: boolean;
   runtimeContext?: {
     formData: Record<string, any>;
-    elementStates: Map<string, any>;
-  };
+    elementStates: Map<string, any>
+  }
 }
 
 export const RatingStarsRenderer: React.FC<RatingStarsRendererProps> = ({
@@ -67,7 +67,7 @@ export const RatingStarsRenderer: React.FC<RatingStarsRendererProps> = ({
       case 'sm': return 'w-4 h-4';
       case 'md': return 'w-5 h-5';
       case 'lg': return 'w-6 h-6';
-      default: return 'w-5 h-5';
+      default: return 'w-5 h-5'
     }
   };
 
@@ -82,18 +82,18 @@ export const RatingStarsRenderer: React.FC<RatingStarsRendererProps> = ({
       onStateChange({
         rating: newRating,
         lastUpdated: Date.now(),
-      });
+      })
     }
   };
 
   const handleStarHover = (rating: number) => {
     if (behavior.isReadOnly || behavior.isDisabled) return;
-    setHoverRating(rating);
+    setHoverRating(rating)
   };
 
   const handleMouseLeave = () => {
     if (behavior.isReadOnly || behavior.isDisabled) return;
-    setHoverRating(0);
+    setHoverRating(0)
   };
 
   // Determine which rating to show (hover takes precedence)
@@ -140,8 +140,8 @@ export const RatingStarsRenderer: React.FC<RatingStarsRendererProps> = ({
                 strokeWidth={1.5}
               />
             </button>
-          );
-        })}
+          )
+          })
         
         {/* Rating display */}
         <span className="ml-2 text-sm text-[var(--hive-text-secondary)]">
@@ -156,5 +156,5 @@ export const RatingStarsRenderer: React.FC<RatingStarsRendererProps> = ({
         </p>
       )}
     </div>
-  );
+  )
 };

@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, createContext, useContext } from 'react';
 import { cn } from '../../lib/utils';
-import { ButtonEnhanced as Button } from '../../atomic/atoms/button-enhanced';
+import { Button } from '../../atomic/atoms/button';
 import { Check, Mail, ArrowLeft, ArrowRight, Loader2, AlertCircle, Sparkles, Zap, Users, Shield } from 'lucide-react';
 const AuthContext = createContext(null);
 export function useAuth() {
@@ -138,13 +138,13 @@ export function HiveAuthFlowEnhanced({ className, onAuthSuccess, initialStep = '
                                     animationDelay: `${Math.random() * 2}s`
                                 } }, i))) })] }), _jsx("div", { className: "w-full max-w-md relative z-10", children: _jsx(AuthStepRenderer, {}) }), _jsx("style", { children: `
           @keyframes grid-flow {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
+            0% { transform: translate(0, 0) }
+            100% { transform: translate(50px, 50px) }
           }
           
           @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            0%, 100% { transform: translateY(0px) rotate(0deg) }
+            50% { transform: translateY(-20px) rotate(180deg) }
           }
         ` })] }) }));
 }

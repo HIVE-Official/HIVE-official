@@ -46,6 +46,6 @@ interface CommunityToolBrowserProps {
     currentSpaceId?: string;
     isLoading?: boolean;
 }
-export declare const CommunityToolBrowser: React.FC<CommunityToolBrowserProps>;
+export declare const CommunityToolBrowser: React.FC<CommunityToolBrowserProps>, communityTools: any, searchQuery: any, categoryFilter: any, sortBy: any, showFeaturedOnly: any;
 export {};
 //# sourceMappingURL=community-tool-browser.d.ts.map

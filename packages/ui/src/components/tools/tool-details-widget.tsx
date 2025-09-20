@@ -39,13 +39,13 @@ interface Tool {
   author?: {
     name: string;
     handle: string;
-    avatar?: string;
+    avatar?: string
   };
   tags?: string[];
   isPublic?: boolean;
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
   timeToComplete?: string;
-  version?: string;
+  version?: string
 }
 
 interface ToolDetailsWidgetProps {
@@ -56,7 +56,7 @@ interface ToolDetailsWidgetProps {
   onShare?: (toolId: string) => void;
   onFavorite?: (toolId: string) => void;
   onViewAnalytics?: (toolId: string) => void;
-  onDownload?: (toolId: string) => void;
+  onDownload?: (toolId: string) => void
 }
 
 export const ToolDetailsWidget: React.FC<ToolDetailsWidgetProps> = ({
@@ -82,7 +82,7 @@ export const ToolDetailsWidget: React.FC<ToolDetailsWidgetProps> = ({
       case 'deprecated':
         return 'bg-red-500/10 text-red-400 border-red-500/20';
       default:
-        return 'bg-hive-text-tertiary/10 text-hive-text-tertiary border-hive-border-default';
+        return 'bg-hive-text-tertiary/10 text-hive-text-tertiary border-hive-border-default'
     }
   };
 
@@ -103,7 +103,7 @@ export const ToolDetailsWidget: React.FC<ToolDetailsWidgetProps> = ({
         <IconComponent size={14} />
         <span>{config.label}</span>
       </div>
-    );
+    )
   };
 
   const formatDate = (dateString: string) => {
@@ -112,7 +112,7 @@ export const ToolDetailsWidget: React.FC<ToolDetailsWidgetProps> = ({
       month: 'short', 
       day: 'numeric',
       year: 'numeric'
-    });
+    })
   };
 
   return (
@@ -166,7 +166,7 @@ export const ToolDetailsWidget: React.FC<ToolDetailsWidgetProps> = ({
         <button
           onClick={() => {
             setIsFavorited(!isFavorited);
-            onFavorite?.(tool.id);
+            onFavorite?.(tool.id)
           }}
           className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
             isFavorited 
@@ -302,7 +302,7 @@ export const ToolDetailsWidget: React.FC<ToolDetailsWidgetProps> = ({
         </div>
       )}
     </div>
-  );
+  )
 };
 
 export default ToolDetailsWidget;

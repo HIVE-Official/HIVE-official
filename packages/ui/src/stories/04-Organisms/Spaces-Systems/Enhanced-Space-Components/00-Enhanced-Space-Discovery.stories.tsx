@@ -387,8 +387,8 @@ function EnhancedSpaceDiscovery() {
     // Filter by view type
     if (activeView === 'trending' && !space.isTrending) return false;
     
-    return true;
-  }).sort((a, b) => {
+    return true
+  })}.sort((a, b) => {
     switch (sortBy) {
       case 'popular':
         return b.memberCount - a.memberCount;
@@ -399,7 +399,7 @@ function EnhancedSpaceDiscovery() {
       case 'alphabetical':
         return a.name.localeCompare(b.name);
       default:
-        return 0;
+        return 0
     }
   });
 
@@ -436,7 +436,7 @@ function EnhancedSpaceDiscovery() {
               { id: 'discover', label: 'Discover', icon: Search, count: filteredSpaces.length },
               { id: 'trending', label: 'Trending', icon: TrendingUp, count: mockSpaces.filter(s => s.isTrending).length },
               { id: 'smart', label: 'Smart Discovery', icon: Sparkles, count: null },
-            ].map(({ id, label, icon: Icon, count }) => (
+            ].map(({ id, label, icon: Icon, count })} => (
               <button
                 key={id}
                 onClick={() => setActiveView(id as any)}
@@ -734,7 +734,7 @@ function EnhancedSpaceDiscovery() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
 // Enhanced Space Preview Card Component
@@ -745,10 +745,10 @@ function SpacePreviewCard({ space }: { space: any }) {
     <Card 
       className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer transition-all duration-200 group"
       onMouseEnter={() => {
-        setIsHovered(true);
+        setIsHovered(true)
       }}
       onMouseLeave={() => {
-        setIsHovered(false);
+        setIsHovered(false)
       }}
       style={isHovered ? {
         borderColor: 'var(--hive-border-gold)',
@@ -942,7 +942,7 @@ function SpacePreviewCard({ space }: { space: any }) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Enhanced Space List Card Component
@@ -951,11 +951,11 @@ function SpaceListCard({ space }: { space: any }) {
     <Card className="bg-gray-800/50 border-gray-700 hive-interactive cursor-pointer transition-all duration-200"
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-gold)';
-            e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)';
+            e.currentTarget.style.boxShadow = 'var(--hive-shadow-gold-glow)'
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'var(--hive-border-primary)';
-            e.currentTarget.style.boxShadow = 'none';
+            e.currentTarget.style.boxShadow = 'none'
           }}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
@@ -1040,7 +1040,7 @@ function SpaceListCard({ space }: { space: any }) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 export const EnhancedDiscoverySystem: Story = {
@@ -1057,9 +1057,9 @@ export const SmartDiscoveryMode: Story = {
   render: () => {
     const Component = () => {
       const [activeView] = useState('smart');
-      return <EnhancedSpaceDiscovery />;
+      return <EnhancedSpaceDiscovery />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',
@@ -1073,9 +1073,9 @@ export const TrendingSpacesView: Story = {
   render: () => {
     const Component = () => {
       const [activeView] = useState('trending');
-      return <EnhancedSpaceDiscovery />;
+      return <EnhancedSpaceDiscovery />
     };
-    return <Component />;
+    return <Component />
   },
   parameters: {
     layout: 'fullscreen',

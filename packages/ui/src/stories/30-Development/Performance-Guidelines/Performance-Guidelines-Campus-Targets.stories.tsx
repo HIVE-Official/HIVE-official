@@ -274,8 +274,8 @@ const PerformanceShowcase = () => {
         loadTime: loadTimes[condition],
         condition: condition,
         timestamp: Date.now()
-      });
-    }, loadTimes[condition]);
+      })
+    }, loadTimes[condition])
   };
 
   // Performance Metrics Visualization
@@ -289,14 +289,14 @@ const PerformanceShowcase = () => {
     const getStatus = (current: any, target: string) => {
       if (typeof current === 'string') {
         return current === 'Excellent' ? 'excellent' : 
-               current === 'Good' ? 'good' : 'needs-work';
+               current === 'Good' ? 'good' : 'needs-work'
       }
       
       const targetValue = parseFloat(target.replace(/[<>\s]/g, ''));
       const isTime = target.includes('s') || target.includes('ms');
       const comparison = isTime ? current <= targetValue : current >= targetValue;
       
-      return comparison ? 'excellent' : current <= targetValue * 1.2 ? 'good' : 'needs-work';
+      return comparison ? 'excellent' : current <= targetValue * 1.2 ? 'good' : 'needs-work'
     };
 
     const status = getStatus(current, target);
@@ -356,7 +356,7 @@ const PerformanceShowcase = () => {
           )}
         </div>
       </motion.div>
-    );
+    )
   };
 
   // Campus Scenario Simulator
@@ -452,7 +452,7 @@ const PerformanceShowcase = () => {
           ))}
         </div>
       </div>
-    );
+    )
   };
 
   // Optimization Strategies
@@ -553,8 +553,8 @@ const PerformanceShowcase = () => {
                   <IconComponent className="w-5 h-5 mr-2" />
                   {target.title}
                 </Button>
-              );
-            })}
+              )
+            })
           </div>
           
           <p className="text-lg mt-4" style={{ color: 'var(--hive-text-muted)' }}>
@@ -830,7 +830,7 @@ const PerformanceShowcase = () => {
         </motion.div>
       </div>
     </div>
-  );
+  )
 };
 
 export const PerformanceCampusGuidelines: Story = {

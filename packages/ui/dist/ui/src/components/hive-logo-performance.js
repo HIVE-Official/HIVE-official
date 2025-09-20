@@ -35,80 +35,83 @@ const usePerformanceMonitor = (componentName, config, onMetrics) => {
                 }
             });
         });
-        observer.observe({ entryTypes: ['measure', 'paint'] });
-        return () => observer.disconnect();
-    }, [componentName, config.enableMetrics]);
-    // Memory usage monitoring
-    useEffect(() => {
-        if (!config.enableMetrics || typeof window === 'undefined')
-            return;
-        const measureMemory = () => {
-            if (typeof window !== 'undefined' && 'memory' in performance) {
-                const memory = performance.memory;
-                const memoryUsage = memory.usedJSHeapSize;
-                setMetrics(prev => ({
-                    ...prev,
-                    memoryUsage,
-                }));
-                // Alert if memory usage exceeds threshold
-                if (config.maxMemoryUsage && memoryUsage > config.maxMemoryUsage) {
-                    console.warn(`[${componentName}] Memory usage exceeded threshold: ${memoryUsage}MB`);
-                }
-            }
-        };
-        const interval = setInterval(measureMemory, 1000);
-        return () => clearInterval(interval);
-    }, [componentName, config]);
-    // Frame rate monitoring
-    useEffect(() => {
-        if (!config.enableMetrics)
-            return;
-        const measureFrameRate = () => {
-            const now = performance.now();
-            const delta = now - lastFrameTime.current;
-            lastFrameTime.current = now;
-            frameCount.current++;
-            if (frameCount.current % 60 === 0) {
-                const fps = 1000 / delta;
-                setMetrics(prev => ({
-                    ...prev,
-                    frameRate: fps,
-                }));
-                // Alert if frame rate drops below target
-                if (fps < config.targetFrameRate) {
-                    console.warn(`[${componentName}] Frame rate below target: ${fps}fps`);
-                }
-            }
-            requestAnimationFrame(measureFrameRate);
-        };
-        const rafId = requestAnimationFrame(measureFrameRate);
-        return () => cancelAnimationFrame(rafId);
-    }, [componentName, config]);
-    // Report metrics to callback
-    useEffect(() => {
-        if (onMetrics && config.enableMetrics) {
-            onMetrics(metrics);
-        }
-    }, [metrics, onMetrics, config.enableMetrics]);
-    const startRender = useCallback(() => {
-        if (config.enableProfiling) {
-            renderStartTime.current = performance.now();
-            performance.mark(`${componentName}-render-start`);
-        }
-    }, [componentName, config.enableProfiling]);
-    const endRender = useCallback(() => {
-        if (config.enableProfiling && renderStartTime.current) {
-            const renderTime = performance.now() - renderStartTime.current;
-            performance.mark(`${componentName}-render-end`);
-            performance.measure(`${componentName}-render`, `${componentName}-render-start`, `${componentName}-render-end`);
+    });
+};
+observer.observe({ entryTypes: ['measure', 'paint'] });
+return () => observer.disconnect();
+[componentName, config.enableMetrics];
+;
+// Memory usage monitoring
+useEffect(() => {
+    if (!config.enableMetrics || typeof window === 'undefined')
+        return;
+    const measureMemory = () => {
+        if (typeof window !== 'undefined' && 'memory' in performance) {
+            const memory = performance.memory;
+            const memoryUsage = memory.usedJSHeapSize;
             setMetrics(prev => ({
                 ...prev,
-                renderTime,
+                memoryUsage,
             }));
+            // Alert if memory usage exceeds threshold
+            if (config.maxMemoryUsage && memoryUsage > config.maxMemoryUsage) {
+                console.warn(`[${componentName}] Memory usage exceeded threshold: ${memoryUsage}MB`);
+            }
         }
-    }, [componentName, config.enableProfiling]);
-    return { metrics, startRender, endRender };
-};
+    };
+    const interval = setInterval(measureMemory, 1000);
+    return () => clearInterval(interval);
+}, [componentName, config]);
+// Frame rate monitoring
+useEffect(() => {
+    if (!config.enableMetrics)
+        return;
+    const measureFrameRate = () => {
+        const now = performance.now();
+        const delta = now - lastFrameTime.current;
+        lastFrameTime.current = now;
+        frameCount.current++;
+        if (frameCount.current % 60 === 0) {
+            const fps = 1000 / delta;
+            setMetrics(prev => ({
+                ...prev,
+                frameRate: fps,
+            }));
+            // Alert if frame rate drops below target
+            if (fps < config.targetFrameRate) {
+                console.warn(`[${componentName}] Frame rate below target: ${fps}fps`);
+            }
+        }
+        requestAnimationFrame(measureFrameRate);
+    };
+    const rafId = requestAnimationFrame(measureFrameRate);
+    return () => cancelAnimationFrame(rafId);
+}, [componentName, config]);
+// Report metrics to callback
+useEffect(() => {
+    if (onMetrics && config.enableMetrics) {
+        onMetrics(metrics);
+    }
+}, [metrics, onMetrics, config.enableMetrics]);
+const startRender = useCallback(() => {
+    if (config.enableProfiling) {
+        renderStartTime.current = performance.now();
+        performance.mark(`${componentName}-render-start`);
+    }
+}, [componentName, config.enableProfiling]);
+const endRender = useCallback(() => {
+    if (config.enableProfiling && renderStartTime.current) {
+        const renderTime = performance.now() - renderStartTime.current;
+        performance.mark(`${componentName}-render-end`);
+        performance.measure(`${componentName}-render`, `${componentName}-render-start`, `${componentName}-render-end`);
+        setMetrics(prev => ({
+            ...prev,
+            renderTime,
+        }));
+    }
+}, [componentName, config.enableProfiling]);
+return { metrics, startRender, endRender };
+;
 // SVG optimization hook
 const useOptimizedSVG = (variant, size, quality, optimization) => {
     return useMemo(() => {
@@ -352,18 +355,18 @@ export const createLogoWorker = () => {
           // Performance metrics calculation
           const metrics = calculateMetrics(data);
           self.postMessage({ type: 'METRICS_CALCULATED', data: metrics });
-          break;
+          break
       }
     };
     
     function optimizeSVG(svgData) {
       // Implement SVG optimization
-      return svgData;
+      return svgData
     }
     
     function calculateMetrics(data) {
       // Implement metrics calculation
-      return {};
+      return {}
     }
   `;
     const blob = new Blob([workerScript], { type: 'application/javascript' });

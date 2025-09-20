@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Button } from "../../ui/button-enhanced";
-import { Textarea } from "../../ui/textarea-enhanced";
+import { Button } from "../../atomic/atoms/button-enhanced";
+import { Textarea } from "../../atomic/atoms/textarea-enhanced";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
@@ -25,36 +25,36 @@ interface FeedComposerProps {
     id: string;
     fullName: string;
     handle: string;
-    photoURL?: string;
+    photoURL?: string
   };
   onPostCreated: (post: CreatePost) => void;
-  className?: string;
+  className?: string
 }
 
 interface MentionSuggestion {
   id: string;
   handle: string;
   fullName: string;
-  photoURL?: string;
+  photoURL?: string
 }
 
 interface DraftData {
   content: string;
   postType: PostType;
-  timestamp: number;
+  timestamp: number
 }
 
 interface ErrorWithMessage {
   error?: string;
-  message?: string;
+  message?: string
 }
 
 interface ApiErrorResponse {
-  error: string;
+  error: string
 }
 
 interface ApiSuccessResponse {
-  post: CreatePost;
+  post: CreatePost
 }
 
 const POST_TYPE_CONFIG = {
@@ -99,9 +99,9 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
           postType,
           timestamp: Date.now(),
         })
-      );
+      )
     } else {
-      localStorage.removeItem(draftKey);
+      localStorage.removeItem(draftKey)
     }
   }, [content, postType, spaceId]);
 
@@ -115,10 +115,10 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
         // Only load if draft is less than 24 hours old
         if (Date.now() - draft.timestamp < 24 * 60 * 60 * 1000) {
           setContent(draft.content || "");
-          setPostType(draft.postType || "text");
+          setPostType(draft.postType || "text")
         }
       } catch (error) {
-        console.error("Error loading draft:", error);
+        console.error("Error loading draft:", error)
       }
     }
   }, [spaceId]);
@@ -149,10 +149,10 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
               user.handle.toLowerCase().includes(mentionQuery.toLowerCase()) ||
               user.fullName.toLowerCase().includes(mentionQuery.toLowerCase())
           )
-        );
+        )
       } else {
         setShowMentions(false);
-        setMentionQuery("");
+        setMentionQuery("")
       }
     };
 
@@ -161,8 +161,8 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
 
     return () => {
       textarea.removeEventListener("input", handleInput);
-      textarea.removeEventListener("selectionchange", handleInput);
-    };
+      textarea.removeEventListener("selectionchange", handleInput)
+    }
   }, [content, mentionQuery]);
 
   const handleMentionSelect = (user: MentionSuggestion) => {
@@ -184,8 +184,8 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
     setTimeout(() => {
       textarea.focus();
       const newCursorPos = beforeMention.length + user.handle.length + 2;
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
-    }, 0);
+      textarea.setSelectionRange(newCursorPos, newCursorPos)
+    }, 0)
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -197,8 +197,8 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
         error instanceof Error
           ? error.message
           : (error as ErrorWithMessage)?.error || "Failed to submit post";
-      setError(errorMessage);
-    });
+      setError(errorMessage)
+    })
   };
 
   const submitPost = async () => {
@@ -223,7 +223,7 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
 
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse;
-        throw new Error(errorData.error || "Failed to create post");
+        throw new Error(errorData.error || "Failed to create post")
       }
 
       const responseData = (await response.json()) as ApiSuccessResponse;
@@ -235,26 +235,26 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
       localStorage.removeItem(`hive-draft-${spaceId}`);
 
       // Notify parent
-      onPostCreated(post);
+      onPostCreated(post)
     } catch (error) {
       console.error("Error creating post:", error);
       setError(
         error instanceof Error ? error.message : "Failed to create post"
-      );
+      )
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
-      handleSubmit(e);
+      handleSubmit(e)
     }
 
     if (showMentions) {
       if (e.key === "Escape") {
-        setShowMentions(false);
+        setShowMentions(false)
       }
       // Handle arrow keys and enter for mention selection
       // Implementation would go here for full keyboard navigation
@@ -297,7 +297,7 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
               <div className="flex gap-2 flex-wrap">
                 {Object.entries(POST_TYPE_CONFIG).map(([type, config]) => {
                   const Icon = config.icon as React.ComponentType<{
-                    className?: string;
+                    className?: string
                   }>;
                   const isSelected = postType === type;
 
@@ -308,15 +308,15 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
                       size="sm"
                       onClick={(e) => {
                         e.preventDefault();
-                        setPostType(type as PostType);
-                      }}
+                        setPostType(type as PostType)
+          }}
                       className="h-7 text-xs"
                     >
                       {Icon && <Icon className="h-3 w-3 mr-1" />}
                       {config.label}
                     </Button>
-                  );
-                })}
+                  )
+          })}
               </div>
 
               {/* Content Input */}
@@ -340,8 +340,8 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
                           key={user.id}
                           onClick={(e) => {
                             e.preventDefault();
-                            handleMentionSelect(user);
-                          }}
+                            handleMentionSelect(user)
+          }}
                           className="w-full flex items-center gap-2 p-2 rounded hover:bg-muted text-left"
                         >
                           <Avatar className="h-6 w-6">
@@ -428,5 +428,5 @@ export const FeedComposer: React.FC<FeedComposerProps> = ({
         </form>
       </CardContent>
     </Card>
-  );
+  )
 };

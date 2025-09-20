@@ -21,7 +21,7 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
           <Loader2 className="h-6 w-6 animate-spin text-[var(--hive-brand-secondary)]" />
         </div>
       </HiveCard>
-    );
+    )
   }
 
   if (error) {
@@ -35,7 +35,7 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
           </div>
         </div>
       </HiveCard>
-    );
+    )
   }
 
   const getEventIcon = (type: string) => {
@@ -49,7 +49,7 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
       case 'milestone':
         return <Award className="h-4 w-4" />;
       default:
-        return <Calendar className="h-4 w-4" />;
+        return <Calendar className="h-4 w-4" />
     }
   };
 
@@ -64,7 +64,7 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
       case 'milestone':
         return 'from-hive-gold/20 to-yellow-400/20 border-hive-gold/30';
       default:
-        return 'from-gray-500/20 to-gray-600/20 border-gray-500/30';
+        return 'from-gray-500/20 to-gray-600/20 border-gray-500/30'
     }
   };
 
@@ -173,7 +173,7 @@ export const SmartCalendar: React.FC<SmartCalendarProps> = ({
         </div>
       </div>
     </HiveCard>
-  );
+  )
 };
 
 export default SmartCalendar;

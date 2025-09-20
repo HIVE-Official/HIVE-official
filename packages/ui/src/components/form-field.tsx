@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { Text } from '../atoms/text';
+import { cn } from '../lib/utils';
+import { InputEnhanced as Input } from '../atomic/atoms/input-enhanced';
+import { Text } from '../atomic/atoms/text';
 
 export interface FormFieldProps {
   label?: string;
@@ -11,7 +11,7 @@ export interface FormFieldProps {
   error?: string;
   required?: boolean;
   children: React.ReactElement;
-  className?: string;
+  className?: string
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -80,7 +80,7 @@ export const FormField: React.FC<FormFieldProps> = ({
         </Text>
       )}
     </div>
-  );
+  )
 };
 
 // Composed form field components for common patterns

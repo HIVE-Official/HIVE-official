@@ -39,7 +39,7 @@ const createMockItems = (activeSection?: string) => {
     isActive: item.id === activeSection,
     badge: item.id === 'spaces' ? { type: 'notification' as const, count: 3 } : 
            item.id === 'feed' ? { type: 'status' as const, count: 12 } : undefined
-  }));
+  }))
 };
 
 // ============================================================================
@@ -270,7 +270,7 @@ export const CleanState: Story = {
     items: createMockItems('profile').map(item => ({
       ...item,
       badge: undefined
-    })),
+    })}),
     user: mockUser,
     onNavigate: action('navigate')
   },

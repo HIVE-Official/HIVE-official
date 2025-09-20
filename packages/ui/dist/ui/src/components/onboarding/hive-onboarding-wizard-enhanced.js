@@ -151,14 +151,14 @@ export function HiveOnboardingWizardEnhanced({ className, onComplete, initialSte
                                     animationDelay: `${Math.random() * 3}s`
                                 } }, i))) }), _jsx("div", { className: "absolute inset-0", children: _jsxs("svg", { className: "w-full h-full opacity-10", viewBox: "0 0 100 100", children: [_jsx("defs", { children: _jsxs("linearGradient", { id: "brandGradient", x1: "0%", y1: "0%", x2: "100%", y2: "100%", children: [_jsx("stop", { offset: "0%", stopColor: "var(--hive-brand-primary)" }), _jsx("stop", { offset: "100%", stopColor: "var(--hive-brand-accent)" })] }) }), _jsx("path", { d: "M20,30 L80,30 L50,70 Z", fill: "none", stroke: "url(#brandGradient)", strokeWidth: "0.5", className: "animate-pulse" })] }) })] }), _jsx("div", { className: "w-full max-w-2xl relative z-10", children: _jsx(OnboardingStepRenderer, {}) }), _jsx("style", { children: `
           @keyframes grid-pulse {
-            0%, 100% { opacity: 0.05; transform: scale(1); }
-            50% { opacity: 0.1; transform: scale(1.05); }
+            0%, 100% { opacity: 0.05; transform: scale(1) }
+            50% { opacity: 0.1; transform: scale(1.05) }
           }
           
           @keyframes float-brand {
-            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-            33% { transform: translateY(-30px) rotate(120deg) scale(1.1); }
-            66% { transform: translateY(-15px) rotate(240deg) scale(0.9); }
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1) }
+            33% { transform: translateY(-30px) rotate(120deg) scale(1.1) }
+            66% { transform: translateY(-15px) rotate(240deg) scale(0.9) }
           }
         ` })] }) }));
 }
@@ -198,11 +198,11 @@ function EnhancedProgressBar() {
                         ? "bg-[var(--hive-brand-primary)] shadow-[var(--hive-shadow-gold-glow)]"
                         : "bg-[var(--hive-background-secondary)] border border-[var(--hive-border-glass)]") }, index))) }), _jsx("style", { children: `
         @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+          0% { transform: translateX(-100%) }
+          100% { transform: translateX(100%) }
         }
         .animate-shimmer {
-          animation: shimmer 2s infinite;
+          animation: shimmer 2s infinite
         }
       ` })] }));
 }

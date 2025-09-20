@@ -8,7 +8,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
   icon: LucideIcon | React.ComponentType<any>;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   color?: 'primary' | 'secondary' | 'muted' | 'gold' | 'ruby' | 'emerald' | 'sapphire';
-  variant?: 'default' | 'outlined' | 'filled';
+  variant?: 'default' | 'outlined' | 'filled'
 }
 
 const iconSizes = {
@@ -56,5 +56,5 @@ export const Icon: React.FC<IconProps> = ({
       className={cn(baseClasses, className)}
       {...props}
     />
-  );
+  )
 };

@@ -49,7 +49,7 @@ export interface PlantedTool {
   // Permissions
   canConfigure?: boolean;
   canRemove?: boolean;
-  canView?: boolean;
+  canView?: boolean
 }
 
 export interface PlantedToolWidgetProps {
@@ -66,7 +66,7 @@ export interface PlantedToolWidgetProps {
   // Display options
   showStats?: boolean;
   showActions?: boolean;
-  className?: string;
+  className?: string
 }
 
 const CATEGORY_CONFIG = {
@@ -162,7 +162,7 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return `${Math.floor(diffInHours / 168)}w ago`;
+    return `${Math.floor(diffInHours / 168)}w ago`
   };
 
   const handleToggleStatus = async () => {
@@ -170,9 +170,9 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
     
     setIsToggling(true);
     try {
-      await onToggleStatus(tool.id, tool.status !== 'active');
+      await onToggleStatus(tool.id, tool.status !== 'active')
     } finally {
-      setIsToggling(false);
+      setIsToggling(false)
     }
   };
 
@@ -207,7 +207,7 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
           icon: <Settings className="w-4 h-4" />,
         };
       default:
-        return null;
+        return null
     }
   };
 
@@ -255,7 +255,7 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
           </div>
         </div>
       </motion.div>
-    );
+    )
   }
 
   return (
@@ -313,8 +313,8 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setShowMenu(!showMenu);
-              }}
+                setShowMenu(!showMenu)
+          }}
               className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--hive-text-muted)] hover:text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200"
             >
               <MoreHorizontal className="w-4 h-4" />
@@ -333,8 +333,8 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
                       onClick={(e) => {
                         e.stopPropagation();
                         onConfigure?.(tool.id);
-                        setShowMenu(false);
-                      }}
+                        setShowMenu(false)
+          }}
                       className="w-full px-4 py-2 text-left text-sm text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200 flex items-center gap-2"
                     >
                       <Settings className="w-4 h-4" />
@@ -347,8 +347,8 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
                       onClick={(e) => {
                         e.stopPropagation();
                         onViewOutputs?.(tool.id);
-                        setShowMenu(false);
-                      }}
+                        setShowMenu(false)
+          }}
                       className="w-full px-4 py-2 text-left text-sm text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200 flex items-center gap-2"
                     >
                       <MessageSquare className="w-4 h-4" />
@@ -360,8 +360,8 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
                     onClick={(e) => {
                       e.stopPropagation();
                       handleToggleStatus();
-                      setShowMenu(false);
-                    }}
+                      setShowMenu(false)
+          }}
                     disabled={isToggling}
                     className="w-full px-4 py-2 text-left text-sm text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50"
                   >
@@ -383,8 +383,8 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
                       onClick={(e) => {
                         e.stopPropagation();
                         onRemove?.(tool.id);
-                        setShowMenu(false);
-                      }}
+                        setShowMenu(false)
+          }}
                       className="w-full px-4 py-2 text-left text-sm text-[var(--hive-status-error)] hover:bg-[var(--hive-background-primary)]/50 transition-colors duration-200 flex items-center gap-2"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -470,7 +470,7 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
           whileTap={{ scale: 0.98 }}
           onClick={(e) => {
             e.stopPropagation();
-            primaryAction.action();
+            primaryAction.action()
           }}
           disabled={isToggling}
           className={cn(
@@ -489,7 +489,7 @@ export const PlantedToolWidget: React.FC<PlantedToolWidgetProps> = ({
       {/* Hover Glow Effect */}
       <div className="absolute inset-0 bg-gradient-radial from-[var(--hive-brand-primary)]/2 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />
     </motion.div>
-  );
+  )
 };
 
 export default PlantedToolWidget;

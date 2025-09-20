@@ -143,7 +143,7 @@ const linkVariants = cva(
 export interface HeadingProps
   extends Omit<React.HTMLAttributes<HTMLHeadingElement>, 'color'>,
     VariantProps<typeof headingVariants> {
-  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
 }
 
 export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
@@ -154,7 +154,7 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       ref,
       className: cn(headingVariants({ level, color, weight }), className),
       ...props,
-    });
+    })
   }
 );
 Heading.displayName = "Heading";
@@ -163,7 +163,7 @@ Heading.displayName = "Heading";
 export interface TextProps
   extends Omit<React.HTMLAttributes<HTMLParagraphElement>, 'color'>,
     VariantProps<typeof textVariants> {
-  as?: "p" | "span" | "div" | "label";
+  as?: "p" | "span" | "div" | "label"
 }
 
 export const Text = React.forwardRef<HTMLElement, TextProps>(
@@ -172,7 +172,7 @@ export const Text = React.forwardRef<HTMLElement, TextProps>(
       ref,
       className: cn(textVariants({ size, color, weight, decoration }), className),
       ...props,
-    });
+    })
   }
 );
 Text.displayName = "Text";
@@ -181,7 +181,7 @@ Text.displayName = "Text";
 export interface CaptionProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'color'>,
     VariantProps<typeof captionVariants> {
-  as?: "p" | "span" | "div" | "figcaption";
+  as?: "p" | "span" | "div" | "figcaption"
 }
 
 export const Caption = React.forwardRef<HTMLElement, CaptionProps>(
@@ -190,7 +190,7 @@ export const Caption = React.forwardRef<HTMLElement, CaptionProps>(
       ref,
       className: cn(captionVariants({ color, weight }), className),
       ...props,
-    });
+    })
   }
 );
 Caption.displayName = "Caption";
@@ -208,14 +208,14 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
         className={cn(linkVariants({ color, decoration }), className)}
         {...props}
       />
-    );
+    )
   }
 );
 Link.displayName = "Link";
 
 // Code Component
 export interface CodeProps extends React.HTMLAttributes<HTMLElement> {
-  variant?: "inline" | "block";
+  variant?: "inline" | "block"
 }
 
 export const Code = React.forwardRef<HTMLElement, CodeProps>(
@@ -233,7 +233,7 @@ export const Code = React.forwardRef<HTMLElement, CodeProps>(
           )}
           {...props}
         />
-      );
+      )
     }
     
     return (
@@ -242,7 +242,7 @@ export const Code = React.forwardRef<HTMLElement, CodeProps>(
         className={cn(baseClasses, "px-1.5 py-0.5", className)}
         {...props}
       />
-    );
+    )
   }
 );
 Code.displayName = "Code";
@@ -261,14 +261,14 @@ export const Blockquote = React.forwardRef<HTMLQuoteElement, BlockquoteProps>(
         )}
         {...props}
       />
-    );
+    )
   }
 );
 Blockquote.displayName = "Blockquote";
 
 // List Components
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement | HTMLOListElement> {
-  variant?: "unordered" | "ordered";
+  variant?: "unordered" | "ordered"
 }
 
 export const List = React.forwardRef<HTMLUListElement | HTMLOListElement, ListProps>(
@@ -284,7 +284,7 @@ export const List = React.forwardRef<HTMLUListElement | HTMLOListElement, ListPr
         className
       ),
       ...props,
-    });
+    })
   }
 );
 List.displayName = "List";
@@ -299,7 +299,7 @@ export const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
         className={cn("text-[var(--hive-text-primary)]", className)}
         {...props}
       />
-    );
+    )
   }
 );
 ListItem.displayName = "ListItem";

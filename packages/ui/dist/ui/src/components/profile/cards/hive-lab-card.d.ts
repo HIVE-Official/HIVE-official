@@ -19,6 +19,7 @@ export interface Tool {
     isShared: boolean;
     spaceId?: string;
     spaceName?: string;
+    Archive: any;
     collaborators?: {
         id: string;
         name: string;

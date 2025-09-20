@@ -104,7 +104,7 @@ export const EnhancedDefault: Story = {
     mockMode: true,
     onComplete: (userData) => {
       console.log('Enhanced onboarding complete:', userData);
-      alert(`🎉 Enhanced Welcome to HIVE, ${userData.name}! Premium builder profile activated.`);
+      alert(`🎉 Enhanced Welcome to HIVE, ${userData.name}! Premium builder profile activated.`)
     }
   },
   parameters: {
@@ -154,7 +154,7 @@ export const EnhancedNameStep: Story = {
     initialStep: 'name',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Enhanced name step:', userData);
+      console.log('Enhanced name step:', userData)
     }
   },
   parameters: {
@@ -204,7 +204,7 @@ export const EnhancedHandleStep: Story = {
     initialStep: 'handle',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Enhanced handle step:', userData);
+      console.log('Enhanced handle step:', userData)
     }
   },
   parameters: {
@@ -254,7 +254,7 @@ export const EnhancedPhotoStep: Story = {
     initialStep: 'photo',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Enhanced photo step:', userData);
+      console.log('Enhanced photo step:', userData)
     }
   },
   parameters: {
@@ -304,7 +304,7 @@ export const EnhancedAcademicsStep: Story = {
     initialStep: 'academics',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Enhanced academics step:', userData);
+      console.log('Enhanced academics step:', userData)
     }
   },
   parameters: {
@@ -354,7 +354,7 @@ export const EnhancedBuilderStep: Story = {
     initialStep: 'builder',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Enhanced builder step:', userData);
+      console.log('Enhanced builder step:', userData)
     }
   },
   parameters: {
@@ -404,7 +404,7 @@ export const EnhancedLegalStep: Story = {
     initialStep: 'legal',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Enhanced legal step:', userData);
+      console.log('Enhanced legal step:', userData)
     }
   },
   parameters: {
@@ -454,7 +454,7 @@ export const EnhancedCompleteStep: Story = {
     initialStep: 'complete',
     mockMode: true,
     onComplete: (userData) => {
-      console.log('Enhanced completion:', userData);
+      console.log('Enhanced completion:', userData)
     }
   },
   parameters: {
@@ -512,7 +512,7 @@ export const EnhancedInteractiveFlowDemo: Story = {
     const handleComplete = (userData: any) => {
       setCompletedData(userData);
       setIsShowcasing(true);
-      console.log('Enhanced interactive demo complete:', userData);
+      console.log('Enhanced interactive demo complete:', userData)
     };
 
     // Enhanced Progress tracker component
@@ -522,7 +522,7 @@ export const EnhancedInteractiveFlowDemo: Story = {
       const currentIndex = steps.indexOf(state.step);
       
       React.useEffect(() => {
-        setCurrentProgress(((currentIndex + 1) / steps.length) * 100);
+        setCurrentProgress(((currentIndex + 1) / steps.length) * 100)
       }, [currentIndex]);
 
       return (
@@ -545,7 +545,7 @@ export const EnhancedInteractiveFlowDemo: Story = {
             </div>
           </div>
         </div>
-      );
+      )
     };
 
     return (
@@ -588,15 +588,15 @@ export const EnhancedInteractiveFlowDemo: Story = {
 
         <style jsx>{`
           @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% { transform: translateX(-100%) }
+            100% { transform: translateX(100%) }
           }
           .animate-shimmer {
-            animation: shimmer 2s infinite;
+            animation: shimmer 2s infinite
           }
         `}</style>
       </div>
-    );
+    )
   },
   parameters: {
     docs: {
@@ -720,11 +720,11 @@ export const EnhancedBrandDesignShowcase: Story = {
           initialStep={brandFeatures[selectedFeature as keyof typeof brandFeatures].step}
           mockMode={true}
           onComplete={(userData) => {
-            alert(`🎉 Enhanced ${brandFeatures[selectedFeature as keyof typeof brandFeatures].title} - Welcome ${userData.name}!`);
-          }}
+            alert(`🎉 Enhanced ${brandFeatures[selectedFeature as keyof typeof brandFeatures].title} - Welcome ${userData.name}!`)
+          })}
         />
       </div>
-    );
+    )
   },
   parameters: {
     layout: 'fullscreen',

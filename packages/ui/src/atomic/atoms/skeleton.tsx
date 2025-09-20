@@ -8,7 +8,7 @@ export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: string | number;
   height?: string | number;
   lines?: number;
-  animate?: boolean;
+  animate?: boolean
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({
@@ -57,7 +57,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
           />
         ))}
       </div>
-    );
+    )
   }
 
   // Single skeleton
@@ -67,7 +67,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
       style={skeletonStyle}
       {...props}
     />
-  );
+  )
 };
 
 // Predefined skeleton compositions
@@ -95,7 +95,7 @@ export const SkeletonAvatar: React.FC<{ size?: 'sm' | 'md' | 'lg'; className?: s
       height={sizeMap[size]} 
       className={className} 
     />
-  );
+  )
 };
 
 export const SkeletonCard: React.FC<{ className?: string }> = ({ className }) => (
