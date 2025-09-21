@@ -283,7 +283,7 @@ export default function ToolEditPage() {
             <div className="flex items-center gap-3">
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 onClick={handleTest}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
@@ -292,7 +292,7 @@ export default function ToolEditPage() {
               </Button>
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 onClick={handlePreview}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
@@ -326,7 +326,7 @@ export default function ToolEditPage() {
                   <input
                     type="text"
                     value={tool.name}
-                    onChange={(e) => {
+                    onChange={(e: React.ChangeEvent) => {
                       setTool({ ...tool, name: e.target.value });
                       setHasChanges(true);
                     }}
@@ -337,7 +337,7 @@ export default function ToolEditPage() {
                   <label className="block text-xs text-[#A1A1AA] mb-1">Privacy</label>
                   <select
                     value={tool.privacy}
-                    onChange={(e) => {
+                    onChange={(e: React.ChangeEvent) => {
                       setTool({ ...tool, privacy: e.target.value as any });
                       setHasChanges(true);
                     }}
@@ -379,7 +379,7 @@ export default function ToolEditPage() {
                       <Button
                         key={elementType.type}
                         size="sm"
-                        variant="outline"
+                        variant="secondary"
                         className="border-[rgba(255,255,255,0.1)] text-[#A1A1AA] hover:text-white hover:border-[#FFD700]/30 p-2 h-auto"
                         onClick={() => {
                           const newElement: ToolElement = {

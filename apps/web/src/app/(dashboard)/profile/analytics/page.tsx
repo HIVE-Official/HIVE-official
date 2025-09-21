@@ -4,7 +4,7 @@
 // Replacing custom analytics preview with sophisticated @hive/ui components
 // Following the successful profile edit, settings, and privacy page patterns
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   PageContainer,
@@ -26,9 +26,7 @@ import {
   Sparkles,
   Star,
   MessageSquare,
-  Calendar,
   Target,
-  Award,
   Clock,
   Zap,
   Brain,
@@ -125,19 +123,6 @@ export default function ProfileAnalyticsStorybook() {
     return colorMap[color] || 'bg-hive-gold/10 text-hive-gold border-hive-gold/20';
   };
 
-  // Current user context for components
-  const currentUser = useMemo(() => {
-    if (!profile) return null;
-    return {
-      id: profile.identity.id,
-      name: profile.identity.fullName || '',
-      handle: profile.identity.handle || '',
-      role: profile.builder?.isBuilder ? 'builder' : 'member',
-      campus: 'ub-buffalo',
-      year: profile.academic.academicYear,
-      major: profile.academic.major
-    };
-  }, [profile]);
 
   if (isLoading || !profile) {
     return (
@@ -169,7 +154,7 @@ export default function ProfileAnalyticsStorybook() {
               v1 Feature
             </Badge>
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => router.push('/profile')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -214,7 +199,7 @@ export default function ProfileAnalyticsStorybook() {
                 )}
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => setShowPreviewModal(true)}
               >
                 <Activity className="h-4 w-4 mr-2" />
@@ -398,7 +383,7 @@ export default function ProfileAnalyticsStorybook() {
                   {selectedFeature.metrics.map((metric, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
                       <span className="text-sm text-gray-300">{metric}</span>
-                      <Badge variant="secondary" className="text-xs">Coming Soon</Badge>
+                      <Badge variant="sophomore" className="text-xs">Coming Soon</Badge>
                     </div>
                   ))}
                 </div>

@@ -23,7 +23,7 @@ import {
 const HiveHeader = () => (
   <header className="hive-header bg-primary-600 text-white">
     <div className="flex items-center gap-3 p-4">
-      <HiveLogo size="medium" variant="white" />
+      <HiveLogo size="md" variant="white" />
       <h1 className="hive-heading--h2 font-brand">HIVE</h1>
     </div>
   </header>
@@ -33,7 +33,7 @@ const HiveNavigation = () => (
   <nav className="hive-navigation bg-white border-b border-neutral-200">
     <div className="flex items-center justify-between p-4">
       <div className="flex items-center gap-6">
-        <HiveBrand variant="horizontal" size="small" />
+        <HiveBrand variant="horizontal" size="sm" />
         <div className="flex gap-4">
           <Button variant="ghost" className="font-medium">Feed</Button>
           <Button variant="ghost" className="font-medium">Spaces</Button>
@@ -52,7 +52,7 @@ const HiveCard = ({ children, branded = false }: { children: React.ReactNode, br
     {branded && (
       <Card.Header className="bg-primary-50 border-b border-primary-100">
         <div className="flex items-center gap-2">
-          <HiveLogo size="small" />
+          <HiveLogo size="sm" />
           <span className="hive-text--small font-medium text-primary-700">HIVE Platform</span>
         </div>
       </Card.Header>
@@ -160,7 +160,7 @@ describe('Brand Consistency Tests', () => {
     it('validates brand color accessibility across all components', () => {
       const brandColorComponents = [
         <Button variant="primary">Primary Button</Button>,
-        <Badge variant="primary">Primary Badge</Badge>,
+        <Badge variant="senior">Primary Badge</Badge>,
         <Card className="bg-primary-600 text-white"><Card.Content>Primary Card</Card.Content></Card>
       ];
       
@@ -178,7 +178,7 @@ describe('Brand Consistency Tests', () => {
     it('ensures secondary brand colors maintain hierarchy', () => {
       const secondaryElements = [
         <Button variant="secondary">Secondary</Button>,
-        <Badge variant="secondary">Secondary</Badge>
+        <Badge variant="sophomore">Secondary</Badge>
       ];
       
       secondaryElements.forEach((element) => {
@@ -326,7 +326,7 @@ describe('Brand Consistency Tests', () => {
     it('validates brand lockup spacing consistency', () => {
       const BrandLockup = () => (
         <div className="hive-brand-lockup flex items-center gap-3">
-          <HiveLogo size="medium" />
+          <HiveLogo size="md" />
           <div className="hive-brand-text">
             <h1 className="hive-heading--h3 font-brand leading-none">HIVE</h1>
             <p className="hive-text--small text-neutral-600 leading-none">Platform</p>
@@ -351,7 +351,7 @@ describe('Brand Consistency Tests', () => {
       const BrandWithClearSpace = () => (
         <div className="hive-brand-container">
           <div className="hive-brand-clear-space p-8">
-            <HiveLogo size="large" />
+            <HiveLogo size="lg" />
           </div>
           <div className="hive-content mt-8">
             <h2 className="hive-heading--h2">Content Section</h2>
@@ -396,7 +396,7 @@ describe('Brand Consistency Tests', () => {
               <p className="hive-text--small text-neutral-600 mb-4">
                 Connect with students, share knowledge, and build the future together.
               </p>
-              <Button variant="primary" size="small">Join HIVE</Button>
+              <Button variant="primary" size="sm">Join HIVE</Button>
             </Card.Content>
           </Card>
         </div>
@@ -451,7 +451,7 @@ describe('Brand Consistency Tests', () => {
         <div className="hive-icon-system">
           <div className="flex gap-4">
             <div className="hive-feature-icon bg-primary-100 p-3 rounded-lg">
-              <HiveLogo size="small" variant="primary" />
+              <HiveLogo size="sm" variant="primary" />
             </div>
             <div className="hive-feature-icon bg-secondary-100 p-3 rounded-lg">
               <svg className="w-6 h-6 text-secondary-600" fill="currentColor" viewBox="0 0 24 24">
@@ -480,7 +480,7 @@ describe('Brand Consistency Tests', () => {
           <div className="hive-illustration-graphic mb-4">
             {variant === 'empty-state' && (
               <div className="w-24 h-24 bg-neutral-100 rounded-full mx-auto flex items-center justify-center">
-                <HiveLogo size="medium" variant="monochrome" />
+                <HiveLogo size="md" variant="monochrome" />
               </div>
             )}
           </div>
@@ -519,7 +519,7 @@ describe('Brand Consistency Tests', () => {
 
   describe('Brand Asset Loading and Performance', () => {
     it('ensures brand assets load with proper optimization', () => {
-      const { container } = render(<HiveLogo size="large" />);
+      const { container } = render(<HiveLogo size="lg" />);
       const logo = container.querySelector('.hive-logo')!;
       
       // Logo should be optimized SVG

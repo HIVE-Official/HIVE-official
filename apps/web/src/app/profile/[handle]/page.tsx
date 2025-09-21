@@ -179,25 +179,25 @@ export default function PublicProfilePage() {
           <div className="flex items-center space-x-3">
             {!profileData.isOwnProfile && (
               <>
-                <Button variant="outline" size="sm">
+                <Button variant="secondary" size="sm">
                   <MessageCircle className="h-4 w-4 mr-2" />
                   Message
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="secondary" size="sm">
                   <UserPlus className="h-4 w-4 mr-2" />
                   Connect
                 </Button>
               </>
             )}
             
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <Share className="h-4 w-4 mr-2" />
               Share
             </Button>
             
             {profileData.isOwnProfile && (
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
                 onClick={() => router.push('/profile/edit')}
               >
@@ -205,7 +205,7 @@ export default function PublicProfilePage() {
               </Button>
             )}
             
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </div>

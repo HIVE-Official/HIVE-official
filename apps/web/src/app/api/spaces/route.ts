@@ -1,10 +1,9 @@
-import * as admin from "firebase-admin/firestore";
+import * as admin from 'firebase-admin';
 import { z } from "zod";
 import type { Space, SpaceType } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
-import * as admin from 'firebase-admin';
 
 const createSpaceSchema = z.object({
   name: z.string().min(1).max(100),

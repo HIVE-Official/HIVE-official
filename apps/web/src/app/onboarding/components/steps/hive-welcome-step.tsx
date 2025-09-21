@@ -27,7 +27,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
         className="mx-auto w-32 h-32 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center relative overflow-hidden"
       >
-        <HiveLogo size="xl" variant="gold" showWordmark={false} />
+        <HiveLogo size="lg" variant="gold" showWordmark={false} />
         
         {/* Pulse animation */}
         <motion.div
@@ -70,8 +70,8 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
           className="flex justify-center"
         >
           <HiveButton
-            variant="premium"
-            size="xl"
+            variant="primary"
+            size="lg"
             onClick={onNext}
             rightIcon={<ArrowRight className="w-4 h-4" />}
             className="px-[var(--hive-spacing-8)]"

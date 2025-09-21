@@ -82,7 +82,7 @@ function ErrorState({ error }: { error: Error }) {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/spaces">
-            <Button variant="outline" className="w-full sm:w-auto">
+            <Button variant="secondary" className="w-full sm:w-auto">
               Browse Spaces
             </Button>
           </Link>
@@ -547,7 +547,7 @@ export default function SpaceDetailPage({
           <div className="flex items-center gap-3 flex-shrink-0">
             {space.status === 'dormant' ? (
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 className="border-blue-500/20 text-blue-400 hover:bg-blue-500/10"
                 disabled
               >
@@ -555,7 +555,7 @@ export default function SpaceDetailPage({
               </Button>
             ) : space.status === 'frozen' ? (
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 className="border-gray-500/20 text-gray-400"
                 disabled
               >
@@ -594,7 +594,7 @@ export default function SpaceDetailPage({
           
           {isAdmin && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               className="border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
             >
@@ -644,7 +644,7 @@ export default function SpaceDetailPage({
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-white">{activeWidget.title}</h3>
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         className="border-white/[0.2] text-white hover:bg-white/[0.1]"
                         onClick={() => openModal(activeWidget.id)}
@@ -1129,7 +1129,7 @@ export default function SpaceDetailPage({
                       placeholder="Describe your space..."
                       rows={4}
                       value={editedDescription}
-                      onChange={(e) => setEditedDescription(e.target.value)}
+                      onChange={(e: React.ChangeEvent) => setEditedDescription(e.target.value)}
                     />
                     <div className="flex justify-end gap-2">
                       <motion.button
@@ -1220,7 +1220,7 @@ export default function SpaceDetailPage({
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
               >
                 {/* Modal Header */}
                 <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
@@ -1273,7 +1273,7 @@ export default function SpaceDetailPage({
                     })()}
                     
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       className="border-white/[0.2] text-white hover:bg-white/[0.1]"
                       onClick={closeModal}

@@ -332,7 +332,7 @@ export default function ProfilePrivacyStorybook() {
               {getPrivacyLevel()}
             </Badge>
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => router.push('/profile')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -518,9 +518,9 @@ export default function ProfilePrivacyStorybook() {
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
             <Moon className="h-5 w-5 text-purple-400" />
             Ghost Mode
-            <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
+            <Badge variant="sophomore" className="text-xs">UB Exclusive</Badge>
             {privacySettings.ghostMode.enabled && (
-              <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">
+              <Badge variant="sophomore" className="text-xs bg-purple-500/20 text-purple-300">
                 Active - {privacySettings.ghostMode.level}
               </Badge>
             )}

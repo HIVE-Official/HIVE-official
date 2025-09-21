@@ -352,7 +352,7 @@ export default function CalendarPage() {
             {/* Conflict Warning */}
             {conflictEvents.length > 0 && (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={() => setShowConflicts(true)}
                 className="border-red-500 text-red-400 hover:bg-red-500/10"
@@ -379,7 +379,7 @@ export default function CalendarPage() {
 
             {/* Settings */}
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => setShowIntegrations(true)}
             >
@@ -404,7 +404,7 @@ export default function CalendarPage() {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={() => navigateDate('prev')}
               >
@@ -418,7 +418,7 @@ export default function CalendarPage() {
               </h2>
               
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={() => navigateDate('next')}
               >
@@ -427,7 +427,7 @@ export default function CalendarPage() {
             </div>
             
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => setCurrentDate(new Date())}
             >
@@ -440,7 +440,7 @@ export default function CalendarPage() {
             <Filter className="h-4 w-4 text-zinc-400" />
             <select
               value={eventTypeFilter}
-              onChange={(e) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Events</option>
@@ -660,14 +660,14 @@ export default function CalendarPage() {
                   {formatDate(event.startTime)} • {formatTime(event.startTime)} - {formatTime(event.endTime)}
                 </p>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <X className="h-3 w-3 mr-1" />
                     Remove
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     Reschedule
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     Keep Both
                   </Button>
                 </div>

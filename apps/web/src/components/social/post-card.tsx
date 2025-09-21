@@ -272,7 +272,7 @@ export function PostCard({
                     </span>
                   )}
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="secondary" size="sm">
                   <Download className="h-4 w-4" />
                 </Button>
               </div>
@@ -381,7 +381,7 @@ export function PostCard({
           >
             {post.event.isAttending ? 'Attending' : 'Attend'}
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="secondary" size="sm">
             <Calendar className="h-4 w-4 mr-2" />
             Add to Calendar
           </Button>
@@ -495,7 +495,7 @@ export function PostCard({
                   <CheckCircle className="h-4 w-4 text-blue-400" />
                 )}
                 {post.author.badges?.map(badge => (
-                  <Badge key={badge} variant="secondary" className="text-xs">
+                  <Badge key={badge} variant="sophomore" className="text-xs">
                     {badge}
                   </Badge>
                 ))}
@@ -525,7 +525,7 @@ export function PostCard({
           
           <div className="flex items-center space-x-2">
             {post.isPinned && <Pin className="h-4 w-4 text-hive-gold" />}
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </div>
@@ -625,7 +625,7 @@ export function PostCard({
               <Textarea
                 ref={commentInputRef}
                 value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setCommentText(e.target.value)}
                 placeholder="Write a comment..."
                 rows={2}
                 className="resize-none"
@@ -638,7 +638,7 @@ export function PostCard({
                 
                 <div className="flex items-center space-x-2">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => {
                       setIsCommenting(false);

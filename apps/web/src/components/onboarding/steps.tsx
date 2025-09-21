@@ -121,7 +121,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
             <Input
               id="fullName"
               value={fullName}
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent) => {
                 setFullName(e.target.value);
                 setHandle(generateHandle(e.target.value));
               }}
@@ -137,7 +137,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
               <Input
                 id="handle"
                 value={handle}
-                onChange={(e) => setHandle(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setHandle(e.target.value)}
                 className="bg-zinc-800 border-zinc-700 pl-8"
                 required
               />
@@ -154,7 +154,7 @@ export const DisplayNameStep: React.FC<StepProps> = ({
           </div>
           <div className="flex gap-2">
             {onPrev && (
-              <Button type="button" variant="outline" onClick={onPrev}>
+              <Button type="button" variant="secondary" onClick={onPrev}>
                 Back
               </Button>
             )}
@@ -231,7 +231,7 @@ export const LeaderQuestionStep: React.FC<StepProps> = ({
         </div>
         <div className="mt-6 flex gap-2">
           {onPrev && (
-            <Button type="button" variant="outline" onClick={onPrev}>
+            <Button type="button" variant="secondary" onClick={onPrev}>
               Back
             </Button>
           )}
@@ -284,7 +284,7 @@ export const ClaimSpaceStep: React.FC<StepProps> = ({
           </div>
           <div className="flex gap-2">
             {onPrev && (
-              <Button type="button" variant="outline" onClick={onPrev}>
+              <Button type="button" variant="secondary" onClick={onPrev}>
                 Back
               </Button>
             )}

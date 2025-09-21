@@ -293,8 +293,8 @@ function LoginPageContent() {
                 <HiveButton
                   type="submit"
                   disabled={isLoading || !formData.email || !!error}
-                  variant="premium"
-                  size="xl"
+                  variant="primary"
+                  size="lg"
                   className="w-full"
                   data-testid="send-magic-link-button"
                   aria-label="Send magic link to email"
@@ -389,8 +389,8 @@ function LoginPageContent() {
           <div className="space-y-4 pt-4">
             {devMagicLink && schoolDomain === 'test.edu' && (
               <HiveButton
-                variant="premium"
-                size="xl"
+                variant="primary"
+                size="lg"
                 className="w-full"
                 onClick={() => window.location.href = devMagicLink}
               >
@@ -399,7 +399,7 @@ function LoginPageContent() {
             )}
             <HiveButton
               variant="secondary"
-              size="xl"
+              size="lg"
               className="w-full"
               onClick={() => {
                 setSuccess(false);

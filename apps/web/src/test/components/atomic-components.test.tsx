@@ -41,7 +41,7 @@ describe('Atomic Components Test Suite', () => {
   describe('Button Component', () => {
     it('renders button with correct text and variant', () => {
       render(
-        <Button variant="primary" size="medium">
+        <Button variant="primary" size="md">
           Click Me
         </Button>
       );
@@ -145,10 +145,10 @@ describe('Atomic Components Test Suite', () => {
     });
 
     it('supports different input sizes', () => {
-      const { rerender } = render(<Input size="small" />);
+      const { rerender } = render(<Input size="sm" />);
       expect(screen.getByRole('textbox')).toHaveClass('hive-input--small');
 
-      rerender(<Input size="large" />);
+      rerender(<Input size="lg" />);
       expect(screen.getByRole('textbox')).toHaveClass('hive-input--large');
     });
 
@@ -167,7 +167,7 @@ describe('Atomic Components Test Suite', () => {
         <Avatar
           src="https://example.com/avatar.jpg"
           alt="User Avatar"
-          size="medium"
+          size="md"
         />
       );
       
@@ -180,7 +180,7 @@ describe('Atomic Components Test Suite', () => {
       render(
         <Avatar
           name="John Doe"
-          size="large"
+          size="lg"
         />
       );
       
@@ -205,7 +205,7 @@ describe('Atomic Components Test Suite', () => {
     });
 
     it('supports different avatar sizes', () => {
-      const { rerender } = render(<Avatar size="small" name="Test" />);
+      const { rerender } = render(<Avatar size="sm" name="Test" />);
       expect(screen.getByTestId('avatar')).toHaveClass('hive-avatar--small');
 
       rerender(<Avatar size="xlarge" name="Test" />);
@@ -216,7 +216,7 @@ describe('Atomic Components Test Suite', () => {
   describe('Badge Component', () => {
     it('renders badge with correct content and variant', () => {
       render(
-        <Badge variant="success" size="medium">
+        <Badge variant="senior" size="md">
           Verified
         </Badge>
       );
@@ -228,7 +228,7 @@ describe('Atomic Components Test Suite', () => {
 
     it('renders numeric badges correctly', () => {
       render(
-        <Badge variant="primary" count={42} />
+        <Badge variant="senior" count={42} />
       );
       
       expect(screen.getByText('42')).toBeInTheDocument();
@@ -249,10 +249,10 @@ describe('Atomic Components Test Suite', () => {
     });
 
     it('supports different badge variants', () => {
-      const { rerender } = render(<Badge variant="warning">Warning</Badge>);
+      const { rerender } = render(<Badge variant="junior">Warning</Badge>);
       expect(screen.getByText('Warning')).toHaveClass('hive-badge--warning');
 
-      rerender(<Badge variant="error">Error</Badge>);
+      rerender(<Badge variant="freshman">Error</Badge>);
       expect(screen.getByText('Error')).toHaveClass('hive-badge--error');
     });
   });
@@ -295,7 +295,7 @@ describe('Atomic Components Test Suite', () => {
 
     it('supports different card variants and elevations', () => {
       const { rerender } = render(
-        <Card variant="outlined" elevation="low">
+        <Card elevation="low">
           Content
         </Card>
       );
@@ -304,7 +304,7 @@ describe('Atomic Components Test Suite', () => {
       expect(card).toHaveClass('hive-card--outlined', 'hive-card--elevation-low');
 
       rerender(
-        <Card variant="filled" elevation="high">
+        <Card elevation="high">
           Content
         </Card>
       );
@@ -601,7 +601,7 @@ describe('Atomic Components Test Suite', () => {
   describe('Spinner Component', () => {
     it('renders spinner with correct size', () => {
       render(
-        <Spinner size="large" />
+        <Spinner size="lg" />
       );
       
       const spinner = screen.getByTestId('spinner');

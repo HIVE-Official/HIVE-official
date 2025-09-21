@@ -258,7 +258,7 @@ export default function ToolDeployPage() {
                   name="surface"
                   value={surface.id}
                   checked={deploymentConfig.surface === surface.id}
-                  onChange={(e) => handleConfigUpdate({ surface: e.target.value })}
+                  onChange={(e: React.ChangeEvent) => handleConfigUpdate({ surface: e.target.value })}
                   className="text-[#FFD700]"
                 />
                 <div>
@@ -286,7 +286,7 @@ export default function ToolDeployPage() {
             <input
               type="checkbox"
               checked={deploymentConfig.permissions.canView}
-              onChange={(e) => handleConfigUpdate({
+              onChange={(e: React.ChangeEvent) => handleConfigUpdate({
                 permissions: { ...deploymentConfig.permissions, canView: e.target.checked }
               })}
               className="text-[#FFD700]"
@@ -303,7 +303,7 @@ export default function ToolDeployPage() {
             <input
               type="checkbox"
               checked={deploymentConfig.permissions.canInteract}
-              onChange={(e) => handleConfigUpdate({
+              onChange={(e: React.ChangeEvent) => handleConfigUpdate({
                 permissions: { ...deploymentConfig.permissions, canInteract: e.target.checked }
               })}
               className="text-[#FFD700]"
@@ -329,7 +329,7 @@ export default function ToolDeployPage() {
             <input
               type="checkbox"
               checked={deploymentConfig.settings.showInDirectory}
-              onChange={(e) => handleConfigUpdate({
+              onChange={(e: React.ChangeEvent) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, showInDirectory: e.target.checked }
               })}
               className="text-[#FFD700]"
@@ -346,7 +346,7 @@ export default function ToolDeployPage() {
             <input
               type="checkbox"
               checked={deploymentConfig.settings.allowSharing}
-              onChange={(e) => handleConfigUpdate({
+              onChange={(e: React.ChangeEvent) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, allowSharing: e.target.checked }
               })}
               className="text-[#FFD700]"
@@ -363,7 +363,7 @@ export default function ToolDeployPage() {
             <input
               type="checkbox"
               checked={deploymentConfig.settings.collectAnalytics}
-              onChange={(e) => handleConfigUpdate({
+              onChange={(e: React.ChangeEvent) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, collectAnalytics: e.target.checked }
               })}
               className="text-[#FFD700]"
@@ -380,7 +380,7 @@ export default function ToolDeployPage() {
 
       <div className="flex gap-3">
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={() => setStep('target')}
           className="border-[var(--hive-border-primary)]"
         >
@@ -454,7 +454,7 @@ export default function ToolDeployPage() {
 
         <div className="flex gap-3">
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => setStep('config')}
             className="border-[var(--hive-border-primary)]"
           >
@@ -499,7 +499,7 @@ export default function ToolDeployPage() {
 
       <div className="flex gap-3 justify-center">
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={() => ToolNavigation.toMarketplace()}
           className="border-[var(--hive-border-primary)]"
         >

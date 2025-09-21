@@ -336,7 +336,7 @@ export default function ToolRunPage() {
             <div className="flex items-center gap-3">
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 onClick={() => router.push(`/tools/${tool.id}/settings`)}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
@@ -346,7 +346,7 @@ export default function ToolRunPage() {
               
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
                 <Share className="h-4 w-4 mr-2" />
@@ -516,7 +516,7 @@ export default function ToolRunPage() {
               </div>
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 className="w-full border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
                 onClick={() => router.push(`/tools/${tool.id}/preview`)}
               >

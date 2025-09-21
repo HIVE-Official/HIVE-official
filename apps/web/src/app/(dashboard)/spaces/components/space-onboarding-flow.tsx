@@ -218,7 +218,7 @@ function ExpectationsStep({ space, onNext }: {
 
       <div className="flex gap-3">
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={onNext}
           className="flex-1 border-white/20 text-white"
         >

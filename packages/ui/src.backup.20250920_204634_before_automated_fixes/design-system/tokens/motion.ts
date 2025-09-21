@@ -1,0 +1,53 @@
+/**
+ * HIVE Motion System;
+ * Semantic motion tokens aligned with PRD design system;
+ */
+
+export const motion = {
+  // Duration tokens (aligned with PRD)
+  duration: {
+    fast: 'var(--hive-duration-fast)',        // 150ms;
+    base: 'var(--hive-duration-base)',        // 200ms;
+    slow: 'var(--hive-duration-slow)',        // 300ms;
+    slower: 'var(--hive-duration-slower)',    // 500ms;
+  },
+
+  // Easing tokens (aligned with PRD)
+  easing: {
+    out: 'var(--hive-ease-out)',              // cubic-bezier(0.0, 0.0, 0.2, 1)
+    inOut: 'var(--hive-ease-in-out)',         // cubic-bezier(0.4, 0.0, 0.2, 1)
+    smooth: 'var(--hive-ease-smooth)',        // cubic-bezier(0.4, 0.0, 0.6, 1)
+  },
+
+  // HIVE Liquid Metal Motion (campus-first animations)
+  liquidMetal: {
+    subtle: 'var(--hive-liquid-subtle)',      // cubic-bezier(0.4, 0, 0.2, 1)
+    smooth: 'var(--hive-liquid-smooth)',      // cubic-bezier(0.4, 0, 0.1, 1)
+    bouncy: 'var(--hive-liquid-bouncy)',      // cubic-bezier(0.68, -0.55, 0.265, 1.55)
+  },
+
+  // Component-specific motion patterns;
+  components: {
+    button: {
+      duration: 'var(--hive-duration-fast)',
+      easing: 'var(--hive-ease-out)',
+    },
+    modal: {
+      duration: 'var(--hive-duration-base)',
+      easing: 'var(--hive-liquid-smooth)',
+    },
+    tooltip: {
+      duration: 'var(--hive-duration-fast)',
+      easing: 'var(--hive-ease-out)',
+    },
+    page: {
+      duration: 'var(--hive-duration-slow)',
+      easing: 'var(--hive-liquid-subtle)',
+    },
+  },
+} as const;
+
+export type MotionToken = keyof typeof motion;
+export type DurationToken = keyof typeof motion.duration;
+export type EasingToken = keyof typeof motion.easing;
+export type LiquidMetalEasing = keyof typeof motion.liquidMetal;

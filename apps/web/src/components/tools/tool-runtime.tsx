@@ -336,7 +336,7 @@ export function ToolRuntime({
           {mode === 'preview' && (
             <>
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={resetTool}
                 disabled={isRunning}
@@ -371,7 +371,7 @@ export function ToolRuntime({
                 <div className="w-2 h-2 rounded-full bg-green-500" />
                 <span>Live</span>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 <Settings className="h-4 w-4" />
               </Button>
             </div>

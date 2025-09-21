@@ -315,7 +315,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <label className="block text-sm font-medium text-white mb-2">Space Name *</label>
                 <HiveInput
                   value={spaceData.name}
-                  onChange={(e) => updateSpaceData({ name: e.target.value })}
+                  onChange={(e: React.ChangeEvent) => updateSpaceData({ name: e.target.value })}
                   placeholder="Enter a clear, descriptive name..."
                   maxLength={50}
                   error={errors.name}
@@ -327,7 +327,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <label className="block text-sm font-medium text-white mb-2">Description *</label>
                 <textarea
                   value={spaceData.description}
-                  onChange={(e) => updateSpaceData({ description: e.target.value })}
+                  onChange={(e: React.ChangeEvent) => updateSpaceData({ description: e.target.value })}
                   placeholder="Describe the purpose and goals of your space..."
                   maxLength={200}
                   rows={4}
@@ -507,7 +507,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <input
                   type="text"
                   value={newRule}
-                  onChange={(e) => setNewRule(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setNewRule(e.target.value)}
                   placeholder="Enter a community guideline..."
                   className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
                   onKeyPress={(e) => {
@@ -849,7 +849,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
           )}
           <div className="flex items-center justify-between">
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={currentStepIndex === 0 ? handleClose : prevStep}
               className="flex items-center space-x-2"
               disabled={isLoading}

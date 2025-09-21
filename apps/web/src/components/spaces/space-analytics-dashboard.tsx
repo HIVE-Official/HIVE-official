@@ -259,11 +259,11 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <Button variant="outline" size="sm" onClick={() => setShowExportModal(true)}>
+          <Button variant="secondary" size="sm" onClick={() => setShowExportModal(true)}>
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button variant="outline" size="sm" onClick={fetchAnalytics}>
+          <Button variant="secondary" size="sm" onClick={fetchAnalytics}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
@@ -551,7 +551,7 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
                 <div className="font-medium text-white">CSV Report</div>
                 <div className="text-sm text-zinc-400">Comprehensive data export</div>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 Download
               </Button>
             </div>
@@ -561,14 +561,14 @@ export function SpaceAnalyticsDashboard({ spaceId, spaceName, userRole, timeRang
                 <div className="font-medium text-white">PDF Summary</div>
                 <div className="text-sm text-zinc-400">Executive summary report</div>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 Download
               </Button>
             </div>
           </div>
           
           <div className="flex justify-end space-x-3 pt-4">
-            <Button variant="outline" onClick={() => setShowExportModal(false)}>
+            <Button variant="secondary" onClick={() => setShowExportModal(false)}>
               Cancel
             </Button>
             <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">

@@ -146,7 +146,7 @@ export function ToolConfigModal({
     <HiveModal 
       open={isOpen} 
       onOpenChange={onClose} 
-      size="xl"
+      size="lg"
       title={`Configure ${tool.name}`}
       description={`Version ${tool.version} • ${tool.isCustom ? 'Custom Tool' : 'Marketplace Tool'}`}
     >
@@ -187,7 +187,7 @@ export function ToolConfigModal({
                           <div className="font-medium text-white">{permission.name}</div>
                           <div className="text-sm text-hive-text-mutedLight">{permission.description}</div>
                         </div>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="sophomore" className="text-xs">
                           Required
                         </Badge>
                       </div>
@@ -344,7 +344,7 @@ export function ToolConfigModal({
           <div>
             {onUninstall && !tool.isCustom && (
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={onUninstall}
                 className="border-red-500 text-red-400 hover:bg-red-500/10"
                 disabled={isSaving}
@@ -356,7 +356,7 @@ export function ToolConfigModal({
           </div>
           <div className="flex items-center space-x-3">
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={onClose}
               disabled={isSaving}
             >

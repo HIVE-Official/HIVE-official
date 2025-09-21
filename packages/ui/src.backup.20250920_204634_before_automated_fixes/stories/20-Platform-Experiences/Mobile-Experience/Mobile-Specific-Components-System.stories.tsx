@@ -1,0 +1,1016 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { Badge } from '../../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
+import { Switch } from '../../../components/ui/switch';
+import { Alert, AlertDescription } from '../../../components/ui/alert';
+import { Separator } from '../../../components/ui/separator';
+import { 
+  Smartphone, 
+  Camera,
+  Mic,
+  MapPin,
+  Wifi,
+  WifiOff,
+  Battery,
+  BatteryLow,
+  Volume2,
+  VolumeX,
+  Sun,
+  Moon,
+  RefreshCw,
+  Download,
+  Upload,
+  Bell,
+  BellOff,
+  MessageCircle,
+  Phone,
+  Video,
+  ChevronDown,
+  ChevronUp,
+  Search,
+  Home,
+  User,
+  Hash,
+  Zap,
+  MoreHorizontal,
+  Heart,
+  Share,
+  Bookmark,
+  ArrowUp,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  Plus,
+  X,
+  Check,
+  Navigation,
+  Compass,
+  Clock;
+} from 'lucide-react';
+
+/**
+ * # HIVE Mobile-Specific Components System;
+ * 
+ * Complete mobile-optimized component system for the HIVE platform.
+ * Designed specifically for campus mobile usage with gestures, offline support,
+ * and native mobile patterns that work perfectly for UB students on-the-go.
+ * 
+ * ## Key Features:
+ * - **Touch Gestures**: Swipe, pull-to-refresh, long press interactions;
+ * - **Offline Support**: Cached content, sync indicators, offline posting;
+ * - **Mobile Camera**: Photo capture, QR scanning, campus check-ins;
+ * - **Push Notifications**: Campus-aware notifications with smart grouping;
+ * - **Location Services**: Campus building detection, study room finding;
+ * - **Mobile Performance**: Optimized for campus WiFi and cellular networks;
+ */
+
+const meta: Meta = {
+  title: '15-Live Frontend/Mobile-Specific Components System',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'Complete mobile-optimized component system for campus mobile usage'
+      }
+    }
+  }
+};
+
+export default meta;
+type Story = StoryObj;
+
+// Mobile Gesture Hook;
+const useSwipeGesture = (onSwipeLeft?: () => void, onSwipeRight?: () => void, onSwipeUp?: () => void, onSwipeDown?: () => void) => {
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      endX = e.touches[0].clientX;
+      endY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = () => {
+      const deltaX = endX - startX;
+      const deltaY = endY - startY;
+      const threshold = 50;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe;
+        if (deltaX > threshold) {
+          onSwipeRight?.()
+        } else if (deltaX < -threshold) {
+          onSwipeLeft?.()
+        }
+      } else {
+        // Vertical swipe;
+        if (deltaY > threshold) {
+          onSwipeDown?.()
+        } else if (deltaY < -threshold) {
+          onSwipeUp?.()
+        }
+      }
+    };
+
+    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+    element.addEventListener('touchmove', handleTouchMove, { passive: true });
+    element.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      element.removeEventListener('touchstart', handleTouchStart);
+      element.removeEventListener('touchmove', handleTouchMove);
+      element.removeEventListener('touchend', handleTouchEnd)
+    }}
+  }, [onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown]);
+
+  return elementRef;
+};
+
+// Pull-to-Refresh Component;
+const PullToRefresh = ({ onRefresh, children }: { onRefresh: () => Promise<void>; children: React.ReactNode }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [pullDistance, setPullDistance] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleTouchStart = (e: TouchEvent) => {
+    if (containerRef.current?.scrollTop === 0) {
+      setStartY(e.touches[0].clientY)
+    }}
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (containerRef.current?.scrollTop === 0 && startY > 0) {
+      const currentY = e.touches[0].clientY;
+      const distance = Math.max(0, currentY - startY);
+      setPullDistance(Math.min(distance, 100))
+    }}
+  };
+
+  const handleTouchEnd = async () => {
+    if (pullDistance > 60 && !isRefreshing) {
+      setIsRefreshing(true);
+      try {
+        await onRefresh()
+      } finally {
+        setIsRefreshing(false)
+      }
+    }
+    setPullDistance(0);
+    setStartY(0)
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd)
+    }}
+  }, [pullDistance, startY, isRefreshing]);
+
+  return (
+    <div;
+      ref={containerRef}
+      className="relative overflow-auto h-full"
+      style={{ transform: `translateY(${pullDistance * 0.5}px)` }}
+    >
+      {pullDistance > 0 && (
+        <div;
+          className="absolute top-0 left-0 right-0 flex items-center justify-center text-gray-400 z-10 transition-all"
+          style={{ 
+            height: `${pullDistance}px`,
+            opacity: pullDistance / 100,
+            transform: `translateY(-${pullDistance}px)`
+          }}
+        >
+          {isRefreshing ? (
+            <RefreshCw className="h-6 w-6 animate-spin text-yellow-500" />
+          ) : pullDistance > 60 ? (
+            <ArrowUp className="h-6 w-6 text-yellow-500" />
+          ) : (
+            <ArrowDown className="h-6 w-6" />
+          )}
+        </div>
+      )}
+      {children}
+    </div>
+  )
+};
+
+// Mobile Bottom Sheet Component;
+const MobileBottomSheet = ({ 
+  isOpen, 
+  onClose, 
+  children, 
+  title;
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  children: React.ReactNode;
+  title?: string;
+}) => {
+  const [dragY, setDragY] = useState(0);
+  const startYRef = useRef(0);
+
+  const handleTouchStart = (e: TouchEvent) => {
+    startYRef.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    const currentY = e.touches[0].clientY;
+    const deltaY = Math.max(0, currentY - startYRef.current);
+    setDragY(deltaY)
+  };
+
+  const handleTouchEnd = () => {
+    if (dragY > 100) {
+      onClose()
+    }}
+    setDragY(0)
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const sheet = document.getElementById('bottom-sheet');
+    if (!sheet) return;
+
+    sheet.addEventListener('touchstart', handleTouchStart, { passive: true });
+    sheet.addEventListener('touchmove', handleTouchMove, { passive: true });
+    sheet.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      sheet.removeEventListener('touchstart', handleTouchStart);
+      sheet.removeEventListener('touchmove', handleTouchMove);
+      sheet.removeEventListener('touchend', handleTouchEnd)
+    }}
+  }, [isOpen, dragY]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50">
+      <div;
+        className="absolute inset-0 bg-black/50" 
+        onClick={onClose}
+      />
+      <div;
+        id="bottom-sheet"
+        className="absolute bottom-0 left-0 right-0 bg-gray-900 rounded-t-xl border-t border-gray-800 max-h-[80vh] overflow-hidden"
+        style={{ transform: `translateY(${dragY}px)` }}
+      >
+        {/* Handle */}
+        <div className="flex justify-center py-3">
+          <div className="w-12 h-1 bg-gray-600 rounded-full" />
+        </div>
+        
+        {title && (
+          <div className="px-4 pb-4">
+            <h3 className="text-lg font-semibold text-white">{title}</h3>
+          </div>
+        )}
+        
+        <div className="px-4 pb-8 overflow-auto max-h-[calc(80vh-100px)]">
+          {children}
+        </div>
+      </div>
+    </div>
+  )
+};
+
+// Mobile Camera Component;
+const MobileCameraCapture = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [cameraMode, setCameraMode] = useState<'photo' | 'qr' | 'checkin'>('photo');
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-3">
+        <Button;
+          onClick={() => { setIsOpen(true); setCameraMode('photo') }}
+          className="bg-blue-600 hover:bg-blue-700 text-white p-4 h-auto flex-col"
+        >
+          <Camera className="h-6 w-6 mb-2" />
+          <span className="text-xs">Take Photo</span>
+        </Button>
+        <Button;
+          onClick={() => { setIsOpen(true); setCameraMode('qr') }}
+          className="bg-green-600 hover:bg-green-700 text-white p-4 h-auto flex-col"
+        >
+          <Search className="h-6 w-6 mb-2" />
+          <span className="text-xs">Scan QR</span>
+        </Button>
+        <Button;
+          onClick={() => { setIsOpen(true); setCameraMode('checkin') }}
+          className="bg-yellow-500 hover:bg-yellow-600 text-black p-4 h-auto flex-col"
+        >
+          <MapPin className="h-6 w-6 mb-2" />
+          <span className="text-xs">Check In</span>
+        </Button>
+      </div>
+
+      <MobileBottomSheet;
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title={cameraMode === 'photo' ? 'Take Photo' : cameraMode === 'qr' ? 'Scan QR Code' : 'Campus Check-In'}
+      >
+        <div className="space-y-4">
+          <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center">
+            <div className="text-center text-gray-400">
+              <Camera className="h-12 w-12 mx-auto mb-2" />
+              <p>Camera view would appear here</p>
+              <p className="text-sm">{cameraMode === 'qr' ? 'Point at QR code' : cameraMode === 'checkin' ? 'Scan campus location' : 'Position subject in frame'}</p>
+            </div>
+          </div>
+          
+          <div className="flex justify-center space-x-4">
+            <Button;
+              size="lg"
+              className="bg-white text-black rounded-full w-16 h-16 p-0"
+              onClick={() => {
+                setCapturedImage('/api/placeholder/300/200');
+                setIsOpen(false)
+              }}
+            >
+              <div className="w-12 h-12 rounded-full bg-white border-4 border-gray-300" />
+            </Button>
+          </div>
+
+          {cameraMode === 'checkin' && (
+            <div className="mt-4 space-y-2">
+              <Alert className="border-yellow-800 bg-yellow-900/20">
+                <MapPin className="h-4 w-4 text-yellow-400" />
+                <AlertDescription className="text-yellow-200">
+                  <strong>Location detected:</strong> Lockwood Library - 3rd Floor Study Area;
+                </AlertDescription>
+              </Alert>
+              
+              <div className="space-y-2">
+                <h4 className="text-white font-medium">Quick Actions:</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    Post About It;
+                  </Button>
+                  <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                    <Users className="mr-2 h-4 w-4" />
+                    Find Study Partners;
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </MobileBottomSheet>
+
+      {capturedImage && (
+        <Card className="bg-gray-900 border-gray-800">
+          <CardContent className="p-4">
+            <img src={capturedImage} alt="Captured" className="w-full rounded-lg mb-3" />
+            <div className="flex space-x-2">
+              <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-black flex-1">
+                <Upload className="mr-2 h-4 w-4" />
+                Share to Feed;
+              </Button>
+              <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+};
+
+// Mobile Push Notification Component;
+const MobilePushNotifications = () => {
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      type: 'space',
+      title: 'CS 101 Study Group',
+      message: 'Sarah Chen started a study session in Lockwood Library',
+      time: '2 min ago',
+      avatar: 'SC',
+      unread: true;
+    },
+    {
+      id: 2,
+      type: 'message',
+      title: 'Mike Johnson',
+      message: 'Are you joining the floor pizza night?',
+      time: '5 min ago',
+      avatar: 'MJ',
+      unread: true;
+    },
+    {
+      id: 3,
+      type: 'tool',
+      title: 'Study Room Finder',
+      message: 'Room 302 is now available in Lockwood',
+      time: '1 hour ago',
+      avatar: null,
+      unread: false;
+    }
+  ]);
+
+  const [permission, setPermission] = useState<'granted' | 'denied' | 'default'>('default');
+
+  const requestPermission = async () => {
+    if ('Notification' in window) {
+      const result = await Notification.requestPermission();
+      setPermission(result);
+      if (result === 'granted') {
+        new Notification('HIVE Notifications Enabled!', {
+          body: 'You\'ll now get campus updates and messages',
+          icon: '/favicon.ico'
+        })
+      }
+    }
+  };
+
+  const swipeRef = useSwipeGesture(
+    () => console.log('Swiped left - archive notification'),
+    () => console.log('Swiped right - mark as read')
+  );
+
+  return (
+    <div className="space-y-4">
+      <Card className="bg-gray-900 border-gray-800">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center">
+            <Bell className="mr-2 h-5 w-5" />
+            Push Notifications;
+          </CardTitle>
+          <CardDescription className="text-gray-400">
+            Stay connected to your UB community;
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {permission === 'default' && (
+            <Alert className="border-blue-800 bg-blue-900/20">
+              <Bell className="h-4 w-4 text-blue-400" />
+              <AlertDescription className="text-blue-200">
+                Enable notifications to get real-time updates about spaces, messages, and campus events.
+                <Button;
+                  size="sm" 
+                  onClick={requestPermission}
+                  className="ml-2 bg-yellow-500 hover:bg-yellow-600 text-black"
+                >
+                  Enable;
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {permission === 'granted' && (
+            <Alert className="border-green-800 bg-green-900/20">
+              <Check className="h-4 w-4 text-green-400" />
+              <AlertDescription className="text-green-200">
+                <strong>Notifications enabled!</strong> You'll get campus updates and messages.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <div className="space-y-2">
+            <h4 className="text-white font-medium">Recent Notifications</h4>
+            <div className="space-y-1" ref={swipeRef}>
+              {notifications.map((notification) => (
+                <div;
+                  key={notification.id}
+                  className={`p-3 rounded-lg border transition-all ${
+                    notification.unread;
+                      ? 'bg-blue-900/20 border-blue-800' 
+                      : 'bg-gray-800 border-gray-700'
+                  }`}
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0">
+                      {notification.avatar ? (
+                        <Avatar className="w-8 h-8">
+                          <AvatarFallback className="bg-blue-600 text-white text-xs">
+                            {notification.avatar}
+                          </AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                          <Zap className="h-4 w-4 text-black" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-white truncate">
+                          {notification.title}
+                        </p>
+                        <span className="text-xs text-gray-400">{notification.time}</span>
+                      </div>
+                      <p className="text-sm text-gray-300 truncate">{notification.message}</p>
+                    </div>
+                    {notification.unread && (
+                      <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500 text-center">Swipe left to archive, right to mark as read</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+};
+
+// Mobile Offline Support Component;
+const MobileOfflineSupport = () => {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [offlineQueue, setOfflineQueue] = useState([
+    { id: 1, type: 'post', content: 'Study session at library tonight!', timestamp: new Date() },
+    { id: 2, type: 'comment', content: 'Count me in!', timestamp: new Date() }
+  ]);
+  const [syncProgress, setSyncProgress] = useState(0);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline)
+    }}
+  }, []);
+
+  const simulateSync = async () => {
+    setSyncProgress(0);
+    for (let i = 0; i <= 100; i += 10) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      setSyncProgress(i)
+    }}
+    setOfflineQueue([])
+  };
+
+  return (
+    <div className="space-y-4">
+      <Card className="bg-gray-900 border-gray-800">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center">
+            {isOnline ? (
+              <Wifi className="mr-2 h-5 w-5 text-green-500" />
+            ) : (
+              <WifiOff className="mr-2 h-5 w-5 text-red-500" />
+            )}
+            Connection Status;
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Alert className={isOnline ? "border-green-800 bg-green-900/20" : "border-red-800 bg-red-900/20"}>
+            {isOnline ? (
+              <Wifi className="h-4 w-4 text-green-400" />
+            ) : (
+              <WifiOff className="h-4 w-4 text-red-400" />
+            )}
+            <AlertDescription className={isOnline ? "text-green-200" : "text-red-200"}>
+              {isOnline ? (
+                <strong>Connected to UB WiFi</strong>
+              ) : (
+                <span><strong>Offline Mode</strong>: Your posts and actions are saved and will sync when you reconnect.</span>
+              )}
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex justify-between items-center">
+            <span className="text-white">Offline Mode</span>
+            <Switch;
+              checked={!isOnline} 
+              onChange={(e) => { const checked = e.target.checked; setIsOnline(!checked)}}
+              className="data-[state=checked]:bg-yellow-500"
+            />
+          </div>
+
+          {!isOnline && offlineQueue.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-white font-medium">Pending Sync ({offlineQueue.length})</h4>
+                {isOnline && (
+                  <Button;
+                    size="sm" 
+                    onClick={simulateSync}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black"
+                  >
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                    Sync Now;
+                  </Button>
+                )}
+              </div>
+              
+              {syncProgress > 0 && syncProgress < 100 && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-white">Syncing...</span>
+                    <span className="text-gray-400">{syncProgress}%</span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div;
+                      className="bg-yellow-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${syncProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                {offlineQueue.map((item) => (
+                  <div key={item.id} className="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
+                    <div className="flex-1">
+                      <p className="text-sm text-white">{item.content}</p>
+                      <p className="text-xs text-gray-400">{item.type} • {item.timestamp.toLocaleTimeString()}</p>
+                    </div>
+                    <Upload className="h-4 w-4 text-gray-500" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="p-3 bg-blue-900/20 rounded-lg">
+            <h4 className="text-blue-300 font-medium mb-2">Offline Features:</h4>
+            <ul className="text-sm text-blue-200 space-y-1">
+              <li>• View cached feed posts and spaces</li>
+              <li>• Draft posts and comments</li>
+              <li>• Browse your profile and tools</li>
+              <li>• Access saved campus maps</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+};
+
+// Mobile Location Services Component;
+const MobileLocationServices = () => {
+  const [locationPermission, setLocationPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
+  const [currentLocation, setCurrentLocation] = useState<{ building: string; area: string } | null>(null);
+  const [nearbySpaces, setNearbySpaces] = useState([
+    { name: 'Lockwood Library Study Group', distance: '50m', members: 12 },
+    { name: 'Student Union Lounge', distance: '100m', members: 8 },
+    { name: 'Engineering Building CS Lounge', distance: '200m', members: 15 }
+  ]);
+
+  const requestLocation = async () => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocationPermission('granted');
+          // Simulate campus building detection;
+          setCurrentLocation({building: 'Lockwood Library', area: '3rd Floor Study Area')}
+        },
+        () => {setLocationPermission('denied')
+        }})
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Card className="bg-gray-900 border-gray-800">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center">
+            <MapPin className="mr-2 h-5 w-5" />
+            Campus Location;
+          </CardTitle>
+          <CardDescription className="text-gray-400">
+            Find spaces and students near you on campus;
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {locationPermission === 'prompt' && (
+            <Alert className="border-blue-800 bg-blue-900/20">
+              <MapPin className="h-4 w-4 text-blue-400" />
+              <AlertDescription className="text-blue-200">
+                Enable location to find nearby study spaces and campus communities.
+                <Button;
+                  size="sm" 
+                  onClick={requestLocation}
+                  className="ml-2 bg-yellow-500 hover:bg-yellow-600 text-black"
+                >
+                  Enable Location;
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {locationPermission === 'granted' && currentLocation && (
+            <div className="space-y-3">
+              <Alert className="border-green-800 bg-green-900/20">
+                <Navigation className="h-4 w-4 text-green-400" />
+                <AlertDescription className="text-green-200">
+                  <strong>Current Location:</strong> {currentLocation.building} - {currentLocation.area}
+                </AlertDescription>
+              </Alert>
+
+              <div className="space-y-2">
+                <h4 className="text-white font-medium">Nearby Spaces</h4>
+                {nearbySpaces.map((space, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                    <div>
+                      <p className="text-white font-medium">{space.name}</p>
+                      <p className="text-gray-400 text-sm">{space.members} active members</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-yellow-500 font-medium">{space.distance}</p>
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-xs">
+                        Join;
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                  <Compass className="mr-2 h-4 w-4" />
+                  Campus Map;
+                </Button>
+                <Button size="sm" variant="outline" className="border-gray-700 text-gray-300">
+                  <Search className="mr-2 h-4 w-4" />
+                  Find Study Room;
+                </Button>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  )
+};
+
+// Main Mobile System Demo;
+const MobileSystemDemo = () => {
+  const [activeDemo, setActiveDemo] = useState<'gestures' | 'camera' | 'notifications' | 'offline' | 'location'>('gestures');
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setRefreshing(false)
+  };
+
+  const swipeRef = useSwipeGesture(
+    () => console.log('Swiped left'),
+    () => console.log('Swiped right'),
+    () => console.log('Swiped up'),
+    () => console.log('Swiped down')
+  );
+
+  return (
+    <div className="min-h-screen bg-black text-white max-w-sm mx-auto">
+      {/* Mobile Header */}
+      <div className="sticky top-0 bg-gray-900 border-b border-gray-800 p-4 z-10">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold text-white">Mobile System</h1>
+          <div className="flex items-center space-x-2 text-gray-400">
+            <Wifi className="h-4 w-4" />
+            <Battery className="h-4 w-4" />
+            <Clock className="h-4 w-4" />
+            <span className="text-sm">12:34</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="bg-gray-800 p-2">
+        <div className="flex space-x-1">
+          {[
+            { id: 'gestures', label: 'Gestures', icon: ArrowUp },
+            { id: 'camera', label: 'Camera', icon: Camera },
+            { id: 'notifications', label: 'Notifications', icon: Bell },
+            { id: 'offline', label: 'Offline', icon: WifiOff },
+            { id: 'location', label: 'Location', icon: MapPin }
+          ].map(map}) => (
+            <Button;
+              key={id}
+              size="sm"
+              variant={activeDemo === id ? 'default' : 'ghost'}
+              onClick={() => setActiveDemo(id as any)}
+              className={`flex-1 text-xs ${
+                activeDemo === id;
+                  ? 'bg-yellow-500 text-black' 
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <Icon className="h-3 w-3 mr-1" />
+              {label}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* Content Area */}
+      <PullToRefresh onRefresh={handleRefresh}>
+        <div className="p-4 pb-20">
+          {activeDemo === 'gestures' && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-white">Touch Gestures</h2>
+              <div;
+                ref={swipeRef}
+                className="h-64 bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600"
+              >
+                <div className="text-center text-gray-400">
+                  <ArrowUp className="h-8 w-8 mx-auto mb-2" />
+                  <p>Swipe in any direction</p>
+                  <p className="text-sm mt-2">Or pull down to refresh</p>
+                </div>
+              </div>
+              
+              {refreshing && (
+                <Alert className="border-yellow-800 bg-yellow-900/20">
+                  <RefreshCw className="h-4 w-4 text-yellow-400 animate-spin" />
+                  <AlertDescription className="text-yellow-200">
+                    Refreshing campus feed...
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="p-3 bg-gray-800 rounded-lg">
+                  <ArrowLeft className="h-4 w-4 text-blue-400 mb-1" />
+                  <p className="text-white font-medium">Swipe Left</p>
+                  <p className="text-gray-400">Archive/Delete</p>
+                </div>
+                <div className="p-3 bg-gray-800 rounded-lg">
+                  <ArrowRight className="h-4 w-4 text-green-400 mb-1" />
+                  <p className="text-white font-medium">Swipe Right</p>
+                  <p className="text-gray-400">Mark as Read</p>
+                </div>
+                <div className="p-3 bg-gray-800 rounded-lg">
+                  <ArrowUp className="h-4 w-4 text-purple-400 mb-1" />
+                  <p className="text-white font-medium">Swipe Up</p>
+                  <p className="text-gray-400">Quick Actions</p>
+                </div>
+                <div className="p-3 bg-gray-800 rounded-lg">
+                  <ArrowDown className="h-4 w-4 text-yellow-400 mb-1" />
+                  <p className="text-white font-medium">Pull Down</p>
+                  <p className="text-gray-400">Refresh Content</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {activeDemo === 'camera' && <MobileCameraCapture />}
+          {activeDemo === 'notifications' && <MobilePushNotifications />}
+          {activeDemo === 'offline' && <MobileOfflineSupport />}
+          {activeDemo === 'location' && <MobileLocationServices />}
+        </div>
+      </PullToRefresh>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm bg-gray-900 border-t border-gray-800">
+        <div className="flex items-center justify-around py-2">
+          <Button variant="ghost" size="sm" className="flex flex-col items-center text-yellow-500">
+            <Home className="h-5 w-5" />
+            <span className="text-xs">Feed</span>
+          </Button>
+          <Button variant="ghost" size="sm" className="flex flex-col items-center text-gray-400">
+            <Hash className="h-5 w-5" />
+            <span className="text-xs">Spaces</span>
+          </Button>
+          <Button variant="ghost" size="sm" className="flex flex-col items-center text-gray-400">
+            <Zap className="h-5 w-5" />
+            <span className="text-xs">Tools</span>
+          </Button>
+          <Button variant="ghost" size="sm" className="flex flex-col items-center text-gray-400">
+            <User className="h-5 w-5" />
+            <span className="text-xs">Profile</span>
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+};
+
+// Story Exports;
+export const CompleteMobileSystem: Story = {
+  render: () => <MobileSystemDemo />,
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1'
+    },
+    docs: {
+      description: {
+        story: 'Complete mobile-specific component system with gestures, camera, notifications, and offline support'
+      }
+    }
+  }
+};
+
+export const MobileTouchGestures: Story = {
+  render: () => {
+    const swipeRef = useSwipeGesture(
+      () => alert('Swiped left!'),
+      () => alert('Swiped right!'),
+      () => alert('Swiped up!'),
+      () => alert('Swiped down!')
+    );
+
+    return (
+      <div className="min-h-screen bg-black p-6">
+        <div className="max-w-sm mx-auto">
+          <h2 className="text-2xl font-bold text-white mb-4">Touch Gestures</h2>
+          <div;
+            ref={swipeRef}}
+            className="h-64 bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600 mb-4"
+          >
+            <div className="text-center text-gray-400">
+              <ArrowUp className="h-12 w-12 mx-auto mb-2" />
+              <p>Swipe in any direction</p>
+              <p className="text-sm mt-2">Touch and drag to test gestures</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1'
+    }
+  }
+};
+
+export const MobileCameraSystem: Story = {
+  render: () => (
+    <div className="min-h-screen bg-black p-6">
+      <div className="max-w-sm mx-auto">
+        <h2 className="text-2xl font-bold text-white mb-4">Mobile Camera</h2>
+        <MobileCameraCapture />
+      </div>
+    </div>
+  ),
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1'
+    }
+  }
+};
+
+export const MobileNotificationCenter: Story = {
+  render: () => (
+    <div className="min-h-screen bg-black p-6">
+      <div className="max-w-sm mx-auto">
+        <h2 className="text-2xl font-bold text-white mb-4">Push Notifications</h2>
+        <MobilePushNotifications />
+      </div>
+    </div>
+  ),
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1'
+    }
+  }
+};
+
+export const MobileOfflineExperience: Story = {
+  render: () => (
+    <div className="min-h-screen bg-black p-6">
+      <div className="max-w-sm mx-auto">
+        <h2 className="text-2xl font-bold text-white mb-4">Offline Support</h2>
+        <MobileOfflineSupport />
+      </div>
+    </div>
+  ),
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1'
+    }
+  }
+};

@@ -11,16 +11,25 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "lint:quick": "turbo run lint --filter=!web",
+    "lint:web": "eslint apps/web --max-warnings 50",
+    "lint:packages": "turbo run lint --filter=!web",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "clean": "turbo run clean",
+    "clean:node": "rm -rf node_modules && pnpm install",
+    "clean:build": "turbo run clean && rm -rf apps/*/node_modules packages/*/node_modules",
     "storybook": "turbo run storybook",
-    "build-storybook": "turbo run build-storybook"
+    "build-storybook": "turbo run build-storybook",
+    "fix:memory": "node fix-syntax-errors.js",
+    "build:memory-efficient": "node --max-old-space-size=4096 ./node_modules/.bin/turbo run build",
+    "lint:memory-efficient": "node --max-old-space-size=4096 ./node_modules/.bin/turbo run lint"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.4",
     "eslint-plugin-import": "^2.29.1",
+    "glob": "^11.0.3",
     "turbo": "^2.5.4"
   },
   "workspaces": [
@@ -43,7 +52,6 @@
     }
   },
   "dependencies": {
-    "glob": "^11.0.3",
     "lucide-react": "^0.411.0",
     "recharts": "^3.1.0",
     "vitest": "^3.2.4"

@@ -140,7 +140,7 @@ export default function ProfileToolsPage() {
         ]}
         actions={
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="flex items-center gap-2">
+            <Badge variant="freshman" className="flex items-center gap-2">
               <Lock className="h-3 w-3" />
               v1 Release
             </Badge>
@@ -169,7 +169,7 @@ export default function ProfileToolsPage() {
           {/* Hero Section */}
           <Card className="p-8 text-center bg-gradient-to-br from-hive-gold/5 to-hive-champagne/5 border-hive-gold/20">
             <div className="mb-6">
-              <Badge variant="outline" className="mb-4 px-4 py-2 border-hive-gold/30 text-hive-gold">
+              <Badge variant="freshman" className="mb-4 px-4 py-2 border-hive-gold/30 text-hive-gold">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Coming in v1
               </Badge>
@@ -202,7 +202,7 @@ export default function ProfileToolsPage() {
                   )}
                 </Button>
                 <Button 
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => router.push('/spaces')}
                   size="lg"
                 >
@@ -228,7 +228,7 @@ export default function ProfileToolsPage() {
                   >
                     {/* Lock Overlay */}
                     <div className="absolute top-4 right-4">
-                      <Badge variant="outline" className="bg-hive-background-overlay border-hive-gold/30">
+                      <Badge variant="freshman" className="bg-hive-background-overlay border-hive-gold/30">
                         <Lock className="h-3 w-3 mr-1" />
                         v1
                       </Badge>
@@ -368,7 +368,7 @@ export default function ProfileToolsPage() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setEmail(e.target.value)}
                 placeholder="your.name@buffalo.edu"
                 className="w-full p-3 bg-hive-background-overlay border border-hive-border-default rounded-lg text-white placeholder-gray-400 focus:border-hive-gold focus:outline-none"
               />
@@ -394,7 +394,7 @@ export default function ProfileToolsPage() {
 
             <div className="flex justify-between pt-4">
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => setShowWaitlistModal(false)}
               >
                 Maybe Later

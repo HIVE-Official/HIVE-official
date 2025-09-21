@@ -159,7 +159,7 @@ export function HiveAcademicsStep({
             label="Major *"
             placeholder="Search for your major..."
             value={data.major || searchQuery}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent) => {
               const value = e.target.value;
               if (data.major) {
                 // If they start typing, clear the selected major
@@ -240,7 +240,7 @@ export function HiveAcademicsStep({
           <div className="relative">
             <select
               value={data.graduationYear ? `'${data.graduationYear.toString().slice(-2)}` : ""}
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent) => {
                 const year = e.target.value.replace("'", "");
                 const fullYear = parseInt(`20${year}`);
                 updateData({ graduationYear: fullYear });
@@ -266,8 +266,7 @@ export function HiveAcademicsStep({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <HiveCard 
-              variant="elevated"
+            <HiveCard
               className="p-[var(--hive-spacing-4)]"
             >
               <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">

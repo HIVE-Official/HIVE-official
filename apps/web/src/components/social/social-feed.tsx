@@ -370,7 +370,7 @@ export function SocialFeed({
         </h2>
         <div className="flex items-center space-x-2">
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => setShowComposerModal(true)}
           >
@@ -415,7 +415,7 @@ export function SocialFeed({
                     </p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="secondary" size="sm">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </div>
@@ -427,7 +427,7 @@ export function SocialFeed({
                 </p>
                 {shouldTruncate && (
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     className="mt-2"
                     onClick={() => toggleExpanded(post.id)}
@@ -456,7 +456,7 @@ export function SocialFeed({
               <div className="flex items-center justify-between pt-4 border-t border-hive-border-subtle">
                 <div className="flex items-center space-x-6">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => handleLike(post.id)}
                     className={post.engagement.hasLiked ? '!text-red-400 !border-red-400' : ''}
@@ -464,12 +464,12 @@ export function SocialFeed({
                     <Heart className={`h-4 w-4 mr-2 ${post.engagement.hasLiked ? 'fill-current' : ''}`} />
                     {post.engagement.likes}
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <MessageCircle className="h-4 w-4 mr-2" />
                     {post.engagement.comments}
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => handleShare(post.id)}
                   >
@@ -478,7 +478,7 @@ export function SocialFeed({
                   </Button>
                 </div>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => handleBookmark(post.id)}
                   className={post.engagement.hasBookmarked ? '!text-hive-gold !border-hive-gold' : ''}
@@ -502,7 +502,7 @@ export function SocialFeed({
               <div className="text-center py-8">
                 <p className="text-hive-text-secondary">You&apos;ve reached the end!</p>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={refreshFeed}
                   className="mt-2"

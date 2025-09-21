@@ -1,141 +1,154 @@
-'use client';
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../../lib/utils"
 
-import React from 'react';
-import { cn } from '../../lib/utils';
+const switchVariants = cva(
+  "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default:
+          "data-[state=checked]:bg-[var(--hive-brand-primary)] data-[state=unchecked]:bg-[var(--hive-background-tertiary)]",
+        destructive:
+          "data-[state=checked]:bg-[var(--hive-status-error)] data-[state=unchecked]:bg-[var(--hive-background-tertiary)]",
+        success:
+          "data-[state=checked]:bg-[var(--hive-status-success)] data-[state=unchecked]:bg-[var(--hive-background-tertiary)]",
+        warning:
+          "data-[state=checked]:bg-[var(--hive-status-warning)] data-[state=unchecked]:bg-[var(--hive-background-tertiary)]",
+      },
+      size: {
+        default: "h-6 w-11",
+        sm: "h-5 w-9",
+        lg: "h-7 w-12",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
 
-export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  label?: string;
-  description?: string;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'ghost'
+const switchThumbVariants = cva(
+  "pointer-events-none block rounded-full bg-background shadow-lg ring-0 transition-transform",
+  {
+    variants: {
+      size: {
+        default: "h-5 w-5 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
+        sm: "h-4 w-4 data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0",
+        lg: "h-6 w-6 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
+      },
+    },
+    defaultVariants: {
+      size: "default",
+    },
+  }
+)
+
+export interface SwitchProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange">,
+    VariantProps<typeof switchVariants> {
+  checked?: boolean
+  onCheckedChange?: (checked: boolean) => void
+  label?: string
+  description?: string
+  error?: string
 }
 
-const switchSizes = {
-  sm: {
-    track: 'h-5 w-9',
-    thumb: 'h-4 w-4',
-    translate: 'translate-x-4',
-    text: 'text-sm'
-  },
-  md: {
-    track: 'h-6 w-11', 
-    thumb: 'h-5 w-5',
-    translate: 'translate-x-5',
-    text: 'text-base'
-  },
-  lg: {
-    track: 'h-7 w-13',
-    thumb: 'h-6 w-6', 
-    translate: 'translate-x-6',
-    text: 'text-lg'
-  }
-};
+const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
+  ({
+    className,
+    variant,
+    size,
+    checked,
+    onCheckedChange,
+    label,
+    description,
+    error,
+    disabled,
+    ...props
+  }, ref) => {
+    const [internalChecked, setInternalChecked] = React.useState(false)
+    const switchId = React.useId()
 
-export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(({
-  label,
-  description,
-  size = 'md',
-  variant = 'default',
-  checked = false,
-  disabled = false,
-  className,
-  ...props
-}, ref) => {
-  const trackClasses = [
-    'relative inline-flex flex-shrink-0',
-    'border-2 border-transparent rounded-full',
-    'transition-colors duration-200 ease-out',
-    'focus:outline-none focus:ring-2 focus:ring-hive-gold focus:ring-offset-2 focus:ring-offset-hive-background-primary',
-    switchSizes[size].track,
-    
-    // States
-    !disabled && (checked ? [
-      'bg-[var(--hive-brand-secondary)]',
-      variant === 'ghost' && 'bg-transparent border-hive-gold'
-    ].filter(Boolean).join(' ') : [
-      'bg-hive-background-tertiary',
-      variant === 'ghost' && 'bg-transparent border-hive-border-default'
-    ].filter(Boolean).join(' ')),
-    
-    disabled && (checked ? 
-      'bg-hive-steel cursor-not-allowed' : 
-      'bg-hive-smoke cursor-not-allowed'
-    ),
-    
-    !disabled && 'cursor-pointer'
-  ].filter(Boolean).join(' ');
+    const isControlled = checked !== undefined
+    const isChecked = isControlled ? checked : internalChecked
 
-  const thumbClasses = [
-    'pointer-events-none inline-block rounded-full',
-    'bg-[var(--hive-text-primary)] shadow-lg transform ring-0',
-    'transition-transform duration-200 ease-out',
-    switchSizes[size].thumb,
-    
-    // Position
-    checked ? switchSizes[size].translate : 'translate-x-0',
-    
-    // Disabled state
-    disabled && 'bg-[var(--hive-text-disabled)]'
-  ].filter(Boolean).join(' ');
+    const handleClick = React.useCallback(() => {
+      if (disabled) return
 
-  const containerClasses = [
-    'flex items-center gap-3',
-    disabled && 'opacity-50'
-  ].join(' ');
+      const newChecked = !isChecked
+      if (!isControlled) {
+        setInternalChecked(newChecked)
+      }
+      onCheckedChange?.(newChecked)
+    }, [disabled, isChecked, isControlled, onCheckedChange])
 
-  return (
-    <label className={cn(containerClasses, className)}>
-      <button
-        role="switch"
-        type="button"
-        aria-checked={checked}
-        disabled={disabled}
-        className={trackClasses}
-        onClick={(e) => {
-          e.preventDefault();
-          const input = e.currentTarget.querySelector('input') as HTMLInputElement;
-          if (input && !disabled) {
-            input.click()
-          }
-          }}
-      >
-        <input
-          ref={ref}
-          type="checkbox"
-          checked={checked}
-          disabled={disabled}
-          className="sr-only"
-          {...props}
-        />
-        <span className={thumbClasses} />
-      </button>
+    const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
+      if (event.key === " " || event.key === "Enter") {
+        event.preventDefault()
+        handleClick()
+      }
+    }, [handleClick])
 
-      {(label || description) && (
-        <div className="flex-1 min-w-0">
+    return (
+      <div className="flex flex-col space-y-2">
+        <div className="flex items-center space-x-3">
+          <button
+            ref={ref}
+            id={switchId}
+            role="switch"
+            type="button"
+            aria-checked={isChecked}
+            aria-describedby={description ? `${switchId}-description` : undefined}
+            data-state={isChecked ? "checked" : "unchecked"}
+            disabled={disabled}
+            className={cn(switchVariants({ variant, size }), className)}
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}
+            {...props}
+          >
+            <span
+              data-state={isChecked ? "checked" : "unchecked"}
+              className={cn(
+                switchThumbVariants({ size }),
+                "bg-[var(--hive-background-primary)]"
+              )}
+            />
+          </button>
+
           {label && (
-            <div className={cn(
-              'font-medium text-hive-text-primary',
-              switchSizes[size].text,
-              disabled && 'text-[var(--hive-text-disabled)]'
-            )}>
+            <label
+              htmlFor={switchId}
+              className={cn(
+                "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+                "text-[var(--hive-text-primary)] cursor-pointer",
+                disabled && "cursor-not-allowed opacity-70"
+              )}
+              onClick={!disabled ? handleClick : undefined}
+            >
               {label}
-            </div>
-          )}
-          {description && (
-            <div className={cn(
-              'text-hive-text-secondary',
-              size === 'sm' && 'text-xs',
-              size === 'md' && 'text-sm',
-              size === 'lg' && 'text-base',
-              disabled && 'text-[var(--hive-text-disabled)]'
-            )}>
-              {description}
-            </div>
+            </label>
           )}
         </div>
-      )}
-    </label>
-  )
-});
 
-Switch.displayName = 'Switch';
+        {(description || error) && (
+          <p
+            id={`${switchId}-description`}
+            className={cn(
+              "text-xs",
+              error
+                ? "text-[var(--hive-status-error)]"
+                : "text-[var(--hive-text-secondary)]"
+            )}
+          >
+            {error || description}
+          </p>
+        )}
+      </div>
+    )
+  }
+)
+Switch.displayName = "Switch"
+
+export { Switch, switchVariants, switchThumbVariants }

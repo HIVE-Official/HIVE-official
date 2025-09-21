@@ -121,7 +121,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
             <div className="flex items-start space-x-4">
               {/* Checkbox */}
               <motion.button
-                onClick={(e) => { e.stopPropagation(); agreement.toggle(); }}
+                onClick={(e: React.MouseEvent) => { e.stopPropagation(); agreement.toggle(); }}
                 className={cn(
                   "flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95",
                   agreement.checked
@@ -158,7 +158,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
                 
                 {/* View Link */}
                 <button
-                  onClick={(e) => { e.stopPropagation(); window.open(agreement.link, '_blank'); }}
+                  onClick={(e: React.MouseEvent) => { e.stopPropagation(); window.open(agreement.link, '_blank'); }}
                   className="inline-flex items-center space-x-1 text-xs text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-secondary)] transition-colors"
                 >
                   <span>Read full document</span>
@@ -177,7 +177,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
       >
-        <HiveCard variant="default" className="p-[var(--hive-spacing-4)]">
+        <HiveCard className="p-[var(--hive-spacing-4)]">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
             <Shield className="w-4 h-4 mr-2 text-[var(--hive-brand-primary)]" />
             Your Privacy Matters

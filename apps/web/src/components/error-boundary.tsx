@@ -89,7 +89,7 @@ function DefaultErrorFallback({ error, retry }: { error?: Error; retry: () => vo
             Try Again
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => window.location.href = '/'}
             className="border-zinc-600 text-zinc-300"
           >

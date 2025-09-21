@@ -1,157 +1,53 @@
-'use client';
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../../lib/utils"
 
-import React, { forwardRef } from 'react';
-import { motion } from '../../components/framer-motion-proxy';
-import { cn } from '../../lib/utils';
-import { Loader2 } from 'lucide-react';
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-[var(--hive-brand-primary)] text-[var(--hive-background-primary)] hover:bg-[var(--hive-brand-hover)]",
+        primary: "bg-[var(--hive-brand-primary)] text-[var(--hive-background-primary)] hover:bg-[var(--hive-brand-hover)]",
+        destructive: "bg-[var(--hive-status-error)] text-white hover:bg-[var(--hive-status-error)]/90",
+        outline: "border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] hover:bg-[var(--hive-interactive-hover)] hover:text-[var(--hive-text-primary)]",
+        secondary: "bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-interactive-hover)]",
+        ghost: "hover:bg-[var(--hive-interactive-hover)] hover:text-[var(--hive-text-primary)]",
+        link: "text-[var(--hive-brand-primary)] underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'destructive' | 'outline' | 'accent' | 'premium';
-  size?: 'sm' | 'md' | 'lg' | 'icon';
-  loading?: boolean;
-  icon?: React.ReactNode;
-  iconPosition?: 'left' | 'right';
-  fullWidth?: boolean;
-  children?: React.ReactNode
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
 }
 
-const buttonVariants = {
-  variant: {
-    // PRD-Aligned Primary: Semantic tokens only
-    primary: [
-      'bg-[var(--hive-brand-primary)] text-[var(--hive-text-primary)]',
-      'hover:bg-[var(--hive-brand-hover)]',
-      'active:bg-[var(--hive-brand-primary)]',
-      'disabled:bg-[var(--hive-background-tertiary)] disabled:text-[var(--hive-text-disabled)]'
-    ].join(' '),
-    
-    // PRD-Aligned Secondary: Semantic tokens only
-    secondary: [
-      'bg-transparent text-[var(--hive-text-primary)]',
-      'border border-[var(--hive-border-default)]',
-      'hover:bg-[var(--hive-interactive-hover)] hover:border-[var(--hive-border-hover)]',
-      'active:bg-[var(--hive-interactive-active)]',
-      'disabled:bg-transparent disabled:text-[var(--hive-text-disabled)] disabled:border-[var(--hive-border-default)]'
-    ].join(' '),
-    
-    // PRD-Aligned Ghost: Semantic tokens only
-    ghost: [
-      'text-[var(--hive-text-primary)]',
-      'hover:bg-[var(--hive-interactive-hover)]',
-      'active:bg-[var(--hive-interactive-active)]',
-      'disabled:text-[var(--hive-text-disabled)]'
-    ].join(' '),
-    
-    // PRD-Aligned Destructive: Semantic tokens only
-    destructive: [
-      'bg-[var(--hive-status-error)] text-[var(--hive-text-primary)]',
-      'hover:bg-[var(--hive-status-error)]',
-      'active:bg-[var(--hive-status-error)]',
-      'disabled:bg-[var(--hive-background-tertiary)] disabled:text-[var(--hive-text-disabled)]'
-    ].join(' '),
-    
-    // PRD-Aligned Outline: Semantic tokens only
-    outline: [
-      'border border-[var(--hive-border-strong)] text-[var(--hive-text-primary)]',
-      'hover:bg-[var(--hive-interactive-hover)] hover:border-[var(--hive-border-hover)]',
-      'active:bg-[var(--hive-interactive-active)]',
-      'disabled:border-[var(--hive-border-default)] disabled:text-[var(--hive-text-disabled)]'
-    ].join(' '),
-    
-    // Sleek accent: Gold outline only
-    accent: [
-      'bg-transparent text-[var(--hive-brand-secondary)]',
-      'border border-[var(--hive-brand-secondary)]',
-      'hover:bg-[var(--hive-interactive-hover)]',
-      'disabled:text-[var(--hive-text-disabled)] disabled:border-[var(--hive-border-default)]'
-    ].join(' '),
-
-    // Premium variant: Enhanced gold styling
-    premium: [
-      'border-2 border-[var(--hive-brand-secondary)]',
-      'bg-[color-mix(in_srgb,var(--hive-brand-secondary)_5%,transparent)]',
-      'text-[var(--hive-brand-secondary)]',
-      'hover:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)]',
-      'hover:border-[var(--hive-brand-secondary)]',
-      'active:bg-[color-mix(in_srgb,var(--hive-brand-secondary)_25%,transparent)]',
-      'shadow-sm hover:shadow-md',
-      'disabled:text-[var(--hive-text-disabled)] disabled:border-[var(--hive-border-default)]'
-    ].join(' ')
-  },
-  size: {
-    sm: 'h-8 px-3 text-sm font-medium',
-    md: 'h-10 px-4 text-sm font-medium', 
-    lg: 'h-12 px-6 text-base font-medium',
-    icon: 'h-10 w-10'
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
   }
-};
+)
+Button.displayName = "Button"
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
-  className,
-  variant = 'primary',
-  size = 'md',
-  loading = false,
-  icon,
-  iconPosition = 'left',
-  fullWidth = false,
-  children,
-  disabled,
-  ...props
-}, ref) => {
-  const baseClasses = [
-    // Layout & Spacing
-    'inline-flex items-center justify-center gap-2',
-    'rounded-2xl', // Apple-like generous radius (16px instead of 3)
-    'font-medium',
-    'transition-all duration-200 ease-out',
-    
-    // Clean focus - no persistent rings
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-secondary)] focus-visible:ring-offset-1',
-    
-    // Social platform motion
-    'transform hover:scale-[1.02] active:scale-[0.98]',
-    
-    // Disabled State
-    'disabled:cursor-not-allowed disabled:transform-none',
-    
-    // Full Width
-    fullWidth && 'w-full'
-  ].filter(Boolean).join(' ');
-
-  const variantClasses = buttonVariants.variant[variant];
-  const sizeClasses = buttonVariants.size[size];
-
-  return (
-    <motion.button
-      ref={ref}
-      className={cn(baseClasses, variantClasses, sizeClasses, className)}
-      disabled={disabled || loading}
-      whileHover={{ scale: disabled || loading ? 1 : 1.02 }}
-      whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
-      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-      {...props}
-    >
-      {loading && (
-        <Loader2 className="h-4 w-4 animate-spin" />
-      )}
-      
-      {!loading && icon && iconPosition === 'left' && (
-        <span className="flex-shrink-0">{icon}</span>
-      )}
-      
-      {children && (
-        <span className={cn(
-          size === 'icon' && 'sr-only'
-        )}>
-          {children}
-        </span>
-      )}
-      
-      {!loading && icon && iconPosition === 'right' && (
-        <span className="flex-shrink-0">{icon}</span>
-      )}
-    </motion.button>
-  )
-});
-
-Button.displayName = 'Button';
+export { Button, buttonVariants }

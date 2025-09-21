@@ -207,7 +207,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       value={formData.fullName}
-                      onChange={(e) => handleInputChange('fullName', e.target.value)}
+                      onChange={(e: React.ChangeEvent) => handleInputChange('fullName', e.target.value)}
                       className="w-full px-4 py-3 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary placeholder:text-hive-text-tertiary focus:border-hive-brand-secondary focus:outline-none transition-colors"
                       placeholder="Enter your full name"
                     />
@@ -219,7 +219,7 @@ export default function ProfileEditPage() {
                     </label>
                     <select
                       value={formData.pronouns}
-                      onChange={(e) => handleInputChange('pronouns', e.target.value)}
+                      onChange={(e: React.ChangeEvent) => handleInputChange('pronouns', e.target.value)}
                       className="w-full px-4 py-3 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary focus:border-hive-brand-secondary focus:outline-none transition-colors"
                     >
                       <option value="">Select pronouns</option>
@@ -241,7 +241,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       value={formData.handle}
-                      onChange={(e) => handleInputChange('handle', e.target.value)}
+                      onChange={(e: React.ChangeEvent) => handleInputChange('handle', e.target.value)}
                       className="w-full pl-10 pr-4 py-3 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary placeholder:text-hive-text-tertiary focus:border-hive-brand-secondary focus:outline-none transition-colors"
                       placeholder="your-handle"
                     />
@@ -254,7 +254,7 @@ export default function ProfileEditPage() {
                   </label>
                   <textarea
                     value={formData.bio}
-                    onChange={(e) => handleInputChange('bio', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('bio', e.target.value)}
                     rows={3}
                     className="w-full px-4 py-3 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary placeholder:text-hive-text-tertiary focus:border-hive-brand-secondary focus:outline-none transition-colors resize-none"
                     placeholder="Tell others about yourself..."
@@ -277,7 +277,7 @@ export default function ProfileEditPage() {
                     <input
                       type="text"
                       value={formData.major}
-                      onChange={(e) => handleInputChange('major', e.target.value)}
+                      onChange={(e: React.ChangeEvent) => handleInputChange('major', e.target.value)}
                       className="w-full px-4 py-3 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary placeholder:text-hive-text-tertiary focus:border-hive-brand-secondary focus:outline-none transition-colors"
                       placeholder="Computer Science"
                     />
@@ -289,7 +289,7 @@ export default function ProfileEditPage() {
                     </label>
                     <select
                       value={formData.academicYear}
-                      onChange={(e) => handleInputChange('academicYear', e.target.value)}
+                      onChange={(e: React.ChangeEvent) => handleInputChange('academicYear', e.target.value)}
                       className="w-full px-4 py-3 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary focus:border-hive-brand-secondary focus:outline-none transition-colors"
                     >
                       <option value="">Select year</option>
@@ -310,7 +310,7 @@ export default function ProfileEditPage() {
                   <input
                     type="number"
                     value={formData.graduationYear}
-                    onChange={(e) => handleInputChange('graduationYear', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('graduationYear', e.target.value)}
                     min="2024"
                     max="2035"
                     className="w-full px-4 py-3 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary placeholder:text-hive-text-tertiary focus:border-hive-brand-secondary focus:outline-none transition-colors"
@@ -333,7 +333,7 @@ export default function ProfileEditPage() {
                   <input
                     type="text"
                     value={formData.housing}
-                    onChange={(e) => handleInputChange('housing', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('housing', e.target.value)}
                     className="w-full px-4 py-3 bg-hive-background-primary border border-hive-border-default rounded-lg text-hive-text-primary placeholder:text-hive-text-tertiary focus:border-hive-brand-secondary focus:outline-none transition-colors"
                     placeholder="Smith Hall, Room 305"
                   />

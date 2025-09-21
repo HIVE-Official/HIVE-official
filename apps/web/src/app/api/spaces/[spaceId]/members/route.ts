@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import * as admin from "firebase-admin/auth";
+import * as admin from 'firebase-admin';
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import * as admin from 'firebase-admin';
 
 const GetMembersSchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(50),

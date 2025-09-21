@@ -118,7 +118,7 @@ export function IntegrationConnectionModal({
       case 'healthy': return <Badge className="bg-green-500/10 text-green-400 border-green-500/20">Connected</Badge>;
       case 'warning': return <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/20">Issues</Badge>;
       case 'error': return <Badge className="bg-red-500/10 text-red-400 border-red-500/20">Error</Badge>;
-      default: return <Badge variant="outline">Not Connected</Badge>;
+      default: return <Badge variant="freshman">Not Connected</Badge>;
     }
   };
 
@@ -230,7 +230,7 @@ export function IntegrationConnectionModal({
                     <div className="flex items-center space-x-2">
                       <span className="font-medium text-white">{permission.name}</span>
                       {permission.required && (
-                        <Badge variant="secondary" className="text-xs">Required</Badge>
+                        <Badge variant="sophomore" className="text-xs">Required</Badge>
                       )}
                     </div>
                     <p className="text-sm text-hive-text-mutedLight">{permission.description}</p>
@@ -294,7 +294,7 @@ export function IntegrationConnectionModal({
             <div>
               {integration.isConnected && onDisconnect && (
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={handleDisconnect}
                   disabled={isConnecting}
                   className="border-red-500 text-red-400 hover:bg-red-500/10"
@@ -306,7 +306,7 @@ export function IntegrationConnectionModal({
             </div>
             <div className="flex items-center space-x-3">
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={onClose}
                 disabled={isConnecting}
               >
@@ -323,7 +323,7 @@ export function IntegrationConnectionModal({
                 </Button>
               ) : (
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => window.open(`/settings/integrations/${integration.id}`, '_blank')}
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />

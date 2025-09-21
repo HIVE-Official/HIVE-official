@@ -103,7 +103,7 @@ export function LeaveSpaceButton({
   return (
     <>
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         onClick={handleLeaveClick}
         className={`border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 ${className}`}

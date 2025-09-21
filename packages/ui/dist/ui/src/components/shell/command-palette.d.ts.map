@@ -1,1 +1,0 @@
-{"version":3,"file":"command-palette.d.ts","sourceRoot":"","sources":["../../../../../src/components/shell/command-palette.tsx"],"names":[],"mappings":"AAiBA,UAAU,mBAAmB;IAC3B,MAAM,EAAE,OAAO,CAAC;IAChB,OAAO,EAAE,MAAM,IAAI,CAAA;CACpB;AAYD,UAAU,mBAAmB;IAC3B,MAAM,EAAE,OAAO,CAAC;IAChB,OAAO,EAAE,MAAM,IAAI,CAAA;CACpB;AAED,wBAAgB,cAAc,CAAC,EAAE,MAAM,EAAE,OAAO,EAAE,EAAE,mBAAmB,QAmHlE"}

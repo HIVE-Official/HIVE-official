@@ -1,165 +1,164 @@
-'use client';
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../../lib/utils"
 
-import React from 'react';
-import { cn } from '../../lib/utils';
-import { AlertCircle } from 'lucide-react';
+const textareaVariants = cva(
+  "flex min-h-[80px] w-full rounded-md border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-3 py-2 text-sm text-[var(--hive-text-primary)] ring-offset-background placeholder:text-[var(--hive-text-placeholder)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "border-[var(--hive-border-default)]",
+        destructive: "border-[var(--hive-status-error)] focus-visible:ring-[var(--hive-status-error)]",
+        success: "border-[var(--hive-status-success)] focus-visible:ring-[var(--hive-status-success)]",
+        warning: "border-[var(--hive-status-warning)] focus-visible:ring-[var(--hive-status-warning)]",
+        ghost: "border-transparent bg-transparent focus-visible:border-[var(--hive-border-default)]",
+      },
+      size: {
+        default: "min-h-[80px] px-3 py-2 text-sm",
+        sm: "min-h-[60px] px-2 py-1 text-xs",
+        lg: "min-h-[120px] px-4 py-3 text-base",
+        xl: "min-h-[160px] px-4 py-4 text-lg",
+      },
+      resize: {
+        none: "resize-none",
+        vertical: "resize-y",
+        horizontal: "resize-x",
+        both: "resize",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+      resize: "vertical",
+    },
+  }
+)
 
-export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label?: string;
-  error?: string;
-  helperText?: string;
-  variant?: 'default' | 'outline' | 'filled' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  resize?: 'none' | 'vertical' | 'horizontal' | 'both';
-  maxLength?: number;
-  showCount?: boolean;
-  fullWidth?: boolean
+export interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    VariantProps<typeof textareaVariants> {
+  label?: string
+  helperText?: string
+  error?: string
+  maxLength?: number
+  showCount?: boolean
+  autoResize?: boolean
 }
 
-const textareaVariants = {
-  default: [
-    'bg-transparent',
-    'border border-[var(--hive-border-default)]',
-    'focus:border-[var(--hive-brand-secondary)] focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/20',
-    'hover:border-[var(--hive-border-hover)]'
-  ].join(' '),
-  outline: [
-    'bg-transparent',
-    'border border-[var(--hive-border-default)]',
-    'focus:border-[var(--hive-brand-secondary)] focus:ring-2 focus:ring-[var(--hive-brand-secondary)]/20',
-    'hover:border-[var(--hive-border-hover)]'
-  ].join(' '),
-  ghost: [
-    'bg-transparent',
-    'border border-transparent',
-    'focus:bg-[var(--hive-background-secondary)] focus:border-[var(--hive-border-default)]'
-  ].join(' '),
-  filled: [
-    'bg-[var(--hive-background-secondary)]',
-    'border border-transparent',
-    'focus:bg-[var(--hive-background-tertiary)] focus:border-[var(--hive-brand-secondary)]'
-  ].join(' ')
-};
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({
+    className,
+    variant,
+    size,
+    resize,
+    label,
+    helperText,
+    error,
+    maxLength,
+    showCount = false,
+    autoResize = false,
+    value,
+    onChange,
+    ...props
+  }, ref) => {
+    const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+    const combinedRef = React.useMemo(() => {
+      return (node: HTMLTextAreaElement) => {
+        if (ref) {
+          if (typeof ref === 'function') {
+            ref(node)
+          } else {
+            ref.current = node
+          }
+        }
+        textareaRef.current = node
+      }
+    }, [ref])
 
-const textareaSizes = {
-  sm: 'p-4 text-sm min-h-24',
-  md: 'p-5 text-sm min-h-32',
-  lg: 'p-6 text-base min-h-40'
-};
+    const textareaId = React.useId()
 
-const resizeClasses = {
-  none: 'resize-none',
-  vertical: 'resize-y',
-  horizontal: 'resize-x', 
-  both: 'resize'
-};
+    // Auto-resize functionality
+    React.useEffect(() => {
+      if (autoResize && textareaRef.current) {
+        const textarea = textareaRef.current
+        textarea.style.height = 'auto'
+        textarea.style.height = `${textarea.scrollHeight}px`
+      }
+    }, [value, autoResize])
 
-export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
-  label,
-  error,
-  helperText,
-  variant = 'default',
-  size = 'md',
-  resize = 'vertical',
-  maxLength,
-  showCount = false,
-  fullWidth = true,
-  className,
-  disabled,
-  value,
-  ...props
-}, ref) => {
-  const [internalValue, setInternalValue] = React.useState(value || '');
-  const currentLength = typeof value === 'string' ? value.length : (typeof internalValue === 'string' ? internalValue.length : 0);
+    const handleChange = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      if (autoResize) {
+        const textarea = e.target
+        textarea.style.height = 'auto'
+        textarea.style.height = `${textarea.scrollHeight}px`
+      }
+      onChange?.(e)
+    }, [onChange, autoResize])
 
-  React.useEffect(() => {
-    if (typeof value === 'string') {
-      setInternalValue(value)
-    }
-  }, [value]);
+    const currentLength = typeof value === 'string' ? value.length : 0
+    const isOverLimit = maxLength ? currentLength > maxLength : false
 
-  const baseClasses = [
-    // Layout - chip feel with high radius
-    'w-full rounded-2xl',
-    'transition-all duration-200 ease-out',
-    
-    // Typography
-    'font-medium text-[var(--hive-text-primary)]',
-    'placeholder:text-[var(--hive-text-tertiary)]',
-    
-    // Focus
-    'focus:outline-none',
-    
-    // States
-    'disabled:opacity-50 disabled:cursor-not-allowed',
-    error && 'border-hive-ruby focus:border-hive-ruby focus:ring-hive-ruby/20',
-    
-    // Variants and sizing
-    textareaVariants[variant],
-    textareaSizes[size],
-    resizeClasses[resize],
-    
-    // Width
-    fullWidth && 'w-full'
-  ].filter(Boolean).join(' ');
-
-  const showCharacterCount = showCount && maxLength;
-
-  return (
-    <div className={cn('space-y-2', fullWidth && 'w-full')}>
-      {label && (
-        <label className="block text-sm font-medium text-hive-text-primary">
-          {label}
-        </label>
-      )}
-      
-      <div className="relative">
-        <textarea
-          ref={ref}
-          value={value}
-          maxLength={maxLength}
-          disabled={disabled}
-          className={cn(baseClasses, className)}
-          onChange={(e) => {
-            setInternalValue(e.target.value);
-            props.onChange?.(e)
-          }}
-          {...props}
-        />
-        
-        {error && (
-          <div className="absolute top-3 right-3">
-            <AlertCircle className="h-4 w-4 text-hive-ruby" />
-          </div>
+    return (
+      <div className="flex flex-col space-y-1">
+        {label && (
+          <label
+            htmlFor={textareaId}
+            className="text-sm font-medium text-[var(--hive-text-primary)]"
+          >
+            {label}
+          </label>
         )}
-      </div>
-      
-      <div className="flex items-center justify-between">
-        <div>
-          {error && (
-            <p className="text-xs text-hive-ruby">
-              {error}
-            </p>
-          )}
-          {!error && helperText && (
-            <p className="text-xs text-hive-text-secondary">
-              {helperText}
-            </p>
+
+        <div className="relative">
+          <textarea
+            id={textareaId}
+            className={cn(
+              textareaVariants({
+                variant: error ? "destructive" : variant,
+                size,
+                resize: autoResize ? "none" : resize
+              }),
+              className
+            )}
+            ref={combinedRef}
+            value={value}
+            onChange={handleChange}
+            maxLength={maxLength}
+            {...props}
+          />
+
+          {showCount && maxLength && (
+            <div className="absolute bottom-2 right-2">
+              <span
+                className={cn(
+                  "text-xs",
+                  isOverLimit
+                    ? "text-[var(--hive-status-error)]"
+                    : "text-[var(--hive-text-secondary)]"
+                )}
+              >
+                {currentLength}/{maxLength}
+              </span>
+            </div>
           )}
         </div>
-        
-        {showCharacterCount && (
-          <p className={cn(
-            'text-xs',
-            currentLength > maxLength! * 0.9 ? 'text-[var(--hive-brand-secondary)]' : 'text-hive-text-secondary',
-            currentLength >= maxLength! && 'text-hive-ruby'
-          )}>
-            {currentLength}/{maxLength}
+
+        {(helperText || error) && (
+          <p
+            className={cn(
+              "text-xs",
+              error
+                ? "text-[var(--hive-status-error)]"
+                : "text-[var(--hive-text-secondary)]"
+            )}
+          >
+            {error || helperText}
           </p>
         )}
       </div>
-    </div>
-  )
-});
+    )
+  }
+)
+Textarea.displayName = "Textarea"
 
-Textarea.displayName = 'Textarea';
+export { Textarea, textareaVariants }

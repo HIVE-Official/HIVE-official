@@ -9,7 +9,7 @@ import { Card, Button, Input, Avatar, Badge } from "@hive/ui";
 const UserCard = ({ user }: { user: any }) => (
   <Card>
     <Card.Header className="flex items-center gap-3">
-      <Avatar src={user.avatar} name={user.name} size="medium" />
+      <Avatar src={user.avatar} name={user.name} size="md" />
       <div className="flex-1">
         <h3 className="hive-heading--h4">{user.name}</h3>
         <p className="hive-text--small text-neutral-600">@{user.handle}</p>
@@ -22,17 +22,17 @@ const UserCard = ({ user }: { user: any }) => (
       <p className="hive-text--body">{user.bio}</p>
       <div className="flex gap-2 mt-4">
         {user.tags.map((tag: string) => (
-          <Badge key={tag} variant="secondary" size="small">
+          <Badge key={tag} variant="sophomore" size="sm">
             {tag}
           </Badge>
         ))}
       </div>
     </Card.Content>
     <Card.Footer className="flex justify-between">
-      <Button variant="secondary" size="small">
+      <Button variant="secondary" size="sm">
         View Profile
       </Button>
-      <Button variant="primary" size="small">
+      <Button variant="primary" size="sm">
         Connect
       </Button>
     </Card.Footer>
@@ -53,9 +53,9 @@ const SearchForm = ({ onSearch }: { onSearch: (query: string) => void }) => (
         </Button>
       </div>
       <div className="flex gap-2 mt-3">
-        <Button variant="ghost" size="small">Tools</Button>
-        <Button variant="ghost" size="small">Spaces</Button>
-        <Button variant="ghost" size="small">People</Button>
+        <Button variant="ghost" size="sm">Tools</Button>
+        <Button variant="ghost" size="sm">Spaces</Button>
+        <Button variant="ghost" size="sm">People</Button>
       </div>
     </Card.Content>
   </Card>
@@ -69,7 +69,7 @@ const ToolCard = ({ tool }: { tool: any }) => (
           <h3 className="hive-heading--h4">{tool.name}</h3>
           <p className="hive-text--small text-neutral-600">by @{tool.author}</p>
         </div>
-        <Badge variant="primary">{tool.category}</Badge>
+        <Badge variant="senior">{tool.category}</Badge>
       </div>
     </Card.Header>
     <Card.Content>
@@ -88,7 +88,7 @@ const ToolCard = ({ tool }: { tool: any }) => (
         <Button variant="primary" className="flex-1">
           Use Tool
         </Button>
-        <Button variant="secondary" size="medium">
+        <Button variant="secondary" size="md">
           ♡
         </Button>
       </div>
@@ -362,7 +362,7 @@ describe('Component Composition Consistency Tests', () => {
               <Card.Content>
                 <Input
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
                   placeholder="Search users..."
                   className="mb-4"
                 />

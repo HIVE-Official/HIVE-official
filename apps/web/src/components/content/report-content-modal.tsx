@@ -216,7 +216,7 @@ export function ReportContentModal({
     }}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="outline" size="sm" className="text-red-400 border-red-400/50 hover:bg-red-400/10">
+          <Button variant="secondary" size="sm" className="text-red-400 border-red-400/50 hover:bg-red-400/10">
             <Flag className="h-4 w-4 mr-2" />
             Report
           </Button>
@@ -247,7 +247,7 @@ export function ReportContentModal({
           {contentPreview && currentStep !== 'complete' && (
             <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-2">
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="freshman" className="text-xs">
                   {contentType}
                 </Badge>
                 <span className="text-sm text-gray-400">Content being reported:</span>
@@ -330,7 +330,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Describe specifically what you think violates our community guidelines..."
                   className="min-h-[100px]"
                   maxLength={1000}
@@ -370,13 +370,13 @@ export function ReportContentModal({
                 <div className="flex space-x-2 mb-2">
                   <Input
                     value={newUrl}
-                    onChange={(e) => setNewUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent) => setNewUrl(e.target.value)}
                     placeholder="https://example.com/related-content"
                     className="flex-1"
                   />
                   <Button
                     onClick={addEvidenceUrl}
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     disabled={!newUrl.trim()}
                   >
@@ -410,7 +410,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.additionalContext}
-                  onChange={(e) => setFormData(prev => ({ ...prev, additionalContext: e.target.value }))}
+                  onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, additionalContext: e.target.value }))}
                   placeholder="Any additional information that might help us review this report..."
                   className="min-h-[80px]"
                   maxLength={500}
@@ -514,7 +514,7 @@ export function ReportContentModal({
             <div className="flex justify-between pt-4 border-t border-gray-800">
               <Button
                 onClick={handleBack}
-                variant="outline"
+                variant="secondary"
                 disabled={currentStep === 'category'}
               >
                 Back

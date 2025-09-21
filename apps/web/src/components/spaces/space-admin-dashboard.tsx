@@ -152,7 +152,7 @@ export function SpaceAdminDashboard({ spaceId, spaceName, userRole }: SpaceAdmin
           <Badge variant="building-tools" className="capitalize">
             {userRole}
           </Badge>
-          <Button variant="outline" size="sm">
+          <Button variant="secondary" size="sm">
             <Eye className="h-4 w-4 mr-2" />
             View Space
           </Button>
@@ -268,12 +268,12 @@ export function SpaceAdminDashboard({ spaceId, spaceName, userRole }: SpaceAdmin
                 <UserPlus className="h-4 w-4 mr-2" />
                 Invite Members
               </Button>
-              <Button variant="outline" className="justify-start">
+              <Button variant="secondary" className="justify-start">
                 <Calendar className="h-4 w-4 mr-2" />
                 Create Event
               </Button>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 className="justify-start"
                 onClick={() => window.location.href = `/spaces/${spaceId}/resources`}
               >
@@ -281,14 +281,14 @@ export function SpaceAdminDashboard({ spaceId, spaceName, userRole }: SpaceAdmin
                 Manage Resources
               </Button>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 className="justify-start"
                 onClick={() => window.location.href = `/spaces/${spaceId}/analytics`}
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 View Analytics
               </Button>
-              <Button variant="outline" className="justify-start">
+              <Button variant="secondary" className="justify-start">
                 <Download className="h-4 w-4 mr-2" />
                 Export Data
               </Button>
@@ -338,7 +338,7 @@ export function SpaceAdminDashboard({ spaceId, spaceName, userRole }: SpaceAdmin
           <p className="text-zinc-400 mb-6">
             Advanced member management features are coming soon.
           </p>
-          <Button variant="outline">
+          <Button variant="secondary">
             View All Members
           </Button>
         </Card>
@@ -367,7 +367,7 @@ export function SpaceAdminDashboard({ spaceId, spaceName, userRole }: SpaceAdmin
           <p className="text-zinc-400 mb-6">
             Advanced space configuration options are coming soon.
           </p>
-          <Button variant="outline">
+          <Button variant="secondary">
             <Edit className="h-4 w-4 mr-2" />
             Edit Space Details
           </Button>
@@ -394,7 +394,7 @@ export function SpaceAdminDashboard({ spaceId, spaceName, userRole }: SpaceAdmin
           </div>
           
           <div className="flex justify-end space-x-3">
-            <Button variant="outline" onClick={() => setShowMemberModal(false)}>
+            <Button variant="secondary" onClick={() => setShowMemberModal(false)}>
               Cancel
             </Button>
             <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">

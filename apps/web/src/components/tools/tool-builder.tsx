@@ -332,14 +332,14 @@ export function ToolBuilder({
         </div>
         <div className="flex items-center space-x-3">
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => fileInputRef.current?.click()}
           >
             <Upload className="h-4 w-4 mr-2" />
             Import
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={exportTool}
             disabled={!formData.name}
           >
@@ -347,7 +347,7 @@ export function ToolBuilder({
             Export
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => setShowPreview(!showPreview)}
           >
             <Eye className="h-4 w-4 mr-2" />
@@ -374,7 +374,7 @@ export function ToolBuilder({
               {Object.keys(toolTemplates).map(template => (
                 <Button
                   key={template}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => loadTemplate(template)}
                 >
@@ -411,7 +411,7 @@ export function ToolBuilder({
                   <Label className="text-white">Tool Name</Label>
                   <Input
                     value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('name', e.target.value)}
                     onBlur={() => handleFieldBlur('name')}
                     placeholder="Enter tool name"
                     className={`mt-1 ${touched.name && validationErrors.name?.length ? 'border-red-500' : ''}`}
@@ -443,7 +443,7 @@ export function ToolBuilder({
                 <Label className="text-white">Description</Label>
                 <Textarea
                   value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleInputChange('description', e.target.value)}
                   onBlur={() => handleFieldBlur('description')}
                   placeholder="Describe what your tool does..."
                   rows={3}
@@ -458,7 +458,7 @@ export function ToolBuilder({
                 <Label className="text-white">Code</Label>
                 <Textarea
                   value={formData.code}
-                  onChange={(e) => handleInputChange('code', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleInputChange('code', e.target.value)}
                   onBlur={() => handleFieldBlur('code')}
                   placeholder="// Write your tool code here..."
                   rows={12}
@@ -477,7 +477,7 @@ export function ToolBuilder({
                 <div className="flex items-center justify-between mb-3">
                   <Label className="text-white">Input Fields</Label>
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={addInputField}
                   >
@@ -493,7 +493,7 @@ export function ToolBuilder({
                         <div className="col-span-3">
                           <Input
                             value={field.key}
-                            onChange={(e) => updateInputField(index, 'key', e.target.value)}
+                            onChange={(e: React.ChangeEvent) => updateInputField(index, 'key', e.target.value)}
                             placeholder="Field name"
                             className="text-sm"
                           />
@@ -516,7 +516,7 @@ export function ToolBuilder({
                         <div className="col-span-5">
                           <Input
                             value={field.description}
-                            onChange={(e) => updateInputField(index, 'description', e.target.value)}
+                            onChange={(e: React.ChangeEvent) => updateInputField(index, 'description', e.target.value)}
                             placeholder="Description"
                             className="text-sm"
                           />
@@ -529,7 +529,7 @@ export function ToolBuilder({
                         </div>
                         <div className="col-span-1">
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             onClick={() => removeInputField(index)}
                             className="text-red-400 border-red-400"
@@ -553,7 +553,7 @@ export function ToolBuilder({
                 <div className="flex items-center justify-between mb-3">
                   <Label className="text-white">Output Fields</Label>
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={addOutputField}
                   >
@@ -569,7 +569,7 @@ export function ToolBuilder({
                         <div className="col-span-3">
                           <Input
                             value={field.key}
-                            onChange={(e) => updateOutputField(index, 'key', e.target.value)}
+                            onChange={(e: React.ChangeEvent) => updateOutputField(index, 'key', e.target.value)}
                             placeholder="Field name"
                             className="text-sm"
                           />
@@ -592,14 +592,14 @@ export function ToolBuilder({
                         <div className="col-span-6">
                           <Input
                             value={field.description}
-                            onChange={(e) => updateOutputField(index, 'description', e.target.value)}
+                            onChange={(e: React.ChangeEvent) => updateOutputField(index, 'description', e.target.value)}
                             placeholder="Description"
                             className="text-sm"
                           />
                         </div>
                         <div className="col-span-1">
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             onClick={() => removeOutputField(index)}
                             className="text-red-400 border-red-400"
@@ -673,7 +673,7 @@ export function ToolBuilder({
                   <Label className="text-white">Version</Label>
                   <Input
                     value={formData.version}
-                    onChange={(e) => handleInputChange('version', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('version', e.target.value)}
                     placeholder="1.0.0"
                     className="mt-1"
                   />
@@ -698,7 +698,7 @@ export function ToolBuilder({
           {/* Actions */}
           <div className="flex items-center justify-between">
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={onCancel}
               disabled={isSaving}
             >

@@ -1,7 +1,8 @@
-// HIVE UI Hooks
-export { useNavigation, useKeyboardNavigation, useRouteTransitions } from './use-navigation-context';
-export * from './use-navigation-layout';
-export { useDeployedTools } from './use-deployed-tools';
-export * from './use-standard-element-styles';
-export * from './use-auth-compat';
-export * from './use-onboarding-bridge';
+export { useUnifiedAuth, UnifiedAuthProvider, createUnifiedAuthValue } from "./use-unified-auth"
+export type { User, AuthState, UnifiedAuthContextType } from "./use-unified-auth"
+export { useAuth, AuthProvider, createAuthValue } from "./use-auth"
+export type { AuthUser, AuthContextType } from "./use-auth"
+export { useShell, ShellProvider, createShellValue } from "./use-shell"
+export type { ShellState, ShellActions, ShellContextType, ShellNotification } from "./use-shell"
+export { useWelcomeMat, WelcomeMatProvider, createWelcomeMatValue } from "./use-welcome-mat"
+export type { WelcomeMatState, WelcomeMatActions, WelcomeMatContextType, WelcomeMatStep, WelcomeMatFlow } from "./use-welcome-mat"

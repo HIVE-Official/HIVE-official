@@ -360,7 +360,7 @@ export function EnhancedSpaceCard({
           <div className="flex gap-2">
             <Button
               size="sm"
-              variant="outline"
+              variant="secondary"
               onClick={() => onPreview?.(space.id)}
               className="flex-1 text-xs border-white/20 text-neutral-300 hover:text-white"
             >

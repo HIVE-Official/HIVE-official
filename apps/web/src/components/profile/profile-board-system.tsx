@@ -615,7 +615,7 @@ export function ProfileBoardSystem({
         >
           {editMode && (
             <button
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleWidgetConfigure('avatar');
               }}
@@ -658,7 +658,7 @@ export function ProfileBoardSystem({
 
             {/* Photo Edit Button */}
             <button 
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 onConfigure && onConfigure('avatar');
               }}
@@ -860,7 +860,7 @@ export function ProfileBoardSystem({
         >
         {editMode && (
           <button
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               handleWidgetConfigure('calendar');
             }}
@@ -876,7 +876,7 @@ export function ProfileBoardSystem({
             <h3 className="font-semibold text-hive-text-primary text-heading-sm">Campus Schedule</h3>
           </div>
           <button 
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               // Action handled by modal - no navigation
             }}
@@ -943,7 +943,7 @@ export function ProfileBoardSystem({
           
           <div className="text-center pt-hive-2">
             <button 
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 // Action handled by modal - no navigation
               }}
@@ -999,7 +999,7 @@ export function ProfileBoardSystem({
       >
         {editMode && (
           <button
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               handleWidgetConfigure('ritual');
             }}
@@ -1034,7 +1034,7 @@ export function ProfileBoardSystem({
               </p>
               
               <button 
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   handleStartSession();
                 }}
@@ -1052,7 +1052,7 @@ export function ProfileBoardSystem({
               <p className="text-body-xs text-hive-text-tertiary mb-3">Create your first routine</p>
               
               <button 
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   // Action handled by modal - no navigation
                 }}
@@ -1082,7 +1082,7 @@ export function ProfileBoardSystem({
       >
         {editMode && (
           <button
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               handleWidgetConfigure('spaces');
             }}
@@ -1107,7 +1107,7 @@ export function ProfileBoardSystem({
             mySpaces.map((space, index) => (
               <button
                 key={space.id || index}
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   // Action handled by modal - no navigation
                 }}
@@ -1131,7 +1131,7 @@ export function ProfileBoardSystem({
         </div>
         
         <button 
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
             // Action handled by modal - no navigation
           }}
@@ -1158,7 +1158,7 @@ export function ProfileBoardSystem({
       >
         {editMode && (
           <button
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               handleWidgetConfigure('connections');
             }}
@@ -1206,7 +1206,7 @@ export function ProfileBoardSystem({
           )}
           
           <button 
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               router.push('/connections');
             }}
@@ -1229,7 +1229,7 @@ export function ProfileBoardSystem({
     >
       {editMode && (
         <button
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
             handleWidgetConfigure('hivelab');
           }}
@@ -1252,7 +1252,7 @@ export function ProfileBoardSystem({
         <p className="text-body-xs text-hive-text-tertiary mb-4">Tools built</p>
         
         <button 
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
             router.push('/tools');
           }}

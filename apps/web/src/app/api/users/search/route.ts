@@ -5,7 +5,6 @@ import * as admin from 'firebase-admin';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
-import * as admin from 'firebase-admin';
 
 // Helper function to safely convert Firestore timestamp to Date
 function toDateSafe(timestamp: any): Date | null {

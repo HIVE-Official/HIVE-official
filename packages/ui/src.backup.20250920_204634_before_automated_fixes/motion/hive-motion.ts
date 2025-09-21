@@ -1,0 +1,239 @@
+// HIVE Motion System - Smooth Operator;
+// 60fps liquid animations with gravitational easing;
+// HIVE Signature Easing Curves - "Magnetic Pull"
+export const hiveEasing = {
+  // Gravitational pull - starts slow, accelerates, gentle landing;
+  magnetic: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  
+  // Liquid mercury - completely smooth throughout;
+  liquid: 'cubic-bezier(0.23, 1, 0.32, 1)',
+  
+  // Silk touch - subtle acceleration with buttery smooth end;
+  silk: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  
+  // Steel spring - controlled bounce for interactive elements;
+  steel: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  
+  // Molten flow - for cascading animations;
+  molten: 'cubic-bezier(0.19, 1, 0.22, 1)',
+  
+  // Premium snap - instant but sophisticated;
+  snap: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+} as const;
+
+// Motion Duration Scale - Engineered for 60fps;
+export const hiveDuration = {
+  instant: '100ms',    // Micro-interactions;
+  snap: '150ms',       // Button presses;
+  smooth: '250ms',     // Hover states;
+  liquid: '350ms',     // Card movements;
+  flow: '500ms',       // Layout changes;
+  cascade: '750ms',    // Sequential animations;
+  cinematic: '1000ms', // Space activation;
+} as const;
+
+// HIVE Motion Tokens;
+export const hiveMotion = {
+  // Signature Hover - Silk smooth lift;
+  hoverLift: {
+    transform: 'translateY(-0.5) scale(1.01)',
+    boxShadow: '0 2 6 color-mix(in_srgb,var(--hive-background-primary)_30%,transparent)',
+    transition: `all ${hiveDuration.smooth} ${hiveEasing.silk}`,
+  },
+  
+  // Premium Button Press;
+  buttonPress: {
+    transform: 'translateY(1px) scale(0.98)',
+    transition: `all ${hiveDuration.snap} ${hiveEasing.magnetic}`,
+  },
+  
+  // Card Float State;
+  cardFloat: {
+    transform: 'translateY(-1)',
+    boxShadow: '0 3 10 color-mix(in_srgb,var(--hive-background-primary)_40%,transparent)',
+    transition: `all ${hiveDuration.liquid} ${hiveEasing.liquid}`,
+  },
+  
+  // Magnetic Selection;
+  magneticSelect: {
+    transform: 'scale(1.02)',
+    boxShadow: '0 0 0 0.5 color-mix(in_srgb,var(--hive-brand-secondary)_30%,transparent), 0 2 6 color-mix(in_srgb,var(--hive-brand-secondary)_15%,transparent)',
+    transition: `all ${hiveDuration.smooth} ${hiveEasing.magnetic}`,
+  },
+  
+  // Ripple Foundation (for Space Activation)
+  rippleBase: {
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
+  },
+  
+  // Fade Cascade (for sequential reveals)
+  fadeCascade: {
+    opacity: 0,
+    transform: 'translateY(5)',
+    transition: `opacity ${hiveDuration.liquid} ${hiveEasing.molten}, transform ${hiveDuration.liquid} ${hiveEasing.molten}`,
+  },
+  
+  // Reveal state for cascades;
+  revealed: {
+    opacity: 1,
+    transform: 'translateY(0)',
+  },
+} as const;
+
+// Advanced Animation Utilities;
+export const createStaggerDelay = (index: number, baseDelay: number = 100): string => {
+  return `${index * baseDelay}ms`;
+};
+
+export const createRippleKeyframes = () => `
+  @keyframes hive-ripple {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+`;
+
+export const createShimmerKeyframes = () => `
+  @keyframes hive-shimmer {
+    0% {
+      background-position: -50 0;
+    }
+    100% {
+      background-position: calc(50 + 100%) 0;
+    }
+  }
+`;
+
+export const createFloatKeyframes = () => `
+  @keyframes hive-float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-1.5);
+    }
+  }
+`;
+
+// CSS-in-JS helper for complex animations;
+export const createHiveAnimation = (
+  keyframes: string,
+  duration: keyof typeof hiveDuration = 'liquid',
+  easing: keyof typeof hiveEasing = 'liquid',
+  iterations: number | 'infinite' = 1
+) => ({
+  animation: `${keyframes} ${hiveDuration[duration]} ${hiveEasing[easing]} ${iterations}`,
+});
+
+// Framer Motion variants for React components;
+export const hiveVariants = {
+  // Space Activation - Ripple from center;
+  spaceActivation: {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: [0.25, 0.46, 0.45, 0.94], // magnetic easing;
+        staggerChildren: 0.1,
+      },
+    },
+  },
+  
+  // Tool Planting - Drop with weight;
+  toolPlant: {
+    hidden: { y: -50, scale: 0.8, opacity: 0 },
+    planted: {
+      y: 0,
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
+        mass: 0.8,
+      },
+    },
+  },
+  
+  // Feed Cascade - Sequential reveal;
+  feedCascade: {
+    hidden: { y: 20, opacity: 0 },
+    visible: (i: number) => ({
+      y: 0,
+      opacity: 1,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.35,
+        ease: [0.19, 1, 0.22, 1], // molten easing;
+      },
+    }),
+  },
+  
+  // Profile Bento - Piece by piece reveal;
+  bentoPiece: {
+    hidden: { scale: 0.8, opacity: 0, rotateY: -10 },
+    visible: (i: number) => ({
+      scale: 1,
+      opacity: 1,
+      rotateY: 0,
+      transition: {
+        delay: i * 0.15,
+        duration: 0.4,
+        ease: [0.23, 1, 0.32, 1], // liquid easing;
+      },
+    }),
+  },
+  
+  // Hover States;
+  hoverScale: {
+    rest: { scale: 1 },
+    hover: {
+      scale: 1.02,
+      transition: {
+        duration: 0.25,
+        ease: [0.16, 1, 0.3, 1], // silk easing;
+      },
+    },
+  },
+  
+  // Press States;
+  pressScale: {
+    rest: { scale: 1 },
+    press: {
+      scale: 0.98,
+      transition: {
+        duration: 0.1,
+        ease: [0.25, 0.1, 0.25, 1], // snap easing;
+      },
+    },
+  },
+} as const;
+
+// Performance optimizations;
+export const hiveGPULayers = {
+  // Force GPU acceleration for smooth animations;
+  willChange: 'transform, opacity, box-shadow',
+  transform: 'translateZ(0)', // Create new layer;
+  backfaceVisibility: 'hidden' as const,
+  perspective: 1000,
+} as const;
+
+// Reduced motion preferences;
+export const respectsReducedMotion = (styles: Record<string, unknown>) => ({
+  ...styles,
+  '@media (prefers-reduced-motion: reduce)': {
+    animation: 'none',
+    transition: 'none',
+  },
+});
+
+export type HiveEasing = keyof typeof hiveEasing;
+export type HiveDuration = keyof typeof hiveDuration;

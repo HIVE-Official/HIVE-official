@@ -1,0 +1,657 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import { ChevronDown, Users, BookOpen, MapPin, Clock, GraduationCap, Home, Building, Calendar } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
+
+const meta: Meta = {
+  title: '02-Atoms/Interactive-Elements/Select & Dropdown System',
+  parameters: {
+    docs: {
+      description: {
+        component: `
+# HIVE Select & Dropdown System;
+A comprehensive selection interface system designed for University at Buffalo campus life. This system provides intuitive dropdown selections for academic, social, and administrative choices across the HIVE platform.
+
+## Campus Integration Features;
+- **Academic Selections** - Majors, courses, academic years, study preferences;
+- **Social Choices** - Space categories, event types, privacy settings, connection preferences;
+- **Campus Navigation** - Building selections, dining locations, campus services;
+- **Smart Defaults** - UB-specific options with intelligent pre-selection based on context;
+## Accessibility Standards;
+- **WCAG 2.1 AA Compliant** - Full keyboard navigation and screen reader support;
+- **Focus Management** - Clear focus indicators and logical tab order;
+- **Search Within Options** - Type-ahead filtering for long option lists;
+- **Mobile Optimized** - Touch-friendly targets with proper spacing for campus mobile usage;
+        `
+      }
+    }
+  }
+};
+
+export default meta;
+type Story = StoryObj;
+
+// Campus Select Data;
+const campusSelectOptions = {
+  academics: {
+    majors: [
+      { value: 'computer-science', label: 'Computer Science', school: 'School of Engineering' },
+      { value: 'business-admin', label: 'Business Administration', school: 'School of Management' },
+      { value: 'psychology', label: 'Psychology', school: 'College of Arts & Sciences' },
+      { value: 'mechanical-engineering', label: 'Mechanical Engineering', school: 'School of Engineering' },
+      { value: 'nursing', label: 'Nursing', school: 'School of Nursing' },
+      { value: 'pre-med', label: 'Pre-Medicine Track', school: 'College of Arts & Sciences' },
+      { value: 'architecture', label: 'Architecture', school: 'School of Architecture' },
+      { value: 'pharmacy', label: 'Pharmacy', school: 'School of Pharmacy' }
+    ],
+    years: [
+      { value: 'freshman', label: 'Freshman', description: 'First year student' },
+      { value: 'sophomore', label: 'Sophomore', description: 'Second year student' },
+      { value: 'junior', label: 'Junior', description: 'Third year student' },
+      { value: 'senior', label: 'Senior', description: 'Fourth+ year student' },
+      { value: 'graduate', label: 'Graduate Student', description: 'Masters or PhD student' },
+      { value: 'faculty', label: 'Faculty', description: 'Teaching staff' }
+    ],
+    semesters: [
+      { value: 'fall-2024', label: 'Fall 2024', status: 'current' },
+      { value: 'spring-2025', label: 'Spring 2025', status: 'upcoming' },
+      { value: 'summer-2025', label: 'Summer 2025', status: 'future' },
+      { value: 'fall-2025', label: 'Fall 2025', status: 'future' }
+    ]
+  },
+  campus: {
+    buildings: [
+      { value: 'student-union', label: 'Student Union', campus: 'North Campus' },
+      { value: 'lockwood-library', label: 'Lockwood Library', campus: 'North Campus' },
+      { value: 'alumni-arena', label: 'Alumni Arena', campus: 'North Campus' },
+      { value: 'capen-hall', label: 'Capen Hall', campus: 'North Campus' },
+      { value: 'knox-hall', label: 'Knox Hall', campus: 'North Campus' },
+      { value: 'hochstetter-hall', label: 'Hochstetter Hall', campus: 'North Campus' },
+      { value: 'south-campus', label: 'South Campus', campus: 'South Campus' }
+    ],
+    diningLocations: [
+      { value: 'ellicott-dining', label: 'Ellicott Dining Hall', type: 'Dining Hall' },
+      { value: 'governors-dining', label: 'Governors Dining Hall', type: 'Dining Hall' },
+      { value: 'crossroads-dining', label: 'Crossroads Culinary Center', type: 'Food Court' },
+      { value: 'student-union-food', label: 'Student Union Food Court', type: 'Food Court' },
+      { value: 'knox-food', label: 'Knox Food Court', type: 'Food Court' },
+      { value: 'commons', label: 'The Commons', type: 'Restaurant' }
+    ],
+    residenceHalls: [
+      { value: 'ellicott-complex', label: 'Ellicott Complex', type: 'Traditional' },
+      { value: 'governors-complex', label: 'Governors Complex', type: 'Suite Style' },
+      { value: 'south-campus-apts', label: 'South Campus Apartments', type: 'Apartment' },
+      { value: 'flint-loop', label: 'Flint Loop', type: 'Apartment' },
+      { value: 'creekside-village', label: 'Creekside Village', type: 'Apartment' },
+      { value: 'hadley-village', label: 'Hadley Village', type: 'Apartment' }
+    ]
+  },
+  social: {
+    spaceCategories: [
+      { value: 'study-group', label: 'Study Group', icon: BookOpen, description: 'Academic collaboration' },
+      { value: 'social-event', label: 'Social Event', icon: Users, description: 'Campus social activities' },
+      { value: 'dorm-floor', label: 'Dorm Floor', icon: Home, description: 'Residence hall community' },
+      { value: 'club-org', label: 'Club/Organization', icon: Building, description: 'Official student organizations' },
+      { value: 'intramural', label: 'Intramural Sports', icon: Calendar, description: 'Recreational athletics' },
+      { value: 'academic-society', label: 'Academic Society', icon: GraduationCap, description: 'Subject-focused groups' }
+    ],
+    privacyLevels: [
+      { value: 'public', label: 'Public', description: 'Visible to all UB students' },
+      { value: 'campus-only', label: 'Campus Only', description: 'Visible to your school/department' },
+      { value: 'friends-only', label: 'Friends Only', description: 'Visible to your connections' },
+      { value: 'invite-only', label: 'Invite Only', description: 'Invitation required to view' },
+      { value: 'private', label: 'Private', description: 'Only visible to you' }
+    ]
+  }
+};
+
+// Academic Selections Story;
+export const AcademicSelections: Story = {
+  render: () => (
+    <div className="w-full max-w-4xl mx-auto p-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Academic Selection System</h2>
+        <p className="text-lg text-gray-600">University at Buffalo academic choices and preferences</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Major Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <GraduationCap className="h-5 w-5 text-blue-600" />
+            Major Selection;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Primary Major</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose your major" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusSelectOptions.academics.majors.map((major) => (
+                  <SelectItem key={major.value} value={major.value}>
+                    <div>
+                      <div className="font-medium">{major.label}</div>
+                      <div className="text-sm text-gray-500">{major.school}</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              This helps us suggest relevant academic spaces and study groups;
+            </p>
+          </div>
+        </div>
+
+        {/* Academic Year Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-green-600" />
+            Academic Level;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Current Level</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select your academic year" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusSelectOptions.academics.years.map((year) => (
+                  <SelectItem key={year.value} value={year.value}>
+                    <div>
+                      <div className="font-medium">{year.label}</div>
+                      <div className="text-sm text-gray-500">{year.description}</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Connect with students at your academic level;
+            </p>
+          </div>
+        </div>
+
+        {/* Semester Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-purple-600" />
+            Active Semester;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Planning For</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose semester" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusSelectOptions.academics.semesters.map((semester) => (
+                  <SelectItem key={semester.value} value={semester.value}>
+                    <div className="flex items-center justify-between w-full">
+                      <span className="font-medium">{semester.label}</span>
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        semester.status === 'current' ? 'bg-green-100 text-green-700' :
+                        semester.status === 'upcoming' ? 'bg-blue-100 text-blue-700' :
+                        'bg-gray-100 text-gray-600'
+                      }`}>
+                        {semester.status}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Plan ahead for upcoming academic terms;
+            </p>
+          </div>
+        </div>
+
+        {/* Course Format Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Clock className="h-5 w-5 text-orange-600" />
+            Study Preferences;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Preferred Study Format</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="How do you like to study?" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="group-study">Group Study Sessions</SelectItem>
+                <SelectItem value="peer-tutoring">Peer Tutoring</SelectItem>
+                <SelectItem value="study-buddies">Study Buddy Pairs</SelectItem>
+                <SelectItem value="large-groups">Large Study Groups (5+)</SelectItem>
+                <SelectItem value="online-collab">Online Collaboration</SelectItem>
+                <SelectItem value="library-quiet">Quiet Library Sessions</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              We'll suggest study spaces that match your learning style;
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+};
+
+// Campus Location Selections Story;
+export const CampusLocationSelections: Story = {
+  render: () => (
+    <div className="w-full max-w-4xl mx-auto p-8 bg-gradient-to-br from-green-50 to-teal-50">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Campus Location System</h2>
+        <p className="text-lg text-gray-600">Navigate University at Buffalo campus spaces and facilities</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Building Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Building className="h-5 w-5 text-blue-600" />
+            Campus Buildings;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Meeting Location</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a building" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusSelectOptions.campus.buildings.map((building) => (
+                  <SelectItem key={building.value} value={building.value}>
+                    <div>
+                      <div className="font-medium">{building.label}</div>
+                      <div className="text-sm text-gray-500">{building.campus}</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Choose convenient meeting spots across campus;
+            </p>
+          </div>
+        </div>
+
+        {/* Dining Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-red-600" />
+            Dining Locations;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Dining Preference</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose dining location" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusSelectOptions.campus.diningLocations.map((location) => (
+                  <SelectItem key={location.value} value={location.value}>
+                    <div>
+                      <div className="font-medium">{location.label}</div>
+                      <div className="text-sm text-gray-500">{location.type}</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Coordinate dining meetups and food orders;
+            </p>
+          </div>
+        </div>
+
+        {/* Residence Hall Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Home className="h-5 w-5 text-green-600" />
+            Residence Halls;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Your Dorm</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select your residence" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusSelectOptions.campus.residenceHalls.map((hall) => (
+                  <SelectItem key={hall.value} value={hall.value}>
+                    <div>
+                      <div className="font-medium">{hall.label}</div>
+                      <div className="text-sm text-gray-500">{hall.type} Style</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Connect with students in your residence community;
+            </p>
+          </div>
+        </div>
+
+        {/* Campus Zone Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-purple-600" />
+            Campus Zone;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Primary Campus</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select campus zone" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="north-campus">
+                  <div>
+                    <div className="font-medium">North Campus</div>
+                    <div className="text-sm text-gray-500">Main academic and residential area</div>
+                  </div>
+                </SelectItem>
+                <SelectItem value="south-campus">
+                  <div>
+                    <div className="font-medium">South Campus</div>
+                    <div className="text-sm text-gray-500">Medical and professional schools</div>
+                  </div>
+                </SelectItem>
+                <SelectItem value="downtown">
+                  <div>
+                    <div className="font-medium">Downtown Campus</div>
+                    <div className="text-sm text-gray-500">Medical school and clinical facilities</div>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Find activities and connections in your campus area;
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+};
+
+// Social & Privacy Selections Story;
+export const SocialPrivacySelections: Story = {
+  render: () => (
+    <div className="w-full max-w-4xl mx-auto p-8 bg-gradient-to-br from-purple-50 to-pink-50">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Social & Privacy Controls</h2>
+        <p className="text-lg text-gray-600">Manage your social interactions and privacy preferences</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Space Category Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Users className="h-5 w-5 text-blue-600" />
+            Space Categories;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Create New Space</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose space type" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusSelectOptions.social.spaceCategories.map((category) => {
+                  const IconComponent = category.icon;
+                  return (
+                    <SelectItem key={category.value} value={category.value}>
+                      <div className="flex items-center gap-3">
+                        <IconComponent className="h-4 w-4 text-gray-600" />
+                        <div>
+                          <div className="font-medium">{category.label}</div>
+                          <div className="text-sm text-gray-500">{category.description}</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Choose the right category for better discoverability;
+            </p>
+          </div>
+        </div>
+
+        {/* Privacy Level Selection */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Clock className="h-5 w-5 text-green-600" />
+            Privacy Settings;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Who Can See This</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose privacy level" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusSelectOptions.social.privacyLevels.map((level) => (
+                  <SelectItem key={level.value} value={level.value}>
+                    <div>
+                      <div className="font-medium">{level.label}</div>
+                      <div className="text-sm text-gray-500">{level.description}</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Control who can discover and join your space;
+            </p>
+          </div>
+        </div>
+
+        {/* Notification Preferences */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-orange-600" />
+            Notification Timing;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">When to Notify</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose notification frequency" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="immediate">Immediately</SelectItem>
+                <SelectItem value="hourly">Hourly Digest</SelectItem>
+                <SelectItem value="daily">Daily Summary</SelectItem>
+                <SelectItem value="weekly">Weekly Overview</SelectItem>
+                <SelectItem value="never">Never (Manual Check)</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Stay updated without notification overload;
+            </p>
+          </div>
+        </div>
+
+        {/* Connection Preferences */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Users className="h-5 w-5 text-purple-600" />
+            Connection Preferences;
+          </h3>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Who Can Connect</label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose connection policy" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="anyone">Anyone at UB</SelectItem>
+                <SelectItem value="same-year">Same Academic Year</SelectItem>
+                <SelectItem value="same-major">Same Major/Department</SelectItem>
+                <SelectItem value="same-dorm">Same Residence Hall</SelectItem>
+                <SelectItem value="mutual-friends">Mutual Connections Only</SelectItem>
+                <SelectItem value="invite-only">Invitation Required</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500">
+              Control who can send you connection requests;
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+};
+
+// Interactive Multi-Select Demo Story;
+export const InteractiveSelectDemo: Story = {
+  render: () => {
+    const [selectedValues, setSelectedValues] = React.useState({major: '',
+      year: '',
+      building: '',
+      privacy: '')};
+
+    const handleSelectionChange = (key: string, value: string) => {
+      setSelectedValues(prev => ({ ...prev, [key]: value }))
+    };
+
+    return (
+      <div className="w-full max-w-4xl mx-auto p-8 bg-gradient-to-br from-orange-50 to-red-50">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Interactive Selection Demo</h2>
+          <p className="text-lg text-gray-600">Experience HIVE's selection system in action</p>
+        </div>
+
+        <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
+          <h3 className="text-xl font-semibold text-gray-800 mb-6">Profile Setup Wizard</h3>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-gray-700">Academic Major</label>
+              <Select onValueChange={(value) => handleSelectionChange('major', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose your major" />
+                </SelectTrigger>
+                <SelectContent>
+                  {campusSelectOptions.academics.majors.slice(0, 6).map((major) => (
+                    <SelectItem key={major.value} value={major.value}>
+                      <div>
+                        <div className="font-medium">{major.label}</div>
+                        <div className="text-sm text-gray-500">{major.school}</div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-gray-700">Academic Year</label>
+              <Select onValueChange={(value) => handleSelectionChange('year', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your year" />
+                </SelectTrigger>
+                <SelectContent>
+                  {campusSelectOptions.academics.years.slice(0, 4).map((year) => (
+                    <SelectItem key={year.value} value={year.value}>
+                      {year.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-gray-700">Preferred Building</label>
+              <Select onValueChange={(value) => handleSelectionChange('building', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose a building" />
+                </SelectTrigger>
+                <SelectContent>
+                  {campusSelectOptions.campus.buildings.slice(0, 5).map((building) => (
+                    <SelectItem key={building.value} value={building.value}>
+                      {building.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-gray-700">Privacy Level</label>
+              <Select onValueChange={(value) => handleSelectionChange('privacy', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose privacy setting" />
+                </SelectTrigger>
+                <SelectContent>
+                  {campusSelectOptions.social.privacyLevels.slice(0, 4).map((level) => (
+                    <SelectItem key={level.value} value={level.value}>
+                      {level.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {Object.values(selectedValues).some(value => value) && (
+            <div className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-100">
+              <h4 className="font-semibold text-blue-900 mb-3">Your Selections</h4>
+              <div className="space-y-2 text-sm">
+                {selectedValues.major && (
+                  <div>
+                    <span className="font-medium text-blue-800">Major:</span>
+                    <span className="ml-2 text-blue-700">
+                      {campusSelectOptions.academics.majors.find(m => m.value === selectedValues.major)?.label}
+                    </span>
+                  </div>
+                )}
+                {selectedValues.year && (
+                  <div>
+                    <span className="font-medium text-blue-800">Year:</span>
+                    <span className="ml-2 text-blue-700">
+                      {campusSelectOptions.academics.years.find(y => y.value === selectedValues.year)?.label}
+                    </span>
+                  </div>
+                )}
+                {selectedValues.building && (
+                  <div>
+                    <span className="font-medium text-blue-800">Building:</span>
+                    <span className="ml-2 text-blue-700">
+                      {campusSelectOptions.campus.buildings.find(b => b.value === selectedValues.building)?.label}
+                    </span>
+                  </div>
+                )}
+                {selectedValues.privacy && (
+                  <div>
+                    <span className="font-medium text-blue-800">Privacy:</span>
+                    <span className="ml-2 text-blue-700">
+                      {campusSelectOptions.social.privacyLevels.find(p => p.value === selectedValues.privacy)?.label}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-8 bg-green-50 rounded-xl p-6 border border-green-100">
+          <h4 className="font-semibold text-green-900 mb-2">Campus Integration Features</h4>
+          <ul className="text-sm text-green-800 space-y-1">
+            <li>• UB-specific academic and campus options</li>
+            <li>• Smart suggestions based on previous selections</li>
+            <li>• Keyboard navigation and screen reader support</li>
+            <li>• Mobile-optimized touch targets for campus use</li>
+          </ul>
+        </div>
+      </div>
+    )
+  }
+};

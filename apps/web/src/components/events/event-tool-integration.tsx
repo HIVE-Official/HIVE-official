@@ -218,7 +218,7 @@ export function EventToolIntegration({
                         Live
                       </Badge>
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => onToolLaunch(session.toolId, { sessionId: session.id })}
                       >
@@ -376,7 +376,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       value={toolConfig.duration || '25'}
-                      onChange={(e) => setToolConfig((prev: any) => ({...prev, duration: e.target.value}))}
+                      onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, duration: e.target.value}))}
                     >
                       <option value="15">15 minutes</option>
                       <option value="25">25 minutes</option>
@@ -389,7 +389,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.autoBreaks || false}
-                        onChange={(e) => setToolConfig((prev: any) => ({...prev, autoBreaks: e.target.checked}))}
+                        onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, autoBreaks: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Automatic break reminders</span>
                     </label>
@@ -406,7 +406,7 @@ export function EventToolIntegration({
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       placeholder="Enter poll question..."
                       value={toolConfig.title || ''}
-                      onChange={(e) => setToolConfig((prev: any) => ({...prev, title: e.target.value}))}
+                      onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, title: e.target.value}))}
                     />
                   </div>
                   <div>
@@ -414,7 +414,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.anonymous || true}
-                        onChange={(e) => setToolConfig((prev: any) => ({...prev, anonymous: e.target.checked}))}
+                        onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, anonymous: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Anonymous responses</span>
                     </label>
@@ -429,7 +429,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       value={toolConfig.method || 'code'}
-                      onChange={(e) => setToolConfig((prev: any) => ({...prev, method: e.target.value}))}
+                      onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, method: e.target.value}))}
                     >
                       <option value="code">Check-in Code</option>
                       <option value="location">Location Verification</option>
@@ -441,7 +441,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.certificates || false}
-                        onChange={(e) => setToolConfig((prev: any) => ({...prev, certificates: e.target.checked}))}
+                        onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, certificates: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Generate attendance certificates</span>
                     </label>
@@ -451,7 +451,7 @@ export function EventToolIntegration({
             </div>
 
             <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
-              <Button variant="outline" onClick={() => setShowSetupModal(false)}>
+              <Button variant="secondary" onClick={() => setShowSetupModal(false)}>
                 Cancel
               </Button>
               <Button 

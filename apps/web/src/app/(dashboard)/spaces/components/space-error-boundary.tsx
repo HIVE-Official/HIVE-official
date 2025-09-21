@@ -89,7 +89,7 @@ class SpaceErrorBoundary extends React.Component<SpaceErrorBoundaryProps, SpaceE
               
               <div className="flex gap-2">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
                   onClick={() => window.history.back()}
                 >
@@ -98,7 +98,7 @@ class SpaceErrorBoundary extends React.Component<SpaceErrorBoundaryProps, SpaceE
                 </Button>
                 
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
                   onClick={() => window.location.href = '/spaces'}
                 >

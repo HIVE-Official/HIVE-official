@@ -180,7 +180,7 @@ export function SpaceTransferInterface({
       <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Current Space</h3>
-          <Badge variant="outline" className="border-[#FFD700]/30 text-[#FFD700]">
+          <Badge variant="freshman" className="border-[#FFD700]/30 text-[#FFD700]">
             {getSpaceTypeName(spaceType)}
           </Badge>
         </div>
@@ -287,7 +287,7 @@ export function SpaceTransferInterface({
           <h3 className="text-lg font-semibold text-white mb-4">Transfer Reason</h3>
           <textarea
             value={transferReason}
-            onChange={(e) => setTransferReason(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setTransferReason(e.target.value)}
             placeholder="Why are you transferring? (optional)"
             className="w-full h-24 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[#FFD700]/30"
             maxLength={200}
@@ -345,7 +345,7 @@ export function SpaceTransferInterface({
           
           <div className="flex gap-4 mt-6">
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => {
                 setSelectedTargetSpace(null);
                 setTransferReason('');
@@ -413,7 +413,7 @@ export function SpaceTransferInterface({
               
               <div className="flex gap-3">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setShowConfirmation(false)}
                   className="flex-1"
                   disabled={transferMutation.isPending}
@@ -470,7 +470,7 @@ export function SpaceTransferInterface({
                   </div>
                 </div>
                 
-                <Badge variant="outline" className="text-xs capitalize">
+                <Badge variant="freshman" className="text-xs capitalize">
                   {record.spaceType.replace('_', ' ')}
                 </Badge>
               </div>

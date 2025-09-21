@@ -1,122 +1,89 @@
-'use client';
-
-import React from 'react';
-import { cn } from '../../lib/utils';
-import { InputEnhanced as Input } from '../atoms/input-enhanced';
-import { Text } from '../atoms/text';
+import * as React from "react"
+import { cn } from "../../lib/utils"
 
 export interface FormFieldProps {
-  label?: string;
-  description?: string;
-  error?: string;
-  required?: boolean;
-  children: React.ReactElement;
+  children: React.ReactNode
   className?: string
 }
 
-export const FormField: React.FC<FormFieldProps> = ({
-  label,
-  description,
-  error,
-  required = false,
-  children,
-  className
-}) => {
-  // Generate unique ID for accessibility
-  const fieldId = React.useId();
-  const descriptionId = description ? `${fieldId}-description` : undefined;
-  const errorId = error ? `${fieldId}-error` : undefined;
+const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
+  ({ children, className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn("space-y-2", className)}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  }
+)
+FormField.displayName = "FormField"
 
-  // Clone child with accessibility props
-  const childWithProps = React.cloneElement(children, {
-    id: fieldId,
-    'aria-describedby': [descriptionId, errorId].filter(Boolean).join(' ') || undefined,
-    'aria-invalid': error ? 'true' : undefined,
-    error
-  });
+export interface FormLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 
-  return (
-    <div className={cn('space-y-2', className)}>
-      {/* Label */}
-      {label && (
-        <label
-          htmlFor={fieldId}
-          className="block font-medium text-[var(--hive-text-primary)]"
-        >
-          <Text variant="body-sm" color="primary">
-            {label}
-            {required && (
-              <span className="text-[var(--hive-status-error)] ml-1" aria-label="required">
-                *
-              </span>
-            )}
-          </Text>
-        </label>
+const FormLabel = React.forwardRef<HTMLLabelElement, FormLabelProps>(
+  ({ className, ...props }, ref) => (
+    <label
+      ref={ref}
+      className={cn(
+        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[var(--hive-text-primary)]",
+        className
       )}
-
-      {/* Description */}
-      {description && (
-        <Text
-          variant="body-xs"
-          color="secondary"
-          id={descriptionId}
-        >
-          {description}
-        </Text>
-      )}
-
-      {/* Input Field */}
-      {childWithProps}
-
-      {/* Error Message */}
-      {error && (
-        <Text
-          variant="body-xs"
-          color="ruby"
-          id={errorId}
-          role="alert"
-        >
-          {error}
-        </Text>
-      )}
-    </div>
+      {...props}
+    />
   )
-};
+)
+FormLabel.displayName = "FormLabel"
 
-// Composed form field components for common patterns
-export const TextFormField: React.FC<
-  Omit<FormFieldProps, 'children'> & 
-  React.ComponentProps<typeof Input>
-> = ({ label, description, error, required, className, ...inputProps }) => (
-  <FormField
-    label={label}
-    description={description}
-    error={error}
-    required={required}
-    className={className}
-  >
-    <Input {...inputProps} />
-  </FormField>
-);
+export interface FormControlProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export const EmailFormField: React.FC<
-  Omit<FormFieldProps, 'children'> & 
-  Omit<React.ComponentProps<typeof Input>, 'type'>
-> = ({ label = 'Email', ...props }) => (
-  <TextFormField
-    type="email"
-    label={label}
-    {...props}
-  />
-);
+const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
+  ({ ...props }, ref) => (
+    <div ref={ref} {...props} />
+  )
+)
+FormControl.displayName = "FormControl"
 
-export const PasswordFormField: React.FC<
-  Omit<FormFieldProps, 'children'> & 
-  Omit<React.ComponentProps<typeof Input>, 'type'>
-> = ({ label = 'Password', ...props }) => (
-  <TextFormField
-    type="password"
-    label={label}
-    {...props}
-  />
-);
+export interface FormDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+
+const FormDescription = React.forwardRef<HTMLParagraphElement, FormDescriptionProps>(
+  ({ className, ...props }, ref) => (
+    <p
+      ref={ref}
+      className={cn("text-sm text-[var(--hive-text-secondary)]", className)}
+      {...props}
+    />
+  )
+)
+FormDescription.displayName = "FormDescription"
+
+export interface FormMessageProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+
+const FormMessage = React.forwardRef<HTMLParagraphElement, FormMessageProps>(
+  ({ className, children, ...props }, ref) => {
+    if (!children) {
+      return null
+    }
+
+    return (
+      <p
+        ref={ref}
+        className={cn("text-sm font-medium text-[var(--hive-status-error)]", className)}
+        {...props}
+      >
+        {children}
+      </p>
+    )
+  }
+)
+FormMessage.displayName = "FormMessage"
+
+export {
+  FormField,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+}

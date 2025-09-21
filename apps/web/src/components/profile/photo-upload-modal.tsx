@@ -174,9 +174,9 @@ export function PhotoUploadModal({
                 </div>
                 <div className="flex items-center justify-center space-x-4">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleReset();
                     }}
@@ -230,7 +230,7 @@ export function PhotoUploadModal({
 
         <HiveModalFooter>
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={handleClose}
             disabled={isUploading}
           >

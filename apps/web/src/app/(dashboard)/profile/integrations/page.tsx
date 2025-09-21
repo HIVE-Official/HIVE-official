@@ -20,8 +20,7 @@ import {
   FormField,
   Switch
 } from "@hive/ui";
-import { 
-  User, 
+import {
   Link,
   Check,
   X,
@@ -41,7 +40,7 @@ import {
   Plus
 } from 'lucide-react';
 import { ErrorBoundary } from '../../../../components/error-boundary';
-import { useHiveProfile } from '../../../../hooks/use-hive-profile';
+// Removed unused useHiveProfile hook
 
 interface Integration {
   id: string;
@@ -197,7 +196,6 @@ const INTEGRATION_HEALTH: IntegrationHealth = {
 
 export default function ProfileIntegrationsPage() {
   const router = useRouter();
-  const { profile } = useHiveProfile();
   
   const [integrations, setIntegrations] = useState<Integration[]>(INTEGRATIONS);
   const [health, setHealth] = useState<IntegrationHealth>(INTEGRATION_HEALTH);
@@ -205,10 +203,7 @@ export default function ProfileIntegrationsPage() {
   const [showManageModal, setShowManageModal] = useState(false);
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null);
 
-  // Calculate UB-specific integration insights
-  const ubIntegrations = useMemo(() => {
-    return integrations.filter(i => i.provider.includes('UB') || i.provider.includes('University at Buffalo'));
-  }, [integrations]);
+  // UB-specific integration insights could be calculated here if needed
 
   const criticalMissing = useMemo(() => {
     return integrations.filter(i => i.status === 'disconnected' && (i.isRequired || i.isRecommended));
@@ -334,7 +329,7 @@ export default function ProfileIntegrationsPage() {
           <div className="flex items-center gap-3">
             {criticalMissing.length > 0 && (
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
                 className="border-yellow-500 text-yellow-400 hover:bg-yellow-500/10"
               >
@@ -343,7 +338,7 @@ export default function ProfileIntegrationsPage() {
               </Button>
             )}
             <Button 
-              variant="outline" 
+              variant="secondary" 
               size="sm"
               onClick={handleRefreshAll}
               disabled={isRefreshing}
@@ -352,7 +347,7 @@ export default function ProfileIntegrationsPage() {
               Refresh All
             </Button>
             <Button 
-              variant="outline" 
+              variant="secondary" 
               size="sm"
               onClick={() => router.push('/profile/privacy')}
             >
@@ -401,7 +396,7 @@ export default function ProfileIntegrationsPage() {
                     {errorIntegrations.length} integration{errorIntegrations.length > 1 ? 's' : ''} need{errorIntegrations.length === 1 ? 's' : ''} attention
                   </p>
                 </div>
-                <Button variant="outline" size="sm" className="ml-auto border-red-500 text-red-400 hover:bg-red-500/10">
+                <Button variant="secondary" size="sm" className="ml-auto border-red-500 text-red-400 hover:bg-red-500/10">
                   Fix Issues
                 </Button>
               </div>
@@ -436,10 +431,10 @@ export default function ProfileIntegrationsPage() {
                             <h3 className="font-semibold text-white flex items-center space-x-2">
                               <span>{integration.name}</span>
                               {integration.isRequired && (
-                                <Badge variant="secondary" className="text-xs">Required</Badge>
+                                <Badge variant="sophomore" className="text-xs">Required</Badge>
                               )}
                               {integration.isRecommended && (
-                                <Badge variant="outline" className="text-xs">Recommended</Badge>
+                                <Badge variant="freshman" className="text-xs">Recommended</Badge>
                               )}
                             </h3>
                             <p className="text-sm text-hive-text-mutedLight">by {integration.provider}</p>
@@ -492,7 +487,7 @@ export default function ProfileIntegrationsPage() {
                           {integration.status === 'connected' ? (
                             <>
                               <Button 
-                                variant="outline" 
+                                variant="secondary" 
                                 size="sm"
                                 onClick={() => {
                                   setSelectedIntegration(integration);
@@ -514,7 +509,7 @@ export default function ProfileIntegrationsPage() {
                             </>
                           ) : (
                             <Button
-                              variant="outline"
+                              variant="secondary"
                               size="sm"
                               onClick={() => handleConnect(integration.id)}
                               disabled={integration.status === 'syncing'}
@@ -562,7 +557,7 @@ export default function ProfileIntegrationsPage() {
                             <div className="text-xs text-white font-medium">Features:</div>
                             <div className="flex flex-wrap gap-1">
                               {integration.features.slice(0, 3).map((feature) => (
-                                <Badge key={feature} variant="outline" className="text-xs">
+                                <Badge key={feature} variant="freshman" className="text-xs">
                                   {feature}
                                 </Badge>
                               ))}
@@ -585,7 +580,7 @@ export default function ProfileIntegrationsPage() {
                                 </Button>
                               ) : (
                                 <Button
-                                  variant="outline"
+                                  variant="secondary"
                                   size="sm"
                                   onClick={() => handleConnect(integration.id)}
                                 >
@@ -735,7 +730,7 @@ export default function ProfileIntegrationsPage() {
                 </h5>
                 <div className="grid grid-cols-2 gap-2">
                   {selectedIntegration.features.map((feature) => (
-                    <Badge key={feature} variant="outline" className="justify-center">
+                    <Badge key={feature} variant="freshman" className="justify-center">
                       {feature}
                     </Badge>
                   ))}
@@ -757,7 +752,7 @@ export default function ProfileIntegrationsPage() {
               {/* Action Buttons */}
               <div className="flex justify-between pt-4">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => {
                     if (selectedIntegration.status === 'connected') {
                       handleDisconnect(selectedIntegration.id);

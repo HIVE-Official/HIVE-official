@@ -174,7 +174,7 @@ export function EventDetailsModal({
       isOpen={isOpen}
       onClose={onClose}
       title=""
-      size="xl"
+      size="lg"
       className="max-h-[90vh] overflow-hidden"
     >
       <div className="flex flex-col h-full">
@@ -377,7 +377,7 @@ export function EventDetailsModal({
                       {event.location.virtualLink && (
                         <div className="mt-2">
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             onClick={() => window.open(event.location.virtualLink, '_blank')}
                             className="flex items-center space-x-2"
@@ -446,7 +446,7 @@ export function EventDetailsModal({
                     {event.capacity.max - event.capacity.current} spots left
                   </Badge>
                   {event.organizer.id === currentUserId && (
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <UserPlus className="h-4 w-4 mr-1" />
                       Invite
                     </Button>
@@ -577,7 +577,7 @@ export function EventDetailsModal({
                   Discussion ({event.engagement.comments})
                 </h3>
                 {event.organizer.id === currentUserId && (
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <Settings className="h-4 w-4 mr-1" />
                     Moderate
                   </Button>
@@ -691,7 +691,7 @@ export function EventDetailsModal({
                     
                     {event.engagement.comments > 3 && (
                       <div className="text-center">
-                        <Button variant="outline" size="sm">
+                        <Button variant="secondary" size="sm">
                           Load {event.engagement.comments - 3} more comments
                         </Button>
                       </div>

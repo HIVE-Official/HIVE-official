@@ -1,74 +1,84 @@
-"use client";
+"use client"
 
-import React from 'react';
-import { cn } from '../../lib/utils';
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./card"
+import { Switch } from "./switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select"
+import { Label } from "./label"
 
-export type NavigationStyle = 'auto' | 'sidebar' | 'tabs';
+export interface NavigationPreference {
+  id: string
+  label: string
+  description?: string
+  value: boolean | string
+  type: 'boolean' | 'select'
+  options?: Array<{ value: string; label: string }>
+}
 
-interface NavigationPreferencesProps {
-  value: NavigationStyle;
-  onChange: (value: NavigationStyle) => void;
+export interface NavigationPreferencesProps {
+  preferences: NavigationPreference[]
+  onPreferenceChange: (id: string, value: boolean | string) => void
   className?: string
 }
 
-const options: { value: NavigationStyle; label: string; description: string }[] = [
-  {
-    value: 'auto',
-    label: 'Automatic',
-    description: 'Adapts to your screen size and usage patterns'
-  },
-  {
-    value: 'sidebar',
-    label: 'Sidebar',
-    description: 'Always show navigation in a side panel'
-  },
-  {
-    value: 'tabs',
-    label: 'Top Tabs',
-    description: 'Show navigation as tabs at the top'
-  }
-];
-
-export function NavigationPreferences({ value, onChange, className }: NavigationPreferencesProps) {
-  return (
-    <div className={cn("space-y-4", className)}>
-      <div className="space-y-3">
-        {options.map((option) => (
-          <label
-            key={option.value}
-            className={cn(
-              "flex items-start space-x-3 p-4 rounded-lg border cursor-pointer transition-colors",
-              value === option.value
-                ? "border-[var(--hive-brand-gold)] bg-[var(--hive-brand-gold)]/5"
-                : "border-[var(--hive-border-primary)] bg-[var(--hive-background-secondary)] hover:border-[var(--hive-border-interactive)]"
-            )}
-          >
-            <input
-              type="radio"
-              name="navigation-preference"
-              value={option.value}
-              checked={value === option.value}
-              onChange={() => onChange(option.value)}
-              className="mt-1 w-4 h-4 text-[var(--hive-brand-gold)] bg-transparent border-[var(--hive-border-primary)] focus:ring-[var(--hive-brand-gold)] focus:ring-2"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-[var(--hive-text-primary)]">
-                  {option.label}
-                </span>
-                {value === option.value && (
-                  <span className="text-xs px-2 py-1 bg-[var(--hive-brand-gold)] text-[var(--hive-text-inverse)] rounded-full font-medium">
-                    Active
-                  </span>
+const NavigationPreferences = React.forwardRef<HTMLDivElement, NavigationPreferencesProps>(
+  ({ preferences, onPreferenceChange, className, ...props }, ref) => {
+    return (
+      <Card ref={ref} className={cn("w-full", className)} {...props}>
+        <CardHeader>
+          <CardTitle>Navigation Preferences</CardTitle>
+          <CardDescription>
+            Customize how you navigate through HIVE
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {preferences.map((preference) => (
+            <div key={preference.id} className="flex items-center justify-between space-x-4">
+              <div className="flex-1 space-y-1">
+                <Label htmlFor={preference.id} className="text-sm font-medium">
+                  {preference.label}
+                </Label>
+                {preference.description && (
+                  <p className="text-xs text-[var(--hive-text-secondary)]">
+                    {preference.description}
+                  </p>
                 )}
               </div>
-              <p className="text-xs text-[var(--hive-text-secondary)] mt-1">
-                {option.description}
-              </p>
+
+              <div className="flex-shrink-0">
+                {preference.type === 'boolean' ? (
+                  <Switch
+                    id={preference.id}
+                    checked={preference.value as boolean}
+                    onCheckedChange={(checked) => onPreferenceChange(preference.id, checked)}
+                  />
+                ) : (
+                  <Select
+                    value={preference.value as string}
+                    onValueChange={(value) => onPreferenceChange(preference.id, value)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {preference.options?.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
             </div>
-          </label>
-        ))}
-      </div>
-    </div>
-  )
-}
+          ))}
+        </CardContent>
+      </Card>
+    )
+  }
+)
+
+NavigationPreferences.displayName = "NavigationPreferences"
+
+export { NavigationPreferences }

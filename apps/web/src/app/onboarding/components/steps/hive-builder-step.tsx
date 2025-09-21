@@ -182,7 +182,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
             : "Search for communities you want to help build..."
           }
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent) => setSearchTerm(e.target.value)}
           leftIcon={<Search className="w-4 h-4" />}
           variant="premium"
           size="lg"
@@ -208,7 +208,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <HiveCard variant="default" className="p-[var(--hive-spacing-4)] text-center border-red-500/30 bg-red-900/10">
+          <HiveCard className="p-[var(--hive-spacing-4)] text-center border-red-500/30 bg-red-900/10">
             <p className="text-[var(--hive-status-error)]">{error}</p>
           </HiveCard>
         </motion.div>
@@ -220,7 +220,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <HiveCard variant="default" className="p-[var(--hive-spacing-6)] text-center">
+          <HiveCard className="p-[var(--hive-spacing-6)] text-center">
             <p className="text-[var(--hive-text-secondary)]">
               {searchTerm && searchTerm.length >= 2 
                 ? (data.userType === 'faculty' 
@@ -296,7 +296,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <HiveCard variant="online" className="p-[var(--hive-spacing-4)] inline-block">
+          <HiveCard className="p-[var(--hive-spacing-4)] inline-block">
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-[var(--hive-status-success)]" />
               <span className="text-sm font-medium text-[var(--hive-text-primary)]">
@@ -313,7 +313,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <HiveCard variant="default" className="p-[var(--hive-spacing-4)] text-center">
+        <HiveCard className="p-[var(--hive-spacing-4)] text-center">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center justify-center">
             <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
             {data.userType === 'faculty' ? 'Faculty Management Requests' : 'HIVE Builder Program'}

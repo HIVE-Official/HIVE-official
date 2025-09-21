@@ -13,17 +13,16 @@ import {
   Button,
   Badge
 } from "@hive/ui";
-import { 
-  Activity, 
-  Plus, 
-  TrendingUp, 
-  Users, 
-  Calendar, 
+import {
+  Activity,
+  Plus,
+  TrendingUp,
+  Users,
+  Calendar,
   Zap,
   Heart,
   Globe,
-  Bell,
-  Settings
+  Bell
 } from 'lucide-react';
 import { ErrorBoundary } from '../../../components/error-boundary';
 
@@ -110,19 +109,6 @@ export default function FeedPageStoryBookMigration() {
   // 🎓 **UB STUDENT CONTEXT DATA**
   // =============================================================================
   // This demonstrates sophisticated UB student context that Storybook provides
-  
-  const currentUser = useMemo(() => ({
-    id: 'current-user',
-    fullName: 'Alex Chen',
-    handle: 'achen4',
-    photoURL: undefined,
-    role: 'member' as const,
-    // 🎓 UB Context
-    campus: 'ub-buffalo',
-    year: 'Junior',
-    major: 'Computer Science',
-    housing: 'Ellicott Complex'
-  }), []);
 
   // Load feed data (simulated - in real app would use platform hooks)
   useEffect(() => {
@@ -194,42 +180,8 @@ export default function FeedPageStoryBookMigration() {
   // 🎨 **SOPHISTICATED INTERACTION HANDLERS**
   // =============================================================================
   // These demonstrate the advanced interactions Storybook components support
-  
-  const handlePostReaction = async (postId: string, reactionType: string) => {
-    try {
-      // Platform API call would go here
-      console.log(`Reacting to post ${postId} with ${reactionType}`);
-      
-      // Update local state optimistically
-      setFeedPosts(posts => posts.map(post => 
-        post.id === postId
-          ? {
-              ...post,
-              reactions: {
-                ...post.reactions,
-                [reactionType]: post.isLiked 
-                  ? post.reactions.heart - 1 
-                  : post.reactions.heart + 1
-              },
-              isLiked: !post.isLiked
-            }
-          : post
-      ));
-    } catch (error) {
-      console.error('Error reacting to post:', error);
-    }
-  };
 
-  const handlePostCreated = async (postData: any) => {
-    try {
-      console.log('Creating post:', postData);
-      // Platform API call would go here
-      setShowComposer(false);
-      // Reload feed
-    } catch (error) {
-      console.error('Error creating post:', error);
-    }
-  };
+  // Interaction handlers would be implemented here when connected to platform APIs
 
   // Loading state with Storybook loading component
   if (isLoading) {
@@ -297,7 +249,7 @@ export default function FeedPageStoryBookMigration() {
             </div>
             
             {/* 🔔 **CAMPUS NOTIFICATIONS** */}
-            <Button variant="outline" size="sm" className="relative">
+            <Button variant="secondary" size="sm" className="relative">
               <Bell className="h-4 w-4" />
               <Badge className="absolute -top-1 -right-1 bg-hive-gold text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                 3
@@ -373,7 +325,7 @@ export default function FeedPageStoryBookMigration() {
                       Browse Spaces
                     </Button>
                     <Button 
-                      variant="outline" 
+                      variant="secondary" 
                       onClick={() => setShowComposer(true)}
                     >
                       Create Post
@@ -395,7 +347,7 @@ export default function FeedPageStoryBookMigration() {
           {feedPosts.length > 0 && (
             <div className="text-center">
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 className="w-full max-w-md"
                 onClick={() => console.log('Load more posts')}
               >

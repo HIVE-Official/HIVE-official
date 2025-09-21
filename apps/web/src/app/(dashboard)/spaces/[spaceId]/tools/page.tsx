@@ -392,7 +392,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
         ]}
         actions={
           <div className="flex items-center space-x-3">
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <BarChart3 className="h-4 w-4 mr-2" />
               Analytics
             </Button>
@@ -461,7 +461,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
                 placeholder="Search tools..."
                 className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-64"
               />
@@ -469,7 +469,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             
             <select
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value as 'all' | 'academic' | 'engagement' | 'productivity' | 'communication' | 'collaboration' | 'organization')}
+              onChange={(e: React.ChangeEvent) => setCategoryFilter(e.target.value as 'all' | 'academic' | 'engagement' | 'productivity' | 'communication' | 'collaboration' | 'organization')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Categories</option>
@@ -483,7 +483,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
             
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+              onChange={(e: React.ChangeEvent) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Status</option>
@@ -563,7 +563,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                 <div className="flex items-center space-x-2">
                   {tool.isActive ? (
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       className="text-green-400 border-green-500/30 hover:bg-green-500/10"
                     >
@@ -572,7 +572,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                     </Button>
                   ) : (
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       disabled
                       className="text-zinc-500"
@@ -717,7 +717,7 @@ export default function SpaceToolsPage({ params }: SpaceToolsPageProps) {
                       <div className="text-sm text-zinc-400">Enable or disable this tool for space members</div>
                     </div>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() => handleToolToggle(showToolSettings.id)}
                       className={showToolSettings.isActive ? 'text-green-400 border-green-500/30' : 'text-zinc-500'}

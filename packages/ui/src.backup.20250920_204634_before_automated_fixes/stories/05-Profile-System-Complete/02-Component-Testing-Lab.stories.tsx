@@ -1,0 +1,700 @@
+/**
+ * HIVE Profile System - Component Testing Lab;
+ * Interactive testing environment for individual profile cards and features;
+ */
+
+import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from '../../components/framer-motion-proxy';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Switch } from '../../components/ui/switch';
+// import { Slider } from '../../components/ui/slider';
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+
+// Import individual card components;
+import { AvatarCard, mockUserProfile, type UserProfile } from '../../components/profile/cards/avatar-card';
+import { CalendarCard, mockCalendarEvents, type CalendarEvent } from '../../components/profile/cards/calendar-card';
+import { NotificationsCard, mockNotifications, type Notification } from '../../components/profile/cards/notifications-card';
+import { SpacesCard, mockSpaces, mockRecommendedSpaces, type Space } from '../../components/profile/cards/spaces-card';
+import { GhostModeCard, mockGhostModeSettings, type GhostModeSettings } from '../../components/profile/cards/ghost-mode-card';
+import { HiveLabCard, mockTools, mockBuilderStats, type Tool, type BuilderStats } from '../../components/profile/cards/hive-lab-card';
+
+import { 
+  Beaker,
+  Settings,
+  Play,
+  Pause,
+  RotateCcw,
+  Monitor,
+  Tablet,
+  Smartphone,
+  Grid,
+  Layout,
+  Eye,
+  EyeOff,
+  Crown,
+  Shield,
+  Zap,
+  Users,
+  Calendar,
+  Bell,
+  User,
+  TestTube,
+  Code,
+  Wrench,
+  Database,
+  CheckCircle,
+  AlertTriangle,
+  Info;
+} from 'lucide-react';
+
+const meta: Meta = {
+  title: '05-Profile System/Component Testing Lab',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: `
+# 🧪 HIVE Profile System - Component Testing Lab;
+**Interactive testing environment for profile card components**
+
+## 🎯 Testing Capabilities;
+### **Component Isolation Testing**
+- Individual card components in controlled environment;
+- Real-time prop manipulation and state changes;
+- Visual regression testing for different states;
+- Performance monitoring for individual components;
+### **Interactive Controls**
+- **Device Simulation**: Desktop, tablet, mobile previews;
+- **State Manipulation**: Edit mode, loading states, error conditions;
+- **Data Variants**: Different user types, content volumes;
+- **Visual Testing**: Different themes, accessibility modes;
+### **UB Integration Testing**
+- Campus-specific data validation;
+- @buffalo.edu email scenarios;
+- Academic calendar integration;
+- Housing and course space testing;
+## 🔧 Available Components;
+### **6 Profile Cards**
+1. **Avatar Card** - Identity, photos, academic info;
+2. **Calendar Card** - UB events, class schedules;
+3. **Notifications Card** - Campus updates, space activity;
+4. **Spaces Card** - Course/housing communities;
+5. **Ghost Mode Card** - Privacy and visibility controls;
+6. **HiveLAB Card** - Tool creation and sharing;
+### **Testing Scenarios**
+- **New Student**: Empty states, onboarding flows;
+- **Active Student**: Full data, typical usage;
+- **Builder**: Advanced features, tool management;
+- **Error States**: Network issues, loading failures;
+        `
+      }
+    }
+  }
+};
+
+export default meta;
+
+// Component configurations for testing;
+const cardConfigs = [
+  {
+    id: 'avatar',
+    name: 'Avatar Card',
+    icon: User,
+    description: 'User identity and profile information',
+    size: '2x1',
+    component: AvatarCard,
+    testScenarios: ['New Student', 'Verified Student', 'Builder', 'Ghost Mode']
+  },
+  {
+    id: 'calendar',
+    name: 'Calendar Card',
+    icon: Calendar,
+    description: 'UB events and academic calendar',
+    size: '2x1',
+    component: CalendarCard,
+    testScenarios: ['Empty Calendar', 'Busy Schedule', 'Event Conflicts', 'Loading']
+  },
+  {
+    id: 'notifications',
+    name: 'Notifications Card',
+    icon: Bell,
+    description: 'Campus updates and space activity',
+    size: '2x1',
+    component: NotificationsCard,
+    testScenarios: ['No Notifications', 'Mixed Alerts', 'High Volume', 'Action Required']
+  },
+  {
+    id: 'spaces',
+    name: 'Spaces Card',
+    icon: Users,
+    description: 'Course and housing communities',
+    size: '1x2',
+    component: SpacesCard,
+    testScenarios: ['New Student', 'Course Heavy', 'Social Focus', 'Admin View']
+  },
+  {
+    id: 'ghost',
+    name: 'Ghost Mode Card',
+    icon: EyeOff,
+    description: 'Privacy and visibility controls',
+    size: '1x1',
+    component: GhostModeCard,
+    testScenarios: ['Privacy Conscious', 'Fully Open', 'Custom Settings', 'Quick Presets']
+  },
+  {
+    id: 'hivelab',
+    name: 'HiveLAB Card',
+    icon: Zap,
+    description: 'Tool creation and builder features',
+    size: '1x1',
+    component: HiveLabCard,
+    testScenarios: ['New User', 'Active Builder', 'Expert Creator', 'Tool Portfolio']
+  }
+];
+
+// Test Control Panel Component;
+function TestControlPanel({
+  selectedCard,
+  onCardChange,
+  testScenario,
+  onScenarioChange,
+  deviceMode,
+  onDeviceChange,
+  isEditMode,
+  onEditModeChange,
+  autoPlay,
+  onAutoPlayChange;
+}: {
+  selectedCard: string;
+  onCardChange: (card: string) => void;
+  testScenario: string;
+  onScenarioChange: (scenario: string) => void;
+  deviceMode: 'desktop' | 'tablet' | 'mobile';
+  onDeviceChange: (device: 'desktop' | 'tablet' | 'mobile') => void;
+  isEditMode: boolean;
+  onEditModeChange: (enabled: boolean) => void;
+  autoPlay: boolean;
+  onAutoPlayChange: (enabled: boolean) => void;
+}) {
+  const selectedConfig = cardConfigs.find(c => c.id === selectedCard);
+
+  return (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Beaker className="w-5 h-5" />
+          Component Testing Controls;
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Component Selection */}
+          <div>
+            <label className="text-sm font-medium text-[var(--hive-text-primary)] mb-2 block">
+              Test Component;
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {cardConfigs.map((config) => {
+                const Icon = config.icon;
+                const isSelected = selectedCard === config.id;
+                return (
+                  <Button;
+                    key={config.id}}
+                    size="sm"
+                    variant={isSelected ? "default" : "outline"}
+                    onClick={() => onCardChange(config.id)}
+                    className="flex items-center gap-2"
+                  >
+                    <Icon className="w-4 h-4" />
+                    {config.name}
+                  </Button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Test Scenario */}
+          <div>
+            <label className="text-sm font-medium text-[var(--hive-text-primary)] mb-2 block">
+              Test Scenario;
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {selectedConfig?.testScenarios.map((scenario) => {
+                const isSelected = testScenario === scenario;
+                return (
+                  <Button;
+                    key={scenario}}
+                    size="sm"
+                    variant={isSelected ? "default" : "outline"}
+                    onClick={() => onScenarioChange(scenario)}
+                  >
+                    {scenario}
+                  </Button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Device Mode */}
+          <div>
+            <label className="text-sm font-medium text-[var(--hive-text-primary)] mb-2 block">
+              Device Mode;
+            </label>
+            <div className="flex gap-1">
+              {[
+                { key: 'desktop', icon: Monitor },
+                { key: 'tablet', icon: Tablet },
+                { key: 'mobile', icon: Smartphone }
+              ].map(map}) => (
+                <Button;
+                  key={key}
+                  size="sm"
+                  variant={deviceMode === key ? "default" : "outline"}
+                  onClick={() => onDeviceChange(key as any)}
+                  className="flex-1"
+                >
+                  <Icon className="w-4 h-4" />
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Testing Options */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Switch checked={isEditMode} onCheckedChange={onEditModeChange} />
+              <label className="text-sm text-[var(--hive-text-primary)]">Edit Mode</label>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Switch checked={autoPlay} onCheckedChange={onAutoPlayChange} />
+              <label className="text-sm text-[var(--hive-text-primary)]">Auto Cycle</label>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline">
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Reset;
+            </Button>
+            <Button size="sm" variant="outline">
+              <Code className="w-4 h-4 mr-2" />
+              View Code;
+            </Button>
+          </div>
+        </div>
+
+        {/* Component Info */}
+        {selectedConfig && (
+          <div className="p-4 bg-[var(--hive-background-secondary)] rounded-lg">
+            <div className="flex items-start gap-3">
+              <selectedConfig.icon className="w-5 h-5 text-[var(--hive-brand-primary)] mt-0.5" />
+              <div>
+                <h4 className="font-medium text-[var(--hive-text-primary)]">
+                  {selectedConfig.name}
+                </h4>
+                <p className="text-sm text-[var(--hive-text-muted)] mb-2">
+                  {selectedConfig.description}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">
+                    Size: {selectedConfig.size}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs">
+                    {selectedConfig.testScenarios.length} Test Scenarios;
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+// Component Test Results;
+function TestResults({ 
+  results;
+}: { 
+  results: { 
+    renderTime: number; 
+    componentState: string; 
+    errors: string[]; 
+    warnings: string[] 
+  } 
+}) {
+  return (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <TestTube className="w-5 h-5" />
+          Test Results;
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <div className="text-lg font-bold text-[var(--hive-text-primary)]">
+              {results.renderTime}ms;
+            </div>
+            <div className="text-sm text-[var(--hive-text-muted)]">Render Time</div>
+          </div>
+          
+          <div className="text-center">
+            <div className="text-lg font-bold text-[var(--hive-text-primary)]">
+              {results.componentState}
+            </div>
+            <div className="text-sm text-[var(--hive-text-muted)]">Component State</div>
+          </div>
+          
+          <div className="text-center">
+            <div className={`text-lg font-bold ${results.errors.length > 0 ? 'text-red-500' : 'text-green-500'}`}>
+              {results.errors.length}
+            </div>
+            <div className="text-sm text-[var(--hive-text-muted)]">Errors</div>
+          </div>
+          
+          <div className="text-center">
+            <div className={`text-lg font-bold ${results.warnings.length > 0 ? 'text-yellow-500' : 'text-green-500'}`}>
+              {results.warnings.length}
+            </div>
+            <div className="text-sm text-[var(--hive-text-muted)]">Warnings</div>
+          </div>
+        </div>
+
+        {/* Error/Warning Details */}
+        {(results.errors.length > 0 || results.warnings.length > 0) && (
+          <div className="mt-4 space-y-2">
+            {results.errors.map((error, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-red-50 rounded text-red-700">
+                <AlertTriangle className="w-4 h-4" />
+                <span className="text-sm">{error}</span>
+              </div>
+            ))}
+            {results.warnings.map((warning, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-yellow-50 rounded text-yellow-700">
+                <Info className="w-4 h-4" />
+                <span className="text-sm">{warning}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+// Generate test data based on scenario;
+function generateTestData(cardType: string, scenario: string) {
+  switch (cardType) {
+    case 'avatar':
+      switch (scenario) {
+        case 'New Student':
+          return {
+            profile: {
+              ...mockUserProfile,
+              displayName: 'Alex Rodriguez',
+              bio: '',
+              profilePhotoURL: '',
+              academicInfo: {
+                ...mockUserProfile.academicInfo,
+                major: 'Undeclared',
+                housing: ''
+              },
+              builderStatus: false,
+              isVerified: false;
+            }
+          };
+        case 'Builder':
+          return {
+            profile: {
+              ...mockUserProfile,
+              displayName: 'Marcus Thompson',
+              builderStatus: true,
+              isVerified: true,
+              bio: 'Engineering student building tools to improve campus life. Creator of multiple popular campus utilities.'
+            }
+          };
+        case 'Ghost Mode':
+          return {
+            profile: {
+              ...mockUserProfile,
+              ghostMode: true,
+              isOnline: false;
+            }
+          };
+        default:
+          return { profile: mockUserProfile }
+      }
+      
+    case 'calendar':
+      switch (scenario) {
+        case 'Empty Calendar':
+          return { events: [] };
+        case 'Busy Schedule':
+          return { 
+            events: [
+              ...mockCalendarEvents,
+              {
+                id: 'extra-1',
+                title: 'Study Group',
+                startTime: '2024-01-16T16:00:00Z',
+                type: 'study',
+                location: 'Library'
+              },
+              {
+                id: 'extra-2',
+                title: 'Office Hours',
+                startTime: '2024-01-16T10:00:00Z',
+                type: 'meeting',
+                location: 'Davis Hall'
+              }
+            ]
+          };
+        default:
+          return { events: mockCalendarEvents }
+      }
+      
+    case 'notifications':
+      switch (scenario) {
+        case 'No Notifications':
+          return { notifications: [], unreadCount: 0 };
+        case 'High Volume':
+          return { 
+            notifications: Array.from({ length: 10 }, (_, i) => ({
+              ...mockNotifications[0],
+              id: `notif-${i}`,
+              title: `Notification ${i + 1}`,
+              isRead: i > 7
+            })}),
+            unreadCount: 8
+          };
+        default:
+          return { notifications: mockNotifications, unreadCount: 3 }
+      }
+      
+    default:
+      return {}
+  }
+}
+
+// Main Testing Lab Component;
+export const ComponentTestingLab: StoryObj = {
+  render: () => {
+    const [selectedCard, setSelectedCard] = useState('avatar');
+    const [testScenario, setTestScenario] = useState('New Student');
+    const [deviceMode, setDeviceMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [autoPlay, setAutoPlay] = useState(false);
+    const [renderTime] = useState(Math.floor(Math.random() * 50) + 150);
+
+    const testResults = {
+      renderTime,
+      componentState: 'Healthy',
+      errors: [],
+      warnings: []
+    };
+
+    const testData = generateTestData(selectedCard, testScenario);
+    const selectedConfig = cardConfigs.find(c => c.id === selectedCard);
+
+    const renderTestComponent = () => {
+      switch (selectedCard) {
+        case 'avatar':
+          return (
+            <AvatarCard;
+              profile={testData.profile}}
+              isEditMode={isEditMode}
+              onProfileUpdate={() => {}}
+              onPhotoUpload={async () => ''}
+            />
+          );
+        case 'calendar':
+          return (
+            <CalendarCard;
+              events={testData.events || mockCalendarEvents}
+              isEditMode={isEditMode}
+            />
+          );
+        case 'notifications':
+          return (
+            <NotificationsCard;
+              notifications={testData.notifications || mockNotifications}
+              unreadCount={testData.unreadCount || 0}
+              isEditMode={isEditMode}
+            />
+          );
+        case 'spaces':
+          return (
+            <SpacesCard;
+              spaces={mockSpaces}
+              recommendedSpaces={mockRecommendedSpaces}
+              isEditMode={isEditMode}
+            />
+          );
+        case 'ghost':
+          return (
+            <GhostModeCard;
+              settings={mockGhostModeSettings}
+              isEditMode={isEditMode}
+              onSettingsChange={() => {}}
+              onToggleGhostMode={() => {}}
+              onQuickPreset={() => {}}
+            />
+          );
+        case 'hivelab':
+          return (
+            <HiveLabCard;
+              tools={mockTools}
+              builderStats={mockBuilderStats}
+              isBuilder={true}
+              isEditMode={isEditMode}
+            />
+          );
+        default:
+          return <div>Component not found</div>
+      }
+    };
+
+    const containerMaxWidth = {
+      desktop: 'max-w-4xl',
+      tablet: 'max-w-2xl',
+      mobile: 'max-w-sm'
+    }[deviceMode];
+
+    return (
+      <div className="min-h-screen bg-[var(--hive-background-primary)] p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold text-[var(--hive-text-primary)]">
+              Component Testing Lab;
+            </h1>
+            <p className="text-[var(--hive-text-muted)]">
+              Interactive testing environment for HIVE profile system components;
+            </p>
+          </div>
+
+          {/* Test Controls */}
+          <TestControlPanel;
+            selectedCard={selectedCard}
+            onCardChange={setSelectedCard}
+            testScenario={testScenario}
+            onScenarioChange={setTestScenario}
+            deviceMode={deviceMode}
+            onDeviceChange={setDeviceMode}
+            isEditMode={isEditMode}
+            onEditModeChange={setIsEditMode}
+            autoPlay={autoPlay}
+            onAutoPlayChange={setAutoPlay}
+          />
+
+          {/* Test Results */}
+          <TestResults results={testResults} />
+
+          {/* Component Under Test */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {selectedConfig?.icon && <selectedConfig.icon className="w-5 h-5" />}
+                  {selectedConfig?.name} - {testScenario}
+                </div>
+                <Badge variant="outline">{deviceMode}</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-center">
+                <div className={`w-full ${containerMaxWidth} transition-all duration-300`}>
+                  <motion.div;
+                    key={`${selectedCard}-${testScenario}-${deviceMode}`}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {renderTestComponent()}
+                  </motion.div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Component Grid Overview */}
+          <Card>
+            <CardHeader>
+              <CardTitle>All Components Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {cardConfigs.map((config) => {
+                  const Icon = config.icon;
+                  const isSelected = selectedCard === config.id;
+                  
+                  return (
+                    <motion.div;
+                      key={config.id}}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Card;
+                        className={`cursor-pointer transition-all ${
+                          isSelected;
+                            ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-brand-primary)]/5' 
+                            : 'hover:border-[var(--hive-brand-secondary)]'
+                        }`}
+                        onClick={() => setSelectedCard(config.id)}
+                      >
+                        <CardContent className="p-4 text-center">
+                          <div className={`w-8 h-8 mx-auto mb-2 rounded-lg flex items-center justify-center ${
+                            isSelected;
+                              ? 'bg-[var(--hive-brand-primary)] text-white' 
+                              : 'bg-[var(--hive-background-secondary)]'
+                          }`}>
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <h4 className="font-medium text-sm text-[var(--hive-text-primary)] mb-1">
+                            {config.name}
+                          </h4>
+                          <p className="text-xs text-[var(--hive-text-muted)]">
+                            {config.size}
+                          </p>
+                          {isSelected && (
+                            <CheckCircle className="w-4 h-4 text-[var(--hive-brand-primary)] mx-auto mt-2" />
+                          )}
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Interactive component testing environment for HIVE profile cards**
+
+This testing lab allows you to:
+- Test individual components in isolation;
+- Simulate different user scenarios and data states;
+- Preview components across different device sizes;
+- Monitor component performance and health;
+- Validate UB-specific functionality;
+Perfect for development, QA testing, and component validation.
+        `
+      }
+    }
+  }
+};

@@ -401,7 +401,7 @@ export function CommandNavLayout({ children }: CommandNavLayoutProps) {
                   type="text"
                   placeholder="Search anything... (tools, spaces, people, commands)"
                   value={searchQuery}
-                  onChange={(e) => {
+                  onChange={(e: React.ChangeEvent) => {
                     setSearchQuery(e.target.value);
                     setSelectedIndex(0);
                   }}

@@ -114,7 +114,7 @@ export default function LandingPage() {
           >
             <HiveLogo 
               variant="gold" 
-              size="xl"
+              size="lg"
               showWordmark={true}
               className="scale-125"
             />
@@ -198,8 +198,8 @@ export default function LandingPage() {
                 className="flex flex-col sm:flex-row gap-4 justify-center"
               >
                 <HiveButton 
-                  variant="premium" 
-                  size="xl" 
+                  variant="primary" 
+                  size="lg" 
                   className="w-full sm:w-auto"
                   onClick={handleNavigateToSchools}
                   data-testid="get-started-button"
@@ -208,7 +208,7 @@ export default function LandingPage() {
                 </HiveButton>
                 <HiveButton 
                   variant="secondary" 
-                  size="xl" 
+                  size="lg" 
                   className="w-full sm:w-auto"
                   onClick={() => setIsLearnMoreOpen(true)}
                 >
@@ -284,8 +284,8 @@ export default function LandingPage() {
               Launching July 2025 • Join the beta program
             </p>
             <HiveButton 
-              variant="premium" 
-              size="xl" 
+              variant="primary" 
+              size="lg" 
               className="w-full"
               onClick={() => {
                 setIsLearnMoreOpen(false);

@@ -196,7 +196,7 @@ export function ToolExecutionPanel({
           return (
             <Textarea
               value={value || ''}
-              onChange={(e) => handleInputChange(key, e.target.value)}
+              onChange={(e: React.ChangeEvent) => handleInputChange(key, e.target.value)}
               placeholder={definition.placeholder}
               rows={3}
               className="mt-1"
@@ -206,7 +206,7 @@ export function ToolExecutionPanel({
         return (
           <Input
             value={value || ''}
-            onChange={(e) => handleInputChange(key, e.target.value)}
+            onChange={(e: React.ChangeEvent) => handleInputChange(key, e.target.value)}
             placeholder={definition.placeholder}
             className="mt-1"
           />
@@ -217,7 +217,7 @@ export function ToolExecutionPanel({
           <Input
             type="number"
             value={value || 0}
-            onChange={(e) => handleInputChange(key, parseFloat(e.target.value))}
+            onChange={(e: React.ChangeEvent) => handleInputChange(key, parseFloat(e.target.value))}
             className="mt-1"
           />
         );
@@ -226,7 +226,7 @@ export function ToolExecutionPanel({
         return (
           <div className="mt-1">
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => handleInputChange(key, !value)}
               className={value ? 'bg-green-500/20 border-green-500' : ''}
@@ -241,7 +241,7 @@ export function ToolExecutionPanel({
         return (
           <Textarea
             value={typeof value === 'string' ? value : JSON.stringify(value, null, 2)}
-            onChange={(e) => handleInputChange(key, parseInputValue(e.target.value, definition.type))}
+            onChange={(e: React.ChangeEvent) => handleInputChange(key, parseInputValue(e.target.value, definition.type))}
             placeholder={definition.type === 'array' ? '["item1", "item2"]' : '{"key": "value"}'}
             rows={3}
             className="mt-1 font-mono text-sm"
@@ -252,7 +252,7 @@ export function ToolExecutionPanel({
         return (
           <Input
             value={value || ''}
-            onChange={(e) => handleInputChange(key, e.target.value)}
+            onChange={(e: React.ChangeEvent) => handleInputChange(key, e.target.value)}
             className="mt-1"
           />
         );
@@ -295,14 +295,14 @@ export function ToolExecutionPanel({
             {result && (
               <>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={copyResult}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={exportResult}
                 >
@@ -312,7 +312,7 @@ export function ToolExecutionPanel({
             )}
             {isExecuting ? (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={handleCancel}
                 className="text-red-400 border-red-400"
@@ -382,7 +382,7 @@ export function ToolExecutionPanel({
                     <Label className="text-white flex items-center space-x-2">
                       <span>{key}</span>
                       {definition.required && (
-                        <Badge variant="secondary" className="text-xs">Required</Badge>
+                        <Badge variant="sophomore" className="text-xs">Required</Badge>
                       )}
                     </Label>
                     {definition.description && (

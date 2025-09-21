@@ -406,7 +406,7 @@ export function SpaceEventCalendar({
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
             placeholder="Search events..."
             className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
           />
@@ -414,7 +414,7 @@ export function SpaceEventCalendar({
         
         <select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={(e: React.ChangeEvent) => setTypeFilter(e.target.value)}
           className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Types</option>
@@ -427,7 +427,7 @@ export function SpaceEventCalendar({
         
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          onChange={(e: React.ChangeEvent) => setStatusFilter(e.target.value)}
           className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Status</option>
@@ -436,7 +436,7 @@ export function SpaceEventCalendar({
           <option value="completed">Completed</option>
         </select>
         
-        <Button variant="outline" size="sm">
+        <Button variant="secondary" size="sm">
           <Download className="h-4 w-4 mr-2" />
           Export
         </Button>
@@ -452,21 +452,21 @@ export function SpaceEventCalendar({
             </h3>
             <div className="flex items-center space-x-2">
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
                 onClick={() => navigateMonth('prev')}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={() => setCurrentDate(new Date())}
               >
                 Today
               </Button>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
                 onClick={() => navigateMonth('next')}
               >
@@ -798,11 +798,11 @@ export function SpaceEventCalendar({
               </div>
               
               <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm">
+                <Button variant="secondary" size="sm">
                   <Bell className="h-4 w-4 mr-1" />
                   Remind Me
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="secondary" size="sm">
                   <Calendar className="h-4 w-4 mr-1" />
                   Add to Calendar
                 </Button>

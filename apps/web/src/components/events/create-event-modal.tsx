@@ -214,7 +214,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
       isOpen={isOpen}
       onClose={onClose}
       title={`Create Event - ${getStepTitle(step)}`}
-      size="xl"
+      size="lg"
     >
       <div className="space-y-6">
         {/* Progress Indicator */}
@@ -245,7 +245,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               </label>
               <HiveInput
                 value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                onChange={(e: React.ChangeEvent) => handleInputChange('title', e.target.value)}
                 placeholder="Enter event title..."
                 className="w-full"
                 maxLength={100}
@@ -259,7 +259,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
+                onChange={(e: React.ChangeEvent) => handleInputChange('description', e.target.value)}
                 placeholder="Describe your event, what to expect, and any important details..."
                 className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
                 rows={4}
@@ -306,7 +306,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <input
                   type="datetime-local"
                   value={formData.datetime.start}
-                  onChange={(e) => handleNestedInputChange('datetime', 'start', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleNestedInputChange('datetime', 'start', e.target.value)}
                   className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
                   min={new Date().toISOString().slice(0, 16)}
                 />
@@ -320,7 +320,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <input
                   type="datetime-local"
                   value={formData.datetime.end}
-                  onChange={(e) => handleNestedInputChange('datetime', 'end', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleNestedInputChange('datetime', 'end', e.target.value)}
                   className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
                   min={formData.datetime.start || new Date().toISOString().slice(0, 16)}
                 />
@@ -331,7 +331,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <label className="block text-sm font-medium text-white mb-2">Timezone</label>
               <select
                 value={formData.datetime.timezone}
-                onChange={(e) => handleNestedInputChange('datetime', 'timezone', e.target.value)}
+                onChange={(e: React.ChangeEvent) => handleNestedInputChange('datetime', 'timezone', e.target.value)}
                 className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
               >
                 <option value="America/New_York">Eastern Time (ET)</option>
@@ -379,7 +379,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               </label>
               <HiveInput
                 value={formData.location.name}
-                onChange={(e) => handleNestedInputChange('location', 'name', e.target.value)}
+                onChange={(e: React.ChangeEvent) => handleNestedInputChange('location', 'name', e.target.value)}
                 placeholder={
                   formData.location.type === 'virtual' 
                     ? 'e.g., Zoom Meeting, Discord Channel'
@@ -394,7 +394,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <label className="block text-sm font-medium text-white mb-2">Full Address</label>
                 <HiveInput
                   value={formData.location.address || ''}
-                  onChange={(e) => handleNestedInputChange('location', 'address', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleNestedInputChange('location', 'address', e.target.value)}
                   placeholder="Enter full address with building and room number..."
                   className="w-full"
                 />
@@ -406,7 +406,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <label className="block text-sm font-medium text-white mb-2">Virtual Link</label>
                 <HiveInput
                   value={formData.location.virtualLink || ''}
-                  onChange={(e) => handleNestedInputChange('location', 'virtualLink', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleNestedInputChange('location', 'virtualLink', e.target.value)}
                   placeholder="https://zoom.us/j/... or Discord invite link"
                   className="w-full"
                 />
@@ -427,7 +427,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <HiveInput
                   type="number"
                   value={formData.capacity.toString()}
-                  onChange={(e) => handleInputChange('capacity', parseInt(e.target.value) || 0)}
+                  onChange={(e: React.ChangeEvent) => handleInputChange('capacity', parseInt(e.target.value) || 0)}
                   placeholder="50"
                   className="w-32"
                   min="1"
@@ -461,7 +461,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                       name="visibility"
                       value={vis.id}
                       checked={formData.visibility === vis.id}
-                      onChange={(e) => handleInputChange('visibility', e.target.value)}
+                      onChange={(e: React.ChangeEvent) => handleInputChange('visibility', e.target.value)}
                       className="mt-1"
                     />
                     <div>
@@ -521,7 +521,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <div className="flex items-center space-x-2 mb-3">
                 <HiveInput
                   value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setNewTag(e.target.value)}
                   placeholder="Add a tag..."
                   className="flex-1"
                   onKeyPress={(e) => e.key === 'Enter' && addTag()}
@@ -547,7 +547,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <div className="flex items-center space-x-2 mb-3">
                 <HiveInput
                   value={newRequirement}
-                  onChange={(e) => setNewRequirement(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setNewRequirement(e.target.value)}
                   placeholder="e.g., Laptop, Professional attire..."
                   className="flex-1"
                   onKeyPress={(e) => e.key === 'Enter' && addRequirement()}
@@ -614,7 +614,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
         {/* Navigation Buttons */}
         <div className="flex items-center justify-between pt-6 border-t border-zinc-800">
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => step > 1 ? setStep(step - 1) : onClose()}
           >
             {step > 1 ? 'Previous' : 'Cancel'}

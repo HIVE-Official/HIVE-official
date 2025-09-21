@@ -214,7 +214,7 @@ function ConfirmModalContent({
       <div className="flex gap-3 justify-center">
         <Button
           onClick={onCancel}
-          variant="outline"
+          variant="secondary"
           className="border-hive-border-secondary text-hive-text-secondary hover:bg-hive-background-elevated"
           disabled={isLoading}
         >

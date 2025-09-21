@@ -82,13 +82,13 @@ vi.mock('../../../app/onboarding/components/steps/hive-name-step', () => ({
       <input
         data-testid="first-name"
         value={data.firstName || ''}
-        onChange={(e) => updateData({ firstName: e.target.value })}
+        onChange={(e: React.ChangeEvent) => updateData({ firstName: e.target.value })}
         placeholder="First name"
       />
       <input
         data-testid="last-name"
         value={data.lastName || ''}
-        onChange={(e) => updateData({ lastName: e.target.value })}
+        onChange={(e: React.ChangeEvent) => updateData({ lastName: e.target.value })}
         placeholder="Last name"
       />
     </div>
@@ -102,14 +102,14 @@ vi.mock('../../../app/onboarding/components/steps/hive-academics-step', () => ({
       <input
         data-testid="major"
         value={data.major || ''}
-        onChange={(e) => updateData({ major: e.target.value })}
+        onChange={(e: React.ChangeEvent) => updateData({ major: e.target.value })}
         placeholder="Major"
       />
       <input
         data-testid="graduation-year"
         type="number"
         value={data.graduationYear || 2024}
-        onChange={(e) => updateData({ graduationYear: parseInt(e.target.value) })}
+        onChange={(e: React.ChangeEvent) => updateData({ graduationYear: parseInt(e.target.value) })}
       />
     </div>
   ),
@@ -122,7 +122,7 @@ vi.mock('../../../app/onboarding/components/steps/hive-handle-step', () => ({
       <input
         data-testid="handle"
         value={data.handle || ''}
-        onChange={(e) => updateData({ handle: e.target.value })}
+        onChange={(e: React.ChangeEvent) => updateData({ handle: e.target.value })}
         placeholder="Handle"
       />
     </div>
@@ -163,7 +163,7 @@ vi.mock('../../../app/onboarding/components/steps/hive-legal-step', () => ({
           type="checkbox"
           data-testid="accept-terms"
           checked={data.acceptedTerms || false}
-          onChange={(e) => updateData({ acceptedTerms: e.target.checked })}
+          onChange={(e: React.ChangeEvent) => updateData({ acceptedTerms: e.target.checked })}
         />
         Accept Terms
       </label>
@@ -172,7 +172,7 @@ vi.mock('../../../app/onboarding/components/steps/hive-legal-step', () => ({
           type="checkbox"
           data-testid="accept-privacy"
           checked={data.acceptedPrivacy || false}
-          onChange={(e) => updateData({ acceptedPrivacy: e.target.checked })}
+          onChange={(e: React.ChangeEvent) => updateData({ acceptedPrivacy: e.target.checked })}
         />
         Accept Privacy Policy
       </label>
@@ -187,13 +187,13 @@ vi.mock('../../../app/onboarding/components/steps/hive-faculty-info-step', () =>
       <input
         data-testid="faculty-first-name"
         value={data.firstName || ''}
-        onChange={(e) => updateData({ firstName: e.target.value })}
+        onChange={(e: React.ChangeEvent) => updateData({ firstName: e.target.value })}
         placeholder="First name"
       />
       <input
         data-testid="faculty-last-name"
         value={data.lastName || ''}
-        onChange={(e) => updateData({ lastName: e.target.value })}
+        onChange={(e: React.ChangeEvent) => updateData({ lastName: e.target.value })}
         placeholder="Last name"
       />
     </div>

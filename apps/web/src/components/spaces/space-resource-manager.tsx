@@ -259,7 +259,7 @@ export function SpaceResourceManager({
             type="text"
             placeholder="Search resources, tags, or descriptions..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-zinc-800/50 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
           />
         </div>
@@ -267,7 +267,7 @@ export function SpaceResourceManager({
           <Filter className="h-4 w-4 text-zinc-400" />
           <select
             value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value as any)}
+            onChange={(e: React.ChangeEvent) => setSelectedType(e.target.value as any)}
             className="bg-zinc-800/50 border border-zinc-700 rounded-lg px-3 py-2 text-white focus:border-hive-gold focus:outline-none"
           >
             <option value="all">All Types</option>
@@ -345,7 +345,7 @@ export function SpaceResourceManager({
               {/* Actions */}
               <div className="flex items-center justify-between">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => setSelectedResource(resource)}
                   className="border-zinc-600 text-zinc-400 hover:text-white"
@@ -465,7 +465,7 @@ export function SpaceResourceManager({
             )}
 
             <div className="flex justify-end space-x-3">
-              <Button variant="outline" onClick={() => setSelectedResource(null)}>
+              <Button variant="secondary" onClick={() => setSelectedResource(null)}>
                 Close
               </Button>
               {selectedResource.availability === 'available' && (
@@ -522,7 +522,7 @@ export function SpaceResourceManager({
           </div>
           
           <div className="flex justify-end space-x-3">
-            <Button variant="outline" onClick={() => setShowCreateModal(false)}>
+            <Button variant="secondary" onClick={() => setShowCreateModal(false)}>
               Cancel
             </Button>
             <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">

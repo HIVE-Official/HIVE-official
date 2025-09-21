@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useCallback } from 'react';
-import { Button, Card, Badge, useAuth } from "@hive/ui";
+import { Button, Card, Badge } from "@hive/ui";
+import { useAuth } from "@hive/auth-logic";
 import { 
   Activity, 
   Plus, 
@@ -28,28 +29,26 @@ export default function FeedPage() {
   const [feedFilter, setFeedFilter] = useState<'all' | 'following' | 'spaces' | 'academic'>('all');
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'trending'>('recent');
   const [showComposer, setShowComposer] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-
   // Stub functions for post interactions
-  const createPost = async (postData: any) => {
+  const createPost = useCallback(async (postData: any) => {
     console.log('Creating post:', postData);
     // Implementation needed
-  };
+  }, []);
 
-  const likePost = async (postId: string) => {
+  const likePost = useCallback(async (postId: string) => {
     console.log('Liking post:', postId);
     // Implementation needed
-  };
+  }, []);
 
-  const commentOnPost = async (postId: string, content: string) => {
+  const commentOnPost = useCallback(async (postId: string, content: string) => {
     console.log('Commenting on post:', postId, content);
     // Implementation needed
-  };
+  }, []);
 
-  const sharePost = async (postId: string) => {
+  const sharePost = useCallback(async (postId: string) => {
     console.log('Sharing post:', postId);
     // Implementation needed
-  };
+  }, []);
 
   // Use the integrated feed hook
   const {
@@ -198,7 +197,6 @@ export default function FeedPage() {
                 </h1>
                 <p className="text-hive-text-secondary text-sm">
                   Your personalized campus pulse and coordination center
-                  {lastUpdated && ` • Last updated ${lastUpdated.toLocaleTimeString()}`}
                 </p>
               </div>
             </div>
@@ -208,7 +206,7 @@ export default function FeedPage() {
               {/* Sort By */}
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as any)}
                 className="text-sm bg-hive-background-tertiary border border-hive-border-default rounded px-3 py-1"
               >
                 <option value="recent">Recent</option>
@@ -257,13 +255,13 @@ export default function FeedPage() {
               </div>
               
               {/* Feed Settings */}
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
               
               {/* Notifications */}
-              <Button variant="outline" size="sm" className="relative">
+              <Button variant="secondary" size="sm" className="relative">
                 <Bell className="h-4 w-4" />
                 <Badge className="absolute -top-1 -right-1 bg-hive-gold text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                   3
@@ -317,10 +315,10 @@ export default function FeedPage() {
           <Card className="p-4">
             <PostComposer
               user={{
-                id: (user as any)?.id || (user as any)?.uid || '',
-                name: user.fullName || 'User',
-                handle: user.handle || 'user',
-                avatarUrl: user.avatarUrl
+                id: user?.uid || '',
+                name: user?.fullName || 'User',
+                handle: user?.handle || 'user',
+                avatarUrl: user?.avatarUrl
               }}
               onPost={handleCreatePost}
               onCancel={() => setShowComposer(false)}
@@ -354,7 +352,7 @@ export default function FeedPage() {
                     Browse Spaces
                   </Button>
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     onClick={() => setShowComposer(true)}
                   >
                     Create Post
@@ -394,7 +392,7 @@ export default function FeedPage() {
               </div>
             ) : (
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={loadMore}
                 disabled={isLoadingMore}
                 className="w-full max-w-md"
@@ -412,7 +410,7 @@ export default function FeedPage() {
               <AlertTriangle className="h-4 w-4 text-red-400" />
               <span className="text-red-400 text-sm">{error}</span>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm" 
                 onClick={refresh}
                 className="ml-auto"

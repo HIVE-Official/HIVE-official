@@ -146,7 +146,7 @@ function VerifyPageContent() {
           action={
             <HiveButton
               variant="secondary"
-              size="xl"
+              size="lg"
               className="w-full"
               onClick={() => router.push("/schools")}
             >

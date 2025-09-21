@@ -223,7 +223,7 @@ export function PersonalToolsCard({
               <h3 className="text-sm font-semibold text-hive-text-primary">Your Tools</h3>
             </div>
             <HiveButton 
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleAddTools();
               }}
@@ -257,7 +257,7 @@ export function PersonalToolsCard({
             </div>
 
             <HiveButton 
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleAddTools();
               }}
@@ -296,7 +296,7 @@ export function PersonalToolsCard({
           </div>
           <div className="flex items-center gap-2">
             <HiveButton 
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleAddTools();
               }}
@@ -307,7 +307,7 @@ export function PersonalToolsCard({
               + Add
             </HiveButton>
             <HiveButton 
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleManageTools();
               }}
@@ -333,7 +333,7 @@ export function PersonalToolsCard({
                   return (
                     <button
                       key={tool.id}
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleToolClick(tool.id);
                       }}
@@ -347,7 +347,7 @@ export function PersonalToolsCard({
                   return (
                     <button
                       key={`empty-${index}`}
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleAddTools();
                       }}
@@ -399,7 +399,7 @@ export function PersonalToolsCard({
         {/* Bottom Action */}
         <div className="mt-auto">
           <HiveButton 
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               handleManageTools();
             }}

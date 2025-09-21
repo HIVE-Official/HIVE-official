@@ -105,7 +105,7 @@ export default [
     },
   },
 
-  // Global ignore patterns
+  // Global ignore patterns - optimized for memory usage
   {
     ignores: [
       "storybook-static/**",
@@ -118,6 +118,15 @@ export default [
       "*.config.*",
       "node_modules/**",
       "src/stories/generate-missing-stories.ts",
+      // Performance optimizations
+      "src/**/*.bak", // Backup files
+      "src/**/*.disabled", // Disabled files
+      "src/**/*.backup", // Backup files
+      "src/**/*.old", // Old files
+      "**/*.map", // Source maps
+      "**/*.d.ts", // Type definitions (parsed separately)
+      // Large directories that can cause memory issues
+      "stories-backup/**", // Large backup directory
     ],
   },
 ];

@@ -262,7 +262,7 @@ export default function ProfileSettingsPage() {
         actions={
           <div className="flex items-center space-x-3">
             <Button 
-              variant="outline" 
+              variant="secondary" 
               onClick={handleCancel}
               disabled={isSaving}
             >
@@ -560,17 +560,17 @@ export default function ProfileSettingsPage() {
                 Account Security
               </h3>
               <div className="space-y-4">
-                <Button variant="outline" className="justify-start">
+                <Button variant="secondary" className="justify-start">
                   <Shield className="h-4 w-4 mr-2" />
                   Change Password
                 </Button>
                 
-                <Button variant="outline" className="justify-start">
+                <Button variant="secondary" className="justify-start">
                   <Smartphone className="h-4 w-4 mr-2" />
                   Two-Factor Authentication
                 </Button>
                 
-                <Button variant="outline" className="justify-start">
+                <Button variant="secondary" className="justify-start">
                   <Eye className="h-4 w-4 mr-2" />
                   Active Sessions
                 </Button>
@@ -584,7 +584,7 @@ export default function ProfileSettingsPage() {
               </h3>
               <div className="space-y-3">
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   className="justify-start border-red-500 text-red-400 hover:bg-red-500/10"
                   onClick={() => setShowDataExportModal(true)}
                 >
@@ -593,7 +593,7 @@ export default function ProfileSettingsPage() {
                 </Button>
                 
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   className="justify-start border-red-500 text-red-400 hover:bg-red-500/10"
                   onClick={() => setShowDeleteModal(true)}
                 >

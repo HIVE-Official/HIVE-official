@@ -229,7 +229,7 @@ export function SmartDiscoveryFilters({
             type="text"
             placeholder="Search communities, activities, or interests..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
             onFocus={() => setShowSuggestions(searchSuggestions.length > 0)}
             className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-xl text-white placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none transition-colors"
           />
@@ -297,7 +297,7 @@ export function SmartDiscoveryFilters({
           <Button
             key={interest}
             size="sm"
-            variant="outline"
+            variant="secondary"
             onClick={() => {
               const _currentCategories = activeFilters.category || []; // TODO: For future multi-category support
               handleFilterChange("category", interest);
@@ -315,7 +315,7 @@ export function SmartDiscoveryFilters({
         {/* Advanced Filters Toggle */}
         <Button
           size="sm"
-          variant="outline"
+          variant="secondary"
           onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
           className={`flex-shrink-0 border-white/20 text-neutral-300 ml-auto ${
             isFilterPanelOpen ? "bg-white/10" : ""

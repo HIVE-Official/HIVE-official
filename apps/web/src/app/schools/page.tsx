@@ -391,7 +391,7 @@ export default function SchoolsPage() {
                 type="text"
                 placeholder="Search universities..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20 focus:bg-white/10 transition-all"
               />
             </div>

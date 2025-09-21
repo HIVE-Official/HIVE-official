@@ -65,7 +65,7 @@ export function ProfileHeader({
         <div className="relative">
           <ProfileAvatar
             user={user}
-            size="xl"
+            size="lg"
             isEditable={!!onAvatarChange}
             onAvatarChange={onAvatarChange}
           />

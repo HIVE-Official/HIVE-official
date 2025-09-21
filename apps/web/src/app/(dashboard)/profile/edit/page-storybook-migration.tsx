@@ -255,7 +255,7 @@ export default function ProfileEditPageStorybook() {
         actions={
           <div className="flex items-center gap-3">
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => router.push('/profile')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -305,11 +305,11 @@ export default function ProfileEditPageStorybook() {
                 
                 {currentUser && (
                   <div className="mt-4 space-y-2">
-                    <Badge variant="primary" className="text-xs">
+                    <Badge variant="senior" className="text-xs">
                       {currentUser.role === 'builder' ? 'Tool Builder' : 'Student'}
                     </Badge>
                     {currentUser.major && (
-                      <Badge variant="secondary" className="text-xs block">
+                      <Badge variant="sophomore" className="text-xs block">
                         {currentUser.major}
                       </Badge>
                     )}
@@ -337,7 +337,7 @@ export default function ProfileEditPageStorybook() {
                 >
                   <Input
                     value={formData.fullName}
-                    onChange={(e) => handleInputChange('fullName', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('fullName', e.target.value)}
                     placeholder="Enter your full name"
                     error={validationErrors.fullName}
                   />
@@ -349,7 +349,7 @@ export default function ProfileEditPageStorybook() {
                 >
                   <Input
                     value={formData.pronouns}
-                    onChange={(e) => handleInputChange('pronouns', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('pronouns', e.target.value)}
                     placeholder="Select or type pronouns"
                     list="pronouns-list"
                   />
@@ -365,7 +365,7 @@ export default function ProfileEditPageStorybook() {
                 >
                   <Input
                     value={formData.handle}
-                    onChange={(e) => handleInputChange('handle', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('handle', e.target.value)}
                     placeholder="your-handle"
                     leftIcon={<Hash className="h-4 w-4" />}
                     error={validationErrors.handle}
@@ -381,7 +381,7 @@ export default function ProfileEditPageStorybook() {
                 >
                   <Textarea
                     value={formData.bio}
-                    onChange={(e) => handleInputChange('bio', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('bio', e.target.value)}
                     placeholder="Tell your campus community about yourself..."
                     rows={3}
                     maxLength={500}
@@ -402,7 +402,7 @@ export default function ProfileEditPageStorybook() {
                 <FormField label="Major">
                   <Input
                     value={formData.major}
-                    onChange={(e) => handleInputChange('major', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('major', e.target.value)}
                     placeholder="Computer Science"
                     list="majors-list"
                   />
@@ -411,7 +411,7 @@ export default function ProfileEditPageStorybook() {
                 <FormField label="Academic Year">
                   <Input
                     value={formData.academicYear}
-                    onChange={(e) => handleInputChange('academicYear', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('academicYear', e.target.value)}
                     placeholder="Select year"
                     list="years-list"
                   />
@@ -427,7 +427,7 @@ export default function ProfileEditPageStorybook() {
                   <Input
                     type="number"
                     value={formData.graduationYear}
-                    onChange={(e) => handleInputChange('graduationYear', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('graduationYear', e.target.value)}
                     min="2024"
                     max="2035"
                     placeholder="2027"
@@ -450,7 +450,7 @@ export default function ProfileEditPageStorybook() {
               >
                 <Input
                   value={formData.housing}
-                  onChange={(e) => handleInputChange('housing', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleInputChange('housing', e.target.value)}
                   placeholder="Hadley Village 123A"
                   list="housing-list"
                 />
@@ -480,7 +480,7 @@ export default function ProfileEditPageStorybook() {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent) => {
                 const file = e.target.files?.[0];
                 if (file) handleAvatarUpload(file);
               }}

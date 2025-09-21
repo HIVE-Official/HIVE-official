@@ -221,7 +221,7 @@ export function EventCreationModal({
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: React.MouseEvent) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
@@ -234,7 +234,7 @@ export function EventCreationModal({
             </div>
             
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={handleClose}
               className="border-white/[0.2] text-white hover:bg-white/[0.1]"
@@ -254,7 +254,7 @@ export function EventCreationModal({
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleInputChange('title', e.target.value)}
                   placeholder="What's happening?"
                   className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
                   maxLength={200}
@@ -292,7 +292,7 @@ export function EventCreationModal({
                 </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleInputChange('description', e.target.value)}
                   placeholder="Tell people more about this event..."
                   className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[#FFD700]/30 h-24"
                   maxLength={2000}
@@ -309,7 +309,7 @@ export function EventCreationModal({
                   <input
                     type="date"
                     value={formData.startDate}
-                    onChange={(e) => handleInputChange('startDate', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('startDate', e.target.value)}
                     className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white focus:outline-none focus:border-[#FFD700]/30"
                   />
                   {errors.startDate && <p className="text-red-400 text-xs mt-1">{errors.startDate}</p>}
@@ -322,7 +322,7 @@ export function EventCreationModal({
                   <input
                     type="time"
                     value={formData.startTime}
-                    onChange={(e) => handleInputChange('startTime', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('startTime', e.target.value)}
                     className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white focus:outline-none focus:border-[#FFD700]/30"
                   />
                   {errors.startTime && <p className="text-red-400 text-xs mt-1">{errors.startTime}</p>}
@@ -335,7 +335,7 @@ export function EventCreationModal({
                   <input
                     type="date"
                     value={formData.endDate}
-                    onChange={(e) => handleInputChange('endDate', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('endDate', e.target.value)}
                     className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white focus:outline-none focus:border-[#FFD700]/30"
                   />
                   {errors.endDate && <p className="text-red-400 text-xs mt-1">{errors.endDate}</p>}
@@ -348,7 +348,7 @@ export function EventCreationModal({
                   <input
                     type="time"
                     value={formData.endTime}
-                    onChange={(e) => handleInputChange('endTime', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('endTime', e.target.value)}
                     className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white focus:outline-none focus:border-[#FFD700]/30"
                   />
                   {errors.endTime && <p className="text-red-400 text-xs mt-1">{errors.endTime}</p>}
@@ -364,7 +364,7 @@ export function EventCreationModal({
                 <input
                   type="text"
                   value={formData.location}
-                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleInputChange('location', e.target.value)}
                   placeholder="Where is this happening?"
                   className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
                 />
@@ -380,7 +380,7 @@ export function EventCreationModal({
                   <input
                     type="url"
                     value={formData.virtualLink}
-                    onChange={(e) => handleInputChange('virtualLink', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('virtualLink', e.target.value)}
                     placeholder="https://zoom.us/j/..."
                     className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
                   />
@@ -398,7 +398,7 @@ export function EventCreationModal({
                   <input
                     type="number"
                     value={formData.maxAttendees}
-                    onChange={(e) => handleInputChange('maxAttendees', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('maxAttendees', e.target.value)}
                     placeholder="Unlimited"
                     min="1"
                     className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
@@ -414,7 +414,7 @@ export function EventCreationModal({
                   <div className="flex">
                     <select
                       value={formData.currency}
-                      onChange={(e) => handleInputChange('currency', e.target.value)}
+                      onChange={(e: React.ChangeEvent) => handleInputChange('currency', e.target.value)}
                       className="px-3 py-3 rounded-l-lg bg-white/[0.02] border border-r-0 border-white/[0.06] text-white focus:outline-none focus:border-[#FFD700]/30"
                     >
                       <option value="USD">$</option>
@@ -424,7 +424,7 @@ export function EventCreationModal({
                     <input
                       type="number"
                       value={formData.cost}
-                      onChange={(e) => handleInputChange('cost', e.target.value)}
+                      onChange={(e: React.ChangeEvent) => handleInputChange('cost', e.target.value)}
                       placeholder="0.00"
                       min="0"
                       step="0.01"
@@ -441,7 +441,7 @@ export function EventCreationModal({
                   <input
                     type="checkbox"
                     checked={formData.requiredRSVP}
-                    onChange={(e) => handleInputChange('requiredRSVP', e.target.checked)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('requiredRSVP', e.target.checked)}
                     className="w-4 h-4 rounded border-white/[0.06] bg-white/[0.02] text-[#FFD700] focus:ring-[#FFD700]/50"
                   />
                   <span className="text-sm text-white">Require RSVP</span>
@@ -451,7 +451,7 @@ export function EventCreationModal({
                   <input
                     type="checkbox"
                     checked={formData.isPrivate}
-                    onChange={(e) => handleInputChange('isPrivate', e.target.checked)}
+                    onChange={(e: React.ChangeEvent) => handleInputChange('isPrivate', e.target.checked)}
                     className="w-4 h-4 rounded border-white/[0.06] bg-white/[0.02] text-[#FFD700] focus:ring-[#FFD700]/50"
                   />
                   <span className="text-sm text-white">Private event</span>
@@ -476,7 +476,7 @@ export function EventCreationModal({
               <div className="flex gap-3 pt-4 border-t border-white/[0.06]">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="secondary"
                   onClick={handleClose}
                   disabled={isSubmitting}
                   className="flex-1"

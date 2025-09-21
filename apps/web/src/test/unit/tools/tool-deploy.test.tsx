@@ -113,7 +113,7 @@ const MockToolDeploy = ({
             id="deployment-name"
             type="text"
             value={deploymentConfig.deploymentName}
-            onChange={(e) => setDeploymentConfig(prev => ({
+            onChange={(e: React.ChangeEvent) => setDeploymentConfig(prev => ({
               ...prev,
               deploymentName: e.target.value,
             }))}
@@ -126,7 +126,7 @@ const MockToolDeploy = ({
           <select
             id="environment"
             value={deploymentConfig.environment}
-            onChange={(e) => setDeploymentConfig(prev => ({
+            onChange={(e: React.ChangeEvent) => setDeploymentConfig(prev => ({
               ...prev,
               environment: e.target.value,
             }))}
@@ -142,7 +142,7 @@ const MockToolDeploy = ({
             <input
               type="checkbox"
               checked={deploymentConfig.autoScale}
-              onChange={(e) => setDeploymentConfig(prev => ({
+              onChange={(e: React.ChangeEvent) => setDeploymentConfig(prev => ({
                 ...prev,
                 autoScale: e.target.checked,
               }))}
@@ -157,7 +157,7 @@ const MockToolDeploy = ({
             id="max-instances"
             type="number"
             value={deploymentConfig.maxInstances}
-            onChange={(e) => setDeploymentConfig(prev => ({
+            onChange={(e: React.ChangeEvent) => setDeploymentConfig(prev => ({
               ...prev,
               maxInstances: parseInt(e.target.value) || 1,
             }))}

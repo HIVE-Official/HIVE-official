@@ -231,7 +231,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 onClick={() => setIsFullscreen(!isFullscreen)}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
@@ -240,7 +240,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 onClick={handleEdit}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
@@ -270,7 +270,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => window.location.reload()}
                   className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
                 >
@@ -278,7 +278,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                 </Button>
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setShowCode(!showCode)}
                   className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
                 >

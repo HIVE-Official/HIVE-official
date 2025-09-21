@@ -204,7 +204,7 @@ export default function ToolSettingsPage() {
               <input
                 type="text"
                 value={settings.name}
-                onChange={(e) => updateSettings({ name: e.target.value })}
+                onChange={(e: React.ChangeEvent) => updateSettings({ name: e.target.value })}
                 className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
               />
             </div>
@@ -213,7 +213,7 @@ export default function ToolSettingsPage() {
               <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Description</label>
               <textarea
                 value={settings.description}
-                onChange={(e) => updateSettings({ description: e.target.value })}
+                onChange={(e: React.ChangeEvent) => updateSettings({ description: e.target.value })}
                 rows={3}
                 className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none resize-none"
               />
@@ -224,7 +224,7 @@ export default function ToolSettingsPage() {
                 <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Category</label>
                 <select
                   value={settings.metadata.category}
-                  onChange={(e) => updateSettings({ 
+                  onChange={(e: React.ChangeEvent) => updateSettings({ 
                     metadata: { ...settings.metadata, category: e.target.value }
                   })}
                   className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
@@ -243,7 +243,7 @@ export default function ToolSettingsPage() {
                 <input
                   type="text"
                   value={settings.metadata.version}
-                  onChange={(e) => updateSettings({
+                  onChange={(e: React.ChangeEvent) => updateSettings({
                     metadata: { ...settings.metadata, version: e.target.value }
                   })}
                   className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
@@ -256,7 +256,7 @@ export default function ToolSettingsPage() {
               <input
                 type="text"
                 value={settings.metadata.tags.join(', ')}
-                onChange={(e) => updateSettings({
+                onChange={(e: React.ChangeEvent) => updateSettings({
                   metadata: { ...settings.metadata, tags: e.target.value.split(', ').filter(tag => tag.trim()) }
                 })}
                 placeholder="polling, engagement, voting"

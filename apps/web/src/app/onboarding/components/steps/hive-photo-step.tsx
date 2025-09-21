@@ -352,7 +352,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 </HiveButton>
                 
                 <HiveButton
-                  variant="premium"
+                  variant="primary"
                   size="sm"
                   onClick={cropImage}
                   leftIcon={<CheckCircle className="w-4 h-4" />}
@@ -415,7 +415,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             {/* Selected Photo Card - Larger for Main Display */}
             <div className="relative group">
               <HiveCard
-                variant="elevated"
                 className="w-40 h-48 p-0 overflow-hidden border-2 border-[var(--hive-brand-primary)]/30 shadow-xl"
               >
                 <Image
@@ -448,7 +447,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             {/* Change Photo Button */}
             <HiveButton
               onClick={openFileDialog}
-              variant="outline"
+              variant="secondary"
               size="sm"
               leftIcon={<Upload className="w-4 h-4" />}
             >
@@ -459,7 +458,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
           <div className="space-y-[var(--hive-spacing-6)]">
             {/* Upload Area */}
             <HiveCard
-              variant="elevated"
               className="p-[var(--hive-spacing-8)] border-2 border-dashed border-[var(--hive-border-primary)]/30 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-300 cursor-pointer group"
               onClick={openFileDialog}
             >
@@ -534,7 +532,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                     // Removed whileHover and whileTap - using CSS hover/active states
                   >
                     <HiveCard
-                      variant="elevated"
                       className="relative h-32 overflow-hidden border-2 border-[var(--hive-border-primary)]/20 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-200 group cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                       onClick={() => selectAvatar(avatar)}
                     >
@@ -580,7 +577,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
           transition={{ delay: 0.6 }}
         >
           <HiveCard
-            variant="default"
             className="p-[var(--hive-spacing-4)]"
           >
             <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
@@ -610,7 +606,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        onChange={(e) => {
+        onChange={(e: React.ChangeEvent) => {
           const file = e.target.files?.[0];
           if (file) handleFileSelect(file);
         }}

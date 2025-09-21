@@ -319,7 +319,7 @@ export default function UnifiedSpacesPage() {
           <div className="flex items-center space-x-3">
             {activeView === "browse" && (
               <Button 
-                variant="outline"
+                variant="secondary"
                 onClick={() => setShowSmartDiscovery(!showSmartDiscovery)}
                 className="border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
               >
@@ -455,7 +455,7 @@ export default function UnifiedSpacesPage() {
                   type="text"
                   placeholder="Search spaces, descriptions, or keywords..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder:text-neutral-400 focus:border-hive-gold focus:outline-none"
                 />
               </div>
@@ -464,7 +464,7 @@ export default function UnifiedSpacesPage() {
                 <ArrowUpDown className="h-4 w-4 text-neutral-400 mx-2" />
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
+                  onChange={(e: React.ChangeEvent) => setSortBy(e.target.value as any)}
                   className="bg-transparent text-white text-sm focus:outline-none border-none"
                 >
                   <option value="popular" className="bg-neutral-950">Popular</option>

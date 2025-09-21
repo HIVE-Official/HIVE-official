@@ -233,11 +233,11 @@ export function LeaderToolbar({
         >
           {currentMode === 'moderate' && (
             <>
-              <Button size="sm" variant="outline" className="border-red-400/30 text-red-400 hover:bg-red-400/10">
+              <Button size="sm" variant="secondary" className="border-red-400/30 text-red-400 hover:bg-red-400/10">
                 <Pin className="w-3 h-3 mr-1" />
                 Pin
               </Button>
-              <Button size="sm" variant="outline" className="border-red-400/30 text-red-400 hover:bg-red-400/10">
+              <Button size="sm" variant="secondary" className="border-red-400/30 text-red-400 hover:bg-red-400/10">
                 <Lock className="w-3 h-3 mr-1" />
                 Lock
               </Button>
@@ -246,11 +246,11 @@ export function LeaderToolbar({
           
           {currentMode === 'manage' && (
             <>
-              <Button size="sm" variant="outline" className="border-blue-400/30 text-blue-400 hover:bg-blue-400/10">
+              <Button size="sm" variant="secondary" className="border-blue-400/30 text-blue-400 hover:bg-blue-400/10">
                 <UserCog className="w-3 h-3 mr-1" />
                 Roles
               </Button>
-              <Button size="sm" variant="outline" className="border-blue-400/30 text-blue-400 hover:bg-blue-400/10">
+              <Button size="sm" variant="secondary" className="border-blue-400/30 text-blue-400 hover:bg-blue-400/10">
                 <Users className="w-3 h-3 mr-1" />
                 Members
               </Button>
@@ -258,7 +258,7 @@ export function LeaderToolbar({
           )}
           
           {currentMode === 'insights' && (
-            <Button size="sm" variant="outline" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10">
+            <Button size="sm" variant="secondary" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10">
               <Eye className="w-3 h-3 mr-1" />
               Analytics
             </Button>

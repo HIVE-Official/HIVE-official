@@ -27,7 +27,7 @@ describe('Atomic Design System Consistency Tests', () => {
   describe('Color System Consistency', () => {
     it('ensures all components use consistent color tokens', () => {
       const { container: primaryButton } = render(<Button variant="primary">Primary</Button>);
-      const { container: primaryBadge } = render(<Badge variant="primary">Badge</Badge>);
+      const { container: primaryBadge } = render(<Badge variant="senior">Badge</Badge>);
       const { container: primaryTag } = render(<Tag variant="primary">Tag</Tag>);
       
       // All primary variants should use the same color token
@@ -41,7 +41,7 @@ describe('Atomic Design System Consistency Tests', () => {
 
     it('validates semantic color usage across components', () => {
       const { container: successButton } = render(<Button variant="success">Success</Button>);
-      const { container: successBadge } = render(<Badge variant="success">Success</Badge>);
+      const { container: successBadge } = render(<Badge variant="senior">Success</Badge>);
       const { container: successProgress } = render(<Progress variant="success" value={50} />);
       
       const successButtonColor = window.getComputedStyle(successButton.querySelector('.hive-button--success')!).backgroundColor;
@@ -56,7 +56,7 @@ describe('Atomic Design System Consistency Tests', () => {
     it('ensures proper contrast ratios for accessibility', () => {
       const components = [
         { component: <Button variant="primary">Button</Button>, selector: '.hive-button--primary' },
-        { component: <Badge variant="primary">Badge</Badge>, selector: '.hive-badge--primary' },
+        { component: <Badge variant="senior">Badge</Badge>, selector: '.hive-badge--primary' },
         { component: <Tag variant="primary">Tag</Tag>, selector: '.hive-tag--primary' }
       ];
       
@@ -159,15 +159,15 @@ describe('Atomic Design System Consistency Tests', () => {
   describe('Spacing System Consistency', () => {
     it('validates consistent padding across similar components', () => {
       const buttonComponents = [
-        { component: <Button size="small">Small</Button>, selector: '.hive-button--small' },
-        { component: <Button size="medium">Medium</Button>, selector: '.hive-button--medium' },
-        { component: <Button size="large">Large</Button>, selector: '.hive-button--large' }
+        { component: <Button size="sm">Small</Button>, selector: '.hive-button--small' },
+        { component: <Button size="md">Medium</Button>, selector: '.hive-button--medium' },
+        { component: <Button size="lg">Large</Button>, selector: '.hive-button--large' }
       ];
       
       const inputComponents = [
-        { component: <Input size="small" />, selector: '.hive-input--small' },
-        { component: <Input size="medium" />, selector: '.hive-input--medium' },
-        { component: <Input size="large" />, selector: '.hive-input--large' }
+        { component: <Input size="sm" />, selector: '.hive-input--small' },
+        { component: <Input size="md" />, selector: '.hive-input--medium' },
+        { component: <Input size="lg" />, selector: '.hive-input--large' }
       ];
       
       // Buttons and inputs of the same size should have proportional padding

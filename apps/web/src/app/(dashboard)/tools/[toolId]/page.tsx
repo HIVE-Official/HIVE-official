@@ -136,7 +136,7 @@ export default function ToolPage() {
                 <div className="flex items-center gap-3 mb-2">
                   <Code className="h-8 w-8 text-blue-400" />
                   <h1 className="text-2xl font-bold text-white">{tool.name}</h1>
-                  <Badge variant="secondary">{tool.category}</Badge>
+                  <Badge variant="sophomore">{tool.category}</Badge>
                 </div>
                 <p className="text-neutral-300 mb-4">{tool.description}</p>
                 
@@ -157,7 +157,7 @@ export default function ToolPage() {
                 
                 <div className="flex flex-wrap gap-2 mt-4">
                   {tool.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
+                    <Badge key={tag} variant="freshman" className="text-xs">
                       {tag}
                     </Badge>
                   ))}
@@ -194,7 +194,7 @@ export default function ToolPage() {
                 )}
                 
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={() => router.push(`/tools/${tool.id}/analytics`)}
                 >
                   <BarChart3 className="h-4 w-4 mr-2" />
@@ -202,7 +202,7 @@ export default function ToolPage() {
                 </Button>
                 
                 <Button 
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => router.push(`/tools/${tool.id}/settings`)}
                 >
                   <Settings className="h-4 w-4 mr-2" />

@@ -70,7 +70,7 @@ export function EmptySearchResults({
         {hasSearch && (
           <Button 
             onClick={onClearSearch}
-            variant="outline"
+            variant="secondary"
             className="w-full border-white/20 text-white"
           >
             Clear search term
@@ -80,7 +80,7 @@ export function EmptySearchResults({
         {hasFilters && (
           <Button 
             onClick={onClearFilters}
-            variant="outline"
+            variant="secondary"
             className="w-full border-white/20 text-white"
           >
             Reset filters
@@ -198,7 +198,7 @@ export function SpaceOverloadHandler({
                         <div className="text-sm text-white">{space.name}</div>
                         <div className="text-xs text-neutral-400">Last visited 2+ weeks ago</div>
                       </div>
-                      <Button size="sm" variant="outline" className="text-neutral-400">
+                      <Button size="sm" variant="secondary" className="text-neutral-400">
                         Leave
                       </Button>
                     </div>
@@ -219,7 +219,7 @@ export function SpaceOverloadHandler({
             </Button>
             
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => setShowDetails(!showDetails)}
               className="border-orange-400/30 text-orange-400"
             >
@@ -347,7 +347,7 @@ export function InclusiveCommunityFinder({
             </Button>
             
             <Button
-              variant="outline"
+              variant="secondary"
               className="border-purple-400/30 text-purple-400"
             >
               <Globe className="h-4 w-4 mr-2" />
@@ -502,21 +502,21 @@ export function TransferStudentHelper({
           {/* Quick Access Actions */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
             <Button
-              variant="outline"
+              variant="secondary"
               className="border-blue-400/30 text-blue-400 text-sm"
             >
               <MessageSquare className="h-4 w-4 mr-2" />
               Campus FAQ
             </Button>
             <Button
-              variant="outline"
+              variant="secondary"
               className="border-green-400/30 text-green-400 text-sm"
             >
               <Users className="h-4 w-4 mr-2" />
               Buddy Program
             </Button>
             <Button
-              variant="outline"
+              variant="secondary"
               className="border-purple-400/30 text-purple-400 text-sm"
             >
               <Calendar className="h-4 w-4 mr-2" />

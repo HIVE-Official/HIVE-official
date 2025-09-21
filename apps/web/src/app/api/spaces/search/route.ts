@@ -5,7 +5,6 @@ import * as admin from 'firebase-admin';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import * as admin from 'firebase-admin';
 
 const SearchSpacesSchema = z.object({
   query: z.string().min(1).max(100),

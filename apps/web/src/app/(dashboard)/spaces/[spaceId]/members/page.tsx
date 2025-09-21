@@ -320,7 +320,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
               <HiveInput
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
                 placeholder="Search members..."
                 className="pl-10 w-64"
               />
@@ -328,7 +328,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             
             <select
               value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value as 'all' | 'admin' | 'moderator' | 'member')}
+              onChange={(e: React.ChangeEvent) => setRoleFilter(e.target.value as 'all' | 'admin' | 'moderator' | 'member')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Roles</option>
@@ -339,7 +339,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
             
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+              onChange={(e: React.ChangeEvent) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
             >
               <option value="all">All Status</option>
@@ -522,7 +522,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               <div className="flex items-center justify-between mb-3">
                 <h4 className="font-medium text-white">Invite Links</h4>
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm"
                   onClick={generateInviteLink}
                 >
@@ -556,7 +556,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                         className="flex-1 p-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm"
                       />
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => copyInviteLink(link.url)}
                       >
@@ -655,7 +655,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
               {(userRole === 'admin' || userRole === 'moderator') && showMemberDetails.role !== 'admin' && (
                 <div className="flex items-center space-x-3 pt-4 border-t border-zinc-800">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => {/* Message functionality to be implemented */}}
                   >
@@ -666,7 +666,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                   {userRole === 'admin' && (
                     <>
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => {/* Promotion/demotion functionality to be implemented */}}
                       >
@@ -684,7 +684,7 @@ export default function SpaceMembersPage({ params }: SpaceMembersPageProps) {
                       </Button>
                       
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => {/* Remove member functionality to be implemented */}}
                         className="text-red-400 border-red-500/30 hover:bg-red-500/10"

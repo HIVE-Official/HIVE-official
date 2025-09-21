@@ -403,7 +403,7 @@ export default function EventsPage() {
                 type="text"
                 placeholder="Search events..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-64"
               />
             </div>
@@ -514,7 +514,7 @@ export default function EventsPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleBookmark(event.id);
                   }}
@@ -577,7 +577,7 @@ export default function EventsPage() {
                   <Button
                     variant={event.rsvpStatus === 'going' ? 'primary' : 'ghost'}
                     size="sm"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleRSVP(event.id, event.rsvpStatus === 'going' ? 'not_going' : 'going');
                     }}
@@ -589,7 +589,7 @@ export default function EventsPage() {
                   <Button
                     variant={event.rsvpStatus === 'interested' ? 'primary' : 'ghost'}
                     size="sm"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleRSVP(event.id, event.rsvpStatus === 'interested' ? 'not_going' : 'interested');
                     }}
@@ -609,7 +609,7 @@ export default function EventsPage() {
                     variant="ghost" 
                     size="sm" 
                     className="text-xs text-zinc-400"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       navigator.clipboard.writeText(`${window.location.origin}/events/${event.id}`);
                     }}

@@ -377,7 +377,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             )}
             
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               className="border-white/[0.2] text-white hover:bg-white/[0.1]"
               onClick={onClose}
@@ -397,7 +397,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                 type="text"
                 placeholder="Search members..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50 focus:border-[#FFD700]/30"
               />
             </div>
@@ -405,7 +405,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Role Filter */}
             <select
               value={selectedRole}
-              onChange={(e) => setSelectedRole(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setSelectedRole(e.target.value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50"
             >
               <option value="all">All Roles</option>
@@ -418,7 +418,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Status Filter */}
             <select
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setSelectedStatus(e.target.value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50"
             >
               <option value="all">All Status</option>
@@ -497,13 +497,13 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
                       {/* Status Indicators */}
                       {member.flags?.isSuspended && (
-                        <Badge variant="outline" className="border-red-500/30 text-red-400">
+                        <Badge variant="freshman" className="border-red-500/30 text-red-400">
                           Suspended
                         </Badge>
                       )}
                       
                       {member.flags?.isReported && (
-                        <Badge variant="outline" className="border-orange-500/30 text-orange-400">
+                        <Badge variant="freshman" className="border-orange-500/30 text-orange-400">
                           Reported
                         </Badge>
                       )}
@@ -524,7 +524,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                   <div className="flex items-center gap-2">
                     {/* View Details */}
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       className="border-white/[0.2] text-white hover:bg-white/[0.1]"
                       onClick={() => {
@@ -539,7 +539,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                       <>
                         {/* Change Role */}
                         <Button
-                          variant="outline"
+                          variant="secondary"
                           size="sm"
                           className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
                           onClick={() => {
@@ -552,7 +552,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
                         {/* Suspend/Unsuspend */}
                         <Button
-                          variant="outline"
+                          variant="secondary"
                           size="sm"
                           className={member.flags?.isSuspended 
                             ? "border-green-500/30 text-green-400 hover:bg-green-500/10"
@@ -566,7 +566,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                         {/* Remove Member */}
                         {canRemoveMembers && member.role !== 'owner' && (
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             className="border-red-500/30 text-red-400 hover:bg-red-500/10"
                             onClick={() => handleRemoveMember(member.id)}
@@ -634,7 +634,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
               <div className="flex gap-3">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
                   onClick={() => {
                     setShowRoleChangeModal(false);

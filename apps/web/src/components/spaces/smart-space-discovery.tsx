@@ -419,14 +419,14 @@ export function SmartSpaceDiscovery({
         
         <div className="flex items-center space-x-2">
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
           >
             {viewMode === 'grid' ? <List className="h-4 w-4" /> : <Activity className="h-4 w-4" />}
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => setShowFilters(!showFilters)}
           >
@@ -477,7 +477,7 @@ export function SmartSpaceDiscovery({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
               placeholder="Search spaces by name, description, or tags..."
               className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
             />
@@ -504,7 +504,7 @@ export function SmartSpaceDiscovery({
                 <label className="text-sm font-medium text-white mb-2 block">Category</label>
                 <select
                   value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value as FilterCategory)}
+                  onChange={(e: React.ChangeEvent) => setCategoryFilter(e.target.value as FilterCategory)}
                   className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
                 >
                   <option value="all">All Categories</option>
@@ -636,7 +636,7 @@ export function SmartSpaceDiscovery({
                     <Button
                       size="sm"
                       className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleJoinSpace(space.id);
                       }}
@@ -708,7 +708,7 @@ export function SmartSpaceDiscovery({
                 </div>
                 
                 <div className="flex items-center space-x-2 flex-shrink-0">
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <Eye className="h-4 w-4 mr-1" />
                     Preview
                   </Button>
@@ -721,7 +721,7 @@ export function SmartSpaceDiscovery({
                     <Button
                       size="sm"
                       className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleJoinSpace(space.id);
                       }}
@@ -746,7 +746,7 @@ export function SmartSpaceDiscovery({
             Try adjusting your search terms or filters to discover more spaces.
           </p>
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => {
               setSearchQuery('');
               setCategoryFilter('all');
@@ -763,7 +763,7 @@ export function SmartSpaceDiscovery({
         isOpen={showSpacePreview}
         onClose={() => setShowSpacePreview(false)}
         title={selectedSpace?.name || ''}
-        size="xl"
+        size="lg"
       >
         {selectedSpace && (
           <div className="space-y-6">
@@ -891,7 +891,7 @@ export function SmartSpaceDiscovery({
               </div>
               
               <div className="flex items-center space-x-3">
-                <Button variant="outline">
+                <Button variant="secondary">
                   <Eye className="h-4 w-4 mr-2" />
                   View Full Space
                 </Button>

@@ -157,7 +157,7 @@ describe('Form Components Test Suite', () => {
                 { value: 'faculty', label: 'Faculty' }
               ]}
               value={userType}
-              onChange={(e) => setUserType(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setUserType(e.target.value)}
             />
             
             {userType === 'student' && (

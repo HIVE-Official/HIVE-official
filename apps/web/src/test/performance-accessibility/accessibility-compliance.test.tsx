@@ -151,7 +151,7 @@ const AccessibleModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         </div>
         
         <div className="modal-footer">
-          <Button variant="danger" onClick={onClose}>
+          <Button variant="destructive" onClick={onClose}>
             Delete Tool
           </Button>
           <Button variant="secondary" onClick={onClose}>

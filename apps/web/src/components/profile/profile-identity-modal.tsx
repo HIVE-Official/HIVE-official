@@ -421,7 +421,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   <HiveButton
                     onClick={showCamera ? capturePhoto : startCamera}
                     disabled={isUploading}
-                    variant="outline"
+                    variant="secondary"
                     className="w-full transition-all duration-200 hover:scale-[1.02]"
                   >
                     <span className="transition-all duration-200 hover:scale-105 inline-flex items-center">
@@ -494,7 +494,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <HiveInput
                     value={formData.fullName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                     placeholder="Your full name"
                     className="w-full"
                   />
@@ -507,7 +507,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <HiveInput
                     value={formData.preferredName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, preferredName: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, preferredName: e.target.value }))}
                     placeholder="What should we call you?"
                     className="w-full"
                   />
@@ -522,7 +522,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     <HiveInput
                       type="number"
                       value={formData.age}
-                      onChange={(e) => setFormData(prev => ({ ...prev, age: e.target.value }))}
+                      onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, age: e.target.value }))}
                       placeholder="18"
                       className="w-full"
                     />
@@ -534,7 +534,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     </label>
                     <select
                       value={formData.academicYear}
-                      onChange={(e) => setFormData(prev => ({ ...prev, academicYear: e.target.value as any }))}
+                      onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, academicYear: e.target.value as any }))}
                       className="w-full px-4 py-3 bg-hive-background-secondary border border-hive-border-primary rounded-xl text-hive-text-primary focus:border-hive-brand-primary/40 focus:outline-none transition-colors"
                     >
                       {ACADEMIC_YEARS.map(year => (
@@ -553,7 +553,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <select
                     value={formData.major}
-                    onChange={(e) => setFormData(prev => ({ ...prev, major: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, major: e.target.value }))}
                     className="w-full px-4 py-3 bg-hive-background-secondary border border-hive-border-primary rounded-xl text-hive-text-primary focus:border-hive-brand-primary/40 focus:outline-none transition-colors"
                   >
                     <option value="">Select your major</option>
@@ -572,7 +572,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <HiveInput
                     value={formData.housing}
-                    onChange={(e) => setFormData(prev => ({ ...prev, housing: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, housing: e.target.value }))}
                     placeholder="e.g., Smith Hall, Room 305"
                     className="w-full"
                   />
@@ -585,7 +585,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <HiveInput
                     value={formData.pronouns}
-                    onChange={(e) => setFormData(prev => ({ ...prev, pronouns: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, pronouns: e.target.value }))}
                     placeholder="e.g., they/them, she/her, he/him"
                     className="w-full"
                   />
@@ -598,7 +598,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <Textarea
                     value={formData.statusMessage}
-                    onChange={(e) => setFormData(prev => ({ ...prev, statusMessage: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, statusMessage: e.target.value }))}
                     placeholder="Tell your campus story..."
                     rows={3}
                     maxLength={200}
@@ -633,7 +633,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
         <div className="p-6 border-t border-hive-border-primary flex justify-end gap-3">
             <HiveButton
               onClick={onClose}
-              variant="outline"
+              variant="secondary"
               className="px-6 py-3"
             >
               Cancel

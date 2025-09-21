@@ -128,7 +128,7 @@ export default function SettingsPage() {
                   <input 
                     type="text" 
                     value={formData.fullName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[#FFD700] focus:outline-none"
                   />
                 </div>
@@ -137,7 +137,7 @@ export default function SettingsPage() {
                   <input 
                     type="text" 
                     value={formData.handle}
-                    onChange={(e) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[#FFD700] focus:outline-none"
                   />
                 </div>
@@ -157,7 +157,7 @@ export default function SettingsPage() {
                 <textarea 
                   rows={3}
                   value={formData.bio}
-                  onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                  onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
                   className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[#FFD700] focus:outline-none"
                   placeholder="Tell others about yourself..."
                 />
@@ -259,7 +259,7 @@ export default function SettingsPage() {
               <h4 className="text-white text-sm font-medium mb-4">Data Management</h4>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={handleDownloadData}
                   disabled={isDownloading}
                   className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)] disabled:opacity-50"
@@ -268,7 +268,7 @@ export default function SettingsPage() {
                   {isDownloading ? 'Downloading...' : 'Download My Data'}
                 </Button>
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={() => setShowDeleteConfirm(true)}
                   className="border-red-500/20 text-red-400 hover:bg-red-500/10"
                 >
@@ -287,7 +287,7 @@ export default function SettingsPage() {
                 <p className="text-[#A1A1AA] text-sm">Sign out of your HIVE account on this device</p>
               </div>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
                 onClick={logout}
               >
@@ -326,7 +326,7 @@ export default function SettingsPage() {
               
               <div className="flex gap-3 pt-4">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setShowDeleteConfirm(false)}
                   className="flex-1 border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
                 >

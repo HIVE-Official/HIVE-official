@@ -76,7 +76,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
         transition={{ delay: 0.3 }}
         className="space-y-[var(--hive-spacing-6)]"
       >
-        <HiveCard variant="elevated" className="p-[var(--hive-spacing-6)]">
+        <HiveCard className="p-[var(--hive-spacing-6)]">
           <div className="space-y-[var(--hive-spacing-5)]">
             {/* Name Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hive-spacing-4)]">
@@ -84,7 +84,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="First Name"
                 placeholder="First name"
                 value={firstName}
-                onChange={(e) => handleFirstNameChange(e.target.value)}
+                onChange={(e: React.ChangeEvent) => handleFirstNameChange(e.target.value)}
                 variant="premium"
                 size="lg"
                 floatingLabel={false}
@@ -96,7 +96,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="Last Name"
                 placeholder="Last name"
                 value={lastName}
-                onChange={(e) => handleLastNameChange(e.target.value)}
+                onChange={(e: React.ChangeEvent) => handleLastNameChange(e.target.value)}
                 variant="premium"
                 size="lg"
                 floatingLabel={false}
@@ -109,7 +109,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
         </HiveCard>
 
         {/* Faculty Info */}
-        <HiveCard variant="default" className="p-[var(--hive-spacing-4)]">
+        <HiveCard className="p-[var(--hive-spacing-4)]">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
             <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
             Faculty Access

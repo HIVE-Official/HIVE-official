@@ -102,7 +102,7 @@ export function HiveModal({
   if (!modalIsOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleClose}>
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
         {title && (
           <div className="p-4 border-b border-gray-200 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{title}</h2>

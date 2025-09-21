@@ -304,7 +304,7 @@ export default function AdminDashboard() {
                   {Object.entries(statistics.users.byMajor).slice(0, 5).map(([major, count]) => (
                     <div key={major} className="flex justify-between items-center">
                       <span className="text-sm">{major}</span>
-                      <Badge variant="secondary">{count}</Badge>
+                      <Badge variant="sophomore">{count}</Badge>
                     </div>
                   ))}
                 </div>
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
                   {Object.entries(statistics.users.byYear).map(([year, count]) => (
                     <div key={year} className="flex justify-between items-center">
                       <span className="text-sm">{year}</span>
-                      <Badge variant="outline">{count}</Badge>
+                      <Badge variant="freshman">{count}</Badge>
                     </div>
                   ))}
                 </div>
@@ -370,8 +370,8 @@ export default function AdminDashboard() {
                     <div key={type} className="flex justify-between items-center">
                       <span className="text-sm capitalize">{type.replace(/_/g, ' ')}</span>
                       <div className="flex space-x-2">
-                        <Badge variant="secondary">{data.total}</Badge>
-                        <Badge variant="outline">{data.members} members</Badge>
+                        <Badge variant="sophomore">{data.total}</Badge>
+                        <Badge variant="freshman">{data.members} members</Badge>
                       </div>
                     </div>
                   ))}
@@ -443,11 +443,11 @@ export default function AdminDashboard() {
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Review Pending
                 </Button>
-                <Button variant="outline">
+                <Button variant="secondary">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   View Analytics
                 </Button>
-                <Button variant="outline">
+                <Button variant="secondary">
                   <Activity className="h-4 w-4 mr-2" />
                   Export Data
                 </Button>
@@ -468,11 +468,11 @@ export default function AdminDashboard() {
                   <Flag className="h-4 w-4 mr-2" />
                   {flagsLoading ? 'Loading...' : 'Refresh Flags'}
                 </Button>
-                <Button variant="outline">
+                <Button variant="secondary">
                   <TrendingUp className="h-4 w-4 mr-2" />
                   View Analytics
                 </Button>
-                <Button variant="outline">
+                <Button variant="secondary">
                   <Settings className="h-4 w-4 mr-2" />
                   Create Flag
                 </Button>
@@ -519,7 +519,7 @@ export default function AdminDashboard() {
                               <div className="flex items-center space-x-4">
                                 <Switch
                                   checked={flag.enabled}
-                                  onCheckedChange={(enabled) => toggleFeatureFlag(flag.id, enabled)}
+                                  onCheckedChange={(enabled: boolean) => toggleFeatureFlag(flag.id, enabled)}
                                 />
                               </div>
                             </div>
@@ -570,15 +570,15 @@ export default function AdminDashboard() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Users</span>
-                    <Badge variant="outline">{statistics.system.collections.users}</Badge>
+                    <Badge variant="freshman">{statistics.system.collections.users}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Spaces</span>
-                    <Badge variant="outline">{statistics.system.collections.spaces}</Badge>
+                    <Badge variant="freshman">{statistics.system.collections.spaces}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Builder Requests</span>
-                    <Badge variant="outline">{statistics.system.collections.builderRequests}</Badge>
+                    <Badge variant="freshman">{statistics.system.collections.builderRequests}</Badge>
                   </div>
                 </div>
               </CardContent>

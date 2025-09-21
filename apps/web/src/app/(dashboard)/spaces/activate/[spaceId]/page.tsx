@@ -389,7 +389,7 @@ export default function SpaceActivationPage() {
         {/* Action Buttons */}
         <div className="flex gap-4 justify-end mt-8">
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => router.back()}
             className="border-white/20 text-white hover:bg-white/10"
             disabled={isActivating}

@@ -393,9 +393,9 @@ export function UnifiedSpaceCard({
         {onAction && (
           <Button 
             size="sm"
-            variant="outline"
+            variant="secondary"
             className="border-hive-border-secondary text-hive-text-primary hover:bg-hive-background-elevated/20"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               onAction('favorite');
             }}

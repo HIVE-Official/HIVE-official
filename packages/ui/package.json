@@ -2,24 +2,23 @@
   "name": "@hive/ui",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
-  "main": "./dist/ui/index.js",
-  "types": "./dist/ui/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/ui/index.d.ts",
-      "import": "./dist/ui/index.js",
-      "require": "./dist/ui/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     },
     "./lib/utils": {
-      "types": "./dist/ui/index.d.ts",
-      "import": "./dist/ui/index.js",
-      "require": "./dist/ui/index.js"
+      "types": "./dist/src/lib/utils.d.ts",
+      "import": "./dist/src/lib/utils.js",
+      "require": "./dist/src/lib/utils.js"
     },
     "./src/components/framer-motion-proxy": {
-      "types": "./dist/ui/src/components/framer-motion-proxy.d.ts",
-      "import": "./dist/ui/src/components/framer-motion-proxy.js",
-      "require": "./dist/ui/src/components/framer-motion-proxy.js"
+      "types": "./dist/src/components/framer-motion-proxy.d.ts",
+      "import": "./dist/src/components/framer-motion-proxy.js",
+      "require": "./dist/src/components/framer-motion-proxy.js"
     },
     "./styles.css": "./dist/styles.css"
   },

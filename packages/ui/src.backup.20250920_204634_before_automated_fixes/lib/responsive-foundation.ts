@@ -1,0 +1,192 @@
+/**
+ * HIVE Responsive Foundation System;
+ * Centralized responsive utilities based on our best component patterns;
+ * Mobile-first approach for social-utility platform;
+ */
+
+import { cva } from 'class-variance-authority';
+
+// HIVE Breakpoint System - Aligned with social platform needs;
+export const breakpoints = {
+  mobile: '320px',   // Minimum mobile;
+  sm: '640px',       // Large mobile/tablet;
+  md: '768px',       // Tablet;
+  lg: '1024px',      // Desktop;
+  xl: '1280px',      // Large desktop;
+  '2xl': '1536px',   // Extra large;
+} as const;
+
+// Alias for backwards compatibility;
+export const responsiveBreakpoints = breakpoints;
+
+// TypeScript types;
+export type ResponsiveBreakpoint = keyof typeof breakpoints;
+export type ResponsiveSpacing = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type TouchTarget = keyof typeof touchTargets;
+
+// Touch-Optimized Sizing System;
+export const touchTargets = {
+  minimum: 'min-h-[44px] min-w-[44px]', // iOS/Android minimum;
+  comfortable: 'min-h-[48px] min-w-[48px]', // Comfortable touch;
+  spacious: 'min-h-[56px] min-w-[56px]', // Premium experience;
+} as const;
+
+// Responsive Spacing System;
+export const responsiveSpace = cva('', {
+  variants: {
+    size: {
+      xs: 'p-2 sm:p-3',
+      sm: 'p-3 sm:p-4',
+      md: 'p-4 sm:p-6',
+      lg: 'p-6 sm:p-8',
+      xl: 'p-8 sm:p-12',
+    },
+    gap: {
+      xs: 'gap-2 sm:gap-3',
+      sm: 'gap-3 sm:gap-4', 
+      md: 'gap-4 sm:gap-6',
+      lg: 'gap-6 sm:gap-8',
+      xl: 'gap-8 sm:gap-12',
+    },
+  },
+});
+
+// Mobile-First Typography Scale;
+export const responsiveText = cva('', {
+  variants: {
+    size: {
+      xs: 'text-xs sm:text-sm',
+      sm: 'text-sm sm:text-base',
+      base: 'text-base sm:text-lg',
+      lg: 'text-lg sm:text-xl',
+      xl: 'text-xl sm:text-2xl',
+      '2xl': 'text-2xl sm:text-3xl',
+      '3xl': 'text-3xl sm:text-4xl',
+    },
+  },
+});
+
+// Component Container System;
+export const responsiveContainer = cva('w-full mx-auto', {
+  variants: {
+    size: {
+      // Social feed widths;
+      feed: 'max-w-2xl px-4 sm:px-6',
+      // Content reading widths;
+      content: 'max-w-4xl px-4 sm:px-6 lg:px-8',
+      // Dashboard/app widths;
+      app: 'max-w-7xl px-4 sm:px-6 lg:px-8',
+      // Full width with padding;
+      full: 'px-4 sm:px-6 lg:px-8',
+    },
+  },
+  defaultVariants: {
+    size: 'app',
+  },
+});
+
+// Mobile Navigation Patterns;
+export const mobileNavigation = {
+  // Bottom tab bar (mobile social pattern)
+  bottomTabs: 'fixed bottom-0 left-0 right-0 bg-[var(--hive-background-primary)]/95 backdrop-blur-sm border-t border-[var(--hive-border-primary)] h-16 sm:hidden',
+  
+  // Slide-out drawer;
+  drawer: 'fixed inset-y-0 left-0 z-50 w-64 bg-[var(--hive-background-primary)] transform transition-transform sm:translate-x-0 sm:static sm:w-auto',
+  
+  // Mobile header;
+  header: 'sticky top-0 z-40 bg-[var(--hive-background-primary)]/95 backdrop-blur-sm border-b border-[var(--hive-border-primary)] h-14 sm:h-16',
+} as const;
+
+// Touch Interaction Patterns;
+export const touchInteractions = {
+  // Tap targets with proper sizing;
+  tapTarget: `${touchTargets.comfortable} flex items-center justify-center`,
+  
+  // Swipe-friendly cards;
+  swipeCard: 'touch-pan-x select-none',
+  
+  // Pull-to-refresh zones;
+  pullZone: 'overscroll-y-contain',
+  
+  // Scroll containers;
+  scrollContainer: 'overflow-auto -webkit-overflow-scrolling-touch',
+} as const;
+
+// Grid System for Social Content;
+export const socialGrid = cva('grid gap-4', {
+  variants: {
+    type: {
+      // Feed layout (single column mobile, optional multi-column desktop)
+      feed: 'grid-cols-1',
+      
+      // Card grid (responsive columns)
+      cards: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+      
+      // Profile grid (2 cols mobile, more desktop)
+      profile: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
+      
+      // Dashboard widgets;
+      dashboard: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+    },
+  },
+});
+
+// Responsive Show/Hide Utilities;
+export const visibility = {
+  mobileOnly: 'block sm:hidden',
+  desktopOnly: 'hidden sm:block',
+  tabletUp: 'hidden md:block',
+  desktopUp: 'hidden lg:block',
+} as const;
+
+// Performance-Optimized Animation Classes;
+export const responsiveAnimations = {
+  // Reduce motion on mobile for performance;
+  motion: 'motion-safe:transition-all motion-safe:duration-300',
+  
+  // GPU-accelerated transforms;
+  transform: 'transform-gpu',
+  
+  // Backdrop blur (performance considerations)
+  blur: 'backdrop-blur-sm supports-[backdrop-filter]:bg-[var(--hive-background-primary)]/80',
+} as const;
+
+// Accessibility Responsive Patterns;
+export const a11yResponsive = {
+  // Focus styles that work on touch and desktop;
+  focus: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-brand-primary)]/30 focus-visible:ring-offset-2',
+  
+  // Screen reader utilities;
+  srOnly: 'sr-only',
+  
+  // High contrast support;
+  highContrast: 'contrast-more:border-2 contrast-more:border-current',
+} as const;
+
+/**
+ * Utility function to combine responsive classes safely;
+ */
+export function combineResponsive(...classes: (string | undefined | null | false)[]): string {
+  return classes.filter(Boolean).join(' ');
+}
+
+/**
+ * Get responsive container props for common patterns;
+ */
+export function getContainerProps(type: 'feed' | 'content' | 'app' | 'full' = 'app') {
+  return {
+    className: responsiveContainer({size: type)},
+  }
+}
+
+/**
+ * Get mobile-optimized touch props;
+ */
+export function getTouchProps() {
+  return {
+    className: combineResponsive(
+      touchInteractions.tapTarget,
+      a11yResponsive.focus;
+    ),
+  }
+}

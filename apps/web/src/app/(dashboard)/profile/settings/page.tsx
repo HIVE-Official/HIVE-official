@@ -301,7 +301,7 @@ export default function ProfileSettingsStorybook() {
         actions={
           <div className="flex items-center gap-3">
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => router.push('/profile')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -522,7 +522,7 @@ export default function ProfileSettingsStorybook() {
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                 <Moon className="h-5 w-5 text-purple-400" />
                 Ghost Mode
-                <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
+                <Badge variant="sophomore" className="text-xs">UB Exclusive</Badge>
               </h3>
               
               <div className="space-y-4">
@@ -543,7 +543,7 @@ export default function ProfileSettingsStorybook() {
                       onCheckedChange={() => setShowGhostModeModal(true)}
                     />
                     {privacySettings.ghostMode.enabled && (
-                      <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">
+                      <Badge variant="sophomore" className="text-xs bg-purple-500/20 text-purple-300">
                         Active - {privacySettings.ghostMode.level}
                       </Badge>
                     )}
@@ -607,7 +607,7 @@ export default function ProfileSettingsStorybook() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-white">{currentUser?.email}</span>
                     {currentUser?.isVerified && (
-                      <Badge variant="success" className="text-xs">Verified</Badge>
+                      <Badge variant="senior" className="text-xs">Verified</Badge>
                     )}
                   </div>
                 </div>
@@ -619,7 +619,7 @@ export default function ProfileSettingsStorybook() {
                 
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Student Status</span>
-                  <Badge variant="primary" className="text-xs">Active</Badge>
+                  <Badge variant="senior" className="text-xs">Active</Badge>
                 </div>
               </div>
             </Card>

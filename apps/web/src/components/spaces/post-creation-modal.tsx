@@ -225,7 +225,7 @@ export function PostCreationModal({
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: React.MouseEvent) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
@@ -242,7 +242,7 @@ export function PostCreationModal({
             </div>
             
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={handleClose}
               className="border-white/[0.2] text-white hover:bg-white/[0.1]"
@@ -293,7 +293,7 @@ export function PostCreationModal({
                 <input
                   type="text"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setTitle(e.target.value)}
                   placeholder="Give your post a title..."
                   className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
                   maxLength={200}
@@ -333,7 +333,7 @@ export function PostCreationModal({
                   <input
                     type="url"
                     value={linkUrl}
-                    onChange={(e) => setLinkUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent) => setLinkUrl(e.target.value)}
                     placeholder="https://example.com"
                     className="w-full px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
                     required={selectedType === 'link'}
@@ -353,7 +353,7 @@ export function PostCreationModal({
                         <input
                           type="text"
                           value={option}
-                          onChange={(e) => updatePollOption(index, e.target.value)}
+                          onChange={(e: React.ChangeEvent) => updatePollOption(index, e.target.value)}
                           placeholder={`Option ${index + 1}`}
                           className="flex-1 px-4 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 focus:outline-none focus:border-[#FFD700]/30"
                           maxLength={100}
@@ -361,7 +361,7 @@ export function PostCreationModal({
                         {pollOptions.length > 2 && (
                           <Button
                             type="button"
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             onClick={() => removePollOption(index)}
                             className="border-red-500/30 text-red-400 hover:bg-red-500/10"
@@ -375,7 +375,7 @@ export function PostCreationModal({
                     {pollOptions.length < 6 && (
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={addPollOption}
                         className="border-white/[0.2] text-white hover:bg-white/[0.1]"
@@ -406,7 +406,7 @@ export function PostCreationModal({
               <div className="flex gap-3 pt-4 border-t border-white/[0.06]">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="secondary"
                   onClick={handleClose}
                   disabled={isSubmitting}
                   className="flex-1"

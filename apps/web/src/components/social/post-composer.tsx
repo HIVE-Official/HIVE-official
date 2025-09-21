@@ -308,7 +308,7 @@ export function PostComposer({
           </div>
           {onCancel && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={onCancel}
             >
@@ -322,7 +322,7 @@ export function PostComposer({
           <Textarea
             ref={textareaRef}
             value={content}
-            onChange={(e) => handleContentChange(e.target.value)}
+            onChange={(e: React.ChangeEvent) => handleContentChange(e.target.value)}
             placeholder={placeholder}
             className={`min-h-[80px] resize-none border-none bg-transparent text-white placeholder:text-hive-text-mutedLight focus:outline-none ${
               isOverLimit ? 'text-red-400' : ''
@@ -347,7 +347,7 @@ export function PostComposer({
               <input
                 type="text"
                 value={poll.question}
-                onChange={(e) => setPoll(prev => ({ ...prev, question: e.target.value }))}
+                onChange={(e: React.ChangeEvent) => setPoll(prev => ({ ...prev, question: e.target.value }))}
                 placeholder="Ask a question..."
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
               />
@@ -359,13 +359,13 @@ export function PostComposer({
                     <input
                       type="text"
                       value={option}
-                      onChange={(e) => updatePollOption(index, e.target.value)}
+                      onChange={(e: React.ChangeEvent) => updatePollOption(index, e.target.value)}
                       placeholder={`Option ${index + 1}`}
                       className="flex-1 bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
                     />
                     {poll.options.length > 2 && (
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => removePollOption(index)}
                         className="text-red-400 border-red-400"
@@ -379,7 +379,7 @@ export function PostComposer({
               
               <div className="flex items-center justify-between">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={addPollOption}
                   disabled={poll.options.length >= 4}
@@ -392,7 +392,7 @@ export function PostComposer({
                   <input
                     type="checkbox"
                     checked={poll.allowMultiple}
-                    onChange={(e) => setPoll(prev => ({ ...prev, allowMultiple: e.target.checked }))}
+                    onChange={(e: React.ChangeEvent) => setPoll(prev => ({ ...prev, allowMultiple: e.target.checked }))}
                     className="rounded"
                   />
                   <span>Allow multiple choices</span>
@@ -406,14 +406,14 @@ export function PostComposer({
               <input
                 type="text"
                 value={event.title}
-                onChange={(e) => setEvent(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e: React.ChangeEvent) => setEvent(prev => ({ ...prev, title: e.target.value }))}
                 placeholder="Event title"
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none font-medium"
               />
               
               <textarea
                 value={event.description}
-                onChange={(e) => setEvent(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e: React.ChangeEvent) => setEvent(prev => ({ ...prev, description: e.target.value }))}
                 placeholder="Event description"
                 rows={2}
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none resize-none"
@@ -425,7 +425,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.startTime}
-                    onChange={(e) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
                     className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
@@ -434,7 +434,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.endTime || ''}
-                    onChange={(e) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
+                    onChange={(e: React.ChangeEvent) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
                     className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
@@ -459,7 +459,7 @@ export function PostComposer({
                     )}
                   </div>
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => removeAttachment(attachment.id)}
                     className="text-red-400 border-red-400"
@@ -490,7 +490,7 @@ export function PostComposer({
               {allowedTypes.map(type => (
                 <Button
                   key={type}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => setPostType(type)}
                   className={postType === type ? 'bg-hive-gold/20 border-hive-gold' : ''}
@@ -510,7 +510,7 @@ export function PostComposer({
             {allowedTypes.includes('image') && (
               <>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
                 >
@@ -529,7 +529,7 @@ export function PostComposer({
 
             {/* Additional Tools */}
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={() => setShowAdvanced(!showAdvanced)}
               className={showAdvanced ? 'bg-hive-gold/20 border-hive-gold' : ''}
@@ -558,7 +558,7 @@ export function PostComposer({
                 {['public', 'space', 'private'].map(vis => (
                   <Button
                     key={vis}
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => setVisibility(vis as 'public' | 'space' | 'private')}
                     className={visibility === vis ? 'bg-hive-gold/20 border-hive-gold' : ''}

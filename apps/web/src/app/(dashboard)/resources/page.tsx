@@ -225,7 +225,7 @@ export default function ResourcesPage() {
                   variant="ghost" 
                   size="sm" 
                   className="h-8 px-3 text-xs hover:bg-[#FFD700] hover:text-[#0A0A0A]"
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     window.location.href = `/build?template=${template.name.toLowerCase().replace(/\s+/g, '-')}`;
                   }}
@@ -259,7 +259,7 @@ export default function ResourcesPage() {
               Join Discord
             </Button>
             <Button 
-              variant="outline" 
+              variant="secondary" 
               className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
               onClick={() => window.open('https://calendly.com/hive-university/office-hours', '_blank')}
             >

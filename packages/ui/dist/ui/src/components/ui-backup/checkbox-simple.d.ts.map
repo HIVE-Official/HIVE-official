@@ -1,1 +1,0 @@
-{"version":3,"file":"checkbox-simple.d.ts","sourceRoot":"","sources":["../../../../../src/components/ui-backup/checkbox-simple.tsx"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,OAAO,KAAK,MAAM,OAAO,CAAC;AAG1B,MAAM,WAAW,aAAc,SAAQ,IAAI,CAAC,KAAK,CAAC,mBAAmB,CAAC,gBAAgB,CAAC,EAAE,MAAM,CAAC;IAC9F,eAAe,CAAC,EAAE,CAAC,OAAO,EAAE,OAAO,KAAK,IAAI,CAAA;CAC7C;AAED,eAAO,MAAM,QAAQ,wFAwBpB,CAAC"}

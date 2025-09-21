@@ -296,7 +296,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
               Invite Space
             </Button>
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => setShowCreateProjectModal(true)}
             >
               <Target className="h-4 w-4 mr-2" />
@@ -339,7 +339,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
             placeholder="Search collaborations..."
             className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
           />
@@ -347,7 +347,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
         
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as any)}
+          onChange={(e: React.ChangeEvent) => setStatusFilter(e.target.value as any)}
           className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
         >
           <option value="all">All Status</option>
@@ -477,7 +477,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <MessageSquare className="h-4 w-4 mr-1" />
                     Chat
                   </Button>
@@ -564,7 +564,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                   ))}
                 </div>
                 
-                <Button variant="outline" size="sm">
+                <Button variant="secondary" size="sm">
                   View Details
                 </Button>
               </div>
@@ -580,7 +580,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
           <p className="text-zinc-400 mb-6 max-w-2xl mx-auto">
             Collaborative workspace for planning cross-space initiatives, sharing resources, and coordinating joint activities. This feature is coming soon.
           </p>
-          <Button variant="outline">
+          <Button variant="secondary">
             <Plus className="h-4 w-4 mr-2" />
             Request Early Access
           </Button>
@@ -619,7 +619,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
                   </div>
                   <span className="text-white text-sm">{spaceName}</span>
                 </div>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   Invite
                 </Button>
               </div>
@@ -627,7 +627,7 @@ export function CrossSpaceCollaboration({ currentSpaceId, currentSpaceName, user
           </div>
           
           <div className="flex justify-end space-x-3 pt-4 border-t border-zinc-800">
-            <Button variant="outline" onClick={() => setShowInviteModal(false)}>
+            <Button variant="secondary" onClick={() => setShowInviteModal(false)}>
               Cancel
             </Button>
             <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">

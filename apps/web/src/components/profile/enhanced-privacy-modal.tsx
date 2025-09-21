@@ -400,7 +400,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                               min="1"
                               max="24"
                               value={scheduleHours}
-                              onChange={(e) => setScheduleHours(parseInt(e.target.value))}
+                              onChange={(e: React.ChangeEvent) => setScheduleHours(parseInt(e.target.value))}
                               className="flex-1"
                             />
                             <span className="text-sm text-gray-300 w-16">{scheduleHours}h</span>
@@ -591,7 +591,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
             Changes take effect immediately and sync across all your devices
           </div>
           <div className="flex gap-3">
-            <HiveButton variant="outline" onClick={onClose} disabled={isLoading}>
+            <HiveButton variant="secondary" onClick={onClose} disabled={isLoading}>
               Cancel
             </HiveButton>
             <HiveButton onClick={handleSave} disabled={isLoading}>

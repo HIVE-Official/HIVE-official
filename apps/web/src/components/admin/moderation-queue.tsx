@@ -240,7 +240,7 @@ export function ModerationQueue() {
         
         <Button
           onClick={fetchModerationQueue}
-          variant="outline"
+          variant="secondary"
           size="sm"
           disabled={isLoading}
         >
@@ -377,10 +377,10 @@ export function ModerationQueue() {
                     {/* Header */}
                     <div className="flex items-center space-x-3">
                       <div className={`w-2 h-2 rounded-full ${getSeverityColor(report.severity)}`} />
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="freshman" className="text-xs">
                         {report.contentType}
                       </Badge>
-                      <Badge variant="outline" className="text-xs capitalize">
+                      <Badge variant="freshman" className="text-xs capitalize">
                         {report.category.replace('_', ' ')}
                       </Badge>
                       <div className="flex items-center space-x-1">
@@ -433,7 +433,7 @@ export function ModerationQueue() {
                   <div className="flex items-center space-x-2 ml-4">
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" onClick={() => setSelectedReport(report)}>
+                        <Button variant="secondary" size="sm" onClick={() => setSelectedReport(report)}>
                           <Eye className="h-4 w-4 mr-2" />
                           Review
                         </Button>
@@ -532,7 +532,7 @@ export function ModerationQueue() {
               </label>
               <Textarea
                 value={actionReason}
-                onChange={(e) => setActionReason(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setActionReason(e.target.value)}
                 placeholder="Provide a detailed reason for this action..."
                 className="min-h-[80px]"
               />
@@ -544,7 +544,7 @@ export function ModerationQueue() {
               </label>
               <Textarea
                 value={actionNotes}
-                onChange={(e) => setActionNotes(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setActionNotes(e.target.value)}
                 placeholder="Any additional context or notes..."
                 className="min-h-[60px]"
               />
@@ -552,7 +552,7 @@ export function ModerationQueue() {
 
             <div className="flex justify-end space-x-3 pt-4">
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => setActionDialog({ isOpen: false, report: null, action: '' })}
                 disabled={isProcessingAction}
               >
@@ -615,7 +615,7 @@ function ReportDetailsPanel({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Category:</span>
-                  <Badge variant="outline">{report.category}</Badge>
+                  <Badge variant="freshman">{report.category}</Badge>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Severity:</span>
@@ -706,7 +706,7 @@ function ReportDetailsPanel({
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Suggested Action:</span>
-                    <Badge variant="outline">{report.aiAnalysis.suggestedAction}</Badge>
+                    <Badge variant="freshman">{report.aiAnalysis.suggestedAction}</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Risk Score:</span>

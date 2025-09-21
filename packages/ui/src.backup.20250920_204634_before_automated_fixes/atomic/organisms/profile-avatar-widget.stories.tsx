@@ -1,0 +1,693 @@
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { ProfileAvatarWidget } from './profile-avatar-widget';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../atoms/badge';
+import { Text } from '../atoms/text';
+import { action } from '@storybook/addon-actions';
+import '../../hive-tokens.css';
+
+const meta: Meta<typeof ProfileAvatarWidget> = {
+  title: '03-Organisms/Profile Avatar Widget - COMPLETE DEFINITION',
+  component: ProfileAvatarWidget,
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## 👤 HIVE Profile Avatar Widget - Complete Organism Definition;
+**PRODUCTION STATUS**: ✅ **FULLY DEFINED & PRODUCTION-READY**
+
+The comprehensive profile identity widget for University at Buffalo HIVE platform student profile dashboard and campus command center.
+
+### 🎯 **COMPONENT EXCELLENCE**
+- **Complete Identity Display** - Avatar, name, handle, academic info, and bio in unified interface;
+- **Interactive Photo Management** - Hover-to-edit photo upload with visual feedback;
+- **Academic Context** - Major, year, residence hall integration for UB student identity;
+- **Online Status Tracking** - Real-time presence indicators and last seen timestamps;
+- **Profile Analytics** - Views, connections, achievements with visual metrics;
+- **Privacy Controls** - Ghost mode toggle and visibility management;
+- **Perfect Semantic Tokens** - 100% semantic token usage for consistent theming;
+- **Mobile Optimized** - Touch-friendly design with responsive layout adaptation;
+- **Campus Integration** - Built for University at Buffalo student profile management;
+### 🎓 **UB CAMPUS CONTEXT**
+Perfect for University at Buffalo HIVE platform student profiles:
+- **Academic Identity** - CSE major, Junior year, Ellicott Complex residence display;
+- **Campus Presence** - Online status for study session coordination and availability;
+- **Social Proof** - Profile views from classmates, connection counts, achievement displays;
+- **Privacy Management** - Ghost mode for focused study periods and controlled visibility;
+- **Achievement Recognition** - Visual indicators for academic excellence and platform engagement;
+- **Peer Discovery** - Professional profile presentation for study partner matching;
+- **Campus Coordination** - Status updates for availability and academic collaboration;
+### 📱 **MOBILE OPTIMIZATION**
+- **Touch-Friendly Design** - Large avatar targets and clear interaction zones;
+- **Responsive Layout** - Adaptive information display for mobile profile management;
+- **Gesture Support** - Swipe and tap interactions for photo upload and editing;
+- **Quick Actions** - One-touch profile editing and visibility control;
+`,
+      },
+    },
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    user: {
+      control: 'object',
+      description: 'User profile data',
+    },
+    isEditable: {
+      control: 'boolean',
+      description: 'Enable editing controls',
+    },
+    onEditProfile: {
+      action: 'edit-profile',
+      description: 'Profile edit handler',
+    },
+    onUploadPhoto: {
+      action: 'upload-photo',
+      description: 'Photo upload handler',
+    },
+    onToggleVisibility: {
+      action: 'toggle-visibility',
+      description: 'Visibility toggle handler',
+    },
+    onViewProfile: {
+      action: 'view-profile',
+      description: 'Profile view handler',
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof ProfileAvatarWidget>;
+
+// Sample user data for stories;
+const sampleUsers = {
+  activeStudent: {
+    id: 'sarah-chen-cs',
+    name: 'Sarah Chen',
+    handle: 'schen_cs',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b02e4d2d?w=150&h=150&fit=crop&crop=face',
+    major: 'Computer Science',
+    year: 'Junior',
+    residence: 'Ellicott Complex',
+    bio: 'CS junior passionate about AI and machine learning. Always down for algorithm study sessions and hackathons! Currently working on neural network projects.',
+    isOnline: true,
+    profileViews: 1247,
+    achievements: 23,
+    connections: 156,
+    isGhostMode: false;
+  },
+  ghostModeStudent: {
+    id: 'alex-rivera-ee',
+    name: 'Alex Rivera',
+    handle: 'arivera_ub',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    major: 'Electrical Engineering',
+    year: 'Senior',
+    residence: 'Governors Complex',
+    bio: 'EE senior focusing on embedded systems. Leading the robotics club and working on autonomous vehicle projects.',
+    isOnline: false,
+    lastSeen: '2 hours ago',
+    profileViews: 892,
+    achievements: 34,
+    connections: 203,
+    isGhostMode: true;
+  },
+  newStudent: {
+    id: 'jamie-park-bio',
+    name: 'Jamie Park',
+    handle: 'jpark2024',
+    major: 'Biology',
+    year: 'Freshman',
+    residence: 'South Campus Apartments',
+    bio: 'Pre-med freshman excited to connect with study partners and join research opportunities at UB!',
+    isOnline: true,
+    profileViews: 45,
+    achievements: 3,
+    connections: 12,
+    isGhostMode: false;
+  }
+};
+
+// Default profile avatar widget showcase;
+export const Default: Story = {
+  args: {
+    user: sampleUsers.activeStudent,
+    isEditable: true,
+    onEditProfile: action('edit-profile-clicked'),
+    onUploadPhoto: action('upload-photo-clicked'),
+    onToggleVisibility: action('visibility-toggled'),
+    onViewProfile: action('view-profile-clicked'),
+  },
+  render: (args) => (
+    <div className="p-6 bg-[var(--hive-background-primary)] max-w-md">
+      <Text variant="body-md" color="primary" className="mb-4">
+        HIVE profile avatar widget for University at Buffalo student dashboard:
+      </Text>
+      <ProfileAvatarWidget {...args} />
+    </div>
+  ),
+};
+
+// Complete showcase;
+export const CompleteShowcase: Story = {
+  render: () => (
+    <div className="space-y-8 p-6 bg-[var(--hive-background-primary)]">
+      
+      {/* Profile Widget Variations */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <Badge variant="success">👤 PROFILE VARIATIONS</Badge>
+            Identity Widget States;
+          </CardTitle>
+          <p className="text-[var(--hive-text-muted)]">
+            Profile avatar widget variations for different University at Buffalo student states and contexts;
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-8">
+            
+            <div className="space-y-4">
+              <h4 className="font-medium text-[var(--hive-text-primary)]">Student Profile States:</h4>
+              <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-6">
+                
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  
+                  <div className="space-y-3">
+                    <Text variant="body-sm" color="gold" weight="medium">Active Online Student:</Text>
+                    <ProfileAvatarWidget;
+                      user={sampleUsers.activeStudent}
+                      isEditable={true}
+                      onEditProfile={action('edit-active-profile')}
+                      onUploadPhoto={action('upload-active-photo')}
+                      onToggleVisibility={action('toggle-active-visibility')}
+                      onViewProfile={action('view-active-profile')}
+                    />
+                    <Text variant="body-xs" color="secondary">
+                      Junior CS student with active engagement, high achievements, and strong campus presence;
+                    </Text>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Text variant="body-sm" color="gold" weight="medium">Ghost Mode Student:</Text>
+                    <ProfileAvatarWidget;
+                      user={sampleUsers.ghostModeStudent}
+                      isEditable={true}
+                      onEditProfile={action('edit-ghost-profile')}
+                      onUploadPhoto={action('upload-ghost-photo')}
+                      onToggleVisibility={action('toggle-ghost-visibility')}
+                      onViewProfile={action('view-ghost-profile')}
+                    />
+                    <Text variant="body-xs" color="secondary">
+                      Senior EE student using ghost mode for focused study periods and controlled visibility;
+                    </Text>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Text variant="body-sm" color="gold" weight="medium">New Student Profile:</Text>
+                    <ProfileAvatarWidget;
+                      user={sampleUsers.newStudent}
+                      isEditable={true}
+                      onEditProfile={action('edit-new-profile')}
+                      onUploadPhoto={action('upload-new-photo')}
+                      onToggleVisibility={action('toggle-new-visibility')}
+                      onViewProfile={action('view-new-profile')}
+                    />
+                    <Text variant="body-xs" color="secondary">
+                      Freshman pre-med student building connections and establishing campus presence;
+                    </Text>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Profile Features */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <Badge variant="info">🎯 PROFILE FEATURES</Badge>
+            Identity Management Components;
+          </CardTitle>
+          <p className="text-[var(--hive-text-muted)]">
+            Core features and functionality of the profile avatar widget for comprehensive identity management;
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            
+            <div className="space-y-4">
+              <h4 className="font-medium text-[var(--hive-text-primary)]">Identity Components:</h4>
+              <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-6">
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  
+                  <div className="space-y-4">
+                    <Text variant="body-sm" color="gold" weight="medium">Visual Identity:</Text>
+                    <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
+                      <div className="space-y-2">
+                        <Text variant="body-sm" weight="medium" color="primary">Avatar & Photo Management</Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Large avatar display with ring indicator;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Hover-to-edit photo upload functionality;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Online status indicator with real-time updates;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Achievement badge for high-performing students;
+                        </Text>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Text variant="body-sm" color="gold" weight="medium">Academic Identity:</Text>
+                    <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
+                      <div className="space-y-2">
+                        <Text variant="body-sm" weight="medium" color="primary">Campus Context Display</Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Major and academic year presentation;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Residence hall and campus location;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Personal bio with academic interests;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • UB handle for platform identification;
+                        </Text>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Text variant="body-sm" color="gold" weight="medium">Social Analytics:</Text>
+                    <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
+                      <div className="space-y-2">
+                        <Text variant="body-sm" weight="medium" color="primary">Engagement Metrics</Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Profile views from other UB students;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Connection count and network size;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Achievement count with visual recognition;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Three-column stats grid layout;
+                        </Text>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Text variant="body-sm" color="gold" weight="medium">Privacy Controls:</Text>
+                    <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
+                      <div className="space-y-2">
+                        <Text variant="body-sm" weight="medium" color="primary">Visibility Management</Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Ghost mode toggle for privacy;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Editable vs view-only mode control;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • Quick profile edit access button;
+                        </Text>
+                        <Text variant="body-xs" color="secondary">
+                          • External profile view option;
+                        </Text>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* UB Campus Context */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <Badge variant="primary">🦌 UNIVERSITY AT BUFFALO</Badge>
+            Real Campus Profile Scenarios;
+          </CardTitle>
+          <p className="text-[var(--hive-text-muted)]">
+            Profile avatar widget usage in actual University at Buffalo student identity and campus integration contexts;
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-8">
+          
+          {/* Academic Identity Scenarios */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-[var(--hive-text-primary)]">Academic Identity Integration:</h4>
+            <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-6">
+              
+              <div className="space-y-4">
+                <Text as="h3" variant="heading-sm" color="primary">
+                  Computer Science Student Profile - Academic Excellence Display;
+                </Text>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  
+                  <div className="space-y-3">
+                    <Text variant="body-sm" color="gold" weight="medium">High-Achieving Junior:</Text>
+                    <ProfileAvatarWidget;
+                      user={{
+                        id: 'sarah-chen-excellence',
+                        name: 'Sarah Chen',
+                        handle: 'schen_cs_ub',
+                        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b02e4d2d?w=150&h=150&fit=crop&crop=face',
+                        major: 'Computer Science & Mathematics',
+                        year: 'Junior',
+                        residence: 'Ellicott Complex - Porter Hall',
+                        bio: 'Dean\'s List CS junior specializing in AI/ML. TA for CSE 331, researcher in UB AI lab. Always organizing study groups for algorithms and data structures!',
+                        isOnline: true,
+                        profileViews: 2847,
+                        achievements: 47,
+                        connections: 234,
+                        isGhostMode: false;
+                      }}
+                      isEditable={true}
+                      onEditProfile={action('edit-excellence-profile')}
+                      onUploadPhoto={action('upload-excellence-photo')}
+                      onToggleVisibility={action('toggle-excellence-visibility')}
+                      onViewProfile={action('view-excellence-profile')}
+                    />
+                    <Text variant="body-xs" color="secondary">
+                      Profile showcasing academic achievement, teaching assistance, and active research participation;
+                    </Text>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Text variant="body-sm" color="gold" weight="medium">Engineering Leadership:</Text>
+                    <ProfileAvatarWidget;
+                      user={{
+                        id: 'alex-engineering-lead',
+                        name: 'Alex Rivera',
+                        handle: 'arivera_seas',
+                        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+                        major: 'Electrical Engineering',
+                        year: 'Senior',
+                        residence: 'Governors Complex - Richmond Quad',
+                        bio: 'EE senior and robotics club president. Building autonomous drones, mentoring underclassmen, and preparing for graduate school in embedded systems.',
+                        isOnline: false,
+                        lastSeen: '4 hours ago',
+                        profileViews: 1923,
+                        achievements: 52,
+                        connections: 189,
+                        isGhostMode: false;
+                      }}
+                      isEditable={true}
+                      onEditProfile={action('edit-leader-profile')}
+                      onUploadPhoto={action('upload-leader-photo')}
+                      onToggleVisibility={action('toggle-leader-visibility')}
+                      onViewProfile={action('view-leader-profile')}
+                    />
+                    <Text variant="body-xs" color="secondary">
+                      Senior leadership profile with club presidency, mentoring roles, and graduate preparation;
+                    </Text>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          {/* Campus Life Integration */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-[var(--hive-text-primary)]">Campus Community Integration:</h4>
+            <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-6">
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                
+                <div className="space-y-3">
+                  <Text variant="body-sm" color="gold" weight="medium">Freshman Explorer:</Text>
+                  <ProfileAvatarWidget;
+                    user={{
+                      id: 'jamie-freshman',
+                      name: 'Jamie Park',
+                      handle: 'jpark_ub2024',
+                      major: 'Biology (Pre-Med)',
+                      year: 'Freshman',
+                      residence: 'South Campus Apartments',
+                      bio: 'Pre-med freshman excited about organic chemistry and volunteer opportunities. Looking for study partners and research experience!',
+                      isOnline: true,
+                      profileViews: 127,
+                      achievements: 8,
+                      connections: 34,
+                      isGhostMode: false;
+                    }}
+                    isEditable={true}
+                    onEditProfile={action('edit-freshman-profile')}
+                    onUploadPhoto={action('upload-freshman-photo')}
+                    onToggleVisibility={action('toggle-freshman-visibility')}
+                    onViewProfile={action('view-freshman-profile')}
+                  />
+                  <Text variant="body-xs" color="secondary">
+                    New student profile focused on community building and academic exploration;
+                  </Text>
+                </div>
+
+                <div className="space-y-3">
+                  <Text variant="body-sm" color="gold" weight="medium">Research Scholar:</Text>
+                  <ProfileAvatarWidget;
+                    user={{
+                      id: 'marcus-researcher',
+                      name: 'Marcus Thompson',
+                      handle: 'mthompson_phd',
+                      major: 'Psychology PhD',
+                      year: 'Graduate Student',
+                      residence: 'Graduate Student Housing',
+                      bio: 'PhD candidate in cognitive psychology studying decision-making processes. Published researcher and statistics tutor for undergraduates.',
+                      isOnline: true,
+                      profileViews: 1456,
+                      achievements: 34,
+                      connections: 145,
+                      isGhostMode: false;
+                    }}
+                    isEditable={true}
+                    onEditProfile={action('edit-researcher-profile')}
+                    onUploadPhoto={action('upload-researcher-photo')}
+                    onToggleVisibility={action('toggle-researcher-visibility')}
+                    onViewProfile={action('view-researcher-profile')}
+                  />
+                  <Text variant="body-xs" color="secondary">
+                    Graduate student profile showcasing research credentials and tutoring services;
+                  </Text>
+                </div>
+
+                <div className="space-y-3">
+                  <Text variant="body-sm" color="gold" weight="medium">International Student:</Text>
+                  <ProfileAvatarWidget;
+                    user={{
+                      id: 'sofia-international',
+                      name: 'Sofia Nakamura',
+                      handle: 'snakamura_intl',
+                      major: 'Business Administration',
+                      year: 'Sophomore',
+                      residence: 'Creekside Village',
+                      bio: 'International business student from Tokyo. Passionate about cross-cultural collaboration and sustainable business practices. Always happy to share language exchange!',
+                      isOnline: false,
+                      lastSeen: '1 hour ago',
+                      profileViews: 892,
+                      achievements: 19,
+                      connections: 167,
+                      isGhostMode: false;
+                    }}
+                    isEditable={true}
+                    onEditProfile={action('edit-international-profile')}
+                    onUploadPhoto={action('upload-international-photo')}
+                    onToggleVisibility={action('toggle-international-visibility')}
+                    onViewProfile={action('view-international-profile')}
+                  />
+                  <Text variant="body-xs" color="secondary">
+                    International student profile emphasizing cultural exchange and global perspective;
+                  </Text>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          {/* Privacy and Status Management */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-[var(--hive-text-primary)]">Privacy & Status Management:</h4>
+            <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-6">
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                
+                <div className="space-y-3">
+                  <Text variant="body-sm" color="gold" weight="medium">Ghost Mode Study Focus:</Text>
+                  <ProfileAvatarWidget;
+                    user={{
+                      id: 'finals-focus-student',
+                      name: 'Emily Rodriguez',
+                      handle: 'erodriguez_chem',
+                      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+                      major: 'Chemistry',
+                      year: 'Junior',
+                      residence: 'Hadley Village',
+                      bio: 'Chemistry junior in finals preparation mode. Using ghost mode for focused study sessions and minimal distractions.',
+                      isOnline: false,
+                      lastSeen: '30 minutes ago',
+                      profileViews: 634,
+                      achievements: 28,
+                      connections: 98,
+                      isGhostMode: true;
+                    }}
+                    isEditable={true}
+                    onEditProfile={action('edit-ghost-focus-profile')}
+                    onUploadPhoto={action('upload-ghost-focus-photo')}
+                    onToggleVisibility={action('toggle-ghost-focus-visibility')}
+                    onViewProfile={action('view-ghost-focus-profile')}
+                  />
+                  <Text variant="body-xs" color="secondary">
+                    Student using ghost mode for intensive study periods with controlled campus visibility;
+                  </Text>
+                </div>
+
+                <div className="space-y-3">
+                  <Text variant="body-sm" color="gold" weight="medium">Highly Connected Student:</Text>
+                  <ProfileAvatarWidget;
+                    user={{
+                      id: 'campus-connector',
+                      name: 'David Kim',
+                      handle: 'dkim_campus_life',
+                      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+                      major: 'Communications',
+                      year: 'Senior',
+                      residence: 'Flint Loop',
+                      bio: 'Communications senior and student government representative. Event coordinator for campus activities and inter-organization collaboration.',
+                      isOnline: true,
+                      profileViews: 4521,
+                      achievements: 73,
+                      connections: 456,
+                      isGhostMode: false;
+                    }}
+                    isEditable={true}
+                    onEditProfile={action('edit-connector-profile')}
+                    onUploadPhoto={action('upload-connector-photo')}
+                    onToggleVisibility={action('toggle-connector-visibility')}
+                    onViewProfile={action('view-connector-profile')}
+                  />
+                  <Text variant="body-xs" color="secondary">
+                    Highly connected student leader with maximum engagement and campus activity coordination;
+                  </Text>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          {/* Mobile Profile Experience */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-[var(--hive-text-primary)]">Mobile Profile Management:</h4>
+            <div className="bg-[var(--hive-background-secondary)] p-6 rounded-lg space-y-6">
+              
+              <Text variant="body-md" color="primary">
+                Mobile-optimized profile widget for on-campus identity management:
+              </Text>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                
+                <div className="space-y-3">
+                  <Text variant="body-sm" color="gold" weight="medium">Quick Profile Updates:</Text>
+                  <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
+                    <Text variant="body-sm" weight="medium" color="primary">Touch-Friendly Profile Management</Text>
+                    <Text variant="body-xs" color="secondary">
+                      Large avatar touch targets for photo upload while walking between classes;
+                    </Text>
+                    <Text variant="body-xs" color="secondary">
+                      One-touch ghost mode toggle for instant privacy control;
+                    </Text>
+                    <Text variant="body-xs" color="secondary">
+                      Quick bio updates for current academic status and availability;
+                    </Text>
+                    <Text variant="body-xs" color="secondary">
+                      Responsive layout adaptation for portrait and landscape orientations;
+                    </Text>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Text variant="body-sm" color="gold" weight="medium">Campus Status Broadcasting:</Text>
+                  <div className="p-4 bg-[var(--hive-background-primary)] rounded-lg border border-[var(--hive-border-primary)] space-y-3">
+                    <Text variant="body-sm" weight="medium" color="primary">Real-Time Campus Presence</Text>
+                    <Text variant="body-xs" color="secondary">
+                      Online status updates for study session coordination and availability;
+                    </Text>
+                    <Text variant="body-xs" color="secondary">
+                      Location-aware presence for campus building and study space coordination;
+                    </Text>
+                    <Text variant="body-xs" color="secondary">
+                      Achievement notifications and milestone celebrations;
+                    </Text>
+                    <Text variant="body-xs" color="secondary">
+                      Social proof display for peer recognition and connection building;
+                    </Text>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </CardContent>
+      </Card>
+
+    </div>
+  ),
+};
+
+// Interactive playground;
+export const Playground: Story = {
+  args: {
+    user: sampleUsers.activeStudent,
+    isEditable: true,
+    onEditProfile: action('playground-edit-profile'),
+    onUploadPhoto: action('playground-upload-photo'),
+    onToggleVisibility: action('playground-toggle-visibility'),
+    onViewProfile: action('playground-view-profile'),
+  },
+  render: (args) => (
+    <div className="p-6 bg-[var(--hive-background-primary)]">
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile Avatar Widget Playground</CardTitle>
+          <p className="text-[var(--hive-text-muted)]">
+            Use the controls to test different profile avatar configurations;
+          </p>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="space-y-4 max-w-md">
+            <ProfileAvatarWidget {...args} />
+            <Text variant="body-sm" color="secondary">
+              Interactive profile widget testing for University at Buffalo HIVE platform student dashboard;
+            </Text>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  ),
+};

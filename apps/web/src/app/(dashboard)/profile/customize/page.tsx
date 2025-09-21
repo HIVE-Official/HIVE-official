@@ -5,7 +5,7 @@
 // Following the successful profile edit, settings, privacy, and analytics page patterns
 // ✅ MIGRATION STATUS: Complete - All @hive/ui components, enhanced UX, UB student context
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { logger } from '@/lib/logger';
 import { 
@@ -21,7 +21,7 @@ import {
   HiveModal,
   FormField
 } from "@hive/ui";
-import { useHiveProfile } from '../../../../hooks/use-hive-profile';
+// Removed unused useHiveProfile hook
 import { 
   User, 
   Grid,
@@ -329,7 +329,7 @@ export default function ProfileCustomizePage() {
         actions={
           <div className="flex items-center space-x-3">
             <Button 
-              variant="outline" 
+              variant="secondary" 
               onClick={handleCancel}
             >
               <X className="h-4 w-4 mr-2" />
@@ -405,7 +405,7 @@ export default function ProfileCustomizePage() {
               </h3>
               <div className="space-y-2">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={resetToDefault}
                   className="w-full justify-start"
@@ -437,7 +437,7 @@ export default function ProfileCustomizePage() {
                       </Button>
                     </div>
                     <p className="text-xs text-hive-text-mutedLight mb-1">{template.description}</p>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="freshman" className="text-xs">
                       {template.targetUser}
                     </Badge>
                   </div>
@@ -455,7 +455,7 @@ export default function ProfileCustomizePage() {
                   <Grid className="h-5 w-5 mr-2" />
                   Layout Preview
                 </h3>
-                <Badge variant="outline">
+                <Badge variant="freshman">
                   {visibleCards.length} cards visible
                 </Badge>
               </div>
@@ -535,18 +535,18 @@ export default function ProfileCustomizePage() {
                               <h4 className="font-medium text-white text-sm">{card.name}</h4>
                               <p className="text-xs text-hive-text-mutedLight">{card.description}</p>
                               {card.builderOnly && (
-                                <Badge variant="secondary" className="text-xs mt-1">
+                                <Badge variant="sophomore" className="text-xs mt-1">
                                   Builder Only
                                 </Badge>
                               )}
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="freshman" className="text-xs">
                               {card.size}
                             </Badge>
                             {card.isRequired ? (
-                              <Badge variant="secondary" className="text-xs">Required</Badge>
+                              <Badge variant="sophomore" className="text-xs">Required</Badge>
                             ) : (
                               <Switch
                                 checked={card.isVisible}
@@ -648,14 +648,14 @@ export default function ProfileCustomizePage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 mt-3">
-                  <Badge variant="outline" className="text-xs capitalize">
+                  <Badge variant="freshman" className="text-xs capitalize">
                     {editingCard.category}
                   </Badge>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="sophomore" className="text-xs">
                     {editingCard.size}
                   </Badge>
                   {editingCard.isRequired && (
-                    <Badge variant="secondary" className="text-xs">Required</Badge>
+                    <Badge variant="sophomore" className="text-xs">Required</Badge>
                   )}
                 </div>
               </div>
