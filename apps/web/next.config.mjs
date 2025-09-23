@@ -5,11 +5,18 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Bundle analyzer
-import bundleAnalyzer from '@next/bundle-analyzer';
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
+// Bundle analyzer - only use in development
+let withBundleAnalyzer = (config) => config;
+if (process.env.NODE_ENV !== 'production' && process.env.ANALYZE === 'true') {
+  try {
+    const bundleAnalyzer = await import('@next/bundle-analyzer');
+    withBundleAnalyzer = bundleAnalyzer.default({
+      enabled: process.env.ANALYZE === 'true',
+    });
+  } catch (e) {
+    console.warn('Bundle analyzer not available in production');
+  }
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
