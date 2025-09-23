@@ -122,7 +122,7 @@ export function SpaceToolRenderer({
         break;
       default:
         // Handle tool-specific actions
-        setToolState(prev => ({
+        setToolState((prev: any) => ({
           ...prev,
           lastAction: { action, data, timestamp: Date.now() }
         }));
@@ -130,7 +130,7 @@ export function SpaceToolRenderer({
   };
 
   const handleElementChange = (elementId: string, data: any) => {
-    setToolState(prev => ({
+    setToolState((prev: any) => ({
       ...prev,
       elements: {
         ...prev.elements,
