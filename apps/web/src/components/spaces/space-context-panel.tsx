@@ -182,6 +182,7 @@ export function SpaceContextPanel({
               <SpaceToolRenderer
                 tool={tool}
                 spaceId={space.id}
+                spaceType={space.type as string}
                 userPermissions={{...userPermissions, userId: '', spaceId: space.id} as any}
                 spaceRules={spaceRules}
                 position="contextual"

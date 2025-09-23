@@ -30,6 +30,7 @@ interface SpaceToolRendererProps {
     usageCount?: number;
   };
   spaceId: string;
+  spaceType?: string; // Add spaceType prop
   userPermissions: UserPermissions;
   spaceRules: SpaceTypeRules | null;
   position: 'inline' | 'contextual';
@@ -38,6 +39,7 @@ interface SpaceToolRendererProps {
 export function SpaceToolRenderer({
   tool,
   spaceId,
+  spaceType,
   userPermissions,
   spaceRules,
   position
@@ -58,7 +60,7 @@ export function SpaceToolRenderer({
 
     const permission = canUseToolInSpace(
       userPermissions,
-      spaceRules?.name as any, // TODO: Fix type mapping
+      (spaceType || 'student_organizations') as any, // Use spaceType prop or default
       spaceRules,
       toolPermissions
     );
