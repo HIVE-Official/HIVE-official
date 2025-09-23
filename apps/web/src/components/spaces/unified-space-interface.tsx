@@ -71,7 +71,7 @@ export function UnifiedSpaceInterface({
 
   // Set up realtime connection for this space
   useEffect(() => {
-    if (!spaceId || userPermissions.role === 'guest') return;
+    if (!spaceId) return;
 
     let eventSource: EventSource | null = null;
 
@@ -122,7 +122,7 @@ export function UnifiedSpaceInterface({
         setRealtimeConnected(false);
       }
     };
-  }, [spaceId, userPermissions.role]);
+  }, [spaceId]);
 
   // Handle realtime messages
   const handleRealtimeMessage = (data: any) => {
@@ -134,13 +134,12 @@ export function UnifiedSpaceInterface({
             const exists = prev.some(member => member.id === data.data.userId);
             if (!exists) {
               // In real implementation, fetch user data
-              const newMember: User = {
+              const newMember = {
                 id: data.data.userId,
                 fullName: 'Online User',
                 handle: 'user',
-                email: '',
-                campusId: 'ub-buffalo'
-              };
+                email: ''
+              } as User;
               return [...prev, newMember];
             }
             return prev;
@@ -247,6 +246,14 @@ export function UnifiedSpaceInterface({
     return resolveUserPermissions(userPermissions, spaceData?.space?.type as SpaceType, spaceRules);
   }, [userPermissions, spaceData?.space?.type, spaceRules]);
 
+  // Create simplified permissions for SpaceContextPanel
+  const simplePermissions = useMemo(() => ({
+    isMember: userPermissions.role !== 'guest',
+    isAdmin: userPermissions.role === 'admin' || userPermissions.role === 'owner',
+    isModerator: userPermissions.role === 'moderator',
+    role: userPermissions.role
+  }), [userPermissions.role]);
+
   // Filter tools based on space rules and position
   const inlineTools = useMemo(() => {
     return installedTools.filter(tool =>
@@ -298,7 +305,7 @@ export function UnifiedSpaceInterface({
               <div className="flex-1">
                 <div className="flex items-center gap-4 mb-3">
                   <div className="w-16 h-16 bg-gray-800 rounded-lg border-2 border-gray-700 flex items-center justify-center">
-                    <span className="text-2xl">{space.avatar || '🍯'}</span>
+                    <span className="text-2xl">{(space as any).avatar || '🍯'}</span>
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-1">
@@ -478,7 +485,7 @@ export function UnifiedSpaceInterface({
                 userMembership={spaceData.userMembership}
                 onlineMembers={onlineMembers}
                 contextualTools={contextualTools}
-                userPermissions={userPermissions}
+                userPermissions={simplePermissions}
                 spaceRules={spaceRules}
                 onToolInteraction={(toolId, action) => {
                   // Handle tool interactions
@@ -509,7 +516,7 @@ export function UnifiedSpaceInterface({
                   userMembership={spaceData.userMembership}
                   onlineMembers={onlineMembers}
                   contextualTools={contextualTools}
-                  userPermissions={userPermissions}
+                  userPermissions={simplePermissions}
                   spaceRules={spaceRules}
                   onToolInteraction={(toolId, action) => {
                     console.log('Tool interaction:', toolId, action);

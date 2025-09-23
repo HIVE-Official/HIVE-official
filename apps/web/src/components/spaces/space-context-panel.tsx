@@ -183,7 +183,11 @@ export function SpaceContextPanel({
                 tool={tool}
                 spaceId={space.id}
                 spaceType={space.type as string}
-                userPermissions={{...userPermissions, userId: '', spaceId: space.id} as any}
+                userPermissions={{
+                  userId: userMembership?.userId || '',
+                  spaceId: space.id,
+                  role: userPermissions.role || 'guest'
+                } as any}
                 spaceRules={spaceRules}
                 position="contextual"
               />
