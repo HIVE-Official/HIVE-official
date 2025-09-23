@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "dev": "node ../../node_modules/storybook/bin/index.cjs dev -p 6006",
-    "build": "npx tsc && node ../../node_modules/tailwindcss/lib/cli.js -i ./src/styles.css -o ./dist/styles.css --minify && node fix-imports.cjs",
+    "build": "npx tsc && npx tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify && node fix-imports.cjs",
     "build-storybook": "node ../../node_modules/storybook/bin/index.cjs build --disable-telemetry",
     "storybook": "node ../../node_modules/storybook/bin/index.cjs dev -p 6006",
     "lint": "npx eslint . --max-warnings 15",
