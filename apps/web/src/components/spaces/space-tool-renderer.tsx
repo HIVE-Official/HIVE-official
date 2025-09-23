@@ -337,14 +337,14 @@ export function SpaceToolRenderer({
       </div>
 
       {/* Tool Actions Bar */}
-      {tool.elements && tool.elements.length > 0 && (
+      {tool.configuration?.elements && tool.configuration.elements.length > 0 && (
         <div className="flex items-center justify-between pt-4 border-t border-gray-700">
           <div className="text-xs text-gray-400">
             Last updated: {new Date(toolState.lastAction?.timestamp || Date.now()).toLocaleTimeString()}
           </div>
 
           <div className="flex items-center gap-2">
-            {tool.config.actions?.map((action: any, index: number) => (
+            {tool.configuration?.actions?.map((action: any, index: number) => (
               <HiveButton
                 key={index}
                 variant="outline"
