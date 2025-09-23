@@ -8,6 +8,14 @@ import type { HiveProfile, HiveProfileDashboard } from '@hive/core';
 interface ProfileSystem {
   userId: string;
   campusId: string;
+  handle: string;
+  identity?: any;
+  presence?: any;
+  connections?: any;
+  grid?: any;
+  privacy?: any;
+  intelligence?: any;
+  createdAt?: any;
   profile: any;
   dashboard: any;
   analytics: any;
@@ -15,12 +23,16 @@ interface ProfileSystem {
 }
 
 interface BentoGridLayout {
-  items: any[];
+  cards?: any[];
+  items?: any[];
+  mobileLayout?: any[];
+  lastModified?: string;
 }
 
 enum VisibilityLevel {
   PUBLIC = 'public',
   FRIENDS = 'friends',
+  CONNECTIONS = 'connections',
   PRIVATE = 'private'
 }
 
@@ -153,7 +165,7 @@ function generateBentoGridLayout(
   if (profile.builder.isBuilder) {
     cards.push({
       id: 'vibe_check',
-      type: 'vibe_check' as const,
+      type: 'discovery' as const,
       position: { x: 2, y: 2 },
       size: '1x1' as const,
       visible: true
@@ -161,7 +173,7 @@ function generateBentoGridLayout(
   }
 
   return {
-    cards,
+    cards: cards,
     mobileLayout: [
       {
         id: 'spaces_hub',
@@ -185,7 +197,7 @@ function generateBentoGridLayout(
         visible: profile.privacy.showConnections
       }
     ],
-    lastModified: new Date(profile.timestamps.updatedAt)
+    lastModified: new Date(profile.timestamps.updatedAt).toISOString()
   };
 }
 
