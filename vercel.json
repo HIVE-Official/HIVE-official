@@ -114,8 +114,6 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production",
-    "TURBO_TEAM": "hive",
-    "TURBO_TOKEN": "@turbo_token"
+    "NODE_ENV": "production"
   }
 }

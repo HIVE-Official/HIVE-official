@@ -58,7 +58,7 @@ export function SpaceToolRenderer({
 
     const permission = canUseToolInSpace(
       userPermissions,
-      spaceRules.name as any, // TODO: Fix type mapping
+      spaceRules?.name as any, // TODO: Fix type mapping
       spaceRules,
       toolPermissions
     );
