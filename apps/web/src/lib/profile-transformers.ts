@@ -16,10 +16,13 @@ interface ProfileSystem {
   privacy?: any;
   intelligence?: any;
   createdAt?: any;
-  profile: any;
-  dashboard: any;
-  analytics: any;
-  navigation: any;
+  updatedAt?: any;
+  completeness?: any;
+  isSetupComplete?: any;
+  profile?: any;
+  dashboard?: any;
+  analytics?: any;
+  navigation?: any;
 }
 
 interface BentoGridLayout {
