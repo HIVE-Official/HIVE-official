@@ -352,7 +352,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 </HiveButton>
                 
                 <HiveButton
-                  variant="primary"
+                  variant="default"
                   size="sm"
                   onClick={cropImage}
                   leftIcon={<CheckCircle className="w-4 h-4" />}
@@ -419,7 +419,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
               >
                 <Image
                   src={data.profilePhoto}
-                  alt="Profile"
+                  alt="Profile photo"
                   width={160}
                   height={192}
                   className="w-full h-full object-cover"
@@ -606,7 +606,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        onChange={(e: React.ChangeEvent) => {
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           const file = e.target.files?.[0];
           if (file) handleFileSelect(file);
         }}

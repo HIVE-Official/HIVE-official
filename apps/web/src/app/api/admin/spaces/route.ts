@@ -295,6 +295,9 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
       updatedBy: adminUserId
     });
   }
+
+  // Handle unknown action
+  return respond.error(`Unknown action: ${action}`, "INVALID_INPUT", { status: 400 });
 });
 
 /**
@@ -302,8 +305,9 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
  * DELETE /api/admin/spaces
  */
 export const DELETE = withAdminAuthAndErrors(
-  spaceActionSchema,
-  async (request: AuthenticatedRequest, context, { spaceId, spaceType, action, reason }, respond) => {
+  async (request: AuthenticatedRequest, context, respond) => {
+    const body = await request.json();
+    const { spaceId, spaceType, action, reason } = spaceActionSchema.parse(body);
     const adminUserId = getUserId(request);
 
     const spaceRef = dbAdmin

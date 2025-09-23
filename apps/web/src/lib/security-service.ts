@@ -160,10 +160,10 @@ export async function validateDevBypass(
     const securityContext = {
       token: isDevToken ? '[DEV_TOKEN_BLOCKED]' : token,
       environment: currentEnvironment,
-      userAgent: request.headers.get('user-agent'),
+      userAgent: request.headers.get('user-agent') || undefined,
       ip: request.headers.get('x-forwarded-for') || 
           request.headers.get('x-real-ip') || 
-          request.headers.get('cf-connecting-ip'),
+          request.headers.get('cf-connecting-ip') || undefined,
       path: context?.path || new URL(request.url).pathname,
       operation: context?.operation,
       timestamp: new Date().toISOString()
@@ -237,8 +237,8 @@ export async function validateMagicLinkBypass(
       
       // Structured security logging
       await logSecurityEvent('bypass_attempt', {
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+        userAgent: request.headers.get('user-agent') || undefined,
         operation: 'magic_link_verify',
         tags: {
           bypassType: 'dev_magic_link',
@@ -261,8 +261,8 @@ export async function validateMagicLinkBypass(
           },
           extra: {
             email: email.replace(/(.{3}).*@/, '$1***@'), // Masked email
-            ip: request.headers.get('x-forwarded-for'),
-            userAgent: request.headers.get('user-agent'),
+            ip: request.headers.get('x-forwarded-for') || undefined,
+            userAgent: request.headers.get('user-agent') || undefined,
             timestamp: new Date().toISOString()
           }
         });
@@ -435,9 +435,9 @@ export async function blockDevPatternsInProduction(
     const token = authHeader.replace('Bearer ', '');
     if (isDevBypassToken(token)) {
       // Log the security incident
-      await logSecurityEvent('production_dev_token_blocked', {
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
+      await logSecurityEvent('bypass_attempt', {
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+        userAgent: request.headers.get('user-agent') || undefined,
         path: new URL(request.url).pathname,
         tags: {
           tokenType: token.startsWith('dev_session_') ? 'debug_session' : 'dev_bypass',

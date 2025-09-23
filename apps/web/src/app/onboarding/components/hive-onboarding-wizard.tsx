@@ -4,11 +4,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from 'next/image';
 import { cn } from "@/lib/utils";
-import { useUnifiedAuth } from "@hive/ui";
+import { useAuth } from "@hive/auth-logic";
 // TEMPORARY: Using local implementation due to export resolution issue
-import { useOnboardingBridge } from "@/lib/onboarding-bridge-temp";
-import type { OnboardingData } from "@hive/ui";
-import { motion } from "framer-motion";
+import { useOnboardingBridge, type OnboardingData } from "@/lib/onboarding-bridge-temp";
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HiveButton, 
   HiveCard, 
@@ -27,7 +26,6 @@ import {
   Wrench,
   Shield,
   CheckCircle,
-  Circle,
   Loader2
 } from "lucide-react";
 
@@ -51,22 +49,20 @@ function OnboardingProgress({ value, isComplete, className }: {
   return (
     <HiveProgress
       value={value}
-      variant="bar"
-      status={isComplete ? "success" : "default"}
+      variant={isComplete ? "success" : "default"}
       size="lg"
-      showValue={false}
       className={cn("w-full", className)}
     />
   );
 }
 
 // HIVE Step Indicator using design system
-function StepIndicator({ 
-  currentStep, 
+function StepIndicator({
+  currentStep,
   totalSteps,
-  stepTitles 
-}: { 
-  currentStep: number; 
+  stepTitles
+}: {
+  currentStep: number;
   totalSteps: number;
   stepTitles: string[];
 }) {
@@ -94,7 +90,7 @@ function StepIndicator({
                 "flex-shrink-0 w-8 h-8 rounded-full border-2 transition-all duration-300",
                 "flex items-center justify-center relative overflow-hidden",
                 isCompleted
-                  ? "bg-[var(--hive-status-success)]/20 border-[var(--hive-status-success)]/50 text-[var(--hive-status-success)]"
+                  ? "bg-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)] text-black"
                   : isActive
                     ? "bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]/50 text-[var(--hive-brand-primary)]"
                     : "bg-[var(--hive-background-tertiary)]/20 border-[var(--hive-border-subtle)] text-[var(--hive-text-muted)]"
@@ -205,7 +201,7 @@ const steps = [
 
 export function HiveOnboardingWizard() {
   const router = useRouter();
-  const unifiedAuth = useUnifiedAuth();
+  const unifiedAuth = useAuth();
   const onboardingBridge = useOnboardingBridge();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -349,7 +345,7 @@ export function HiveOnboardingWizard() {
         handle: data.userType === 'faculty' ? `${data.firstName?.toLowerCase()}.${data.lastName?.toLowerCase()}` : data.handle,
         avatarUrl: data.profilePhoto || "",
         builderRequestSpaces: data.builderRequestSpaces || [],
-        consentGiven: data.hasConsented && data.acceptedTerms && data.acceptedPrivacy,
+        consentGiven: data.acceptedTerms && data.acceptedPrivacy,
       };
 
       // Complete onboarding through the bridge
@@ -373,9 +369,9 @@ export function HiveOnboardingWizard() {
 
       // Redirect after delay - give time for session to update
       setTimeout(() => {
-        console.log('🚀 Redirecting to dashboard after onboarding completion');
-        router.push("/");
-      }, 1000);
+        console.log('🚀 Redirecting to feed after onboarding completion');
+        router.push("/feed");
+      }, 1500);
     } catch (error) {
       console.error("Onboarding error:", error);
       
@@ -520,7 +516,7 @@ export function HiveOnboardingWizard() {
       >
         <div className="max-w-6xl mx-auto p-[var(--hive-spacing-6)]">
           <div className="flex items-center justify-center">
-            <HiveLogo size="md" variant="gold" showWordmark={true} />
+            <HiveLogo size="default" variant="gradient" showText={true} />
           </div>
         </div>
       </motion.div>
@@ -620,7 +616,7 @@ export function HiveOnboardingWizard() {
 
                 {currentStep === TOTAL_STEPS - 1 ? (
                   <HiveButton
-                    variant="primary"
+                    variant="default"
                     size="lg"
                     onClick={handleSubmit}
                     disabled={!canGoNext() || isSubmitting}
@@ -632,7 +628,7 @@ export function HiveOnboardingWizard() {
                   </HiveButton>
                 ) : (
                   <HiveButton
-                    variant="primary"
+                    variant="default"
                     size="lg"
                     onClick={goNext}
                     disabled={!canGoNext()}
@@ -683,7 +679,7 @@ export function HiveOnboardingWizard() {
                   {data.profilePhoto ? (
                     <Image
                       src={data.profilePhoto}
-                      alt="Profile"
+                      alt="Profile preview"
                       width={80}
                       height={96}
                       className="w-full h-full object-cover"

@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -30,7 +31,7 @@ export async function GET(
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
     const { searchParams } = new URL(request.url);
@@ -38,23 +39,23 @@ export async function GET(
       Object.fromEntries(searchParams.entries())
     );
 
-    // Check if requesting user is member of the space using flat spaceMembers collection
-    const requesterMemberQuery = db.collection('spaceMembers')
-      .where('spaceId', '==', spaceId)
-      .where('userId', '==', decodedToken.uid)
-      .where('isActive', '==', true)
-      .limit(1);
-    
-    const requesterMemberSnapshot = await requesterMemberQuery.get();
+    // Check if requesting user is member of the space using nested collection structure
+    const requesterMemberDoc = await db
+      .collection('spaces')
+      .doc(spaceId)
+      .collection('members')
+      .doc(decodedToken.uid)
+      .get();
 
-    if (requesterMemberSnapshot.empty) {
+    if (!requesterMemberDoc.exists || !requesterMemberDoc.data()?.isActive) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    // Build query for members using flat spaceMembers collection
+    // Build query for members using nested collection structure
     let query: admin.firestore.Query<admin.firestore.DocumentData> = db
-      .collection('spaceMembers')
-      .where('spaceId', '==', spaceId)
+      .collection('spaces')
+      .doc(spaceId)
+      .collection('members')
       .where('isActive', '==', true);
 
     // Filter by role
@@ -70,10 +71,10 @@ export async function GET(
 
     const members = [];
 
-    // Process members
+    // Process members - note: doc.id IS the userId in nested structure
     for (const doc of membersSnapshot.docs) {
       const memberData = doc.data();
-      const userId = memberData.userId;
+      const userId = doc.id; // In nested structure, doc.id is the userId
 
       // Get user profile info
       const userDoc = await db
@@ -173,6 +174,7 @@ export async function GET(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
+      .where('isActive', '==', true)
       .get()).size;
 
     const onlineMembers = members.filter(m => m.status !== 'offline').length;
@@ -214,7 +216,7 @@ export async function POST(
     }
 
     const token = authHeader.substring(7);
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
     // Check if requesting user can invite members
@@ -303,7 +305,7 @@ export async function PATCH(
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
     // Parse request body
@@ -446,7 +448,7 @@ export async function DELETE(
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
     // Parse request query
@@ -517,7 +519,7 @@ export async function DELETE(
       .collection("spaces")
       .doc(spaceId)
       .update({
-        memberCount: admin.firestore.admin.firestore.FieldValue.increment(-1),
+        memberCount: admin.firestore.FieldValue.increment(-1),
         updatedAt: new Date()
       });
 

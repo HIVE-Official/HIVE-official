@@ -124,8 +124,7 @@ export const POST = withAuthValidationAndErrors(
       return respond.error(
         'Database operation failed',
         "INTERNAL_ERROR",
-        500,
-        { details: error instanceof Error ? error.message : 'Unknown error' }
+        { status: 500, details: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
 

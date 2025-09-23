@@ -4,6 +4,7 @@
  */
 
 import { dbAdmin } from '@/lib/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 import { logger } from '@/lib/logger';
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
 
@@ -267,15 +268,14 @@ export class ContentModerationService {
       // Notify relevant parties
       await this.sendReportNotifications(reportId);
 
-      logger.info('Content report submitted', { 
-        reportId, 
-        category: reportData.category, 
-        contentType: reportData.contentType 
+      logger.info('Content report submitted', {
+        reportId,
+        category: reportData.category
       });
 
       return reportId;
     } catch (error) {
-      logger.error('Error submitting content report', { error, reportData });
+      logger.error('Error submitting content report', { error, postData: reportData });
       throw error;
     }
   }
@@ -337,7 +337,7 @@ export class ContentModerationService {
       // Send notifications
       await this.sendModerationNotifications(reportId, action);
 
-      logger.info('Moderation action processed', { reportId, action, moderator: moderatorId });
+      logger.info('Moderation action processed', { reportId, action, moderatorId });
     } catch (error) {
       logger.error('Error processing moderation action', { error, reportId, action });
       throw error;
@@ -501,7 +501,7 @@ export class ContentModerationService {
         hiddenReason: 'Content violates community guidelines'
       });
     } catch (error) {
-      logger.error('Error hiding content', { error, contentId, contentType });
+      logger.error('Error hiding content', { error });
       throw error;
     }
   }
@@ -530,7 +530,7 @@ export class ContentModerationService {
         });
       }
     } catch (error) {
-      logger.error('Error removing content', { error, contentId, contentType });
+      logger.error('Error removing content', { error });
       throw error;
     }
   }
@@ -600,7 +600,7 @@ export class ContentModerationService {
         }
       );
     } catch (error) {
-      logger.error('Error suspending user', { error, userId, days });
+      logger.error('Error suspending user', { error, userId });
       throw error;
     }
   }
@@ -789,7 +789,7 @@ export class ContentModerationService {
 
   private async updateRuleStats(ruleId: string): Promise<void> {
     await dbAdmin.collection('moderationRules').doc(ruleId).update({
-      'statistics.triggered': dbAdmin.admin.firestore.FieldValue.increment(1),
+      'statistics.triggered': FieldValue.increment(1),
       'statistics.lastTriggered': new Date().toISOString()
     });
   }
@@ -801,7 +801,7 @@ export class ContentModerationService {
 
   private async updateReporterStats(reporterId: string): Promise<void> {
     await dbAdmin.collection('users').doc(reporterId).update({
-      'moderationStats.totalReports': dbAdmin.admin.firestore.FieldValue.increment(1),
+      'moderationStats.totalReports': FieldValue.increment(1),
       'moderationStats.lastReport': new Date().toISOString()
     });
   }
@@ -818,9 +818,9 @@ export class ContentModerationService {
 
   private async updateModerationStats(moderatorId: string, action: ModerationAction): Promise<void> {
     await dbAdmin.collection('users').doc(moderatorId).update({
-      'moderationStats.actionsToday': dbAdmin.admin.firestore.FieldValue.increment(1),
+      'moderationStats.actionsToday': FieldValue.increment(1),
       'moderationStats.lastAction': new Date().toISOString(),
-      [`moderationStats.actions.${action}`]: dbAdmin.admin.firestore.FieldValue.increment(1)
+      [`moderationStats.actions.${action}`]: FieldValue.increment(1)
     });
   }
 

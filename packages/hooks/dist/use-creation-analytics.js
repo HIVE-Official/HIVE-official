@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useCreationAnalytics = void 0;
 const react_1 = require("react");
-const use_auth_1 = require("./use-auth");
+const auth_logic_1 = require("@hive/auth-logic");
 const core_1 = require("@hive/core");
 const useCreationAnalytics = (options = {}) => {
-    const authResult = (0, use_auth_1.useAuth)();
+    const authResult = (0, auth_logic_1.useAuth)();
     const user = authResult.user;
     const { toolId, spaceId, batchSize = 100, flushInterval = 30000, // 30 seconds
     enableDebugLogging = false, } = options;

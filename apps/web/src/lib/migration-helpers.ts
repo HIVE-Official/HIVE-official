@@ -4,7 +4,7 @@
  */
 
 import { authenticatedFetch } from './auth-utils';
-import { logger } from './logger';
+import { logger } from './structured-logger';
 
 /**
  * Replace legacy console statements with proper logging
@@ -129,7 +129,14 @@ export async function monitorPerformance<T>(
   operation: () => Promise<T>,
   context?: Record<string, any>
 ): Promise<T> {
-  const endTimer = logger.performanceStart(operationName);
+  const startTime = performance.now();
+  const endTimer = () => {
+    const duration = performance.now() - startTime;
+    logger.debug(`Performance: ${operationName} completed in ${duration.toFixed(2)}ms`, {
+      action: 'performance',
+      metadata: { operation: operationName, duration },
+    });
+  };
   
   try {
     const result = await operation();

@@ -22,10 +22,10 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     
     const userId = authContext.userId;
 
-    // Get user's space memberships from flat spaceMembers collection
-    let membershipQuery = dbAdmin.collection('spaceMembers')
-      .where('userId', '==', userId);
-    
+    // Get user's space memberships using collectionGroup query for nested structure
+    let membershipQuery = dbAdmin.collectionGroup('members')
+      .where('__name__', '==', userId); // Match document ID (userId)
+
     if (!includeInactive) {
       membershipQuery = membershipQuery.where('isActive', '==', true);
     }
@@ -46,18 +46,22 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       });
     }
 
-    // Extract space IDs and roles
+    // Extract space IDs and roles from nested collection structure
     const spaceIds: string[] = [];
     const membershipData: Record<string, { role: string; joinedAt: any; permissions: string[] }> = {};
-    
+
     membershipsSnapshot.docs.forEach(doc => {
       const data = doc.data();
-      spaceIds.push(data.spaceId);
-      membershipData[data.spaceId] = {
-        role: data.role,
-        joinedAt: data.joinedAt,
-        permissions: data.permissions || []
-      };
+      // In nested structure, the space ID is the parent document ID
+      const spaceId = doc.ref.parent.parent?.id;
+      if (spaceId) {
+        spaceIds.push(spaceId);
+        membershipData[spaceId] = {
+          role: data.role,
+          joinedAt: data.joinedAt,
+          permissions: data.permissions || []
+        };
+      }
     });
 
     // Batch get space details from flat spaces collection
@@ -101,7 +105,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 
     // Categorize spaces
     const owned = spaces.filter(space => space.membership.role === 'owner');
-    const adminned = spaces.filter(space => space.membership.role === 'admin' && space.membership.role !== 'owner');
+    const adminned = spaces.filter(space => space.membership.role === 'admin');
     const joined = spaces.filter(space => !['owner', 'admin'].includes(space.membership.role));
     
     // Sort by activity (most recent interaction first)
@@ -126,12 +130,14 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       recent
     };
 
-    logger.info('📊 Retrieved user spaces', { 
-      userId, 
+    logger.info('📊 Retrieved user spaces', {
+      userId,
       totalSpaces: spaces.length,
-      owned: owned.length,
-      joined: joined.length,
-      endpoint: '/api/profile/my-spaces' 
+      metadata: {
+        owned: owned.length,
+        joined: joined.length
+      },
+      endpoint: '/api/profile/my-spaces'
     });
 
     return NextResponse.json({

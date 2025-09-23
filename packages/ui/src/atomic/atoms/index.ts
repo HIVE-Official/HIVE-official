@@ -1,6 +1,6 @@
 export { Alert, AlertTitle, AlertDescription, AlertIcons, alertVariants } from "./alert"
 export {
-  Avatar,
+  Avatar as BaseAvatar,
   AvatarImage,
   AvatarFallback,
   ShadcnAvatar,
@@ -8,10 +8,12 @@ export {
   ShadcnAvatarFallback,
   avatarVariants,
 } from "./avatar"
+export { SimpleAvatar as Avatar } from "./simple-avatar"
 export { Badge, badgeVariants } from "./badge"
 export { Button, buttonVariants } from "./button"
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card"
 export { Checkbox, checkboxVariants } from "./checkbox"
+export { CheckIcon } from "./check-icon"
 export { HiveButton, hiveButtonVariants } from "./hive-button"
 export {
   HiveCard,
@@ -24,21 +26,27 @@ export {
 } from "./hive-card"
 export { HiveInput, hiveInputVariants } from "./hive-input"
 export { HiveLogo, HiveLogos, hiveLogoVariants } from "./hive-logo"
-export { HiveConfirmModal } from "./hive-confirm-modal"
 export { HiveProgress, hiveProgressVariants, hiveProgressBarVariants } from "./hive-progress"
-export { Grid, gridVariants } from "./grid"
-export { NavigationPreferences } from "./navigation-preferences"
 export {
   HiveModal,
   HiveModalHeader,
   HiveModalTitle,
   HiveModalDescription,
   HiveModalContent,
-  HiveModalFooter,
-  HiveModalClose,
-  hiveModalContentVariants,
-  hiveModalOverlayVariants,
+  HiveModalFooter
 } from "./hive-modal"
+export { HiveConfirmModal } from "./hive-confirm-modal"
+export {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger
+} from "./dialog"
+export { Grid, gridVariants } from "./grid"
+export { NavigationPreferences } from "./navigation-preferences"
 export { Input } from "./input"
 export { InputEnhanced, inputEnhancedVariants } from "./input-enhanced"
 export { Label, labelVariants } from "./label"
@@ -54,6 +62,7 @@ export {
   selectVariants,
 } from "./select"
 export { Switch, switchVariants } from "./switch"
+export { Slider, sliderVariants, sliderTrackVariants, sliderRangeVariants, sliderThumbVariants } from "./slider"
 export {
   Tabs,
   TabsList,
@@ -65,3 +74,4 @@ export {
 } from "./tabs"
 export { Textarea, textareaVariants } from "./textarea"
 export { TextareaEnhanced, textareaEnhancedVariants } from "./textarea-enhanced"
+export { TopBarNav, topBarNavVariants, topBarNavIconVariants, topBarNavLabelVariants } from "./top-bar-nav"

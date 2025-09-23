@@ -670,6 +670,6 @@ export function usePlatformIntegration() {
   return {
     getUnifiedFeed: (userId: string, options?: any) => integration.getUnifiedFeedData(userId, options),
     subscribe: (eventType: string, callback: Function) => integration.subscribe(eventType, callback),
-    invalidateCache: (pattern: string) => integration.invalidateCache(pattern)
+    invalidateCache: (pattern: string) => (integration as any).invalidateCache(pattern)
   };
 }

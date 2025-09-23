@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import * as admin from "firebase-admin/firestore";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import * as admin from 'firebase-admin';
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { withAuthValidationAndErrors, withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
@@ -33,12 +34,12 @@ export const POST = withAuthValidationAndErrors(
       .get();
 
     if (!spaceMemberDoc.exists) {
-      return respond.error("Access denied to this space", "FORBIDDEN", 403);
+      return respond.error("Access denied to this space", "FORBIDDEN", { status: 403 });
     }
 
     const memberData = spaceMemberDoc.data();
     if (memberData?.role !== "admin") {
-      return respond.error("Admin access required to deploy tools", "FORBIDDEN", 403);
+      return respond.error("Admin access required to deploy tools", "FORBIDDEN", { status: 403 });
     }
 
     // Verify tool exists and can be deployed
@@ -188,7 +189,7 @@ export const DELETE = withAuthAndErrors(async (
   const spaceId = searchParams.get("spaceId");
 
   if (!spaceId) {
-    return respond.error("spaceId parameter is required", "INVALID_INPUT", 400);
+    return respond.error("spaceId parameter is required", "INVALID_INPUT", { status: 400 });
   }
 
   const db = dbAdmin;
@@ -202,12 +203,12 @@ export const DELETE = withAuthAndErrors(async (
     .get();
 
   if (!spaceMemberDoc.exists) {
-    return respond.error("Access denied to this space", "FORBIDDEN", 403);
+    return respond.error("Access denied to this space", "FORBIDDEN", { status: 403 });
   }
 
   const memberData = spaceMemberDoc.data();
   if (memberData?.role !== "admin") {
-    return respond.error("Admin access required to undeploy tools", "FORBIDDEN", 403);
+    return respond.error("Admin access required to undeploy tools", "FORBIDDEN", { status: 403 });
   }
 
     const deploymentId = `${toolId}_${spaceId}`;
@@ -219,7 +220,7 @@ export const DELETE = withAuthAndErrors(async (
       .get();
 
     if (!deploymentDoc.exists) {
-      return respond.error("Tool deployment not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Tool deployment not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     // Deactivate deployment (soft delete to preserve analytics)
@@ -290,7 +291,7 @@ export const GET = withAuthAndErrors(async (
   const spaceId = searchParams.get("spaceId");
 
   if (!spaceId) {
-    return respond.error("spaceId parameter is required", "INVALID_INPUT", 400);
+    return respond.error("spaceId parameter is required", "INVALID_INPUT", { status: 400 });
   }
 
   const db = dbAdmin;
@@ -304,7 +305,7 @@ export const GET = withAuthAndErrors(async (
     .get();
 
   if (!spaceMemberDoc.exists) {
-    return respond.error("Access denied to this space", "FORBIDDEN", 403);
+    return respond.error("Access denied to this space", "FORBIDDEN", { status: 403 });
   }
 
     const deploymentId = `${toolId}_${spaceId}`;
@@ -316,7 +317,7 @@ export const GET = withAuthAndErrors(async (
       .get();
 
     if (!deploymentDoc.exists) {
-      return respond.error("Tool deployment not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Tool deployment not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const deploymentData = deploymentDoc.data();

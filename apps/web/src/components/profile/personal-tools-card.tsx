@@ -261,7 +261,7 @@ export function PersonalToolsCard({
                 e.stopPropagation();
                 handleAddTools();
               }}
-              variant="primary"
+              variant="default"
               className="hover:scale-105 transition-all duration-200"
             >
               + Install Your First Tool

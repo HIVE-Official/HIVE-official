@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Wrench, Users, Crown, Star, CheckCircle, Loader2, Search, BookOpen } from "lucide-react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { Users, Star, CheckCircle, Loader2, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
 import { useSession } from "@/hooks/use-session";
@@ -177,16 +177,14 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         transition={{ delay: 0.3 }}
       >
         <HiveInput
-          placeholder={data.userType === 'faculty' 
-            ? "Search for institutional spaces (departments, courses, etc.)..." 
+          placeholder={data.userType === 'faculty'
+            ? "Search for institutional spaces (departments, courses, etc.)..."
             : "Search for communities you want to help build..."
           }
           value={searchTerm}
-          onChange={(e: React.ChangeEvent) => setSearchTerm(e.target.value)}
-          leftIcon={<Search className="w-4 h-4" />}
-          variant="premium"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+          variant="default"
           size="lg"
-          floatingLabel={false}
         />
       </motion.div>
 
@@ -253,7 +251,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
               transition={{ delay: 0.1 * index }}
             >
               <HiveCard
-                variant={selectedSpaces.includes(space.id) ? "selected" : "elevated"}
+                variant={selectedSpaces.includes(space.id) ? "brand" : "elevated"}
                 className={cn(
                   "p-[var(--hive-spacing-4)] cursor-pointer transition-all duration-300 hover:scale-105",
                   selectedSpaces.includes(space.id)

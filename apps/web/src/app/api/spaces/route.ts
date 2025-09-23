@@ -36,10 +36,10 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       .where("name_lowercase", "<=", searchTerm + "\uf8ff")
       .orderBy("name_lowercase");
   } else {
-    // Default ordering by member count (popular first), then name
+    // Simple ordering by creation date for now (no composite index needed)
+    // TODO: Create composite index for ordering by metrics.memberCount + name_lowercase
     spacesQuery = spacesQuery
-      .orderBy("metrics.memberCount", "desc")
-      .orderBy("name_lowercase");
+      .orderBy("createdAt", "desc");
   }
 
   // Apply pagination
@@ -65,7 +65,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
   // Get total count for pagination (expensive but necessary)
   let totalCount = 0;
   try {
-    let countQuery = dbAdmin.collection("spaces");
+    let countQuery: any = dbAdmin.collection("spaces");
     if (filterType && filterType !== "all") {
       countQuery = countQuery.where("type", "==", filterType);
     }
@@ -93,9 +93,12 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
   });
 });
 
+type CreateSpaceData = z.infer<typeof createSpaceSchema>;
+
 export const POST = withAuthValidationAndErrors(
-  createSpaceSchema,
-  async (request: AuthenticatedRequest, context, { name, description, type, subType, isPrivate, tags }, respond) => {
+  createSpaceSchema as any,
+  async (request: AuthenticatedRequest, context, body: CreateSpaceData, respond) => {
+  const { name, description, type, subType, isPrivate, tags } = body;
   const userId = getUserId(request);
 
   // Generate space ID and create space document - use flat structure
@@ -111,7 +114,7 @@ export const POST = withAuthValidationAndErrors(
     subType: subType || null,
     status: 'active', // New spaces start active
     isPrivate,
-    tags: tags.map(tag => ({ sub_type: tag })),
+    tags: tags?.map((tag: any) => ({ sub_type: tag })) || [],
     createdAt: now,
     updatedAt: now,
     createdBy: userId,
@@ -128,14 +131,12 @@ export const POST = withAuthValidationAndErrors(
   // Use batch write for atomicity
   const batch = dbAdmin.batch();
 
-  // Create space in flat structure
+  // Create space in nested structure
   batch.set(spaceRef, spaceData);
 
-  // Add creator as owner in separate members collection
-  const memberRef = dbAdmin.collection('spaceMembers').doc();
+  // Add creator as owner in nested members collection
+  const memberRef = spaceRef.collection('members').doc(userId);
   batch.set(memberRef, {
-    spaceId,
-    userId,
     role: 'owner',
     joinedAt: now,
     isActive: true,

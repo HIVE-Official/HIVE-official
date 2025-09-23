@@ -546,7 +546,7 @@ export function PostCard({
           </div>
           
           {/* Hashtags */}
-          {post.tags?.length > 0 && (
+          {(post.tags?.length || 0) > 0 && (
             <div className="flex flex-wrap gap-2">
               {post.tags?.map(tag => (
                 <button
@@ -625,7 +625,7 @@ export function PostCard({
               <Textarea
                 ref={commentInputRef}
                 value={commentText}
-                onChange={(e: React.ChangeEvent) => setCommentText(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)}
                 placeholder="Write a comment..."
                 rows={2}
                 className="resize-none"

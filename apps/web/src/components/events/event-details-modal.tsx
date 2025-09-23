@@ -171,10 +171,10 @@ export function EventDetailsModal({
 
   return (
     <HiveModal
-      isOpen={isOpen}
-      onClose={onClose}
-      title=""
-      size="lg"
+      open={isOpen}
+      onOpenChange={onClose}
+     
+     
       className="max-h-[90vh] overflow-hidden"
     >
       <div className="flex flex-col h-full">

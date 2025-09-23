@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, User, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveInput } from "@hive/ui";
@@ -84,11 +84,9 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="First Name"
                 placeholder="First name"
                 value={firstName}
-                onChange={(e: React.ChangeEvent) => handleFirstNameChange(e.target.value)}
-                variant="premium"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFirstNameChange(e.target.value)}
+                variant="default"
                 size="lg"
-                floatingLabel={false}
-                leftIcon={<User className="w-4 h-4" />}
                 required
               />
               
@@ -96,11 +94,9 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="Last Name"
                 placeholder="Last name"
                 value={lastName}
-                onChange={(e: React.ChangeEvent) => handleLastNameChange(e.target.value)}
-                variant="premium"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLastNameChange(e.target.value)}
+                variant="default"
                 size="lg"
-                floatingLabel={false}
-                leftIcon={<User className="w-4 h-4" />}
                 required
               />
             </div>

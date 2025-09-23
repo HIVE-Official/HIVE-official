@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from './use-auth';
+import { useAuth } from '@hive/auth-logic';
 
 interface Space {
   id: string;

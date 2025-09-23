@@ -36,11 +36,11 @@ export async function validateApiAuth(
   
   const authHeader = request.headers.get('authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    await logSecurityEvent('unauthorized_api_access', {
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-      userAgent: request.headers.get('user-agent'),
+    await logSecurityEvent('invalid_token', {
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+      userAgent: request.headers.get('user-agent') || undefined,
       path: new URL(request.url).pathname,
-      operation,
+      operation: operation || '',
       tags: { reason: 'missing_auth_header' }
     });
 
@@ -55,16 +55,16 @@ export async function validateApiAuth(
   // In production, never allow development bypasses for sensitive operations
   if (isProductionEnvironment() && !allowDevelopmentBypass) {
     const validation = await validateAuthToken(token, request, {
-      operation,
+      operation: operation || '',
       requireRealAuth: true
     });
 
     if (!validation.valid) {
-      await logSecurityEvent('invalid_token_api_access', {
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
+      await logSecurityEvent('invalid_token', {
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+        userAgent: request.headers.get('user-agent') || undefined,
         path: new URL(request.url).pathname,
-        operation,
+        operation: operation || '',
         tags: { reason: validation.reason || 'invalid_token' }
       });
 
@@ -77,12 +77,12 @@ export async function validateApiAuth(
 
     // Check admin requirements
     if (requireAdmin && !await isAdminUser(validation.userId!)) {
-      await logSecurityEvent('unauthorized_admin_access', {
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
+      await logSecurityEvent('admin_access', {
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+        userAgent: request.headers.get('user-agent') || undefined,
         path: new URL(request.url).pathname,
-        operation,
-        tags: { userId: validation.userId, reason: 'insufficient_permissions' }
+        operation: operation || '',
+        tags: { userId: validation.userId || '', reason: 'insufficient_permissions' }
       });
 
       throw new Response(
@@ -96,8 +96,8 @@ export async function validateApiAuth(
       token,
       isAdmin: requireAdmin ? true : await isAdminUser(validation.userId!),
       user: {
-        email: validation.email,
-        emailVerified: validation.emailVerified
+        email: '',  // validation doesn't include email
+        emailVerified: false  // validation doesn't include emailVerified
       }
     };
   }
@@ -140,8 +140,8 @@ export async function validateApiAuth(
       token,
       isAdmin: requireAdmin ? true : await isAdminUser(validation.userId!),
       user: {
-        email: validation.email,
-        emailVerified: validation.emailVerified
+        email: '',  // validation doesn't include email
+        emailVerified: false  // validation doesn't include emailVerified
       }
     };
   }

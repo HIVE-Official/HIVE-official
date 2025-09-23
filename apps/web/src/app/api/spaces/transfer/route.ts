@@ -56,11 +56,11 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     const { fromSpaceId, toSpaceId, reason, adminOverride = false } = body;
 
     if (!fromSpaceId || !toSpaceId) {
-      return respond.error("Both fromSpaceId and toSpaceId are required", "INVALID_INPUT", 400);
+      return respond.error("Both fromSpaceId and toSpaceId are required", "INVALID_INPUT", { status: 400 });
     }
 
     if (fromSpaceId === toSpaceId) {
-      return respond.error("Cannot transfer to the same space", "INVALID_INPUT", 400);
+      return respond.error("Cannot transfer to the same space", "INVALID_INPUT", { status: 400 });
     }
 
     // Find both spaces and validate they're the same type
@@ -68,11 +68,11 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     const toSpaceInfo = await findSpaceInfo(toSpaceId);
 
     if (!fromSpaceInfo || !toSpaceInfo) {
-      return respond.error("One or both spaces not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("One or both spaces not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     if (fromSpaceInfo.spaceType !== toSpaceInfo.spaceType) {
-      return respond.error("Cannot transfer between different space types", "INVALID_INPUT", 400);
+      return respond.error("Cannot transfer between different space types", "INVALID_INPUT", { status: 400 });
     }
 
     // Check if user is a member of the source space
@@ -82,7 +82,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       .where('status', '==', 'active')
       .get();
     if (membershipSnapshot.empty) {
-      return respond.error("You are not a member of the source space", "UNAUTHORIZED", 401);
+      return respond.error("You are not a member of the source space", "UNAUTHORIZED", { status: 401 });
     }
 
     const memberData = membershipSnapshot.docs[0].data();
@@ -92,9 +92,9 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       const validationResult = await validateMovementRestrictions(userId, fromSpaceInfo.spaceType, fromSpaceInfo.space, toSpaceInfo.space);
       
       if (!validationResult.canMove) {
-        return respond.error(validationResult.reason || "Cannot move at this time", "MOVEMENT_RESTRICTED", 403, {
-          details: validationResult,
-          message: validationResult.reason || "Cannot move at this time"
+        return respond.error(validationResult.reason || "Cannot move at this time", "MOVEMENT_RESTRICTED", {
+          status: 403,
+          details: validationResult
         });
       }
     }
@@ -105,7 +105,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       .where('spaceId', '==', toSpaceId)
       .get();
     if (!targetMembershipSnapshot.empty) {
-      return respond.error("You are already a member of the target space", "INVALID_INPUT", 400);
+      return respond.error("You are already a member of the target space", "INVALID_INPUT", { status: 400 });
     }
 
     // Special handling for fraternity_and_sorority (only 1 membership allowed)
@@ -125,7 +125,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       }
 
       if (greekMemberships.length > 1) {
-        return respond.error("You can only be a member of one Greek organization at a time", "INVALID_INPUT", 400);
+        return respond.error("You can only be a member of one Greek organization at a time", "INVALID_INPUT", { status: 400 });
       }
     }
 
@@ -224,7 +224,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       const toSpaceInfo = await findSpaceInfo(toSpaceId);
 
       if (!fromSpaceInfo || !toSpaceInfo) {
-        return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
+        return respond.error("Space not found", "RESOURCE_NOT_FOUND", { status: 404 });
       }
 
       const validationResult = await validateMovementRestrictions(userId, spaceType as any, fromSpaceInfo.space, toSpaceInfo.space);

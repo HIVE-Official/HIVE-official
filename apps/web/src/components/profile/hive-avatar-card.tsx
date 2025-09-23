@@ -45,8 +45,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
           {displayPhoto ? (
             // Photo Display
             <div className="relative h-full">
-              <Image 
-                src={displayPhoto} 
+              <Image src={displayPhoto}
                 alt={`${profile.fullName}'s profile`}
                 fill
                 className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"

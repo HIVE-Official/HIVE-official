@@ -188,7 +188,7 @@ function LoginPageContent() {
             
             <div className="absolute left-1/2 transform -translate-x-1/2">
               <Link href="/landing" className="hover:opacity-80 transition-opacity duration-200">
-                <HiveLogo size="md" variant="gold" showWordmark={true} />
+                <HiveLogo size="default" variant="gradient" showText={true} />
               </Link>
             </div>
             
@@ -256,7 +256,7 @@ function LoginPageContent() {
                     disabled={isLoading}
                     autoComplete="email"
                     autoFocus
-                    variant={error ? 'error' : 'default'}
+                    variant={error ? 'destructive' : 'default'}
                     size="lg"
                     className="w-full"
                     data-testid="email-input"
@@ -293,7 +293,7 @@ function LoginPageContent() {
                 <HiveButton
                   type="submit"
                   disabled={isLoading || !formData.email || !!error}
-                  variant="primary"
+                  variant="default"
                   size="lg"
                   className="w-full"
                   data-testid="send-magic-link-button"
@@ -318,8 +318,8 @@ function LoginPageContent() {
 
       {/* Redirect Success Modal */}
       <HiveModal
-        isOpen={_isRedirecting}
-        onClose={() => {}}
+        open={_isRedirecting}
+        onOpenChange={() => {}}
         title="Authentication successful"
         size="sm"
         showCloseButton={false}
@@ -347,8 +347,8 @@ function LoginPageContent() {
 
       {/* Success Modal */}
       <HiveModal
-        isOpen={success}
-        onClose={() => setSuccess(false)}
+        open={success}
+        onOpenChange={() => setSuccess(false)}
         title="Check your inbox"
         size="sm"
       >
@@ -389,7 +389,7 @@ function LoginPageContent() {
           <div className="space-y-4 pt-4">
             {devMagicLink && schoolDomain === 'test.edu' && (
               <HiveButton
-                variant="primary"
+                variant="default"
                 size="lg"
                 className="w-full"
                 onClick={() => window.location.href = devMagicLink}

@@ -237,7 +237,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       timestamp: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000)
     }));
 
-    logger.info('✅ Returning spaces for user', { spacesCount: spaces.length, userId, endpoint: '/api/spaces/my' });
+    logger.info('✅ Returning spaces for user', { spaceCount: spaces.length, userId, endpoint: '/api/spaces/my' });
 
     return respond.success({
       activeSpaces: spaces,
@@ -250,9 +250,12 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 /**
  * Update user space preferences (pin/unpin, notifications, etc.)
  */
+type UpdatePreferencesData = z.infer<typeof updateSpacePreferencesSchema>;
+
 export const PATCH = withAuthValidationAndErrors(
   updateSpacePreferencesSchema,
-  async (request: AuthenticatedRequest, context, { spaceId, action, value }, respond) => {
+  async (request: AuthenticatedRequest, context, body: UpdatePreferencesData, respond) => {
+    const { spaceId, action, value } = body;
     const userId = getUserId(request);
 
     // Find the space's membership document
@@ -272,7 +275,7 @@ export const PATCH = withAuthValidationAndErrors(
     }
 
     if (!membershipRef) {
-      return respond.error("Membership not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Membership not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     // Update membership based on action
@@ -292,7 +295,7 @@ export const PATCH = withAuthValidationAndErrors(
         updates.notifications = value || 0;
         break;
       default:
-        return respond.error("Invalid action", "INVALID_INPUT", 400);
+        return respond.error("Invalid action", "INVALID_INPUT", { status: 400 });
     }
 
     await membershipRef.update(updates);

@@ -6,6 +6,7 @@
  */
 
 import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { NextRequest } from 'next/server';
 
 export interface AuthUser {
@@ -69,7 +70,7 @@ export async function getCurrentUser(request?: NextRequest): Promise<AuthUser | 
     }
 
     // Verify the token with Firebase Admin
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    const decodedToken = await getAuth().verifyIdToken(token);
     
     return {
       uid: decodedToken.uid,

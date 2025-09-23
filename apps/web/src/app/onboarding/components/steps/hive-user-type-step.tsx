@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { GraduationCap, Users, BookOpen, ArrowRight, Mail, CheckCircle } from "lucide-react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { GraduationCap, Users, ArrowRight, Mail, CheckCircle, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
@@ -105,7 +105,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-3xl font-bold text-[#FFD700] mb-4">
+          <h2 className="text-3xl font-bold text-[var(--hive-brand-primary)] mb-4">
             ⚡ Jacob, get on it! ⚡
           </h2>
           <p className="text-[var(--hive-text-secondary)] text-lg mb-8">
@@ -155,17 +155,15 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                     type="email"
                     placeholder="Enter your email address"
                     value={waitlistEmail}
-                    onChange={(e: React.ChangeEvent) => setWaitlistEmail(e.target.value)}
-                    variant="premium"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail(e.target.value)}
+                    variant="default"
                     size="lg"
-                    floatingLabel={false}
-                    leftIcon={<Mail className="w-4 h-4" />}
                   />
                   
                   <HiveButton
                     onClick={submitWaitlist}
                     disabled={!waitlistEmail.trim() || !waitlistEmail.includes('@') || isSubmittingWaitlist}
-                    variant="primary"
+                    variant="default"
                     size="lg"
                     className="w-full"
                     leftIcon={isSubmittingWaitlist ? <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}><Mail className="w-4 h-4" /></motion.div> : <Mail className="w-4 h-4" />}

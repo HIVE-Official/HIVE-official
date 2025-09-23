@@ -79,8 +79,7 @@ export class RSSImportManager {
         headers: {
           'User-Agent': this.userAgent,
           'Accept': 'application/rss+xml, application/xml, text/xml'
-        },
-        timeout: 30000 // 30 second timeout
+        }
       });
 
       if (!response.ok) {
@@ -119,7 +118,8 @@ export class RSSImportManager {
 
         } catch (itemError) {
           console.error(`Error processing RSS item: ${item.title}`, itemError);
-          result.errors.push(`Item "${item.title}": ${itemError.message}`);
+          const errorMessage = itemError instanceof Error ? itemError.message : String(itemError);
+          result.errors.push(`Item "${item.title}": ${errorMessage}`);
         }
       }
 
@@ -427,8 +427,8 @@ export class RSSImportManager {
    * Extract tags from content
    */
   private extractTags(item: RSSItem, feedConfig: RSSFeedConfig): string[] {
-    const tags = [feedConfig.category];
-    
+    const tags: string[] = [feedConfig.category];
+
     if (item.category) {
       tags.push(item.category.toLowerCase());
     }

@@ -19,8 +19,8 @@ const CURRENT_TERMS: LegalDocument = {
   title: "Terms of Service",
   content: (
     <div className="prose prose-invert max-w-none">
-      <div className="mb-8 rounded-lg border border-gold/20 bg-gold/5 p-6">
-        <h2 className="mt-0 text-xl font-semibold text-gold">
+      <div className="mb-8 rounded-lg border border-[var(--hive-brand-primary)]/20 bg-[var(--hive-brand-primary)]/5 p-6">
+        <h2 className="mt-0 text-xl font-semibold text-[var(--hive-brand-primary)]">
           TL;DR - The Essentials
         </h2>
         <p className="mb-0 text-gray-300">
@@ -38,8 +38,8 @@ const CURRENT_TERMS: LegalDocument = {
       </p>
 
       <h2>2. Description of Service</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: HIVE connects students through Spaces, Tools, and social
           features.
         </p>
@@ -73,8 +73,8 @@ const CURRENT_TERMS: LegalDocument = {
       </ul>
 
       <h2>3. User Accounts and Eligibility</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Must be 13+ with a valid .edu email address.
         </p>
       </div>
@@ -87,8 +87,8 @@ const CURRENT_TERMS: LegalDocument = {
       </ul>
 
       <h2>4. User-Generated Content and Intellectual Property</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: You own your content, we get permission to display it.
         </p>
       </div>
@@ -121,8 +121,8 @@ const CURRENT_TERMS: LegalDocument = {
       </ul>
 
       <h2>5. Community Guidelines and Moderation</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Space builders moderate first, we have final say on serious
           violations.
         </p>
@@ -149,8 +149,8 @@ const CURRENT_TERMS: LegalDocument = {
       </p>
 
       <h2>6. Tool Creation and Sharing</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Create awesome tools, but keep them safe and functional.
         </p>
       </div>
@@ -174,8 +174,8 @@ const CURRENT_TERMS: LegalDocument = {
       </ul>
 
       <h2>7. Privacy and Data Collection</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: We collect minimal data, anonymize analytics, and respect your
           privacy.
         </p>
@@ -200,15 +200,15 @@ const CURRENT_TERMS: LegalDocument = {
       </ul>
       <p>
         For complete details, see our{" "}
-        <Link href="/legal/privacy" className="text-gold hover:text-gold/80">
+        <Link href="/legal/privacy" className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80">
           Privacy Policy
         </Link>
         .
       </p>
 
       <h2>8. Account Suspension and Termination</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Serious or repeated violations may result in account
           restrictions.
         </p>
@@ -239,13 +239,13 @@ const CURRENT_TERMS: LegalDocument = {
       <h2>11. Contact Information</h2>
       <p>
         For questions about these Terms, contact us at:{" "}
-        <a href="mailto:legal@hive.co" className="text-gold hover:text-gold/80">
+        <a href="mailto:legal@hive.co" className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80">
           legal@hive.co
         </a>
       </p>
 
       <div className="mt-12 border-t border-gray-800 pt-8">
-        <h3 className="text-lg font-semibold text-gold">Version History</h3>
+        <h3 className="text-lg font-semibold text-[var(--hive-brand-primary)]">Version History</h3>
         <div className="mt-4 space-y-2 text-sm text-gray-400">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />

@@ -76,14 +76,14 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     }
 
     if (!spaceDoc || !spaceDoc.exists) {
-      return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Space not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const spaceData = spaceDoc.data();
 
     // Check if space is eligible for builder requests
     if (spaceData.isPrivate) {
-      return respond.error("Private spaces cannot accept builder requests", "FORBIDDEN", 403);
+      return respond.error("Private spaces cannot accept builder requests", "FORBIDDEN", { status: 403 });
     }
 
     // Check if user is already a member with elevated permissions
@@ -99,7 +99,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     if (memberDoc.exists) {
       const memberData = memberDoc.data();
       if (memberData?.role === 'builder' || memberData?.role === 'admin') {
-        return respond.error("You already have builder rights for this space", "ALREADY_BUILDER", 409);
+        return respond.error("You already have builder rights for this space", "ALREADY_BUILDER", { status: 409 });
       }
     }
 
@@ -112,7 +112,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       .get();
 
     if (!existingRequestQuery.empty) {
-      return respond.error("You already have a pending request for this space", "REQUEST_EXISTS", 409);
+      return respond.error("You already have a pending request for this space", "REQUEST_EXISTS", { status: 409 });
     }
 
     // Get user profile for additional context
@@ -171,7 +171,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
         'Approved builders get access to HiveLAB tools and space management'
       ],
       estimatedReviewTime: '24 hours'
-    }, 201);
+    }, { status: 201 });
 
 });
 

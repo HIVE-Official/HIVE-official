@@ -61,8 +61,7 @@ export class ResilientHiveApiClient {
       },
       {
         timeout: overrides.timeout,
-        retryConfig: overrides.retries ? { maxRetries: overrides.retries } : undefined,
-        fallback: overrides.fallback ? { fallbackValue: overrides.fallback } : undefined
+        retryConfig: overrides.retries ? { maxRetries: overrides.retries } : undefined
       }
     );
   }
@@ -303,44 +302,14 @@ export class ResilientHiveApiClient {
   async getSpacesWithOfflineSupport(): Promise<any> {
     return this.apiWrapper(
       () => this.getSpaces(),
-      {
-        fallback: {
-          fallbackFunction: async () => {
-            // Try to get from localStorage cache
-            const cached = localStorage.getItem('hive_spaces_cache');
-            if (cached) {
-              const { data, timestamp } = JSON.parse(cached);
-              const isStale = Date.now() - timestamp > 5 * 60 * 1000; // 5 minutes
-              if (!isStale) {
-                return data;
-              }
-            }
-            return { spaces: [], total: 0, hasMore: false };
-          }
-        }
-      }
+      {}
     );
   }
 
   async getFeedWithOfflineSupport(): Promise<any> {
     return this.apiWrapper(
       () => this.getFeed(),
-      {
-        fallback: {
-          fallbackFunction: async () => {
-            // Try to get from localStorage cache
-            const cached = localStorage.getItem('hive_feed_cache');
-            if (cached) {
-              const { data, timestamp } = JSON.parse(cached);
-              const isStale = Date.now() - timestamp > 2 * 60 * 1000; // 2 minutes
-              if (!isStale) {
-                return data;
-              }
-            }
-            return { items: [], total: 0, hasMore: false };
-          }
-        }
-      }
+      {}
     );
   }
 

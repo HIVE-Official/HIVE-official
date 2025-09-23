@@ -71,7 +71,7 @@ export async function sessionMiddleware(
       
       // Check security level requirements
       if (requireElevated && session.securityLevel === 'standard') {
-        await logSecurityEvent('session', {
+        await logSecurityEvent('invalid_token', {
           operation: 'insufficient_security_level',
           tags: {
             userId: session.userId,
@@ -156,7 +156,7 @@ export async function sessionMiddleware(
     // Handle invalid sessions
     if (validationResult.securityViolation) {
       // Log security violations
-      await logSecurityEvent('session', {
+      await logSecurityEvent('invalid_token', {
         operation: 'session_security_violation',
         tags: {
           violation: validationResult.securityViolation,
@@ -209,7 +209,7 @@ export async function sessionMiddleware(
   } catch (error) {
     console.error('Session middleware error:', error);
     
-    await logSecurityEvent('session', {
+    await logSecurityEvent('invalid_token', {
       operation: 'session_middleware_error',
       tags: {
         error: error instanceof Error ? error.message : 'unknown',
@@ -267,7 +267,7 @@ export function withSession(
       
       // Log handler errors with session context
       if (middlewareResult.context.isAuthenticated) {
-        await logSecurityEvent('session', {
+        await logSecurityEvent('invalid_token', {
           operation: 'authenticated_handler_error',
           tags: {
             userId: middlewareResult.context.user?.userId || 'unknown',
@@ -371,7 +371,7 @@ export function withResourceOwnership(
     const resourceUserId = getUserIdFromParams(params);
     
     if (!hasResourcePermission(context, resourceUserId, action)) {
-      await logSecurityEvent('session', {
+      await logSecurityEvent('invalid_token', {
         operation: 'unauthorized_resource_access',
         tags: {
           userId: context.user?.userId || 'anonymous',

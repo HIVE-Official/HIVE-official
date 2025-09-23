@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     logger.info('SSE connection requested', { 
       userId: user.uid, 
       channels,
-      userAgent: request.headers.get('user-agent') 
+      userAgent: request.headers.get('user-agent') || undefined 
     });
 
     // Create SSE stream

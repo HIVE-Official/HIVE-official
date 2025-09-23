@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, FileText, Eye, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveCard } from "@hive/ui";
@@ -109,7 +109,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
             transition={{ delay: 0.4 + index * 0.1 }}
           >
             <HiveCard
-              variant={agreement.checked ? "selected" : "elevated"}
+              variant={agreement.checked ? "brand" : "elevated"}
               className={cn(
                 "p-[var(--hive-spacing-4)] transition-all duration-300 cursor-pointer",
                 agreement.checked
@@ -125,7 +125,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
                 className={cn(
                   "flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95",
                   agreement.checked
-                    ? "bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]/50 text-[var(--hive-brand-primary)]"
+                    ? "bg-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)] text-black"
                     : "border-[var(--hive-border-primary)] hover:border-[var(--hive-brand-primary)]/30"
                 )}
                 // Removed whileHover and whileTap - using CSS hover/active states
@@ -207,7 +207,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
         transition={{ delay: 0.9 }}
       >
         <HiveCard 
-          variant={data.acceptedTerms && data.acceptedPrivacy ? "online" : "elevated"}
+          variant={data.acceptedTerms && data.acceptedPrivacy ? "brand" : "elevated"}
           className="p-[var(--hive-spacing-4)]"
         >
           <div className="flex items-center justify-between">

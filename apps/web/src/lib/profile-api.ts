@@ -87,6 +87,7 @@ export interface ProfileDashboardData {
   upcomingEvents: Array<{
     id: string;
     title: string;
+    description?: string;
     startDate: string;
     endDate: string;
     type: 'personal' | 'space';

@@ -2,6 +2,8 @@
 // TODO: Use proper firebase-admin from @hive/core
 
 import * as admin from "firebase-admin";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 import { env, isFirebaseAdminConfigured, currentEnvironment } from "./env";
 
 let firebaseInitialized = false;
@@ -51,8 +53,8 @@ try {
         projectId: env.FIREBASE_PROJECT_ID,
       });
 
-      dbAdmin = admin.firestore();
-      authAdmin = admin.auth();
+      dbAdmin = getFirestore();
+      authAdmin = getAuth();
       firebaseInitialized = true;
 
     } else {
@@ -60,8 +62,8 @@ try {
     }
   } else {
     // App already initialized
-    dbAdmin = admin.firestore();
-    authAdmin = admin.auth();
+    dbAdmin = getFirestore();
+    authAdmin = getAuth();
     firebaseInitialized = true;
   }
 } catch (error) {
@@ -99,6 +101,7 @@ export { dbAdmin, authAdmin };
 
 // Re-export for compatibility with existing code
 export const db = dbAdmin;
+export const adminDb = dbAdmin; // Alias for modules expecting adminDb
 export const auth = authAdmin;
 export const isFirebaseConfigured = firebaseInitialized;
 

@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { useUnifiedAuth } from '@hive/ui';
+import { useAuth } from '@hive/auth-logic';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -21,7 +21,7 @@ export function AuthGuard({
 }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, isLoading, requiresOnboarding } = useUnifiedAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   useEffect(() => {
     // Don't redirect while auth is loading
@@ -38,7 +38,7 @@ export function AuthGuard({
     }
 
     // If user is authenticated but needs onboarding, redirect to onboarding
-    if (isAuthenticated && requiresOnboarding()) {
+    if (isAuthenticated && user && !user.onboardingCompleted) {
       // Allow access to onboarding pages
       if (pathname.startsWith('/onboarding')) {
         return;
@@ -56,7 +56,7 @@ export function AuthGuard({
     }
 
     console.log('🔍 No redirect needed, allowing access');
-  }, [isLoading, isAuthenticated, requiresOnboarding, pathname, requireAuth, redirectTo, router]);
+  }, [isLoading, isAuthenticated, user, pathname, requireAuth, redirectTo, router]);
 
   // Show loading state while auth is initializing
   if (isLoading) {

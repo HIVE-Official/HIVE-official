@@ -285,7 +285,7 @@ export function getTemplatePreview(templateId: string) {
       'Will be shared to your network' : 
       'Private tool',
     elements: template.elements.length,
-    examples: this.getTemplateExamples(templateId)
+    examples: getTemplateExamples(templateId)
   };
 }
 

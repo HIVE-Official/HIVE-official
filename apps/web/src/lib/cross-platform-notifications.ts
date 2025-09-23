@@ -312,7 +312,7 @@ export class CrossPlatformNotificationManager {
       type,
       title: template.title(data),
       message: template.message(data),
-      sourceSlice: options.sourceSlice || this.getSourceSliceFromType(type),
+      sourceSlice: (options.sourceSlice || this.getSourceSliceFromType(type)) as 'feed' | 'spaces' | 'tools' | 'profile' | 'system',
       sourceId: options.sourceId || data.id || 'unknown',
       targetUserId,
       actionUrl: template.actionUrl(data),
@@ -376,7 +376,7 @@ export class CrossPlatformNotificationManager {
           metadata: {
             sourceSlice: config.sourceSlice,
             sourceId: config.sourceId,
-            priority: config.metadata.priority,
+            priority: config.metadata.priority as 'low' | 'medium' | 'high',
             read: false,
             timestamp: new Date().toISOString()
           }
@@ -657,11 +657,7 @@ export class CrossPlatformNotificationManager {
             badge: '/hive-badge.png',
             tag: config.id,
             requireInteraction: config.metadata.priority === 'urgent',
-            actions: config.actionUrl ? [{
-              action: 'view',
-              title: 'View',
-              icon: '/notification-view.png'
-            }] : undefined
+            // Remove unsupported actions property
           });
           
           return true;

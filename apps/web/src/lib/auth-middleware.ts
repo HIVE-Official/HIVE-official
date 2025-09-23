@@ -5,6 +5,7 @@
 
 import { NextRequest } from 'next/server';
 import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { validateAuthToken, blockDevPatternsInProduction } from './security-service';
 import { AuthenticationError, AuthorizationError } from './api-error-handler';
 
@@ -94,7 +95,7 @@ export async function authenticateRequest(
 
   // Handle production Firebase tokens
   try {
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     
     return {
@@ -195,8 +196,13 @@ export async function logAuthEvent(
   details?: any
 ) {
   const { logAuthEvent: structuredLogAuthEvent } = await import('./structured-logger');
-  
-  await structuredLogAuthEvent(event, {
+
+  // Map event types to structured logger types
+  const mappedEvent = event === 'token_validation' ? 'verify' :
+                      event === 'auth_failure' ? 'failed_login' :
+                      event as 'login' | 'logout' | 'register' | 'verify' | 'failed_login';
+
+  await structuredLogAuthEvent(mappedEvent, {
     requestId: request.headers.get('x-request-id') || undefined,
     userId: authContext?.userId,
     isTestUser: authContext?.isTestUser,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
 import { AtSign, Check, X, Loader2, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveInput } from "@hive/ui";
@@ -231,16 +231,12 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
             onChange={handleChange}
             variant={
               validationState === "available" ? "success" :
-              validationState === "taken" || validationState === "invalid" ? "error" :
-              "premium"
+              validationState === "taken" || validationState === "invalid" ? "destructive" :
+              "default"
             }
             size="lg"
-            floatingLabel={false}
-            leftIcon={<AtSign className="w-4 h-4" />}
-            rightIcon={getValidationIcon()}
-            helperText={data.handle ? getValidationMessage() ?? undefined : undefined}
-            errorText={validationState === "taken" || validationState === "invalid" ? getValidationMessage() ?? undefined : undefined}
-            successText={validationState === "available" ? getValidationMessage() ?? undefined : undefined}
+            helperText={validationState === "available" ? getValidationMessage() ?? undefined : undefined}
+            error={validationState === "taken" || validationState === "invalid" ? getValidationMessage() ?? undefined : undefined}
             autoFocus
             className="w-full"
           />

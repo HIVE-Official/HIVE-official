@@ -5,7 +5,7 @@ import { cn } from "../../lib/utils";
 const hiveButtonVariants = cva("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", {
     variants: {
         variant: {
-            default: "bg-[var(--hive-brand-primary)] text-[var(--hive-brand-primary-text)] hover:bg-[var(--hive-brand-primary)]/90",
+            default: "bg-transparent border border-[var(--hive-border-strong)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-secondary)] hover:text-[var(--hive-text-primary)]",
             destructive: "bg-[var(--hive-status-error)] text-[var(--hive-status-error-text)] hover:bg-[var(--hive-status-error)]/90",
             outline: "border border-[var(--hive-border-strong)] bg-transparent text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-secondary)] hover:text-[var(--hive-text-primary)]",
             secondary: "bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-tertiary)]/80",

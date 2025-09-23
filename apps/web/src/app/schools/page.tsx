@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 // import { useRouter } from 'next/navigation';
 import { Search, Users, ArrowRight, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { HiveButton } from '@hive/ui';
 import { SchoolsPageHeader } from '../../components/temp-stubs';
 
 
@@ -391,7 +392,7 @@ export default function SchoolsPage() {
                 type="text"
                 placeholder="Search universities..."
                 value={searchTerm}
-                onChange={(e: React.ChangeEvent) => setSearchTerm(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20 focus:bg-white/10 transition-all"
               />
             </div>
@@ -413,11 +414,17 @@ export default function SchoolsPage() {
         {/* Schools Grid */}
         {!loading && (
           <div className="grid gap-4 hive-animate-liquid-reveal mb-16">
-            {filteredSchools.map((school) => (
+            {filteredSchools.map((school) => {
+              const isUB = school.id === 'ub' || school.id === 'test-university';
+              const isBlurred = !isUB;
+
+              return (
             <div
               key={school.id}
               data-testid={`school-${school.id}`}
-              className="group relative overflow-hidden rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-500 cursor-pointer hive-interactive"
+              className={`group relative overflow-hidden rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-500 cursor-pointer hive-interactive ${
+                isBlurred ? 'opacity-40 blur-sm hover:opacity-60 hover:blur-none' : ''
+              }`}
               onClick={() => handleSchoolSelect(school)}
               style={{
                 background: 'rgba(255, 255, 255, 0.02)',
@@ -428,6 +435,16 @@ export default function SchoolsPage() {
               {/* Glass reflection effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-50" />
               <div className="absolute inset-0 bg-gradient-to-tl from-yellow-500/5 via-transparent to-transparent" />
+
+              {/* Coming Soon Overlay for blurred schools */}
+              {isBlurred && (
+                <div className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="text-center">
+                    <span className="text-hive-gold font-semibold text-lg">Coming Soon</span>
+                    <p className="text-white/70 text-sm mt-1">Join the waitlist!</p>
+                  </div>
+                </div>
+              )}
               
               <div className="relative p-6">
                 <div className="flex items-center justify-between">
@@ -469,7 +486,7 @@ export default function SchoolsPage() {
                     ) : (
                       <div className="text-center">
                         <div className="hive-font-sans text-sm font-medium" style={{ color: '#C1C1C4' }}>
-                          {school.isComingSoon ? 'Coming Soon' : 'Join Waitlist'}
+                          {isBlurred ? 'Coming Soon' : (school.isComingSoon ? 'Coming Soon' : 'Join Waitlist')}
                         </div>
                       </div>
                     )}
@@ -482,7 +499,8 @@ export default function SchoolsPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
               </div>
             </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -510,9 +528,9 @@ export default function SchoolsPage() {
             <p className="hive-font-sans text-base mb-6 leading-relaxed" style={{ color: '#9A9AA1' }}>
               We&apos;re expanding to more campuses every month. Join our general waitlist to be notified when HIVE arrives at your school.
             </p>
-            <button className="hive-button-primary px-8 py-3">
+            <HiveButton variant="default" size="lg" className="px-8 py-3">
               Join General Waitlist
-            </button>
+            </HiveButton>
           </div>
         </div>
       </div>

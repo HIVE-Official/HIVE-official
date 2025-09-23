@@ -126,8 +126,8 @@ export function isUserUploadedImage(imageUrl: string): boolean {
  */
 export function getFallbackAvatar(userId: string, userName?: string): string {
   const seed = userName || userId;
-  return generateDefaultAvatar(userId, { 
-    style: 'initials', 
-    seed 
+  return generateDefaultAvatar(userId, {
+    style: 'initials',
+    seed
   });
 }

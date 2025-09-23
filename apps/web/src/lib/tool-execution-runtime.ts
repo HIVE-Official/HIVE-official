@@ -22,6 +22,7 @@ export interface ExecutionResult {
 export interface ToolDefinition {
   id: string;
   name: string;
+  description?: string;
   code: string;
   language: 'javascript' | 'typescript' | 'python';
   version: string;

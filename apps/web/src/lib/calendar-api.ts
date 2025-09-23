@@ -1,4 +1,4 @@
-import type { Event } from '@hive/ui';
+// Event type is defined locally in this file
 
 /**
  * Calendar API integration utilities
@@ -98,6 +98,19 @@ export const deleteCalendarEvent = async (id: string): Promise<void> => {
   }
 };
 
+// UI Event interface for HIVE calendar components
+export interface Event {
+  id: string;
+  title: string;
+  time: string;
+  type: 'academic' | 'social' | 'meeting' | 'milestone' | 'deadline';
+  location?: string;
+  attendees: string[];
+  isAllDay: boolean;
+  hasReminder: boolean;
+  metadata?: any;
+}
+
 /**
  * Convert API event format to HIVE UI Event format
  */
@@ -155,7 +168,7 @@ export const connectCalendarService = async (type: 'google' | 'outlook'): Promis
   } catch (error) {
     console.error(`Failed to connect ${type} calendar:`, error);
     // Return not implemented for now - can be implemented when OAuth flow is ready
-    return { success: false, error: `${type} calendar integration coming soon` };
+    return { success: false, redirectUrl: '' };
   }
 };
 
@@ -180,6 +193,6 @@ export const syncCalendarService = async (connectionId: string): Promise<{ succe
   } catch (error) {
     console.error('Failed to sync calendar:', error);
     // Return not implemented for now - can be implemented when sync API is ready
-    return { success: false, lastSync: new Date(), error: 'Calendar sync coming soon' };
+    return { success: false, lastSync: new Date() };
   }
 };

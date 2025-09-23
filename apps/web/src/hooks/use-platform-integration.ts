@@ -564,10 +564,10 @@ export function useSurfaceIntegration(surfaceType: 'posts' | 'members' | 'events
 
   return {
     data: surfaceData,
-    loading,
-    error,
+    loading: loading || spaceIntegration.loading,
+    error: error || spaceIntegration.error,
     refresh: loadSurfaceData,
-    ...spaceIntegration,
-    ...realtimeIntegration
+    space: spaceIntegration,
+    realtime: realtimeIntegration
   };
 }

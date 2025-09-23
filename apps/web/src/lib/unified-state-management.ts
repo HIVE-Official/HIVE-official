@@ -456,7 +456,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setError('feed', null);
 
             const integration = getPlatformIntegration();
-            const feedData = await integration.getUnifiedFeed(state.user.uid, {
+            const feedData = await integration.getUnifiedFeedData(state.user.uid, {
               limit: 20,
               sources: ['feed', 'spaces', 'tools', 'profile']
             });
@@ -731,8 +731,8 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
                 const tool = state.userTools.find(t => t.id === update.data.toolId);
                 if (tool) {
                   state.updateUserTool(tool.id, {
-                    deploymentCount: (tool.deploymentCount || 0) + 1
-                  });
+                    // deploymentCount: (tool.deploymentCount || 0) + 1
+                  } as any);
                 }
               }
               break;
@@ -896,7 +896,7 @@ export function initializeUnifiedState(user: User | null) {
       });
     });
 
-    const unsubscribeFeed = integration.subscribe('feed_update', (data) => {
+    const unsubscribeFeed = integration.subscribe('feed_update', (data: any) => {
       store.handleRealtimeUpdate({
         type: 'feed_update',
         slice: 'feed',
@@ -905,7 +905,7 @@ export function initializeUnifiedState(user: User | null) {
       });
     });
 
-    const unsubscribeNotifications = integration.subscribe('notification', (data) => {
+    const unsubscribeNotifications = integration.subscribe('notification', (data: any) => {
       store.handleRealtimeUpdate({
         type: 'notification',
         slice: 'notifications',

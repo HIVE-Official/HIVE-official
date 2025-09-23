@@ -114,7 +114,7 @@ export function PhotoUploadModal({
   };
 
   return (
-    <HiveModal open={isOpen} onOpenChange={handleClose} size="lg">
+    <HiveModal open={isOpen} onOpenChange={handleClose}>
       <HiveModalContent className="max-w-2xl">
         <HiveModalHeader>
           <HiveModalTitle className="flex items-center space-x-2">
@@ -129,10 +129,7 @@ export function PhotoUploadModal({
             <div className="text-center">
               <p className="text-sm text-hive-text-mutedLight mb-3">Current Photo</p>
               <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden bg-hive-background-tertiary">
-                <Image
-                  src={currentPhotoUrl}
-                  alt="Current profile photo"
-                  fill
+                <Image src={currentPhotoUrl} alt="" fill
                   className="object-cover"
                 />
               </div>
@@ -165,10 +162,7 @@ export function PhotoUploadModal({
             {previewUrl ? (
               <div className="space-y-4">
                 <div className="relative w-48 h-48 mx-auto rounded-lg overflow-hidden bg-hive-background-tertiary">
-                  <Image
-                    src={previewUrl}
-                    alt="Preview"
-                    fill
+                  <Image src={previewUrl} alt="" fill
                     className="object-cover"
                   />
                 </div>

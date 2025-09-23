@@ -18,7 +18,6 @@ import {
   Building
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 interface SpaceInfo {
   id: string;
   name: string;
@@ -287,7 +286,7 @@ export function SpaceTransferInterface({
           <h3 className="text-lg font-semibold text-white mb-4">Transfer Reason</h3>
           <textarea
             value={transferReason}
-            onChange={(e: React.ChangeEvent) => setTransferReason(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTransferReason(e.target.value)}
             placeholder="Why are you transferring? (optional)"
             className="w-full h-24 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[#FFD700]/30"
             maxLength={200}
@@ -356,7 +355,7 @@ export function SpaceTransferInterface({
             </Button>
             
             <Button
-              variant="primary"
+              variant="default"
               onClick={() => setShowConfirmation(true)}
               disabled={!transferValidation.canMove || validationLoading}
               className="flex-1 bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
@@ -422,7 +421,7 @@ export function SpaceTransferInterface({
                 </Button>
                 
                 <Button
-                  variant="primary"
+                  variant="default"
                   onClick={handleTransfer}
                   className="flex-1 bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
                   disabled={transferMutation.isPending}

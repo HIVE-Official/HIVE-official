@@ -4,7 +4,8 @@
  */
 
 import { dbAdmin } from './firebase-admin';
-import { logger } from './logger';
+import { FieldValue } from 'firebase-admin/firestore';
+import { logger } from './structured-logger';
 import { contentModerationService } from './content-moderation-service';
 import { sseRealtimeService } from './sse-realtime-service';
 
@@ -155,7 +156,7 @@ export class AutomatedModerationWorkflows {
 
     logger.info('Processing automated workflow', {
       workflowId: workflow.id,
-      matchingReports: matchingReports.length
+      metadata: { matchingReports: matchingReports.length }
     });
 
     // Group reports by content/user for batch processing
@@ -183,22 +184,25 @@ export class AutomatedModerationWorkflows {
       }
 
       const snapshot = await query.get();
-      const reports = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const reports = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
 
       // Apply additional filters
       return reports.filter(report => {
+        // Cast report to any to access properties
+        const r = report as any;
+
         // AI confidence check
-        if (report.aiAnalysis && report.aiAnalysis.confidence < workflow.triggers.aiConfidenceThreshold) {
+        if (r.aiAnalysis && r.aiAnalysis.confidence < workflow.triggers.aiConfidenceThreshold) {
           return false;
         }
 
         // Severity check
-        if (!workflow.triggers.severityLevels.includes(report.severity)) {
+        if (!workflow.triggers.severityLevels.includes(r.severity)) {
           return false;
         }
 
         // Reporter trust score check
-        if (report.reporterInfo.trustScore < workflow.triggers.reporterTrustThreshold) {
+        if (r.reporterInfo?.trustScore < workflow.triggers.reporterTrustThreshold) {
           return false;
         }
 
@@ -286,8 +290,9 @@ export class AutomatedModerationWorkflows {
           batch.results.succeeded++;
         } catch (error) {
           batch.results.failed++;
-          batch.results.errors.push(`Action ${action.type} failed: ${error.message}`);
-          logger.error('Automated action failed', { error, action, batchId });
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          batch.results.errors.push(`Action ${action.type} failed: ${errorMessage}`);
+          logger.error('Automated action failed', { error, action: action.type, metadata: { batchId } });
         }
         batch.results.processed++;
       }
@@ -306,15 +311,15 @@ export class AutomatedModerationWorkflows {
       batch.completedAt = new Date().toISOString();
 
       logger.info('Batch processing completed', {
-        batchId,
         workflowId: workflow.id,
-        results: batch.results
+        metadata: { batchId, results: batch.results }
       });
 
     } catch (error) {
       batch.status = 'failed';
-      batch.results.errors.push(`Batch processing failed: ${error.message}`);
-      logger.error('Batch processing failed', { error, batchId });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      batch.results.errors.push(`Batch processing failed: ${errorMessage}`);
+      logger.error('Batch processing failed', { error: errorMessage, metadata: { batchId } });
     }
 
     // Store batch results
@@ -472,11 +477,11 @@ export class AutomatedModerationWorkflows {
             });
           }
         } catch (error) {
-          logger.error('Error executing delayed action', { error, actionId: action.id });
+          logger.error('Error executing delayed action', { error, action: action.id });
           await dbAdmin.collection('delayedModerationActions').doc(action.id).update({
             status: 'failed',
             failedAt: new Date().toISOString(),
-            error: error.message
+            error: error instanceof Error ? error.message : String(error)
           });
         }
       }
@@ -514,7 +519,7 @@ export class AutomatedModerationWorkflows {
             });
           }
         } catch (error) {
-          logger.error('Error processing escalation', { error, escalationId: escalation.id });
+          logger.error('Error processing escalation', { error, metadata: { escalationId: escalation.id } });
         }
       }
     } catch (error) {
@@ -582,7 +587,8 @@ export class AutomatedModerationWorkflows {
     if (action.conditions.noModerationAction) {
       for (const reportId of action.reportIds) {
         const report = await dbAdmin.collection('contentReports').doc(reportId).get();
-        if (report.exists && report.data().status !== 'pending') {
+        const reportData = report.data();
+        if (report.exists && reportData?.status !== 'pending') {
           return false;
         }
       }
@@ -592,7 +598,7 @@ export class AutomatedModerationWorkflows {
     if (action.conditions.reportStillActive) {
       for (const reportId of action.reportIds) {
         const report = await dbAdmin.collection('contentReports').doc(reportId).get();
-        if (!report.exists || report.data().status === 'dismissed') {
+        if (!report.exists || report.data()?.status === 'dismissed') {
           return false;
         }
       }
@@ -675,15 +681,15 @@ export class AutomatedModerationWorkflows {
   }
 
   private async updateWorkflowStats(workflowId: string, result: 'success' | 'error'): Promise<void> {
-    const updateData = {
+    const updateData: any = {
       'statistics.lastTriggered': new Date().toISOString(),
-      'statistics.triggeredCount': dbAdmin.admin.firestore.FieldValue.increment(1)
+      'statistics.triggeredCount': FieldValue.increment(1)
     };
 
     if (result === 'success') {
-      updateData['statistics.successCount'] = dbAdmin.admin.firestore.FieldValue.increment(1);
+      updateData['statistics.successCount'] = FieldValue.increment(1);
     } else {
-      updateData['statistics.errorCount'] = dbAdmin.admin.firestore.FieldValue.increment(1);
+      updateData['statistics.errorCount'] = FieldValue.increment(1);
     }
 
     await dbAdmin.collection('automatedWorkflows').doc(workflowId).update(updateData);
@@ -727,7 +733,7 @@ export class AutomatedModerationWorkflows {
 
     await dbAdmin.collection('automatedWorkflows').doc(workflow.id).set(workflow);
     
-    logger.info('Automated workflow created', { workflowId: workflow.id, name: workflow.name });
+    logger.info('Automated workflow created', { workflowId: workflow.id });
     return workflow.id;
   }
 
@@ -752,7 +758,7 @@ export class AutomatedModerationWorkflows {
       updatedAt: new Date().toISOString()
     });
 
-    logger.info('Automated workflow updated', { workflowId, updates: Object.keys(updates) });
+    logger.info('Automated workflow updated', { workflowId });
   }
 
   /**

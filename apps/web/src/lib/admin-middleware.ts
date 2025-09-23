@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin, logAdminActivity } from './admin-auth';
+import { requireAdmin, logAdminActivity, AdminUser } from './admin-auth';
 
 /**
  * Middleware to protect admin routes
  */
-interface Admin {
-  id: string;
-  email?: string;
-  [key: string]: unknown;
-}
-
 export async function withAdminAuth(
   _request: NextRequest,
-  handler: (_request: NextRequest, _admin: Admin) => Promise<NextResponse>
+  handler: (_request: NextRequest, _admin: AdminUser) => Promise<NextResponse>
 ) {
   const authResult = await requireAdmin(_request);
   
@@ -35,7 +29,7 @@ export async function withAdminAuth(
     clientIP as string
   );
 
-  return handler(_request, authResult.admin);
+  return handler(_request, authResult.admin!);
 }
 
 /**

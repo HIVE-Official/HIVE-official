@@ -4,7 +4,7 @@
  */
 
 import { dbAdmin } from './firebase-admin';
-import { Transaction, WriteBatch } from 'firebase-admin';
+import { Transaction, WriteBatch } from 'firebase-admin/firestore';
 import { logger } from './structured-logger';
 
 /**
@@ -116,7 +116,7 @@ export class TransactionManager {
         
         return {
           success: true,
-          data: result,
+          data: result as T,
           operationsCompleted,
           operationsFailed,
           duration
@@ -134,7 +134,7 @@ export class TransactionManager {
             attempt,
             error: error instanceof Error ? error.message : String(error),
             isRetriable,
-            shouldRetry,
+            metadata: { shouldRetry },
             operationsCompleted,
             operationsFailed
           });
@@ -430,19 +430,55 @@ export async function executeOnboardingTransaction(
         const now = new Date();
         
         const updatedUserData = {
+          // Core identity fields
           fullName: onboardingData.fullName,
-          userType: onboardingData.userType,
-          firstName: onboardingData.firstName,
-          lastName: onboardingData.lastName,
-          major: onboardingData.major,
-          academicLevel: onboardingData.academicLevel,
-          graduationYear: onboardingData.graduationYear,
           handle: normalizedHandle,
           avatarUrl: onboardingData.avatarUrl || '',
+
+          // Name fields
+          firstName: onboardingData.firstName,
+          lastName: onboardingData.lastName,
+
+          // Academic information
+          userType: onboardingData.userType,
+          major: onboardingData.major,
+          academicLevel: onboardingData.academicLevel,
+          academicYear: onboardingData.academicYear || onboardingData.academicLevel, // Map academicLevel to academicYear
+          graduationYear: onboardingData.graduationYear,
+          schoolId: onboardingData.schoolId || 'ub-buffalo', // Default to UB for launch
+
+          // Personal information (set defaults for missing fields)
+          bio: onboardingData.bio || '',
+          statusMessage: onboardingData.statusMessage || '',
+          interests: onboardingData.interests || [],
+          housing: onboardingData.housing || '',
+          pronouns: onboardingData.pronouns || '',
+
+          // Privacy settings (set sensible defaults)
+          isPublic: onboardingData.isPublic !== undefined ? onboardingData.isPublic : true,
+          showActivity: true,
+          showSpaces: true,
+          showConnections: true,
+          allowDirectMessages: true,
+          showOnlineStatus: true,
+          ghostMode: {
+            enabled: false,
+            level: 'minimal'
+          },
+
+          // Builder information
           builderRequestSpaces: onboardingData.builderRequestSpaces,
+          builderOptIn: onboardingData.builderOptIn || (onboardingData.builderRequestSpaces && onboardingData.builderRequestSpaces.length > 0),
+          isBuilder: false, // Will be set to true after builder approval
+
+          // Verification and timestamps
           consentGiven: onboardingData.consentGiven,
           consentGivenAt: now,
           onboardingCompletedAt: now,
+          onboardingCompleted: true,
+          emailVerified: true, // Set to true since they went through magic link auth
+          profileVerified: false, // Admin will verify later
+          accountStatus: 'active',
           updatedAt: now,
         };
         

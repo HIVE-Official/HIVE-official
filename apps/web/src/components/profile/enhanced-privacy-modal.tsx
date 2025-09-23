@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiveButton, HiveCard, HiveBadge } from "@hive/ui";
+import { HiveButton, HiveCard, Badge } from "@hive/ui";
 import { 
   Shield, 
   Eye, 
@@ -311,7 +311,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                           </p>
                         </div>
                       </div>
-                      <HiveBadge 
+                      <Badge 
                         variant={settings.ghostMode.enabled ? "tool-tag" : "active-tag"}
                         className={settings.ghostMode.enabled ? 
                           'bg-red-500/20 text-red-400 border-red-500/30' :
@@ -319,7 +319,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                         }
                       >
                         {settings.ghostMode.enabled ? 'HIDDEN' : 'VISIBLE'}
-                      </HiveBadge>
+                      </Badge>
                     </div>
                   </HiveCard>
 
@@ -400,7 +400,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                               min="1"
                               max="24"
                               value={scheduleHours}
-                              onChange={(e: React.ChangeEvent) => setScheduleHours(parseInt(e.target.value))}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScheduleHours(parseInt(e.target.value))}
                               className="flex-1"
                             />
                             <span className="text-sm text-gray-300 w-16">{scheduleHours}h</span>

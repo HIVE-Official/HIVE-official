@@ -1,11 +1,20 @@
 /**
  * Auto Space Creation Service
- * 
+ *
  * Automatically creates and joins users to relevant spaces based on
  * their academic information (year, major, school) during onboarding.
  */
 
-import type { OnboardingData } from '@hive/ui/slices/onboarding';
+// Define OnboardingData locally since the package export doesn't exist
+export interface OnboardingData {
+  schoolId: string;
+  graduationYear: number;
+  major: string;
+  year: 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'other';
+  userType: 'student' | 'faculty' | 'staff' | 'alumni';
+  housing?: string; // Optional housing field
+  [key: string]: any;
+}
 
 export interface AutoSpaceConfig {
   schoolId: string;
@@ -13,6 +22,7 @@ export interface AutoSpaceConfig {
   major: string;
   year: 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'other';
   userType: 'student' | 'faculty' | 'staff' | 'alumni';
+  housing?: string; // Optional housing field
 }
 
 export interface SpaceTemplate {
@@ -30,7 +40,7 @@ export interface SpaceTemplate {
  * Generate space templates based on user's academic information
  */
 export function generateAutoSpaces(config: AutoSpaceConfig): SpaceTemplate[] {
-  const { schoolId, graduationYear, major, year, userType } = config;
+  const { schoolId, graduationYear, major, year, userType, housing } = config;
   const spaces: SpaceTemplate[] = [];
 
   // 1. Class Year Space (Social/Networking)
@@ -91,7 +101,71 @@ export function generateAutoSpaces(config: AutoSpaceConfig): SpaceTemplate[] {
     });
   }
 
-  // 5. Graduate Student Space
+  // 5. Housing/Dorm-based Spaces (UB-specific for launch)
+  if (userType === 'student' && housing) {
+    const housingKey = housing.toLowerCase().replace(/\s+/g, '-');
+
+    // Map UB housing areas to spaces
+    const housingMappings: Record<string, { name: string; description: string }> = {
+      'ellicott': {
+        name: 'Ellicott Complex',
+        description: 'Connect with fellow Ellicott residents! Share dining tips, coordinate study sessions, and build your dorm community.'
+      },
+      'governors': {
+        name: 'Governors Complex',
+        description: 'The Governors community hub! Meet neighbors, plan activities, and share campus life experiences.'
+      },
+      'south-campus': {
+        name: 'South Campus',
+        description: 'South Campus residents unite! Connect with neighbors, share transportation tips, and build community.'
+      },
+      'creekside': {
+        name: 'Creekside Village',
+        description: 'Creekside Village community! Perfect for apartment-style living discussions and resident meetups.'
+      },
+      'university-apartments': {
+        name: 'University Apartments',
+        description: 'University Apartments network! Connect with fellow apartment residents and share living tips.'
+      },
+      'off-campus': {
+        name: 'Off-Campus Housing',
+        description: 'Off-campus students connect here! Share housing tips, coordinate commutes, and stay connected to campus.'
+      }
+    };
+
+    // Check if housing matches a known area
+    const matchedHousing = Object.entries(housingMappings).find(([key, _]) =>
+      housingKey.includes(key) || key.includes(housingKey)
+    );
+
+    if (matchedHousing) {
+      const [key, info] = matchedHousing;
+      spaces.push({
+        id: `${schoolId}-housing-${key}`,
+        name: info.name,
+        description: info.description,
+        type: 'social',
+        category: 'Housing',
+        autoJoin: true, // Auto-join students to their housing space
+        isRecommended: true,
+        membershipType: 'open'
+      });
+    } else if (housing.trim()) {
+      // Generic housing space for unrecognized housing
+      spaces.push({
+        id: `${schoolId}-housing-${housingKey}`,
+        name: `${housing} Residents`,
+        description: `Connect with fellow ${housing} residents and build your living community!`,
+        type: 'social',
+        category: 'Housing',
+        autoJoin: true,
+        isRecommended: true,
+        membershipType: 'open'
+      });
+    }
+  }
+
+  // 6. Graduate Student Space
   if (userType === 'student' && year === 'graduate') {
     spaces.push({
       id: `${schoolId}-graduate-students`,
@@ -105,7 +179,7 @@ export function generateAutoSpaces(config: AutoSpaceConfig): SpaceTemplate[] {
     });
   }
 
-  // 6. Faculty Spaces
+  // 7. Faculty Spaces
   if (userType === 'faculty') {
     spaces.push({
       id: `${schoolId}-faculty`,
@@ -133,7 +207,7 @@ export function generateAutoSpaces(config: AutoSpaceConfig): SpaceTemplate[] {
     }
   }
 
-  // 7. Career Development Spaces
+  // 8. Career Development Spaces
   const careerYear = graduationYear ? graduationYear - 1 : new Date().getFullYear();
   if (userType === 'student' && (year === 'junior' || year === 'senior')) {
     spaces.push({
@@ -163,7 +237,8 @@ export async function createAndJoinSpaces(
     graduationYear: onboardingData.graduationYear,
     major: onboardingData.major,
     year: onboardingData.year,
-    userType: onboardingData.userType
+    userType: onboardingData.userType,
+    housing: onboardingData.housing // Pass housing for space determination
   };
 
   try {

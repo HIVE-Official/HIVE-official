@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { NextRequest } from 'next/server';
 import { validateAuthToken } from './security-service';
 
@@ -31,6 +32,16 @@ export async function isAdmin(userId: string): Promise<boolean> {
 }
 
 /**
+ * Require admin role for a userId (throws if not admin)
+ */
+export async function requireAdminRole(userId: string): Promise<void> {
+  const isAdminUser = await isAdmin(userId);
+  if (!isAdminUser) {
+    throw new Error('Unauthorized: Admin access required');
+  }
+}
+
+/**
  * Get admin user details
  */
 export async function getAdminUser(userId: string): Promise<AdminUser | null> {
@@ -39,7 +50,7 @@ export async function getAdminUser(userId: string): Promise<AdminUser | null> {
   }
 
   try {
-    const auth = admin.auth();
+    const auth = getAuth();
     const userRecord = await auth.getUser(userId);
     
     // Get custom claims for permissions
@@ -97,7 +108,7 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
 
     // For production tokens, verify with Firebase
     try {
-      const auth = admin.auth();
+      const auth = getAuth();
       const decodedToken = await auth.verifyIdToken(token);
       return await getAdminUser(decodedToken.uid);
     } catch (authError) {
@@ -127,7 +138,7 @@ export async function requireAdmin(request: NextRequest): Promise<{
   status?: number;
 }> {
   const admin = await verifyAdminToken(request);
-  
+
   if (!admin) {
     return {
       success: false,

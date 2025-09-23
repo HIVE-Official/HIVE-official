@@ -54,4 +54,6 @@ __exportStar(require("./firebase"), exports);
 __exportStar(require("./feature-flags"), exports);
 // Privacy utilities
 __exportStar(require("./utils/privacy-utils"), exports);
+// Profile system types
+__exportStar(require("./types/profile-system"), exports);
 //# sourceMappingURL=index.js.map

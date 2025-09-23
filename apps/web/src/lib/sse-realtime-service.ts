@@ -5,7 +5,7 @@
  */
 
 import { dbAdmin } from './firebase-admin';
-import { logger } from './logger';
+import { logger } from './structured-logger';
 import { realtimeOptimizationManager } from './realtime-optimization';
 
 export interface RealtimeMessage {
@@ -131,7 +131,7 @@ export class SSERealtimeService {
         messageId, 
         channel: message.channel, 
         type: message.type,
-        targetUsers: message.targetUsers?.length || 'broadcast'
+        targetUserId: message.targetUsers?.length ? `${message.targetUsers.length} users` : 'broadcast'
       });
 
       return messageId;

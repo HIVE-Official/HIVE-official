@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import * as admin from "firebase-admin/auth";
+import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Invalid authorization format", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    const decodedToken = await getAuth().verifyIdToken(token);
 
     // Check if current user is admin
     const db = getFirestore();
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       updatedBy: decodedToken.uid });
 
     // Set custom claims for Firebase Auth
-    await admin.auth().setCustomUserClaims(userId, { role });
+    await getAuth().setCustomUserClaims(userId, { role });
 
     // Log admin action
     await db.collection("admin_logs").add({

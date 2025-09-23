@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import * as admin from "firebase-admin/auth";
+import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { z } from "zod";
@@ -30,7 +30,7 @@ export const GET = withAuthAndErrors(async (
   const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
   if (!toolDoc.exists) {
-    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
+    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
   }
 
   const toolData = { id: toolDoc.id, ...toolDoc.data() };
@@ -38,7 +38,7 @@ export const GET = withAuthAndErrors(async (
 
   // Check if user can view this tool
   if (!canUserViewTool(tool, userId)) {
-    return respond.error("Access denied", "FORBIDDEN", 403);
+    return respond.error("Access denied", "FORBIDDEN", { status: 403 });
   }
 
   // Increment view count if not the owner
@@ -70,12 +70,14 @@ export const GET = withAuthAndErrors(async (
 });
 
 // PUT /api/tools/[toolId] - Update tool
+type UpdateToolData = z.infer<typeof UpdateToolSchema>;
+
 export const PUT = withAuthValidationAndErrors(
-  UpdateToolSchema,
+  UpdateToolSchema as any,
   async (
     request: AuthenticatedRequest,
     { params }: { params: Promise<{ toolId: string }> },
-    updateData,
+    updateData: UpdateToolData,
     respond
   ) => {
     const userId = getUserId(request);
@@ -83,21 +85,22 @@ export const PUT = withAuthValidationAndErrors(
     const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
     if (!toolDoc.exists) {
-      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const currentTool = ToolSchema.parse({ id: toolDoc.id, ...toolDoc.data() });
 
     // Check if user can edit this tool
     if (!canUserEditTool(currentTool, userId)) {
-      return respond.error("Access denied", "FORBIDDEN", 403);
+      return respond.error("Access denied", "FORBIDDEN", { status: 403 });
     }
 
     // Validate tool structure if elements are being updated
     if (updateData.elements) {
       const structureValidation = validateToolStructure(updateData.elements);
       if (!structureValidation.isValid) {
-        return respond.error("Invalid tool structure", "INVALID_INPUT", 400, {
+        return respond.error("Invalid tool structure", "INVALID_INPUT", {
+          status: 400,
           details: structureValidation.errors
         });
       }
@@ -115,7 +118,7 @@ export const PUT = withAuthValidationAndErrors(
           return respond.error(
             `Element definition not found: ${elementInstance.elementId}`,
             "INVALID_INPUT",
-            400
+            { status: 400 }
           );
         }
 
@@ -123,7 +126,7 @@ export const PUT = withAuthValidationAndErrors(
           return respond.error(
             `Invalid configuration for element: ${elementInstance.id}`,
             "INVALID_INPUT",
-            400
+            { status: 400 }
           );
         }
       }
@@ -148,7 +151,7 @@ export const PUT = withAuthValidationAndErrors(
       ...updateData,
       currentVersion: newVersion,
       updatedAt: now,
-    };
+    } as Record<string, any>;
 
     // Update tool document
     await toolDoc.ref.update(updatedTool);
@@ -202,14 +205,14 @@ export const DELETE = withAuthAndErrors(async (
   const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
   if (!toolDoc.exists) {
-    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
+    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
   }
 
   const tool = ToolSchema.parse({ id: toolDoc.id, ...toolDoc.data() });
 
   // Only owner can delete
   if (tool.ownerId !== userId) {
-    return respond.error("Access denied", "FORBIDDEN", 403);
+    return respond.error("Access denied", "FORBIDDEN", { status: 403 });
   }
 
   // Check if tool is being used in any posts
@@ -224,7 +227,7 @@ export const DELETE = withAuthAndErrors(async (
     return respond.error(
       "Cannot delete tool that is being used in posts",
       "CONFLICT",
-      409
+      { status: 409 }
     );
   }
 

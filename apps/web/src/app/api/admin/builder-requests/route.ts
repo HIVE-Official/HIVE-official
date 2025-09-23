@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin, authAdmin } from '@/lib/firebase-admin';
 import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
       adminUserId = 'test-user';
     } else {
       try {
-        const auth = admin.auth();
+        const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {
@@ -222,7 +223,7 @@ export async function GET(request: NextRequest) {
       adminUserId = 'test-user';
     } else {
       try {
-        const auth = admin.auth();
+        const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
         adminUserId = decodedToken.uid;
       } catch (authError) {

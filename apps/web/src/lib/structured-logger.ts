@@ -4,7 +4,7 @@
  */
 
 import { currentEnvironment } from './env';
-import { captureError } from './error-monitoring';
+import { captureError, LogLevel as ErrorLogLevel } from './error-monitoring';
 
 /**
  * Log levels in order of severity
@@ -172,6 +172,8 @@ export interface LogContext {
   feedType?: string;
   type?: string;
   sourceType?: string;
+  contentType?: string;
+  contentId?: string;
   
   // Time ranges
   timeRange?: string;
@@ -225,6 +227,30 @@ export interface LogContext {
   publishData?: any;
   recommendationData?: any;
   usageData?: any;
+  reportData?: any;
+
+  // Additional context fields
+  hasUser?: boolean;
+  matchingReports?: number;
+  batchId?: string;
+  actionId?: string;
+  escalationId?: string;
+  name?: string;
+  updates?: string[];
+  days?: number;
+  latency?: number;
+  errorRate?: number;
+  memoryUsage?: number;
+  sseHealthy?: boolean;
+  firebaseHealthy?: boolean;
+  retryCount?: number;
+  config?: any;
+  path?: string;
+  targetUsers?: any;
+  operations?: any[];
+  isRetriable?: boolean;
+  operationDescription?: string;
+  widgetId?: string;
   waitlistData?: any;
   analyticsData?: any;
   cohortData?: any;
@@ -253,7 +279,7 @@ export interface LogContext {
   eventId?: string;
   memberId?: string;
   deploymentId?: string;
-  updates?: any;
+  contentUpdates?: any;
   authorId?: string;
   organizerId?: string;
   deployerId?: string;
@@ -268,6 +294,9 @@ export interface LogContext {
   messageId?: string;
   channel?: string;
   userIds?: string;
+
+  // Allow additional properties for flexibility during development
+  [key: string]: any;
 }
 
 /**
@@ -420,7 +449,7 @@ async function sendToRemoteService(entry: LogEntry): Promise<void> {
         error.stack = entry.error.stack;
         
         await captureError(error, {
-          level: entry.level === LogLevel.ERROR ? ('error' as const) : ('fatal' as const),
+          level: entry.level === LogLevel.ERROR ? ErrorLogLevel.ERROR : ErrorLogLevel.FATAL,
           userId: entry.context.userId,
           requestId: entry.context.requestId,
           tags: {
@@ -438,7 +467,7 @@ async function sendToRemoteService(entry: LogEntry): Promise<void> {
       } else {
         // Log message without error object
         await captureError(new Error(entry.message), {
-          level: entry.level === LogLevel.ERROR ? ('error' as const) : ('fatal' as const),
+          level: entry.level === LogLevel.ERROR ? ErrorLogLevel.ERROR : ErrorLogLevel.FATAL,
           userId: entry.context.userId,
           requestId: entry.context.requestId,
           tags: {

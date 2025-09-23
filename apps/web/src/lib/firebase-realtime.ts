@@ -1,6 +1,6 @@
 import { Database, getDatabase, ref, push, set, onValue, off, serverTimestamp, DataSnapshot } from 'firebase/database';
 import { app } from '@hive/core';
-import { logger } from './logger';
+import { logger } from './structured-logger';
 
 /**
  * Firebase Realtime Database Helper for HIVE Platform

@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Button } from "@hive/ui";
 import { LogOut } from "lucide-react";
-import { useModalHelpers } from '../ui/modal-system';
-import { useUnifiedAuth } from '@hive/ui';
+import { useConfirm } from '@hive/ui';
+import { useAuth } from "@hive/auth-logic";
 
 interface LeaveSpaceButtonProps {
   spaceId: string;
@@ -24,33 +24,36 @@ export function LeaveSpaceButton({
   className
 }: LeaveSpaceButtonProps) {
   const [isLeaving, setIsLeaving] = useState(false);
-  const { confirm } = useModalHelpers();
-  const { user } = useUnifiedAuth();
+  const confirm = useConfirm();
+  const { user } = useAuth();
 
   const isGreekLife = spaceType === 'greek_life';
   const isImportantRole = userRole === 'owner' || userRole === 'admin';
 
-  const handleLeaveClick = () => {
-    const variant = isGreekLife || isImportantRole ? 'warning' : 'default';
-    
+  const handleLeaveClick = async () => {
+    const variant = isGreekLife || isImportantRole ? 'warning' : 'info';
+
     let message = `Are you sure you want to leave "${spaceName}"?`;
-    
+
     if (isGreekLife) {
       message += '\n\nAs this is a Greek Life organization, you may need special permission to rejoin.';
     }
-    
+
     if (isImportantRole) {
       message += `\n\nYou are currently ${userRole === 'owner' ? 'the owner' : 'an admin'} of this space. Consider transferring your role before leaving.`;
     }
 
-    confirm({
+    const confirmed = await confirm({
       title: 'Leave Space',
       message,
-      confirmText: 'Leave Space',
-      cancelText: 'Stay',
-      variant,
-      onConfirm: handleConfirmLeave
+      confirmLabel: 'Leave Space',
+      cancelLabel: 'Stay',
+      variant
     });
+
+    if (confirmed) {
+      handleConfirmLeave();
+    }
   };
 
   const handleConfirmLeave = async () => {

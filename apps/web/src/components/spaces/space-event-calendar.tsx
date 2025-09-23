@@ -1,526 +1,341 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal } from "@hive/ui";
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Users, 
+import { useState, useEffect } from 'react';
+import {
+  Calendar,
   Plus,
-  ChevronLeft, 
+  Clock,
+  MapPin,
+  Users,
+  ChevronLeft,
   ChevronRight,
   Filter,
-  Search,
-  Grid,
   List,
-  Star,
-  Bell,
-  ExternalLink,
-  Settings,
+  Grid3X3,
   Eye,
   Edit,
   Trash2,
+  Share,
   Copy,
-  Share2,
-  Download,
-  CheckCircle
-} from "lucide-react";
+  Bell,
+  BellOff,
+  Check,
+  X,
+  UserCheck,
+  UserX,
+  MoreHorizontal,
+  CalendarDays,
+  Video,
+  Navigation,
+  AlertCircle,
+  Star,
+  Repeat,
+  Globe
+} from 'lucide-react';
+import {
+  HiveCard,
+  HiveButton,
+  Badge,
+  Avatar,
+  HiveModal,
+  HiveInput
+} from '@hive/ui';
+import type { User } from '@hive/core';
 
-export interface SpaceEvent {
+// Define missing types that should be in @hive/core
+interface SpaceEvent {
   id: string;
   title: string;
   description: string;
-  type: 'academic' | 'social' | 'professional' | 'recreational' | 'official';
-  organizer: {
-    id: string;
-    name: string;
-    handle: string;
-    verified?: boolean;
-  };
-  datetime: {
-    start: string;
-    end: string;
-    timezone: string;
-  };
-  location: {
-    type: 'physical' | 'virtual' | 'hybrid';
-    name: string;
-    address?: string;
-    virtualLink?: string;
-  };
-  capacity: {
-    max: number;
-    current: number;
-    waitlist: number;
-  };
-  tools: string[];
-  tags: string[];
-  visibility: 'public' | 'space_only' | 'invited_only';
-  rsvpStatus?: 'going' | 'interested' | 'not_going' | null;
-  isBookmarked: boolean;
-  engagement: {
-    going: number;
-    interested: number;
-    comments: number;
-  };
-  status: 'upcoming' | 'ongoing' | 'completed' | 'cancelled';
-  isRecurring: boolean;
-  recurringPattern?: string;
-  spaceIntegration: {
-    spaceId: string;
-    spaceName: string;
-    isJointEvent: boolean;
-    partnerSpaces?: string[];
-    spaceTools: string[];
-    autoToolLaunch: boolean;
-  };
+  startTime: Date;
+  endTime: Date;
+  location?: string;
+  spaceId: string;
+  organizerId: string;
+  createdAt: Date;
+  isRecurring?: boolean;
+  isVirtual?: boolean;
 }
+
+interface EventRSVP {
+  id: string;
+  eventId: string;
+  userId: string;
+  response: 'yes' | 'no' | 'maybe';
+  createdAt: Date;
+  user?: User;
+}
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
 
 interface SpaceEventCalendarProps {
   spaceId: string;
-  spaceName: string;
-  userRole: 'admin' | 'moderator' | 'member';
-  onCreateEvent?: () => void;
-  onEventClick?: (event: SpaceEvent) => void;
+  canCreateEvents: boolean;
+  spaceRules?: import('@/lib/space-type-rules').SpaceTypeRules | null;
 }
 
-export function SpaceEventCalendar({ 
-  spaceId, 
-  spaceName, 
-  userRole, 
-  onCreateEvent, 
-  onEventClick 
-}: SpaceEventCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState<'month' | 'week' | 'day' | 'list'>('month');
-  const [events, setEvents] = useState<SpaceEvent[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<SpaceEvent[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<SpaceEvent | null>(null);
-  const [showEventDetails, setShowEventDetails] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState<'all' | string>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | string>('all');
-  const [isLoading, setIsLoading] = useState(true);
+interface EventWithDetails extends SpaceEvent {
+  rsvps: EventRSVP[];
+  attendeeCount: number;
+  userRSVP?: 'yes' | 'no' | 'maybe' | null;
+  organizer: User;
+}
 
+type ViewMode = 'calendar' | 'list';
+type EventFilter = 'all' | 'upcoming' | 'attending' | 'organizing';
+
+export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: SpaceEventCalendarProps) {
+  const [events, setEvents] = useState<EventWithDetails[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>('calendar');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [filter, setFilter] = useState<EventFilter>('all');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<EventWithDetails | null>(null);
+
+  // Space rules-based event features
+  const isGreekLife = spaceRules?.membership.joinMethod === 'invitation_only';
+  const isResidential = spaceRules?.membership.maxSpaces === 1;
+  const eventsArePublic = spaceRules?.visibility.events === 'public_calendar';
+  const eventsAreCampusVisible = spaceRules?.visibility.events === 'campus_calendar';
+
+  // Customize event calendar based on space type
+  const getEventTypeLabels = () => {
+    if (isGreekLife) return {
+      social: 'Social Events',
+      rush: 'Recruitment',
+      philanthropy: 'Philanthropy',
+      meeting: 'Chapter Meetings'
+    };
+    if (isResidential) return {
+      social: 'Floor Events',
+      maintenance: 'Maintenance',
+      meeting: 'Resident Meetings',
+      community: 'Building Events'
+    };
+    return {
+      academic: 'Academic Events',
+      social: 'Social Events',
+      meeting: 'Meetings',
+      workshop: 'Workshops'
+    };
+  };
+
+  const getCreateEventButtonText = () => {
+    if (isGreekLife) return "Plan Chapter Event";
+    if (isResidential) return "Schedule Community Event";
+    return "Create Event";
+  };
+
+  // Fetch events
   useEffect(() => {
-    const fetchSpaceEvents = async () => {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const mockEvents: SpaceEvent[] = [
-        {
-          id: '1',
-          title: 'Weekly Algorithm Study Session',
-          description: 'Deep dive into dynamic programming with collaborative problem solving using our space tools.',
-          type: 'academic',
-          organizer: {
-            id: '1',
-            name: 'Sarah Chen',
-            handle: 'sarahc',
-            verified: true
-          },
-          datetime: {
-            start: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-            end: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000 + 3 * 60 * 60 * 1000).toISOString(),
-            timezone: 'America/New_York'
-          },
-          location: {
-            type: 'physical',
-            name: 'Lockwood Library Room 301',
-            address: '433 Capen Hall, Buffalo, NY 14260'
-          },
-          capacity: {
-            max: 25,
-            current: 18,
-            waitlist: 3
-          },
-          tools: ['whiteboard', 'study-timer', 'file-share'],
-          tags: ['algorithms', 'data-structures', 'study-group'],
-          visibility: 'space_only',
-          rsvpStatus: 'going',
-          isBookmarked: true,
-          engagement: {
-            going: 18,
-            interested: 7,
-            comments: 5
-          },
-          status: 'upcoming',
-          isRecurring: true,
-          recurringPattern: 'Weekly on Wednesdays',
-          spaceIntegration: {
-            spaceId: spaceId,
-            spaceName: spaceName,
-            isJointEvent: false,
-            spaceTools: ['study-timer', 'whiteboard', 'chat'],
-            autoToolLaunch: true
-          }
-        },
-        {
-          id: '2',
-          title: 'Cross-Space Hackathon Planning',
-          description: 'Joint planning session with Data Science Club and Web Dev Society for upcoming hackathon.',
-          type: 'professional',
-          organizer: {
-            id: '2',
-            name: 'Marcus Johnson',
-            handle: 'marcusj'
-          },
-          datetime: {
-            start: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-            end: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(),
-            timezone: 'America/New_York'
-          },
-          location: {
-            type: 'hybrid',
-            name: 'Davis Hall 101 + Virtual',
-            address: '340 Bell Hall, Buffalo, NY 14260',
-            virtualLink: 'https://zoom.us/j/123456789'
-          },
-          capacity: {
-            max: 50,
-            current: 32,
-            waitlist: 0
-          },
-          tools: ['project-board', 'group-chat', 'file-share'],
-          tags: ['hackathon', 'collaboration', 'planning'],
-          visibility: 'public',
-          rsvpStatus: 'interested',
-          isBookmarked: false,
-          engagement: {
-            going: 32,
-            interested: 15,
-            comments: 8
-          },
-          status: 'upcoming',
-          isRecurring: false,
-          spaceIntegration: {
-            spaceId: spaceId,
-            spaceName: spaceName,
-            isJointEvent: true,
-            partnerSpaces: ['Data Science Club', 'Web Dev Society'],
-            spaceTools: ['project-board', 'shared-docs'],
-            autoToolLaunch: false
-          }
-        },
-        {
-          id: '3',
-          title: 'Technical Interview Prep Workshop',
-          description: 'Mock interviews and coding challenges with real-time feedback using our interview prep tools.',
-          type: 'professional',
-          organizer: {
-            id: '3',
-            name: 'Emma Davis',
-            handle: 'emmad'
-          },
-          datetime: {
-            start: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-            end: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000 + 3 * 60 * 60 * 1000).toISOString(),
-            timezone: 'America/New_York'
-          },
-          location: {
-            type: 'virtual',
-            name: 'Zoom Meeting Room',
-            virtualLink: 'https://zoom.us/j/987654321'
-          },
-          capacity: {
-            max: 30,
-            current: 24,
-            waitlist: 5
-          },
-          tools: ['code-editor', 'timer', 'feedback-forms'],
-          tags: ['interview', 'coding', 'career'],
-          visibility: 'space_only',
-          rsvpStatus: null,
-          isBookmarked: false,
-          engagement: {
-            going: 24,
-            interested: 12,
-            comments: 3
-          },
-          status: 'upcoming',
-          isRecurring: false,
-          spaceIntegration: {
-            spaceId: spaceId,
-            spaceName: spaceName,
-            isJointEvent: false,
-            spaceTools: ['code-editor', 'timer', 'feedback'],
-            autoToolLaunch: true
-          }
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(`/api/spaces/${spaceId}/events`);
+        const data = await response.json();
+
+        if (data.success) {
+          setEvents(data.data || []);
         }
-      ];
-      
-      setEvents(mockEvents);
-      setFilteredEvents(mockEvents);
-      setIsLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchSpaceEvents();
-  }, [spaceId, spaceName]);
+    fetchEvents();
+  }, [spaceId]);
 
-  useEffect(() => {
-    const filtered = events.filter(event => {
-      const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           event.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesType = typeFilter === 'all' || event.type === typeFilter;
-      const matchesStatus = statusFilter === 'all' || event.status === statusFilter;
-      
-      return matchesSearch && matchesType && matchesStatus;
-    });
-    
-    setFilteredEvents(filtered);
-  }, [events, searchQuery, typeFilter, statusFilter]);
+  // Handle RSVP
+  const handleRSVP = async (eventId: string, response: 'yes' | 'no' | 'maybe') => {
+    try {
+      await fetch(`/api/spaces/${spaceId}/events/${eventId}/rsvp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ response })
+      });
 
-  const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
-    
-    const days = [];
-    
-    // Add empty cells for days before the first day of the month
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null);
-    }
-    
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(year, month, day));
-    }
-    
-    return days;
-  };
-
-  const getEventsForDate = (date: Date) => {
-    return filteredEvents.filter(event => {
-      const eventDate = new Date(event.datetime.start);
-      return eventDate.toDateString() === date.toDateString();
-    });
-  };
-
-  const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(prev.getMonth() + (direction === 'next' ? 1 : -1));
-      return newDate;
-    });
-  };
-
-  const formatEventTime = (startTime: string, endTime: string) => {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    
-    return `${start.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
-    })} - ${end.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
-    })}`;
-  };
-
-  const getEventTypeColor = (type: string) => {
-    switch (type) {
-      case 'academic': return 'bg-blue-500';
-      case 'social': return 'bg-pink-500';
-      case 'professional': return 'bg-green-500';
-      case 'recreational': return 'bg-orange-500';
-      case 'official': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      // Update local state
+      setEvents(prev => prev.map(event => {
+        if (event.id === eventId) {
+          return {
+            ...event,
+            userRSVP: response,
+            attendeeCount: response === 'yes'
+              ? event.attendeeCount + (event.userRSVP === 'yes' ? 0 : 1)
+              : event.attendeeCount - (event.userRSVP === 'yes' ? 1 : 0)
+          };
+        }
+        return event;
+      }));
+    } catch (error) {
+      console.error('Failed to RSVP:', error);
     }
   };
 
-  const handleEventClick = (event: SpaceEvent) => {
-    setSelectedEvent(event);
-    setShowEventDetails(true);
-    if (onEventClick) {
-      onEventClick(event);
+  // Filter events
+  const filteredEvents = events.filter(event => {
+    switch (filter) {
+      case 'upcoming':
+        return new Date(event.startTime) > new Date();
+      case 'attending':
+        return event.userRSVP === 'yes';
+      case 'organizing':
+        return event.organizer.id === 'current-user-id'; // Replace with actual user ID
+      default:
+        return true;
     }
+  });
+
+  // Get events for current month (calendar view)
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
+  const calendarDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
+
+  const getEventsForDay = (day: Date) => {
+    return filteredEvents.filter(event =>
+      isSameDay(new Date(event.startTime), day)
+    );
   };
 
-  const handleRSVP = (eventId: string, status: 'going' | 'interested' | 'not_going') => {
-    setEvents(prev => prev.map(event => 
-      event.id === eventId 
-        ? { ...event, rsvpStatus: status }
-        : event
-    ));
-  };
-
-  if (isLoading) {
+  if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
-          <p className="text-white">Loading space calendar...</p>
+      <div className="p-6">
+        <div className="animate-pulse space-y-4">
+          <div className="bg-gray-800 h-8 rounded w-1/3"></div>
+          <div className="bg-gray-800 h-64 rounded"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">Space Calendar</h2>
-          <p className="text-zinc-400">Events and activities for {spaceName}</p>
+          <h3 className="text-xl font-semibold text-white mb-1">Events</h3>
+          <p className="text-gray-400 text-sm">Coordinate and attend space activities</p>
         </div>
-        
+
         <div className="flex items-center space-x-3">
-          <div className="flex items-center bg-zinc-800 rounded-lg p-1">
-            {['month', 'week', 'day', 'list'].map((mode) => (
-              <button
-                key={mode}
-                onClick={() => setViewMode(mode as any)}
-                className={`px-3 py-1 text-sm rounded-md transition-colors capitalize ${
-                  viewMode === mode
-                    ? 'bg-hive-gold text-hive-obsidian font-medium'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                {mode}
-              </button>
-            ))}
-          </div>
-          
-          {(userRole === 'admin' || userRole === 'moderator') && (
-            <Button 
-              onClick={onCreateEvent}
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+          {/* View Toggle */}
+          <div className="flex bg-gray-800 rounded-lg p-1">
+            <button
+              onClick={() => setViewMode('calendar')}
+              className={`p-2 rounded-md transition-colors ${
+                viewMode === 'calendar' ? 'bg-hive-gold text-black' : 'text-gray-400 hover:text-white'
+              }`}
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Grid3X3 className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`p-2 rounded-md transition-colors ${
+                viewMode === 'list' ? 'bg-hive-gold text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              <List className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Filter */}
+          <div className="relative">
+            <HiveButton variant="secondary" size="sm">
+              <Filter className="w-4 h-4 mr-2" />
+              {filter === 'all' ? 'All Events' :
+               filter === 'upcoming' ? 'Upcoming' :
+               filter === 'attending' ? 'Attending' : 'Organizing'}
+            </HiveButton>
+            {/* Simplified filter - would need proper dropdown */}
+          </div>
+
+          {/* Create Event */}
+          {canCreateEvents && (
+            <HiveButton
+              onClick={() => setShowCreateModal(true)}
+              className="bg-hive-gold text-black hover:bg-yellow-400"
+            >
+              <Plus className="w-4 h-4 mr-2" />
               Create Event
-            </Button>
+            </HiveButton>
           )}
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
-            placeholder="Search events..."
-            className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none w-full"
-          />
-        </div>
-        
-        <select
-          value={typeFilter}
-          onChange={(e: React.ChangeEvent) => setTypeFilter(e.target.value)}
-          className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
-        >
-          <option value="all">All Types</option>
-          <option value="academic">Academic</option>
-          <option value="social">Social</option>
-          <option value="professional">Professional</option>
-          <option value="recreational">Recreational</option>
-          <option value="official">Official</option>
-        </select>
-        
-        <select
-          value={statusFilter}
-          onChange={(e: React.ChangeEvent) => setStatusFilter(e.target.value)}
-          className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:border-hive-gold focus:outline-none"
-        >
-          <option value="all">All Status</option>
-          <option value="upcoming">Upcoming</option>
-          <option value="ongoing">Ongoing</option>
-          <option value="completed">Completed</option>
-        </select>
-        
-        <Button variant="secondary" size="sm">
-          <Download className="h-4 w-4 mr-2" />
-          Export
-        </Button>
-      </div>
-
-      {/* Calendar Views */}
-      {viewMode === 'month' && (
-        <Card className="p-6 bg-zinc-800/50 border-zinc-700">
-          {/* Month Navigation */}
+      {/* Calendar View */}
+      {viewMode === 'calendar' && (
+        <div>
+          {/* Calendar Header */}
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold text-white">
-              {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-            </h3>
+            <h4 className="text-lg font-semibold text-white">
+              {format(currentDate, 'MMMM yyyy')}
+            </h4>
             <div className="flex items-center space-x-2">
-              <Button 
-                variant="secondary" 
+              <HiveButton
+                variant="secondary"
                 size="sm"
-                onClick={() => navigateMonth('prev')}
+                onClick={() => setCurrentDate(subMonths(currentDate, 1))}
               >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
+                <ChevronLeft className="w-4 h-4" />
+              </HiveButton>
+              <HiveButton
                 variant="secondary"
                 size="sm"
                 onClick={() => setCurrentDate(new Date())}
               >
                 Today
-              </Button>
-              <Button 
-                variant="secondary" 
+              </HiveButton>
+              <HiveButton
+                variant="secondary"
                 size="sm"
-                onClick={() => navigateMonth('next')}
+                onClick={() => setCurrentDate(addMonths(currentDate, 1))}
               >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+                <ChevronRight className="w-4 h-4" />
+              </HiveButton>
             </div>
           </div>
-          
+
           {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-1">
-            {/* Day Headers */}
+          <div className="grid grid-cols-7 gap-2">
+            {/* Day headers */}
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-              <div key={day} className="p-2 text-center text-sm font-medium text-zinc-400">
+              <div key={day} className="p-2 text-center text-sm font-medium text-gray-400">
                 {day}
               </div>
             ))}
-            
-            {/* Calendar Days */}
-            {getDaysInMonth(currentDate).map((date, index) => {
-              if (!date) {
-                return <div key={index} className="p-2 min-h-[80px]" />;
-              }
-              
-              const dayEvents = getEventsForDate(date);
-              const isToday = date.toDateString() === new Date().toDateString();
-              
+
+            {/* Calendar days */}
+            {calendarDays.map((day) => {
+              const dayEvents = getEventsForDay(day);
+              const isCurrentDay = isToday(day);
+
               return (
-                <div 
-                  key={index} 
-                  className={`p-2 min-h-[80px] border border-zinc-700 hover:bg-zinc-800/50 transition-colors ${
-                    isToday ? 'bg-hive-gold/10 border-hive-gold/30' : ''
+                <div
+                  key={day.toISOString()}
+                  className={`min-h-24 p-2 border border-gray-800 rounded-lg ${
+                    isCurrentDay ? 'bg-hive-gold/10 border-hive-gold/30' : 'bg-gray-900/50'
                   }`}
                 >
                   <div className={`text-sm font-medium mb-1 ${
-                    isToday ? 'text-hive-gold' : 'text-white'
+                    isCurrentDay ? 'text-hive-gold' : 'text-white'
                   }`}>
-                    {date.getDate()}
+                    {format(day, 'd')}
                   </div>
-                  
+
                   <div className="space-y-1">
                     {dayEvents.slice(0, 3).map((event) => (
                       <div
                         key={event.id}
-                        onClick={() => handleEventClick(event)}
-                        className={`text-xs p-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getEventTypeColor(event.type)} text-white`}
+                        onClick={() => setSelectedEvent(event)}
+                        className="text-xs p-1 bg-blue-500/20 text-blue-300 rounded cursor-pointer hover:bg-blue-500/30 transition-colors truncate"
                       >
-                        <div className="truncate font-medium">{event.title}</div>
-                        <div className="truncate opacity-75">
-                          {formatEventTime(event.datetime.start, event.datetime.end)}
-                        </div>
+                        {format(new Date(event.startTime), 'HH:mm')} {event.title}
                       </div>
                     ))}
+
                     {dayEvents.length > 3 && (
-                      <div className="text-xs text-zinc-400 text-center">
+                      <div className="text-xs text-gray-400">
                         +{dayEvents.length - 3} more
                       </div>
                     )}
@@ -529,288 +344,421 @@ export function SpaceEventCalendar({
               );
             })}
           </div>
-        </Card>
-      )}
-
-      {viewMode === 'list' && (
-        <div className="space-y-4">
-          {filteredEvents.map((event) => (
-            <Card 
-              key={event.id} 
-              className="p-6 bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/70 transition-colors cursor-pointer"
-              onClick={() => handleEventClick(event)}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-start space-x-4 flex-1">
-                  <div className={`w-12 h-12 ${getEventTypeColor(event.type)} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                    <Calendar className="h-6 w-6 text-white" />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h3 className="text-lg font-semibold text-white">{event.title}</h3>
-                      {event.isRecurring && (
-                        <Badge variant="skill-tag" className="text-xs">
-                          Recurring
-                        </Badge>
-                      )}
-                      {event.spaceIntegration.isJointEvent && (
-                        <Badge variant="building-tools" className="text-xs">
-                          Joint Event
-                        </Badge>
-                      )}
-                      {event.isBookmarked && <Star className="h-4 w-4 text-hive-gold fill-current" />}
-                    </div>
-                    
-                    <p className="text-zinc-400 text-sm mb-3 line-clamp-2">{event.description}</p>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-zinc-400" />
-                        <div>
-                          <div className="text-white font-medium">
-                            {new Date(event.datetime.start).toLocaleDateString()}
-                          </div>
-                          <div className="text-zinc-400">
-                            {formatEventTime(event.datetime.start, event.datetime.end)}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="h-4 w-4 text-zinc-400" />
-                        <div>
-                          <div className="text-white font-medium capitalize">
-                            {event.location.type}
-                          </div>
-                          <div className="text-zinc-400 truncate">{event.location.name}</div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Users className="h-4 w-4 text-zinc-400" />
-                        <div>
-                          <div className="text-white font-medium">
-                            {event.engagement.going}/{event.capacity.max}
-                          </div>
-                          <div className="text-zinc-400">attending</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-2 flex-shrink-0">
-                  {event.spaceIntegration.spaceTools.length > 0 && (
-                    <Badge variant="skill-tag" className="text-xs">
-                      {event.spaceIntegration.spaceTools.length} tools
-                    </Badge>
-                  )}
-                  <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white">
-                    <ExternalLink className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between pt-3 border-t border-zinc-700">
-                <div className="flex items-center space-x-2 text-sm text-zinc-400">
-                  <span>by @{event.organizer.handle}</span>
-                  {event.organizer.verified && <Star className="h-3 w-3 text-hive-gold fill-current" />}
-                  <Badge variant="skill-tag" className="text-xs capitalize">
-                    {event.type}
-                  </Badge>
-                </div>
-                
-                <div className="flex items-center space-x-4 text-sm text-zinc-400">
-                  <div className="flex items-center space-x-1">
-                    <Users className="h-3 w-3" />
-                    <span>{event.engagement.going}</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Star className="h-3 w-3" />
-                    <span>{event.engagement.interested}</span>
-                  </div>
-                  {event.spaceIntegration.autoToolLaunch && (
-                    <Badge variant="building-tools" className="text-xs">
-                      Auto-Launch Tools
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </Card>
-          ))}
         </div>
       )}
 
-      {/* Event Details Modal */}
-      <HiveModal
-        isOpen={showEventDetails}
-        onClose={() => setShowEventDetails(false)}
-        title={selectedEvent?.title || ''}
-        size="lg"
-      >
-        {selectedEvent && (
-          <div className="space-y-6">
-            {/* Event Header */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Badge variant="skill-tag" className="capitalize">
-                    {selectedEvent.type}
-                  </Badge>
-                  {selectedEvent.spaceIntegration.isJointEvent && (
-                    <Badge variant="building-tools">Joint Event</Badge>
-                  )}
-                  {selectedEvent.isRecurring && (
-                    <Badge variant="skill-tag">Recurring</Badge>
-                  )}
-                </div>
-                <p className="text-zinc-300 mb-4">{selectedEvent.description}</p>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                {selectedEvent.isBookmarked && <Star className="h-5 w-5 text-hive-gold fill-current" />}
-                <Button variant="ghost" size="sm">
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            
-            {/* Event Details Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-medium text-white mb-2">Date & Time</h4>
-                  <div className="flex items-center space-x-2 text-sm text-zinc-300">
-                    <Clock className="h-4 w-4 text-zinc-400" />
-                    <div>
-                      <div>{new Date(selectedEvent.datetime.start).toLocaleDateString()}</div>
-                      <div className="text-zinc-400">
-                        {formatEventTime(selectedEvent.datetime.start, selectedEvent.datetime.end)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-white mb-2">Location</h4>
-                  <div className="flex items-center space-x-2 text-sm text-zinc-300">
-                    <MapPin className="h-4 w-4 text-zinc-400" />
-                    <div>
-                      <div className="capitalize">{selectedEvent.location.type}</div>
-                      <div className="text-zinc-400">{selectedEvent.location.name}</div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-white mb-2">Capacity</h4>
-                  <div className="flex items-center space-x-2 text-sm text-zinc-300">
-                    <Users className="h-4 w-4 text-zinc-400" />
-                    <div>
-                      <div>{selectedEvent.engagement.going}/{selectedEvent.capacity.max} attending</div>
-                      {selectedEvent.capacity.waitlist > 0 && (
-                        <div className="text-zinc-400">{selectedEvent.capacity.waitlist} on waitlist</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-medium text-white mb-2">Space Integration</h4>
-                  <div className="space-y-2">
-                    {selectedEvent.spaceIntegration.spaceTools.length > 0 && (
-                      <div>
-                        <span className="text-sm text-zinc-400">Available Tools:</span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {selectedEvent.spaceIntegration.spaceTools.map((tool) => (
-                            <Badge key={tool} variant="skill-tag" className="text-xs">
-                              {tool}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {selectedEvent.spaceIntegration.autoToolLaunch && (
-                      <div className="flex items-center space-x-2 text-sm text-green-400">
-                        <CheckCircle className="h-4 w-4" />
-                        <span>Tools will auto-launch when event starts</span>
-                      </div>
-                    )}
-                    
-                    {selectedEvent.spaceIntegration.partnerSpaces && (
-                      <div>
-                        <span className="text-sm text-zinc-400">Partner Spaces:</span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {selectedEvent.spaceIntegration.partnerSpaces.map((space) => (
-                            <Badge key={space} variant="building-tools" className="text-xs">
-                              {space}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-white mb-2">Organizer</h4>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-zinc-600 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-medium">
-                        {selectedEvent.organizer.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                    <div>
-                      <div className="text-white text-sm">{selectedEvent.organizer.name}</div>
-                      <div className="text-zinc-400 text-xs">@{selectedEvent.organizer.handle}</div>
-                    </div>
-                    {selectedEvent.organizer.verified && (
-                      <Star className="h-4 w-4 text-hive-gold fill-current" />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* RSVP Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant={selectedEvent.rsvpStatus === 'going' ? 'primary' : 'outline'}
-                  size="sm"
-                  onClick={() => handleRSVP(selectedEvent.id, 'going')}
-                  className={selectedEvent.rsvpStatus === 'going' ? 'bg-green-500 hover:bg-green-600' : ''}
+      {/* List View */}
+      {viewMode === 'list' && (
+        <div className="space-y-4">
+          {filteredEvents.length === 0 ? (
+            <div className="text-center py-12">
+              <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h4 className="text-lg font-semibold text-white mb-2">No events found</h4>
+              <p className="text-gray-400 mb-4">
+                {filter === 'all'
+                  ? "No events have been created yet"
+                  : `No events match your current filter`
+                }
+              </p>
+              {canCreateEvents && filter === 'all' && (
+                <HiveButton
+                  onClick={() => setShowCreateModal(true)}
+                  className="bg-hive-gold text-black hover:bg-yellow-400"
                 >
-                  Going
-                </Button>
-                <Button
-                  variant={selectedEvent.rsvpStatus === 'interested' ? 'primary' : 'outline'}
-                  size="sm"
-                  onClick={() => handleRSVP(selectedEvent.id, 'interested')}
-                  className={selectedEvent.rsvpStatus === 'interested' ? 'bg-blue-500 hover:bg-blue-600' : ''}
-                >
-                  Interested
-                </Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create First Event
+                </HiveButton>
+              )}
+            </div>
+          ) : (
+            filteredEvents.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onRSVP={handleRSVP}
+                onView={() => setSelectedEvent(event)}
+                canEdit={canCreateEvents}
+              />
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Event Detail Modal */}
+      {selectedEvent && (
+        <EventDetailModal
+          event={selectedEvent}
+          isOpen={!!selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          onRSVP={handleRSVP}
+          canEdit={canCreateEvents}
+        />
+      )}
+
+      {/* Create Event Modal */}
+      {showCreateModal && (
+        <CreateEventModal
+          spaceId={spaceId}
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onEventCreated={(newEvent) => {
+            setEvents(prev => [...prev, newEvent]);
+            setShowCreateModal(false);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+// Event Card Component
+function EventCard({
+  event,
+  onRSVP,
+  onView,
+  canEdit
+}: {
+  event: EventWithDetails;
+  onRSVP: (eventId: string, response: 'yes' | 'no' | 'maybe') => void;
+  onView: () => void;
+  canEdit: boolean;
+}) {
+  const isPast = new Date(event.endTime) < new Date();
+  const isUpcoming = new Date(event.startTime) > new Date();
+
+  return (
+    <HiveCard className="p-4 hover:border-hive-gold/50 transition-colors">
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1">
+          <div className="flex items-center space-x-2 mb-1">
+            <h4 className="font-semibold text-white cursor-pointer hover:text-hive-gold" onClick={onView}>
+              {event.title}
+            </h4>
+            {isPast && <Badge variant="secondary" className="text-xs">Past</Badge>}
+            {event.isRecurring && <Repeat className="w-4 h-4 text-gray-400" />}
+            {event.isVirtual && <Video className="w-4 h-4 text-blue-400" />}
+          </div>
+
+          <div className="flex items-center space-x-4 text-sm text-gray-400 mb-2">
+            <div className="flex items-center space-x-1">
+              <Clock className="w-4 h-4" />
+              <span>
+                {format(new Date(event.startTime), 'MMM d, HH:mm')} - {format(new Date(event.endTime), 'HH:mm')}
+              </span>
+            </div>
+
+            {event.location && (
+              <div className="flex items-center space-x-1">
+                <MapPin className="w-4 h-4" />
+                <span>{event.location}</span>
               </div>
-              
-              <div className="flex items-center space-x-2">
-                <Button variant="secondary" size="sm">
-                  <Bell className="h-4 w-4 mr-1" />
-                  Remind Me
-                </Button>
-                <Button variant="secondary" size="sm">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  Add to Calendar
-                </Button>
+            )}
+          </div>
+
+          {event.description && (
+            <p className="text-sm text-gray-300 mb-3 line-clamp-2">{event.description}</p>
+          )}
+
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-1 text-sm text-gray-400">
+              <Users className="w-4 h-4" />
+              <span>{event.attendeeCount} attending</span>
+            </div>
+
+            <div className="flex items-center space-x-1 text-sm text-gray-400">
+              <Users className="w-4 h-4" />
+              <span>by {event.organizer.fullName}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2 ml-4">
+          {/* RSVP Status */}
+          {!isPast && (
+            <div className="flex bg-gray-800 rounded-lg p-1">
+              <button
+                onClick={() => onRSVP(event.id, 'yes')}
+                className={`p-1 rounded text-xs transition-colors ${
+                  event.userRSVP === 'yes'
+                    ? 'bg-green-500 text-white'
+                    : 'text-gray-400 hover:text-green-400'
+                }`}
+                title="Going"
+              >
+                <Check className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => onRSVP(event.id, 'maybe')}
+                className={`p-1 rounded text-xs transition-colors ${
+                  event.userRSVP === 'maybe'
+                    ? 'bg-yellow-500 text-white'
+                    : 'text-gray-400 hover:text-yellow-400'
+                }`}
+                title="Maybe"
+              >
+                <AlertCircle className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => onRSVP(event.id, 'no')}
+                className={`p-1 rounded text-xs transition-colors ${
+                  event.userRSVP === 'no'
+                    ? 'bg-red-500 text-white'
+                    : 'text-gray-400 hover:text-red-400'
+                }`}
+                title="Not Going"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* Actions */}
+          <button
+            onClick={onView}
+            className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
+            title="View details"
+          >
+            <MoreHorizontal className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </HiveCard>
+  );
+}
+
+// Event Detail Modal Component
+function EventDetailModal({
+  event,
+  isOpen,
+  onClose,
+  onRSVP,
+  canEdit
+}: {
+  event: EventWithDetails;
+  isOpen: boolean;
+  onClose: () => void;
+  onRSVP: (eventId: string, response: 'yes' | 'no' | 'maybe') => void;
+  canEdit: boolean;
+}) {
+  const isPast = new Date(event.endTime) < new Date();
+
+  return (
+    <HiveModal open={isOpen} onOpenChange={onClose} className="max-w-2xl">
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-2">{event.title}</h2>
+            <div className="flex items-center space-x-4 text-sm text-gray-400">
+              <div className="flex items-center space-x-1">
+                <Clock className="w-4 h-4" />
+                <span>
+                  {format(new Date(event.startTime), 'EEEE, MMMM d, yyyy • HH:mm')} - {format(new Date(event.endTime), 'HH:mm')}
+                </span>
               </div>
             </div>
           </div>
+
+          {canEdit && (
+            <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors">
+              <MoreHorizontal className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Event Info */}
+        <div className="space-y-4 mb-6">
+          {event.location && (
+            <div className="flex items-center space-x-2">
+              <MapPin className="w-5 h-5 text-gray-400" />
+              <span className="text-white">{event.location}</span>
+            </div>
+          )}
+
+          <div className="flex items-center space-x-2">
+            <Users className="w-5 h-5 text-gray-400" />
+            <span className="text-white">{event.attendeeCount} people attending</span>
+          </div>
+
+          {event.description && (
+            <div>
+              <h4 className="font-medium text-white mb-2">Description</h4>
+              <p className="text-gray-300 whitespace-pre-wrap">{event.description}</p>
+            </div>
+          )}
+        </div>
+
+        {/* RSVP Section */}
+        {!isPast && (
+          <div className="mb-6">
+            <h4 className="font-medium text-white mb-3">Will you attend?</h4>
+            <div className="flex space-x-3">
+              <HiveButton
+                variant={event.userRSVP === 'yes' ? 'default' : 'secondary'}
+                onClick={() => onRSVP(event.id, 'yes')}
+                className={event.userRSVP === 'yes' ? 'bg-green-500 hover:bg-green-600' : ''}
+              >
+                <Check className="w-4 h-4 mr-2" />
+                Going
+              </HiveButton>
+              <HiveButton
+                variant={event.userRSVP === 'maybe' ? 'default' : 'secondary'}
+                onClick={() => onRSVP(event.id, 'maybe')}
+                className={event.userRSVP === 'maybe' ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
+              >
+                <AlertCircle className="w-4 h-4 mr-2" />
+                Maybe
+              </HiveButton>
+              <HiveButton
+                variant={event.userRSVP === 'no' ? 'default' : 'secondary'}
+                onClick={() => onRSVP(event.id, 'no')}
+                className={event.userRSVP === 'no' ? 'bg-red-500 hover:bg-red-600' : ''}
+              >
+                <X className="w-4 h-4 mr-2" />
+                Can't Go
+              </HiveButton>
+            </div>
+          </div>
         )}
-      </HiveModal>
-    </div>
+
+        {/* Attendees */}
+        <div>
+          <h4 className="font-medium text-white mb-3">Attendees ({event.attendeeCount})</h4>
+          <div className="flex flex-wrap gap-2">
+            {event.rsvps
+              .filter(rsvp => rsvp.response === 'yes')
+              .slice(0, 12)
+              .map((rsvp) => (
+                <div key={rsvp.id} className="flex items-center space-x-2 bg-gray-800 rounded-lg p-2">
+                  <Avatar
+                    src={rsvp.user?.avatarUrl}
+                    fallback={rsvp.user?.fullName?.[0]}
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm text-white">{rsvp.user?.fullName}</span>
+                </div>
+              ))}
+
+            {event.attendeeCount > 12 && (
+              <div className="flex items-center justify-center bg-gray-800 rounded-lg p-2 min-w-16">
+                <span className="text-sm text-gray-400">+{event.attendeeCount - 12}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </HiveModal>
+  );
+}
+
+// Create Event Modal Component (simplified version)
+function CreateEventModal({
+  spaceId,
+  isOpen,
+  onClose,
+  onEventCreated
+}: {
+  spaceId: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onEventCreated: (event: EventWithDetails) => void;
+}) {
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    location: '',
+    startTime: '',
+    endTime: '',
+    isVirtual: false
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`/api/spaces/${spaceId}/events`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        const newEvent = await response.json();
+        onEventCreated(newEvent.data);
+      }
+    } catch (error) {
+      console.error('Failed to create event:', error);
+    }
+  };
+
+  return (
+    <HiveModal open={isOpen} onOpenChange={onClose} className="max-w-lg">
+      <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <h2 className="text-2xl font-bold text-white mb-4">Create Event</h2>
+
+        <div>
+          <label className="block text-sm font-medium text-white mb-2">Event Title</label>
+          <HiveInput
+            value={formData.title}
+            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            placeholder="Enter event title"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-white mb-2">Description</label>
+          <textarea
+            value={formData.description}
+            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            placeholder="Describe your event"
+            rows={3}
+            className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-hive-gold focus:outline-none resize-none"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-white mb-2">Start Time</label>
+            <input
+              type="datetime-local"
+              value={formData.startTime}
+              onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-white mb-2">End Time</label>
+            <input
+              type="datetime-local"
+              value={formData.endTime}
+              onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-white mb-2">Location</label>
+          <HiveInput
+            value={formData.location}
+            onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+            placeholder="Event location or virtual link"
+          />
+        </div>
+
+        <div className="flex justify-end space-x-3 pt-4">
+          <HiveButton type="button" variant="secondary" onClick={onClose}>
+            Cancel
+          </HiveButton>
+          <HiveButton type="submit" className="bg-hive-gold text-black hover:bg-yellow-400">
+            Create Event
+          </HiveButton>
+        </div>
+      </form>
+    </HiveModal>
   );
 }

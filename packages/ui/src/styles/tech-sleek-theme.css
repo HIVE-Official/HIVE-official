@@ -1,0 +1,350 @@
+/* HIVE Tech-Sleek Theme Implementation */
+/* Gold (#FFD700) + Black + White */
+
+@layer hive-theme {
+  :root {
+    /* ==================== CORE TRINITY ==================== */
+    --gold: #FFD700;
+    --black: #000000;
+    --white: #FFFFFF;
+
+    /* ==================== GOLD SPECTRUM ==================== */
+    --gold-50: #FFFEF5;   /* Barely there */
+    --gold-100: #FFF9E6;  /* Whisper */
+    --gold-200: #FFECB3;  /* Soft glow */
+    --gold-300: #FFE082;  /* Warm light */
+    --gold-400: #FFD700;  /* PURE GOLD - Primary */
+    --gold-500: #FFC107;  /* Deep gold */
+    --gold-600: #FFB300;  /* Rich gold */
+    --gold-700: #FFA000;  /* Burnt gold */
+    --gold-800: #FF8F00;  /* Dark amber */
+    --gold-900: #FF6F00;  /* Deep amber */
+
+    /* ==================== BLACK LAYERS ==================== */
+    --black-50: rgba(0,0,0,0.02);   /* Barely visible */
+    --black-100: rgba(0,0,0,0.05);  /* Mist */
+    --black-200: rgba(0,0,0,0.10);  /* Smoke */
+    --black-300: rgba(0,0,0,0.20);  /* Shadow */
+    --black-400: rgba(0,0,0,0.30);  /* Light charcoal */
+    --black-500: rgba(0,0,0,0.50);  /* Medium */
+    --black-600: rgba(0,0,0,0.70);  /* Charcoal */
+    --black-700: rgba(0,0,0,0.85);  /* Deep charcoal */
+    --black-800: rgba(0,0,0,0.95);  /* Near black */
+    --black-900: #000000;            /* TRUE BLACK */
+
+    /* ==================== WHITE LAYERS ==================== */
+    --white-50: rgba(255,255,255,0.02);   /* Ghost */
+    --white-100: rgba(255,255,255,0.05);  /* Whisper */
+    --white-200: rgba(255,255,255,0.10);  /* Frost */
+    --white-300: rgba(255,255,255,0.20);  /* Mist */
+    --white-400: rgba(255,255,255,0.30);  /* Fog */
+    --white-500: rgba(255,255,255,0.50);  /* Cloud */
+    --white-600: rgba(255,255,255,0.70);  /* Light */
+    --white-700: rgba(255,255,255,0.85);  /* Bright */
+    --white-800: rgba(255,255,255,0.95);  /* Near white */
+    --white-900: #FFFFFF;                 /* TRUE WHITE */
+
+    /* ==================== SEMANTIC ASSIGNMENTS ==================== */
+
+    /* Backgrounds */
+    --bg-void: var(--black-900);
+    --bg-primary: var(--black-900);
+    --bg-secondary: var(--white-50);
+    --bg-tertiary: var(--white-100);
+    --bg-elevated: var(--white-200);
+    --bg-overlay: rgba(0, 0, 0, 0.85);
+    --bg-gold: var(--gold-400);
+
+    /* Text Colors */
+    --text-primary: var(--white-900);
+    --text-secondary: var(--white-700);
+    --text-tertiary: var(--white-600);
+    --text-muted: var(--white-500);
+    --text-disabled: var(--white-400);
+    --text-gold: var(--gold-400);
+    --text-on-gold: var(--black-900);
+
+    /* Borders */
+    --border-subtle: var(--white-100);
+    --border-default: var(--white-200);
+    --border-strong: var(--white-300);
+    --border-gold: rgba(255, 215, 0, 0.3);
+    --border-gold-strong: rgba(255, 215, 0, 0.5);
+
+    /* Interactive States */
+    --hover-bg: var(--white-100);
+    --active-bg: var(--white-200);
+    --focus-ring: var(--gold-400);
+    --selection-bg: rgba(255, 215, 0, 0.2);
+  }
+
+  /* ==================== COMPONENT STYLES ==================== */
+
+  /* Premium Button */
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+    color: var(--black-900);
+    border: 1px solid var(--gold-400);
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.12),
+      0 1px 2px rgba(0, 0, 0, 0.24),
+      0 0 20px rgba(255, 215, 0, 0.1);
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.16),
+      0 3px 6px rgba(0, 0, 0, 0.23),
+      0 0 30px rgba(255, 215, 0, 0.3);
+  }
+
+  .btn-gold:active {
+    transform: translateY(0);
+  }
+
+  /* Ghost Button */
+  .btn-ghost {
+    background: transparent;
+    color: var(--white-900);
+    border: 1px solid var(--white-300);
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-ghost:hover {
+    background: var(--white-100);
+    border-color: var(--gold-400);
+    color: var(--gold-400);
+  }
+
+  /* Sleek Card */
+  .card-sleek {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-sleek:hover {
+    border-color: var(--border-gold);
+    box-shadow:
+      0 10px 40px rgba(0, 0, 0, 0.8),
+      0 0 60px rgba(255, 215, 0, 0.05),
+      inset 0 0 30px rgba(255, 215, 0, 0.01);
+    transform: translateY(-4px);
+  }
+
+  /* Gold Accent Bar */
+  .accent-bar {
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--gold-400) 20%,
+      var(--gold-400) 80%,
+      transparent
+    );
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* Text Glow Effect */
+  .text-gold-glow {
+    color: var(--gold-400);
+    text-shadow:
+      0 0 10px rgba(255, 215, 0, 0.5),
+      0 0 20px rgba(255, 215, 0, 0.3),
+      0 0 30px rgba(255, 215, 0, 0.1);
+  }
+
+  /* Input Field */
+  .input-sleek {
+    background: var(--white-50);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .input-sleek:hover {
+    background: var(--white-100);
+    border-color: var(--white-200);
+  }
+
+  .input-sleek:focus {
+    outline: none;
+    border-color: var(--gold-400);
+    box-shadow:
+      0 0 0 3px rgba(255, 215, 0, 0.1),
+      0 0 20px rgba(255, 215, 0, 0.05);
+  }
+
+  /* Navigation Active State */
+  .nav-item {
+    color: var(--text-secondary);
+    position: relative;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .nav-item:hover {
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    color: var(--gold-400);
+  }
+
+  .nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 16px;
+    height: 2px;
+    background: var(--gold-400);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  /* Badge */
+  .badge-gold {
+    background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+    color: var(--black-900);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+  }
+
+  /* Toggle Switch */
+  .toggle-sleek {
+    width: 48px;
+    height: 24px;
+    background: var(--white-200);
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .toggle-sleek.active {
+    background: var(--gold-400);
+  }
+
+  .toggle-sleek::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--white-900);
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .toggle-sleek.active::after {
+    transform: translateX(24px);
+    background: var(--black-900);
+  }
+
+  /* Progress Bar */
+  .progress-track {
+    height: 4px;
+    background: var(--white-100);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-400), var(--gold-500));
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    animation: progress-glow 1.5s ease-in-out infinite;
+  }
+
+  /* ==================== ANIMATIONS ==================== */
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes progress-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+  }
+
+  /* ==================== UTILITY CLASSES ==================== */
+
+  .bg-black { background: var(--black-900); }
+  .bg-white { background: var(--white-900); }
+  .bg-gold { background: var(--gold-400); }
+
+  .text-black { color: var(--black-900); }
+  .text-white { color: var(--white-900); }
+  .text-gold { color: var(--gold-400); }
+
+  .border-gold { border-color: var(--gold-400); }
+  .border-white { border-color: var(--white-900); }
+  .border-black { border-color: var(--black-900); }
+
+  /* Gradient Utilities */
+  .gradient-gold {
+    background: linear-gradient(135deg, var(--gold-400), var(--gold-600));
+  }
+
+  .gradient-shine {
+    background: linear-gradient(
+      135deg,
+      var(--gold-400) 0%,
+      var(--gold-100) 50%,
+      var(--gold-400) 100%
+    );
+    background-size: 200% 200%;
+    animation: shine 3s linear infinite;
+  }
+
+  @keyframes shine {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  /* Glass Effect */
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--white-200);
+  }
+
+  .glass-gold {
+    background: rgba(255, 215, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-gold);
+  }
+}

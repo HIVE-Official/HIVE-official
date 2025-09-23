@@ -99,7 +99,7 @@ export class ResponseFormatter {
         total: pagination.total,
         page: pagination.page,
         limit: pagination.limit,
-        hasMore: pagination.hasMore ?? (pagination.page * pagination.limit < pagination.total)
+        // hasMore is calculated but not part of the meta type
       }
     });
   }

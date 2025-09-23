@@ -49,6 +49,29 @@ const ShellContext = createContext<ShellContextType | null>(null)
 export function useShell(): ShellContextType {
   const context = useContext(ShellContext)
   if (!context) {
+    // During SSR or when context is not available, provide a safe fallback
+    if (typeof window === 'undefined') {
+      // SSR fallback - provide minimal shell state without hooks
+      return {
+        isLoading: false,
+        error: null,
+        sidebarOpen: false,
+        commandPaletteOpen: false,
+        notifications: [],
+        theme: 'system',
+        user: null,
+        setLoading: () => {},
+        setError: () => {},
+        setSidebarOpen: () => {},
+        setCommandPaletteOpen: () => {},
+        addNotification: () => {},
+        removeNotification: () => {},
+        markNotificationRead: () => {},
+        clearNotifications: () => {},
+        setTheme: () => {},
+        setUser: () => {},
+      }
+    }
     // Return a default implementation if no provider
     return createDefaultShellContext()
   }

@@ -1,32 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Button,
-  Badge,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  Textarea,
-  Alert,
-  AlertDescription,
-  Progress,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from '@hive/ui';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Textarea, Alert, AlertDescription, Progress, Tabs, TabsContent, TabsList, TabsTrigger,  } from '@hive/ui';
 import {
   AlertTriangle,
   Eye,
@@ -44,8 +19,8 @@ import {
   User,
   Calendar,
   Flag,
-  Shield
-} from 'lucide-react';
+  Shield,
+} from "lucide-react";
 
 interface ContentReport {
   id: string;
@@ -56,19 +31,26 @@ interface ContentReport {
     trustScore: number;
   };
   contentId: string;
-  contentType: 'post' | 'comment' | 'message' | 'tool' | 'space' | 'profile' | 'event';
+  contentType:
+    | "post"
+    | "comment"
+    | "message"
+    | "tool"
+    | "space"
+    | "profile"
+    | "event";
   contentOwnerId: string;
   spaceId?: string;
   category: string;
   subCategory?: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: "low" | "medium" | "high" | "critical";
   description: string;
   evidence?: {
     screenshots: string[];
     urls: string[];
     additionalContext: string;
   };
-  status: 'pending' | 'under_review' | 'resolved' | 'dismissed' | 'escalated';
+  status: "pending" | "under_review" | "resolved" | "dismissed" | "escalated";
   assignedModerator?: string;
   aiAnalysis?: {
     confidence: number;
@@ -91,15 +73,18 @@ export function ModerationQueue() {
   const [reports, setReports] = useState<ContentReport[]>([]);
   const [stats, setStats] = useState<ModerationStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedReport, setSelectedReport] = useState<ContentReport | null>(null);
+  const [selectedReport, setSelectedReport] = useState<ContentReport | null>(
+    null
+  );
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [isProcessingAction, setIsProcessingAction] = useState(false);
-  
+
   // Filters
-  const [statusFilter, setStatusFilter] = useState('pending');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [severityFilter, setSeverityFilter] = useState('all');
-  const [assignmentFilter, setAssignmentFilter] = useState('all');
-  
+  const [statusFilter, setStatusFilter] = useState("pending");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [severityFilter, setSeverityFilter] = useState("all");
+  const [assignmentFilter, setAssignmentFilter] = useState("all");
+
   // Action dialog state
   const [actionDialog, setActionDialog] = useState<{
     isOpen: boolean;
@@ -108,28 +93,23 @@ export function ModerationQueue() {
   }>({
     isOpen: false,
     report: null,
-    action: ''
+    action: "",
   });
-  
-  const [actionReason, setActionReason] = useState('');
-  const [actionNotes, setActionNotes] = useState('');
 
-  useEffect(() => {
-    fetchModerationQueue();
-    const interval = setInterval(fetchModerationQueue, 30000); // Refresh every 30 seconds
-    return () => clearInterval(interval);
-  }, [statusFilter, categoryFilter, severityFilter, assignmentFilter]);
+  const [actionReason, setActionReason] = useState("");
+  const [actionNotes, setActionNotes] = useState("");
 
   const fetchModerationQueue = async () => {
     try {
       setIsLoading(true);
       const params = new URLSearchParams({
-        limit: '50',
-        ...(statusFilter !== 'all' && { status: statusFilter }),
-        ...(categoryFilter !== 'all' && { category: categoryFilter }),
-        ...(severityFilter !== 'all' && { severity: severityFilter }),
-        ...(assignmentFilter === 'me' && { assignedTo: 'me' }),
-        ...(assignmentFilter !== 'all' && assignmentFilter !== 'me' && { assignedTo: assignmentFilter })
+        limit: "50",
+        ...(statusFilter !== "all" && { status: statusFilter }),
+        ...(categoryFilter !== "all" && { category: categoryFilter }),
+        ...(severityFilter !== "all" && { severity: severityFilter }),
+        ...(assignmentFilter === "me" && { assignedTo: "me" }),
+        ...(assignmentFilter !== "all" &&
+          assignmentFilter !== "me" && { assignedTo: assignmentFilter }),
       });
 
       const response = await fetch(`/api/admin/moderation?${params}`);
@@ -139,36 +119,52 @@ export function ModerationQueue() {
         setStats(data.statistics);
       }
     } catch (error) {
-      console.error('Failed to fetch moderation queue:', error);
+      console.error("Failed to fetch moderation queue:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleModerationAction = async (reportId: string, action: string, reason: string, notes?: string) => {
+  useEffect(() => {
+    fetchModerationQueue();
+    const interval = setInterval(fetchModerationQueue, 30000); // Refresh every 30 seconds
+    return () => clearInterval(interval);
+  }, [
+    statusFilter,
+    categoryFilter,
+    severityFilter,
+    assignmentFilter,
+  ]);
+
+  const handleModerationAction = async (
+    reportId: string,
+    action: string,
+    reason: string,
+    notes?: string
+  ) => {
     try {
       setIsProcessingAction(true);
-      const response = await fetch('/api/admin/moderation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/admin/moderation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           reportId,
           action,
           reason,
-          notes
-        })
+          notes,
+        }),
       });
 
       if (response.ok) {
         await fetchModerationQueue(); // Refresh the queue
-        setActionDialog({ isOpen: false, report: null, action: '' });
-        setActionReason('');
-        setActionNotes('');
+        setActionDialog({ isOpen: false, report: null, action: "" });
+        setActionReason("");
+        setActionNotes("");
       } else {
-        throw new Error('Failed to process moderation action');
+        throw new Error("Failed to process moderation action");
       }
     } catch (error) {
-      console.error('Error processing moderation action:', error);
+      console.error("Error processing moderation action:", error);
     } finally {
       setIsProcessingAction(false);
     }
@@ -176,34 +172,52 @@ export function ModerationQueue() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case "critical":
+        return "bg-red-500";
+      case "high":
+        return "bg-orange-500";
+      case "medium":
+        return "bg-yellow-500";
+      case "low":
+        return "bg-blue-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending': return <Clock className="h-4 w-4 text-yellow-500" />;
-      case 'under_review': return <Eye className="h-4 w-4 text-blue-500" />;
-      case 'resolved': return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'dismissed': return <XCircle className="h-4 w-4 text-gray-500" />;
-      case 'escalated': return <AlertTriangle className="h-4 w-4 text-red-500" />;
-      default: return <Flag className="h-4 w-4 text-gray-500" />;
+      case "pending":
+        return <Clock className="h-4 w-4 text-yellow-500" />;
+      case "under_review":
+        return <Eye className="h-4 w-4 text-blue-500" />;
+      case "resolved":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "dismissed":
+        return <XCircle className="h-4 w-4 text-gray-500" />;
+      case "escalated":
+        return <AlertTriangle className="h-4 w-4 text-red-500" />;
+      default:
+        return <Flag className="h-4 w-4 text-gray-500" />;
     }
   };
 
   const getActionIcon = (action: string) => {
     switch (action) {
-      case 'hide_content': return <EyeOff className="h-4 w-4" />;
-      case 'remove_content': return <Trash2 className="h-4 w-4" />;
-      case 'warn_user': return <AlertTriangle className="h-4 w-4" />;
-      case 'suspend_user': return <UserX className="h-4 w-4" />;
-      case 'ban_user': return <Ban className="h-4 w-4" />;
-      case 'escalate_human': return <ArrowUpDown className="h-4 w-4" />;
-      default: return <Shield className="h-4 w-4" />;
+      case "hide_content":
+        return <EyeOff className="h-4 w-4" />;
+      case "remove_content":
+        return <Trash2 className="h-4 w-4" />;
+      case "warn_user":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "suspend_user":
+        return <UserX className="h-4 w-4" />;
+      case "ban_user":
+        return <Ban className="h-4 w-4" />;
+      case "escalate_human":
+        return <ArrowUpDown className="h-4 w-4" />;
+      default:
+        return <Shield className="h-4 w-4" />;
     }
   };
 
@@ -223,7 +237,9 @@ export function ModerationQueue() {
       <div className="p-6">
         <div className="flex items-center justify-center h-64">
           <RefreshCw className="h-8 w-8 animate-spin text-gray-500" />
-          <span className="ml-2 text-gray-500">Loading moderation queue...</span>
+          <span className="ml-2 text-gray-500">
+            Loading moderation queue...
+          </span>
         </div>
       </div>
     );
@@ -237,14 +253,16 @@ export function ModerationQueue() {
           <h1 className="text-2xl font-bold text-white">Moderation Queue</h1>
           <p className="text-gray-400">Review and moderate reported content</p>
         </div>
-        
+
         <Button
           onClick={fetchModerationQueue}
           variant="secondary"
           size="sm"
           disabled={isLoading}
         >
-          <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+          <RefreshCw
+            className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+          />
           Refresh
         </Button>
       </div>
@@ -260,7 +278,9 @@ export function ModerationQueue() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.pendingReports}</div>
+              <div className="text-2xl font-bold text-white">
+                {stats.pendingReports}
+              </div>
               <p className="text-sm text-gray-400">Awaiting review</p>
             </CardContent>
           </Card>
@@ -273,7 +293,9 @@ export function ModerationQueue() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.todayReports}</div>
+              <div className="text-2xl font-bold text-white">
+                {stats.todayReports}
+              </div>
               <p className="text-sm text-gray-400">New today</p>
             </CardContent>
           </Card>
@@ -286,7 +308,9 @@ export function ModerationQueue() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.resolvedToday}</div>
+              <div className="text-2xl font-bold text-white">
+                {stats.resolvedToday}
+              </div>
               <p className="text-sm text-gray-400">Processed</p>
             </CardContent>
           </Card>
@@ -298,7 +322,7 @@ export function ModerationQueue() {
         <CardContent className="pt-6">
           <div className="flex items-center space-x-4">
             <Filter className="h-5 w-5 text-gray-400" />
-            
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
@@ -322,7 +346,9 @@ export function ModerationQueue() {
                 <SelectItem value="spam">Spam</SelectItem>
                 <SelectItem value="harassment">Harassment</SelectItem>
                 <SelectItem value="hate_speech">Hate Speech</SelectItem>
-                <SelectItem value="inappropriate_content">Inappropriate</SelectItem>
+                <SelectItem value="inappropriate_content">
+                  Inappropriate
+                </SelectItem>
                 <SelectItem value="misinformation">Misinformation</SelectItem>
                 <SelectItem value="violence">Violence</SelectItem>
                 <SelectItem value="other">Other</SelectItem>
@@ -342,7 +368,10 @@ export function ModerationQueue() {
               </SelectContent>
             </Select>
 
-            <Select value={assignmentFilter} onValueChange={setAssignmentFilter}>
+            <Select
+              value={assignmentFilter}
+              onValueChange={setAssignmentFilter}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Assignment" />
               </SelectTrigger>
@@ -363,30 +392,41 @@ export function ModerationQueue() {
             <CardContent className="pt-6">
               <div className="text-center py-12">
                 <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">Queue is Clear!</h3>
-                <p className="text-gray-400">No reports match the current filters.</p>
+                <h3 className="text-lg font-medium text-white mb-2">
+                  Queue is Clear!
+                </h3>
+                <p className="text-gray-400">
+                  No reports match the current filters.
+                </p>
               </div>
             </CardContent>
           </Card>
         ) : (
           reports.map((report) => (
-            <Card key={report.id} className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors">
+            <Card
+              key={report.id}
+              className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors"
+            >
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 space-y-3">
                     {/* Header */}
                     <div className="flex items-center space-x-3">
-                      <div className={`w-2 h-2 rounded-full ${getSeverityColor(report.severity)}`} />
+                      <div
+                        className={`w-2 h-2 rounded-full ${getSeverityColor(
+                          report.severity
+                        )}`}
+                      />
                       <Badge variant="freshman" className="text-xs">
                         {report.contentType}
                       </Badge>
                       <Badge variant="freshman" className="text-xs capitalize">
-                        {report.category.replace('_', ' ')}
+                        {report.category.replace("_", " ")}
                       </Badge>
                       <div className="flex items-center space-x-1">
                         {getStatusIcon(report.status)}
                         <span className="text-sm text-gray-400 capitalize">
-                          {report.status.replace('_', ' ')}
+                          {report.status.replace("_", " ")}
                         </span>
                       </div>
                       <span className="text-sm text-gray-500">
@@ -415,14 +455,16 @@ export function ModerationQueue() {
                       <div className="flex items-center space-x-1">
                         <Shield className="h-4 w-4 text-gray-400" />
                         <span className="text-gray-400">
-                          Trust: {Math.round(report.reporterInfo.trustScore * 100)}%
+                          Trust:{" "}
+                          {Math.round(report.reporterInfo.trustScore * 100)}%
                         </span>
                       </div>
                       {report.aiAnalysis && (
                         <div className="flex items-center space-x-1">
                           <MessageSquare className="h-4 w-4 text-purple-400" />
                           <span className="text-purple-400">
-                            AI: {Math.round(report.aiAnalysis.confidence * 100)}% confident
+                            AI: {Math.round(report.aiAnalysis.confidence * 100)}
+                            % confident
                           </span>
                         </div>
                       )}
@@ -431,25 +473,33 @@ export function ModerationQueue() {
 
                   {/* Actions */}
                   <div className="flex items-center space-x-2 ml-4">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="secondary" size="sm" onClick={() => setSelectedReport(report)}>
-                          <Eye className="h-4 w-4 mr-2" />
-                          Review
-                        </Button>
-                      </DialogTrigger>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedReport(report);
+                        setIsReviewDialogOpen(true);
+                      }}
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      Review
+                    </Button>
+                    <Dialog
+                      open={isReviewDialogOpen}
+                      onOpenChange={setIsReviewDialogOpen}
+                    >
                       <DialogContent className="max-w-4xl">
                         <DialogHeader>
                           <DialogTitle>Report Details</DialogTitle>
                         </DialogHeader>
                         {selectedReport && (
-                          <ReportDetailsPanel 
-                            report={selectedReport} 
+                          <ReportDetailsPanel
+                            report={selectedReport}
                             onAction={(action) => {
                               setActionDialog({
                                 isOpen: true,
                                 report: selectedReport,
-                                action
+                                action,
                               });
                             }}
                           />
@@ -457,43 +507,49 @@ export function ModerationQueue() {
                       </DialogContent>
                     </Dialog>
 
-                    {report.status === 'pending' && (
+                    {report.status === "pending" && (
                       <>
                         <Button
-                          onClick={() => setActionDialog({
-                            isOpen: true,
-                            report,
-                            action: 'warn_user'
-                          })}
+                          onClick={() =>
+                            setActionDialog({
+                              isOpen: true,
+                              report,
+                              action: "warn_user",
+                            })
+                          }
                           variant="outline"
                           size="sm"
                           className="text-yellow-400 border-yellow-400/50 hover:bg-yellow-400/10"
                         >
-                          {getActionIcon('warn_user')}
+                          {getActionIcon("warn_user")}
                         </Button>
                         <Button
-                          onClick={() => setActionDialog({
-                            isOpen: true,
-                            report,
-                            action: 'hide_content'
-                          })}
+                          onClick={() =>
+                            setActionDialog({
+                              isOpen: true,
+                              report,
+                              action: "hide_content",
+                            })
+                          }
                           variant="outline"
                           size="sm"
                           className="text-orange-400 border-orange-400/50 hover:bg-orange-400/10"
                         >
-                          {getActionIcon('hide_content')}
+                          {getActionIcon("hide_content")}
                         </Button>
                         <Button
-                          onClick={() => setActionDialog({
-                            isOpen: true,
-                            report,
-                            action: 'remove_content'
-                          })}
+                          onClick={() =>
+                            setActionDialog({
+                              isOpen: true,
+                              report,
+                              action: "remove_content",
+                            })
+                          }
                           variant="outline"
                           size="sm"
                           className="text-red-400 border-red-400/50 hover:bg-red-400/10"
                         >
-                          {getActionIcon('remove_content')}
+                          {getActionIcon("remove_content")}
                         </Button>
                       </>
                     )}
@@ -506,23 +562,27 @@ export function ModerationQueue() {
       </div>
 
       {/* Moderation Action Dialog */}
-      <Dialog 
-        open={actionDialog.isOpen} 
-        onOpenChange={(open) => !open && setActionDialog({ isOpen: false, report: null, action: '' })}
+      <Dialog
+        open={actionDialog.isOpen}
+        onOpenChange={(open) =>
+          !open && setActionDialog({ isOpen: false, report: null, action: "" })
+        }
       >
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
               {getActionIcon(actionDialog.action)}
-              <span>Confirm {actionDialog.action.replace('_', ' ')}</span>
+              <span>Confirm {actionDialog.action.replace("_", " ")}</span>
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <Alert>
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                This action will {actionDialog.action.replace('_', ' ').toLowerCase()} for report #{actionDialog.report?.id.slice(-8)}.
+                This action will{" "}
+                {actionDialog.action.replace("_", " ").toLowerCase()} for report
+                #{actionDialog.report?.id.slice(-8)}.
               </AlertDescription>
             </Alert>
 
@@ -532,7 +592,9 @@ export function ModerationQueue() {
               </label>
               <Textarea
                 value={actionReason}
-                onChange={(e: React.ChangeEvent) => setActionReason(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setActionReason(e.target.value)
+                }
                 placeholder="Provide a detailed reason for this action..."
                 className="min-h-[80px]"
               />
@@ -544,7 +606,9 @@ export function ModerationQueue() {
               </label>
               <Textarea
                 value={actionNotes}
-                onChange={(e: React.ChangeEvent) => setActionNotes(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setActionNotes(e.target.value)
+                }
                 placeholder="Any additional context or notes..."
                 className="min-h-[60px]"
               />
@@ -553,7 +617,9 @@ export function ModerationQueue() {
             <div className="flex justify-end space-x-3 pt-4">
               <Button
                 variant="secondary"
-                onClick={() => setActionDialog({ isOpen: false, report: null, action: '' })}
+                onClick={() =>
+                  setActionDialog({ isOpen: false, report: null, action: "" })
+                }
                 disabled={isProcessingAction}
               >
                 Cancel
@@ -588,11 +654,11 @@ export function ModerationQueue() {
 }
 
 // Detailed report review panel
-function ReportDetailsPanel({ 
-  report, 
-  onAction 
-}: { 
-  report: ContentReport; 
+function ReportDetailsPanel({
+  report,
+  onAction,
+}: {
+  report: ContentReport;
   onAction: (action: string) => void;
 }) {
   return (
@@ -603,11 +669,13 @@ function ReportDetailsPanel({
           <TabsTrigger value="content">Content Preview</TabsTrigger>
           <TabsTrigger value="analysis">AI Analysis</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="details" className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-white mb-2">Report Information</h4>
+              <h4 className="font-medium text-white mb-2">
+                Report Information
+              </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">ID:</span>
@@ -619,7 +687,9 @@ function ReportDetailsPanel({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Severity:</span>
-                  <Badge className={getSeverityColor(report.severity)}>{report.severity}</Badge>
+                  <Badge className={getSeverityColor(report.severity)}>
+                    {report.severity}
+                  </Badge>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Content Type:</span>
@@ -627,11 +697,13 @@ function ReportDetailsPanel({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Created:</span>
-                  <span className="text-white">{new Date(report.createdAt).toLocaleString()}</span>
+                  <span className="text-white">
+                    {new Date(report.createdAt).toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-medium text-white mb-2">Reporter</h4>
               <div className="space-y-2 text-sm">
@@ -641,12 +713,14 @@ function ReportDetailsPanel({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Trust Score:</span>
-                  <span className="text-white">{Math.round(report.reporterInfo.trustScore * 100)}%</span>
+                  <span className="text-white">
+                    {Math.round(report.reporterInfo.trustScore * 100)}%
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div>
             <h4 className="font-medium text-white mb-2">Description</h4>
             <p className="text-gray-300 bg-gray-800 p-3 rounded border">
@@ -659,7 +733,9 @@ function ReportDetailsPanel({
               <h4 className="font-medium text-white mb-2">Evidence</h4>
               <div className="bg-gray-800 p-3 rounded border">
                 {report.evidence.additionalContext && (
-                  <p className="text-gray-300 mb-2">{report.evidence.additionalContext}</p>
+                  <p className="text-gray-300 mb-2">
+                    {report.evidence.additionalContext}
+                  </p>
                 )}
                 {report.evidence.urls && report.evidence.urls.length > 0 && (
                   <div>
@@ -681,16 +757,17 @@ function ReportDetailsPanel({
             </div>
           )}
         </TabsContent>
-        
+
         <TabsContent value="content" className="space-y-4">
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              Content preview would be loaded here from the actual content source.
+              Content preview would be loaded here from the actual content
+              source.
             </AlertDescription>
           </Alert>
         </TabsContent>
-        
+
         <TabsContent value="analysis" className="space-y-4">
           {report.aiAnalysis ? (
             <div className="space-y-4">
@@ -700,24 +777,38 @@ function ReportDetailsPanel({
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Confidence:</span>
                     <div className="flex items-center space-x-2">
-                      <Progress value={report.aiAnalysis.confidence * 100} className="w-20" />
-                      <span className="text-white">{Math.round(report.aiAnalysis.confidence * 100)}%</span>
+                      <Progress
+                        value={report.aiAnalysis.confidence * 100}
+                        className="w-20"
+                      />
+                      <span className="text-white">
+                        {Math.round(report.aiAnalysis.confidence * 100)}%
+                      </span>
                     </div>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Suggested Action:</span>
-                    <Badge variant="freshman">{report.aiAnalysis.suggestedAction}</Badge>
+                    <Badge variant="freshman">
+                      {report.aiAnalysis.suggestedAction}
+                    </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Risk Score:</span>
                     <div className="flex items-center space-x-2">
-                      <Progress value={report.aiAnalysis.riskScore * 100} className="w-20" />
-                      <span className="text-white">{Math.round(report.aiAnalysis.riskScore * 100)}%</span>
+                      <Progress
+                        value={report.aiAnalysis.riskScore * 100}
+                        className="w-20"
+                      />
+                      <span className="text-white">
+                        {Math.round(report.aiAnalysis.riskScore * 100)}%
+                      </span>
                     </div>
                   </div>
                   <div>
                     <span className="text-gray-400 block mb-1">Reasoning:</span>
-                    <p className="text-gray-300 text-sm">{report.aiAnalysis.reasoning}</p>
+                    <p className="text-gray-300 text-sm">
+                      {report.aiAnalysis.reasoning}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -732,20 +823,39 @@ function ReportDetailsPanel({
           )}
         </TabsContent>
       </Tabs>
-      
+
       {/* Quick Actions */}
-      {report.status === 'pending' && (
+      {report.status === "pending" && (
         <div className="flex justify-end space-x-2 pt-4 border-t border-gray-800">
-          <Button onClick={() => onAction('no_action')} variant="outline" size="sm">
+          <Button
+            onClick={() => onAction("no_action")}
+            variant="outline"
+            size="sm"
+          >
             Dismiss
           </Button>
-          <Button onClick={() => onAction('warn_user')} variant="outline" size="sm" className="text-yellow-400">
+          <Button
+            onClick={() => onAction("warn_user")}
+            variant="outline"
+            size="sm"
+            className="text-yellow-400"
+          >
             Warn User
           </Button>
-          <Button onClick={() => onAction('hide_content')} variant="outline" size="sm" className="text-orange-400">
+          <Button
+            onClick={() => onAction("hide_content")}
+            variant="outline"
+            size="sm"
+            className="text-orange-400"
+          >
             Hide Content
           </Button>
-          <Button onClick={() => onAction('remove_content')} variant="outline" size="sm" className="text-red-400">
+          <Button
+            onClick={() => onAction("remove_content")}
+            variant="outline"
+            size="sm"
+            className="text-red-400"
+          >
             Remove Content
           </Button>
         </div>
@@ -755,11 +865,16 @@ function ReportDetailsPanel({
 
   function getSeverityColor(severity: string) {
     switch (severity) {
-      case 'critical': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case "critical":
+        return "bg-red-500";
+      case "high":
+        return "bg-orange-500";
+      case "medium":
+        return "bg-yellow-500";
+      case "low":
+        return "bg-blue-500";
+      default:
+        return "bg-gray-500";
     }
   }
 }

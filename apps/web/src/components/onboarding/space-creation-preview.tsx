@@ -8,7 +8,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Users, BookOpen, GraduationCap, Building2, Sparkles } from 'lucide-react';
+import { Users, GraduationCap, Building2, Sparkles, BookOpen } from 'lucide-react';
 import type { AutoSpaceConfig } from '../../lib/auto-space-creation';
 
 interface SpacePreview {

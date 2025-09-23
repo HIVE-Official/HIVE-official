@@ -162,7 +162,7 @@ export function ProfileDashboardMain({
 
         {/* Stats Grid */}
         <ProfileStatsGrid
-          stats={stats}
+          stats={stats || { connections: 0, spaces: 0, tools: 0, achievements: 0 }}
           onStatClick={handleStatClick}
           isLoading={isLoading || localLoading}
         />

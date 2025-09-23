@@ -3,10 +3,10 @@ import { type VariantProps } from "class-variance-authority";
 declare const pageContainerVariants: (props?: {
     variant?: "default" | "brand" | "secondary" | "tertiary";
     padding?: "default" | "none" | "sm" | "lg" | "xl";
-    maxWidth?: "none" | "sm" | "lg" | "xl" | "2xl" | "full" | "md";
+    maxWidth?: "none" | "sm" | "lg" | "xl" | "2xl" | "md" | "full";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const pageHeaderVariants: (props?: {
-    alignment?: "center" | "left" | "right";
+    alignment?: "left" | "center" | "right";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const pageContentVariants: (props?: {
     spacing?: "default" | "none" | "sm" | "lg" | "xl";

@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@hive/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, Button } from '@hive/ui';
 import { Alert } from "@/components/temp-stubs";
 import { AlertTriangle, Trash2, Shield } from 'lucide-react';
 
@@ -64,30 +64,31 @@ export function ConfirmationModal({
   const styles = getVariantStyles();
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className={`max-w-md ${styles.border}`}>
-        <AlertDialogHeader className={`p-4 rounded-t-lg ${styles.headerBg}`}>
-          <AlertDialogTitle className="flex items-center space-x-3">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className={`max-w-md ${styles.border}`}>
+        <DialogHeader className={`p-4 rounded-t-lg ${styles.headerBg}`}>
+          <DialogTitle className="flex items-center space-x-3">
             {getVariantIcon()}
             <span className="text-white">{title}</span>
-          </AlertDialogTitle>
-        </AlertDialogHeader>
-        
+          </DialogTitle>
+        </DialogHeader>
+
         <div className="p-6">
-          <AlertDialogDescription className="text-hive-text-mutedLight leading-relaxed">
+          <DialogDescription className="text-hive-text-mutedLight leading-relaxed">
             {description}
-          </AlertDialogDescription>
+          </DialogDescription>
         </div>
-        
-        <AlertDialogFooter className="p-6 pt-0">
-          <AlertDialogCancel 
+
+        <DialogFooter className="p-6 pt-0">
+          <Button
             onClick={onClose}
             disabled={isLoading}
+            variant="outline"
             className="border-hive-border-default hover:bg-hive-background-secondary"
           >
             {cancelText}
-          </AlertDialogCancel>
-          <AlertDialogAction
+          </Button>
+          <Button
             onClick={onConfirm}
             disabled={isLoading}
             className={styles.buttonClass}
@@ -100,10 +101,10 @@ export function ConfirmationModal({
             ) : (
               confirmText
             )}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

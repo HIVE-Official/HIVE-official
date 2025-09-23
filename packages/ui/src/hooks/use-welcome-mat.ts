@@ -69,6 +69,32 @@ const WelcomeMatContext = createContext<WelcomeMatContextType | null>(null)
 export function useWelcomeMat(): WelcomeMatContextType {
   const context = useContext(WelcomeMatContext)
   if (!context) {
+    // During SSR or when context is not available, provide a safe fallback
+    if (typeof window === 'undefined') {
+      // SSR fallback - provide minimal welcome mat state without hooks
+      return {
+        isOpen: false,
+        currentStep: 0,
+        totalSteps: 0,
+        completedSteps: new Set(),
+        skippedSteps: new Set(),
+        currentFlow: null,
+        flows: new Map(),
+        completedFlows: new Set(),
+        openFlow: () => {},
+        closeFlow: () => {},
+        nextStep: () => {},
+        previousStep: () => {},
+        skipStep: () => {},
+        completeStep: () => {},
+        jumpToStep: () => {},
+        registerFlow: () => {},
+        unregisterFlow: () => {},
+        markFlowCompleted: () => {},
+        resetFlow: () => {},
+        setStepTarget: () => {},
+      }
+    }
     // Return a default implementation if no provider
     return createDefaultWelcomeMatContext()
   }

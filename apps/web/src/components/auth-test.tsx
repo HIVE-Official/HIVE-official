@@ -4,12 +4,12 @@
  * Simple test component to verify UnifiedAuth integration
  */
 
-import { useUnifiedAuth } from "@hive/ui";
+import { useAuth } from "@hive/auth-logic";
 import { useSession } from '../hooks/use-session';
 
 export function AuthTest() {
   // Test new UnifiedAuth hook
-  const unifiedAuth = useUnifiedAuth();
+  const unifiedAuth = useAuth();
   
   // Test local session hook  
   const session = useSession();
@@ -25,9 +25,9 @@ export function AuthTest() {
             User: {unifiedAuth.user?.email || 'Not authenticated'} 
             ({unifiedAuth.isLoading ? 'Loading...' : unifiedAuth.isAuthenticated ? 'Authenticated' : 'Not authenticated'})
           </p>
-          <p className="text-sm">
+          {/* <p className="text-sm">
             Onboarding: {unifiedAuth.requiresOnboarding() ? 'Required' : 'Complete'}
-          </p>
+          </p> */}
         </div>
 
         <div>
@@ -48,23 +48,23 @@ export function AuthTest() {
           </p>
         </div>
 
-        {unifiedAuth.user?.developmentMode && (
+        {/* {unifiedAuth.user?.developmentMode && (
           <div className="bg-yellow-100 dark:bg-yellow-900 p-2 rounded">
             <p className="text-sm text-yellow-800 dark:text-yellow-200">
               🚧 Development Mode Active
             </p>
           </div>
-        )}
+        )} */}
         
         <div className="flex gap-2">
-          <button
+          {/* <button
             onClick={() => unifiedAuth.devLogin('test_user_456')}
             className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
           >
             Dev Login
-          </button>
+          </button> */}
           <button
-            onClick={() => unifiedAuth.logout()}
+            onClick={() => unifiedAuth.logout?.()}
             className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
           >
             Logout

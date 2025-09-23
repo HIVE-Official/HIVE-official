@@ -27,8 +27,52 @@ export interface SecureAuthHeaders extends Record<string, string> {
  * @returns {SecureAuthHeaders} Validated headers ready for API requests
  */
 export function getSecureAuthHeaders(): SecureAuthHeaders {
+  // DEVELOPMENT MODE: Check for dev session
+  if (process.env.NODE_ENV === 'development') {
+    // First check for dev session cookie
+    const cookies = document.cookie.split(';').map(c => c.trim());
+    const sessionCookie = cookies.find(c => c.startsWith('session-token='));
+    const devModeCookie = cookies.find(c => c.startsWith('dev-mode='));
+
+    if (sessionCookie && devModeCookie) {
+      // Extract the session token value
+      const sessionToken = sessionCookie.split('=')[1];
+
+      // For dev mode, convert session token to dev_token format for API
+      // The middleware expects dev_token_ prefix
+      const devToken = sessionToken.startsWith('dev_session_')
+        ? sessionToken.replace('dev_session_', 'dev_token_')
+        : `dev_token_${sessionToken}`;
+
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${devToken}`,
+        'X-Hive-Client': 'web-app-v1-dev'
+      };
+    }
+
+    // Check localStorage session for development
+    const sessionJson = localStorage.getItem('hive_session');
+    if (sessionJson) {
+      try {
+        const session = JSON.parse(sessionJson);
+        if (session.developmentMode) {
+          const devToken = `dev_token_${session.userId || 'debug-user'}`;
+          return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${devToken}`,
+            'X-Hive-Client': 'web-app-v1-dev'
+          };
+        }
+      } catch (e) {
+        console.error('Failed to parse dev session:', e);
+      }
+    }
+  }
+
+  // PRODUCTION MODE: Standard JWT token validation
   const token = localStorage.getItem('hive_session_token');
-  
+
   // SECURITY: Validate token presence and format
   if (!token || typeof token !== 'string' || token.length < 32) {
     throw new Error('HIVE_AUTH_REQUIRED: Please log in to continue');
@@ -70,7 +114,8 @@ export async function secureApiFetch(
     });
   } catch (error) {
     // SECURITY: Log auth failures for monitoring
-    console.error('[HIVE_AUTH_ERROR]', { url, error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('[HIVE_AUTH_ERROR]', { url, error: errorMessage });
     throw error;
   }
 }

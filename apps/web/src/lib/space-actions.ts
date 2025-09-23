@@ -8,11 +8,11 @@ export interface SpaceActionResult {
 
 /**
  * Get auth token from session (utility for space actions)
- * WARNING: This is a temporary utility - should use useUnifiedAuth in components
+ * WARNING: This is a temporary utility - should use useAuth in components
  */
 async function getAuthTokenFromSession(): Promise<string> {
   // This is a temporary utility function for non-component contexts
-  // Components should use useUnifiedAuth().getAuthToken() instead
+  // Components should use useAuth().getAuthToken() instead
   try {
     const sessionJson = window.localStorage.getItem('hive_session');
     if (sessionJson) {

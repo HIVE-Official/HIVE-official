@@ -329,12 +329,12 @@ class SearchIndex {
       }
       
       // Author filter
-      if (filters.authors?.length && !filters.authors.includes(doc.metadata.authorId)) {
+      if (filters.authors?.length && doc.metadata.authorId && !filters.authors.includes(doc.metadata.authorId)) {
         return false;
       }
       
       // Space filter
-      if (filters.spaces?.length && !filters.spaces.includes(doc.metadata.spaceId)) {
+      if (filters.spaces?.length && doc.metadata.spaceId && !filters.spaces.includes(doc.metadata.spaceId)) {
         return false;
       }
       
@@ -347,7 +347,7 @@ class SearchIndex {
       }
       
       // Post type filter
-      if (filters.postTypes?.length && !filters.postTypes.includes(doc.metadata.postType)) {
+      if (filters.postTypes?.length && doc.metadata.postType && !filters.postTypes.includes(doc.metadata.postType)) {
         return false;
       }
       

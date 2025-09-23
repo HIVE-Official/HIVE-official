@@ -1,324 +1,304 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser as _getCurrentUser } from '../../../../../lib/auth-server';
-import { logger } from "@/lib/logger";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
+import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/structured-logger";
+import { z } from 'zod';
+import * as admin from 'firebase-admin';
 
-interface CalendarEvent {
-  id: string;
-  title: string;
-  description?: string;
-  startDate: string;
-  endDate: string;
-  type: 'personal' | 'space' | 'class' | 'study' | 'meeting';
-  location?: string;
-  spaceId?: string;
-  spaceName?: string;
-  attendees?: string[];
-  isRecurring?: boolean;
-  recurringPattern?: string;
-  status: 'confirmed' | 'tentative' | 'cancelled';
-  createdBy: string;
-  createdAt: string;
-  updatedAt: string;
-}
+// Validation schemas
+const createEventSchema = z.object({
+  title: z.string().min(1).max(200),
+  description: z.string().max(1000).optional(),
+  startDate: z.string(), // ISO string
+  endDate: z.string(), // ISO string
+  type: z.enum(['personal', 'space', 'class', 'study', 'meeting']),
+  location: z.string().max(200).optional(),
+  spaceId: z.string().optional(),
+  spaceName: z.string().optional(),
+});
 
-// GET - Fetch user's calendar events
-export const GET = withAuth(async (request: NextRequest, authContext) => {
+const updateEventSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1).max(200).optional(),
+  description: z.string().max(1000).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  type: z.enum(['personal', 'space', 'class', 'study', 'meeting']).optional(),
+  location: z.string().max(200).optional(),
+  status: z.enum(['confirmed', 'tentative', 'cancelled']).optional(),
+});
+
+/**
+ * Get calendar events
+ * GET /api/profile/calendar/events
+ *
+ * Query params:
+ * - startDate: ISO string
+ * - endDate: ISO string
+ */
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const userId = getUserId(request);
+  const { searchParams } = new URL(request.url);
+  const startDate = searchParams.get('startDate');
+  const endDate = searchParams.get('endDate');
+
   try {
-    const userId = authContext.userId;
-    const { searchParams } = new URL(request.url);
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
-    const type = searchParams.get('type');
-
-    // For development, return mock data
-    if (process.env.NODE_ENV !== 'production') {
-      const mockEvents: CalendarEvent[] = [
-        {
-          id: 'event-1',
-          title: 'CS 350 Lecture',
-          description: 'Data Structures and Algorithms',
-          startDate: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 3.5 * 60 * 60 * 1000).toISOString(),
-          type: 'class',
-          location: 'Engineering Hall 101',
-          status: 'confirmed',
-          createdBy: userId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: 'event-2',
-          title: 'Study Group',
-          description: 'CS 350 study session',
-          startDate: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
-          type: 'study',
-          location: 'Library Room 204',
-          status: 'confirmed',
-          createdBy: userId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: 'event-3',
-          title: 'HIVE Builder Meetup',
-          description: 'Weekly builder community meeting',
-          startDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date(Date.now() + 25.5 * 60 * 60 * 1000).toISOString(),
-          type: 'space',
-          location: 'Student Union 301',
-          spaceId: 'hive-builders',
-          spaceName: 'HIVE Builders',
-          status: 'confirmed',
-          createdBy: userId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ];
-
-      // Filter by date range if provided
-      let filteredEvents = mockEvents;
-      if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        filteredEvents = mockEvents.filter(event => {
-          const eventStart = new Date(event.startDate);
-          return eventStart >= start && eventStart <= end;
-        });
-      }
-
-      // Filter by type if provided
-      if (type) {
-        filteredEvents = filteredEvents.filter(event => event.type === type);
-      }
-
-      return NextResponse.json({
-        success: true,
-        events: filteredEvents,
-        metadata: {
-          count: filteredEvents.length,
-          timeRange: { startDate, endDate },
-          type
-        }
+    // Development mode mock data
+    if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
+      const now = new Date();
+      return respond.success({
+        events: [
+          {
+            id: 'event-1',
+            title: 'CS 370 Study Session',
+            description: 'Midterm review with the study group',
+            startDate: new Date(now.getTime() + 86400000).toISOString(),
+            endDate: new Date(now.getTime() + 93600000).toISOString(),
+            type: 'study',
+            location: 'Lockwood Library Room 201',
+            spaceId: 'cs-370',
+            spaceName: 'CS 370 Study Group',
+            status: 'confirmed',
+          },
+          {
+            id: 'event-2',
+            title: 'Office Hours - Prof. Smith',
+            description: 'Discuss project feedback',
+            startDate: new Date(now.getTime() + 172800000).toISOString(),
+            endDate: new Date(now.getTime() + 176400000).toISOString(),
+            type: 'meeting',
+            location: 'Davis Hall 338',
+            status: 'confirmed',
+          },
+          {
+            id: 'event-3',
+            title: 'Personal Study Time',
+            description: 'Focus on algorithms practice',
+            startDate: new Date(now.getTime() + 259200000).toISOString(),
+            endDate: new Date(now.getTime() + 266400000).toISOString(),
+            type: 'personal',
+            location: 'Home',
+            status: 'tentative',
+          },
+        ],
       });
     }
 
-    // Production implementation would query Firestore
-    // TODO: Implement Firestore queries for calendar events
-    return NextResponse.json({
-      success: true,
-      events: [],
-      metadata: { count: 0 }
+    // Build query for user's calendar events
+    let query = dbAdmin
+      .collection('users')
+      .doc(userId)
+      .collection('calendar_events')
+      .orderBy('startDate', 'asc');
+
+    if (startDate) {
+      query = query.where('startDate', '>=', startDate);
+    }
+    if (endDate) {
+      query = query.where('endDate', '<=', endDate);
+    }
+
+    const eventsSnapshot = await query.limit(50).get();
+
+    const events = eventsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+      };
     });
 
+    return respond.success({ events });
   } catch (error) {
-    logger.error('Error fetching calendar events', { error, endpoint: '/api/profile/calendar/events' });
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch calendar events' },
+    logger.error('Failed to fetch calendar events', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      userId,
+    });
+    return respond.error(
+      'Failed to fetch calendar events',
+      'INTERNAL_ERROR',
       { status: 500 }
     );
   }
-}, {
-  allowDevelopmentBypass: true,
-  operation: 'get_calendar_events'
 });
 
-// POST - Create new calendar event
-export const POST = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
-    const body = await request.json();
+/**
+ * Create a calendar event
+ * POST /api/profile/calendar/events
+ */
+export const POST = withAuthValidationAndErrors(
+  createEventSchema,
+  async (request: AuthenticatedRequest, context, eventData: z.infer<typeof createEventSchema>, respond) => {
+    const userId = getUserId(request);
 
-    // Validate required fields
-    const { title, startDate, endDate, type } = body;
-    if (!title || !startDate || !endDate || !type) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields: title, startDate, endDate, type' },
-        { status: 400 }
-      );
-    }
+    try {
+      // Development mode
+      if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
+        const mockEvent = {
+          id: `event-${Date.now()}`,
+          ...eventData,
+          status: 'confirmed',
+          createdAt: new Date().toISOString(),
+          createdBy: userId,
+        };
 
-    // Validate date format
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid date format' },
-        { status: 400 }
-      );
-    }
-
-    if (start >= end) {
-      return NextResponse.json(
-        { success: false, error: 'Start date must be before end date' },
-        { status: 400 }
-      );
-    }
-
-    // Create event object
-    const newEvent: CalendarEvent = {
-      id: `event-${Date.now()}`, // In production, use proper UUID
-      title,
-      description: body.description || '',
-      startDate: start.toISOString(),
-      endDate: end.toISOString(),
-      type: body.type,
-      location: body.location || '',
-      spaceId: body.spaceId,
-      spaceName: body.spaceName,
-      attendees: body.attendees || [],
-      isRecurring: body.isRecurring || false,
-      recurringPattern: body.recurringPattern,
-      status: 'confirmed',
-      createdBy: userId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    // For development, simulate creation
-    if (process.env.NODE_ENV !== 'production') {
-      return NextResponse.json({
-        success: true,
-        event: newEvent,
-        message: 'Event created successfully'
-      }, { status: 201 });
-    }
-
-    // Production implementation would save to Firestore
-    // TODO: Implement Firestore save for calendar events
-    return NextResponse.json({
-      success: true,
-      event: newEvent,
-      message: 'Event created successfully'
-    }, { status: 201 });
-
-  } catch (error) {
-    logger.error('Error creating calendar event', { error, endpoint: '/api/profile/calendar/events' });
-    return NextResponse.json(
-      { success: false, error: 'Failed to create calendar event' },
-      { status: 500 }
-    );
-  }
-}, {
-  allowDevelopmentBypass: true,
-  operation: 'create_calendar_event'
-});
-
-// PUT - Update existing calendar event
-export const PUT = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
-    const body = await request.json();
-    const { id, ...updates } = body;
-
-    if (!id) {
-      return NextResponse.json(
-        { success: false, error: 'Event ID is required' },
-        { status: 400 }
-      );
-    }
-
-    // Validate dates if provided
-    if (updates.startDate || updates.endDate) {
-      const start = new Date(updates.startDate);
-      const end = new Date(updates.endDate);
-      
-      if (updates.startDate && isNaN(start.getTime())) {
-        return NextResponse.json(
-          { success: false, error: 'Invalid start date format' },
-          { status: 400 }
-        );
-      }
-      
-      if (updates.endDate && isNaN(end.getTime())) {
-        return NextResponse.json(
-          { success: false, error: 'Invalid end date format' },
-          { status: 400 }
-        );
+        logger.info('Development mode event created', { event: mockEvent });
+        return respond.success({ event: mockEvent });
       }
 
-      if (updates.startDate && updates.endDate && start >= end) {
-        return NextResponse.json(
-          { success: false, error: 'Start date must be before end date' },
-          { status: 400 }
-        );
+      // Validate date range
+      const start = new Date(eventData.startDate);
+      const end = new Date(eventData.endDate);
+      if (end <= start) {
+        return respond.error('End date must be after start date', 'VALIDATION_ERROR', { status: 400 });
       }
-    }
 
-    // For development, simulate update
-    if (process.env.NODE_ENV !== 'production') {
-      const updatedEvent = {
-        id,
-        ...updates,
-        updatedAt: new Date().toISOString(),
-        updatedBy: userId
+      // Create event in Firestore
+      const eventRef = dbAdmin
+        .collection('users')
+        .doc(userId)
+        .collection('calendar_events')
+        .doc();
+
+      const event = {
+        ...eventData,
+        status: 'confirmed',
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        createdBy: userId,
       };
 
-      return NextResponse.json({
-        success: true,
-        event: updatedEvent,
-        message: 'Event updated successfully'
+      await eventRef.set(event);
+
+      return respond.success({
+        event: {
+          id: eventRef.id,
+          ...eventData,
+          status: 'confirmed',
+          createdAt: new Date().toISOString(),
+          createdBy: userId,
+        },
       });
-    }
-
-    // Production implementation would update in Firestore
-    // TODO: Implement Firestore update for calendar events
-    return NextResponse.json({
-      success: true,
-      message: 'Event updated successfully'
-    });
-
-  } catch (error) {
-    logger.error('Error updating calendar event', { error, endpoint: '/api/profile/calendar/events' });
-    return NextResponse.json(
-      { success: false, error: 'Failed to update calendar event' },
-      { status: 500 }
-    );
-  }
-}, {
-  allowDevelopmentBypass: true,
-  operation: 'update_calendar_event'
-});
-
-// DELETE - Delete calendar event
-export const DELETE = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
-    const { searchParams } = new URL(request.url);
-    const eventId = searchParams.get('id');
-
-    if (!eventId) {
-      return NextResponse.json(
-        { success: false, error: 'Event ID is required' },
-        { status: 400 }
+    } catch (error) {
+      logger.error('Failed to create calendar event', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        userId,
+      });
+      return respond.error(
+        'Failed to create calendar event',
+        'INTERNAL_ERROR',
+        { status: 500 }
       );
     }
+  }
+);
 
-    // For development, simulate deletion
-    if (process.env.NODE_ENV !== 'production') {
-      return NextResponse.json({
-        success: true,
-        message: 'Event deleted successfully',
-        eventId
+/**
+ * Update a calendar event
+ * PUT /api/profile/calendar/events
+ */
+export const PUT = withAuthValidationAndErrors(
+  updateEventSchema,
+  async (request: AuthenticatedRequest, context, updateData: z.infer<typeof updateEventSchema>, respond) => {
+    const userId = getUserId(request);
+    const { id, ...updates } = updateData;
+
+    try {
+      // Development mode
+      if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
+        logger.info('Development mode event updated', { id, updateFields: Object.keys(updates) });
+        return respond.success({ message: 'Event updated successfully' });
+      }
+
+      // Validate date range if both dates are provided
+      if (updates.startDate && updates.endDate) {
+        const start = new Date(updates.startDate);
+        const end = new Date(updates.endDate);
+        if (end <= start) {
+          return respond.error('End date must be after start date', 'VALIDATION_ERROR', { status: 400 });
+        }
+      }
+
+      // Update event in Firestore
+      const eventRef = dbAdmin
+        .collection('users')
+        .doc(userId)
+        .collection('calendar_events')
+        .doc(id);
+
+      const eventDoc = await eventRef.get();
+      if (!eventDoc.exists) {
+        return respond.error('Event not found', 'RESOURCE_NOT_FOUND', { status: 404 });
+      }
+
+      await eventRef.update({
+        ...updates,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
+
+      return respond.success({ message: 'Event updated successfully' });
+    } catch (error) {
+      logger.error('Failed to update calendar event', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        userId,
+        eventId: id,
+      });
+      return respond.error(
+        'Failed to update calendar event',
+        'INTERNAL_ERROR',
+        { status: 500 }
+      );
+    }
+  }
+);
+
+/**
+ * Delete a calendar event
+ * DELETE /api/profile/calendar/events
+ *
+ * Query params:
+ * - id: event ID
+ */
+export const DELETE = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const userId = getUserId(request);
+  const { searchParams } = new URL(request.url);
+  const eventId = searchParams.get('id');
+
+  if (!eventId) {
+    return respond.error('Event ID is required', 'VALIDATION_ERROR', { status: 400 });
+  }
+
+  try {
+    // Development mode
+    if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
+      logger.info('Development mode event deleted', { eventId });
+      return respond.success({ message: 'Event deleted successfully' });
     }
 
-    // Production implementation would delete from Firestore
-    // TODO: Implement Firestore deletion for calendar events
-    return NextResponse.json({
-      success: true,
-      message: 'Event deleted successfully'
-    });
+    // Delete event from Firestore
+    const eventRef = dbAdmin
+      .collection('users')
+      .doc(userId)
+      .collection('calendar_events')
+      .doc(eventId);
 
+    const eventDoc = await eventRef.get();
+    if (!eventDoc.exists) {
+      return respond.error('Event not found', 'RESOURCE_NOT_FOUND', { status: 404 });
+    }
+
+    await eventRef.delete();
+
+    return respond.success({ message: 'Event deleted successfully' });
   } catch (error) {
-    logger.error('Error deleting calendar event', { error, endpoint: '/api/profile/calendar/events' });
-    return NextResponse.json(
-      { success: false, error: 'Failed to delete calendar event' },
+    logger.error('Failed to delete calendar event', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      userId,
+      eventId,
+    });
+    return respond.error(
+      'Failed to delete calendar event',
+      'INTERNAL_ERROR',
       { status: 500 }
     );
   }
-}, {
-  allowDevelopmentBypass: true,
-  operation: 'delete_calendar_event'
 });

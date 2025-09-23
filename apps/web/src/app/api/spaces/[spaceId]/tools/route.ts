@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -39,7 +40,7 @@ export async function GET(
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
     const { searchParams } = new URL(request.url);
@@ -199,7 +200,7 @@ export async function POST(
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
 
     // Check if user is member of the space

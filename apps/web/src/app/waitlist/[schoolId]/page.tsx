@@ -1,3 +1,5 @@
+'use client';
+
 import { notFound } from "next/navigation";
 import {
   Card,
@@ -6,10 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@hive/ui";
-import { getFirestore } from "firebase-admin/firestore";
+import { dbAdmin } from "@/lib/firebase-admin";
 import type { School } from "@hive/core";
 import { WaitlistProgress } from "./components/waitlist-progress";
 import { WaitlistForm } from "./components/waitlist-form";
+
+// Force dynamic rendering since we need Firebase Admin at runtime
+export const dynamic = 'force-dynamic';
 
 type WaitlistPageProps = {
   params: Promise<{
@@ -19,8 +24,7 @@ type WaitlistPageProps = {
 
 async function getSchool(schoolId: string): Promise<School | null> {
   try {
-    const db = getFirestore();
-    const schoolDoc = await db.collection("schools").doc(schoolId).get();
+    const schoolDoc = await dbAdmin.collection("schools").doc(schoolId).get();
     if (!schoolDoc.exists) {
       return null;
     }

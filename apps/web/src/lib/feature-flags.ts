@@ -1,5 +1,5 @@
 import { dbAdmin } from './firebase-admin';
-import { logger } from './logger';
+import { logger } from './structured-logger';
 
 /**
  * Feature Flag System for HIVE Platform

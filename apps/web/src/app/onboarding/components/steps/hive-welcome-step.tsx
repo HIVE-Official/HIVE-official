@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from "lucide-react";
 import { HiveButton, HiveLogo } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
@@ -27,7 +27,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
         className="mx-auto w-32 h-32 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center relative overflow-hidden"
       >
-        <HiveLogo size="lg" variant="gold" showWordmark={false} />
+        <HiveLogo size="lg" variant="gradient" showText={false} />
         
         {/* Pulse animation */}
         <motion.div
@@ -70,7 +70,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
           className="flex justify-center"
         >
           <HiveButton
-            variant="primary"
+            variant="default"
             size="lg"
             onClick={onNext}
             rightIcon={<ArrowRight className="w-4 h-4" />}

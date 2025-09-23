@@ -47,12 +47,14 @@ export const GET = withAuthAndErrors(async (
 });
 
 // PATCH /api/spaces/[spaceId] - Update space settings
+type UpdateSpaceData = z.infer<typeof UpdateSpaceSchema>;
+
 export const PATCH = withAuthValidationAndErrors(
   UpdateSpaceSchema,
   async (
     request: AuthenticatedRequest,
     { params }: { params: Promise<{ spaceId: string }> },
-    updates,
+    updates: UpdateSpaceData,
     respond
   ) => {
     const { spaceId } = await params;
@@ -62,7 +64,8 @@ export const PATCH = withAuthValidationAndErrors(
       return respond.error("Space ID is required", "INVALID_INPUT", { status: 400 });
     }
 
-    if (Object.keys(updates).length === 0) {
+    const updateKeys = Object.keys(updates);
+    if (updateKeys.length === 0) {
       return respond.error("No updates provided", "INVALID_INPUT", { status: 400 });
     }
 
@@ -96,11 +99,11 @@ export const PATCH = withAuthValidationAndErrors(
     }
 
     // Prepare update data
-    const updateData: any = {
+    const updateData = {
       ...updates,
       updatedAt: new Date(),
       updatedBy: userId
-    };
+    } as Record<string, any>;
 
     // Update space document
     await spaceRef.update(updateData);
@@ -110,14 +113,14 @@ export const PATCH = withAuthValidationAndErrors(
       type: 'space_updated',
       performedBy: userId,
       details: {
-        updates: Object.keys(updates),
+        updates: updateKeys,
         description: updates.description ? 'Updated space description' : undefined,
         name: updates.name ? 'Updated space name' : undefined
       },
       timestamp: new Date()
     });
 
-    logger.info(`Space updated: ${spaceId} by ${userId}`, { updates: Object.keys(updates) });
+    logger.info(`Space updated: ${spaceId} by ${userId}`, { updates: updateKeys });
 
     return respond.success({
       message: "Space updated successfully",

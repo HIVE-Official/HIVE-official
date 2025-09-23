@@ -1,11 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser as _getCurrentUser } from '../../../../../lib/auth-server';
-import { logger } from "@/lib/logger";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
+import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from "@/lib/structured-logger";
+import { z } from 'zod';
+
+// Validation schema for conflict resolution
+const resolveConflictSchema = z.object({
+  conflictId: z.string(),
+  resolution: z.string(),
+  eventId: z.string().optional(),
+  newTime: z.string().optional(), // ISO string
+});
+
+interface CalendarEvent {
+  id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  type: string;
+  location?: string;
+}
 
 interface CalendarConflict {
   id: string;
-  type: 'overlap' | 'double_booking' | 'travel_time' | 'preparation_time';
+  type: 'overlap' | 'double_booking' | 'travel_time';
   severity: 'high' | 'medium' | 'low';
   eventIds: string[];
   description: string;
@@ -16,291 +33,294 @@ interface CalendarConflict {
     newTime?: string;
     newLocation?: string;
   }>;
-  createdAt: string;
 }
 
-interface TimeSlot {
-  start: string;
-  end: string;
-  eventId?: string;
-  title?: string;
-  type?: string;
-}
+/**
+ * Detect calendar conflicts
+ * GET /api/profile/calendar/conflicts
+ *
+ * Query params:
+ * - includeNewEvent: JSON string of new event to check for conflicts
+ * - suggestTimes: boolean - whether to suggest alternative times
+ */
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const userId = getUserId(request);
+  const { searchParams } = new URL(request.url);
+  const includeNewEventStr = searchParams.get('includeNewEvent');
+  const suggestTimes = searchParams.get('suggestTimes') === 'true';
 
-// Helper function to detect conflicts
-function detectConflicts(events: any[], newEvent?: any): CalendarConflict[] {
-  const conflicts: CalendarConflict[] = [];
-  const allEvents = newEvent ? [...events, newEvent] : events;
-
-  // Sort events by start time
-  const sortedEvents = allEvents.sort((a, b) => 
-    new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-  );
-
-  for (let i = 0; i < sortedEvents.length; i++) {
-    for (let j = i + 1; j < sortedEvents.length; j++) {
-      const event1 = sortedEvents[i];
-      const event2 = sortedEvents[j];
-
-      const start1 = new Date(event1.startDate);
-      const end1 = new Date(event1.endDate);
-      const start2 = new Date(event2.startDate);
-      const end2 = new Date(event2.endDate);
-
-      // Check for overlap
-      if (start1 < end2 && start2 < end1) {
-        // Determine conflict severity
-        const overlapMinutes = Math.min(end1.getTime(), end2.getTime()) - Math.max(start1.getTime(), start2.getTime());
-        const overlapHours = overlapMinutes / (1000 * 60 * 60);
-
-        let severity: 'high' | 'medium' | 'low' = 'low';
-        if (overlapHours >= 1) severity = 'high';
-        else if (overlapHours >= 0.5) severity = 'medium';
-
-        // Generate suggestions
-        const suggestions = [];
-        if (event1.type === 'personal' && event2.type === 'class') {
-          suggestions.push({
-            action: 'reschedule' as const,
-            eventId: event1.id,
-            newTime: new Date(end2.getTime() + 30 * 60 * 1000).toISOString() // 30 min after class ends
-          });
-        } else if (event1.type === 'class' && event2.type === 'personal') {
-          suggestions.push({
-            action: 'reschedule' as const,
-            eventId: event2.id,
-            newTime: new Date(end1.getTime() + 30 * 60 * 1000).toISOString()
-          });
-        } else {
-          // For same priority events, suggest shortening the later one
-          suggestions.push({
-            action: 'shorten' as const,
-            eventId: event2.id,
-            newTime: end1.toISOString()
-          });
-        }
-
-        conflicts.push({
-          id: `conflict-${event1.id}-${event2.id}`,
-          type: 'overlap',
-          severity,
-          eventIds: [event1.id, event2.id],
-          description: `"${event1.title}" overlaps with "${event2.title}" for ${Math.round(overlapHours * 60)} minutes`,
-          suggestion: severity === 'high' 
-            ? 'This is a significant scheduling conflict that needs resolution'
-            : 'Minor overlap detected - consider adjusting timing',
-          suggestedActions: suggestions,
-          createdAt: new Date().toISOString()
-        });
-      }
-
-      // Check for travel time conflicts (same day, different locations)
-      const timeBetween = start2.getTime() - end1.getTime();
-      const timeBetweenMinutes = timeBetween / (1000 * 60);
-
-      if (timeBetweenMinutes > 0 && timeBetweenMinutes < 15 && 
-          event1.location && event2.location && 
-          event1.location !== event2.location &&
-          start1.toDateString() === start2.toDateString()) {
-        
-        conflicts.push({
-          id: `travel-${event1.id}-${event2.id}`,
-          type: 'travel_time',
-          severity: timeBetweenMinutes < 5 ? 'high' : 'medium',
-          eventIds: [event1.id, event2.id],
-          description: `Only ${Math.round(timeBetweenMinutes)} minutes between "${event1.title}" and "${event2.title}" in different locations`,
-          suggestion: 'Consider adding buffer time for travel between locations',
-          suggestedActions: [{
-            action: 'reschedule',
-            eventId: event2.id,
-            newTime: new Date(end1.getTime() + 20 * 60 * 1000).toISOString() // 20 min buffer
-          }],
-          createdAt: new Date().toISOString()
-        });
-      }
-    }
-  }
-
-  return conflicts;
-}
-
-// Helper function to suggest optimal meeting times
-function suggestOptimalTimes(events: any[], duration: number = 60): TimeSlot[] {
-  const suggestions: TimeSlot[] = [];
-  const today = new Date();
-  const endOfWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-  // Create time slots for the next 7 days, 9 AM to 6 PM
-  for (let day = 0; day < 7; day++) {
-    const currentDay = new Date(today.getTime() + day * 24 * 60 * 60 * 1000);
-    
-    for (let hour = 9; hour <= 17; hour++) {
-      const slotStart = new Date(currentDay);
-      slotStart.setHours(hour, 0, 0, 0);
-      const slotEnd = new Date(slotStart.getTime() + duration * 60 * 1000);
-
-      // Check if this slot conflicts with any existing events
-      const hasConflict = events.some(event => {
-        const eventStart = new Date(event.startDate);
-        const eventEnd = new Date(event.endDate);
-        return slotStart < eventEnd && slotEnd > eventStart;
-      });
-
-      if (!hasConflict && suggestions.length < 5) {
-        suggestions.push({
-          start: slotStart.toISOString(),
-          end: slotEnd.toISOString()
-        });
-      }
-    }
-  }
-
-  return suggestions;
-}
-
-// GET - Detect scheduling conflicts
-export const GET = withAuth(async (request: NextRequest, authContext) => {
   try {
-    const userId = authContext.userId;
-    const { searchParams } = new URL(request.url);
-    const includeNewEvent = searchParams.get('includeNewEvent');
-    const suggestTimes = searchParams.get('suggestTimes') === 'true';
+    // Development mode mock data
+    if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
+      const mockConflicts: CalendarConflict[] = [
+        {
+          id: 'conflict-1',
+          type: 'overlap',
+          severity: 'high',
+          eventIds: ['event-1', 'event-2'],
+          description: 'CS 370 Study Session overlaps with Office Hours',
+          suggestion: 'Consider rescheduling one of these events',
+          suggestedActions: [
+            {
+              action: 'reschedule',
+              eventId: 'event-2',
+              newTime: new Date(Date.now() + 259200000).toISOString(),
+            },
+            {
+              action: 'shorten',
+              eventId: 'event-1',
+              newTime: new Date(Date.now() + 90000000).toISOString(),
+            },
+          ],
+        },
+        {
+          id: 'conflict-2',
+          type: 'travel_time',
+          severity: 'medium',
+          eventIds: ['event-3', 'event-4'],
+          description: 'Not enough time to travel between Davis Hall and Student Union',
+          suggestion: 'Allow at least 15 minutes between events in different buildings',
+          suggestedActions: [
+            {
+              action: 'reschedule',
+              eventId: 'event-4',
+              newTime: new Date(Date.now() + 345600000).toISOString(),
+            },
+            {
+              action: 'move_location',
+              eventId: 'event-3',
+              newLocation: 'Online',
+            },
+          ],
+        },
+      ];
 
-    // For development, get mock events from the events API
-    const eventsResponse = await fetch(`${request.url.split('/conflicts')[0]}/events`, {
-      headers: {
-        'Authorization': request.headers.get('Authorization') || ''
+      // If checking a new event, add a mock conflict for it
+      if (includeNewEventStr) {
+        try {
+          const newEvent = JSON.parse(includeNewEventStr);
+          mockConflicts.push({
+            id: 'conflict-new',
+            type: 'double_booking',
+            severity: 'high',
+            eventIds: ['event-1', 'new-event'],
+            description: `"${newEvent.title}" conflicts with existing event`,
+            suggestion: 'Choose a different time slot',
+            suggestedActions: suggestTimes ? [
+              {
+                action: 'reschedule',
+                eventId: 'new-event',
+                newTime: new Date(Date.now() + 432000000).toISOString(),
+              },
+            ] : [],
+          });
+        } catch (e) {
+          // Ignore JSON parse errors
+        }
       }
-    });
 
-    if (!eventsResponse.ok) {
-      throw new Error('Failed to fetch events for conflict detection');
+      return respond.success({ conflicts: mockConflicts });
     }
 
-    const eventsData = await eventsResponse.json();
-    const events = eventsData.events || [];
+    // Get user's existing events
+    const eventsSnapshot = await dbAdmin
+      .collection('users')
+      .doc(userId)
+      .collection('calendar_events')
+      .where('status', '!=', 'cancelled')
+      .orderBy('status')
+      .orderBy('startDate')
+      .get();
 
-    let newEvent = null;
-    if (includeNewEvent) {
+    const events: CalendarEvent[] = eventsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as CalendarEvent));
+
+    // Parse new event if provided
+    let newEvent: Partial<CalendarEvent> | null = null;
+    if (includeNewEventStr) {
       try {
-        newEvent = JSON.parse(includeNewEvent);
-      } catch (e) {
-        return NextResponse.json(
-          { success: false, error: 'Invalid newEvent format' },
-          { status: 400 }
-        );
+        newEvent = JSON.parse(includeNewEventStr);
+      } catch (error) {
+        return respond.error('Invalid new event format', 'VALIDATION_ERROR', { status: 400 });
       }
     }
 
     // Detect conflicts
-    const conflicts = detectConflicts(events, newEvent);
+    const conflicts: CalendarConflict[] = [];
 
-    // Generate optimal time suggestions if requested
-    let suggestions: any[] = [];
-    if (suggestTimes) {
-      const duration = newEvent?.duration || 60; // Default 60 minutes
-      suggestions = suggestOptimalTimes(events, duration);
+    // Check for overlaps between existing events
+    for (let i = 0; i < events.length; i++) {
+      for (let j = i + 1; j < events.length; j++) {
+        const event1 = events[i];
+        const event2 = events[j];
+
+        const start1 = new Date(event1.startDate).getTime();
+        const end1 = new Date(event1.endDate).getTime();
+        const start2 = new Date(event2.startDate).getTime();
+        const end2 = new Date(event2.endDate).getTime();
+
+        // Check for overlap
+        if ((start1 < end2 && end1 > start2)) {
+          conflicts.push({
+            id: `conflict-${event1.id}-${event2.id}`,
+            type: 'overlap',
+            severity: 'high',
+            eventIds: [event1.id, event2.id],
+            description: `"${event1.title}" overlaps with "${event2.title}"`,
+            suggestion: 'Reschedule one of these events',
+            suggestedActions: suggestTimes ? [
+              {
+                action: 'reschedule',
+                eventId: event2.id,
+                newTime: new Date(end1 + 900000).toISOString(), // 15 mins after first event
+              },
+            ] : [],
+          });
+        }
+
+        // Check for insufficient travel time (if locations differ)
+        if (event1.location && event2.location && event1.location !== event2.location) {
+          const gap = Math.abs(start2 - end1);
+          const fifteenMinutes = 900000;
+
+          if (gap < fifteenMinutes && gap > 0) {
+            conflicts.push({
+              id: `travel-${event1.id}-${event2.id}`,
+              type: 'travel_time',
+              severity: 'medium',
+              eventIds: [event1.id, event2.id],
+              description: `Not enough time to travel between "${event1.location}" and "${event2.location}"`,
+              suggestion: 'Allow at least 15 minutes between events in different locations',
+              suggestedActions: [
+                {
+                  action: 'reschedule',
+                  eventId: event2.id,
+                  newTime: new Date(end1 + fifteenMinutes).toISOString(),
+                },
+              ],
+            });
+          }
+        }
+      }
     }
 
-    return NextResponse.json({
-      success: true,
-      conflicts,
-      suggestions,
-      metadata: {
-        eventCount: events.length,
-        conflictCount: conflicts.length,
-        highSeverityConflicts: conflicts.filter(c => c.severity === 'high').length,
-        includedNewEvent: !!newEvent,
-        generatedAt: new Date().toISOString()
-      }
-    });
+    // Check new event against existing events
+    if (newEvent && newEvent.startDate && newEvent.endDate) {
+      const newStart = new Date(newEvent.startDate).getTime();
+      const newEnd = new Date(newEvent.endDate).getTime();
 
+      for (const event of events) {
+        const start = new Date(event.startDate).getTime();
+        const end = new Date(event.endDate).getTime();
+
+        if ((newStart < end && newEnd > start)) {
+          conflicts.push({
+            id: `new-conflict-${event.id}`,
+            type: 'double_booking',
+            severity: 'high',
+            eventIds: [event.id, 'new-event'],
+            description: `New event "${newEvent.title}" conflicts with "${event.title}"`,
+            suggestion: 'Choose a different time for the new event',
+            suggestedActions: suggestTimes ? [
+              {
+                action: 'reschedule',
+                eventId: 'new-event',
+                newTime: new Date(end + 900000).toISOString(),
+              },
+            ] : [],
+          });
+        }
+      }
+    }
+
+    return respond.success({ conflicts });
   } catch (error) {
-    logger.error('Error detecting calendar conflicts', { error, endpoint: '/api/profile/calendar/conflicts' });
-    return NextResponse.json(
-      { success: false, error: 'Failed to detect calendar conflicts' },
+    logger.error('Failed to detect calendar conflicts', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      userId,
+    });
+    return respond.error(
+      'Failed to detect calendar conflicts',
+      'INTERNAL_ERROR',
       { status: 500 }
     );
   }
-}, {
-  allowDevelopmentBypass: true,
-  operation: 'detect_calendar_conflicts'
 });
 
-// POST - Resolve a specific conflict
-export const POST = withAuth(async (request: NextRequest, authContext) => {
-  try {
-    const userId = authContext.userId;
-    const body = await request.json();
-    const { conflictId, resolution, eventId, newTime, newLocation } = body;
+/**
+ * Resolve a calendar conflict
+ * POST /api/profile/calendar/conflicts
+ */
+export const POST = withAuthValidationAndErrors(
+  resolveConflictSchema,
+  async (request: AuthenticatedRequest, context, data: z.infer<typeof resolveConflictSchema>, respond) => {
+    const userId = getUserId(request);
+    const { conflictId, resolution, eventId, newTime } = data;
 
-    if (!conflictId || !resolution) {
-      return NextResponse.json(
-        { success: false, error: 'Conflict ID and resolution are required' },
-        { status: 400 }
-      );
-    }
-
-    // Validate resolution type
-    const validResolutions = ['reschedule', 'cancel', 'shorten', 'move_location', 'ignore'];
-    if (!validResolutions.includes(resolution)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid resolution type' },
-        { status: 400 }
-      );
-    }
-
-    // For development, simulate conflict resolution
-    if (process.env.NODE_ENV !== 'production') {
-      let message = '';
-      switch (resolution) {
-        case 'reschedule':
-          message = `Event ${eventId} rescheduled to ${newTime}`;
-          break;
-        case 'cancel':
-          message = `Event ${eventId} cancelled`;
-          break;
-        case 'shorten':
-          message = `Event ${eventId} shortened to end at ${newTime}`;
-          break;
-        case 'move_location':
-          message = `Event ${eventId} moved to ${newLocation}`;
-          break;
-        case 'ignore':
-          message = `Conflict ${conflictId} marked as ignored`;
-          break;
-      }
-
-      return NextResponse.json({
-        success: true,
-        message,
-        resolution: {
+    try {
+      // Development mode
+      if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
+        logger.info('Development mode conflict resolved', {
           conflictId,
           resolution,
           eventId,
           newTime,
-          newLocation,
-          resolvedAt: new Date().toISOString(),
-          resolvedBy: userId
-        }
+        });
+        return respond.success({ message: 'Conflict resolved successfully' });
+      }
+
+      // In production, this would implement actual conflict resolution logic
+      // For now, we'll just log the resolution attempt
+      logger.info('Conflict resolution attempted', {
+        userId,
+        conflictId,
+        resolution,
+        eventId,
+        newTime,
       });
+
+      // If an event reschedule was requested, update the event
+      if (eventId && newTime && resolution === 'reschedule') {
+        const eventRef = dbAdmin
+          .collection('users')
+          .doc(userId)
+          .collection('calendar_events')
+          .doc(eventId);
+
+        const eventDoc = await eventRef.get();
+        if (eventDoc.exists) {
+          // Calculate new end time based on original duration
+          const originalData = eventDoc.data();
+          if (originalData) {
+            const originalDuration = new Date(originalData.endDate).getTime() - new Date(originalData.startDate).getTime();
+            const newStartTime = new Date(newTime);
+            const newEndTime = new Date(newStartTime.getTime() + originalDuration);
+
+            await eventRef.update({
+              startDate: newStartTime.toISOString(),
+              endDate: newEndTime.toISOString(),
+              updatedAt: new Date().toISOString(),
+              conflictResolved: true,
+              conflictResolutionId: conflictId,
+            });
+          }
+        }
+      }
+
+      return respond.success({ message: 'Conflict resolved successfully' });
+    } catch (error) {
+      logger.error('Failed to resolve calendar conflict', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        userId,
+        conflictId,
+      });
+      return respond.error(
+        'Failed to resolve calendar conflict',
+        'INTERNAL_ERROR',
+        { status: 500 }
+      );
     }
-
-    // Production implementation would update events in Firestore
-    // TODO: Implement Firestore updates for conflict resolution
-    return NextResponse.json({
-      success: true,
-      message: 'Conflict resolved successfully'
-    });
-
-  } catch (error) {
-    logger.error('Error resolving calendar conflict', { error, endpoint: '/api/profile/calendar/conflicts' });
-    return NextResponse.json(
-      { success: false, error: 'Failed to resolve calendar conflict' },
-      { status: 500 }
-    );
   }
-}, {
-  allowDevelopmentBypass: true,
-  operation: 'resolve_calendar_conflict'
-});
+);

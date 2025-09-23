@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useSpaces = useSpaces;
 const react_1 = require("react");
-const use_auth_1 = require("./use-auth");
+const auth_logic_1 = require("@hive/auth-logic");
 function useSpaces() {
     const [spaces, setSpaces] = (0, react_1.useState)([]);
     const [isLoading, setIsLoading] = (0, react_1.useState)(true);
     const [error, setError] = (0, react_1.useState)(null);
-    const { user, isAuthenticated } = (0, use_auth_1.useAuth)();
+    const { user, isAuthenticated } = (0, auth_logic_1.useAuth)();
     const fetchSpaces = (0, react_1.useCallback)(async () => {
         if (!isAuthenticated || !user) {
             setSpaces([]);

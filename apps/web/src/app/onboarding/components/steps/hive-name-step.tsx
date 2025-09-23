@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
 import { User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { HiveInput } from "@hive/ui";
@@ -92,10 +92,8 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             placeholder="First name"
             value={firstName}
             onChange={handleFirstNameChange}
-            variant="premium"
+            variant="default"
             size="lg"
-            floatingLabel={false}
-            showCharacterCount={true}
             maxLength={50}
             autoFocus
             required
@@ -109,10 +107,8 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             placeholder="Last name"
             value={lastName}
             onChange={handleLastNameChange}
-            variant="premium"
+            variant="default"
             size="lg"
-            floatingLabel={false}
-            showCharacterCount={true}
             maxLength={50}
             required
             className="w-full"

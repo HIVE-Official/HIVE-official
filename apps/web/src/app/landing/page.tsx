@@ -49,8 +49,8 @@ export default function LandingPage() {
   }, [router]);
 
   useEffect(() => {
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 30);
+    // October 1st, 2025 launch date
+    const targetDate = new Date('2025-10-01T00:00:00');
 
     const updateTimer = () => {
       const now = new Date().getTime();
@@ -112,10 +112,10 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
             className="flex justify-center pt-8 pb-4"
           >
-            <HiveLogo 
-              variant="gold" 
+            <HiveLogo
+              variant="gradient"
               size="lg"
-              showWordmark={true}
+              showText={true}
               className="scale-125"
             />
           </motion.div>
@@ -197,18 +197,27 @@ export default function LandingPage() {
                 transition={{ duration: 0.6, delay: 1.0 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center"
               >
-                <HiveButton 
-                  variant="primary" 
-                  size="lg" 
+                <HiveButton
+                  variant="default"
+                  size="lg"
                   className="w-full sm:w-auto"
                   onClick={handleNavigateToSchools}
                   data-testid="get-started-button"
                 >
                   Get Started
                 </HiveButton>
-                <HiveButton 
-                  variant="secondary" 
-                  size="lg" 
+                <HiveButton
+                  variant="secondary"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  onClick={handleNavigateToSchools}
+                  data-testid="sign-in-button"
+                >
+                  Sign In
+                </HiveButton>
+                <HiveButton
+                  variant="secondary"
+                  size="lg"
                   className="w-full sm:w-auto"
                   onClick={() => setIsLearnMoreOpen(true)}
                 >
@@ -227,8 +236,8 @@ export default function LandingPage() {
       <AnimatePresence>
         {isLearnMoreOpen && (
           <HiveModal
-            isOpen={isLearnMoreOpen}
-            onClose={() => setIsLearnMoreOpen(false)}
+            open={isLearnMoreOpen}
+            onOpenChange={() => setIsLearnMoreOpen(false)}
             title="About HIVE"
             size="lg"
           >
@@ -281,10 +290,10 @@ export default function LandingPage() {
 
           <div className="text-center pt-4">
             <p className="hive-font-sans text-hive-text-secondary mb-6 font-medium tracking-wide">
-              Launching July 2025 • Join the beta program
+              Launching October 1st, 2025 • Join the UB beta program
             </p>
             <HiveButton 
-              variant="primary" 
+              variant="default" 
               size="lg" 
               className="w-full"
               onClick={() => {

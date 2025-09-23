@@ -10,6 +10,7 @@ import { SessionManager } from "../session-manager";
 
 export interface AuthUser {
   uid: string;
+  id: string; // Alias for uid for compatibility
   email: string | null;
   fullName: string | null;
   handle: string | null;
@@ -18,6 +19,7 @@ export interface AuthUser {
   graduationYear: number | null;
   avatarUrl: string | null;
   isBuilder: boolean;
+  builderOptIn?: boolean; // Alias for isBuilder
   schoolId: string | null;
   onboardingCompleted: boolean;
   getIdToken: () => Promise<string>;
@@ -31,6 +33,13 @@ export interface UseAuthReturn {
   clearError: () => void;
   refreshUser: () => Promise<void>;
   clearDevMode?: () => void;
+  // Additional methods for backward compatibility
+  getAuthToken?: () => Promise<string>;
+  logout?: () => Promise<void>;
+  completeOnboarding?: (data: any) => Promise<any>;
+  canAccessFeature?: (feature: string) => boolean;
+  hasValidSession?: () => boolean;
+  session?: any;
 }
 
 export function useAuth(): UseAuthReturn {
@@ -52,7 +61,9 @@ export function useAuth(): UseAuthReturn {
         const devUser = JSON.parse(devUserData);
         return {
           ...devUser,
-          getIdToken: async () => 'dev_token_' + devUser.uid
+          id: devUser.uid || devUser.id, // Ensure id field exists
+          builderOptIn: devUser.isBuilder || devUser.builderOptIn || false,
+          getIdToken: async () => 'dev_token_' + (devUser.uid || devUser.id)
         };
       } catch (error) {
         console.error('Error parsing dev user data:', error);
@@ -82,6 +93,7 @@ export function useAuth(): UseAuthReturn {
         const userData = userDoc.data();
         return {
           uid: firebaseUser.uid,
+          id: firebaseUser.uid, // Alias for compatibility
           email: firebaseUser.email,
           fullName: userData.fullName || null,
           handle: userData.handle || null,
@@ -90,6 +102,7 @@ export function useAuth(): UseAuthReturn {
           graduationYear: userData.graduationYear || null,
           avatarUrl: userData.avatarUrl || null,
           isBuilder: userData.builderOptIn || false,
+          builderOptIn: userData.builderOptIn || false, // Alias for compatibility
           schoolId: userData.schoolId || null,
           onboardingCompleted: !!(userData.handle && userData.fullName),
           getIdToken: () => firebaseUser.getIdToken(),
@@ -98,6 +111,7 @@ export function useAuth(): UseAuthReturn {
         // User document doesn't exist yet - needs onboarding
         return {
           uid: firebaseUser.uid,
+          id: firebaseUser.uid, // Alias for compatibility
           email: firebaseUser.email,
           fullName: null,
           handle: null,
@@ -106,6 +120,7 @@ export function useAuth(): UseAuthReturn {
           graduationYear: null,
           avatarUrl: null,
           isBuilder: false,
+          builderOptIn: false, // Alias for compatibility
           schoolId: null,
           onboardingCompleted: false,
           getIdToken: () => firebaseUser.getIdToken(),
@@ -116,6 +131,7 @@ export function useAuth(): UseAuthReturn {
       // Fallback to basic user object
       return {
         uid: firebaseUser.uid,
+        id: firebaseUser.uid, // Alias for compatibility
         email: firebaseUser.email,
         fullName: firebaseUser.displayName || null,
         handle: null,
@@ -124,6 +140,7 @@ export function useAuth(): UseAuthReturn {
         graduationYear: null,
         avatarUrl: null,
         isBuilder: false,
+        builderOptIn: false, // Alias for compatibility
         schoolId: null,
         onboardingCompleted: false,
         getIdToken: () => firebaseUser.getIdToken(),
@@ -230,5 +247,19 @@ export function useAuth(): UseAuthReturn {
     clearError,
     refreshUser,
     clearDevMode: process.env.NODE_ENV === 'development' ? clearDevMode : undefined,
+    // Additional methods for backward compatibility
+    getAuthToken: user && user.getIdToken ? user.getIdToken : undefined,
+    logout: async () => {
+      if (!auth) {
+        console.warn('Auth not available for logout');
+        return;
+      }
+      const { signOut } = await import('firebase/auth');
+      await signOut(auth);
+    },
+    completeOnboarding: undefined, // This would be implemented elsewhere
+    canAccessFeature: () => true, // Simple implementation
+    hasValidSession: () => !!user,
+    session: user ? { issuedAt: new Date().toISOString() } : null,
   };
 }

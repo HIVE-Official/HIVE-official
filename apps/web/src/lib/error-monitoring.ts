@@ -4,6 +4,7 @@
  */
 
 import { currentEnvironment } from './env';
+// import * as Sentry from '@sentry/nextjs'; // Commented out - not yet configured
 
 // Sentry types (will be loaded dynamically)
 interface SentryUser {
@@ -37,7 +38,7 @@ interface SentryHub {
 
 // Global error tracking state
 let isInitialized = false;
-let sentryHub: SentryHub | null = null;
+const sentryHub: SentryHub | null = null;
 
 /**
  * Initialize error monitoring
@@ -59,6 +60,14 @@ export async function initializeErrorMonitoring(): Promise<void> {
     }
 
     // Dynamic import to avoid SSR issues
+    // TEMPORARY FIX: Disable Sentry to avoid OpenTelemetry issues
+    console.warn('⚠️ Sentry temporarily disabled - error monitoring using console only');
+    isInitialized = true;
+    return;
+
+    // COMMENTED OUT: Sentry initialization code
+    // Will be re-enabled once OpenTelemetry issues are resolved
+    /*
     let Sentry;
     try {
       Sentry = await import('@sentry/nextjs');
@@ -67,7 +76,9 @@ export async function initializeErrorMonitoring(): Promise<void> {
       isInitialized = true;
       return;
     }
-    
+    */
+
+    /* UNREACHABLE CODE - Commented out while Sentry is disabled
     Sentry.init({
       dsn: sentryDsn,
       environment: currentEnvironment,
@@ -81,7 +92,7 @@ export async function initializeErrorMonitoring(): Promise<void> {
       replaysOnErrorSampleRate: 1.0,
       
       // Error filtering
-      beforeSend(event, hint) {
+      beforeSend(event: Sentry.ErrorEvent, hint: Sentry.EventHint): Sentry.ErrorEvent | null {
         // Filter out development-only errors
         if (currentEnvironment !== 'production') {
           const error = hint.originalException;
@@ -118,6 +129,7 @@ export async function initializeErrorMonitoring(): Promise<void> {
     sentryHub = Sentry.getCurrentHub();
     isInitialized = true;
     console.log(`✅ Error monitoring initialized for ${currentEnvironment}`);
+    */
   } catch (error) {
     console.error('❌ Failed to initialize error monitoring:', error);
     isInitialized = true; // Prevent retry loops

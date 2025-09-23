@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal } from "@hive/ui";
+import { Button, Card, Badge, HiveModal, HiveModalHeader, HiveModalTitle, HiveModalContent } from "@hive/ui";
 import { 
   Zap, 
   Play, 
@@ -290,7 +290,7 @@ export function EventToolIntegration({
                   <div className="flex flex-col space-y-2">
                     {hasActiveSession ? (
                       <Button
-                        variant="primary"
+                        variant="default"
                         size="sm"
                         onClick={() => onToolLaunch(toolId)}
                       >
@@ -348,11 +348,14 @@ export function EventToolIntegration({
 
       {/* Tool Setup Modal */}
       <HiveModal
-        isOpen={showSetupModal}
-        onClose={() => setShowSetupModal(false)}
-        title={`Setup ${selectedTool ? getToolDefinition(selectedTool).name : 'Tool'}`}
+        open={showSetupModal}
+        onOpenChange={() => setShowSetupModal(false)}
         size="lg"
       >
+        <HiveModalHeader>
+          <HiveModalTitle>Setup {selectedTool ? getToolDefinition(selectedTool).name : 'Tool'}</HiveModalTitle>
+        </HiveModalHeader>
+        <HiveModalContent>
         {selectedTool && (
           <div className="space-y-6">
             <div className="text-center">
@@ -376,7 +379,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       value={toolConfig.duration || '25'}
-                      onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, duration: e.target.value}))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, duration: e.target.value}))}
                     >
                       <option value="15">15 minutes</option>
                       <option value="25">25 minutes</option>
@@ -389,7 +392,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.autoBreaks || false}
-                        onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, autoBreaks: e.target.checked}))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolConfig((prev: any) => ({...prev, autoBreaks: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Automatic break reminders</span>
                     </label>
@@ -406,7 +409,7 @@ export function EventToolIntegration({
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       placeholder="Enter poll question..."
                       value={toolConfig.title || ''}
-                      onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, title: e.target.value}))}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolConfig((prev: any) => ({...prev, title: e.target.value}))}
                     />
                   </div>
                   <div>
@@ -414,7 +417,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.anonymous || true}
-                        onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, anonymous: e.target.checked}))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolConfig((prev: any) => ({...prev, anonymous: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Anonymous responses</span>
                     </label>
@@ -429,7 +432,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       value={toolConfig.method || 'code'}
-                      onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, method: e.target.value}))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, method: e.target.value}))}
                     >
                       <option value="code">Check-in Code</option>
                       <option value="location">Location Verification</option>
@@ -441,7 +444,7 @@ export function EventToolIntegration({
                       <input 
                         type="checkbox" 
                         checked={toolConfig.certificates || false}
-                        onChange={(e: React.ChangeEvent) => setToolConfig((prev: any) => ({...prev, certificates: e.target.checked}))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolConfig((prev: any) => ({...prev, certificates: e.target.checked}))}
                       />
                       <span className="text-sm text-zinc-400">Generate attendance certificates</span>
                     </label>
@@ -463,6 +466,7 @@ export function EventToolIntegration({
             </div>
           </div>
         )}
+        </HiveModalContent>
       </HiveModal>
     </div>
   );

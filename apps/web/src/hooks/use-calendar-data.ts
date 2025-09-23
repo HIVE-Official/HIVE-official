@@ -1,17 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { CalendarCardData, CalendarCardState } from '@hive/ui';
-import { fetchCalendarEvents, transformApiEvent } from '../lib/calendar-api';
+import { fetchCalendarEvents, transformApiEvent, type CalendarApiEvent, type Event } from '../lib/calendar-api';
 
-interface CalendarEvent {
-  id: string;
-  title: string;
-  startTime: string;
-  endTime: string;
-  [key: string]: unknown;
+// Local type definitions since these are not exported from @hive/ui
+type CalendarCardState = 'idle' | 'loading' | 'success' | 'error' | 'empty' | 'default';
+interface CalendarCardData {
+  nextEvent?: any;
+  upcomingEvents?: any[];
+  todaysEvents?: any[];
+  connections?: any[];
+  conflicts?: any[];
+  lastUpdated?: Date;
+  events?: any[];
+  upcomingCount?: number;
 }
 
+
 interface UseCalendarDataOptions {
-  fetchEvents?: () => Promise<CalendarEvent[]>;
+  fetchEvents?: () => Promise<CalendarApiEvent[]>;
   autoFetch?: boolean;
 }
 
@@ -61,7 +66,7 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
     if (!fetchEvents) {
       // No data source - show empty state
       setData(undefined);
-      setState('empty');
+      setState('empty' as CalendarCardState);
       return;
     }
 
@@ -73,14 +78,14 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
       const apiEvents = await fetchEvents();
       
       if (!apiEvents || apiEvents.length === 0) {
-        setState('empty');
+        setState('empty' as CalendarCardState);
         setData(undefined);
       } else {
         // Transform API events to UI Event format
         const events = apiEvents.map(transformApiEvent);
         
         // Sort events by time to get the next upcoming event
-        const sortedEvents = events.sort((a, b) => {
+        const sortedEvents = events.sort((a: any, b: any) => {
           const timeA = convertTimeToMinutes(a.time || '');
           const timeB = convertTimeToMinutes(b.time || '');
           return timeA - timeB;
@@ -111,7 +116,7 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
         };
         
         setData(transformedData);
-        setState('default');
+        setState('default' as CalendarCardState);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch events');

@@ -162,7 +162,7 @@ const CompleteHIVEToolsSystem = React.forwardRef<HTMLDivElement, CompleteHIVEToo
         )}
 
         {/* Tools Grid */}
-        <Grid columns="auto-fit" gap={6} className="min-h-[400px]">
+        <Grid columns="auto-fit" gap={6} className="min-h-">
           {filteredTools.map((tool) => (
             <Card key={tool.id} className="h-full flex flex-col">
               <CardHeader>

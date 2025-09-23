@@ -311,16 +311,20 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
       return respond.error(
         'Invalid request data',
         "INVALID_INPUT",
-        400,
-        { details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`) }
+        {
+          status: 400,
+          details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        }
       );
     }
 
     return respond.error(
       'Bulk operation failed',
       "INTERNAL_ERROR",
-      500,
-      { executionTime: Date.now() - startTime }
+      {
+        status: 500,
+        details: { executionTime: Date.now() - startTime }
+      }
     );
   }
 });

@@ -8,7 +8,7 @@ const hiveButtonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[var(--hive-brand-primary)] text-[var(--hive-brand-primary-text)] hover:bg-[var(--hive-brand-primary)]/90",
+          "bg-transparent border border-[var(--hive-border-strong)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-secondary)] hover:text-[var(--hive-text-primary)]",
         destructive:
           "bg-[var(--hive-status-error)] text-[var(--hive-status-error-text)] hover:bg-[var(--hive-status-error)]/90",
         outline:

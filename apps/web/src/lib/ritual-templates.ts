@@ -415,7 +415,7 @@ export const spaceWarsRitual: Omit<Ritual, 'id' | 'createdAt' | 'updatedAt' | 'v
   description: 'Monthly celebration of space creativity, engagement, and community building',
   tagline: 'May the best community spirit win! ⚔️',
   
-  type: 'competitive',
+  type: 'community',
   category: 'monthly_event',
   tags: ['competition', 'spaces', 'community', 'monthly'],
   

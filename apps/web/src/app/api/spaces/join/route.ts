@@ -1,5 +1,6 @@
 import { z } from "zod";
-import * as admin from "firebase-admin/firestore";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
@@ -14,7 +15,8 @@ const joinSpaceSchema = z.object({
  */
 export const POST = withAuthValidationAndErrors(
   joinSpaceSchema,
-  async (request: AuthenticatedRequest, context, { spaceId }, respond) => {
+  async (request: AuthenticatedRequest, context, body: z.infer<typeof joinSpaceSchema>, respond) => {
+    const { spaceId } = body;
     const userId = getUserId(request);
 
     // Get space details from flat collection

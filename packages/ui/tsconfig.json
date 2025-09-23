@@ -28,7 +28,7 @@
     "types": ["node"],
     "baseUrl": ".",
     "noEmit": false,
-    "noEmitOnError": false,
+    "emitDeclarationOnly": false,
     "paths": {
       "@/*": ["./src/*"],
       "@hive/core": ["../core/src"],
@@ -41,8 +41,8 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src/**/*",
-    "index.ts"
+    "index.ts",
+    "src/**/*"
   ],
   "exclude": [
     "src/components/creators/**/*",

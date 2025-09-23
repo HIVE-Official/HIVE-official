@@ -1,8 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import * as admin from "firebase-admin/auth";
+import { getAuth } from "firebase-admin/auth";
+import type { DecodedIdToken } from "firebase-admin/auth";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 
 /**
  * Authenticated Request Handler Type
@@ -12,7 +13,7 @@ export interface AuthenticatedRequest extends NextRequest {
   user: {
     uid: string;
     email: string;
-    decodedToken: admin.DecodedIdToken;
+    decodedToken: DecodedIdToken;
   };
 }
 
@@ -52,9 +53,47 @@ export function withAuth<T extends RouteParams>(
 
       const idToken = authHeader.substring(7);
 
+      // In development mode, accept development tokens
+      if (process.env.NODE_ENV === 'development' && idToken.startsWith('dev_token_')) {
+        // Parse dev token to get user ID
+        let userId = idToken.replace('dev_token_', '');
+
+        // Handle session token format: debug-user_timestamp_hash -> debug-user
+        if (userId.includes('_')) {
+          userId = userId.split('_')[0];
+        }
+
+        // Create a mock decoded token for development
+        const decodedToken = {
+          uid: userId,
+          email: 'student@test.edu', // Default dev email
+          email_verified: true,
+          iss: 'development',
+          aud: 'development',
+          auth_time: Math.floor(Date.now() / 1000),
+          iat: Math.floor(Date.now() / 1000),
+          exp: Math.floor(Date.now() / 1000) + 3600,
+          firebase: {
+            sign_in_provider: 'development',
+            identities: {}
+          }
+        } as DecodedIdToken;
+
+        // Create authenticated request with dev user info
+        const authenticatedRequest = request as AuthenticatedRequest;
+        authenticatedRequest.user = {
+          uid: userId,
+          email: decodedToken.email || 'student@test.edu',
+          decodedToken
+        };
+
+        // Call the actual handler with authenticated request
+        return await handler(authenticatedRequest, context);
+      }
+
       // Verify Firebase ID token
-      const auth = admin.auth();
-      let decodedToken: admin.DecodedIdToken;
+      const auth = getAuth();
+      let decodedToken: DecodedIdToken;
 
       try {
         decodedToken = await auth.verifyIdToken(idToken);

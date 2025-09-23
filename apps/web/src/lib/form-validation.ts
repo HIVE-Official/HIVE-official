@@ -288,7 +288,7 @@ export function useFormValidation(
 
   const validateField = useCallback((field: string, value: any) => {
     const fieldValidator = new FormValidator({
-      [field]: validator.rules[field]
+      [field]: (validator as any).rules[field]
     });
     
     const result = fieldValidator.validate({ [field]: value });

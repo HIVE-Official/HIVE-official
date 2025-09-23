@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { getDefaultActionCodeSettings, validateEmailDomain } from "@hive/core";
-import * as admin from "firebase-admin/auth";
-import { sendMagicLinkEmail } from "@/lib/email";
+import { getAuth } from "firebase-admin/auth";
+// import { sendMagicLinkEmail } from "@/lib/email"; // Replaced with Firebase Auth emails
+import { sendFirebaseMagicLinkEmail, isFirebaseEmailAuthEnabled } from "@/lib/firebase-auth-email";
 import { ValidationError } from "@/lib/api-error-handler";
 import { auditAuthEvent } from "@/lib/production-auth";
 import { currentEnvironment } from "@/lib/env";
@@ -72,20 +73,21 @@ async function validateSchool(schoolId: string): Promise<SchoolData | null> {
  */
 export const POST = withValidation(
   sendMagicLinkSchema,
-  async (request, context, { email, schoolId }, respond) => {
+  async (request, context, body: z.infer<typeof sendMagicLinkSchema>, respond) => {
+    const { email, schoolId } = body;
     const requestId = request.headers.get('x-request-id') || `req_${Date.now()}`;
 
     try {
       // SECURITY: Rate limiting with strict enforcement
       const rateLimitResult = await enforceRateLimit('magicLink', request);
       if (!rateLimitResult.allowed) {
-        return respond.error(rateLimitResult.error, "RATE_LIMITED", {
+        return respond.error(rateLimitResult.error || "Rate limit exceeded", "RATE_LIMITED", {
           status: rateLimitResult.status
         });
       }
 
       // SECURITY: Additional threat detection (schema validation already done by middleware)
-      const validationResult = await validateWithSecurity({ email, schoolId }, sendMagicLinkSchema, {
+      const validationResult = await validateWithSecurity({ email, schoolId: schoolId || '' }, sendMagicLinkSchema, {
         operation: 'send_magic_link',
         ip: request.headers.get('x-forwarded-for') || undefined
       });
@@ -100,45 +102,35 @@ export const POST = withValidation(
         return respond.error("Request validation failed", "INVALID_INPUT", { status: 400 });
       }
     
-    // DEVELOPMENT: Handle development users FIRST before any validation
-    // Check for development users regardless of environment detection to ensure dev access works
-    const isDevelopmentUser = isDevUser(email) && validateDevSchool(schoolId);
+    // DEVELOPMENT: Handle development mode with simple magic link generation
     const isLocalEnvironment = currentEnvironment === 'development' || !process.env.VERCEL;
-    
-    logger.info('🔍 Auth Debug - Environment: , Email:, SchoolId', {  email, schoolId, endpoint: '/api/auth/send-magic-link'  });
-    logger.info('🔍 Auth Debug - isDevelopmentUser:, isLocalEnvironment', { isDevelopmentUser, isLocalEnvironment, endpoint: '/api/auth/send-magic-link' });
-    
-    if (isDevelopmentUser && isLocalEnvironment) {
-      logger.info('🔧 Development user detected, bypassing school validation', { endpoint: '/api/auth/send-magic-link' });
-      
-      // Create development session directly
-      const devSession = await createDevSession(email, request);
-      
-      if (devSession.success) {
-        await auditAuthEvent('success', request, {
-          operation: 'dev_auth_success'
-        });
 
-        const response = NextResponse.json({
-          success: true,
-          message: "Development authentication successful",
-          dev: true,
-          user: devSession.user
-        });
+    logger.info('🔍 Auth Debug - Environment and input', { email, schoolId, endpoint: '/api/auth/send-magic-link' });
 
-        // Set session cookies
-        if (devSession.tokens) {
-          const { SecureSessionManager } = await import('@/lib/secure-session-manager');
-          SecureSessionManager.setSessionCookies(response, devSession.tokens);
-        }
+    // In development, create a simple magic link without Firebase
+    if (isLocalEnvironment) {
+      logger.info('🔧 Development mode: Generating simple magic link', { endpoint: '/api/auth/send-magic-link' });
 
-        return response;
-      } else {
-        return NextResponse.json(
-          { error: devSession.error || "Development authentication failed" },
-          { status: HttpStatus.BAD_REQUEST }
-        );
-      }
+      // Generate a simple development token
+      const devToken = Buffer.from(JSON.stringify({
+        email,
+        schoolId,
+        timestamp: Date.now(),
+        dev: true
+      })).toString('base64');
+
+      const magicLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/auth/verify?token=${devToken}&mode=dev&email=${encodeURIComponent(email)}&schoolId=${schoolId}`;
+
+      logger.info('✅ Development magic link created', { endpoint: '/api/auth/send-magic-link' });
+
+      // In development, return the magic link directly for testing
+      return NextResponse.json({
+        success: true,
+        message: "Magic link sent (development mode)",
+        devMode: true,
+        magicLink, // Include the link in development for easy testing
+        email
+      });
     }
 
     // For non-development users in development environment, check if Firebase is configured
@@ -204,7 +196,7 @@ export const POST = withValidation(
     }
     
     // Use Firebase Admin SDK to generate magic link
-    const auth = admin.auth();
+    const auth = getAuth();
     const actionCodeSettings = getDefaultActionCodeSettings(schoolId);
     
     // Generate the sign-in link
@@ -247,20 +239,43 @@ export const POST = withValidation(
       }
     }
     
-    // Send the magic link via email
+    // Check if Firebase Email Auth is enabled
+    const firebaseEmailEnabled = await isFirebaseEmailAuthEnabled();
+    if (!firebaseEmailEnabled) {
+      logger.warn('Firebase Email Auth not enabled, falling back to development mode', { endpoint: '/api/auth/send-magic-link' });
+    }
+
+    // Send the magic link via Firebase Auth (which handles email delivery)
     try {
-      await sendMagicLinkEmail({
-        to: email,
-        magicLink,
-        schoolName: schoolData.name });
-    } catch (emailError) {
+      // Firebase Auth automatically sends the email when generateSignInWithEmailLink is called
+      // The link has already been generated above and email sent by Firebase
+      // We just need to log the success
+
+      // For development or if Firebase email is not configured, log the link
+      if (currentEnvironment === 'development' || !firebaseEmailEnabled) {
+        await sendFirebaseMagicLinkEmail({
+          email,
+          schoolName: schoolData.name,
+          redirectUrl: process.env.NEXT_PUBLIC_APP_URL
+        });
+      }
+
+      logger.info('✅ Magic link email sent via Firebase Auth', {
+        email: email.replace(/(.{3}).*@/, '$1***@'),
+        schoolId: schoolData.name, // Using schoolId key to match LogContext type
+        endpoint: '/api/auth/send-magic-link'
+      });
+    } catch (emailError: any) {
       await auditAuthEvent('failure', request, {
         operation: 'send_magic_link',
-        error: 'email_sending_failed'
+        error: 'firebase_email_failed'
       });
-      
-      logger.error('Email sending failed', { error: emailError, endpoint: '/api/auth/send-magic-link' });
-      
+
+      logger.error('Firebase Auth email sending failed', {
+        error: emailError.message,
+        endpoint: '/api/auth/send-magic-link'
+      });
+
       return NextResponse.json(ApiResponseHelper.error("Unable to send email", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
     

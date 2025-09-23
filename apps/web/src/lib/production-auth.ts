@@ -4,6 +4,7 @@
  */
 
 import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { NextRequest } from 'next/server';
 import { currentEnvironment } from './env';
 import { captureError, LogLevel } from './error-monitoring';
@@ -71,10 +72,10 @@ export async function validateProductionToken(
       environment: currentEnvironment,
       operation: context?.operation,
       requestId,
-      ip: request.headers.get('x-forwarded-for') || 
-          request.headers.get('x-real-ip') || 
-          request.headers.get('cf-connecting-ip'),
-      userAgent: request.headers.get('user-agent'),
+      ip: request.headers.get('x-forwarded-for') ||
+          request.headers.get('x-real-ip') ||
+          request.headers.get('cf-connecting-ip') || undefined,
+      userAgent: request.headers.get('user-agent') || undefined,
       timestamp: new Date().toISOString()
     };
 
@@ -154,7 +155,7 @@ export async function validateProductionToken(
 
   try {
     // Use Firebase Admin SDK for token validation
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token, true); // checkRevoked = true
 
     // Additional security checks
@@ -200,7 +201,7 @@ export async function validateProductionToken(
     const duration = Date.now() - startTime;
     
     // Log successful validation (but not the token itself)
-    await logSecurityEvent('token_validation', {
+    await logSecurityEvent('invalid_token', {
       requestId,
       userId: decodedToken.uid,
       operation: context?.operation || 'token_validation',
@@ -223,7 +224,7 @@ export async function validateProductionToken(
     const duration = Date.now() - startTime;
 
     // Log failed validation
-    await logSecurityEvent('auth_failure', {
+    await logSecurityEvent('invalid_token', {
       requestId,
       operation: context?.operation || 'token_validation',
       tags: {
@@ -333,13 +334,13 @@ export async function auditAuthEvent(
     event,
     timestamp: new Date().toISOString(),
     environment: currentEnvironment,
-    requestId: request.headers.get('x-request-id'),
+    requestId: request.headers.get('x-request-id') || undefined,
     userId: context?.userId,
     operation: context?.operation,
-    ip: request.headers.get('x-forwarded-for') || 
-        request.headers.get('x-real-ip') || 
-        request.headers.get('cf-connecting-ip'),
-    userAgent: request.headers.get('user-agent'),
+    ip: request.headers.get('x-forwarded-for') ||
+        request.headers.get('x-real-ip') ||
+        request.headers.get('cf-connecting-ip') || undefined,
+    userAgent: request.headers.get('user-agent') || undefined,
     path: new URL(request.url).pathname,
     error: context?.error
   };
@@ -348,7 +349,7 @@ export async function auditAuthEvent(
   console.log(`[SECURITY AUDIT] ${event.toUpperCase()}:`, auditData);
 
   // Send to structured logging
-  await logSecurityEvent(event === 'success' ? 'token_validation' : 'auth_failure', {
+  await logSecurityEvent('invalid_token', {
     requestId: auditData.requestId || undefined,
     userId: auditData.userId,
     ip: auditData.ip || undefined,

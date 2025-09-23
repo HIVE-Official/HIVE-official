@@ -3,13 +3,15 @@
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { useWelcomeMat, type WelcomeMatStep } from "../../hooks/use-welcome-mat"
-import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalDescription, HiveModalFooter } from "../atoms/hive-modal"
+// Modal components will be refactored to use universal modal system
 import { Button } from "../atoms/button"
 import { Badge } from "../atoms/badge"
 import { Progress } from "../atoms/progress"
 
 export interface WelcomeMatProps {
   className?: string
+  onDismiss?: () => void
+  userName?: string
 }
 
 const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
@@ -93,12 +95,10 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
     }
 
     return (
-      <HiveModal open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-        <HiveModalContent
-          className={cn("max-w-lg", className)}
-          {...props}
-        >
-          <HiveModalHeader>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ display: isOpen ? 'flex' : 'none' }}>
+        <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
+        <div className={cn("relative bg-[var(--hive-background-secondary)] border border-[var(--hive-border)] rounded-lg shadow-xl max-w-lg", className)} {...props}>
+          <div className="p-6 border-b border-[var(--hive-border)]">
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center space-x-3">
                 <div className="p-2 rounded-full bg-[var(--hive-brand-primary-bg)] text-[var(--hive-brand-primary)]">
@@ -116,7 +116,7 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
                   </svg>
                 </div>
                 <div>
-                  <HiveModalTitle>{currentStepData.title}</HiveModalTitle>
+                  <h2 className="text-xl font-semibold">{currentStepData.title}</h2>
                   <div className="flex items-center space-x-2 mt-1">
                     <Badge variant="outline" className="text-xs">
                       {currentFlow.name}
@@ -153,12 +153,12 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
             <div className="mt-4">
               <Progress value={progressPercentage} className="h-2" />
             </div>
-          </HiveModalHeader>
+          </div>
 
           <div className="px-6 py-4">
-            <HiveModalDescription className="text-base">
+            <div className="text-base text-[var(--hive-text-secondary)]">
               {currentStepData.description}
-            </HiveModalDescription>
+            </div>
 
             {currentStepData.content && (
               <div className="mt-4">
@@ -167,7 +167,7 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
             )}
           </div>
 
-          <HiveModalFooter>
+          <div className="flex items-center justify-end space-x-2 p-6 border-t border-[var(--hive-border)]">
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center space-x-2">
                 {!isFirstStep && (
@@ -208,9 +208,9 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
                 )}
               </div>
             </div>
-          </HiveModalFooter>
-        </HiveModalContent>
-      </HiveModal>
+          </div>
+        </div>
+      </div>
     )
   }
 )

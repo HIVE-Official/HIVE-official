@@ -1,5 +1,5 @@
-export { useUnifiedAuth, UnifiedAuthProvider, createUnifiedAuthValue } from "./use-unified-auth";
-export { useAuth, AuthProvider, createAuthValue } from "./use-auth";
-export { useShell, ShellProvider, createShellValue } from "./use-shell";
-export { useWelcomeMat, WelcomeMatProvider, createWelcomeMatValue } from "./use-welcome-mat";
+// Re-export hooks only (no providers for now to fix build)
+export { useShell } from "./use-shell";
+export { useWelcomeMat } from "./use-welcome-mat";
+export { useMediaQuery, useIsDesktop, useIsTablet, useIsMobile, useIsLargeScreen, useIsMediumScreen, useIsSmallScreen } from "./use-media-query";
 //# sourceMappingURL=index.js.map

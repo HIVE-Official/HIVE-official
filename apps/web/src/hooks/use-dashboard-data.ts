@@ -151,6 +151,7 @@ export interface ComprehensiveDashboardData {
     upcomingEvents: Array<{
       id: string;
       title: string;
+      description?: string;
       startTime: string;
       endTime: string;
       type: 'personal' | 'space' | 'academic';

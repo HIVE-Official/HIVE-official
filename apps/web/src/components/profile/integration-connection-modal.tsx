@@ -124,7 +124,7 @@ export function IntegrationConnectionModal({
 
   if (connectionStep === 'connecting') {
     return (
-      <HiveModal open={isOpen} onOpenChange={onClose} size="lg">
+      <HiveModal open={isOpen} onOpenChange={onClose}>
         <HiveModalContent className="max-w-md">
           <div className="p-8 text-center">
             <div className="w-16 h-16 bg-hive-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -145,7 +145,7 @@ export function IntegrationConnectionModal({
 
   if (connectionStep === 'success') {
     return (
-      <HiveModal open={isOpen} onOpenChange={onClose} size="lg">
+      <HiveModal open={isOpen} onOpenChange={onClose}>
         <HiveModalContent className="max-w-md">
           <div className="p-8 text-center">
             <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -164,7 +164,7 @@ export function IntegrationConnectionModal({
   }
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} size="lg">
+    <HiveModal open={isOpen} onOpenChange={onClose}>
       <HiveModalContent className="max-w-2xl">
         <HiveModalHeader>
           <HiveModalTitle className="flex items-center space-x-3">

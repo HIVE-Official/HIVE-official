@@ -265,7 +265,7 @@ export class RealTimeFeedManager {
   private async saveUserFeedState(state: UserFeedState): Promise<void> {
     try {
       await dbAdmin.collection('user_feed_states').doc(this._userId).set({
-        userId: state._userId,
+        userId: state.userId,
         lastUpdateTime: state.lastUpdateTime,
         lastViewTime: state.lastViewTime,
         feedVersion: state.feedVersion,

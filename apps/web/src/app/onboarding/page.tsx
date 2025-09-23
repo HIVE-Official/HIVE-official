@@ -4,10 +4,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useUnifiedAuth } from "@hive/ui";
+import { useAuth } from "@hive/auth-logic";
 // TEMPORARY: Using local implementation due to export resolution issue
-import { useOnboardingBridge } from "@/lib/onboarding-bridge-temp";
-import type { OnboardingData } from "@hive/ui";
+import { useOnboardingBridge, type OnboardingData } from "@/lib/onboarding-bridge-temp";
 
 // Dynamic import for heavy onboarding wizard
 const HiveOnboardingWizard = dynamic(
@@ -25,7 +24,7 @@ const HiveOnboardingWizard = dynamic(
 // Enhanced onboarding wrapper with unified auth integration
 function OnboardingWizardWrapper() {
   const router = useRouter();
-  const unifiedAuth = useUnifiedAuth();
+  const unifiedAuth = useAuth();
   const onboardingBridge = useOnboardingBridge();
   const [isCreatingSpaces, setIsCreatingSpaces] = useState(false);
 
@@ -108,7 +107,7 @@ function OnboardingWizardWrapper() {
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const unifiedAuth = useUnifiedAuth();
+  const unifiedAuth = useAuth();
   const onboardingBridge = useOnboardingBridge();
 
   // Handle authentication and onboarding status

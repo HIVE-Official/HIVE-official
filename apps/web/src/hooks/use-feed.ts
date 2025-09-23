@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@hive/ui';
+import { useAuth } from '@hive/auth-logic';
 
 export interface Post {
   id: string;
@@ -66,7 +66,8 @@ export interface PostInteraction {
 }
 
 export function useFeed(options: FeedOptions = {}) {
-  const { user, getAuthToken } = useAuth();
+  const { user } = useAuth();
+  const getAuthToken = user?.getIdToken;
   const [feedState, setFeedState] = useState<FeedState>({
     posts: [],
     isLoading: true,
@@ -98,8 +99,8 @@ export function useFeed(options: FeedOptions = {}) {
         ...(feedState.posts.length > 0 && !reset && { offset: String(feedState.posts.length) }),
       });
 
-      const authToken = await getAuthToken();
-        const response = await fetch(`/api/feed?${params}`, {
+      const authToken = getAuthToken ? await getAuthToken() : '';
+      const response = await fetch(`/api/feed?${params}`, {
         headers: {
           'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json',
@@ -111,13 +112,16 @@ export function useFeed(options: FeedOptions = {}) {
       }
 
       const data = await response.json();
-      
+
       if (!data.success) {
         throw new Error(data.error || 'Failed to load feed');
       }
 
+      // Safely handle the posts array
+      const posts = Array.isArray(data.posts) ? data.posts : [];
+
       // Transform the posts to match our interface
-      const transformedPosts: Post[] = data.posts.map((post: any) => ({
+      const transformedPosts: Post[] = posts.map((post: any) => ({
         ...post,
         engagement: {
           likes: post.engagement?.likes || 0,
@@ -166,7 +170,7 @@ export function useFeed(options: FeedOptions = {}) {
     const response = await fetch('/api/social/posts', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${await getAuthToken()}`,
+        'Authorization': `Bearer ${getAuthToken ? await getAuthToken() : ''}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(postData),
@@ -250,7 +254,7 @@ export function useFeed(options: FeedOptions = {}) {
       const response = await fetch('/api/social/interactions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${await getAuthToken()}`,
+          'Authorization': `Bearer ${getAuthToken ? await getAuthToken() : ''}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(interaction),

@@ -20,7 +20,7 @@ const DEV_USERS = {
     role: 'student'
   },
   'faculty@test.edu': {
-    userId: 'dev-user-2', 
+    userId: 'dev-user-2',
     email: 'faculty@test.edu',
     handle: 'test-faculty',
     schoolId: 'test-university',
@@ -28,7 +28,7 @@ const DEV_USERS = {
   },
   'admin@test.edu': {
     userId: 'dev-user-3',
-    email: 'admin@test.edu', 
+    email: 'admin@test.edu',
     handle: 'test-admin',
     schoolId: 'test-university',
     role: 'admin'
@@ -39,17 +39,40 @@ const DEV_USERS = {
     handle: 'jacob-founder',
     schoolId: 'test-university',
     role: 'founder'
+  },
+  // UB development users for testing
+  'sarah.chen@buffalo.edu': {
+    userId: 'dev-user-ub-sarah',
+    email: 'sarah.chen@buffalo.edu',
+    handle: 'sarah.chen.cs',
+    schoolId: 'ub',
+    role: 'student'
+  },
+  'admin@buffalo.edu': {
+    userId: 'dev-user-ub-admin',
+    email: 'admin@buffalo.edu',
+    handle: 'ub-admin',
+    schoolId: 'ub',
+    role: 'admin'
   }
 } as const;
 
 /**
- * Development school for testing
+ * Development schools for testing
  */
-const DEV_SCHOOL = {
-  id: 'test-university',
-  name: 'Test University',
-  domain: 'test.edu',
-  active: true
+const DEV_SCHOOLS = {
+  'test-university': {
+    id: 'test-university',
+    name: 'Test University',
+    domain: 'test.edu',
+    active: true
+  },
+  'ub': {
+    id: 'ub',
+    name: 'University at Buffalo',
+    domain: 'buffalo.edu',
+    active: true
+  }
 };
 
 /**
@@ -70,7 +93,7 @@ export async function createDevSession(
 }> {
   // SECURITY: Only allow in development
   if (currentEnvironment !== 'development') {
-    await logSecurityEvent('auth', {
+    await logSecurityEvent('invalid_token', {
       operation: 'dev_session_blocked_in_production',
       tags: {
         email,
@@ -107,7 +130,7 @@ export async function createDevSession(
       request
     );
 
-    await logSecurityEvent('auth', {
+    await logSecurityEvent('invalid_token', {
       operation: 'dev_session_created',
       tags: {
         userId: user.userId,
@@ -200,12 +223,16 @@ export function getDevUsers() {
 /**
  * Get development school
  */
-export function getDevSchool() {
+export function getDevSchool(schoolId?: string) {
   if (currentEnvironment !== 'development') {
     return null;
   }
 
-  return DEV_SCHOOL;
+  if (schoolId && schoolId in DEV_SCHOOLS) {
+    return DEV_SCHOOLS[schoolId as keyof typeof DEV_SCHOOLS];
+  }
+
+  return DEV_SCHOOLS['test-university']; // Default
 }
 
 /**
@@ -221,5 +248,5 @@ export function isDevUser(email: string): boolean {
  */
 export function validateDevSchool(schoolId: string): boolean {
   const isLocalEnv = currentEnvironment === 'development' || !process.env.VERCEL;
-  return isLocalEnv && schoolId === DEV_SCHOOL.id;
+  return isLocalEnv && schoolId in DEV_SCHOOLS;
 }

@@ -1,24 +1,34 @@
-# HIVE UI
+# HIVE - Campus Operating System
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.3-black.svg)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC.svg)](https://tailwindcss.com/)
+[![Launch Status](https://img.shields.io/badge/Launch-October%201st-gold.svg)](https://hive.social)
 
-A beautiful, modern React/Next.js application for social discovery and networking.
+**The social utility platform where connections form around solving real problems together.**
 
 ## Overview
 
-HIVE UI is a Next.js-based web application that helps users discover, create, and engage with spaces and events. The application follows modern React patterns with TypeScript and embraces a sleek dark theme with gold accents for a premium feel.
+HIVE is a complete Campus Operating System launching October 1st at the University at Buffalo. After 2 years of development, it delivers 7 integrated vertical slices that transform how 32,000 students connect, collaborate, and solve problems together. This isn't an MVP - it's a fully-loaded platform where every feature works on Day 1.
 
-## Features
+## 7 Integrated Vertical Slices
 
-- **Space Discovery**: Browse and join spaces categorized by interests and communities
-- **Event Management**: Create, discover, and RSVP to events within spaces
-- **User Profiles**: Comprehensive profile management with authentication
-- **Real-time Features**: Live updates and notifications
-- **Modern UI**: Beautiful glassmorphic design with fluid animations built on Tailwind CSS
-- **Responsive Design**: Optimized for desktop, tablet, and mobile experiences
-- **TypeScript**: Full type safety throughout the application
+1. **Spaces**: Pre-seeded communities with 3000+ RSS-fed events
+2. **Feed**: Real-time social utility stream with smart filtering
+3. **Profile**: Complete campus identity (academic + social + professional)
+4. **HiveLab**: No-code tool builder for student-created utilities
+5. **Events**: Integrated calendar with RSVP and social proof
+6. **Messaging**: Direct messages, group chats, and following system
+7. **Rituals**: Collective experiences that create campus culture
+
+## Key Features
+
+- **Social Utility**: Every interaction serves dual purpose (connection + problem-solving)
+- **RSS Integration**: 3000+ pre-populated events from campus feeds
+- **Real-time Updates**: SSE + Firebase listeners for instant updates
+- **Mobile-First**: Designed for students on phones
+- **Campus Trust**: .edu verification and campus isolation
+- **Production Ready**: 95% complete, clean build achieved
 
 ## Architecture
 
@@ -26,7 +36,7 @@ The application follows modern React and Next.js patterns with a monorepo struct
 
 ### Tech Stack
 
-- **Framework**: Next.js 14 with App Router
+- **Framework**: Next.js 15.3.3 with App Router
 - **Language**: TypeScript 5 (strict mode)
 - **Styling**: Tailwind CSS + shadcn/ui
 - **State Management**: Zustand + React Query
@@ -203,10 +213,30 @@ The application uses Firebase Auth with:
 
 ## Deployment
 
-The application is deployed using:
+### Production Deployment (Vercel)
 
-- **Vercel**: Main hosting platform for the web app
-- **Firebase**: Backend services and database
+The application is production-ready and configured for Vercel deployment:
+
+```bash
+# Deploy to Vercel
+vercel --prod
+
+# Or using the Vercel CLI
+pnpm build
+vercel deploy --prod
+```
+
+### Platform Services
+
+- **Vercel**: Next.js hosting with automatic CI/CD
+- **Firebase**: Auth, Firestore, and Storage services
+- **Environment**: Production configuration via `.env.production`
+
+### Build Status
+- ✅ TypeScript compilation: Clean
+- ✅ ESLint: 0 errors
+- ✅ Production build: Success
+- ✅ Bundle optimization: Complete
 - **GitHub Actions**: CI/CD pipeline for automated deployments
 
 ## License

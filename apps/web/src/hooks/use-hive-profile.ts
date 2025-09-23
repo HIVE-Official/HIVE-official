@@ -158,80 +158,26 @@ export function useHiveProfile(): UseHiveProfileReturn {
     return response.json();
   }, []);
 
-  // Transform API data to HiveProfile format
-  const transformApiProfile = useCallback((apiData: ApiProfileData): HiveProfile => {
-    const now = new Date().toISOString();
-    
-    return {
-      identity: {
-        id: apiData.id,
-        fullName: apiData.fullName || '',
-        handle: apiData.handle || '',
-        email: apiData.email || '',
-        avatarUrl: apiData.avatarUrl || apiData.profilePhoto
-      },
-      academic: {
-        major: apiData.major,
-        academicYear: apiData.academicYear as 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'alumni' | 'faculty' | undefined,
-        graduationYear: typeof apiData.graduationYear === 'string' ? parseInt(apiData.graduationYear, 10) : apiData.graduationYear,
-        schoolId: apiData.schoolId,
-        housing: apiData.housing,
-        pronouns: apiData.pronouns
-      },
-      personal: {
-        bio: apiData.bio,
-        statusMessage: apiData.statusMessage,
-        location: apiData.housing, // Use housing as location for now
-        interests: apiData.interests || []
-      },
-      privacy: {
-        ...DEFAULT_PRIVACY_SETTINGS,
-        isPublic: apiData.isPublic ?? true,
-        showActivity: apiData.showActivity ?? true,
-        showSpaces: apiData.showSpaces ?? true,
-        showConnections: apiData.showConnections ?? true,
-        allowDirectMessages: apiData.allowDirectMessages ?? true,
-        showOnlineStatus: apiData.showOnlineStatus ?? true,
-        ghostMode: {
-          enabled: apiData.ghostMode?.enabled ?? false,
-          level: (apiData.ghostMode?.level ?? 'minimal') as 'minimal' | 'moderate' | 'maximum'
-        }
-      },
-      builder: {
-        ...DEFAULT_BUILDER_INFO,
-        isBuilder: apiData.isBuilder ?? false,
-        builderOptIn: apiData.builderOptIn ?? false,
-        builderLevel: (apiData.builderLevel ?? 'beginner') as 'beginner' | 'intermediate' | 'advanced' | 'expert',
-        specializations: apiData.specializations || [],
-        toolsCreated: apiData.toolsCreated ?? 0
-      },
-      stats: {
-        spacesJoined: apiData.spacesJoined ?? 0,
-        spacesActive: apiData.spacesActive ?? 0,
-        spacesLed: apiData.spacesLed ?? 0,
-        toolsUsed: apiData.toolsUsed ?? 0,
-        connectionsCount: apiData.connectionsCount ?? 0,
-        totalActivity: apiData.totalActivity ?? 0,
-        currentStreak: apiData.currentStreak ?? 0,
-        longestStreak: apiData.longestStreak ?? 0,
-        reputation: apiData.reputation ?? 0,
-        achievements: apiData.achievements ?? 0
-      },
-      timestamps: {
-        createdAt: apiData.createdAt || apiData.joinedAt || now,
-        updatedAt: apiData.updatedAt || now,
-        lastActiveAt: apiData.lastActive || apiData.lastActiveAt || now,
-        lastSeenAt: apiData.lastSeenAt || now
-      },
-      verification: {
-        emailVerified: apiData.emailVerified ?? false,
-        profileVerified: apiData.profileVerified ?? false,
-        accountStatus: (apiData.accountStatus ?? 'active') as 'active' | 'suspended' | 'deactivated',
-        userType: (apiData.userType ?? 'student') as 'alumni' | 'faculty' | 'student' | 'staff',
-        onboardingCompleted: apiData.onboardingCompleted ?? false
+  // No transformation needed - API returns HiveProfile format directly
+
+  // Load Profile Completion Status
+  const loadProfileCompletion = useCallback(async () => {
+    try {
+      const response = await fetch('/api/profile/completion', {
+        headers: getAuthHeaders()
+      });
+
+      const data = await handleApiResponse(response);
+
+      if (data.success && data.completion) {
+        return data.completion.completionPercentage;
       }
-    };
-  }, []);
+      return null;
+    } catch (error) {
+      console.error('Failed to load profile completion:', error);
+      return null;
+    }
+  }, [getAuthHeaders, handleApiResponse]);
 
   // Load Profile Data
   const loadProfile = useCallback(async () => {
@@ -240,15 +186,18 @@ export function useHiveProfile(): UseHiveProfileReturn {
     try {
       setState(prev => ({ ...prev, isLoading: true, error: null }));
 
-      const response = await fetch('/api/profile', {
-        headers: getAuthHeaders()
-      });
+      // Fetch profile and completion data in parallel
+      const [profileResponse, completionPercentage] = await Promise.all([
+        fetch('/api/profile', { headers: getAuthHeaders() }),
+        loadProfileCompletion()
+      ]);
 
-      const data = await handleApiResponse(response);
-      
-      if (data.success && data.user) {
-        const profile = transformApiProfile(data.user);
-        const completeness = getProfileCompleteness(profile);
+      const data = await handleApiResponse(profileResponse);
+
+      if (data.success && data.profile) {
+        // API now returns HiveProfile format directly
+        const profile = data.profile as HiveProfile;
+        const completeness = completionPercentage ?? getProfileCompleteness(profile);
 
         setState(prev => ({
           ...prev,
@@ -267,7 +216,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         isLoading: false
       }));
     }
-  }, [isAuthenticated, user, getAuthHeaders, handleApiResponse, transformApiProfile]);
+  }, [isAuthenticated, user, getAuthHeaders, handleApiResponse, loadProfileCompletion]);
 
   // Update Profile
   const updateProfile = useCallback(async (updateData: HiveProfileUpdateData): Promise<boolean> => {
@@ -276,26 +225,27 @@ export function useHiveProfile(): UseHiveProfileReturn {
     try {
       setState(prev => ({ ...prev, isUpdating: true, error: null }));
 
-      // Transform HiveProfile update format to API format
+      // Flatten update data for API compatibility
       const apiUpdateData: Record<string, unknown> = {};
-      
+
       if (updateData.identity) {
         Object.assign(apiUpdateData, updateData.identity);
       }
-      
+
       if (updateData.academic) {
         Object.assign(apiUpdateData, updateData.academic);
       }
-      
+
       if (updateData.personal) {
         if (updateData.personal.bio !== undefined) apiUpdateData.bio = updateData.personal.bio;
         if (updateData.personal.statusMessage !== undefined) apiUpdateData.statusMessage = updateData.personal.statusMessage;
+        if (updateData.personal.interests !== undefined) apiUpdateData.interests = updateData.personal.interests;
       }
-      
+
       if (updateData.privacy) {
         Object.assign(apiUpdateData, updateData.privacy);
       }
-      
+
       if (updateData.builder) {
         Object.assign(apiUpdateData, updateData.builder);
       }
@@ -647,14 +597,14 @@ export function useHiveProfile(): UseHiveProfileReturn {
         completeness: 0
       });
     }
-  }, [isAuthenticated, user, loadProfile]);
+  }, [isAuthenticated, user?.uid]); // Remove loadProfile to prevent infinite loop
 
   // Load dashboard after profile is loaded
   useEffect(() => {
     if (state.profile && !state.dashboard) {
       refreshDashboard();
     }
-  }, [state.profile, state.dashboard, refreshDashboard]);
+  }, [state.profile?.identity?.id]); // Remove refreshDashboard and state.dashboard to prevent infinite loop
 
   return {
     // State

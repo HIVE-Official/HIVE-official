@@ -9,7 +9,7 @@ interface WelcomeMatProviderProps {
 
 export const WelcomeMatProvider = ({ children }: WelcomeMatProviderProps) => {
   const { user, isLoading } = useSession();
-  const { isVisible, dismissWelcomeMat, hasCheckedStorage } = useWelcomeMat();
+  const { isOpen, closeFlow } = useWelcomeMat();
 
   // Only show welcome mat for authenticated users who have completed onboarding
   // AND are not on auth/onboarding pages
@@ -24,8 +24,7 @@ export const WelcomeMatProvider = ({ children }: WelcomeMatProviderProps) => {
     !isLoading &&
     user &&
     user.onboardingCompleted &&
-    hasCheckedStorage &&
-    isVisible &&
+    isOpen &&
     !isOnAuthPage;
 
   return (
@@ -33,8 +32,7 @@ export const WelcomeMatProvider = ({ children }: WelcomeMatProviderProps) => {
       {children}
       {shouldShowWelcomeMat && (
         <WelcomeMat
-          isVisible={true}
-          onDismiss={dismissWelcomeMat}
+          onDismiss={closeFlow}
           userName={user.fullName || undefined}
         />
       )}

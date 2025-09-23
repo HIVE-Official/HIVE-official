@@ -1,0 +1,199 @@
+<!-- HIVE Firebase Auth Email Templates -->
+<!-- Copy these templates into Firebase Console > Authentication > Templates -->
+
+<!-- ============================================ -->
+<!-- 1. EMAIL VERIFICATION TEMPLATE -->
+<!-- ============================================ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify your HIVE account</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(135deg, #FFB800 0%, #FF8A00 100%); padding: 30px; border-radius: 10px 10px 0 0;">
+    <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to HIVE! 🐝</h1>
+  </div>
+
+  <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 10px 10px;">
+    <p style="font-size: 16px; margin-bottom: 20px;">Hi %DISPLAY_NAME%,</p>
+
+    <p style="font-size: 16px; margin-bottom: 20px;">
+      You're one step away from joining the HIVE community at University at Buffalo!
+    </p>
+
+    <p style="font-size: 16px; margin-bottom: 30px;">
+      Please verify your @buffalo.edu email address to get started:
+    </p>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="%LINK%" style="background: linear-gradient(135deg, #FFB800 0%, #FF8A00 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">
+        Verify Email Address
+      </a>
+    </div>
+
+    <p style="font-size: 14px; color: #666; margin-top: 30px;">
+      This link will expire in 24 hours. If you didn't create a HIVE account, you can safely ignore this email.
+    </p>
+
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+    <p style="font-size: 14px; color: #999; text-align: center;">
+      HIVE - Where Campus Connects<br>
+      University at Buffalo
+    </p>
+  </div>
+</body>
+</html>
+
+<!-- ============================================ -->
+<!-- 2. PASSWORD RESET TEMPLATE -->
+<!-- ============================================ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset your HIVE password</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(135deg, #FFB800 0%, #FF8A00 100%); padding: 30px; border-radius: 10px 10px 0 0;">
+    <h1 style="color: white; margin: 0; font-size: 28px;">Password Reset Request</h1>
+  </div>
+
+  <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 10px 10px;">
+    <p style="font-size: 16px; margin-bottom: 20px;">Hi %DISPLAY_NAME%,</p>
+
+    <p style="font-size: 16px; margin-bottom: 20px;">
+      We received a request to reset your HIVE password.
+    </p>
+
+    <p style="font-size: 16px; margin-bottom: 30px;">
+      Click the button below to create a new password:
+    </p>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="%LINK%" style="background: linear-gradient(135deg, #FFB800 0%, #FF8A00 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">
+        Reset Password
+      </a>
+    </div>
+
+    <p style="font-size: 14px; color: #666; margin-top: 30px;">
+      If you didn't request a password reset, please ignore this email. Your password won't be changed.
+    </p>
+
+    <p style="font-size: 14px; color: #666;">
+      This link will expire in 1 hour for security reasons.
+    </p>
+
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+    <p style="font-size: 14px; color: #999; text-align: center;">
+      Need help? Contact us at support@hive.app<br>
+      HIVE - University at Buffalo
+    </p>
+  </div>
+</body>
+</html>
+
+<!-- ============================================ -->
+<!-- 3. MAGIC LINK SIGN-IN TEMPLATE -->
+<!-- ============================================ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in to HIVE</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(135deg, #FFB800 0%, #FF8A00 100%); padding: 30px; border-radius: 10px 10px 0 0;">
+    <h1 style="color: white; margin: 0; font-size: 28px;">Sign in to HIVE 🔑</h1>
+  </div>
+
+  <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 10px 10px;">
+    <p style="font-size: 16px; margin-bottom: 20px;">Hi there!</p>
+
+    <p style="font-size: 16px; margin-bottom: 30px;">
+      Click the magic link below to instantly sign in to HIVE:
+    </p>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="%LINK%" style="background: linear-gradient(135deg, #FFB800 0%, #FF8A00 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">
+        Sign In to HIVE
+      </a>
+    </div>
+
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 20px 0;">
+      <p style="font-size: 14px; color: #666; margin: 5px 0;">
+        <strong>Security Note:</strong>
+      </p>
+      <ul style="font-size: 14px; color: #666; margin: 5px 0; padding-left: 20px;">
+        <li>This link expires in 10 minutes</li>
+        <li>Can only be used once</li>
+        <li>Only works for your @buffalo.edu email</li>
+      </ul>
+    </div>
+
+    <p style="font-size: 14px; color: #666;">
+      If you didn't request this sign-in link, please ignore this email.
+    </p>
+
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+    <p style="font-size: 14px; color: #999; text-align: center;">
+      HIVE - Where Campus Connects<br>
+      University at Buffalo
+    </p>
+  </div>
+</body>
+</html>
+
+<!-- ============================================ -->
+<!-- 4. EMAIL CHANGE CONFIRMATION TEMPLATE -->
+<!-- ============================================ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm your new email</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(135deg, #FFB800 0%, #FF8A00 100%); padding: 30px; border-radius: 10px 10px 0 0;">
+    <h1 style="color: white; margin: 0; font-size: 28px;">Email Change Request</h1>
+  </div>
+
+  <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 10px 10px;">
+    <p style="font-size: 16px; margin-bottom: 20px;">Hi %DISPLAY_NAME%,</p>
+
+    <p style="font-size: 16px; margin-bottom: 20px;">
+      You requested to change your email address for your HIVE account.
+    </p>
+
+    <p style="font-size: 16px; margin-bottom: 30px;">
+      Please confirm this change by clicking the button below:
+    </p>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="%LINK%" style="background: linear-gradient(135deg, #FFB800 0%, #FF8A00 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">
+        Confirm Email Change
+      </a>
+    </div>
+
+    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 20px 0;">
+      <p style="font-size: 14px; color: #856404; margin: 0;">
+        <strong>⚠️ Important:</strong> If you didn't request this change, please secure your account immediately by resetting your password.
+      </p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+    <p style="font-size: 14px; color: #999; text-align: center;">
+      Security concern? Contact us immediately at security@hive.app<br>
+      HIVE - University at Buffalo
+    </p>
+  </div>
+</body>
+</html>

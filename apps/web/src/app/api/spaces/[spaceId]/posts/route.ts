@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import * as admin from "firebase-admin/auth";
-import { getAuthTokenFromRequest } from "@/lib/auth";
+import { getAuth } from "firebase-admin/auth";
+import { withAuth, type AuthenticatedRequest } from "@/lib/middleware/auth";
 import { postCreationRateLimit } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -15,7 +15,7 @@ const CreatePostSchema = z.object({
   linkUrl: z.string().url().optional(),
   toolId: z.string().optional() });
 
-const db = dbAdmin;
+// Using dbAdmin directly for consistency
 
 // Simple profanity check - in production, use a proper service
 const checkProfanity = (text: string): boolean => {
@@ -30,13 +30,29 @@ export async function GET(
 ) {
   try {
     // Get and validate auth token
-    const token = getAuthTokenFromRequest(request);
-    if (!token) {
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const auth = admin.auth();
-    const decodedToken = await auth.verifyIdToken(token);
+    const token = authHeader.substring(7);
+
+    let decodedToken;
+    let userId;
+
+    // Handle dev tokens in development mode
+    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_')) {
+      userId = token.replace('dev_token_', '');
+      // Handle session token format
+      if (userId.includes('_')) {
+        userId = userId.split('_')[0];
+      }
+      decodedToken = { uid: userId, email: 'test@buffalo.edu' };
+    } else {
+      const auth = getAuth();
+      decodedToken = await auth.verifyIdToken(token);
+      userId = decodedToken.uid;
+    }
 
     const { spaceId } = await params;
 
@@ -44,20 +60,20 @@ export async function GET(
     const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 50);
     const lastPostId = searchParams.get("lastPostId");
 
-    // Check if user is member of the space
-    const memberDoc = await db
+    // Check if user is member of the space using nested collection structure
+    const memberDoc = await dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(userId)
       .get();
 
-    if (!memberDoc.exists) {
+    if (!memberDoc.exists || !memberDoc.data()?.isActive) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Build query for posts
-    let query = db
+    let query = dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("posts")
@@ -65,7 +81,7 @@ export async function GET(
       .limit(limit);
 
     if (lastPostId) {
-      const lastPostDoc = await db
+      const lastPostDoc = await dbAdmin
         .collection("spaces")
         .doc(spaceId)
         .collection("posts")
@@ -80,12 +96,13 @@ export async function GET(
     const postsSnapshot = await query.get();
 
     // Get pinned posts separately (always show at top)
-    const pinnedQuery = await db
+    // TODO: Create composite index for production: isPinned + pinnedAt
+    // For now, we'll fetch pinned posts without ordering by pinnedAt
+    const pinnedQuery = await dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("posts")
       .where("isPinned", "==", true)
-      .orderBy("pinnedAt", "desc")
       .get();
 
     const posts = [];
@@ -96,7 +113,7 @@ export async function GET(
       const postData = doc.data();
 
       // Get author info
-      const authorDoc = await db
+      const authorDoc = await dbAdmin
         .collection("users")
         .doc(postData.authorId)
         .get();
@@ -123,7 +140,7 @@ export async function GET(
       if (postData.isPinned) continue;
 
       // Get author info
-      const authorDoc = await db
+      const authorDoc = await dbAdmin
         .collection("users")
         .doc(postData.authorId)
         .get();
@@ -160,8 +177,13 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ spaceId: string }> }
 ) {
+  // Declare variables outside try block for error logging
+  let spaceId: string = '';
+  let userId: string = '';
+
   try {
-    const { spaceId } = await params;
+    const resolvedParams = await params;
+    spaceId = resolvedParams.spaceId;
 
     // Get auth header and verify token
     const authHeader = request.headers.get("authorization");
@@ -170,8 +192,22 @@ export async function POST(
     }
 
     const token = authHeader.substring(7);
-    const auth = admin.auth();
-    const decodedToken = await auth.verifyIdToken(token);
+
+    let decodedToken;
+
+    // Handle dev tokens in development mode
+    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_')) {
+      userId = token.replace('dev_token_', '');
+      // Handle session token format
+      if (userId.includes('_')) {
+        userId = userId.split('_')[0];
+      }
+      decodedToken = { uid: userId, email: 'test@buffalo.edu' };
+    } else {
+      const auth = getAuth();
+      decodedToken = await auth.verifyIdToken(token);
+      userId = decodedToken.uid;
+    }
 
     // Check rate limiting
     const rateLimitResult = postCreationRateLimit.check(decodedToken.uid);
@@ -193,15 +229,15 @@ export async function POST(
       );
     }
 
-    // Check if user is member of the space
-    const memberDoc = await db
+    // Check if user is member of the space using nested collection structure
+    const memberDoc = await dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(userId)
       .get();
 
-    if (!memberDoc.exists) {
+    if (!memberDoc.exists || !memberDoc.data()?.isActive) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -222,7 +258,7 @@ export async function POST(
     // Create post document
     const postData = {
       ...validatedData,
-      authorId: decodedToken.uid,
+      authorId: userId,
       spaceId: spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -237,7 +273,7 @@ export async function POST(
       isDeleted: false,
     };
 
-    const postRef = await db
+    const postRef = await dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("posts")
@@ -270,7 +306,23 @@ export async function POST(
       );
     }
 
-    logger.error('Error creating post', { error: error, endpoint: '/api/spaces/[spaceId]/posts' });
+    // Enhanced error logging to debug the issue
+    console.error('🔴 Post creation error details:', {
+      error: error instanceof Error ? {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      } : error,
+      spaceId,
+      userId,
+      endpoint: '/api/spaces/[spaceId]/posts'
+    });
+
+    logger.error('Error creating post', {
+      error: error instanceof Error ? error.message : String(error),
+      endpoint: '/api/spaces/[spaceId]/posts'
+    });
+
     return NextResponse.json(ApiResponseHelper.error("Failed to create post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

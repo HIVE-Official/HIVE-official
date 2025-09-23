@@ -52,9 +52,9 @@ export default defineConfig({
     timeout: 120 * 1000, // 2 minutes
   },
 
-  // Global setup and teardown
-  globalSetup: './src/test/global-setup.ts',
-  globalTeardown: './src/test/global-teardown.ts',
+  // Global setup and teardown - commented out until files exist
+  // globalSetup: './src/test/global-setup.ts',
+  // globalTeardown: './src/test/global-teardown.ts',
 
   // Test timeout - increased for slow compilation
   timeout: 60 * 1000, // 60 seconds to handle 13s+ compilation

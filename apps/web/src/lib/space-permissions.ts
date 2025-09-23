@@ -102,7 +102,7 @@ export async function getUserSpaceMembership(spaceId: string): Promise<SpaceMemb
       userId: userMembership.uid,
       role: userMembership.role,
       joinedAt: new Date(userMembership.joinedAt),
-      permissions: userMembership.permissions || DEFAULT_PERMISSIONS[userMembership.role]
+      permissions: userMembership.permissions || DEFAULT_PERMISSIONS[userMembership.role as SpaceRole]
     };
   } catch (error) {
     console.error('Error fetching user space membership:', error);

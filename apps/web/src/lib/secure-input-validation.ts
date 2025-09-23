@@ -394,7 +394,7 @@ export async function validateWithSecurity<T>(
 
     // Log security events for suspicious/dangerous inputs
     if (securityLevel !== 'safe') {
-      await logSecurityEvent('input_validation', {
+      await logSecurityEvent('invalid_token', {
         operation: `suspicious_input_${context.operation}`,
         tags: {
           securityLevel,

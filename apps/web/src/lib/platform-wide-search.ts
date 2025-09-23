@@ -164,7 +164,7 @@ export class HivePlatformSearchEngine {
       );
 
       // Generate suggestions
-      const suggestions = await this.generateSuggestions(query.query);
+      const suggestions = await this.getSuggestions(query.query);
 
       // Generate facets
       const facets = this.generateFacets(allResults);
@@ -587,7 +587,7 @@ export class HivePlatformSearchEngine {
     }
     
     // Personalization boost
-    if (this.searchContext?.preferences.personalizeResults) {
+    if ((this.searchContext?.preferences as any)?.personalizeResults) {
       score += this.getPersonalizationScore(item, type);
     }
     

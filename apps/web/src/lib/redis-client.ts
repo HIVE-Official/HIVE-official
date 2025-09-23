@@ -41,21 +41,18 @@ export function initializeRedis(): Redis | null {
       password: url.password || process.env.REDIS_PASSWORD,
       username: url.username || process.env.REDIS_USERNAME,
       db: 0,
-      
+
       // Connection settings
       connectTimeout: 10000,
       commandTimeout: 5000,
-      retryDelayOnFailover: 100,
       maxRetriesPerRequest: 3,
-      
+
       // Connection pool settings
       family: 4,
-      keepAlive: true,
-      
+
       // Reconnection settings
-      retryDelayOnClusterDown: 300,
       enableOfflineQueue: false,
-      
+
       // Health check
       lazyConnect: true,
     });

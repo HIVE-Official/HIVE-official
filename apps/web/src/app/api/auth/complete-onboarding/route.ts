@@ -8,6 +8,9 @@ import {
 } from "@/lib/transaction-manager";
 import { createRequestLogger } from "@/lib/structured-logger";
 import { withAuthValidationAndErrors, getUserId, getUserEmail, type AuthenticatedRequest } from "@/lib/middleware";
+import { currentEnvironment, isFirebaseAdminConfigured } from "@/lib/env";
+import { isDevUser, getDevSchool } from "@/lib/dev-auth-helper";
+import { NextResponse } from "next/server";
 
 
 const completeOnboardingSchema = z.object({
@@ -20,6 +23,7 @@ const completeOnboardingSchema = z.object({
   lastName: z.string().optional(),
   major: z.string().min(1, "Major is required"),
   academicLevel: z.string().optional(),
+  academicYear: z.string().optional(), // Add academicYear field
   graduationYear: z.number().int().min(1900).max(2040),
   handle: z
     .string()
@@ -33,7 +37,17 @@ const completeOnboardingSchema = z.object({
   builderRequestSpaces: z.array(z.string()).default([]),
   consentGiven: z
     .boolean()
-    .refine((val) => val === true, "Consent must be given") });
+    .refine((val) => val === true, "Consent must be given"),
+  // Additional optional fields for profile completeness
+  bio: z.string().max(500).optional(),
+  statusMessage: z.string().max(200).optional(),
+  interests: z.array(z.string()).optional(),
+  housing: z.string().max(200).optional(),
+  pronouns: z.string().max(50).optional(),
+  isPublic: z.boolean().optional(),
+  builderOptIn: z.boolean().optional(),
+  schoolId: z.string().optional()
+});
 
 interface UserData {
   handle?: string;
@@ -52,16 +66,18 @@ interface UserData {
   updatedAt?: Timestamp;
 }
 
+type OnboardingData = z.infer<typeof completeOnboardingSchema>;
+
 export const POST = withAuthValidationAndErrors(
-  completeOnboardingSchema,
-  async (request: AuthenticatedRequest, context, onboardingData, respond) => {
+  completeOnboardingSchema as any,
+  async (request: AuthenticatedRequest, context, onboardingData: OnboardingData, respond) => {
     const userId = getUserId(request);
     const userEmail = getUserEmail(request);
 
     // Validate handle format first (outside transaction)
     const formatValidation = validateHandleFormat(onboardingData.handle);
     if (!formatValidation.isAvailable) {
-      return respond.error(formatValidation.error, "INVALID_INPUT", { status: 400 });
+      return respond.error(formatValidation.error || "Invalid handle format", "INVALID_INPUT", { status: 400 });
     }
 
     const normalizedHandle = formatValidation.normalizedHandle!;
@@ -75,6 +91,117 @@ export const POST = withAuthValidationAndErrors(
       handle: normalizedHandle,
       userType: onboardingData.userType
     });
+
+    // DEVELOPMENT: Handle development users in local environment
+    const isDevelopmentUser = isDevUser(userEmail);
+    const isLocalEnvironment = currentEnvironment === 'development' || !process.env.VERCEL;
+
+    if (isDevelopmentUser && isLocalEnvironment) {
+      await requestLogger.info('Development onboarding completion bypassing Firebase transaction', {
+        operation: 'dev_complete_onboarding',
+        handle: normalizedHandle,
+        userType: onboardingData.userType
+      });
+
+      // Create mock successful onboarding result for development
+      const mockUserData = {
+        // Core identity fields
+        fullName: onboardingData.fullName,
+        handle: normalizedHandle,
+        avatarUrl: onboardingData.avatarUrl || '',
+
+        // Name fields
+        firstName: onboardingData.firstName,
+        lastName: onboardingData.lastName,
+
+        // Academic information
+        userType: onboardingData.userType,
+        major: onboardingData.major,
+        academicLevel: onboardingData.academicLevel,
+        academicYear: onboardingData.academicYear || onboardingData.academicLevel,
+        graduationYear: onboardingData.graduationYear,
+        schoolId: 'ub-buffalo',
+
+        // Personal information (with defaults)
+        bio: onboardingData.bio || '',
+        statusMessage: '',
+        interests: [],
+        housing: '',
+        pronouns: '',
+
+        // Privacy settings (sensible defaults)
+        isPublic: true,
+        showActivity: true,
+        showSpaces: true,
+        showConnections: true,
+        allowDirectMessages: true,
+        showOnlineStatus: true,
+
+        // Builder information
+        builderRequestSpaces: onboardingData.builderRequestSpaces,
+        builderOptIn: onboardingData.builderRequestSpaces && onboardingData.builderRequestSpaces.length > 0,
+        isBuilder: false,
+
+        // Verification and timestamps
+        consentGiven: onboardingData.consentGiven,
+        consentGivenAt: new Date(),
+        onboardingCompletedAt: new Date(),
+        onboardingCompleted: true,
+        emailVerified: true,
+        profileVerified: false,
+        accountStatus: 'active',
+        updatedAt: new Date(),
+      };
+
+      await requestLogger.info('Development onboarding completed successfully', {
+        operation: 'dev_complete_onboarding',
+        handle: normalizedHandle,
+        userType: onboardingData.userType
+      });
+
+      return respond.success({
+        user: {
+          id: userId,
+          fullName: mockUserData.fullName,
+          userType: mockUserData.userType,
+          handle: normalizedHandle,
+          major: mockUserData.major,
+          academicLevel: mockUserData.academicLevel,
+          graduationYear: mockUserData.graduationYear,
+          builderRequestSpaces: mockUserData.builderRequestSpaces,
+        },
+        builderRequestsCreated: onboardingData.builderRequestSpaces?.length || 0,
+        dev: true,
+        devUserUpdate: {
+          uid: userId,
+          id: userId,
+          email: userEmail,
+          fullName: onboardingData.fullName,
+          handle: normalizedHandle,
+          bio: null,
+          major: onboardingData.major,
+          graduationYear: onboardingData.graduationYear,
+          avatarUrl: onboardingData.avatarUrl || '',
+          isBuilder: false,
+          builderOptIn: false,
+          schoolId: 'ub',
+          onboardingCompleted: true
+        }
+      }, {
+        message: "Development onboarding completed successfully"
+      });
+    }
+
+    // Check if Firebase Admin is configured for non-development users
+    if (isLocalEnvironment && !isFirebaseAdminConfigured) {
+      return NextResponse.json(
+        {
+          error: "Firebase not configured. This feature requires Firebase Admin SDK configuration.",
+          suggestion: "Please configure Firebase Admin credentials or use development users: student@test.edu, faculty@test.edu, admin@test.edu, jacob@test.edu, sarah.chen@buffalo.edu"
+        },
+        { status: 503 }
+      );
+    }
 
     // Use transaction manager for atomicity and consistency
     const transactionResult = await executeOnboardingTransaction(

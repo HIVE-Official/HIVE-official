@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { CookieUtils } from '@/lib/cookie-utils';
 
 // Force dynamic rendering to avoid SSG issues
 export const dynamic = 'force-dynamic';
@@ -15,12 +14,24 @@ export default function DebugAuthPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const returnUrl = urlParams.get('returnTo') || '/';
     setReturnTo(returnUrl);
-    
+
     const checkAuth = () => {
       const sessionJson = localStorage.getItem('hive_session');
       const devAuth = localStorage.getItem('dev_auth_mode');
-      const sessionCookie = CookieUtils.getSessionToken();
-      
+
+      // Inline cookie utility to avoid heavy dependencies
+      const getSessionCookie = () => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; session-token=`);
+        if (parts.length === 2) {
+          const cookieValue = parts.pop()?.split(';').shift();
+          return cookieValue ? decodeURIComponent(cookieValue) : null;
+        }
+        return null;
+      };
+
+      const sessionCookie = getSessionCookie();
+
       setDebug({
         hasSessionJson: !!sessionJson,
         sessionData: sessionJson ? JSON.parse(sessionJson) : null,
@@ -42,7 +53,8 @@ export default function DebugAuthPage() {
 
   const clearAuth = () => {
     localStorage.clear();
-    CookieUtils.clearSessionToken();
+    // Inline cookie clearing
+    document.cookie = 'session-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
     location.reload();
   };
 
@@ -63,17 +75,44 @@ export default function DebugAuthPage() {
         builderOptIn: true
       }
     };
-    
+
+    // Set dev_user for the auth-logic package to pick up
+    const devUser = {
+      uid: userId,
+      id: userId,
+      email: 'debug@test.edu',
+      fullName: 'Debug User',
+      handle: 'debug-user',
+      bio: 'Testing the HIVE platform',
+      major: 'Computer Science',
+      graduationYear: 2025,
+      avatarUrl: '',
+      isBuilder: true,
+      builderOptIn: true,
+      schoolId: 'test-university',
+      onboardingCompleted: true
+    };
+
     // Set localStorage data
     localStorage.setItem('hive_session', JSON.stringify(testSession));
     localStorage.setItem('dev_auth_mode', 'true');
-    
-    // Set session cookie for middleware
-    const sessionToken = CookieUtils.generateDevSessionToken(userId);
-    CookieUtils.setSessionToken(sessionToken);
-    
-    // Debug auth session created successfully
-    
+    localStorage.setItem('dev_user', JSON.stringify(devUser));
+
+    // Inline session token generation and setting
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2);
+    const sessionToken = `dev_session_${userId}_${timestamp}_${random}`;
+
+    // Set cookie inline
+    const maxAge = 24 * 60 * 60; // 24 hours
+    const secure = window.location.protocol === 'https:';
+    let cookieString = `session-token=${encodeURIComponent(sessionToken)}`;
+    cookieString += `; Max-Age=${maxAge}`;
+    cookieString += '; Path=/';
+    cookieString += '; SameSite=lax';
+    if (secure) cookieString += '; Secure';
+    document.cookie = cookieString;
+
     // Redirect to the return URL instead of reloading
     setTimeout(() => {
       window.location.href = returnTo;

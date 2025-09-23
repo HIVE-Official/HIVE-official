@@ -154,7 +154,8 @@ export function useRealtimePerformance(
         entries.forEach((entry) => {
           if (entry.entryType === 'navigation') {
             // Track navigation performance
-            recordLatency(entry.loadEventEnd - entry.loadEventStart);
+            const navEntry = entry as PerformanceNavigationTiming;
+            recordLatency(navEntry.loadEventEnd - navEntry.loadEventStart);
           } else if (entry.entryType === 'measure') {
             // Track custom measurements
             recordLatency(entry.duration);

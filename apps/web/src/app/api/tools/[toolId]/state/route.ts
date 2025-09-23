@@ -1,4 +1,5 @@
-import * as admin from "firebase-admin/firestore";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import * as admin from "firebase-admin";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
@@ -23,7 +24,7 @@ export const GET = withAuthAndErrors(async (
   const userId = searchParams.get("userId") || authenticatedUserId;
 
   if (!spaceId) {
-    return respond.error("spaceId parameter is required", "INVALID_INPUT", 400);
+    return respond.error("spaceId parameter is required", "INVALID_INPUT", { status: 400 });
   }
 
     const db = dbAdmin;
@@ -35,7 +36,7 @@ export const GET = withAuthAndErrors(async (
       .get();
 
     if (!stateDoc.exists) {
-      return respond.error("Tool state not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Tool state not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const stateData = stateDoc.data();
@@ -43,21 +44,24 @@ export const GET = withAuthAndErrors(async (
     return respond.success(stateData);
 });
 
+type ToolStateData = z.infer<typeof ToolStateSchema>;
+
 export const POST = withAuthValidationAndErrors(
   ToolStateSchema,
   async (
     request: AuthenticatedRequest,
     { params }: { params: Promise<{ toolId: string }> },
-    { spaceId, userId: requestUserId, state },
+    body: ToolStateData,
     respond
   ) => {
+    const { spaceId, userId: requestUserId, state } = body;
     const authenticatedUserId = getUserId(request);
     const { toolId } = await params;
 
     // Ensure user can only update their own state
     const userId = requestUserId || authenticatedUserId;
     if (userId !== authenticatedUserId) {
-      return respond.error("Cannot update another user's state", "FORBIDDEN", 403);
+      return respond.error("Cannot update another user's state", "FORBIDDEN", { status: 403 });
     }
 
     const db = dbAdmin;
@@ -71,7 +75,7 @@ export const POST = withAuthValidationAndErrors(
       .get();
 
     if (!spaceMemberDoc.exists) {
-      return respond.error("Access denied to this space", "FORBIDDEN", 403);
+      return respond.error("Access denied to this space", "FORBIDDEN", { status: 403 });
     }
 
     // Verify tool exists and is deployed to the space
@@ -81,12 +85,12 @@ export const POST = withAuthValidationAndErrors(
       .get();
 
     if (!toolDoc.exists) {
-      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const toolData = toolDoc.data();
     if (toolData?.status !== "published") {
-      return respond.error("Tool is not published", "INVALID_INPUT", 400);
+      return respond.error("Tool is not published", "INVALID_INPUT", { status: 400 });
     }
 
     // Check if tool is deployed to the space
@@ -99,7 +103,7 @@ export const POST = withAuthValidationAndErrors(
       .get();
 
     if (toolDeploymentDoc.empty) {
-      return respond.error("Tool is not deployed to this space", "FORBIDDEN", 403);
+      return respond.error("Tool is not deployed to this space", "FORBIDDEN", { status: 403 });
     }
 
     // Prepare state document
@@ -154,12 +158,12 @@ export const DELETE = withAuthAndErrors(async (
   const userId = searchParams.get("userId") || authenticatedUserId;
 
   if (!spaceId) {
-    return respond.error("spaceId parameter is required", "INVALID_INPUT", 400);
+    return respond.error("spaceId parameter is required", "INVALID_INPUT", { status: 400 });
   }
 
   // Ensure user can only delete their own state
   if (userId !== authenticatedUserId) {
-    return respond.error("Cannot delete another user's state", "FORBIDDEN", 403);
+    return respond.error("Cannot delete another user's state", "FORBIDDEN", { status: 403 });
   }
 
     const db = dbAdmin;

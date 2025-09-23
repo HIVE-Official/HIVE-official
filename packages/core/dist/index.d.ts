@@ -21,4 +21,5 @@ export * from "./stores/useAppStore";
 export * from "./firebase";
 export * from "./feature-flags";
 export * from "./utils/privacy-utils";
+export * from "./types/profile-system";
 //# sourceMappingURL=index.d.ts.map

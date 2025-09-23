@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import * as admin from "firebase-admin/auth";
+import { getAuth } from "firebase-admin/auth";
 import { type Timestamp } from "firebase-admin/firestore";
 import { handleApiError, AuthenticationError as _AuthenticationError, ValidationError } from "@/lib/api-error-handler";
 import { auditAuthEvent } from "@/lib/production-auth";
@@ -96,12 +96,72 @@ export async function POST(request: NextRequest) {
     }
 
     const { email, schoolId, token } = validationResult.data;
-    
+
     // Ensure all required fields are strings
     if (typeof email !== 'string' || typeof token !== 'string') {
       return NextResponse.json(ApiResponseHelper.error("Invalid input types", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
-    
+
+    // DEVELOPMENT: Handle development tokens
+    const isLocalEnvironment = currentEnvironment === 'development' || !process.env.VERCEL;
+    if (isLocalEnvironment) {
+      try {
+        // Try to decode the development token
+        const decodedToken = JSON.parse(Buffer.from(token, 'base64').toString());
+        if (decodedToken.dev && decodedToken.email === email) {
+          logger.info('🔧 Development token verified', { email, endpoint: '/api/auth/verify-magic-link' });
+
+          // Create a simple session for development
+          const userId = `dev-user-${email.replace(/[@.]/g, '_')}`;
+
+          // Store session in localStorage (client will handle this)
+          await auditAuthEvent('success', request, {
+            userId,
+            operation: 'verify_magic_link_dev'
+          });
+
+          // Generate session token for development
+          const timestamp = Date.now();
+          const random = Math.random().toString(36).substring(2);
+          const sessionToken = `dev_session_${userId}_${timestamp}_${random}`;
+
+          const response = NextResponse.json({
+            success: true,
+            needsOnboarding: false, // Skip onboarding in dev
+            userId,
+            devMode: true,
+            sessionData: {
+              userId,
+              email,
+              schoolId: schoolId || 'test-university',
+              verifiedAt: new Date().toISOString(),
+              onboardingCompleted: true
+            }
+          });
+
+          // Set the session cookie for middleware
+          response.cookies.set('session-token', sessionToken, {
+            maxAge: 24 * 60 * 60, // 24 hours
+            secure: false, // Allow non-HTTPS in development
+            sameSite: 'lax',
+            path: '/'
+          });
+
+          // Also set dev-mode flag
+          response.cookies.set('dev-mode', 'true', {
+            maxAge: 24 * 60 * 60,
+            secure: false,
+            sameSite: 'lax',
+            path: '/'
+          });
+
+          return response;
+        }
+      } catch (e) {
+        logger.info('Not a development token, continuing with Firebase verification', { endpoint: '/api/auth/verify-magic-link' });
+      }
+    }
+
     // SECURITY: Additional environment-based checks
     if (currentEnvironment === 'production') {
       // In production, validate school domain strictly
@@ -115,13 +175,13 @@ export async function POST(request: NextRequest) {
           operation: 'verify_magic_link',
           error: 'invalid_school_domain'
         });
-        
+
         return NextResponse.json(ApiResponseHelper.error("Email domain does not match school", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
       }
     }
     
     // PRODUCTION: Use Firebase Admin SDK for magic link verification
-    const auth = admin.auth();
+    const auth = getAuth();
     
     // Verify the magic link token
     let actionCodeInfo;

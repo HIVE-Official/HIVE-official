@@ -1,5 +1,14 @@
 import { useState, useCallback } from 'react';
-import { SearchableItem } from "@hive/ui";
+// Define SearchableItem locally since it might not be exported
+interface SearchableItem {
+  id: string;
+  title: string;
+  description?: string;
+  type: string;
+  icon?: string;
+  url?: string;
+  metadata?: Record<string, any>;
+}
 
 interface SearchAPI {
   spaces: (_query: string) => Promise<SearchableItem[]>;

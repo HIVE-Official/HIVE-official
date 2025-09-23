@@ -213,6 +213,7 @@ export interface HiveProfileDashboard {
   upcomingEvents: Array<{
     id: string;
     title: string;
+    description?: string;
     startDate: string;
     type: 'personal' | 'space';
     spaceId?: string;

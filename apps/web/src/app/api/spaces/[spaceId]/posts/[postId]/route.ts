@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import * as admin from "firebase-admin/auth";
+import { getAuth } from "firebase-admin/auth";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
@@ -29,7 +29,7 @@ export async function GET(
     }
 
     const token = authHeader.substring(7);
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
 
@@ -102,7 +102,7 @@ export async function PATCH(
     }
 
     const token = authHeader.substring(7);
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
 
@@ -221,7 +221,7 @@ export async function DELETE(
     }
 
     const token = authHeader.substring(7);
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
 
@@ -303,7 +303,7 @@ export async function POST(
     }
 
     const token = authHeader.substring(7);
-    const auth = admin.auth();
+    const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
     const userId = decodedToken.uid;
 

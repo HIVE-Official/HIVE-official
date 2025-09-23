@@ -133,7 +133,7 @@ export function CardCustomizationModal({
   };
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} size="lg">
+    <HiveModal open={isOpen} onOpenChange={onClose}>
       <HiveModalContent className="max-w-2xl">
         <HiveModalHeader>
           <HiveModalTitle className="flex items-center space-x-3">

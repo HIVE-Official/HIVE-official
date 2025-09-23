@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CRITICAL FIX: Import CSS variables that components actually use */
+@import '../styles/css-variables.css';
+
 /* Mobile performance optimizations */
 @import '../styles/mobile-optimizations.css';
 

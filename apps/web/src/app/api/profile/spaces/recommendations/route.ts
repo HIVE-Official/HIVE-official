@@ -4,6 +4,13 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import {
+  withProfileSecurity,
+  enforceCompusIsolation,
+  getPrivacySettings,
+  getConnectionType,
+  ConnectionType
+} from '@/lib/profile-security';
 
 // Space recommendation interface
 interface SpaceRecommendation {
@@ -21,12 +28,27 @@ interface SpaceRecommendation {
   recommendationType: 'similar_interests' | 'friend_activity' | 'trending' | 'new_spaces' | 'academic_match';
 }
 
-// GET - Get space recommendations for user
-export async function GET(request: NextRequest) {
+// GET - Get space recommendations for user with security
+export const GET = withProfileSecurity(async (request: NextRequest) => {
   try {
     const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
+
+    // Enforce campus isolation
+    const campusId = await enforceCompusIsolation(user.uid);
+
+    // Check if user has opted out of discovery
+    const privacySettings = await getPrivacySettings(user.uid);
+    if (!privacySettings.discoveryParticipation) {
+      return NextResponse.json({
+        recommendations: [],
+        totalAvailable: 0,
+        currentMemberships: 0,
+        recommendationType: 'opted_out',
+        message: 'Discovery recommendations disabled in privacy settings'
+      });
     }
 
     const { searchParams } = new URL(request.url);
@@ -45,8 +67,9 @@ export async function GET(request: NextRequest) {
     const userDoc = await dbAdmin.collection('users').doc(user.uid).get();
     const userData = userDoc.exists ? userDoc.data() : null;
 
-    // Get all available spaces (excluding current memberships)
+    // Get all available spaces (excluding current memberships) with campus isolation
     const allSpacesQuery = dbAdmin.collection('spaces')
+      .where('campusId', '==', campusId)
       .where('status', '==', 'active')
       .orderBy('memberCount', 'desc')
       .limit(100); // Limit for performance
@@ -130,7 +153,12 @@ export async function GET(request: NextRequest) {
     logger.error('Error generating space recommendations', { error: error, endpoint: '/api/profile/spaces/recommendations' });
     return NextResponse.json(ApiResponseHelper.error("Failed to generate space recommendations", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, {
+  requireAuth: true,
+  checkGhostMode: true,
+  auditOperation: 'view_recommendations',
+  rateLimit: { limit: 30, window: 60000 } // 30 requests per minute
+});
 
 // Helper function to generate interest-based recommendations
 async function generateInterestBasedRecommendations(
@@ -260,9 +288,18 @@ async function generateFriendActivityRecommendations(
       .where('status', '==', 'active');
 
     const friendsSnapshot = await friendsQuery.get();
-    const friendIds = [...new Set(friendsSnapshot.docs
+    const potentialFriendIds = [...new Set(friendsSnapshot.docs
       .map(doc => doc.data().userId)
       .filter(id => id !== userId))];
+
+    // Filter out users in ghost mode (unless they're actual friends)
+    const friendIds = [];
+    for (const friendId of potentialFriendIds) {
+      const privacySettings = await getPrivacySettings(friendId);
+      if (!privacySettings.ghostMode || await getConnectionType(userId, friendId) === ConnectionType.FRIEND) {
+        friendIds.push(friendId);
+      }
+    }
 
     if (friendIds.length === 0) {
       return [];

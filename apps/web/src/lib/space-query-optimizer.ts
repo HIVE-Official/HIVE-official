@@ -4,8 +4,8 @@
  */
 
 import { dbAdmin } from './firebase-admin';
-import { logger } from './logger';
-import type { DocumentSnapshot, DocumentReference } from 'firebase-admin';
+import { logger } from './structured-logger';
+import type { DocumentSnapshot, DocumentReference } from 'firebase-admin/firestore';
 
 export interface SpaceQueryResult {
   spaceDoc: DocumentSnapshot | null;

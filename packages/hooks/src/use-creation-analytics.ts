@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useAuth } from "./use-auth";
+import { useAuth } from "@hive/auth-logic";
 import type { CreationAnalyticsEvent, CreationEventType } from "@hive/core";
 import {
   createAnalyticsEvent,
@@ -7,7 +7,6 @@ import {
   batchAnalyticsEvents,
 } from "@hive/core";
 
-// Type-only import to avoid unused variable error
 import type { UseAuthReturn } from "@hive/auth-logic";
 
 interface UseCreationAnalyticsOptions {

@@ -73,14 +73,14 @@ const EnhancedCreateToolSchema = CreateToolSchema.extend({
 // POST /api/tools - Create new tool (supports templates)
 export const POST = withAuthValidationAndErrors(
   EnhancedCreateToolSchema,
-  async (request: AuthenticatedRequest, context, validatedData, respond) => {
+  async (request: AuthenticatedRequest, context, validatedData: any, respond) => {
     const userId = getUserId(request);
 
     // Rate limiting
     try {
       // await createToolLimiter.check(); // Check rate limit for this user
     } catch {
-      return respond.error("Too many tool creations. Please try again later.", "UNKNOWN_ERROR", 429);
+      return respond.error("Too many tool creations. Please try again later.", "UNKNOWN_ERROR", { status: 429 });
     }
 
     logger.info('🔨 Creating tool for user', { userUid: userId, endpoint: '/api/tools'  });
@@ -92,14 +92,14 @@ export const POST = withAuthValidationAndErrors(
         .doc(validatedData.spaceId)
         .get();
       if (!spaceDoc.exists) {
-        return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
+        return respond.error("Space not found", "RESOURCE_NOT_FOUND", { status: 404 });
       }
 
       const spaceData = spaceDoc.data();
       const userRole = spaceData?.members?.[userId]?.role;
 
       if (!["builder", "admin"].includes(userRole)) {
-        return respond.error("Insufficient permissions to create tools in this space", "FORBIDDEN", 403);
+        return respond.error("Insufficient permissions to create tools in this space", "FORBIDDEN", { status: 403 });
       }
     }
 
@@ -222,7 +222,7 @@ export const POST = withAuthValidationAndErrors(
     return respond.success({
       tool: createdTool,
       message: `Tool "${validatedData.name}" created successfully`,
-    }, 201);
+    }, { status: 201 });
   }
 );
 
@@ -234,7 +234,7 @@ const UpdateToolSchema = z.object({
 // PUT /api/tools - Update existing tool
 export const PUT = withAuthValidationAndErrors(
   UpdateToolSchema,
-  async (request: AuthenticatedRequest, context, validatedData, respond) => {
+  async (request: AuthenticatedRequest, context, validatedData: any, respond) => {
     const userId = getUserId(request);
     const { toolId, ...updateData } = validatedData;
 
@@ -243,14 +243,14 @@ export const PUT = withAuthValidationAndErrors(
     // Get existing tool
     const toolDoc = await adminDb.collection("tools").doc(toolId).get();
     if (!toolDoc.exists) {
-      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const existingTool = toolDoc.data();
 
     // Check ownership
     if (existingTool?.ownerId !== userId) {
-      return respond.error("Not authorized to update this tool", "FORBIDDEN", 403);
+      return respond.error("Not authorized to update this tool", "FORBIDDEN", { status: 403 });
     }
 
     const now = new Date();

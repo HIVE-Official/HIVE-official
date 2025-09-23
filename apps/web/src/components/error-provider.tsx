@@ -40,7 +40,7 @@ interface ErrorProviderProps {
 
 export function ErrorProvider({ children }: ErrorProviderProps) {
   // Temporarily remove auth dependency to fix SSG issues
-  const user: Record<string, unknown> | null = null;
+  const user: { id: string; fullName?: string; email?: string; isAdmin?: boolean } | null = null;
   const { trackError, getAnalytics, reset } = useGlobalErrorBoundary();
   const [isOnline, setIsOnline] = useState(true);
   const [campusInfo, setCampusInfo] = useState<ErrorProviderContext['campusInfo']>();
@@ -145,10 +145,10 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
         maxRetryAttempts={3}
         context={{
           user: user ? {
-            id: user.id,
-            name: user.fullName || undefined,  
-            email: user.email || undefined,
-            isAdmin: user.isAdmin || false,
+            id: (user as any).id,
+            name: (user as any).fullName || undefined,
+            email: (user as any).email || undefined,
+            isAdmin: (user as any).isAdmin || false,
           } : undefined,
           campus: campusInfo ? {
             id: campusInfo.id,
@@ -169,6 +169,17 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
 export function useErrorHandler() {
   const context = useContext(ErrorContext);
   if (!context) {
+    // During SSR or when context is not available, provide a safe fallback
+    if (typeof window === 'undefined') {
+      // SSR fallback - provide minimal error handler state
+      return {
+        reportError: () => {},
+        getErrorAnalytics: () => ({}),
+        resetErrorState: () => {},
+        isOnline: true,
+        campusInfo: undefined,
+      };
+    }
     throw new Error('useErrorHandler must be used within an ErrorProvider');
   }
   return context;

@@ -4,7 +4,7 @@
  */
 
 import { config } from './config';
-import { logger } from './logger';
+import { logger } from './structured-logger';
 
 interface SessionData {
   uid: string;
@@ -213,8 +213,10 @@ export async function authenticatedFetch(
     },
   };
 
-  logger.apiCall(url, options.method || 'GET', {
+  logger.info(`API Call: ${options.method || 'GET'} ${url}`, {
     userId: getCurrentUserId() || 'anonymous',
+    endpoint: url,
+    method: options.method || 'GET'
   });
 
   try {

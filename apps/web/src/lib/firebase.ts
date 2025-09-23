@@ -32,12 +32,16 @@ if (typeof window !== "undefined") {
 if (isDevelopment && typeof window !== "undefined") {
   try {
     // Only connect to emulators if not already connected
-    if (!auth.config.emulator) {
+    // Check if emulators are already connected by checking for localhost in config
+    const authConfig = (auth as any).config;
+    const dbConfig = (db as any)._delegate?._databaseId;
+
+    if (!authConfig?.emulator) {
       connectAuthEmulator(auth, "http://localhost:9099", {
         disableWarnings: true,
       });
     }
-    if (!db._delegate._databaseId.projectId.includes("localhost")) {
+    if (dbConfig && !dbConfig.projectId.includes("localhost")) {
       connectFirestoreEmulator(db, "localhost", 8080);
     }
   } catch (error) {

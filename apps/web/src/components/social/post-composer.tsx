@@ -322,7 +322,7 @@ export function PostComposer({
           <Textarea
             ref={textareaRef}
             value={content}
-            onChange={(e: React.ChangeEvent) => handleContentChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleContentChange(e.target.value)}
             placeholder={placeholder}
             className={`min-h-[80px] resize-none border-none bg-transparent text-white placeholder:text-hive-text-mutedLight focus:outline-none ${
               isOverLimit ? 'text-red-400' : ''
@@ -347,7 +347,7 @@ export function PostComposer({
               <input
                 type="text"
                 value={poll.question}
-                onChange={(e: React.ChangeEvent) => setPoll(prev => ({ ...prev, question: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoll(prev => ({ ...prev, question: e.target.value }))}
                 placeholder="Ask a question..."
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
               />
@@ -359,7 +359,7 @@ export function PostComposer({
                     <input
                       type="text"
                       value={option}
-                      onChange={(e: React.ChangeEvent) => updatePollOption(index, e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePollOption(index, e.target.value)}
                       placeholder={`Option ${index + 1}`}
                       className="flex-1 bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
                     />
@@ -392,7 +392,7 @@ export function PostComposer({
                   <input
                     type="checkbox"
                     checked={poll.allowMultiple}
-                    onChange={(e: React.ChangeEvent) => setPoll(prev => ({ ...prev, allowMultiple: e.target.checked }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoll(prev => ({ ...prev, allowMultiple: e.target.checked }))}
                     className="rounded"
                   />
                   <span>Allow multiple choices</span>
@@ -406,14 +406,14 @@ export function PostComposer({
               <input
                 type="text"
                 value={event.title}
-                onChange={(e: React.ChangeEvent) => setEvent(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, title: e.target.value }))}
                 placeholder="Event title"
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none font-medium"
               />
               
               <textarea
                 value={event.description}
-                onChange={(e: React.ChangeEvent) => setEvent(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEvent(prev => ({ ...prev, description: e.target.value }))}
                 placeholder="Event description"
                 rows={2}
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none resize-none"
@@ -425,7 +425,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.startTime}
-                    onChange={(e: React.ChangeEvent) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
                     className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
@@ -434,7 +434,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.endTime || ''}
-                    onChange={(e: React.ChangeEvent) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
                     className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
@@ -448,8 +448,8 @@ export function PostComposer({
               {attachments.map(attachment => (
                 <div key={attachment.id} className="flex items-center justify-between p-2 bg-hive-background-tertiary rounded">
                   <div className="flex items-center space-x-2">
-                    {attachment.type === 'image' ? <Image className="h-4 w-4" alt="" /> :
-                     attachment.type === 'video' ? <Image className="h-4 w-4" alt="" /> :
+                    {attachment.type === 'image' ? <Image className="h-4 w-4" /> :
+                     attachment.type === 'video' ? <Image className="h-4 w-4" /> :
                      <Paperclip className="h-4 w-4" />}
                     <span className="text-sm text-white">{attachment.name}</span>
                     {attachment.size && (
@@ -497,7 +497,7 @@ export function PostComposer({
                   title={`Create ${type} post`}
                 >
                   {type === 'text' && <span className="h-4 w-4 flex items-center justify-center text-xs">📄</span>}
-                  {type === 'image' && <Image className="h-4 w-4" alt="" />}
+                  {type === 'image' && <Image className="h-4 w-4" />}
                   {type === 'link' && <Link className="h-4 w-4" />}
                   {type === 'poll' && <Poll className="h-4 w-4" />}
                   {type === 'event' && <Calendar className="h-4 w-4" />}

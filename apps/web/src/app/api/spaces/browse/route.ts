@@ -28,7 +28,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     // Note: Removed schoolId logic since spaces don't have this field
 
     // Use flat collection structure for better performance
-    let spacesQuery = dbAdmin.collection('spaces');
+    let spacesQuery: any = dbAdmin.collection('spaces');
 
     // Apply type filter
     if (type) {
@@ -43,10 +43,9 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
         .where('name_lowercase', '<=', searchLower + '\uf8ff')
         .orderBy('name_lowercase');
     } else {
-      // Default ordering by member count (popular first), then name
-      spacesQuery = spacesQuery
-        .orderBy('metrics.memberCount', 'desc')
-        .orderBy('name_lowercase');
+      // Simplified ordering to avoid composite index requirement
+      // Just order by name_lowercase for now
+      spacesQuery = spacesQuery.orderBy('name_lowercase');
     }
 
     // Apply pagination
@@ -56,11 +55,11 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     
     spacesQuery = spacesQuery.limit(limit);
 
-    logger.info('📊 Querying spaces with filters', { type, search, limit, offset, endpoint: '/api/spaces/browse' });
+    logger.info('📊 Querying spaces with filters', { metadata: { type, search, limit, offset }, endpoint: '/api/spaces/browse' });
 
     const spacesSnapshot = await spacesQuery.get();
 
-    const spaces = spacesSnapshot.docs.map(doc => {
+    const spaces = spacesSnapshot.docs.map((doc: any) => {
       const data = doc.data();
       return {
         id: doc.id,
@@ -81,7 +80,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     // Get total count for pagination
     let totalCount = 0;
     try {
-      let countQuery = dbAdmin.collection('spaces');
+      let countQuery: any = dbAdmin.collection('spaces');
       if (type) {
         countQuery = countQuery.where('type', '==', type);
       }
@@ -136,7 +135,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     }
 
     // Add membership status to each space
-    const spacesWithMembership = paginatedSpaces.map(space => ({
+    const spacesWithMembership = paginatedSpaces.map((space: any) => ({
       id: space.id,
       name: space.name,
       description: space.description,
@@ -152,7 +151,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     }));
 
     // Group spaces by type for better organization
-    const spacesByType = spacesWithMembership.reduce((acc, space) => {
+    const spacesByType = spacesWithMembership.reduce((acc: any, space: any) => {
       const spaceType = space.type;
       if (!acc[spaceType]) {
         acc[spaceType] = [];

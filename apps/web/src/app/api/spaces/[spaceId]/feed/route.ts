@@ -40,7 +40,7 @@ export const GET = withAuthAndErrors(async (
   const { spaceId } = await params;
 
   if (!spaceId) {
-    return respond.error("Space ID is required", "INVALID_INPUT", 400);
+    return respond.error("Space ID is required", "INVALID_INPUT", { status: 400 });
   }
 
     const { searchParams } = new URL(request.url);
@@ -61,7 +61,7 @@ export const GET = withAuthAndErrors(async (
       .get();
 
     if (!memberDoc.exists) {
-      return respond.error("Not a member of this space", "FORBIDDEN", 403);
+      return respond.error("Not a member of this space", "FORBIDDEN", { status: 403 });
     }
 
     const activities: ActivityItem[] = [];

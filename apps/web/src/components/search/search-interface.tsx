@@ -1,18 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  Card,
-  Button,
-  Input,
-  Badge,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Spinner,
-} from '@hive/ui';
+import { Card, Button, Input, Badge, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@hive/ui';
 import {
   Search,
   Loader2,
@@ -232,7 +221,7 @@ export function SearchInterface({
           <Input
             ref={searchInputRef}
             value={query}
-            onChange={(e: React.ChangeEvent) => setQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
             onFocus={() => setShowSuggestions(true)}
             placeholder={placeholder}
             className="pl-12 pr-12 py-3 text-lg"
@@ -250,7 +239,7 @@ export function SearchInterface({
           )}
           {isSearching && (
             <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-              <Spinner className="h-5 w-5" />
+              <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
             </div>
           )}
         </form>
@@ -523,7 +512,7 @@ export function SearchInterface({
               >
                 {isSearching ? (
                   <>
-                    <Spinner className="h-4 w-4 mr-2" />
+                    <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
                     Loading...
                   </>
                 ) : (

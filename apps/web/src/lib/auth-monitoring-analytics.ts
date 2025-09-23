@@ -420,9 +420,9 @@ export class AuthMonitoringAnalytics {
     return stages.map((stage, index) => {
       const usersAtStage = journeys.filter(j => j.funnel[stage as keyof UserJourney['funnel']]).length;
       const previousStage = index > 0 ? journeys.filter(j => j.funnel[stages[index - 1] as keyof UserJourney['funnel']]).length : journeys.length;
-      
+
       return {
-        stage,
+        stage: stage,
         users: usersAtStage,
         conversionRate: previousStage > 0 ? (usersAtStage / previousStage) * 100 : 0,
         averageTime: this.getAverageTimeToStage(stage)
@@ -440,7 +440,7 @@ export class AuthMonitoringAnalytics {
     const recentViolations = securityEvents.slice(-10);
     
     return {
-      threatLevel: securityEvents.length > 10 ? 'high' : securityEvents.length > 5 ? 'medium' : 'low' as const,
+      threatLevel: (securityEvents.length > 10 ? 'high' : securityEvents.length > 5 ? 'medium' : 'low') as 'low' | 'medium' | 'high',
       recentViolations,
       riskScores: []
     };

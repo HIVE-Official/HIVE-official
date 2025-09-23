@@ -16,8 +16,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
   title: "Community Guidelines",
   content: (
     <div className="prose prose-invert max-w-none">
-      <div className="mb-8 rounded-lg border border-gold/20 bg-gold/5 p-6">
-        <h2 className="mt-0 text-xl font-semibold text-gold">
+      <div className="mb-8 rounded-lg border border-[var(--hive-brand-primary)]/20 bg-[var(--hive-brand-primary)]/5 p-6">
+        <h2 className="mt-0 text-xl font-semibold text-[var(--hive-brand-primary)]">
           TL;DR - Be Human, Be Kind
         </h2>
         <p className="mb-0 text-gray-300">
@@ -29,20 +29,20 @@ const CURRENT_GUIDELINES: LegalDocument = {
 
       <h2>Our Community Values</h2>
       <div className="mb-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border border-gold/20 bg-gray-900/30 p-4">
-          <h3 className="mt-0 text-gold">🤝 Respect</h3>
+        <div className="rounded-lg border border-[var(--hive-brand-primary)]/20 bg-[var(--hive-background-tertiary)]/30 p-4">
+          <h3 className="mt-0 text-[var(--hive-brand-primary)]">🤝 Respect</h3>
           <p className="mb-0 text-sm">
             Honor different perspectives, backgrounds, and experiences.
           </p>
         </div>
-        <div className="rounded-lg border border-gold/20 bg-gray-900/30 p-4">
-          <h3 className="mt-0 text-gold">✨ Authenticity</h3>
+        <div className="rounded-lg border border-[var(--hive-brand-primary)]/20 bg-[var(--hive-background-tertiary)]/30 p-4">
+          <h3 className="mt-0 text-[var(--hive-brand-primary)]">✨ Authenticity</h3>
           <p className="mb-0 text-sm">
             Be genuine in your interactions and contributions.
           </p>
         </div>
-        <div className="rounded-lg border border-gold/20 bg-gray-900/30 p-4">
-          <h3 className="mt-0 text-gold">🚀 Growth</h3>
+        <div className="rounded-lg border border-[var(--hive-brand-primary)]/20 bg-[var(--hive-background-tertiary)]/30 p-4">
+          <h3 className="mt-0 text-[var(--hive-brand-primary)]">🚀 Growth</h3>
           <p className="mb-0 text-sm">
             Support each other's learning and development.
           </p>
@@ -50,8 +50,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </div>
 
       <h2>1. Respectful Communication</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Communicate with kindness, even when you disagree.
         </p>
       </div>
@@ -87,8 +87,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <h2>2. Academic Integrity</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Support learning without compromising academic honesty.
         </p>
       </div>
@@ -122,8 +122,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <h2>3. Content Standards</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Share content that adds value and follows platform rules.
         </p>
       </div>
@@ -173,8 +173,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <h2>4. Space-Specific Guidelines</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Each Space may have additional rules set by its builders.
         </p>
       </div>
@@ -203,8 +203,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </p>
 
       <h2>5. Tool Creation Guidelines</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Create tools that are safe, functional, and add value to
           communities.
         </p>
@@ -238,8 +238,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <h2>6. Privacy and Safety</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Protect your privacy and respect others' boundaries.
         </p>
       </div>
@@ -266,8 +266,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <h2>7. Moderation and Enforcement</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Community builders moderate first, HIVE team handles serious
           violations.
         </p>
@@ -318,8 +318,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <h2>8. Reporting and Appeals</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Report violations and appeal decisions through proper channels.
         </p>
       </div>
@@ -332,7 +332,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
           Email{" "}
           <a
             href="mailto:support@hive.co"
-            className="text-gold hover:text-gold/80"
+            className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80"
           >
             support@hive.co
           </a>{" "}
@@ -348,7 +348,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
           Email{" "}
           <a
             href="mailto:appeals@hive.co"
-            className="text-gold hover:text-gold/80"
+            className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80"
           >
             appeals@hive.co
           </a>{" "}
@@ -359,8 +359,8 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <h2>9. Staying Updated</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Guidelines may evolve as our community grows.
         </p>
       </div>
@@ -378,7 +378,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
           Community Questions:{" "}
           <a
             href="mailto:community@hive.co"
-            className="text-gold hover:text-gold/80"
+            className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80"
           >
             community@hive.co
           </a>
@@ -387,7 +387,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
           Safety Concerns:{" "}
           <a
             href="mailto:safety@hive.co"
-            className="text-gold hover:text-gold/80"
+            className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80"
           >
             safety@hive.co
           </a>
@@ -396,7 +396,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
           General Support:{" "}
           <a
             href="mailto:support@hive.co"
-            className="text-gold hover:text-gold/80"
+            className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80"
           >
             support@hive.co
           </a>
@@ -404,7 +404,7 @@ const CURRENT_GUIDELINES: LegalDocument = {
       </ul>
 
       <div className="mt-12 border-t border-gray-800 pt-8">
-        <h3 className="text-lg font-semibold text-gold">Version History</h3>
+        <h3 className="text-lg font-semibold text-[var(--hive-brand-primary)]">Version History</h3>
         <div className="mt-4 space-y-2 text-sm text-gray-400">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />

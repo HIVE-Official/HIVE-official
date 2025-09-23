@@ -79,7 +79,6 @@ export function createApiHandler(
         const clientId = request.headers.get('x-forwarded-for') ||
                         request.headers.get('x-real-ip') ||
                         request.headers.get('cf-connecting-ip') ||
-                        request.ip ||
                         'unknown';
 
         const result = rateLimiter.check(clientId);
@@ -170,8 +169,8 @@ export function createApiHandler(
             requestId,
             userId: authContext?.userId,
             isTestUser: authContext?.isTestUser,
-            ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-            userAgent: request.headers.get('user-agent'),
+            ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+            userAgent: request.headers.get('user-agent') || undefined,
             tags: {
               rateLimit: config.rateLimit || 'none',
               authenticated: authContext ? 'true' : 'false',
@@ -330,16 +329,19 @@ export function createAuthenticatedHandler(
   );
 }
 
+// Alias for backward compatibility with existing code
+export const withAuthAndErrors = createAuthenticatedHandler;
+
 /**
  * Example usage in API routes:
- * 
+ *
  * export const GET = createGetHandler(async (context) => {
  *   return { message: 'Hello world', userId: context.auth?.userId };
  * }, {
  *   auth: { required: false },
  *   rateLimit: 'API'
  * });
- * 
+ *
  * export const POST = createPostHandler(async (context) => {
  *   const { name } = context.body;
  *   return { message: `Hello ${name}` };

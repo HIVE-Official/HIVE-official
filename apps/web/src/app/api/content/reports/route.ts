@@ -73,7 +73,11 @@ export async function POST(request: NextRequest) {
       category: reportData.category,
       subCategory: reportData.subCategory,
       description: reportData.description,
-      evidence: reportData.evidence || { screenshots: [], urls: [], additionalContext: '' },
+      evidence: reportData.evidence ? {
+        screenshots: reportData.evidence.screenshots || [],
+        urls: reportData.evidence.urls || [],
+        additionalContext: reportData.evidence.additionalContext || ''
+      } : undefined,
       spaceId: reportData.spaceId,
       userAgent
     });
@@ -82,9 +86,11 @@ export async function POST(request: NextRequest) {
     logger.info('Content report submitted successfully', {
       reportId,
       reporterId: user.uid,
-      contentId: reportData.contentId,
-      contentType: reportData.contentType,
-      category: reportData.category
+      postId: reportData.contentId,
+      metadata: {
+        contentType: reportData.contentType,
+        category: reportData.category
+      }
     });
 
     return NextResponse.json({

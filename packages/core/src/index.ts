@@ -74,3 +74,6 @@ export * from "./feature-flags";
 
 // Privacy utilities
 export * from "./utils/privacy-utils";
+
+// Profile system types
+export * from "./types/profile-system";

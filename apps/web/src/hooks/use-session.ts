@@ -1,29 +1,15 @@
 "use client";
 
-import { useUnifiedAuth } from '@hive/ui';
+import { useAuth } from '@hive/auth-logic';
 
-interface SessionData {
-  userId: string;
-  email: string;
-  schoolId: string;
-  needsOnboarding?: boolean;
-  onboardingCompleted?: boolean;
-  verifiedAt: string;
-  profileData?: {
-    fullName: string;
-    handle: string;
-    major: string;
-    avatarUrl: string;
-    builderOptIn: boolean;
-  };
-}
-
-export interface User {
+// Legacy session-specific User type for backward compatibility
+interface LegacySessionUser {
   id: string;
   email: string;
   fullName?: string;
   handle?: string;
-  major?: string;
+  major?: string;      // Legacy field for backward compatibility
+  majors?: string[];   // New field for multiple majors
   avatarUrl?: string;
   schoolId: string;
   builderOptIn?: boolean;
@@ -34,44 +20,49 @@ export interface User {
  * DEPRECATED: Compatibility wrapper around UnifiedAuth
  * Use useUnifiedAuth directly in new code
  */
-export function useSession() {
-  const unifiedAuth = useUnifiedAuth();
+ 
+export function useSession(): any {
+  const hiveAuth = useAuth();
 
-  // Transform UnifiedAuth data to match useSession interface
-  const user: User | null = unifiedAuth.user ? {
-    id: unifiedAuth.user.id,
-    email: unifiedAuth.user.email,
-    fullName: unifiedAuth.user.fullName,
-    handle: unifiedAuth.user.handle,
-    major: unifiedAuth.user.major,
-    avatarUrl: unifiedAuth.user.avatarUrl,
-    schoolId: unifiedAuth.user.schoolId || '',
-    builderOptIn: unifiedAuth.user.builderOptIn,
-    onboardingCompleted: unifiedAuth.user.onboardingCompleted,
+  // Transform HiveAuth data to match useSession interface
+
+  const user: LegacySessionUser | null = hiveAuth.user ? {
+    id: hiveAuth.user.id,
+    email: hiveAuth.user.email || '',
+    fullName: hiveAuth.user.fullName || undefined,
+    handle: hiveAuth.user.handle || undefined,
+    major: hiveAuth.user.major || undefined,
+    majors: hiveAuth.user.major ? [hiveAuth.user.major] : undefined,
+    avatarUrl: hiveAuth.user.avatarUrl || undefined,
+    schoolId: hiveAuth.user.schoolId || '',
+    builderOptIn: hiveAuth.user.builderOptIn,
+    onboardingCompleted: hiveAuth.user.onboardingCompleted,
   } : null;
 
-  const sessionData: SessionData | null = unifiedAuth.user ? {
-    userId: unifiedAuth.user.id,
-    email: unifiedAuth.user.email,
-    schoolId: unifiedAuth.user.schoolId || '',
-    needsOnboarding: !unifiedAuth.user.onboardingCompleted,
-    onboardingCompleted: unifiedAuth.user.onboardingCompleted,
-    verifiedAt: unifiedAuth.session?.issuedAt || new Date().toISOString(),
+  const sessionData: any | null = hiveAuth.user ? {
+    userId: hiveAuth.user.id,
+    email: hiveAuth.user.email,
+    schoolId: hiveAuth.user.schoolId || '',
+    needsOnboarding: !hiveAuth.user.onboardingCompleted,
+    onboardingCompleted: hiveAuth.user.onboardingCompleted,
+    verifiedAt: new Date().toISOString(),
     profileData: {
-      fullName: unifiedAuth.user.fullName || '',
-      handle: unifiedAuth.user.handle || '',
-      major: unifiedAuth.user.major || '',
-      avatarUrl: unifiedAuth.user.avatarUrl || '',
-      builderOptIn: unifiedAuth.user.builderOptIn || false,
-    },
+      fullName: hiveAuth.user.fullName || '',
+      handle: hiveAuth.user.handle || '',
+      major: hiveAuth.user.major || undefined,
+      majors: hiveAuth.user.major ? [hiveAuth.user.major] : [],
+      avatarUrl: hiveAuth.user.avatarUrl || '',
+      builderOptIn: hiveAuth.user.builderOptIn || false,
+    }
   } : null;
 
   return {
-    isLoading: unifiedAuth.isLoading,
-    isAuthenticated: unifiedAuth.isAuthenticated,
+    isLoading: hiveAuth.isLoading,
+    isAuthenticated: hiveAuth.isAuthenticated,
     user,
+    session: sessionData,
     sessionData,
-    // Legacy logout method
-    logout: unifiedAuth.logout,
+    logout: hiveAuth.logout,
+    getIdToken: hiveAuth.getAuthToken || hiveAuth.user?.getIdToken
   };
 }

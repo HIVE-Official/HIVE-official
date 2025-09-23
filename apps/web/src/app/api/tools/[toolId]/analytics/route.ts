@@ -91,7 +91,7 @@ export const GET = withAuthAndErrors(async (
   // Get tool details and check ownership
   const toolDoc = await adminDb.collection('tools').doc(toolId).get();
   if (!toolDoc.exists) {
-    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", 404);
+    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
   }
 
   const toolData = toolDoc.data();
@@ -102,7 +102,7 @@ export const GET = withAuthAndErrors(async (
   const isAdmin = userData?.roles?.includes('admin');
 
   if (toolData?.ownerId !== userId && !isAdmin) {
-    return respond.error("Insufficient permissions to view analytics", "FORBIDDEN", 403);
+    return respond.error("Insufficient permissions to view analytics", "FORBIDDEN", { status: 403 });
   }
 
   const startDate = searchParams.get('startDate') || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();

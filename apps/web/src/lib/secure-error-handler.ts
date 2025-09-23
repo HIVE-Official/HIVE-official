@@ -294,8 +294,8 @@ export async function handleSecureError(
     await logSecurityEvent('bypass_attempt', {
       requestId,
       userId: context?.userId,
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-      userAgent: request.headers.get('user-agent'),
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+      userAgent: request.headers.get('user-agent') || undefined,
       operation: context?.operation || 'error_handling',
       tags: {
         errorLevel: 'critical',

@@ -99,7 +99,7 @@ export class SecureSessionManager {
    */
   private static getJwtSecret(): Uint8Array {
     if (!this.jwtSecret) {
-      const secret = env.JWT_SECRET || env.NEXTAUTH_SECRET;
+      const secret = env.NEXTAUTH_SECRET;
       if (!secret) {
         throw new Error('JWT_SECRET not configured');
       }
@@ -216,7 +216,7 @@ export class SecureSessionManager {
       .sign(secret);
 
     // Log session creation
-    await logSecurityEvent('session', {
+    await logSecurityEvent('invalid_token', {
       operation: 'session_created',
       tags: {
         userId: userData.userId,
@@ -254,7 +254,7 @@ export class SecureSessionManager {
       // SECURITY: Scan token for suspicious patterns
       const tokenScan = SecurityScanner.scanInput(token, 'session_token');
       if (tokenScan.level === 'dangerous') {
-        await logSecurityEvent('session', {
+        await logSecurityEvent('invalid_token', {
           operation: 'dangerous_token_detected',
           tags: {
             threats: tokenScan.threats.join(','),
@@ -302,7 +302,7 @@ export class SecureSessionManager {
       // SECURITY: Validate fingerprint
       const currentFingerprint = this.generateFingerprint(request);
       if (fingerprint !== currentFingerprint) {
-        await logSecurityEvent('session', {
+        await logSecurityEvent('invalid_token', {
           operation: 'fingerprint_mismatch',
           tags: {
             userId: sessionData.userId,
@@ -357,7 +357,7 @@ export class SecureSessionManager {
       };
 
     } catch (error) {
-      await logSecurityEvent('session', {
+      await logSecurityEvent('invalid_token', {
         operation: 'session_validation_error',
         tags: {
           error: error instanceof Error ? error.message : 'unknown',
@@ -388,7 +388,7 @@ export class SecureSessionManager {
     try {
       // Check rotation limits
       if (sessionData.rotationCount >= SESSION_CONFIG.MAX_ROTATION_ATTEMPTS) {
-        await logSecurityEvent('session', {
+        await logSecurityEvent('invalid_token', {
           operation: 'max_rotations_exceeded',
           tags: {
             userId: sessionData.userId,
@@ -436,7 +436,7 @@ export class SecureSessionManager {
       // Update stored session
       this.sessionStore.set(sessionData.sessionId, sessionData);
 
-      await logSecurityEvent('session', {
+      await logSecurityEvent('invalid_token', {
         operation: 'session_rotated',
         tags: {
           userId: sessionData.userId,
@@ -470,7 +470,7 @@ export class SecureSessionManager {
     // Check for IP address changes
     if (sessionData.metadata.ip !== currentIp && sessionData.metadata.ip !== 'unknown') {
       // Allow IP changes but log them
-      await logSecurityEvent('session', {
+      await logSecurityEvent('invalid_token', {
         operation: 'ip_address_change',
         tags: {
           userId: sessionData.userId,
@@ -488,7 +488,7 @@ export class SecureSessionManager {
     );
 
     if (userAgentSimilarity < 0.8) {
-      await logSecurityEvent('session', {
+      await logSecurityEvent('invalid_token', {
         operation: 'user_agent_change',
         tags: {
           userId: sessionData.userId,
@@ -568,7 +568,7 @@ export class SecureSessionManager {
     if (sessionData) {
       this.sessionStore.delete(sessionId);
       
-      await logSecurityEvent('session', {
+      await logSecurityEvent('invalid_token', {
         operation: 'session_revoked',
         tags: {
           userId: sessionData.userId,

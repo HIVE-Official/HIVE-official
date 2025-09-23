@@ -1,18 +1,129 @@
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Post } from '@hive/core';
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/structured-logger";
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
-// Temporary fallback implementations for development
-type FeedContentType = 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import';
+import {
+  getSpaceTypeRules,
+  getContentVisibility,
+  type SpaceType,
+  type SpaceTypeRules
+} from '@/lib/space-type-rules';
+// Enhanced feed content types
+type FeedContentType = 'live_event' | 'upcoming_event' | 'rss_event' | 'user_post' | 'ritual_content' | 'space_activity';
 
-// Basic validation fallback
-function validateFeedContent(_post: unknown) {
-  return {
-    isValid: true,
-    confidence: 95,
-    contentType: 'tool_generated' as FeedContentType
-  };
+// Temporal weighting algorithm for feed content
+function calculateTemporalWeight(item: any, now: Date): number {
+  const itemTime = new Date(item.startTime || item.createdAt);
+  const timeDiff = itemTime.getTime() - now.getTime();
+  const hoursDiff = timeDiff / (1000 * 60 * 60);
+
+  // Event temporal weights
+  if (item.type === 'event' || item.contentType === 'rss_event') {
+    if (Math.abs(hoursDiff) <= 1) return 100; // Happening now
+    if (hoursDiff > 0 && hoursDiff <= 2) return 90; // Next 2 hours
+    if (hoursDiff > 0 && hoursDiff <= 24) return 70; // Today
+    if (hoursDiff > 24 && hoursDiff <= 48) return 60; // Tomorrow
+    if (hoursDiff > 48 && hoursDiff <= 168) return 40; // This week
+    if (hoursDiff < 0) return 20; // Past events (low priority)
+  }
+
+  // User-generated content weights
+  if (item.type === 'post' || item.contentType === 'user_post') {
+    const ageHours = Math.abs(hoursDiff);
+    if (ageHours <= 1) return 80; // Very fresh
+    if (ageHours <= 6) return 65; // Recent
+    if (ageHours <= 24) return 50; // Today
+    if (ageHours <= 72) return 35; // This week
+    return 25; // Older content
+  }
+
+  // Default weight for other content
+  return 50;
+}
+
+// Safe content validation with proper type checking
+function validateFeedContent(content: unknown): { isValid: boolean; confidence: number; contentType: FeedContentType } {
+  try {
+    // Ensure content is an object
+    if (!content || typeof content !== 'object') {
+      return { isValid: false, confidence: 0, contentType: 'user_post' };
+    }
+
+    const item = content as Record<string, any>;
+
+    // Validate required fields
+    if (!item.id || typeof item.id !== 'string') {
+      return { isValid: false, confidence: 0, contentType: 'user_post' };
+    }
+
+    if (!item.type || typeof item.type !== 'string') {
+      return { isValid: false, confidence: 0, contentType: 'user_post' };
+    }
+
+    // Validate dates exist and are valid
+    const createdAt = item.createdAt instanceof Date ? item.createdAt :
+                     (item.createdAt?.toDate ? item.createdAt.toDate() : new Date(item.createdAt));
+
+    if (!createdAt || isNaN(createdAt.getTime())) {
+      return { isValid: false, confidence: 20, contentType: 'user_post' };
+    }
+
+    // Determine content type based on validated properties
+    let contentType: FeedContentType = 'user_post';
+    let confidence = 95;
+
+    if (item.type === 'event' || item.eventId) {
+      const now = new Date();
+      const eventTime = item.startTime instanceof Date ? item.startTime :
+                       (item.startTime?.toDate ? item.startTime.toDate() : new Date(item.startTime));
+
+      if (eventTime && !isNaN(eventTime.getTime())) {
+        const hoursDiff = (eventTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+        if (Math.abs(hoursDiff) <= 1) {
+          contentType = 'live_event';
+          confidence = 100; // High confidence for live events
+        } else if (hoursDiff > 0) {
+          contentType = 'upcoming_event';
+          confidence = 95;
+        } else {
+          contentType = 'rss_event';
+          confidence = 85;
+        }
+      } else {
+        confidence = 60; // Lower confidence for events with invalid times
+      }
+    } else if (item.source === 'rss' || item.isImported === true) {
+      contentType = 'rss_event';
+      confidence = 80;
+    } else if (item.spaceId && typeof item.spaceId === 'string' && item.type !== 'post') {
+      contentType = 'space_activity';
+      confidence = 90;
+    } else if (item.type === 'post') {
+      // Validate post-specific fields
+      if (typeof item.title === 'string' && item.title.length > 0) {
+        confidence = 95;
+      } else {
+        confidence = 70; // Lower confidence for posts without proper titles
+      }
+    }
+
+    // Additional validation for critical fields
+    if (item.spaceId && typeof item.spaceId !== 'string') {
+      confidence = Math.max(confidence - 20, 40);
+    }
+
+    return {
+      isValid: confidence >= 60, // Only consider valid if confidence is 60% or higher
+      confidence,
+      contentType
+    };
+
+  } catch (error) {
+    // If any validation throws an error, mark as invalid
+    return { isValid: false, confidence: 0, contentType: 'user_post' };
+  }
 }
 
 function getContentDistribution(posts: unknown[]) {
@@ -41,11 +152,275 @@ interface AggregatedFeedItem {
   };
 }
 
-function createFeedAggregator(_userId: string, _spaceIds: string[]) {
+/**
+ * Check if content should be visible to user based on space type rules
+ */
+function isContentVisibleToUser(
+  content: any,
+  spaceId: string,
+  spaceType: SpaceType | undefined,
+  userMemberships: UserMembershipData[],
+  contentType: 'posts' | 'events' | 'members'
+): boolean {
+  // If no space type available, default to member-only visibility
+  if (!spaceType) {
+    return userMemberships.some(m => m.spaceId === spaceId);
+  }
+
+  const visibility = getContentVisibility(spaceType, contentType);
+  const userMembership = userMemberships.find(m => m.spaceId === spaceId);
+
+  switch (visibility) {
+    case 'public':
+    case 'public_calendar':
+      return true; // Always visible
+
+    case 'campus_visible':
+    case 'campus_calendar':
+      return true; // Visible to all campus users (our current scope)
+
+    case 'limited_external':
+      // Non-members see limited info, members see full content
+      return true; // Allow but potentially filter content details
+
+    case 'members_only':
+    case 'space_only':
+      return !!userMembership; // Only visible to members
+
+    case 'invitation_controlled':
+      // Check if user has proper permission or invitation
+      return !!userMembership && (userMembership.role === 'admin' || userMembership.role === 'builder');
+
+    case 'role_based':
+      // Different visibility based on role - for now, treat as members only
+      return !!userMembership;
+
+    default:
+      return !!userMembership; // Default to members-only for safety
+  }
+}
+
+function createFeedAggregator(userId: string, spaceIds: string[], userMemberships: UserMembershipData[]) {
   return {
-    aggregateContent: async (_limit: number, _cursor?: string): Promise<AggregatedFeedItem[]> => {
-      // Mock aggregated content for development
-      return [];
+    aggregateContent: async (limit: number, cursor?: string): Promise<AggregatedFeedItem[]> => {
+      const aggregatedItems: AggregatedFeedItem[] = [];
+      const now = new Date();
+
+      try {
+        // 1. Aggregate events from spaces (RSS-seeded content) with space type filtering
+        for (const spaceId of spaceIds.slice(0, 10)) { // Limit to prevent excessive queries
+          try {
+            // Get space type for visibility rules
+            const membership = userMemberships.find(m => m.spaceId === spaceId);
+
+            // Get events from this space
+            const eventsQuery = dbAdmin.collection('spaces')
+              .doc(spaceId)
+              .collection('events')
+              .where('isDeleted', '==', false)
+              .orderBy('startTime', 'desc')
+              .limit(5);
+
+            const eventsSnapshot = await eventsQuery.get();
+
+            for (const eventDoc of eventsSnapshot.docs) {
+              const eventData = eventDoc.data();
+              const eventTime = eventData.startTime?.toDate() || new Date();
+
+              // Check if content should be visible based on space type rules
+              if (!isContentVisibleToUser(
+                eventData,
+                spaceId,
+                membership?.spaceType,
+                userMemberships,
+                'events'
+              )) {
+                continue; // Skip content that shouldn't be visible
+              }
+
+              // Calculate temporal weight
+              const temporalWeight = calculateTemporalWeight({
+                type: 'event',
+                startTime: eventTime.toISOString(),
+                ...eventData
+              }, now);
+
+              aggregatedItems.push({
+                content: {
+                  id: eventDoc.id,
+                  type: 'event',
+                  title: eventData.title,
+                  description: eventData.description,
+                  startTime: eventTime,
+                  endTime: eventData.endTime?.toDate(),
+                  location: eventData.location,
+                  createdAt: eventData.createdAt?.toDate() || eventTime,
+                  updatedAt: eventData.updatedAt?.toDate() || eventTime,
+                  spaceId: spaceId,
+                  source: eventData.source || (eventData.isImported ? 'rss' : 'user'),
+                  isImported: eventData.isImported || false,
+                  reactions: eventData.reactions || {},
+                  // Add space type metadata for frontend filtering
+                  _spaceType: membership?.spaceType,
+                  _visibility: membership?.spaceType ? getContentVisibility(membership.spaceType, 'events') : 'members_only'
+                },
+                spaceId,
+                source: eventData.source || 'space_events',
+                priority: temporalWeight,
+                contentType: Math.abs((eventTime.getTime() - now.getTime()) / (1000 * 60 * 60)) <= 1
+                  ? 'live_event'
+                  : eventTime > now
+                    ? 'upcoming_event'
+                    : 'rss_event',
+                timestamp: eventTime.getTime(),
+                validationData: { confidence: 95 }
+              });
+            }
+          } catch (error) {
+            logger.warn('Error fetching events from space', { spaceId, error });
+          }
+        }
+
+        // 2. Aggregate posts from spaces with space type filtering
+        for (const spaceId of spaceIds.slice(0, 10)) {
+          try {
+            // Get space type for visibility rules
+            const membership = userMemberships.find(m => m.spaceId === spaceId);
+
+            const postsQuery = dbAdmin.collection('spaces')
+              .doc(spaceId)
+              .collection('posts')
+              .where('isDeleted', '==', false)
+              .orderBy('createdAt', 'desc')
+              .limit(3);
+
+            const postsSnapshot = await postsQuery.get();
+
+            for (const postDoc of postsSnapshot.docs) {
+              const postData = postDoc.data();
+              const createdAt = postData.createdAt?.toDate() || new Date();
+
+              // Check if post should be visible based on space type rules
+              if (!isContentVisibleToUser(
+                postData,
+                spaceId,
+                membership?.spaceType,
+                userMemberships,
+                'posts'
+              )) {
+                continue; // Skip posts that shouldn't be visible
+              }
+
+              const temporalWeight = calculateTemporalWeight({
+                type: 'post',
+                createdAt: createdAt.toISOString(),
+                ...postData
+              }, now);
+
+              aggregatedItems.push({
+                content: {
+                  id: postDoc.id,
+                  type: 'post',
+                  title: postData.title,
+                  content: postData.content,
+                  authorId: postData.authorId,
+                  authorName: postData.authorName,
+                  createdAt,
+                  updatedAt: postData.updatedAt?.toDate() || createdAt,
+                  spaceId: spaceId,
+                  reactions: postData.reactions || {},
+                  toolId: postData.toolId,
+                  isToolShare: postData.type === 'toolshare',
+                  // Add space type metadata for frontend filtering
+                  _spaceType: membership?.spaceType,
+                  _visibility: membership?.spaceType ? getContentVisibility(membership.spaceType, 'posts') : 'members_only'
+                },
+                spaceId,
+                source: 'space_posts',
+                priority: temporalWeight,
+                contentType: 'user_post',
+                timestamp: createdAt.getTime(),
+                validationData: { confidence: 90 }
+              });
+            }
+          } catch (error) {
+            logger.warn('Error fetching posts from space', { spaceId, error });
+          }
+        }
+
+        // 3. Add campus-wide events if user has limited space memberships
+        if (spaceIds.length < 3) {
+          try {
+            const campusEventsQuery = dbAdmin.collection('events')
+              .where('campusId', '==', 'ub-buffalo')
+              .where('isPublic', '==', true)
+              .orderBy('startTime', 'desc')
+              .limit(5);
+
+            const campusEventsSnapshot = await campusEventsQuery.get();
+
+            for (const eventDoc of campusEventsSnapshot.docs) {
+              const eventData = eventDoc.data();
+              const eventTime = eventData.startTime?.toDate() || new Date();
+
+              const temporalWeight = calculateTemporalWeight({
+                type: 'event',
+                startTime: eventTime.toISOString(),
+                ...eventData
+              }, now);
+
+              aggregatedItems.push({
+                content: {
+                  id: eventDoc.id,
+                  type: 'event',
+                  title: eventData.title,
+                  description: eventData.description,
+                  startTime: eventTime,
+                  endTime: eventData.endTime?.toDate(),
+                  location: eventData.location,
+                  createdAt: eventData.createdAt?.toDate() || eventTime,
+                  updatedAt: eventData.updatedAt?.toDate() || eventTime,
+                  spaceId: eventData.spaceId || 'campus',
+                  source: eventData.source || 'campus',
+                  isImported: eventData.isImported || false,
+                  reactions: eventData.reactions || {}
+                },
+                spaceId: eventData.spaceId || 'campus',
+                source: 'campus_events',
+                priority: temporalWeight * 0.8, // Slightly lower priority than space events
+                contentType: Math.abs((eventTime.getTime() - now.getTime()) / (1000 * 60 * 60)) <= 1
+                  ? 'live_event'
+                  : eventTime > now
+                    ? 'upcoming_event'
+                    : 'rss_event',
+                timestamp: eventTime.getTime(),
+                validationData: { confidence: 85 }
+              });
+            }
+          } catch (error) {
+            logger.warn('Error fetching campus events', { error });
+          }
+        }
+
+        // Sort by priority (temporal weight) and limit results
+        aggregatedItems.sort((a, b) => b.priority - a.priority);
+
+        logger.info('Feed aggregator results', {
+          totalItems: aggregatedItems.length,
+          spaceCount: spaceIds.length,
+          userId,
+          breakdown: {
+            events: aggregatedItems.filter(i => i.content && (i.content as any).type === 'event').length,
+            posts: aggregatedItems.filter(i => i.content && (i.content as any).type === 'post').length
+          }
+        });
+
+        return aggregatedItems.slice(0, limit);
+
+      } catch (error) {
+        logger.error('Feed aggregation error', { error, userId, spaceIds });
+        return [];
+      }
     }
   };
 }
@@ -75,6 +450,8 @@ interface UserMembershipData {
   joinedAt: Date;
   lastActiveAt: Date;
   engagementScore: number; // 0-100 based on activity
+  spaceType?: SpaceType;
+  spaceRules?: SpaceTypeRules;
 }
 
 /**
@@ -89,17 +466,56 @@ interface UserMembershipData {
  */
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
   const url = new URL(request.url);
-  const queryParams = Object.fromEntries(url.searchParams.entries());
-  const { limit, cursor, refresh, feedType } = FeedQuerySchema.parse(queryParams);
 
+  // Safely extract and validate query parameters
+  let queryParams: Record<string, string> = {};
+  try {
+    // Sanitize URL search params to prevent injection
+    for (const [key, value] of url.searchParams.entries()) {
+      // Only allow alphanumeric characters, dashes, and underscores for safety
+      const sanitizedKey = key.replace(/[^a-zA-Z0-9_-]/g, '');
+      const sanitizedValue = value.trim().slice(0, 100); // Limit length to prevent DoS
+
+      if (sanitizedKey.length > 0 && sanitizedValue.length > 0) {
+        queryParams[sanitizedKey] = sanitizedValue;
+      }
+    }
+  } catch (error) {
+    logger.warn('Error parsing query parameters', { error, endpoint: '/api/feed' });
+    queryParams = {}; // Use defaults if parsing fails
+  }
+
+  // Parse and validate with schema
+  let parsedParams;
+  try {
+    parsedParams = FeedQuerySchema.parse(queryParams);
+  } catch (error) {
+    logger.warn('Invalid query parameters, using defaults', { error, params: queryParams, endpoint: '/api/feed' });
+    // Use safe defaults if parsing fails
+    parsedParams = {
+      limit: 20,
+      cursor: undefined,
+      refresh: false,
+      feedType: 'personal' as const
+    };
+  }
+
+  const { limit, cursor, refresh, feedType } = parsedParams;
   const userId = getUserId(request);
 
   logger.info('🔄 Feed request for user', { feedType, userId, endpoint: '/api/feed' });
 
-  // Get user's membership data (cached for performance)
-  const userMemberships = await getUserMembershipData(userId, refresh);
+  // Get user's membership data with error handling
+  let userMemberships: UserMembershipData[];
+  try {
+    userMemberships = await getUserMembershipData(userId, refresh);
+  } catch (error) {
+    logger.error('Failed to get user memberships', { error, userId, endpoint: '/api/feed' });
+    return respond.error('Failed to load user data', 'USER_DATA_ERROR', { status: 500 });
+  }
 
   if (userMemberships.length === 0) {
+    logger.info('No memberships found for user', { userId, endpoint: '/api/feed' });
     return respond.success({
       posts: [],
       nextCursor: null,
@@ -111,32 +527,125 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
   // Extract space IDs for aggregation
   const userSpaceIds = userMemberships.map(m => m.spaceId);
 
-  // Create aggregation engine
-  const aggregator = createFeedAggregator(userId, userSpaceIds);
+  // Create aggregation engine with error handling
+  let aggregatedItems: AggregatedFeedItem[];
+  try {
+    const aggregator = createFeedAggregator(userId, userSpaceIds, userMemberships);
+    aggregatedItems = await aggregator.aggregateContent(limit, cursor);
 
-  // Get aggregated content from all sources
-  const aggregatedItems = await aggregator.aggregateContent(limit, cursor);
+    logger.info('Feed aggregation completed', {
+      itemCount: aggregatedItems.length,
+      userId,
+      spaceCount: userSpaceIds.length,
+      endpoint: '/api/feed'
+    });
+  } catch (error) {
+    logger.error('Feed aggregation failed', { error, userId, spaceIds: userSpaceIds, endpoint: '/api/feed' });
 
-  // Convert aggregated items to feed items
-  const feedItems: FeedItem[] = aggregatedItems.map(item => ({
-    post: item.content as Post, // Type assertion for now, will handle other types
-    spaceId: item.spaceId || 'system',
-    spaceName: getSpaceName(item.spaceId, item.source),
-    relevanceScore: item.priority,
-    contentType: item.contentType,
-    timestamp: item.timestamp,
-    validationConfidence: item.validationData.confidence
-  }));
+    // Return empty feed instead of crashing
+    return respond.success({
+      posts: [],
+      nextCursor: null,
+      feedType,
+      analytics: {
+        error: 'Feed aggregation failed',
+        totalMemberships: userMemberships.length,
+        rawFeedItems: 0,
+        validFeedItems: 0,
+        filterRate: 0,
+        averageRelevance: 0,
+        averageConfidence: 0,
+        contentDistribution: { tool_generated: 0, tool_enhanced: 0, space_event: 0, builder_announcement: 0, rss_import: 0 },
+        meetsToolThreshold: false
+      }
+    });
+  }
 
-  // Filter for valid tool-generated content only
-  const validFeedItems = feedItems.filter(item => {
-    const validation = validateFeedContent(item.post);
-    return validation.isValid;
-  });
+  // Convert aggregated items to feed items with proper type safety
+  const feedItems: FeedItem[] = aggregatedItems
+    .map(item => {
+      // Validate and convert content safely
+      const validation = validateFeedContent(item.content);
 
-  // Sort by tool priority, then relevance score and timestamp
+      if (!validation.isValid) {
+        logger.warn('Invalid content filtered from feed', {
+          itemId: (item.content as any)?.id || 'unknown',
+          source: item.source,
+          confidence: validation.confidence,
+          endpoint: '/api/feed'
+        });
+        return null;
+      }
+
+      // Create a safe post object with validated data
+      const content = item.content as Record<string, any>;
+      const safePost: Post = {
+        id: content.id,
+        type: content.type === 'event' ? 'event' : 'text', // Use 'text' as default post type
+        content: content.content || content.description || content.title || content.name || '',
+        authorId: content.authorId || content.createdBy || 'system',
+        createdAt: content.createdAt instanceof Date
+          ? content.createdAt
+          : (content.createdAt?.toDate ? content.createdAt.toDate() : new Date(content.createdAt || Date.now())),
+        updatedAt: content.updatedAt instanceof Date
+          ? content.updatedAt
+          : (content.updatedAt?.toDate ? content.updatedAt.toDate() : new Date(content.updatedAt || content.createdAt || Date.now())),
+        spaceId: content.spaceId || item.spaceId || 'system',
+        reactions: content.reactions || { heart: 0 },
+        reactedUsers: { heart: [] },
+        isPinned: content.isPinned || false,
+        isEdited: false,
+        isFlagged: false,
+        isDeleted: false,
+
+        // Event-specific fields (for events)
+        ...(content.type === 'event' && {
+          startTime: content.startTime instanceof Date
+            ? content.startTime
+            : (content.startTime?.toDate ? content.startTime.toDate() : new Date(content.startTime)),
+          endTime: content.endTime instanceof Date
+            ? content.endTime
+            : (content.endTime?.toDate ? content.endTime.toDate() : content.endTime ? new Date(content.endTime) : undefined),
+          location: content.location,
+          isImported: content.isImported || false,
+          source: content.source
+        }),
+
+        // Post-specific fields (for posts)
+        ...(content.type === 'post' && {
+          toolId: content.toolId,
+          isToolShare: content.isToolShare || content.type === 'toolshare'
+        })
+      };
+
+      return {
+        post: safePost,
+        spaceId: item.spaceId || 'system',
+        spaceName: getSpaceName(item.spaceId, item.source),
+        relevanceScore: item.priority,
+        contentType: validation.contentType, // Use validated content type
+        timestamp: item.timestamp,
+        validationConfidence: validation.confidence
+      };
+    })
+    .filter((item): item is FeedItem => item !== null); // Type-safe filtering
+
+  // All feedItems are already validated above, so no need to filter again
+  const validFeedItems = feedItems;
+
+  // Enhanced sorting with temporal weighting
+  const now = new Date();
   validFeedItems.sort((a, b) => {
-    // Primary sort: tool content priority
+    // Calculate temporal weights for both items
+    const aTemporalWeight = calculateTemporalWeight(a.post, now);
+    const bTemporalWeight = calculateTemporalWeight(b.post, now);
+
+    // Primary sort: temporal relevance (higher first)
+    if (Math.abs(aTemporalWeight - bTemporalWeight) > 5) {
+      return bTemporalWeight - aTemporalWeight;
+    }
+
+    // Secondary sort: content type priority for tie-breaking
     const aPriority = getContentTypePriority(a.contentType);
     const bPriority = getContentTypePriority(b.contentType);
 
@@ -144,17 +653,12 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       return bPriority - aPriority;
     }
 
-    // Secondary sort: relevance score (higher first)
+    // Tertiary sort: user engagement score
     if (Math.abs(a.relevanceScore - b.relevanceScore) > 0.1) {
       return b.relevanceScore - a.relevanceScore;
     }
 
-    // Tertiary sort: validation confidence
-    if (Math.abs(a.validationConfidence - b.validationConfidence) > 5) {
-      return b.validationConfidence - a.validationConfidence;
-    }
-
-    // Final sort: recency (newer first)
+    // Final sort: recency for same-weighted content
     return b.timestamp - a.timestamp;
   });
 
@@ -207,36 +711,90 @@ async function getUserMembershipData(
   // Redis cache implementation ready for production deployment
   
   try {
+    // In development, return mock data to avoid index issues
+    if (process.env.NODE_ENV === 'development') {
+      logger.info('📊 Using mock memberships in development', { userId, endpoint: '/api/feed' });
+      return [
+        {
+          spaceId: 'test-space-1',
+          role: 'member',
+          joinedAt: new Date(),
+          lastActiveAt: new Date(),
+          engagementScore: 75
+        },
+        {
+          spaceId: 'cs-study-group',
+          role: 'member',
+          joinedAt: new Date(),
+          lastActiveAt: new Date(),
+          engagementScore: 85
+        }
+      ];
+    }
+
     // Use collectionGroup query for efficient membership lookup
     const membershipsSnapshot = await dbAdmin.collectionGroup('members')
       .where('userId', '==', userId)
       .limit(100) // Reasonable limit for space memberships
       .get();
-    
+
     const memberships: UserMembershipData[] = [];
-    
+
+    // Get space documents to fetch space types in batch
+    const spaceDocPromises = membershipsSnapshot.docs.map(doc => {
+      const spaceId = doc.ref.parent.parent?.id;
+      return spaceId ? dbAdmin.collection('spaces').doc(spaceId).get() : null;
+    }).filter(Boolean);
+
+    const spaceDocsResults = await Promise.all(spaceDocPromises);
+    const spaceDataMap = new Map();
+
+    spaceDocsResults.forEach(spaceDoc => {
+      if (spaceDoc && spaceDoc.exists) {
+        const spaceData = spaceDoc.data();
+        spaceDataMap.set(spaceDoc.id, {
+          type: spaceData?.type as SpaceType,
+          rules: spaceData?.type ? getSpaceTypeRules(spaceData.type as SpaceType) : undefined
+        });
+      }
+    });
+
     for (const doc of membershipsSnapshot.docs) {
       const data = doc.data();
       const spaceId = doc.ref.parent.parent?.id;
-      
+
       if (!spaceId) continue;
-      
+
       // Calculate engagement score based on activity
       const engagementScore = calculateEngagementScore(data);
-      
+      const spaceInfo = spaceDataMap.get(spaceId);
+
       memberships.push({
         spaceId,
         role: data.role || 'member',
         joinedAt: data.joinedAt?.toDate() || new Date(),
         lastActiveAt: data.lastActiveAt?.toDate() || new Date(),
-        engagementScore
+        engagementScore,
+        spaceType: spaceInfo?.type,
+        spaceRules: spaceInfo?.rules
       });
     }
-    
-    logger.info('📊 Foundmemberships for user', { memberships, userId, endpoint: '/api/feed' });
+
+    logger.info('📊 Found memberships for user', { memberships, userId, endpoint: '/api/feed' });
     return memberships;
-    
-  } catch (error) {
+
+  } catch (error: any) {
+    // Check if it's an index error
+    if (error?.code === 9 || error?.message?.includes('index')) {
+      logger.warn('⚠️ Firestore index not configured for memberships query', {
+        error: error.message,
+        hint: 'Create composite index: members (userId ASC)',
+        endpoint: '/api/feed'
+      });
+      // Return empty array to allow feed to still load
+      return [];
+    }
+
     logger.error('Error fetching user memberships', { error: error, endpoint: '/api/feed' });
     return [];
   }
@@ -290,7 +848,7 @@ async function getPersonalFeed(
   const spaceChunks = chunkArray(spaceIds, batchSize);
   
   for (const spaceChunk of spaceChunks) {
-    const chunkPromises = spaceChunk.map(spaceId => 
+    const chunkPromises = spaceChunk.map(spaceId =>
       getSpacePosts(spaceId, 10, cursor) // Get recent posts from each space
     );
     
@@ -309,7 +867,7 @@ async function getPersonalFeed(
           spaceId,
           spaceName: (post as any).spaceName || 'Unknown Space',
           relevanceScore,
-          contentType: validation.contentType || 'tool_generated',
+          contentType: validation.contentType || 'user_post',
           timestamp: post.createdAt.getTime(),
           validationConfidence: validation.confidence
         });
@@ -421,13 +979,14 @@ function calculateRelevanceScore(
  */
 function getContentTypePriority(contentType: FeedContentType): number {
   const priorities: Record<FeedContentType, number> = {
-    'tool_generated': 5,
-    'tool_enhanced': 4,
-    'space_event': 3,
-    'builder_announcement': 2,
-    'rss_import': 1
+    'live_event': 10,        // Highest priority for happening now
+    'ritual_content': 9,     // Ritual activities very important
+    'upcoming_event': 8,     // Future events high priority
+    'user_post': 6,          // User content important for engagement
+    'space_activity': 5,     // Space updates moderate priority
+    'rss_event': 4          // RSS events lower priority (unless temporal)
   };
-  return priorities[contentType] || 0;
+  return priorities[contentType] || 3;
 }
 
 /**

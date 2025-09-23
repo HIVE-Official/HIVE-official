@@ -5,7 +5,7 @@
 
 import { realtimeService } from './firebase-realtime';
 import { featureFlagService, UserFeatureContext, HIVE_FEATURE_FLAGS } from './feature-flags';
-import { logger } from './logger';
+import { logger } from './structured-logger';
 
 export interface IntegrationTestResult {
   success: boolean;
@@ -300,7 +300,7 @@ export class IntegrationTester {
           platform: 'web',
           version: '1.0.0'
         }
-      });
+      } as any);
 
       // Test typing indicators
       await realtimeService.setTypingIndicator(testSpaceId, testUserId, true);
@@ -399,4 +399,4 @@ export async function runSmokeTest(): Promise<boolean> {
 }
 
 // Export the test interface for use in other parts of the application
-export { IntegrationTestResult, IntegrationTester };
+// IntegrationTestResult is already exported above

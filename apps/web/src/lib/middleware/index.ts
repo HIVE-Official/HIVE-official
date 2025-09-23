@@ -58,12 +58,16 @@ export {
 import { withAuth, withAdminAuth, type AuthenticatedHandler } from './auth';
 import { withErrorHandling, type ApiHandler } from './error-handler';
 import { withResponse, type ResponseFormatter } from './response';
+import { z } from 'zod';
+
+// Define RouteParams type for dynamic route parameters
+type RouteParams = Record<string, string | string[]>;
 
 /**
  * Most common pattern: Auth + Error Handling + Response Formatting
  * Replaces 15+ lines of boilerplate in most protected routes
  */
-export function withAuthAndErrors<T extends any>(
+export function withAuthAndErrors<T = RouteParams>(
   handler: (
     request: any,
     context: T,
@@ -72,7 +76,7 @@ export function withAuthAndErrors<T extends any>(
 ): ApiHandler {
   return withErrorHandling(
     withAuth(
-      withResponse(handler)
+      withResponse(handler as any)
     )
   );
 }
@@ -80,7 +84,7 @@ export function withAuthAndErrors<T extends any>(
 /**
  * Admin routes pattern: Admin Auth + Error Handling + Response Formatting
  */
-export function withAdminAuthAndErrors<T extends any>(
+export function withAdminAuthAndErrors<T = RouteParams>(
   handler: (
     request: any,
     context: T,
@@ -89,7 +93,7 @@ export function withAdminAuthAndErrors<T extends any>(
 ): ApiHandler {
   return withErrorHandling(
     withAdminAuth(
-      withResponse(handler)
+      withResponse(handler as any)
     )
   );
 }
@@ -114,7 +118,7 @@ export function withErrors<T extends any>(
  * Combines JSON parsing + Zod validation + error handling
  */
 export function withValidation<TSchema, TContext extends any>(
-  schema: any,
+  schema: z.ZodSchema<TSchema>,
   handler: (
     request: any,
     context: TContext,
@@ -126,7 +130,7 @@ export function withValidation<TSchema, TContext extends any>(
     const { validateRequestBody } = await import('./error-handler');
     const body = await validateRequestBody(request, schema);
     return withResponse(
-      async (req, ctx, respond) => handler(req, ctx, body, respond)
+      async (req, ctx, respond) => handler(req, ctx as TContext, body, respond)
     )(request, context);
   });
 }
@@ -136,7 +140,7 @@ export function withValidation<TSchema, TContext extends any>(
  * For protected routes that need request validation
  */
 export function withAuthValidationAndErrors<TSchema, TContext extends any>(
-  schema: any,
+  schema: z.ZodSchema<TSchema>,
   handler: (
     request: any,
     context: TContext,
@@ -147,6 +151,6 @@ export function withAuthValidationAndErrors<TSchema, TContext extends any>(
   return withAuthAndErrors(async (request, context, respond) => {
     const { validateRequestBody } = await import('./error-handler');
     const body = await validateRequestBody(request, schema);
-    return handler(request, context, body, respond);
+    return handler(request, context as TContext, body, respond);
   });
 }

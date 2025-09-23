@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { getFeedUpdates, markFeedAsViewed, refreshFeedCache } from '@/lib/real-time-feed';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
     
     if (token !== 'test-token') {
       try {
-        const auth = admin.auth();
+        const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
         userId = decodedToken.uid;
       } catch (authError) {
@@ -104,7 +105,7 @@ export async function POST(request: NextRequest) {
     
     if (token !== 'test-token') {
       try {
-        const auth = admin.auth();
+        const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
         userId = decodedToken.uid;
       } catch (authError) {

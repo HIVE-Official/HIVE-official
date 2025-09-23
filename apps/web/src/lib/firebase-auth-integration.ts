@@ -1,6 +1,6 @@
 import { onAuthStateChanged, signInWithEmailLink, isSignInWithEmailLink, getIdToken, User as FirebaseUser } from 'firebase/auth';
 import { auth } from './firebase';
-import { logger } from './logger';
+import { logger } from './structured-logger';
 
 export interface FirebaseAuthIntegration {
   listenToAuthChanges: (callback: (user: FirebaseUser | null) => void) => () => void;
@@ -18,7 +18,7 @@ export const createFirebaseAuthIntegration = (): FirebaseAuthIntegration => {
   
   const listenToAuthChanges = (callback: (user: FirebaseUser | null) => void): (() => void) => {
     return onAuthStateChanged(auth, (user) => {
-      logger.info('Firebase auth state changed', { hasUser: !!user, userId: user?.uid });
+      logger.info('Firebase auth state changed', { userId: user?.uid });
       callback(user);
     });
   };

@@ -1,0 +1,289 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+
+    // Basic authentication check
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Verify user has @buffalo.edu email
+    function isUBUser() {
+      return isAuthenticated() &&
+             request.auth.token.email != null &&
+             request.auth.token.email.matches('.*@buffalo[.]edu$');
+    }
+
+    // Check if user is platform admin
+    function isAdmin() {
+      return isAuthenticated() &&
+             exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Verify campus isolation for UB
+    function isCampusIsolated(data) {
+      return data.campusId == 'ub-buffalo';
+    }
+
+    // Check if user is space leader
+    function isSpaceLeader(spaceId) {
+      return isAuthenticated() &&
+             get(/databases/$(database)/documents/spaces/$(spaceId)).data.leaders[request.auth.uid] == true;
+    }
+
+    // Check if user is space member
+    function isSpaceMember(spaceId) {
+      return isAuthenticated() &&
+             exists(/databases/$(database)/documents/spaces/$(spaceId)/members/$(request.auth.uid));
+    }
+
+    // Rate limiting (prevent spam)
+    function notTooFrequent(lastTime) {
+      return request.time > lastTime + duration.value(1, 's');
+    }
+
+    // Content size limits
+    function contentSizeOk() {
+      return request.resource.data.size() < 100; // Max 100 fields
+    }
+
+    // Validate required fields exist
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // ============================================
+    // USER PROFILES
+    // ============================================
+    match /users/{userId} {
+      // Anyone authenticated can read profiles (for social features)
+      allow read: if isUBUser();
+
+      // Users can only create their own profile
+      allow create: if isOwner(userId) &&
+                      isUBUser() &&
+                      hasRequiredFields(['email', 'campusId', 'createdAt']) &&
+                      request.resource.data.campusId == 'ub-buffalo' &&
+                      request.resource.data.email == request.auth.token.email;
+
+      // Users can update their own profile with rate limiting
+      allow update: if isOwner(userId) &&
+                      isUBUser() &&
+                      isCampusIsolated(request.resource.data) &&
+                      contentSizeOk() &&
+                      notTooFrequent(resource.data.updatedAt);
+
+      // No deletes - soft delete only
+      allow delete: if false;
+    }
+
+    // ============================================
+    // SPACES (Communities)
+    // ============================================
+    match /spaces/{spaceId} {
+      // All UB users can browse spaces
+      allow read: if isUBUser() &&
+                    isCampusIsolated(resource.data);
+
+      // Users can create spaces (with approval workflow)
+      allow create: if isUBUser() &&
+                      hasRequiredFields(['name', 'campusId', 'createdBy', 'createdAt']) &&
+                      request.resource.data.campusId == 'ub-buffalo' &&
+                      request.resource.data.createdBy == request.auth.uid &&
+                      request.resource.data.memberCount == 1;
+
+      // Only space leaders can update
+      allow update: if isUBUser() &&
+                      (isSpaceLeader(spaceId) || isAdmin()) &&
+                      isCampusIsolated(request.resource.data) &&
+                      request.resource.data.campusId == resource.data.campusId; // Can't change campus
+
+      // Only admins can delete
+      allow delete: if isAdmin();
+
+      // ============================================
+      // SPACE SUBCOLLECTIONS
+      // ============================================
+
+      // Space Members
+      match /members/{memberId} {
+        allow read: if isUBUser();
+        allow create: if isOwner(memberId) && isUBUser();
+        allow update: if isOwner(memberId) || isSpaceLeader(spaceId);
+        allow delete: if isOwner(memberId) || isSpaceLeader(spaceId);
+      }
+
+      // Space Posts
+      match /posts/{postId} {
+        allow read: if isUBUser();
+        allow create: if isSpaceMember(spaceId) &&
+                        request.resource.data.authorId == request.auth.uid;
+        allow update: if resource.data.authorId == request.auth.uid;
+        allow delete: if resource.data.authorId == request.auth.uid ||
+                        isSpaceLeader(spaceId);
+
+        // Post Comments
+        match /comments/{commentId} {
+          allow read: if isUBUser();
+          allow create: if isSpaceMember(spaceId) &&
+                          request.resource.data.authorId == request.auth.uid;
+          allow update: if resource.data.authorId == request.auth.uid;
+          allow delete: if resource.data.authorId == request.auth.uid ||
+                          isSpaceLeader(spaceId);
+        }
+      }
+
+      // Space Events
+      match /events/{eventId} {
+        allow read: if isUBUser();
+        allow write: if isSpaceLeader(spaceId) || isSpaceMember(spaceId);
+      }
+    }
+
+    // ============================================
+    // TOOLS (HiveLab)
+    // ============================================
+    match /tools/{toolId} {
+      // All UB users can view published tools
+      allow read: if isUBUser() &&
+                    (resource.data.isPublished == true ||
+                     resource.data.createdBy == request.auth.uid);
+
+      // Only verified builders can create tools
+      allow create: if isUBUser() &&
+                      exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isBuilder == true &&
+                      request.resource.data.createdBy == request.auth.uid;
+
+      // Creators can update their own tools
+      allow update: if isOwner(resource.data.createdBy) && isUBUser();
+
+      // Soft delete only
+      allow delete: if false;
+    }
+
+    // ============================================
+    // RITUALS (Engagement Campaigns)
+    // ============================================
+    match /rituals/{ritualId} {
+      allow read: if isUBUser();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if false;
+
+      // Ritual Participation
+      match /participation/{userId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow write: if isOwner(userId);
+      }
+    }
+
+    // ============================================
+    // FEED & POSTS (Global)
+    // ============================================
+    match /posts/{postId} {
+      allow read: if isUBUser();
+      allow create: if isUBUser() &&
+                      request.resource.data.authorId == request.auth.uid &&
+                      request.resource.data.campusId == 'ub-buffalo';
+      allow update: if resource.data.authorId == request.auth.uid;
+      allow delete: if resource.data.authorId == request.auth.uid || isAdmin();
+    }
+
+    // ============================================
+    // NOTIFICATIONS
+    // ============================================
+    match /notifications/{userId}/items/{notificationId} {
+      allow read: if isOwner(userId);
+      allow create: if isAuthenticated(); // System can send to any user
+      allow update: if isOwner(userId); // Mark as read
+      allow delete: if isOwner(userId);
+    }
+
+    // ============================================
+    // PRESENCE (Online Status)
+    // ============================================
+    match /presence/{userId} {
+      allow read: if isUBUser();
+      allow write: if isOwner(userId);
+    }
+
+    // ============================================
+    // ADMIN COLLECTIONS
+    // ============================================
+    match /admins/{adminId} {
+      allow read: if isAdmin();
+      allow write: if false; // Manual setup only
+    }
+
+    match /analytics/{document=**} {
+      allow read: if isAdmin();
+      allow write: if isAuthenticated(); // System writes
+    }
+
+    match /reports/{reportId} {
+      allow read: if isAdmin() ||
+                    resource.data.reporterId == request.auth.uid;
+      allow create: if isUBUser();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // ============================================
+    // SCHOOLS & WAITLIST (Public)
+    // ============================================
+    match /schools/{schoolId} {
+      allow read: if true; // Public access
+      allow write: if isAdmin();
+
+      match /waitlist/{email} {
+        allow read: if isAdmin();
+        allow create: if true; // Anyone can join waitlist
+        allow update: if false;
+        allow delete: if isAdmin();
+      }
+    }
+
+    // ============================================
+    // BUILDER REQUESTS
+    // ============================================
+    match /builderRequests/{requestId} {
+      allow read: if resource.data.userId == request.auth.uid || isAdmin();
+      allow create: if isUBUser() &&
+                      request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // ============================================
+    // FEATURE FLAGS
+    // ============================================
+    match /featureFlags/{flagId} {
+      allow read: if isUBUser();
+      allow write: if isAdmin();
+    }
+
+    // ============================================
+    // TEMPORARY/TEST COLLECTIONS
+    // ============================================
+    match /test/{document=**} {
+      allow read, write: if isAdmin();
+    }
+
+    // ============================================
+    // DEFAULT DENY
+    // ============================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

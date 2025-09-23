@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import {
   HiveModal,
+  HiveModalHeader,
+  HiveModalTitle,
+  HiveModalDescription,
+  HiveModalContent,
   Button,
   Card,
   Switch,
@@ -143,14 +147,15 @@ export function ToolConfigModal({
   const optionalPermissions = tool.permissions.filter(p => !p.required);
 
   return (
-    <HiveModal 
-      open={isOpen} 
-      onOpenChange={onClose} 
-      size="lg"
-      title={`Configure ${tool.name}`}
-      description={`Version ${tool.version} • ${tool.isCustom ? 'Custom Tool' : 'Marketplace Tool'}`}
+    <HiveModal
+      open={isOpen}
+      onOpenChange={onClose}
     >
-
+      <HiveModalHeader>
+        <HiveModalTitle>Configure {tool.name}</HiveModalTitle>
+        <HiveModalDescription>Version {tool.version} • {tool.isCustom ? 'Custom Tool' : 'Marketplace Tool'}</HiveModalDescription>
+      </HiveModalHeader>
+      <HiveModalContent>
         <div className="p-6">
           <Tabs defaultValue="permissions" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
@@ -381,6 +386,7 @@ export function ToolConfigModal({
             </Button>
           </div>
         </div>
+      </HiveModalContent>
     </HiveModal>
   );
 }

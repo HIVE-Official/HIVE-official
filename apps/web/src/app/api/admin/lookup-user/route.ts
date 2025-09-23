@@ -1,5 +1,5 @@
 import { z } from "zod";
-import * as admin from "firebase-admin/auth";
+import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { logger } from "@/lib/logger";
 import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
@@ -34,8 +34,16 @@ interface FirestoreUserData {
 }
 
 export const POST = withAdminAuthAndErrors(
-  lookupUserSchema,
-  async (request: AuthenticatedRequest, context, { query }, respond) => {
+  async (request: AuthenticatedRequest, context: any, respond: any) => {
+    // Validate request body
+    const body = await request.json();
+    const validation = lookupUserSchema.safeParse(body);
+
+    if (!validation.success) {
+      return respond.badRequest(validation.error.errors[0].message);
+    }
+
+    const { query } = validation.data;
     const currentUserId = getUserId(request);
     const db = getFirestore();
 
@@ -45,7 +53,7 @@ export const POST = withAdminAuthAndErrors(
     // Try to lookup by email first
     if (query.includes("@")) {
       try {
-            const userRecord = await admin.auth().getUserByEmail(query);
+            const userRecord = await getAuth().getUserByEmail(query);
             userData = {
               uid: userRecord.uid,
               email: userRecord.email,
@@ -67,7 +75,7 @@ export const POST = withAdminAuthAndErrors(
         } else {
           // Try to lookup by UID
           try {
-            const userRecord = await admin.auth().getUser(query);
+            const userRecord = await getAuth().getUser(query);
             userData = {
               uid: userRecord.uid,
               email: userRecord.email,
@@ -128,7 +136,7 @@ export const POST = withAdminAuthAndErrors(
 
             // Get Auth data for this user
             try {
-              const userRecord = await admin.auth().getUser(doc.id);
+              const userRecord = await getAuth().getUser(doc.id);
               userData = {
                 uid: userRecord.uid,
                 email: userRecord.email,
@@ -152,8 +160,8 @@ export const POST = withAdminAuthAndErrors(
         }
 
     logger.info('Admin user lookup completed', {
-      query,
-      found: userData !== null || firestoreData !== null,
+      search: query,
+      metadata: { found: userData !== null || firestoreData !== null },
       adminUserId: currentUserId,
       endpoint: '/api/admin/lookup-user'
     });

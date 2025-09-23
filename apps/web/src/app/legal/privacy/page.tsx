@@ -16,8 +16,8 @@ const CURRENT_PRIVACY: LegalDocument = {
   title: "Privacy Policy",
   content: (
     <div className="prose prose-invert max-w-none">
-      <div className="mb-8 rounded-lg border border-gold/20 bg-gold/5 p-6">
-        <h2 className="mt-0 text-xl font-semibold text-gold">
+      <div className="mb-8 rounded-lg border border-[var(--hive-brand-primary)]/20 bg-[var(--hive-brand-primary)]/5 p-6">
+        <h2 className="mt-0 text-xl font-semibold text-[var(--hive-brand-primary)]">
           TL;DR - Your Privacy Matters
         </h2>
         <p className="mb-0 text-gray-300">
@@ -28,8 +28,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </div>
 
       <h2>1. Information We Collect</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Account info, content you create, and anonymized usage data.
         </p>
       </div>
@@ -64,8 +64,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </ul>
 
       <h2>2. How We Use Your Information</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: To provide HIVE's features, improve the platform, and
           communicate with you.
         </p>
@@ -96,8 +96,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </ul>
 
       <h2>3. Information Sharing and Disclosure</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: We don't sell your data. Limited sharing only for service
           operation and legal compliance.
         </p>
@@ -130,8 +130,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </p>
 
       <h2>4. Data Security</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Industry-standard security measures protect your data.
         </p>
       </div>
@@ -146,8 +146,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </ul>
 
       <h2>5. Your Privacy Rights and Controls</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: You control your profile visibility, can export your data, and
           request deletion.
         </p>
@@ -189,8 +189,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </ul>
 
       <h2>6. Regional Privacy Rights</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: Additional rights for EU (GDPR) and California (CCPA) users.
         </p>
       </div>
@@ -214,8 +214,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </ul>
 
       <h2>7. Children's Privacy (COPPA)</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: HIVE is for users 13 and older.
         </p>
       </div>
@@ -228,8 +228,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </p>
 
       <h2>8. Data Retention</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: We keep data only as long as needed for service operation.
         </p>
       </div>
@@ -266,8 +266,8 @@ const CURRENT_PRIVACY: LegalDocument = {
       </p>
 
       <h2>11. Changes to This Privacy Policy</h2>
-      <div className="mb-4 rounded border-l-4 border-gold/50 bg-gray-900/50 p-4">
-        <p className="mb-2 font-medium text-gold">
+      <div className="mb-4 rounded border-l-4 border-[var(--hive-brand-primary)]/50 bg-[var(--hive-background-tertiary)]/50 p-4">
+        <p className="mb-2 font-medium text-[var(--hive-brand-primary)]">
           TL;DR: We'll notify you of significant changes.
         </p>
       </div>
@@ -287,7 +287,7 @@ const CURRENT_PRIVACY: LegalDocument = {
           Email:{" "}
           <a
             href="mailto:privacy@hive.co"
-            className="text-gold hover:text-gold/80"
+            className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80"
           >
             privacy@hive.co
           </a>
@@ -296,7 +296,7 @@ const CURRENT_PRIVACY: LegalDocument = {
           Data Subject Rights:{" "}
           <a
             href="mailto:data-rights@hive.co"
-            className="text-gold hover:text-gold/80"
+            className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80"
           >
             data-rights@hive.co
           </a>
@@ -304,7 +304,7 @@ const CURRENT_PRIVACY: LegalDocument = {
       </ul>
 
       <div className="mt-12 border-t border-gray-800 pt-8">
-        <h3 className="text-lg font-semibold text-gold">Version History</h3>
+        <h3 className="text-lg font-semibold text-[var(--hive-brand-primary)]">Version History</h3>
         <div className="mt-4 space-y-2 text-sm text-gray-400">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />

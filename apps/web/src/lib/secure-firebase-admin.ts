@@ -4,6 +4,8 @@
  */
 
 import * as admin from "firebase-admin";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 import { env, currentEnvironment } from "./env";
 import { captureError, LogLevel } from "./error-monitoring";
 
@@ -11,8 +13,8 @@ import { captureError, LogLevel } from "./error-monitoring";
  * Firebase initialization state
  */
 let firebaseInitialized = false;
-let dbAdmin: admin.firestore.Firestore;
-let authAdmin: admin.auth.Auth;
+let dbAdmin: admin.firestore.Firestore = {} as admin.firestore.Firestore;
+let authAdmin: admin.auth.Auth = {} as admin.auth.Auth;
 let initializationError: Error | null = null;
 
 /**
@@ -114,8 +116,8 @@ function initializeFirebaseSecure(): void {
   try {
     if (admin.apps.length > 0) {
       // App already initialized
-      dbAdmin = admin.firestore();
-      authAdmin = admin.auth();
+      dbAdmin = getFirestore();
+      authAdmin = getAuth();
       firebaseInitialized = true;
       return;
     }
@@ -137,8 +139,8 @@ function initializeFirebaseSecure(): void {
       projectId: env.FIREBASE_PROJECT_ID,
     });
     
-    dbAdmin = admin.firestore();
-    authAdmin = admin.auth();
+    dbAdmin = getFirestore();
+    authAdmin = getAuth();
     firebaseInitialized = true;
     
     // Log success without credential details
@@ -241,13 +243,23 @@ export const auth = authAdmin;
 export const isFirebaseConfigured = firebaseInitialized;
 
 /**
+ * Helper to get initialization error message
+ */
+function getInitializationErrorMessage(): string | null {
+  if (initializationError && initializationError instanceof Error) {
+    return initializationError.message;
+  }
+  return null;
+}
+
+/**
  * Safe environment info - NO SENSITIVE DATA
  */
 export const environmentInfo = {
   environment: currentEnvironment,
   firebaseConfigured: firebaseInitialized,
   projectId: env.FIREBASE_PROJECT_ID || '[NOT_SET]',
-  initializationError: initializationError?.message || null,
+  initializationError: getInitializationErrorMessage(),
   // Safe credential availability check
   credentialSources: {
     individualVars: !!(env.FIREBASE_PRIVATE_KEY && env.FIREBASE_CLIENT_EMAIL),

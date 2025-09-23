@@ -330,7 +330,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.description}
-                  onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Describe specifically what you think violates our community guidelines..."
                   className="min-h-[100px]"
                   maxLength={1000}
@@ -370,7 +370,7 @@ export function ReportContentModal({
                 <div className="flex space-x-2 mb-2">
                   <Input
                     value={newUrl}
-                    onChange={(e: React.ChangeEvent) => setNewUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUrl(e.target.value)}
                     placeholder="https://example.com/related-content"
                     className="flex-1"
                   />
@@ -410,7 +410,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.additionalContext}
-                  onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, additionalContext: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, additionalContext: e.target.value }))}
                   placeholder="Any additional information that might help us review this report..."
                   className="min-h-[80px]"
                   maxLength={500}

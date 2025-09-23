@@ -26,7 +26,7 @@ import {
   Copy,
   Link,
   Move,
-  Resize,
+  Maximize2 as Resize,
   Eye,
   Code,
   Zap,
@@ -256,7 +256,7 @@ export function VisualToolComposer({
           <div className="flex items-center space-x-2">
             <Input
               value={toolName}
-              onChange={(e: React.ChangeEvent) => setToolName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolName(e.target.value)}
               placeholder="Tool name..."
               className="w-48"
             />
@@ -388,7 +388,7 @@ export function VisualToolComposer({
                         <Input
                           type="number"
                           value={selectedCanvasElement.position.x}
-                          onChange={(e: React.ChangeEvent) => handleElementMove(selectedCanvasElement.id, {
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementMove(selectedCanvasElement.id, {
                             x: parseInt(e.target.value) || 0,
                             y: selectedCanvasElement.position.y
                           })}
@@ -397,7 +397,7 @@ export function VisualToolComposer({
                         <Input
                           type="number"
                           value={selectedCanvasElement.position.y}
-                          onChange={(e: React.ChangeEvent) => handleElementMove(selectedCanvasElement.id, {
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementMove(selectedCanvasElement.id, {
                             x: selectedCanvasElement.position.x,
                             y: parseInt(e.target.value) || 0
                           })}
@@ -412,7 +412,7 @@ export function VisualToolComposer({
                         <Input
                           type="number"
                           value={selectedCanvasElement.size.width}
-                          onChange={(e: React.ChangeEvent) => handleElementResize(selectedCanvasElement.id, {
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementResize(selectedCanvasElement.id, {
                             width: parseInt(e.target.value) || 100,
                             height: selectedCanvasElement.size.height
                           })}
@@ -421,7 +421,7 @@ export function VisualToolComposer({
                         <Input
                           type="number"
                           value={selectedCanvasElement.size.height}
-                          onChange={(e: React.ChangeEvent) => handleElementResize(selectedCanvasElement.id, {
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementResize(selectedCanvasElement.id, {
                             width: selectedCanvasElement.size.width,
                             height: parseInt(e.target.value) || 50
                           })}
@@ -436,7 +436,7 @@ export function VisualToolComposer({
                         {(schema as any).type === 'string' && (
                           <Input
                             value={selectedCanvasElement.config[key] || ''}
-                            onChange={(e: React.ChangeEvent) => handleElementConfigChange(selectedCanvasElement.id, {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementConfigChange(selectedCanvasElement.id, {
                               [key]: e.target.value
                             })}
                             className="mt-1"
@@ -460,7 +460,7 @@ export function VisualToolComposer({
                           <Input
                             type="number"
                             value={selectedCanvasElement.config[key] || 0}
-                            onChange={(e: React.ChangeEvent) => handleElementConfigChange(selectedCanvasElement.id, {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementConfigChange(selectedCanvasElement.id, {
                               [key]: parseInt(e.target.value) || 0
                             })}
                             className="mt-1"

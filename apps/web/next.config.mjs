@@ -46,7 +46,7 @@ const nextConfig = {
   // Security headers
   async headers() {
     const isProduction = process.env.NODE_ENV === 'production';
-    
+
     return [
       {
         source: '/(.*)',
@@ -55,9 +55,25 @@ const nextConfig = {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
+          // Content Security Policy for development
+          ...(!isProduction ? [
+            {
+              key: 'Content-Security-Policy',
+              value: [
+                "default-src 'self'",
+                "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.firebaseapp.com https://*.googleapis.com", // Allow Next.js dev scripts and Firebase
+                "style-src 'self' 'unsafe-inline'", // Allow inline styles
+                "img-src 'self' data: blob: https: https://firebasestorage.googleapis.com",
+                "font-src 'self' data:",
+                "connect-src 'self' ws: wss: http://localhost:* https://*.firebaseio.com https://*.firebase.googleapis.com https://*.firebaseapp.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com", // Allow WebSocket for HMR and Firebase
+                "frame-src 'self' https://*.firebaseapp.com",
+                "worker-src 'self' blob:",
+              ].join('; ')
+            }
+          ] : []),
           ...(isProduction ? [
             {
-              key: 'X-Frame-Options', 
+              key: 'X-Frame-Options',
               value: 'DENY',
             },
             {
@@ -68,6 +84,18 @@ const nextConfig = {
               key: 'Referrer-Policy',
               value: 'strict-origin-when-cross-origin',
             },
+            {
+              key: 'Content-Security-Policy',
+              value: [
+                "default-src 'self'",
+                "script-src 'self' https://*.firebaseapp.com https://*.googleapis.com",
+                "style-src 'self' 'unsafe-inline'",
+                "img-src 'self' data: https://firebasestorage.googleapis.com https://storage.googleapis.com",
+                "font-src 'self'",
+                "connect-src 'self' https://*.firebaseio.com https://*.firebase.googleapis.com https://*.firebaseapp.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com",
+                "frame-src 'self' https://*.firebaseapp.com",
+              ].join('; ')
+            }
           ] : []),
         ],
       },

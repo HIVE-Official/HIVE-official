@@ -91,7 +91,7 @@ function getCurrentEnvironment(): "development" | "staging" | "production" | "te
   if (env === "test") return "test";
   
   // Fallback for staging or unknown environments
-  if (env === "staging" || vercelEnv === "preview") return "staging";
+  if (vercelEnv === "preview") return "staging";
 
   return "development";
 }

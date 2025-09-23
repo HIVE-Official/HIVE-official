@@ -60,7 +60,7 @@ export type Config = typeof config;
 
 // Validation function to ensure required env vars are present
 export function validateConfig(): { isValid: boolean; missingVars: string[] } {
-  const requiredVars = [
+  const requiredVars: string[] = [
     // Add required environment variables here
     // 'NEXT_PUBLIC_API_URL',
     // 'NEXT_PUBLIC_FIREBASE_API_KEY',

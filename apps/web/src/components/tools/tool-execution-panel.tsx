@@ -11,7 +11,7 @@ import {
   Settings,
   Clock,
   Cpu,
-  Memory,
+  Brain as Memory,
   CheckCircle,
   XCircle,
   AlertTriangle,
@@ -196,7 +196,7 @@ export function ToolExecutionPanel({
           return (
             <Textarea
               value={value || ''}
-              onChange={(e: React.ChangeEvent) => handleInputChange(key, e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(key, e.target.value)}
               placeholder={definition.placeholder}
               rows={3}
               className="mt-1"
@@ -206,7 +206,7 @@ export function ToolExecutionPanel({
         return (
           <Input
             value={value || ''}
-            onChange={(e: React.ChangeEvent) => handleInputChange(key, e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, e.target.value)}
             placeholder={definition.placeholder}
             className="mt-1"
           />
@@ -217,7 +217,7 @@ export function ToolExecutionPanel({
           <Input
             type="number"
             value={value || 0}
-            onChange={(e: React.ChangeEvent) => handleInputChange(key, parseFloat(e.target.value))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, parseFloat(e.target.value))}
             className="mt-1"
           />
         );
@@ -241,7 +241,7 @@ export function ToolExecutionPanel({
         return (
           <Textarea
             value={typeof value === 'string' ? value : JSON.stringify(value, null, 2)}
-            onChange={(e: React.ChangeEvent) => handleInputChange(key, parseInputValue(e.target.value, definition.type))}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(key, parseInputValue(e.target.value, definition.type))}
             placeholder={definition.type === 'array' ? '["item1", "item2"]' : '{"key": "value"}'}
             rows={3}
             className="mt-1 font-mono text-sm"
@@ -252,7 +252,7 @@ export function ToolExecutionPanel({
         return (
           <Input
             value={value || ''}
-            onChange={(e: React.ChangeEvent) => handleInputChange(key, e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, e.target.value)}
             className="mt-1"
           />
         );

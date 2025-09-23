@@ -3,7 +3,7 @@
  * Handles connection pooling, message batching, fallback systems, and performance monitoring
  */
 
-import { logger } from './logger';
+import { logger } from './structured-logger';
 import { sseRealtimeService, RealtimeMessage } from './sse-realtime-service';
 import { realtimeService as firebaseRealtimeService } from './firebase-realtime';
 
@@ -275,15 +275,19 @@ export class RealtimeOptimizationManager {
 
       batch.messages.forEach(message => this.recordMessageSent(message));
       
-      logger.info('Batch processed successfully', { 
-        batchId: batch.id, 
-        messageCount: batch.messages.length 
+      logger.info('Batch processed successfully', {
+        metadata: {
+          batchId: batch.id,
+          messageCount: batch.messages.length
+        }
       });
     } catch (error) {
-      logger.error('Batch processing failed', { 
-        batchId: batch.id, 
+      logger.error('Batch processing failed', {
         error,
-        messageCount: batch.messages.length 
+        metadata: {
+          batchId: batch.id,
+          messageCount: batch.messages.length
+        }
       });
       
       // Handle individual message failures
@@ -370,19 +374,19 @@ export class RealtimeOptimizationManager {
     
     // Check latency
     if (metrics.averageLatency > this.performanceThresholds.maxLatency) {
-      logger.warn('High latency detected', { latency: metrics.averageLatency });
+      logger.warn('High latency detected', { metadata: { latency: metrics.averageLatency } });
       this.handleHighLatency();
     }
     
     // Check error rate
     if (metrics.errorRate > this.performanceThresholds.maxErrorRate) {
-      logger.warn('High error rate detected', { errorRate: metrics.errorRate });
+      logger.warn('High error rate detected', { metadata: { errorRate: metrics.errorRate } });
       this.handleHighErrorRate();
     }
     
     // Check memory usage
     if (metrics.memoryUsage > this.performanceThresholds.maxMemoryUsage) {
-      logger.warn('High memory usage detected', { memoryUsage: metrics.memoryUsage });
+      logger.warn('High memory usage detected', { metadata: { memoryUsage: metrics.memoryUsage } });
       this.handleHighMemoryUsage();
     }
   }
@@ -412,7 +416,7 @@ export class RealtimeOptimizationManager {
         this.enableFirebaseFallback();
       }
       
-      logger.info('Health check completed', { sseHealthy, firebaseHealthy });
+      logger.info('Health check completed', { metadata: { sseHealthy, firebaseHealthy } });
     } catch (error) {
       logger.error('Health check failed', { error });
     }
@@ -496,10 +500,12 @@ export class RealtimeOptimizationManager {
    * Error Handling & Recovery
    */
   private async handleMessageFailure(message: RealtimeMessage, error: any): Promise<void> {
-    logger.error('Message delivery failed', { 
-      messageId: message.id, 
+    logger.error('Message delivery failed', {
+      messageId: message.id,
       error,
-      retryCount: message.metadata.retryCount 
+      metadata: {
+        retryCount: message.metadata.retryCount
+      }
     });
 
     // Retry with backoff
@@ -614,7 +620,7 @@ export class RealtimeOptimizationManager {
 
   public updateConfiguration(config: Partial<FallbackConfig>): void {
     this.fallbackConfig = { ...this.fallbackConfig, ...config };
-    logger.info('Real-time optimization configuration updated', { config });
+    logger.info('Real-time optimization configuration updated', { metadata: { config } });
   }
 
   public async shutdown(): Promise<void> {

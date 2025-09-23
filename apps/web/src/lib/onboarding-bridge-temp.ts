@@ -4,7 +4,7 @@
  */
 
 import { useCallback } from 'react';
-import { useUnifiedAuth } from "@hive/ui";
+import { useAuth } from "@hive/auth-logic";
 
 export interface OnboardingData {
   fullName: string;
@@ -31,7 +31,7 @@ export interface OnboardingResult {
  * Temporary working implementation of useOnboardingBridge
  */
 export function useOnboardingBridge() {
-  const unifiedAuth = useUnifiedAuth();
+  const unifiedAuth = useAuth();
 
   const completeOnboarding = useCallback(async (
     onboardingData: OnboardingData
@@ -62,10 +62,19 @@ export function useOnboardingBridge() {
         throw new Error('User consent is required to complete onboarding');
       }
 
-      // Call the unified auth complete onboarding method
-      const result = await unifiedAuth.completeOnboarding(onboardingData);
+      // Make direct API call to complete onboarding
+      const response = await fetch('/api/auth/complete-onboarding', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await unifiedAuth.getAuthToken?.() || ''}`,
+        },
+        body: JSON.stringify(onboardingData),
+      });
 
-      if (!result.success) {
+      const result = await response.json();
+
+      if (!response.ok) {
         throw new Error(result.error || 'Onboarding completion failed');
       }
 
@@ -74,10 +83,28 @@ export function useOnboardingBridge() {
         handle: onboardingData.handle,
       });
 
+      // Handle development user update if provided
+      if (result.devUserUpdate && typeof window !== 'undefined') {
+        console.log('Updating development user in localStorage', result.devUserUpdate);
+        localStorage.setItem('dev_auth_mode', 'true');
+        localStorage.setItem('dev_user', JSON.stringify(result.devUserUpdate));
+
+        // Trigger storage event for auth hook to pick up changes
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'dev_user',
+          newValue: JSON.stringify(result.devUserUpdate)
+        }));
+      }
+
+      // Update the auth state to reflect onboarding is complete
+      if (unifiedAuth.refreshUser) {
+        await unifiedAuth.refreshUser();
+      }
+
       return {
         success: true,
         user: result.user,
-        builderRequestsCreated: 0,
+        builderRequestsCreated: result.builderRequestsCreated || 0,
       };
 
     } catch (error) {

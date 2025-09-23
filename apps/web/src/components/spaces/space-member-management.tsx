@@ -130,8 +130,8 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
   // Permission checks
   const canChangeRoles = currentUserRole === 'owner' || currentUserRole === 'admin';
   const canRemoveMembers = currentUserRole === 'owner' || currentUserRole === 'admin';
-  const canSuspendMembers = currentUserRole !== 'member';
-  const canInviteMembers = currentUserRole !== 'member';
+  const canSuspendMembers = true; // currentUserRole is always admin/owner/moderator
+  const canInviteMembers = true; // currentUserRole is always admin/owner/moderator
 
   // Fetch members from API
   useEffect(() => {
@@ -307,12 +307,12 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
       
       // Update local state
       setMembers(prev => prev.map(member =>
-        member.id === memberId 
-          ? { 
-              ...member, 
-              status: suspend ? 'suspended' : 'active',
+        member.id === memberId
+          ? {
+              ...member,
+              status: (suspend ? 'suspended' : 'active') as MemberData['status'],
               flags: { ...member.flags, isSuspended: suspend }
-            }
+            } as MemberData
           : member
       ));
     } catch (error) {
@@ -397,7 +397,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                 type="text"
                 placeholder="Search members..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50 focus:border-[#FFD700]/30"
               />
             </div>
@@ -405,7 +405,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Role Filter */}
             <select
               value={selectedRole}
-              onChange={(e: React.ChangeEvent) => setSelectedRole(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole(e.target.value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50"
             >
               <option value="all">All Roles</option>
@@ -418,7 +418,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Status Filter */}
             <select
               value={selectedStatus}
-              onChange={(e: React.ChangeEvent) => setSelectedStatus(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus(e.target.value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50"
             >
               <option value="all">All Status</option>

@@ -68,10 +68,15 @@ export async function middleware(request: NextRequest) {
   // Public routes that don't require authentication
   const publicRoutes = ['/landing', '/auth/login', '/auth/verify', '/auth/expired', '/onboarding', '/schools', '/waitlist'];
   
-  // Development-only routes
-  const devRoutes = ['/debug-auth', '/dev-login'];
-  
+  // Development-only routes (only allow when explicitly accessed)
+  const devRoutes = ['/dev-login'];
+
   if (process.env.NODE_ENV === 'development' && devRoutes.some(route => pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
+
+  // Allow debug-auth only when directly accessed (not redirected to)
+  if (process.env.NODE_ENV === 'development' && pathname.startsWith('/debug-auth')) {
     return NextResponse.next();
   }
   
@@ -131,17 +136,36 @@ export async function middleware(request: NextRequest) {
 
 
   // For protected dashboard routes, check session
-  const sessionToken = request.cookies.get('session-token')?.value || 
+  const sessionToken = request.cookies.get('session-token')?.value ||
                       request.headers.get('authorization')?.replace('Bearer ', '');
 
   if (!sessionToken) {
-    // In development, redirect to debug auth instead of login for easier debugging
+    // In development, create automatic dev session to prevent redirect loops
     if (process.env.NODE_ENV === 'development') {
-      const debugUrl = new URL('/debug-auth', request.url);
-      debugUrl.searchParams.set('returnTo', pathname);
-      return NextResponse.redirect(debugUrl);
+      // Generate a development session token
+      const userId = 'dev-user-' + Date.now();
+      const devToken = `dev_session_${userId}_${Date.now()}_${Math.random().toString(36).substring(2)}`;
+
+      // Create response with dev session cookie
+      const response = NextResponse.next();
+      response.cookies.set('session-token', devToken, {
+        maxAge: 24 * 60 * 60, // 24 hours
+        secure: false, // Allow non-HTTPS in development
+        sameSite: 'lax',
+        path: '/'
+      });
+
+      // Also set a flag to indicate this is a dev session
+      response.cookies.set('dev-mode', 'true', {
+        maxAge: 24 * 60 * 60,
+        secure: false,
+        sameSite: 'lax',
+        path: '/'
+      });
+
+      return response;
     }
-    
+
     // Redirect to login with return URL
     const loginUrl = new URL('/auth/login', request.url);
     loginUrl.searchParams.set('returnTo', pathname);

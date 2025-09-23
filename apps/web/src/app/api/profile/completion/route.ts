@@ -16,7 +16,7 @@ interface ProfileCompletionCheck {
 // Required fields for basic profile completion
 const REQUIRED_FIELDS = [
   'fullName',
-  'handle', 
+  'handle',
   'email',
   'major',
   'schoolId',
@@ -29,7 +29,12 @@ const OPTIONAL_FIELDS = [
   'bio',
   'graduationYear',
   'isPublic',
-  'builderOptIn'
+  'builderOptIn',
+  'housing',
+  'pronouns',
+  'statusMessage',
+  'interests',
+  'academicYear'
 ];
 
 /**
@@ -62,7 +67,7 @@ export const GET = withAuthAndErrors(async (
     const userDoc = await dbAdmin.collection('users').doc(userId).get();
     
     if (!userDoc.exists) {
-      return respond.error("User profile not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("User profile not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const userData = userDoc.data();
@@ -142,22 +147,32 @@ function checkFieldCompletion(field: string, value: any): boolean {
   if (value === null || value === undefined) {
     return false;
   }
-  
+
   // String fields
   if (typeof value === 'string') {
     return value.trim().length > 0;
   }
-  
+
   // Boolean fields (considered complete if explicitly set)
   if (typeof value === 'boolean') {
     return true; // Both true and false are valid completion states
   }
-  
+
   // Number fields
   if (typeof value === 'number') {
     return !isNaN(value) && value > 0;
   }
-  
+
+  // Array fields (like interests)
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
+
+  // Object fields (like ghostMode)
+  if (typeof value === 'object' && value !== null) {
+    return Object.keys(value).length > 0;
+  }
+
   return false;
 }
 
@@ -193,10 +208,15 @@ function generateNextSteps(missingFields: string[], completedOptionalFields: str
     schoolId: 'Confirm your school',
     consentGiven: 'Accept the terms and privacy policy',
     avatarUrl: 'Upload a profile photo',
-    bio: 'Write a brief bio',
+    bio: 'Write a brief bio about yourself',
     graduationYear: 'Add your graduation year',
     isPublic: 'Set your profile visibility',
-    builderOptIn: 'Consider joining the Builder Program'
+    builderOptIn: 'Consider joining the Builder Program',
+    housing: 'Add your housing information',
+    pronouns: 'Add your pronouns',
+    statusMessage: 'Set a status message',
+    interests: 'Add your interests',
+    academicYear: 'Select your academic year'
   };
 
   // Add steps for missing required fields first

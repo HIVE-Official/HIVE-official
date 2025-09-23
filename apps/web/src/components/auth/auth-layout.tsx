@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { HiveLogo } from "@hive/ui";
+// Temporarily inline logo to fix build error
+// import { HiveLogo } from "@hive/ui";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -44,7 +45,37 @@ export function AuthLayout({
             )}
             
             <Link href="/landing" className="hover:opacity-80 transition-all duration-200">
-              <HiveLogo size="md" variant="gold" showWordmark={true} />
+              {/* Temporary inline logo to fix build error */}
+              <div className="inline-flex items-center justify-center font-bold text-xl bg-gradient-to-r from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] bg-clip-text text-transparent">
+                <svg
+                  className="mr-2 h-6 w-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 2L21.5 7V17L12 22L2.5 17V7L12 2Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="currentColor"
+                    fillOpacity="0.1"
+                  />
+                  <path
+                    d="M8 9L10 7L14 7L16 9L16 13L14 15L10 15L8 13L8 9Z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    fill="currentColor"
+                    fillOpacity="0.2"
+                  />
+                  <circle
+                    cx="12"
+                    cy="11"
+                    r="2"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span className="font-bold tracking-tight">HIVE</span>
+              </div>
             </Link>
             
             <div className="w-24"></div>

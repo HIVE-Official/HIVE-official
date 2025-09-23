@@ -24,11 +24,29 @@ const badgeVariants = cva(
           "bg-green-100 text-green-800 border-green-300 hover:bg-green-200",
         sophomore:
           "bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200",
+        // Class year variants (continued)
+        junior:
+          "bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200",
+        senior:
+          "bg-red-100 text-red-800 border-red-300 hover:bg-red-200",
         // Skill and activity variants
         "skill-tag":
           "bg-purple-100 text-purple-800 border-purple-300 hover:bg-purple-200",
         "building-tools":
           "bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-200",
+        // Additional variants for profiles and spaces
+        primary:
+          "bg-[var(--hive-accent)] text-white hover:bg-[var(--hive-accent)]/90",
+        "prof-favorite":
+          "bg-indigo-100 text-indigo-800 border-indigo-300 hover:bg-indigo-200",
+        "major-tag":
+          "bg-cyan-100 text-cyan-800 border-cyan-300 hover:bg-cyan-200",
+        "active-tag":
+          "bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-200",
+        "tool-tag":
+          "bg-pink-100 text-pink-800 border-pink-300 hover:bg-pink-200",
+        leadership:
+          "bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200",
       },
     },
     defaultVariants: {

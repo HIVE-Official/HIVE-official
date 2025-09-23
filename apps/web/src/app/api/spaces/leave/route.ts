@@ -1,5 +1,6 @@
 import { z } from "zod";
-import * as admin from "firebase-admin/firestore";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import * as admin from 'firebase-admin';
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 import { withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
@@ -14,14 +15,15 @@ const leaveSpaceSchema = z.object({
  */
 export const POST = withAuthValidationAndErrors(
   leaveSpaceSchema,
-  async (request: AuthenticatedRequest, context, { spaceId }, respond) => {
+  async (request: AuthenticatedRequest, context, body: z.infer<typeof leaveSpaceSchema>, respond) => {
+    const { spaceId } = body;
     const userId = getUserId(request);
 
     // Get space from flat collection
     const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
 
     if (!spaceDoc.exists) {
-      return respond.error("Space not found", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("Space not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const space = spaceDoc.data()!;
@@ -36,7 +38,7 @@ export const POST = withAuthValidationAndErrors(
     const membershipSnapshot = await membershipQuery.get();
 
     if (membershipSnapshot.empty) {
-      return respond.error("You are not a member of this space", "RESOURCE_NOT_FOUND", 404);
+      return respond.error("You are not a member of this space", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const memberDoc = membershipSnapshot.docs[0];
@@ -54,7 +56,7 @@ export const POST = withAuthValidationAndErrors(
       const otherOwnersSnapshot = await otherOwnersQuery.get();
       
       if (otherOwnersSnapshot.size <= 1) {
-        return respond.error("Cannot leave space: You are the only owner. Transfer ownership or promote another member first.", "BUSINESS_RULE_VIOLATION", 409);
+        return respond.error("Cannot leave space: You are the only owner. Transfer ownership or promote another member first.", "BUSINESS_RULE_VIOLATION", { status: 409 });
       }
     }
 

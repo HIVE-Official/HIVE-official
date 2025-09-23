@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import * as admin from "firebase-admin/auth";
+import { getAuth } from "firebase-admin/auth";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
@@ -34,29 +34,26 @@ export async function GET(
     }
 
     const token = authHeader.substring(7);
-    const auth = admin.auth();
 
-    const decodedToken = await auth.verifyIdToken(token);
-    const requestingUserId = decodedToken.uid;
+    let requestingUserId;
 
-    // Find the space in the nested structure: spaces/[spacetype]/spaces/spaceID
-    const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
-    let spaceDoc: any = null;
-    let spaceType: string | null = null;
-
-    // Search through all space types to find the space
-    for (const type of spaceTypes) {
-      const potentialSpaceRef = dbAdmin.collection("spaces").doc(type).collection("spaces").doc(spaceId);
-      const potentialDoc = await potentialSpaceRef.get();
-      
-      if (potentialDoc.exists) {
-        spaceDoc = potentialDoc;
-        spaceType = type;
-        break;
+    // Handle dev tokens in development mode
+    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_')) {
+      requestingUserId = token.replace('dev_token_', '');
+      // Handle session token format
+      if (requestingUserId.includes('_')) {
+        requestingUserId = requestingUserId.split('_')[0];
       }
+    } else {
+      const auth = getAuth();
+      const decodedToken = await auth.verifyIdToken(token);
+      requestingUserId = decodedToken.uid;
     }
 
-    if (!spaceDoc || !spaceDoc.exists) {
+    // Get space from flat collection structure
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+
+    if (!spaceDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
@@ -66,34 +63,30 @@ export async function GET(
       return NextResponse.json(ApiResponseHelper.error("Space data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
-    // Check if requesting user is a member of this space
-    const requestingUserMemberDoc = await dbAdmin
-      .collection("spaces")
-      .doc(spaceType!)
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(requestingUserId)
+    // Check if requesting user is a member of this space using flat spaceMembers collection
+    const requestingUserMemberQuery = await dbAdmin
+      .collection("spaceMembers")
+      .where("spaceId", "==", spaceId)
+      .where("userId", "==", requestingUserId)
+      .where("isActive", "==", true)
+      .limit(1)
       .get();
 
-    if (!requestingUserMemberDoc.exists) {
+    if (requestingUserMemberQuery.empty) {
       return NextResponse.json(ApiResponseHelper.error("Access denied: Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    const requestingUserMembership = requestingUserMemberDoc.data();
+    const requestingUserMembership = requestingUserMemberQuery.docs[0].data();
 
     if (!requestingUserMembership) {
       return NextResponse.json(ApiResponseHelper.error("Membership data not found", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    // Build members query
+    // Build members query using flat spaceMembers collection
     let membersQuery = dbAdmin
-      .collection("spaces")
-      .doc(spaceType!)
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .orderBy("joinedAt", "desc");
+      .collection("spaceMembers")
+      .where("spaceId", "==", spaceId)
+      .where("isActive", "==", true);
 
     // Add role filter if specified
     if (role) {
@@ -108,11 +101,9 @@ export async function GET(
 
     // Get total count for pagination
     const totalMembersSnapshot = await dbAdmin
-      .collection("spaces")
-      .doc(spaceType!)
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
+      .collection("spaceMembers")
+      .where("spaceId", "==", spaceId)
+      .where("isActive", "==", true)
       .get();
 
     const totalCount = totalMembersSnapshot.size;
@@ -120,7 +111,7 @@ export async function GET(
     // Fetch user details for each member
     const memberPromises = membersSnapshot.docs.map(async (memberDoc) => {
       const memberData = memberDoc.data();
-      const userId = memberDoc.id;
+      const userId = memberData.userId;
 
       try {
         // Get user profile

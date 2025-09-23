@@ -1,17 +1,15 @@
 import { dbAdmin } from '@/lib/firebase-admin';
 import * as admin from 'firebase-admin';
 import { z } from 'zod';
-import { logger } from "@/lib/logger";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
-
-// In-memory store for development mode profile data
-const devProfileStore: Record<string, any> = {};
+import { logger } from "@/lib/structured-logger";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
+import { HiveProfile, DEFAULT_PRIVACY_SETTINGS, DEFAULT_BUILDER_INFO } from '@hive/core';
 
 // Validation schema for profile updates
 const updateProfileSchema = z.object({
   fullName: z.string().min(1).max(100).optional(),
   major: z.string().min(1).max(100).optional(),
-  academicYear: z.enum(['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'other']).optional(),
+  academicYear: z.enum(['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'alumni', 'faculty']).optional(),
   graduationYear: z.number().int().min(1900).max(2040).optional(),
   housing: z.string().max(200).optional(),
   pronouns: z.string().max(50).optional(),
@@ -21,7 +19,93 @@ const updateProfileSchema = z.object({
   profilePhoto: z.string().url().optional().or(z.literal("")),
   isPublic: z.boolean().optional(),
   builderOptIn: z.boolean().optional(),
-  userType: z.enum(['student', 'alumni', 'faculty']).optional() });
+  userType: z.enum(['student', 'alumni', 'faculty']).optional(),
+  interests: z.array(z.string()).optional(),
+  showActivity: z.boolean().optional(),
+  showSpaces: z.boolean().optional(),
+  showConnections: z.boolean().optional(),
+  allowDirectMessages: z.boolean().optional(),
+  showOnlineStatus: z.boolean().optional(),
+  ghostMode: z.object({
+    enabled: z.boolean().optional(),
+    level: z.enum(['minimal', 'moderate', 'maximum']).optional()
+  }).optional()
+});
+
+// Helper to transform Firestore data to HiveProfile
+function transformToHiveProfile(userId: string, userData: any, userEmail?: string): HiveProfile {
+  const now = new Date().toISOString();
+
+  return {
+    identity: {
+      id: userId,
+      fullName: userData?.fullName || '',
+      handle: userData?.handle || '',
+      email: userData?.email || userEmail || '',
+      avatarUrl: userData?.avatarUrl || userData?.profilePhoto
+    },
+    academic: {
+      major: userData?.major,
+      academicYear: userData?.academicYear as any,
+      graduationYear: userData?.graduationYear,
+      schoolId: userData?.schoolId,
+      housing: userData?.housing,
+      pronouns: userData?.pronouns
+    },
+    personal: {
+      bio: userData?.bio,
+      statusMessage: userData?.statusMessage,
+      location: userData?.housing,
+      interests: userData?.interests || []
+    },
+    privacy: {
+      ...DEFAULT_PRIVACY_SETTINGS,
+      isPublic: userData?.isPublic ?? true,
+      showActivity: userData?.showActivity ?? true,
+      showSpaces: userData?.showSpaces ?? true,
+      showConnections: userData?.showConnections ?? true,
+      allowDirectMessages: userData?.allowDirectMessages ?? true,
+      showOnlineStatus: userData?.showOnlineStatus ?? true,
+      ghostMode: {
+        enabled: userData?.ghostMode?.enabled ?? false,
+        level: (userData?.ghostMode?.level ?? 'minimal') as 'minimal' | 'moderate' | 'maximum'
+      }
+    },
+    builder: {
+      ...DEFAULT_BUILDER_INFO,
+      isBuilder: userData?.isBuilder ?? false,
+      builderOptIn: userData?.builderOptIn ?? false,
+      builderLevel: (userData?.builderLevel ?? 'beginner') as any,
+      specializations: userData?.specializations || [],
+      toolsCreated: userData?.toolsCreated ?? 0
+    },
+    stats: {
+      spacesJoined: userData?.spacesJoined ?? 0,
+      spacesActive: userData?.spacesActive ?? 0,
+      spacesLed: userData?.spacesLed ?? 0,
+      toolsUsed: userData?.toolsUsed ?? 0,
+      connectionsCount: userData?.connectionsCount ?? 0,
+      totalActivity: userData?.totalActivity ?? 0,
+      currentStreak: userData?.currentStreak ?? 0,
+      longestStreak: userData?.longestStreak ?? 0,
+      reputation: userData?.reputation ?? 0,
+      achievements: userData?.achievements ?? 0
+    },
+    timestamps: {
+      createdAt: userData?.createdAt || userData?.joinedAt || now,
+      updatedAt: userData?.updatedAt || now,
+      lastActiveAt: userData?.lastActive || userData?.lastActiveAt || now,
+      lastSeenAt: userData?.lastSeenAt || now
+    },
+    verification: {
+      emailVerified: userData?.emailVerified ?? false,
+      profileVerified: userData?.profileVerified ?? false,
+      accountStatus: (userData?.accountStatus ?? 'active') as any,
+      userType: (userData?.userType ?? 'student') as any,
+      onboardingCompleted: userData?.onboardingCompleted ?? false
+    }
+  };
+}
 
 /**
  * Get user profile
@@ -30,69 +114,48 @@ const updateProfileSchema = z.object({
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
   const userId = getUserId(request);
 
-  // For development mode, provide mock data structured like HiveProfile
-  if (userId === 'test-user' || userId === 'dev_user_123') {
-    const storedProfile = devProfileStore[userId] || {};
+  // Development mode - clean mock data
+  if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
+    const mockData = {
+      fullName: 'Dev User',
+      handle: 'devuser',
+      email: 'dev@hive.com',
+      major: 'Computer Science',
+      academicYear: 'senior',
+      graduationYear: 2025,
+      housing: 'Smith Hall, Room 305',
+      pronouns: 'they/them',
+      bio: 'Building the future of campus collaboration with HIVE 🚀',
+      statusMessage: 'Building epic study tools',
+      avatarUrl: '',
+      schoolId: 'dev_school',
+      userType: 'student',
+      emailVerified: true,
+      builderOptIn: true,
+      isBuilder: true,
+      isPublic: true,
+      onboardingCompleted: true,
+      createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
+      spacesJoined: 8,
+      spacesActive: 5,
+      spacesLed: 3,
+      toolsUsed: 12,
+      toolsCreated: 4,
+      connectionsCount: 156,
+      totalActivity: 342,
+      currentStreak: 7,
+      longestStreak: 21,
+      reputation: 89,
+      achievements: 12,
+      interests: ['coding', 'design', 'collaboration', 'student-life'],
+      specializations: ['web-development', 'ui-ux', 'productivity-tools']
+    };
 
-    return respond.success({
-      user: {
-        id: userId,
-        email: `dev@hive.com`,
-        fullName: storedProfile.fullName || 'Dev User',
-        handle: storedProfile.handle || 'devuser',
-        major: storedProfile.major || 'Computer Science',
-        academicYear: storedProfile.academicYear || 'Senior',
-        graduationYear: storedProfile.graduationYear || 2025,
-        housing: storedProfile.housing || 'Smith Hall, Room 305',
-        pronouns: storedProfile.pronouns || 'they/them',
-        bio: storedProfile.bio || 'Building the future of campus collaboration with HIVE 🚀',
-        statusMessage: storedProfile.statusMessage || 'Building epic study tools',
-        profilePhoto: storedProfile.profilePhoto || storedProfile.avatarUrl || '',
-        avatarUrl: storedProfile.avatarUrl || '',
-        schoolId: 'dev_school',
-        userType: storedProfile.userType || 'student',
-        emailVerified: true,
-        builderOptIn: storedProfile.builderOptIn || true,
-        isBuilder: storedProfile.isBuilder || true,
-        isPublic: storedProfile.isPublic !== false,
-        onboardingCompleted: true,
-        joinedAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-        lastActive: new Date().toISOString(),
-        lastActiveAt: new Date().toISOString(),
-        createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        consentGiven: true,
-        consentGivenAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-        // SECURITY: Development mode removed for production safety,
-        // Additional fields for complete profile
-        spacesJoined: 8,
-        spacesActive: 5,
-        spacesLed: 3,
-        toolsUsed: 12,
-        toolsCreated: 4,
-        connectionsCount: 156,
-        totalActivity: 342,
-        currentStreak: 7,
-        longestStreak: 21,
-        reputation: 89,
-        achievements: 12,
-        showActivity: storedProfile.showActivity !== false,
-        showSpaces: storedProfile.showSpaces !== false,
-        showConnections: storedProfile.showConnections !== false,
-        allowDirectMessages: storedProfile.allowDirectMessages !== false,
-        showOnlineStatus: storedProfile.showOnlineStatus !== false,
-        ghostMode: {
-          enabled: storedProfile.ghostMode?.enabled || false,
-          level: storedProfile.ghostMode?.level || 'minimal'
-        },
-        builderLevel: 'intermediate',
-        specializations: ['web-development', 'ui-ux', 'productivity-tools'],
-        interests: ['coding', 'design', 'collaboration', 'student-life']
-      }
-    });
+    const profile = transformToHiveProfile(userId, mockData, 'dev@hive.com');
+    return respond.success({ profile });
   }
 
-  // Get user document from Firestore
+  // Production: Fetch from Firestore
   const userDoc = await dbAdmin.collection('users').doc(userId).get();
 
   if (!userDoc.exists) {
@@ -100,40 +163,9 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
   }
 
   const userData = userDoc.data();
+  const profile = transformToHiveProfile(userId, userData, userData?.email);
 
-  // Return sanitized user profile
-  const userProfile = {
-      id: userId,
-      email: userData?.email,
-      fullName: userData?.fullName || '',
-      handle: userData?.handle || '',
-      major: userData?.major || '',
-      academicYear: userData?.academicYear || '',
-      graduationYear: userData?.graduationYear,
-      housing: userData?.housing || '',
-      pronouns: userData?.pronouns || '',
-      bio: userData?.bio || '',
-      statusMessage: userData?.statusMessage || '',
-      avatarUrl: userData?.avatarUrl || '',
-      profilePhoto: userData?.profilePhoto || userData?.avatarUrl || '',
-      schoolId: userData?.schoolId || '',
-      userType: userData?.userType || 'student',
-      emailVerified: userData?.emailVerified || false,
-      builderOptIn: userData?.builderOptIn || false,
-      isBuilder: userData?.isBuilder || false,
-      isPublic: userData?.isPublic || false,
-      onboardingCompleted: !!userData?.onboardingCompletedAt,
-      joinedAt: userData?.createdAt || new Date().toISOString(),
-      lastActive: userData?.lastActiveAt || userData?.updatedAt || new Date().toISOString(),
-      createdAt: userData?.createdAt,
-      updatedAt: userData?.updatedAt,
-      consentGiven: userData?.consentGiven || false,
-      consentGivenAt: userData?.consentGivenAt,
-    };
-
-  return respond.success({
-    user: userProfile
-  });
+  return respond.success({ profile });
 });
 
 /**
@@ -142,21 +174,16 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
  */
 export const PATCH = withAuthValidationAndErrors(
   updateProfileSchema,
-  async (request: AuthenticatedRequest, context, updateData, respond) => {
+  async (request: AuthenticatedRequest, context, updateData: z.infer<typeof updateProfileSchema>, respond) => {
   const userId = getUserId(request);
 
-  // For development mode, store in memory
-  if (userId === 'test-user' || userId === 'dev_user_123') {
-    devProfileStore[userId] = {
-      ...devProfileStore[userId],
-      ...updateData,
-    };
-
+  // Development mode - skip Firestore
+  if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
     logger.info('Development mode profile update', { data: updateData, endpoint: '/api/profile' });
 
     return respond.success({
       message: 'Profile updated successfully (development mode)',
-      updated: updateData
+      updated: Object.keys(updateData)
     });
   }
 

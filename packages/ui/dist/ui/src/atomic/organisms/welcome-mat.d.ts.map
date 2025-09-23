@@ -1,0 +1,1 @@
+{"version":3,"file":"welcome-mat.d.ts","sourceRoot":"","sources":["../../../../../src/atomic/organisms/welcome-mat.tsx"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,OAAO,CAAA;AAQ9B,MAAM,WAAW,eAAe;IAC9B,SAAS,CAAC,EAAE,MAAM,CAAA;IAClB,SAAS,CAAC,EAAE,MAAM,IAAI,CAAA;IACtB,QAAQ,CAAC,EAAE,MAAM,CAAA;CAClB;AAED,QAAA,MAAM,UAAU,wFAuMf,CAAA;AAID,OAAO,EAAE,UAAU,EAAE,CAAA"}

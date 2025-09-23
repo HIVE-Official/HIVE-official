@@ -93,7 +93,7 @@ export async function comprehensiveSecurityMiddleware(
       if (!rateLimitResult.allowed) {
         violations.push('rate_limit_exceeded');
         
-        await logSecurityEvent('security_middleware', {
+        await logSecurityEvent('invalid_token', {
           operation: `${config.logging?.operation || 'unknown'}_rate_limited`,
           tags: {
             limiterType: config.rateLimit.limiterType,
@@ -132,7 +132,7 @@ export async function comprehensiveSecurityMiddleware(
         violations.push('input_validation_failed');
         
         if (validationResult.blocked) {
-          await logSecurityEvent('security_middleware', {
+          await logSecurityEvent('invalid_token', {
             operation: `${config.validation.operation}_input_blocked`,
             tags: {
               reason: validationResult.reason || 'validation_failed',
@@ -172,7 +172,7 @@ export async function comprehensiveSecurityMiddleware(
       if (!sessionResult.success && sessionResult.response) {
         violations.push('session_validation_failed');
         
-        await logSecurityEvent('security_middleware', {
+        await logSecurityEvent('invalid_token', {
           operation: `${config.logging?.operation || 'unknown'}_session_failed`,
           tags: {
             environment: currentEnvironment
@@ -213,7 +213,7 @@ export async function comprehensiveSecurityMiddleware(
       if (!csrfResult.valid && csrfResult.response) {
         violations.push('csrf_validation_failed');
         
-        await logSecurityEvent('security_middleware', {
+        await logSecurityEvent('invalid_token', {
           operation: `${config.logging?.operation || 'unknown'}_csrf_failed`,
           tags: {
             sessionId: sessionContext.session.sessionId,
@@ -240,7 +240,7 @@ export async function comprehensiveSecurityMiddleware(
 
     // 6. SUCCESS LOGGING
     if (config.logging?.logSuccess) {
-      await logSecurityEvent('security_middleware', {
+      await logSecurityEvent('invalid_token', {
         operation: `${config.logging.operation}_success`,
         tags: {
           securityLevel,
@@ -267,7 +267,7 @@ export async function comprehensiveSecurityMiddleware(
     
     violations.push('middleware_error');
     
-    await logSecurityEvent('security_middleware', {
+    await logSecurityEvent('invalid_token', {
       operation: `${config.logging?.operation || 'unknown'}_error`,
       tags: {
         error: error instanceof Error ? error.message : 'unknown',
@@ -391,7 +391,7 @@ export function withComprehensiveSecurity(
       console.error('Handler error in security middleware:', error);
       
       // Log handler errors with security context
-      await logSecurityEvent('security_middleware', {
+      await logSecurityEvent('invalid_token', {
         operation: `${config.logging?.operation || 'unknown'}_handler_error`,
         tags: {
           error: error instanceof Error ? error.message : 'unknown',
