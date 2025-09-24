@@ -209,9 +209,11 @@ export function RitualStoriesStrip({ rituals, onRitualClick, className = '' }: R
                         {ritual.title}
                       </span>
                     </div>
-                    <Badge className="text-xs bg-hive-gold/20 text-hive-gold">
-                      {Math.round(ritual.metrics.participationRate)}% participating
-                    </Badge>
+                    {ritual.metrics?.participationRate !== undefined && (
+                      <Badge className="text-xs bg-hive-gold/20 text-hive-gold">
+                        {Math.round(ritual.metrics.participationRate)}% participating
+                      </Badge>
+                    )}
                   </div>
 
                   <button

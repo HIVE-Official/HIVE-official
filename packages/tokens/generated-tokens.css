@@ -1,3 +1,4 @@
+/* Auto-generated HIVE CSS Custom Properties */
 :root {
   /* HIVE Color Tokens */
   --hive-color-void: #000000;
@@ -21,6 +22,14 @@
   --hive-color-citrine: #F59E0B;
   --hive-color-black: #0A0A0B;
   --hive-color-white: #E5E5E7;
+  --hive-color-textMutedLight: #A1A1AA;
+  --hive-color-textMutedDark: #71717A;
+  --hive-color-backgroundOverlayLight: rgba(255, 255, 255, 0.02);
+  --hive-color-backgroundOverlayMedium: rgba(255, 255, 255, 0.05);
+  --hive-color-borderSubtle: rgba(255, 255, 255, 0.06);
+  --hive-color-borderInteractive: rgba(255, 255, 255, 0.1);
+  --hive-color-goldAccent: #FFD700;
+  --hive-color-goldHover: #FFE255;
   --hive-color-gray-50: #4A4A4F;
   --hive-color-gray-100: #6B6B70;
   --hive-color-gray-200: #9B9B9F;
@@ -44,6 +53,9 @@
   --hive-text-muted: #9B9B9F;
   --hive-text-disabled: #6B6B70;
   --hive-text-inverse: #0A0A0B;
+  --hive-text-mutedLight: #A1A1AA;
+  --hive-text-mutedDark: #71717A;
+  --hive-text-subtle: #3F3F46;
   --hive-brand-primary: #FFD700;
   --hive-brand-secondary: #F7E98E;
   --hive-brand-accent: #FFA500;
@@ -61,6 +73,8 @@
   --hive-border-subtle: rgba(255, 255, 255, 0.05);
   --hive-border-focus: rgba(255, 215, 0, 0.2);
   --hive-border-error: #EF4444;
+  --hive-border-muted: #3F3F46;
+  --hive-border-interactive: #A1A1AA;
 
   /* HIVE Overlay Colors */
   --hive-overlay-glass: rgba(255, 255, 255, 0.05);
@@ -105,7 +119,7 @@
   --hive-shadow-inset-deep: inset 0 2px 4px rgba(0, 0, 0, 0.3);
   --hive-shadow-inset-soft: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 
-  /* HIVE Borders */
+  /* HIVE Border Colors */
   --hive-border-steel: #2A2A2D;
   --hive-border-graphite: #1A1A1C;
   --hive-border-slate: #222225;
@@ -116,28 +130,30 @@
   --hive-border-gold-glow: rgba(255, 215, 0, 0.6);
   --hive-border-subtle: rgba(255, 255, 255, 0.05);
   --hive-border-medium: rgba(255, 255, 255, 0.08);
+  --hive-border-gold-strong: rgba(255, 215, 0, 0.4);
+  --hive-border-glass-strong: rgba(255, 255, 255, 0.12);
 
   /* HIVE Typography */
-  --hive-font-size-display-2xl: 4.5rem;
-  --hive-font-size-display-xl: 3.75rem;
-  --hive-font-size-display-lg: 3rem;
-  --hive-font-size-display-md: 2.25rem;
-  --hive-font-size-display-sm: 1.875rem;
-  --hive-font-size-heading-xl: 1.5rem;
-  --hive-font-size-heading-lg: 1.25rem;
-  --hive-font-size-heading-md: 1.125rem;
-  --hive-font-size-heading-sm: 1rem;
-  --hive-font-size-body-lg: 1.125rem;
-  --hive-font-size-body-md: 1rem;
-  --hive-font-size-body-sm: 0.875rem;
-  --hive-font-size-body-xs: 0.75rem;
-  --hive-font-size-body-2xs: 0.625rem;
-  --hive-font-size-xs: 0.75rem;
-  --hive-font-size-sm: 0.875rem;
-  --hive-font-size-base: 1rem;
-  --hive-font-size-lg: 1.125rem;
-  --hive-font-size-xl: 1.25rem;
-  --hive-font-size-2xl: 1.5rem;
+  --hive-font-size-display-2xl: 2.5rem;
+  --hive-font-size-display-xl: 2.25rem;
+  --hive-font-size-display-lg: 2rem;
+  --hive-font-size-display-md: 1.75rem;
+  --hive-font-size-display-sm: 1.5rem;
+  --hive-font-size-heading-xl: 1.25rem;
+  --hive-font-size-heading-lg: 1.125rem;
+  --hive-font-size-heading-md: 1rem;
+  --hive-font-size-heading-sm: 0.875rem;
+  --hive-font-size-body-lg: 1rem;
+  --hive-font-size-body-md: 0.875rem;
+  --hive-font-size-body-sm: 0.75rem;
+  --hive-font-size-body-xs: 0.625rem;
+  --hive-font-size-body-2xs: 0.5rem;
+  --hive-font-size-xs: 0.625rem;
+  --hive-font-size-sm: 0.75rem;
+  --hive-font-size-base: 0.875rem;
+  --hive-font-size-lg: 1rem;
+  --hive-font-size-xl: 1.125rem;
+  --hive-font-size-2xl: 1.25rem;
   --hive-font-weight-light: 300;
   --hive-font-weight-normal: 400;
   --hive-font-weight-medium: 500;
@@ -164,12 +180,16 @@
   --hive-spacing-4: 1rem;
   --hive-spacing-5: 1.25rem;
   --hive-spacing-6: 1.5rem;
+  --hive-spacing-7: 1.75rem;
   --hive-spacing-8: 2rem;
   --hive-spacing-10: 2.5rem;
   --hive-spacing-12: 3rem;
+  --hive-spacing-14: 3.5rem;
   --hive-spacing-16: 4rem;
+  --hive-spacing-18: 4.5rem;
   --hive-spacing-20: 5rem;
   --hive-spacing-24: 6rem;
+  --hive-spacing-28: 7rem;
   --hive-spacing-32: 8rem;
   --hive-spacing-xs: 0.25rem;
   --hive-spacing-sm: 0.5rem;
@@ -177,6 +197,15 @@
   --hive-spacing-lg: 1.5rem;
   --hive-spacing-xl: 2rem;
   --hive-spacing-2xl: 3rem;
+
+  /* HIVE Layout Sizes */
+  --hive-height-xs: 12.5rem;
+  --hive-height-sm: 18.75rem;
+  --hive-height-md: 25rem;
+  --hive-height-lg: 31.25rem;
+  --hive-width-xs: 8.75rem;
+  --hive-width-sm: 12.5rem;
+  --hive-width-md: 25rem;
 
   /* HIVE Radius */
   --hive-radius-none: 0;
@@ -194,6 +223,12 @@
   --hive-easing-steel: cubic-bezier(0.34, 1.56, 0.64, 1);
   --hive-easing-molten: cubic-bezier(0.19, 1, 0.22, 1);
   --hive-easing-snap: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --hive-easing-orchestrated: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --hive-easing-cinematic: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --hive-easing-cascade: cubic-bezier(0.19, 1, 0.22, 1);
+  --hive-easing-toolSnap: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  --hive-easing-toolFloat: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --hive-easing-toolPlant: cubic-bezier(0.34, 1.56, 0.64, 1);
   --hive-easing-easeIn: cubic-bezier(0.4, 0, 1, 1);
   --hive-easing-easeOut: cubic-bezier(0, 0, 0.2, 1);
   --hive-easing-easeInOut: cubic-bezier(0.4, 0, 0.2, 1);
@@ -209,10 +244,12 @@
   --hive-duration-dramatic: 1.0s;
   --hive-duration-orchestrated: 1.2s;
   --hive-duration-cinematic: 1.0s;
-  --hive-cascade-stagger: 0.05s;
-  --hive-cascade-ripple: 0.08s;
-  --hive-cascade-sequence: 0.12s;
   --hive-cascade-wave: 0.03s;
+  --hive-cascade-ripple: 0.05s;
+  --hive-cascade-stagger: 0.08s;
+  --hive-cascade-sequence: 0.12s;
+  --hive-cascade-milestone: 0.15s;
+  --hive-cascade-cinematic: 0.2s;
   --hive-transform-scaleHover: 1.02;
   --hive-transform-scaleTap: 0.98;
   --hive-transform-scaleModal: 1.05;
@@ -246,6 +283,9 @@
   --hive-shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.5);
   --hive-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3);
   --hive-shadow-none: none;
+  --hive-shadow-gold-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+  --hive-shadow-gold-glow-strong: 0 0 30px rgba(255, 215, 0, 0.4);
+  --hive-shadow-emerald-glow: 0 0 20px rgba(16, 185, 129, 0.3);
   --hive-backdrop-blur-none: blur(0);
   --hive-backdrop-blur-sm: blur(4px);
   --hive-backdrop-blur-md: blur(8px);

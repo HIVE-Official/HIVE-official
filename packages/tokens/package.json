@@ -10,7 +10,9 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.js"
-    }
+    },
+    "./hive-tokens-generated.css": "./hive-tokens-generated.css",
+    "./tailwind.config.master": "./tailwind.config.master.ts"
   },
   "scripts": {
     "build": "npm run build:types && npm run build:css",
