@@ -4,7 +4,6 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { currentEnvironment } from './src/lib/env';
 
 // CORS configuration
 const CORS_CONFIG = {
@@ -22,6 +21,9 @@ const CORS_CONFIG = {
       'https://*.vercel.app'
     ],
     production: [
+      'https://hive.college',
+      'https://www.hive.college',
+      'https://app.hive.college',
       'https://hive.io',
       'https://www.hive.io',
       'https://app.hive.io'
@@ -105,13 +107,32 @@ const SECURITY_HEADERS = {
 };
 
 /**
+ * Get current environment based on hostname
+ */
+function getCurrentEnvironment(hostname: string): string {
+  // Production domains
+  if (hostname.includes('hive.college') || hostname.includes('hive.io')) {
+    return 'production';
+  }
+  // Vercel preview URLs
+  if (hostname.includes('vercel.app')) {
+    return 'staging';
+  }
+  // Local development
+  if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+    return 'development';
+  }
+  return 'production'; // Default to production for safety
+}
+
+/**
  * Check if origin is allowed
  */
 function isOriginAllowed(origin: string | null, environment: string): boolean {
   if (!origin) return true; // Allow same-origin requests
-  
+
   const allowedOrigins = CORS_CONFIG.origins[environment as keyof typeof CORS_CONFIG.origins] || [];
-  
+
   return allowedOrigins.some(allowed => {
     if (allowed.includes('*')) {
       // Handle wildcard domains like *.vercel.app
@@ -129,9 +150,11 @@ function handlePreflight(request: NextRequest): NextResponse {
   const origin = request.headers.get('origin');
   const requestMethod = request.headers.get('access-control-request-method');
   const _requestHeaders = request.headers.get('access-control-request-headers');
+  const hostname = request.headers.get('host') || request.nextUrl.hostname;
+  const environment = getCurrentEnvironment(hostname);
 
   // Check if origin is allowed
-  if (!isOriginAllowed(origin, currentEnvironment)) {
+  if (!isOriginAllowed(origin, environment)) {
     return new NextResponse(null, { status: 403 });
   }
 
@@ -160,8 +183,10 @@ function handlePreflight(request: NextRequest): NextResponse {
  */
 function addCorsHeaders(response: NextResponse, request: NextRequest): void {
   const origin = request.headers.get('origin');
+  const hostname = request.headers.get('host') || request.nextUrl.hostname;
+  const environment = getCurrentEnvironment(hostname);
 
-  if (origin && isOriginAllowed(origin, currentEnvironment)) {
+  if (origin && isOriginAllowed(origin, environment)) {
     response.headers.set('Access-Control-Allow-Origin', origin);
     response.headers.set('Access-Control-Allow-Credentials', 'true');
     response.headers.set('Access-Control-Expose-Headers', CORS_CONFIG.exposedHeaders.join(', '));
@@ -171,9 +196,12 @@ function addCorsHeaders(response: NextResponse, request: NextRequest): void {
 /**
  * Add security headers to response
  */
-function addSecurityHeaders(response: NextResponse): void {
+function addSecurityHeaders(response: NextResponse, request: NextRequest): void {
+  const hostname = request.headers.get('host') || request.nextUrl.hostname;
+  const environment = getCurrentEnvironment(hostname);
+
   // Skip security headers for development to avoid CSP issues
-  if (currentEnvironment === 'development') {
+  if (environment === 'development') {
     // Only add essential headers in development
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('X-Frame-Options', 'SAMEORIGIN'); // Less strict for dev
@@ -202,70 +230,11 @@ function addTrackingHeaders(response: NextResponse, request: NextRequest): void 
 }
 
 /**
- * Rate limiting check
+ * Rate limiting check (disabled for Edge Runtime compatibility)
  */
 async function checkRateLimit(request: NextRequest): Promise<NextResponse | null> {
-  // Skip rate limiting for non-API routes in development
-  if (currentEnvironment === 'development' && !request.nextUrl.pathname.startsWith('/api/')) {
-    return null;
-  }
-
-  try {
-    // Dynamic import to avoid startup issues
-    const { createRateLimit } = await import('./src/lib/rate-limit-redis');
-    
-    // Different rate limits for different routes
-    let rateLimiter;
-    const path = request.nextUrl.pathname;
-    
-    if (path.startsWith('/api/auth/')) {
-      rateLimiter = createRateLimit('AUTH');
-    } else if (path.startsWith('/api/')) {
-      rateLimiter = createRateLimit('API');
-    } else {
-      // No rate limiting for static assets and pages
-      return null;
-    }
-
-    // Get client identifier
-    const clientId = request.headers.get('x-forwarded-for') ||
-                    request.headers.get('x-real-ip') ||
-                    request.headers.get('cf-connecting-ip') ||
-                    'unknown';
-
-    const result = await rateLimiter.checkLimit(clientId);
-
-    if (!result.success) {
-      const response = NextResponse.json(
-        {
-          error: 'Rate limit exceeded',
-          retryAfter: result.retryAfter
-        },
-        { status: 429 }
-      );
-
-      // Add rate limit headers
-      response.headers.set('X-RateLimit-Limit', result.limit.toString());
-      response.headers.set('X-RateLimit-Remaining', result.remaining.toString());
-      response.headers.set('X-RateLimit-Reset', result.resetTime.toString());
-      
-      if (result.retryAfter) {
-        response.headers.set('Retry-After', result.retryAfter.toString());
-      }
-
-      return response;
-    }
-
-    // Add rate limit headers to successful requests
-    request.headers.set('x-ratelimit-limit', result.limit.toString());
-    request.headers.set('x-ratelimit-remaining', result.remaining.toString());
-    request.headers.set('x-ratelimit-reset', result.resetTime.toString());
-
-  } catch (error) {
-    console.error('Rate limiting error:', error);
-    // Continue without rate limiting on error (fail open)
-  }
-
+  // Skip rate limiting to avoid Edge Runtime issues with Redis
+  // Rate limiting is handled at the API route level instead
   return null;
 }
 
@@ -276,15 +245,53 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // Add middleware start time for performance tracking
   request.headers.set('x-middleware-start', Date.now().toString());
 
+  const { pathname } = request.nextUrl;
+
+  // Allow static files, Next.js internals to pass through
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/static') ||
+    pathname.startsWith('/__nextjs') ||
+    pathname.includes('hot-update') ||
+    pathname.includes('.') && !pathname.includes('/api/')
+  ) {
+    const response = NextResponse.next();
+    addSecurityHeaders(response, request);
+    return response;
+  }
+
   // Handle CORS preflight requests
   if (request.method === 'OPTIONS') {
     return handlePreflight(request);
   }
 
+  // Public routes that don't require authentication
+  const publicRoutes = ['/landing', '/auth/login', '/auth/verify', '/auth/expired', '/onboarding', '/schools', '/waitlist'];
+
+  if (publicRoutes.some(route => pathname.startsWith(route))) {
+    const response = NextResponse.next();
+    addSecurityHeaders(response, request);
+    addCorsHeaders(response, request);
+    addTrackingHeaders(response, request);
+    return response;
+  }
+
+  // For API routes
+  if (pathname.startsWith('/api/')) {
+    // Skip health check and public endpoints
+    if (pathname === '/api/health' || pathname.startsWith('/api/auth/')) {
+      const response = NextResponse.next();
+      addSecurityHeaders(response, request);
+      addCorsHeaders(response, request);
+      addTrackingHeaders(response, request);
+      return response;
+    }
+  }
+
   // Check rate limits
   const rateLimitResponse = await checkRateLimit(request);
   if (rateLimitResponse) {
-    addSecurityHeaders(rateLimitResponse);
+    addSecurityHeaders(rateLimitResponse, request);
     addCorsHeaders(rateLimitResponse, request);
     addTrackingHeaders(rateLimitResponse, request);
     return rateLimitResponse;
@@ -294,7 +301,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const response = NextResponse.next();
 
   // Add security headers
-  addSecurityHeaders(response);
+  addSecurityHeaders(response, request);
 
   // Add CORS headers
   addCorsHeaders(response, request);
