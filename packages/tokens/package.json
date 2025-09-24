@@ -13,9 +13,15 @@
     }
   },
   "scripts": {
-    "build": "npx tsc",
+    "build": "npm run build:types && npm run build:css",
+    "build:types": "npx tsc",
+    "build:css": "tsx scripts/generate-css.ts",
+    "postbuild": "npm run build:css",
     "lint": "npx eslint . --max-warnings 10",
     "typecheck": "npx tsc --noEmit"
+  },
+  "dependencies": {
+    "tsx": "^4.19.2"
   },
   "devDependencies": {
     "@hive/eslint-config": "workspace:*",
